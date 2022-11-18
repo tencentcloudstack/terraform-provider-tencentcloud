@@ -101,7 +101,8 @@ func resourceTencentCloudRumWhitelistCreate(d *schema.ResourceData, meta interfa
 	logId := getLogId(contextNil)
 
 	var (
-		request    = rum.NewCreateWhitelistRequest()
+		request = rum.NewCreateWhitelistRequest()
+		// response   *rum.CreateWhitelistResponse
 		instanceID string
 		wid        string
 	)

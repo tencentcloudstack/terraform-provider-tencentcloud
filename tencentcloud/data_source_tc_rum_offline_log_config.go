@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_rum_offline_log_config" "offlineLogConfig" {
-  project_key = ""
+  project_key = "ZEYrYfvaYQ30jRdmPx"
 }
 ```
 */

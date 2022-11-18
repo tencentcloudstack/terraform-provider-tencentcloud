@@ -5,18 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_rum_taw_instance" "taw_instance" {
-  area_id = ""
-  charge_type = ""
-  data_retention_days = ""
-  instance_name = ""
+  area_id = "1"
+  charge_type = "1"
+  data_retention_days = "30"
+  instance_name = "instanceName-1"
   tags {
-			key = ""
-			value = ""
-
+	key = "createdBy"
+	value = "terraform"
   }
-  instance_desc = ""
-  count_num = ""
-  period_retain = ""
+  instance_desc = "instanceDesc"
+  count_num = "1"
+  period_retain = "1"
   buying_channel = ""
 }
 
@@ -181,6 +180,7 @@ func resourceTencentCloudRumTawInstanceCreate(d *schema.ResourceData, meta inter
 		request.InstanceName = helper.String(v.(string))
 	}
 
+	tags := make(map[string]string)
 	if v, ok := d.GetOk("tags"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
@@ -191,7 +191,7 @@ func resourceTencentCloudRumTawInstanceCreate(d *schema.ResourceData, meta inter
 			if v, ok := dMap["value"]; ok {
 				tag.Value = helper.String(v.(string))
 			}
-
+			tags[*tag.Key] = *tag.Value
 			request.Tags = append(request.Tags, &tag)
 		}
 	}
@@ -232,6 +232,17 @@ func resourceTencentCloudRumTawInstanceCreate(d *schema.ResourceData, meta inter
 	instanceId = *response.Response.InstanceId
 
 	d.SetId(instanceId)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::rum:%s:uin/:tawInstance/%s", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudRumTawInstanceRead(d, meta)
 }
 
@@ -329,6 +340,14 @@ func resourceTencentCloudRumTawInstanceRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("created_at", tawInstance.CreatedAt)
 	}
 
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "rum", "tawInstance", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -337,6 +356,7 @@ func resourceTencentCloudRumTawInstanceUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := rum.NewModifyInstanceRequest()
 
@@ -356,20 +376,12 @@ func resourceTencentCloudRumTawInstanceUpdate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`data_retention_days` do not support change now.")
 	}
 
-	if d.HasChange("instance_name") {
-		if v, ok := d.GetOk("instance_name"); ok {
-			request.InstanceName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("instance_name"); ok {
+		request.InstanceName = helper.String(v.(string))
 	}
 
-	if d.HasChange("tags") {
-		return fmt.Errorf("`tags` do not support change now.")
-	}
-
-	if d.HasChange("instance_desc") {
-		if v, ok := d.GetOk("instance_desc"); ok {
-			request.InstanceDesc = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("instance_desc"); ok {
+		request.InstanceDesc = helper.String(v.(string))
 	}
 
 	if d.HasChange("count_num") {
@@ -398,6 +410,33 @@ func resourceTencentCloudRumTawInstanceUpdate(d *schema.ResourceData, meta inter
 	if err != nil {
 		log.Printf("[CRITAL]%s create rum tawInstance failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tags := make(map[string]string)
+		if v, ok := d.GetOk("tags"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				var key string
+				var value string
+				if v, ok := dMap["key"]; ok {
+					key = v.(string)
+				}
+				if v, ok := dMap["value"]; ok {
+					value = v.(string)
+				}
+				tags[key] = value
+			}
+			tcClient := meta.(*TencentCloudClient).apiV3Conn
+			tagService := &TagService{client: tcClient}
+			oldTags, newTags := d.GetChange("tags")
+			replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+			resourceName := BuildTagResourceName("rum", "tawInstance", tcClient.Region, d.Id())
+			if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+				return err
+			}
+		}
+
 	}
 
 	return resourceTencentCloudRumTawInstanceRead(d, meta)

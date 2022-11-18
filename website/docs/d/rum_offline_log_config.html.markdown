@@ -15,7 +15,7 @@ Use this data source to query detailed information of rum offlineLogConfig
 
 ```hcl
 data "tencentcloud_rum_offline_log_config" "offlineLogConfig" {
-  project_key = ""
+  project_key = "ZEYrYfvaYQ30jRdmPx"
 }
 ```
 

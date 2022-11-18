@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudRumOfflineLogConfigDataSource -v
 func TestAccTencentCloudRumOfflineLogConfigDataSource(t *testing.T) {
 	t.Parallel()
 
@@ -16,7 +17,9 @@ func TestAccTencentCloudRumOfflineLogConfigDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceRumOfflineLogConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_offline_log_config.offline_log_config"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_rum_offline_log_config.offlineLogConfig"),
+					resource.TestCheckResourceAttr("data.tencentcloud_rum_offline_log_config.offlineLogConfig", "project_key", "ZEYrYfvaYQ30jRdmPx"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_rum_offline_log_config.offlineLogConfig", "unique_id_set.#"),
 				),
 			},
 		},
@@ -25,8 +28,8 @@ func TestAccTencentCloudRumOfflineLogConfigDataSource(t *testing.T) {
 
 const testAccDataSourceRumOfflineLogConfig = `
 
-data "tencentcloud_rum_offline_log_config" "offline_log_config" {
-  project_key = ""
+data "tencentcloud_rum_offline_log_config" "offlineLogConfig" {
+	project_key = "ZEYrYfvaYQ30jRdmPx"
 }
 
 `

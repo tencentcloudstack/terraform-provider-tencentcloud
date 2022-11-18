@@ -15,14 +15,14 @@ Provides a resource to create a rum project
 
 ```hcl
 resource "tencentcloud_rum_project" "project" {
-  name             = ""
-  instance_id      = ""
-  rate             = ""
-  enable_url_group = ""
-  type             = ""
+  name             = "projectName"
+  instance_id      = "rum-pasZKEI3RLgakj"
+  rate             = "100"
+  enable_url_group = "0"
+  type             = "web"
   repo             = ""
-  url              = ""
-  desc             = ""
+  url              = "iac-tf.com"
+  desc             = "projectDesc-1"
 }
 ```
 

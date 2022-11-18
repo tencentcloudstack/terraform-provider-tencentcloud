@@ -15,7 +15,7 @@ Use this data source to query detailed information of rum whitelist
 
 ```hcl
 data "tencentcloud_rum_whitelist" "whitelist" {
-  instance_id = ""
+  instance_id = "rum-pasZKEI3RLgakj"
 }
 ```
 

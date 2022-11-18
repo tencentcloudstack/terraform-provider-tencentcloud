@@ -15,8 +15,8 @@ Provides a resource to create a rum offline_log_config_attachment
 
 ```hcl
 resource "tencentcloud_rum_offline_log_config_attachment" "offline_log_config_attachment" {
-  project_key = ""
-  unique_id   = ""
+  project_key = "ZEYrYfvaYQ30jRdmPx"
+  unique_id   = "100027012454"
 }
 ```
 
@@ -39,6 +39,6 @@ In addition to all arguments above, the following attributes are exported:
 
 rum offline_log_config_attachment can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_rum_offline_log_config_attachment.offline_log_config_attachment offlineLogConfigAttachment_id
+$ terraform import tencentcloud_rum_offline_log_config_attachment.offline_log_config_attachment ZEYrYfvaYQ30jRdmPx#100027012454
 ```
 

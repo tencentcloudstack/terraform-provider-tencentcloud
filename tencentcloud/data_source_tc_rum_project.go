@@ -5,9 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_rum_project" "project" {
-  instance_id = ""
-  pid = ""
-  }
+	instance_id = "rum-pasZKEI3RLgakj"
+}
 ```
 */
 package tencentcloud

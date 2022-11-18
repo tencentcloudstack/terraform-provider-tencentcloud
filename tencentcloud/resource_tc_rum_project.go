@@ -5,14 +5,14 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_rum_project" "project" {
-  name = ""
-  instance_id = ""
-  rate = ""
-  enable_url_group = ""
-  type = ""
+  name = "projectName"
+  instance_id = "rum-pasZKEI3RLgakj"
+  rate = "100"
+  enable_url_group = "0"
+  type = "web"
   repo = ""
-  url = ""
-  desc = ""
+  url = "iac-tf.com"
+  desc = "projectDesc-1"
 }
 
 ```
@@ -164,7 +164,7 @@ func resourceTencentCloudRumProjectCreate(d *schema.ResourceData, meta interface
 		request.Rate = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("enable_url_group"); ok {
+	if v := d.Get("enable_url_group"); v != nil {
 		request.EnableURLGroup = helper.IntUint64(v.(int))
 	}
 

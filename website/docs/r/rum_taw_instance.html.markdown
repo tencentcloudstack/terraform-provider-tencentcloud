@@ -15,18 +15,17 @@ Provides a resource to create a rum taw_instance
 
 ```hcl
 resource "tencentcloud_rum_taw_instance" "taw_instance" {
-  area_id             = ""
-  charge_type         = ""
-  data_retention_days = ""
-  instance_name       = ""
+  area_id             = "1"
+  charge_type         = "1"
+  data_retention_days = "30"
+  instance_name       = "instanceName-1"
   tags {
-    key   = ""
-    value = ""
-
+    key   = "createdBy"
+    value = "terraform"
   }
-  instance_desc  = ""
-  count_num      = ""
-  period_retain  = ""
+  instance_desc  = "instanceDesc"
+  count_num      = "1"
+  period_retain  = "1"
   buying_channel = ""
 }
 ```

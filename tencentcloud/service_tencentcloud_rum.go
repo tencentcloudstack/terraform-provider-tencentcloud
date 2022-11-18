@@ -311,7 +311,7 @@ func (me *RumService) DescribeRumOfflineLogConfigByFilter(ctx context.Context, p
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response == nil {
+	if response != nil {
 		configs = response.Response
 	}
 

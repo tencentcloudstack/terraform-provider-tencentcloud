@@ -15,8 +15,7 @@ Use this data source to query detailed information of rum project
 
 ```hcl
 data "tencentcloud_rum_project" "project" {
-  instance_id = ""
-  pid         = ""
+  instance_id = "rum-pasZKEI3RLgakj"
 }
 ```
 
