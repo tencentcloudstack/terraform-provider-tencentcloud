@@ -814,3 +814,16 @@ const (
 )
 
 // End of TAT
+
+// TDCPG
+const (
+	defaultTdcpgClusterId      = "tdcpg-m5e26fi8"
+	defaultTdcpgClusterName    = "keep-tdcpg-test"
+	defaultTdcpgPayMode        = "POSTPAID_BY_HOUR"
+	defaultTdcpgInstanceId     = "tdcpg-ins-fc0e5kes"
+	defaultTdcpgInstanceName   = "keep-tdcpg-instance-test"
+	defaultTdcpgZone           = "ap-guangzhou-3"
+	defaultTdcpgTestNamePrefix = "tf-tdcpg-"
+)
+
+// End of TDCPG
