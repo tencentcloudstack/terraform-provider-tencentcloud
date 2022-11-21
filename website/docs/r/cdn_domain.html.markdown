@@ -255,6 +255,7 @@ The `filter_rules` object supports the following:
 
 The `force_redirect` object supports the following:
 
+* `carry_headers` - (Optional, String) Whether to return the newly added header during force redirection. Values: `on`, `off`.
 * `redirect_status_code` - (Optional, Int) Forced redirect status code. Valid values are `301` and `302`. When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.
 * `redirect_type` - (Optional, String) Forced redirect type. Valid values are `http` and `https`. `http` means a forced redirect from HTTPS to HTTP, `https` means a forced redirect from HTTP to HTTPS. When `switch` setting `off`, this property does not need to be set or set to `http`. Default value is `http`.
 * `switch` - (Optional, String) Forced redirect configuration switch. Valid values are `on` and `off`. Default value is `off`.

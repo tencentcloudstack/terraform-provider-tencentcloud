@@ -49,6 +49,7 @@ func NewAddCLSTopicDomainsRequest() (request *AddCLSTopicDomainsRequest) {
     request = &AddCLSTopicDomainsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "AddCLSTopicDomains")
     
     
@@ -166,6 +167,7 @@ func NewAddCdnDomainRequest() (request *AddCdnDomainRequest) {
     request = &AddCdnDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "AddCdnDomain")
     
     
@@ -211,6 +213,7 @@ func NewAddCdnDomainResponse() (response *AddCdnDomainResponse) {
 //  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
 //  LIMITEXCEEDED_CDNUSERTOOMANYHOSTS = "LimitExceeded.CdnUserTooManyHosts"
+//  RESOURCEINUSE_CDNCONFLICTHOSTEXISTS = "ResourceInUse.CdnConflictHostExists"
 //  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
 //  RESOURCENOTFOUND_CAMTAGKEYNOTEXIST = "ResourceNotFound.CamTagKeyNotExist"
@@ -272,6 +275,7 @@ func (c *Client) AddCdnDomain(request *AddCdnDomainRequest) (response *AddCdnDom
 //  LIMITEXCEEDED_CDNCONFIGTOOMANYCACHERULES = "LimitExceeded.CdnConfigTooManyCacheRules"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
 //  LIMITEXCEEDED_CDNUSERTOOMANYHOSTS = "LimitExceeded.CdnUserTooManyHosts"
+//  RESOURCEINUSE_CDNCONFLICTHOSTEXISTS = "ResourceInUse.CdnConflictHostExists"
 //  RESOURCEINUSE_CDNHOSTEXISTS = "ResourceInUse.CdnHostExists"
 //  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
 //  RESOURCENOTFOUND_CAMTAGKEYNOTEXIST = "ResourceNotFound.CamTagKeyNotExist"
@@ -317,6 +321,7 @@ func NewCreateClsLogTopicRequest() (request *CreateClsLogTopicRequest) {
     request = &CreateClsLogTopicRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "CreateClsLogTopic")
     
     
@@ -432,6 +437,7 @@ func NewCreateDiagnoseUrlRequest() (request *CreateDiagnoseUrlRequest) {
     request = &CreateDiagnoseUrlRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "CreateDiagnoseUrl")
     
     
@@ -457,6 +463,7 @@ func NewCreateDiagnoseUrlResponse() (response *CreateDiagnoseUrlResponse) {
 //  INVALIDPARAMETER_CDNHOSTINVALIDPARAM = "InvalidParameter.CdnHostInvalidParam"
 //  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
@@ -479,6 +486,7 @@ func (c *Client) CreateDiagnoseUrl(request *CreateDiagnoseUrlRequest) (response 
 //  INVALIDPARAMETER_CDNHOSTINVALIDPARAM = "InvalidParameter.CdnHostInvalidParam"
 //  INVALIDPARAMETER_CDNHOSTINVALIDSTATUS = "InvalidParameter.CdnHostInvalidStatus"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
+//  RESOURCEINUSE_CDNOPINPROGRESS = "ResourceInUse.CdnOpInProgress"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
@@ -505,6 +513,7 @@ func NewCreateEdgePackTaskRequest() (request *CreateEdgePackTaskRequest) {
     request = &CreateEdgePackTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "CreateEdgePackTask")
     
     
@@ -568,6 +577,7 @@ func NewCreateScdnDomainRequest() (request *CreateScdnDomainRequest) {
     request = &CreateScdnDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "CreateScdnDomain")
     
     
@@ -659,6 +669,7 @@ func NewCreateScdnFailedLogTaskRequest() (request *CreateScdnFailedLogTaskReques
     request = &CreateScdnFailedLogTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "CreateScdnFailedLogTask")
     
     
@@ -726,6 +737,7 @@ func NewCreateScdnLogTaskRequest() (request *CreateScdnLogTaskRequest) {
     request = &CreateScdnLogTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "CreateScdnLogTask")
     
     
@@ -801,6 +813,7 @@ func NewCreateVerifyRecordRequest() (request *CreateVerifyRecordRequest) {
     request = &CreateVerifyRecordRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "CreateVerifyRecord")
     
     
@@ -862,6 +875,7 @@ func NewDeleteCdnDomainRequest() (request *DeleteCdnDomainRequest) {
     request = &DeleteCdnDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DeleteCdnDomain")
     
     
@@ -947,6 +961,7 @@ func NewDeleteClsLogTopicRequest() (request *DeleteClsLogTopicRequest) {
     request = &DeleteClsLogTopicRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DeleteClsLogTopic")
     
     
@@ -1048,6 +1063,7 @@ func NewDeleteScdnDomainRequest() (request *DeleteScdnDomainRequest) {
     request = &DeleteScdnDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DeleteScdnDomain")
     
     
@@ -1125,6 +1141,7 @@ func NewDescribeBillingDataRequest() (request *DescribeBillingDataRequest) {
     request = &DescribeBillingDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeBillingData")
     
     
@@ -1226,6 +1243,7 @@ func NewDescribeCcDataRequest() (request *DescribeCcDataRequest) {
     request = &DescribeCcDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeCcData")
     
     
@@ -1281,6 +1299,7 @@ func NewDescribeCdnDataRequest() (request *DescribeCdnDataRequest) {
     request = &DescribeCdnDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeCdnData")
     
     
@@ -1446,6 +1465,7 @@ func NewDescribeCdnDomainLogsRequest() (request *DescribeCdnDomainLogsRequest) {
     request = &DescribeCdnDomainLogsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeCdnDomainLogs")
     
     
@@ -1467,6 +1487,7 @@ func NewDescribeCdnDomainLogsResponse() (response *DescribeCdnDomainLogsResponse
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
@@ -1497,6 +1518,7 @@ func (c *Client) DescribeCdnDomainLogs(request *DescribeCdnDomainLogsRequest) (r
 //  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
+//  INTERNALERROR_CDNQUERYSYSTEMERROR = "InternalError.CdnQuerySystemError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_DATASYSTEMERROR = "InternalError.DataSystemError"
 //  INTERNALERROR_ERROR = "InternalError.Error"
@@ -1535,6 +1557,7 @@ func NewDescribeCdnIpRequest() (request *DescribeCdnIpRequest) {
     request = &DescribeCdnIpRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeCdnIp")
     
     
@@ -1606,6 +1629,7 @@ func NewDescribeCdnOriginIpRequest() (request *DescribeCdnOriginIpRequest) {
     request = &DescribeCdnOriginIpRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeCdnOriginIp")
     
     
@@ -1673,6 +1697,7 @@ func NewDescribeCertDomainsRequest() (request *DescribeCertDomainsRequest) {
     request = &DescribeCertDomainsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeCertDomains")
     
     
@@ -1756,6 +1781,7 @@ func NewDescribeDDoSDataRequest() (request *DescribeDDoSDataRequest) {
     request = &DescribeDDoSDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeDDoSData")
     
     
@@ -1829,6 +1855,7 @@ func NewDescribeDiagnoseReportRequest() (request *DescribeDiagnoseReportRequest)
     request = &DescribeDiagnoseReportRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeDiagnoseReport")
     
     
@@ -1884,6 +1911,7 @@ func NewDescribeDistrictIspDataRequest() (request *DescribeDistrictIspDataReques
     request = &DescribeDistrictIspDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeDistrictIspData")
     
     
@@ -1965,6 +1993,7 @@ func NewDescribeDomainsRequest() (request *DescribeDomainsRequest) {
     request = &DescribeDomainsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeDomains")
     
     
@@ -2058,6 +2087,7 @@ func NewDescribeDomainsConfigRequest() (request *DescribeDomainsConfigRequest) {
     request = &DescribeDomainsConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeDomainsConfig")
     
     
@@ -2153,6 +2183,7 @@ func NewDescribeEventLogDataRequest() (request *DescribeEventLogDataRequest) {
     request = &DescribeEventLogDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeEventLogData")
     
     
@@ -2208,6 +2239,7 @@ func NewDescribeImageConfigRequest() (request *DescribeImageConfigRequest) {
     request = &DescribeImageConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeImageConfig")
     
     
@@ -2222,7 +2254,7 @@ func NewDescribeImageConfigResponse() (response *DescribeImageConfigResponse) {
 }
 
 // DescribeImageConfig
-// DescribeImageConfig 用于获取域名图片优化的当前配置，支持Webp、TPG 和 Guetzli。 
+// DescribeImageConfig 用于获取域名图片优化的当前配置，支持Webp、TPG、 Guetzli 和 Avif。 
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
@@ -2239,7 +2271,7 @@ func (c *Client) DescribeImageConfig(request *DescribeImageConfigRequest) (respo
 }
 
 // DescribeImageConfig
-// DescribeImageConfig 用于获取域名图片优化的当前配置，支持Webp、TPG 和 Guetzli。 
+// DescribeImageConfig 用于获取域名图片优化的当前配置，支持Webp、TPG、 Guetzli 和 Avif。 
 //
 // 可能返回的错误码:
 //  INTERNALERROR_CDNCONFIGERROR = "InternalError.CdnConfigError"
@@ -2271,6 +2303,7 @@ func NewDescribeIpStatusRequest() (request *DescribeIpStatusRequest) {
     request = &DescribeIpStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeIpStatus")
     
     
@@ -2285,7 +2318,7 @@ func NewDescribeIpStatusResponse() (response *DescribeIpStatusResponse) {
 }
 
 // DescribeIpStatus
-// DescribeIpStatus 用于查询域名所在加速平台的边缘节点、回源节点明细。注意事项：边缘节点（edge）尚未全量开放，未在内测名单中的账号不支持调用。
+// DescribeIpStatus 用于查询域名所在加速平台的边缘节点、回源节点明细。注意事项：暂不支持查询边缘节点信息。
 //
 // 
 //
@@ -2309,7 +2342,7 @@ func (c *Client) DescribeIpStatus(request *DescribeIpStatusRequest) (response *D
 }
 
 // DescribeIpStatus
-// DescribeIpStatus 用于查询域名所在加速平台的边缘节点、回源节点明细。注意事项：边缘节点（edge）尚未全量开放，未在内测名单中的账号不支持调用。
+// DescribeIpStatus 用于查询域名所在加速平台的边缘节点、回源节点明细。注意事项：暂不支持查询边缘节点信息。
 //
 // 
 //
@@ -2348,6 +2381,7 @@ func NewDescribeIpVisitRequest() (request *DescribeIpVisitRequest) {
     request = &DescribeIpVisitRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeIpVisit")
     
     
@@ -2449,6 +2483,7 @@ func NewDescribeMapInfoRequest() (request *DescribeMapInfoRequest) {
     request = &DescribeMapInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeMapInfo")
     
     
@@ -2520,6 +2555,7 @@ func NewDescribeOriginDataRequest() (request *DescribeOriginDataRequest) {
     request = &DescribeOriginDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeOriginData")
     
     
@@ -2669,6 +2705,7 @@ func NewDescribePayTypeRequest() (request *DescribePayTypeRequest) {
     request = &DescribePayTypeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribePayType")
     
     
@@ -2732,6 +2769,7 @@ func NewDescribePurgeQuotaRequest() (request *DescribePurgeQuotaRequest) {
     request = &DescribePurgeQuotaRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribePurgeQuota")
     
     
@@ -2789,6 +2827,7 @@ func NewDescribePurgeTasksRequest() (request *DescribePurgeTasksRequest) {
     request = &DescribePurgeTasksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribePurgeTasks")
     
     
@@ -2856,6 +2895,7 @@ func NewDescribePushQuotaRequest() (request *DescribePushQuotaRequest) {
     request = &DescribePushQuotaRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribePushQuota")
     
     
@@ -2915,6 +2955,7 @@ func NewDescribePushTasksRequest() (request *DescribePushTasksRequest) {
     request = &DescribePushTasksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribePushTasks")
     
     
@@ -3008,6 +3049,7 @@ func NewDescribeReportDataRequest() (request *DescribeReportDataRequest) {
     request = &DescribeReportDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeReportData")
     
     
@@ -3073,6 +3115,7 @@ func NewDescribeScdnBotDataRequest() (request *DescribeScdnBotDataRequest) {
     request = &DescribeScdnBotDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnBotData")
     
     
@@ -3140,6 +3183,7 @@ func NewDescribeScdnBotRecordsRequest() (request *DescribeScdnBotRecordsRequest)
     request = &DescribeScdnBotRecordsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnBotRecords")
     
     
@@ -3197,6 +3241,7 @@ func NewDescribeScdnConfigRequest() (request *DescribeScdnConfigRequest) {
     request = &DescribeScdnConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnConfig")
     
     
@@ -3260,6 +3305,7 @@ func NewDescribeScdnIpStrategyRequest() (request *DescribeScdnIpStrategyRequest)
     request = &DescribeScdnIpStrategyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnIpStrategy")
     
     
@@ -3317,6 +3363,7 @@ func NewDescribeScdnTopDataRequest() (request *DescribeScdnTopDataRequest) {
     request = &DescribeScdnTopDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeScdnTopData")
     
     
@@ -3386,6 +3433,7 @@ func NewDescribeTopDataRequest() (request *DescribeTopDataRequest) {
     request = &DescribeTopDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeTopData")
     
     
@@ -3529,6 +3577,7 @@ func NewDescribeTrafficPackagesRequest() (request *DescribeTrafficPackagesReques
     request = &DescribeTrafficPackagesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeTrafficPackages")
     
     
@@ -3586,6 +3635,7 @@ func NewDescribeUrlViolationsRequest() (request *DescribeUrlViolationsRequest) {
     request = &DescribeUrlViolationsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeUrlViolations")
     
     
@@ -3653,6 +3703,7 @@ func NewDescribeWafDataRequest() (request *DescribeWafDataRequest) {
     request = &DescribeWafDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DescribeWafData")
     
     
@@ -3736,6 +3787,7 @@ func NewDisableCachesRequest() (request *DisableCachesRequest) {
     request = &DisableCachesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DisableCaches")
     
     
@@ -3763,6 +3815,7 @@ func NewDisableCachesResponse() (response *DisableCachesResponse) {
 //  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
 //  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
+//  LIMITEXCEEDED_CDNPUSHEXCEEDDAYLIMIT = "LimitExceeded.CdnPushExceedDayLimit"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
@@ -3791,6 +3844,7 @@ func (c *Client) DisableCaches(request *DisableCachesRequest) (response *Disable
 //  INVALIDPARAMETER_CDNSTATINVALIDDATE = "InvalidParameter.CdnStatInvalidDate"
 //  INVALIDPARAMETER_CDNSTATINVALIDPROJECTID = "InvalidParameter.CdnStatInvalidProjectId"
 //  LIMITEXCEEDED_CDNHOSTOPTOOOFTEN = "LimitExceeded.CdnHostOpTooOften"
+//  LIMITEXCEEDED_CDNPUSHEXCEEDDAYLIMIT = "LimitExceeded.CdnPushExceedDayLimit"
 //  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  UNAUTHORIZEDOPERATION_CDNACCOUNTUNAUTHORIZED = "UnauthorizedOperation.CdnAccountUnauthorized"
@@ -3821,6 +3875,7 @@ func NewDisableClsLogTopicRequest() (request *DisableClsLogTopicRequest) {
     request = &DisableClsLogTopicRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DisableClsLogTopic")
     
     
@@ -3926,6 +3981,7 @@ func NewDuplicateDomainConfigRequest() (request *DuplicateDomainConfigRequest) {
     request = &DuplicateDomainConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "DuplicateDomainConfig")
     
     
@@ -3954,6 +4010,7 @@ func NewDuplicateDomainConfigResponse() (response *DuplicateDomainConfigResponse
 //  INVALIDPARAMETER_CDNCERTINFONOTFOUND = "InvalidParameter.CdnCertInfoNotFound"
 //  INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 //  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
+//  INVALIDPARAMETER_CDNKEYRULESEXCLUDECUSTOMREQUIRESFULLLEGO = "InvalidParameter.CdnKeyRulesExcludeCustomRequiresFullLego"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -3970,6 +4027,7 @@ func NewDuplicateDomainConfigResponse() (response *DuplicateDomainConfigResponse
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  RESOURCENOTFOUND_CDNUSERTOOMANYHOSTS = "ResourceNotFound.CdnUserTooManyHosts"
 //  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
+//  RESOURCEUNAVAILABLE_CDNHOSTISMALICIOUS = "ResourceUnavailable.CdnHostIsMalicious"
 //  RESOURCEUNAVAILABLE_CDNHOSTNOICP = "ResourceUnavailable.CdnHostNoIcp"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
@@ -3981,6 +4039,7 @@ func NewDuplicateDomainConfigResponse() (response *DuplicateDomainConfigResponse
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNINVALIDUSERSTATUS = "UnauthorizedOperation.CdnInvalidUserStatus"
 //  UNAUTHORIZEDOPERATION_CDNTAGUNAUTHORIZED = "UnauthorizedOperation.CdnTagUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
 //  UNAUTHORIZEDOPERATION_CDNUSERISISOLATED = "UnauthorizedOperation.CdnUserIsIsolated"
 //  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
@@ -4004,6 +4063,7 @@ func (c *Client) DuplicateDomainConfig(request *DuplicateDomainConfigRequest) (r
 //  INVALIDPARAMETER_CDNCERTINFONOTFOUND = "InvalidParameter.CdnCertInfoNotFound"
 //  INVALIDPARAMETER_CDNCONFIGINVALIDHOST = "InvalidParameter.CdnConfigInvalidHost"
 //  INVALIDPARAMETER_CDNHOSTINTERNALHOST = "InvalidParameter.CdnHostInternalHost"
+//  INVALIDPARAMETER_CDNKEYRULESEXCLUDECUSTOMREQUIRESFULLLEGO = "InvalidParameter.CdnKeyRulesExcludeCustomRequiresFullLego"
 //  INVALIDPARAMETER_CDNPARAMERROR = "InvalidParameter.CdnParamError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -4020,6 +4080,7 @@ func (c *Client) DuplicateDomainConfig(request *DuplicateDomainConfigRequest) (r
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  RESOURCENOTFOUND_CDNUSERTOOMANYHOSTS = "ResourceNotFound.CdnUserTooManyHosts"
 //  RESOURCEUNAVAILABLE_CDNHOSTISLOCKED = "ResourceUnavailable.CdnHostIsLocked"
+//  RESOURCEUNAVAILABLE_CDNHOSTISMALICIOUS = "ResourceUnavailable.CdnHostIsMalicious"
 //  RESOURCEUNAVAILABLE_CDNHOSTNOICP = "ResourceUnavailable.CdnHostNoIcp"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
@@ -4031,6 +4092,7 @@ func (c *Client) DuplicateDomainConfig(request *DuplicateDomainConfigRequest) (r
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNINVALIDUSERSTATUS = "UnauthorizedOperation.CdnInvalidUserStatus"
 //  UNAUTHORIZEDOPERATION_CDNTAGUNAUTHORIZED = "UnauthorizedOperation.CdnTagUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERAUTHFAIL = "UnauthorizedOperation.CdnUserAuthFail"
 //  UNAUTHORIZEDOPERATION_CDNUSERISISOLATED = "UnauthorizedOperation.CdnUserIsIsolated"
 //  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_OPERATIONTOOOFTEN = "UnauthorizedOperation.OperationTooOften"
@@ -4055,6 +4117,7 @@ func NewEnableCachesRequest() (request *EnableCachesRequest) {
     request = &EnableCachesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "EnableCaches")
     
     
@@ -4134,6 +4197,7 @@ func NewEnableClsLogTopicRequest() (request *EnableClsLogTopicRequest) {
     request = &EnableClsLogTopicRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "EnableClsLogTopic")
     
     
@@ -4239,6 +4303,7 @@ func NewGetDisableRecordsRequest() (request *GetDisableRecordsRequest) {
     request = &GetDisableRecordsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "GetDisableRecords")
     
     
@@ -4318,6 +4383,7 @@ func NewListClsLogTopicsRequest() (request *ListClsLogTopicsRequest) {
     request = &ListClsLogTopicsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListClsLogTopics")
     
     
@@ -4431,6 +4497,7 @@ func NewListClsTopicDomainsRequest() (request *ListClsTopicDomainsRequest) {
     request = &ListClsTopicDomainsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListClsTopicDomains")
     
     
@@ -4538,6 +4605,7 @@ func NewListDiagnoseReportRequest() (request *ListDiagnoseReportRequest) {
     request = &ListDiagnoseReportRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListDiagnoseReport")
     
     
@@ -4595,6 +4663,7 @@ func NewListScdnDomainsRequest() (request *ListScdnDomainsRequest) {
     request = &ListScdnDomainsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListScdnDomains")
     
     
@@ -4654,6 +4723,7 @@ func NewListScdnLogTasksRequest() (request *ListScdnLogTasksRequest) {
     request = &ListScdnLogTasksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListScdnLogTasks")
     
     
@@ -4717,6 +4787,7 @@ func NewListScdnTopBotDataRequest() (request *ListScdnTopBotDataRequest) {
     request = &ListScdnTopBotDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListScdnTopBotData")
     
     
@@ -4774,6 +4845,7 @@ func NewListTopBotDataRequest() (request *ListTopBotDataRequest) {
     request = &ListTopBotDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListTopBotData")
     
     
@@ -4831,6 +4903,7 @@ func NewListTopCcDataRequest() (request *ListTopCcDataRequest) {
     request = &ListTopCcDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListTopCcData")
     
     
@@ -4888,6 +4961,7 @@ func NewListTopClsLogDataRequest() (request *ListTopClsLogDataRequest) {
     request = &ListTopClsLogDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListTopClsLogData")
     
     
@@ -4928,6 +5002,7 @@ func NewListTopClsLogDataResponse() (response *ListTopClsLogDataResponse) {
 //  LIMITEXCEEDED_CLSLOGSIZEEXCEED = "LimitExceeded.ClsLogSizeExceed"
 //  LIMITEXCEEDED_CLSLOGSETEXCEED = "LimitExceeded.ClsLogsetExceed"
 //  LIMITEXCEEDED_CLSTOPICEXCEED = "LimitExceeded.ClsTopicExceed"
+//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  RESOURCENOTFOUND_CLSINDEXNOTEXIST = "ResourceNotFound.ClsIndexNotExist"
 //  RESOURCENOTFOUND_CLSLOGSETNOTEXIST = "ResourceNotFound.ClsLogsetNotExist"
@@ -4968,6 +5043,7 @@ func (c *Client) ListTopClsLogData(request *ListTopClsLogDataRequest) (response 
 //  LIMITEXCEEDED_CLSLOGSIZEEXCEED = "LimitExceeded.ClsLogSizeExceed"
 //  LIMITEXCEEDED_CLSLOGSETEXCEED = "LimitExceeded.ClsLogsetExceed"
 //  LIMITEXCEEDED_CLSTOPICEXCEED = "LimitExceeded.ClsTopicExceed"
+//  RESOURCENOTFOUND_CDNHOSTNOTEXISTS = "ResourceNotFound.CdnHostNotExists"
 //  RESOURCENOTFOUND_CDNUSERNOTEXISTS = "ResourceNotFound.CdnUserNotExists"
 //  RESOURCENOTFOUND_CLSINDEXNOTEXIST = "ResourceNotFound.ClsIndexNotExist"
 //  RESOURCENOTFOUND_CLSLOGSETNOTEXIST = "ResourceNotFound.ClsLogsetNotExist"
@@ -4997,6 +5073,7 @@ func NewListTopDDoSDataRequest() (request *ListTopDDoSDataRequest) {
     request = &ListTopDDoSDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListTopDDoSData")
     
     
@@ -5066,6 +5143,7 @@ func NewListTopDataRequest() (request *ListTopDataRequest) {
     request = &ListTopDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListTopData")
     
     
@@ -5203,6 +5281,7 @@ func NewListTopWafDataRequest() (request *ListTopWafDataRequest) {
     request = &ListTopWafDataRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ListTopWafData")
     
     
@@ -5280,6 +5359,7 @@ func NewManageClsTopicDomainsRequest() (request *ManageClsTopicDomainsRequest) {
     request = &ManageClsTopicDomainsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ManageClsTopicDomains")
     
     
@@ -5387,6 +5467,7 @@ func NewModifyPurgeFetchTaskStatusRequest() (request *ModifyPurgeFetchTaskStatus
     request = &ModifyPurgeFetchTaskStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "ModifyPurgeFetchTaskStatus")
     
     
@@ -5444,6 +5525,7 @@ func NewPurgePathCacheRequest() (request *PurgePathCacheRequest) {
     request = &PurgePathCacheRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "PurgePathCache")
     
     
@@ -5547,6 +5629,7 @@ func NewPurgeUrlsCacheRequest() (request *PurgeUrlsCacheRequest) {
     request = &PurgeUrlsCacheRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "PurgeUrlsCache")
     
     
@@ -5652,6 +5735,7 @@ func NewPushUrlsCacheRequest() (request *PushUrlsCacheRequest) {
     request = &PushUrlsCacheRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "PushUrlsCache")
     
     
@@ -5767,6 +5851,7 @@ func NewSearchClsLogRequest() (request *SearchClsLogRequest) {
     request = &SearchClsLogRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "SearchClsLog")
     
     
@@ -5784,6 +5869,7 @@ func NewSearchClsLogResponse() (response *SearchClsLogResponse) {
 // SearchClsLog 用于 CLS 日志检索。支持检索今天，24小时（可选近7中的某一天），近7天的日志数据。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_CLSINTERNALERROR = "InternalError.ClsInternalError"
@@ -5824,6 +5910,7 @@ func (c *Client) SearchClsLog(request *SearchClsLogRequest) (response *SearchCls
 // SearchClsLog 用于 CLS 日志检索。支持检索今天，24小时（可选近7中的某一天），近7天的日志数据。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CAMSYSTEMERROR = "InternalError.CamSystemError"
 //  INTERNALERROR_CDNDBERROR = "InternalError.CdnDbError"
 //  INTERNALERROR_CDNSYSTEMERROR = "InternalError.CdnSystemError"
 //  INTERNALERROR_CLSINTERNALERROR = "InternalError.ClsInternalError"
@@ -5876,6 +5963,7 @@ func NewStartCdnDomainRequest() (request *StartCdnDomainRequest) {
     request = &StartCdnDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "StartCdnDomain")
     
     
@@ -5973,6 +6061,7 @@ func NewStartScdnDomainRequest() (request *StartScdnDomainRequest) {
     request = &StartScdnDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "StartScdnDomain")
     
     
@@ -6056,6 +6145,7 @@ func NewStopCdnDomainRequest() (request *StopCdnDomainRequest) {
     request = &StopCdnDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "StopCdnDomain")
     
     
@@ -6149,6 +6239,7 @@ func NewStopScdnDomainRequest() (request *StopScdnDomainRequest) {
     request = &StopScdnDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "StopScdnDomain")
     
     
@@ -6230,6 +6321,7 @@ func NewUpdateDomainConfigRequest() (request *UpdateDomainConfigRequest) {
     request = &UpdateDomainConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "UpdateDomainConfig")
     
     
@@ -6379,6 +6471,7 @@ func NewUpdateImageConfigRequest() (request *UpdateImageConfigRequest) {
     request = &UpdateImageConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "UpdateImageConfig")
     
     
@@ -6393,7 +6486,7 @@ func NewUpdateImageConfigResponse() (response *UpdateImageConfigResponse) {
 }
 
 // UpdateImageConfig
-// UpdateImageConfig 用于更新控制台图片优化的相关配置，支持Webp、TPG 和 Guetzli。 
+// UpdateImageConfig 用于更新控制台图片优化的相关配置，支持Webp、TPG、 Guetzli 和 Avif。 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
@@ -6415,7 +6508,7 @@ func (c *Client) UpdateImageConfig(request *UpdateImageConfigRequest) (response 
 }
 
 // UpdateImageConfig
-// UpdateImageConfig 用于更新控制台图片优化的相关配置，支持Webp、TPG 和 Guetzli。 
+// UpdateImageConfig 用于更新控制台图片优化的相关配置，支持Webp、TPG、 Guetzli 和 Avif。 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CDNCONFIGERROR = "FailedOperation.CdnConfigError"
@@ -6452,6 +6545,7 @@ func NewUpdatePayTypeRequest() (request *UpdatePayTypeRequest) {
     request = &UpdatePayTypeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "UpdatePayType")
     
     
@@ -6515,6 +6609,7 @@ func NewUpdateScdnDomainRequest() (request *UpdateScdnDomainRequest) {
     request = &UpdateScdnDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "UpdateScdnDomain")
     
     
@@ -6550,6 +6645,7 @@ func NewUpdateScdnDomainResponse() (response *UpdateScdnDomainResponse) {
 //  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
 func (c *Client) UpdateScdnDomain(request *UpdateScdnDomainRequest) (response *UpdateScdnDomainResponse, err error) {
     return c.UpdateScdnDomainWithContext(context.Background(), request)
@@ -6577,6 +6673,7 @@ func (c *Client) UpdateScdnDomain(request *UpdateScdnDomainRequest) (response *U
 //  RESOURCEUNAVAILABLE_SCDNUSERNOPACKAGE = "ResourceUnavailable.ScdnUserNoPackage"
 //  UNAUTHORIZEDOPERATION_CDNCAMUNAUTHORIZED = "UnauthorizedOperation.CdnCamUnauthorized"
 //  UNAUTHORIZEDOPERATION_CDNHOSTUNAUTHORIZED = "UnauthorizedOperation.CdnHostUnauthorized"
+//  UNAUTHORIZEDOPERATION_CDNUSERISSUSPENDED = "UnauthorizedOperation.CdnUserIsSuspended"
 //  UNAUTHORIZEDOPERATION_CDNUSERNOWHITELIST = "UnauthorizedOperation.CdnUserNoWhitelist"
 func (c *Client) UpdateScdnDomainWithContext(ctx context.Context, request *UpdateScdnDomainRequest) (response *UpdateScdnDomainResponse, err error) {
     if request == nil {
@@ -6598,6 +6695,7 @@ func NewVerifyDomainRecordRequest() (request *VerifyDomainRecordRequest) {
     request = &VerifyDomainRecordRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cdn", APIVersion, "VerifyDomainRecord")
     
     
