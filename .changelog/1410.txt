@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_monitor_tmp_exporter_integration: Optimized initialization
+```
