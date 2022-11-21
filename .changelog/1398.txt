@@ -1,3 +1,3 @@
 ```release-note:new-data-source
-tencentcloud_dnspod_records: dnspod support record list datasource
+tencentcloud_dnspod_records
 ```

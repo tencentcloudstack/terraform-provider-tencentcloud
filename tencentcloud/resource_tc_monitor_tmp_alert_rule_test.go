@@ -10,7 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudMonitorAlertRule_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudMonitorAlertRuleResource_basic -v
+func TestAccTencentCloudMonitorAlertRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
@@ -25,6 +26,12 @@ func TestAccTencentCloudMonitorAlertRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "receivers.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "expr", "increase(mysql_global_status_slow_queries[1m]) > 0"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "duration", "4m"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "labels.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "labels.0.key", "hello1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "labels.0.value", "world1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "annotations.0.key", "hello2"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "annotations.0.value", "world2"),
 				),
 			},
 			{
@@ -35,6 +42,12 @@ func TestAccTencentCloudMonitorAlertRule_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "receivers.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "expr", "increase(mysql_global_status_slow_queries[1m]) > 1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "duration", "2m"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "labels.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "labels.0.key", "hello3"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "labels.0.value", "world3"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "annotations.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "annotations.0.key", "hello4"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_alert_rule.basic", "annotations.0.value", "world4"),
 				),
 			},
 			{
@@ -119,6 +132,14 @@ resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
   expr			= "increase(mysql_global_status_slow_queries[1m]) > 0"
   duration	    = "4m"
   rule_state	= 2
+  labels {
+    key   = "hello1"
+    value = "world1"
+  }
+  annotations {
+    key   = "hello2"
+    value = "world2"
+  }
 }`
 
 const testAlertRule_update = testAlertRuleVar + `
@@ -129,4 +150,12 @@ resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
   expr			= "increase(mysql_global_status_slow_queries[1m]) > 1"
   duration	    = "2m"
   rule_state	= 2
+  labels {
+    key   = "hello3"
+    value = "world3"
+  }
+  annotations {
+    key   = "hello4"
+    value = "world4"
+  }
 }`

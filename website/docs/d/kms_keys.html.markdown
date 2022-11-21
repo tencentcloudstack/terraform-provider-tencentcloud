@@ -1,5 +1,5 @@
 ---
-subcategory: "KMS"
+subcategory: "Key Management Service(KMS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kms_keys"
 sidebar_current: "docs-tencentcloud-datasource-kms_keys"

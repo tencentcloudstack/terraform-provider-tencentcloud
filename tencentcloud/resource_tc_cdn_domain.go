@@ -410,6 +410,11 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 										Description: "Forced redirect status code. Valid values are `301` and `302`. " +
 											"When `switch` setting `off`, this property does not need to be set or set to `302`. Default value is `302`.",
 									},
+									"carry_headers": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Whether to return the newly added header during force redirection. Values: `on`, `off`.",
+									},
 								},
 							},
 						},
@@ -1856,6 +1861,9 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 					if rsc := redirectMap["redirect_status_code"]; rsc.(int) != 0 {
 						redirect.RedirectStatusCode = helper.Int64(int64(rsc.(int)))
 					}
+					if ch := redirectMap["carry_headers"]; ch.(string) != "" {
+						redirect.CarryHeaders = helper.String(ch.(string))
+					}
 					request.ForceRedirect = &redirect
 				}
 			}
@@ -2522,6 +2530,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 				"switch":               domainConfig.ForceRedirect.Switch,
 				"redirect_type":        domainConfig.ForceRedirect.RedirectType,
 				"redirect_status_code": domainConfig.ForceRedirect.RedirectStatusCode,
+				"carry_headers":        domainConfig.ForceRedirect.CarryHeaders,
 			},
 		}
 	}
@@ -3101,6 +3110,9 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 					}
 					if rsc := redirectMap["redirect_status_code"]; rsc.(int) != 0 {
 						redirect.RedirectStatusCode = helper.Int64(int64(rsc.(int)))
+					}
+					if ch := redirectMap["carry_headers"]; ch.(string) != "" {
+						redirect.CarryHeaders = helper.String(ch.(string))
 					}
 					request.ForceRedirect = &redirect
 				}

@@ -53,7 +53,7 @@ func testSweepCSSWatermarkTask(r string) error {
 	return nil
 }
 
-func TestAccTencentCloudCSSWatermarkResource_basic(t *testing.T) {
+func TestAccTencentCloudCssWatermarkResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

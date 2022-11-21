@@ -54,7 +54,7 @@ func testSweepCssLiveTranscodeRuleAttachment(r string) error {
 	return nil
 }
 
-func TestAccTencentCloudCSSLiveTranscodeRuleAttachmentResource_basic(t *testing.T) {
+func TestAccTencentCloudCssLiveTranscodeRuleAttachmentResource_basic(t *testing.T) {
 	t.Parallel()
 	baseTime := time.Now().UTC().Add(10 * time.Hour)
 	startTime := baseTime.Format(time.RFC3339)

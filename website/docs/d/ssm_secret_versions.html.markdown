@@ -1,5 +1,5 @@
 ---
-subcategory: "SSM"
+subcategory: "Secrets Manager(SSM)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ssm_secret_versions"
 sidebar_current: "docs-tencentcloud-datasource-ssm_secret_versions"

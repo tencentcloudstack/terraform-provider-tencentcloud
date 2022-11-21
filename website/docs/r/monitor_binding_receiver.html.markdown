@@ -1,5 +1,5 @@
 ---
-subcategory: "Monitor"
+subcategory: "Cloud Monitor(Monitor)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_binding_receiver"
 sidebar_current: "docs-tencentcloud-resource-monitor_binding_receiver"

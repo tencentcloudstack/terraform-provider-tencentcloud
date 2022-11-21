@@ -53,7 +53,7 @@ func testSweepCSSLiveTranscodeTemplate(r string) error {
 	return nil
 }
 
-func TestAccTencentCloudCSSLiveTranscodeTemplateResource_basic(t *testing.T) {
+func TestAccTencentCloudCssLiveTranscodeTemplateResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
