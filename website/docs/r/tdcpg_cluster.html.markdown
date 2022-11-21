@@ -1,5 +1,5 @@
 ---
-subcategory: "tdcpg"
+subcategory: "TDSQL-C for PostgreSQL(TDCPG)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tdcpg_cluster"
 sidebar_current: "docs-tencentcloud-resource-tdcpg_cluster"
