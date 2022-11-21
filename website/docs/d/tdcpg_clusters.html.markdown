@@ -1,15 +1,17 @@
 ---
-subcategory: "tdcpg"
+subcategory: "TDSQL-C for PostgreSQL(TDCPG)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tdcpg_clusters"
 sidebar_current: "docs-tencentcloud-datasource-tdcpg_clusters"
 description: |-
-  Use this data source to query detailed information of tdcpg clusters
+  Use this data source to query detailed information of tdcpg clusters.
 ---
 
 # tencentcloud_tdcpg_clusters
 
-Use this data source to query detailed information of tdcpg clusters
+Use this data source to query detailed information of tdcpg clusters.
+
+~> **NOTE:** This data source is still in internal testing. To experience its functions, you need to apply for a whitelist from Tencent Cloud.
 
 ## Example Usage
 

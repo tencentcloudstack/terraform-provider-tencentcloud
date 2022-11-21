@@ -1,15 +1,17 @@
 ---
-subcategory: "tdcpg"
+subcategory: "TDSQL-C for PostgreSQL(TDCPG)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tdcpg_instance"
 sidebar_current: "docs-tencentcloud-resource-tdcpg_instance"
 description: |-
-  Provides a resource to create a tdcpg instance
+  Provides a resource to create a tdcpg instance.
 ---
 
 # tencentcloud_tdcpg_instance
 
-Provides a resource to create a tdcpg instance
+Provides a resource to create a tdcpg instance.
+
+~> **NOTE:** This resource is still in internal testing. To experience its functions, you need to apply for a whitelist from Tencent Cloud.
 
 ## Example Usage
 

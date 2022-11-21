@@ -776,6 +776,15 @@ TencentCloud Automation Tools(TAT)
 Tencent Cloud Organization (TCO)
   Resource
 	tencentcloud_organization_org_node
+
+TDSQL-C for PostgreSQL(TDCPG)
+  Data Source
+	tencentcloud_tdcpg_clusters
+	tencentcloud_tdcpg_instances
+  Resource
+	tencentcloud_tdcpg_cluster
+	tencentcloud_tdcpg_instance
+
 */
 package tencentcloud
 
