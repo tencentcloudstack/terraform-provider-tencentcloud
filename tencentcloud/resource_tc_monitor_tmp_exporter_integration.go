@@ -140,7 +140,7 @@ func resourceTencentCloudMonitorTmpExporterIntegrationCreate(d *schema.ResourceD
 				return nil
 			})
 			if err != nil {
-				return resource.NonRetryableError(fmt.Errorf("prometheusInstanceInit error %v, operate failed", err))
+				return resource.RetryableError(fmt.Errorf("prometheusInstanceInit error %v, operate failed", err))
 			}
 			return resource.RetryableError(fmt.Errorf("prometheusInstance initializing, retry..."))
 		}

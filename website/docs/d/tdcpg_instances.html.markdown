@@ -1,15 +1,17 @@
 ---
-subcategory: "tdcpg"
+subcategory: "TDSQL-C for PostgreSQL(TDCPG)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tdcpg_instances"
 sidebar_current: "docs-tencentcloud-datasource-tdcpg_instances"
 description: |-
-  Use this data source to query detailed information of tdcpg instances
+  Use this data source to query detailed information of tdcpg instances.
 ---
 
 # tencentcloud_tdcpg_instances
 
-Use this data source to query detailed information of tdcpg instances
+Use this data source to query detailed information of tdcpg instances.
+
+~> **NOTE:** This data source is still in internal testing. To experience its functions, you need to apply for a whitelist from Tencent Cloud.
 
 ## Example Usage
 

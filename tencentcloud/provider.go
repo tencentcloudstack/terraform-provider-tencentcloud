@@ -778,6 +778,14 @@ Tencent Cloud Organization (TCO)
 	tencentcloud_organization_org_node
 	tencentcloud_organization_org_member
 	tencentcloud_organization_policy_sub_account_attachment
+
+TDSQL-C for PostgreSQL(TDCPG)
+  Data Source
+	tencentcloud_tdcpg_clusters
+	tencentcloud_tdcpg_instances
+  Resource
+	tencentcloud_tdcpg_cluster
+	tencentcloud_tdcpg_instance
 */
 package tencentcloud
 
