@@ -457,7 +457,7 @@ PostgreSQL
 	tencentcloud_postgresql_readonly_group
 	tencentcloud_postgresql_readonly_attachment
 
-Redis
+TencentDB for Redis
   Data Source
     tencentcloud_redis_zone_config
     tencentcloud_redis_instances
@@ -709,7 +709,7 @@ Security Token Service(STS)
   Data Source
 	tencentcloud_sts_caller_identity
 
-TDSQL for MySQL(dcdb)
+TDSQL for MySQL(DCDB)
   Data Source
 	tencentcloud_dcdb_instances
 	tencentcloud_dcdb_accounts
@@ -772,6 +772,10 @@ TencentCloud Automation Tools(TAT)
   Resource
 	tencentcloud_tat_command
 	tencentcloud_tat_invoker
+
+Tencent Cloud Organization (TCO)
+  Resource
+	tencentcloud_organization_org_node
 */
 package tencentcloud
 
@@ -1376,6 +1380,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_pts_cron_job":                         resourceTencentCloudPtsCronJob(),
 			"tencentcloud_tat_command":                          resourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                          resourceTencentCloudTatInvoker(),
+			"tencentcloud_organization_org_node":                resourceTencentCloudOrganizationOrgNode(),
 		},
 
 		ConfigureFunc: providerConfigure,

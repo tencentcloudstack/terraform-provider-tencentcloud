@@ -1,5 +1,5 @@
 ---
-subcategory: "TDSQL for MySQL(dcdb)"
+subcategory: "TDSQL for MySQL(DCDB)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dcdb_security_group_attachment"
 sidebar_current: "docs-tencentcloud-resource-dcdb_security_group_attachment"
