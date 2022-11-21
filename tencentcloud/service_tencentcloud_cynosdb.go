@@ -81,7 +81,12 @@ func (me *CynosdbService) DescribeClusters(ctx context.Context, filters map[stri
 	return
 }
 
-func (me *CynosdbService) DescribeClusterById(ctx context.Context, clusterId string) (renewFlag int64, clusterInfo *cynosdb.CynosdbClusterDetail, has bool, errRet error) {
+/**
+Return values:
+	clusterItem: ResponseBody of DescribeClusters, include `renew_flag` and `db_mode`
+    clusterInfo: ResponseBody of DescribeClusterDetailResponse, primary args setter.
+*/
+func (me *CynosdbService) DescribeClusterById(ctx context.Context, clusterId string) (clusterItem *cynosdb.CynosdbCluster, clusterInfo *cynosdb.CynosdbClusterDetail, has bool, errRet error) {
 	logId := getLogId(ctx)
 	request := cynosdb.NewDescribeClusterDetailRequest()
 	request.ClusterId = &clusterId
@@ -102,15 +107,20 @@ func (me *CynosdbService) DescribeClusterById(ctx context.Context, clusterId str
 		if len(clusters) != 1 {
 			return resource.NonRetryableError(fmt.Errorf("[CRITAL] mutiple cluster found by cluster id %s", clusterId))
 		}
-		if *clusters[0].Status == CYNOSDB_STATUS_ISOLATED || *clusters[0].Status == CYNOSDB_STATUS_OFFLINE || *clusters[0].Status == CYNOSDB_STATUS_DELETED {
+		clusterItem = clusters[0]
+		clusterStatus := clusterItem.Status
+		if clusterStatus == nil {
+			return resource.NonRetryableError(fmt.Errorf("cluster %s status is nil", clusterId))
+		}
+		if *clusterStatus == CYNOSDB_STATUS_RUNNING {
+			return nil
+		}
+		if *clusterStatus == CYNOSDB_STATUS_ISOLATED || *clusterStatus == CYNOSDB_STATUS_OFFLINE || *clusterStatus == CYNOSDB_STATUS_DELETED {
 			notExist = true
 			return nil
-		} else if *clusters[0].Status == CYNOSDB_STATUS_RUNNING {
-			renewFlag = *clusters[0].RenewFlag
-			return nil
-		} else {
-			return resource.RetryableError(fmt.Errorf("cynosdb cluster %s is still in processing", clusterId))
 		}
+
+		return resource.RetryableError(fmt.Errorf("cynosdb cluster %s is still in processing", clusterId))
 	})
 	if errRet != nil || notExist {
 		return

@@ -115,6 +115,22 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	request.AdminPassword = helper.String(d.Get("password").(string))
 	request.RollbackStrategy = helper.String("noneRollback")
 
+	if v, ok := d.GetOk("db_mode"); ok {
+		request.DbMode = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("min_cpu"); ok {
+		request.MinCpu = helper.Float64(v.(float64))
+	}
+	if v, ok := d.GetOk("max_cpu"); ok {
+		request.MaxCpu = helper.Float64(v.(float64))
+	}
+	if v, ok := d.GetOk("auto_pause"); ok {
+		request.DbMode = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("auto_pause_delay"); ok {
+		request.AutoPauseDelay = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := d.GetOk("storage_limit"); ok {
 		request.StorageLimit = helper.IntInt64(v.(int))
 	}
@@ -312,7 +328,7 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	cynosdbService := CynosdbService{client: client}
-	renewFlag, cluster, has, err := cynosdbService.DescribeClusterById(ctx, id)
+	item, cluster, has, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -334,7 +350,11 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("cluster_status", cluster.Status)
 	_ = d.Set("create_time", cluster.CreateTime)
 	_ = d.Set("storage_used", *cluster.UsedStorage/1000/1000)
-	_ = d.Set("auto_renew_flag", renewFlag)
+	_ = d.Set("auto_renew_flag", *item.RenewFlag)
+
+	if _, ok := d.GetOk("db_mode"); ok {
+		_ = d.Set("db_mode", item.DbMode)
+	}
 
 	//tag
 	tagService := &TagService{client: client}

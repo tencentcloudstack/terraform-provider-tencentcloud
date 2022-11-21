@@ -346,6 +346,31 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "The ID of the parameter template.",
 		},
+		"db_mode": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Specify DB mode, only available when `db_type` is `MYSQL`. Values: `NORMAL` (Default), `SERVERLESS`.",
+		},
+		"min_cpu": {
+			Optional:    true,
+			Type:        schema.TypeFloat,
+			Description: "Minimum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.",
+		},
+		"max_cpu": {
+			Optional:    true,
+			Type:        schema.TypeFloat,
+			Description: "Maximum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.",
+		},
+		"auto_pause": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Specify whether the cluster can auto-pause while `db_mode` is `SERVERLESS`. Values: `yes` (default), `no`.",
+		},
+		"auto_pause_delay": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Specify auto-pause delay in second while `db_mode` is `SERVERLESS`. Value range: `[600, 691200]`. Default: `600`.",
+		},
 	}
 
 	for k, v := range TencentCynosdbInstanceBaseInfo() {
