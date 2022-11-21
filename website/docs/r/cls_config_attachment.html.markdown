@@ -1,5 +1,5 @@
 ---
-subcategory: "CLS"
+subcategory: "Cloud Log Service(CLS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cls_config_attachment"
 sidebar_current: "docs-tencentcloud-resource-cls_config_attachment"

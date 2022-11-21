@@ -1,5 +1,5 @@
 ---
-subcategory: "Monitor"
+subcategory: "Cloud Monitor(Monitor)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_alarm_notices"
 sidebar_current: "docs-tencentcloud-datasource-monitor_alarm_notices"

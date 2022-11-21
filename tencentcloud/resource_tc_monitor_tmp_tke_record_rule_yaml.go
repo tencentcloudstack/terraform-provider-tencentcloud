@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 
-resource "resourceTencentCloudMonitorTmpTkeRecordRuleYaml" "foo" {
+resource "tencentcloud_monitor_tmp_tke_record_rule_yaml" "foo" {
   instance_id       = ""
   content           = <<-EOT
         apiVersion: monitoring.coreos.com/v1

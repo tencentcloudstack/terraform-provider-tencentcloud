@@ -44,6 +44,7 @@ Provider Data Sources
   tencentcloud_availability_regions
   tencentcloud_availability_zones_by_product
   tencentcloud_availability_zones
+
 Anti-DDoS(DayuV2)
   Data Source
     tencentcloud_dayu_eip
@@ -100,7 +101,7 @@ API GateWay
 	tencentcloud_api_gateway_api_key_attachment
     tencentcloud_api_gateway_service_release
 
-Audit
+CloudAudit(Audit)
   Data Source
 	tencentcloud_audit_cos_regions
 	tencentcloud_audit_key_alias
@@ -286,7 +287,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_reserved_instance
     tencentcloud_image
 
-CynosDB
+TDSQL-C MySQL(CynosDB)
   Data Source
 	tencentcloud_cynosdb_clusters
 	tencentcloud_cynosdb_instances
@@ -317,7 +318,7 @@ Domain
   Data Source
     tencentcloud_domains
 
-Elasticsearch
+Elasticsearch Service(ES)
   Data Source
     tencentcloud_elasticsearch_instances
 
@@ -349,7 +350,7 @@ Global Application Acceleration(GAAP)
     tencentcloud_gaap_security_rule
     tencentcloud_gaap_domain_error_page
 
-KMS
+Key Management Service(KMS)
   Data Source
     tencentcloud_kms_keys
 
@@ -373,7 +374,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_addon_attachment
 	tencentcloud_kubernetes_cluster_endpoint
 
-TDMQ
+Tencent Distributed Message Queue(TDMQ)
   Resource
     tencentcloud_tdmq_instance
 	tencentcloud_tdmq_namespace
@@ -407,7 +408,7 @@ MySQL
     tencentcloud_mysql_account_privilege
     tencentcloud_mysql_backup_policy
 
-Monitor
+Cloud Monitor(Monitor)
   Data Source
 	tencentcloud_monitor_policy_conditions
 	tencentcloud_monitor_data
@@ -506,7 +507,7 @@ SSL Certificates
     tencentcloud_ssl_pay_certificate
 	tencentcloud_ssl_free_certificate
 
-SSM
+Secrets Manager(SSM)
   Data Source
     tencentcloud_ssm_secrets
     tencentcloud_ssm_secret_versions
@@ -608,7 +609,7 @@ Virtual Private Cloud(VPC)
 	tencentcloud_vpc_bandwidth_package
 	tencentcloud_vpc_bandwidth_package_attachment
 
-VPN
+VPN Connections(VPN)
   Data Source
     tencentcloud_vpn_connections
     tencentcloud_vpn_customer_gateways
@@ -623,7 +624,7 @@ VPN
 	tencentcloud_vpn_ssl_server
 	tencentcloud_vpn_ssl_client
 
-EMR
+MapReduce(EMR)
   Data Source
     tencentcloud_emr
     tencentcloud_emr_nodes
@@ -643,7 +644,7 @@ PrivateDNS
     tencentcloud_private_dns_zone
 	tencentcloud_private_dns_record
 
-CLS
+Cloud Log Service(CLS)
   Resource
 	tencentcloud_cls_logset
 	tencentcloud_cls_topic
@@ -654,7 +655,7 @@ CLS
 	tencentcloud_cls_cos_shipper
 	tencentcloud_cls_index
 
-Lighthouse
+TencentCloud Lighthouse(Lighthouse)
   Resource
 	tencentcloud_lighthouse_instance
 
@@ -708,7 +709,7 @@ Security Token Service(STS)
   Data Source
 	tencentcloud_sts_caller_identity
 
-dcdb
+TDSQL for MySQL(dcdb)
   Data Source
 	tencentcloud_dcdb_instances
 	tencentcloud_dcdb_accounts
