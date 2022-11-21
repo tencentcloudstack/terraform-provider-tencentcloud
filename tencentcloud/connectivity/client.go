@@ -51,6 +51,7 @@ import (
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
@@ -141,6 +142,7 @@ type TencentCloudClient struct {
 	mariadbConn        *mariadb.Client
 	ptsConn            *pts.Client
 	tatConn            *tat.Client
+	organizationConn   *organization.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -896,6 +898,19 @@ func (me *TencentCloudClient) UseTatClient() *tat.Client {
 	me.tatConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tatConn
+}
+
+// UseOrganizationClient returns organization client for service
+func (me *TencentCloudClient) UseOrganizationClient() *organization.Client {
+	if me.organizationConn != nil {
+		return me.organizationConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.organizationConn, _ = organization.NewClient(me.Credential, me.Region, cpf)
+	me.organizationConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.organizationConn
 }
 
 func getEnvDefault(key string, defVal int) int {
