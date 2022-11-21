@@ -1,5 +1,7 @@
 /*
-Use this data source to query detailed information of tdcpg clusters
+Use this data source to query detailed information of tdcpg clusters.
+
+~> **NOTE:** This data source is still in internal testing. To experience its functions, you need to apply for a whitelist from Tencent Cloud.
 
 Example Usage
 
