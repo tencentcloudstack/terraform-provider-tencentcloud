@@ -50,7 +50,7 @@ func init() {
 
 			log.Printf("Offline isolated instance %v", isolated)
 			for _, id := range isolated {
-				err = service.OfflineIsolatedDBInstance(ctx, id)
+				err = service.OfflineIsolatedDBInstance(ctx, id, true)
 				if err != nil {
 					continue
 				}
