@@ -9,7 +9,9 @@ description: |-
 
 # tencentcloud_tdcpg_cluster
 
-Provides a resource to create a tdcpg cluster
+Provides a resource to create a tdcpg cluster.
+
+~> **NOTE:**  This resource is still in internal testing. To experience its functions, you need to apply for a whitelist from Tencent Cloud.
 
 ## Example Usage
 
