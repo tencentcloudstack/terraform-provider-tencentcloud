@@ -24,8 +24,8 @@ func TestAccTencentCloudMonitorGrafanaSsoAccount_basic(t *testing.T) {
 				Config: testAccMonitorGrafanaSsoAccount,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSsoAccountExists("tencentcloud_monitor_grafana_sso_account.ssoAccount"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "user_id", "202109071220"),
-					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "notes", "desc-202109071220"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "user_id", "100027012454"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "notes", "desc-100027012454"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "role.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "role.0.role", "Admin"),
 					resource.TestCheckResourceAttr("tencentcloud_monitor_grafana_sso_account.ssoAccount", "role.0.organization", "Main Org."),
@@ -113,8 +113,8 @@ const testAccMonitorGrafanaSsoAccount = testMonitorGrafanaSsoAccountVar + `
 
 resource "tencentcloud_monitor_grafana_sso_account" "ssoAccount" {
   instance_id = var.instance_id
-  user_id     = "202109071220"
-  notes       = "desc-202109071220"
+  user_id     = "100027012454"
+  notes       = "desc-100027012454"
   role {
     organization  = "Main Org."
     role          = "Admin"
