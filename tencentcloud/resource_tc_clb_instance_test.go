@@ -450,7 +450,7 @@ resource "tencentcloud_clb_instance" "clb_internal" {
 
 const testAccClbInstance_update_open = `
 resource "tencentcloud_security_group" "foo" {
-  name = "keep-clb-test1-sg"
+  name = "clb-instance-sg"
 }
 
 resource "tencentcloud_vpc" "foo" {
@@ -487,7 +487,7 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_security_group" "sglab" {
-  name        = "keep-sg_o0ek7r93"
+  name        = "clb-instance-enable-sg"
   description = "favourite sg"
   project_id  = 0
 }
@@ -532,7 +532,7 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_security_group" "sglab" {
-  name        = "keep-sg_o0ek7r93"
+  name        = "clb-instance-enable-sg"
   description = "favourite sg"
   project_id  = 0
 }
