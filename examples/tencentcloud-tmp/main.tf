@@ -67,7 +67,8 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
       "instanceSpec": {
         "region": "ap-singapore",
         "delaySeconds": 0,
-        "useRole": true
+        "useRole": true,
+        "reload_interval_minutes": 10
       },
       "exporterSpec": {
         "mariadb": false,
@@ -95,7 +96,10 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
         "tdmysql": false,
         "postgres": false,
         "dcx": false,
-        "tdmq": false
+        "tdmq": false,
+        "dts": false,
+        "vbc": false,
+        "gaap": false
       }
     }
   })
