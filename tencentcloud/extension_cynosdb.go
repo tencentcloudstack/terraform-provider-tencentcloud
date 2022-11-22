@@ -8,6 +8,7 @@ import (
 const (
 	CYNOSDB_CHARGE_TYPE_POSTPAID = COMMON_PAYTYPE_POSTPAID
 	CYNOSDB_CHARGE_TYPE_PREPAID  = COMMON_PAYTYPE_PREPAID
+	CYNOSDB_SERVERLESS           = "SERVERLESS"
 
 	CYNOSDB_STATUS_RUNNING  = "running"
 	CYNOSDB_STATUS_OFFLINE  = "offlined"
@@ -38,13 +39,13 @@ func TencentCynosdbInstanceBaseInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_cpu_core": {
 			Type:        schema.TypeInt,
-			Required:    true,
-			Description: "The number of CPU cores of read-write type instance in the CynosDB cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.",
+			Optional:    true,
+			Description: "The number of CPU cores of read-write type instance in the CynosDB cluster. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.",
 		},
 		"instance_memory_size": {
 			Type:        schema.TypeInt,
-			Required:    true,
-			Description: "Memory capacity of read-write type instance, unit in GB. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.",
+			Optional:    true,
+			Description: "Memory capacity of read-write type instance, unit in GB. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.",
 		},
 		"instance_id": {
 			Type:        schema.TypeString,
