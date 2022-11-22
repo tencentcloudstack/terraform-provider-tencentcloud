@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_cam_policy_name_as_identifier
+```
+
+```release-note:new-resource
+tencentcloud_cam_role_name_as_identifier
+```
+
+```release-note:new-resource
+tencentcloud_cam_role_policy_attachment_name_as_identifier
+```

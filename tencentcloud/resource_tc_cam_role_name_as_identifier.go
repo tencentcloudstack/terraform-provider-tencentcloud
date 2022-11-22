@@ -6,7 +6,7 @@ Example Usage
 Create normally
 
 ```hcl
-resource "tencentcloud_cam_role_name_as_Identifier" "foo" {
+resource "tencentcloud_cam_role_name_as_identifier" "foo" {
   name          = "cam-role-test"
   document      = <<EOF
 {
@@ -33,7 +33,7 @@ EOF
 Create with SAML provider
 
 ```hcl
-resource "tencentcloud_cam_role_name_as_Identifier" "boo" {
+resource "tencentcloud_cam_role_name_as_identifier" "boo" {
   name          = "cam-role-test"
   document      = <<EOF
 {
