@@ -343,6 +343,7 @@ locals {
 
 const (
 	defaultMySQLName = "keep_preset_mysql"
+	defaultMySQLId   = "cdb-fitq5t9h"
 )
 
 // ref with `local.mysql_id`

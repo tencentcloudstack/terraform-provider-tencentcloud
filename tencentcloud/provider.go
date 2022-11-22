@@ -786,6 +786,12 @@ TDSQL-C for PostgreSQL(TDCPG)
   Resource
 	tencentcloud_tdcpg_cluster
 	tencentcloud_tdcpg_instance
+
+DBbrain
+  Resource
+	tencentcloud_dbbrain_sql_filter
+	tencentcloud_dbbrain_security_audit_log_export_task
+
 */
 package tencentcloud
 
@@ -1397,6 +1403,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_organization_org_node":                      resourceTencentCloudOrganizationOrgNode(),
 			"tencentcloud_organization_org_member":                    resourceTencentCloudOrganizationOrgMember(),
 			"tencentcloud_organization_policy_sub_account_attachment": resourceTencentCloudOrganizationPolicySubAccountAttachment(),
+			"tencentcloud_dbbrain_sql_filter":                         resourceTencentCloudDbbrainSqlFilter(),
+			"tencentcloud_dbbrain_security_audit_log_export_task":     resourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 		},
 
 		ConfigureFunc: providerConfigure,
