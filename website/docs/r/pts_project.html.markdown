@@ -14,7 +14,6 @@ Provides a resource to create a pts project
 ## Example Usage
 
 ```hcl
-s
 resource "tencentcloud_pts_project" "project" {
   name        = "ptsObjectName-1"
   description = "desc"
