@@ -14,9 +14,6 @@ resource "tencentcloud_rum_taw_instance" "taw_instance" {
 	value = "terraform"
   }
   instance_desc = "instanceDesc"
-  count_num = "1"
-  period_retain = "1"
-  buying_channel = ""
 }
 
 ```
@@ -100,23 +97,23 @@ func resourceTencentCloudRumTawInstance() *schema.Resource {
 				Description: "Instance description (up to 1,024 bytes).",
 			},
 
-			"count_num": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Number of data entries reported per day.",
-			},
+			// "count_num": {
+			// 	Type:        schema.TypeString,
+			// 	Optional:    true,
+			// 	Description: "Number of data entries reported per day.",
+			// },
 
-			"period_retain": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Billing for data storage.",
-			},
+			// "period_retain": {
+			// 	Type:        schema.TypeString,
+			// 	Optional:    true,
+			// 	Description: "Billing for data storage.",
+			// },
 
-			"buying_channel": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Instance purchase channel. Valid value: cdn.",
-			},
+			// "buying_channel": {
+			// 	Type:        schema.TypeString,
+			// 	Optional:    true,
+			// 	Description: "Instance purchase channel. Valid value: cdn.",
+			// },
 
 			"instance_status": {
 				Type:        schema.TypeInt,
@@ -200,17 +197,19 @@ func resourceTencentCloudRumTawInstanceCreate(d *schema.ResourceData, meta inter
 		request.InstanceDesc = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("count_num"); ok {
-		request.CountNum = helper.String(v.(string))
-	}
+	request.CountNum = helper.String("1")
+	// if v, ok := d.GetOk("count_num"); ok {
+	// 	request.CountNum = helper.String(v.(string))
+	// }
 
-	if v, ok := d.GetOk("period_retain"); ok {
-		request.PeriodRetain = helper.String(v.(string))
-	}
+	request.PeriodRetain = helper.String("1")
+	// if v, ok := d.GetOk("period_retain"); ok {
+	// 	request.PeriodRetain = helper.String(v.(string))
+	// }
 
-	if v, ok := d.GetOk("buying_channel"); ok {
-		request.BuyingChannel = helper.String(v.(string))
-	}
+	// if v, ok := d.GetOk("buying_channel"); ok {
+	// 	request.BuyingChannel = helper.String(v.(string))
+	// }
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseRumClient().CreateTawInstance(request)
@@ -332,10 +331,6 @@ func resourceTencentCloudRumTawInstanceRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("updated_at", tawInstance.UpdatedAt)
 	}
 
-	// if tawInstance.DataRetentionDays != nil {
-	// 	_ = d.Set("data_retention_days", tawInstance.DataRetentionDays)
-	// }
-
 	if tawInstance.CreatedAt != nil {
 		_ = d.Set("created_at", tawInstance.CreatedAt)
 	}
@@ -382,18 +377,6 @@ func resourceTencentCloudRumTawInstanceUpdate(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOk("instance_desc"); ok {
 		request.InstanceDesc = helper.String(v.(string))
-	}
-
-	if d.HasChange("count_num") {
-		return fmt.Errorf("`count_num` do not support change now.")
-	}
-
-	if d.HasChange("period_retain") {
-		return fmt.Errorf("`period_retain` do not support change now.")
-	}
-
-	if d.HasChange("buying_channel") {
-		return fmt.Errorf("`buying_channel` do not support change now.")
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

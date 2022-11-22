@@ -23,10 +23,7 @@ resource "tencentcloud_rum_taw_instance" "taw_instance" {
     key   = "createdBy"
     value = "terraform"
   }
-  instance_desc  = "instanceDesc"
-  count_num      = "1"
-  period_retain  = "1"
-  buying_channel = ""
+  instance_desc = "instanceDesc"
 }
 ```
 
@@ -38,10 +35,7 @@ The following arguments are supported:
 * `charge_type` - (Required, Int) Billing type (1: Pay-as-you-go).
 * `data_retention_days` - (Required, Int) Data retention period (at least greater than 0).
 * `instance_name` - (Required, String) Instance name (up to 255 bytes).
-* `buying_channel` - (Optional, String) Instance purchase channel. Valid value: cdn.
-* `count_num` - (Optional, String) Number of data entries reported per day.
 * `instance_desc` - (Optional, String) Instance description (up to 1,024 bytes).
-* `period_retain` - (Optional, String) Billing for data storage.
 * `tags` - (Optional, List) Tag list.
 
 The `tags` object supports the following:

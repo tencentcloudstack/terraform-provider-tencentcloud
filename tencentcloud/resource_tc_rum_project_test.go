@@ -9,7 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudRumProject_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudRumProjectResource_basic -v
+func TestAccTencentCloudRumProjectResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -20,9 +21,13 @@ func TestAccTencentCloudRumProject_basic(t *testing.T) {
 				Config: testAccRumProject,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRumProjectExists("tencentcloud_rum_project.project"),
-					resource.TestCheckResourceAttr("tencentcloud_rum_project.project", "project_key", "ZEYrYfvaYQ30jRdmPx"),
-					resource.TestCheckResourceAttr("tencentcloud_rum_project.project", "unique_id", "100027012456"),
-					resource.TestCheckResourceAttrSet("tencentcloud_rum_project.project", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_rum_project.project", "desc", "desc"),
+					resource.TestCheckResourceAttr("tencentcloud_rum_project.project", "enable_url_group", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_rum_project.project", "instance_id", defaultRumInstanceId),
+					resource.TestCheckResourceAttr("tencentcloud_rum_project.project", "name", "name-2"),
+					resource.TestCheckResourceAttr("tencentcloud_rum_project.project", "rate", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_rum_project.project", "type", "web"),
+					resource.TestCheckResourceAttr("tencentcloud_rum_project.project", "url", "*.iac-tf.com"),
 				),
 			},
 			{
@@ -77,17 +82,21 @@ func testAccCheckRumProjectExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccRumProject = `
+const testAccRumProjectVar = `
+variable "instance_id" {
+  default = "` + defaultRumInstanceId + `"
+}
+`
+const testAccRumProject = testAccRumProjectVar + `
 
 resource "tencentcloud_rum_project" "project" {
-  name = ""
-  instance_id = ""
-  rate = ""
-  enable_url_group = ""
-  type = ""
-  repo = ""
-  url = ""
-  desc = ""
+    desc             = "desc"
+    enable_url_group = 0
+    instance_id      = var.instance_id
+    name             = "name-2"
+    rate             = "100"
+    type             = "web"
+    url              = "*.iac-tf.com"
 }
 
 `

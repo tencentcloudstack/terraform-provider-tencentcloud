@@ -15,10 +15,10 @@ Provides a resource to create a rum whitelist
 
 ```hcl
 resource "tencentcloud_rum_whitelist" "whitelist" {
-  instance_id   = ""
-  remark        = ""
-  whitelist_uin = ""
-  aid           = ""
+  instance_id   = "rum-pasZKEI3RLgakj"
+  remark        = "white list remark"
+  whitelist_uin = "20221122"
+  # aid = ""
 }
 ```
 

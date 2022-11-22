@@ -786,3 +786,10 @@ const (
 )
 
 // End of MARIADB
+
+// RUM
+const (
+	defaultRumInstanceId = "rum-pasZKEI3RLgakj"
+)
+
+// End of RUM

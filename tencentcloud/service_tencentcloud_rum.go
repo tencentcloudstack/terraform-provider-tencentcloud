@@ -87,7 +87,7 @@ func (me *RumService) DescribeRumProject(ctx context.Context, id string) (projec
 	request.Filters = append(
 		request.Filters,
 		&rum.Filter{
-			Name:   helper.String("ID"),
+			Name:   helper.String("ProjectID"),
 			Values: []*string{&id},
 		},
 	)

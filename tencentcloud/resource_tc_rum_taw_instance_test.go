@@ -25,12 +25,10 @@ func TestAccTencentCloudRumTawInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_rum_taw_instance.tawInstance", "charge_status", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_rum_taw_instance.tawInstance", "charge_type", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_rum_taw_instance.tawInstance", "cluster_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_rum_taw_instance.tawInstance", "count_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_rum_taw_instance.tawInstance", "data_retention_days", "30"),
 					resource.TestCheckResourceAttr("tencentcloud_rum_taw_instance.tawInstance", "instance_desc", "instanceDesc"),
 					resource.TestCheckResourceAttr("tencentcloud_rum_taw_instance.tawInstance", "instance_name", "instanceName"),
 					resource.TestCheckResourceAttr("tencentcloud_rum_taw_instance.tawInstance", "instance_status", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_rum_taw_instance.tawInstance", "period_retain", "1"),
 				),
 			},
 			{
@@ -97,9 +95,6 @@ resource "tencentcloud_rum_taw_instance" "tawInstance" {
 	value = "terraform"
   }
   instance_desc = "instanceDesc"
-  count_num = "1"
-  period_retain = "1"
-  buying_channel = ""
 }
 
 `

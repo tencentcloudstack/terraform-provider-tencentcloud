@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_rum_whitelist" "whitelist" {
-  instance_id = ""
-  remark = ""
-  whitelist_uin = ""
-  aid = ""
+  instance_id = "rum-pasZKEI3RLgakj"
+  remark = "white list remark"
+  whitelist_uin = "20221122"
+  # aid = ""
 }
 
 ```
@@ -25,6 +25,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -101,8 +102,8 @@ func resourceTencentCloudRumWhitelistCreate(d *schema.ResourceData, meta interfa
 	logId := getLogId(contextNil)
 
 	var (
-		request = rum.NewCreateWhitelistRequest()
-		// response   *rum.CreateWhitelistResponse
+		request    = rum.NewCreateWhitelistRequest()
+		response   *rum.CreateWhitelistResponse
 		instanceID string
 		wid        string
 	)
@@ -132,7 +133,7 @@ func resourceTencentCloudRumWhitelistCreate(d *schema.ResourceData, meta interfa
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
+		response = result
 		return nil
 	})
 
@@ -141,7 +142,7 @@ func resourceTencentCloudRumWhitelistCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	// whitelistId = *response.Response.Msg
+	wid = strconv.Itoa(int(*response.Response.ID))
 
 	d.SetId(instanceID + FILED_SP + wid)
 	return resourceTencentCloudRumWhitelistRead(d, meta)
