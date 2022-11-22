@@ -299,6 +299,23 @@ func IsContains(array interface{}, value interface{}) bool {
 	}
 }
 
+func MatchAny(value interface{}, matches ...interface{}) bool {
+	rVal := reflect.ValueOf(value)
+	kind := rVal.Kind()
+	if kind == reflect.Ptr || kind == reflect.Interface {
+		if rVal.IsNil() {
+			return false
+		}
+	}
+	for i := range matches {
+		match := matches[i]
+		if reflect.DeepEqual(value, match) {
+			return true
+		}
+	}
+	return false
+}
+
 func FindIntListIndex(list []int, elem int) int {
 	for i, v := range list {
 		if v == elem {

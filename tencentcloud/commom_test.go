@@ -77,6 +77,30 @@ func TestIsContains(t *testing.T) {
 	}
 }
 
+func TestMatchAny(t *testing.T) {
+	assert.False(t, MatchAny(1))
+	assert.True(t, MatchAny(1, 1, 2, 3))
+	assert.False(t, MatchAny(1, 4, 5, 6))
+	assert.True(t, MatchAny("a", "b", "c", "a", "aa"))
+
+	one := 1
+	two := 2
+	var ptrOne *int
+	var nilVal *string
+
+	ptrOne = &one
+	assert.True(t, MatchAny(ptrOne, &one, two))
+
+	assert.False(t, MatchAny(ptrOne, 5, 6, 7))
+	assert.False(t, MatchAny(nilVal, nil))
+
+	var oneI64 int64 = 1
+	var oneUI64 uint64 = 1
+
+	assert.False(t, MatchAny(oneI64, 2, 1, 3))
+	assert.False(t, MatchAny(oneUI64, 1))
+}
+
 func TestGetListIncrement(t *testing.T) {
 	var (
 		old1      = []int{1, 2, 2, 3, 5}
