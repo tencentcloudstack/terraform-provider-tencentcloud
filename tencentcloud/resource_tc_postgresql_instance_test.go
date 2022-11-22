@@ -270,7 +270,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   subnet_id 		= local.subnet_id
   engine_version	= "10.4"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
-  security_groups   = [var.sg_id]
+  security_groups   = [local.sg_id]
   charset			= "LATIN1"
   project_id 		= 0
   memory 			= 4
@@ -301,7 +301,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charset 			= "LATIN1"
   project_id 		= 0
   public_access_switch = true
-  security_groups   = [var.sg_id]
+  security_groups   = [local.sg_id]
   memory 			= 4
   storage 			= 250
   backup_plan {
@@ -329,7 +329,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charset 			= "LATIN1"
   project_id 		= 0
   public_access_switch = false
-  security_groups   = [var.sg_id]
+  security_groups   = [local.sg_id]
   memory 			= 4
   storage 			= 250
   backup_plan {
