@@ -828,3 +828,11 @@ const (
 )
 
 // End of TDCPG
+
+// DBBRAIN
+const (
+	defaultDbBrainsagId      = "sag-01z37l4g"
+	defaultDbBrainsagName    = "keep-dbbrain-audit"
+)
+
+// End of DBBRAIN

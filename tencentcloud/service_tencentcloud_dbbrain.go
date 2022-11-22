@@ -117,7 +117,7 @@ func (me *DbbrainService) DeleteDbbrainSqlFilterById(ctx context.Context, instan
 	return
 }
 
-func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTask(ctx context.Context, secAuditGroupId, asyncRequestId, product *string) (securityAuditLogExportTask *dbbrain.SecLogExportTaskInfo, errRet error) {
+func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTask(ctx context.Context, secAuditGroupId, asyncRequestId, product *string) (params *dbbrain.DescribeSecurityAuditLogExportTasksResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = dbbrain.NewDescribeSecurityAuditLogExportTasksRequest()
@@ -149,7 +149,7 @@ func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTask(ctx context.
 	if len(response.Response.Tasks) < 1 {
 		return
 	}
-	securityAuditLogExportTask = response.Response.Tasks[0]
+	params = response.Response
 	return
 }
 

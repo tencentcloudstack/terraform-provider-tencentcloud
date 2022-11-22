@@ -34,6 +34,22 @@ func TestAccTencentCloudDbbrainSqlFilterResource_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccDbbrainSqlFilter_update(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckDbbrainSqlFilterExists("tencentcloud_dbbrain_sql_filter.sql_filter"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dbbrain_sql_filter.sql_filter", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dbbrain_sql_filter.sql_filter", "session_token.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dbbrain_sql_filter.sql_filter", "session_token.0.user"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dbbrain_sql_filter.sql_filter", "session_token.0.password"),
+					resource.TestCheckResourceAttr("tencentcloud_dbbrain_sql_filter.sql_filter", "sql_type", "SELECT"),
+					resource.TestCheckResourceAttr("tencentcloud_dbbrain_sql_filter.sql_filter", "filter_key", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_dbbrain_sql_filter.sql_filter", "max_concurrency", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_dbbrain_sql_filter.sql_filter", "duration", "3600"),
+					resource.TestCheckResourceAttr("tencentcloud_dbbrain_sql_filter.sql_filter", "product", "mysql"),
+					resource.TestCheckResourceAttr("tencentcloud_dbbrain_sql_filter.sql_filter", "status", "TERMINATED"),
+				),
+			},
+			{
 				ResourceName:            "tencentcloud_dbbrain_sql_filter.sql_filter",
 				ImportState:             true,
 				ImportStateVerify:       true,
@@ -80,10 +96,10 @@ func testAccCheckDbbrainSqlFilterExists(re string) resource.TestCheckFunc {
 
 		rs, ok := s.RootModule().Resources[re]
 		if !ok {
-			return fmt.Errorf("css watermark %s is not found", re)
+			return fmt.Errorf("Dbbrain sql filter  %s is not found", re)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("css watermark id is not set")
+			return fmt.Errorf("Dbbrain sql filter id is not set")
 		}
 
 		ids := strings.Split(rs.Primary.ID, FILED_SP)
@@ -105,19 +121,6 @@ func testAccCheckDbbrainSqlFilterExists(re string) resource.TestCheckFunc {
 	}
 }
 
-// resource "tencentcloud_mysql_instance" "foo" {
-//   charge_type       = "POSTPAID"
-//   mem_size          = 1000
-//   volume_size       = 50
-//   instance_name     = "tf_dbbrain_sql_filter"
-//   engine_version    = "5.7"
-//   root_password     = "test1234"
-//   intranet_port     = 3360
-//   availability_zone = "ap-guangzhou-3"
-//   first_slave_zone  = "ap-guangzhou-3"
-//   force_delete      = true
-// }
-
 func testAccDbbrainSqlFilter() string {
 	return fmt.Sprintf(`%s
 
@@ -135,3 +138,23 @@ resource "tencentcloud_dbbrain_sql_filter" "sql_filter" {
 }
 `, CommonPresetMysql)
 }
+
+func testAccDbbrainSqlFilter_update() string {
+	return fmt.Sprintf(`%s
+resource "tencentcloud_dbbrain_sql_filter" "sql_filter" {
+  instance_id = local.mysql_id
+  session_token {
+    user = "test"
+	password = "Test@123456*#"
+  }
+  sql_type = "SELECT"
+  filter_key = "test"
+  max_concurrency = 10
+  duration = 3600
+  product = "mysql"
+  status = "TERMINATED"
+}
+`, CommonPresetMysql)
+}
+
+

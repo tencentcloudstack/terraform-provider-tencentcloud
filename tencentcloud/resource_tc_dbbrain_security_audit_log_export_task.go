@@ -4,12 +4,12 @@ Provides a resource to create a dbbrain security_audit_log_export_task
 Example Usage
 
 ```hcl
-resource "tencentcloud_dbbrain_security_audit_log_export_task" "security_audit_log_export_task" {
-  sec_audit_group_id = ""
-  start_time = ""
-  end_time = ""
-  product = ""
-  danger_levels = ""
+resource "tencentcloud_dbbrain_security_audit_log_export_task" "task" {
+  sec_audit_group_id = "%s"
+  start_time = "%s"
+  end_time = "%s"
+  product = "mysql"
+  danger_levels = [0,1,2]
 }
 
 ```
@@ -24,6 +24,7 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"strings"
@@ -46,24 +47,28 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTask() *schema.Resource {
 			"sec_audit_group_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "security audit group id.",
 			},
 
 			"start_time": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "start time.",
 			},
 
 			"end_time": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "end time.",
 			},
 
 			"product": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "product, optional value is mysql.",
 			},
 
@@ -73,6 +78,7 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTask() *schema.Resource {
 					Type: schema.TypeInt,
 				},
 				Optional:    true,
+				ForceNew:    true,
 				Description: "List of log risk levels, supported values include: 0 no risk; 1 low risk; 2 medium risk; 3 high risk.",
 			},
 		},
@@ -88,6 +94,8 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate(d *schema.Resou
 	var (
 		request         = dbbrain.NewCreateSecurityAuditLogExportTaskRequest()
 		response        *dbbrain.CreateSecurityAuditLogExportTaskResponse
+		service         = DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
 		secAuditGroupId string
 		asyncRequestId  string
 	)
@@ -128,13 +136,31 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate(d *schema.Resou
 		response = result
 		return nil
 	})
-
 	if err != nil {
 		log.Printf("[CRITAL]%s create dbbrain securityAuditLogExportTask failed, reason:%+v", logId, err)
 		return err
 	}
 
 	asyncRequestId = helper.UInt64ToStr(*response.Response.AsyncRequestId)
+
+	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+		ret, err := service.DescribeDbbrainSecurityAuditLogExportTask(ctx, helper.String(secAuditGroupId), helper.String(asyncRequestId), nil)
+		if err != nil {
+			return retryError(err)
+		}
+		if ret != nil {
+			if *ret.TotalCount == 0 || len(ret.Tasks) == 0 {
+				return resource.RetryableError(errors.New("[DEBUG] describe the audit log export task is empty, retry..."))
+			}
+			log.Printf("[###########] task.Status:[%s]\n", *ret.Tasks[0].Status)
+			return nil
+		}
+		return resource.RetryableError(errors.New("[DEBUG] describe the audit log export task is nil, retry..."))
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s query dbbrain securityAuditLogExportTask failed, reason:%+v", logId, err)
+		return err
+	}
 
 	d.SetId(secAuditGroupId + FILED_SP + asyncRequestId)
 	return resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead(d, meta)
@@ -156,27 +182,30 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead(d *schema.Resourc
 	secAuditGroupId := helper.String(idSplit[0])
 	asyncRequestId := helper.String(idSplit[1])
 
-	securityAuditLogExportTask, err := service.DescribeDbbrainSecurityAuditLogExportTask(ctx, secAuditGroupId, asyncRequestId, nil)
-
+	ret, err := service.DescribeDbbrainSecurityAuditLogExportTask(ctx, secAuditGroupId, asyncRequestId, nil)
 	if err != nil {
 		return err
 	}
 
-	if securityAuditLogExportTask == nil {
+	if ret == nil {
 		d.SetId("")
 		return fmt.Errorf("resource `securityAuditLogExportTask` %s does not exist", d.Id())
 	}
 
-	if securityAuditLogExportTask.StartTime != nil {
-		_ = d.Set("start_time", securityAuditLogExportTask.StartTime)
-	}
+	if len(ret.Tasks) > 0 {
+		securityAuditLogExportTask := ret.Tasks[0]
 
-	if securityAuditLogExportTask.EndTime != nil {
-		_ = d.Set("end_time", securityAuditLogExportTask.EndTime)
-	}
+		if securityAuditLogExportTask.StartTime != nil {
+			_ = d.Set("start_time", securityAuditLogExportTask.StartTime)
+		}
 
-	if securityAuditLogExportTask.DangerLevels != nil {
-		_ = d.Set("danger_levels", securityAuditLogExportTask.DangerLevels)
+		if securityAuditLogExportTask.EndTime != nil {
+			_ = d.Set("end_time", securityAuditLogExportTask.EndTime)
+		}
+
+		if securityAuditLogExportTask.DangerLevels != nil {
+			_ = d.Set("danger_levels", securityAuditLogExportTask.DangerLevels)
+		}
 	}
 
 	return nil
