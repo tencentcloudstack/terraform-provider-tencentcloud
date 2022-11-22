@@ -115,7 +115,6 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachmentCreate(d *schema.
 
 	var (
 		request          = organization.NewBindOrganizationMemberAuthAccountRequest()
-		response         *organization.BindOrganizationMemberAuthAccountResponse
 		policyId         int
 		memberUin        int
 		orgSubAccountUin int
@@ -144,7 +143,6 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachmentCreate(d *schema.
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 
