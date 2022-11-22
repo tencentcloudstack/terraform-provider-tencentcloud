@@ -167,7 +167,7 @@ Cloud Access Management(CAM)
     tencentcloud_cam_role_policy_attachment
 	tencentcloud_cam_role_policy_attachment_name_as_identifier
     tencentcloud_cam_policy
-	tencentcloud_cam_policy_name_as_Identifier
+	tencentcloud_cam_policy_name_as_identifier
     tencentcloud_cam_user
     tencentcloud_cam_user_policy_attachment
     tencentcloud_cam_group
