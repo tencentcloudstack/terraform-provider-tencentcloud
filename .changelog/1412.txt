@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_organization_org_member
+```
+
+```release-note:new-resource
+tencentcloud_organization_policy_sub_account_attachment
+```

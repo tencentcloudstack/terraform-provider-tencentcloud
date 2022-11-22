@@ -776,6 +776,8 @@ TencentCloud Automation Tools(TAT)
 Tencent Cloud Organization (TCO)
   Resource
 	tencentcloud_organization_org_node
+	tencentcloud_organization_org_member
+	tencentcloud_organization_policy_sub_account_attachment
 
 TDSQL-C for PostgreSQL(TDCPG)
   Data Source
@@ -784,7 +786,6 @@ TDSQL-C for PostgreSQL(TDCPG)
   Resource
 	tencentcloud_tdcpg_cluster
 	tencentcloud_tdcpg_instance
-
 */
 package tencentcloud
 
@@ -1362,38 +1363,40 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_teo_custom_error_page":                    resourceTencentCloudTeoCustomErrorPage(),
 			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
-			"tencentcloud_tcm_mesh":                             resourceTencentCloudTcmMesh(),
-			"tencentcloud_tcm_cluster_attachment":               resourceTencentCloudTcmClusterAttachment(),
-			"tencentcloud_ses_domain":                           resourceTencentCloudSesDomain(),
-			"tencentcloud_ses_template":                         resourceTencentCloudSesTemplate(),
-			"tencentcloud_ses_email_address":                    resourceTencentCloudSesEmailAddress(),
-			"tencentcloud_sms_sign":                             resourceTencentCloudSmsSign(),
-			"tencentcloud_sms_template":                         resourceTencentCloudSmsTemplate(),
-			"tencentcloud_dcdb_account":                         resourceTencentCloudDcdbAccount(),
-			"tencentcloud_dcdb_hourdb_instance":                 resourceTencentCloudDcdbHourdbInstance(),
-			"tencentcloud_dcdb_security_group_attachment":       resourceTencentCloudDcdbSecurityGroupAttachment(),
-			"tencentcloud_cat_task_set":                         resourceTencentCloudCatTaskSet(),
-			"tencentcloud_mariadb_dedicatedcluster_db_instance": resourceTencentCloudMariadbDedicatedclusterDbInstance(),
-			"tencentcloud_mariadb_hour_db_instance":             resourceTencentCloudMariadbHourDbInstance(),
-			"tencentcloud_mariadb_account":                      resourceTencentCloudMariadbAccount(),
-			"tencentcloud_mariadb_parameters":                   resourceTencentCloudMariadbParameters(),
-			"tencentcloud_mariadb_log_file_retention_period":    resourceTencentCloudMariadbLogFileRetentionPeriod(),
-			"tencentcloud_mariadb_security_groups":              resourceTencentCloudMariadbSecurityGroups(),
-			"tencentcloud_tdcpg_cluster":                        resourceTencentCloudTdcpgCluster(),
-			"tencentcloud_tdcpg_instance":                       resourceTencentCloudTdcpgInstance(),
-			"tencentcloud_css_watermark":                        resourceTencentCloudCssWatermark(),
-			"tencentcloud_css_pull_stream_task":                 resourceTencentCloudCssPullStreamTask(),
-			"tencentcloud_css_live_transcode_template":          resourceTencentCloudCssLiveTranscodeTemplate(),
-			"tencentcloud_css_live_transcode_rule_attachment":   resourceTencentCloudCssLiveTranscodeRuleAttachment(),
-			"tencentcloud_pts_project":                          resourceTencentCloudPtsProject(),
-			"tencentcloud_pts_alert_channel":                    resourceTencentCloudPtsAlertChannel(),
-			"tencentcloud_pts_scenario":                         resourceTencentCloudPtsScenario(),
-			"tencentcloud_pts_file":                             resourceTencentCloudPtsFile(),
-			"tencentcloud_pts_job":                              resourceTencentCloudPtsJob(),
-			"tencentcloud_pts_cron_job":                         resourceTencentCloudPtsCronJob(),
-			"tencentcloud_tat_command":                          resourceTencentCloudTatCommand(),
-			"tencentcloud_tat_invoker":                          resourceTencentCloudTatInvoker(),
-			"tencentcloud_organization_org_node":                resourceTencentCloudOrganizationOrgNode(),
+			"tencentcloud_tcm_mesh":                                   resourceTencentCloudTcmMesh(),
+			"tencentcloud_tcm_cluster_attachment":                     resourceTencentCloudTcmClusterAttachment(),
+			"tencentcloud_ses_domain":                                 resourceTencentCloudSesDomain(),
+			"tencentcloud_ses_template":                               resourceTencentCloudSesTemplate(),
+			"tencentcloud_ses_email_address":                          resourceTencentCloudSesEmailAddress(),
+			"tencentcloud_sms_sign":                                   resourceTencentCloudSmsSign(),
+			"tencentcloud_sms_template":                               resourceTencentCloudSmsTemplate(),
+			"tencentcloud_dcdb_account":                               resourceTencentCloudDcdbAccount(),
+			"tencentcloud_dcdb_hourdb_instance":                       resourceTencentCloudDcdbHourdbInstance(),
+			"tencentcloud_dcdb_security_group_attachment":             resourceTencentCloudDcdbSecurityGroupAttachment(),
+			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
+			"tencentcloud_mariadb_dedicatedcluster_db_instance":       resourceTencentCloudMariadbDedicatedclusterDbInstance(),
+			"tencentcloud_mariadb_hour_db_instance":                   resourceTencentCloudMariadbHourDbInstance(),
+			"tencentcloud_mariadb_account":                            resourceTencentCloudMariadbAccount(),
+			"tencentcloud_mariadb_parameters":                         resourceTencentCloudMariadbParameters(),
+			"tencentcloud_mariadb_log_file_retention_period":          resourceTencentCloudMariadbLogFileRetentionPeriod(),
+			"tencentcloud_mariadb_security_groups":                    resourceTencentCloudMariadbSecurityGroups(),
+			"tencentcloud_tdcpg_cluster":                              resourceTencentCloudTdcpgCluster(),
+			"tencentcloud_tdcpg_instance":                             resourceTencentCloudTdcpgInstance(),
+			"tencentcloud_css_watermark":                              resourceTencentCloudCssWatermark(),
+			"tencentcloud_css_pull_stream_task":                       resourceTencentCloudCssPullStreamTask(),
+			"tencentcloud_css_live_transcode_template":                resourceTencentCloudCssLiveTranscodeTemplate(),
+			"tencentcloud_css_live_transcode_rule_attachment":         resourceTencentCloudCssLiveTranscodeRuleAttachment(),
+			"tencentcloud_pts_project":                                resourceTencentCloudPtsProject(),
+			"tencentcloud_pts_alert_channel":                          resourceTencentCloudPtsAlertChannel(),
+			"tencentcloud_pts_scenario":                               resourceTencentCloudPtsScenario(),
+			"tencentcloud_pts_file":                                   resourceTencentCloudPtsFile(),
+			"tencentcloud_pts_job":                                    resourceTencentCloudPtsJob(),
+			"tencentcloud_pts_cron_job":                               resourceTencentCloudPtsCronJob(),
+			"tencentcloud_tat_command":                                resourceTencentCloudTatCommand(),
+			"tencentcloud_tat_invoker":                                resourceTencentCloudTatInvoker(),
+			"tencentcloud_organization_org_node":                      resourceTencentCloudOrganizationOrgNode(),
+			"tencentcloud_organization_org_member":                    resourceTencentCloudOrganizationOrgMember(),
+			"tencentcloud_organization_policy_sub_account_attachment": resourceTencentCloudOrganizationPolicySubAccountAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
