@@ -1,3 +1,25 @@
+## 1.78.13 (November 22, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_tdcpg_clusters` ([#1382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1382))
+* **New Data Source:** `tencentcloud_tdcpg_instances` ([#1382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1382))
+* **New Resource:** `tencentcloud_organization_org_member` ([#1412](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1412))
+* **New Resource:** `tencentcloud_organization_org_node` ([#1408](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1408))
+* **New Resource:** `tencentcloud_organization_policy_sub_account_attachment` ([#1412](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1412))
+* **New Resource:** `tencentcloud_tdcpg_cluster` ([#1382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1382))
+* **New Resource:** `tencentcloud_tdcpg_instance` ([#1382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1382))
+
+ENHANCEMENTS:
+
+* Provider resource increases the full name of the product ([#1395](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1395))
+* resource/tencentcloud_cdn_domain: feat: cdn - support force_redirect.carry_headers ([#1394](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1394))
+* resource/tencentcloud_monitor_tmp_alert_rule: Parameter check ([#1407](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1407))
+
+BUG FIXES:
+
+* resource/tencentcloud_monitor_tmp_exporter_integration: Optimized initialization ([#1410](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1410))
+
 ## 1.78.12 (November 17, 2022)
 
 FEATURES:
