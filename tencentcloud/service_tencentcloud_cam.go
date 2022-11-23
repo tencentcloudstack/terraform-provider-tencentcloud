@@ -129,6 +129,24 @@ func (me *CamService) DeleteRoleById(ctx context.Context, roleId string) error {
 	return nil
 }
 
+func (me *CamService) DeleteRoleByName(ctx context.Context, roleName string) error {
+
+	logId := getLogId(ctx)
+	request := cam.NewDeleteRoleRequest()
+	request.RoleName = &roleName
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCamClient().DeleteRole(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
 func (me *CamService) decodeCamPolicyAttachmentId(id string) (instanceId string, policyId64 uint64, errRet error) {
 	items := strings.Split(id, "#")
 	if len(items) != 2 {
@@ -141,6 +159,56 @@ func (me *CamService) decodeCamPolicyAttachmentId(id string) (instanceId string,
 		return
 	}
 	policyId64 = uint64(policyId)
+	return
+}
+
+func (me *CamService) DescribeRolePolicyAttachmentByName(ctx context.Context, roleName string, params map[string]interface{}) (policyOfRole *cam.AttachedPolicyOfRole, errRet error) {
+	logId := getLogId(ctx)
+	request := cam.NewListAttachedRolePoliciesRequest()
+	pageStart := uint64(1)
+	rp := uint64(PAGE_ITEM)
+	result := make([]*cam.AttachedPolicyOfRole, 0)
+	for {
+		request.Page = &pageStart
+		request.Rp = &rp
+		request.RoleName = &roleName
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseCamClient().ListAttachedRolePolicies(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				errCode := ee.GetCode()
+				//check if read empty
+				if strings.Contains(errCode, "ResourceNotFound") || errCode == "InvalidParameter.RoleNotExist" {
+					return
+				}
+			}
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.List) < 1 {
+			break
+		}
+		for _, policy := range response.Response.List {
+			policyName, ok := params["policy_name"]
+			if ok && *policy.PolicyName == policyName.(string) {
+				result = append(result, policy)
+			}
+		}
+		if len(response.Response.List) < PAGE_ITEM {
+			break
+		}
+		pageStart += 1
+	}
+
+	if len(result) == 0 {
+		return
+	}
+	policyOfRole = result[0]
 	return
 }
 
@@ -253,6 +321,23 @@ func (me *CamService) DescribeRolePolicyAttachmentsByFilter(ctx context.Context,
 		pageStart += 1
 	}
 	return
+}
+
+func (me *CamService) DeleteRolePolicyAttachmentByName(ctx context.Context, roleName, policyName string) error {
+	logId := getLogId(ctx)
+	request := cam.NewDetachRolePolicyRequest()
+	request.DetachRoleName = &roleName
+	request.PolicyName = &policyName
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCamClient().DetachRolePolicy(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return nil
 }
 
 func (me *CamService) DeleteRolePolicyAttachmentById(ctx context.Context, rolePolicyAttachmentId string) error {
