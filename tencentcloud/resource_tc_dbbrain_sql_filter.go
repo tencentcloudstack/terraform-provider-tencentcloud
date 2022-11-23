@@ -53,9 +53,9 @@ func resourceTencentCloudDbbrainSqlFilter() *schema.Resource {
 		Create: resourceTencentCloudDbbrainSqlFilterCreate,
 		Update: resourceTencentCloudDbbrainSqlFilterUpdate,
 		Delete: resourceTencentCloudDbbrainSqlFilterDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
