@@ -684,9 +684,19 @@ data "tencentcloud_vpc_subnets" "subnet" {
   vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
 }
 
+data "tencentcloud_instance_types" "default" {
+	filter {
+	  name   = "zone"
+	  values = [var.default_az]
+	}
+	cpu_core_count = 2
+	exclude_sold_out = true
+}
+
 locals {
   vpc_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
   subnet_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
+  scale_instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 }
 `
 

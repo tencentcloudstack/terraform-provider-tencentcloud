@@ -199,9 +199,6 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 const testAccTkeScaleWorkerInstanceBasic = defaultAzVariable + TkeExclusiveNetwork + TkeDataSource + defaultSecurityGroupData
 
 const testAccTkeScaleWorkerInstance string = testAccTkeScaleWorkerInstanceBasic + `
-variable "scale_instance_type" {
-  default = "S2.LARGE8"
-}
 
 resource tencentcloud_kubernetes_scale_worker test_scale {
   cluster_id = local.cluster_id
@@ -219,7 +216,7 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
   worker_config {
     count                      				= 1
     availability_zone          				= var.default_az
-    instance_type              				= var.scale_instance_type
+    instance_type              				= local.scale_instance_type
     subnet_id                  				= local.subnet_id
     system_disk_type           				= "CLOUD_SSD"
     system_disk_size           				= 50
