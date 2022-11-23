@@ -10,23 +10,23 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudCamRolePolicyAttachmentNameAsIdentifier_basic(t *testing.T) {
+func TestAccTencentCloudCamRolePolicyAttachmentByName_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCamRolePolicyAttachmentNameAsIdentifierDestroy,
+		CheckDestroy: testAccCheckCamRolePolicyAttachmentByNameDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCamRolePolicyAttachmentNameAsIdentifier_basic(),
+				Config: testAccCamRolePolicyAttachmentByName_basic(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCamRolePolicyAttachmentNameAsIdentifierExists("tencentcloud_cam_role_policy_attachment_name_as_identifier.role_policy_attachment_basic"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_policy_attachment_name_as_identifier.role_policy_attachment_basic", "role_name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_policy_attachment_name_as_identifier.role_policy_attachment_basic", "policy_name"),
+					testAccCheckCamRolePolicyAttachmentByNameExists("tencentcloud_cam_role_policy_attachment_by_name.role_policy_attachment_basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_policy_attachment_by_name.role_policy_attachment_basic", "role_name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_policy_attachment_by_name.role_policy_attachment_basic", "policy_name"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cam_role_policy_attachment_name_as_identifier.role_policy_attachment_basic",
+				ResourceName:      "tencentcloud_cam_role_policy_attachment_by_name.role_policy_attachment_basic",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -34,7 +34,7 @@ func TestAccTencentCloudCamRolePolicyAttachmentNameAsIdentifier_basic(t *testing
 	})
 }
 
-func testAccCheckCamRolePolicyAttachmentNameAsIdentifierDestroy(s *terraform.State) error {
+func testAccCheckCamRolePolicyAttachmentByNameDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -42,7 +42,7 @@ func testAccCheckCamRolePolicyAttachmentNameAsIdentifierDestroy(s *terraform.Sta
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 	}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_cam_role_policy_attachment_name_as_identifier" {
+		if rs.Type != "tencentcloud_cam_role_policy_attachment_by_name" {
 			continue
 		}
 		items := strings.Split(rs.Primary.ID, "#")
@@ -61,7 +61,7 @@ func testAccCheckCamRolePolicyAttachmentNameAsIdentifierDestroy(s *terraform.Sta
 	return nil
 }
 
-func testAccCheckCamRolePolicyAttachmentNameAsIdentifierExists(n string) resource.TestCheckFunc {
+func testAccCheckCamRolePolicyAttachmentByNameExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -96,9 +96,9 @@ func testAccCheckCamRolePolicyAttachmentNameAsIdentifierExists(n string) resourc
 }
 
 //need to add policy resource definition
-func testAccCamRolePolicyAttachmentNameAsIdentifier_basic() string {
+func testAccCamRolePolicyAttachmentByName_basic() string {
 	return defaultCamVariables + `
-resource "tencentcloud_cam_role_policy_attachment_name_as_identifier" "role_policy_attachment_basic" {
+resource "tencentcloud_cam_role_policy_attachment_by_name" "role_policy_attachment_basic" {
   role_name   = var.cam_role_basic
   policy_name = var.cam_policy_basic
 }

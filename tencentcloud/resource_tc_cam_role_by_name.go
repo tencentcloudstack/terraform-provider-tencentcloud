@@ -6,7 +6,7 @@ Example Usage
 Create normally
 
 ```hcl
-resource "tencentcloud_cam_role_name_as_identifier" "foo" {
+resource "tencentcloud_cam_role_by_name" "foo" {
   name          = "cam-role-test"
   document      = <<EOF
 {
@@ -33,7 +33,7 @@ EOF
 Create with SAML provider
 
 ```hcl
-resource "tencentcloud_cam_role_name_as_identifier" "boo" {
+resource "tencentcloud_cam_role_by_name" "boo" {
   name          = "cam-role-test"
   document      = <<EOF
 {
@@ -59,7 +59,7 @@ Import
 CAM role can be imported using the name, e.g.
 
 ```
-$ terraform import tencentcloud_cam_role_name_as_identifier.foo cam-role-test
+$ terraform import tencentcloud_cam_role_by_name.foo cam-role-test
 ```
 */
 package tencentcloud
@@ -80,12 +80,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCamRoleNameAsIdentifier() *schema.Resource {
+func resourceTencentCloudCamRoleByName() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCamRoleNameAsIdentifierCreate,
-		Read:   resourceTencentCloudCamRoleNameAsIdentifierRead,
-		Update: resourceTencentCloudCamRoleNameAsIdentifierUpdate,
-		Delete: resourceTencentCloudCamRoleNameAsIdentifierDelete,
+		Create: resourceTencentCloudCamRoleByNameCreate,
+		Read:   resourceTencentCloudCamRoleByNameRead,
+		Update: resourceTencentCloudCamRoleByNameUpdate,
+		Delete: resourceTencentCloudCamRoleByNameDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -146,8 +146,8 @@ func resourceTencentCloudCamRoleNameAsIdentifier() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCamRoleNameAsIdentifierCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_role_name_as_identifier.create")()
+func resourceTencentCloudCamRoleByNameCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_role_by_name.create")()
 
 	logId := getLogId(contextNil)
 
@@ -234,11 +234,11 @@ func resourceTencentCloudCamRoleNameAsIdentifierCreate(d *schema.ResourceData, m
 		}
 	}
 	time.Sleep(10 * time.Second)
-	return resourceTencentCloudCamRoleNameAsIdentifierRead(d, meta)
+	return resourceTencentCloudCamRoleByNameRead(d, meta)
 }
 
-func resourceTencentCloudCamRoleNameAsIdentifierRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_role_name_as_identifier.read")()
+func resourceTencentCloudCamRoleByNameRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_role_by_name.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -301,8 +301,8 @@ func resourceTencentCloudCamRoleNameAsIdentifierRead(d *schema.ResourceData, met
 	return nil
 }
 
-func resourceTencentCloudCamRoleNameAsIdentifierUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_role_name_as_identifier.update")()
+func resourceTencentCloudCamRoleByNameUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_role_by_name.update")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -414,11 +414,11 @@ func resourceTencentCloudCamRoleNameAsIdentifierUpdate(d *schema.ResourceData, m
 		d.SetPartial("tags")
 	}
 
-	return resourceTencentCloudCamRoleNameAsIdentifierRead(d, meta)
+	return resourceTencentCloudCamRoleByNameRead(d, meta)
 }
 
-func resourceTencentCloudCamRoleNameAsIdentifierDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_role_name_as_identifier.delete")()
+func resourceTencentCloudCamRoleByNameDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_role_by_name.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

@@ -9,30 +9,30 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudCamPolicyNameAsIdentifierResource_basic(t *testing.T) {
+func TestAccTencentCloudCamPolicyByNameResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckCamPolicyNameAsIdentifierDestroy,
+		CheckDestroy: testAccCheckCamPolicyByNameDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCamPolicyNameAsIdentifier_basic,
+				Config: testAccCamPolicyByName_basic,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCamPolicyNameAsIdentifierExists("tencentcloud_cam_policy_name_as_identifier.policy_basic"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_policy_name_as_identifier.policy_basic", "name", "cam_policy_name_as_identifier_test"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cam_policy_name_as_identifier.policy_basic", "document"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_policy_name_as_identifier.policy_basic", "description", "test"),
+					testAccCheckCamPolicyByNameExists("tencentcloud_cam_policy_by_name.policy_basic"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy_by_name.policy_basic", "name", "cam_policy_name_as_identifier_test"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cam_policy_by_name.policy_basic", "document"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy_by_name.policy_basic", "description", "test"),
 				),
 			}, {
-				Config: testAccCamPolicyNameAsIdentifier_update,
+				Config: testAccCamPolicyByName_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckCamPolicyNameAsIdentifierExists("tencentcloud_cam_policy_name_as_identifier.policy_basic"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_policy_name_as_identifier.policy_basic", "name", "cam_policy_name_as_identifier_test"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cam_policy_name_as_identifier.policy_basic", "document"),
+					testAccCheckCamPolicyByNameExists("tencentcloud_cam_policy_by_name.policy_basic"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_policy_by_name.policy_basic", "name", "cam_policy_name_as_identifier_test"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cam_policy_by_name.policy_basic", "document"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cam_policy_name_as_identifier.policy_basic",
+				ResourceName:      "tencentcloud_cam_policy_by_name.policy_basic",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -40,7 +40,7 @@ func TestAccTencentCloudCamPolicyNameAsIdentifierResource_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckCamPolicyNameAsIdentifierDestroy(s *terraform.State) error {
+func testAccCheckCamPolicyByNameDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -48,7 +48,7 @@ func testAccCheckCamPolicyNameAsIdentifierDestroy(s *terraform.State) error {
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 	}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_cam_policy_name_as_identifier" {
+		if rs.Type != "tencentcloud_cam_policy_by_name" {
 			continue
 		}
 
@@ -62,7 +62,7 @@ func testAccCheckCamPolicyNameAsIdentifierDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckCamPolicyNameAsIdentifierExists(n string) resource.TestCheckFunc {
+func testAccCheckCamPolicyByNameExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -90,16 +90,16 @@ func testAccCheckCamPolicyNameAsIdentifierExists(n string) resource.TestCheckFun
 	}
 }
 
-const testAccCamPolicyNameAsIdentifier_basic = `
-resource "tencentcloud_cam_policy_name_as_identifier" "policy_basic" {
+const testAccCamPolicyByName_basic = `
+resource "tencentcloud_cam_policy_by_name" "policy_basic" {
   name        = "cam_policy_name_as_identifier_test"
   document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"cos:*\"],\"resource\":[\"*\"],\"effect\":\"allow\"},{\"effect\":\"allow\",\"action\":[\"monitor:*\",\"cam:ListUsersForGroup\",\"cam:ListGroups\",\"cam:GetGroup\"],\"resource\":[\"*\"]}]}"
   description = "test"
 }
 `
 
-const testAccCamPolicyNameAsIdentifier_update = `
-resource "tencentcloud_cam_policy_name_as_identifier" "policy_basic" {
+const testAccCamPolicyByName_update = `
+resource "tencentcloud_cam_policy_by_name" "policy_basic" {
   name     = "cam_policy_name_as_identifier_test"
   document = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"cos:*\"],\"resource\":[\"*\"],\"effect\":\"allow\"},{\"effect\":\"allow\",\"action\":[\"cam:ListUsersForGroup\",\"cam:ListGroups\",\"cam:GetGroup\"],\"resource\":[\"*\"]}]}"
   description = "test2"

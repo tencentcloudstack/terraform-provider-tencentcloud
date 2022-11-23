@@ -4,7 +4,7 @@ Provides a resource to create a CAM policy.
 Example Usage
 
 ```hcl
-resource "tencentcloud_cam_policy_name_as_identifier" "foo" {
+resource "tencentcloud_cam_policy_by_name" "foo" {
   name        = "cam-policy-test"
   document    = <<EOF
 {
@@ -31,7 +31,7 @@ Import
 CAM policy can be imported using the name, e.g.
 
 ```
-$ terraform import tencentcloud_cam_policy_name_as_identifier.foo name
+$ terraform import tencentcloud_cam_policy_by_name.foo name
 ```
 */
 package tencentcloud
@@ -53,12 +53,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCamPolicyNameAsIdentifier() *schema.Resource {
+func resourceTencentCloudCamPolicyByName() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCamPolicyNameAsIdentifierCreate,
-		Read:   resourceTencentCloudCamPolicyNameAsIdentifierRead,
-		Update: resourceTencentCloudCamPolicyNameAsIdentifierUpdate,
-		Delete: resourceTencentCloudCamPolicyNameAsIdentifierDelete,
+		Create: resourceTencentCloudCamPolicyByNameCreate,
+		Read:   resourceTencentCloudCamPolicyByNameRead,
+		Update: resourceTencentCloudCamPolicyByNameUpdate,
+		Delete: resourceTencentCloudCamPolicyByNameDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -113,8 +113,8 @@ func resourceTencentCloudCamPolicyNameAsIdentifier() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCamPolicyNameAsIdentifierCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_policy_name_as_identifier.create")()
+func resourceTencentCloudCamPolicyByNameCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_policy_by_name.create")()
 
 	logId := getLogId(contextNil)
 
@@ -185,11 +185,11 @@ func resourceTencentCloudCamPolicyNameAsIdentifierCreate(d *schema.ResourceData,
 		return err
 	}
 	time.Sleep(10 * time.Second)
-	return resourceTencentCloudCamPolicyNameAsIdentifierRead(d, meta)
+	return resourceTencentCloudCamPolicyByNameRead(d, meta)
 }
 
-func resourceTencentCloudCamPolicyNameAsIdentifierRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_policy_name_as_identifier.read")()
+func resourceTencentCloudCamPolicyByNameRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_policy_by_name.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -249,8 +249,8 @@ func resourceTencentCloudCamPolicyNameAsIdentifierRead(d *schema.ResourceData, m
 	return nil
 }
 
-func resourceTencentCloudCamPolicyNameAsIdentifierUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_policy_name_as_identifier.update")()
+func resourceTencentCloudCamPolicyByNameUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_policy_by_name.update")()
 
 	logId := getLogId(contextNil)
 
@@ -302,11 +302,11 @@ func resourceTencentCloudCamPolicyNameAsIdentifierUpdate(d *schema.ResourceData,
 		}
 	}
 
-	return resourceTencentCloudCamPolicyNameAsIdentifierRead(d, meta)
+	return resourceTencentCloudCamPolicyByNameRead(d, meta)
 }
 
-func resourceTencentCloudCamPolicyNameAsIdentifierDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_policy_name_as_identifier.delete")()
+func resourceTencentCloudCamPolicyByNameDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_policy_by_name.delete")()
 
 	logId := getLogId(contextNil)
 	var policies []*cam.StrategyInfo

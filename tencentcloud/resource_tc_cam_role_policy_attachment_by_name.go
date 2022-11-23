@@ -4,7 +4,7 @@ Provides a resource to create a CAM role policy attachment.
 Example Usage
 
 ```hcl
-resource "tencentcloud_cam_role_policy_attachment_name_as_identifier" "foo" {
+resource "tencentcloud_cam_role_policy_attachment_by_name" "foo" {
   role_name   = xxxxx
   policy_name = yyyyy
 }
@@ -15,7 +15,7 @@ Import
 CAM role policy attachment can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cam_role_policy_attachment_name_as_identifier.foo ${role_name}#${policy_name}
+$ terraform import tencentcloud_cam_role_policy_attachment_by_name.foo ${role_name}#${policy_name}
 ```
 */
 package tencentcloud
@@ -33,11 +33,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifier() *schema.Resource {
+func resourceTencentCloudCamRolePolicyAttachmentByName() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifierCreate,
-		Read:   resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifierRead,
-		Delete: resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifierDelete,
+		Create: resourceTencentCloudCamRolePolicyAttachmentByNameCreate,
+		Read:   resourceTencentCloudCamRolePolicyAttachmentByNameRead,
+		Delete: resourceTencentCloudCamRolePolicyAttachmentByNameDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -74,8 +74,8 @@ func resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifier() *schema.Resou
 	}
 }
 
-func resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifierCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_role_policy_attachment_name_as_identifier.create")()
+func resourceTencentCloudCamRolePolicyAttachmentByNameCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_role_policy_attachment_by_name.create")()
 
 	logId := getLogId(contextNil)
 
@@ -127,11 +127,11 @@ func resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifierCreate(d *schema
 		return err
 	}
 	time.Sleep(10 * time.Second)
-	return resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifierRead(d, meta)
+	return resourceTencentCloudCamRolePolicyAttachmentByNameRead(d, meta)
 }
 
-func resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifierRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_role_policy_attachment_name_as_identifier.read")()
+func resourceTencentCloudCamRolePolicyAttachmentByNameRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_role_policy_attachment_by_name.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -176,8 +176,8 @@ func resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifierRead(d *schema.R
 	return nil
 }
 
-func resourceTencentCloudCamRolePolicyAttachmentNameAsIdentifierDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_cam_role_policy_attachment_name_as_identifier.delete")()
+func resourceTencentCloudCamRolePolicyAttachmentByNameDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_cam_role_policy_attachment_by_name.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

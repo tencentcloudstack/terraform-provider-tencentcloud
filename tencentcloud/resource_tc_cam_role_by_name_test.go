@@ -9,24 +9,24 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudCamRoleNameAsIdentifierResource_basic(t *testing.T) {
+func TestAccTencentCloudCamRoleByNameResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCamRoleNameAsIdentifierDestroy,
+		CheckDestroy: testAccCamRoleByNameDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCamRoleNameAsIdentifier_basic(ownerUin),
+				Config: testAccCamRoleByName_basic(ownerUin),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCamRoleNameAsIdentifierExists("tencentcloud_cam_role_name_as_identifier.role_basic"),
+					testAccCamRoleByNameExists("tencentcloud_cam_role_name_as_identifier.role_basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_name_as_identifier.role_basic", "name"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_name_as_identifier.role_basic", "document"),
 				),
 			}, {
-				Config: testAccCamRoleNameAsIdentifier_update(ownerUin),
+				Config: testAccCamRoleByName_update(ownerUin),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCamRoleNameAsIdentifierExists("tencentcloud_cam_role_name_as_identifier.role_basic"),
+					testAccCamRoleByNameExists("tencentcloud_cam_role_name_as_identifier.role_basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_name_as_identifier.role_basic", "name"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_name_as_identifier.role_basic", "document"),
 				),
@@ -40,7 +40,7 @@ func TestAccTencentCloudCamRoleNameAsIdentifierResource_basic(t *testing.T) {
 	})
 }
 
-func testAccCamRoleNameAsIdentifierDestroy(s *terraform.State) error {
+func testAccCamRoleByNameDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -62,7 +62,7 @@ func testAccCamRoleNameAsIdentifierDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCamRoleNameAsIdentifierExists(n string) resource.TestCheckFunc {
+func testAccCamRoleByNameExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -90,7 +90,7 @@ func testAccCamRoleNameAsIdentifierExists(n string) resource.TestCheckFunc {
 	}
 }
 
-func testAccCamRoleNameAsIdentifier_basic(uin string) string {
+func testAccCamRoleByName_basic(uin string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cam_role_name_as_identifier" "role_basic" {
 	name          = "cam_role_name_as_identifier_test"
@@ -100,7 +100,7 @@ resource "tencentcloud_cam_role_name_as_identifier" "role_basic" {
 }`, uin, uin)
 }
 
-func testAccCamRoleNameAsIdentifier_update(uin string) string {
+func testAccCamRoleByName_update(uin string) string {
 	return fmt.Sprintf(`
 resource "tencentcloud_cam_role_name_as_identifier" "role_basic" {
   name          = "cam_role_name_as_identifier_test"
