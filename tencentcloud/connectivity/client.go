@@ -38,6 +38,7 @@ import (
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
+	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
@@ -145,6 +146,7 @@ type TencentCloudClient struct {
 	tatConn            *tat.Client
 	organizationConn   *organization.Client
 	tdcpgConn          *tdcpg.Client
+	dbbrainConn        *dbbrain.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -926,6 +928,20 @@ func (me *TencentCloudClient) UseTdcpgClient() *tdcpg.Client {
 	me.tdcpgConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tdcpgConn
+}
+
+// UseDbbrainClient returns dbbrain client for service
+func (me *TencentCloudClient) UseDbbrainClient() *dbbrain.Client {
+	if me.dbbrainConn != nil {
+		return me.dbbrainConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.dbbrainConn, _ = dbbrain.NewClient(me.Credential, me.Region, cpf)
+	me.dbbrainConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dbbrainConn
 }
 
 func getEnvDefault(key string, defVal int) int {
