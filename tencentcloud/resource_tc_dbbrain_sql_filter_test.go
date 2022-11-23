@@ -155,5 +155,3 @@ resource "tencentcloud_dbbrain_sql_filter" "sql_filter" {
 }
 `, CommonPresetMysql)
 }
-
-

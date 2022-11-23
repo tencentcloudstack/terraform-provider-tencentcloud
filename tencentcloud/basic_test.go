@@ -343,7 +343,6 @@ locals {
 
 const (
 	defaultMySQLName = "keep_preset_mysql"
-	defaultMySQLId   = "cdb-fitq5t9h"
 )
 
 // ref with `local.mysql_id`
@@ -831,8 +830,7 @@ const (
 
 // DBBRAIN
 const (
-	defaultDbBrainsagId      = "sag-01z37l4g"
-	defaultDbBrainsagName    = "keep-dbbrain-audit"
+	defaultDbBrainsagId = "sag-01z37l4g"
 )
 
 // End of DBBRAIN
