@@ -5,19 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dbbrain_security_audit_log_export_task" "task" {
-  sec_audit_group_id = "%s"
-  start_time = "%s"
-  end_time = "%s"
+  sec_audit_group_id = "sec_audit_group_id"
+  start_time = "2020-12-28 00:00:00"
+  end_time = "2020-12-28 01:00:00"
   product = "mysql"
   danger_levels = [0,1,2]
 }
 
-```
-Import
-
-dbbrain security_audit_log_export_task can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_dbbrain_security_audit_log_export_task.security_audit_log_export_task securityAuditLogExportTask_id
 ```
 */
 package tencentcloud
@@ -40,9 +34,9 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTask() *schema.Resource {
 		Read:   resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead,
 		Create: resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate,
 		Delete: resourceTencentCloudDbbrainSecurityAuditLogExportTaskDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"sec_audit_group_id": {
 				Type:        schema.TypeString,
@@ -149,10 +143,7 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate(d *schema.Resou
 			return retryError(err)
 		}
 		if ret != nil {
-			if *ret.TotalCount == 0 || len(ret.Tasks) == 0 {
-				return resource.RetryableError(errors.New("[DEBUG] describe the audit log export task is empty, retry..."))
-			}
-			log.Printf("[###########] task.Status:[%s]\n", *ret.Tasks[0].Status)
+			log.Printf("[###########] task.Status:[%s]\n", *ret.Status)
 			return nil
 		}
 		return resource.RetryableError(errors.New("[DEBUG] describe the audit log export task is nil, retry..."))
@@ -182,30 +173,28 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead(d *schema.Resourc
 	secAuditGroupId := helper.String(idSplit[0])
 	asyncRequestId := helper.String(idSplit[1])
 
-	ret, err := service.DescribeDbbrainSecurityAuditLogExportTask(ctx, secAuditGroupId, asyncRequestId, nil)
+	securityAuditLogExportTask, err := service.DescribeDbbrainSecurityAuditLogExportTask(ctx, secAuditGroupId, asyncRequestId, nil)
 	if err != nil {
 		return err
 	}
 
-	if ret == nil {
+	// _ = d.Set("sec_audit_group_id", secAuditGroupId)
+
+	if securityAuditLogExportTask == nil {
 		d.SetId("")
 		return fmt.Errorf("resource `securityAuditLogExportTask` %s does not exist", d.Id())
 	}
 
-	if len(ret.Tasks) > 0 {
-		securityAuditLogExportTask := ret.Tasks[0]
+	if securityAuditLogExportTask.LogStartTime != nil {
+		_ = d.Set("start_time", securityAuditLogExportTask.LogStartTime)
+	}
 
-		if securityAuditLogExportTask.StartTime != nil {
-			_ = d.Set("start_time", securityAuditLogExportTask.StartTime)
-		}
+	if securityAuditLogExportTask.LogEndTime != nil {
+		_ = d.Set("end_time", securityAuditLogExportTask.LogEndTime)
+	}
 
-		if securityAuditLogExportTask.EndTime != nil {
-			_ = d.Set("end_time", securityAuditLogExportTask.EndTime)
-		}
-
-		if securityAuditLogExportTask.DangerLevels != nil {
-			_ = d.Set("danger_levels", securityAuditLogExportTask.DangerLevels)
-		}
+	if securityAuditLogExportTask.DangerLevels != nil {
+		_ = d.Set("danger_levels", securityAuditLogExportTask.DangerLevels)
 	}
 
 	return nil

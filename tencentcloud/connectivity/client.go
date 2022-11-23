@@ -146,7 +146,7 @@ type TencentCloudClient struct {
 	tatConn            *tat.Client
 	organizationConn   *organization.Client
 	tdcpgConn          *tdcpg.Client
-	dbbrainConn *dbbrain.Client
+	dbbrainConn        *dbbrain.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -937,6 +937,7 @@ func (me *TencentCloudClient) UseDbbrainClient() *dbbrain.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
 	me.dbbrainConn, _ = dbbrain.NewClient(me.Credential, me.Region, cpf)
 	me.dbbrainConn.WithHttpTransport(&LogRoundTripper{})
 

@@ -117,7 +117,18 @@ func (me *DbbrainService) DeleteDbbrainSqlFilterById(ctx context.Context, instan
 	return
 }
 
-func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTask(ctx context.Context, secAuditGroupId, asyncRequestId, product *string) (params *dbbrain.DescribeSecurityAuditLogExportTasksResponseParams, errRet error) {
+func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTask(ctx context.Context, secAuditGroupId, asyncRequestId, product *string) (task *dbbrain.SecLogExportTaskInfo, errRet error) {
+	ret, errRet := me.DescribeDbbrainSecurityAuditLogExportTasks(ctx, secAuditGroupId, []*string{asyncRequestId}, product)
+	if errRet != nil {
+		return
+	}
+	if ret != nil {
+		return ret.Tasks[0], nil
+	}
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTasks(ctx context.Context, secAuditGroupId *string, asyncRequestId []*string, product *string) (params *dbbrain.DescribeSecurityAuditLogExportTasksResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = dbbrain.NewDescribeSecurityAuditLogExportTasksRequest()
@@ -126,11 +137,16 @@ func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTask(ctx context.
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "query object", request.ToJsonString(), errRet.Error())
+				logId, "query objects", request.ToJsonString(), errRet.Error())
 		}
 	}()
+
 	request.SecAuditGroupId = secAuditGroupId
-	request.AsyncRequestIds = []*uint64{helper.StrToUint64Point(*asyncRequestId)}
+
+	if asyncRequestId != nil {
+		request.AsyncRequestIds = helper.StringsToUint64Pointer(asyncRequestId)
+	}
+
 	if product != nil {
 		request.Product = product
 	} else {

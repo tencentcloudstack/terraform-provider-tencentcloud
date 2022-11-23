@@ -32,12 +32,6 @@ resource "tencentcloud_dbbrain_sql_filter" "sql_filter" {
 }
 
 ```
-Import
-
-dbbrain sql_filter can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_dbbrain_sql_filter.sql_filter sqlFilter_id
-```
 */
 package tencentcloud
 

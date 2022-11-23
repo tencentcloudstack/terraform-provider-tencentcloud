@@ -12,11 +12,51 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
+func init() {
+	resource.AddTestSweepers("tencentcloud_dbbrain_security_audit_log_export_task", &resource.Sweeper{
+		Name: "tencentcloud_dbbrain_security_audit_log_export_task",
+		F:    testSweepDbbrainSecurityAuditLogExportTask,
+	})
+}
+
+// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_dbbrain_security_audit_log_export_task
+func testSweepDbbrainSecurityAuditLogExportTask(r string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(r)
+	dbbrainService := DbbrainService{client: cli.(*TencentCloudClient).apiV3Conn}
+	sagId := helper.String(defaultDbBrainsagId)
+
+	ret, err := dbbrainService.DescribeDbbrainSecurityAuditLogExportTasks(ctx, sagId, nil, nil)
+	if err != nil {
+		return err
+	}
+	if ret == nil {
+		return fmt.Errorf("Dbbrain security audit log export tasks not exists.")
+	}
+
+	for _, v := range ret.Tasks {
+		delId := *v.AsyncRequestId
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			err := dbbrainService.DeleteDbbrainSecurityAuditLogExportTaskById(ctx, sagId, helper.UInt64ToStrPoint(delId), nil)
+			if err != nil {
+				return retryError(err)
+			}
+			return nil
+		})
+		if err != nil {
+			return fmt.Errorf("[ERROR] sweeper Dbbrain security audit log export task:[%v] failed! reason:[%s]", delId, err.Error())
+		}
+	}
+	return nil
+}
+
 func TestAccTencentCloudDbbrainSecurityAuditLogExportTaskResource_basic(t *testing.T) {
 	t.Parallel()
-	baseTime := time.Now().UTC()
-	startTime := baseTime.Add(-2 * time.Hour).Format(time.RFC3339)
-	endTime := baseTime.Add(2 * time.Hour).Format(time.RFC3339)
+	loc, _ := time.LoadLocation("Asia/Chongqing")
+	startTime := time.Now().Add(-2 * time.Hour).In(loc).Format("2006-01-02T15:04:05+08:00")
+	endTime := time.Now().Add(2 * time.Hour).In(loc).Format("2006-01-02T15:04:05+08:00")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -26,7 +66,7 @@ func TestAccTencentCloudDbbrainSecurityAuditLogExportTaskResource_basic(t *testi
 			{
 				Config: testAccDbbrainSecurityAuditLogExportTask(startTime, endTime),
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckDbbrainSqlFilterExists("tencentcloud_dbbrain_security_audit_log_export_task.task"),
+					testAccCheckDbbrainSecurityAuditLogExportTaskExists("tencentcloud_dbbrain_security_audit_log_export_task.task"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dbbrain_security_audit_log_export_task.task", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_dbbrain_security_audit_log_export_task.task", "sec_audit_group_id", defaultDbBrainsagId),
 					resource.TestCheckResourceAttr("tencentcloud_dbbrain_security_audit_log_export_task.task", "start_time", startTime),
@@ -34,11 +74,6 @@ func TestAccTencentCloudDbbrainSecurityAuditLogExportTaskResource_basic(t *testi
 					resource.TestCheckResourceAttr("tencentcloud_dbbrain_security_audit_log_export_task.task", "product", "mysql"),
 					resource.TestCheckResourceAttr("tencentcloud_dbbrain_security_audit_log_export_task.task", "danger_levels.#", "3"),
 				),
-			},
-			{
-				ResourceName:      "tencentcloud_dbbrain_security_audit_log_export_task.task",
-				ImportState:       true,
-				ImportStateVerify: true,
 			},
 		},
 	})
@@ -61,12 +96,12 @@ func testAccCheckDbbrainSecurityAuditLogExportTaskDestroy(s *terraform.State) er
 		secAuditGroupId := helper.String(idSplit[0])
 		asyncRequestId := helper.String(idSplit[1])
 
-		filter, err := dbbrainService.DescribeDbbrainSecurityAuditLogExportTask(ctx, secAuditGroupId, asyncRequestId, nil)
+		task, err := dbbrainService.DescribeDbbrainSecurityAuditLogExportTask(ctx, secAuditGroupId, asyncRequestId, nil)
 		if err != nil {
 			return err
 		}
 
-		if filter != nil {
+		if task != nil {
 			return fmt.Errorf("Dbbrain security audit log export task still exist, Id: %v", rs.Primary.ID)
 		}
 	}
@@ -94,12 +129,12 @@ func testAccCheckDbbrainSecurityAuditLogExportTaskExists(re string) resource.Tes
 		secAuditGroupId := helper.String(idSplit[0])
 		asyncRequestId := helper.String(idSplit[1])
 
-		filter, err := dbbrainService.DescribeDbbrainSecurityAuditLogExportTask(ctx, secAuditGroupId, asyncRequestId, nil)
+		task, err := dbbrainService.DescribeDbbrainSecurityAuditLogExportTask(ctx, secAuditGroupId, asyncRequestId, nil)
 		if err != nil {
 			return err
 		}
 
-		if filter == nil {
+		if task == nil {
 			return fmt.Errorf("Dbbrain security audit log export task not found, Id: %v", rs.Primary.ID)
 		}
 		return nil
@@ -107,7 +142,7 @@ func testAccCheckDbbrainSecurityAuditLogExportTaskExists(re string) resource.Tes
 }
 
 func testAccDbbrainSecurityAuditLogExportTask(st, et string) string {
-	return fmt.Sprintf(`%s
+	return fmt.Sprintf(`
 
 resource "tencentcloud_dbbrain_security_audit_log_export_task" "task" {
   sec_audit_group_id = "%s"
@@ -117,5 +152,5 @@ resource "tencentcloud_dbbrain_security_audit_log_export_task" "task" {
   danger_levels = [0,1,2]
 }
 
-`, CommonPresetMysql, defaultDbBrainsagId, st, et)
+`, defaultDbBrainsagId, st, et)
 }

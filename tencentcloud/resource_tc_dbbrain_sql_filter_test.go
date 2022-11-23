@@ -49,12 +49,12 @@ func TestAccTencentCloudDbbrainSqlFilterResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dbbrain_sql_filter.sql_filter", "status", "TERMINATED"),
 				),
 			},
-			{
-				ResourceName:            "tencentcloud_dbbrain_sql_filter.sql_filter",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"duration", "session_token"},
-			},
+			// {
+			// 	ResourceName:            "tencentcloud_dbbrain_sql_filter.sql_filter",
+			// 	ImportState:             true,
+			// 	ImportStateVerify:       true,
+			// 	ImportStateVerifyIgnore: []string{"duration", "session_token"},
+			// },
 		},
 	})
 }
@@ -124,12 +124,11 @@ func testAccCheckDbbrainSqlFilterExists(re string) resource.TestCheckFunc {
 func testAccDbbrainSqlFilter() string {
 	return fmt.Sprintf(`%s
 
-
 resource "tencentcloud_dbbrain_sql_filter" "sql_filter" {
   instance_id = local.mysql_id
   session_token {
-    user = "test"
-	password = "Test@123456*#"
+    user = "keep_dbbrain"
+	password = "Test@123456#"
   }
   sql_type = "SELECT"
   filter_key = "test"
@@ -144,8 +143,8 @@ func testAccDbbrainSqlFilter_update() string {
 resource "tencentcloud_dbbrain_sql_filter" "sql_filter" {
   instance_id = local.mysql_id
   session_token {
-    user = "test"
-	password = "Test@123456*#"
+    user = "keep_dbbrain"
+	password = "Test@123456#"
   }
   sql_type = "SELECT"
   filter_key = "test"
