@@ -19,20 +19,20 @@ func TestAccTencentCloudCamRoleByNameResource_basic(t *testing.T) {
 			{
 				Config: testAccCamRoleByName_basic(ownerUin),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCamRoleByNameExists("tencentcloud_cam_role_name_as_identifier.role_basic"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_name_as_identifier.role_basic", "name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_name_as_identifier.role_basic", "document"),
+					testAccCamRoleByNameExists("tencentcloud_cam_role_by_name.role_basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_by_name.role_basic", "name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_by_name.role_basic", "document"),
 				),
 			}, {
 				Config: testAccCamRoleByName_update(ownerUin),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCamRoleByNameExists("tencentcloud_cam_role_name_as_identifier.role_basic"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_name_as_identifier.role_basic", "name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_name_as_identifier.role_basic", "document"),
+					testAccCamRoleByNameExists("tencentcloud_cam_role_by_name.role_basic"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_by_name.role_basic", "name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cam_role_by_name.role_basic", "document"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cam_role_name_as_identifier.role_basic",
+				ResourceName:      "tencentcloud_cam_role_by_name.role_basic",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -48,7 +48,7 @@ func testAccCamRoleByNameDestroy(s *terraform.State) error {
 		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
 	}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_cam_role_name_as_identifier" {
+		if rs.Type != "tencentcloud_cam_role_by_name" {
 			continue
 		}
 
@@ -92,7 +92,7 @@ func testAccCamRoleByNameExists(n string) resource.TestCheckFunc {
 
 func testAccCamRoleByName_basic(uin string) string {
 	return fmt.Sprintf(`
-resource "tencentcloud_cam_role_name_as_identifier" "role_basic" {
+resource "tencentcloud_cam_role_by_name" "role_basic" {
 	name          = "cam_role_name_as_identifier_test"
 	document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/%s:uin/%s\"]}}]}"
 	description   = "test"
@@ -102,7 +102,7 @@ resource "tencentcloud_cam_role_name_as_identifier" "role_basic" {
 
 func testAccCamRoleByName_update(uin string) string {
 	return fmt.Sprintf(`
-resource "tencentcloud_cam_role_name_as_identifier" "role_basic" {
+resource "tencentcloud_cam_role_by_name" "role_basic" {
   name          = "cam_role_name_as_identifier_test"
   document      = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/%s:uin/%s\"]}},{\"action\":[\"name/sts:AssumeRole\"],\"effect\":\"allow\",\"principal\":{\"qcs\":[\"qcs::cam::uin/%s:uin/%s\"]}}]}"
   console_login = false
