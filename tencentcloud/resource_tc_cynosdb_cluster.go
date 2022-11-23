@@ -159,12 +159,12 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	if v, ok := d.GetOk("instance_cpu_core"); ok {
 		request.Cpu = helper.IntInt64(v.(int))
 	} else if !isServerless {
-		return fmt.Errorf("`instance_cpu_core` is requried while creating non-serverless cluster")
+		return fmt.Errorf("`instance_cpu_core` is required while creating non-serverless cluster")
 	}
 	if v, ok := d.GetOk("instance_memory_size"); ok {
 		request.Memory = helper.IntInt64(v.(int))
 	} else if !isServerless {
-		return fmt.Errorf("`instance_memory_size` is requried while creating non-serverless cluster")
+		return fmt.Errorf("`instance_memory_size` is required while creating non-serverless cluster")
 	}
 
 	var chargeType int64 = 0
@@ -359,7 +359,7 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("storage_used", *cluster.UsedStorage/1000/1000)
 	_ = d.Set("auto_renew_flag", *item.RenewFlag)
 
-	if _, ok := d.GetOk("db_mode"); ok {
+	if _, ok := d.GetOk("db_mode"); ok || *item.DbMode == CYNOSDB_SERVERLESS {
 		_ = d.Set("db_mode", item.DbMode)
 	}
 
