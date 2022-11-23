@@ -147,7 +147,7 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ValidateFunc: validateIntegerInRange(0, 1),
-				Description:  "The pay mode of instance. 0 is pay on an annual basis, 1 is pay on a measure basis.",
+				Description:  "The pay mode of instance. 0 represent POSTPAID_BY_HOUR, 1 represent PREPAID.",
 			},
 			"placement": {
 				Type:        schema.TypeMap,

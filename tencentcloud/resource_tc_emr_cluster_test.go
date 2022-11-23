@@ -183,6 +183,20 @@ func testAccCheckEmrExists(n string) resource.TestCheckFunc {
 }
 
 const testEmrBasic = defaultEMRVariable + `
+data "tencentcloud_instance_types" "cvm4c8m" {
+	exclude_sold_out=true
+	cpu_core_count=4
+	memory_size=8
+    filter {
+      name   = "instance-charge-type"
+      values = ["POSTPAID_BY_HOUR"]
+    }
+    filter {
+    name   = "zone"
+    values = ["ap-guangzhou-3"]
+  }
+}
+
 resource "tencentcloud_emr_cluster" "emrrrr" {
 	product_id=4
 	display_strategy="clusterList"
@@ -201,7 +215,7 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
 		cpu=4
 		disk_size=100
 		disk_type="CLOUD_PREMIUM"
-		spec="CVM.S2"
+		spec="CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
 		storage_type=5
 		root_size=50
 	  }
@@ -210,7 +224,7 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
 		cpu=4
 		disk_size=100
 		disk_type="CLOUD_PREMIUM"
-		spec="CVM.S2"
+		spec="CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
 		storage_type=5
 		root_size=50
 	  }

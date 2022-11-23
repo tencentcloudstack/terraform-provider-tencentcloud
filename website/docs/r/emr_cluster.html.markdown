@@ -64,7 +64,7 @@ The following arguments are supported:
 * `display_strategy` - (Required, String, ForceNew) Display strategy of EMR instance.
 * `instance_name` - (Required, String, ForceNew) Name of the instance, which can contain 6 to 36 English letters, Chinese characters, digits, dashes(-), or underscores(_).
 * `login_settings` - (Required, Map, ForceNew) Instance login settings.
-* `pay_mode` - (Required, Int) The pay mode of instance. 0 is pay on an annual basis, 1 is pay on a measure basis.
+* `pay_mode` - (Required, Int) The pay mode of instance. 0 represent POSTPAID_BY_HOUR, 1 represent PREPAID.
 * `placement` - (Required, Map, ForceNew) The location of the instance.
 * `product_id` - (Required, Int, ForceNew) The product id of EMR instance.
 * `softwares` - (Required, List: [`String`], ForceNew) The softwares of a EMR instance.
