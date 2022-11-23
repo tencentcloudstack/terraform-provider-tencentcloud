@@ -8,6 +8,7 @@ import (
 const (
 	CYNOSDB_CHARGE_TYPE_POSTPAID = COMMON_PAYTYPE_POSTPAID
 	CYNOSDB_CHARGE_TYPE_PREPAID  = COMMON_PAYTYPE_PREPAID
+	CYNOSDB_SERVERLESS           = "SERVERLESS"
 
 	CYNOSDB_STATUS_RUNNING  = "running"
 	CYNOSDB_STATUS_OFFLINE  = "offlined"
@@ -38,13 +39,13 @@ func TencentCynosdbInstanceBaseInfo() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"instance_cpu_core": {
 			Type:        schema.TypeInt,
-			Required:    true,
-			Description: "The number of CPU cores of read-write type instance in the CynosDB cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.",
+			Optional:    true,
+			Description: "The number of CPU cores of read-write type instance in the CynosDB cluster. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.",
 		},
 		"instance_memory_size": {
 			Type:        schema.TypeInt,
-			Required:    true,
-			Description: "Memory capacity of read-write type instance, unit in GB. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.",
+			Optional:    true,
+			Description: "Memory capacity of read-write type instance, unit in GB. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.",
 		},
 		"instance_id": {
 			Type:        schema.TypeString,
@@ -345,6 +346,31 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Computed:    true,
 			Description: "The ID of the parameter template.",
+		},
+		"db_mode": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Specify DB mode, only available when `db_type` is `MYSQL`. Values: `NORMAL` (Default), `SERVERLESS`.",
+		},
+		"min_cpu": {
+			Optional:    true,
+			Type:        schema.TypeFloat,
+			Description: "Minimum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.",
+		},
+		"max_cpu": {
+			Optional:    true,
+			Type:        schema.TypeFloat,
+			Description: "Maximum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.",
+		},
+		"auto_pause": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Specify whether the cluster can auto-pause while `db_mode` is `SERVERLESS`. Values: `yes` (default), `no`.",
+		},
+		"auto_pause_delay": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Specify auto-pause delay in second while `db_mode` is `SERVERLESS`. Value range: `[600, 691200]`. Default: `600`.",
 		},
 	}
 

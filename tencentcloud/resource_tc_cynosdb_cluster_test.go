@@ -128,6 +128,37 @@ func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
 		},
 	})
 }
+func TestAccTencentCloudCynosdbClusterResourceServerless(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckCynosdbClusterDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccCynosdbClusterServerless,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "db_mode", "SERVERLESS"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_cynosdb_cluster.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"password",
+					"force_delete",
+					"storage_limit",
+					"min_cpu",
+					"max_cpu",
+					"auto_pause",
+					"auto_pause_delay",
+				},
+			},
+		},
+	})
+}
 
 func testAccCheckCynosdbClusterDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
@@ -179,7 +210,7 @@ func testAccCheckCynosdbClusterExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCynosdbBasic = `
+const testAccCynosdbBasic = defaultSecurityGroupData + `
 variable "availability_zone" {
   default = "ap-guangzhou-4"
 }
@@ -237,10 +268,10 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   force_delete = true
 
   rw_group_sg = [
-    "` + defaultSecurityGroup + `",
+    local.sg_id
   ]
   ro_group_sg = [
-    "` + defaultSecurityGroup + `",
+    local.sg_id
   ]
   prarm_template_id = var.my_param_template
 }
@@ -289,10 +320,39 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   force_delete = true
 
   rw_group_sg = [
-    "` + defaultSecurityGroup2 + `",
+    local.sg_id2
   ]
   ro_group_sg = [
-    "` + defaultSecurityGroup2 + `",
+    local.sg_id2
   ]
 }
 `
+
+const testAccCynosdbClusterServerless = testAccCynosdbBasic + `
+resource "tencentcloud_cynosdb_cluster" "foo" {
+  available_zone               = var.availability_zone
+  vpc_id                       = var.my_vpc
+  subnet_id                    = var.my_subnet
+  db_type                      = "MYSQL"
+  db_version                   = "5.7"
+  cluster_name                 = "tf-cynosdb-s"
+  password                     = "cynos@123"
+  db_mode                      = "SERVERLESS"
+  min_cpu 					   = 0.25
+  max_cpu 					   = 1
+  auto_pause 				   = "yes"
+  auto_pause_delay 			   = 1000
+  instance_maintain_duration   = 3600
+  instance_maintain_start_time = 10800
+  instance_maintain_weekdays   = [
+    "Fri",
+    "Mon",
+    "Sat",
+    "Sun",
+    "Thu",
+    "Wed",
+    "Tue",
+  ]
+
+  force_delete = true
+}`

@@ -92,8 +92,7 @@ const (
 	defaultGaapRealserverIp2        = "1.1.1.5"
 	defaultHttpsDomainCertificateId = "cert-crg2aynt"
 
-	defaultSecurityGroup  = "sg-ijato2x1"
-	defaultSecurityGroup2 = "sg-51rgzop1"
+	defaultSecurityGroup = "sg-ijato2x1"
 
 	defaultProjectId = "1250480"
 

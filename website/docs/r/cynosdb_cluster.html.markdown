@@ -68,17 +68,22 @@ The following arguments are supported:
 * `cluster_name` - (Required, String, ForceNew) Name of CynosDB cluster.
 * `db_type` - (Required, String, ForceNew) Type of CynosDB, and available values include `MYSQL`.
 * `db_version` - (Required, String, ForceNew) Version of CynosDB, which is related to `db_type`. For `MYSQL`, available value is `5.7`.
-* `instance_cpu_core` - (Required, Int) The number of CPU cores of read-write type instance in the CynosDB cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
-* `instance_memory_size` - (Required, Int) Memory capacity of read-write type instance, unit in GB. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `password` - (Required, String, ForceNew) Password of `root` account.
 * `subnet_id` - (Required, String, ForceNew) ID of the subnet within this VPC.
 * `vpc_id` - (Required, String, ForceNew) ID of the VPC.
+* `auto_pause_delay` - (Optional, Int) Specify auto-pause delay in second while `db_mode` is `SERVERLESS`. Value range: `[600, 691200]`. Default: `600`.
+* `auto_pause` - (Optional, String) Specify whether the cluster can auto-pause while `db_mode` is `SERVERLESS`. Values: `yes` (default), `no`.
 * `auto_renew_flag` - (Optional, Int, ForceNew) Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`.
+* `db_mode` - (Optional, String) Specify DB mode, only available when `db_type` is `MYSQL`. Values: `NORMAL` (Default), `SERVERLESS`.
 * `force_delete` - (Optional, Bool) Indicate whether to delete cluster instance directly or not. Default is false. If set true, the cluster and its `All RELATED INSTANCES` will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.
+* `instance_cpu_core` - (Optional, Int) The number of CPU cores of read-write type instance in the CynosDB cluster. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `instance_maintain_duration` - (Optional, Int) Duration time for maintenance, unit in second. `3600` by default.
 * `instance_maintain_start_time` - (Optional, Int) Offset time from 00:00, unit in second. For example, 03:00am should be `10800`. `10800` by default.
 * `instance_maintain_weekdays` - (Optional, Set: [`String`]) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
+* `instance_memory_size` - (Optional, Int) Memory capacity of read-write type instance, unit in GB. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
+* `max_cpu` - (Optional, Float64) Maximum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.
+* `min_cpu` - (Optional, Float64) Minimum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.
 * `param_items` - (Optional, List) Specify parameter list of database. It is valid when prarm_template_id is set in create cluster. Use `data.tencentcloud_mysql_default_params` to query available parameter details.
 * `port` - (Optional, Int, ForceNew) Port of CynosDB cluster.
 * `prarm_template_id` - (Optional, Int) The ID of the parameter template.
