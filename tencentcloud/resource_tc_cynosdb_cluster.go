@@ -514,6 +514,19 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		tagService     = TagService{client: client}
 		region         = client.Region
 	)
+	immutableArgs := []string{
+		"db_mode",
+		"min_cpu",
+		"max_cpu",
+		"auto_pause",
+		"auto_pause_delay",
+	}
+
+	for _, a := range immutableArgs {
+		if d.HasChange(a) {
+			return fmt.Errorf("argument %s cannot be modified", a)
+		}
+	}
 
 	d.Partial(true)
 
