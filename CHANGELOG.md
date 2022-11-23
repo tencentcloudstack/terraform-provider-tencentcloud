@@ -1,3 +1,18 @@
+## 1.78.14 (November 23, 2022)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cam_policy_by_name` ([#1415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1415))
+* **New Resource:** `tencentcloud_cam_role_by_name` ([#1415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1415))
+* **New Resource:** `tencentcloud_cam_role_policy_attachment_by_name` ([#1415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1415))
+* **New Resource:** `tencentcloud_dbbrain_security_audit_log_export_task` ([#1417](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1417))
+* **New Resource:** `tencentcloud_dbbrain_sql_filter` ([#1417](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1417))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cynosdb_cluster: feat: tdsql-c - support serverless creation ([#1406](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1406))
+* resource/tencentcloud_instance: update the `key_ids` of cvm smoothly ([#1403](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1403))
+
 ## 1.78.13 (November 22, 2022)
 
 FEATURES:
