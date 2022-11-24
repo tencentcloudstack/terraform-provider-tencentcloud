@@ -57,6 +57,7 @@ import (
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
+	rum "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
@@ -142,6 +143,7 @@ type TencentCloudClient struct {
 	smsConn            *sms.Client
 	catConn            *cat.Client
 	mariadbConn        *mariadb.Client
+	rumConn            *rum.Client
 	ptsConn            *pts.Client
 	tatConn            *tat.Client
 	organizationConn   *organization.Client
@@ -942,6 +944,19 @@ func (me *TencentCloudClient) UseDbbrainClient() *dbbrain.Client {
 	me.dbbrainConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dbbrainConn
+}
+
+// UseRumClient returns rum client for service
+func (me *TencentCloudClient) UseRumClient() *rum.Client {
+	if me.rumConn != nil {
+		return me.rumConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.rumConn, _ = rum.NewClient(me.Credential, me.Region, cpf)
+	me.rumConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.rumConn
 }
 
 func getEnvDefault(key string, defVal int) int {

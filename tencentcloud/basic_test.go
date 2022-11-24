@@ -847,3 +847,10 @@ const (
 )
 
 // End of DBBRAIN
+
+// RUM
+const (
+	defaultRumInstanceId = "rum-pasZKEI3RLgakj"
+)
+
+// End of RUM

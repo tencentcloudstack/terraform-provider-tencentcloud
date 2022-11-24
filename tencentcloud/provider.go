@@ -749,6 +749,18 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_log_file_retention_period
 	tencentcloud_mariadb_security_groups
 
+Real User Monitoring(RUM)
+  Data Source
+	tencentcloud_rum_project
+	tencentcloud_rum_offline_log_config
+	tencentcloud_rum_whitelist
+	tencentcloud_rum_taw_instance
+  Resource
+	tencentcloud_rum_project
+	tencentcloud_rum_taw_instance
+	tencentcloud_rum_whitelist
+	tencentcloud_rum_offline_log_config_attachment
+
 Cloud Streaming Services(CSS)
   Resource
     tencentcloud_css_watermark
@@ -1106,6 +1118,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdcpg_instances":                          dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                           dataSourceTencentCloudCatProbeData(),
 			"tencentcloud_cat_node":                                 dataSourceTencentCloudCatNode(),
+			"tencentcloud_rum_project":                              dataSourceTencentCloudRumProject(),
+			"tencentcloud_rum_offline_log_config":                   dataSourceTencentCloudRumOfflineLogConfig(),
+			"tencentcloud_rum_whitelist":                            dataSourceTencentCloudRumWhitelist(),
+			"tencentcloud_rum_taw_instance":                         dataSourceTencentCloudRumTawInstance(),
 			"tencentcloud_dnspod_records":                           dataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_tat_command":                              dataSourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
@@ -1408,6 +1424,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_organization_policy_sub_account_attachment": resourceTencentCloudOrganizationPolicySubAccountAttachment(),
 			"tencentcloud_dbbrain_sql_filter":                         resourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":     resourceTencentCloudDbbrainSecurityAuditLogExportTask(),
+			"tencentcloud_rum_project":                                resourceTencentCloudRumProject(),
+			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
+			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
+			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
