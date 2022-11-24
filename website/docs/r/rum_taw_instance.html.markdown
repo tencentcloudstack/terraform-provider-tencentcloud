@@ -19,11 +19,10 @@ resource "tencentcloud_rum_taw_instance" "taw_instance" {
   charge_type         = "1"
   data_retention_days = "30"
   instance_name       = "instanceName-1"
-  tags {
-    key   = "createdBy"
-    value = "terraform"
+  tags = {
+    createdBy = "terraform"
   }
-  instance_desc = "instanceDesc"
+  instance_desc = "instanceDesc-1"
 }
 ```
 
@@ -36,12 +35,7 @@ The following arguments are supported:
 * `data_retention_days` - (Required, Int) Data retention period (at least greater than 0).
 * `instance_name` - (Required, String) Instance name (up to 255 bytes).
 * `instance_desc` - (Optional, String) Instance description (up to 1,024 bytes).
-* `tags` - (Optional, List) Tag list.
-
-The `tags` object supports the following:
-
-* `key` - (Required, String) Tag key.
-* `value` - (Required, String) Tag value.
+* `tags` - (Optional, Map) Tag description list. Up to 10 tag key-value pairs are supported and must be unique.
 
 ## Attributes Reference
 

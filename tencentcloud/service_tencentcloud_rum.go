@@ -27,7 +27,14 @@ func (me *RumService) DescribeRumTawInstance(ctx context.Context, instanceId str
 				logId, "query object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.InstanceIds = []*string{&instanceId}
+
+	request.Filters = append(
+		request.Filters,
+		&rum.Filter{
+			Name:   helper.String("InstanceIDs"),
+			Values: []*string{&instanceId},
+		},
+	)
 
 	response, err := me.client.UseRumClient().DescribeTawInstances(request)
 	if err != nil {

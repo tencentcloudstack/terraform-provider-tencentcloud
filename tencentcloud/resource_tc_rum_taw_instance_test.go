@@ -86,15 +86,14 @@ func testAccCheckRumTawInstanceExists(r string) resource.TestCheckFunc {
 const testAccRumTawInstance = `
 
 resource "tencentcloud_rum_taw_instance" "tawInstance" {
-  area_id = "1"
-  charge_type = "1"
-  data_retention_days = "30"
-  instance_name = "instanceName"
-  tags {
-	key = "createdBy"
-	value = "terraform"
-  }
-  instance_desc = "instanceDesc"
+	area_id = "1"
+	charge_type = "1"
+	data_retention_days = "30"
+	instance_name = "instanceName"
+	tags = {
+	  createdBy = "terraform"
+	}
+	instance_desc = "instanceDesc"
 }
 
 `
