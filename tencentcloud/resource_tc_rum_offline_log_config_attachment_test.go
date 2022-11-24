@@ -22,7 +22,7 @@ func TestAccTencentCloudRumOfflineLogConfigAttachmentResource_basic(t *testing.T
 				Config: testAccRumOfflineLogConfigAttachment,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRumOfflineLogConfigExists("tencentcloud_rum_offline_log_config_attachment.offlineLogConfigAttachment"),
-					resource.TestCheckResourceAttr("tencentcloud_rum_offline_log_config_attachment.offlineLogConfigAttachment", "project_key", "ZEYrYfvaYQ30jRdmPx"),
+					resource.TestCheckResourceAttr("tencentcloud_rum_offline_log_config_attachment.offlineLogConfigAttachment", "project_key", "e72G2Ulmvyk507X8x5"),
 					resource.TestCheckResourceAttr("tencentcloud_rum_offline_log_config_attachment.offlineLogConfigAttachment", "unique_id", "100027012456"),
 					resource.TestCheckResourceAttr("tencentcloud_rum_offline_log_config_attachment.offlineLogConfigAttachment", "msg", "success"),
 				),
@@ -52,7 +52,7 @@ func testAccCheckRumOfflineLogConfigDestroy(s *terraform.State) error {
 		uniqueId := idSplit[1]
 
 		logConfig, err := service.DescribeRumOfflineLogConfigAttachment(ctx, projectKey, uniqueId)
-		if logConfig != nil {
+		if logConfig != nil && len(logConfig.UniqueIDSet) > 0 {
 			return fmt.Errorf("rum logConfig %s still exists", rs.Primary.ID)
 		}
 		if err != nil {
@@ -81,7 +81,7 @@ func testAccCheckRumOfflineLogConfigExists(r string) resource.TestCheckFunc {
 
 		service := RumService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		logConfig, err := service.DescribeRumOfflineLogConfigAttachment(ctx, projectKey, uniqueId)
-		if logConfig == nil {
+		if logConfig == nil || len(logConfig.UniqueIDSet) < 1 {
 			return fmt.Errorf("rum logConfig %s is not found", rs.Primary.ID)
 		}
 		if err != nil {
@@ -95,7 +95,7 @@ func testAccCheckRumOfflineLogConfigExists(r string) resource.TestCheckFunc {
 const testAccRumOfflineLogConfigAttachment = `
 
 resource "tencentcloud_rum_offline_log_config_attachment" "offlineLogConfigAttachment" {
-	project_key = "ZEYrYfvaYQ30jRdmPx"
+	project_key = "e72G2Ulmvyk507X8x5"
 	unique_id = "100027012456"
 }
 
