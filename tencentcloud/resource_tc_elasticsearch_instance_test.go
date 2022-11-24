@@ -57,7 +57,7 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "instance_name", "tf-ci-test"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "availability_zone", defaultAZone),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "version", "7.5.1"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "version", "7.10.1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "vpc_id", defaultVpcId),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "subnet_id", defaultSubnetId),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "oss"),
@@ -168,7 +168,7 @@ const testAccElasticsearchInstance = defaultVpcVariable + `
 resource "tencentcloud_elasticsearch_instance" "foo" {
 	instance_name       = "tf-ci-test"
 	availability_zone   = var.availability_zone
-	version             = "7.5.1"
+	version             = "7.10.1"
 	vpc_id              = var.vpc_id
 	subnet_id           = var.subnet_id
 	password            = "Test1234"
@@ -194,7 +194,7 @@ const testAccElasticsearchInstanceUpdate = defaultVpcVariable + `
 resource "tencentcloud_elasticsearch_instance" "foo" {
 	instance_name       = "tf-ci-test-update"
 	availability_zone   = var.availability_zone
-	version             = "7.5.1"
+	version             = "7.10.1"
 	vpc_id              = var.vpc_id
 	subnet_id           = var.subnet_id
 	password            = "Test12345"

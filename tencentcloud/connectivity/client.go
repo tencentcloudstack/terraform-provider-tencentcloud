@@ -517,13 +517,14 @@ func (me *TencentCloudClient) UseEsClient() *es.Client {
 	}
 
 	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
 	me.esConn, _ = es.NewClient(me.Credential, me.Region, cpf)
 	me.esConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.esConn
 }
 
-// UsePostgreClient returns postgresql client for service
+// UsePostgresqlClient returns postgresql client for service
 func (me *TencentCloudClient) UsePostgresqlClient() *postgre.Client {
 	if me.postgreConn != nil {
 		return me.postgreConn
