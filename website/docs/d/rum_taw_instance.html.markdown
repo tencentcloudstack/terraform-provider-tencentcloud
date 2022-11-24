@@ -15,10 +15,10 @@ Use this data source to query detailed information of rum tawInstance
 
 ```hcl
 data "tencentcloud_rum_taw_instance" "tawInstance" {
-  charge_statutes   = ""
+  charge_statuses   = ""
   charge_types      = ""
   area_ids          = ""
-  instance_statutes = ""
+  instance_statuses = ""
   instance_ids      = ""
 }
 ```
@@ -28,10 +28,10 @@ data "tencentcloud_rum_taw_instance" "tawInstance" {
 The following arguments are supported:
 
 * `area_ids` - (Optional, Set: [`Int`]) Region ID.
-* `charge_statutes` - (Optional, Set: [`Int`]) Billing status.
+* `charge_statuses` - (Optional, Set: [`Int`]) Billing status.
 * `charge_types` - (Optional, Set: [`Int`]) Billing type.
 * `instance_ids` - (Optional, Set: [`String`]) Instance ID.
-* `instance_statutes` - (Optional, Set: [`Int`]) Instance status (`1`: creating; `2`: running; `3`: exceptional; `4`: restarting; `5`: stopping; `6`: stopped; `7`: terminating; `8`: terminated).
+* `instance_statuses` - (Optional, Set: [`Int`]) Instance status (`1`: creating; `2`: running; `3`: exceptional; `4`: restarting; `5`: stopping; `6`: stopped; `7`: terminating; `8`: terminated).
 * `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference

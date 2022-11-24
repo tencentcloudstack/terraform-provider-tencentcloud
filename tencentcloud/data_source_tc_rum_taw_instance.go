@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_rum_taw_instance" "tawInstance" {
-  charge_statutes = ""
+  charge_statuses = ""
   charge_types = ""
   area_ids = ""
-  instance_statutes = ""
+  instance_statuses = ""
   instance_ids = ""
 }
 ```
@@ -29,7 +29,7 @@ func dataSourceTencentCloudRumTawInstance() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudRumTawInstanceRead,
 		Schema: map[string]*schema.Schema{
-			"charge_statutes": {
+			"charge_statuses": {
 				Type: schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
@@ -56,7 +56,7 @@ func dataSourceTencentCloudRumTawInstance() *schema.Resource {
 				Description: "Region ID.",
 			},
 
-			"instance_statutes": {
+			"instance_statuses": {
 				Type: schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
@@ -175,14 +175,14 @@ func dataSourceTencentCloudRumTawInstanceRead(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	if v, ok := d.GetOk("charge_statutes"); ok {
-		chargeStatutesSet := []*int64{}
-		charge_statutesSet := v.(*schema.Set).List()
-		for i := range charge_statutesSet {
-			charge_statuse := charge_statutesSet[i].(int)
-			chargeStatutesSet = append(chargeStatutesSet, helper.IntInt64(charge_statuse))
+	if v, ok := d.GetOk("charge_statuses"); ok {
+		chargeStatusSet := []*int64{}
+		charge_statusSet := v.(*schema.Set).List()
+		for i := range charge_statusSet {
+			charge_status := charge_statusSet[i].(int)
+			chargeStatusSet = append(chargeStatusSet, helper.IntInt64(charge_status))
 		}
-		paramMap["charge_statutes"] = chargeStatutesSet
+		paramMap["charge_statuses"] = chargeStatusSet
 	}
 
 	if v, ok := d.GetOk("charge_types"); ok {
@@ -205,14 +205,14 @@ func dataSourceTencentCloudRumTawInstanceRead(d *schema.ResourceData, meta inter
 		paramMap["area_ids"] = areaIdsSet
 	}
 
-	if v, ok := d.GetOk("instance_statutes"); ok {
-		instanceStatutesSet := []*int64{}
-		instance_statutesSet := v.(*schema.Set).List()
-		for i := range instance_statutesSet {
-			instance_statuse := instance_statutesSet[i].(int)
-			instanceStatutesSet = append(instanceStatutesSet, helper.IntInt64(instance_statuse))
+	if v, ok := d.GetOk("instance_statuses"); ok {
+		instanceStatusSet := []*int64{}
+		instance_statusSet := v.(*schema.Set).List()
+		for i := range instance_statusSet {
+			instance_status := instance_statusSet[i].(int)
+			instanceStatusSet = append(instanceStatusSet, helper.IntInt64(instance_status))
 		}
-		paramMap["instance_statutes"] = instanceStatutesSet
+		paramMap["instance_statuses"] = instanceStatusSet
 	}
 
 	if v, ok := d.GetOk("instance_ids"); ok {

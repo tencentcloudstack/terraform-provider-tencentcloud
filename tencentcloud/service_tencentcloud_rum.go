@@ -430,7 +430,7 @@ func (me *RumService) DescribeRumTawInstanceByFilter(ctx context.Context, param 
 	}()
 
 	for k, v := range param {
-		if k == "charge_statutes" {
+		if k == "charge_statuses" {
 			request.ChargeStatuses = v.([]*int64)
 		}
 		if k == "charge_types" {
@@ -439,7 +439,7 @@ func (me *RumService) DescribeRumTawInstanceByFilter(ctx context.Context, param 
 		if k == "area_ids" {
 			request.AreaIds = v.([]*int64)
 		}
-		if k == "instance_statutes" {
+		if k == "instance_statuses" {
 			request.InstanceStatuses = v.([]*int64)
 		}
 		if k == "instance_ids" {
