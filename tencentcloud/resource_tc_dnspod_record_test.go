@@ -23,7 +23,7 @@ func TestAccTencentCloudDnspodRecord(t *testing.T) {
 				Config: testAccTencentCloudDnspodRecord,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDnspodRecordExists("tencentcloud_dnspod_record.demo"),
-					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "terraform.com"),
+					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "domain", "terraform-test.com"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "value", "1.2.3.9"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "sub_domain", "demo"),
 					resource.TestCheckResourceAttr("tencentcloud_dnspod_record.demo", "status", "ENABLE"),
@@ -119,7 +119,7 @@ func testAccCheckDnspodRecordDestroy(s *terraform.State) error {
 
 const testAccTencentCloudDnspodRecord = `
 resource "tencentcloud_dnspod_record" "demo" {
-  domain="terraform.com"
+  domain="terraform-test.com"
   record_type="A"
   record_line="默认"
   value="1.2.3.9"
