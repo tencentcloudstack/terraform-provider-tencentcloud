@@ -674,7 +674,7 @@ locals {
 }
 `
 
-const TkeExclusiveNetwork = `
+const TkeExclusiveNetwork = defaultAzVariable + `
 data "tencentcloud_vpc_instances" "vpc" {
   name = "` + tkeExclusiveVpcName + `"
 }
@@ -688,6 +688,10 @@ data "tencentcloud_instance_types" "default" {
 	  name   = "zone"
 	  values = [var.default_az]
 	}
+  filter {
+    name   = "instance-charge-type"
+    values = ["POSTPAID_BY_HOUR"]
+  }
 	cpu_core_count = 2
 	exclude_sold_out = true
 }

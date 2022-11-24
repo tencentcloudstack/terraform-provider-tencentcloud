@@ -196,7 +196,7 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTkeScaleWorkerInstanceBasic = defaultAzVariable + TkeExclusiveNetwork + TkeDataSource + defaultSecurityGroupData
+const testAccTkeScaleWorkerInstanceBasic = TkeExclusiveNetwork + TkeDataSource + defaultSecurityGroupData
 
 const testAccTkeScaleWorkerInstance string = testAccTkeScaleWorkerInstanceBasic + `
 
