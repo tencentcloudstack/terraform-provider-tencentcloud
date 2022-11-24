@@ -23,7 +23,6 @@ func TestAccTencentCloudRumTawInstanceDataSource(t *testing.T) {
 					resource.TestCheckResourceAttr("data.tencentcloud_rum_taw_instance.taw_instance", "instance_set.0.charge_status", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_rum_taw_instance.taw_instance", "instance_set.0.charge_type", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_rum_taw_instance.taw_instance", "instance_set.0.cluster_id", "0"),
-					resource.TestCheckResourceAttr("data.tencentcloud_rum_taw_instance.taw_instance", "instance_set.0.created_at", "2022-11-14 21:33:21"),
 					resource.TestCheckResourceAttr("data.tencentcloud_rum_taw_instance.taw_instance", "instance_set.0.data_retention_days", "30"),
 					resource.TestCheckResourceAttr("data.tencentcloud_rum_taw_instance.taw_instance", "instance_set.0.instance_desc", "Automated testing, do not delete"),
 					resource.TestCheckResourceAttr("data.tencentcloud_rum_taw_instance.taw_instance", "instance_set.0.instance_id", "rum-pasZKEI3RLgakj"),

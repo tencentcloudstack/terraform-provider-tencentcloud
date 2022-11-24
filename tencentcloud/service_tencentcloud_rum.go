@@ -443,7 +443,13 @@ func (me *RumService) DescribeRumTawInstanceByFilter(ctx context.Context, param 
 			request.InstanceStatuses = v.([]*int64)
 		}
 		if k == "instance_ids" {
-			request.InstanceIds = v.([]*string)
+			request.Filters = append(
+				request.Filters,
+				&rum.Filter{
+					Name:   helper.String("InstanceIDs"),
+					Values: v.([]*string),
+				},
+			)
 		}
 	}
 	ratelimit.Check(request.GetAction())
