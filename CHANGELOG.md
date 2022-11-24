@@ -1,3 +1,73 @@
+## 1.78.14 (November 23, 2022)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cam_policy_by_name` ([#1415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1415))
+* **New Resource:** `tencentcloud_cam_role_by_name` ([#1415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1415))
+* **New Resource:** `tencentcloud_cam_role_policy_attachment_by_name` ([#1415](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1415))
+* **New Resource:** `tencentcloud_dbbrain_security_audit_log_export_task` ([#1417](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1417))
+* **New Resource:** `tencentcloud_dbbrain_sql_filter` ([#1417](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1417))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cynosdb_cluster: feat: tdsql-c - support serverless creation ([#1406](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1406))
+* resource/tencentcloud_instance: update the `key_ids` of cvm smoothly ([#1403](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1403))
+
+## 1.78.13 (November 22, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_tdcpg_clusters` ([#1382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1382))
+* **New Data Source:** `tencentcloud_tdcpg_instances` ([#1382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1382))
+* **New Resource:** `tencentcloud_organization_org_member` ([#1412](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1412))
+* **New Resource:** `tencentcloud_organization_org_node` ([#1408](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1408))
+* **New Resource:** `tencentcloud_organization_policy_sub_account_attachment` ([#1412](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1412))
+* **New Resource:** `tencentcloud_tdcpg_cluster` ([#1382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1382))
+* **New Resource:** `tencentcloud_tdcpg_instance` ([#1382](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1382))
+
+ENHANCEMENTS:
+
+* Provider resource increases the full name of the product ([#1395](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1395))
+* resource/tencentcloud_cdn_domain: feat: cdn - support force_redirect.carry_headers ([#1394](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1394))
+* resource/tencentcloud_monitor_tmp_alert_rule: Parameter check ([#1407](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1407))
+
+BUG FIXES:
+
+* resource/tencentcloud_monitor_tmp_exporter_integration: Optimized initialization ([#1410](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1410))
+
+## 1.78.12 (November 17, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dnspod_records` ([#1398](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1398))
+* **New Data Source:** `tencentcloud_tat_command` ([#1393](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1393))
+* **New Data Source:** `tencentcloud_tat_invoker` ([#1393](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1393))
+* **New Resource:** `tencentcloud_css_live_transcode_rule_attachment` ([#1401](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1401))
+* **New Resource:** `tencentcloud_css_live_transcode_template` ([#1401](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1401))
+* **New Resource:** `tencentcloud_css_pull_stream_task` ([#1401](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1401))
+* **New Resource:** `tencentcloud_css_watermark` ([#1401](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1401))
+* **New Resource:** `tencentcloud_tat_command` ([#1393](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1393))
+* **New Resource:** `tencentcloud_tat_invoker` ([#1393](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1393))
+
+BUG FIXES:
+
+* resource/tencentcloud_gaap_proxy: fix gaap proxy retry error `DuplicatedRequest` ([#1402](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1402))
+
+## 1.78.11 (November 15, 2022)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_pts_alert_channel` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+* **New Resource:** `tencentcloud_pts_cron_job` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+* **New Resource:** `tencentcloud_pts_file` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+* **New Resource:** `tencentcloud_pts_job` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+* **New Resource:** `tencentcloud_pts_project` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+* **New Resource:** `tencentcloud_pts_scenario` ([#1383](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1383))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_instance: Remove maximum item limit on data disks ([#1390](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1390))
+
 ## 1.78.10 (November 11, 2022)
 
 BUG FIXES:

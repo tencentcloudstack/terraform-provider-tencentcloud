@@ -1,5 +1,5 @@
 ---
-subcategory: "Monitor"
+subcategory: "Cloud Monitor(Monitor)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_tmp_tke_record_rule_yaml"
 sidebar_current: "docs-tencentcloud-resource-monitor_tmp_tke_record_rule_yaml"
@@ -14,7 +14,7 @@ Provides a resource to create a tke tmpRecordRule
 ## Example Usage
 
 ```hcl
-resource "resourceTencentCloudMonitorTmpTkeRecordRuleYaml" "foo" {
+resource "tencentcloud_monitor_tmp_tke_record_rule_yaml" "foo" {
   instance_id = ""
   content     = <<-EOT
         apiVersion: monitoring.coreos.com/v1

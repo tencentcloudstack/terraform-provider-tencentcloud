@@ -39,6 +39,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -172,6 +173,9 @@ func resourceTencentCloudMonitorTmpAlertRuleCreate(d *schema.ResourceData, meta 
 		labelsList := v.([]interface{})
 		prometheusRuleKV := make([]*monitor.PrometheusRuleKV, 0, len(labelsList))
 		for _, labels := range labelsList {
+			if labels == nil {
+				return fmt.Errorf("Invalid `labels` parameter, must not be empty")
+			}
 			label := labels.(map[string]interface{})
 			var kv monitor.PrometheusRuleKV
 			kv.Key = helper.String(label["key"].(string))
@@ -184,6 +188,9 @@ func resourceTencentCloudMonitorTmpAlertRuleCreate(d *schema.ResourceData, meta 
 		annotationsList := v.([]interface{})
 		prometheusRuleKV := make([]*monitor.PrometheusRuleKV, 0, len(annotationsList))
 		for _, annotations := range annotationsList {
+			if annotations == nil {
+				return fmt.Errorf("Invalid `annotation` parameter, must not be empty")
+			}
 			annotation := annotations.(map[string]interface{})
 			var kv monitor.PrometheusRuleKV
 			kv.Key = helper.String(annotation["key"].(string))
@@ -199,6 +206,10 @@ func resourceTencentCloudMonitorTmpAlertRuleCreate(d *schema.ResourceData, meta 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreateAlertRule(request)
 		if e != nil {
+			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
+			if ok && IsContains("FailedOperation", ee.Code) {
+				return resource.NonRetryableError(ee)
+			}
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
@@ -279,7 +290,7 @@ func resourceTencentCloudMonitorTmpAlertRuleRead(d *schema.ResourceData, meta in
 		_ = d.Set("labels", result)
 	}
 	if tmpAlertRule.Annotations != nil {
-		annotationsList := tmpAlertRule.Labels
+		annotationsList := tmpAlertRule.Annotations
 		result := make([]map[string]interface{}, 0, len(annotationsList))
 		for _, v := range annotationsList {
 			mapping := map[string]interface{}{
@@ -334,47 +345,47 @@ func resourceTencentCloudMonitorTmpAlertRuleUpdate(d *schema.ResourceData, meta 
 		request.RuleState = helper.IntInt64(v.(int))
 	}
 
-	if d.HasChange("duration") {
-		if v, ok := d.GetOk("duration"); ok {
-			request.Duration = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("duration"); ok {
+		request.Duration = helper.String(v.(string))
 	}
-	if d.HasChange("labels") {
-		if v, ok := d.GetOk("labels"); ok {
-			labelsList := v.([]interface{})
-			prometheusRuleKV := make([]*monitor.PrometheusRuleKV, 0, len(labelsList))
-			for _, labels := range labelsList {
-				label := labels.(map[string]interface{})
-				var kv monitor.PrometheusRuleKV
-				kv.Key = helper.String(label["key"].(string))
-				kv.Value = helper.String(label["value"].(string))
-				prometheusRuleKV = append(prometheusRuleKV, &kv)
-			}
-			request.Labels = prometheusRuleKV
+
+	if v, ok := d.GetOk("labels"); ok {
+		labelsList := v.([]interface{})
+		prometheusRuleKV := make([]*monitor.PrometheusRuleKV, 0, len(labelsList))
+		for _, labels := range labelsList {
+			label := labels.(map[string]interface{})
+			var kv monitor.PrometheusRuleKV
+			kv.Key = helper.String(label["key"].(string))
+			kv.Value = helper.String(label["value"].(string))
+			prometheusRuleKV = append(prometheusRuleKV, &kv)
 		}
+		request.Labels = prometheusRuleKV
 	}
-	if d.HasChange("annotations") {
-		if v, ok := d.GetOk("annotations"); ok {
-			annotationsList := v.([]interface{})
-			prometheusRuleKV := make([]*monitor.PrometheusRuleKV, 0, len(annotationsList))
-			for _, annotations := range annotationsList {
-				annotation := annotations.(map[string]interface{})
-				var kv monitor.PrometheusRuleKV
-				kv.Key = helper.String(annotation["key"].(string))
-				kv.Value = helper.String(annotation["value"].(string))
-				prometheusRuleKV = append(prometheusRuleKV, &kv)
-			}
-			request.Annotations = prometheusRuleKV
+
+	if v, ok := d.GetOk("annotations"); ok {
+		annotationsList := v.([]interface{})
+		prometheusRuleKV := make([]*monitor.PrometheusRuleKV, 0, len(annotationsList))
+		for _, annotations := range annotationsList {
+			annotation := annotations.(map[string]interface{})
+			var kv monitor.PrometheusRuleKV
+			kv.Key = helper.String(annotation["key"].(string))
+			kv.Value = helper.String(annotation["value"].(string))
+			prometheusRuleKV = append(prometheusRuleKV, &kv)
 		}
+		request.Annotations = prometheusRuleKV
 	}
-	if d.HasChange("type") {
-		if v, ok := d.GetOk("type"); ok {
-			request.Type = helper.String(v.(string))
-		}
+
+	if v, ok := d.GetOk("type"); ok {
+		request.Type = helper.String(v.(string))
 	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().UpdateAlertRule(request)
 		if e != nil {
+			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
+			if ok && IsContains("FailedOperation", ee.Code) {
+				return resource.NonRetryableError(ee)
+			}
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",

@@ -1,5 +1,5 @@
 ---
-subcategory: "Lighthouse"
+subcategory: "TencentCloud Lighthouse(Lighthouse)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_lighthouse_instance"
 sidebar_current: "docs-tencentcloud-resource-lighthouse_instance"

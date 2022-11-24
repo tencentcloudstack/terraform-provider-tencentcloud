@@ -168,7 +168,7 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudPostgresqlMAZInstanceResource(t *testing.T) {
+func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -255,7 +255,7 @@ func testAccCheckPostgresqlInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccPostgresqlInstanceBasic = `
+const testAccPostgresqlInstanceBasic = defaultSecurityGroupData + `
 data "tencentcloud_availability_zones_by_product" "zone" {
   product = "postgres"
 }
@@ -270,6 +270,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   subnet_id 		= local.subnet_id
   engine_version	= "10.4"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
+  security_groups   = [local.sg_id]
   charset			= "LATIN1"
   project_id 		= 0
   memory 			= 4
@@ -300,6 +301,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charset 			= "LATIN1"
   project_id 		= 0
   public_access_switch = true
+  security_groups   = [local.sg_id]
   memory 			= 4
   storage 			= 250
   backup_plan {
@@ -327,6 +329,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charset 			= "LATIN1"
   project_id 		= 0
   public_access_switch = false
+  security_groups   = [local.sg_id]
   memory 			= 4
   storage 			= 250
   backup_plan {

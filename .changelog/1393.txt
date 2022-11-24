@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_tat_command
+```
+
+```release-note:new-data-source
+tencentcloud_tat_invoker
+```
+
+```release-note:new-resource
+tencentcloud_tat_command
+```
+
+```release-note:new-resource
+tencentcloud_tat_invoker
+```

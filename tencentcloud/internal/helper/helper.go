@@ -157,7 +157,7 @@ func SetMapInterfaces(d *schema.ResourceData, key string, values ...map[string]i
 
 func InterfaceToMap(d map[string]interface{}, key string) (result map[string]interface{}, ok bool) {
 	if v, ok := d[key]; ok {
-		if len(v.([]interface{})) != 1 {
+		if len(v.([]interface{})) != 1 || v.([]interface{})[0] == nil {
 			return nil, false
 		}
 		return v.([]interface{})[0].(map[string]interface{}), true

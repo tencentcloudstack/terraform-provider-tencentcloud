@@ -71,7 +71,7 @@ func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
-			if err := testAccCdnDomainVerify("www"); err != nil {
+			if err := testAccCdnDomainVerify("www2"); err != nil {
 				log.Printf("[TestAccTencentCloudCdnDomainResource] Domain Verify failed: %s", err)
 				t.Fatalf("[TestAccTencentCloudCdnDomainResource] Domain Verify failed: %s", err)
 			}
@@ -519,7 +519,7 @@ locals {
 const testAccCdnDomainBasic = testAccDomainCosForCDN + `
 
 resource "tencentcloud_cdn_domain" "foo" {
-  domain = "www.${local.domain}"
+  domain = "www2.${local.domain}"
   service_type = "web"
   area = "overseas"
   origin {
@@ -556,7 +556,7 @@ resource "tencentcloud_cdn_domain" "foo" {
 const testAccCdnDomainBasicUpdate = testAccDomainCosForCDN + `
 
 resource "tencentcloud_cdn_domain" "foo" {
-  domain = "www.${local.domain}"
+  domain = "www2.${local.domain}"
   service_type = "web"
   area = "overseas"
   origin {

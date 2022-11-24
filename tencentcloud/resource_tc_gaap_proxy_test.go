@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudGaapProxy_basic(t *testing.T) {
+func TestAccTencentCloudGaapProxyResource_basic(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{
@@ -49,7 +49,7 @@ func TestAccTencentCloudGaapProxy_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapProxy_update(t *testing.T) {
+func TestAccTencentCloudGaapProxyResource_update(t *testing.T) {
 	id := new(string)
 
 	resource.Test(t, resource.TestCase{

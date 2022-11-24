@@ -38,7 +38,7 @@ The following arguments are supported:
 * `realserver_region` - (Required, String, ForceNew) Region of the GAAP realserver. Valid value: `NorthChina`, `EastChina`, `SouthChina`, `SouthwestChina`, `Hongkong`, `SL_TAIWAN`, `SoutheastAsia`, `Korea`, `SL_India`, `SL_Australia`, `Europe`, `SL_UK`, `SL_SouthAmerica`, `NorthAmerica`, `SL_MiddleUSA`, `Canada`, `SL_VIET`, `WestIndia`, `Thailand`, `Virginia`, `Russia`, `Japan` and `SL_Indonesia`.
 * `enable` - (Optional, Bool) Indicates whether GAAP proxy is enabled, default value is `true`.
 * `project_id` - (Optional, Int) ID of the project within the GAAP proxy, `0` means is default project.
-* `tags` - (Optional, Map) Tags of the GAAP proxy.
+* `tags` - (Optional, Map) Tags of the GAAP proxy. Tags that do not exist are not created automatically.
 
 ## Attributes Reference
 

@@ -367,7 +367,7 @@ variable "availability_zone" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "guagua-ci-temp-test"
+  name       = "clb-instance-internal-vpc"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -398,7 +398,7 @@ resource "tencentcloud_security_group" "foo" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "keep-guagua-ci-temp-test"
+  name       = "clb-instance-open-vpc"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -423,7 +423,7 @@ variable "availability_zone" {
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "keep-clb-temp-test"
+  name       = "clb-instance-internal-vpc"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -450,11 +450,11 @@ resource "tencentcloud_clb_instance" "clb_internal" {
 
 const testAccClbInstance_update_open = `
 resource "tencentcloud_security_group" "foo" {
-  name = "keep-clb-test1-sg"
+  name = "clb-instance-sg"
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name       = "keep-clb-temp-test"
+  name       = "clb-instance-open-vpc"
   cidr_block = "10.0.0.0/16"
 }
 
@@ -487,13 +487,13 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_security_group" "sglab" {
-  name        = "keep-sg_o0ek7r93"
+  name        = "clb-instance-enable-sg"
   description = "favourite sg"
   project_id  = 0
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name         = "keep-for-my-open-clb"
+  name         = "clb-instance-default-vpc"
   cidr_block   = "10.0.0.0/16"
 
   tags = {
@@ -532,13 +532,13 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_security_group" "sglab" {
-  name        = "keep-sg_o0ek7r93"
+  name        = "clb-instance-enable-sg"
   description = "favourite sg"
   project_id  = 0
 }
 
 resource "tencentcloud_vpc" "foo" {
-  name         = "keep-for-my-open-clb"
+  name         = "clb-instance-default-vpc"
   cidr_block   = "10.0.0.0/16"
 
   tags = {

@@ -1,5 +1,5 @@
 ---
-subcategory: "VPN"
+subcategory: "VPN Connections(VPN)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vpn_gateway_route"
 sidebar_current: "docs-tencentcloud-resource-vpn_gateway_route"

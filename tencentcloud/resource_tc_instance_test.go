@@ -752,15 +752,83 @@ resource "tencentcloud_instance" "foo" {
     data_disk_type        = "CLOUD_PREMIUM"
     data_disk_size        = 150
     delete_with_instance  = true
-	// encrypt = true
   } 
    
   data_disks {
     data_disk_type        = "CLOUD_PREMIUM"
     data_disk_size        = 150
-    # data_disk_snapshot_id = "snap-nvzu3dmh"
     delete_with_instance  = true
   }
+
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+  data_disks {
+    data_disk_type        = "CLOUD_PREMIUM"
+    data_disk_size        = 150
+    delete_with_instance  = true
+  }
+
+
 
   disable_security_service = true
   disable_monitor_service  = true

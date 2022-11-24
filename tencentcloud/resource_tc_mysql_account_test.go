@@ -89,7 +89,7 @@ func TestAccTencentCloudMysqlAccountResource(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlAccountExists("tencentcloud_mysql_account.mysql_account"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account.mysql_account", "mysql_id"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "name", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "name", "keep_dbbrain"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "description", "test from terraform"),
 				),
 			},
@@ -194,9 +194,9 @@ func testAccMysqlAccount() string {
 
 resource "tencentcloud_mysql_account" "mysql_account" {
 	mysql_id = local.mysql_id
-	name    = "test"
+	name    = "keep_dbbrain"
     host = "192.168.0.%%"
-	password = "test1234"
+	password = "Test@123456#"
 	description = "test from terraform"
 }
 	`, CommonPresetMysql)

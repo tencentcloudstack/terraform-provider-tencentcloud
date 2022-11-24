@@ -48,6 +48,18 @@ func Strings(strs []string) []*string {
 	return sp
 }
 
+func StringsToUint64Pointer(strs []*string) []*uint64 {
+	if len(strs) == 0 {
+		return nil
+	}
+
+	vs := make([]*uint64, 0, len(strs))
+	for _, v := range strs {
+		vs = append(vs, StrToUint64Point(*v))
+	}
+	return vs
+}
+
 func PString(pointer *string) string {
 	if pointer == nil {
 		return ""
@@ -163,9 +175,19 @@ func Int64ToStr(s int64) (i string) {
 	return
 }
 
+func Int64ToStrPoint(s int64) *string {
+	i := Int64ToStr(s)
+	return &i
+}
+
 func StrToInt64(s string) (i int64) {
 	i, _ = strconv.ParseInt(s, 10, 64)
 	return
+}
+
+func StrToInt64Point(s string) *int64 {
+	i := StrToInt64(s)
+	return &i
 }
 
 func UInt64ToStr(s uint64) (i string) {
@@ -173,10 +195,20 @@ func UInt64ToStr(s uint64) (i string) {
 	return
 }
 
+func UInt64ToStrPoint(i uint64) *string {
+	s := strconv.FormatUint(i, 10)
+	return &s
+}
+
 func StrToUInt64(s string) (i uint64) {
 	intNum, _ := strconv.Atoi(s)
 	i = uint64(intNum)
 	return
+}
+
+func StrToUint64Point(s string) *uint64 {
+	i := StrToUInt64(s)
+	return &i
 }
 
 func StrToBool(s string) (i bool) {

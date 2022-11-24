@@ -115,6 +115,22 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	request.AdminPassword = helper.String(d.Get("password").(string))
 	request.RollbackStrategy = helper.String("noneRollback")
 
+	if v, ok := d.GetOk("db_mode"); ok {
+		request.DbMode = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("min_cpu"); ok {
+		request.MinCpu = helper.Float64(v.(float64))
+	}
+	if v, ok := d.GetOk("max_cpu"); ok {
+		request.MaxCpu = helper.Float64(v.(float64))
+	}
+	if v, ok := d.GetOk("auto_pause"); ok {
+		request.AutoPause = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("auto_pause_delay"); ok {
+		request.AutoPauseDelay = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := d.GetOk("storage_limit"); ok {
 		request.StorageLimit = helper.IntInt64(v.(int))
 	}
@@ -139,10 +155,17 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	if v, ok := d.GetOk("prarm_template_id"); ok {
 		request.ParamTemplateId = helper.IntInt64(v.(int))
 	}
-
-	// instance info
-	request.Cpu = helper.IntInt64(d.Get("instance_cpu_core").(int))
-	request.Memory = helper.IntInt64(d.Get("instance_memory_size").(int))
+	isServerless := d.Get("db_mode").(string) == CYNOSDB_SERVERLESS
+	if v, ok := d.GetOk("instance_cpu_core"); ok {
+		request.Cpu = helper.IntInt64(v.(int))
+	} else if !isServerless {
+		return fmt.Errorf("`instance_cpu_core` is required while creating non-serverless cluster")
+	}
+	if v, ok := d.GetOk("instance_memory_size"); ok {
+		request.Memory = helper.IntInt64(v.(int))
+	} else if !isServerless {
+		return fmt.Errorf("`instance_memory_size` is required while creating non-serverless cluster")
+	}
 
 	var chargeType int64 = 0
 	if v, ok := d.GetOk("charge_type"); ok {
@@ -312,7 +335,7 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	cynosdbService := CynosdbService{client: client}
-	renewFlag, cluster, has, err := cynosdbService.DescribeClusterById(ctx, id)
+	item, cluster, has, err := cynosdbService.DescribeClusterById(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -334,7 +357,11 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("cluster_status", cluster.Status)
 	_ = d.Set("create_time", cluster.CreateTime)
 	_ = d.Set("storage_used", *cluster.UsedStorage/1000/1000)
-	_ = d.Set("auto_renew_flag", renewFlag)
+	_ = d.Set("auto_renew_flag", *item.RenewFlag)
+
+	if _, ok := d.GetOk("db_mode"); ok || *item.DbMode == CYNOSDB_SERVERLESS {
+		_ = d.Set("db_mode", item.DbMode)
+	}
 
 	//tag
 	tagService := &TagService{client: client}
@@ -357,8 +384,10 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 			if err != nil {
 				return err
 			}
-			_ = d.Set("instance_cpu_core", instance.Cpu)
-			_ = d.Set("instance_memory_size", instance.Memory)
+			if *item.DbMode != CYNOSDB_SERVERLESS {
+				_ = d.Set("instance_cpu_core", instance.Cpu)
+				_ = d.Set("instance_memory_size", instance.Memory)
+			}
 			_ = d.Set("instance_id", instance.InstanceId)
 			_ = d.Set("instance_name", instance.InstanceName)
 			_ = d.Set("instance_status", instance.Status)
@@ -485,6 +514,19 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		tagService     = TagService{client: client}
 		region         = client.Region
 	)
+	immutableArgs := []string{
+		"db_mode",
+		"min_cpu",
+		"max_cpu",
+		"auto_pause",
+		"auto_pause_delay",
+	}
+
+	for _, a := range immutableArgs {
+		if d.HasChange(a) {
+			return fmt.Errorf("argument %s cannot be modified", a)
+		}
+	}
 
 	d.Partial(true)
 

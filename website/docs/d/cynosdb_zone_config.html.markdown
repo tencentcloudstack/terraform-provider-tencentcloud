@@ -1,5 +1,5 @@
 ---
-subcategory: "CynosDB"
+subcategory: "TDSQL-C MySQL(CynosDB)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cynosdb_zone_config"
 sidebar_current: "docs-tencentcloud-datasource-cynosdb_zone_config"

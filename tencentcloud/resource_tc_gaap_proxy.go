@@ -96,7 +96,7 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				Description: "Tags of the GAAP proxy.",
+				Description: "Tags of the GAAP proxy. Tags that do not exist are not created automatically.",
 			},
 
 			// computed

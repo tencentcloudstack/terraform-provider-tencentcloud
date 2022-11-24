@@ -92,8 +92,7 @@ const (
 	defaultGaapRealserverIp2        = "1.1.1.5"
 	defaultHttpsDomainCertificateId = "cert-crg2aynt"
 
-	defaultSecurityGroup  = "sg-ijato2x1"
-	defaultSecurityGroup2 = "sg-51rgzop1"
+	defaultSecurityGroup = "sg-ijato2x1"
 
 	defaultProjectId = "1250480"
 
@@ -675,7 +674,7 @@ locals {
 }
 `
 
-const TkeExclusiveNetwork = `
+const TkeExclusiveNetwork = defaultAzVariable + `
 data "tencentcloud_vpc_instances" "vpc" {
   name = "` + tkeExclusiveVpcName + `"
 }
@@ -684,9 +683,23 @@ data "tencentcloud_vpc_subnets" "subnet" {
   vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
 }
 
+data "tencentcloud_instance_types" "default" {
+	filter {
+	  name   = "zone"
+	  values = [var.default_az]
+	}
+  filter {
+    name   = "instance-charge-type"
+    values = ["POSTPAID_BY_HOUR"]
+  }
+	cpu_core_count = 2
+	exclude_sold_out = true
+}
+
 locals {
   vpc_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
   subnet_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
+  scale_instance_type = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 }
 `
 
@@ -786,6 +799,54 @@ const (
 )
 
 // End of MARIADB
+// PTS
+const (
+	defaultPtsProjectId  = "project-45vw7v82"
+	defaultScenarioId    = "scenario-gb5ix8m2"
+	defaultScenarioIdJob = "scenario-22q19f3k"
+	defaultPtsNoticeId   = "notice-tj75hgqj"
+)
+
+// End of PTS
+
+// CSS
+const (
+	defaultCSSLiveType   = "PullLivePushLive"
+	defaultCSSDomainName = "177154.push.tlivecloud.com"
+	defaultCSSStreamName = defaultCSSPrefix + "test_stream_name"
+	defaultCSSAppName    = "live"
+	defaultCSSOperator   = "tf_admin"
+	defaultCSSPrefix     = "tf_css_"
+)
+
+// End of CSS
+
+// TAT
+const (
+	defaultInstanceId = "ins-881b1c8w"
+)
+
+// End of TAT
+
+// TDCPG
+const (
+	defaultTdcpgClusterId      = "tdcpg-m5e26fi8"
+	defaultTdcpgClusterName    = "keep-tdcpg-test"
+	defaultTdcpgPayMode        = "POSTPAID_BY_HOUR"
+	defaultTdcpgInstanceId     = "tdcpg-ins-fc0e5kes"
+	defaultTdcpgInstanceName   = "keep-tdcpg-instance-test"
+	defaultTdcpgZone           = "ap-guangzhou-3"
+	defaultTdcpgTestNamePrefix = "tf-tdcpg-"
+)
+
+// End of TDCPG
+
+// DBBRAIN
+const (
+	defaultDbBrainsagId = "sag-01z37l4g"
+)
+
+// End of DBBRAIN
 
 // RUM
 const (

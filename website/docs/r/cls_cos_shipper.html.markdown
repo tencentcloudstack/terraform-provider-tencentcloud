@@ -1,5 +1,5 @@
 ---
-subcategory: "CLS"
+subcategory: "Cloud Log Service(CLS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cls_cos_shipper"
 sidebar_current: "docs-tencentcloud-resource-cls_cos_shipper"

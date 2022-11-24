@@ -38,6 +38,7 @@ import (
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
+	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
 	dc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
@@ -47,11 +48,14 @@ import (
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
 	kms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
+	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
+	pts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts/v20210728"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	rum "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
@@ -61,8 +65,10 @@ import (
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 	sts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts/v20180813"
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
+	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
+	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
@@ -131,12 +137,18 @@ type TencentCloudClient struct {
 	temConn            *tem.Client
 	teoConn            *teo.Client
 	tcmConn            *tcm.Client
+	cssConn            *css.Client
 	sesConn            *ses.Client
 	dcdbConn           *dcdb.Client
 	smsConn            *sms.Client
 	catConn            *cat.Client
 	mariadbConn        *mariadb.Client
 	rumConn            *rum.Client
+	ptsConn            *pts.Client
+	tatConn            *tat.Client
+	organizationConn   *organization.Client
+	tdcpgConn          *tdcpg.Client
+	dbbrainConn        *dbbrain.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -790,6 +802,19 @@ func (me *TencentCloudClient) UseTcmClient() *tcm.Client {
 	return me.tcmConn
 }
 
+// UseCssClient returns css client for service
+func (me *TencentCloudClient) UseCssClient() *css.Client {
+	if me.cssConn != nil {
+		return me.cssConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.cssConn, _ = css.NewClient(me.Credential, me.Region, cpf)
+	me.cssConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cssConn
+}
+
 // UseSesClient returns Ses client for service
 func (me *TencentCloudClient) UseSesClient() *ses.Client {
 	if me.sesConn != nil {
@@ -853,6 +878,72 @@ func (me *TencentCloudClient) UseMariadbClient() *mariadb.Client {
 	me.mariadbConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.mariadbConn
+}
+
+// UsePtsClient returns pts client for service
+func (me *TencentCloudClient) UsePtsClient() *pts.Client {
+	if me.ptsConn != nil {
+		return me.ptsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.ptsConn, _ = pts.NewClient(me.Credential, me.Region, cpf)
+	me.ptsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ptsConn
+}
+
+// UseTatClient returns tat client for service
+func (me *TencentCloudClient) UseTatClient() *tat.Client {
+	if me.tatConn != nil {
+		return me.tatConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.tatConn, _ = tat.NewClient(me.Credential, me.Region, cpf)
+	me.tatConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tatConn
+}
+
+// UseOrganizationClient returns organization client for service
+func (me *TencentCloudClient) UseOrganizationClient() *organization.Client {
+	if me.organizationConn != nil {
+		return me.organizationConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.organizationConn, _ = organization.NewClient(me.Credential, me.Region, cpf)
+	me.organizationConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.organizationConn
+}
+
+// UseTdcpgClient returns tdcpg client for service
+func (me *TencentCloudClient) UseTdcpgClient() *tdcpg.Client {
+	if me.tdcpgConn != nil {
+		return me.tdcpgConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.tdcpgConn, _ = tdcpg.NewClient(me.Credential, me.Region, cpf)
+	me.tdcpgConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tdcpgConn
+}
+
+// UseDbbrainClient returns dbbrain client for service
+func (me *TencentCloudClient) UseDbbrainClient() *dbbrain.Client {
+	if me.dbbrainConn != nil {
+		return me.dbbrainConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.dbbrainConn, _ = dbbrain.NewClient(me.Credential, me.Region, cpf)
+	me.dbbrainConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dbbrainConn
 }
 
 // UseRumClient returns rum client for service
