@@ -215,7 +215,7 @@ func resourceTencentCloudCamPolicyByNameRead(d *schema.ResourceData, meta interf
 		return err
 	}
 	if len(policies) == 0 {
-		return fmt.Errorf("Can not find policy by name!")
+		return nil
 	}
 	var instance *cam.GetPolicyResponse
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -330,7 +330,7 @@ func resourceTencentCloudCamPolicyByNameDelete(d *schema.ResourceData, meta inte
 		return err
 	}
 	if len(policies) == 0 {
-		return fmt.Errorf("Can not find policy by name!")
+		return nil
 	}
 
 	policyId := policies[0].PolicyId
