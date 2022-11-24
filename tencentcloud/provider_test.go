@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"fmt"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"log"
 	"os"
 	"testing"
@@ -41,6 +42,11 @@ func init() {
 	testAccProviders = map[string]terraform.ResourceProvider{
 		"tencentcloud": testAccProvider,
 	}
+	envProject := os.Getenv("QCI_JOB_ID")
+	envNum := os.Getenv("QCI_BUILD_NUMBER")
+	envId := os.Getenv("QCI_BUILD_ID")
+	reqCli := fmt.Sprintf("Terraform-%s/%s-%s", envProject, envNum, envId)
+	os.Setenv(connectivity.REQUEST_CLIENT, reqCli)
 }
 
 func TestProvider(t *testing.T) {
