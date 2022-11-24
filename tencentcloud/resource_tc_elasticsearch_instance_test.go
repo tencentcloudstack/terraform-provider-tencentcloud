@@ -194,7 +194,7 @@ const testAccElasticsearchInstanceUpdate = defaultVpcVariable + `
 resource "tencentcloud_elasticsearch_instance" "foo" {
 	instance_name       = "tf-ci-test-update"
 	availability_zone   = var.availability_zone
-	version             = "7.14.2"
+	version             = "7.10.1"
 	vpc_id              = var.vpc_id
 	subnet_id           = var.subnet_id
 	password            = "Test12345"
