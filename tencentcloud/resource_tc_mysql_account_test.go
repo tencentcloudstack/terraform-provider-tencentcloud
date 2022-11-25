@@ -77,7 +77,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudMysqlResource_Account(t *testing.T) {
+func TestAccTencentCloudMysqlAccountResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

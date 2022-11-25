@@ -10,7 +10,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-func TestAccTencentCloudMysqlResource_ReadonlyInstance(t *testing.T) {
+func TestAccTencentCloudMysqlReadonlyInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
