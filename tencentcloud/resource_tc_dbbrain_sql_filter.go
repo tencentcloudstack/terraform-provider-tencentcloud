@@ -120,6 +120,12 @@ func resourceTencentCloudDbbrainSqlFilter() *schema.Resource {
 				Computed:    true,
 				Description: "filter status.",
 			},
+
+			"filter_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "filter id.",
+			},
 		},
 	}
 }
@@ -274,6 +280,10 @@ func resourceTencentCloudDbbrainSqlFilterRead(d *schema.ResourceData, meta inter
 
 	if sqlFilter.Status != nil {
 		_ = d.Set("status", sqlFilter.Status)
+	}
+
+	if sqlFilter.Id != nil {
+		_ = d.Set("filter_id", sqlFilter.Id)
 	}
 
 	return nil
