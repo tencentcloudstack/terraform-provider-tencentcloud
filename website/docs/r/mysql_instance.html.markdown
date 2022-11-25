@@ -69,7 +69,6 @@ The following arguments are supported:
 * `period` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.36.0. Please use `prepaid_period` instead. Period of instance. NOTES: Only supported prepaid instance.
 * `prepaid_period` - (Optional, Int) Period of instance. NOTES: Only supported prepaid instance.
 * `project_id` - (Optional, Int) Project ID, default value is 0.
-* `retry_creating` - (Optional, Bool) Specify whether to retry while instance create timeout with client token, default `false`.
 * `root_password` - (Optional, String) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
 * `second_slave_zone` - (Optional, String, ForceNew) Zone information about second slave instance.
 * `security_groups` - (Optional, Set: [`String`]) Security groups to use.

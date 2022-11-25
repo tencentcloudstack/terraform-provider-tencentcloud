@@ -195,11 +195,6 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "Instance tags.",
 		},
-		"retry_creating": {
-			Type:        schema.TypeBool,
-			Optional:    true,
-			Description: "Specify whether to retry while instance create timeout with client token, default `false`.",
-		},
 		"force_delete": {
 			Type:        schema.TypeBool,
 			Optional:    true,
@@ -561,12 +556,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	logId := getLogId(ctx)
 
 	request := cdb.NewCreateDBInstanceRequest()
-	var clientToken string
-
-	if v := d.Get("retry_creating").(bool); v {
-		clientToken = helper.BuildToken()
-		request.ClientToken = &clientToken
-	}
+	clientToken := helper.BuildToken()
+	request.ClientToken = &clientToken
 
 	payType, oldOk := d.GetOkExists("pay_type")
 	var period int
@@ -623,12 +614,8 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 
 	logId := getLogId(ctx)
 	request := cdb.NewCreateDBInstanceHourRequest()
-	var clientToken string
-
-	if v := d.Get("retry_creating").(bool); v {
-		clientToken = helper.BuildToken()
-		request.ClientToken = &clientToken
-	}
+	clientToken := helper.BuildToken()
+	request.ClientToken = &clientToken
 
 	if err := mysqlAllInstanceRoleSet(ctx, request, d, meta); err != nil {
 		return err

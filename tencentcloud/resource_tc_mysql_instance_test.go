@@ -112,7 +112,7 @@ func TestAccTencentCloudMysqlResource_DeviceType(t *testing.T) {
 				ResourceName:            "tencentcloud_mysql_instance.mysql_exclusive",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "param_template_id", "fast_upgrade", "retry_creating"},
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "param_template_id", "fast_upgrade"},
 			},
 			{
 				Config: testAccMySQLDeviceTypeUpdate,
@@ -179,7 +179,7 @@ func TestAccTencentCloudMysqlResource_MasterInstance_basic_and_update(t *testing
 				ResourceName:            "tencentcloud_mysql_instance.mysql_master",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "retry_creating"},
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete"},
 			},
 			// add tag
 			{
@@ -325,7 +325,6 @@ resource "tencentcloud_mysql_instance" "mysql_exclusive" {
   force_delete      = true
   device_type       = "EXCLUSIVE"
   param_template_id = var.temporary_param_tmpl_id
-  retry_creating    = true
 }
 `
 
@@ -349,7 +348,6 @@ resource "tencentcloud_mysql_instance" "mysql_exclusive" {
   device_type       = "EXCLUSIVE"
   fast_upgrade      = 1
   param_template_id = var.temporary_param_tmpl_id
-  retry_creating    = true
 }
 `
 
@@ -366,7 +364,6 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   availability_zone = "ap-guangzhou-3"
   first_slave_zone  = "ap-guangzhou-3"
   force_delete      = true
-  retry_creating    = true
 }`
 }
 
@@ -386,7 +383,6 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   second_slave_zone = "ap-guangzhou-3"
   slave_sync_mode   = 2
   force_delete      = true
-  retry_creating    = true
 }`
 }
 
@@ -408,7 +404,6 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   first_slave_zone  = "ap-guangzhou-3"
   internet_service  = ` + tag + `
   force_delete      = true
-  retry_creating    = true
 }`
 
 }
@@ -426,7 +421,6 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   availability_zone = "ap-guangzhou-3"
   first_slave_zone  = "ap-guangzhou-3"
   force_delete      = true
-  retry_creating    = true
   
   parameters = {
     max_connections = "1000"
@@ -447,7 +441,6 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   availability_zone = "ap-guangzhou-3"
   first_slave_zone  = "ap-guangzhou-3"
   force_delete      = true
-  retry_creating    = true
   tags = {
     test = "test-tf"
     role = "%s"
@@ -469,7 +462,6 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   availability_zone = "ap-guangzhou-3"
   first_slave_zone  = "ap-guangzhou-3"
   force_delete      = true
-  retry_creating    = true
 }`
 	return fmt.Sprintf(tpl, instance_name, instranet_port)
 }
