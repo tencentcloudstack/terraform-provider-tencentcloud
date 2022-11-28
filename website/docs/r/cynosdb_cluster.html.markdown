@@ -91,6 +91,7 @@ The following arguments are supported:
 * `project_id` - (Optional, Int, ForceNew) ID of the project. `0` by default.
 * `ro_group_sg` - (Optional, List: [`String`]) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional, List: [`String`]) IDs of security group for `rw_group`.
+* `serverless_status_flag` - (Optional, String) Specify whether to pause or resume serverless cluster. values: `resume`, `pause`.
 * `storage_limit` - (Optional, Int, ForceNew) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
 * `tags` - (Optional, Map) The tags of the CynosDB cluster.
 
@@ -126,6 +127,7 @@ In addition to all arguments above, the following attributes are exported:
 * `rw_group_instances` - List of instances in the read-write instance group.
   * `instance_id` - ID of instance.
   * `instance_name` - Name of instance.
+* `serverless_status` - Serverless cluster status. NOTE: This is a readonly attribute, to modify, please set `serverless_status_flag`.
 * `storage_used` - Used storage of CynosDB cluster, unit in MB.
 
 
