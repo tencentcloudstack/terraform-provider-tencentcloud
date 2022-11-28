@@ -13,7 +13,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func TestAccTencentCloudDnspodRecord(t *testing.T) {
+func TestAccTencentCloudDnspodRecordResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		Providers:    testAccProviders,
