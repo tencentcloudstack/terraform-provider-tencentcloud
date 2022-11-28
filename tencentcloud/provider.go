@@ -800,6 +800,9 @@ TDSQL-C for PostgreSQL(TDCPG)
 	tencentcloud_tdcpg_instance
 
 DBbrain
+  Data Source
+	tencentcloud_dbbrain_sql_filters
+	tencentcloud_dbbrain_security_audit_log_export_tasks
   Resource
 	tencentcloud_dbbrain_sql_filter
 	tencentcloud_dbbrain_security_audit_log_export_task
@@ -1125,6 +1128,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dnspod_records":                           dataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_tat_command":                              dataSourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
+			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
+			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
