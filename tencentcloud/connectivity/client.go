@@ -43,6 +43,7 @@ import (
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
+	dts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
@@ -149,6 +150,7 @@ type TencentCloudClient struct {
 	organizationConn   *organization.Client
 	tdcpgConn          *tdcpg.Client
 	dbbrainConn        *dbbrain.Client
+	dtsConn            *dts.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -958,6 +960,19 @@ func (me *TencentCloudClient) UseRumClient() *rum.Client {
 	me.rumConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.rumConn
+}
+
+// UseDtsClient returns dts client for service
+func (me *TencentCloudClient) UseDtsClient() *dts.Client {
+	if me.dtsConn != nil {
+		return me.dtsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.dtsConn, _ = dts.NewClient(me.Credential, me.Region, cpf)
+	me.dtsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dtsConn
 }
 
 func getEnvDefault(key string, defVal int) int {

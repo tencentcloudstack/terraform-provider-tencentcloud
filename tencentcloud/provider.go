@@ -809,6 +809,13 @@ DBbrain
 	tencentcloud_dbbrain_sql_filter
 	tencentcloud_dbbrain_security_audit_log_export_task
 
+Data Transmission Service(DTS)
+  Data Source
+	tencentcloud_dts_sync_jobs
+  Resource
+	tencentcloud_dts_sync_job
+
+
 */
 package tencentcloud
 
@@ -1132,6 +1139,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
+			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1437,6 +1445,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
+			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			// "tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
 		ConfigureFunc: providerConfigure,
