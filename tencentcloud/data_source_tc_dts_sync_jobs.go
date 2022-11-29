@@ -4,24 +4,27 @@ Use this data source to query detailed information of dts syncJobs
 Example Usage
 
 ```hcl
-data "tencentcloud_dts_sync_jobs" "syncJobs" {
-  job_id = ""
-  job_name = ""
-  order = ""
-  order_seq = ""
-  status = ""
-  run_mode = ""
-  job_type = ""
-  pay_mode = ""
-  tag_filters {
-			tag_key = ""
-			tag_value = ""
+resource "tencentcloud_dts_sync_job" "job" {
+	job_name = "tf_dts_test"
+	pay_mode = "PostPay"
+	src_database_type = "mysql"
+	src_region = "ap-guangzhou"
+	dst_database_type = "cynosdbmysql"
+	dst_region = "ap-guangzhou"
+	tags {
+	  tag_key = "aaa"
+	  tag_value = "bbb"
+	}
+	auto_renew = 0
+   instance_class = "micro"
+  }
 
-  }
-  }
+data "tencentcloud_dts_sync_jobs" "sync_jobs" {
+  job_id = tencentcloud_dts_sync_job.job.id
+  job_name = "tf_dts_test"
+}
 ```
 */
-
 package tencentcloud
 
 import (
@@ -487,7 +490,7 @@ func dataSourceTencentCloudDtsSyncJobs() *schema.Resource {
 									"engine_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "enginer version.",
+										Description: "engineer version.",
 									},
 									"account_mode": {
 										Type:        schema.TypeString,
@@ -622,7 +625,7 @@ func dataSourceTencentCloudDtsSyncJobs() *schema.Resource {
 									"engine_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "enginer version.",
+										Description: "engineer version.",
 									},
 									"account_mode": {
 										Type:        schema.TypeString,
@@ -877,10 +880,10 @@ func dataSourceTencentCloudDtsSyncJobsRead(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("status"); ok {
 		statusSet := v.(*schema.Set).List()
-		tmpList :=make([]*string, 0, len(statusSet))
+		tmpList := make([]*string, 0, len(statusSet))
 		for i := range statusSet {
 			status := statusSet[i].(string)
-			 tmpList =append(tmpList, helper.String(status))
+			tmpList = append(tmpList, helper.String(status))
 		}
 		paramMap["status"] = tmpList
 	}
@@ -898,19 +901,19 @@ func dataSourceTencentCloudDtsSyncJobsRead(d *schema.ResourceData, meta interfac
 	}
 
 	if v, ok := d.GetOk("tag_filters"); ok {
-		vv:=v.([]interface{})
-		filters :=make([]*dts.TagFilter,0,len(vv))
-		for _,item:=range vv{
-			dMap:=item.(map[string]interface{})
-			filter :=dts.TagFilter{}
-			if v,ok:=dMap["tag_key"]; ok{
-				filter.TagKey=helper.String(v.(string))
+		vv := v.([]interface{})
+		filters := make([]*dts.TagFilter, 0, len(vv))
+		for _, item := range vv {
+			dMap := item.(map[string]interface{})
+			filter := dts.TagFilter{}
+			if v, ok := dMap["tag_key"]; ok {
+				filter.TagKey = helper.String(v.(string))
 			}
-			if v,ok:=dMap["tag_value"]; ok{
-				filter.TagValue[0]=helper.String(v.(string))
+			if v, ok := dMap["tag_value"]; ok {
+				filter.TagValue[0] = helper.String(v.(string))
 			}
 
-			filters=append(filters, &filter)
+			filters = append(filters, &filter)
 		}
 		paramMap["tag_filters"] = filters
 	}

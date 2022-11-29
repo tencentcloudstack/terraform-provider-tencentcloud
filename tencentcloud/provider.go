@@ -810,6 +810,8 @@ DBbrain
 Data Transmission Service(DTS)
   Data Source
 	tencentcloud_dts_sync_jobs
+  Resource
+	tencentcloud_dts_sync_job
 
 
 */
@@ -1439,7 +1441,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
-			// "tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
 			// "tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
