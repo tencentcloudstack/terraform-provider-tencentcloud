@@ -161,7 +161,6 @@ func dataSourceTencentCloudDtsSyncJobs() *schema.Resource {
 						},
 						"options": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "options.",
 							Elem: &schema.Resource{
@@ -196,7 +195,6 @@ func dataSourceTencentCloudDtsSyncJobs() *schema.Resource {
 									},
 									"conflict_handle_option": {
 										Type:        schema.TypeList,
-										MaxItems:    1,
 										Computed:    true,
 										Description: "conflict handle option.",
 										Elem: &schema.Resource{
@@ -246,7 +244,6 @@ func dataSourceTencentCloudDtsSyncJobs() *schema.Resource {
 						},
 						"objects": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "objects.",
 							Elem: &schema.Resource{
@@ -407,7 +404,6 @@ func dataSourceTencentCloudDtsSyncJobs() *schema.Resource {
 						},
 						"src_info": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "source info.",
 							Elem: &schema.Resource{
@@ -542,7 +538,6 @@ func dataSourceTencentCloudDtsSyncJobs() *schema.Resource {
 						},
 						"dst_info": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "destination info.",
 							Elem: &schema.Resource{
@@ -701,7 +696,6 @@ func dataSourceTencentCloudDtsSyncJobs() *schema.Resource {
 						},
 						"detail": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "tag list.",
 							Elem: &schema.Resource{
