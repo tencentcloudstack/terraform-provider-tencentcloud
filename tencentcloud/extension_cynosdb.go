@@ -372,6 +372,17 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "Specify auto-pause delay in second while `db_mode` is `SERVERLESS`. Value range: `[600, 691200]`. Default: `600`.",
 		},
+		"serverless_status_flag": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			ValidateFunc: validateAllowedStringValue([]string{"resume", "pause"}),
+			Description:  "Specify whether to pause or resume serverless cluster. values: `resume`, `pause`.",
+		},
+		"serverless_status": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Serverless cluster status. NOTE: This is a readonly attribute, to modify, please set `serverless_status_flag`.",
+		},
 	}
 
 	for k, v := range TencentCynosdbInstanceBaseInfo() {
