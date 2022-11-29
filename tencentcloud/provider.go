@@ -101,7 +101,7 @@ API GateWay
 	tencentcloud_api_gateway_api_key_attachment
     tencentcloud_api_gateway_service_release
 
-CloudAudit(Audit)
+Cloud Audit(Audit)
   Data Source
 	tencentcloud_audit_cos_regions
 	tencentcloud_audit_key_alias
@@ -109,6 +109,7 @@ CloudAudit(Audit)
 
   Resource
 	tencentcloud_audit
+	tencentcloud_audit_track
 
 Auto Scaling(AS)
   Data Source
@@ -1316,6 +1317,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_acl":                               resourceTencentCloudCkafkaAcl(),
 			"tencentcloud_ckafka_topic":                             resourceTencentCloudCkafkaTopic(),
 			"tencentcloud_audit":                                    resourceTencentCloudAudit(),
+			"tencentcloud_audit_track":                              resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                    resourceTencentCloudImage(),
 			"tencentcloud_cynosdb_cluster":                          resourceTencentCloudCynosdbCluster(),
 			"tencentcloud_cynosdb_readonly_instance":                resourceTencentCloudCynosdbReadonlyInstance(),

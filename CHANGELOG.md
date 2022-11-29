@@ -1,3 +1,16 @@
+## 1.78.15 (November 24, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_rum_offline_log_config` ([#1422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1422))
+* **New Data Source:** `tencentcloud_rum_project` ([#1422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1422))
+* **New Data Source:** `tencentcloud_rum_taw_instance` ([#1422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1422))
+* **New Data Source:** `tencentcloud_rum_whitelist` ([#1422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1422))
+* **New Resource:** `tencentcloud_rum_offline_log_config_attachment` ([#1422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1422))
+* **New Resource:** `tencentcloud_rum_project` ([#1422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1422))
+* **New Resource:** `tencentcloud_rum_taw_instance` ([#1422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1422))
+* **New Resource:** `tencentcloud_rum_whitelist` ([#1422](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1422))
+
 ## 1.78.14 (November 23, 2022)
 
 FEATURES:

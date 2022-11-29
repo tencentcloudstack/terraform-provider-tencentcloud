@@ -17,8 +17,23 @@ package v20190319
 const (
 	// 此产品的特有错误码
 
+	// 操作失败。
+	FAILEDOPERATION = "FailedOperation"
+
+	// 检查cls日志主题是否存在失败。
+	FAILEDOPERATION_CHECKCLSTOPICISEXISTFAILED = "FailedOperation.CheckClsTopicIsExistFailed"
+
+	// 检查cos桶是否存在失败。
+	FAILEDOPERATION_CHECKCOSBUCKETISEXISTFAILED = "FailedOperation.CheckCosBucketIsExistFailed"
+
 	// 创建COS存储桶失败
 	FAILEDOPERATION_CREATEBUCKETFAIL = "FailedOperation.CreateBucketFail"
+
+	// 拉取cls日志主题失败。
+	FAILEDOPERATION_GETCLSTOPICFAILED = "FailedOperation.GetClsTopicFailed"
+
+	// 拉取cos存储桶列表失败。
+	FAILEDOPERATION_GETCOSBUCKETLISTFAILED = "FailedOperation.GetCosBucketListFailed"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -68,8 +83,14 @@ const (
 	// 必须包含开始时间和结束时间，且必须为整形时间戳（精确到秒）
 	INVALIDPARAMETER_TIME = "InvalidParameter.Time"
 
+	// 别名已经存在
+	INVALIDPARAMETERVALUE_ALIASALREADYEXISTS = "InvalidParameterValue.AliasAlreadyExists"
+
 	// 跟踪集名称不符合规则
 	INVALIDPARAMETERVALUE_AUDITNAMEERROR = "InvalidParameterValue.AuditNameError"
+
+	// 跟踪集名称不支持修改。
+	INVALIDPARAMETERVALUE_AUDITTRACKNAMENOTSUPPORTMODIFY = "InvalidParameterValue.AuditTrackNameNotSupportModify"
 
 	// 云审计目前不支持输入的cmq地域
 	INVALIDPARAMETERVALUE_CMQREGIONERROR = "InvalidParameterValue.CmqRegionError"
@@ -88,6 +109,9 @@ const (
 
 	// IsEnableCmqNotify的有效取值范围是0和1，0代表不开启投递cmq,1代表开启cmq投递。
 	INVALIDPARAMETERVALUE_ISENABLECMQNOTIFYERROR = "InvalidParameterValue.IsEnableCmqNotifyError"
+
+	// 云审计暂不支持该地域的KMS
+	INVALIDPARAMETERVALUE_KMSREGIONERROR = "InvalidParameterValue.KmsRegionError"
 
 	// 日志前缀格式错误
 	INVALIDPARAMETERVALUE_LOGFILEPREFIXERROR = "InvalidParameterValue.LogFilePrefixError"
@@ -137,6 +161,12 @@ const (
 	// cos存储桶已经存在
 	RESOURCEINUSE_COSBUCKETEXISTS = "ResourceInUse.CosBucketExists"
 
+	// 资源不存在。
+	RESOURCENOTFOUND = "ResourceNotFound"
+
 	// 跟踪集不存在
 	RESOURCENOTFOUND_AUDITNOTEXIST = "ResourceNotFound.AuditNotExist"
+
+	// 角色不存在。
+	RESOURCENOTFOUND_ROLENOTEXIST = "ResourceNotFound.RoleNotExist"
 )

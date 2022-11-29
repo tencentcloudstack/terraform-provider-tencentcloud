@@ -1,5 +1,5 @@
 ---
-subcategory: "CloudAudit(Audit)"
+subcategory: "Cloud Audit(Audit)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_audit"
 sidebar_current: "docs-tencentcloud-resource-audit"
@@ -10,6 +10,8 @@ description: |-
 # tencentcloud_audit
 
 Provides a resource to create an audit.
+
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_audit_track.
 
 ## Example Usage
 
