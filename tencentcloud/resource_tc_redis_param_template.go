@@ -83,7 +83,7 @@ func resourceTencentCloudRedisParamTemplate() *schema.Resource {
 			"params_override": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Specify override parameter list, NOTE: Param not been set here will be reset to default value.",
+				Description: "Specify override parameter list, NOTE: Do not remove override params once set, removing will not take effects to current value.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
@@ -300,15 +300,11 @@ func resourceTencentCloudRedisParamTemplateUpdate(d *schema.ResourceData, meta i
 	request.TemplateId = &templateId
 
 	if d.HasChange("name") {
-		if v, ok := d.GetOk("name"); ok {
-			request.Name = helper.String(v.(string))
-		}
+		request.Name = helper.String(d.Get("name").(string))
 	}
 
 	if d.HasChange("description") {
-		if v, ok := d.GetOk("description"); ok {
-			request.Description = helper.String(v.(string))
-		}
+		request.Description = helper.String(d.Get("description").(string))
 	}
 
 	if d.HasChange("product_type") {
@@ -320,32 +316,15 @@ func resourceTencentCloudRedisParamTemplateUpdate(d *schema.ResourceData, meta i
 	}
 
 	if d.HasChange("params_override") {
-		defaultParams := d.Get("param_details").([]interface{})
-		paramMap := make(map[string]string)
 		if v, ok := d.GetOk("params_override"); ok {
 			for _, item := range v.([]interface{}) {
 				dMap := item.(map[string]interface{})
-				paramMap[dMap["key"].(string)] = dMap["value"].(string)
-
+				request.ParamList = append(request.ParamList, &redis.InstanceParam{
+					Key:   helper.String(dMap["key"].(string)),
+					Value: helper.String(dMap["value"].(string)),
+				})
 			}
 		}
-		for i := range defaultParams {
-			item := defaultParams[i].(map[string]interface{})
-			key := item["name"].(string)
-			defaultVal := item["default"].(string)
-			if defaultVal == `""` {
-				defaultVal = ""
-			}
-			instanceParam := redis.InstanceParam{
-				Key:   &key,
-				Value: &defaultVal,
-			}
-			if v, ok := paramMap[key]; ok {
-				instanceParam.Value = &v
-			}
-			request.ParamList = append(request.ParamList, &instanceParam)
-		}
-
 	}
 
 	err := service.ModifyParamTemplate(ctx, request)

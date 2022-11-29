@@ -45,7 +45,7 @@ The following arguments are supported:
 
 * `name` - (Required, String) Parameter template name.
 * `description` - (Optional, String) Parameter template description.
-* `params_override` - (Optional, List) Specify override parameter list, NOTE: Param not been set here will be reset to default value.
+* `params_override` - (Optional, List) Specify override parameter list, NOTE: Do not remove override params once set, removing will not take effects to current value.
 * `product_type` - (Optional, Int) Specify product type. Valid values: 1 (Redis 2.8 Memory Edition in cluster architecture), 2 (Redis 2.8 Memory Edition in standard architecture), 3 (CKV 3.2 Memory Edition in standard architecture), 4 (CKV 3.2 Memory Edition in cluster architecture), 5 (Redis 2.8 Memory Edition in standalone architecture), 6 (Redis 4.0 Memory Edition in standard architecture), 7 (Redis 4.0 Memory Edition in cluster architecture), 8 (Redis 5.0 Memory Edition in standard architecture), 9 (Redis 5.0 Memory Edition in cluster architecture). If `template_id` is specified, this parameter can be left blank; otherwise, it is required.
 * `template_id` - (Optional, String) Specify which existed template import from.
 

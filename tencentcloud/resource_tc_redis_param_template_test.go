@@ -35,7 +35,10 @@ func init() {
 				}
 				dReq := redis.NewDeleteParamTemplateRequest()
 				dReq.TemplateId = item.TemplateId
-				service.DeleteParamTemplate(ctx, dReq)
+				err = service.DeleteParamTemplate(ctx, dReq)
+				if err != nil {
+					return err
+				}
 			}
 			return nil
 		},
