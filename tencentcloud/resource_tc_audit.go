@@ -1,6 +1,8 @@
 /*
 Provides a resource to create an audit.
 
+~> **NOTE:** It has been deprecated and replaced by tencentcloud_audit_track.
+
 Example Usage
 
 ```hcl
@@ -37,10 +39,11 @@ import (
 
 func resourceTencentCloudAudit() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudAuditCreate,
-		Read:   resourceTencentCloudAuditRead,
-		Update: resourceTencentCloudAuditUpdate,
-		Delete: resourceTencentCloudAuditDelete,
+		DeprecationMessage: "This resource has been deprecated in Terraform TencentCloud provider version 1.78.16. Please use 'tencentcloud_audit_track' instead.",
+		Create:             resourceTencentCloudAuditCreate,
+		Read:               resourceTencentCloudAuditRead,
+		Update:             resourceTencentCloudAuditUpdate,
+		Delete:             resourceTencentCloudAuditDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},

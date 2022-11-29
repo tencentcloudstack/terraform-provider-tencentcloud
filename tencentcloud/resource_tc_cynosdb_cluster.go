@@ -167,6 +167,10 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`instance_memory_size` is required while creating non-serverless cluster")
 	}
 
+	if _, ok := d.GetOk("serverless_status_flag"); ok && !isServerless {
+		return fmt.Errorf("cannot set `serverless_status_flag` while creating non-serverless cluster")
+	}
+
 	var chargeType int64 = 0
 	if v, ok := d.GetOk("charge_type"); ok {
 		if v == CYNOSDB_CHARGE_TYPE_PREPAID {
@@ -321,6 +325,15 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	// serverless status
+	if v, ok := d.GetOk("serverless_status_flag"); ok {
+		resume := v.(string) == "resume"
+		err := cynosdbService.SwitchServerlessCluster(ctx, id, resume)
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudCynosdbClusterRead(d, meta)
 }
 
@@ -358,6 +371,12 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("create_time", cluster.CreateTime)
 	_ = d.Set("storage_used", *cluster.UsedStorage/1000/1000)
 	_ = d.Set("auto_renew_flag", *item.RenewFlag)
+	_ = d.Set("serverless_status", cluster.ServerlessStatus)
+
+	if _, ok := d.GetOk("serverless_status_flag"); ok && *item.DbMode == CYNOSDB_SERVERLESS {
+		status := *item.ServerlessStatus
+		_ = d.Set("serverless_status_flag", status)
+	}
 
 	if _, ok := d.GetOk("db_mode"); ok || *item.DbMode == CYNOSDB_SERVERLESS {
 		_ = d.Set("db_mode", item.DbMode)
@@ -472,31 +491,34 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	currentParamMap := make(map[string]*cynosdb.ParamInfo)
-	params, err := cynosdbService.DescribeClusterParams(ctx, id)
-	if err != nil {
-		return err
-	}
-	for _, param := range params {
-		currentParamMap[*param.ParamName] = param
-	}
-	resultParamItems := make([]map[string]string, 0)
-	if v, ok := d.GetOk("param_items"); ok {
-		paramItems := v.([]interface{})
-		for _, paramItem := range paramItems {
-			item := paramItem.(map[string]interface{})
-			name := item["name"].(string)
-			oldValue := item["old_value"].(string)
-			currentParamItem := make(map[string]string)
-			currentParamItem["name"] = name
-			currentParamItem["current_value"] = *currentParamMap[name].CurrentValue
-			if oldValue != "" {
-				currentParamItem["old_value"] = oldValue
-			}
-			resultParamItems = append(resultParamItems, currentParamItem)
+	isServerlessPaused := *item.DbMode == CYNOSDB_SERVERLESS && *item.ServerlessStatus == "pause"
+	if !isServerlessPaused {
+		currentParamMap := make(map[string]*cynosdb.ParamInfo)
+		params, err := cynosdbService.DescribeClusterParams(ctx, id)
+		if err != nil {
+			return err
 		}
+		for _, param := range params {
+			currentParamMap[*param.ParamName] = param
+		}
+		resultParamItems := make([]map[string]string, 0)
+		if v, ok := d.GetOk("param_items"); ok {
+			paramItems := v.([]interface{})
+			for _, paramItem := range paramItems {
+				item := paramItem.(map[string]interface{})
+				name := item["name"].(string)
+				oldValue := item["old_value"].(string)
+				currentParamItem := make(map[string]string)
+				currentParamItem["name"] = name
+				currentParamItem["current_value"] = *currentParamMap[name].CurrentValue
+				if oldValue != "" {
+					currentParamItem["old_value"] = oldValue
+				}
+				resultParamItems = append(resultParamItems, currentParamItem)
+			}
+		}
+		_ = d.Set("param_items", resultParamItems)
 	}
-	_ = d.Set("param_items", resultParamItems)
 
 	return nil
 }
@@ -687,6 +709,17 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			if err != nil {
 				return err
 			}
+		}
+	}
+
+	// update serverless status
+
+	// serverless status
+	if d.HasChange("serverless_status_flag") {
+		resume := d.Get("serverless_status_flag").(string) == "resume"
+		err := cynosdbService.SwitchServerlessCluster(ctx, clusterId, resume)
+		if err != nil {
+			return err
 		}
 	}
 

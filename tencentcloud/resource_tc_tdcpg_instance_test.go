@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
@@ -75,7 +76,7 @@ func TestAccTencentCloudTdcpgInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: fmt.Sprintf(testAccTdcpgInstance_update, defaultTdcpgClusterId, defaultTdcpgTestNamePrefix),
+				Config: testAccTdcpgInstance_update(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdcpgInstanceExists("tencentcloud_tdcpg_instance.instance"),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_instance.instance", "cluster_id", defaultTdcpgClusterId),
@@ -83,6 +84,15 @@ func TestAccTencentCloudTdcpgInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_instance.instance", "memory", "4"),
 					resource.TestMatchResourceAttr("tencentcloud_tdcpg_instance.instance", "instance_name", regexp.MustCompile(defaultTdcpgTestNamePrefix)),
 					resource.TestCheckResourceAttr("tencentcloud_tdcpg_instance.instance", "operation_timing", "IMMEDIATE"),
+				),
+			},
+			{
+				PreConfig: func() { //sleep 1 min after update
+					time.Sleep(time.Minute)
+				},
+				Config: testAccTdcpgInstance_sleep(),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTdcpgInstanceExists("tencentcloud_tdcpg_instance.instance"),
 				),
 			},
 			{
@@ -161,14 +171,18 @@ resource "tencentcloud_tdcpg_instance" "instance" {
 
 `
 
-const testAccTdcpgInstance_update = `
-
-resource "tencentcloud_tdcpg_instance" "instance" {
-  cluster_id = "%s"
-  cpu = 2
-  memory = 4
-  instance_name = "%sinstance"
-  operation_timing = "IMMEDIATE"
+func testAccTdcpgInstance_update() string {
+	return fmt.Sprintf(`
+		resource "tencentcloud_tdcpg_instance" "instance" {
+		cluster_id = "%s"
+		cpu = 2
+		memory = 4
+		instance_name = "%sinstance"
+		operation_timing = "IMMEDIATE"
+		}
+	`, defaultTdcpgClusterId, defaultTdcpgTestNamePrefix)
 }
 
-`
+func testAccTdcpgInstance_sleep() string {
+	return testAccTdcpgInstance_update()
+}

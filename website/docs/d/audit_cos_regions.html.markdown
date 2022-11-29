@@ -1,5 +1,5 @@
 ---
-subcategory: "CloudAudit(Audit)"
+subcategory: "Cloud Audit(Audit)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_audit_cos_regions"
 sidebar_current: "docs-tencentcloud-datasource-audit_cos_regions"

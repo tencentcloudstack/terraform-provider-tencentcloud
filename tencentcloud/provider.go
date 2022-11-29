@@ -101,7 +101,7 @@ API GateWay
 	tencentcloud_api_gateway_api_key_attachment
     tencentcloud_api_gateway_service_release
 
-CloudAudit(Audit)
+Cloud Audit(Audit)
   Data Source
 	tencentcloud_audit_cos_regions
 	tencentcloud_audit_key_alias
@@ -109,6 +109,7 @@ CloudAudit(Audit)
 
   Resource
 	tencentcloud_audit
+	tencentcloud_audit_track
 
 Auto Scaling(AS)
   Data Source
@@ -465,6 +466,7 @@ TencentDB for Redis
   Resource
     tencentcloud_redis_instance
     tencentcloud_redis_backup_config
+    tencentcloud_redis_param_template
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -1226,6 +1228,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_access_rule":                          resourceTencentCloudCfsAccessRule(),
 			"tencentcloud_redis_instance":                           resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                      resourceTencentCloudRedisBackupConfig(),
+			"tencentcloud_redis_param_template":                     resourceTencentCloudRedisParamTemplate(),
 			"tencentcloud_as_scaling_config":                        resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                         resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                            resourceTencentCloudAsAttachment(),
@@ -1324,6 +1327,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_acl":                               resourceTencentCloudCkafkaAcl(),
 			"tencentcloud_ckafka_topic":                             resourceTencentCloudCkafkaTopic(),
 			"tencentcloud_audit":                                    resourceTencentCloudAudit(),
+			"tencentcloud_audit_track":                              resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                    resourceTencentCloudImage(),
 			"tencentcloud_cynosdb_cluster":                          resourceTencentCloudCynosdbCluster(),
 			"tencentcloud_cynosdb_readonly_instance":                resourceTencentCloudCynosdbReadonlyInstance(),

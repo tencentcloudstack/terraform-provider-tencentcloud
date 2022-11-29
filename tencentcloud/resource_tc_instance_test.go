@@ -61,7 +61,7 @@ func testSweepCvmInstance(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudInstanceBasic(t *testing.T) {
+func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
@@ -103,7 +103,7 @@ func TestAccTencentCloudInstanceBasic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithDataDisk(t *testing.T) {
 	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
@@ -149,7 +149,7 @@ func TestAccTencentCloudInstanceWithDataDisk(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithNetwork(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithNetwork(t *testing.T) {
 	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
@@ -184,7 +184,7 @@ func TestAccTencentCloudInstanceWithNetwork(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithPrivateIP(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithPrivateIP(t *testing.T) {
 	t.Parallel()
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
@@ -206,7 +206,7 @@ func TestAccTencentCloudInstanceWithPrivateIP(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithKeyPairs(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithKeyPairs(t *testing.T) {
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
@@ -243,7 +243,7 @@ func TestAccTencentCloudInstanceWithKeyPairs(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithPassword(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithPassword(t *testing.T) {
 	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
@@ -280,7 +280,7 @@ func TestAccTencentCloudInstanceWithPassword(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithImageLogin(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithImageLogin(t *testing.T) {
 
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
@@ -303,7 +303,7 @@ func TestAccTencentCloudInstanceWithImageLogin(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithName(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithName(t *testing.T) {
 	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
@@ -337,7 +337,7 @@ func TestAccTencentCloudInstanceWithName(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithHostname(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithHostname(t *testing.T) {
 	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
@@ -361,7 +361,7 @@ func TestAccTencentCloudInstanceWithHostname(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithSecurityGroup(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithSecurityGroup(t *testing.T) {
 	t.Parallel()
 
 	instanceId := "tencentcloud_instance.foo"
@@ -412,7 +412,63 @@ func TestAccTencentCloudInstanceWithSecurityGroup(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithTags(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithOrderlySecurityGroup(t *testing.T) {
+	t.Parallel()
+
+	var sgId1, sgId2, sgId3 string
+	instanceId := "tencentcloud_instance.cvm_with_orderly_sg"
+	orderlySecurityGroupId1 := "tencentcloud_security_group.orderly_security_group1"
+	orderlySecurityGroupId2 := "tencentcloud_security_group.orderly_security_group2"
+	orderlySecurityGroupId3 := "tencentcloud_security_group.orderly_security_group3"
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: instanceId,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config: testAccTencentCloudInstanceOrderlySecurityGroups(`[
+					tencentcloud_security_group.orderly_security_group1.id,
+					tencentcloud_security_group.orderly_security_group2.id,
+					tencentcloud_security_group.orderly_security_group3.id
+				]`),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudInstanceExists(instanceId),
+					testAccCheckSecurityGroupExists(orderlySecurityGroupId1, &sgId1),
+					testAccCheckSecurityGroupExists(orderlySecurityGroupId2, &sgId2),
+					testAccCheckSecurityGroupExists(orderlySecurityGroupId3, &sgId3),
+
+					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.0", &sgId1),
+					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.1", &sgId2),
+					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.2", &sgId3),
+				),
+			},
+
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config: testAccTencentCloudInstanceOrderlySecurityGroups(`[
+					tencentcloud_security_group.orderly_security_group3.id,
+					tencentcloud_security_group.orderly_security_group2.id,
+					tencentcloud_security_group.orderly_security_group1.id
+				]`),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudInstanceExists(instanceId),
+					testAccCheckSecurityGroupExists(orderlySecurityGroupId1, &sgId1),
+					testAccCheckSecurityGroupExists(orderlySecurityGroupId2, &sgId2),
+					testAccCheckSecurityGroupExists(orderlySecurityGroupId3, &sgId3),
+
+					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.0", &sgId3),
+					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.1", &sgId2),
+					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.2", &sgId1),
+				),
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudInstanceResource_WithTags(t *testing.T) {
 	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
@@ -453,7 +509,7 @@ func TestAccTencentCloudInstanceWithTags(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithPlacementGroup(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithPlacementGroup(t *testing.T) {
 	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
@@ -475,7 +531,7 @@ func TestAccTencentCloudInstanceWithPlacementGroup(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstanceWithSpotpaid(t *testing.T) {
+func TestAccTencentCloudInstanceResource_WithSpotpaid(t *testing.T) {
 	t.Parallel()
 
 	id := "tencentcloud_instance.foo"
@@ -531,7 +587,7 @@ func TestAccTencentCloudNeedFixInstancePostpaidToPrepaid(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudInstancePrepaidFallbackToPostpaid(t *testing.T) {
+func TestAccTencentCloudInstanceResource_PrepaidFallbackToPostpaid(t *testing.T) {
 
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
@@ -1062,3 +1118,32 @@ resource "tencentcloud_instance" "foo" {
   spot_max_price       = "0.5"
 }
 `
+
+func testAccTencentCloudInstanceOrderlySecurityGroups(sgs string) string {
+
+	return fmt.Sprintf(defaultInstanceVariable+`
+resource "tencentcloud_security_group" "orderly_security_group1" {
+	name        = "test-cvm-orderly-sg1"
+	description = "test-cvm-orderly-sg1"
+}
+
+resource "tencentcloud_security_group" "orderly_security_group2" {
+	name        = "test-cvm-orderly-sg2"
+	description = "test-cvm-orderly-sg2"
+}
+
+resource "tencentcloud_security_group" "orderly_security_group3" {
+	name        = "test-cvm-orderly-sg3"
+	description = "test-cvm-orderly-sg3"
+}
+
+resource "tencentcloud_instance" "cvm_with_orderly_sg" {
+	instance_name              = "test-orderly-sg-cvm"
+	availability_zone          = var.availability_cvm_zone
+	image_id                   = data.tencentcloud_images.default.images.0.image_id
+	instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+	system_disk_type           = "CLOUD_PREMIUM"
+	orderly_security_groups    = %s
+}
+`, sgs)
+}
