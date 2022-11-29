@@ -163,6 +163,60 @@ func (c *Client) DeleteMeshWithContext(ctx context.Context, request *DeleteMeshR
     return
 }
 
+func NewDescribeAccessLogConfigRequest() (request *DescribeAccessLogConfigRequest) {
+    request = &DescribeAccessLogConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcm", APIVersion, "DescribeAccessLogConfig")
+    
+    
+    return
+}
+
+func NewDescribeAccessLogConfigResponse() (response *DescribeAccessLogConfigResponse) {
+    response = &DescribeAccessLogConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAccessLogConfig
+// 获取AccessLog配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAccessLogConfig(request *DescribeAccessLogConfigRequest) (response *DescribeAccessLogConfigResponse, err error) {
+    return c.DescribeAccessLogConfigWithContext(context.Background(), request)
+}
+
+// DescribeAccessLogConfig
+// 获取AccessLog配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) DescribeAccessLogConfigWithContext(ctx context.Context, request *DescribeAccessLogConfigRequest) (response *DescribeAccessLogConfigResponse, err error) {
+    if request == nil {
+        request = NewDescribeAccessLogConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAccessLogConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAccessLogConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeMeshRequest() (request *DescribeMeshRequest) {
     request = &DescribeMeshRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -333,6 +387,126 @@ func (c *Client) LinkClusterListWithContext(ctx context.Context, request *LinkCl
     return
 }
 
+func NewLinkPrometheusRequest() (request *LinkPrometheusRequest) {
+    request = &LinkPrometheusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcm", APIVersion, "LinkPrometheus")
+    
+    
+    return
+}
+
+func NewLinkPrometheusResponse() (response *LinkPrometheusResponse) {
+    response = &LinkPrometheusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// LinkPrometheus
+// 关联Prometheus
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERNOENOUGHRESOURCE = "FailedOperation.ClusterNoEnoughResource"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) LinkPrometheus(request *LinkPrometheusRequest) (response *LinkPrometheusResponse, err error) {
+    return c.LinkPrometheusWithContext(context.Background(), request)
+}
+
+// LinkPrometheus
+// 关联Prometheus
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLUSTERNOENOUGHRESOURCE = "FailedOperation.ClusterNoEnoughResource"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) LinkPrometheusWithContext(ctx context.Context, request *LinkPrometheusRequest) (response *LinkPrometheusResponse, err error) {
+    if request == nil {
+        request = NewLinkPrometheusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("LinkPrometheus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewLinkPrometheusResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyAccessLogConfigRequest() (request *ModifyAccessLogConfigRequest) {
+    request = &ModifyAccessLogConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcm", APIVersion, "ModifyAccessLogConfig")
+    
+    
+    return
+}
+
+func NewModifyAccessLogConfigResponse() (response *ModifyAccessLogConfigResponse) {
+    response = &ModifyAccessLogConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyAccessLogConfig
+// 修改访问日志配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyAccessLogConfig(request *ModifyAccessLogConfigRequest) (response *ModifyAccessLogConfigResponse, err error) {
+    return c.ModifyAccessLogConfigWithContext(context.Background(), request)
+}
+
+// ModifyAccessLogConfig
+// 修改访问日志配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyAccessLogConfigWithContext(ctx context.Context, request *ModifyAccessLogConfigRequest) (response *ModifyAccessLogConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyAccessLogConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAccessLogConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAccessLogConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyMeshRequest() (request *ModifyMeshRequest) {
     request = &ModifyMeshRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -391,6 +565,64 @@ func (c *Client) ModifyMeshWithContext(ctx context.Context, request *ModifyMeshR
     return
 }
 
+func NewModifyTracingConfigRequest() (request *ModifyTracingConfigRequest) {
+    request = &ModifyTracingConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcm", APIVersion, "ModifyTracingConfig")
+    
+    
+    return
+}
+
+func NewModifyTracingConfigResponse() (response *ModifyTracingConfigResponse) {
+    response = &ModifyTracingConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyTracingConfig
+// 修改 Tracing 配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyTracingConfig(request *ModifyTracingConfigRequest) (response *ModifyTracingConfigResponse, err error) {
+    return c.ModifyTracingConfigWithContext(context.Background(), request)
+}
+
+// ModifyTracingConfig
+// 修改 Tracing 配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) ModifyTracingConfigWithContext(ctx context.Context, request *ModifyTracingConfigRequest) (response *ModifyTracingConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyTracingConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyTracingConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyTracingConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewUnlinkClusterRequest() (request *UnlinkClusterRequest) {
     request = &UnlinkClusterRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -445,6 +677,66 @@ func (c *Client) UnlinkClusterWithContext(ctx context.Context, request *UnlinkCl
     request.SetContext(ctx)
     
     response = NewUnlinkClusterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUnlinkPrometheusRequest() (request *UnlinkPrometheusRequest) {
+    request = &UnlinkPrometheusRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tcm", APIVersion, "UnlinkPrometheus")
+    
+    
+    return
+}
+
+func NewUnlinkPrometheusResponse() (response *UnlinkPrometheusResponse) {
+    response = &UnlinkPrometheusResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UnlinkPrometheus
+// 解除关联Prometheus
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UnlinkPrometheus(request *UnlinkPrometheusRequest) (response *UnlinkPrometheusResponse, err error) {
+    return c.UnlinkPrometheusWithContext(context.Background(), request)
+}
+
+// UnlinkPrometheus
+// 解除关联Prometheus
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) UnlinkPrometheusWithContext(ctx context.Context, request *UnlinkPrometheusRequest) (response *UnlinkPrometheusResponse, err error) {
+    if request == nil {
+        request = NewUnlinkPrometheusRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UnlinkPrometheus require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUnlinkPrometheusResponse()
     err = c.Send(request, response)
     return
 }
