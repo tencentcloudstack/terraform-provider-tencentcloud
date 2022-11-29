@@ -162,12 +162,13 @@ The following arguments are supported:
 * `keep_image_login` - (Optional, Bool) Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifying will cause the instance reset.
 * `key_ids` - (Optional, Set: [`String`]) The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.
 * `key_name` - (Optional, String, **Deprecated**) Please use `key_ids` instead. The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.
+* `orderly_security_groups` - (Optional, List: [`String`]) A list of orderly security group IDs to associate with.
 * `password` - (Optional, String) Password for the instance. In order for the new password to take effect, the instance will be restarted after the password change. Modifying will cause the instance reset.
 * `placement_group_id` - (Optional, String, ForceNew) The ID of a placement group.
 * `private_ip` - (Optional, String) The private IP to be assigned to this instance, must be in the provided subnet and available.
 * `project_id` - (Optional, Int) The project the instance belongs to, default to 0.
 * `running_flag` - (Optional, Bool) Set instance to running or stop. Default value is true, the instance will shutdown when this flag is false.
-* `security_groups` - (Optional, Set: [`String`]) A list of security group IDs to associate with.
+* `security_groups` - (Optional, Set: [`String`], **Deprecated**) It will be deprecated. Use `orderly_security_groups` instead. A list of security group IDs to associate with.
 * `spot_instance_type` - (Optional, String) Type of spot instance, only support `ONE-TIME` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `spot_max_price` - (Optional, String, ForceNew) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `stopped_mode` - (Optional, String) Billing method of a pay-as-you-go instance after shutdown. Available values: `KEEP_CHARGING`,`STOP_CHARGING`. Default `KEEP_CHARGING`.
