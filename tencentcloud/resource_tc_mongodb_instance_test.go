@@ -96,7 +96,7 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 			},
 			{
 				SkipFunc: func() (bool, error) {
-					log.Printf("[WARN] MongoDB Update Need DealID query avialable, skip checking.")
+					log.Printf("[WARN] MongoDB Update Need DealID query available, skip checking.")
 					return true, nil
 				},
 				Config: testAccMongodbInstance_update,
