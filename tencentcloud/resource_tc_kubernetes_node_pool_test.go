@@ -104,6 +104,8 @@ func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np1", "test1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np2", "test2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.security_group_ids.#", "1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.host_name", "12.123.0.0"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.host_name_style", "ORIGINAL"),
 				),
 			},
 			{
@@ -136,6 +138,8 @@ func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np1", "testI"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "tags.keep-test-np3", "testIII"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.security_group_ids.#", "2"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.host_name", "12.123.1.1"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.host_name_style", "UNIQUE"),
 				),
 			},
 		},
@@ -288,7 +292,8 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     password                   = "test123#"
     enhanced_security_service  = false
     enhanced_monitor_service   = false
-
+	host_name                  = "12.123.0.0"
+	host_name_style            = "ORIGINAL"
   }
   unschedulable = 0
   labels = {
@@ -361,6 +366,8 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     password                   = "test123#"
     enhanced_security_service  = false
     enhanced_monitor_service   = false
+	host_name                  = "12.123.1.1"
+	host_name_style            = "UNIQUE"
 
   }
   unschedulable = 0
