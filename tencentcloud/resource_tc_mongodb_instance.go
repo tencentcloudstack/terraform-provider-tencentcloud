@@ -506,7 +506,7 @@ func resourceTencentCloudMongodbInstanceDelete(d *schema.ResourceData, meta inte
 	if err != nil {
 		return err
 	}
-	err = mongodbService.OfflineIsolatedDBInstance(ctx, instanceId)
+	err = mongodbService.OfflineIsolatedDBInstance(ctx, instanceId, true)
 	if err != nil {
 		log.Printf("[CRITAL]%s mongodb %s fail, reason:%s", logId, "OfflineIsolatedDBInstance", err.Error())
 		return err
