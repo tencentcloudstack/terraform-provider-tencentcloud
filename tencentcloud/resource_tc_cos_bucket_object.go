@@ -120,7 +120,6 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
-				ValidateFunc: validateAllowedStringValue(availableCosStorageClass),
 				Description:  "Object storage type, Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.",
 			},
 			"etag": {

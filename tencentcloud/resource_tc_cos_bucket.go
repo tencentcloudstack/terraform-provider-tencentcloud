@@ -253,20 +253,6 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-const (
-	tencentCloudCosStorageClassStandard   = "STANDARD"
-	tencentCloudCosStorageClassStandardIA = "STANDARD_IA"
-	tencentCloudCosStorageClassArchive    = "ARCHIVE"
-)
-
-var (
-	availableCosStorageClass = []string{
-		tencentCloudCosStorageClassStandard,
-		tencentCloudCosStorageClassStandardIA,
-		tencentCloudCosStorageClassArchive,
-	}
-)
-
 func originPullRules() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -605,7 +591,6 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 									"storage_class": {
 										Type:         schema.TypeString,
 										Required:     true,
-										ValidateFunc: validateAllowedStringValue(availableCosStorageClass),
 										Description:  "Specifies the storage class to which you want the object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.",
 									},
 								},
@@ -655,7 +640,6 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 									"storage_class": {
 										Type:         schema.TypeString,
 										Required:     true,
-										ValidateFunc: validateAllowedStringValue(availableCosStorageClass),
 										Description:  "Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.",
 									},
 								},
