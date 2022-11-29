@@ -75,6 +75,12 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTask() *schema.Resource {
 				ForceNew:    true,
 				Description: "List of log risk levels, supported values include: 0 no risk; 1 low risk; 2 medium risk; 3 high risk.",
 			},
+
+			"async_request_id": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "request of async id.",
+			},
 		},
 	}
 }
@@ -195,6 +201,10 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead(d *schema.Resourc
 
 	if securityAuditLogExportTask.DangerLevels != nil {
 		_ = d.Set("danger_levels", securityAuditLogExportTask.DangerLevels)
+	}
+
+	if securityAuditLogExportTask.AsyncRequestId != nil {
+		_ = d.Set("async_request_id", securityAuditLogExportTask.AsyncRequestId)
 	}
 
 	return nil

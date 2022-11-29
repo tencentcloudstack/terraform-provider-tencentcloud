@@ -38,6 +38,6 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `async_request_id` - request of async id.
 
 
