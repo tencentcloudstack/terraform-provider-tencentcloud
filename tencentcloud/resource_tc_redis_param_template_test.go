@@ -45,7 +45,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudRedisParamTemplate_basic(t *testing.T) {
+func TestAccTencentCloudRedisParamTemplateResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
