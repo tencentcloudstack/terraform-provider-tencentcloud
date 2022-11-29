@@ -1,23 +1,34 @@
 /*
-Provides a resource to create a redis param_template
+Provides a resource to create a redis parameter template
 
-# Example Usage
+Example Usage
 
 ```hcl
-
-	resource "tencentcloud_redis_param_template" "param_template" {
-	  name = ""
-	  description = ""
-	  product_type = ""
-	  template_id = ""
-	  param_list {
-				key = ""
-				value = ""
-
-	  }
-	}
-
+resource "tencentcloud_redis_param_template" "param_template" {
+  name = "example-template"
+  description = "This is an example redis param template."
+  product_type = 6
+  params {
+	key = "timeout"
+	value = "7200"
+  }
+}
 ```
+
+Copy from another template
+```hcl
+resource "tencentcloud_redis_param_template" "param_template" {
+  name = "example-copied"
+  description = "This is an copied redis param template from xxx."
+  template_id = "xxx"
+  params {
+	key = "timeout"
+	value = "7200"
+  }
+}
+```
+
+
 Import
 
 redis param_template can be imported using the id, e.g.
@@ -30,7 +41,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -51,42 +61,95 @@ func resourceTencentCloudRedisParamTemplate() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "参数模板名称。.",
+				Description: "Parameter template name.",
 			},
-
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "参数模板描述。.",
+				Description: "Parameter template description.",
 			},
-
 			"product_type": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Description: "产品类型：1 – Redis2.8内存版（集群架构），2 – Redis2.8内存版（标准架构），3 – CKV 3.2内存版(标准架构)，4 – CKV 3.2内存版(集群架构)，5 – Redis2.8内存版（单机），6 – Redis4.0内存版（标准架构），7 – Redis4.0内存版（集群架构），8 – Redis5.0内存版（标准架构），9 – Redis5.0内存版（集群架构）。创建模板时必填，从源模板复制则不需要传入该参数。.",
+				Type:          schema.TypeInt,
+				Optional:      true,
+				ConflictsWith: []string{"template_id"},
+				Description:   "Specify product type. Valid values: 1 (Redis 2.8 Memory Edition in cluster architecture), 2 (Redis 2.8 Memory Edition in standard architecture), 3 (CKV 3.2 Memory Edition in standard architecture), 4 (CKV 3.2 Memory Edition in cluster architecture), 5 (Redis 2.8 Memory Edition in standalone architecture), 6 (Redis 4.0 Memory Edition in standard architecture), 7 (Redis 4.0 Memory Edition in cluster architecture), 8 (Redis 5.0 Memory Edition in standard architecture), 9 (Redis 5.0 Memory Edition in cluster architecture). If `template_id` is specified, this parameter can be left blank; otherwise, it is required.",
 			},
-
 			"template_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "源参数模板 ID。.",
+				Type:          schema.TypeString,
+				Optional:      true,
+				ConflictsWith: []string{"product_type"},
+				Description:   "Specify which existed template import from.",
 			},
-
-			"param_list": {
+			"params_override": {
 				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "参数列表。.",
+				Description: "Specify override parameter list, NOTE: Param not been set here will be reset to default value.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "设置参数的名称。例如timeout。当前支持自定义的参数，请参见&lt;a href=&quot;https://cloud.tencent.com/document/product/239/49925&quot;&gt;参数配置&lt;/a&gt;。.",
+							Description: "Parameter key e.g. `timeout`, check https://www.tencentcloud.com/document/product/239/39796 for more reference.",
 						},
 						"value": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "设置参数名称对应的运行值。例如timeout对应运行值可设置为120， 单位为秒（s）。指当客户端连接闲置时间达到120 s时，将关闭连接。更多参数取值信息，请参见&lt;a href=&quot;https://cloud.tencent.com/document/product/239/49925&quot;&gt;参数配置&lt;/a&gt;。.",
+							Description: "Parameter value, check https://www.tencentcloud.com/document/product/239/39796 for more reference.",
+						},
+					},
+				},
+			},
+			"param_details": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Readonly full parameter list details.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Parameter key name.",
+						},
+						"param_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Parameter type.",
+						},
+						"default": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Default value.",
+						},
+						"description": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Parameter description.",
+						},
+						"current_value": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Current value.",
+						},
+						"need_reboot": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Indicates whether to reboot redis instance if modified.",
+						},
+						"max": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Maximum value.",
+						},
+						"min": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Minimum value.",
+						},
+						"enum_value": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "Enum values.",
+							Elem:        &schema.Schema{Type: schema.TypeString},
 						},
 					},
 				},
@@ -125,7 +188,7 @@ func resourceTencentCloudRedisParamTemplateCreate(d *schema.ResourceData, meta i
 		request.TemplateId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("param_list"); ok {
+	if v, ok := d.GetOk("params_override"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			instanceParam := redis.InstanceParam{}
@@ -170,9 +233,9 @@ func resourceTencentCloudRedisParamTemplateRead(d *schema.ResourceData, meta int
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	paramTemplateId := d.Id()
+	id := d.Id()
 
-	paramTemplate, err := service.DescribeParamTemplateInfo(ctx, paramTemplateId)
+	paramTemplate, err := service.DescribeParamTemplateInfo(ctx, id)
 
 	if err != nil {
 		return err
@@ -180,8 +243,10 @@ func resourceTencentCloudRedisParamTemplateRead(d *schema.ResourceData, meta int
 
 	if paramTemplate == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `param_template` %s does not exist", paramTemplateId)
+		return fmt.Errorf("resource `param_template` %s does not exist", id)
 	}
+
+	d.SetId(id)
 
 	if paramTemplate.Name != nil {
 		_ = d.Set("name", paramTemplate.Name)
@@ -191,7 +256,7 @@ func resourceTencentCloudRedisParamTemplateRead(d *schema.ResourceData, meta int
 		_ = d.Set("description", paramTemplate.Description)
 	}
 
-	if paramTemplate.ProductType != nil {
+	if _, ok := d.GetOk("product_type"); ok && paramTemplate.ProductType != nil {
 		_ = d.Set("product_type", paramTemplate.ProductType)
 	}
 
@@ -199,17 +264,21 @@ func resourceTencentCloudRedisParamTemplateRead(d *schema.ResourceData, meta int
 		result := make([]interface{}, 0)
 		for i := range paramTemplate.Items {
 			item := paramTemplate.Items[i]
-			listMap := map[string]interface{}{}
-			if item.Name != nil {
-				listMap["key"] = item.Name
-			}
-			if item.CurrentValue != nil {
-				listMap["value"] = item.CurrentValue
+			listMap := map[string]interface{}{
+				"name":          item.Name,
+				"param_type":    item.ParamType,
+				"default":       item.Default,
+				"description":   item.Description,
+				"current_value": item.CurrentValue,
+				"need_reboot":   item.NeedReboot,
+				"max":           item.Max,
+				"min":           item.Min,
+				"enum_value":    item.EnumValue,
 			}
 
-			result = append(result, item)
+			result = append(result, listMap)
 		}
-		_ = d.Set("param_list", result)
+		_ = d.Set("param_details", result)
 	}
 
 	return nil
@@ -221,7 +290,10 @@ func resourceTencentCloudRedisParamTemplateUpdate(d *schema.ResourceData, meta i
 
 	logId := getLogId(contextNil)
 
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	request := redis.NewModifyParamTemplateRequest()
+	client := meta.(*TencentCloudClient).apiV3Conn
+	service := RedisService{client: client}
 
 	templateId := d.Id()
 
@@ -237,49 +309,46 @@ func resourceTencentCloudRedisParamTemplateUpdate(d *schema.ResourceData, meta i
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("product_type") {
 		return fmt.Errorf("`product_type` do not support change now.")
-
 	}
 
 	if d.HasChange("template_id") {
-		if v, ok := d.GetOk("template_id"); ok {
-			request.TemplateId = helper.String(v.(string))
-		}
-
+		return fmt.Errorf("`template_id` do not support change now.")
 	}
 
-	if d.HasChange("param_list") {
-		if v, ok := d.GetOk("param_list"); ok {
+	if d.HasChange("params_override") {
+		defaultParams := d.Get("param_details").([]interface{})
+		paramMap := make(map[string]string)
+		if v, ok := d.GetOk("params_override"); ok {
 			for _, item := range v.([]interface{}) {
 				dMap := item.(map[string]interface{})
-				instanceParam := redis.InstanceParam{}
-				if v, ok := dMap["key"]; ok {
-					instanceParam.Key = helper.String(v.(string))
-				}
-				if v, ok := dMap["value"]; ok {
-					instanceParam.Value = helper.String(v.(string))
-				}
+				paramMap[dMap["key"].(string)] = dMap["value"].(string)
 
-				request.ParamList = append(request.ParamList, &instanceParam)
 			}
+		}
+		for i := range defaultParams {
+			item := defaultParams[i].(map[string]interface{})
+			key := item["name"].(string)
+			defaultVal := item["default"].(string)
+			if defaultVal == `""` {
+				defaultVal = ""
+			}
+			instanceParam := redis.InstanceParam{
+				Key:   &key,
+				Value: &defaultVal,
+			}
+			if v, ok := paramMap[key]; ok {
+				instanceParam.Value = &v
+			}
+			request.ParamList = append(request.ParamList, &instanceParam)
 		}
 
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().ModifyParamTemplate(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
+	err := service.ModifyParamTemplate(ctx, request)
 
 	if err != nil {
 		return err
@@ -297,10 +366,10 @@ func resourceTencentCloudRedisParamTemplateDelete(d *schema.ResourceData, meta i
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	paramTemplateId := d.Id()
+	id := d.Id()
 
 	request := redis.NewDeleteParamTemplateRequest()
-	request.TemplateId = &paramTemplateId
+	request.TemplateId = &id
 	if err := service.DeleteParamTemplate(ctx, request); err != nil {
 		return err
 	}

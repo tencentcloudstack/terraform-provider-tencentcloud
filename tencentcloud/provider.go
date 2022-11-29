@@ -465,6 +465,7 @@ TencentDB for Redis
   Resource
     tencentcloud_redis_instance
     tencentcloud_redis_backup_config
+    tencentcloud_redis_param_template
 
 Serverless Cloud Function(SCF)
   Data Source
