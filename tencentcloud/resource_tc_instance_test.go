@@ -429,7 +429,30 @@ func TestAccTencentCloudInstanceResource_WithOrderlySecurityGroup(t *testing.T) 
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccTencentCloudInstanceOrderlySecurityGroups,
+				Config: testAccTencentCloudInstanceOrderlySecurityGroups(`[
+					tencentcloud_security_group.orderly_security_group1.id,
+					tencentcloud_security_group.orderly_security_group2.id,
+					tencentcloud_security_group.orderly_security_group3.id
+				]`),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudInstanceExists(instanceId),
+					testAccCheckSecurityGroupExists(orderlySecurityGroupId1, &sgId1),
+					testAccCheckSecurityGroupExists(orderlySecurityGroupId2, &sgId2),
+					testAccCheckSecurityGroupExists(orderlySecurityGroupId3, &sgId3),
+
+					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.0", &sgId1),
+					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.1", &sgId2),
+					resource.TestCheckResourceAttrPtr(instanceId, "orderly_security_groups.2", &sgId3),
+				),
+			},
+
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config: testAccTencentCloudInstanceOrderlySecurityGroups(`[
+					tencentcloud_security_group.orderly_security_group3.id,
+					tencentcloud_security_group.orderly_security_group2.id,
+					tencentcloud_security_group.orderly_security_group1.id
+				]`),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudInstanceExists(instanceId),
 					testAccCheckSecurityGroupExists(orderlySecurityGroupId1, &sgId1),
@@ -1096,7 +1119,9 @@ resource "tencentcloud_instance" "foo" {
 }
 `
 
-const testAccTencentCloudInstanceOrderlySecurityGroups = defaultInstanceVariable + `
+func testAccTencentCloudInstanceOrderlySecurityGroups(sgs string) string {
+
+	return fmt.Sprintf(defaultInstanceVariable+`
 resource "tencentcloud_security_group" "orderly_security_group1" {
 	name        = "test-cvm-orderly-sg1"
 	description = "test-cvm-orderly-sg1"
@@ -1118,6 +1143,7 @@ resource "tencentcloud_instance" "cvm_with_orderly_sg" {
 	image_id                   = data.tencentcloud_images.default.images.0.image_id
 	instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
 	system_disk_type           = "CLOUD_PREMIUM"
-	orderly_security_groups    = [tencentcloud_security_group.orderly_security_group3.id, tencentcloud_security_group.orderly_security_group2.id, tencentcloud_security_group.orderly_security_group1.id]
+	orderly_security_groups    = %s
 }
-`
+`, sgs)
+}
