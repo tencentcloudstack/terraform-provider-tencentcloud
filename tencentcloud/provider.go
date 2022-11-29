@@ -174,6 +174,7 @@ Cloud Access Management(CAM)
     tencentcloud_cam_saml_provider
 	tencentcloud_cam_oidc_sso
 	tencentcloud_cam_role_sso
+	tencentcloud_cam_service_linked_role
 
 Cloud Block Storage(CBS)
   Data Source
