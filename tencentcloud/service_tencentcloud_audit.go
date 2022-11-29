@@ -5,6 +5,8 @@ import (
 	"log"
 	"strings"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -111,5 +113,58 @@ func (me *AuditService) DescribeKeyAlias(ctx context.Context, region string) (ke
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	keyMetadatas = response.Response.KeyMetadatas
+	return
+}
+
+func (me *AuditService) DescribeAuditTrack(ctx context.Context, trackId string) (track *audit.DescribeAuditTrackResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = audit.NewDescribeAuditTrackRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.TrackId = helper.StrToUint64Point(trackId)
+
+	response, err := me.client.UseAuditClient().DescribeAuditTrack(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	track = response.Response
+	return
+}
+
+func (me *AuditService) DeleteAuditTrackById(ctx context.Context, trackId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := audit.NewDeleteAuditTrackRequest()
+
+	request.TrackId = helper.StrToUint64Point(trackId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseAuditClient().DeleteAuditTrack(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }
