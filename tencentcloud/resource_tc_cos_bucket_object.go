@@ -117,10 +117,10 @@ func resourceTencentCloudCosBucketObject() *schema.Resource {
 				Description: "A standard MIME type describing the format of the object data.",
 			},
 			"storage_class": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				Description:  "Object storage type, Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Object storage type, Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.",
 			},
 			"etag": {
 				Type:        schema.TypeString,
