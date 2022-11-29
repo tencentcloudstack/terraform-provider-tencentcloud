@@ -1277,6 +1277,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cam_role_sso":                             resourceTencentCloudCamRoleSSO(),
 			"tencentcloud_cam_group_membership":                     resourceTencentCloudCamGroupMembership(),
 			"tencentcloud_cam_saml_provider":                        resourceTencentCloudCamSAMLProvider(),
+			"tencentcloud_cam_service_linked_role":                  resourceTencentCloudCamServiceLinkedRole(),
 			"tencentcloud_scf_function":                             resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_namespace":                            resourceTencentCloudScfNamespace(),
 			"tencentcloud_scf_layer":                                resourceTencentCloudScfLayer(),
