@@ -1,3 +1,17 @@
+## 1.78.16 (November 29, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dts_sync_jobs` ([#1433](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1433))
+* **New Resource:** `tencentcloud_audit_track` ([#1431](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1431))
+* **New Resource:** `tencentcloud_dts_sync_job` ([#1433](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1433))
+* **New Resource:** `tencentcloud_redis_param_template` ([#1432](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1432))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cynosdb_cluster: fix: cynos - support serverless cluster pause/resume ([#1429](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1429))
+* resource/tencentcloud_instance: support orderly security group ([#1430](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1430))
+
 ## 1.78.15 (November 24, 2022)
 
 FEATURES:
