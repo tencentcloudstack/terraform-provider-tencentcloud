@@ -1593,7 +1593,8 @@ func (me *TkeService) SwitchLogAgent(ctx context.Context, clusterId, rootDir str
 	return me.UninstallLogAgent(ctx, request)
 }
 
-func (me *TkeService) SwitchEventPersistence(ctx context.Context, clusterId, logSetId, topicId string, enable bool) error {
+func (me *TkeService) SwitchEventPersistence(ctx context.Context, clusterId, logSetId, topicId string,
+	enable, deleteEventLogSetAndTopic bool) error {
 	if enable {
 		request := tke.NewEnableEventPersistenceRequest()
 		request.ClusterId = &clusterId
@@ -1607,10 +1608,12 @@ func (me *TkeService) SwitchEventPersistence(ctx context.Context, clusterId, log
 	}
 	request := tke.NewDisableEventPersistenceRequest()
 	request.ClusterId = &clusterId
+	request.DeleteLogSetAndTopic = &deleteEventLogSetAndTopic
 	return me.DisableEventPersistence(ctx, request)
 }
 
-func (me *TkeService) SwitchClusterAudit(ctx context.Context, clusterId, logSetId, topicId string, enable bool) error {
+func (me *TkeService) SwitchClusterAudit(ctx context.Context, clusterId, logSetId, topicId string, enable,
+	deleteAuditLogSetAndTopic bool) error {
 	if enable {
 		request := tke.NewEnableClusterAuditRequest()
 		request.ClusterId = &clusterId
@@ -1623,8 +1626,25 @@ func (me *TkeService) SwitchClusterAudit(ctx context.Context, clusterId, logSetI
 		return me.EnableClusterAudit(ctx, request)
 	}
 	request := tke.NewDisableClusterAuditRequest()
+	request.DeleteLogSetAndTopic = &deleteAuditLogSetAndTopic
 	request.ClusterId = &clusterId
 	return me.DisableClusterAudit(ctx, request)
+}
+
+func (me *TkeService) CloseClusterAuditAndDeleteLog(ctx context.Context, clusterId string) error {
+	request := tke.NewDisableClusterAuditRequest()
+	request.ClusterId = &clusterId
+	var delete bool = true
+	request.DeleteLogSetAndTopic = &delete
+	return me.DisableClusterAudit(ctx, request)
+}
+
+func (me *TkeService) CloseClusterEventPersistenceAndDeleteLog(ctx context.Context, clusterId string) error {
+	request := tke.NewDisableEventPersistenceRequest()
+	request.ClusterId = &clusterId
+	var delete bool = true
+	request.DeleteLogSetAndTopic = &delete
+	return me.DisableEventPersistence(ctx, request)
 }
 
 func (me *TkeService) InstallLogAgent(ctx context.Context, request *tke.InstallLogAgentRequest) (errRet error) {

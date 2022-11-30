@@ -497,6 +497,7 @@ The `auth_options` object supports the following:
 The `cluster_audit` object supports the following:
 
 * `enabled` - (Required, Bool) Specify weather the Cluster Audit enabled. NOTE: Enable Cluster Audit will also auto install Log Agent.
+* `delete_audit_log_and_topic` - (Optional, Bool) when you want to close the cluster audit log or delete the cluster, you can use this parameter to determine whether the audit log set and topic created by default will be deleted.
 * `log_set_id` - (Optional, String) Specify id of existing CLS log set, or auto create a new set by leave it empty.
 * `topic_id` - (Optional, String) Specify id of existing CLS log topic, or auto create a new topic by leave it empty.
 
@@ -521,6 +522,7 @@ The `data_disk` object supports the following:
 The `event_persistence` object supports the following:
 
 * `enabled` - (Required, Bool) Specify weather the Event Persistence enabled.
+* `delete_event_log_and_topic` - (Optional, Bool) when you want to close the cluster event persistence or delete the cluster, you can use this parameter to determine whether the event persistence log set and topic created by default will be deleted.
 * `log_set_id` - (Optional, String) Specify id of existing CLS log set, or auto create a new set by leave it empty.
 * `topic_id` - (Optional, String) Specify id of existing CLS log topic, or auto create a new topic by leave it empty.
 

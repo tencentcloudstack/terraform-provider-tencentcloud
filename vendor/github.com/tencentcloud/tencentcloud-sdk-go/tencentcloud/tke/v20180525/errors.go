@@ -59,6 +59,9 @@ const (
 	// 请求(http请求)其他云服务失败。
 	FAILEDOPERATION_COMPONENTCLINETHTTP = "FailedOperation.ComponentClinetHttp"
 
+	// 创建CLS客户端失败。
+	FAILEDOPERATION_CREATECLSCLIENT = "FailedOperation.CreateClsClient"
+
 	// 创建CLS采集配置失败。
 	FAILEDOPERATION_CREATECLSCONFIG = "FailedOperation.CreateClsConfig"
 
@@ -161,11 +164,17 @@ const (
 	// 子账户RBAC权限不足。
 	FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
 
+	// 记录没有发现。
+	FAILEDOPERATION_RECORDNOTFOUND = "FailedOperation.RecordNotFound"
+
 	// 已有相同任务执行中。
 	FAILEDOPERATION_TASKALREADYRUNNING = "FailedOperation.TaskAlreadyRunning"
 
 	// 询价错误。
 	FAILEDOPERATION_TRADECOMMON = "FailedOperation.TradeCommon"
+
+	// 不可预知的错误。
+	FAILEDOPERATION_UNEXPECTEDERROR = "FailedOperation.UnexpectedError"
 
 	// VPC未知错误。
 	FAILEDOPERATION_VPCUNEXPECTEDERROR = "FailedOperation.VPCUnexpectedError"
@@ -463,6 +472,9 @@ const (
 
 	// 资源不足。
 	RESOURCEINSUFFICIENT = "ResourceInsufficient"
+
+	// CVM资源不足。
+	RESOURCEINSUFFICIENT_SPECIFIEDINSTANCETYPE = "ResourceInsufficient.SpecifiedInstanceType"
 
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
