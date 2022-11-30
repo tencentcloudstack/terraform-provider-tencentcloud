@@ -821,6 +821,7 @@ Data Transmission Service(DTS)
 RocketMQ
   Resource
 	tencentcloud_tdmq_rocketmq_cluster
+	tencentcloud_tdmq_rocketmq_namespace
 
 
 */
@@ -1457,6 +1458,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
 			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
 			"tencentcloud_tdmq_rocketmq_cluster":                      resourceTencentCloudTdmqRocketmqCluster(),
+			"tencentcloud_tdmq_rocketmq_namespace":                    resourceTencentCloudTdmqRocketmqNamespace(),
 			// "tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
