@@ -818,6 +818,10 @@ Data Transmission Service(DTS)
   Resource
 	tencentcloud_dts_sync_job
 
+RocketMQ
+  Resource
+	tencentcloud_tdmq_rocketmq_cluster
+
 
 */
 package tencentcloud
@@ -1452,6 +1456,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
 			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			"tencentcloud_tdmq_rocketmq_cluster":                      resourceTencentCloudTdmqRocketmqCluster(),
 			// "tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
