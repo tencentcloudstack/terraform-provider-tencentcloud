@@ -519,7 +519,121 @@ func (me *CynosdbService) DescribeClusterParams(ctx context.Context, clusterId s
 		}
 		return nil
 	})
+	if errRet != nil {
+		return
+	}
 	items = response.Response.Items
 
 	return
+}
+
+func (me *CynosdbService) ResumeServerless(ctx context.Context, request *cynosdb.ResumeServerlessRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCynosdbClient().ResumeServerless(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CynosdbService) PauseServerless(ctx context.Context, request *cynosdb.PauseServerlessRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCynosdbClient().PauseServerless(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CynosdbService) SwitchServerlessCluster(ctx context.Context, clusterId string, resume bool) error {
+	pause := !resume
+	_, detail, _, err := me.DescribeClusterById(ctx, clusterId)
+	if err != nil {
+		return err
+	}
+	st := detail.ServerlessStatus
+	if st == nil {
+		return nil
+	}
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if resume && *st == "resuming" || pause && *st == "pausing" {
+			return resource.RetryableError(fmt.Errorf("waiting for status %s finish", *st))
+		}
+		if resume && *st == "resume" || pause && *st == "pause" {
+			return nil
+		}
+		if resume && *st == "pause" {
+			request := cynosdb.NewResumeServerlessRequest()
+			request.ClusterId = &clusterId
+			err := me.ResumeServerless(ctx, request)
+			if err != nil {
+				return retryError(err, cynosdb.OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED)
+			}
+			return nil
+		}
+		if pause && *st == "resume" {
+			request := cynosdb.NewPauseServerlessRequest()
+			request.ClusterId = &clusterId
+			err := me.PauseServerless(ctx, request)
+			if err != nil {
+				return retryError(err, cynosdb.OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED)
+			}
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	statusChangeRetry := 5
+	return resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+		_, detail, _, err = me.DescribeClusterById(ctx, clusterId)
+		if err != nil {
+			return retryError(err)
+		}
+		st := detail.ServerlessStatus
+		if st == nil {
+			return resource.NonRetryableError(fmt.Errorf("cannot read serverless cluster status"))
+		}
+		if resume && *st == "pause" || pause && *st == "resume" {
+			if statusChangeRetry > 0 {
+				statusChangeRetry -= 1
+				return resource.RetryableError(fmt.Errorf("waiting for status change, retry %d", statusChangeRetry))
+			}
+			return resource.NonRetryableError(fmt.Errorf("api action invoked but status still %s", *st))
+		}
+		if resume && *st == "resuming" || pause && *st == "pausing" {
+			statusChangeRetry = 0
+			return resource.RetryableError(fmt.Errorf("waiting for status %s finished", *st))
+		}
+		return nil
+	})
 }

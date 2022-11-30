@@ -466,6 +466,7 @@ TencentDB for Redis
   Resource
     tencentcloud_redis_instance
     tencentcloud_redis_backup_config
+    tencentcloud_redis_param_template
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -808,6 +809,13 @@ DBbrain
 	tencentcloud_dbbrain_sql_filter
 	tencentcloud_dbbrain_security_audit_log_export_task
 
+Data Transmission Service(DTS)
+  Data Source
+	tencentcloud_dts_sync_jobs
+  Resource
+	tencentcloud_dts_sync_job
+
+
 */
 package tencentcloud
 
@@ -1131,6 +1139,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
+			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1219,6 +1228,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_access_rule":                          resourceTencentCloudCfsAccessRule(),
 			"tencentcloud_redis_instance":                           resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                      resourceTencentCloudRedisBackupConfig(),
+			"tencentcloud_redis_param_template":                     resourceTencentCloudRedisParamTemplate(),
 			"tencentcloud_as_scaling_config":                        resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                         resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                            resourceTencentCloudAsAttachment(),
@@ -1435,6 +1445,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
+			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			// "tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -49,7 +49,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudCynosdbClusterResource(t *testing.T) {
+func TestAccTencentCloudCynosdbClusterResourceBasic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -155,6 +155,24 @@ func TestAccTencentCloudCynosdbClusterResourceServerless(t *testing.T) {
 					"auto_pause",
 					"auto_pause_delay",
 				},
+			},
+			{
+				Config: testAccCynosdbClusterServerlessPause,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "db_mode", "SERVERLESS"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "serverless_status", "pause"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "serverless_status_flag", "pause"),
+				),
+			},
+			{
+				Config: testAccCynosdbClusterServerlessResume,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCynosdbClusterExists("tencentcloud_cynosdb_cluster.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "db_mode", "SERVERLESS"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "serverless_status", "resume"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "serverless_status_flag", "resume"),
+				),
 			},
 		},
 	})
@@ -354,5 +372,61 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
     "Tue",
   ]
 
+  force_delete = true
+}`
+const testAccCynosdbClusterServerlessPause = testAccCynosdbBasic + `
+resource "tencentcloud_cynosdb_cluster" "foo" {
+  available_zone               = var.availability_zone
+  vpc_id                       = var.my_vpc
+  subnet_id                    = var.my_subnet
+  db_type                      = "MYSQL"
+  db_version                   = "5.7"
+  cluster_name                 = "tf-cynosdb-s"
+  password                     = "cynos@123"
+  db_mode                      = "SERVERLESS"
+  min_cpu 					   = 0.25
+  max_cpu 					   = 1
+  auto_pause 				   = "yes"
+  auto_pause_delay 			   = 1000
+  instance_maintain_duration   = 3600
+  instance_maintain_start_time = 10800
+  instance_maintain_weekdays   = [
+    "Fri",
+    "Mon",
+    "Sat",
+    "Sun",
+    "Thu",
+    "Wed",
+    "Tue",
+  ]
+  serverless_status_flag       = "pause"
+  force_delete = true
+}`
+const testAccCynosdbClusterServerlessResume = testAccCynosdbBasic + `
+resource "tencentcloud_cynosdb_cluster" "foo" {
+  available_zone               = var.availability_zone
+  vpc_id                       = var.my_vpc
+  subnet_id                    = var.my_subnet
+  db_type                      = "MYSQL"
+  db_version                   = "5.7"
+  cluster_name                 = "tf-cynosdb-s"
+  password                     = "cynos@123"
+  db_mode                      = "SERVERLESS"
+  min_cpu 					   = 0.25
+  max_cpu 					   = 1
+  auto_pause 				   = "yes"
+  auto_pause_delay 			   = 1000
+  instance_maintain_duration   = 3600
+  instance_maintain_start_time = 10800
+  instance_maintain_weekdays   = [
+    "Fri",
+    "Mon",
+    "Sat",
+    "Sun",
+    "Thu",
+    "Wed",
+    "Tue",
+  ]
+  serverless_status_flag       = "resume"
   force_delete = true
 }`

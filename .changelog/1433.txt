@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_dts_sync_job
+```
+
+```release-note:new-data-source
+tencentcloud_dts_sync_jobs
+```
