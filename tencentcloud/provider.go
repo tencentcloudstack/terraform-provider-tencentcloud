@@ -814,6 +814,7 @@ Data Transmission Service(DTS)
 	tencentcloud_dts_sync_jobs
   Resource
 	tencentcloud_dts_sync_job
+	tencentcloud_dts_compare_task
 
 
 */
@@ -1140,6 +1141,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
+			// "tencentcloud_dts_compare_tasks": dataSourceTencentCloudDtsCompareTasks(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1446,7 +1448,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
 			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
-			// "tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
+			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
 		ConfigureFunc: providerConfigure,

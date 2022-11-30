@@ -224,31 +224,85 @@ func (me *DtsService) DeleteDtsSyncJobById(ctx context.Context, jobId string) (e
 	return
 }
 
-func (me *DtsService) DescribeDtsCompareTask(ctx context.Context, jobId, compareTaskId string) (compareTask *dts.DescribeCompareReportResponseParams, errRet error) {
+func (me *DtsService) DescribeDtsCompareTasksByFilter(ctx context.Context, param map[string]interface{}) (compareTasks []*dts.CompareTaskItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = dts.NewDescribeCompareReportRequest()
+		request = dts.NewDescribeCompareTasksRequest()
 	)
 
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "query object", request.ToJsonString(), errRet.Error())
+				logId, "query objects", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.JobId = &jobId
-	request.CompareTaskId = &compareTaskId
 
-	response, err := me.client.UseDtsClient().DescribeCompareReport(request)
+	for k, v := range param {
+		if k == "job_id" {
+			request.JobId = v.(*string)
+		}
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDtsClient().DescribeCompareTasks(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		compareTasks = append(compareTasks, response.Response.Items...)
+		if len(response.Response.Items) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *DtsService) DescribeDtsCompareTask(ctx context.Context, jobId, compareTaskId *string) (tasks []*dts.CompareTaskItem, errRet error) {
+	logId := getLogId(ctx)
+	param := map[string]interface{}{
+		"job_id": jobId,
+	}
+
+	ret, err := me.DescribeDtsCompareTasksByFilter(ctx, param)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, "DescribeDtsCompareTask", err.Error())
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	compareTask = response.Response
+	if ret == nil {
+		errRet = fmt.Errorf("DescribeDtsCompareTask failed, ret is nil. jobId:[%s], compareTaskId:[%s]", *jobId, *compareTaskId)
+		return
+	}
+
+	tasks = ret
+
+	// exactly search for specific compare task
+	if compareTaskId != nil {
+		for _, t := range tasks {
+			if *compareTaskId == *t.CompareTaskId {
+				tasks = []*dts.CompareTaskItem{t}
+				break
+			}
+		}
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, tasks num:[%s]\n", logId, "DescribeDtsCompareTask", len(tasks))
 	return
 }
 
