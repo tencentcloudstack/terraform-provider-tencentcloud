@@ -1324,8 +1324,8 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					"delete_event_log_and_topic": {
 						Type:     schema.TypeBool,
 						Optional: true,
-						Description: "when you want to close the cluster event persistence or delete the cluster, you can use this " +
-							"parameter to determine whether the event persistence log set and topic will be deleted.",
+						Description: "when you want to close the cluster event persistence or delete the cluster, you can use this parameter to determine " +
+							"whether the event persistence log set and topic created by default will be deleted.",
 					},
 				},
 			},
@@ -1355,8 +1355,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					"delete_audit_log_and_topic": {
 						Type:     schema.TypeBool,
 						Optional: true,
-						Description: "when you want to close the cluster audit log or delete the cluster, " +
-							"you can use this parameter to determine whether the audit log set and topic will be deleted.",
+						Description: "when you want to close the cluster audit log or delete the cluster, you can use " +
+							"this parameter to determine whether the audit log set and topic created by default will" +
+							" be deleted.",
 					},
 				},
 			},
