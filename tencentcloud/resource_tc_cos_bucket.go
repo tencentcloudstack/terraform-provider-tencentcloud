@@ -591,7 +591,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 									"storage_class": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Specifies the storage class to which you want the object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.",
+										Description: "Specifies the storage class to which you want the object to transition. Available values include `STANDARD_IA`, `MAZ_STANDARD_IA`, `INTELLIGENT_TIERING`, `MAZ_INTELLIGENT_TIERING`, `ARCHIVE`, `DEEP_ARCHIVE`. For more information, please refer to: https://cloud.tencent.com/document/product/436/33417.",
 									},
 								},
 							},
@@ -640,7 +640,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 									"storage_class": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.",
+										Description: "Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD_IA`, `MAZ_STANDARD_IA`, `INTELLIGENT_TIERING`, `MAZ_INTELLIGENT_TIERING`, `ARCHIVE`, `DEEP_ARCHIVE`. For more information, please refer to: https://cloud.tencent.com/document/product/436/33417.",
 									},
 								},
 							},
