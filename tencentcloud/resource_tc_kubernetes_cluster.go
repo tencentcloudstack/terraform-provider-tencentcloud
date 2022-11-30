@@ -1434,6 +1434,11 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Computed:    true,
 			Description: "Kubernetes config.",
 		},
+		"kube_config_intranet": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Kubernetes config of private network.",
+		},
 		"delete_audit_log_and_topic": {
 			Type:     schema.TypeBool,
 			Optional: true,
