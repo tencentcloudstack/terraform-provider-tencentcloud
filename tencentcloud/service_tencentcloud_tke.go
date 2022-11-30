@@ -1627,6 +1627,22 @@ func (me *TkeService) SwitchClusterAudit(ctx context.Context, clusterId, logSetI
 	return me.DisableClusterAudit(ctx, request)
 }
 
+func (me *TkeService) CloseClusterAuditAndDeleteLog(ctx context.Context, clusterId string) error {
+	request := tke.NewDisableClusterAuditRequest()
+	request.ClusterId = &clusterId
+	var delete bool = true
+	request.DeleteLogSetAndTopic = &delete
+	return me.DisableClusterAudit(ctx, request)
+}
+
+func (me *TkeService) CloseClusterEventPersistenceAndDeleteLog(ctx context.Context, clusterId string) error {
+	request := tke.NewDisableEventPersistenceRequest()
+	request.ClusterId = &clusterId
+	var delete bool = true
+	request.DeleteLogSetAndTopic = &delete
+	return me.DisableEventPersistence(ctx, request)
+}
+
 func (me *TkeService) InstallLogAgent(ctx context.Context, request *tke.InstallLogAgentRequest) (errRet error) {
 	logId := getLogId(ctx)
 	defer func() {

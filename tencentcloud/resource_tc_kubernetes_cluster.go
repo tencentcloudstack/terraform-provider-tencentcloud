@@ -1434,10 +1434,17 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Computed:    true,
 			Description: "Kubernetes config.",
 		},
-		"kube_config_intranet": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Kubernetes config of private network.",
+		"delete_audit_log_and_topic": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Description: "when you want to close the cluster audit log or delete the cluster, " +
+				"you can use this parameter to determine whether the audit log set and topic will be deleted.",
+		},
+		"delete_event_log_and_topic": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Description: "when you want to close the cluster event persistence or delete the cluster, you can use this " +
+				"parameter to determine whether the event persistence log set and topic will be deleted.",
 		},
 	}
 
@@ -2888,7 +2895,20 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 	}
-
+	var deleteAuditLogSetAndTopic = d.Get("delete_audit_log_and_topic").(bool)
+	var deleteEventLogSetAndTopic = d.Get("delete_event_log_and_topic").(bool)
+	if deleteAuditLogSetAndTopic {
+		err := tkeService.CloseClusterAuditAndDeleteLog(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+	}
+	if deleteEventLogSetAndTopic {
+		err := tkeService.CloseClusterEventPersistenceAndDeleteLog(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+	}
 	d.Partial(false)
 	if err := resourceTencentCloudTkeClusterRead(d, meta); err != nil {
 		log.Printf("[WARN]%s resource.kubernetes_cluster.read after update fail , %s", logId, err.Error())
@@ -2903,7 +2923,20 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-
+	var deleteAuditLogSetAndTopic = d.Get("delete_audit_log_and_topic").(bool)
+	var deleteEventLogSetAndTopic = d.Get("delete_event_log_and_topic").(bool)
+	if deleteAuditLogSetAndTopic {
+		err := service.CloseClusterAuditAndDeleteLog(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+	}
+	if deleteEventLogSetAndTopic {
+		err := service.CloseClusterEventPersistenceAndDeleteLog(ctx, d.Id())
+		if err != nil {
+			return err
+		}
+	}
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		err := service.DeleteCluster(ctx, d.Id())
 
