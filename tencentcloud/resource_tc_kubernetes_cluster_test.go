@@ -132,6 +132,8 @@ func TestAccTencentCloudTkeResourceLogs(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "log_agent.0.enabled", "true"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "event_persistence.0.enabled", "false"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "event_persistence.0.delete_audit_log_and_topic",
+						"true"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_audit.0.enabled", "true"),
 				),
 			},
@@ -477,6 +479,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   event_persistence {
     enabled = false
+    delete_audit_log_and_topic = true
   }
 
   cluster_audit {
