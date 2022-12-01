@@ -2308,7 +2308,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		logSetId := v["log_set_id"].(string)
 		topicId := v["topic_id"].(string)
 		if enabled {
-			err := service.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, false,d)
+			err := service.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, false, d)
 			if err != nil {
 				return err
 			}
@@ -2925,7 +2925,7 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	if v, ok := helper.InterfacesHeadMap(d, "event_persistence"); ok {
 		deleteEventLogSetAndTopic := v["delete_event_log_and_topic"].(bool)
 		if deleteEventLogSetAndTopic {
-			err := service.SwitchEventPersistence(ctx, d.Id(), "", "", false, true,d)
+			err := service.SwitchEventPersistence(ctx, d.Id(), "", "", false, true, d)
 			if err != nil {
 				return err
 			}

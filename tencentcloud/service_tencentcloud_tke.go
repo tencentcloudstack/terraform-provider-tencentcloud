@@ -1594,7 +1594,7 @@ func (me *TkeService) SwitchLogAgent(ctx context.Context, clusterId, rootDir str
 }
 
 func (me *TkeService) SwitchEventPersistence(ctx context.Context, clusterId, logSetId, topicId string,
-	enable, deleteEventLog bool,d *schema.ResourceData) error {
+	enable, deleteEventLog bool, d *schema.ResourceData) error {
 	if enable {
 		request := tke.NewEnableEventPersistenceRequest()
 		request.ClusterId = &clusterId
