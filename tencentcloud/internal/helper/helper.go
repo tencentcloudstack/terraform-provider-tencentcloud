@@ -146,6 +146,18 @@ func InterfacesHeadMap(d *schema.ResourceData, key string) (result map[string]in
 	return
 }
 
+// ConvertInterfacesHeadToMap returns string key map if argument is MaxItem: 1 List Type
+func ConvertInterfacesHeadToMap(v interface{}) (result map[string]interface{}, ok bool) {
+	interfaces, ok := v.([]interface{})
+	if !ok || len(interfaces) == 0 {
+		ok = false
+		return
+	}
+	head := interfaces[0]
+	result, ok = head.(map[string]interface{})
+	return
+}
+
 func SetMapInterfaces(d *schema.ResourceData, key string, values ...map[string]interface{}) error {
 	val := make([]interface{}, 0, len(values))
 	for i := range values {
