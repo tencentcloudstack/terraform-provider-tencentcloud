@@ -376,7 +376,7 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 	return needSchema
 }
 
-func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
+func resourceTencentCloudKubernetesNodePool() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceKubernetesNodePoolCreate,
 		Read:   resourceKubernetesNodePoolRead,

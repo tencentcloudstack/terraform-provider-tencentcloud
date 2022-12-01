@@ -68,7 +68,7 @@ func testNodePoolSweep(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
+func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -146,7 +146,7 @@ func TestAccTencentCloudTkeNodePoolResourceBasic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudTkeNodePoolResourceDiskEncrypt(t *testing.T) {
+func TestAccTencentCloudKubernetesNodePoolResource_DiskEncrypt(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
