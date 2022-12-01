@@ -128,6 +128,7 @@ func resourceTencentCloudTdmqRocketmqClusterCreate(d *schema.ResourceData, meta 
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request   = tdmqRocketmq.NewCreateRocketMQClusterRequest()
@@ -163,6 +164,18 @@ func resourceTencentCloudTdmqRocketmqClusterCreate(d *schema.ResourceData, meta 
 	}
 
 	clusterId = *response.Response.ClusterId
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		service := TdmqRocketmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+		_, innerErr := service.DescribeTdmqRocketmqCluster(ctx, clusterId)
+		if innerErr != nil {
+			return resource.RetryableError(innerErr)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
 
 	d.SetId(clusterId)
 	return resourceTencentCloudTdmqRocketmqClusterRead(d, meta)

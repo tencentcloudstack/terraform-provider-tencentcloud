@@ -446,3 +446,61 @@ func (me *TdmqRocketmqService) DeleteTdmqRocketmqEnvironmentRoleById(ctx context
 
 	return
 }
+
+func (me *TdmqRocketmqService) DescribeRocketmqClusterByFilter(ctx context.Context, param map[string]interface{}) (cluster []*tdmqRocketmq.RocketMQClusterDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmqRocketmq.NewDescribeRocketMQClustersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if v, ok := param["id_keyword"]; ok {
+		request.IdKeyword = helper.String(v.(string))
+	}
+	if v, ok := param["name_keyword"]; ok {
+		request.NameKeyword = helper.String(v.(string))
+	}
+	if v, ok := param["cluster_id_list"]; ok {
+		request.ClusterIdList = make([]*string, 0)
+		for _, cluster := range v.([]interface{}) {
+			clusterId := cluster.(string)
+			request.ClusterIdList = append(request.ClusterIdList, &clusterId)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTdmqClient().DescribeRocketMQClusters(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ClusterList) < 1 {
+			break
+		}
+		cluster = append(cluster, response.Response.ClusterList...)
+		if len(response.Response.ClusterList) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
