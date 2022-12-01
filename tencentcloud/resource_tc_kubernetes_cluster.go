@@ -1321,6 +1321,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 						Optional:    true,
 						Description: "Specify id of existing CLS log topic, or auto create a new topic by leave it empty.",
 					},
+					"delete_event_log_and_topic": {
+						Type:     schema.TypeBool,
+						Optional: true,
+						Description: "when you want to close the cluster event persistence or delete the cluster, you can use this parameter to determine " +
+							"whether the event persistence log set and topic created by default will be deleted.",
+					},
 				},
 			},
 		},
@@ -1345,6 +1351,13 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 						Type:        schema.TypeString,
 						Optional:    true,
 						Description: "Specify id of existing CLS log topic, or auto create a new topic by leave it empty.",
+					},
+					"delete_audit_log_and_topic": {
+						Type:     schema.TypeBool,
+						Optional: true,
+						Description: "when you want to close the cluster audit log or delete the cluster, you can use " +
+							"this parameter to determine whether the audit log set and topic created by default will" +
+							" be deleted.",
 					},
 				},
 			},
@@ -2295,7 +2308,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		logSetId := v["log_set_id"].(string)
 		topicId := v["topic_id"].(string)
 		if enabled {
-			err := service.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled)
+			err := service.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, false)
 			if err != nil {
 				return err
 			}
@@ -2307,7 +2320,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		logSetId := v["log_set_id"].(string)
 		topicId := v["topic_id"].(string)
 		if enabled {
-			err := service.SwitchClusterAudit(ctx, id, logSetId, topicId, enabled)
+			err := service.SwitchClusterAudit(ctx, id, logSetId, topicId, enabled, false)
 			if err != nil {
 				return err
 			}
@@ -2862,12 +2875,14 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		enabled := false
 		logSetId := ""
 		topicId := ""
+		deleteEventLog := false
 		if ok {
 			enabled = v["enabled"].(bool)
 			logSetId = v["log_set_id"].(string)
 			topicId = v["topic_id"].(string)
+			deleteEventLog = v["delete_event_log_and_topic"].(bool)
 		}
-		err := tkeService.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled)
+		err := tkeService.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, deleteEventLog)
 		if err != nil {
 			return err
 		}
@@ -2878,12 +2893,14 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		enabled := false
 		logSetId := ""
 		topicId := ""
+		deleteAuditLog := false
 		if ok {
 			enabled = v["enabled"].(bool)
 			logSetId = v["log_set_id"].(string)
 			topicId = v["topic_id"].(string)
+			deleteAuditLog = v["delete_audit_log_and_topic"].(bool)
 		}
-		err := tkeService.SwitchClusterAudit(ctx, id, logSetId, topicId, enabled)
+		err := tkeService.SwitchClusterAudit(ctx, id, logSetId, topicId, enabled, deleteAuditLog)
 		if err != nil {
 			return err
 		}
@@ -2903,6 +2920,26 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	if v, ok := helper.InterfacesHeadMap(d, "event_persistence"); ok {
+		deleteEventLogSetAndTopic := v["delete_event_log_and_topic"].(bool)
+		if deleteEventLogSetAndTopic {
+			err := service.SwitchEventPersistence(ctx, d.Id(), "", "", false, true)
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	if v, ok := helper.InterfacesHeadMap(d, "cluster_audit"); ok {
+		deleteAuditLogSetAndTopic := v["delete_audit_log_and_topic"].(bool)
+		if deleteAuditLogSetAndTopic {
+			err := service.SwitchClusterAudit(ctx, d.Id(), "", "", false, true)
+			if err != nil {
+				return err
+			}
+		}
+	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		err := service.DeleteCluster(ctx, d.Id())
