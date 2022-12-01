@@ -373,3 +373,76 @@ func (me *TdmqRocketmqService) DeleteTdmqRocketmqGroupById(ctx context.Context, 
 
 	return
 }
+
+func (me *TdmqRocketmqService) DescribeTdmqRocketmqEnvironmentRole(ctx context.Context, clusterId, roleName, environmentId string) (environmentRoles []*tdmqRocketmq.EnvironmentRole, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmqRocketmq.NewDescribeEnvironmentRolesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.RoleName = &roleName
+	request.EnvironmentId = &environmentId
+	environmentRoles = make([]*tdmqRocketmq.EnvironmentRole, 0)
+	var offset int64 = 0
+	var pageSize int64 = 100
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTdmqClient().DescribeEnvironmentRoles(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EnvironmentRoleSets) < 1 {
+			break
+		}
+		environmentRoles = append(environmentRoles, response.Response.EnvironmentRoleSets...)
+		if len(response.Response.EnvironmentRoleSets) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *TdmqRocketmqService) DeleteTdmqRocketmqEnvironmentRoleById(ctx context.Context, clusterId, roleName, environmentId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmqRocketmq.NewDeleteEnvironmentRolesRequest()
+
+	request.ClusterId = &clusterId
+	request.RoleNames = []*string{&roleName}
+	request.EnvironmentId = &environmentId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTdmqClient().DeleteEnvironmentRoles(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

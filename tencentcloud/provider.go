@@ -825,6 +825,7 @@ RocketMQ
 	tencentcloud_tdmq_rocketmq_role
 	tencentcloud_tdmq_rocketmq_topic
 	tencentcloud_tdmq_rocketmq_group
+	tencentcloud_tdmq_rocketmq_environment_role
 
 */
 package tencentcloud
@@ -1464,6 +1465,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_role":                         resourceTencentCloudTdmqRocketmqRole(),
 			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
+			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
 			// "tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
