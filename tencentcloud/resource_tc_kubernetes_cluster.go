@@ -2921,28 +2921,30 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
-
+	deleteEventLogSetAndTopic := false
+	deleteAuditLogSetAndTopic := false
 	if v, ok := helper.InterfacesHeadMap(d, "event_persistence"); ok {
-		deleteEventLogSetAndTopic := v["delete_event_log_and_topic"].(bool)
-		if deleteEventLogSetAndTopic {
-			err := service.SwitchEventPersistence(ctx, d.Id(), "", "", false, true, d)
-			if err != nil {
-				return err
-			}
-		}
+		deleteEventLogSetAndTopic = v["delete_event_log_and_topic"].(bool)
 	}
 
 	if v, ok := helper.InterfacesHeadMap(d, "cluster_audit"); ok {
-		deleteAuditLogSetAndTopic := v["delete_audit_log_and_topic"].(bool)
-		if deleteAuditLogSetAndTopic {
-			err := service.SwitchClusterAudit(ctx, d.Id(), "", "", false, true)
-			if err != nil {
-				return err
-			}
-		}
+		deleteAuditLogSetAndTopic = v["delete_audit_log_and_topic"].(bool)
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		if deleteEventLogSetAndTopic {
+			err := service.SwitchEventPersistence(ctx, d.Id(), "", "", false,
+				true, d)
+			if err != nil {
+				return retryError(err, InternalError)
+			}
+		}
+		if deleteAuditLogSetAndTopic {
+			err := service.SwitchClusterAudit(ctx, d.Id(), "", "", false, true)
+			if err != nil {
+				return retryError(err, InternalError)
+			}
+		}
 		err := service.DeleteCluster(ctx, d.Id())
 
 		if e, ok := err.(*errors.TencentCloudSDKError); ok {
