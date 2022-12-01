@@ -298,3 +298,78 @@ func (me *TdmqRocketmqService) DeleteTdmqRocketmqTopicById(ctx context.Context, 
 
 	return
 }
+
+func (me *TdmqRocketmqService) DescribeTdmqRocketmqGroup(ctx context.Context, clusterId, namespaceId, groupId string) (result []*tdmqRocketmq.RocketMQGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmqRocketmq.NewDescribeRocketMQGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &clusterId
+	request.NamespaceId = &namespaceId
+	request.FilterGroup = &groupId
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	result = make([]*tdmqRocketmq.RocketMQGroup, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTdmqClient().DescribeRocketMQGroups(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Groups) < 1 {
+			break
+		}
+		result = append(result, response.Response.Groups...)
+		if len(response.Response.Groups) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	return
+}
+
+func (me *TdmqRocketmqService) DeleteTdmqRocketmqGroupById(ctx context.Context, clusterId, namespaceId, groupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmqRocketmq.NewDeleteRocketMQGroupRequest()
+
+	request.ClusterId = &clusterId
+	request.NamespaceId = &namespaceId
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTdmqClient().DeleteRocketMQGroup(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
