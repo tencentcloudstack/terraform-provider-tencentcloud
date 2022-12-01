@@ -41,6 +41,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -54,9 +55,9 @@ func resourceTencentCloudDtsCompareTask() *schema.Resource {
 		Create: resourceTencentCloudDtsCompareTaskCreate,
 		Update: resourceTencentCloudDtsCompareTaskUpdate,
 		Delete: resourceTencentCloudDtsCompareTaskDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"job_id": {
 				Type:        schema.TypeString,
@@ -172,6 +173,9 @@ func resourceTencentCloudDtsCompareTaskCreate(d *schema.ResourceData, meta inter
 	var (
 		request       = dts.NewCreateCompareTaskRequest()
 		response      *dts.CreateCompareTaskResponse
+		startRequest  = dts.NewStartCompareRequest()
+		service       = DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
 		jobId         string
 		compareTaskId string
 	)
@@ -179,23 +183,24 @@ func resourceTencentCloudDtsCompareTaskCreate(d *schema.ResourceData, meta inter
 	if v, ok := d.GetOk("job_id"); ok {
 		jobId = v.(string)
 		request.JobId = helper.String(v.(string))
+		startRequest.JobId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("task_name"); ok {
-
 		request.TaskName = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("object_mode"); ok {
-
 		request.ObjectMode = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "objects"); ok {
 		compareObject := dts.CompareObject{}
+
 		if v, ok := dMap["object_mode"]; ok {
 			compareObject.ObjectMode = helper.String(v.(string))
 		}
+
 		if v, ok := dMap["object_items"]; ok {
 			for _, item := range v.([]interface{}) {
 				ObjectItemsMap := item.(map[string]interface{})
@@ -242,6 +247,7 @@ func resourceTencentCloudDtsCompareTaskCreate(d *schema.ResourceData, meta inter
 		request.Objects = &compareObject
 	}
 
+	// create compareTask
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDtsClient().CreateCompareTask(request)
 		if e != nil {
@@ -259,7 +265,28 @@ func resourceTencentCloudDtsCompareTaskCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	compareTaskId := *response.Response.JobId
+	compareTaskId = *response.Response.CompareTaskId
+	// start compareTask
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		startRequest.CompareTaskId = helper.String(compareTaskId)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDtsClient().StartCompare(startRequest)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, startRequest.GetAction(), startRequest.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s start dts compareTask failed, reason:%+v", logId, err)
+		return err
+	}
+	// wait running
+	if err = service.PollingCompareTaskStatusUntil(ctx, jobId, compareTaskId, "running"); err != nil {
+		return err
+	}
 
 	d.SetId(jobId + FILED_SP + compareTaskId)
 	return resourceTencentCloudDtsCompareTaskRead(d, meta)
@@ -281,90 +308,98 @@ func resourceTencentCloudDtsCompareTaskRead(d *schema.ResourceData, meta interfa
 	jobId := idSplit[0]
 	compareTaskId := idSplit[1]
 
-	compareTask, err := service.DescribeDtsCompareTask(ctx, jobId, compareTaskId)
+	ret, err := service.DescribeDtsCompareTask(ctx, helper.String(jobId), helper.String(compareTaskId))
 
 	if err != nil {
 		return err
 	}
 
-	if compareTask == nil {
+	if ret == nil {
 		d.SetId("")
 		return fmt.Errorf("resource `compareTask` %s does not exist", compareTaskId)
 	}
 
-	if compareTask.JobId != nil {
-		_ = d.Set("job_id", compareTask.JobId)
-	}
+	if len(ret) > 0 {
+		compareTask := ret[0]
 
-	if compareTask.TaskName != nil {
-		_ = d.Set("task_name", compareTask.TaskName)
-	}
-
-	if compareTask.ObjectMode != nil {
-		_ = d.Set("object_mode", compareTask.ObjectMode)
-	}
-
-	if compareTask.Objects != nil {
-		objectsMap := map[string]interface{}{}
-		if compareTask.Objects.ObjectMode != nil {
-			objectsMap["object_mode"] = compareTask.Objects.ObjectMode
+		if compareTask.JobId != nil {
+			_ = d.Set("job_id", compareTask.JobId)
 		}
-		if compareTask.Objects.ObjectItems != nil {
-			objectItemsList := []interface{}{}
-			for _, objectItems := range compareTask.Objects.ObjectItems {
-				objectItemsMap := map[string]interface{}{}
-				if objectItems.DbName != nil {
-					objectItemsMap["db_name"] = objectItems.DbName
-				}
-				if objectItems.DbMode != nil {
-					objectItemsMap["db_mode"] = objectItems.DbMode
-				}
-				if objectItems.SchemaName != nil {
-					objectItemsMap["schema_name"] = objectItems.SchemaName
-				}
-				if objectItems.TableMode != nil {
-					objectItemsMap["table_mode"] = objectItems.TableMode
-				}
-				if objectItems.Tables != nil {
-					tablesList := []interface{}{}
-					for _, tables := range objectItems.Tables {
-						tablesMap := map[string]interface{}{}
-						if tables.TableName != nil {
-							tablesMap["table_name"] = tables.TableName
-						}
 
-						tablesList = append(tablesList, tablesMap)
-					}
-					objectItemsMap["tables"] = tablesList
-				}
-				if objectItems.ViewMode != nil {
-					objectItemsMap["view_mode"] = objectItems.ViewMode
-				}
-				if objectItems.Views != nil {
-					viewsList := []interface{}{}
-					for _, views := range objectItems.Views {
-						viewsMap := map[string]interface{}{}
-						if views.ViewName != nil {
-							viewsMap["view_name"] = views.ViewName
-						}
+		if compareTask.TaskName != nil {
+			_ = d.Set("task_name", compareTask.TaskName)
+		}
 
-						viewsList = append(viewsList, viewsMap)
-					}
-					objectItemsMap["views"] = viewsList
-				}
+		if compareTask.Config != nil {
+			objects := compareTask.Config
+			// SDK do not support this field ObjectMode
+			// if objects.ObjectMode != nil {  
+			// 	_ = d.Set("object_mode", objects.ObjectMode)
+			// }
 
-				objectItemsList = append(objectItemsList, objectItemsMap)
+			//objects
+			objectsMap := map[string]interface{}{}
+			if objects.ObjectMode != nil {
+				objectsMap["object_mode"] = objects.ObjectMode
 			}
-			objectsMap["object_items"] = objectItemsList
+
+			if objects.ObjectItems != nil {
+				objectItemsList := []interface{}{}
+				// object_items
+				for _, objectItems := range objects.ObjectItems {
+					objectItemsMap := map[string]interface{}{}
+					if objectItems.DbName != nil {
+						objectItemsMap["db_name"] = objectItems.DbName
+					}
+					if objectItems.DbMode != nil {
+						objectItemsMap["db_mode"] = objectItems.DbMode
+					}
+					if objectItems.SchemaName != nil {
+						objectItemsMap["schema_name"] = objectItems.SchemaName
+					}
+					if objectItems.TableMode != nil {
+						objectItemsMap["table_mode"] = objectItems.TableMode
+					}
+					if objectItems.Tables != nil {
+						tablesList := []interface{}{}
+						for _, tables := range objectItems.Tables {
+							tablesMap := map[string]interface{}{}
+							if tables.TableName != nil {
+								tablesMap["table_name"] = tables.TableName
+							}
+
+							tablesList = append(tablesList, tablesMap)
+						}
+						objectItemsMap["tables"] = tablesList
+					}
+					if objectItems.ViewMode != nil {
+						objectItemsMap["view_mode"] = objectItems.ViewMode
+					}
+					if objectItems.Views != nil {
+						viewsList := []interface{}{}
+						for _, views := range objectItems.Views {
+							viewsMap := map[string]interface{}{}
+							if views.ViewName != nil {
+								viewsMap["view_name"] = views.ViewName
+							}
+
+							viewsList = append(viewsList, viewsMap)
+						}
+						objectItemsMap["views"] = viewsList
+					}
+					objectItemsList = append(objectItemsList, objectItemsMap)
+				}
+				objectsMap["object_items"] = objectItemsList
+			}
+
+			_ = d.Set("objects", []interface{}{objectsMap})
 		}
 
-		_ = d.Set("objects", []interface{}{objectsMap})
-	}
+		if compareTask.CompareTaskId != nil {
+			_ = d.Set("compare_task_id", compareTask.CompareTaskId)
+		}
 
-	if compareTask.CompareTaskId != nil {
-		_ = d.Set("compare_task_id", compareTask.CompareTaskId)
 	}
-
 	return nil
 }
 
@@ -373,7 +408,7 @@ func resourceTencentCloudDtsCompareTaskUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	// ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := dts.NewModifyCompareTaskRequest()
 
@@ -388,23 +423,19 @@ func resourceTencentCloudDtsCompareTaskUpdate(d *schema.ResourceData, meta inter
 	request.CompareTaskId = &compareTaskId
 
 	if d.HasChange("job_id") {
-
 		return fmt.Errorf("`job_id` do not support change now.")
-
 	}
 
 	if d.HasChange("task_name") {
 		if v, ok := d.GetOk("task_name"); ok {
 			request.TaskName = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("object_mode") {
 		if v, ok := d.GetOk("object_mode"); ok {
 			request.ObjectMode = helper.String(v.(string))
 		}
-
 	}
 
 	if d.HasChange("objects") {

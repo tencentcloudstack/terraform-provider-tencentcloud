@@ -18,6 +18,7 @@ type DtsService struct {
 	client *connectivity.TencentCloudClient
 }
 
+// sync job
 func (me *DtsService) DescribeDtsSyncJob(ctx context.Context, jobId *string) (jobInfo *dts.SyncJobInfo, errRet error) {
 	logId := getLogId(ctx)
 	params := map[string]interface{}{}
@@ -148,33 +149,6 @@ func (me *DtsService) IsolateDtsSyncJobById(ctx context.Context, jobId string) (
 	return
 }
 
-func (me *DtsService) PollingStatusUntil(ctx context.Context, jobId string, targetStatus string) error {
-	logId := getLogId(ctx)
-
-	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		ret, err := me.DescribeDtsSyncJob(ctx, helper.String(jobId))
-		if err != nil {
-			return retryError(err)
-		}
-
-		if ret != nil && ret.Status != nil {
-			status := *ret.Status
-			if strings.Contains(targetStatus, status) {
-				return nil
-			}
-			return resource.RetryableError(fmt.Errorf("DTS sync job[%s] status is still on [%s], retry...", jobId, status))
-		}
-
-		log.Printf("[DEBUG]%s api[%s] has been destroyed, return with nil\n", logId, "DescribeDtsSyncJob")
-		return nil
-		// return resource.RetryableError(fmt.Errorf("DTS sync job[%s] is nil, retry...", jobId))
-	})
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 func (me *DtsService) DeleteDtsSyncJobById(ctx context.Context, jobId string) (errRet error) {
 	var (
 		logId    = getLogId(ctx)
@@ -224,6 +198,34 @@ func (me *DtsService) DeleteDtsSyncJobById(ctx context.Context, jobId string) (e
 	return
 }
 
+func (me *DtsService) PollingSyncJobStatusUntil(ctx context.Context, jobId string, targetStatus string) error {
+	logId := getLogId(ctx)
+
+	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+		ret, err := me.DescribeDtsSyncJob(ctx, helper.String(jobId))
+		if err != nil {
+			return retryError(err)
+		}
+
+		if ret != nil && ret.Status != nil {
+			status := *ret.Status
+			if strings.Contains(targetStatus, status) {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("DTS sync job[%s] status is still on [%s], retry...", jobId, status))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] has been destroyed, return with nil\n", logId, "DescribeDtsSyncJob")
+		return nil
+		// return resource.RetryableError(fmt.Errorf("DTS sync job[%s] is nil, retry...", jobId))
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// compare task
 func (me *DtsService) DescribeDtsCompareTasksByFilter(ctx context.Context, param map[string]interface{}) (compareTasks []*dts.CompareTaskItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -323,6 +325,189 @@ func (me *DtsService) DeleteDtsCompareTaskById(ctx context.Context, jobId, compa
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseDtsClient().DeleteCompareTask(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DtsService) PollingCompareTaskStatusUntil(ctx context.Context, jobId, compareTaskId, targetStatus string) error {
+	logId := getLogId(ctx)
+
+	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+		ret, err := me.DescribeDtsCompareTask(ctx, helper.String(jobId), helper.String(compareTaskId))
+		if err != nil {
+			return retryError(err)
+		}
+
+		if ret != nil && ret[0].Status != nil {
+			status := *ret[0].Status
+			if strings.Contains(targetStatus, status) {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("DTS compare task [%s,%s] status is still on [%s], retry...", jobId, compareTaskId, status))
+		}
+
+		log.Printf("[DEBUG]%s api[%s] has been destroyed, return with nil\n", logId, "DescribeDtsCompareTask")
+		return nil
+		// return resource.RetryableError(fmt.Errorf("DTS sync job[%s] is nil, retry...", jobId))
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// migration job
+func (me *DtsService) DescribeDtsMigrateJobsByFilter(ctx context.Context, param map[string]interface{}) (migrateJobs []*dts.JobItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dts.NewDescribeMigrationJobsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "job_id" {
+			request.JobId = v.(*string)
+		}
+
+		if k == "job_name" {
+			request.JobName = v.(*string)
+		}
+
+		if k == "status" {
+			request.Status=v.([]*string)
+		}
+
+		if k == "src_instance_id" {
+			request.SrcInstanceId = v.(*string)
+		}
+
+		if k == "src_region" {
+			request.SrcRegion = v.(*string)
+		}
+
+		if k == "src_database_type" {
+			request.SrcDatabaseType=v.([]*string)
+		}
+
+		if k == "src_access_type" {
+			request.SrcAccessType=v.([]*string)
+		}
+
+		if k == "dst_instance_id" {
+			request.DstInstanceId = v.(*string)
+		}
+
+		if k == "dst_region" {
+			request.DstRegion = v.(*string)
+		}
+
+		if k == "dst_database_type" {
+			request.DstDatabaseType=v.([]*string)
+		}
+
+		if k == "dst_access_type" {
+			request.DstAccessType=v.([]*string)
+		}
+
+		if k == "run_mode" {
+			request.RunMode = v.(*string)
+		}
+
+		if k == "order_seq" {
+			request.OrderSeq = v.(*string)
+		}
+
+		if k == "tag_filters" {
+			request.TagFilters=v.([]*dts.TagFilter)
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDtsClient().DescribeMigrationJobs(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.JobList) < 1 {
+			break
+		}
+		migrateJobs = append(migrateJobs, response.Response.JobList...)
+		if len(response.Response.JobList) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *DtsService) DescribeDtsMigrateJob(ctx context.Context, jobId string) (migrateJob *dts.DescribeMigrationDetailResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dts.NewDescribeMigrationDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.JobId = &jobId
+
+	response, err := me.client.UseDtsClient().DescribeMigrationDetail(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	migrateJob = response.Response
+	return
+}
+
+func (me *DtsService) DeleteDtsMigrateJobById(ctx context.Context, jobId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDestroyMigrateJobRequest()
+
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDtsClient().DestroyMigrateJob(request)
 	if err != nil {
 		errRet = err
 		return err

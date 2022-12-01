@@ -812,8 +812,12 @@ DBbrain
 Data Transmission Service(DTS)
   Data Source
 	tencentcloud_dts_sync_jobs
+	tencentcloud_dts_migrate_jobs
+	tencentcloud_dts_compare_tasks
+
   Resource
 	tencentcloud_dts_sync_job
+	tencentcloud_dts_migrate_job
 	tencentcloud_dts_compare_task
 
 
@@ -1141,7 +1145,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
-			// "tencentcloud_dts_compare_tasks": dataSourceTencentCloudDtsCompareTasks(),
+			"tencentcloud_dts_compare_tasks":                        dataSourceTencentCloudDtsCompareTasks(),
+			"tencentcloud_dts_migrate_jobs":                         dataSourceTencentCloudDtsMigrateJobs(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1448,6 +1453,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
 			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
