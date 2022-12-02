@@ -717,62 +717,6 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	// Initialize mysql instance
-	var (
-		version   = d.Get("engine_version").(string)
-		charset   = d.Get("parameters.character_set_server").(string)
-		lowercase = d.Get("parameters.lower_case_table_names").(string)
-		password  string
-		vPort     int
-	)
-
-	if v, ok := d.GetOk("root_password"); ok {
-		password = v.(string)
-	}
-
-	// 8.0 does not support lower_case_table_names modified, skip this params
-	if version == "8.0" {
-		lowercase = ""
-	}
-
-	port, portOk := d.GetOk("intranet_port")
-
-	if portOk && port.(int) != 0 {
-		vPort = port.(int)
-	}
-
-	aReqId, err := mysqlService.InitDBInstances(ctx, mysqlID, password, charset, lowercase, vPort)
-
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		// Available status：INITIAL, RUNNING, SUCCESS, FAILED, KILLED, REMOVED, PAUSED
-		taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, aReqId)
-
-		if err != nil {
-			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
-			return nil
-		}
-		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-			return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
-		}
-		err = fmt.Errorf("initialize db task status is %s,we won't wait for it finish ,it show message:%s", ",",
-			message)
-		return resource.NonRetryableError(err)
-	})
-
-	if err != nil {
-		log.Printf("[WARN] initial DB error: %s", err.Error())
-	}
-
 	//internet service
 	internetService := d.Get("internet_service").(int)
 	if internetService == 1 {
