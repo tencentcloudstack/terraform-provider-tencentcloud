@@ -136,7 +136,7 @@ Content Delivery Network(CDN)
 	tencentcloud_cdn_url_push
 	tencentcloud_cdn_url_purge
 
-Ckafka
+Cloud Kafka(ckafka)
   Data Source
     tencentcloud_ckafka_users
     tencentcloud_ckafka_acls
@@ -376,7 +376,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_addon_attachment
 	tencentcloud_kubernetes_cluster_endpoint
 
-Tencent Distributed Message Queue(TDMQ)
+TDMQ for Pulsar(tpulsar)
   Resource
     tencentcloud_tdmq_instance
 	tencentcloud_tdmq_namespace
@@ -384,7 +384,7 @@ Tencent Distributed Message Queue(TDMQ)
 	tencentcloud_tdmq_role
 	tencentcloud_tdmq_namespace_role_attachment
 
-MongoDB
+TencentDB for MongoDB(mongodb)
   Data Source
     tencentcloud_mongodb_instances
     tencentcloud_mongodb_zone_config
@@ -394,7 +394,7 @@ MongoDB
     tencentcloud_mongodb_sharding_instance
     tencentcloud_mongodb_standby_instance
 
-MySQL
+TencentDB for MySQL(cdb)
   Data Source
     tencentcloud_mysql_backup_list
     tencentcloud_mysql_instance
@@ -459,7 +459,7 @@ PostgreSQL
 	tencentcloud_postgresql_readonly_group
 	tencentcloud_postgresql_readonly_attachment
 
-TencentDB for Redis
+TencentDB for Redis(crs)
   Data Source
     tencentcloud_redis_zone_config
     tencentcloud_redis_instances
@@ -805,7 +805,7 @@ TDSQL-C for PostgreSQL(TDCPG)
 	tencentcloud_tdcpg_cluster
 	tencentcloud_tdcpg_instance
 
-DBbrain
+TencentDB for DBbrain(dbbrain)
   Data Source
 	tencentcloud_dbbrain_sql_filters
 	tencentcloud_dbbrain_security_audit_log_export_tasks
@@ -819,7 +819,7 @@ Data Transmission Service(DTS)
   Resource
 	tencentcloud_dts_sync_job
 
-RocketMQ
+TDMQ for RocketMQ(trocket)
   Data Source
 	tencentcloud_tdmq_rocketmq_cluster
 	tencentcloud_tdmq_rocketmq_namespace

@@ -1,5 +1,5 @@
 ---
-subcategory: "MySQL"
+subcategory: "TencentDB for MySQL(cdb)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_readonly_instance"
 sidebar_current: "docs-tencentcloud-resource-mysql_readonly_instance"

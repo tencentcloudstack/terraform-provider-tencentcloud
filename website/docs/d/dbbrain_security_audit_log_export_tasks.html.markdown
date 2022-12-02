@@ -1,5 +1,5 @@
 ---
-subcategory: "DBbrain"
+subcategory: "TencentDB for DBbrain(dbbrain)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dbbrain_security_audit_log_export_tasks"
 sidebar_current: "docs-tencentcloud-datasource-dbbrain_security_audit_log_export_tasks"
