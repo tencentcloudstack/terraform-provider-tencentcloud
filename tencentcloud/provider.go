@@ -700,6 +700,9 @@ TencentCloud ServiceMesh(TCM)
   Resource
 	tencentcloud_tcm_mesh
 	tencentcloud_tcm_cluster_attachment
+	tencentcloud_tcm_prometheus_attachment
+	tencentcloud_tcm_tracing_config
+	tencentcloud_tcm_access_log_config
 
 Simple Email Service(SES)
   Resource

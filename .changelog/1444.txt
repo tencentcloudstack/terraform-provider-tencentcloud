@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_tcm_prometheus_attachment
+```
+
+```release-note:new-resource
+tencentcloud_tcm_tracing_config
+```
+
+```release-note:new-resource
+tencentcloud_tcm_access_log_config
+```
