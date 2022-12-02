@@ -504,3 +504,57 @@ func (me *TdmqRocketmqService) DescribeRocketmqClusterByFilter(ctx context.Conte
 	}
 	return
 }
+
+func (me *TdmqRocketmqService) DescribeTdmqRocketmqNamespaceByFilter(ctx context.Context, param map[string]interface{}) (namespace []*tdmqRocketmq.RocketMQNamespace, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmqRocketmq.NewDescribeRocketMQNamespacesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "cluster_id" {
+			request.ClusterId = helper.String(v.(string))
+		}
+
+		if k == "name_keyword" {
+			request.NameKeyword = helper.String(v.(string))
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTdmqClient().DescribeRocketMQNamespaces(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Namespaces) < 1 {
+			break
+		}
+		namespace = append(namespace, response.Response.Namespaces...)
+		if len(response.Response.Namespaces) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
