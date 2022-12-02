@@ -35,9 +35,6 @@ func resourceTencentCloudCamServiceLinkedRole() *schema.Resource {
 		Create: resourceTencentCloudCamServiceLinkedRoleCreate,
 		Update: resourceTencentCloudCamServiceLinkedRoleUpdate,
 		Delete: resourceTencentCloudCamServiceLinkedRoleDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"qcs_service_name": {
 				Type:        schema.TypeString,
