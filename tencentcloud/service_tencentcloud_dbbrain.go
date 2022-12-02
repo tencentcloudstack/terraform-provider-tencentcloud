@@ -15,7 +15,15 @@ type DbbrainService struct {
 }
 
 func (me *DbbrainService) DescribeDbbrainSqlFilter(ctx context.Context, instanceId, filterId *string) (sqlFilter *dbbrain.SQLFilter, errRet error) {
-	ret, errRet := me.DescribeDbbrainSqlFilters(ctx, instanceId, []*int64{helper.StrToInt64Point(*filterId)})
+	param := make(map[string]interface{})
+	if instanceId != nil {
+		param["instance_id"] = instanceId
+	}
+	if filterId != nil {
+		param["filter_ids"] = []*int64{helper.StrToInt64Point(*filterId)}
+	}
+
+	ret, errRet := me.DescribeDbbrainSqlFiltersByFilter(ctx, param)
 	if errRet != nil {
 		return
 	}
@@ -25,7 +33,7 @@ func (me *DbbrainService) DescribeDbbrainSqlFilter(ctx context.Context, instance
 	return
 }
 
-func (me *DbbrainService) DescribeDbbrainSqlFilters(ctx context.Context, instanceId *string, filterIds []*int64) (sqlFilters []*dbbrain.SQLFilter, errRet error) {
+func (me *DbbrainService) DescribeDbbrainSqlFiltersByFilter(ctx context.Context, param map[string]interface{}) (sqlFilters []*dbbrain.SQLFilter, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = dbbrain.NewDescribeSqlFiltersRequest()
@@ -34,27 +42,51 @@ func (me *DbbrainService) DescribeDbbrainSqlFilters(ctx context.Context, instanc
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "query object", request.ToJsonString(), errRet.Error())
+				logId, "query objects", request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.InstanceId = instanceId
-	if filterIds != nil {
-		request.FilterIds = filterIds
-	}
 
-	response, err := me.client.UseDbbrainClient().DescribeSqlFilters(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+
+		if k == "filter_ids" {
+			request.FilterIds = v.([]*int64)
+		}
+
+		if k == "statuses" {
+			request.Statuses = v.([]*string)
+		}
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if len(response.Response.Items) < 1 {
-		return
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDbbrainClient().DescribeSqlFilters(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		sqlFilters = append(sqlFilters, response.Response.Items...)
+		if len(response.Response.Items) < int(pageSize) {
+			break
+		}
+		offset += pageSize
 	}
-	sqlFilters = response.Response.Items
 	return
 }
 
@@ -118,17 +150,30 @@ func (me *DbbrainService) DeleteDbbrainSqlFilterById(ctx context.Context, instan
 }
 
 func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTask(ctx context.Context, secAuditGroupId, asyncRequestId, product *string) (task *dbbrain.SecLogExportTaskInfo, errRet error) {
-	ret, errRet := me.DescribeDbbrainSecurityAuditLogExportTasks(ctx, secAuditGroupId, []*string{asyncRequestId}, product)
+	param := make(map[string]interface{})
+	if secAuditGroupId != nil {
+		param["sec_audit_group_id"] = secAuditGroupId
+	}
+	if asyncRequestId != nil {
+		param["async_request_ids"] = []*uint64{helper.StrToUint64Point(*asyncRequestId)}
+	}
+	if product != nil {
+		param["product"] = product
+	} else {
+		param["product"] = helper.String("mysql")
+	}
+
+	ret, errRet := me.DescribeDbbrainSecurityAuditLogExportTasksByFilter(ctx, param)
 	if errRet != nil {
 		return
 	}
 	if ret != nil {
-		return ret.Tasks[0], nil
+		return ret[0], nil
 	}
 	return
 }
 
-func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTasks(ctx context.Context, secAuditGroupId *string, asyncRequestId []*string, product *string) (params *dbbrain.DescribeSecurityAuditLogExportTasksResponseParams, errRet error) {
+func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTasksByFilter(ctx context.Context, param map[string]interface{}) (securityAuditLogExportTasks []*dbbrain.SecLogExportTaskInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = dbbrain.NewDescribeSecurityAuditLogExportTasksRequest()
@@ -141,31 +186,47 @@ func (me *DbbrainService) DescribeDbbrainSecurityAuditLogExportTasks(ctx context
 		}
 	}()
 
-	request.SecAuditGroupId = secAuditGroupId
+	for k, v := range param {
+		if k == "sec_audit_group_id" {
+			request.SecAuditGroupId = v.(*string)
+		}
 
-	if asyncRequestId != nil {
-		request.AsyncRequestIds = helper.StringsToUint64Pointer(asyncRequestId)
-	}
+		if k == "product" {
+			request.Product = v.(*string)
+		}
 
-	if product != nil {
-		request.Product = product
-	} else {
-		request.Product = helper.String("mysql")
+		if k == "async_request_ids" {
+			request.AsyncRequestIds = v.([]*uint64)
+		}
 	}
+	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseDbbrainClient().DescribeSecurityAuditLogExportTasks(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
+	var offset uint64 = 0
+	var pageSize uint64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDbbrainClient().DescribeSecurityAuditLogExportTasks(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Tasks) < 1 {
+			break
+		}
+		securityAuditLogExportTasks = append(securityAuditLogExportTasks, response.Response.Tasks...)
+		if len(response.Response.Tasks) < int(pageSize) {
+			break
+		}
+		offset += pageSize
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if len(response.Response.Tasks) < 1 {
-		return
-	}
-	params = response.Response
 	return
 }
 
@@ -195,6 +256,7 @@ func (me *DbbrainService) DeleteDbbrainSecurityAuditLogExportTaskById(ctx contex
 		errRet = err
 		return err
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 

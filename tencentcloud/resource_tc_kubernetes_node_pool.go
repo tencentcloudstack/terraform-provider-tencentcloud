@@ -67,7 +67,8 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
     password                   = "test123#"
     enhanced_security_service  = false
     enhanced_monitor_service   = false
-
+	host_name                  = "12.123.0.0"
+	host_name_style            = "ORIGINAL"
   }
 
   labels = {
@@ -364,12 +365,18 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "The hostname of the cloud server, dot (.) and dash (-) cannot be used as the first and last characters of HostName and cannot be used consecutively. Windows instances are not supported. Examples of other types (Linux, etc.): The character length is [2, 40], multiple periods are allowed, and there is a paragraph between the dots, and each paragraph is allowed to consist of letters (unlimited case), numbers and dashes (-). Pure numbers are not allowed. For usage, refer to `HostNameSettings` in https://www.tencentcloud.com/document/product/377/31001.",
 		},
+		"host_name_style": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "The style of the host name of the cloud server, the value range includes ORIGINAL and UNIQUE, and the default is ORIGINAL. For usage, refer to `HostNameSettings` in https://www.tencentcloud.com/document/product/377/31001.",
+		},
 	}
 
 	return needSchema
 }
 
-func ResourceTencentCloudKubernetesNodePool() *schema.Resource {
+func resourceTencentCloudKubernetesNodePool() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceKubernetesNodePoolCreate,
 		Read:   resourceKubernetesNodePoolRead,
@@ -811,8 +818,22 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 	}
 
 	if v, ok := dMap["host_name"]; ok && v != "" {
-		request.HostNameSettings = &as.HostNameSettings{
-			HostName: helper.String(v.(string)),
+		if request.HostNameSettings == nil {
+			request.HostNameSettings = &as.HostNameSettings{
+				HostName: helper.String(v.(string)),
+			}
+		} else {
+			request.HostNameSettings.HostName = helper.String(v.(string))
+		}
+	}
+
+	if v, ok := dMap["host_name_style"]; ok && v != "" {
+		if request.HostNameSettings != nil {
+			request.HostNameSettings.HostNameStyle = helper.String(v.(string))
+		} else {
+			request.HostNameSettings = &as.HostNameSettings{
+				HostNameStyle: helper.String(v.(string)),
+			}
 		}
 	}
 	result = request.ToJsonString()
@@ -924,8 +945,22 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 	}
 
 	if v, ok := dMap["host_name"]; ok && v != "" {
-		request.HostNameSettings = &as.HostNameSettings{
-			HostName: helper.String(v.(string)),
+		if request.HostNameSettings == nil {
+			request.HostNameSettings = &as.HostNameSettings{
+				HostName: helper.String(v.(string)),
+			}
+		} else {
+			request.HostNameSettings.HostName = helper.String(v.(string))
+		}
+	}
+
+	if v, ok := dMap["host_name_style"]; ok && v != "" {
+		if request.HostNameSettings != nil {
+			request.HostNameSettings.HostNameStyle = helper.String(v.(string))
+		} else {
+			request.HostNameSettings = &as.HostNameSettings{
+				HostNameStyle: helper.String(v.(string)),
+			}
 		}
 	}
 
@@ -1150,6 +1185,9 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		}
 		if launchCfg.HostNameSettings != nil && launchCfg.HostNameSettings.HostName != nil {
 			launchConfig["host_name"] = launchCfg.HostNameSettings.HostName
+		}
+		if launchCfg.HostNameSettings != nil && launchCfg.HostNameSettings.HostNameStyle != nil {
+			launchConfig["host_name_style"] = launchCfg.HostNameSettings.HostNameStyle
 		}
 
 		asgConfig := make([]interface{}, 0, 1)

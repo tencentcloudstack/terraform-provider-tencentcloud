@@ -63,7 +63,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func ResourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
+func resourceTencentCloudKubernetesAsScalingGroup() *schema.Resource {
 	return &schema.Resource{
 		DeprecationMessage: "This resource was offline and no longer supported.",
 		Create:             resourceKubernetesAsScalingGroupCreate,

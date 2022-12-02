@@ -325,11 +325,22 @@ func resourceTencentCloudInstance() *schema.Resource {
 			},
 			// security group
 			"security_groups": {
-				Type:        schema.TypeSet,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Optional:    true,
-				Computed:    true,
-				Description: "A list of security group IDs to associate with.",
+				Type:          schema.TypeSet,
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"orderly_security_groups"},
+				Description:   "A list of security group IDs to associate with.",
+				Deprecated:    "It will be deprecated. Use `orderly_security_groups` instead.",
+			},
+
+			"orderly_security_groups": {
+				Type:          schema.TypeList,
+				Elem:          &schema.Schema{Type: schema.TypeString},
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"security_groups"},
+				Description:   "A list of orderly security group IDs to associate with.",
 			},
 			// storage
 			"system_disk_type": {
@@ -626,6 +637,14 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 
 	if v, ok := d.GetOk("security_groups"); ok {
 		securityGroups := v.(*schema.Set).List()
+		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
+		for _, securityGroup := range securityGroups {
+			request.SecurityGroupIds = append(request.SecurityGroupIds, helper.String(securityGroup.(string)))
+		}
+	}
+
+	if v, ok := d.GetOk("orderly_security_groups"); ok {
+		securityGroups := v.([]interface{})
 		request.SecurityGroupIds = make([]*string, 0, len(securityGroups))
 		for _, securityGroup := range securityGroups {
 			request.SecurityGroupIds = append(request.SecurityGroupIds, helper.String(securityGroup.(string)))
@@ -929,7 +948,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("internet_max_bandwidth_out", instance.InternetAccessible.InternetMaxBandwidthOut)
 	_ = d.Set("vpc_id", instance.VirtualPrivateCloud.VpcId)
 	_ = d.Set("subnet_id", instance.VirtualPrivateCloud.SubnetId)
-	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecurityGroupIds))
+	_ = d.Set("security_groups", instance.SecurityGroupIds)
+	_ = d.Set("orderly_security_groups", instance.SecurityGroupIds)
 	_ = d.Set("system_disk_type", instance.SystemDisk.DiskType)
 	_ = d.Set("system_disk_size", instance.SystemDisk.DiskSize)
 	_ = d.Set("system_disk_id", instance.SystemDisk.DiskId)
@@ -1152,6 +1172,19 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 		d.SetPartial("security_groups")
+	}
+
+	if d.HasChange("orderly_security_groups") {
+		orderlySecurityGroups := d.Get("orderly_security_groups").([]interface{})
+		orderlySecurityGroupIds := make([]*string, 0, len(orderlySecurityGroups))
+		for _, securityGroup := range orderlySecurityGroups {
+			orderlySecurityGroupIds = append(orderlySecurityGroupIds, helper.String(securityGroup.(string)))
+		}
+		err := cvmService.ModifySecurityGroups(ctx, instanceId, orderlySecurityGroupIds)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("orderly_security_groups")
 	}
 
 	if d.HasChange("project_id") {

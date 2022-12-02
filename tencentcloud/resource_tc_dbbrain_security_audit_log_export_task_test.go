@@ -26,8 +26,11 @@ func testSweepDbbrainSecurityAuditLogExportTask(r string) error {
 	cli, _ := sharedClientForRegion(r)
 	dbbrainService := DbbrainService{client: cli.(*TencentCloudClient).apiV3Conn}
 	sagId := helper.String(defaultDbBrainsagId)
+	param := map[string]interface{}{
+		"sec_audit_group_id": sagId,
+	}
 
-	ret, err := dbbrainService.DescribeDbbrainSecurityAuditLogExportTasks(ctx, sagId, nil, nil)
+	ret, err := dbbrainService.DescribeDbbrainSecurityAuditLogExportTasksByFilter(ctx, param)
 	if err != nil {
 		return err
 	}
@@ -35,7 +38,7 @@ func testSweepDbbrainSecurityAuditLogExportTask(r string) error {
 		return fmt.Errorf("Dbbrain security audit log export tasks not exists.")
 	}
 
-	for _, v := range ret.Tasks {
+	for _, v := range ret {
 		delId := *v.AsyncRequestId
 
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {

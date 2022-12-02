@@ -50,7 +50,7 @@ func init() {
 
 			log.Printf("Offline isolated instance %v", isolated)
 			for _, id := range isolated {
-				err = service.OfflineIsolatedDBInstance(ctx, id)
+				err = service.OfflineIsolatedDBInstance(ctx, id, true)
 				if err != nil {
 					continue
 				}
@@ -89,6 +89,16 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 				),
 			},
 			{
+				ResourceName:            "tencentcloud_mongodb_instance.mongodb",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"security_groups", "password", "auto_renew_flag"},
+			},
+			{
+				SkipFunc: func() (bool, error) {
+					log.Printf("[WARN] MongoDB Update Need DealID query available, skip checking.")
+					return true, nil
+				},
 				Config: testAccMongodbInstance_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-update"),
@@ -97,12 +107,6 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "tags.abc", "abc"),
 				),
-			},
-			{
-				ResourceName:            "tencentcloud_mongodb_instance.mongodb",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"security_groups", "password", "auto_renew_flag"},
 			},
 		},
 	})

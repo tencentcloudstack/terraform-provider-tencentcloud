@@ -1005,6 +1005,34 @@ func (me *RedisService) ApplyParamsTemplate(ctx context.Context, request *redis.
 	return
 }
 
+func (me *RedisService) DescribeParamTemplateInfo(ctx context.Context, templateId string) (info *redis.DescribeParamTemplateInfoResponseParams, errRet error) {
+	logId := getLogId(ctx)
+	request := redis.NewDescribeParamTemplateInfoRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.TemplateId = &templateId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().DescribeParamTemplateInfo(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	info = response.Response
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *RedisService) CreateParamTemplate(ctx context.Context, request *redis.CreateParamTemplateRequest) (id string, errRet error) {
 	logId := getLogId(ctx)
 	defer func() {
@@ -1028,6 +1056,29 @@ func (me *RedisService) CreateParamTemplate(ctx context.Context, request *redis.
 	}
 
 	id = *response.Response.TemplateId
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *RedisService) ModifyParamTemplate(ctx context.Context, request *redis.ModifyParamTemplateRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().ModifyParamTemplate(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -293,7 +294,7 @@ func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId 
 	logId := getLogId(ctx)
 	request := mongodb.NewDescribeAsyncRequestInfoRequest()
 	request.AsyncRequestId = &asyncId
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().DescribeAsyncRequestInfo(request)
 		if e != nil {
@@ -315,7 +316,7 @@ func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId 
 	return nil
 }
 
-func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanceId string) (errRet error) {
+func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanceId string, timeOutTolerant bool) (errRet error) {
 	logId := getLogId(ctx)
 	request := mongodb.NewOfflineIsolatedDBInstanceRequest()
 	request.InstanceId = &instanceId
@@ -330,27 +331,26 @@ func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanc
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseMongodbClient().OfflineIsolatedDBInstance(request)
 		if err != nil {
-			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-				if ee.Code == "InvalidParameterValue.LockFailed" {
-					return resource.RetryableError(err)
-				} else {
-					return resource.NonRetryableError(err)
-				}
-			}
-			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
-			return resource.NonRetryableError(err)
+			return retryError(err, mongodb.INVALIDPARAMETERVALUE_LOCKFAILED)
 		}
 		return nil
 	})
 	if err != nil {
 		return err
 	}
-	if response != nil && response.Response != nil {
-		if err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId); err != nil {
-			return err
-		}
-	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	return nil
+	if response == nil || response.Response == nil {
+		return nil
+	}
+	err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId)
+	if err == nil {
+		return nil
+	}
+	isTimeout := strings.Contains(err.Error(), "retrying")
+	if err != nil && isTimeout && timeOutTolerant {
+		log.Printf("[WARN] Offline Task Timeout but tolerant, process continue.")
+		return nil
+	}
+	return err
 }
