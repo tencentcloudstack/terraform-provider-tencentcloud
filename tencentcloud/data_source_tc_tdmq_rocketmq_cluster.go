@@ -4,7 +4,7 @@ Use this data source to query detailed information of rocketmq cluster
 Example Usage
 
 ```hcl
-data "tencentcloud_rocketmq_cluster" "cluster" {
+data "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
   name_keyword = "test_rocketmq"
 }
 ```
