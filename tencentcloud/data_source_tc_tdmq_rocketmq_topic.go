@@ -32,7 +32,6 @@ data "tencentcloud_tdmq_rocketmq_topic" "topic" {
 }
 ```
 */
-
 package tencentcloud
 
 import (

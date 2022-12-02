@@ -21,7 +21,6 @@ data "tencentcloud_tdmq_rocketmq_role" "role" {
 }
 ```
 */
-
 package tencentcloud
 
 import (

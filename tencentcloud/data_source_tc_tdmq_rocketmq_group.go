@@ -33,7 +33,6 @@ data "tencentcloud_tdmq_rocketmq_group" "group" {
 }
 ```
 */
-
 package tencentcloud
 
 import (

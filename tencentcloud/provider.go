@@ -825,6 +825,7 @@ RocketMQ
 	tencentcloud_tdmq_rocketmq_topic
 	tencentcloud_tdmq_rocketmq_role
 	tencentcloud_tdmq_rocketmq_group
+
   Resource
 	tencentcloud_tdmq_rocketmq_cluster
 	tencentcloud_tdmq_rocketmq_namespace
@@ -832,7 +833,6 @@ RocketMQ
 	tencentcloud_tdmq_rocketmq_topic
 	tencentcloud_tdmq_rocketmq_group
 	tencentcloud_tdmq_rocketmq_environment_role
-
 */
 package tencentcloud
 

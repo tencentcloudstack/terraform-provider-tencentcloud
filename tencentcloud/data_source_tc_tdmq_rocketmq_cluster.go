@@ -1,5 +1,5 @@
 /*
-Use this data source to query detailed information of rocketmq cluster
+Use this data source to query detailed information of tdmqRocketmq cluster
 
 Example Usage
 
@@ -9,7 +9,6 @@ data "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
 }
 ```
 */
-
 package tencentcloud
 
 import (
