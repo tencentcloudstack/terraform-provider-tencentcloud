@@ -66,7 +66,7 @@ func testSweepCosBuckets(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudCosBucket_basic(t *testing.T) {
+func TestAccTencentCloudCosBucketResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -101,7 +101,7 @@ func TestAccTencentCloudCosBucket_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCosBucket_ACL(t *testing.T) {
+func TestAccTencentCloudCosBucketResource_ACL(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -136,7 +136,7 @@ func TestAccTencentCloudCosBucket_ACL(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCosBucket_tags(t *testing.T) {
+func TestAccTencentCloudCosBucketResource_tags(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -170,7 +170,7 @@ func TestAccTencentCloudCosBucket_tags(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCosBucket_cors(t *testing.T) {
+func TestAccTencentCloudCosBucketResource_cors(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -219,7 +219,7 @@ func TestAccTencentCloudCosBucket_cors(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
+func TestAccTencentCloudCosBucketResource_lifecycle(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -271,7 +271,7 @@ func TestAccTencentCloudCosBucket_lifecycle(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCosBucket_website(t *testing.T) {
+func TestAccTencentCloudCosBucketResource_website(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -308,7 +308,7 @@ func TestAccTencentCloudCosBucket_website(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCosBucket_MAZ(t *testing.T) {
+func TestAccTencentCloudCosBucketResource_MAZ(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -333,7 +333,7 @@ func TestAccTencentCloudCosBucket_MAZ(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCosBucket_originPull(t *testing.T) {
+func TestAccTencentCloudCosBucketResource_originPull(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -451,7 +451,7 @@ func TestAccTencentCloudCosBucket_originDomain(t *testing.T) {
 }
 */
 
-func TestAccTencentCloudCosBucket_replication(t *testing.T) {
+func TestAccTencentCloudCosBucketResource_replication(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

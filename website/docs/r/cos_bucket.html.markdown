@@ -285,7 +285,7 @@ The `non_current_expiration` object supports the following:
 
 The `non_current_transition` object supports the following:
 
-* `storage_class` - (Required, String) Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
+* `storage_class` - (Required, String) Specifies the storage class to which you want the non current object to transition. Available values include `STANDARD_IA`, `MAZ_STANDARD_IA`, `INTELLIGENT_TIERING`, `MAZ_INTELLIGENT_TIERING`, `ARCHIVE`, `DEEP_ARCHIVE`. For more information, please refer to: https://cloud.tencent.com/document/product/436/33417.
 * `non_current_days` - (Optional, Int) Number of days after non current object creation when the specific rule action takes effect.
 
 The `origin_domain_rules` object supports the following:
@@ -316,7 +316,7 @@ The `replica_rules` object supports the following:
 
 The `transition` object supports the following:
 
-* `storage_class` - (Required, String) Specifies the storage class to which you want the object to transition. Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
+* `storage_class` - (Required, String) Specifies the storage class to which you want the object to transition. Available values include `STANDARD_IA`, `MAZ_STANDARD_IA`, `INTELLIGENT_TIERING`, `MAZ_INTELLIGENT_TIERING`, `ARCHIVE`, `DEEP_ARCHIVE`. For more information, please refer to: https://cloud.tencent.com/document/product/436/33417.
 * `date` - (Optional, String) Specifies the date after which you want the corresponding action to take effect.
 * `days` - (Optional, Int) Specifies the number of days after object creation when the specific rule action takes effect.
 
