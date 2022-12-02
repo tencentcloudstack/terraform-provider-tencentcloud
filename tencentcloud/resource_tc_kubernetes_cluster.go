@@ -2308,7 +2308,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		logSetId := v["log_set_id"].(string)
 		topicId := v["topic_id"].(string)
 		if enabled {
-			err := service.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, false, d)
+			err := service.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, false)
 			if err != nil {
 				return err
 			}
@@ -2876,16 +2876,27 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		logSetId := ""
 		topicId := ""
 		deleteEventLog := false
+		deleteEventLogFlag := true
 		if ok {
 			enabled = v["enabled"].(bool)
 			logSetId = v["log_set_id"].(string)
 			topicId = v["topic_id"].(string)
 			deleteEventLog = v["delete_event_log_and_topic"].(bool)
 		}
-		err := tkeService.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, deleteEventLog, d)
-		if err != nil {
-			return err
+		if !enabled {
+			oldConf, _ := d.GetChange("event_persistence")
+			oldEventConf, ok := helper.ConvertInterfacesHeadToMap(oldConf)
+			if ok && !oldEventConf["enabled"].(bool) {
+				deleteEventLogFlag = false
+			}
 		}
+		if deleteEventLogFlag {
+			err := tkeService.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, deleteEventLog)
+			if err != nil {
+				return err
+			}
+		}
+
 	}
 
 	if d.HasChange("cluster_audit") {
@@ -2922,9 +2933,12 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 	deleteEventLogSetAndTopic := false
+	enableEventLog := false
 	deleteAuditLogSetAndTopic := false
 	if v, ok := helper.InterfacesHeadMap(d, "event_persistence"); ok {
 		deleteEventLogSetAndTopic = v["delete_event_log_and_topic"].(bool)
+		// get cluster current enabled status
+		enableEventLog = v["enabled"].(bool)
 	}
 
 	if v, ok := helper.InterfacesHeadMap(d, "cluster_audit"); ok {
@@ -2932,15 +2946,24 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if deleteEventLogSetAndTopic {
-			err := service.SwitchEventPersistence(ctx, d.Id(), "", "", false,
-				true, d)
+		if deleteEventLogSetAndTopic && enableEventLog {
+			err := service.SwitchEventPersistence(ctx, d.Id(), "", "", false, true)
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() != "FailedOperation.ClusterNotFound" {
+					return retryError(err, InternalError)
+				}
+			}
 			if err != nil {
 				return retryError(err, InternalError)
 			}
 		}
 		if deleteAuditLogSetAndTopic {
 			err := service.SwitchClusterAudit(ctx, d.Id(), "", "", false, true)
+			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() != "ResourceNotFound.ClusterNotFound" {
+					return retryError(err, InternalError)
+				}
+			}
 			if err != nil {
 				return retryError(err, InternalError)
 			}
