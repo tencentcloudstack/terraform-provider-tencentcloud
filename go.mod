@@ -35,11 +35,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.445
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
-<<<<<<< HEAD
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.547
-=======
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.548
->>>>>>> d3c58f79 (add resource tencentcloud_tdmq_rocketmq_cluster)
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.488
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
