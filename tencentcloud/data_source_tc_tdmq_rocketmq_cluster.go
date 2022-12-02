@@ -22,7 +22,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudRocketmqCluster() *schema.Resource {
+func dataSourceTencentCloudTdmqRocketmqCluster() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudRocketmqClusterRead,
 		Schema: map[string]*schema.Schema{
@@ -124,7 +124,7 @@ func dataSourceTencentCloudRocketmqCluster() *schema.Resource {
 										Computed:    true,
 										Description: "Whether it is an exclusive instance.",
 									},
-									"rocket_m_q_flag": {
+									"rocketmq_flag": {
 										Type:        schema.TypeBool,
 										Computed:    true,
 										Description: "Rocketmq cluster identification.",
@@ -295,7 +295,7 @@ func dataSourceTencentCloudRocketmqClusterRead(d *schema.ResourceData, meta inte
 				infoMap["is_vip"] = clusterList.Info.IsVip
 			}
 			if clusterList.Info.RocketMQFlag != nil {
-				infoMap["rocket_m_q_flag"] = clusterList.Info.RocketMQFlag
+				infoMap["rocketmq_flag"] = clusterList.Info.RocketMQFlag
 			}
 
 			clusterListMap["info"] = []interface{}{infoMap}
