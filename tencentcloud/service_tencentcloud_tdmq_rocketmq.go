@@ -625,3 +625,50 @@ func (me *TdmqRocketmqService) DescribeTdmqRocketmqTopicByFilter(ctx context.Con
 	}
 	return
 }
+
+func (me *TdmqRocketmqService) DescribeTdmqRocketmqRoleByFilter(ctx context.Context, param map[string]interface{}) (role []*tdmqRocketmq.Role, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmqRocketmq.NewDescribeRolesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ClusterId = helper.String(param["cluster_id"].(string))
+	if v, ok := param["role_name"]; ok {
+		request.RoleName = helper.String(v.(string))
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTdmqClient().DescribeRoles(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.RoleSets) < 1 {
+			break
+		}
+		role = append(role, response.Response.RoleSets...)
+		if len(response.Response.RoleSets) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}

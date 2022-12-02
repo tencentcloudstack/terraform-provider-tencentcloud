@@ -823,6 +823,7 @@ RocketMQ
 	tencentcloud_rocketmq_cluster
 	tencentcloud_tdmq_rocketmq_namespace
 	tencentcloud_tdmq_rocketmq_topic
+	tencentcloud_tdmq_rocketmq_role
   Resource
 	tencentcloud_tdmq_rocketmq_cluster
 	tencentcloud_tdmq_rocketmq_namespace
@@ -1158,6 +1159,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_rocketmq_cluster":                         dataSourceTencentCloudRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                  dataSourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_topic":                      dataSourceTencentCloudTdmqRocketmqTopic(),
+			"tencentcloud_tdmq_rocketmq_role":                       dataSourceTencentCloudTdmqRocketmqRole(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
