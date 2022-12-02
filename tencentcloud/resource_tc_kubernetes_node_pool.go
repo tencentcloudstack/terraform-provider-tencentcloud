@@ -1456,9 +1456,8 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 			request.MultiZoneSubnetPolicy = &multiZoneSubnetPolicy
 		}
 
-		if projectId != 0 {
-			request.ProjectId = helper.IntUint64(projectId)
-		}
+		// It is safe to use Get() with default value 0.
+		request.ProjectId = helper.IntUint64(projectId)
 
 		if defaultCooldown != 0 {
 			request.DefaultCooldown = helper.IntUint64(defaultCooldown)

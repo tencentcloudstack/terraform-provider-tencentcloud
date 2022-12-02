@@ -90,6 +90,136 @@ func resourceTencentCloudTcmMesh() *schema.Resource {
 				Description: "Mesh configuration.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
+						"tracing": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "Tracing config.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enable": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Whether enable tracing.",
+									},
+									"apm": {
+										Type:        schema.TypeList,
+										MaxItems:    1,
+										Optional:    true,
+										Description: "APM config.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"enable": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Whether enable APM.",
+												},
+												"region": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Region.",
+												},
+												"instance_id": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Instance id of the APM.",
+												},
+											},
+										},
+									},
+									"sampling": {
+										Type:        schema.TypeFloat,
+										Optional:    true,
+										Description: "Tracing sampling, 0.0-1.0.",
+									},
+									"zipkin": {
+										Type:        schema.TypeList,
+										MaxItems:    1,
+										Optional:    true,
+										Description: "Third party zipkin config.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"address": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Zipkin address.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"prometheus": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "Prometheus configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"vpc_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Vpc id.",
+									},
+									"subnet_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Subnet id.",
+									},
+									"region": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Region.",
+									},
+									"instance_id": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Instance id.",
+									},
+									"custom_prom": {
+										Type:        schema.TypeList,
+										MaxItems:    1,
+										Optional:    true,
+										Description: "Custom prometheus.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"is_public_addr": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Whether it is public address, default false.",
+												},
+												"vpc_id": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Vpc id.",
+												},
+												"url": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Url of the prometheus.",
+												},
+												"auth_type": {
+													Type:        schema.TypeString,
+													Required:    true,
+													Description: "Authentication type of the prometheus.",
+												},
+												"username": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Username of the prometheus, used in basic authentication type.",
+												},
+												"password": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Password of the prometheus, used in basic authentication type.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 						"istio": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
@@ -198,6 +328,74 @@ func resourceTencentCloudTcmMeshCreate(d *schema.ResourceData, meta interface{})
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "config"); ok {
 		meshConfig := tcm.MeshConfig{}
+		if TracingMap, ok := helper.InterfaceToMap(dMap, "tracing"); ok {
+			tracingConfig := tcm.TracingConfig{}
+			if v, ok := TracingMap["enable"]; ok {
+				tracingConfig.Enable = helper.Bool(v.(bool))
+			}
+			if ApmMap, ok := helper.InterfaceToMap(TracingMap, "apm"); ok {
+				apm := tcm.APM{}
+				if v, ok := ApmMap["enable"]; ok {
+					apm.Enable = helper.Bool(v.(bool))
+				}
+				if v, ok := ApmMap["region"]; ok {
+					apm.Region = helper.String(v.(string))
+				}
+				if v, ok := ApmMap["instance_id"]; ok {
+					apm.InstanceId = helper.String(v.(string))
+				}
+				tracingConfig.APM = &apm
+			}
+			if v, ok := TracingMap["sampling"]; ok {
+				tracingConfig.Sampling = helper.Float64(v.(float64))
+			}
+			if ZipkinMap, ok := helper.InterfaceToMap(TracingMap, "zipkin"); ok {
+				tracingZipkin := tcm.TracingZipkin{}
+				if v, ok := ZipkinMap["address"]; ok {
+					tracingZipkin.Address = helper.String(v.(string))
+				}
+				tracingConfig.Zipkin = &tracingZipkin
+			}
+			meshConfig.Tracing = &tracingConfig
+		}
+		if PrometheusMap, ok := helper.InterfaceToMap(dMap, "prometheus"); ok {
+			prometheusConfig := tcm.PrometheusConfig{}
+			if v, ok := PrometheusMap["vpc_id"]; ok {
+				prometheusConfig.VpcId = helper.String(v.(string))
+			}
+			if v, ok := PrometheusMap["subnet_id"]; ok {
+				prometheusConfig.SubnetId = helper.String(v.(string))
+			}
+			if v, ok := PrometheusMap["region"]; ok {
+				prometheusConfig.Region = helper.String(v.(string))
+			}
+			if v, ok := PrometheusMap["instance_id"]; ok {
+				prometheusConfig.InstanceId = helper.String(v.(string))
+			}
+			if CustomPromMap, ok := helper.InterfaceToMap(PrometheusMap, "custom_prom"); ok {
+				customPromConfig := tcm.CustomPromConfig{}
+				if v, ok := CustomPromMap["is_public_addr"]; ok {
+					customPromConfig.IsPublicAddr = helper.Bool(v.(bool))
+				}
+				if v, ok := CustomPromMap["vpc_id"]; ok {
+					customPromConfig.VpcId = helper.String(v.(string))
+				}
+				if v, ok := CustomPromMap["url"]; ok {
+					customPromConfig.Url = helper.String(v.(string))
+				}
+				if v, ok := CustomPromMap["auth_type"]; ok {
+					customPromConfig.AuthType = helper.String(v.(string))
+				}
+				if v, ok := CustomPromMap["username"]; ok {
+					customPromConfig.Username = helper.String(v.(string))
+				}
+				if v, ok := CustomPromMap["password"]; ok {
+					customPromConfig.Password = helper.String(v.(string))
+				}
+				prometheusConfig.CustomProm = &customPromConfig
+			}
+			meshConfig.Prometheus = &prometheusConfig
+		}
 		if IstioMap, ok := helper.InterfaceToMap(dMap, "istio"); ok {
 			istioConfig := tcm.IstioConfig{}
 			if v, ok := IstioMap["outbound_traffic_policy"]; ok {
@@ -326,6 +524,79 @@ func resourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{}) e
 
 	if mesh.Config != nil {
 		configMap := map[string]interface{}{}
+		if mesh.Config.Tracing != nil {
+			tracingMap := map[string]interface{}{}
+			if mesh.Config.Tracing.Enable != nil {
+				tracingMap["enable"] = mesh.Config.Tracing.Enable
+			}
+			if mesh.Config.Tracing.APM != nil {
+				apmMap := map[string]interface{}{}
+				if mesh.Config.Tracing.APM.Enable != nil {
+					apmMap["enable"] = mesh.Config.Tracing.APM.Enable
+				}
+				if mesh.Config.Tracing.APM.Region != nil {
+					apmMap["region"] = mesh.Config.Tracing.APM.Region
+				}
+				if mesh.Config.Tracing.APM.InstanceId != nil {
+					apmMap["instance_id"] = mesh.Config.Tracing.APM.InstanceId
+				}
+
+				tracingMap["apm"] = []interface{}{apmMap}
+			}
+			if mesh.Config.Tracing.Sampling != nil {
+				tracingMap["sampling"] = mesh.Config.Tracing.Sampling
+			}
+			if mesh.Config.Tracing.Zipkin != nil {
+				zipkinMap := map[string]interface{}{}
+				if mesh.Config.Tracing.Zipkin.Address != nil {
+					zipkinMap["address"] = mesh.Config.Tracing.Zipkin.Address
+				}
+
+				tracingMap["zipkin"] = []interface{}{zipkinMap}
+			}
+
+			configMap["tracing"] = []interface{}{tracingMap}
+		}
+		if mesh.Config.Prometheus != nil {
+			prometheusMap := map[string]interface{}{}
+			if mesh.Config.Prometheus.VpcId != nil {
+				prometheusMap["vpc_id"] = mesh.Config.Prometheus.VpcId
+			}
+			if mesh.Config.Prometheus.SubnetId != nil {
+				prometheusMap["subnet_id"] = mesh.Config.Prometheus.SubnetId
+			}
+			if mesh.Config.Prometheus.Region != nil {
+				prometheusMap["region"] = mesh.Config.Prometheus.Region
+			}
+			if mesh.Config.Prometheus.InstanceId != nil {
+				prometheusMap["instance_id"] = mesh.Config.Prometheus.InstanceId
+			}
+			if mesh.Config.Prometheus.CustomProm != nil {
+				customPromMap := map[string]interface{}{}
+				if mesh.Config.Prometheus.CustomProm.IsPublicAddr != nil {
+					customPromMap["is_public_addr"] = mesh.Config.Prometheus.CustomProm.IsPublicAddr
+				}
+				if mesh.Config.Prometheus.CustomProm.VpcId != nil {
+					customPromMap["vpc_id"] = mesh.Config.Prometheus.CustomProm.VpcId
+				}
+				if mesh.Config.Prometheus.CustomProm.Url != nil {
+					customPromMap["url"] = mesh.Config.Prometheus.CustomProm.Url
+				}
+				if mesh.Config.Prometheus.CustomProm.AuthType != nil {
+					customPromMap["auth_type"] = mesh.Config.Prometheus.CustomProm.AuthType
+				}
+				if mesh.Config.Prometheus.CustomProm.Username != nil {
+					customPromMap["username"] = mesh.Config.Prometheus.CustomProm.Username
+				}
+				if mesh.Config.Prometheus.CustomProm.Password != nil {
+					customPromMap["password"] = mesh.Config.Prometheus.CustomProm.Password
+				}
+
+				prometheusMap["custom_prom"] = []interface{}{customPromMap}
+			}
+
+			configMap["prometheus"] = []interface{}{prometheusMap}
+		}
 		if mesh.Config.Istio != nil {
 			istioMap := map[string]interface{}{}
 			if mesh.Config.Istio.OutboundTrafficPolicy != nil {
@@ -355,7 +626,10 @@ func resourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{}) e
 			configMap["istio"] = []interface{}{istioMap}
 		}
 
-		_ = d.Set("config", []interface{}{configMap})
+		err = d.Set("config", []interface{}{configMap})
+		if err != nil {
+			return fmt.Errorf("set error, err: %v", err)
+		}
 	}
 
 	if mesh.TagList != nil {
@@ -411,6 +685,74 @@ func resourceTencentCloudTcmMeshUpdate(d *schema.ResourceData, meta interface{})
 	if d.HasChange("config") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "config"); ok {
 			meshConfig := tcm.MeshConfig{}
+			if TracingMap, ok := helper.InterfaceToMap(dMap, "tracing"); ok {
+				tracingConfig := tcm.TracingConfig{}
+				if v, ok := TracingMap["enable"]; ok {
+					tracingConfig.Enable = helper.Bool(v.(bool))
+				}
+				if ApmMap, ok := helper.InterfaceToMap(TracingMap, "apm"); ok {
+					aPM := tcm.APM{}
+					if v, ok := ApmMap["enable"]; ok {
+						aPM.Enable = helper.Bool(v.(bool))
+					}
+					if v, ok := ApmMap["region"]; ok {
+						aPM.Region = helper.String(v.(string))
+					}
+					if v, ok := ApmMap["instance_id"]; ok {
+						aPM.InstanceId = helper.String(v.(string))
+					}
+					tracingConfig.APM = &aPM
+				}
+				if v, ok := TracingMap["sampling"]; ok {
+					tracingConfig.Sampling = helper.Float64(v.(float64))
+				}
+				if ZipkinMap, ok := helper.InterfaceToMap(TracingMap, "zipkin"); ok {
+					tracingZipkin := tcm.TracingZipkin{}
+					if v, ok := ZipkinMap["address"]; ok {
+						tracingZipkin.Address = helper.String(v.(string))
+					}
+					tracingConfig.Zipkin = &tracingZipkin
+				}
+				meshConfig.Tracing = &tracingConfig
+			}
+			if PrometheusMap, ok := helper.InterfaceToMap(dMap, "prometheus"); ok {
+				prometheusConfig := tcm.PrometheusConfig{}
+				if v, ok := PrometheusMap["vpc_id"]; ok {
+					prometheusConfig.VpcId = helper.String(v.(string))
+				}
+				if v, ok := PrometheusMap["subnet_id"]; ok {
+					prometheusConfig.SubnetId = helper.String(v.(string))
+				}
+				if v, ok := PrometheusMap["region"]; ok {
+					prometheusConfig.Region = helper.String(v.(string))
+				}
+				if v, ok := PrometheusMap["instance_id"]; ok {
+					prometheusConfig.InstanceId = helper.String(v.(string))
+				}
+				if CustomPromMap, ok := helper.InterfaceToMap(PrometheusMap, "custom_prom"); ok {
+					customPromConfig := tcm.CustomPromConfig{}
+					if v, ok := CustomPromMap["is_public_addr"]; ok {
+						customPromConfig.IsPublicAddr = helper.Bool(v.(bool))
+					}
+					if v, ok := CustomPromMap["vpc_id"]; ok {
+						customPromConfig.VpcId = helper.String(v.(string))
+					}
+					if v, ok := CustomPromMap["url"]; ok {
+						customPromConfig.Url = helper.String(v.(string))
+					}
+					if v, ok := CustomPromMap["auth_type"]; ok {
+						customPromConfig.AuthType = helper.String(v.(string))
+					}
+					if v, ok := CustomPromMap["username"]; ok {
+						customPromConfig.Username = helper.String(v.(string))
+					}
+					if v, ok := CustomPromMap["password"]; ok {
+						customPromConfig.Password = helper.String(v.(string))
+					}
+					prometheusConfig.CustomProm = &customPromConfig
+				}
+				meshConfig.Prometheus = &prometheusConfig
+			}
 			if IstioMap, ok := helper.InterfaceToMap(dMap, "istio"); ok {
 				istioConfig := tcm.IstioConfig{}
 				if v, ok := IstioMap["outbound_traffic_policy"]; ok {

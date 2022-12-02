@@ -385,6 +385,92 @@ type DeployConfig struct {
 }
 
 // Predefined struct for user
+type DescribeAccessLogConfigRequestParams struct {
+	// mesh名字
+	MeshId *string `json:"MeshId,omitempty" name:"MeshId"`
+}
+
+type DescribeAccessLogConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// mesh名字
+	MeshId *string `json:"MeshId,omitempty" name:"MeshId"`
+}
+
+func (r *DescribeAccessLogConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAccessLogConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "MeshId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAccessLogConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAccessLogConfigResponseParams struct {
+	// 访问日志输出路径。默认 /dev/stdout
+	File *string `json:"File,omitempty" name:"File"`
+
+	// 访问日志的格式。
+	Format *string `json:"Format,omitempty" name:"Format"`
+
+	// 访问日志输出编码。默认 “TEXT”。除此之外还有“JSON”
+	Encoding *string `json:"Encoding,omitempty" name:"Encoding"`
+
+	// 选中的范围
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SelectedRange *SelectedRange `json:"SelectedRange,omitempty" name:"SelectedRange"`
+
+	// 采用的模板，可取值为"istio, trace，默认为istio
+	Template *string `json:"Template,omitempty" name:"Template"`
+
+	// 腾讯云日志服务相关参数
+	CLS *CLS `json:"CLS,omitempty" name:"CLS"`
+
+	// GRPC第三方服务器地址
+	Address *string `json:"Address,omitempty" name:"Address"`
+
+	// 是否启用GRPC第三方服务器
+	EnableServer *bool `json:"EnableServer,omitempty" name:"EnableServer"`
+
+	// 是否启用标准输出
+	EnableStdout *bool `json:"EnableStdout,omitempty" name:"EnableStdout"`
+
+	// 是否启用访问日志采集
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Enable *bool `json:"Enable,omitempty" name:"Enable"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeAccessLogConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAccessLogConfigResponseParams `json:"Response"`
+}
+
+func (r *DescribeAccessLogConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAccessLogConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeMeshListRequestParams struct {
 	// 过滤条件
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
@@ -745,6 +831,67 @@ func (r *LinkClusterListResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type LinkPrometheusRequestParams struct {
+	// 网格ID
+	MeshID *string `json:"MeshID,omitempty" name:"MeshID"`
+
+	// 配置
+	Prometheus *PrometheusConfig `json:"Prometheus,omitempty" name:"Prometheus"`
+}
+
+type LinkPrometheusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网格ID
+	MeshID *string `json:"MeshID,omitempty" name:"MeshID"`
+
+	// 配置
+	Prometheus *PrometheusConfig `json:"Prometheus,omitempty" name:"Prometheus"`
+}
+
+func (r *LinkPrometheusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *LinkPrometheusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "MeshID")
+	delete(f, "Prometheus")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "LinkPrometheusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type LinkPrometheusResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type LinkPrometheusResponse struct {
+	*tchttp.BaseResponse
+	Response *LinkPrometheusResponseParams `json:"Response"`
+}
+
+func (r *LinkPrometheusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *LinkPrometheusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type LoadBalancer struct {
 	// 负载均衡实例的网络类型：
 	// OPEN：公网属性， INTERNAL：内网属性。
@@ -913,6 +1060,123 @@ type MetricSpec struct {
 }
 
 // Predefined struct for user
+type ModifyAccessLogConfigRequestParams struct {
+	// mesh ID
+	MeshId *string `json:"MeshId,omitempty" name:"MeshId"`
+
+	// 选中的范围
+	SelectedRange *SelectedRange `json:"SelectedRange,omitempty" name:"SelectedRange"`
+
+	// 采用的模板，可选值：istio（默认）、trace、custom
+	Template *string `json:"Template,omitempty" name:"Template"`
+
+	// 是否启用
+	Enable *bool `json:"Enable,omitempty" name:"Enable"`
+
+	// 腾讯云日志服务相关参数
+	CLS *CLS `json:"CLS,omitempty" name:"CLS"`
+
+	// 编码格式，可选值：TEXT、JSON
+	Encoding *string `json:"Encoding,omitempty" name:"Encoding"`
+
+	// 日志格式
+	Format *string `json:"Format,omitempty" name:"Format"`
+
+	// 是否启用标准输出
+	EnableStdout *bool `json:"EnableStdout,omitempty" name:"EnableStdout"`
+
+	// 是否启动GRPC第三方服务器
+	EnableServer *bool `json:"EnableServer,omitempty" name:"EnableServer"`
+
+	// GRPC第三方服务器地址
+	Address *string `json:"Address,omitempty" name:"Address"`
+}
+
+type ModifyAccessLogConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// mesh ID
+	MeshId *string `json:"MeshId,omitempty" name:"MeshId"`
+
+	// 选中的范围
+	SelectedRange *SelectedRange `json:"SelectedRange,omitempty" name:"SelectedRange"`
+
+	// 采用的模板，可选值：istio（默认）、trace、custom
+	Template *string `json:"Template,omitempty" name:"Template"`
+
+	// 是否启用
+	Enable *bool `json:"Enable,omitempty" name:"Enable"`
+
+	// 腾讯云日志服务相关参数
+	CLS *CLS `json:"CLS,omitempty" name:"CLS"`
+
+	// 编码格式，可选值：TEXT、JSON
+	Encoding *string `json:"Encoding,omitempty" name:"Encoding"`
+
+	// 日志格式
+	Format *string `json:"Format,omitempty" name:"Format"`
+
+	// 是否启用标准输出
+	EnableStdout *bool `json:"EnableStdout,omitempty" name:"EnableStdout"`
+
+	// 是否启动GRPC第三方服务器
+	EnableServer *bool `json:"EnableServer,omitempty" name:"EnableServer"`
+
+	// GRPC第三方服务器地址
+	Address *string `json:"Address,omitempty" name:"Address"`
+}
+
+func (r *ModifyAccessLogConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyAccessLogConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "MeshId")
+	delete(f, "SelectedRange")
+	delete(f, "Template")
+	delete(f, "Enable")
+	delete(f, "CLS")
+	delete(f, "Encoding")
+	delete(f, "Format")
+	delete(f, "EnableStdout")
+	delete(f, "EnableServer")
+	delete(f, "Address")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAccessLogConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyAccessLogConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyAccessLogConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyAccessLogConfigResponseParams `json:"Response"`
+}
+
+func (r *ModifyAccessLogConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyAccessLogConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyMeshRequestParams struct {
 	// 需要修改的网格Id
 	MeshId *string `json:"MeshId,omitempty" name:"MeshId"`
@@ -984,6 +1248,88 @@ func (r *ModifyMeshResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyMeshResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyTracingConfigRequestParams struct {
+	// mesh名字
+	MeshId *string `json:"MeshId,omitempty" name:"MeshId"`
+
+	// 是否启用调用跟踪
+	Enable *bool `json:"Enable,omitempty" name:"Enable"`
+
+	// 腾讯云 APM 服务相关参数
+	APM *APM `json:"APM,omitempty" name:"APM"`
+
+	// 调用跟踪采样值
+	Sampling *float64 `json:"Sampling,omitempty" name:"Sampling"`
+
+	// 调用追踪Zipkin相关配置
+	Zipkin *TracingZipkin `json:"Zipkin,omitempty" name:"Zipkin"`
+}
+
+type ModifyTracingConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// mesh名字
+	MeshId *string `json:"MeshId,omitempty" name:"MeshId"`
+
+	// 是否启用调用跟踪
+	Enable *bool `json:"Enable,omitempty" name:"Enable"`
+
+	// 腾讯云 APM 服务相关参数
+	APM *APM `json:"APM,omitempty" name:"APM"`
+
+	// 调用跟踪采样值
+	Sampling *float64 `json:"Sampling,omitempty" name:"Sampling"`
+
+	// 调用追踪Zipkin相关配置
+	Zipkin *TracingZipkin `json:"Zipkin,omitempty" name:"Zipkin"`
+}
+
+func (r *ModifyTracingConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyTracingConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "MeshId")
+	delete(f, "Enable")
+	delete(f, "APM")
+	delete(f, "Sampling")
+	delete(f, "Zipkin")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyTracingConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyTracingConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyTracingConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyTracingConfigResponseParams `json:"Response"`
+}
+
+func (r *ModifyTracingConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyTracingConfigResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1199,6 +1545,60 @@ func (r *UnlinkClusterResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UnlinkClusterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UnlinkPrometheusRequestParams struct {
+	// 网格ID
+	MeshID *string `json:"MeshID,omitempty" name:"MeshID"`
+}
+
+type UnlinkPrometheusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 网格ID
+	MeshID *string `json:"MeshID,omitempty" name:"MeshID"`
+}
+
+func (r *UnlinkPrometheusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UnlinkPrometheusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "MeshID")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UnlinkPrometheusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UnlinkPrometheusResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type UnlinkPrometheusResponse struct {
+	*tchttp.BaseResponse
+	Response *UnlinkPrometheusResponseParams `json:"Response"`
+}
+
+func (r *UnlinkPrometheusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UnlinkPrometheusResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

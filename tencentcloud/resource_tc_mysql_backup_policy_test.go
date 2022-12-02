@@ -10,7 +10,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-func TestAccTencentCloudMysqlBackupPolicy(t *testing.T) {
+func TestAccTencentCloudMysqlBackupPolicyResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

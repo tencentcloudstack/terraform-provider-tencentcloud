@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cos_bucket: enhance the storage_class of lifecycle
+```
+
+```release-note:enhancement
+resource/tencentcloud_cos_bucket_object: enhance the storage_class of lifecycle
+```

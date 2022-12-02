@@ -18,7 +18,7 @@ import (
 var testAccTencentCloudMysqlPrivilegeType = "tencentcloud_mysql_privilege"
 var testAccTencentCloudMysqlPrivilegeName = testAccTencentCloudMysqlPrivilegeType + ".privilege"
 
-func TestAccTencentCloudMysqlPrivilege(t *testing.T) {
+func TestAccTencentCloudMysqlPrivilegeResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
