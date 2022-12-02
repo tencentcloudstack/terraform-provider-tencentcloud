@@ -54,7 +54,6 @@ func dataSourceTencentCloudTdmqRocketmqCluster() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"info": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "Basic cluster information.",
 							Elem: &schema.Resource{
@@ -133,7 +132,6 @@ func dataSourceTencentCloudTdmqRocketmqCluster() *schema.Resource {
 						},
 						"config": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "Cluster configuration information.",
 							Elem: &schema.Resource{
