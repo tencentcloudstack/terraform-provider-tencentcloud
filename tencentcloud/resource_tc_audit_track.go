@@ -156,7 +156,7 @@ func resourceTencentCloudAuditTrackCreate(d *schema.ResourceData, meta interface
 		request.ResourceType = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("status"); ok {
+	if v, _ := d.GetOk("status"); v != nil {
 		request.Status = helper.IntUint64(v.(int))
 	}
 
@@ -185,7 +185,7 @@ func resourceTencentCloudAuditTrackCreate(d *schema.ResourceData, meta interface
 		request.Storage = &storage
 	}
 
-	if v, ok := d.GetOk("track_for_all_members"); ok {
+	if v, _ := d.GetOk("track_for_all_members"); v != nil {
 		request.TrackForAllMembers = helper.IntUint64(v.(int))
 	}
 
@@ -313,7 +313,7 @@ func resourceTencentCloudAuditTrackUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("status") {
-		if v, ok := d.GetOk("status"); ok {
+		if v, _ := d.GetOk("status"); v != nil {
 			request.Status = helper.IntUint64(v.(int))
 		}
 	}
@@ -348,7 +348,7 @@ func resourceTencentCloudAuditTrackUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("track_for_all_members") {
-		if v, ok := d.GetOk("track_for_all_members"); ok {
+		if v, _ := d.GetOk("track_for_all_members"); v != nil {
 			request.TrackForAllMembers = helper.IntUint64(v.(int))
 		}
 	}

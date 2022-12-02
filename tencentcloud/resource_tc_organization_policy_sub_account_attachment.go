@@ -120,17 +120,17 @@ func resourceTencentCloudOrganizationPolicySubAccountAttachmentCreate(d *schema.
 		orgSubAccountUin int
 	)
 
-	if v, ok := d.GetOk("policy_id"); ok {
+	if v, _ := d.GetOk("policy_id"); v != nil {
 		policyId = v.(int)
 		request.PolicyId = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOk("org_sub_account_uin"); ok {
+	if v, _ := d.GetOk("org_sub_account_uin"); v != nil {
 		orgSubAccountUin = v.(int)
 		request.OrgSubAccountUins = []*int64{helper.IntInt64(v.(int))}
 	}
 
-	if v, ok := d.GetOk("member_uin"); ok {
+	if v, _ := d.GetOk("member_uin"); v != nil {
 		memberUin = v.(int)
 		request.MemberUin = helper.IntInt64(v.(int))
 	}
