@@ -25,6 +25,7 @@ import (
 
 var eipUnattachLocker = &sync.Mutex{}
 
+/* For Adun Sake please DO NOT Declare the redundant Type STRUCT!! */
 // VPC basic information
 type VpcBasicInfo struct {
 	vpcId                string
@@ -1329,6 +1330,7 @@ func (me *VpcService) DescribeSecurityGroupsAssociate(ctx context.Context, ids [
 	return response.Response.SecurityGroupAssociationStatisticsSet, nil
 }
 
+// Deprecated: the redundant type struct cause cause unnecessary mental burden, use sdk request directly
 func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securityGroupRuleBasicInfoWithPolicyIndex) (ruleId string, err error) {
 	logId := getLogId(ctx)
 
@@ -1400,6 +1402,30 @@ func (me *VpcService) CreateSecurityGroupPolicy(ctx context.Context, info securi
 	return ruleId, nil
 }
 
+func (me *VpcService) CreateSecurityGroupPolicies(ctx context.Context, request *vpc.CreateSecurityGroupPoliciesRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().CreateSecurityGroupPolicies(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+// Deprecated: use DescribeSecurityGroupPolicies instead
 func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId string) (sgId string, policyType string, policy *vpc.SecurityGroupPolicy, errRet error) {
 	logId := getLogId(ctx)
 
@@ -1457,6 +1483,33 @@ func (me *VpcService) DescribeSecurityGroupPolicy(ctx context.Context, ruleId st
 	}
 
 	return info.SgId, info.PolicyType, policy, nil
+}
+
+func (me *VpcService) DescribeSecurityGroupPolicies(ctx context.Context, sgId string) (result *vpc.SecurityGroupPolicySet, errRet error) {
+	logId := getLogId(ctx)
+	request := vpc.NewDescribeSecurityGroupPoliciesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.SecurityGroupId = &sgId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeSecurityGroupPolicies(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	result = response.Response.SecurityGroupPolicySet
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }
 
 func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId string) error {
@@ -1531,6 +1584,29 @@ func (me *VpcService) DeleteSecurityGroupPolicy(ctx context.Context, ruleId stri
 	return nil
 }
 
+func (me *VpcService) DeleteSecurityGroupPolicies(ctx context.Context, request *vpc.DeleteSecurityGroupPoliciesRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DeleteSecurityGroupPolicies(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *VpcService) DeleteSecurityGroupPolicyByPolicyIndex(ctx context.Context, policyIndex int64, sgId, policyType string) error {
 	logId := getLogId(ctx)
 
@@ -1557,6 +1633,7 @@ func (me *VpcService) DeleteSecurityGroupPolicyByPolicyIndex(ctx context.Context
 
 }
 
+// Deprecated: Use ModifySecurityGroupPolicies instead
 func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId string, desc *string) error {
 	logId := getLogId(ctx)
 
@@ -1593,6 +1670,29 @@ func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId stri
 	}
 
 	return nil
+}
+
+func (me *VpcService) ModifySecurityGroupPolicies(ctx context.Context, request *vpc.ModifySecurityGroupPoliciesRequest) (errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().ModifySecurityGroupPolicies(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }
 
 func (me *VpcService) DescribeSecurityGroups(ctx context.Context, sgId, sgName *string, projectId *int, tags map[string]string) (sgs []*vpc.SecurityGroup, err error) {
