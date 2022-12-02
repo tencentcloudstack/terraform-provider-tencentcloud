@@ -1,33 +1,35 @@
 /*
 Provides a resource to create a tcm prometheus_attachment
 
+~> **NOTE:** Instructions for use: 1. Use Tencent Cloud Prometheus to monitor TMP, please enter `vpc_id`, `subnet_id`, `region` or `instance_id`, it is recommended to use an existing tmp instance; 2. To use the third-party Prometheus service, please enter `custom_prom`; 3. `tencentcloud_tcm_prometheus_attachment` does not support modification; 4. If you use Tencent Cloud Prometheus to monitor TMP, enter `vpc_id`, `subnet_id`, `region` to create a new Prometheus monitoring instance, destroy will not destroy the Prometheus monitoring instance
+
 Example Usage
 
 ```hcl
 resource "tencentcloud_tcm_prometheus_attachment" "prometheus_attachment" {
-  mesh_id = "mesh-xxxxxxxx"
-  prometheus {
-	vpc_id = "vpc-xxx"
-	subnet_id = "subnet-xxx"
-	region = "sh"
-	instance_id = "prom-xxx"
-	custom_prom {
-		is_public_addr = false
-		vpc_id = "vpc-xxx"
-		url = "http://x.x.x.x:9090"
-		auth_type = "none, basic"
-		username = "test"
-		password = "test"
+	mesh_id = "mesh-rofjmxxx"
+	prometheus {
+	  vpc_id = "vpc-pewdpxxx"
+	  subnet_id = "subnet-driddxxx"
+	  region = "ap-guangzhou"
+	  instance_id = ""
+	  # custom_prom {
+		#   is_public_addr = false
+		#   vpc_id = "vpc-pewdpxxx"
+		#   url = "http://10.0.0.1:9090"
+		#   auth_type = "basic"
+		#   username = "test"
+		#   password = "test"
+	  # }
 	}
-  }
 }
 
 ```
 Import
 
-tcm prometheus_attachment can be imported using the id, e.g.
+tcm prometheus_attachment can be imported using the mesh_id, e.g.
 ```
-$ terraform import tencentcloud_tcm_prometheus_attachment.prometheus_attachment prometheusAttachment_id
+$ terraform import tencentcloud_tcm_prometheus_attachment.prometheus_attachment mesh-rofjmxxx
 ```
 */
 package tencentcloud
@@ -122,6 +124,7 @@ func resourceTencentCloudTcmPrometheusAttachment() *schema.Resource {
 									"password": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Sensitive:   true,
 										Description: "Password of the prometheus, used in basic authentication type.",
 									},
 								},
@@ -207,6 +210,26 @@ func resourceTencentCloudTcmPrometheusAttachmentCreate(d *schema.ResourceData, m
 	}
 
 	d.SetId(meshID)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := TcmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		mesh, errRet := service.DescribeTcmMesh(ctx, meshID)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if mesh.Mesh.Status == nil || mesh.Mesh.Status.TPS == nil {
+			return nil
+		}
+		if *mesh.Mesh.Status.TPS.State == "PENDING" {
+			return resource.RetryableError(fmt.Errorf("mesh status is %v, retry...", *mesh.Mesh.State))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
 	return resourceTencentCloudTcmPrometheusAttachmentRead(d, meta)
 }
 
@@ -274,6 +297,24 @@ func resourceTencentCloudTcmPrometheusAttachmentRead(d *schema.ResourceData, met
 			}
 
 			prometheusMap["custom_prom"] = []interface{}{customPromMap}
+		}
+
+		_ = d.Set("prometheus", []interface{}{prometheusMap})
+	}
+	prom := mesh.Status.TPS
+	if prom != nil && *prom.Type == "tmp" {
+		prometheusMap := map[string]interface{}{}
+		if prom.VpcId != nil {
+			prometheusMap["vpc_id"] = prom.VpcId
+		}
+		// if prometheus.SubnetId != nil {
+		// 	prometheusMap["subnet_id"] = prometheus.SubnetId
+		// }
+		if prom.Region != nil {
+			prometheusMap["region"] = prom.Region
+		}
+		if prom.InstanceId != nil {
+			prometheusMap["instance_id"] = prom.InstanceId
 		}
 
 		_ = d.Set("prometheus", []interface{}{prometheusMap})

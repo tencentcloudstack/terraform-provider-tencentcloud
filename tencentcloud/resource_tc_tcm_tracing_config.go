@@ -9,7 +9,7 @@ resource "tencentcloud_tcm_tracing_config" "tracing_config" {
   enable = true
   apm {
 	enable = true
-	region = "ap-shanghai"
+	region = "ap-guangzhou"
 	instance_id = "apm-xxx"
   }
   sampling =
@@ -18,12 +18,26 @@ resource "tencentcloud_tcm_tracing_config" "tracing_config" {
   }
 }
 
+resource "tencentcloud_tcm_tracing_config" "delete_config" {
+  mesh_id = "mesh-rofjmxxx"
+  enable = true
+  apm {
+    enable = false
+    # region = "ap-guangzhou"
+    # instance_id = "apm-xxx"
+  }
+  sampling = 0
+  zipkin {
+    address = ""
+  }
+}
+
 ```
 Import
 
-tcm tracing_config can be imported using the id, e.g.
+tcm tracing_config can be imported using the mesh_id, e.g.
 ```
-$ terraform import tencentcloud_tcm_tracing_config.tracing_config tracingConfig_id
+$ terraform import tencentcloud_tcm_tracing_config.tracing_config mesh-rofjmxxx
 ```
 */
 package tencentcloud
