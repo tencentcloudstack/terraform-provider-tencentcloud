@@ -96,7 +96,7 @@ func dataSourceTencentCloudTdmqRocketmqGroup() *schema.Resource {
 							Computed:    true,
 							Description: "The number of online consumers.",
 						},
-						"t_p_s": {
+						"tps": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Consumption TPS.",
@@ -219,7 +219,7 @@ func dataSourceTencentCloudTdmqRocketmqGroupRead(d *schema.ResourceData, meta in
 			groupMap["consumer_num"] = group.ConsumerNum
 		}
 		if group.TPS != nil {
-			groupMap["t_p_s"] = group.TPS
+			groupMap["tps"] = group.TPS
 		}
 		if group.TotalAccumulative != nil {
 			groupMap["total_accumulative"] = group.TotalAccumulative

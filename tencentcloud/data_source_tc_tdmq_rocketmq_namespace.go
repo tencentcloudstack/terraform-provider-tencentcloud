@@ -144,7 +144,6 @@ func dataSourceTencentCloudTdmqRocketmqNamespaceRead(d *schema.ResourceData, met
 
 		namespaceList = append(namespaceList, namespaceMap)
 	}
-	log.Printf("==========%+v, %v", namespaceList, ids)
 	d.SetId(helper.DataResourceIdsHash(ids))
 	_ = d.Set("namespaces", namespaceList)
 

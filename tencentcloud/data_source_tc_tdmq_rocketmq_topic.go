@@ -187,7 +187,6 @@ func dataSourceTencentCloudTdmqRocketmqTopicRead(d *schema.ResourceData, meta in
 
 		topicList = append(topicList, topicMap)
 	}
-	log.Printf("==========%+v", topicList)
 	d.SetId(helper.DataResourceIdsHash(ids))
 	_ = d.Set("topics", topicList)
 
