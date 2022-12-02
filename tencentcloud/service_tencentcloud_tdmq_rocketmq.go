@@ -558,3 +558,70 @@ func (me *TdmqRocketmqService) DescribeTdmqRocketmqNamespaceByFilter(ctx context
 	}
 	return
 }
+
+func (me *TdmqRocketmqService) DescribeTdmqRocketmqTopicByFilter(ctx context.Context, param map[string]interface{}) (topic []*tdmqRocketmq.RocketMQTopic, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmqRocketmq.NewDescribeRocketMQTopicsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "cluster_id" {
+			request.ClusterId = helper.String(v.(string))
+		}
+
+		if k == "namespace_id" {
+			request.NamespaceId = helper.String(v.(string))
+		}
+
+		if k == "filter_type" {
+			filterTypes := make([]*string, 0)
+			for _, item := range v.([]interface{}) {
+				fileterType := item.(string)
+				filterTypes = append(filterTypes, &fileterType)
+			}
+			request.FilterType = filterTypes
+		}
+
+		if k == "filter_name" {
+			request.FilterName = helper.String(v.(string))
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTdmqClient().DescribeRocketMQTopics(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Topics) < 1 {
+			break
+		}
+		topic = append(topic, response.Response.Topics...)
+		if len(response.Response.Topics) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}

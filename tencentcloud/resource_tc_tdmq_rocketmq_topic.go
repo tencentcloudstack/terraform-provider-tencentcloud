@@ -18,7 +18,7 @@ resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
 }
 
 resource "tencentcloud_tdmq_rocketmq_topic" "topic" {
-  topic = "test_rocketmq_topic"
+  topic_name = "test_rocketmq_topic"
   namespace_name = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
   type = "Normal"
   cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id

@@ -822,6 +822,7 @@ RocketMQ
   Data Source
 	tencentcloud_rocketmq_cluster
 	tencentcloud_tdmq_rocketmq_namespace
+	tencentcloud_tdmq_rocketmq_topic
   Resource
 	tencentcloud_tdmq_rocketmq_cluster
 	tencentcloud_tdmq_rocketmq_namespace
@@ -1156,6 +1157,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_rocketmq_cluster":                         dataSourceTencentCloudRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                  dataSourceTencentCloudTdmqRocketmqNamespace(),
+			"tencentcloud_tdmq_rocketmq_topic":                      dataSourceTencentCloudTdmqRocketmqTopic(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
