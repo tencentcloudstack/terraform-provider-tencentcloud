@@ -10,8 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTcmMesh_basic -v
-func TestAccTencentCloudTcmMesh_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTcmMeshResource_basic -v
+func TestAccTencentCloudTcmMeshResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
@@ -23,6 +23,32 @@ func TestAccTencentCloudTcmMesh_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMeshExists("tencentcloud_tcm_mesh.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_tcm_mesh.basic", "display_name", "test_mesh"),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_mesh.basic", "mesh_version", "1.12.5"),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_mesh.basic", "type", "HOSTED"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.istio.0.disable_http_retry"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.istio.0.disable_policy_checks"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.istio.0.enable_pilot_http"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.istio.0.outbound_traffic_policy"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.istio.0.smart_dns.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.istio.0.smart_dns.0.istio_meta_dns_auto_allocate"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.istio.0.smart_dns.0.istio_meta_dns_capture"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.prometheus.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.prometheus.0.custom_prom.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.prometheus.0.custom_prom.0.auth_type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.prometheus.0.custom_prom.0.is_public_addr"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.prometheus.0.custom_prom.0.url"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.prometheus.0.custom_prom.0.vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.tracing.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.tracing.0.enable"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.tracing.0.sampling"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.tracing.0.apm.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.tracing.0.apm.0.enable"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.tracing.0.zipkin.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "tag_list.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "tag_list.0.key"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "tag_list.0.passthrough"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "tag_list.0.value"),
 				),
 			},
 			{
@@ -96,6 +122,23 @@ resource "tencentcloud_tcm_mesh" "basic" {
         istio_meta_dns_auto_allocate = true
       }
     }
+	tracing {
+		enable = true
+		sampling = 1
+		apm {
+			enable = false
+		}
+		zipkin {
+			address = "10.0.0.1:1000"
+		}
+	}
+	prometheus {
+		custom_prom {
+			url = "https://10.0.0.1:1000"
+			auth_type = "none"
+			vpc_id = "vpc-j9yhbzpn"
+		}
+	}
   }
   tag_list {
     key = "key"

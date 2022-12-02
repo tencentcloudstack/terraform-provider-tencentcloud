@@ -700,6 +700,9 @@ TencentCloud ServiceMesh(TCM)
   Resource
 	tencentcloud_tcm_mesh
 	tencentcloud_tcm_cluster_attachment
+	tencentcloud_tcm_prometheus_attachment
+	tencentcloud_tcm_tracing_config
+	tencentcloud_tcm_access_log_config
 
 Simple Email Service(SES)
   Resource
@@ -1407,6 +1410,9 @@ func Provider() terraform.ResourceProvider {
 			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
 			"tencentcloud_tcm_mesh":                                   resourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                     resourceTencentCloudTcmClusterAttachment(),
+			"tencentcloud_tcm_prometheus_attachment":                  resourceTencentCloudTcmPrometheusAttachment(),
+			"tencentcloud_tcm_tracing_config":                         resourceTencentCloudTcmTracingConfig(),
+			"tencentcloud_tcm_access_log_config":                      resourceTencentCloudTcmAccessLogConfig(),
 			"tencentcloud_ses_domain":                                 resourceTencentCloudSesDomain(),
 			"tencentcloud_ses_template":                               resourceTencentCloudSesTemplate(),
 			"tencentcloud_ses_email_address":                          resourceTencentCloudSesEmailAddress(),
