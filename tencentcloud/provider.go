@@ -818,7 +818,21 @@ Data Transmission Service(DTS)
   Resource
 	tencentcloud_dts_sync_job
 
+RocketMQ
+  Data Source
+	tencentcloud_tdmq_rocketmq_cluster
+	tencentcloud_tdmq_rocketmq_namespace
+	tencentcloud_tdmq_rocketmq_topic
+	tencentcloud_tdmq_rocketmq_role
+	tencentcloud_tdmq_rocketmq_group
 
+  Resource
+	tencentcloud_tdmq_rocketmq_cluster
+	tencentcloud_tdmq_rocketmq_namespace
+	tencentcloud_tdmq_rocketmq_role
+	tencentcloud_tdmq_rocketmq_topic
+	tencentcloud_tdmq_rocketmq_group
+	tencentcloud_tdmq_rocketmq_environment_role
 */
 package tencentcloud
 
@@ -1143,6 +1157,11 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
+			"tencentcloud_tdmq_rocketmq_cluster":                    dataSourceTencentCloudTdmqRocketmqCluster(),
+			"tencentcloud_tdmq_rocketmq_namespace":                  dataSourceTencentCloudTdmqRocketmqNamespace(),
+			"tencentcloud_tdmq_rocketmq_topic":                      dataSourceTencentCloudTdmqRocketmqTopic(),
+			"tencentcloud_tdmq_rocketmq_role":                       dataSourceTencentCloudTdmqRocketmqRole(),
+			"tencentcloud_tdmq_rocketmq_group":                      dataSourceTencentCloudTdmqRocketmqGroup(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1452,6 +1471,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
 			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			"tencentcloud_tdmq_rocketmq_cluster":                      resourceTencentCloudTdmqRocketmqCluster(),
+			"tencentcloud_tdmq_rocketmq_namespace":                    resourceTencentCloudTdmqRocketmqNamespace(),
+			"tencentcloud_tdmq_rocketmq_role":                         resourceTencentCloudTdmqRocketmqRole(),
+			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
+			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
+			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
 			// "tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
