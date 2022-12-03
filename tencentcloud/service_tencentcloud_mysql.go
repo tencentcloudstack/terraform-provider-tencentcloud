@@ -932,6 +932,7 @@ func (me *MysqlService) DescribeDBInstanceConfig(ctx context.Context, mysqlId st
 	return
 }
 
+// DEPRECATED: Specify these arguments while creating.
 func (me *MysqlService) InitDBInstances(ctx context.Context, mysqlId, password, charset, lowerCase string, port int) (asyncRequestId string, errRet error) {
 	logId := getLogId(ctx)
 	request := cdb.NewInitDBInstancesRequest()

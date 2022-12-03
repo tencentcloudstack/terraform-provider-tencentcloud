@@ -23,6 +23,12 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// CMQ 后台服务错误。
+	FAILEDOPERATION_CMQBACKENDERROR = "FailedOperation.CmqBackendError"
+
+	// 创建vpc绑定关系失败。
+	FAILEDOPERATION_CREATEBINDVPC = "FailedOperation.CreateBindVpc"
+
 	// 创建集群失败。
 	FAILEDOPERATION_CREATECLUSTER = "FailedOperation.CreateCluster"
 
@@ -74,9 +80,6 @@ const (
 	// 主题删除失败。
 	FAILEDOPERATION_DELETETOPICS = "FailedOperation.DeleteTopics"
 
-	// 查询生产者数据失败。
-	FAILEDOPERATION_DESCRIBEPRODUCERS = "FailedOperation.DescribeProducers"
-
 	// 查询订阅数据失败。
 	FAILEDOPERATION_DESCRIBESUBSCRIPTION = "FailedOperation.DescribeSubscription"
 
@@ -86,8 +89,17 @@ const (
 	// 获取主题分区数失败。
 	FAILEDOPERATION_GETTOPICPARTITIONSFAILED = "FailedOperation.GetTopicPartitionsFailed"
 
+	// 最大消息超过1MB。
+	FAILEDOPERATION_MAXMESSAGESIZEERROR = "FailedOperation.MaxMessageSizeError"
+
+	// 上传的msgID错误。
+	FAILEDOPERATION_MESSAGEIDERROR = "FailedOperation.MessageIDError"
+
 	// 必须先清除关联命名空间才能继续操作。
 	FAILEDOPERATION_NAMESPACEINUSE = "FailedOperation.NamespaceInUse"
+
+	// PulsarAdminClient错误。
+	FAILEDOPERATION_PULSARADMINERROR = "FailedOperation.PulsarAdminError"
 
 	// 接收消息出错。
 	FAILEDOPERATION_RECEIVEERROR = "FailedOperation.ReceiveError"
@@ -104,14 +116,23 @@ const (
 	// 保存秘钥失败。
 	FAILEDOPERATION_SAVESECRETKEY = "FailedOperation.SaveSecretKey"
 
+	// 消息发送超时。
+	FAILEDOPERATION_SENDMESSAGETIMEOUTERROR = "FailedOperation.SendMessageTimeoutError"
+
 	// 发送消息失败。
 	FAILEDOPERATION_SENDMSGFAILED = "FailedOperation.SendMsgFailed"
+
+	// 设置消息保留策略失败。
+	FAILEDOPERATION_SETRETENTIONPOLICY = "FailedOperation.SetRetentionPolicy"
 
 	// 设置消息TTL失败。
 	FAILEDOPERATION_SETTTL = "FailedOperation.SetTTL"
 
 	// 必须先清除关联主题数据才能继续操作。
 	FAILEDOPERATION_TOPICINUSE = "FailedOperation.TopicInUse"
+
+	// 请使用partition topic。
+	FAILEDOPERATION_TOPICTYPEERROR = "FailedOperation.TopicTypeError"
 
 	// 环境更新失败。
 	FAILEDOPERATION_UPDATEENVIRONMENT = "FailedOperation.UpdateEnvironment"
@@ -128,11 +149,17 @@ const (
 	// 必须先清除关联VPC路由数据才能继续操作。
 	FAILEDOPERATION_VPCINUSE = "FailedOperation.VpcInUse"
 
+	// 内部错误。
+	INTERNALERROR = "InternalError"
+
 	// Broker服务异常。
 	INTERNALERROR_BROKERSERVICE = "InternalError.BrokerService"
 
 	// 获取属性失败。
 	INTERNALERROR_GETATTRIBUTESFAILED = "InternalError.GetAttributesFailed"
+
+	// 内部错误。
+	INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
 
 	// 重试可以成功。
 	INTERNALERROR_RETRY = "InternalError.Retry"
@@ -142,6 +169,9 @@ const (
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
+
+	// 错误的分区数。
+	INVALIDPARAMETER_PARTITION = "InvalidParameter.Partition"
 
 	// 上传的 tenant name 错误。
 	INVALIDPARAMETER_TENANTNOTFOUND = "InvalidParameter.TenantNotFound"
@@ -167,6 +197,9 @@ const (
 	// 上传的topic name错误。
 	INVALIDPARAMETERVALUE_TOPICNOTFOUND = "InvalidParameterValue.TopicNotFound"
 
+	// 超过配额限制。
+	LIMITEXCEEDED = "LimitExceeded"
+
 	// 实例下集群数量超过限制。
 	LIMITEXCEEDED_CLUSTERS = "LimitExceeded.Clusters"
 
@@ -175,6 +208,12 @@ const (
 
 	// 实例下命名空间数量超过限额。
 	LIMITEXCEEDED_NAMESPACES = "LimitExceeded.Namespaces"
+
+	// 超过剩余额度，请重新调整。
+	LIMITEXCEEDED_RETENTIONSIZE = "LimitExceeded.RetentionSize"
+
+	// 超过保留时间限制，请重新调整。
+	LIMITEXCEEDED_RETENTIONTIME = "LimitExceeded.RetentionTime"
 
 	// 实例下订阅者数量超过限制。
 	LIMITEXCEEDED_SUBSCRIPTIONS = "LimitExceeded.Subscriptions"
@@ -194,6 +233,9 @@ const (
 	// 默认环境不允许操作。
 	OPERATIONDENIED_DEFAULTENVIRONMENT = "OperationDenied.DefaultEnvironment"
 
+	// 资源被占用。
+	RESOURCEINUSE = "ResourceInUse"
+
 	// 集群已存在。
 	RESOURCEINUSE_CLUSTER = "ResourceInUse.Cluster"
 
@@ -203,6 +245,9 @@ const (
 	// 重名，命名空间已存在。
 	RESOURCEINUSE_NAMESPACE = "ResourceInUse.Namespace"
 
+	// 队列已存在。
+	RESOURCEINUSE_QUEUE = "ResourceInUse.Queue"
+
 	// 角色已存在。
 	RESOURCEINUSE_ROLE = "ResourceInUse.Role"
 
@@ -211,6 +256,12 @@ const (
 
 	// 重名，主题已存在。
 	RESOURCEINUSE_TOPIC = "ResourceInUse.Topic"
+
+	// 资源不足。
+	RESOURCEINSUFFICIENT = "ResourceInsufficient"
+
+	// 资源不存在。
+	RESOURCENOTFOUND = "ResourceNotFound"
 
 	// 服务的集群不存在。
 	RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
@@ -238,6 +289,12 @@ const (
 
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
+
+	// 发货异常。
+	RESOURCEUNAVAILABLE_CREATEFAILED = "ResourceUnavailable.CreateFailed"
+
+	// 需要充值才可继续操作。
+	RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 
 	// 系统升级。
 	RESOURCEUNAVAILABLE_SYSTEMUPGRADE = "ResourceUnavailable.SystemUpgrade"

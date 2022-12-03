@@ -52,7 +52,7 @@ The following arguments are supported:
 * `content` - (Optional, String) Literal string value to use as the object content, which will be uploaded as UTF-8-encoded text.
 * `etag` - (Optional, String) The ETag generated for the object (an MD5 sum of the object content).
 * `source` - (Optional, String) The path to the source file being uploaded to the bucket.
-* `storage_class` - (Optional, String) Object storage type, Available values include `STANDARD`, `STANDARD_IA` and `ARCHIVE`.
+* `storage_class` - (Optional, String) Object storage type, Available values include `STANDARD_IA`, `MAZ_STANDARD_IA`, `INTELLIGENT_TIERING`, `MAZ_INTELLIGENT_TIERING`, `ARCHIVE`, `DEEP_ARCHIVE`. For more information, please refer to: https://cloud.tencent.com/document/product/436/33417.
 * `tags` - (Optional, Map) Tag of the object.
 
 ## Attributes Reference

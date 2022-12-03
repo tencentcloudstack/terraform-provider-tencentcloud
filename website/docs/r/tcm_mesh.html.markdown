@@ -49,9 +49,26 @@ The following arguments are supported:
 * `mesh_id` - (Optional, String) Mesh ID.
 * `tag_list` - (Optional, List) A list of associated tags.
 
+The `apm` object supports the following:
+
+* `enable` - (Optional, Bool) Whether enable APM.
+* `instance_id` - (Optional, String) Instance id of the APM.
+* `region` - (Optional, String) Region.
+
 The `config` object supports the following:
 
 * `istio` - (Optional, List) Istio configuration.
+* `prometheus` - (Optional, List) Prometheus configuration.
+* `tracing` - (Optional, List) Tracing config.
+
+The `custom_prom` object supports the following:
+
+* `auth_type` - (Required, String) Authentication type of the prometheus.
+* `url` - (Required, String) Url of the prometheus.
+* `is_public_addr` - (Optional, Bool) Whether it is public address, default false.
+* `password` - (Optional, String) Password of the prometheus, used in basic authentication type.
+* `username` - (Optional, String) Username of the prometheus, used in basic authentication type.
+* `vpc_id` - (Optional, String) Vpc id.
 
 The `istio` object supports the following:
 
@@ -60,6 +77,14 @@ The `istio` object supports the following:
 * `disable_policy_checks` - (Optional, Bool) Disable policy checks.
 * `enable_pilot_http` - (Optional, Bool) Enable HTTP/1.0 support.
 * `smart_dns` - (Optional, List) SmartDNS configuration.
+
+The `prometheus` object supports the following:
+
+* `custom_prom` - (Optional, List) Custom prometheus.
+* `instance_id` - (Optional, String) Instance id.
+* `region` - (Optional, String) Region.
+* `subnet_id` - (Optional, String) Subnet id.
+* `vpc_id` - (Optional, String) Vpc id.
 
 The `smart_dns` object supports the following:
 
@@ -71,6 +96,17 @@ The `tag_list` object supports the following:
 * `key` - (Required, String) Tag key.
 * `value` - (Required, String) Tag value.
 * `passthrough` - (Optional, Bool) Passthrough to other related product.
+
+The `tracing` object supports the following:
+
+* `apm` - (Optional, List) APM config.
+* `enable` - (Optional, Bool) Whether enable tracing.
+* `sampling` - (Optional, Float64) Tracing sampling, 0.0-1.0.
+* `zipkin` - (Optional, List) Third party zipkin config.
+
+The `zipkin` object supports the following:
+
+* `address` - (Required, String) Zipkin address.
 
 ## Attributes Reference
 

@@ -1,5 +1,5 @@
 ---
-subcategory: "MongoDB"
+subcategory: "TencentDB for MongoDB(mongodb)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mongodb_sharding_instance"
 sidebar_current: "docs-tencentcloud-resource-mongodb_sharding_instance"

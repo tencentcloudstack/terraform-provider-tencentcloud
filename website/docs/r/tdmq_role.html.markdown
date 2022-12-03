@@ -1,5 +1,5 @@
 ---
-subcategory: "Tencent Distributed Message Queue(TDMQ)"
+subcategory: "TDMQ for Pulsar(tpulsar)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tdmq_role"
 sidebar_current: "docs-tencentcloud-resource-tdmq_role"

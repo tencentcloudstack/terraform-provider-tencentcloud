@@ -1,5 +1,5 @@
 ---
-subcategory: "MySQL"
+subcategory: "TencentDB for MySQL(cdb)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mysql_default_params"
 sidebar_current: "docs-tencentcloud-datasource-mysql_default_params"
