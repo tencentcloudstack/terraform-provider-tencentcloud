@@ -891,8 +891,8 @@ func dataSourceTencentCloudDtsMigrateJobsRead(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	ids :=make([]string, 0, len(jobItems))
-	jobList :=make([]map[string]interface{},0,len(jobItems))
+	ids := make([]string, 0, len(jobItems))
+	jobList := make([]map[string]interface{}, 0, len(jobItems))
 
 	if jobItems != nil {
 		for _, item := range jobItems {

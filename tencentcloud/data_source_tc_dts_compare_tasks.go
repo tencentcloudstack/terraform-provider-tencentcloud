@@ -450,10 +450,10 @@ func dataSourceTencentCloudDtsCompareTasksRead(d *schema.ResourceData, meta inte
 		return err
 	}
 
-	ids :=make([]string, 0, len(compareTaskItems))
-	itemList :=make([]map[string]interface{},0,len(compareTaskItems))
+	ids := make([]string, 0, len(compareTaskItems))
+	itemList := make([]map[string]interface{}, 0, len(compareTaskItems))
 
-	if compareTaskItems != nil {	
+	if compareTaskItems != nil {
 		for _, item := range compareTaskItems {
 			itemMap := map[string]interface{}{}
 			if item.JobId != nil {

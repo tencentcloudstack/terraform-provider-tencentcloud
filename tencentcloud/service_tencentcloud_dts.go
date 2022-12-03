@@ -386,7 +386,7 @@ func (me *DtsService) DescribeDtsMigrateJobsByFilter(ctx context.Context, param 
 		}
 
 		if k == "status" {
-			request.Status=v.([]*string)
+			request.Status = v.([]*string)
 		}
 
 		if k == "src_instance_id" {
@@ -398,11 +398,11 @@ func (me *DtsService) DescribeDtsMigrateJobsByFilter(ctx context.Context, param 
 		}
 
 		if k == "src_database_type" {
-			request.SrcDatabaseType=v.([]*string)
+			request.SrcDatabaseType = v.([]*string)
 		}
 
 		if k == "src_access_type" {
-			request.SrcAccessType=v.([]*string)
+			request.SrcAccessType = v.([]*string)
 		}
 
 		if k == "dst_instance_id" {
@@ -414,11 +414,11 @@ func (me *DtsService) DescribeDtsMigrateJobsByFilter(ctx context.Context, param 
 		}
 
 		if k == "dst_database_type" {
-			request.DstDatabaseType=v.([]*string)
+			request.DstDatabaseType = v.([]*string)
 		}
 
 		if k == "dst_access_type" {
-			request.DstAccessType=v.([]*string)
+			request.DstAccessType = v.([]*string)
 		}
 
 		if k == "run_mode" {
@@ -430,7 +430,7 @@ func (me *DtsService) DescribeDtsMigrateJobsByFilter(ctx context.Context, param 
 		}
 
 		if k == "tag_filters" {
-			request.TagFilters=v.([]*dts.TagFilter)
+			request.TagFilters = v.([]*dts.TagFilter)
 		}
 
 	}
