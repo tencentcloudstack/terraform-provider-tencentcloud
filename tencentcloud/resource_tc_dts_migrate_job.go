@@ -5,16 +5,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dts_migrate_job" "migrate_job" {
-  src_database_type = ""
-  dst_database_type = ""
-  src_region = ""
-  dst_region = ""
-  instance_class = ""
-  job_name = ""
+  src_database_type = "mysql"
+  dst_database_type = "cynosdbmysql"
+  src_region = "ap-guangzhou"
+  dst_region = "ap-guangzhou"
+  instance_class = "small"
+  job_name = "tf_test_migration_job"
   tags {
-			tag_key = ""
-			tag_value = ""
-
+	tag_key = "aaa"
+	tag_value = "bbb"
   }
 }
 
@@ -76,7 +75,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 			"instance_class": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "instance class, optional value is micro/small/medium/large/xlarge/2xlarge.",
+				Description: "instance class, optional value is small/medium/large/xlarge/2xlarge.",
 			},
 
 			"job_name": {
@@ -704,11 +703,12 @@ func resourceTencentCloudDtsMigrateJobCreate(d *schema.ResourceData, meta interf
 	defer logElapsed("resource.tencentcloud_dts_migrate_job.create")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
 	var (
+		logId    = getLogId(contextNil)
 		request  = dts.NewCreateMigrationServiceRequest()
 		response *dts.CreateMigrationServiceResponse
+		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
+		service  = DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 		jobId    string
 	)
 
@@ -772,25 +772,25 @@ func resourceTencentCloudDtsMigrateJobCreate(d *schema.ResourceData, meta interf
 	}
 
 	jobId = *response.Response.JobIds[0]
+	// wait created
+	if err = service.PollingMigrateJobStatusUntil(ctx, jobId, DTSJobStatus, "created"); err != nil {
+		return err
+	}
 
 	d.SetId(jobId)
 	return resourceTencentCloudDtsMigrateJobRead(d, meta)
 }
 
-// func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interface{}) error {
-// 	return nil
-// }
-
 func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dts_migrate_job.read")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	jobId := d.Id()
+	var (
+		logId   = getLogId(contextNil)
+		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
+		service = DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		jobId   = d.Id()
+	)
 
 	migrateJob, err := service.DescribeDtsMigrateJob(ctx, jobId)
 
@@ -1302,22 +1302,5 @@ func resourceTencentCloudDtsMigrateJobDelete(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	err := resource.Retry(0*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeDtsMigrateJob(ctx, migrateJobId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if *instance.Status == "deleted" {
-			return nil
-		}
-		if *instance.Status == "calll" {
-			return resource.NonRetryableError(fmt.Errorf("migrateJob status is %v, operate failed.", *instance.Status))
-		}
-		return resource.RetryableError(fmt.Errorf("migrateJob status is %v, retry...", *instance.Status))
-	})
-
-	if err != nil {
-		return err
-	}
 	return nil
 }

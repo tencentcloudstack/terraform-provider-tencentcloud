@@ -1,4 +1,3 @@
-
 package tencentcloud
 
 import (
@@ -17,7 +16,7 @@ func TestAccTencentCloudDtsCompareTasksDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceDtsCompareTasks,
 				Check: resource.ComposeTestCheckFunc(
-				  testAccCheckTencentCloudDataSourceID("data.tencentcloud_dts_compare_tasks.compare_tasks"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dts_compare_tasks.compare_tasks"),
 				),
 			},
 		},

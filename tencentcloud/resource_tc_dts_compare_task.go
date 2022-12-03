@@ -333,7 +333,7 @@ func resourceTencentCloudDtsCompareTaskRead(d *schema.ResourceData, meta interfa
 		if compareTask.Config != nil {
 			objects := compareTask.Config
 			// SDK do not support this field ObjectMode
-			// if objects.ObjectMode != nil {  
+			// if objects.ObjectMode != nil {
 			// 	_ = d.Set("object_mode", objects.ObjectMode)
 			// }
 

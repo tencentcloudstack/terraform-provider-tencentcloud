@@ -4,29 +4,43 @@ Use this data source to query detailed information of dts migrateJobs
 Example Usage
 
 ```hcl
-data "tencentcloud_dts_migrate_jobs" "migrateJobs" {
-  job_id = ""
-  job_name = ""
-  status = ""
-  src_instance_id = ""
-  src_region = ""
-  src_database_type = ""
-  src_access_type = ""
-  dst_instance_id = ""
-  dst_region = ""
-  dst_database_type = ""
-  dst_access_type = ""
-  run_mode = ""
-  order_seq = ""
-  tag_filters {
-			tag_key = ""
-			tag_value = ""
-
+resource "tencentcloud_dts_migrate_job" "migrate_job" {
+  src_database_type = "mysql"
+  dst_database_type = "cynosdbmysql"
+  src_region = "ap-guangzhou"
+  dst_region = "ap-guangzhou"
+  instance_class = "small"
+  job_name = "tf_test_migration_job"
+  tags {
+	tag_key = "aaa"
+	tag_value = "bbb"
   }
 }
+
+data "tencentcloud_dts_migrate_jobs" "all" {}
+
+data "tencentcloud_dts_migrate_jobs" "job" {
+  job_id = tencentcloud_dts_migrate_job.migrate_job.id
+  job_name = tencentcloud_dts_migrate_job.migrate_job.job_name
+  status = ["created"]
+}
+
+data "tencentcloud_dts_migrate_jobs" "src_dest" {
+
+  src_region = "ap-guangzhou"
+  src_database_type = ["mysql"]
+  dst_region = "ap-guangzhou"
+  dst_database_type = ["cynosdbmysql"]
+
+  status = ["created"]
+  tag_filters {
+	tag_key = "aaa"
+	tag_value = "bbb"
+  }
+}
+
 ```
 */
-
 package tencentcloud
 
 import (
@@ -133,7 +147,7 @@ func dataSourceTencentCloudDtsMigrateJobs() *schema.Resource {
 			"order_seq": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "order by, default by create time .",
+				Description: "order by, default by create time.",
 			},
 
 			"tag_filters": {
@@ -860,11 +874,11 @@ func dataSourceTencentCloudDtsMigrateJobsRead(d *schema.ResourceData, meta inter
 	}
 
 	if v, ok := d.GetOk("tag_filters"); ok {
-		filterSet := v.(*schema.Set).List()
+		filterSet := v.([]interface{})
 		tmpList := make([]*dts.TagFilter, 0, len(filterSet))
 
-		for f := range filterSet {
-			fMap := filterSet[f].(map[string]interface{})
+		for _, f := range filterSet {
+			fMap := f.(map[string]interface{})
 
 			filter := dts.TagFilter{
 				TagKey:   helper.String(fMap["tag_key"].(string)),

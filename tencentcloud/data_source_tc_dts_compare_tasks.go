@@ -9,7 +9,6 @@ data "tencentcloud_dts_compare_tasks" "compareTasks" {
   }
 ```
 */
-
 package tencentcloud
 
 import (
