@@ -59,7 +59,6 @@ func dataSourceTencentCloudDtsCompareTasks() *schema.Resource {
 						},
 						"config": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "config.",
 							Elem: &schema.Resource{
@@ -136,7 +135,6 @@ func dataSourceTencentCloudDtsCompareTasks() *schema.Resource {
 						},
 						"check_process": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "compare check info.",
 							Elem: &schema.Resource{
@@ -263,7 +261,6 @@ func dataSourceTencentCloudDtsCompareTasks() *schema.Resource {
 						},
 						"compare_process": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "compare processing info.",
 							Elem: &schema.Resource{

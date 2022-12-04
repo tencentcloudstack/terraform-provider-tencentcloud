@@ -30,9 +30,6 @@ func testSweepDtsSyncJob(r string) error {
 	if err != nil {
 		return err
 	}
-	if ret == nil {
-		return fmt.Errorf("DTS sync job not exists.")
-	}
 
 	for _, v := range ret {
 		delId := *v.JobId

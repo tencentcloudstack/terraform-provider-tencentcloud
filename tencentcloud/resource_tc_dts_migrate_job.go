@@ -118,14 +118,12 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 
 			"migrate_option": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "migrate option.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"database_table": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "database table.",
 							Elem: &schema.Resource{
@@ -321,7 +319,6 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 						},
 						"consistency": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "consistency option.",
 							Elem: &schema.Resource{
@@ -374,7 +371,6 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 
 			"src_info": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "source info.",
 				Elem: &schema.Resource{
@@ -468,7 +464,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 									"engine_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "enginer version.",
+										Description: "engine version.",
 									},
 									"account": {
 										Type:        schema.TypeString,
@@ -533,7 +529,6 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 
 			"dst_info": {
 				Type:        schema.TypeList,
-				MaxItems:    1,
 				Computed:    true,
 				Description: "destination info.",
 				Elem: &schema.Resource{
@@ -627,7 +622,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 									"engine_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "enginer version.",
+										Description: "engine version.",
 									},
 									"account": {
 										Type:        schema.TypeString,

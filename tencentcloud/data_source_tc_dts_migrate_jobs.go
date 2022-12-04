@@ -228,7 +228,6 @@ func dataSourceTencentCloudDtsMigrateJobs() *schema.Resource {
 						},
 						"action": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "action info.",
 							Elem: &schema.Resource{
@@ -254,7 +253,6 @@ func dataSourceTencentCloudDtsMigrateJobs() *schema.Resource {
 						},
 						"step_info": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "step info.",
 							Elem: &schema.Resource{
@@ -376,7 +374,6 @@ func dataSourceTencentCloudDtsMigrateJobs() *schema.Resource {
 						},
 						"src_info": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "source info.",
 							Elem: &schema.Resource{
@@ -534,7 +531,6 @@ func dataSourceTencentCloudDtsMigrateJobs() *schema.Resource {
 						},
 						"dst_info": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "destination info.",
 							Elem: &schema.Resource{
@@ -668,7 +664,6 @@ func dataSourceTencentCloudDtsMigrateJobs() *schema.Resource {
 						},
 						"compare_task": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "compare task info.",
 							Elem: &schema.Resource{
@@ -688,7 +683,6 @@ func dataSourceTencentCloudDtsMigrateJobs() *schema.Resource {
 						},
 						"trade_info": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Computed:    true,
 							Description: "trade info.",
 							Elem: &schema.Resource{

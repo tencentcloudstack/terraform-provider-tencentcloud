@@ -133,7 +133,7 @@ func (me *DtsService) IsolateDtsSyncJobById(ctx context.Context, jobId string) (
 	logId := getLogId(ctx)
 
 	request := dts.NewIsolateSyncJobRequest()
-	request.JobId = &jobId
+	request.JobId = helper.String(jobId)
 
 	defer func() {
 		if errRet != nil {
@@ -181,7 +181,7 @@ func (me *DtsService) DeleteDtsSyncJobById(ctx context.Context, jobId string) (e
 
 	ratelimit.Check(request.GetAction())
 	err = resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
-		request.JobId = &jobId
+		request.JobId = helper.String(jobId)
 		_, err := me.client.UseDtsClient().DestroySyncJob(request)
 		if err != nil {
 			time.Sleep(10 * time.Second)
@@ -312,13 +312,38 @@ func (me *DtsService) DescribeDtsCompareTask(ctx context.Context, jobId, compare
 	return
 }
 
-func (me *DtsService) DeleteDtsCompareTaskById(ctx context.Context, jobId, compareTaskId string) (errRet error) {
+func (me *DtsService) StopDtsCompareById(ctx context.Context, jobId, compareTaskId string) (errRet error) {
 	logId := getLogId(ctx)
 
-	request := dts.NewDeleteCompareTaskRequest()
+	request := dts.NewStopCompareRequest()
+	request.JobId = helper.String(jobId)
+	request.CompareTaskId = helper.String(compareTaskId)
 
-	request.JobId = &jobId
-	request.CompareTaskId = &compareTaskId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "isolate object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDtsClient().StopCompare(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DtsService) DeleteDtsCompareTaskById(ctx context.Context, jobId, compareTaskId string) (errRet error) {
+	var (
+		logId    = getLogId(ctx)
+		request  = dts.NewDeleteCompareTaskRequest()
+		response = dts.NewDeleteCompareTaskResponse()
+	)
 
 	defer func() {
 		if errRet != nil {
@@ -327,12 +352,29 @@ func (me *DtsService) DeleteDtsCompareTaskById(ctx context.Context, jobId, compa
 		}
 	}()
 
+	// ***canceled task cannot be deleted!!!***
+	// err := me.StopDtsCompareById(ctx, jobId, compareTaskId)
+	// if err != nil {
+	// 	errRet = err
+	// 	return
+	// }
+
+	// wait success or failed
+	err := me.PollingCompareTaskStatusUntil(ctx, jobId, compareTaskId, "success,failed")
+	if err != nil {
+		return err
+	}
+
+	request.JobId = helper.String(jobId)
+	request.CompareTaskId = helper.String(compareTaskId)
+
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseDtsClient().DeleteCompareTask(request)
+	response, err = me.client.UseDtsClient().DeleteCompareTask(request)
 	if err != nil {
 		errRet = err
 		return err
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
@@ -499,7 +541,7 @@ func (me *DtsService) IsolateDtsMigrateJobById(ctx context.Context, jobId string
 	logId := getLogId(ctx)
 
 	request := dts.NewIsolateMigrateJobRequest()
-	request.JobId = &jobId
+	request.JobId = helper.String(jobId)
 
 	defer func() {
 		if errRet != nil {
@@ -547,7 +589,7 @@ func (me *DtsService) DeleteDtsMigrateJobById(ctx context.Context, jobId string)
 
 	ratelimit.Check(request.GetAction())
 	err = resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
-		request.JobId = &jobId
+		request.JobId = helper.String(jobId)
 		_, err := me.client.UseDtsClient().DestroyMigrateJob(request)
 		if err != nil {
 			time.Sleep(10 * time.Second)

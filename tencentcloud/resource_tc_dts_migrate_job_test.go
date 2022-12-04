@@ -29,9 +29,6 @@ func testSweepDtsMigrateJob(r string) error {
 	if err != nil {
 		return err
 	}
-	if ret == nil {
-		return fmt.Errorf("DTS migrate job not exists.")
-	}
 
 	for _, v := range ret {
 		delId := *v.JobId

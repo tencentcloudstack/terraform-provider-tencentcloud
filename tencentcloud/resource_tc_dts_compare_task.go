@@ -28,12 +28,6 @@ resource "tencentcloud_dts_compare_task" "compare_task" {
   }
 
 ```
-Import
-
-dts compare_task can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_dts_compare_task.compare_task compareTask_id
-```
 */
 package tencentcloud
 
@@ -86,44 +80,51 @@ func resourceTencentCloudDtsCompareTask() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"object_mode": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "object mode.",
 						},
 						"object_items": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "object items.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"db_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "database name.",
 									},
 									"db_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "database mode.",
 									},
 									"schema_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "schema name.",
 									},
 									"table_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "table mode.",
 									},
 									"tables": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "table list.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"table_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "table name.",
 												},
 											},
@@ -132,17 +133,20 @@ func resourceTencentCloudDtsCompareTask() *schema.Resource {
 									"view_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "view mode.",
 									},
 									"views": {
 										Type:        schema.TypeList,
 										Optional:    true,
+										Computed:    true,
 										Description: "view list.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"view_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "view name.",
 												},
 											},
@@ -265,8 +269,13 @@ func resourceTencentCloudDtsCompareTaskCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	compareTaskId = *response.Response.CompareTaskId
+	// wait created
+	if err = service.PollingCompareTaskStatusUntil(ctx, jobId, compareTaskId, "created"); err != nil {
+		return err
+	}
+
 	// start compareTask
+	compareTaskId = *response.Response.CompareTaskId
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		startRequest.CompareTaskId = helper.String(compareTaskId)
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDtsClient().StartCompare(startRequest)
@@ -283,6 +292,7 @@ func resourceTencentCloudDtsCompareTaskCreate(d *schema.ResourceData, meta inter
 		log.Printf("[CRITAL]%s start dts compareTask failed, reason:%+v", logId, err)
 		return err
 	}
+
 	// wait running
 	if err = service.PollingCompareTaskStatusUntil(ctx, jobId, compareTaskId, "running"); err != nil {
 		return err
