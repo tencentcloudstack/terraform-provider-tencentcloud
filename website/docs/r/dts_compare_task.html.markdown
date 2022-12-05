@@ -59,8 +59,8 @@ The `object_items` object supports the following:
 
 The `objects` object supports the following:
 
+* `object_mode` - (Required, String) object mode.
 * `object_items` - (Optional, List) object items.
-* `object_mode` - (Optional, String) object mode.
 
 The `tables` object supports the following:
 
@@ -77,11 +77,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `compare_task_id` - compare task id.
 
-
-## Import
-
-dts compare_task can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_dts_compare_task.compare_task compareTask_id
-```
 
