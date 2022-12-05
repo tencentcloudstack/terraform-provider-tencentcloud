@@ -467,7 +467,7 @@ func dataSourceTencentCloudDtsMigrateJobs() *schema.Resource {
 												"engine_version": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "enginer version.",
+													Description: "engine version.",
 												},
 												"account": {
 													Type:        schema.TypeString,
@@ -624,7 +624,7 @@ func dataSourceTencentCloudDtsMigrateJobs() *schema.Resource {
 												"engine_version": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "enginer version.",
+													Description: "engine version.",
 												},
 												"account": {
 													Type:        schema.TypeString,

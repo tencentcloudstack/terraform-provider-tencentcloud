@@ -74,6 +74,7 @@ func TestAccTencentCloudDtsCompareTaskResource_basic(t *testing.T) {
 			{
 				Config: testAccDtsCompareTask,
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDtsCompareTaskExists("tencentcloud_dts_compare_task.compare_task"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_compare_task.compare_task", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_dts_compare_task.compare_task", "task_name", "tf_test_compare_task"),
 				),

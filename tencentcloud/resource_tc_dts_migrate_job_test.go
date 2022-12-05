@@ -62,6 +62,7 @@ func TestAccTencentCloudDtsMigrateJobResource_basic(t *testing.T) {
 			{
 				Config: testAccDtsMigrateJob,
 				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDtsMigrateJobExists("tencentcloud_dts_migrate_job.migrate_job"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.migrate_job", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.migrate_job", "src_database_type", "mysql"),
 					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.migrate_job", "src_region", "ap-guangzhou"),
