@@ -98,7 +98,7 @@ In addition to all arguments above, the following attributes are exported:
       * `ccn_gw_id` - ccn gateway id.
       * `cvm_instance_id` - cvm instance id.
       * `db_kernel` - database kernel.
-      * `engine_version` - enginer version.
+      * `engine_version` - engine version.
       * `host` - host.
       * `instance_id` - instance id.
       * `password` - password.
@@ -130,7 +130,7 @@ In addition to all arguments above, the following attributes are exported:
       * `ccn_gw_id` - ccn gateway id.
       * `cvm_instance_id` - cvm instance id.
       * `db_kernel` - database kernel.
-      * `engine_version` - enginer version.
+      * `engine_version` - engine version.
       * `host` - host.
       * `instance_id` - instance id.
       * `password` - password.
