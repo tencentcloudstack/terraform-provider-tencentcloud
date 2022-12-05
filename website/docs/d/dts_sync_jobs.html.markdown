@@ -97,7 +97,7 @@ In addition to all arguments above, the following attributes are exported:
     * `cvm_instance_id` - cvm instance id.
     * `db_kernel` - database kernel.
     * `db_name` - database name.
-    * `engine_version` - engineer version.
+    * `engine_version` - engine version.
     * `instance_id` - instance id.
     * `ip` - ip.
     * `password` - password.
@@ -166,7 +166,7 @@ In addition to all arguments above, the following attributes are exported:
     * `cvm_instance_id` - cvm instance id.
     * `db_kernel` - database kernel.
     * `db_name` - database name.
-    * `engine_version` - engineer version.
+    * `engine_version` - engine version.
     * `instance_id` - instance id.
     * `ip` - ip.
     * `password` - password.

@@ -816,8 +816,13 @@ TencentDB for DBbrain(dbbrain)
 Data Transmission Service(DTS)
   Data Source
 	tencentcloud_dts_sync_jobs
+	tencentcloud_dts_migrate_jobs
+	tencentcloud_dts_compare_tasks
+
   Resource
 	tencentcloud_dts_sync_job
+	tencentcloud_dts_migrate_job
+	tencentcloud_dts_compare_task
 
 TDMQ for RocketMQ(trocket)
   Data Source
@@ -1158,6 +1163,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
+			"tencentcloud_dts_compare_tasks":                        dataSourceTencentCloudDtsCompareTasks(),
+			"tencentcloud_dts_migrate_jobs":                         dataSourceTencentCloudDtsMigrateJobs(),
 			"tencentcloud_tdmq_rocketmq_cluster":                    dataSourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                  dataSourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_topic":                      dataSourceTencentCloudTdmqRocketmqTopic(),
@@ -1479,7 +1486,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
-			// "tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
+			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
+			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
 		ConfigureFunc: providerConfigure,
