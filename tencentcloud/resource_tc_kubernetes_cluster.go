@@ -2876,27 +2876,17 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		logSetId := ""
 		topicId := ""
 		deleteEventLog := false
-		deleteEventLogFlag := true
 		if ok {
 			enabled = v["enabled"].(bool)
 			logSetId = v["log_set_id"].(string)
 			topicId = v["topic_id"].(string)
 			deleteEventLog = v["delete_event_log_and_topic"].(bool)
 		}
-		if !enabled {
-			oldConf, _ := d.GetChange("event_persistence")
-			oldEventConf, ok := helper.ConvertInterfacesHeadToMap(oldConf)
-			if ok && !oldEventConf["enabled"].(bool) {
-				deleteEventLogFlag = false
-			}
-		}
-		if deleteEventLogFlag {
-			err := tkeService.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, deleteEventLog)
-			if err != nil {
-				return err
-			}
-		}
 
+		err := tkeService.SwitchEventPersistence(ctx, id, logSetId, topicId, enabled, deleteEventLog)
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("cluster_audit") {
