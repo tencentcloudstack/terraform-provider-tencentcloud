@@ -92,6 +92,7 @@ func dataSourceTencentCloudTeoBotManagedRulesRead(d *schema.ResourceData, meta i
 	}
 
 	if v, ok := d.GetOk("entity"); ok {
+		entity = v.(string)
 		paramMap["entity"] = v
 	}
 
