@@ -908,7 +908,7 @@ type ClusterAsGroupOption struct {
 }
 
 type ClusterBasicSettings struct {
-	// 集群操作系统，支持设置公共镜像(字段传相应镜像ID)和自定义镜像(字段传相应镜像Name)，详情参考：https://cloud.tencent.com/document/product/457/68289
+	// 集群操作系统，支持设置公共镜像(字段传相应镜像Name)和自定义镜像(字段传相应镜像ID)，详情参考：https://cloud.tencent.com/document/product/457/68289
 	ClusterOs *string `json:"ClusterOs,omitempty" name:"ClusterOs"`
 
 	// 集群版本,默认值为1.10.5
@@ -1596,10 +1596,10 @@ type CreateClusterNodePoolRequestParams struct {
 	// cluster id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
-	// AutoScalingGroupPara AS组参数
+	// AutoScalingGroupPara AS组参数，参考 https://cloud.tencent.com/document/product/377/20440
 	AutoScalingGroupPara *string `json:"AutoScalingGroupPara,omitempty" name:"AutoScalingGroupPara"`
 
-	// LaunchConfigurePara 运行参数
+	// LaunchConfigurePara 运行参数，参考 https://cloud.tencent.com/document/product/377/20447
 	LaunchConfigurePara *string `json:"LaunchConfigurePara,omitempty" name:"LaunchConfigurePara"`
 
 	// InstanceAdvancedSettings 示例参数
@@ -1642,10 +1642,10 @@ type CreateClusterNodePoolRequest struct {
 	// cluster id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
 
-	// AutoScalingGroupPara AS组参数
+	// AutoScalingGroupPara AS组参数，参考 https://cloud.tencent.com/document/product/377/20440
 	AutoScalingGroupPara *string `json:"AutoScalingGroupPara,omitempty" name:"AutoScalingGroupPara"`
 
-	// LaunchConfigurePara 运行参数
+	// LaunchConfigurePara 运行参数，参考 https://cloud.tencent.com/document/product/377/20447
 	LaunchConfigurePara *string `json:"LaunchConfigurePara,omitempty" name:"LaunchConfigurePara"`
 
 	// InstanceAdvancedSettings 示例参数
@@ -10174,6 +10174,9 @@ func (r *DescribeVpcCniPodLimitsResponse) FromJsonString(s string) error {
 type DisableClusterAuditRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 取值为true代表关闭集群审计时删除默认创建的日志集和主题，false代表不删除
+	DeleteLogSetAndTopic *bool `json:"DeleteLogSetAndTopic,omitempty" name:"DeleteLogSetAndTopic"`
 }
 
 type DisableClusterAuditRequest struct {
@@ -10181,6 +10184,9 @@ type DisableClusterAuditRequest struct {
 	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 取值为true代表关闭集群审计时删除默认创建的日志集和主题，false代表不删除
+	DeleteLogSetAndTopic *bool `json:"DeleteLogSetAndTopic,omitempty" name:"DeleteLogSetAndTopic"`
 }
 
 func (r *DisableClusterAuditRequest) ToJsonString() string {
@@ -10196,6 +10202,7 @@ func (r *DisableClusterAuditRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "ClusterId")
+	delete(f, "DeleteLogSetAndTopic")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisableClusterAuditRequest has unknown keys!", "")
 	}
@@ -10282,6 +10289,9 @@ func (r *DisableClusterDeletionProtectionResponse) FromJsonString(s string) erro
 type DisableEventPersistenceRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 取值为true代表关闭集群审计时删除默认创建的日志集和主题，false代表不删除
+	DeleteLogSetAndTopic *bool `json:"DeleteLogSetAndTopic,omitempty" name:"DeleteLogSetAndTopic"`
 }
 
 type DisableEventPersistenceRequest struct {
@@ -10289,6 +10299,9 @@ type DisableEventPersistenceRequest struct {
 	
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 取值为true代表关闭集群审计时删除默认创建的日志集和主题，false代表不删除
+	DeleteLogSetAndTopic *bool `json:"DeleteLogSetAndTopic,omitempty" name:"DeleteLogSetAndTopic"`
 }
 
 func (r *DisableEventPersistenceRequest) ToJsonString() string {
@@ -10304,6 +10317,7 @@ func (r *DisableEventPersistenceRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "ClusterId")
+	delete(f, "DeleteLogSetAndTopic")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisableEventPersistenceRequest has unknown keys!", "")
 	}
@@ -11020,7 +11034,7 @@ type EnhancedService struct {
 	// 开启云监控服务。若不指定该参数，则默认开启云监控服务。
 	MonitorService *RunMonitorServiceEnabled `json:"MonitorService,omitempty" name:"MonitorService"`
 
-	// 开启云自动化助手服务。若不指定该参数，则默认不开启云自动化助手服务。
+	// 开启云自动化助手服务（TencentCloud Automation Tools，TAT）。若不指定该参数，则公共镜像默认开启云自动化助手服务，其他镜像默认不开启云自动化助手服务。
 	AutomationService *RunAutomationServiceEnabled `json:"AutomationService,omitempty" name:"AutomationService"`
 }
 
@@ -12537,6 +12551,15 @@ type ModifyClusterNodePoolRequestParams struct {
 	// 镜像版本，"DOCKER_CUSTOMIZE"(容器定制版),"GENERAL"(普通版本，默认值)
 	OsCustomizeType *string `json:"OsCustomizeType,omitempty" name:"OsCustomizeType"`
 
+	// GPU驱动版本，CUDA版本，cuDNN版本以及是否启用MIG特性
+	GPUArgs *GPUArgs `json:"GPUArgs,omitempty" name:"GPUArgs"`
+
+	// base64编码后的自定义脚本
+	UserScript *string `json:"UserScript,omitempty" name:"UserScript"`
+
+	// 更新label和taint时忽略存量节点
+	IgnoreExistedNode *bool `json:"IgnoreExistedNode,omitempty" name:"IgnoreExistedNode"`
+
 	// 节点自定义参数
 	ExtraArgs *InstanceExtraArgs `json:"ExtraArgs,omitempty" name:"ExtraArgs"`
 
@@ -12548,6 +12571,9 @@ type ModifyClusterNodePoolRequestParams struct {
 
 	// 删除保护开关
 	DeletionProtection *bool `json:"DeletionProtection,omitempty" name:"DeletionProtection"`
+
+	// dockerd --graph 指定值, 默认为 /var/lib/docker
+	DockerGraphPath *string `json:"DockerGraphPath,omitempty" name:"DockerGraphPath"`
 }
 
 type ModifyClusterNodePoolRequest struct {
@@ -12583,6 +12609,15 @@ type ModifyClusterNodePoolRequest struct {
 	// 镜像版本，"DOCKER_CUSTOMIZE"(容器定制版),"GENERAL"(普通版本，默认值)
 	OsCustomizeType *string `json:"OsCustomizeType,omitempty" name:"OsCustomizeType"`
 
+	// GPU驱动版本，CUDA版本，cuDNN版本以及是否启用MIG特性
+	GPUArgs *GPUArgs `json:"GPUArgs,omitempty" name:"GPUArgs"`
+
+	// base64编码后的自定义脚本
+	UserScript *string `json:"UserScript,omitempty" name:"UserScript"`
+
+	// 更新label和taint时忽略存量节点
+	IgnoreExistedNode *bool `json:"IgnoreExistedNode,omitempty" name:"IgnoreExistedNode"`
+
 	// 节点自定义参数
 	ExtraArgs *InstanceExtraArgs `json:"ExtraArgs,omitempty" name:"ExtraArgs"`
 
@@ -12594,6 +12629,9 @@ type ModifyClusterNodePoolRequest struct {
 
 	// 删除保护开关
 	DeletionProtection *bool `json:"DeletionProtection,omitempty" name:"DeletionProtection"`
+
+	// dockerd --graph 指定值, 默认为 /var/lib/docker
+	DockerGraphPath *string `json:"DockerGraphPath,omitempty" name:"DockerGraphPath"`
 }
 
 func (r *ModifyClusterNodePoolRequest) ToJsonString() string {
@@ -12618,10 +12656,14 @@ func (r *ModifyClusterNodePoolRequest) FromJsonString(s string) error {
 	delete(f, "EnableAutoscale")
 	delete(f, "OsName")
 	delete(f, "OsCustomizeType")
+	delete(f, "GPUArgs")
+	delete(f, "UserScript")
+	delete(f, "IgnoreExistedNode")
 	delete(f, "ExtraArgs")
 	delete(f, "Tags")
 	delete(f, "Unschedulable")
 	delete(f, "DeletionProtection")
+	delete(f, "DockerGraphPath")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyClusterNodePoolRequest has unknown keys!", "")
 	}
@@ -14779,6 +14821,12 @@ type SubnetInfos struct {
 
 	// 安全组id
 	SecurityGroups []*string `json:"SecurityGroups,omitempty" name:"SecurityGroups"`
+
+	// 系统
+	Os *string `json:"Os,omitempty" name:"Os"`
+
+	// 硬件架构
+	Arch *string `json:"Arch,omitempty" name:"Arch"`
 }
 
 // Predefined struct for user

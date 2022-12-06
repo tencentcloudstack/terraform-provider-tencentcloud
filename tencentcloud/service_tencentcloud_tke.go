@@ -1593,7 +1593,8 @@ func (me *TkeService) SwitchLogAgent(ctx context.Context, clusterId, rootDir str
 	return me.UninstallLogAgent(ctx, request)
 }
 
-func (me *TkeService) SwitchEventPersistence(ctx context.Context, clusterId, logSetId, topicId string, enable bool) error {
+func (me *TkeService) SwitchEventPersistence(ctx context.Context, clusterId, logSetId, topicId string,
+	enable, deleteEventLog bool) error {
 	if enable {
 		request := tke.NewEnableEventPersistenceRequest()
 		request.ClusterId = &clusterId
@@ -1605,12 +1606,15 @@ func (me *TkeService) SwitchEventPersistence(ctx context.Context, clusterId, log
 		}
 		return me.EnableEventPersistence(ctx, request)
 	}
+
 	request := tke.NewDisableEventPersistenceRequest()
 	request.ClusterId = &clusterId
+	request.DeleteLogSetAndTopic = &deleteEventLog
 	return me.DisableEventPersistence(ctx, request)
 }
 
-func (me *TkeService) SwitchClusterAudit(ctx context.Context, clusterId, logSetId, topicId string, enable bool) error {
+func (me *TkeService) SwitchClusterAudit(ctx context.Context, clusterId, logSetId, topicId string,
+	enable, deleteAuditLog bool) error {
 	if enable {
 		request := tke.NewEnableClusterAuditRequest()
 		request.ClusterId = &clusterId
@@ -1624,6 +1628,7 @@ func (me *TkeService) SwitchClusterAudit(ctx context.Context, clusterId, logSetI
 	}
 	request := tke.NewDisableClusterAuditRequest()
 	request.ClusterId = &clusterId
+	request.DeleteLogSetAndTopic = &deleteAuditLog
 	return me.DisableClusterAudit(ctx, request)
 }
 
