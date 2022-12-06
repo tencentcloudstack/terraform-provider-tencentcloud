@@ -2952,8 +2952,7 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 				if e.GetCode() != "FailedOperation.ClusterNotFound" {
 					return retryError(err, InternalError)
 				}
-			}
-			if err != nil {
+			} else if err != nil {
 				return retryError(err, InternalError)
 			}
 		}
@@ -2963,8 +2962,7 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 				if e.GetCode() != "ResourceNotFound.ClusterNotFound" {
 					return retryError(err, InternalError)
 				}
-			}
-			if err != nil {
+			} else if err != nil {
 				return retryError(err, InternalError)
 			}
 		}
