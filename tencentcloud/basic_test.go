@@ -854,3 +854,10 @@ const (
 )
 
 // End of RUM
+
+// DTS
+const (
+	defaultDTSJobId = "dts-iesbn9qg"
+)
+
+// End of DTS

@@ -1,5 +1,5 @@
 ---
-subcategory: "DBbrain"
+subcategory: "TencentDB for DBbrain(dbbrain)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_dbbrain_sql_filters"
 sidebar_current: "docs-tencentcloud-datasource-dbbrain_sql_filters"

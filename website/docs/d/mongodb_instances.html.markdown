@@ -1,5 +1,5 @@
 ---
-subcategory: "MongoDB"
+subcategory: "TencentDB for MongoDB(mongodb)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_mongodb_instances"
 sidebar_current: "docs-tencentcloud-datasource-mongodb_instances"

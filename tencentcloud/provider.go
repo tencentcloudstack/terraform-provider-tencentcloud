@@ -136,7 +136,7 @@ Content Delivery Network(CDN)
 	tencentcloud_cdn_url_push
 	tencentcloud_cdn_url_purge
 
-Ckafka
+Cloud Kafka(ckafka)
   Data Source
     tencentcloud_ckafka_users
     tencentcloud_ckafka_acls
@@ -174,6 +174,7 @@ Cloud Access Management(CAM)
     tencentcloud_cam_saml_provider
 	tencentcloud_cam_oidc_sso
 	tencentcloud_cam_role_sso
+	tencentcloud_cam_service_linked_role
 
 Cloud Block Storage(CBS)
   Data Source
@@ -375,7 +376,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_addon_attachment
 	tencentcloud_kubernetes_cluster_endpoint
 
-Tencent Distributed Message Queue(TDMQ)
+TDMQ for Pulsar(tpulsar)
   Resource
     tencentcloud_tdmq_instance
 	tencentcloud_tdmq_namespace
@@ -383,7 +384,7 @@ Tencent Distributed Message Queue(TDMQ)
 	tencentcloud_tdmq_role
 	tencentcloud_tdmq_namespace_role_attachment
 
-MongoDB
+TencentDB for MongoDB(mongodb)
   Data Source
     tencentcloud_mongodb_instances
     tencentcloud_mongodb_zone_config
@@ -393,7 +394,7 @@ MongoDB
     tencentcloud_mongodb_sharding_instance
     tencentcloud_mongodb_standby_instance
 
-MySQL
+TencentDB for MySQL(cdb)
   Data Source
     tencentcloud_mysql_backup_list
     tencentcloud_mysql_instance
@@ -458,7 +459,7 @@ PostgreSQL
 	tencentcloud_postgresql_readonly_group
 	tencentcloud_postgresql_readonly_attachment
 
-TencentDB for Redis
+TencentDB for Redis(crs)
   Data Source
     tencentcloud_redis_zone_config
     tencentcloud_redis_instances
@@ -804,7 +805,7 @@ TDSQL-C for PostgreSQL(TDCPG)
 	tencentcloud_tdcpg_cluster
 	tencentcloud_tdcpg_instance
 
-DBbrain
+TencentDB for DBbrain(dbbrain)
   Data Source
 	tencentcloud_dbbrain_sql_filters
 	tencentcloud_dbbrain_security_audit_log_export_tasks
@@ -815,10 +816,15 @@ DBbrain
 Data Transmission Service(DTS)
   Data Source
 	tencentcloud_dts_sync_jobs
+	tencentcloud_dts_migrate_jobs
+	tencentcloud_dts_compare_tasks
+
   Resource
 	tencentcloud_dts_sync_job
+	tencentcloud_dts_migrate_job
+	tencentcloud_dts_compare_task
 
-RocketMQ
+TDMQ for RocketMQ(trocket)
   Data Source
 	tencentcloud_tdmq_rocketmq_cluster
 	tencentcloud_tdmq_rocketmq_namespace
@@ -1157,6 +1163,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
+			"tencentcloud_dts_compare_tasks":                        dataSourceTencentCloudDtsCompareTasks(),
+			"tencentcloud_dts_migrate_jobs":                         dataSourceTencentCloudDtsMigrateJobs(),
 			"tencentcloud_tdmq_rocketmq_cluster":                    dataSourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                  dataSourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_topic":                      dataSourceTencentCloudTdmqRocketmqTopic(),
@@ -1299,6 +1307,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cam_role_sso":                             resourceTencentCloudCamRoleSSO(),
 			"tencentcloud_cam_group_membership":                     resourceTencentCloudCamGroupMembership(),
 			"tencentcloud_cam_saml_provider":                        resourceTencentCloudCamSAMLProvider(),
+			"tencentcloud_cam_service_linked_role":                  resourceTencentCloudCamServiceLinkedRole(),
 			"tencentcloud_scf_function":                             resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_namespace":                            resourceTencentCloudScfNamespace(),
 			"tencentcloud_scf_layer":                                resourceTencentCloudScfLayer(),
@@ -1477,7 +1486,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
-			// "tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
+			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
+			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
 		ConfigureFunc: providerConfigure,

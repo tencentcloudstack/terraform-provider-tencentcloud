@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_cam_service_linked_role
+```

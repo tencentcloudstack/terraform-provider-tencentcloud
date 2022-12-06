@@ -19,12 +19,6 @@ resource "tencentcloud_dts_sync_job" "sync_job" {
 }
 
 ```
-Import
-
-dts sync_job can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_dts_sync_job.sync_job syncJob_id
-```
 */
 package tencentcloud
 

@@ -187,7 +187,7 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 		}
 	}
 
-	if v, ok := d.GetOk("node_id"); ok {
+	if v, _ := d.GetOk("node_id"); v != nil {
 		request.NodeId = helper.IntInt64(v.(int))
 	}
 
@@ -195,7 +195,7 @@ func resourceTencentCloudOrganizationOrgMemberCreate(d *schema.ResourceData, met
 		request.Remark = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("record_id"); ok {
+	if v, _ := d.GetOk("record_id"); v != nil {
 		request.RecordId = helper.IntInt64(v.(int))
 	}
 
@@ -356,7 +356,7 @@ func resourceTencentCloudOrganizationOrgMemberUpdate(d *schema.ResourceData, met
 	}
 
 	if d.HasChange("node_id") {
-		if v, ok := d.GetOk("node_id"); ok {
+		if v, _ := d.GetOk("node_id"); v != nil {
 			request.NodeId = helper.IntInt64(v.(int))
 		}
 	}

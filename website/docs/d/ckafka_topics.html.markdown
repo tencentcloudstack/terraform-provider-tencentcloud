@@ -1,5 +1,5 @@
 ---
-subcategory: "Ckafka"
+subcategory: "Cloud Kafka(ckafka)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ckafka_topics"
 sidebar_current: "docs-tencentcloud-datasource-ckafka_topics"
