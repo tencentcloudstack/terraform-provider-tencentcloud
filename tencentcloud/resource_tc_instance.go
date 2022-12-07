@@ -910,7 +910,8 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	}
 	if instance == nil || *instance.InstanceState == CVM_STATUS_LAUNCH_FAILED {
 		d.SetId("")
-		return fmt.Errorf("instance %s not exist or launch failed", instanceId)
+		log.Printf("[CRITAL]instance %s not exist or launch failed", instanceId)
+		return nil
 	}
 
 	var cvmImages []string
