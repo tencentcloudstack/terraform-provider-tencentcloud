@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_stop_instances" "stop_instances" {
-  auto_scaling_group_id = ""
-  instance_ids = ""
-  stopped_mode = ""
+  auto_scaling_group_id = tencentcloud_as_scaling_group.scaling_group.id
+  instance_ids = ["ins-xxxx"]
+  stopped_mode = "STOP_CHARGING"
 }
 ```
 
@@ -59,7 +59,7 @@ func resourceTencentCloudAsStopInstances() *schema.Resource {
 }
 
 func resourceTencentCloudAsStopInstancesCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_as_stop_instances.read")()
+	defer logElapsed("data_source.tencentcloud_as_stop_instances.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -90,13 +90,13 @@ func resourceTencentCloudAsStopInstancesCreate(d *schema.ResourceData, meta inte
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Println("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
 	if err != nil {
-		log.Println("[CRITAL]%s operate as stopInstances failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate as stopInstances failed, reason:%+v", logId, err)
 		return nil
 	}
 

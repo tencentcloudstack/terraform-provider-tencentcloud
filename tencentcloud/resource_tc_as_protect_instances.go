@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_protect_instances" "protect_instances" {
-  auto_scaling_group_id = ""
-  instance_ids = ""
-  protected_from_scale_in = ""
+  auto_scaling_group_id = tencentcloud_as_scaling_group.scaling_group.id
+  instance_ids = ["ins-xxxxx"]
+  protected_from_scale_in = true
 }
 ```
 
@@ -57,24 +57,23 @@ func resourceTencentCloudAsProtectInstances() *schema.Resource {
 }
 
 func resourceTencentCloudAsProtectInstancesCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_as_protect_instances.read")()
+	defer logElapsed("data_source.tencentcloud_as_protect_instances.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
-		request  = as.NewSetInstancesProtectionRequest()
-		response = as.NewSetInstancesProtectionResponse()
-		//instanceIds string
+		request = as.NewSetInstancesProtectionRequest()
 	)
 	if v, ok := d.GetOk("auto_scaling_group_id"); ok {
 		request.AutoScalingGroupId = helper.String(v.(string))
 	}
-
+	ids := make([]string, 0)
 	if v, ok := d.GetOk("instance_ids"); ok {
 		instanceIdsSet := v.(*schema.Set).List()
 		for i := range instanceIdsSet {
 			instanceIds := instanceIdsSet[i].(string)
+			ids = append(ids, instanceIds)
 			request.InstanceIds = append(request.InstanceIds, &instanceIds)
 		}
 	}
@@ -88,18 +87,17 @@ func resourceTencentCloudAsProtectInstancesCreate(d *schema.ResourceData, meta i
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Println("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
-		log.Println("[CRITAL]%s operate as protectInstances failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate as protectInstances failed, reason:%+v", logId, err)
 		return nil
 	}
 
 	// 需要 setId，可以通过InstancesId作为ID
-	d.SetId("")
+	d.SetId(helper.DataResourceIdsHash(ids))
 
 	return resourceTencentCloudAsProtectInstancesRead(d, meta)
 }

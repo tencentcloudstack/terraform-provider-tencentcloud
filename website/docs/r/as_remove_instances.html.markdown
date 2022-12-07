@@ -15,8 +15,8 @@ Provides a resource to create a as remove_instances
 
 ```hcl
 resource "tencentcloud_as_remove_instances" "remove_instances" {
-  auto_scaling_group_id = ""
-  instance_ids          = ""
+  auto_scaling_group_id = tencentcloud_as_scaling_group.scaling_group.id
+  instance_ids          = ["ins-xxxxxx"]
 }
 ```
 
@@ -34,12 +34,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
-
-## Import
-
-as remove_instances can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_as_remove_instances.remove_instances remove_instances_id
-```
 

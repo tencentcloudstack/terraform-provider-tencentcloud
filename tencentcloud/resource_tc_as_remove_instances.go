@@ -5,17 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_as_remove_instances" "remove_instances" {
-  auto_scaling_group_id = ""
-  instance_ids = ""
+  auto_scaling_group_id = tencentcloud_as_scaling_group.scaling_group.id
+  instance_ids = ["ins-xxxxxx"]
 }
-```
-
-Import
-
-as remove_instances can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_as_remove_instances.remove_instances remove_instances_id
 ```
 */
 package tencentcloud
@@ -56,7 +48,7 @@ func resourceTencentCloudAsRemoveInstances() *schema.Resource {
 }
 
 func resourceTencentCloudAsRemoveInstancesCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_as_remove_instances.read")()
+	defer logElapsed("data_source.tencentcloud_as_remove_instances.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -83,13 +75,13 @@ func resourceTencentCloudAsRemoveInstancesCreate(d *schema.ResourceData, meta in
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Println("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
 	if err != nil {
-		log.Println("[CRITAL]%s operate as removeInstances failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate as removeInstances failed, reason:%+v", logId, err)
 		return nil
 	}
 

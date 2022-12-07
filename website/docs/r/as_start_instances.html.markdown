@@ -15,8 +15,8 @@ Provides a resource to create a as start_instances
 
 ```hcl
 resource "tencentcloud_as_start_instances" "start_instances" {
-  auto_scaling_group_id = ""
-  instance_ids          = ""
+  auto_scaling_group_id = tencentcloud_as_scaling_group.scaling_group.id
+  instance_ids          = ["ins-xxxxx"]
 }
 ```
 
