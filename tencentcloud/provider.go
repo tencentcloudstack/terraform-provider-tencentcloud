@@ -600,6 +600,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule
+    tencentcloud_security_group_rule_set
     tencentcloud_security_group_lite_rule
 	tencentcloud_address_template
 	tencentcloud_address_template_group
@@ -1222,6 +1223,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ha_vip_eip_attachment":                    resourceTencentCloudHaVipEipAttachment(),
 			"tencentcloud_security_group":                           resourceTencentCloudSecurityGroup(),
 			"tencentcloud_security_group_rule":                      resourceTencentCloudSecurityGroupRule(),
+			"tencentcloud_security_group_rule_set":                  resourceTencentCloudSecurityGroupRuleSet(),
 			"tencentcloud_security_group_lite_rule":                 resourceTencentCloudSecurityGroupLiteRule(),
 			"tencentcloud_lb":                                       resourceTencentCloudLB(),
 			"tencentcloud_alb_server_attachment":                    resourceTencentCloudAlbServerAttachment(),

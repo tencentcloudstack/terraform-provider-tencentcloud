@@ -185,3 +185,10 @@ func ImportWithDefaultValue(defaultValues map[string]interface{}) schema.StateFu
 		return []*schema.ResourceData{d}, nil
 	}
 }
+
+func IsEmptyStr(s *string) bool {
+	if s == nil {
+		return true
+	}
+	return *s == ""
+}
