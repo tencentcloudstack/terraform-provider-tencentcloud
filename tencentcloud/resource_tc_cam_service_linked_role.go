@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_service_linked_role" "service_linked_role" {
-  qcs_service_name = "postgreskms.postgres.cloud.tencent.com"
+  qcs_service_name = ["cvm.qcloud.com","ekslog.tke.cloud.tencent.com"]
   custom_suffix = "x-1"
   description = "desc cam"
   tags = {
@@ -21,7 +21,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -37,7 +36,8 @@ func resourceTencentCloudCamServiceLinkedRole() *schema.Resource {
 		Delete: resourceTencentCloudCamServiceLinkedRoleDelete,
 		Schema: map[string]*schema.Schema{
 			"qcs_service_name": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 				Required:    true,
 				Description: "Authorization service, the Tencent Cloud service principal with this role attached.",
 			},
@@ -70,20 +70,21 @@ func resourceTencentCloudCamServiceLinkedRoleCreate(d *schema.ResourceData, meta
 	logId := getLogId(contextNil)
 
 	var (
-		request        = cam.NewCreateServiceLinkedRoleRequest()
-		response       *cam.CreateServiceLinkedRoleResponse
-		roleId         string
-		qcsServiceName = ""
-		customSuffix   = ""
+		request  = cam.NewCreateServiceLinkedRoleRequest()
+		response *cam.CreateServiceLinkedRoleResponse
+		roleId   string
 	)
 
 	if v, ok := d.GetOk("qcs_service_name"); ok {
-		qcsServiceName = v.(string)
-		request.QCSServiceName = helper.Strings([]string{v.(string)})
+		serviceName := v.(*schema.Set).List()
+		serviceNameArr := make([]*string, 0, len(serviceName))
+		for _, name := range serviceName {
+			serviceNameArr = append(serviceNameArr, helper.String(name.(string)))
+		}
+		request.QCSServiceName = serviceNameArr
 	}
 
 	if v, ok := d.GetOk("custom_suffix"); ok {
-		customSuffix = v.(string)
 		request.CustomSuffix = helper.String(v.(string))
 	}
 
@@ -121,7 +122,7 @@ func resourceTencentCloudCamServiceLinkedRoleCreate(d *schema.ResourceData, meta
 
 	roleId = *response.Response.RoleId
 
-	d.SetId(roleId + FILED_SP + qcsServiceName + FILED_SP + customSuffix)
+	d.SetId(roleId)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -142,14 +143,7 @@ func resourceTencentCloudCamServiceLinkedRoleRead(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := CamService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	resourceId := d.Id()
-	items := strings.Split(resourceId, FILED_SP)
-	if len(items) != 3 {
-		return fmt.Errorf("invalid ID %s", resourceId)
-	}
-	roleId := items[0]
-	qcsServiceName := items[1]
-	customSuffix := items[2]
+	roleId := d.Id()
 
 	serviceLinkedRole, err := service.DescribeCamServiceLinkedRole(ctx, roleId)
 	if err != nil {
@@ -161,13 +155,13 @@ func resourceTencentCloudCamServiceLinkedRoleRead(d *schema.ResourceData, meta i
 		return fmt.Errorf("resource `serviceLinkedRole` %s does not exist", roleId)
 	}
 
-	if qcsServiceName != "" {
-		_ = d.Set("qcs_service_name", qcsServiceName)
-	}
+	// if qcsServiceName != "" {
+	// 	_ = d.Set("qcs_service_name", qcsServiceName)
+	// }
 
-	if customSuffix != "" {
-		_ = d.Set("custom_suffix", customSuffix)
-	}
+	// if customSuffix != "" {
+	// 	_ = d.Set("custom_suffix", customSuffix)
+	// }
 
 	if serviceLinkedRole.Description != nil {
 		_ = d.Set("description", serviceLinkedRole.Description)
@@ -192,14 +186,7 @@ func resourceTencentCloudCamServiceLinkedRoleUpdate(d *schema.ResourceData, meta
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	request := cam.NewUpdateRoleDescriptionRequest()
 
-	resourceId := d.Id()
-	items := strings.Split(resourceId, FILED_SP)
-	if len(items) != 3 {
-		return fmt.Errorf("invalid ID %s", resourceId)
-	}
-	roleId := items[0]
-	// qcsServiceName := items[1]
-	// customSuffix := items[2]
+	roleId := d.Id()
 
 	request.RoleId = &roleId
 
@@ -255,14 +242,7 @@ func resourceTencentCloudCamServiceLinkedRoleDelete(d *schema.ResourceData, meta
 
 	service := CamService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	resourceId := d.Id()
-	items := strings.Split(resourceId, FILED_SP)
-	if len(items) != 3 {
-		return fmt.Errorf("invalid ID %s", resourceId)
-	}
-	roleId := items[0]
-	// qcsServiceName := items[1]
-	// customSuffix := items[2]
+	roleId := d.Id()
 
 	serviceLinkedRole, err := service.DescribeCamServiceLinkedRole(ctx, roleId)
 	if err != nil {

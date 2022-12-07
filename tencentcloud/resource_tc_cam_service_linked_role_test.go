@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -23,7 +22,7 @@ func TestAccTencentCloudCamServiceLinkedRoleResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCamServiceLinkedRoleExists("tencentcloud_cam_service_linked_role.service_linked_role"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cam_service_linked_role.service_linked_role", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_cam_service_linked_role.service_linked_role", "qcs_service_name", "postgreskms.postgres.cloud.tencent.com"),
+					resource.TestCheckResourceAttr("tencentcloud_cam_service_linked_role.service_linked_role", "qcs_service_name.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_service_linked_role.service_linked_role", "custom_suffix", "x-1"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_service_linked_role.service_linked_role", "description", "desc cam"),
 					resource.TestCheckResourceAttr("tencentcloud_cam_service_linked_role.service_linked_role", "tags.createdBy", "terraform"),
@@ -48,13 +47,8 @@ func testAccCheckCamServiceLinkedRoleDestroy(s *terraform.State) error {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("[CHECK]CAM ServiceLinkedRole id is not set")
 		}
-		items := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(items) != 3 {
-			return fmt.Errorf("invalid ID %s", rs.Primary.ID)
-		}
-		roleId := items[0]
 
-		instance, err := camService.DescribeCamServiceLinkedRole(ctx, roleId)
+		instance, err := camService.DescribeCamServiceLinkedRole(ctx, rs.Primary.ID)
 		if err == nil && instance != nil {
 			return fmt.Errorf("[CHECK]CAM ServiceLinkedRole still exists: %s", rs.Primary.ID)
 		}
@@ -75,11 +69,7 @@ func testAccCheckCamServiceLinkedRoleExists(n string) resource.TestCheckFunc {
 			return fmt.Errorf("[CHECK]CAM ServiceLinkedRole id is not set")
 		}
 
-		items := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(items) != 3 {
-			return fmt.Errorf("invalid ID %s", rs.Primary.ID)
-		}
-		roleId := items[0]
+		roleId := rs.Primary.ID
 
 		camService := CamService{
 			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
@@ -98,7 +88,7 @@ func testAccCheckCamServiceLinkedRoleExists(n string) resource.TestCheckFunc {
 const testAccCamServiceLinkedRole = `
 
 resource "tencentcloud_cam_service_linked_role" "service_linked_role" {
-	qcs_service_name = "postgreskms.postgres.cloud.tencent.com"
+	qcs_service_name = ["cvm.qcloud.com","ekslog.tke.cloud.tencent.com"]
 	custom_suffix = "x-1"
 	description = "desc cam"
 	tags = {
