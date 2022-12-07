@@ -126,6 +126,9 @@ Auto Scaling(AS)
     tencentcloud_as_lifecycle_hook
     tencentcloud_as_notification
 	tencentcloud_as_remove_instances
+    tencentcloud_as_protect_instances
+    tencentcloud_as_start_instances
+    tencentcloud_as_stop_instances
 
 Content Delivery Network(CDN)
   Data Source
@@ -1268,6 +1271,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_as_lifecycle_hook":                        resourceTencentCloudAsLifecycleHook(),
 			"tencentcloud_as_notification":                          resourceTencentCloudAsNotification(),
 			"tencentcloud_as_remove_instances":                      resourceTencentCloudAsRemoveInstances(),
+			"tencentcloud_as_protect_instances":                     resourceTencentCloudAsProtectInstances(),
+			"tencentcloud_as_start_instances":                       resourceTencentCloudAsStartInstances(),
+			"tencentcloud_as_stop_instances":                        resourceTencentCloudAsStopInstances(),
 			"tencentcloud_mongodb_instance":                         resourceTencentCloudMongodbInstance(),
 			"tencentcloud_mongodb_sharding_instance":                resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_dayu_cc_http_policy":                      resourceTencentCloudDayuCCHttpPolicy(),
