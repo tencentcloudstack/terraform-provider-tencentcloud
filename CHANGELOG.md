@@ -1,3 +1,21 @@
+## 1.79.1 (December 7, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dts_compare_tasks` ([#1440](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1440))
+* **New Data Source:** `tencentcloud_dts_migrate_jobs` ([#1440](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1440))
+* **New Resource:** `tencentcloud_as_protect_instances` ([#1451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1451))
+* **New Resource:** `tencentcloud_as_remove_instances` ([#1451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1451))
+* **New Resource:** `tencentcloud_as_start_instances` ([#1451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1451))
+* **New Resource:** `tencentcloud_as_stop_instances` ([#1451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1451))
+* **New Resource:** `tencentcloud_dts_compare_task` ([#1440](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1440))
+* **New Resource:** `tencentcloud_dts_migrate_job` ([#1440](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1440))
+* **New Resource:** `tencentcloud_security_group_rule_set` ([#1453](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1453))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_gaap_security_rule: keep consistency when cidr is 1.1.1.1/32 and attr support change ([#1448](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1448))
+
 ## 1.79.0 (December 1, 2022)
 
 FEATURES:
