@@ -9,8 +9,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudCamRolePolicyAttachment_basic(t *testing.T) {
-	t.Parallel()
+// go test -i; go test -test.run TestAccTencentCloudCamRolePolicyAttachmentResource_basic -v
+func TestAccTencentCloudCamRolePolicyAttachmentResource_basic(t *testing.T) {
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
