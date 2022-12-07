@@ -444,21 +444,3 @@ func marshalSecurityPolicy(policies []*vpc.SecurityGroupPolicy) []interface{} {
 	}
 	return result
 }
-
-// If AddressTemplate or ServiceTemplate not nil, Describe Protocol / Port will always return "ALL"
-func checkPolicyPortIgnore(portOrProtocol *string, policy *vpc.SecurityGroupPolicy) bool {
-	if portOrProtocol == nil {
-		return true
-	}
-	value := *portOrProtocol
-	if value != "ALL" {
-		return false
-	}
-	if policy.AddressTemplate == nil || policy.ServiceTemplate == nil {
-		return false
-	}
-	isICMP := !helper.IsEmptyStr(policy.Protocol) && *policy.Protocol == "ICMP"
-	nilAddress := helper.IsEmptyStr(policy.AddressTemplate.AddressId) && helper.IsEmptyStr(policy.AddressTemplate.AddressGroupId)
-	nilService := helper.IsEmptyStr(policy.ServiceTemplate.ServiceId) && helper.IsEmptyStr(policy.ServiceTemplate.ServiceGroupId)
-	return isICMP || !nilAddress || !nilService
-}
