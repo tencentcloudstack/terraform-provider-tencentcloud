@@ -1,0 +1,7 @@
+```release-note:bug
+resource/tencentcloud_cam_role_policy_attachment: fix: test case
+```
+
+```release-note:bug
+resource/tencentcloud_cam_role_policy_attachment_by_name: fix: test case
+```
