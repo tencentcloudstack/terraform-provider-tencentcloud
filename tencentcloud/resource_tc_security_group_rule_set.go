@@ -1,6 +1,6 @@
 /*
 Provides a resource to create security group rule.
-This resource is similar with tencentcloud_security_group_lite_rule, rules can be ordered and configure descriptions
+This resource is similar with tencentcloud_security_group_lite_rule, rules can be ordered and configure descriptions.
 
 ~> **NOTE:** This resource must exclusive in one security group, do not declare additional rule resources of this security group elsewhere.
 
@@ -49,7 +49,13 @@ resource "tencentcloud_security_group_rule_set" "sglab_1" {
 }
 ```
 
+Import
 
+Resource tencentcloud_security_group_rule_set can be imported by passing security grou id:
+
+```
+terraform import tencentcloud_security_group_rule_set.sglab_1 sg-xxxxxxxx
+```
 */
 package tencentcloud
 

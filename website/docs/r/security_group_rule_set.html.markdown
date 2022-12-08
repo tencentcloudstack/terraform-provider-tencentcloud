@@ -5,13 +5,13 @@ page_title: "TencentCloud: tencentcloud_security_group_rule_set"
 sidebar_current: "docs-tencentcloud-resource-security_group_rule_set"
 description: |-
   Provides a resource to create security group rule.
-This resource is similar with tencentcloud_security_group_lite_rule, rules can be ordered and configure descriptions
+This resource is similar with tencentcloud_security_group_lite_rule, rules can be ordered and configure descriptions.
 ---
 
 # tencentcloud_security_group_rule_set
 
 Provides a resource to create security group rule.
-This resource is similar with tencentcloud_security_group_lite_rule, rules can be ordered and configure descriptions
+This resource is similar with tencentcloud_security_group_lite_rule, rules can be ordered and configure descriptions.
 
 ~> **NOTE:** This resource must exclusive in one security group, do not declare additional rule resources of this security group elsewhere.
 
@@ -103,4 +103,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `version` - Security policies version, auto increment for every update.
 
+
+## Import
+
+Resource tencentcloud_security_group_rule_set can be imported by passing security grou id:
+
+```
+terraform import tencentcloud_security_group_rule_set.sglab_1 sg-xxxxxxxx
+```
 

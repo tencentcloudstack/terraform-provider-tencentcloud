@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create security group rule.
 
+~> **NOTE:** Single security rule is hardly ordered, use tencentcloud_security_group_lite_rule instead.
+
 ## Example Usage
 
 Source is CIDR ip
