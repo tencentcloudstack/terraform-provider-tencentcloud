@@ -223,7 +223,7 @@ func resourceTencentCloudAuditTrackRead(d *schema.ResourceData, meta interface{}
 
 	trackId := d.Id()
 
-	track, err := service.DescribeAuditTrack(ctx, trackId)
+	track, err := service.DescribeAuditTrackById(ctx, trackId)
 
 	if err != nil {
 		return err
