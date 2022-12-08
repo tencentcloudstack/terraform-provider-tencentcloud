@@ -7,8 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccDataSourceTencentCloudEnisResource_basic -v
-func TestAccDataSourceTencentCloudEnisResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccDataSourceTencentCloudEnis_basic -v
+func TestAccDataSourceTencentCloudEnis_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
