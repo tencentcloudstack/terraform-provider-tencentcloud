@@ -195,7 +195,6 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "Instance tags.",
 		},
-
 		"force_delete": {
 			Type:        schema.TypeBool,
 			Optional:    true,
@@ -557,6 +556,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	logId := getLogId(ctx)
 
 	request := cdb.NewCreateDBInstanceRequest()
+	clientToken := helper.BuildToken()
+	request.ClientToken = &clientToken
 
 	payType, oldOk := d.GetOkExists("pay_type")
 	var period int
@@ -578,15 +579,30 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		return err
 	}
 
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
+	var response *cdb.CreateDBInstanceResponse
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		// shadowed response will not pass to outside
+		r, inErr := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
+		if inErr != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), inErr.Error())
+			return retryError(inErr)
+		}
+
+		if response.Response.InstanceIds == nil && clientToken != "" {
+			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
+		}
+
+		response = r
+
+		return nil
+	})
+
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
@@ -598,6 +614,8 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 
 	logId := getLogId(ctx)
 	request := cdb.NewCreateDBInstanceHourRequest()
+	clientToken := helper.BuildToken()
+	request.ClientToken = &clientToken
 
 	if err := mysqlAllInstanceRoleSet(ctx, request, d, meta); err != nil {
 		return err
@@ -607,15 +625,28 @@ func mysqlCreateInstancePayByUse(ctx context.Context, d *schema.ResourceData, me
 		return err
 	}
 
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstanceHour(request)
+	var response *cdb.CreateDBInstanceHourResponse
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		// shadowed response will not pass to outside
+		r, inErr := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstanceHour(request)
+		if inErr != nil {
+			return retryError(inErr)
+		}
+		if r.Response.InstanceIds == nil && clientToken != "" {
+			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
+		}
+		response = r
+		return nil
+	})
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())
 		return err
-	} else {
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	if len(response.Response.InstanceIds) != 1 {
 		return fmt.Errorf("mysql CreateDBInstanceHour return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
 	}
@@ -684,62 +715,6 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	if err != nil {
 		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
 		return err
-	}
-
-	// Initialize mysql instance
-	var (
-		version   = d.Get("engine_version").(string)
-		charset   = d.Get("parameters.character_set_server").(string)
-		lowercase = d.Get("parameters.lower_case_table_names").(string)
-		password  string
-		vPort     int
-	)
-
-	if v, ok := d.GetOk("root_password"); ok {
-		password = v.(string)
-	}
-
-	// 8.0 does not support lower_case_table_names modified, skip this params
-	if version == "8.0" {
-		lowercase = ""
-	}
-
-	port, portOk := d.GetOk("intranet_port")
-
-	if portOk && port.(int) != 0 {
-		vPort = port.(int)
-	}
-
-	aReqId, err := mysqlService.InitDBInstances(ctx, mysqlID, password, charset, lowercase, vPort)
-
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		// Available status：INITIAL, RUNNING, SUCCESS, FAILED, KILLED, REMOVED, PAUSED
-		taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, aReqId)
-
-		if err != nil {
-			if _, ok := err.(*errors.TencentCloudSDKError); !ok {
-				return resource.RetryableError(err)
-			} else {
-				return resource.NonRetryableError(err)
-			}
-		}
-		if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
-			return nil
-		}
-		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-			return resource.RetryableError(fmt.Errorf("create account task  status is %s", taskStatus))
-		}
-		err = fmt.Errorf("initialize db task status is %s,we won't wait for it finish ,it show message:%s", ",",
-			message)
-		return resource.NonRetryableError(err)
-	})
-
-	if err != nil {
-		log.Printf("[WARN] initial DB error: %s", err.Error())
 	}
 
 	//internet service

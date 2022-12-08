@@ -40,6 +40,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 )
@@ -64,7 +65,6 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 			"cidr_ip": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ForceNew:     true,
 				ValidateFunc: validateCidrIp,
 				Description:  "A network address block of the request source.",
 			},
@@ -72,7 +72,6 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 				Type:         schema.TypeString,
 				Required:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"ACCEPT", "DROP"}),
-				ForceNew:     true,
 				Description:  "Policy of the rule. Valid value: `ACCEPT` and `DROP`.",
 			},
 			"name": {
@@ -87,14 +86,12 @@ func resourceTencentCloudGaapSecurityRule() *schema.Resource {
 				Optional:     true,
 				Default:      "ALL",
 				ValidateFunc: validateAllowedStringValue([]string{"ALL", "TCP", "UDP"}),
-				ForceNew:     true,
 				Description:  "Protocol of the security policy rule. Default value is `ALL`. Valid value: `TCP`, `UDP` and `ALL`.",
 			},
 			"port": {
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "ALL",
-				ForceNew: true,
 				ValidateFunc: func(v interface{}, k string) (ws []string, errors []error) {
 					value := v.(string)
 					if value == "ALL" {
@@ -162,7 +159,20 @@ func resourceTencentCloudGaapSecurityRuleRead(d *schema.ResourceData, m interfac
 	}
 
 	_ = d.Set("policy_id", rule.PolicyId)
-	_ = d.Set("cidr_ip", rule.SourceCidr)
+
+	cidrIp := *rule.SourceCidr
+	// fix when cidr is "x.x.x.x/32", because return will remove /32
+	if v, ok := d.GetOk("cidr_ip"); ok {
+		getCidrIp := v.(string)
+		splits := strings.Split(getCidrIp, "/")
+		if len(splits) > 1 {
+			if splits[1] == "32" && cidrIp == splits[0] {
+				cidrIp = fmt.Sprintf("%s/32", cidrIp)
+			}
+		}
+	}
+
+	_ = d.Set("cidr_ip", cidrIp)
 	_ = d.Set("action", rule.Action)
 	_ = d.Set("name", rule.AliasName)
 	_ = d.Set("protocol", rule.Protocol)
@@ -181,15 +191,15 @@ func resourceTencentCloudGaapSecurityRuleUpdate(d *schema.ResourceData, m interf
 
 	id := d.Id()
 	policyId := d.Get("policy_id").(string)
+	cidrIp := d.Get("cidr_ip").(string)
+	action := d.Get("action").(string)
+	port := d.Get("port").(string)
+	protocol := d.Get("protocol").(string)
 	name := d.Get("name").(string)
-
-	if name == "" {
-		return errors.New("new name can't be empty")
-	}
 
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	if err := service.ModifySecurityRuleName(ctx, policyId, id, name); err != nil {
+	if err := service.ModifySecurityRule(ctx, policyId, id, cidrIp, action, port, protocol, name); err != nil {
 		return err
 	}
 

@@ -1644,12 +1644,17 @@ func (me *GaapService) DescribeSecurityRule(ctx context.Context, id string) (sec
 	return
 }
 
-func (me *GaapService) ModifySecurityRuleName(ctx context.Context, policyId, ruleId, name string) error {
+func (me *GaapService) ModifySecurityRule(ctx context.Context, policyId, ruleId, cidrIp, action, port, protocol, name string) error {
 	logId := getLogId(ctx)
 
 	request := gaap.NewModifySecurityRuleRequest()
 	request.PolicyId = &policyId
 	request.RuleId = &ruleId
+	request.SourceCidr = &cidrIp
+	request.RuleAction = &action
+	request.DestPortRange = &port
+	request.Protocol = &protocol
+
 	request.AliasName = &name
 
 	if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

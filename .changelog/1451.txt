@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_as_remove_instances
+```
+
+```release-note:new-resource
+tencentcloud_as_protect_instances
+```
+
+```release-note:new-resource
+tencentcloud_as_start_instances
+```
+
+```release-note:new-resource
+tencentcloud_as_stop_instances
+```

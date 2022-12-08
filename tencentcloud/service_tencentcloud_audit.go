@@ -116,7 +116,7 @@ func (me *AuditService) DescribeKeyAlias(ctx context.Context, region string) (ke
 	return
 }
 
-func (me *AuditService) DescribeAuditTrack(ctx context.Context, trackId string) (track *audit.DescribeAuditTrackResponseParams, errRet error) {
+func (me *AuditService) DescribeAuditTrackById(ctx context.Context, trackId string) (track *audit.DescribeAuditTrackResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = audit.NewDescribeAuditTrackRequest()

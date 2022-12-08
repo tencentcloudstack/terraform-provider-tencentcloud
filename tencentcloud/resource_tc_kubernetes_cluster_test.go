@@ -56,6 +56,7 @@ func TestAccTencentCloudTkeResourceBasic(t *testing.T) {
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
+				//PreventDiskCleanup: true,
 				Config: testAccTkeCluster,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
@@ -108,6 +109,7 @@ func TestAccTencentCloudTkeResourceLogs(t *testing.T) {
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
+				//PreventDiskCleanup: true,
 				Config: testAccTkeClusterLogs,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
@@ -132,7 +134,11 @@ func TestAccTencentCloudTkeResourceLogs(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "log_agent.0.enabled", "true"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "event_persistence.0.enabled", "false"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "event_persistence.0.delete_event_log_and_topic",
+						"true"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_audit.0.enabled", "true"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_audit.0.delete_audit_log_and_topic",
+						"true"),
 				),
 			},
 		},
@@ -477,9 +483,11 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   event_persistence {
     enabled = false
+    delete_event_log_and_topic = true
   }
 
   cluster_audit {
     enabled = true
+    delete_audit_log_and_topic = true
   }
 }`

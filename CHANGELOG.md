@@ -1,3 +1,54 @@
+## 1.79.1 (December 7, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dts_compare_tasks` ([#1440](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1440))
+* **New Data Source:** `tencentcloud_dts_migrate_jobs` ([#1440](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1440))
+* **New Resource:** `tencentcloud_as_protect_instances` ([#1451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1451))
+* **New Resource:** `tencentcloud_as_remove_instances` ([#1451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1451))
+* **New Resource:** `tencentcloud_as_start_instances` ([#1451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1451))
+* **New Resource:** `tencentcloud_as_stop_instances` ([#1451](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1451))
+* **New Resource:** `tencentcloud_dts_compare_task` ([#1440](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1440))
+* **New Resource:** `tencentcloud_dts_migrate_job` ([#1440](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1440))
+* **New Resource:** `tencentcloud_security_group_rule_set` ([#1453](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1453))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_gaap_security_rule: keep consistency when cidr is 1.1.1.1/32 and attr support change ([#1448](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1448))
+
+## 1.79.0 (December 1, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_tdmq_rocketmq_cluster` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+* **New Data Source:** `tencentcloud_tdmq_rocketmq_group` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+* **New Data Source:** `tencentcloud_tdmq_rocketmq_namespace` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+* **New Data Source:** `tencentcloud_tdmq_rocketmq_role` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+* **New Data Source:** `tencentcloud_tdmq_rocketmq_topic` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+* **New Resource:** `tencentcloud_cam_service_linked_role` ([#1436](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1436))
+* **New Resource:** `tencentcloud_tcm_access_log_config` ([#1444](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1444))
+* **New Resource:** `tencentcloud_tcm_prometheus_attachment` ([#1444](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1444))
+* **New Resource:** `tencentcloud_tcm_tracing_config` ([#1444](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1444))
+* **New Resource:** `tencentcloud_tdmq_rocketmq_cluster` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+* **New Resource:** `tencentcloud_tdmq_rocketmq_environment_role` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+* **New Resource:** `tencentcloud_tdmq_rocketmq_group` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+* **New Resource:** `tencentcloud_tdmq_rocketmq_namespace` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+* **New Resource:** `tencentcloud_tdmq_rocketmq_role` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+* **New Resource:** `tencentcloud_tdmq_rocketmq_topic` ([#1445](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1445))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: enhance the storage_class of lifecycle ([#1434](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1434))
+* resource/tencentcloud_cos_bucket_object: enhance the storage_class of lifecycle ([#1434](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1434))
+* resource/tencentcloud_kubernetes_node_pool: optimize scaling_group_project_id default value ([#1439](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1439))
+* resource/tencentcloud_kubernetes_node_pool: support host_name_style field ([#1435](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1435))
+* resource/tencentcloud_mysql_instance: Support retry creating with client token ([#1330](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1330))
+* resource/tencentcloud_tcm_mesh: support tracing, prometheus ([#1444](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1444))
+
+BUG FIXES:
+
+* resource/tencentcloud_mysql_instance: fix: mysql - no longer init ([#1443](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1443))
+
 ## 1.78.16 (November 29, 2022)
 
 FEATURES:

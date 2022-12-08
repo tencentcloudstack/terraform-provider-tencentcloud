@@ -13,7 +13,7 @@ import (
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-func TestAccTencentCloudMysqlAccountPrivilege(t *testing.T) {
+func TestAccTencentCloudMysqlAccountPrivilegeResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

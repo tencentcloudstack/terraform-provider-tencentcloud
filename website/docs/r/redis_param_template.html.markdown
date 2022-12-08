@@ -1,5 +1,5 @@
 ---
-subcategory: "TencentDB for Redis"
+subcategory: "TencentDB for Redis(crs)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_redis_param_template"
 sidebar_current: "docs-tencentcloud-resource-redis_param_template"

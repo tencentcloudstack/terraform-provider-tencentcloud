@@ -47,7 +47,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudGaapSecurityRule_basic(t *testing.T) {
+func TestAccTencentCloudGaapSecurityRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 
@@ -75,7 +75,7 @@ func TestAccTencentCloudGaapSecurityRule_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapSecurityRule_drop(t *testing.T) {
+func TestAccTencentCloudGaapSecurityRuleResource_drop(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 
@@ -98,7 +98,7 @@ func TestAccTencentCloudGaapSecurityRule_drop(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapSecurityRule_name(t *testing.T) {
+func TestAccTencentCloudGaapSecurityRuleResource_name(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 
@@ -129,7 +129,7 @@ func TestAccTencentCloudGaapSecurityRule_name(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapSecurityRule_ipSubnet(t *testing.T) {
+func TestAccTencentCloudGaapSecurityRuleResource_ipSubnet(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 
@@ -152,7 +152,7 @@ func TestAccTencentCloudGaapSecurityRule_ipSubnet(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapSecurityRule_allProtocols(t *testing.T) {
+func TestAccTencentCloudGaapSecurityRuleResource_allProtocols(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 
@@ -175,7 +175,7 @@ func TestAccTencentCloudGaapSecurityRule_allProtocols(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudGaapSecurityRule_AllPorts(t *testing.T) {
+func TestAccTencentCloudGaapSecurityRuleResource_AllPorts(t *testing.T) {
 	t.Parallel()
 	id := new(string)
 

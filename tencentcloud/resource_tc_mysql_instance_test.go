@@ -95,7 +95,7 @@ func testSweepMySQLInstance(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudMysqlDeviceType(t *testing.T) {
+func TestAccTencentCloudMysqlInstanceResource_DeviceType(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -125,7 +125,7 @@ func TestAccTencentCloudMysqlDeviceType(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudMysqlMasterInstance_fullslave(t *testing.T) {
+func TestAccTencentCloudMysqlInstanceResource_MasterInstance_fullslave(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -147,7 +147,7 @@ func TestAccTencentCloudMysqlMasterInstance_fullslave(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudMysqlMasterInstance_basic_and_update(t *testing.T) {
+func TestAccTencentCloudMysqlInstanceResource_MasterInstance_basic_and_update(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

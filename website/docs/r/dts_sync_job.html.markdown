@@ -58,10 +58,3 @@ In addition to all arguments above, the following attributes are exported:
 * `job_id` - job id.
 
 
-## Import
-
-dts sync_job can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_dts_sync_job.sync_job syncJob_id
-```
-

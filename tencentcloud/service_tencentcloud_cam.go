@@ -1218,3 +1218,90 @@ func (me *CamService) PolicyDocumentForceCheck(document string) error {
 	}
 	return nil
 }
+
+func (me *CamService) DescribeCamServiceLinkedRole(ctx context.Context, roleId string) (serviceLinkedRole *cam.RoleInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cam.NewGetRoleRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.RoleId = &roleId
+
+	response, err := me.client.UseCamClient().GetRole(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && response.Response != nil {
+		serviceLinkedRole = response.Response.RoleInfo
+	}
+
+	return
+}
+
+func (me *CamService) DeleteCamServiceLinkedRoleById(ctx context.Context, roleId string) (deletionTaskId string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewDeleteServiceLinkedRoleRequest()
+
+	request.RoleName = &roleId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCamClient().DeleteServiceLinkedRole(request)
+	if err != nil {
+		errRet = err
+		return "", err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && response.Response != nil {
+		deletionTaskId = *response.Response.DeletionTaskId
+	}
+	return
+}
+
+func (me *CamService) DescribeCamServiceLinkedRoleDeleteStatus(ctx context.Context, deletionTaskId string) (response *cam.GetServiceLinkedRoleDeletionStatusResponse, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cam.NewGetServiceLinkedRoleDeletionStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.DeletionTaskId = &deletionTaskId
+
+	response, err := me.client.UseCamClient().GetServiceLinkedRoleDeletionStatus(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

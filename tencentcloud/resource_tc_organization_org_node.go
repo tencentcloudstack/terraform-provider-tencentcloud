@@ -87,7 +87,7 @@ func resourceTencentCloudOrganizationOrgNodeCreate(d *schema.ResourceData, meta 
 		nodeId   int64
 	)
 
-	if v, ok := d.GetOk("parent_node_id"); ok {
+	if v, _ := d.GetOk("parent_node_id"); v != nil {
 		request.ParentNodeId = helper.IntUint64(v.(int))
 	}
 
