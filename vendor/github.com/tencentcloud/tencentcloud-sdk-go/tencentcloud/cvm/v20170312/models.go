@@ -46,14 +46,14 @@ type AccountQuotaOverview struct {
 }
 
 type ActionTimer struct {
-	// 扩展数据
-	Externals *Externals `json:"Externals,omitempty" name:"Externals"`
-
 	// 定时器名称，目前仅支持销毁一个值：TerminateInstances。
 	TimerAction *string `json:"TimerAction,omitempty" name:"TimerAction"`
 
 	// 执行时间，格式形如：2018-5-29 11:26:40,执行时间必须大于当前时间5分钟。
 	ActionTime *string `json:"ActionTime,omitempty" name:"ActionTime"`
+
+	// 扩展数据
+	Externals *Externals `json:"Externals,omitempty" name:"Externals"`
 }
 
 // Predefined struct for user
@@ -132,7 +132,7 @@ func (r *AllocateHostsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AllocateHostsResponseParams struct {
-	// 新创建云子机的实例id列表。
+	// 新创建云子机的实例ID列表。
 	HostIdSet []*string `json:"HostIdSet,omitempty" name:"HostIdSet"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -388,6 +388,17 @@ type ChcHost struct {
 	DeployExtraConfig *ChcDeployExtraConfig `json:"DeployExtraConfig,omitempty" name:"DeployExtraConfig"`
 }
 
+type ChcHostDeniedActions struct {
+	// CHC物理服务器的实例id
+	ChcId *string `json:"ChcId,omitempty" name:"ChcId"`
+
+	// CHC物理服务器的状态
+	State *string `json:"State,omitempty" name:"State"`
+
+	// 当前CHC物理服务器禁止做的操作
+	DenyActions []*string `json:"DenyActions,omitempty" name:"DenyActions"`
+}
+
 // Predefined struct for user
 type ConfigureChcAssistVpcRequestParams struct {
 	// CHC物理服务器的实例Id。
@@ -625,6 +636,78 @@ func (r *CreateDisasterRecoverGroupResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateHpcClusterRequestParams struct {
+	// 可用区。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 高性能计算集群名称。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 高性能计算集群备注。
+	Remark *string `json:"Remark,omitempty" name:"Remark"`
+}
+
+type CreateHpcClusterRequest struct {
+	*tchttp.BaseRequest
+	
+	// 可用区。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 高性能计算集群名称。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 高性能计算集群备注。
+	Remark *string `json:"Remark,omitempty" name:"Remark"`
+}
+
+func (r *CreateHpcClusterRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateHpcClusterRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Zone")
+	delete(f, "Name")
+	delete(f, "Remark")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateHpcClusterRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateHpcClusterResponseParams struct {
+	// 高性能计算集群信息。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HpcClusterSet []*HpcClusterInfo `json:"HpcClusterSet,omitempty" name:"HpcClusterSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateHpcClusterResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateHpcClusterResponseParams `json:"Response"`
+}
+
+func (r *CreateHpcClusterResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateHpcClusterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateImageRequestParams struct {
 	// 镜像名称
 	ImageName *string `json:"ImageName,omitempty" name:"ImageName"`
@@ -645,7 +728,7 @@ type CreateImageRequestParams struct {
 	// 关于Sysprep的详情请参考[链接](https://cloud.tencent.com/document/product/213/43498)。
 	Sysprep *string `json:"Sysprep,omitempty" name:"Sysprep"`
 
-	// 基于实例创建整机镜像时，指定包含在镜像里的数据盘Id
+	// 基于实例创建整机镜像时，指定包含在镜像里的数据盘ID
 	DataDiskIds []*string `json:"DataDiskIds,omitempty" name:"DataDiskIds"`
 
 	// 基于快照创建镜像，指定快照ID，必须包含一个系统盘快照。不可与InstanceId同时传入。
@@ -680,7 +763,7 @@ type CreateImageRequest struct {
 	// 关于Sysprep的详情请参考[链接](https://cloud.tencent.com/document/product/213/43498)。
 	Sysprep *string `json:"Sysprep,omitempty" name:"Sysprep"`
 
-	// 基于实例创建整机镜像时，指定包含在镜像里的数据盘Id
+	// 基于实例创建整机镜像时，指定包含在镜像里的数据盘ID
 	DataDiskIds []*string `json:"DataDiskIds,omitempty" name:"DataDiskIds"`
 
 	// 基于快照创建镜像，指定快照ID，必须包含一个系统盘快照。不可与InstanceId同时传入。
@@ -1332,7 +1415,7 @@ type DataDisk struct {
 	// 数据盘大小，单位：GB。最小调整步长为10G，不同数据盘类型取值范围不同，具体限制详见：[存储概述](https://cloud.tencent.com/document/product/213/4952)。默认值为0，表示不购买数据盘。更多限制详见产品文档。
 	DiskSize *int64 `json:"DiskSize,omitempty" name:"DiskSize"`
 
-	// 数据盘类型。数据盘类型限制详见[存储概述](https://cloud.tencent.com/document/product/213/4952)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>LOCAL_NVME：本地NVME硬盘，与InstanceType强相关，不支持指定<br><li>LOCAL_PRO：本地HDD硬盘，与InstanceType强相关，不支持指定<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><li>CLOUD_HSSD：增强型SSD云硬盘<br><li>CLOUD_TSSD：极速型SSD云硬盘<br><br>默认取值：LOCAL_BASIC。<br><br>该参数对`ResizeInstanceDisk`接口无效。
+	// 数据盘类型。数据盘类型限制详见[存储概述](https://cloud.tencent.com/document/product/213/4952)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>LOCAL_NVME：本地NVME硬盘，与InstanceType强相关，不支持指定<br><li>LOCAL_PRO：本地HDD硬盘，与InstanceType强相关，不支持指定<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><li>CLOUD_HSSD：增强型SSD云硬盘<br><li>CLOUD_TSSD：极速型SSD云硬盘<br><li>CLOUD_BSSD：通用型SSD云硬盘<br><br>默认取值：LOCAL_BASIC。<br><br>该参数对`ResizeInstanceDisk`接口无效。
 	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
 
 	// 数据盘ID。LOCAL_BASIC 和 LOCAL_SSD 类型没有ID，暂时不支持该参数。
@@ -1425,6 +1508,60 @@ func (r *DeleteDisasterRecoverGroupsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteDisasterRecoverGroupsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteHpcClustersRequestParams struct {
+	// 高性能计算集群ID列表。
+	HpcClusterIds []*string `json:"HpcClusterIds,omitempty" name:"HpcClusterIds"`
+}
+
+type DeleteHpcClustersRequest struct {
+	*tchttp.BaseRequest
+	
+	// 高性能计算集群ID列表。
+	HpcClusterIds []*string `json:"HpcClusterIds,omitempty" name:"HpcClusterIds"`
+}
+
+func (r *DeleteHpcClustersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteHpcClustersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "HpcClusterIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteHpcClustersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteHpcClustersResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteHpcClustersResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteHpcClustersResponseParams `json:"Response"`
+}
+
+func (r *DeleteHpcClustersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteHpcClustersResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1728,6 +1865,63 @@ func (r *DescribeAccountQuotaResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeAccountQuotaResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeChcDeniedActionsRequestParams struct {
+	// CHC物理服务器实例id
+	ChcIds []*string `json:"ChcIds,omitempty" name:"ChcIds"`
+}
+
+type DescribeChcDeniedActionsRequest struct {
+	*tchttp.BaseRequest
+	
+	// CHC物理服务器实例id
+	ChcIds []*string `json:"ChcIds,omitempty" name:"ChcIds"`
+}
+
+func (r *DescribeChcDeniedActionsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeChcDeniedActionsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ChcIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeChcDeniedActionsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeChcDeniedActionsResponseParams struct {
+	// CHC实例禁止操作信息
+	ChcHostDeniedActionSet []*ChcHostDeniedActions `json:"ChcHostDeniedActionSet,omitempty" name:"ChcHostDeniedActionSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeChcDeniedActionsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeChcDeniedActionsResponseParams `json:"Response"`
+}
+
+func (r *DescribeChcDeniedActionsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeChcDeniedActionsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2072,6 +2266,94 @@ func (r *DescribeHostsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeHostsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeHpcClustersRequestParams struct {
+	// 高性能计算集群ID数组。
+	HpcClusterIds []*string `json:"HpcClusterIds,omitempty" name:"HpcClusterIds"`
+
+	// 高性能计算集群名称。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 可用区。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 偏移量, 默认值0。
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 本次请求量, 默认值20。
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+type DescribeHpcClustersRequest struct {
+	*tchttp.BaseRequest
+	
+	// 高性能计算集群ID数组。
+	HpcClusterIds []*string `json:"HpcClusterIds,omitempty" name:"HpcClusterIds"`
+
+	// 高性能计算集群名称。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 可用区。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 偏移量, 默认值0。
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 本次请求量, 默认值20。
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeHpcClustersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeHpcClustersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "HpcClusterIds")
+	delete(f, "Name")
+	delete(f, "Zone")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeHpcClustersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeHpcClustersResponseParams struct {
+	// 高性能计算集群信息。
+	HpcClusterSet []*HpcClusterInfo `json:"HpcClusterSet,omitempty" name:"HpcClusterSet"`
+
+	// 高性能计算集群总数。
+	TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeHpcClustersResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeHpcClustersResponseParams `json:"Response"`
+}
+
+func (r *DescribeHpcClustersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeHpcClustersResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3323,10 +3605,10 @@ func (r *DescribeRegionsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRegionsResponseParams struct {
-	// 地域数量
+	// 地域数量。
 	TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-	// 地域列表信息
+	// 地域列表信息。
 	RegionSet []*RegionInfo `json:"RegionSet,omitempty" name:"RegionSet"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -4002,7 +4284,7 @@ type EnhancedService struct {
 	// 开启云监控服务。若不指定该参数，则默认开启云监控服务。
 	MonitorService *RunMonitorServiceEnabled `json:"MonitorService,omitempty" name:"MonitorService"`
 
-	// 开启云自动化助手服务。若不指定该参数，则默认不开启云自动化助手服务。
+	// 开启云自动化助手服务（TencentCloud Automation Tools，TAT）。若不指定该参数，则公共镜像默认开启云自动化助手服务，其他镜像默认不开启云自动化助手服务。
 	AutomationService *RunAutomationServiceEnabled `json:"AutomationService,omitempty" name:"AutomationService"`
 }
 
@@ -4142,40 +4424,40 @@ type GPUInfo struct {
 }
 
 type HostItem struct {
-	// cdh实例所在的位置。通过该参数可以指定实例所属可用区，所属项目等属性。
+	// 专用宿主机实例所在的位置。通过该参数可以指定实例所属可用区，所属项目等属性。
 	Placement *Placement `json:"Placement,omitempty" name:"Placement"`
 
-	// cdh实例id
+	// 专用宿主机实例ID
 	HostId *string `json:"HostId,omitempty" name:"HostId"`
 
-	// cdh实例类型
+	// 专用宿主机实例类型
 	HostType *string `json:"HostType,omitempty" name:"HostType"`
 
-	// cdh实例名称
+	// 专用宿主机实例名称
 	HostName *string `json:"HostName,omitempty" name:"HostName"`
 
-	// cdh实例付费模式
+	// 专用宿主机实例付费模式
 	HostChargeType *string `json:"HostChargeType,omitempty" name:"HostChargeType"`
 
-	// cdh实例自动续费标记
+	// 专用宿主机实例自动续费标记
 	RenewFlag *string `json:"RenewFlag,omitempty" name:"RenewFlag"`
 
-	// cdh实例创建时间
+	// 专用宿主机实例创建时间
 	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
 
-	// cdh实例过期时间
+	// 专用宿主机实例过期时间
 	ExpiredTime *string `json:"ExpiredTime,omitempty" name:"ExpiredTime"`
 
-	// cdh实例上已创建云子机的实例id列表
+	// 专用宿主机实例上已创建云子机的实例id列表
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 
-	// cdh实例状态
+	// 专用宿主机实例状态
 	HostState *string `json:"HostState,omitempty" name:"HostState"`
 
-	// cdh实例ip
+	// 专用宿主机实例IP
 	HostIp *string `json:"HostIp,omitempty" name:"HostIp"`
 
-	// cdh实例资源信息
+	// 专用宿主机实例资源信息
 	HostResource *HostResource `json:"HostResource,omitempty" name:"HostResource"`
 
 	// 专用宿主机所属的围笼ID。该字段仅对金融专区围笼内的专用宿主机有效。
@@ -4184,10 +4466,10 @@ type HostItem struct {
 }
 
 type HostResource struct {
-	// 专用宿主机实例总cpu核数
+	// 专用宿主机实例总CPU核数
 	CpuTotal *uint64 `json:"CpuTotal,omitempty" name:"CpuTotal"`
 
-	// 专用宿主机实例可用cpu核数
+	// 专用宿主机实例可用CPU核数
 	CpuAvailable *uint64 `json:"CpuAvailable,omitempty" name:"CpuAvailable"`
 
 	// 专用宿主机实例总内存大小（单位为:GiB）
@@ -4210,6 +4492,36 @@ type HostResource struct {
 
 	// 专用宿主机实例可用GPU卡数
 	GpuAvailable *uint64 `json:"GpuAvailable,omitempty" name:"GpuAvailable"`
+}
+
+type HpcClusterInfo struct {
+	// 高性能计算集群ID
+	HpcClusterId *string `json:"HpcClusterId,omitempty" name:"HpcClusterId"`
+
+	// 高性能计算集群名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 高性能计算集群备注
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Remark *string `json:"Remark,omitempty" name:"Remark"`
+
+	// 集群下设备容量
+	CvmQuotaTotal *uint64 `json:"CvmQuotaTotal,omitempty" name:"CvmQuotaTotal"`
+
+	// 集群所在可用区
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 集群当前已有设备量
+	CurrentNum *uint64 `json:"CurrentNum,omitempty" name:"CurrentNum"`
+
+	// 集群创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 集群内实例ID列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 }
 
 type Image struct {
@@ -4277,11 +4589,11 @@ type Image struct {
 }
 
 type ImageOsList struct {
-	// 支持的windows操作系统。
+	// 支持的Windows操作系统。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Windows []*string `json:"Windows,omitempty" name:"Windows"`
 
-	// 支持的linux操作系统
+	// 支持的Linux操作系统
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Linux []*string `json:"Linux,omitempty" name:"Linux"`
 }
@@ -4322,6 +4634,12 @@ type ImportImageRequestParams struct {
 
 	// 标签描述列表。通过指定该参数可以同时绑定标签到自定义镜像。
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitempty" name:"TagSpecification"`
+
+	// 导入镜像后，激活操作系统采用的许可证类型。
+	// 可选项：
+	// TencentCloud: 腾讯云官方许可
+	// BYOL: 自带许可（Bring Your Own License）
+	LicenseType *string `json:"LicenseType,omitempty" name:"LicenseType"`
 }
 
 type ImportImageRequest struct {
@@ -4353,6 +4671,12 @@ type ImportImageRequest struct {
 
 	// 标签描述列表。通过指定该参数可以同时绑定标签到自定义镜像。
 	TagSpecification []*TagSpecification `json:"TagSpecification,omitempty" name:"TagSpecification"`
+
+	// 导入镜像后，激活操作系统采用的许可证类型。
+	// 可选项：
+	// TencentCloud: 腾讯云官方许可
+	// BYOL: 自带许可（Bring Your Own License）
+	LicenseType *string `json:"LicenseType,omitempty" name:"LicenseType"`
 }
 
 func (r *ImportImageRequest) ToJsonString() string {
@@ -4376,6 +4700,7 @@ func (r *ImportImageRequest) FromJsonString(s string) error {
 	delete(f, "DryRun")
 	delete(f, "Force")
 	delete(f, "TagSpecification")
+	delete(f, "LicenseType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ImportImageRequest has unknown keys!", "")
 	}
@@ -5390,6 +5715,9 @@ type Instance struct {
 
 	// 实例的操作系统许可类型，默认为TencentCloud
 	LicenseType *string `json:"LicenseType,omitempty" name:"LicenseType"`
+
+	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例<br><li>FALSE：表示关闭实例保护，允许通过api接口删除实例<br><br>默认取值：FALSE。
+	DisableApiTermination *bool `json:"DisableApiTermination,omitempty" name:"DisableApiTermination"`
 }
 
 type InstanceChargePrepaid struct {
@@ -5535,6 +5863,12 @@ type InstanceTypeQuotaItem struct {
 
 	// 实例备注信息。
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
+
+	// 实例机型映射的物理GPU卡数，单位：卡。vGPU卡型小于1，直通卡型大于等于1。vGPU是通过分片虚拟化技术，将物理GPU卡重新划分，同一块GPU卡经虚拟化分割后可分配至不同的实例使用。直通卡型会将GPU设备直接挂载给实例使用。
+	GpuCount *float64 `json:"GpuCount,omitempty" name:"GpuCount"`
+
+	// 实例的CPU主频信息
+	Frequency *string `json:"Frequency,omitempty" name:"Frequency"`
 }
 
 type InternetAccessible struct {
@@ -5790,7 +6124,7 @@ type LaunchTemplateVersionData struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UserData *string `json:"UserData,omitempty" name:"UserData"`
 
-	// 置放群组id，仅支持指定一个。
+	// 置放群组ID，仅支持指定一个。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitempty" name:"DisasterRecoverGroupIds"`
 
@@ -5866,7 +6200,7 @@ type LoginSettings struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Password *string `json:"Password,omitempty" name:"Password"`
 
-	// 密钥ID列表。关联密钥后，就可以通过对应的私钥来访问实例；KeyId可通过接口[DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699)获取，密钥与密码不能同时指定，同时Windows操作系统不支持指定密钥。当前仅支持购买的时候指定一个密钥。
+	// 密钥ID列表。关联密钥后，就可以通过对应的私钥来访问实例；KeyId可通过接口[DescribeKeyPairs](https://cloud.tencent.com/document/api/213/15699)获取，密钥与密码不能同时指定，同时Windows操作系统不支持指定密钥。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	KeyIds []*string `json:"KeyIds,omitempty" name:"KeyIds"`
 
@@ -6101,6 +6435,74 @@ func (r *ModifyHostsAttributeResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyHpcClusterAttributeRequestParams struct {
+	// 高性能计算集群ID。
+	HpcClusterId *string `json:"HpcClusterId,omitempty" name:"HpcClusterId"`
+
+	// 高性能计算集群新名称。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 高性能计算集群新备注。
+	Remark *string `json:"Remark,omitempty" name:"Remark"`
+}
+
+type ModifyHpcClusterAttributeRequest struct {
+	*tchttp.BaseRequest
+	
+	// 高性能计算集群ID。
+	HpcClusterId *string `json:"HpcClusterId,omitempty" name:"HpcClusterId"`
+
+	// 高性能计算集群新名称。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 高性能计算集群新备注。
+	Remark *string `json:"Remark,omitempty" name:"Remark"`
+}
+
+func (r *ModifyHpcClusterAttributeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyHpcClusterAttributeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "HpcClusterId")
+	delete(f, "Name")
+	delete(f, "Remark")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyHpcClusterAttributeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyHpcClusterAttributeResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyHpcClusterAttributeResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyHpcClusterAttributeResponseParams `json:"Response"`
+}
+
+func (r *ModifyHpcClusterAttributeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyHpcClusterAttributeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyImageAttributeRequestParams struct {
 	// 镜像ID，形如`img-gvbnzy6f`。镜像ID可以通过如下方式获取：<br><li>通过[DescribeImages](https://cloud.tencent.com/document/api/213/15715)接口返回的`ImageId`获取。<br><li>通过[镜像控制台](https://console.cloud.tencent.com/cvm/image)获取。
 	ImageId *string `json:"ImageId,omitempty" name:"ImageId"`
@@ -6319,6 +6721,9 @@ type ModifyInstancesAttributeRequestParams struct {
 	// 给实例绑定用户角色，传空值为解绑操作
 	CamRoleName *string `json:"CamRoleName,omitempty" name:"CamRoleName"`
 
+	// 实例的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。<br><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。<br><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。
+	HostName *string `json:"HostName,omitempty" name:"HostName"`
+
 	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例<br><li>FALSE：表示关闭实例保护，允许通过api接口删除实例<br><br>默认取值：FALSE。
 	DisableApiTermination *bool `json:"DisableApiTermination,omitempty" name:"DisableApiTermination"`
 
@@ -6343,6 +6748,9 @@ type ModifyInstancesAttributeRequest struct {
 
 	// 给实例绑定用户角色，传空值为解绑操作
 	CamRoleName *string `json:"CamRoleName,omitempty" name:"CamRoleName"`
+
+	// 实例的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。<br><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。<br><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。
+	HostName *string `json:"HostName,omitempty" name:"HostName"`
 
 	// 实例销毁保护标志，表示是否允许通过api接口删除实例。取值范围：<br><li>TRUE：表示开启实例保护，不允许通过api接口删除实例<br><li>FALSE：表示关闭实例保护，允许通过api接口删除实例<br><br>默认取值：FALSE。
 	DisableApiTermination *bool `json:"DisableApiTermination,omitempty" name:"DisableApiTermination"`
@@ -6369,6 +6777,7 @@ func (r *ModifyInstancesAttributeRequest) FromJsonString(s string) error {
 	delete(f, "InstanceName")
 	delete(f, "SecurityGroups")
 	delete(f, "CamRoleName")
+	delete(f, "HostName")
 	delete(f, "DisableApiTermination")
 	delete(f, "CamRoleType")
 	if len(f) > 0 {
@@ -6829,13 +7238,13 @@ type Placement struct {
 	// 实例所属的可用区ID。该参数可以通过调用  [DescribeZones](https://cloud.tencent.com/document/product/213/15707) 的返回值中的Zone字段来获取。
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
 
-	// 实例所属项目ID。该参数可以通过调用 [DescribeProject](/document/api/378/4400) 的返回值中的 projectId 字段来获取。不填为默认项目。
+	// 实例所属项目ID。该参数可以通过调用 [DescribeProject](https://cloud.tencent.com/document/api/651/78725) 的返回值中的 projectId 字段来获取。不填为默认项目。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 实例所属的专用宿主机ID列表，仅用于入参。如果您有购买专用宿主机并且指定了该参数，则您购买的实例就会随机的部署在这些专用宿主机上。
 	HostIds []*string `json:"HostIds,omitempty" name:"HostIds"`
 
-	// 指定母机ip生产子机
+	// 指定母机IP生产子机
 	HostIps []*string `json:"HostIps,omitempty" name:"HostIps"`
 
 	// 实例所属的专用宿主机ID，仅用于出参。
@@ -7418,8 +7827,8 @@ type ReservedInstancePriceItem struct {
 	// 计量单位：秒
 	Duration *uint64 `json:"Duration,omitempty" name:"Duration"`
 
-	// 预留实例计费的平台描述（即操作系统）。形如：linux。
-	// 返回项： linux 。
+	// 预留实例计费的平台描述（即操作系统）。形如：Linux。
+	// 返回项： Linux 。
 	ProductDescription *string `json:"ProductDescription,omitempty" name:"ProductDescription"`
 }
 
@@ -7577,6 +7986,9 @@ type ResetInstanceRequestParams struct {
 
 	// 重装系统时，可以指定修改实例的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。<br><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。<br><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。
 	HostName *string `json:"HostName,omitempty" name:"HostName"`
+
+	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅[Windows](https://cloud.tencent.com/document/product/213/17526)和[Linux](https://cloud.tencent.com/document/product/213/17525)启动时运行命令。
+	UserData *string `json:"UserData,omitempty" name:"UserData"`
 }
 
 type ResetInstanceRequest struct {
@@ -7600,6 +8012,9 @@ type ResetInstanceRequest struct {
 
 	// 重装系统时，可以指定修改实例的主机名。<br><li>点号（.）和短横线（-）不能作为 HostName 的首尾字符，不能连续使用。<br><li>Windows 实例：名字符长度为[2, 15]，允许字母（不限制大小写）、数字和短横线（-）组成，不支持点号（.），不能全是数字。<br><li>其他类型（Linux 等）实例：字符长度为[2, 60]，允许支持多个点号，点之间为一段，每段允许字母（不限制大小写）、数字和短横线（-）组成。
 	HostName *string `json:"HostName,omitempty" name:"HostName"`
+
+	// 提供给实例使用的用户数据，需要以 base64 方式编码，支持的最大数据大小为 16KB。关于获取此参数的详细介绍，请参阅[Windows](https://cloud.tencent.com/document/product/213/17526)和[Linux](https://cloud.tencent.com/document/product/213/17525)启动时运行命令。
+	UserData *string `json:"UserData,omitempty" name:"UserData"`
 }
 
 func (r *ResetInstanceRequest) ToJsonString() string {
@@ -7620,6 +8035,7 @@ func (r *ResetInstanceRequest) FromJsonString(s string) error {
 	delete(f, "LoginSettings")
 	delete(f, "EnhancedService")
 	delete(f, "HostName")
+	delete(f, "UserData")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ResetInstanceRequest has unknown keys!", "")
 	}
@@ -7983,7 +8399,7 @@ type RunInstancesRequestParams struct {
 	// 实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。
 	DataDisks []*DataDisk `json:"DataDisks,omitempty" name:"DataDisks"`
 
-	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。
+	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。
 	VirtualPrivateCloud *VirtualPrivateCloud `json:"VirtualPrivateCloud,omitempty" name:"VirtualPrivateCloud"`
 
 	// 公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。
@@ -8078,7 +8494,7 @@ type RunInstancesRequest struct {
 	// 实例数据盘配置信息。若不指定该参数，则默认不购买数据盘。支持购买的时候指定21块数据盘，其中最多包含1块LOCAL_BASIC数据盘或者LOCAL_SSD数据盘，最多包含20块CLOUD_BASIC数据盘、CLOUD_PREMIUM数据盘或者CLOUD_SSD数据盘。
 	DataDisks []*DataDisk `json:"DataDisks,omitempty" name:"DataDisks"`
 
-	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若不指定该参数，则默认使用基础网络。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。
+	// 私有网络相关信息配置。通过该参数可以指定私有网络的ID，子网ID等信息。若在此参数中指定了私有网络IP，即表示每个实例的主网卡IP；同时，InstanceCount参数必须与私有网络IP的个数一致且不能大于20。
 	VirtualPrivateCloud *VirtualPrivateCloud `json:"VirtualPrivateCloud,omitempty" name:"VirtualPrivateCloud"`
 
 	// 公网带宽相关信息设置。若不指定该参数，则默认公网带宽为0Mbps。
@@ -8194,7 +8610,7 @@ func (r *RunInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RunInstancesResponseParams struct {
-	// 当通过本接口来创建实例时会返回该参数，表示一个或多个实例`ID`。返回实例`ID`列表并不代表实例创建成功，可根据 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询返回的InstancesSet中对应实例的`ID`的状态来判断创建是否完成；如果实例状态由“准备中”变为“正在运行”，则为创建成功。
+	// 当通过本接口来创建实例时会返回该参数，表示一个或多个实例`ID`。返回实例`ID`列表并不代表实例创建成功，可根据 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口查询返回的InstancesSet中对应实例的`ID`的状态来判断创建是否完成；如果实例状态由“PENDING(创建中)”变为“RUNNING(运行中)”，则为创建成功。
 	InstanceIdSet []*string `json:"InstanceIdSet,omitempty" name:"InstanceIdSet"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -8417,16 +8833,30 @@ type StorageBlock struct {
 	MaxSize *int64 `json:"MaxSize,omitempty" name:"MaxSize"`
 }
 
+type SyncImage struct {
+	// 镜像ID
+	ImageId *string `json:"ImageId,omitempty" name:"ImageId"`
+
+	// 地域
+	Region *string `json:"Region,omitempty" name:"Region"`
+}
+
 // Predefined struct for user
 type SyncImagesRequestParams struct {
 	// 镜像ID列表 ，镜像ID可以通过如下方式获取：<br><li>通过[DescribeImages](https://cloud.tencent.com/document/api/213/15715)接口返回的`ImageId`获取。<br><li>通过[镜像控制台](https://console.cloud.tencent.com/cvm/image)获取。<br>镜像ID必须满足限制：<br><li>镜像ID对应的镜像状态必须为`NORMAL`。<br>镜像状态请参考[镜像数据表](https://cloud.tencent.com/document/product/213/15753#Image)。
 	ImageIds []*string `json:"ImageIds,omitempty" name:"ImageIds"`
 
-	// 目的同步地域列表；必须满足限制：<br><li>不能为源地域，<br><li>必须是一个合法的Region。<br><li>暂不支持部分地域同步。<br>具体地域参数请参考[Region](https://cloud.tencent.com/document/product/213/6091)。
+	// 目的同步地域列表，必须满足如下限制：<br><li>必须是一个合法的Region。<br><li>如果是自定义镜像，则目标同步地域不能为源地域。<br><li>如果是共享镜像，则目的同步地域仅支持源地域，表示将共享镜像复制为源地域的自定义镜像。<br><li>暂不支持部分地域同步。<br>具体地域参数请参考[Region](https://cloud.tencent.com/document/product/213/6091)。
 	DestinationRegions []*string `json:"DestinationRegions,omitempty" name:"DestinationRegions"`
 
-	// 检测是否支持发起同步镜像
+	// 检测是否支持发起同步镜像。
 	DryRun *bool `json:"DryRun,omitempty" name:"DryRun"`
+
+	// 目标镜像名称。
+	ImageName *string `json:"ImageName,omitempty" name:"ImageName"`
+
+	// 是否需要返回目的地域的镜像ID。
+	ImageSetRequired *bool `json:"ImageSetRequired,omitempty" name:"ImageSetRequired"`
 }
 
 type SyncImagesRequest struct {
@@ -8435,11 +8865,17 @@ type SyncImagesRequest struct {
 	// 镜像ID列表 ，镜像ID可以通过如下方式获取：<br><li>通过[DescribeImages](https://cloud.tencent.com/document/api/213/15715)接口返回的`ImageId`获取。<br><li>通过[镜像控制台](https://console.cloud.tencent.com/cvm/image)获取。<br>镜像ID必须满足限制：<br><li>镜像ID对应的镜像状态必须为`NORMAL`。<br>镜像状态请参考[镜像数据表](https://cloud.tencent.com/document/product/213/15753#Image)。
 	ImageIds []*string `json:"ImageIds,omitempty" name:"ImageIds"`
 
-	// 目的同步地域列表；必须满足限制：<br><li>不能为源地域，<br><li>必须是一个合法的Region。<br><li>暂不支持部分地域同步。<br>具体地域参数请参考[Region](https://cloud.tencent.com/document/product/213/6091)。
+	// 目的同步地域列表，必须满足如下限制：<br><li>必须是一个合法的Region。<br><li>如果是自定义镜像，则目标同步地域不能为源地域。<br><li>如果是共享镜像，则目的同步地域仅支持源地域，表示将共享镜像复制为源地域的自定义镜像。<br><li>暂不支持部分地域同步。<br>具体地域参数请参考[Region](https://cloud.tencent.com/document/product/213/6091)。
 	DestinationRegions []*string `json:"DestinationRegions,omitempty" name:"DestinationRegions"`
 
-	// 检测是否支持发起同步镜像
+	// 检测是否支持发起同步镜像。
 	DryRun *bool `json:"DryRun,omitempty" name:"DryRun"`
+
+	// 目标镜像名称。
+	ImageName *string `json:"ImageName,omitempty" name:"ImageName"`
+
+	// 是否需要返回目的地域的镜像ID。
+	ImageSetRequired *bool `json:"ImageSetRequired,omitempty" name:"ImageSetRequired"`
 }
 
 func (r *SyncImagesRequest) ToJsonString() string {
@@ -8457,6 +8893,8 @@ func (r *SyncImagesRequest) FromJsonString(s string) error {
 	delete(f, "ImageIds")
 	delete(f, "DestinationRegions")
 	delete(f, "DryRun")
+	delete(f, "ImageName")
+	delete(f, "ImageSetRequired")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "SyncImagesRequest has unknown keys!", "")
 	}
@@ -8465,6 +8903,9 @@ func (r *SyncImagesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SyncImagesResponseParams struct {
+	// 目的地域的镜像ID信息。
+	ImageSet []*SyncImage `json:"ImageSet,omitempty" name:"ImageSet"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -8486,7 +8927,7 @@ func (r *SyncImagesResponse) FromJsonString(s string) error {
 }
 
 type SystemDisk struct {
-	// 系统盘类型。系统盘类型限制详见[存储概述](https://cloud.tencent.com/document/product/213/4952)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><br>默认取值：当前有库存的硬盘类型。
+	// 系统盘类型。系统盘类型限制详见[存储概述](https://cloud.tencent.com/document/product/213/4952)。取值范围：<br><li>LOCAL_BASIC：本地硬盘<br><li>LOCAL_SSD：本地SSD硬盘<br><li>CLOUD_BASIC：普通云硬盘<br><li>CLOUD_SSD：SSD云硬盘<br><li>CLOUD_PREMIUM：高性能云硬盘<br><li>CLOUD_BSSD：通用性SSD云硬盘<br><br>默认取值：当前有库存的硬盘类型。
 	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
 
 	// 系统盘ID。LOCAL_BASIC 和 LOCAL_SSD 类型没有ID。暂时不支持该参数。
@@ -8612,6 +9053,7 @@ type ZoneInfo struct {
 	// <li> ap-singapore-1 </li>
 	// <li> ap-singapore-2 </li>
 	// <li> ap-singapore-3 </li>
+	// <li>ap-singapore-4 </li>
 	// <li> ap-shanghai-fsi-1 </li>
 	// <li> ap-shanghai-fsi-2 </li>
 	// <li> ap-shanghai-fsi-3 </li>
@@ -8622,6 +9064,7 @@ type ZoneInfo struct {
 	// <li> ap-shanghai-3 </li>
 	// <li> ap-shanghai-4 </li>
 	// <li> ap-shanghai-5 </li>
+	// <li> ap-shanghai-8 </li>
 	// <li> ap-mumbai-1 </li>
 	// <li> ap-mumbai-2 </li>
 	// <li> eu-moscow-1 </li>
@@ -8641,7 +9084,10 @@ type ZoneInfo struct {
 	// <li> na-ashburn-2 </li>
 	// <li> ap-nanjing-1 </li>
 	// <li> ap-nanjing-2 </li>
+	// <li> ap-nanjing-3 </li>
 	// <li> sa-saopaulo-1</li>
+	// <li> ap-jakarta-1 </li>
+	// <li> ap-jakarta-2 </li>
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
 
 	// 可用区描述，例如，广州三区
