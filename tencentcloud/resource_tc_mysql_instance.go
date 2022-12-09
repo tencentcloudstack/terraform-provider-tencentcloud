@@ -589,7 +589,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 			return retryError(inErr)
 		}
 
-		if response.Response.InstanceIds == nil && clientToken != "" {
+		if r.Response.InstanceIds == nil && clientToken != "" {
 			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
 		}
 
