@@ -848,6 +848,7 @@ TDMQ for RocketMQ(trocket)
 package tencentcloud
 
 import (
+	"context"
 	"net/url"
 	"os"
 	"strconv"
@@ -875,6 +876,16 @@ const (
 
 type TencentCloudClient struct {
 	apiV3Conn *connectivity.TencentCloudClient
+}
+
+type ConfigureOverride struct {
+	secretId      string
+	secretKey     string
+	securityToken string
+	region        string
+	protocol      string
+	domain        string
+	context       context.Context
 }
 
 func Provider() terraform.ResourceProvider {
@@ -1500,63 +1511,91 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 		},
 
-		ConfigureFunc: providerConfigure,
+		ConfigureFunc: CreateConfigureFunc(nil),
 	}
 }
 
-func providerConfigure(d *schema.ResourceData) (interface{}, error) {
-	secretId := d.Get("secret_id").(string)
-	secretKey := d.Get("secret_key").(string)
-	securityToken := d.Get("security_token").(string)
-	region := d.Get("region").(string)
-	protocol := d.Get("protocol").(string)
-	domain := d.Get("domain").(string)
-
-	// standard client
-	var tcClient TencentCloudClient
-	tcClient.apiV3Conn = &connectivity.TencentCloudClient{
-		Credential: common.NewTokenCredential(
-			secretId,
-			secretKey,
-			securityToken,
-		),
-		Region:   region,
-		Protocol: protocol,
-		Domain:   domain,
+func CreateConfigureFunc(opt *ConfigureOverride) schema.ConfigureFunc {
+	if opt == nil {
+		opt = &ConfigureOverride{}
 	}
+	return func(d *schema.ResourceData) (interface{}, error) {
+		secretId := d.Get("secret_id").(string)
+		secretKey := d.Get("secret_key").(string)
+		securityToken := d.Get("security_token").(string)
+		region := d.Get("region").(string)
+		protocol := d.Get("protocol").(string)
+		domain := d.Get("domain").(string)
 
-	envRoleArn := os.Getenv(PROVIDER_ASSUME_ROLE_ARN)
-	envSessionName := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_NAME)
+		if opt.secretId != "" {
+			secretId = opt.secretId
+		}
+		if opt.secretKey != "" {
+			secretKey = opt.secretKey
+		}
+		if opt.securityToken != "" {
+			securityToken = opt.securityToken
+		}
+		if opt.region != "" {
+			region = opt.region
+		}
+		if opt.protocol != "" {
+			protocol = opt.protocol
+		}
+		if opt.domain != "" {
+			domain = opt.domain
+		}
+		if opt.context == nil {
+			opt.context = contextNil
+		}
 
-	// get assume role from env
-	if envRoleArn != "" && envSessionName != "" {
-		var assumeRoleSessionDuration int
-		if envSessionDuration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); envSessionDuration != "" {
-			var err error
-			assumeRoleSessionDuration, err = strconv.Atoi(envSessionDuration)
-			if err != nil {
-				return nil, err
+		// standard client
+		var tcClient TencentCloudClient
+		tcClient.apiV3Conn = &connectivity.TencentCloudClient{
+			Credential: common.NewTokenCredential(
+				secretId,
+				secretKey,
+				securityToken,
+			),
+			Region:   region,
+			Protocol: protocol,
+			Domain:   domain,
+			Context:  opt.context,
+		}
+
+		envRoleArn := os.Getenv(PROVIDER_ASSUME_ROLE_ARN)
+		envSessionName := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_NAME)
+
+		// get assume role from env
+		if envRoleArn != "" && envSessionName != "" {
+			var assumeRoleSessionDuration int
+			if envSessionDuration := os.Getenv(PROVIDER_ASSUME_ROLE_SESSION_DURATION); envSessionDuration != "" {
+				var err error
+				assumeRoleSessionDuration, err = strconv.Atoi(envSessionDuration)
+				if err != nil {
+					return nil, err
+				}
 			}
+			if assumeRoleSessionDuration == 0 {
+				assumeRoleSessionDuration = 7200
+			}
+
+			_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
 		}
-		if assumeRoleSessionDuration == 0 {
-			assumeRoleSessionDuration = 7200
+
+		// get assume role from tf config
+		assumeRoleList := d.Get("assume_role").(*schema.Set).List()
+		if len(assumeRoleList) == 1 {
+			assumeRole := assumeRoleList[0].(map[string]interface{})
+			assumeRoleArn := assumeRole["role_arn"].(string)
+			assumeRoleSessionName := assumeRole["session_name"].(string)
+			assumeRoleSessionDuration := assumeRole["session_duration"].(int)
+			assumeRolePolicy := assumeRole["policy"].(string)
+
+			_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
 		}
-
-		_ = genClientWithSTS(&tcClient, envRoleArn, envSessionName, assumeRoleSessionDuration, "")
+		return &tcClient, nil
 	}
-
-	// get assume role from tf config
-	assumeRoleList := d.Get("assume_role").(*schema.Set).List()
-	if len(assumeRoleList) == 1 {
-		assumeRole := assumeRoleList[0].(map[string]interface{})
-		assumeRoleArn := assumeRole["role_arn"].(string)
-		assumeRoleSessionName := assumeRole["session_name"].(string)
-		assumeRoleSessionDuration := assumeRole["session_duration"].(int)
-		assumeRolePolicy := assumeRole["policy"].(string)
-
-		_ = genClientWithSTS(&tcClient, assumeRoleArn, assumeRoleSessionName, assumeRoleSessionDuration, assumeRolePolicy)
-	}
-	return &tcClient, nil
 }
 
 func genClientWithSTS(tcClient *TencentCloudClient, assumeRoleArn, assumeRoleSessionName string, assumeRoleSessionDuration int, assumeRolePolicy string) error {

@@ -1,9 +1,11 @@
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"testing"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -13,8 +15,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-var testAccProviders map[string]terraform.ResourceProvider
+type MappedProviders map[string]terraform.ResourceProvider
+
+var testAccProviders MappedProviders
 var testAccProvider *schema.Provider
+
+var providerCache = map[string]MappedProviders{}
+
+var testAccContext = context.TODO()
 
 const (
 	ACCOUNT_TYPE_INTERNATIONAL        = "INTERNATIONAL"
@@ -43,11 +51,6 @@ func init() {
 	testAccProviders = map[string]terraform.ResourceProvider{
 		"tencentcloud": testAccProvider,
 	}
-	envProject := os.Getenv("QCI_JOB_ID")
-	envNum := os.Getenv("QCI_BUILD_NUMBER")
-	envId := os.Getenv("QCI_BUILD_ID")
-	reqCli := fmt.Sprintf("Terraform-%s/%s-%s", envProject, envNum, envId)
-	os.Setenv(connectivity.REQUEST_CLIENT, reqCli)
 }
 
 func TestProvider(t *testing.T) {
@@ -58,6 +61,94 @@ func TestProvider(t *testing.T) {
 
 func TestProviderImpl(t *testing.T) {
 	var _ = Provider()
+}
+
+func useProvider(name string, override *ConfigureOverride) MappedProviders {
+	if override.context != nil {
+		if v, ok := override.context.Value(connectivity.LogTitleCtxKey).(string); ok {
+			name += v
+		}
+	}
+	providers, ok := providerCache[name]
+	if !ok || providers == nil {
+		provider := Provider().(*schema.Provider)
+		if override != nil {
+			provider.ConfigureFunc = CreateConfigureFunc(override)
+		}
+		providers = MappedProviders{
+			"tencentcloud": provider,
+		}
+		providerCache[name] = providers
+	}
+	return providers
+}
+
+func useAccProvider(t *testing.T, accountTypeOverride ...string) MappedProviders {
+	accountType := ""
+	if len(accountTypeOverride) > 0 {
+		accountType = accountTypeOverride[0]
+	}
+	override := &ConfigureOverride{}
+	testNameRE := regexp.MustCompile(`^TestAcc(\w*)TencentCloud`)
+	logTitle := testNameRE.ReplaceAllString(t.Name(), "") + "@"
+	override.context = context.WithValue(testAccContext, connectivity.LogTitleCtxKey, logTitle)
+
+	if v := os.Getenv(PROVIDER_REGION); v == "" {
+		log.Printf("[INFO] Testing: Using %s as test region", defaultRegion)
+		override.region = defaultRegion
+	} else {
+		override.region = v
+	}
+	secretId := ""
+	secretKey := ""
+	switch {
+	case accountType == ACCOUNT_TYPE_INTERNATIONAL:
+		secretId = os.Getenv(INTERNATIONAL_PROVIDER_SECRET_ID)
+		secretKey = os.Getenv(INTERNATIONAL_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", INTERNATIONAL_PROVIDER_SECRET_ID, INTERNATIONAL_PROVIDER_SECRET_KEY)
+		}
+	case accountType == ACCOUNT_TYPE_PREPAY:
+		secretId = os.Getenv(PREPAY_PROVIDER_SECRET_ID)
+		secretKey = os.Getenv(PREPAY_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", PREPAY_PROVIDER_SECRET_ID, PREPAY_PROVIDER_SECRET_KEY)
+		}
+	case accountType == ACCOUNT_TYPE_PRIVATE:
+		secretId = os.Getenv(PRIVATE_PROVIDER_SECRET_ID)
+		secretKey = os.Getenv(PRIVATE_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", PRIVATE_PROVIDER_SECRET_ID, PRIVATE_PROVIDER_SECRET_KEY)
+		}
+	case accountType == ACCOUNT_TYPE_COMMON:
+		secretId = os.Getenv(COMMON_PROVIDER_SECRET_ID)
+		secretKey = os.Getenv(COMMON_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", COMMON_PROVIDER_SECRET_ID, COMMON_PROVIDER_SECRET_KEY)
+		}
+	case accountType == ACCOUNT_TYPE_SUB_ACCOUNT:
+		secretId = os.Getenv(SUB_ACCOUNT_PROVIDER_SECRET_ID)
+		secretKey = os.Getenv(SUB_ACCOUNT_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", SUB_ACCOUNT_PROVIDER_SECRET_ID, SUB_ACCOUNT_PROVIDER_SECRET_KEY)
+		}
+	case accountType == ACCOUNT_TYPE_SMS:
+		secretId = os.Getenv(SMS_PROVIDER_SECRET_ID)
+		secretKey = os.Getenv(SMS_PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", SMS_PROVIDER_SECRET_ID, SMS_PROVIDER_SECRET_KEY)
+		}
+	default:
+		secretId = os.Getenv(PROVIDER_SECRET_ID)
+		secretKey = os.Getenv(PROVIDER_SECRET_KEY)
+		if secretId == "" || secretKey == "" {
+			t.Fatalf("%v and %v must be set for acceptance tests\n", SUB_ACCOUNT_PROVIDER_SECRET_ID, SUB_ACCOUNT_PROVIDER_SECRET_KEY)
+		}
+	}
+
+	override.secretId = secretId
+	override.secretKey = secretKey
+	return useProvider(accountType, override)
 }
 
 func testAccPreCheck(t *testing.T) {

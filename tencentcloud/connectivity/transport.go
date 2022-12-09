@@ -2,6 +2,7 @@ package connectivity
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -12,6 +13,7 @@ import (
 )
 
 const REQUEST_CLIENT = "TENCENTCLOUD_API_REQUEST_CLIENT"
+const LogTitleCtxKey = "LogTitle"
 
 var ReqClient = "Terraform-latest"
 
@@ -23,6 +25,7 @@ func SetReqClient(name string) {
 }
 
 type LogRoundTripper struct {
+	context context.Context
 }
 
 func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Response, errRet error) {
@@ -31,7 +34,16 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 
 	var start = time.Now()
 
-	defer func() { me.log(inBytes, outBytes, errRet, start) }()
+	var title string
+
+	defer func() { me.log(title, inBytes, outBytes, errRet, start) }()
+
+	if me.context != nil {
+		v, ok := me.context.Value(LogTitleCtxKey).(string)
+		if ok {
+			title = v
+		}
+	}
 
 	bodyReader, errRet := request.GetBody()
 	if errRet != nil {
@@ -44,7 +56,7 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	}
 
 	request.Header.Set("X-TC-RequestClient", ReqClient)
-	inBytes = []byte(fmt.Sprintf("%s, request: ", request.Header[headName]))
+	inBytes = []byte(fmt.Sprintf("%s request=", request.Header[headName]))
 	requestBody, errRet := ioutil.ReadAll(bodyReader)
 	if errRet != nil {
 		return
@@ -53,7 +65,7 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 
 	headName = "X-TC-Region"
 	appendMessage := []byte(fmt.Sprintf(
-		", (host %+v, region:%+v)",
+		"; host=%+v; region=%+v",
 		request.Header["Host"],
 		request.Header[headName],
 	))
@@ -72,20 +84,23 @@ func (me *LogRoundTripper) RoundTrip(request *http.Request) (response *http.Resp
 	return
 }
 
-func (me *LogRoundTripper) log(in []byte, out []byte, err error, start time.Time) {
+func (me *LogRoundTripper) log(title string, in []byte, out []byte, err error, start time.Time) {
 	var buf bytes.Buffer
-	buf.WriteString("######")
 	tag := "[DEBUG]"
 	if err != nil {
 		tag = "[CRITICAL]"
 	}
 	buf.WriteString(tag)
+	buf.WriteString(" ")
+	if title != "" {
+		buf.WriteString(title)
+	}
+	buf.WriteString("TencentCloudSDK: ")
 	if len(in) > 0 {
-		buf.WriteString("tencentcloud-sdk-go: ")
 		buf.Write(in)
 	}
 	if len(out) > 0 {
-		buf.WriteString("; response:")
+		buf.WriteString("; response=")
 		err := json.Compact(&buf, out)
 		if err != nil {
 			out := bytes.Replace(out,
@@ -101,11 +116,11 @@ func (me *LogRoundTripper) log(in []byte, out []byte, err error, start time.Time
 	}
 
 	if err != nil {
-		buf.WriteString("; error:")
+		buf.WriteString("; error=")
 		buf.WriteString(err.Error())
 	}
 
-	costFormat := fmt.Sprintf(",cost %s", time.Since(start).String())
+	costFormat := fmt.Sprintf("; cost=%s", time.Since(start).String())
 	buf.WriteString(costFormat)
 
 	log.Println(buf.String())
