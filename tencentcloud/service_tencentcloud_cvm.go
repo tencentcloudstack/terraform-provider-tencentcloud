@@ -1258,7 +1258,6 @@ func (me *CvmService) DescribeCvmHpcClusterById(ctx context.Context, hpcClusterI
 	logId := getLogId(ctx)
 
 	request := cvm.NewDescribeHpcClustersRequest()
-	request. = []
 
 	defer func() {
 		if errRet != nil {
@@ -1305,7 +1304,6 @@ func (me *CvmService) DeleteCvmHpcClusterById(ctx context.Context, hpcClusterId 
 	logId := getLogId(ctx)
 
 	request := cvm.NewDeleteHpcClustersRequest()
-	request.HpcClusterId = &hpcClusterId
 
 	defer func() {
 		if errRet != nil {
