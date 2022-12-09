@@ -12,8 +12,10 @@ import (
 	"time"
 )
 
+type LogTitleCtx string
+
 const REQUEST_CLIENT = "TENCENTCLOUD_API_REQUEST_CLIENT"
-const LogTitleCtxKey = "LogTitle"
+const LogTitleCtxKey = LogTitleCtx("LogTitle")
 
 var ReqClient = "Terraform-latest"
 
