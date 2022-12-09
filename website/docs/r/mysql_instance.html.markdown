@@ -40,7 +40,8 @@ resource "tencentcloud_mysql_instance" "default" {
   }
 
   parameters = {
-    max_connections = "1000"
+    character_set_server = "UTF8"
+    max_connections      = "1000"
   }
 }
 ```
