@@ -110,7 +110,7 @@ func TestAccTencentCloudMysqlInstanceResource_prepaid(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_mysql_instance.mysql_exclusive",
+				ResourceName:            "tencentcloud_mysql_instance.prepaid",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "param_template_id", "fast_upgrade"},
