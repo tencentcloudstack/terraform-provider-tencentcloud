@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
+
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -48,7 +50,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTkeResourceBasic(t *testing.T) {
+func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -56,7 +58,6 @@ func TestAccTencentCloudTkeResourceBasic(t *testing.T) {
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
-				//PreventDiskCleanup: true,
 				Config: testAccTkeCluster,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
@@ -101,7 +102,7 @@ func TestAccTencentCloudTkeResourceBasic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudTkeResourceLogs(t *testing.T) {
+func TestAccTencentCloudKubernetesClusterResourceLogsAddons(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -109,8 +110,7 @@ func TestAccTencentCloudTkeResourceLogs(t *testing.T) {
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
-				//PreventDiskCleanup: true,
-				Config: testAccTkeClusterLogs,
+				Config: testAccTkeClusterLogsAddons,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "192.168.0.0/18"),
@@ -126,7 +126,7 @@ func TestAccTencentCloudTkeResourceLogs(t *testing.T) {
 					// do not update so fast
 					time.Sleep(10 * time.Second)
 				},
-				Config: testAccTkeClusterLogsUpdate,
+				Config: testAccTkeClusterLogsAddonsUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_cidr", "192.168.0.0/18"),
@@ -142,6 +142,73 @@ func TestAccTencentCloudTkeResourceLogs(t *testing.T) {
 				),
 			},
 		},
+	})
+}
+
+func TestUnitTkeAddonDiff(t *testing.T) {
+	t.Parallel()
+	addons1 := []interface{}{
+		map[string]interface{}{
+			"name":  "tcr",
+			"param": `{ "version": "1.0" }`,
+		},
+		map[string]interface{}{
+			"name":  "cos",
+			"param": `{ "version": "1.2" }`,
+		},
+		map[string]interface{}{
+			"name":  "oom_guard",
+			"param": `{ "version": "1.2" }`,
+		},
+		map[string]interface{}{
+			"name":  "npdplus",
+			"param": `{ "version": "1.1" }`,
+		},
+	}
+
+	addons2 := []interface{}{
+		map[string]interface{}{
+			"name":  "tcr",
+			"param": `{ "version": "1.0" }`,
+		},
+		map[string]interface{}{
+			"name":  "oom_guard",
+			"param": `{ "version": "2.0" }`,
+		},
+		map[string]interface{}{
+			"name":  "prom",
+			"param": `{ "version": "1.1" }`,
+		},
+		map[string]interface{}{
+			"name":  "npdplus",
+			"param": `{ "version": "1.3" }`,
+		},
+	}
+
+	adds, removes, changes := resourceTkeGetAddonsDiffs(addons1, addons2)
+
+	assert.Len(t, adds, 1)
+	assert.Len(t, removes, 1)
+	assert.Len(t, changes, 2)
+
+	assert.Contains(t, adds, map[string]interface{}{
+		"name":  "prom",
+		"param": `{ "version": "1.1" }`,
+	})
+
+	assert.Contains(t, removes, map[string]interface{}{
+		"name":  "cos",
+		"param": `{ "version": "1.2" }`,
+	})
+
+	assert.Contains(t, changes, map[string]interface{}{
+		"name":  "oom_guard",
+		"param": `{ "version": "2.0" }`,
+	})
+
+	assert.Contains(t, changes, map[string]interface{}{
+		"name":  "npdplus",
+		"param": `{ "version": "1.3" }`,
 	})
 }
 
@@ -229,6 +296,50 @@ func testAccCheckTkeExists(n string) resource.TestCheckFunc {
 
 	}
 }
+
+const testAccTkeExtensionAddons = `
+variable "addons" {
+  default = [{
+    name  = "CFS",
+    param = {
+      "kind" : "App", "spec" : {
+        "chart" : { "chartName" : "cfs", "chartVersion" : "1.0.7" },
+        "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
+      }
+    }
+  },
+    {
+      name  = "OOMGuard",
+      param = {
+        "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : "1.0.1" } }
+      }
+    }]
+}
+
+variable "addons_update" {
+  default = [{
+    name  = "CFS",
+    param = {
+      "kind" : "App", "spec" : {
+        "chart" : { "chartName" : "cfs", "chartVersion" : "1.0.8" },
+        "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
+      }
+    }
+  },
+    {
+      name  = "OOMGuard",
+      param = {
+        "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : "1.0.1" } }
+      }
+    },
+    {
+      name  = "cos",
+      param = {
+        "kind" : "App", "spec" : { "chart" : { "chartName" : "cos", "chartVersion" : "1.0.1" } }
+      }
+    }]
+}
+`
 
 const TkeDeps = TkeExclusiveNetwork + TkeInstanceType + TkeCIDRs + defaultImages + defaultSecurityGroupData
 
@@ -428,7 +539,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 `
 
-const testAccTkeClusterLogs = TkeDeps + `
+const testAccTkeClusterLogsAddons = TkeDeps + testAccTkeExtensionAddons + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -445,6 +556,32 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
   cluster_deploy_type 						 = "MANAGED_CLUSTER"
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = local.final_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    subnet_id                  = local.subnet_id
+    img_id                     = var.default_img_id
+    security_group_ids         = [local.sg_id]
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  dynamic "extension_addon" {
+    for_each = var.addons
+    content {
+      name = extension_addon.value.name
+      param = jsonencode(extension_addon.value.param)
+    }
+  }
 
   log_agent {
     enabled = true
@@ -459,7 +596,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 }`
 
-const testAccTkeClusterLogsUpdate = TkeDeps + `
+const testAccTkeClusterLogsAddonsUpdate = TkeDeps + testAccTkeExtensionAddons + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -476,6 +613,32 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
   cluster_deploy_type 						 = "MANAGED_CLUSTER"
+
+  dynamic "extension_addon" {
+    for_each = var.addons_update
+    content {
+      name = extension_addon.value.name
+      param = jsonencode(extension_addon.value.param)
+    }
+  }
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = local.final_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 10
+    public_ip_assigned         = true
+    subnet_id                  = local.subnet_id
+    img_id                     = var.default_img_id
+    security_group_ids         = [local.sg_id]
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
 
   log_agent {
     enabled = true

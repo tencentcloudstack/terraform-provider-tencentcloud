@@ -213,6 +213,15 @@ data "tencentcloud_vpc_subnets" "vpc_first" {
   availability_zone = var.availability_zone_first
 }
 
+# fetch latest addon(chart) versions
+data "tencentcloud_kubernetes_charts" "charts" {}
+
+locals {
+  chartNames = data.tencentcloud_kubernetes_charts.charts.chart_list.*.name
+  chartVersions = data.tencentcloud_kubernetes_charts.charts.chart_list.*.latest_version
+  chartMap = zipmap(local.chartNames, local.chartVersions)
+}
+
 resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
   cluster_cidr                               = var.cluster_cidr
@@ -242,28 +251,31 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   }
 
   extension_addon {
-    name  = "NodeProblemDetectorPlus"
-    param = "{\"kind\":\"NodeProblemDetector\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"npd\"},\"spec\":{\"version\":\"v2.0.0\",\"selfCure\":true,\"uin\":\"12345\",\"subUin\":\"12345\",\"policys\":[{\"actions\":{\"CVM\":{\"reBootCVM\":true,\"retryCounts\":1},\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1},\"nodePod\":{\"evict\":true,\"retryCounts\":1}},\"conditionType\":\"Ready\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":true,\"retryCounts\":1}},\"conditionType\":\"KubeletProblem\"},{\"actions\":{\"runtime\":{\"reStartDokcer\":true,\"reStartKubelet\":false,\"retryCounts\":1}},\"conditionType\":\"DockerdProblem\"}]}}"
+    name  = "COS"
+    param = jsonencode({
+      "kind" : "App", "spec" : {
+        "chart" : { "chartName" : "cos", "chartVersion" : local.chartMap["cos"] },
+        "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
+      }
+    })
+  }
+  extension_addon {
+    name  = "SecurityGroupPolicy"
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : local.chartMap["securitygrouppolicy"] } }
+    })
   }
   extension_addon {
     name  = "OOMGuard"
-    param = "{\"kind\":\"OOMGuard\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"oom\"},\"spec\":{}}"
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : local.chartMap["oomguard"] } }
+    })
   }
   extension_addon {
-    name  = "DNSAutoscaler"
-    param = "{\"kind\":\"DNSAutoscaler\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"da\"},\"spec\":{}}"
-  }
-  extension_addon {
-    name  = "COS"
-    param = "{\"kind\":\"COS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cos\"},\"spec\":{\"version\":\"1.0.0\"}}"
-  }
-  extension_addon {
-    name  = "CFS"
-    param = "{\"kind\":\"CFS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cfs\"},\"spec\":{\"version\":\"1.0.0\"}}"
-  }
-  extension_addon {
-    name  = "CBS"
-    param = "{\"kind\":\"CBS\",\"apiVersion\":\"platform.tke/v1\",\"metadata\":{\"generateName\":\"cbs\"},\"spec\":{}}"
+    name  = "OLM"
+    param = jsonencode({
+      "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : local.chartMap["olm"] } }
+    })
   }
 }
 ```
@@ -1260,9 +1272,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Specify cluster authentication configuration. Only available for managed cluster and `cluster_version` >= 1.20.",
 		},
 		"extension_addon": {
-			Type:     schema.TypeList,
-			Optional: true,
-			ForceNew: true,
+			Type:        schema.TypeList,
+			Optional:    true,
+			Description: "Information of the add-on to be installed.",
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"name": {
@@ -1271,13 +1283,13 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 						Description: "Add-on name.",
 					},
 					"param": {
-						Type:        schema.TypeString,
-						Required:    true,
-						Description: "Description of the add-on resource object in JSON string format.",
+						Type:             schema.TypeString,
+						Required:         true,
+						DiffSuppressFunc: helper.DiffSupressJSON,
+						Description:      "Parameter of the add-on resource object in JSON string format, please check the example at the top of page for reference.",
 					},
 				},
 			},
-			Description: "Information of the add-on to be installed.",
 		},
 		"log_agent": {
 			Type:        schema.TypeList,
@@ -2908,6 +2920,56 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if d.HasChange("extension_addon") {
+		o, n := d.GetChange("extension_addon")
+		adds, removes, changes := resourceTkeGetAddonsDiffs(o.([]interface{}), n.([]interface{}))
+		updates := append(adds, changes...)
+		for i := range updates {
+			var err error
+			addon := updates[i].(map[string]interface{})
+			param := addon["param"].(string)
+			name, err := tkeService.GetAddonNameFromJson(param)
+			if err != nil {
+				return err
+			}
+			_, has, _ := tkeService.PollingAddonsPhase(ctx, id, name, nil)
+			if has {
+				err = tkeService.UpdateExtensionAddon(ctx, id, name, param)
+			} else {
+				err = tkeService.CreateExtensionAddon(ctx, id, param)
+			}
+			if err != nil {
+				return err
+			}
+			_, _, err = tkeService.PollingAddonsPhase(ctx, id, name, nil)
+			if err != nil {
+				return err
+			}
+		}
+
+		for i := range removes {
+			addon := removes[i].(map[string]interface{})
+			param := addon["param"].(string)
+			name, err := tkeService.GetAddonNameFromJson(param)
+			if err != nil {
+				return err
+			}
+			_, has, _ := tkeService.PollingAddonsPhase(ctx, id, name, nil)
+			if !has {
+				continue
+			}
+			err = tkeService.DeleteExtensionAddon(ctx, id, name)
+			if err != nil {
+				return err
+			}
+			_, has, _ = tkeService.PollingAddonsPhase(ctx, id, name, nil)
+			if has {
+				return fmt.Errorf("addon %s still exists", name)
+			}
+		}
+
+	}
+
 	d.Partial(false)
 	if err := resourceTencentCloudTkeClusterRead(d, meta); err != nil {
 		log.Printf("[WARN]%s resource.kubernetes_cluster.read after update fail , %s", logId, err.Error())
@@ -2991,4 +3053,29 @@ func resourceTencentCloudTkeClusterDelete(d *schema.ResourceData, meta interface
 	}
 	return err
 
+}
+
+func resourceTkeGetAddonsDiffs(o, n []interface{}) (adds, removes, changes []interface{}) {
+	indexByName := func(i interface{}) int {
+		v := i.(map[string]interface{})
+		return helper.HashString(v["name"].(string))
+	}
+	indexAll := func(i interface{}) int {
+		v := i.(map[string]interface{})
+		name := v["name"].(string)
+		param := v["param"].(string)
+		return helper.HashString(fmt.Sprintf("%s#%s", name, param))
+	}
+
+	os := schema.NewSet(indexByName, o)
+	ns := schema.NewSet(indexByName, n)
+
+	adds = ns.Difference(os).List()
+	removes = os.Difference(ns).List()
+
+	fullIndexedKeeps := schema.NewSet(indexAll, ns.Intersection(os).List())
+	fullIndexedOlds := schema.NewSet(indexAll, o)
+
+	changes = fullIndexedKeeps.Difference(fullIndexedOlds).List()
+	return
 }

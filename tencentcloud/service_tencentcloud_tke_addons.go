@@ -90,7 +90,7 @@ func (me *TkeService) PollingAddonsPhase(ctx context.Context, clusterId, addonNa
 		addonResponseData = &AddonResponseData{}
 	}
 
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
 		response, has, err = me.DescribeExtensionAddon(ctx, clusterId, addonName)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -227,4 +227,16 @@ func (me *TkeService) GetAddonsPath(cluster, addon string) string {
 		addonPath = fmt.Sprintf("/%s", addon)
 	}
 	return fmt.Sprintf("/apis/application.tkestack.io/v1/namespaces/%s/apps%s", cluster, addonPath)
+}
+
+func (me *TkeService) GetAddonNameFromJson(reqJson string) (name string, err error) {
+	reqBody := &AddonRequestBody{}
+	err = json.Unmarshal([]byte(reqJson), reqBody)
+	if err != nil {
+		err = fmt.Errorf("error when reading chart name in addon param: %s", err.Error())
+	}
+	if reqBody.Spec != nil && reqBody.Spec.Chart != nil && reqBody.Spec.Chart.ChartName != nil {
+		name = *reqBody.Spec.Chart.ChartName
+	}
+	return
 }

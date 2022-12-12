@@ -1,0 +1,4 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: support tke cluster addon modify
+```
+
