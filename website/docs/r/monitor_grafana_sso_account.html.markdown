@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Monitor(Monitor)"
+subcategory: "Cloud Monitor(Grafana)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_grafana_sso_account"
 sidebar_current: "docs-tencentcloud-resource-monitor_grafana_sso_account"

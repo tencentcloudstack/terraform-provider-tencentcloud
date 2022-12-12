@@ -431,12 +431,6 @@ Cloud Monitor(Monitor)
 	tencentcloud_monitor_policy_binding_object
     tencentcloud_monitor_binding_receiver
 	tencentcloud_monitor_alarm_policy
-	tencentcloud_monitor_tmp_instance
-	tencentcloud_monitor_tmp_cvm_agent
-	tencentcloud_monitor_tmp_scrape_job
-	tencentcloud_monitor_tmp_exporter_integration
-	tencentcloud_monitor_tmp_alert_rule
-    tencentcloud_monitor_tmp_recording_rule
 	tencentcloud_monitor_tmp_tke_template
 	tencentcloud_monitor_tmp_tke_template_attachment
 	tencentcloud_monitor_tmp_tke_alert_policy
@@ -446,6 +440,17 @@ Cloud Monitor(Monitor)
 	tencentcloud_monitor_tmp_tke_global_notification
 	tencentcloud_monitor_tmp_tke_cluster_agent
 
+Cloud Monitor(Prometheus)
+  Resource
+  	tencentcloud_monitor_tmp_instance
+	tencentcloud_monitor_tmp_alert_rule
+	tencentcloud_monitor_tmp_exporter_integration
+	tencentcloud_monitor_tmp_cvm_agent
+	tencentcloud_monitor_tmp_scrape_job
+	tencentcloud_monitor_tmp_recording_rule
+
+Cloud Monitor(Grafana)
+  Resource
 	tencentcloud_monitor_grafana_instance
 	tencentcloud_monitor_grafana_integration
 	tencentcloud_monitor_grafana_notification_channel
