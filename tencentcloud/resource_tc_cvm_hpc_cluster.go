@@ -90,14 +90,18 @@ func resourceTencentCloudCvmHpcClusterCreate(d *schema.ResourceData, meta interf
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Println("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
 	if err != nil {
-		log.Println("[CRITAL]%s create cvm hpcCluster failed, reason:%+v", logId, err)
-		return nil
+		log.Printf("[CRITAL]%s create cvm hpcCluster failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if len(response.Response.HpcClusterSet) < 1 {
+		return fmt.Errorf("resource `tencentcloud_cvm_hpc_cluster` create failed.")
 	}
 
 	hpcClusterId = *response.Response.HpcClusterSet[0].HpcClusterId
@@ -125,7 +129,7 @@ func resourceTencentCloudCvmHpcClusterRead(d *schema.ResourceData, meta interfac
 
 	if hpcCluster == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		return fmt.Errorf("resource `tencentcloud_cvm_hpc_cluster` %s does not exist", d.Id())
 	}
 
 	if hpcCluster.Zone != nil {
@@ -172,12 +176,12 @@ func resourceTencentCloudCvmHpcClusterUpdate(d *schema.ResourceData, meta interf
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Println("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 	if err != nil {
-		log.Println("[CRITAL]%s create cvm hpcCluster failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create cvm hpcCluster failed, reason:%+v", logId, err)
 		return nil
 	}
 

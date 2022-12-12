@@ -292,6 +292,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_placement_group
     tencentcloud_reserved_instance
     tencentcloud_image
+	tencentcloud_cvm_hpc_cluster
 
 TDSQL-C MySQL(CynosDB)
   Data Source
