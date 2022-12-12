@@ -88,7 +88,7 @@ func resourceTencentCloudVpcRouteEntry() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(ALL_GATE_WAY_TYPES),
-				Description:  "Type of next-hop. Valid values: `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `SSLVPN`, `NAT`, `NORMAL_CVM`, `EIP` and `CCN`.",
+				Description:  "Type of next-hop. Valid values: `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `HAVIP`, `NAT`, `NORMAL_CVM`, `EIP` and `LOCAL_GATEWAY`.",
 			},
 			"next_hub": {
 				Type:        schema.TypeString,

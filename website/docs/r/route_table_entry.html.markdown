@@ -51,7 +51,7 @@ The following arguments are supported:
 
 * `destination_cidr_block` - (Required, String, ForceNew) Destination address block.
 * `next_hub` - (Required, String, ForceNew) ID of next-hop gateway. Note: when `next_type` is EIP, GatewayId should be `0`.
-* `next_type` - (Required, String, ForceNew) Type of next-hop. Valid values: `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `SSLVPN`, `NAT`, `NORMAL_CVM`, `EIP` and `CCN`.
+* `next_type` - (Required, String, ForceNew) Type of next-hop. Valid values: `CVM`, `VPN`, `DIRECTCONNECT`, `PEERCONNECTION`, `HAVIP`, `NAT`, `NORMAL_CVM`, `EIP` and `LOCAL_GATEWAY`.
 * `route_table_id` - (Required, String, ForceNew) ID of routing table to which this entry belongs.
 * `description` - (Optional, String, ForceNew) Description of the routing table entry.
 * `disabled` - (Optional, Bool) Whether the entry is disabled, default is `false`.
