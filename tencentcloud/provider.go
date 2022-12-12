@@ -619,6 +619,7 @@ Virtual Private Cloud(VPC)
 	tencentcloud_vpc_bandwidth_package_attachment
 	tencentcloud_vpc_end_point_service
 	tencentcloud_vpc_end_point
+	tencentcloud_vpc_end_point_service_white_list
 
 VPN Connections(VPN)
   Data Source
@@ -1504,6 +1505,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),
 			"tencentcloud_vpc_end_point_service":                      resourceTencentCloudVpcEndPointService(),
 			"tencentcloud_vpc_end_point":                              resourceTencentCloudVpcEndPoint(),
+			"tencentcloud_vpc_end_point_service_white_list":           resourceTencentCloudVpcEndPointServiceWhiteList(),
 		},
 
 		ConfigureFunc: providerConfigure,
