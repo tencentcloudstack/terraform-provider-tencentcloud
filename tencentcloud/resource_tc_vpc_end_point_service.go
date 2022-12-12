@@ -5,11 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_vpc_end_point_service" "end_point_service" {
-  vpc_id = ""
-  end_point_service_name = ""
-  auto_accept_flag =
-  service_instance_id = ""
-  is_pass_service =
+  vpc_id = "vpc-391sv4w3"
+  end_point_service_name = "terraform-endpoint-service"
+  auto_accept_flag = false
+  service_instance_id = "lb-o5f6x7ke"
 }
 ```
 
@@ -67,10 +66,28 @@ func resourceTencentCloudVpcEndPointService() *schema.Resource {
 				Description: "Id of service instance, like lb-xxx.",
 			},
 
-			"is_pass_service": {
-				Optional:    true,
-				Type:        schema.TypeBool,
-				Description: "Whether is PassService.",
+			"service_owner": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "APPID.",
+			},
+
+			"service_vip": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "VIP of backend service.",
+			},
+
+			"end_point_count": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Count of end point.",
+			},
+
+			"create_time": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Create Time.",
 			},
 		},
 	}
@@ -103,10 +120,6 @@ func resourceTencentCloudVpcEndPointServiceCreate(d *schema.ResourceData, meta i
 		request.ServiceInstanceId = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("is_pass_service"); v != nil {
-		request.IsPassService = helper.Bool(v.(bool))
-	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().CreateVpcEndPointService(request)
 		if e != nil {
@@ -122,8 +135,8 @@ func resourceTencentCloudVpcEndPointServiceCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	endPointServiceId = *response.Response.EndPointServiceId
-	d.SetId(helper.String(endPointServiceId))
+	endPointServiceId = *response.Response.EndPointService.EndPointServiceId
+	d.SetId(endPointServiceId)
 
 	return resourceTencentCloudVpcEndPointServiceRead(d, meta)
 }
@@ -141,6 +154,7 @@ func resourceTencentCloudVpcEndPointServiceRead(d *schema.ResourceData, meta int
 	endPointServiceId := d.Id()
 
 	endPointService, err := service.DescribeVpcEndPointServiceById(ctx, endPointServiceId)
+
 	if err != nil {
 		return err
 	}
@@ -154,8 +168,8 @@ func resourceTencentCloudVpcEndPointServiceRead(d *schema.ResourceData, meta int
 		_ = d.Set("vpc_id", endPointService.VpcId)
 	}
 
-	if endPointService.EndPointServiceName != nil {
-		_ = d.Set("end_point_service_name", endPointService.EndPointServiceName)
+	if endPointService.ServiceName != nil {
+		_ = d.Set("end_point_service_name", endPointService.ServiceName)
 	}
 
 	if endPointService.AutoAcceptFlag != nil {
@@ -166,8 +180,20 @@ func resourceTencentCloudVpcEndPointServiceRead(d *schema.ResourceData, meta int
 		_ = d.Set("service_instance_id", endPointService.ServiceInstanceId)
 	}
 
-	if endPointService.IsPassService != nil {
-		_ = d.Set("is_pass_service", endPointService.IsPassService)
+	if endPointService.ServiceOwner != nil {
+		_ = d.Set("service_owner", endPointService.ServiceOwner)
+	}
+
+	if endPointService.ServiceVip != nil {
+		_ = d.Set("service_vip", endPointService.ServiceVip)
+	}
+
+	if endPointService.EndPointCount != nil {
+		_ = d.Set("end_point_count", endPointService.EndPointCount)
+	}
+
+	if endPointService.CreateTime != nil {
+		_ = d.Set("create_time", endPointService.CreateTime)
 	}
 
 	return nil
@@ -184,9 +210,17 @@ func resourceTencentCloudVpcEndPointServiceUpdate(d *schema.ResourceData, meta i
 	endPointServiceId := d.Id()
 
 	request.EndPointServiceId = &endPointServiceId
-	if d.HasChange("vpc_id") {
-		if v, ok := d.GetOk("vpc_id"); ok {
-			request.VpcId = helper.String(v.(string))
+
+	if v, ok := d.GetOk("vpc_id"); ok {
+		request.VpcId = helper.String(v.(string))
+	}
+
+	unsupportedUpdateFields := []string{
+		"vpc_id",
+	}
+	for _, field := range unsupportedUpdateFields {
+		if d.HasChange(field) {
+			return fmt.Errorf("tencentcloud_vpc_end_point_service update on %s is not support yet", field)
 		}
 	}
 

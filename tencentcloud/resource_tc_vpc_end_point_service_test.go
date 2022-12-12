@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestTencentCloudVpcEndPointServiceResource_basic(t *testing.T) {
+func TestAccTencentCloudVpcEndPointServiceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -29,11 +29,10 @@ func TestTencentCloudVpcEndPointServiceResource_basic(t *testing.T) {
 const testAccVpcEndPointService = `
 
 resource "tencentcloud_vpc_end_point_service" "end_point_service" {
-  vpc_id = ""
-  end_point_service_name = ""
-  auto_accept_flag = 
-  service_instance_id = ""
-  is_pass_service = 
+  vpc_id = "vpc-391sv4w3"
+  end_point_service_name = "terraform-endpoint-service"
+  auto_accept_flag = false
+  service_instance_id = "lb-o5f6x7ke"
 }
 
 `

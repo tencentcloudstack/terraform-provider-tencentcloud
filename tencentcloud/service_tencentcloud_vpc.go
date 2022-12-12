@@ -5412,3 +5412,74 @@ func (me *VpcService) DeleteVpcBandwidthPackageAttachmentById(ctx context.Contex
 
 	return
 }
+
+func (me *VpcService) DescribeVpcEndPointServiceById(ctx context.Context, endPointServiceId string) (endPointService *vpc.EndPointService, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeVpcEndPointServiceRequest()
+	request.EndPointServiceIds = []*string{&endPointServiceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*vpc.EndPointService, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeVpcEndPointService(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EndPointServiceSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.EndPointServiceSet...)
+		if len(response.Response.EndPointServiceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	endPointService = instances[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcEndPointServiceById(ctx context.Context, endPointServiceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteVpcEndPointServiceRequest()
+	request.EndPointServiceId = &endPointServiceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DeleteVpcEndPointService(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
