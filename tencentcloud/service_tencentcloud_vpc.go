@@ -5483,3 +5483,74 @@ func (me *VpcService) DeleteVpcEndPointServiceById(ctx context.Context, endPoint
 
 	return
 }
+
+func (me *VpcService) DescribeVpcEndPointById(ctx context.Context, endPointId string) (endPoint *vpc.EndPoint, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeVpcEndPointRequest()
+	request.EndPointId = []*string{&endPointId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*vpc.EndPoint, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeVpcEndPoint(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EndPointSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.EndPointSet...)
+		if len(response.Response.EndPointSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	endPoint = instances[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcEndPointById(ctx context.Context, endPointId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteVpcEndPointRequest()
+	request.EndPointId = &endPointId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DeleteVpcEndPoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
