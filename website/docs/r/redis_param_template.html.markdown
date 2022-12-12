@@ -18,7 +18,7 @@ resource "tencentcloud_redis_param_template" "param_template" {
   name         = "example-template"
   description  = "This is an example redis param template."
   product_type = 6
-  params {
+  params_override {
     key   = "timeout"
     value = "7200"
   }
@@ -32,7 +32,7 @@ resource "tencentcloud_redis_param_template" "param_template" {
   name        = "example-copied"
   description = "This is an copied redis param template from xxx."
   template_id = "xxx"
-  params {
+  params_override {
     key   = "timeout"
     value = "7200"
   }
