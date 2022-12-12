@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestTencentCloudNeedFixCvmHpcClusterResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixCvmHpcClusterResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
