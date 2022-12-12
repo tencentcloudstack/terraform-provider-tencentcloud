@@ -95,6 +95,30 @@ func testSweepMySQLInstance(region string) error {
 	return nil
 }
 
+func TestAccTencentCloudMysqlInstanceResource_prepaid(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckMysqlMasterInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMySQLPrepaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.prepaid"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.prepaid", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "charge_type", "PREPAID"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_mysql_instance.prepaid",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "param_template_id", "fast_upgrade"},
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudMysqlInstanceResource_DeviceType(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -305,6 +329,22 @@ func testAccCheckMysqlMasterInstanceExists(n string) resource.TestCheckFunc {
 		return nil
 	}
 }
+
+const testAccMySQLPrepaid = `
+resource "tencentcloud_mysql_instance" "prepaid" {
+  charge_type       = "PREPAID"
+  prepaid_period    = 1
+  mem_size          = 2000
+  volume_size       = 30
+  instance_name     = "testAccMysqlPrepaid"
+  engine_version    = "5.7"
+  intranet_port     = 3360
+  root_password     = "test1234"
+  availability_zone = "ap-guangzhou-3"
+  first_slave_zone  = "ap-guangzhou-3"
+  force_delete      = true
+}
+`
 
 const testAccMySQLDeviceType = `
 variable "temporary_param_tmpl_id" {
