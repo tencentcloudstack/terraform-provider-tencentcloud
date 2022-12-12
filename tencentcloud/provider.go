@@ -617,6 +617,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_ha_vip_eip_attachment
 	tencentcloud_vpc_bandwidth_package
 	tencentcloud_vpc_bandwidth_package_attachment
+	tencentcloud_vpc_flow_log
 
 VPN Connections(VPN)
   Data Source
@@ -1500,6 +1501,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),
+			"tencentcloud_vpc_flow_log":                               resourceTencentCloudVpcFlowLog(),
 		},
 
 		ConfigureFunc: providerConfigure,
