@@ -292,6 +292,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_placement_group
     tencentcloud_reserved_instance
     tencentcloud_image
+	tencentcloud_cvm_hpc_cluster
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -1498,6 +1499,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
 			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
+			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),
 		},
 
 		ConfigureFunc: providerConfigure,
