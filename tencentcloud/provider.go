@@ -680,6 +680,7 @@ TencentCloud Elastic Microservice(TEM)
 	tencentcloud_tem_log_config
 	tencentcloud_tem_scale_rule
 	tencentcloud_tem_gateway
+	tencentcloud_tem_application_service
 
 TencentCloud EdgeOne(TEO)
   Data Source
@@ -1435,6 +1436,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tem_log_config":                           resourceTencentCloudTemLogConfig(),
 			"tencentcloud_tem_scale_rule":                           resourceTencentCloudTemScaleRule(),
 			"tencentcloud_tem_gateway":                              resourceTencentCloudTemGateway(),
+			"tencentcloud_tem_application_service":                  resourceTencentCloudTemApplicationService(),
 			"tencentcloud_teo_zone":                                 resourceTencentCloudTeoZone(),
 			"tencentcloud_teo_zone_setting":                         resourceTencentCloudTeoZoneSetting(),
 			"tencentcloud_teo_dns_record":                           resourceTencentCloudTeoDnsRecord(),

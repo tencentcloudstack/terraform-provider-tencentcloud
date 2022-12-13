@@ -468,3 +468,54 @@ func (me *TemService) DeleteTemGatewayById(ctx context.Context, environmentId st
 
 	return
 }
+
+func (me *TemService) DescribeTemApplicationServiceById(ctx context.Context, environmentId string, applicationId string) (applicationService *tem.DescribeApplicationServiceListResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tem.NewDescribeApplicationServiceListRequest()
+	request.EnvironmentId = &environmentId
+	request.ApplicationId = &applicationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTemClient().DescribeApplicationServiceList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	applicationService = response.Response
+	return
+}
+
+func (me *TemService) DeleteTemApplicationServiceById(ctx context.Context, environmentId string, applicationId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tem.NewDeleteApplicationServiceRequest()
+	request.EnvironmentId = &environmentId
+	request.ApplicationId = &applicationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTemClient().DeleteApplicationService(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
