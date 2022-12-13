@@ -1,5 +1,5 @@
 ---
-subcategory: "Cloud Monitor(Monitor)"
+subcategory: "TencentCloud Managed Service for Grafana(TCMG)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_monitor_grafana_instance"
 sidebar_current: "docs-tencentcloud-resource-monitor_grafana_instance"
