@@ -440,7 +440,7 @@ Cloud Monitor(Monitor)
 	tencentcloud_monitor_tmp_tke_global_notification
 	tencentcloud_monitor_tmp_tke_cluster_agent
 
-Cloud Monitor(Prometheus)
+Managed Service for Prometheus(TMP)
   Resource
   	tencentcloud_monitor_tmp_instance
 	tencentcloud_monitor_tmp_alert_rule
@@ -449,7 +449,7 @@ Cloud Monitor(Prometheus)
 	tencentcloud_monitor_tmp_scrape_job
 	tencentcloud_monitor_tmp_recording_rule
 
-Cloud Monitor(Grafana)
+TencentCloud Managed Service for Grafana(TCMG)
   Resource
 	tencentcloud_monitor_grafana_instance
 	tencentcloud_monitor_grafana_integration
@@ -457,7 +457,7 @@ Cloud Monitor(Grafana)
 	tencentcloud_monitor_grafana_plugin
 	tencentcloud_monitor_grafana_sso_account
 
-PostgreSQL
+TencentDB for PostgreSQL(PostgreSQL)
   Data Source
 	tencentcloud_postgresql_instances
 	tencentcloud_postgresql_specinfos
