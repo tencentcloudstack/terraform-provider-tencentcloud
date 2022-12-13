@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestTencentCloudVpcEndPointServiceWhiteListResource_basic(t *testing.T) {
+func TestAccTencentCloudVpcEndPointServiceWhiteListResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
