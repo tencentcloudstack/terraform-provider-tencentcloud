@@ -62,6 +62,6 @@ In addition to all arguments above, the following attributes are exported:
 tem application_service can be imported using the environmentId#applicationId#serviceName, e.g.
 
 ```
-terraform import tencentcloud_tem_application_service.application_service application_service_id
+terraform import tencentcloud_tem_application_service.application_service en-dpxyydl5#app-jrl3346j#test0-1
 ```
 
