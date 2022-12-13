@@ -15,8 +15,13 @@ func TestAccTencentCloudNeedFixCvmHpcClusterResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCvmHpcCluster,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cvm_hpc_cluster.hpc_cluster", "id")),
+				Config:    testAccCvmHpcCluster,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-beijing") },
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_hpc_cluster.hpc_cluster", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_hpc_cluster.hpc_cluster", "name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cvm_hpc_cluster.hpc_cluster", "remark"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_cvm_hpc_cluster.hpc_cluster",
