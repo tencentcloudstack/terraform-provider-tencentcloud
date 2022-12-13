@@ -33,12 +33,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"strings"
 )
 
 func resourceTencentCloudTemApplicationService() *schema.Resource {
@@ -119,7 +120,6 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 
 	var (
 		request       = tem.NewCreateApplicationServiceRequest()
-		response      = tem.NewCreateApplicationServiceResponse()
 		environmentId string
 		applicationId string
 	)
@@ -167,7 +167,6 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
