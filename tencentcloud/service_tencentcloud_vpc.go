@@ -5412,3 +5412,88 @@ func (me *VpcService) DeleteVpcBandwidthPackageAttachmentById(ctx context.Contex
 
 	return
 }
+
+func (me *VpcService) DescribeFlowLogs(ctx context.Context, request *vpc.DescribeFlowLogsRequest) (result []*vpc.FlowLog, errRet error) {
+	logId := getLogId(ctx)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeFlowLogs(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	result = response.Response.FlowLog
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DescribeVpcFlowLogById(ctx context.Context, flowLogId, vpcId string) (FlowLog *vpc.FlowLog, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeFlowLogRequest()
+	request.FlowLogId = &flowLogId
+
+	if vpcId != "" {
+		request.VpcId = &vpcId
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeFlowLog(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.FlowLog) < 1 {
+		return
+	}
+
+	FlowLog = response.Response.FlowLog[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcFlowLogById(ctx context.Context, flowLogId, vpcId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteFlowLogRequest()
+	request.FlowLogId = &flowLogId
+	if vpcId != "" {
+		request.VpcId = &vpcId
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DeleteFlowLog(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
