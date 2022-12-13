@@ -861,3 +861,11 @@ const (
 )
 
 // End of DTS
+
+// TEM
+const (
+	defaultEnvironmentId = "en-758oo2ej"
+	defaultApplicationId = "app-joqr9bd5"
+)
+
+// End of TEM

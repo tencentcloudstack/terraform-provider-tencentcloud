@@ -5,24 +5,23 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tem_application_service" "application_service" {
-  environment_id = "en-xxx"
-  application_id = "xxx"
+  environment_id = "en-dpxyydl5"
+  application_id = "app-jrl3346j"
   service {
 		type = "CLUSTER"
-		service_name = "consumer"
+		service_name = "test0-1"
 		port_mapping_item_list {
 			port = 80
 			target_port = 80
 			protocol = "tcp"
 		}
-
   }
 }
 ```
 
 Import
 
-tem application_service can be imported using the id, e.g.
+tem application_service can be imported using the environmentId#applicationId#serviceName, e.g.
 
 ```
 terraform import tencentcloud_tem_application_service.application_service application_service_id
@@ -122,6 +121,7 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 		request       = tem.NewCreateApplicationServiceRequest()
 		environmentId string
 		applicationId string
+		serviceName   string
 	)
 	if v, ok := d.GetOk("environment_id"); ok {
 		environmentId = v.(string)
@@ -139,6 +139,7 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 			servicePortMapping.Type = helper.String(v.(string))
 		}
 		if v, ok := dMap["service_name"]; ok {
+			serviceName = v.(string)
 			servicePortMapping.ServiceName = helper.String(v.(string))
 		}
 		if v, ok := dMap["port_mapping_item_list"]; ok {
@@ -174,7 +175,7 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	d.SetId(environmentId + FILED_SP + applicationId)
+	d.SetId(environmentId + FILED_SP + applicationId + FILED_SP + serviceName)
 
 	return resourceTencentCloudTemApplicationServiceRead(d, meta)
 }
@@ -190,11 +191,12 @@ func resourceTencentCloudTemApplicationServiceRead(d *schema.ResourceData, meta 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	environmentId := idSplit[0]
 	applicationId := idSplit[1]
+	serviceName := idSplit[2]
 
 	res, err := service.DescribeTemApplicationServiceById(ctx, environmentId, applicationId)
 	if err != nil {
@@ -209,7 +211,12 @@ func resourceTencentCloudTemApplicationServiceRead(d *schema.ResourceData, meta 
 	_ = d.Set("environment_id", environmentId)
 	_ = d.Set("application_id", applicationId)
 
-	applicationService := res.Result.ServicePortMappingList[0]
+	var applicationService *tem.ServicePortMapping
+	for _, v := range res.Result.ServicePortMappingList {
+		if *v.ServiceName == serviceName {
+			applicationService = v
+		}
+	}
 
 	if applicationService != nil {
 		serviceMap := map[string]interface{}{}
@@ -242,10 +249,13 @@ func resourceTencentCloudTemApplicationServiceRead(d *schema.ResourceData, meta 
 				portMappingItemListList = append(portMappingItemListList, portMappingItemListMap)
 			}
 
-			serviceMap["port_mapping_item_list"] = []interface{}{portMappingItemListList}
+			serviceMap["port_mapping_item_list"] = portMappingItemListList
 		}
 
-		_ = d.Set("service", []interface{}{serviceMap})
+		err = d.Set("service", []interface{}{serviceMap})
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -257,14 +267,24 @@ func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, met
 
 	logId := getLogId(contextNil)
 
+	unsupportedUpdateFields := []string{
+		"service",
+	}
+	for _, field := range unsupportedUpdateFields {
+		if d.HasChange(field) {
+			return fmt.Errorf("tencentcloud_tem_application_service update on %s is not support yet", field)
+		}
+	}
+
 	request := tem.NewModifyApplicationServiceRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	environmentId := idSplit[0]
 	applicationId := idSplit[1]
+	serviceName := idSplit[2]
 
 	request.EnvironmentId = &environmentId
 	request.ApplicationId = &applicationId
@@ -274,9 +294,8 @@ func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, met
 			if v, ok := dMap["type"]; ok {
 				servicePortMapping.Type = helper.String(v.(string))
 			}
-			if v, ok := dMap["service_name"]; ok {
-				servicePortMapping.ServiceName = helper.String(v.(string))
-			}
+
+			servicePortMapping.ServiceName = &serviceName
 			if v, ok := dMap["port_mapping_item_list"]; ok {
 				for _, item := range v.([]interface{}) {
 					portMappingItemListMap := item.(map[string]interface{})
@@ -323,14 +342,15 @@ func resourceTencentCloudTemApplicationServiceDelete(d *schema.ResourceData, met
 
 	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	environmentId := idSplit[0]
 	applicationId := idSplit[1]
+	serviceName := idSplit[2]
 
-	if err := service.DeleteTemApplicationServiceById(ctx, environmentId, applicationId); err != nil {
-		return nil
+	if err := service.DeleteTemApplicationServiceById(ctx, environmentId, applicationId, serviceName); err != nil {
+		return err
 	}
 
 	return nil

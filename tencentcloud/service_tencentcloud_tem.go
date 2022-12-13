@@ -495,12 +495,13 @@ func (me *TemService) DescribeTemApplicationServiceById(ctx context.Context, env
 	return
 }
 
-func (me *TemService) DeleteTemApplicationServiceById(ctx context.Context, environmentId string, applicationId string) (errRet error) {
+func (me *TemService) DeleteTemApplicationServiceById(ctx context.Context, environmentId string, applicationId string, serviceName string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tem.NewDeleteApplicationServiceRequest()
 	request.EnvironmentId = &environmentId
 	request.ApplicationId = &applicationId
+	request.ServiceName = &serviceName
 
 	defer func() {
 		if errRet != nil {
