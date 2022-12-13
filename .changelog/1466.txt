@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_vpc_end_point_service
+```
+
+```release-note:new-resource
+tencentcloud_vpc_end_point
+```
