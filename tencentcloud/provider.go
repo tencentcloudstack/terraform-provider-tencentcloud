@@ -622,9 +622,15 @@ Virtual Private Cloud(VPC)
     tencentcloud_ha_vip_eip_attachment
 	tencentcloud_vpc_bandwidth_package
 	tencentcloud_vpc_bandwidth_package_attachment
-	tencentcloud_vpc_flow_log
+
+Private Link(PLS)
+  Resource
 	tencentcloud_vpc_end_point_service
 	tencentcloud_vpc_end_point
+
+Flow Logs(FL)
+  Resource
+ 	tencentcloud_vpc_flow_log
 
 VPN Connections(VPN)
   Data Source

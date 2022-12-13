@@ -1,5 +1,5 @@
 ---
-subcategory: "Virtual Private Cloud(VPC)"
+subcategory: "Flow Logs(FL)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vpc_flow_log"
 sidebar_current: "docs-tencentcloud-resource-vpc_flow_log"

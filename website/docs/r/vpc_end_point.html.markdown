@@ -1,5 +1,5 @@
 ---
-subcategory: "Virtual Private Cloud(VPC)"
+subcategory: "Private Link(PLS)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_vpc_end_point"
 sidebar_current: "docs-tencentcloud-resource-vpc_end_point"
