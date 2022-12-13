@@ -30,7 +30,7 @@ func TestAccTencentCloudVpcEndPointServiceResource_basic(t *testing.T) {
 const testAccVpcEndPointService = `
 
 resource "tencentcloud_vpc_end_point_service" "end_point_service" {
-  vpc_id = "vpc-391sv4w3"
+  vpc_id = "vpc-4owdpnwr"
   end_point_service_name = "terraform-endpoint-service"
   auto_accept_flag = false
   service_instance_id = "lb-6ksdvyqw"
