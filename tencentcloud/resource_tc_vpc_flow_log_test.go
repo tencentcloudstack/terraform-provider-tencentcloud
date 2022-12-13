@@ -48,7 +48,7 @@ func init() {
 	})
 }
 
-func TestTencentCloudVpcFlowLogResource_basic(t *testing.T) {
+func TestAccTencentCloudVpcFlowLogResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
