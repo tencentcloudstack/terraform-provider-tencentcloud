@@ -84,7 +84,6 @@ func resourceTencentCloudVpcEndPointServiceWhiteListCreate(d *schema.ResourceDat
 
 	var (
 		request           = vpc.NewCreateVpcEndPointServiceWhiteListRequest()
-		response          = vpc.NewCreateVpcEndPointServiceWhiteListResponse()
 		userUin           string
 		endPointServiceId string
 	)
@@ -109,7 +108,6 @@ func resourceTencentCloudVpcEndPointServiceWhiteListCreate(d *schema.ResourceDat
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
