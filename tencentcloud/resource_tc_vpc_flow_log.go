@@ -237,6 +237,10 @@ func resourceTencentCloudVpcFlowLogRead(d *schema.ResourceData, meta interface{}
 
 	flowLogId, vpcId, err := resourceTencentCloudGetFlowLogId(d)
 
+	if err != nil {
+		return err
+	}
+
 	flowLog, err := service.DescribeVpcFlowLogById(ctx, flowLogId, vpcId)
 	if err != nil {
 		return err
