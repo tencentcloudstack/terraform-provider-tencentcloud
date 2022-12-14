@@ -1,3 +1,23 @@
+## 1.79.2 (December 13, 2022)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cvm_hpc_cluster` ([#1462](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1462))
+* **New Resource:** `tencentcloud_tem_application_service` ([#1467](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1467))
+* **New Resource:** `tencentcloud_vpc_end_point` ([#1466](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1466))
+* **New Resource:** `tencentcloud_vpc_end_point_service` ([#1466](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1466))
+* **New Resource:** `tencentcloud_vpc_flow_log` ([#1463](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1463))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cam_service_linked_role: support for multiple qcs_service_name ([#1452](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1452))
+* resource/tencentcloud_kubernetes_cluster: support tke cluster addon modify ([#1363](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1363))
+* resource/tencentcloud_route_table_entry: update the `next_type` value ([#1461](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1461))
+
+BUG FIXES:
+
+* resource/tencentcloud_mysql_instance: fix: mysql - retry npe err ([#1460](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1460))
+
 ## 1.79.1 (December 7, 2022)
 
 FEATURES:

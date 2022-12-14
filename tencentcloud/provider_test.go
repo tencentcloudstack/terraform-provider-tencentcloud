@@ -85,6 +85,10 @@ func testAccStepPreConfigSetTempAKSK(t *testing.T, accountType string) {
 	testAccPreCheckCommon(t, accountType)
 }
 
+func testAccStepSetRegion(t *testing.T, region string) {
+	os.Setenv(PROVIDER_REGION, region)
+}
+
 func testAccPreCheckCommon(t *testing.T, accountType string) {
 	if v := os.Getenv(PROVIDER_REGION); v == "" {
 		log.Printf("[INFO] Testing: Using %s as test region", defaultRegion)

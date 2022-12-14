@@ -1253,3 +1253,74 @@ func (me *CvmService) ResizeInstanceDisks(ctx context.Context, request *cvm.Resi
 
 	return
 }
+
+func (me *CvmService) DescribeCvmHpcClusterById(ctx context.Context, hpcClusterId string) (hpcCluster *cvm.HpcClusterInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDescribeHpcClustersRequest()
+	request.HpcClusterIds = []*string{&hpcClusterId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*cvm.HpcClusterInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCvmClient().DescribeHpcClusters(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.HpcClusterSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.HpcClusterSet...)
+		if len(response.Response.HpcClusterSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	hpcCluster = instances[0]
+	return
+}
+
+func (me *CvmService) DeleteCvmHpcClusterById(ctx context.Context, hpcClusterId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDeleteHpcClustersRequest()
+	request.HpcClusterIds = []*string{&hpcClusterId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DeleteHpcClusters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

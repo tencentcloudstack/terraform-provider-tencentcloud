@@ -30,6 +30,7 @@ resource "tencentcloud_mysql_instance" "default" {
   }
 
   parameters = {
+    character_set_server = "UTF8"
     max_connections = "1000"
   }
 }
@@ -589,7 +590,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 			return retryError(inErr)
 		}
 
-		if response.Response.InstanceIds == nil && clientToken != "" {
+		if r.Response.InstanceIds == nil && clientToken != "" {
 			return resource.RetryableError(fmt.Errorf("%s returns nil instanceIds but client token provided, retrying", request.GetAction()))
 		}
 

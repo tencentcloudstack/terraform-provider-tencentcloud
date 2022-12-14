@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"hash/crc32"
 	"reflect"
 	"sort"
 	"strings"
@@ -27,9 +28,24 @@ func DataResourceIdsHash(ids []string) string {
 	return fmt.Sprintf("%d", hashcode.String(buf.String()))
 }
 
+// HashString hashes a string to a unique hashcode.
+//
+// This will be removed in v2 without replacement. So we place here instead of import.
+func HashString(s string) int {
+	v := int(crc32.ChecksumIEEE([]byte(s)))
+	if v >= 0 {
+		return v
+	}
+	if -v >= 0 {
+		return -v
+	}
+	// v == MinInt
+	return 0
+}
+
 // Generates a hash for the set hash function used by the ID
 func DataResourceIdHash(id string) string {
-	return fmt.Sprintf("%d", hashcode.String(id))
+	return fmt.Sprintf("%d", HashString(id))
 }
 
 func GetTags(d *schema.ResourceData, k string) map[string]string {

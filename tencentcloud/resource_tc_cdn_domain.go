@@ -413,6 +413,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 									"carry_headers": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Default:     "off",
 										Description: "Whether to return the newly added header during force redirection. Values: `on`, `off`.",
 									},
 								},

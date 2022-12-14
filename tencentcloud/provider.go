@@ -292,6 +292,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_placement_group
     tencentcloud_reserved_instance
     tencentcloud_image
+	tencentcloud_cvm_hpc_cluster
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -430,12 +431,6 @@ Cloud Monitor(Monitor)
 	tencentcloud_monitor_policy_binding_object
     tencentcloud_monitor_binding_receiver
 	tencentcloud_monitor_alarm_policy
-	tencentcloud_monitor_tmp_instance
-	tencentcloud_monitor_tmp_cvm_agent
-	tencentcloud_monitor_tmp_scrape_job
-	tencentcloud_monitor_tmp_exporter_integration
-	tencentcloud_monitor_tmp_alert_rule
-    tencentcloud_monitor_tmp_recording_rule
 	tencentcloud_monitor_tmp_tke_template
 	tencentcloud_monitor_tmp_tke_template_attachment
 	tencentcloud_monitor_tmp_tke_alert_policy
@@ -445,13 +440,24 @@ Cloud Monitor(Monitor)
 	tencentcloud_monitor_tmp_tke_global_notification
 	tencentcloud_monitor_tmp_tke_cluster_agent
 
+Managed Service for Prometheus(TMP)
+  Resource
+  	tencentcloud_monitor_tmp_instance
+	tencentcloud_monitor_tmp_alert_rule
+	tencentcloud_monitor_tmp_exporter_integration
+	tencentcloud_monitor_tmp_cvm_agent
+	tencentcloud_monitor_tmp_scrape_job
+	tencentcloud_monitor_tmp_recording_rule
+
+TencentCloud Managed Service for Grafana(TCMG)
+  Resource
 	tencentcloud_monitor_grafana_instance
 	tencentcloud_monitor_grafana_integration
 	tencentcloud_monitor_grafana_notification_channel
 	tencentcloud_monitor_grafana_plugin
 	tencentcloud_monitor_grafana_sso_account
 
-PostgreSQL
+TencentDB for PostgreSQL(PostgreSQL)
   Data Source
 	tencentcloud_postgresql_instances
 	tencentcloud_postgresql_specinfos
@@ -617,6 +623,15 @@ Virtual Private Cloud(VPC)
 	tencentcloud_vpc_bandwidth_package
 	tencentcloud_vpc_bandwidth_package_attachment
 
+Private Link(PLS)
+  Resource
+	tencentcloud_vpc_end_point_service
+	tencentcloud_vpc_end_point
+
+Flow Logs(FL)
+  Resource
+ 	tencentcloud_vpc_flow_log
+
 VPN Connections(VPN)
   Data Source
     tencentcloud_vpn_connections
@@ -676,6 +691,7 @@ TencentCloud Elastic Microservice(TEM)
 	tencentcloud_tem_log_config
 	tencentcloud_tem_scale_rule
 	tencentcloud_tem_gateway
+	tencentcloud_tem_application_service
 
 TencentCloud EdgeOne(TEO)
   Data Source
@@ -1431,6 +1447,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tem_log_config":                           resourceTencentCloudTemLogConfig(),
 			"tencentcloud_tem_scale_rule":                           resourceTencentCloudTemScaleRule(),
 			"tencentcloud_tem_gateway":                              resourceTencentCloudTemGateway(),
+			"tencentcloud_tem_application_service":                  resourceTencentCloudTemApplicationService(),
 			"tencentcloud_teo_zone":                                 resourceTencentCloudTeoZone(),
 			"tencentcloud_teo_zone_setting":                         resourceTencentCloudTeoZoneSetting(),
 			"tencentcloud_teo_dns_record":                           resourceTencentCloudTeoDnsRecord(),
@@ -1498,6 +1515,11 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
 			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
+			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),
+			"tencentcloud_vpc_flow_log":                               resourceTencentCloudVpcFlowLog(),
+			"tencentcloud_vpc_end_point_service":                      resourceTencentCloudVpcEndPointService(),
+			"tencentcloud_vpc_end_point":                              resourceTencentCloudVpcEndPoint(),
+			"tencentcloud_vpc_end_point_service_white_list":           resourceTencentCloudVpcEndPointServiceWhiteList(),
 		},
 
 		ConfigureFunc: providerConfigure,

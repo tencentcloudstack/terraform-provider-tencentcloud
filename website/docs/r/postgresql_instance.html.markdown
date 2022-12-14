@@ -1,5 +1,5 @@
 ---
-subcategory: "PostgreSQL"
+subcategory: "TencentDB for PostgreSQL(PostgreSQL)"
 layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_postgresql_instance"
 sidebar_current: "docs-tencentcloud-resource-postgresql_instance"
