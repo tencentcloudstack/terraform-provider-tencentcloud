@@ -151,6 +151,7 @@ type TencentCloudClient struct {
 	tdcpgConn          *tdcpg.Client
 	dbbrainConn        *dbbrain.Client
 	dtsConn            *dts.Client
+	ciConn             *cos.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -973,6 +974,30 @@ func (me *TencentCloudClient) UseDtsClient() *dts.Client {
 	me.dtsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dtsConn
+}
+
+// UseCiClient returns ci client for service
+func (me *TencentCloudClient) UseCiClient(bucket string) *cos.Client {
+	u, _ := url.Parse(fmt.Sprintf("https://%s.pic.%s.myqcloud.com", bucket, me.Region))
+
+	if me.ciConn != nil && me.ciConn.BaseURL.CIURL == u {
+		return me.ciConn
+	}
+
+	baseUrl := &cos.BaseURL{
+		CIURL: u,
+	}
+
+	me.ciConn = cos.NewClient(baseUrl, &http.Client{
+		Timeout: 100 * time.Second,
+		Transport: &cos.AuthorizationTransport{
+			SecretID:     me.Credential.SecretId,
+			SecretKey:    me.Credential.SecretKey,
+			SessionToken: me.Credential.Token,
+		},
+	})
+
+	return me.ciConn
 }
 
 func getEnvDefault(key string, defVal int) int {
