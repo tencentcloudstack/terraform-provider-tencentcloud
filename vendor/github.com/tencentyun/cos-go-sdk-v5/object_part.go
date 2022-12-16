@@ -88,7 +88,7 @@ func (s *ObjectService) UploadPart(ctx context.Context, name, uploadID string, p
 	}
 	// 分块上传不支持 Chunk 上传
 	if err == nil {
-		// 与 go http 保持一致, 非bytes.Buffer/bytes.Reader/strings.Reader需用户指定ContentLength
+		// 非bytes.Buffer/bytes.Reader/strings.Reader/os.File 由用户指定ContentLength, 或使用 Chunk 上传
 		if opt != nil && opt.ContentLength == 0 && IsLenReader(r) {
 			opt.ContentLength = totalBytes
 		}
@@ -280,7 +280,7 @@ func (s *ObjectService) CopyPart(ctx context.Context, name, uploadID string, par
 		optHeader: opt,
 		result:    &bs,
 	}
-	resp, err := s.client.send(ctx, &sendOpt)
+	resp, err := s.client.doRetry(ctx, &sendOpt)
 
 	if err == nil { // 请求正常
 		err = xml.Unmarshal(bs.Bytes(), &res) // body 正常返回
@@ -386,7 +386,7 @@ func copyworker(ctx context.Context, s *ObjectService, jobs <-chan *CopyJobs, re
 					results <- &copyres
 					break
 				}
-				if resp != nil && resp.StatusCode < 499 {
+				if resp != nil && resp.StatusCode < 499 && resp.StatusCode >= 400 {
 					results <- &copyres
 					break
 				}

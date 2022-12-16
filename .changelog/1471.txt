@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_ci_bucket_attachment
+```
