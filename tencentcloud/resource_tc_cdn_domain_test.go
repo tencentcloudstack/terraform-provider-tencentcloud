@@ -1125,7 +1125,7 @@ resource "tencentcloud_cdn_domain" "foo" {
     cache_time = 10000
     rule_paths=["jpg", "png"]
 	rule_type="file"
-    follow_origin_switch = "off"
+    follow_origin_switch = "on"
     heuristic_cache_switch = "off"
   }
 
