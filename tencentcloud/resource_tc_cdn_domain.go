@@ -710,6 +710,18 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
 							Description:  "Follow the source station configuration switch. Valid values are `on` and `off`.",
 						},
+						"heuristic_cache_switch": {
+							Type:         schema.TypeString,
+							Optional:     true,
+							Default:      CDN_SWITCH_OFF,
+							ValidateFunc: validateAllowedStringValue(CDN_SWITCH),
+							Description:  "Specify whether to enable heuristic cache, only available while `follow_origin_switch` enabled, values: `on`, `off` (Default).",
+						},
+						"heuristic_cache_time": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Specify heuristic cache time in second, only available while `follow_origin_switch` and `heuristic_cache_switch` enabled.",
+						},
 					},
 				},
 			},
@@ -1735,6 +1747,20 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 			re.CacheConfig.NoCache.Switch = &noCacheSwitch
 			re.CacheConfig.NoCache.Revalidate = &reValidate
 			re.CacheConfig.FollowOrigin.Switch = &followOriginSwitch
+			heuristicCacheSwitch := ruleCacheMap["heuristic_cache_switch"].(string)
+			heuristicCacheTime := ruleCacheMap["heuristic_cache_time"].(int)
+			if heuristicCacheSwitch != "" {
+				re.CacheConfig.FollowOrigin.HeuristicCache = &cdn.HeuristicCache{
+					Switch:      &heuristicCacheSwitch,
+					CacheConfig: &cdn.CacheConfig{},
+				}
+				if heuristicCacheTime > 0 {
+					re.CacheConfig.FollowOrigin.HeuristicCache.CacheConfig.HeuristicCacheTimeSwitch = helper.String("on")
+					re.CacheConfig.FollowOrigin.HeuristicCache.CacheConfig.HeuristicCacheTime = helper.IntInt64(heuristicCacheTime)
+				} else {
+					re.CacheConfig.FollowOrigin.HeuristicCache.CacheConfig.HeuristicCacheTimeSwitch = helper.String("off")
+				}
+			}
 			ruleCaches = append(ruleCaches, re)
 		}
 		request.Cache = &cdn.Cache{}
@@ -2434,14 +2460,29 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 			ruleCache := make(map[string]interface{})
 			ruleCache["rule_paths"] = value.RulePaths
 			ruleCache["rule_type"] = value.RuleType
-			ruleCache["switch"] = value.CacheConfig.Cache.Switch
-			ruleCache["cache_time"] = value.CacheConfig.Cache.CacheTime
-			ruleCache["compare_max_age"] = value.CacheConfig.Cache.CompareMaxAge
-			ruleCache["ignore_cache_control"] = value.CacheConfig.Cache.IgnoreCacheControl
-			ruleCache["ignore_set_cookie"] = value.CacheConfig.Cache.IgnoreSetCookie
-			ruleCache["no_cache_switch"] = value.CacheConfig.NoCache.Switch
-			ruleCache["re_validate"] = value.CacheConfig.NoCache.Revalidate
-			ruleCache["follow_origin_switch"] = value.CacheConfig.FollowOrigin.Switch
+			if value.CacheConfig == nil {
+				continue
+			}
+			if value.CacheConfig.Cache != nil {
+				ruleCache["switch"] = value.CacheConfig.Cache.Switch
+				ruleCache["cache_time"] = value.CacheConfig.Cache.CacheTime
+				ruleCache["compare_max_age"] = value.CacheConfig.Cache.CompareMaxAge
+				ruleCache["ignore_cache_control"] = value.CacheConfig.Cache.IgnoreCacheControl
+				ruleCache["ignore_set_cookie"] = value.CacheConfig.Cache.IgnoreSetCookie
+			}
+			if value.CacheConfig.NoCache != nil {
+				ruleCache["no_cache_switch"] = value.CacheConfig.NoCache.Switch
+				ruleCache["re_validate"] = value.CacheConfig.NoCache.Revalidate
+			}
+			if value.CacheConfig.FollowOrigin != nil {
+				ruleCache["follow_origin_switch"] = value.CacheConfig.FollowOrigin.Switch
+				if htc := value.CacheConfig.FollowOrigin.HeuristicCache; htc != nil {
+					ruleCache["heuristic_cache_switch"] = htc.Switch
+					if htc.CacheConfig != nil {
+						ruleCache["heuristic_cache_time"] = htc.CacheConfig.HeuristicCacheTime
+					}
+				}
+			}
 			ruleCaches[index] = ruleCache
 		}
 		_ = d.Set("rule_cache", ruleCaches)
@@ -3051,6 +3092,20 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			re.CacheConfig.NoCache.Switch = &noCacheSwitch
 			re.CacheConfig.NoCache.Revalidate = &reValidate
 			re.CacheConfig.FollowOrigin.Switch = &followOriginSwitch
+			heuristicCacheSwitch := ruleCacheMap["heuristic_cache_switch"].(string)
+			heuristicCacheTime := ruleCacheMap["heuristic_cache_time"].(int)
+			if heuristicCacheSwitch != "" {
+				re.CacheConfig.FollowOrigin.HeuristicCache = &cdn.HeuristicCache{
+					Switch:      &heuristicCacheSwitch,
+					CacheConfig: &cdn.CacheConfig{},
+				}
+				if heuristicCacheTime > 0 {
+					re.CacheConfig.FollowOrigin.HeuristicCache.CacheConfig.HeuristicCacheTimeSwitch = helper.String("on")
+					re.CacheConfig.FollowOrigin.HeuristicCache.CacheConfig.HeuristicCacheTime = helper.IntInt64(heuristicCacheTime)
+				} else {
+					re.CacheConfig.FollowOrigin.HeuristicCache.CacheConfig.HeuristicCacheTimeSwitch = helper.String("off")
+				}
+			}
 			ruleCaches = append(ruleCaches, re)
 		}
 		request.Cache = &cdn.Cache{}

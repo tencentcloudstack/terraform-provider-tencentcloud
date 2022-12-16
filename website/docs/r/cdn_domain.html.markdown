@@ -394,6 +394,8 @@ The `rule_cache` object supports the following:
 * `cache_time` - (Required, Int) Cache expiration time setting, the unit is second, the maximum can be set to 365 days.
 * `compare_max_age` - (Optional, String) Advanced cache expiration configuration. When it is turned on, it will compare the max-age value returned by the origin site with the cache expiration time set in CacheRules, and take the minimum value to cache at the node. Valid values are `on` and `off`. Default value is `off`.
 * `follow_origin_switch` - (Optional, String) Follow the source station configuration switch. Valid values are `on` and `off`.
+* `heuristic_cache_switch` - (Optional, String) Specify whether to enable heuristic cache, only available while `follow_origin_switch` enabled, values: `on`, `off` (Default).
+* `heuristic_cache_time` - (Optional, Int) Specify heuristic cache time in second, only available while `follow_origin_switch` and `heuristic_cache_switch` enabled.
 * `ignore_cache_control` - (Optional, String) Force caching. After opening, the no-store and no-cache resources returned by the origin site will also be cached in accordance with the CacheRules rules. Valid values are `on` and `off`. Default value is `off`.
 * `ignore_set_cookie` - (Optional, String) Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. This parameter is for white-list customer.
 * `no_cache_switch` - (Optional, String) Cache configuration switch. Valid values are `on` and `off`.
