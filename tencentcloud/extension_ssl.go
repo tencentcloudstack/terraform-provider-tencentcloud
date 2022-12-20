@@ -46,3 +46,19 @@ var SSL_CERT_TYPE = []string{
 	SSL_CERT_TYPE_SERVER,
 	SSL_CERT_TYPE_CA,
 }
+var DNSPOD_OV_EV_TYPE = []int64{51, 52, 53}
+var GEOTRUST_OV_EV_TYPE = []int64{8, 9, 10}
+var SECURESITE_OV_EV_TYPE = []int64{3, 4, 5, 6, 7}
+var TRUSTASIA_OV_EV_TYPE = []int64{13, 14, 15, 16, 17}
+var GLOBALSIGN_OV_EV_TYPE = []int64{18, 19, 20, 21, 22, 23, 24}
+
+func IsContainProductId(productId int64, lists ...[]int64) bool {
+	for _, list := range lists {
+		for _, item := range list {
+			if item == productId {
+				return true
+			}
+		}
+	}
+	return false
+}

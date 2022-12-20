@@ -81,9 +81,9 @@ func resourceTencentCloudSSLInstance() *schema.Resource {
 				Type:         schema.TypeInt,
 				Required:     true,
 				ForceNew:     true,
-				ValidateFunc: validateIntegerInRange(3, 42),
-				Description: "Certificate commodity ID. Valid value ranges: (3~42). `3` means SecureSite Enhanced Enterprise Edition (EV Pro), " +
-					"`4` means SecureSite Enhanced (EV), `5` means SecureSite Enterprise Professional Edition (OV Pro), " +
+				ValidateFunc: validateIntegerInRange(3, 56),
+				Description: "Certificate commodity ID. Valid value ranges: (3~42). `3` means SecureSite enhanced Enterprise Edition (EV Pro), " +
+					"`4` means SecureSite enhanced (EV), `5` means SecureSite Enterprise Professional Edition (OV Pro), " +
 					"`6` means SecureSite Enterprise (OV), `7` means SecureSite Enterprise Type (OV) wildcard, " +
 					"`8` means Geotrust enhanced (EV), `9` means Geotrust enterprise (OV), " +
 					"`10` means Geotrust enterprise (OV) wildcard, `11` means TrustAsia domain type multi-domain SSL certificate, " +
@@ -97,11 +97,18 @@ func resourceTencentCloudSSLInstance() *schema.Resource {
 					"`26` means Wotrus domain type multi-domain certificate, `27` means Wotrus domain type wildcard certificate, " +
 					"`28` means Wotrus enterprise type certificate, `29` means Wotrus enterprise multi-domain certificate, " +
 					"`30` means Wotrus enterprise wildcard certificate, `31` means Wotrus enhanced certificate, " +
-					"`32` means Wotrus enhanced multi-domain certificate, `33` means DNSPod national secret domain name certificate, " +
-					"`34` means DNSPod national secret domain name certificate Multi-domain certificate, `35` means DNSPod national secret domain name wildcard certificate, " +
-					"`37` means DNSPod national secret enterprise certificate, `38` means DNSPod national secret enterprise multi-domain certificate, " +
-					"`39` means DNSPod national secret enterprise wildcard certificate, `40` means DNSPod national secret increase Strong certificate, " +
-					"`41` means DNSPod national secret enhanced multi-domain certificate, `42` means TrustAsia domain-type wildcard multi-domain certificate.",
+					"`32` means Wotrus enhanced multi-domain certificate, `33` means WoTrus National Secret Domain name Certificate, " +
+					"`34` means WoTrus National Secret Domain name Certificate (multiple domain names), `35` WoTrus National Secret Domain name Certificate (wildcard), " +
+					"`37` means WoTrus State Secret Enterprise Certificate, `38` means WoTrus State Secret Enterprise Certificate (multiple domain names), " +
+					"`39` means WoTrus State Secret Enterprise Certificate (wildcard), `40` means WoTrus National secret enhanced certificate, " +
+					"`41` means WoTrus National Secret enhanced Certificate (multiple domain names), `42` means TrustAsia- Domain name Certificate (wildcard multiple domain names), " +
+					"`43` means DNSPod Enterprise (OV) SSL Certificate, `44` means DNSPod- Enterprise (OV) wildcard SSL certificate, " +
+					"`45` means DNSPod Enterprise (OV) Multi-domain name SSL Certificate, `46` means DNSPod enhanced (EV) SSL certificate, " +
+					"`47` means DNSPod enhanced (EV) multi-domain name SSL certificate, `48` means DNSPod Domain name Type (DV) SSL Certificate, " +
+					"`49` means DNSPod Domain name Type (DV) wildcard SSL certificate, `50` means DNSPod domain name type (DV) multi-domain name SSL certificate, " +
+					"`51` means DNSPod (State Secret) Enterprise (OV) SSL certificate, `52` DNSPod (National Secret) Enterprise (OV) wildcard SSL certificate, " +
+					"`53` means DNSPod (National Secret) Enterprise (OV) multi-domain SSL certificate, `54` means DNSPod (National Secret) Domain Name (DV) SSL certificate, " +
+					"`55` means DNSPod (National Secret) Domain Name Type (DV) wildcard SSL certificate, `56` means DNSPod (National Secret) Domain Name Type (DV) multi-domain SSL certificate.",
 			},
 			"domain_num": {
 				Type:        schema.TypeInt,
@@ -126,6 +133,11 @@ func resourceTencentCloudSSLInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "Remark name.",
+			},
+			"confirm_letter": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The base64-encoded certificate confirmation file should be in jpg, jpeg, png, pdf, and the size should be between 1kb and 1.4M. Note: it only works when product_id is set to 8, 9 or 10.",
 			},
 			// ssl information
 			"information": {
@@ -313,6 +325,30 @@ func resourceTencentCloudSSLInstance() *schema.Resource {
 				Computed:    true,
 				Description: "SSL certificate status.",
 			},
+			"dv_auths": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "DV certification information.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"dv_auth_key": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "DV authentication key.",
+						},
+						"dv_auth_value": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "DV authentication value.",
+						},
+						"dv_auth_verify_type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "DV authentication type.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -321,6 +357,7 @@ func resourceTencentCloudSSLInstanceCreate(d *schema.ResourceData, meta interfac
 	defer logElapsed("resource.tencentcloud_ssl_pay_certificate.create")()
 
 	var (
+		productId     = int64(d.Get("product_id").(int))
 		logId         = getLogId(contextNil)
 		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
 		sslService    = SSLService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -329,7 +366,7 @@ func resourceTencentCloudSSLInstanceCreate(d *schema.ResourceData, meta interfac
 	)
 
 	request := ssl.NewCreateCertificateRequest()
-	request.ProductId = helper.Int64(int64(d.Get("product_id").(int)))
+	request.ProductId = helper.Int64(productId)
 	request.DomainNum = helper.Int64(int64(d.Get("domain_num").(int)))
 	request.TimeSpan = helper.Int64(int64(d.Get("time_span").(int)))
 
@@ -430,6 +467,27 @@ func resourceTencentCloudSSLInstanceCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
+	if IsContainProductId(productId, GEOTRUST_OV_EV_TYPE) {
+		confirmLetter := d.Get("confirm_letter").(string)
+		uploadConfirmLetterRequest := ssl.NewUploadConfirmLetterRequest()
+		uploadConfirmLetterRequest.CertificateId = helper.String(certificateId)
+		uploadConfirmLetterRequest.ConfirmLetter = helper.String(confirmLetter)
+		if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			if err = sslService.UploadConfirmLetter(ctx, uploadConfirmLetterRequest); err != nil {
+				if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
+					code := sdkError.GetCode()
+					if code == InvalidParam || code == CertificateNotFound {
+						return resource.NonRetryableError(sdkError)
+					}
+				}
+				return retryError(err)
+			}
+			return nil
+		}); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudSSLInstanceRead(d, meta)
 }
 
@@ -496,6 +554,18 @@ func resourceTencentCloudSSLInstanceRead(d *schema.ResourceData, meta interface{
 	}
 	if response.Response.SubmittedData != nil {
 		setSubmitInfo(d, response.Response.SubmittedData)
+	}
+	if response.Response.DvAuthDetail != nil && len(response.Response.DvAuthDetail.DvAuths) != 0 {
+		dvAuths := make([]map[string]string, 0)
+		for _, item := range response.Response.DvAuthDetail.DvAuths {
+			dvAuth := make(map[string]string)
+			dvAuth["dv_auth_key"] = *item.DvAuthKey
+			dvAuth["dv_auth_value"] = *item.DvAuthValue
+			dvAuth["dv_auth_verify_type"] = *item.DvAuthVerifyType
+			dvAuths = append(dvAuths, dvAuth)
+		}
+
+		_ = d.Set("dv_auths", dvAuths)
 	}
 
 	return nil
@@ -651,7 +721,7 @@ func getSubmitInfoRequest(d *schema.ResourceData) *ssl.SubmitCertificateInformat
 
 func setSubmitInfo(d *schema.ResourceData, info *ssl.SubmittedData) {
 	infos := make([]map[string]interface{}, 1)
-	infos[1] = map[string]interface{}{
+	infos[0] = map[string]interface{}{
 		"csr_type":              info.CsrType,
 		"organization_name":     info.OrganizationName,
 		"organization_division": info.OrganizationDivision,
