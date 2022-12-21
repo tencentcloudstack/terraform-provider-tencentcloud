@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudNeedFixTemLogConfigResource_basic -v
@@ -49,7 +50,7 @@ func testAccCheckTemLogConfigDestroy(s *terraform.State) error {
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_tem_application" {
+		if rs.Type != "tencentcloud_tem_log_config" {
 			continue
 		}
 
@@ -63,6 +64,13 @@ func testAccCheckTemLogConfigDestroy(s *terraform.State) error {
 
 		res, err := service.DescribeTemLogConfig(ctx, environmentId, applicationId, name)
 		if err != nil {
+			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if !ok {
+				return err
+			}
+			if ee.Code == "InternalError.DefaultInternalError" {
+				return nil
+			}
 			return err
 		}
 
@@ -93,7 +101,7 @@ func testAccCheckTemLogConfigExists(r string) resource.TestCheckFunc {
 		service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		res, err := service.DescribeTemLogConfig(ctx, environmentId, applicationId, name)
 		if err != nil {
-			return err
+			return fmt.Errorf("xxxxxxx: %v", err)
 		}
 
 		if res == nil {

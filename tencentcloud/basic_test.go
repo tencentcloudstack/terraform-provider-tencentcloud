@@ -864,7 +864,7 @@ const (
 
 // TEM
 const (
-	defaultEnvironmentId = "en-758oo2ej"
+	defaultEnvironmentId = "en-85377m6j"
 	defaultApplicationId = "app-joqr9bd5"
 	defaultTemVpcId      = "vpc-4owdpnwr"
 	defaultTemSubnetId   = "subnet-c1l35990"
