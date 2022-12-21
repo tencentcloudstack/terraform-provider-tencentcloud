@@ -1,6 +1,5 @@
 /*
-Provides a resource to create security group rule.
-This resource is similar with tencentcloud_security_group_lite_rule, rules can be ordered and configure descriptions.
+Provides a resource to create security group rule. This resource is similar with tencentcloud_security_group_lite_rule, rules can be ordered and configure descriptions.
 
 ~> **NOTE:** This resource must exclusive in one security group, do not declare additional rule resources of this security group elsewhere.
 

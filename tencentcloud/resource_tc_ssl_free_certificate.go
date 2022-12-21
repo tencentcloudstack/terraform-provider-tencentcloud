@@ -1,5 +1,6 @@
 /*
 Provide a resource to create a Free Certificate.
+
 ~> **NOTE:** Once certificat created, it cannot be removed within 1 hours.
 
 Example Usage
@@ -18,7 +19,6 @@ resource "tencentcloud_ssl_free_certificate" "foo" {
 	alias = "my_free_cert"
 }
 ```
-
 
 Import
 

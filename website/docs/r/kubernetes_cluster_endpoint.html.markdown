@@ -4,14 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_kubernetes_cluster_endpoint"
 sidebar_current: "docs-tencentcloud-resource-kubernetes_cluster_endpoint"
 description: |-
-  Provide a resource to create a KubernetesClusterEndpoint.
-This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
+  Provide a resource to create a KubernetesClusterEndpoint. This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
 ---
 
 # tencentcloud_kubernetes_cluster_endpoint
 
-Provide a resource to create a KubernetesClusterEndpoint.
-This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
+Provide a resource to create a KubernetesClusterEndpoint. This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
 
 ~> **NOTE:** Recommend using `depends_on` to make sure endpoint create after node pools or workers does.
 

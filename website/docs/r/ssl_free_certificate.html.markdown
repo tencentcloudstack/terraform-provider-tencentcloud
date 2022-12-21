@@ -5,12 +5,12 @@ page_title: "TencentCloud: tencentcloud_ssl_free_certificate"
 sidebar_current: "docs-tencentcloud-resource-ssl_free_certificate"
 description: |-
   Provide a resource to create a Free Certificate.
-~> **NOTE:** Once certificat created, it cannot be removed within 1 hours.
 ---
 
 # tencentcloud_ssl_free_certificate
 
 Provide a resource to create a Free Certificate.
+
 ~> **NOTE:** Once certificat created, it cannot be removed within 1 hours.
 
 ## Example Usage
