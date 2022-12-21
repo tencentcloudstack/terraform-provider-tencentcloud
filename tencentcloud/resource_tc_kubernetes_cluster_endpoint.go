@@ -1,6 +1,5 @@
 /*
-Provide a resource to create a KubernetesClusterEndpoint.
-This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
+Provide a resource to create a KubernetesClusterEndpoint. This resource allows you to create an empty cluster first without any workers. Only all attached node depends create complete, cluster endpoint will finally be enabled.
 
 ~> **NOTE:** Recommend using `depends_on` to make sure endpoint create after node pools or workers does.
 
