@@ -44,7 +44,10 @@ resource "tencentcloud_cdn_domain" "foo" {
   domain         = "xxxx.com"
   service_type   = "web"
   area           = "mainland"
-  full_url_cache = false
+  # full_url_cache = true # Deprecated, use cache_key below.
+  cache_key {
+    full_url_cache = "on"
+  }
   range_origin_switch = "off"
 
   rule_cache{
@@ -105,7 +108,10 @@ resource "tencentcloud_cdn_domain" "cdn" {
   domain         = "abc.com"
   service_type   = "web"
   area           = "mainland"
-  full_url_cache = false
+  # full_url_cache = false # Deprecated
+  cache_key {
+    full_url_cache = "off"
+  }
 
   origin {
     origin_type          = "cos"
@@ -169,6 +175,9 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				"authentication": []interface{}{map[string]interface{}{
 					"switch": "off",
 				}},
+				"cache_key": []interface{}{map[string]interface{}{
+					"full_url_cache": "on",
+				}},
 			}),
 		},
 
@@ -199,10 +208,12 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Description:  "Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.",
 			},
 			"full_url_cache": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "Whether to enable full-path cache. Default value is `true`.",
+				Type:          schema.TypeBool,
+				Optional:      true,
+				Default:       true,
+				ConflictsWith: []string{"cache_key"},
+				Deprecated:    "Use `cache_key` -> `full_url_cache` instead.",
+				Description:   "Whether to enable full-path cache. Default value is `true`.",
 			},
 			"origin": {
 				Type:        schema.TypeList,
@@ -1388,6 +1399,128 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 				Optional:    true,
 				Description: "QUIC switch, available values: `on`, `off` (default).",
 			},
+			"cache_key": {
+				Optional:      true,
+				Type:          schema.TypeList,
+				MaxItems:      1,
+				ConflictsWith: []string{"full_url_cache"},
+				Description:   "Cache key configuration (Ignore Query String configuration). NOTE: All of `full_url_cache` default value is `on`.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"full_url_cache": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     CDN_SWITCH_ON,
+							Description: "Whether to enable full-path cache, values `on` (DEFAULT ON), `off`.",
+						},
+						"ignore_case": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default:     CDN_SWITCH_OFF,
+							Description: "Specifies whether the cache key is case sensitive.",
+						},
+						"query_string": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "Request parameter contained in CacheKey.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"switch": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Default:     CDN_SWITCH_OFF,
+										Description: "Whether to use QueryString as part of CacheKey, values `on`, `off` (Default).",
+									},
+									"reorder": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Default:     CDN_SWITCH_OFF,
+										Description: "Whether to sort again, values `on`, `off` (Default).",
+									},
+									"action": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Computed:    true,
+										Description: "Include/exclude query parameters. Values: `includeAll` (Default), `excludeAll`, `includeCustom`, `excludeCustom`.",
+									},
+									"value": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Array of included/excluded query strings (separated by `;`).",
+									},
+								},
+							},
+						},
+						"key_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Path-specific cache key configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"rule_paths": {
+										Type: schema.TypeList,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+										Required:    true,
+										Description: "List of rule paths for each `key_rules`: `/` for `index`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.",
+									},
+									"rule_type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "Rule type, available: `file`, `directory`, `path`, `index`.",
+									},
+									"full_url_cache": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Default:     CDN_SWITCH_ON,
+										Description: "Whether to enable full-path cache, values `on` (DEFAULT ON), `off`.",
+									},
+									"ignore_case": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Default:     CDN_SWITCH_OFF,
+										Description: "Whether caches are case insensitive.",
+									},
+									"query_string": {
+										Type:        schema.TypeList,
+										MaxItems:    1,
+										Required:    true,
+										Description: "Request parameter contained in CacheKey.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"switch": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Default:     CDN_SWITCH_OFF,
+													Description: "Whether to use QueryString as part of CacheKey, values `on`, `off` (Default).",
+												},
+												"action": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Specify key rule QS action, values: `includeCustom`, `excludeCustom`.",
+												},
+												"value": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Default:     "",
+													Description: "Array of included/excluded query strings (separated by `;`).",
+												},
+											},
+										},
+									},
+									"rule_tag": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Specify rule tag, default value is `user`.",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
 			"aws_private_access": {
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -1577,13 +1710,6 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 	request.ProjectId = helper.IntInt64(d.Get("project_id").(int))
 	if v, ok := d.GetOk("area"); ok {
 		request.Area = helper.String(v.(string))
-	}
-	fullUrlCache := d.Get("full_url_cache").(bool)
-	request.CacheKey = &cdn.CacheKey{}
-	if fullUrlCache {
-		request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_ON)
-	} else {
-		request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_OFF)
 	}
 	// Range Origin Pull
 	request.RangeOriginPull = &cdn.RangeOriginPull{}
@@ -2263,6 +2389,76 @@ func resourceTencentCloudCdnDomainCreate(d *schema.ResourceData, meta interface{
 			Switch: helper.String(v.(string)),
 		}
 	}
+	if v, ok := helper.InterfacesHeadMap(d, "cache_key"); ok {
+		request.CacheKey = &cdn.CacheKey{}
+		if fuc := v["full_url_cache"].(string); fuc != "" {
+			request.CacheKey.FullUrlCache = &fuc
+		}
+		if ic := v["ignore_case"].(string); ic != "" {
+			request.CacheKey.IgnoreCase = &ic
+		}
+		if qs, ok := v["query_string"].([]interface{}); ok && len(qs) > 0 {
+			if dMap, ok := qs[0].(map[string]interface{}); ok {
+				qSwitch := dMap["switch"].(string)
+				reorder := dMap["reorder"].(string)
+				action := dMap["action"].(string)
+				value := dMap["value"].(string)
+				request.CacheKey.QueryString = &cdn.QueryStringKey{
+					Switch:  &qSwitch,
+					Reorder: &reorder,
+					Action:  &action,
+					Value:   &value,
+				}
+			}
+		}
+		if kr, ok := v["key_rules"].([]interface{}); ok {
+			for i := range kr {
+				rule, ok := kr[i].(map[string]interface{})
+				if !ok {
+					continue
+				}
+				ruleType := rule["rule_type"].(string)
+				keyRule := &cdn.KeyRule{
+					RuleType: &ruleType,
+				}
+				if vv := rule["full_url_cache"].(string); vv != "" {
+					keyRule.FullUrlCache = &vv
+				}
+				if vv := rule["ignore_case"].(string); vv != "" {
+					keyRule.IgnoreCase = &vv
+				}
+				if vv := rule["rule_tag"].(string); vv != "" {
+					keyRule.RuleTag = &vv
+				}
+				if rp, ok := rule["rule_paths"].([]interface{}); ok {
+					keyRule.RulePaths = helper.InterfacesStringsPoint(rp)
+				}
+				if qs, ok := rule["query_string"].([]interface{}); ok && len(qs) > 0 {
+					if dMap, ok := qs[0].(map[string]interface{}); ok {
+						vSwitch := dMap["switch"].(string)
+						keyRule.QueryString = &cdn.RuleQueryString{
+							Switch: &vSwitch,
+						}
+						if v := dMap["action"].(string); v != "" && vSwitch == "on" {
+							keyRule.QueryString.Action = &v
+						}
+						if v := dMap["value"].(string); v != "" {
+							keyRule.QueryString.Value = &v
+						}
+					}
+				}
+				request.CacheKey.KeyRules = append(request.CacheKey.KeyRules, keyRule)
+			}
+		}
+	} else {
+		fullUrlCache := d.Get("full_url_cache").(bool)
+		request.CacheKey = &cdn.CacheKey{}
+		if fullUrlCache {
+			request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_ON)
+		} else {
+			request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_OFF)
+		}
+	}
 	if v, ok := helper.InterfacesHeadMap(d, "aws_private_access"); ok {
 		vSwitch := v["switch"].(string)
 		request.AwsPrivateAccess = &cdn.AwsPrivateAccess{
@@ -2434,11 +2630,6 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	}
 	if domainConfig.FollowRedirect != nil {
 		_ = d.Set("follow_redirect_switch", domainConfig.FollowRedirect.Switch)
-	}
-	if *domainConfig.CacheKey.FullUrlCache == CDN_SWITCH_OFF {
-		_ = d.Set("full_url_cache", false)
-	} else {
-		_ = d.Set("full_url_cache", true)
 	}
 
 	origins := make([]map[string]interface{}, 0, 1)
@@ -2883,6 +3074,53 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 		}
 		_ = helper.SetMapInterfaces(d, "post_max_size", dMap)
 	}
+	if ok := checkCdnInfoWritable(d, "cache_key", dc.CacheKey); ok {
+		dMap := map[string]interface{}{
+			"full_url_cache": dc.CacheKey.FullUrlCache,
+			"ignore_case":    dc.CacheKey.IgnoreCase,
+		}
+		if qs := dc.CacheKey.QueryString; qs != nil {
+			dMap["query_string"] = []interface{}{
+				map[string]interface{}{
+					"switch":  qs.Switch,
+					"action":  qs.Action,
+					"value":   qs.Value,
+					"reorder": qs.Reorder,
+				},
+			}
+		}
+		if krs := dc.CacheKey.KeyRules; len(krs) > 0 {
+			dMaps := make([]interface{}, 0)
+			for i := range krs {
+				kr := krs[i]
+				dMap := map[string]interface{}{
+					"full_url_cache": kr.FullUrlCache,
+					"ignore_case":    kr.IgnoreCase,
+				}
+				if kr.RuleType != nil {
+					dMap["rule_type"] = kr.RuleType
+				}
+				if len(kr.RulePaths) > 0 {
+					dMap["rule_paths"] = helper.StringsInterfaces(kr.RulePaths)
+				}
+				if krqs := kr.QueryString; krqs != nil {
+					dMap["query_string"] = []interface{}{
+						map[string]interface{}{
+							"value":  krqs.Value,
+							"switch": krqs.Switch,
+							"action": krqs.Action,
+						},
+					}
+				}
+				dMaps = append(dMaps, dMap)
+			}
+			dMap["key_rules"] = dMaps
+		}
+		_ = helper.SetMapInterfaces(d, "cache_key", dMap)
+	} else if dc.CacheKey != nil && dc.CacheKey.FullUrlCache != nil {
+		fullUrlCache := *dc.CacheKey.FullUrlCache == CDN_SWITCH_ON
+		_ = d.Set("full_url_cache", fullUrlCache)
+	}
 	if _, ok := d.GetOk("offline_cache_switch"); ok && dc.OfflineCache != nil {
 		_ = d.Set("offline_cache_switch", dc.OfflineCache.Switch)
 	}
@@ -2957,16 +3195,6 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 	if d.HasChange("area") {
 		request.Area = helper.String(d.Get("area").(string))
 		updateAttrs = append(updateAttrs, "area")
-	}
-	if d.HasChange("full_url_cache") {
-		fullUrlCache := d.Get("full_url_cache").(bool)
-		request.CacheKey = &cdn.CacheKey{}
-		if fullUrlCache {
-			request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_ON)
-		} else {
-			request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_OFF)
-		}
-		updateAttrs = append(updateAttrs, "full_url_cache")
 	}
 	if d.HasChange("range_origin_switch") {
 		request.RangeOriginPull = &cdn.RangeOriginPull{}
@@ -3652,6 +3880,78 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 		request.Quic = &cdn.Quic{
 			Switch: helper.String(v.(string)),
 		}
+	}
+	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "cache_key"); ok && hasChanged {
+		updateAttrs = append(updateAttrs, "cache_key")
+		request.CacheKey = &cdn.CacheKey{}
+		if fuc := v["full_url_cache"].(string); fuc != "" {
+			request.CacheKey.FullUrlCache = &fuc
+		}
+		if ic := v["ignore_case"].(string); ic != "" {
+			request.CacheKey.IgnoreCase = &ic
+		}
+		if qs, ok := v["query_string"].([]interface{}); ok && len(qs) > 0 {
+			if dMap, ok := qs[0].(map[string]interface{}); ok {
+				qSwitch := dMap["switch"].(string)
+				reorder := dMap["reorder"].(string)
+				action := dMap["action"].(string)
+				value := dMap["value"].(string)
+				request.CacheKey.QueryString = &cdn.QueryStringKey{
+					Switch:  &qSwitch,
+					Reorder: &reorder,
+					Action:  &action,
+					Value:   &value,
+				}
+			}
+		}
+		if kr, ok := v["key_rules"].([]interface{}); ok {
+			for i := range kr {
+				rule, ok := kr[i].(map[string]interface{})
+				if !ok {
+					continue
+				}
+				ruleType := rule["rule_type"].(string)
+				keyRule := &cdn.KeyRule{
+					RuleType: &ruleType,
+				}
+				if vv := rule["full_url_cache"].(string); vv != "" {
+					keyRule.FullUrlCache = &vv
+				}
+				if vv := rule["ignore_case"].(string); vv != "" {
+					keyRule.IgnoreCase = &vv
+				}
+				if vv := rule["rule_tag"].(string); vv != "" {
+					keyRule.RuleTag = &vv
+				}
+				if rp, ok := rule["rule_paths"].([]interface{}); ok {
+					keyRule.RulePaths = helper.InterfacesStringsPoint(rp)
+				}
+				if qs, ok := rule["query_string"].([]interface{}); ok && len(qs) > 0 {
+					if dMap, ok := qs[0].(map[string]interface{}); ok {
+						vSwitch := dMap["switch"].(string)
+						keyRule.QueryString = &cdn.RuleQueryString{
+							Switch: &vSwitch,
+						}
+						if v := dMap["action"].(string); v != "" && vSwitch == "on" {
+							keyRule.QueryString.Action = &v
+						}
+						if v := dMap["value"].(string); v != "" {
+							keyRule.QueryString.Value = &v
+						}
+					}
+				}
+				request.CacheKey.KeyRules = append(request.CacheKey.KeyRules, keyRule)
+			}
+		}
+	} else if d.HasChange("full_url_cache") {
+		fullUrlCache := d.Get("full_url_cache").(bool)
+		request.CacheKey = &cdn.CacheKey{}
+		if fullUrlCache {
+			request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_ON)
+		} else {
+			request.CacheKey.FullUrlCache = helper.String(CDN_SWITCH_OFF)
+		}
+		updateAttrs = append(updateAttrs, "full_url_cache")
 	}
 	if v, ok, hasChanged := checkCdnHeadMapOkAndChanged(d, "aws_private_access"); ok && hasChanged {
 		vSwitch := v["switch"].(string)
