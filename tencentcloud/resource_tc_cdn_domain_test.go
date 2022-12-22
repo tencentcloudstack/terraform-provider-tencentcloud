@@ -329,10 +329,15 @@ func TestAccTencentCloudCdnDomainResource_HTTPs(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cdn_domain.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"https_config", "authentication", "full_url_cache"},
+				ResourceName:      "tencentcloud_cdn_domain.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"https_config",
+					"authentication",
+					"full_url_cache",
+					"cache_key",
+				},
 			},
 		},
 	})
