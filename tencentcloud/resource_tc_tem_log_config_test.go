@@ -101,7 +101,7 @@ func testAccCheckTemLogConfigExists(r string) resource.TestCheckFunc {
 		service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		res, err := service.DescribeTemLogConfig(ctx, environmentId, applicationId, name)
 		if err != nil {
-			return fmt.Errorf("xxxxxxx: %v", err)
+			return err
 		}
 
 		if res == nil {

@@ -8,7 +8,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudNeedFixTemGatewayResource_basic -v
@@ -19,8 +18,8 @@ func TestAccTencentCloudNeedFixTemGatewayResource_basic(t *testing.T) {
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckTemGatewayDestroy,
+		Providers: testAccProviders,
+		// CheckDestroy: testAccCheckTemGatewayDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTemGateway,
@@ -55,38 +54,40 @@ func TestAccTencentCloudNeedFixTemGatewayResource_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckTemGatewayDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_tem_environment" {
-			continue
-		}
+// func testAccCheckTemGatewayDestroy(s *terraform.State) error {
+// 	logId := getLogId(contextNil)
+// 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+// 	service := TemService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+// 	for _, rs := range s.RootModule().Resources {
+// 		if rs.Type != "tencentcloud_tem_gateway" {
+// 			continue
+// 		}
 
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		environmentId := idSplit[0]
-		ingressName := idSplit[1]
+// 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+// 		if len(idSplit) != 2 {
+// 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
+// 		}
+// 		environmentId := idSplit[0]
+// 		ingressName := idSplit[1]
 
-		res, err := service.DescribeTemGateway(ctx, environmentId, ingressName)
-		if err != nil {
-			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
-				if sdkErr.Code == "ResourceNotFound.VersionNamespaceNotFound" {
-					return nil
-				}
-			}
-			return err
-		}
+// 		res, err := service.DescribeTemGateway(ctx, environmentId, ingressName)
+// 		if err != nil {
+// 			ee, ok := err.(*sdkErrors.TencentCloudSDKError)
+// 			if !ok {
+// 				return err
+// 			}
+// 			if ee.Code == "InternalError.DefaultInternalError" {
+// 				return nil
+// 			}
+// 			return err
+// 		}
 
-		if res != nil {
-			return fmt.Errorf("tem gateway %s still exists", rs.Primary.ID)
-		}
-	}
-	return nil
-}
+// 		if res != nil {
+// 			return fmt.Errorf("tem gateway %s still exists", rs.Primary.ID)
+// 		}
+// 	}
+// 	return nil
+// }
 
 func testAccCheckTemGatewayExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
