@@ -5,12 +5,12 @@ page_title: "TencentCloud: tencentcloud_cdn_domain"
 sidebar_current: "docs-tencentcloud-resource-cdn_domain"
 description: |-
   Provides a resource to create a CDN domain.
-~> **NOTE:** To disable most of configuration with switch, just modify switch argument to off instead of remove the whole block
 ---
 
 # tencentcloud_cdn_domain
 
 Provides a resource to create a CDN domain.
+
 ~> **NOTE:** To disable most of configuration with switch, just modify switch argument to off instead of remove the whole block
 
 ## Example Usage

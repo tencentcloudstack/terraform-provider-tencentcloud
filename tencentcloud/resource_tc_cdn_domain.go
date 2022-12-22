@@ -1,5 +1,6 @@
 /*
 Provides a resource to create a CDN domain.
+
 ~> **NOTE:** To disable most of configuration with switch, just modify switch argument to off instead of remove the whole block
 
 Example Usage
