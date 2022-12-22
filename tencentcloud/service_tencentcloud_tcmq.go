@@ -263,40 +263,32 @@ func (me *TcmqService) CreateTcmqTopic(ctx context.Context, environId string, to
 	return
 }
 
-func (me *TcmqService) DescribeTcmqTopicById(ctx context.Context,
-	environId string, topicName string, clusterId string) (info *tcmq.Topic, has bool, errRet error) {
+func (me *TcmqService) DescribeTcmqTopicById(ctx context.Context, topicName string) (topic *tcmq.CmqTopic, errRet error) {
 	logId := getLogId(ctx)
-	request := tcmq.NewDescribeTopicsRequest()
+
+	request := tcmq.NewDescribeCmqTopicDetailRequest()
+	request.TopicName = &topicName
+
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	request.EnvironmentId = &environId
-	request.TopicName = &topicName
-	request.ClusterId = &clusterId
 
-	var response *tcmq.DescribeTopicsResponse
+	ratelimit.Check(request.GetAction())
 
-	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		result, err := me.client.UseTdmqClient().DescribeTopics(request)
-		if err != nil {
-			return retryError(err, InternalError)
-		}
-		response = result
-		return nil
-	}); err != nil {
-		log.Printf("[CRITAL]%s read tcmq failed, reason: %v", logId, err)
-		return nil, false, err
-	}
-
-	if len(response.Response.TopicSets) < 1 {
+	response, err := me.client.UseTdmqClient().DescribeCmqTopicDetail(request)
+	if err != nil {
+		errRet = err
 		return
 	}
-	has = true
-	info = response.Response.TopicSets[0]
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.TopicDescribe == nil {
+		return
+	}
+
+	topic = response.Response.TopicDescribe
 	return
 }
 
@@ -324,40 +316,33 @@ func (me *TcmqService) ModifyTcmqTopicAttribute(ctx context.Context, environId s
 		}
 		return nil
 	}); err != nil {
-		log.Printf("[CRITAL]%s modify tcmq topic failed, reason: %v", logId, err)
+		log.Printf("[CRITAL]%s modify tdmq topic failed, reason: %v", logId, err)
 		return err
 	}
 	return
 }
 
-func (me *TcmqService) DeleteTcmqTopic(ctx context.Context, environId string, topicName string, clusterId string) (errRet error) {
+func (me *TcmqService) DeleteTcmqTopicById(ctx context.Context, topicName string) (errRet error) {
 	logId := getLogId(ctx)
-	request := tcmq.NewDeleteTopicsRequest()
+
+	request := tcmq.NewDeleteCmqTopicRequest()
+	request.TopicName = &topicName
+
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
 		}
 	}()
-	var (
-		topicRecord tcmq.TopicRecord
-	)
-	topicRecord.TopicName = &topicName
-	topicRecord.EnvironmentId = &environId
-	request.TopicSets = []*tcmq.TopicRecord{&topicRecord}
-	request.ClusterId = &clusterId
 
-	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		_, err := me.client.UseTdmqClient().DeleteTopics(request)
-		if err != nil {
-			return retryError(err, InternalError)
-		}
-		return nil
-	}); err != nil {
-		log.Printf("[CRITAL]%s delete tcmq topic failed, reason: %v", logId, err)
-		return err
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DeleteCmqTopic(request)
+	if err != nil {
+		errRet = err
+		return
 	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }
 

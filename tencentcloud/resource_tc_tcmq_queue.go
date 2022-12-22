@@ -136,7 +136,7 @@ func resourceTencentCloudTcmqQueue() *schema.Resource {
 				Description: "Whether to enable message trace. true: yes; false: no. If this field is not configured, the feature will not be enabled.",
 			},
 
-			"retention_size_in_m_b": {
+			"retention_size_in_mb": {
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Queue storage space configured for message rewind. Value range: 10,240-512,000 MB (if message rewind is enabled). The value “0” indicates that message rewind is not enabled.",
@@ -217,7 +217,7 @@ func resourceTencentCloudTcmqQueueCreate(d *schema.ResourceData, meta interface{
 		request.Trace = helper.Bool(v.(bool))
 	}
 
-	if v, _ := d.GetOk("retention_size_in_m_b"); v != nil {
+	if v, _ := d.GetOk("retention_size_in_mb"); v != nil {
 		request.RetentionSizeInMB = helper.IntUint64(v.(int))
 	}
 
@@ -328,7 +328,7 @@ func resourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{})
 	}
 
 	if queue.RetentionSizeInMB != nil {
-		_ = d.Set("retention_size_in_m_b", queue.RetentionSizeInMB)
+		_ = d.Set("retention_size_in_mb", queue.RetentionSizeInMB)
 	}
 
 	return nil
@@ -435,8 +435,8 @@ func resourceTencentCloudTcmqQueueUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	if d.HasChange("retention_size_in_m_b") {
-		if v, _ := d.GetOk("retention_size_in_m_b"); v != nil {
+	if d.HasChange("retention_size_in_mb") {
+		if v, _ := d.GetOk("retention_size_in_mb"); v != nil {
 			request.RetentionSizeInMB = helper.IntUint64(v.(int))
 		}
 	}

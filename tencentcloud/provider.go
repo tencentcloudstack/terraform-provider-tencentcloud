@@ -1530,6 +1530,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc_end_point_service_white_list":           resourceTencentCloudVpcEndPointServiceWhiteList(),
 			"tencentcloud_ci_bucket_attachment":                       resourceTencentCloudCiBucketAttachment(),
 			"tencentcloud_tcmq_queue":                                 resourceTencentCloudTcmqQueue(),
+			"tencentcloud_tcmq_topic":                                 resourceTencentCloudTcmqTopic(),
 		},
 
 		ConfigureFunc: providerConfigure,
