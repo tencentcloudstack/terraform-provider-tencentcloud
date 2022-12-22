@@ -103,3 +103,29 @@ func (me *CiService) DeleteCiBucketPicStyleById(ctx context.Context, bucket, sty
 
 	return
 }
+
+func (me *CiService) DescribeCiHotLinkById(ctx context.Context, bucket string) (hotLink *ci.HotLinkResult, errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "GetHotLink", bucket, errRet.Error())
+		}
+	}()
+
+	hotLinkResult, response, err := me.client.UseCiClient(bucket).CI.GetHotLink(ctx)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response status [%s]\n", logId, "GetHotLink", bucket, response.Status)
+
+	if len(hotLinkResult.Url) < 1 {
+		return
+	}
+
+	hotLink = hotLinkResult
+
+	return
+}

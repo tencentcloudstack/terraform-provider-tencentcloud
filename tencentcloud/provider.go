@@ -865,6 +865,7 @@ Cloud Infinite(CI)
   Resource
 	tencentcloud_ci_bucket_attachment
 	tencentcloud_ci_bucket_pic_style
+	tencentcloud_ci_hot_link
 */
 package tencentcloud
 
@@ -1527,6 +1528,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc_end_point_service_white_list":           resourceTencentCloudVpcEndPointServiceWhiteList(),
 			"tencentcloud_ci_bucket_attachment":                       resourceTencentCloudCiBucketAttachment(),
 			"tencentcloud_ci_bucket_pic_style":                        resourceTencentCloudCiBucketPicStyle(),
+			"tencentcloud_ci_hot_link":                                resourceTencentCloudCiHotLink(),
 		},
 
 		ConfigureFunc: providerConfigure,
