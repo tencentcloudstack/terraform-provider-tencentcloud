@@ -864,6 +864,7 @@ TDMQ for RocketMQ(trocket)
 Cloud Infinite(CI)
   Resource
 	tencentcloud_ci_bucket_attachment
+	tencentcloud_ci_bucket_pic_style
 */
 package tencentcloud
 
@@ -1525,6 +1526,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc_end_point":                              resourceTencentCloudVpcEndPoint(),
 			"tencentcloud_vpc_end_point_service_white_list":           resourceTencentCloudVpcEndPointServiceWhiteList(),
 			"tencentcloud_ci_bucket_attachment":                       resourceTencentCloudCiBucketAttachment(),
+			"tencentcloud_ci_bucket_pic_style":                        resourceTencentCloudCiBucketPicStyle(),
 		},
 
 		ConfigureFunc: providerConfigure,

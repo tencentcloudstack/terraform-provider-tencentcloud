@@ -50,3 +50,56 @@ func (me *CiService) DeleteCiBucketById(ctx context.Context, bucket string) (err
 
 	return
 }
+
+func (me *CiService) DescribeCiBucketPicStyleById(ctx context.Context, bucket, styleName string) (styleRule *ci.StyleRule, errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "GetStyle", bucket+"#"+styleName, errRet.Error())
+		}
+	}()
+
+	styleResult, response, err := me.client.UseCiClient(bucket).CI.GetStyle(ctx, &ci.GetStyleOptions{
+		StyleName: styleName,
+	})
+	if err != nil {
+		// if response.StatusCode == 400 {
+		// 	log.Printf("[CRITAL]%s api[%s] success, request body [%s], response status [%v]\n", logId, "GetStyle", bucket+"#"+styleName, response.StatusCode)
+		// 	return
+		// }
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response status [%s]\n", logId, "GetStyle", bucket+"#"+styleName, response.Status)
+
+	if len(styleResult.StyleRule) < 1 {
+		return
+	}
+
+	styleRule = &styleResult.StyleRule[0]
+
+	return
+}
+
+func (me *CiService) DeleteCiBucketPicStyleById(ctx context.Context, bucket, styleName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "DeleteStyle", bucket+"#"+styleName, errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseCiClient(bucket).CI.DeleteStyle(ctx, &ci.DeleteStyleOptions{
+		StyleName: styleName,
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response status [%s]\n", logId, "DeleteStyle", bucket+"#"+styleName, response.Status)
+
+	return
+}
