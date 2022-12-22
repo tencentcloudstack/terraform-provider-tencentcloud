@@ -1531,6 +1531,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_bucket_attachment":                       resourceTencentCloudCiBucketAttachment(),
 			"tencentcloud_tcmq_queue":                                 resourceTencentCloudTcmqQueue(),
 			"tencentcloud_tcmq_topic":                                 resourceTencentCloudTcmqTopic(),
+			"tencentcloud_tcmq_subscribe":                             resourceTencentCloudTdmqSubscribe(),
 		},
 
 		ConfigureFunc: providerConfigure,

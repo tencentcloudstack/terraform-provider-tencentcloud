@@ -646,3 +646,58 @@ func (me *TcmqService) DeleteTcmqQueueById(ctx context.Context, queueName string
 
 	return
 }
+
+func (me *TcmqService) DescribeTcmqSubscribeById(ctx context.Context, topicName string, subscriptionName string) (subscribe *tcmq.CmqSubscription, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcmq.NewDescribeCmqSubscriptionDetailRequest()
+	request.TopicName = &topicName
+	request.SubscriptionName = &subscriptionName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeCmqSubscriptionDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SubscriptionSet) < 1 {
+		return
+	}
+
+	subscribe = response.Response.SubscriptionSet[0]
+	return
+}
+
+func (me *TcmqService) DeleteTcmqSubscribeById(ctx context.Context, topicName string, subscriptionName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcmq.NewDeleteCmqSubscribeRequest()
+	request.TopicName = &topicName
+	request.SubscriptionName = &subscriptionName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DeleteCmqSubscribe(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
