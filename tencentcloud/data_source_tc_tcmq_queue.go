@@ -8,13 +8,6 @@ data "tencentcloud_tcmq_queue" "queue" {
   offset = 0
   limit = 20
   queue_name = "queue_name"
-  queue_name_list = &lt;nil&gt;
-  is_tag_filter = true
-  filters {
-		name = "tag"
-		values = &lt;nil&gt;
-
-  }
 }
 ```
 */
@@ -341,15 +334,15 @@ func dataSourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{
 
 	paramMap := make(map[string]interface{})
 	if v, _ := d.GetOk("offset"); v != nil {
-		paramMap["Offset"] = helper.IntUint64(v.(int))
+		paramMap["offset"] = v.(int)
 	}
 
 	if v, _ := d.GetOk("limit"); v != nil {
-		paramMap["Limit"] = helper.IntUint64(v.(int))
+		paramMap["limit"] = v.(int)
 	}
 
 	if v, ok := d.GetOk("queue_name"); ok {
-		paramMap["QueueName"] = helper.String(v.(string))
+		paramMap["queue_name"] = v.(string)
 	}
 
 	if v, ok := d.GetOk("queue_name_list"); ok {
@@ -363,15 +356,25 @@ func dataSourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{
 	}
 
 	if v, _ := d.GetOk("is_tag_filter"); v != nil {
-		paramMap["IsTagFilter"] = helper.Bool(v.(bool))
+		paramMap["is_tag_filter"] = v.(bool)
 	}
 
-	if v, _ := d.GetOk("total_count"); v != nil {
-		paramMap["TotalCount"] = helper.IntUint64(v.(int))
-	}
+	if v, ok := d.GetOk("filters"); ok {
+		filters := make([]map[string]interface{}, 0)
+		for _, item := range v.(*schema.Set).List() {
+			filter := item.(map[string]interface{})
+			name := filter["name"].(string)
+			values := make([]string, 0)
+			for _, value := range filter["values"].([]string) {
+				values = append(values, value)
+			}
+			filters = append(filters, map[string]interface{}{
+				"name":   name,
+				"values": values,
+			})
+		}
+		paramMap["fileters"] = filters
 
-	if v, ok := d.GetOk("request_id"); ok {
-		paramMap["RequestId"] = helper.String(v.(string))
 	}
 
 	service := TcmqService{client: meta.(*TencentCloudClient).apiV3Conn}

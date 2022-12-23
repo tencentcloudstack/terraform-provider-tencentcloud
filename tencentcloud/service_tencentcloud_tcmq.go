@@ -709,6 +709,67 @@ func (me *TcmqService) DeleteTcmqQueueById(ctx context.Context, queueName string
 	return
 }
 
+func (me *TcmqService) DescribeTdmqTopicByFilter(ctx context.Context, paramMap map[string]interface{}) (topicList []*tcmq.CmqTopic, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcmq.NewDescribeCmqTopicsRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if v, ok := paramMap["offset"]; ok {
+		request.Offset = helper.IntUint64(v.(int))
+	}
+	if v, ok := paramMap["limit"]; ok {
+		request.Limit = helper.IntUint64(v.(int))
+	}
+	if v, ok := paramMap["topic_name"]; ok {
+		request.TopicName = helper.String(v.(string))
+	}
+	if v, ok := paramMap["is_tag_filter"]; ok {
+		request.IsTagFilter = helper.Bool(v.(bool))
+	}
+	if v, ok := paramMap["topic_name_list"]; ok {
+		topicNameList := make([]*string, 0)
+		for _, item := range v.([]interface{}) {
+			topicName := helper.String(item.(string))
+			topicNameList = append(topicNameList, topicName)
+		}
+		request.TopicNameList = topicNameList
+	}
+	if v, ok := paramMap["filters"]; ok {
+		filters := make([]*tcmq.Filter, 0)
+		for _, item := range v.([]interface{}) {
+			itemMap := item.(map[string]interface{})
+			name := helper.String(itemMap["name"].(string))
+			values := make([]*string, 0)
+			for _, item := range itemMap["values"].([]string) {
+				values = append(values, helper.String(item))
+			}
+			filters = append(filters, &tcmq.Filter{
+				Name:   name,
+				Values: values,
+			})
+		}
+		request.Filters = filters
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeCmqTopics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	topicList = response.Response.TopicList
+	return
+}
+
 func (me *TcmqService) DescribeTcmqSubscribeById(ctx context.Context, topicName string, subscriptionName string) (subscribe *tcmq.CmqSubscription, errRet error) {
 	logId := getLogId(ctx)
 
