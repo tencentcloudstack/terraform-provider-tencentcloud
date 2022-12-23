@@ -79,9 +79,13 @@ import (
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 )
 
+type CiHostType string
+
 const (
-	PROVIDER_CVM_REQUEST_TIMEOUT = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
-	PROVIDER_CBS_REQUEST_TIMEOUT = "TENCENTCLOUD_CBS_REQUEST_TIMEOUT"
+	PROVIDER_CVM_REQUEST_TIMEOUT            = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
+	PROVIDER_CBS_REQUEST_TIMEOUT            = "TENCENTCLOUD_CBS_REQUEST_TIMEOUT"
+	CI_HOST_PIC                  CiHostType = "pic"
+	CI_HOST_CI                   CiHostType = "ci"
 )
 
 // TencentCloudClient is client for all TencentCloud service
@@ -976,11 +980,14 @@ func (me *TencentCloudClient) UseDtsClient() *dts.Client {
 	return me.dtsConn
 }
 
-// UseCiClient returns ci client for service
-func (me *TencentCloudClient) UseCiClient(bucket string) *cos.Client {
-	u, _ := url.Parse(fmt.Sprintf("https://%s.pic.%s.myqcloud.com", bucket, me.Region))
+// UseCiClient returns CI client for service
+// using the COS SDK, there are 2 base url:
+// * pic.<region>.myqcloud.com
+// * ci.<region>.myqcloud.com
+func (me *TencentCloudClient) UseCiClient(bucket string, hostType CiHostType) *cos.Client {
+	u, _ := url.Parse(fmt.Sprintf("https://%s.%s.%s.myqcloud.com", bucket, hostType, me.Region))
 
-	if me.ciConn != nil && me.ciConn.BaseURL.CIURL == u {
+	if me.ciConn != nil && me.ciConn.BaseURL.BucketURL == u {
 		return me.ciConn
 	}
 

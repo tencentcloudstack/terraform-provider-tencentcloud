@@ -27,6 +27,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
 func resourceTencentCloudCiBucketAttachment() *schema.Resource {
@@ -68,7 +69,7 @@ func resourceTencentCloudCiBucketAttachmentCreate(d *schema.ResourceData, meta i
 		return errors.New("get bucket failed!")
 	}
 
-	ciClient := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket)
+	ciClient := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket, connectivity.CI_HOST_PIC)
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := ciClient.CI.OpenCIService(ctx)
 		if e != nil {
