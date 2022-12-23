@@ -14,7 +14,7 @@ resource "tencentcloud_ci_original_image_protection" "foo" {
 
 Import
 
-Service original image protection can be imported using the id, e.g.
+Resource original image protection can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_ci_original_image_protection.example examplebucket-1250000000
