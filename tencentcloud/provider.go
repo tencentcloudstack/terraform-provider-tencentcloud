@@ -1199,6 +1199,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_topic":                      dataSourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_role":                       dataSourceTencentCloudTdmqRocketmqRole(),
 			"tencentcloud_tdmq_rocketmq_group":                      dataSourceTencentCloudTdmqRocketmqGroup(),
+			"tencentcloud_tcmq_queue":                               dataSourceTencentCloudTcmqQueue(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

@@ -7,6 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	tcmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -620,6 +621,67 @@ func (me *TcmqService) DescribeTcmqQueueById(ctx context.Context, queueName stri
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	queue = response.Response.QueueDescribe
+	return
+}
+
+func (me *TcmqService) DescribeTcmqQueueByFilter(ctx context.Context, paramMap map[string]interface{}) (queueList []*tcmq.CmqQueue, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcmq.NewDescribeCmqQueuesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if v, ok := paramMap["offset"]; ok {
+		request.Offset = helper.IntUint64(v.(int))
+	}
+	if v, ok := paramMap["limit"]; ok {
+		request.Limit = helper.IntUint64(v.(int))
+	}
+	if v, ok := paramMap["queue_name"]; ok {
+		request.QueueName = helper.String(v.(string))
+	}
+	if v, ok := paramMap["is_tag_filter"]; ok {
+		request.IsTagFilter = helper.Bool(v.(bool))
+	}
+	if v, ok := paramMap["queue_name_list"]; ok {
+		queueNameList := make([]*string, 0)
+		for _, item := range v.([]interface{}) {
+			queueName := helper.String(item.(string))
+			queueNameList = append(queueNameList, queueName)
+		}
+		request.QueueNameList = queueNameList
+	}
+	if v, ok := paramMap["filters"]; ok {
+		filters := make([]*tcmq.Filter, 0)
+		for _, item := range v.([]interface{}) {
+			itemMap := item.(map[string]interface{})
+			name := helper.String(itemMap["name"].(string))
+			values := make([]*string, 0)
+			for _, item := range itemMap["values"].([]string) {
+				values = append(values, helper.String(item))
+			}
+			filters = append(filters, &tcmq.Filter{
+				Name:   name,
+				Values: values,
+			})
+		}
+		request.Filters = filters
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeCmqQueues(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	queueList = response.Response.QueueList
 	return
 }
 
