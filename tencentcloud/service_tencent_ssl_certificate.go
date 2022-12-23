@@ -212,6 +212,26 @@ func (me *SSLService) SubmitCertificateInformation(ctx context.Context, request 
 	return
 }
 
+func (me *SSLService) UploadConfirmLetter(ctx context.Context, request *ssl.UploadConfirmLetterRequest) (err error) {
+	logId := getLogId(ctx)
+	client := me.client.UseSSLCertificateClient()
+	ratelimit.Check(request.GetAction())
+
+	var response *ssl.UploadConfirmLetterResponse
+
+	response, err = client.UploadConfirmLetter(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	if response == nil || response.Response == nil {
+		err = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+		return
+	}
+	return
+}
+
 func (me *SSLService) UploadCertificate(ctx context.Context, request *ssl.UploadCertificateRequest) (id string, err error) {
 	logId := getLogId(ctx)
 	client := me.client.UseSSLCertificateClient()
