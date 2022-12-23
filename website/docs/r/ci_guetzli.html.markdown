@@ -35,3 +35,11 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+Resource guetzli can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_ci_guetzli.example examplebucket-1250000000
+```
+
