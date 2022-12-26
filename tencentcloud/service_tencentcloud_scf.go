@@ -345,7 +345,7 @@ func (me *ScfService) DeleteFunction(ctx context.Context, name, namespace string
 				}
 			}
 
-			return retryError(errors.WithStack(err), InternalError)
+			return retryError(errors.WithStack(err), InternalError, "ResourceNotFound.Version")
 		}
 	})
 }
