@@ -237,9 +237,7 @@ func dataSourceTencentCloudTcmqTopicRead(d *schema.ResourceData, meta interface{
 			filter := item.(map[string]interface{})
 			name := filter["name"].(string)
 			values := make([]string, 0)
-			for _, value := range filter["values"].([]string) {
-				values = append(values, value)
-			}
+			values = append(values, filter["values"].([]string)...)
 			filters = append(filters, map[string]interface{}{
 				"name":   name,
 				"values": values,
