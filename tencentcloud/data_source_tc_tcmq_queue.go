@@ -495,7 +495,7 @@ func dataSourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{
 			queueItem["tags"] = tags
 		}
 		if queue.DeadLetterPolicy != nil {
-			deadLetterPolicy := make(map[string]interface{}, 0)
+			deadLetterPolicy := make(map[string]interface{})
 			deadLetterPolicy["dead_letter_queue"] = queue.DeadLetterPolicy.DeadLetterQueue
 			deadLetterPolicy["policy"] = queue.DeadLetterPolicy.Policy
 			deadLetterPolicy["max_time_to_live"] = queue.DeadLetterPolicy.MaxTimeToLive
@@ -503,7 +503,7 @@ func dataSourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{
 			queueItem["dead_letter_policy"] = deadLetterPolicy
 		}
 		if queue.TransactionPolicy != nil {
-			transactionPolicy := make(map[string]interface{}, 0)
+			transactionPolicy := make(map[string]interface{},)
 			transactionPolicy["first_query_interval"] = queue.TransactionPolicy.FirstQueryInterval
 			transactionPolicy["max_query_count"] = queue.TransactionPolicy.MaxQueryCount
 			queueItem["transaction_policy"] = transactionPolicy
