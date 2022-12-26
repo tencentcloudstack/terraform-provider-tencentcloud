@@ -26,6 +26,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tcmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -83,7 +84,7 @@ func resourceTencentCloudTcmqQueue() *schema.Resource {
 			"rewind_seconds": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Rewindable time of messages in the queue. Value range: 0-1,296,000s (if message rewind is enabled). The value “0” indicates that message rewind is not enabled.",
+				Description: "Rewindable time of messages in the queue. Value range: 0-1,296,000s (if message rewind is enabled). The value `0` indicates that message rewind is not enabled.",
 			},
 
 			"transaction": {
@@ -139,7 +140,7 @@ func resourceTencentCloudTcmqQueue() *schema.Resource {
 			"retention_size_in_mb": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Queue storage space configured for message rewind. Value range: 10,240-512,000 MB (if message rewind is enabled). The value “0” indicates that message rewind is not enabled.",
+				Description: "Queue storage space configured for message rewind. Value range: 10,240-512,000 MB (if message rewind is enabled). The value `0` indicates that message rewind is not enabled.",
 			},
 		},
 	}
@@ -153,7 +154,6 @@ func resourceTencentCloudTcmqQueueCreate(d *schema.ResourceData, meta interface{
 
 	var (
 		request   = tcmq.NewCreateCmqQueueRequest()
-		response  = tcmq.NewCreateCmqQueueResponse()
 		queueName string
 	)
 	if v, ok := d.GetOk("queue_name"); ok {
@@ -228,7 +228,6 @@ func resourceTencentCloudTcmqQueueCreate(d *schema.ResourceData, meta interface{
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
@@ -255,6 +254,11 @@ func resourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{})
 
 	queue, err := service.DescribeTcmqQueueById(ctx, queueName)
 	if err != nil {
+		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() == "ResourceNotFound" {
+				return nil
+			}
+		}
 		return err
 	}
 

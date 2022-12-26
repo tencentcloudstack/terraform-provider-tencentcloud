@@ -5,8 +5,6 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tcmq_queue" "queue" {
-  offset = 0
-  limit = 20
   queue_name = "queue_name"
 }
 ```
@@ -27,12 +25,14 @@ func dataSourceTencentCloudTcmqQueue() *schema.Resource {
 		Read: dataSourceTencentCloudTcmqQueueRead,
 		Schema: map[string]*schema.Schema{
 			"offset": {
+				Default:     0,
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Starting position of a queue list to be returned on the current page in case of paginated return. If a value is entered, limit must be specified. If this parameter is left empty, 0 will be used by default.",
 			},
 
 			"limit": {
+				Default:     20,
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "The number of queues to be returned per page in case of paginated return. If this parameter is not passed in, 20 will be used by default. Maximum value: 50.",
@@ -62,7 +62,7 @@ func dataSourceTencentCloudTcmqQueue() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Filter. Currently, you can filter by tag. The tag name must be prefixed with “tag:”, such as “tag: owner”, “tag: environment”, or “tag: business”.",
+				Description: "Filter. Currently, you can filter by tag. The tag name must be prefixed with `tag:`, such as `tag: owner`, `tag: environment`, or `tag: business`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {
@@ -141,7 +141,7 @@ func dataSourceTencentCloudTcmqQueue() *schema.Resource {
 						"rewind_seconds": {
 							Computed:    true,
 							Type:        schema.TypeInt,
-							Description: "Rewindable time of messages in the queue. Value range: 0-1,296,000s (if message rewind is enabled). The value “0” indicates that message rewind is not enabled.",
+							Description: "Rewindable time of messages in the queue. Value range: 0-1,296,000s (if message rewind is enabled). The value `0` indicates that message rewind is not enabled.",
 						},
 						"create_time": {
 							Computed:    true,
@@ -309,7 +309,7 @@ func dataSourceTencentCloudTcmqQueue() *schema.Resource {
 						"retention_size_in_mb": {
 							Computed:    true,
 							Type:        schema.TypeInt,
-							Description: "Queue storage space configured for message rewind. Value range: 1,024-10,240 MB (if message rewind is enabled). The value “0” indicates that message rewind is not enabled.",
+							Description: "Queue storage space configured for message rewind. Value range: 1,024-10,240 MB (if message rewind is enabled). The value `0` indicates that message rewind is not enabled.",
 						},
 					},
 				},

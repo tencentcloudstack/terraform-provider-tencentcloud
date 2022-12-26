@@ -7,7 +7,7 @@ Example Usage
 resource "tencentcloud_tcmq_subscribe" "subscribe" {
   topic_name = "topic_name"
   subscription_name = "subscription_name"
-  protocol = "HTTP"
+  protocol = "http"
   endpoint = "http://xxxxxx";
 }
 ```
@@ -59,7 +59,7 @@ func resourceTencentCloudTdmqSubscribe() *schema.Resource {
 			"protocol": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "ubscription protocol. Currently, two protocols are supported: HTTP and queue. To use the HTTP protocol, you need to build your own web server to receive messages. With the queue protocol, messages are automatically pushed to a CMQ queue and you can pull them concurrently.",
+				Description: "ubscription protocol. Currently, two protocols are supported: `http` and `queue`. To use the `http` protocol, you need to build your own web server to receive messages. With the `queue` protocol, messages are automatically pushed to a CMQ queue and you can pull them concurrently.",
 			},
 
 			"endpoint": {
@@ -69,6 +69,7 @@ func resourceTencentCloudTdmqSubscribe() *schema.Resource {
 			},
 
 			"notify_strategy": {
+				Default:     "EXPONENTIAL_DECAY_RETRY",
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "CMQ push server retry policy in case an error occurs while pushing a message to `Endpoint`. Valid values: 1. `BACKOFF_RETRY`: backoff retry, which is to retry at a fixed interval, discard the message after a certain number of retries, and continue to push the next message; 2. `EXPONENTIAL_DECAY_RETRY`: exponential decay retry, which is to retry at an exponentially increasing interval, such as 1s, 2s, 4s, 8s, and so on. As a message can be retained in a topic for one day, failed messages will be discarded at most after one day of retry. Default value: `EXPONENTIAL_DECAY_RETRY`.",
@@ -93,6 +94,7 @@ func resourceTencentCloudTdmqSubscribe() *schema.Resource {
 			},
 
 			"notify_content_format": {
+				Default:     "JSON",
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Push content format. Valid values: 1. JSON; 2. SIMPLIFIED, i.e., the raw format. If `Protocol` is `queue`, this value must be `SIMPLIFIED`. If `Protocol` is `http`, both options are acceptable, and the default value is `JSON`.",

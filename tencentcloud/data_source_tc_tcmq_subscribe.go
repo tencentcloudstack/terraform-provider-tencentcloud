@@ -6,8 +6,6 @@ Example Usage
 ```hcl
 data "tencentcloud_tcmq_subscribe" "subscribe" {
   topic_name = "topic_name"
-  offset = 0
-  limit = 20
   subscription_name = "subscription_name";
 }
 ```
@@ -34,12 +32,14 @@ func dataSourceTencentCloudTcmqSubscribe() *schema.Resource {
 			},
 
 			"offset": {
+				Default:     0,
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Starting position of the list of topics to be returned on the current page in case of paginated return. If a value is entered, limit is required. If this parameter is left empty, 0 will be used by default.",
 			},
 
 			"limit": {
+				Default:     20,
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Number of topics to be returned per page in case of paginated return. If this parameter is not passed in, 20 will be used by default. Maximum value: 50.",

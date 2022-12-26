@@ -866,8 +866,15 @@ Cloud Infinite(CI)
 	tencentcloud_ci_bucket_attachment
 
 TDMQ for CMQ
+  Data Source
+    tencentcloud_tcmq_queue
+	tencentcloud_tcmq_topic
+	tencentcloud_tcmq_subscribe
+
   Resource
     tencentcloud_tcmq_queue
+	tencentcloud_tcmq_topic
+	tencentcloud_tcmq_subscribe
 */
 package tencentcloud
 

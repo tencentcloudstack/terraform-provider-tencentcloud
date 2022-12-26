@@ -5,8 +5,6 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tcmq_topic" "topic" {
-  offset = 0
-  limit = 20
   topic_name = "topic_name"
 }
 ```
@@ -27,12 +25,14 @@ func dataSourceTencentCloudTcmqTopic() *schema.Resource {
 		Read: dataSourceTencentCloudTcmqTopicRead,
 		Schema: map[string]*schema.Schema{
 			"offset": {
+				Default:     0,
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Starting position of the list of topics to be returned on the current page in case of paginated return. If a value is entered, limit is required. If this parameter is left empty, 0 will be used by default.",
 			},
 
 			"limit": {
+				Default:     20,
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Number of topics to be returned per page in case of paginated return. If this parameter is not passed in, 20 will be used by default. Maximum value: 50.",
@@ -62,7 +62,7 @@ func dataSourceTencentCloudTcmqTopic() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Filter. Currently, you can filter by tag. The tag name must be prefixed with “tag:”, such as “tag: owner”, “tag: environment”, or “tag: business”.",
+				Description: "Filter. Currently, you can filter by tag. The tag name must be prefixed with `tag:`, such as `tag: owner`, `tag: environment`, or `tag: business`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {

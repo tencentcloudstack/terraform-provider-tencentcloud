@@ -26,6 +26,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tcmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -141,6 +142,11 @@ func resourceTencentCloudTcmqTopicRead(d *schema.ResourceData, meta interface{})
 
 	topic, err := service.DescribeTcmqTopicById(ctx, topicName)
 	if err != nil {
+		if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e.GetCode() == "ResourceNotFound" {
+				return nil
+			}
+		}
 		return err
 	}
 
