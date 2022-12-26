@@ -503,7 +503,7 @@ func dataSourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{
 			queueItem["dead_letter_policy"] = deadLetterPolicy
 		}
 		if queue.TransactionPolicy != nil {
-			transactionPolicy := make(map[string]interface{},)
+			transactionPolicy := make(map[string]interface{})
 			transactionPolicy["first_query_interval"] = queue.TransactionPolicy.FirstQueryInterval
 			transactionPolicy["max_query_count"] = queue.TransactionPolicy.MaxQueryCount
 			queueItem["transaction_policy"] = transactionPolicy
