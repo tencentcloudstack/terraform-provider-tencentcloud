@@ -800,6 +800,43 @@ func (me *TcmqService) DescribeTcmqSubscribeById(ctx context.Context, topicName 
 	return
 }
 
+func (me *TcmqService) DescribeTcmqSubscribeByFilter(ctx context.Context, paramMap map[string]interface{}) (subscriptionList []*tcmq.CmqSubscription, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcmq.NewDescribeCmqSubscriptionDetailRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if v, ok := paramMap["topic_name"]; ok {
+		request.TopicName = helper.String(v.(string))
+	}
+	if v, ok := paramMap["offset"]; ok {
+		request.Offset = helper.IntUint64(v.(int))
+	}
+	if v, ok := paramMap["limit"]; ok {
+		request.Limit = helper.IntUint64(v.(int))
+	}
+	if v, ok := paramMap["subscription_name"]; ok {
+		request.SubscriptionName = helper.String(v.(string))
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeCmqSubscriptionDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	subscriptionList = response.Response.SubscriptionSet
+	return
+}
+
 func (me *TcmqService) DeleteTcmqSubscribeById(ctx context.Context, topicName string, subscriptionName string) (errRet error) {
 	logId := getLogId(ctx)
 
