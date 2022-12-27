@@ -14,7 +14,7 @@ resource "tencentcloud_tcmq_subscribe" "subscribe" {
 
 Import
 
-tdmq subscribe can be imported using the id, e.g.
+tcmq subscribe can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_tcmq_subscribe.subscribe subscribe_id
@@ -34,7 +34,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTdmqSubscribe() *schema.Resource {
+func resourceTencentCloudTcmqSubscribe() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTcmqSubscribeCreate,
 		Read:   resourceTencentCloudTcmqSubscribeRead,
@@ -172,7 +172,7 @@ func resourceTencentCloudTcmqSubscribeCreate(d *schema.ResourceData, meta interf
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmq subscribe failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tcmq subscribe failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -302,7 +302,7 @@ func resourceTencentCloudTcmqSubscribeUpdate(d *schema.ResourceData, meta interf
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmq subscribe failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tcmq subscribe failed, reason:%+v", logId, err)
 		return err
 	}
 

@@ -8,7 +8,7 @@ import (
 
 var testDataSourceTcmqTopic = "data.tencentcloud_tcmq_topic.topic"
 
-func TestAccTencentCloudTdmqTopicDataSource_basic(t *testing.T) {
+func TestAccTencentCloudTcmqTopicDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

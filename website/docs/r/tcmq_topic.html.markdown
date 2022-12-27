@@ -39,7 +39,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-tdmq topic can be imported using the id, e.g.
+tcmq topic can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_tcmq_topic.topic topic_id

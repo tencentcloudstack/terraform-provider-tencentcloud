@@ -10,19 +10,19 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudTdmqSubscribeResource_basic(t *testing.T) {
+func TestAccTencentCloudTcmqSubscribeResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		CheckDestroy: testAccCheckTdmqSubscribeDestroy,
+		CheckDestroy: testAccCheckTcmqSubscribeDestroy,
 		Providers:    testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTdmqSubscribe,
+				Config: testAccTcmqSubscribe,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTdmqSubscribeExists("tencentcloud_tcmq_subscribe.subscribe"),
+					testAccCheckTcmqSubscribeExists("tencentcloud_tcmq_subscribe.subscribe"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcmq_subscribe.subscribe", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tcmq_subscribe.subscribe", "topic_name", "test_subscribe_topic"),
 					resource.TestCheckResourceAttr("tencentcloud_tcmq_subscribe.subscribe", "subscription_name", "test_subscribe"),
@@ -37,7 +37,7 @@ func TestAccTencentCloudTdmqSubscribeResource_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckTdmqSubscribeDestroy(s *terraform.State) error {
+func testAccCheckTcmqSubscribeDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
@@ -54,7 +54,7 @@ func testAccCheckTdmqSubscribeDestroy(s *terraform.State) error {
 		subscriptionName := idSplit[1]
 		subscribe, err := service.DescribeTcmqSubscribeById(ctx, topicName, subscriptionName)
 		if subscribe != nil {
-			return fmt.Errorf("TdmqSubscribe instance still exists")
+			return fmt.Errorf("TcmqSubscribe instance still exists")
 		}
 		if err != nil {
 			return err
@@ -63,17 +63,17 @@ func testAccCheckTdmqSubscribeDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckTdmqSubscribeExists(n string) resource.TestCheckFunc {
+func testAccCheckTcmqSubscribeExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 		rs, ok := s.RootModule().Resources[n]
 		if !ok {
-			return fmt.Errorf("TdmqSubscribe %s is not found", n)
+			return fmt.Errorf("TcmqSubscribe %s is not found", n)
 		}
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("TdmqSubscribe id is not set")
+			return fmt.Errorf("TcmqSubscribe id is not set")
 		}
 
 		service := TcmqService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
@@ -85,7 +85,7 @@ func testAccCheckTdmqSubscribeExists(n string) resource.TestCheckFunc {
 		subscriptionName := idSplit[1]
 		subscribe, err := service.DescribeTcmqSubscribeById(ctx, topicName, subscriptionName)
 		if subscribe == nil {
-			return fmt.Errorf("TdmqSubscribe %s is not found", rs.Primary.ID)
+			return fmt.Errorf("TcmqSubscribe %s is not found", rs.Primary.ID)
 		}
 		if err != nil {
 			return err
@@ -95,7 +95,7 @@ func testAccCheckTdmqSubscribeExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTdmqSubscribe = `
+const testAccTcmqSubscribe = `
 resource "tencentcloud_tcmq_topic" "topic" {
 	topic_name = "test_subscribe_topic"
 }

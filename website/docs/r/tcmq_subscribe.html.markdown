@@ -46,7 +46,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-tdmq subscribe can be imported using the id, e.g.
+tcmq subscribe can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_tcmq_subscribe.subscribe subscribe_id

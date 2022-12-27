@@ -179,7 +179,7 @@ func (me *TcmqService) DeleteTcmqQueueById(ctx context.Context, queueName string
 	return
 }
 
-func (me *TcmqService) DescribeTdmqTopicByFilter(ctx context.Context, paramMap map[string]interface{}) (topicList []*tcmq.CmqTopic, errRet error) {
+func (me *TcmqService) DescribeTcmqTopicByFilter(ctx context.Context, paramMap map[string]interface{}) (topicList []*tcmq.CmqTopic, errRet error) {
 	logId := getLogId(ctx)
 
 	request := tcmq.NewDescribeCmqTopicsRequest()

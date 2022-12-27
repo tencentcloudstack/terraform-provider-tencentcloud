@@ -11,7 +11,7 @@ resource "tencentcloud_tcmq_topic" "topic" {
 
 Import
 
-tdmq topic can be imported using the id, e.g.
+tcmq topic can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_tcmq_topic.topic topic_id
@@ -119,7 +119,7 @@ func resourceTencentCloudTcmqTopicCreate(d *schema.ResourceData, meta interface{
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmq topic failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tcmq topic failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -178,7 +178,7 @@ func resourceTencentCloudTcmqTopicRead(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudTcmqTopicUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmq_topic.update")()
+	defer logElapsed("resource.tencentcloud_tcmq_topic.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -222,7 +222,7 @@ func resourceTencentCloudTcmqTopicUpdate(d *schema.ResourceData, meta interface{
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmq topic failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tcmq topic failed, reason:%+v", logId, err)
 		return err
 	}
 

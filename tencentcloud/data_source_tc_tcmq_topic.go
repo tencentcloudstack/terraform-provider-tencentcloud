@@ -253,7 +253,7 @@ func dataSourceTencentCloudTcmqTopicRead(d *schema.ResourceData, meta interface{
 	topicNames := make([]string, 0)
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeTdmqTopicByFilter(ctx, paramMap)
+		result, e := service.DescribeTcmqTopicByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}

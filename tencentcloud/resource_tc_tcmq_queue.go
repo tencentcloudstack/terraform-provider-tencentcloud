@@ -11,7 +11,7 @@ resource "tencentcloud_tcmq_queue" "queue" {
 
 Import
 
-tdmq queue can be imported using the id, e.g.
+tcmq queue can be imported using the id, e.g.
 
 ```
 terraform import tencentcloud_tcmq_queue.queue queue_id
@@ -231,7 +231,7 @@ func resourceTencentCloudTcmqQueueCreate(d *schema.ResourceData, meta interface{
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmq queue failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tcmq queue failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -339,7 +339,7 @@ func resourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{})
 }
 
 func resourceTencentCloudTcmqQueueUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmq_queue.update")()
+	defer logElapsed("resource.tencentcloud_tcmq_queue.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -455,7 +455,7 @@ func resourceTencentCloudTcmqQueueUpdate(d *schema.ResourceData, meta interface{
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create tdmq queue failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tcmq queue failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -463,7 +463,7 @@ func resourceTencentCloudTcmqQueueUpdate(d *schema.ResourceData, meta interface{
 }
 
 func resourceTencentCloudTcmqQueueDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tdmq_queue.delete")()
+	defer logElapsed("resource.tencentcloud_tcmq_queue.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)

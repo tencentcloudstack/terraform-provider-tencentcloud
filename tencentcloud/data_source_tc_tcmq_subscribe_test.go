@@ -15,7 +15,7 @@ func TestAccTencentCloudTcmqSubscribeDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudTdmqSubscribeDataSource_basic,
+				Config: testAccTencentCloudTcmqSubscribeDataSource_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr(testDataSourceTcmqSubscribe, "subscription_list.#", "1"),
 				),
@@ -24,7 +24,7 @@ func TestAccTencentCloudTcmqSubscribeDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudTdmqSubscribeDataSource_basic = `
+const testAccTencentCloudTcmqSubscribeDataSource_basic = `
 resource "tencentcloud_tcmq_topic" "topic" {
 	topic_name = "test_subscribe_datasource_topic"
 }
