@@ -62,7 +62,6 @@ data "tencentcloud_as_instances" "instances" {
 	filters {
 		name = "auto-scaling-group-id"
 		values = [tencentcloud_as_scaling_group.scaling_group.id]
-
   }
 }
 

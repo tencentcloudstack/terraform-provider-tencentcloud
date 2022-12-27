@@ -5,19 +5,18 @@ Example Usage
 
 ```hcl
 data "tencentcloud_as_instances" "instances" {
-  instance_ids =
   filters {
-		name = ""
-		values =
-
+		name = "auto-scaling-group-id"
+		values = [tencentcloud_as_scaling_group.scaling_group.id]
   }
-  }
+}
 ```
 */
 package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
