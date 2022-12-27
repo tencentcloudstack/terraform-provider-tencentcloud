@@ -46,10 +46,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-tem application can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_tem_application.application application_id
-```
-
