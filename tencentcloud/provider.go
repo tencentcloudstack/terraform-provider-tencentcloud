@@ -116,6 +116,7 @@ Auto Scaling(AS)
     tencentcloud_as_scaling_configs
     tencentcloud_as_scaling_groups
     tencentcloud_as_scaling_policies
+	tencentcloud_as_instances
 
   Resource
     tencentcloud_as_scaling_config
@@ -1195,6 +1196,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_topic":                      dataSourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_role":                       dataSourceTencentCloudTdmqRocketmqRole(),
 			"tencentcloud_tdmq_rocketmq_group":                      dataSourceTencentCloudTdmqRocketmqGroup(),
+			"tencentcloud_as_instances":                             dataSourceTencentCloudAsInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
