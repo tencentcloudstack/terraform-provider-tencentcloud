@@ -237,3 +237,74 @@ func (me *CfsService) DeleteAccessRule(ctx context.Context, accessGroupId, acces
 
 	return nil
 }
+
+func (me *CfsService) DescribeCfsAutoSnapshotPolicyById(ctx context.Context, autoSnapshotPolicyId string) (autoSnapshotPolicy *cfs.AutoSnapshotPolicyInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfs.NewDescribeAutoSnapshotPoliciesRequest()
+	request.AutoSnapshotPolicyId = &autoSnapshotPolicyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*cfs.AutoSnapshotPolicyInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCfsClient().DescribeAutoSnapshotPolicies(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AutoSnapshotPolicies) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.AutoSnapshotPolicies...)
+		if len(response.Response.AutoSnapshotPolicies) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	autoSnapshotPolicy = instances[0]
+	return
+}
+
+func (me *CfsService) DeleteCfsAutoSnapshotPolicyById(ctx context.Context, autoSnapshotPolicyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cfs.NewDeleteAutoSnapshotPolicyRequest()
+	request.AutoSnapshotPolicyId = &autoSnapshotPolicyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCfsClient().DeleteAutoSnapshotPolicy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

@@ -472,6 +472,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.539 h1:0L6nZhT
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.539/go.mod h1:6Syk7W5fdDf0BLvX+RXL5obQ6unkt3Id4aN2QqVrV6U=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.199 h1:VyOKZOlgTXW0szboWhI1N35khPsaHE4CyH9pf42o7P8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.199/go.mod h1:9ldm0D1ToaztnlD2bFC5yjMMqvQfVeAMhvcoCCVnZb8=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.562 h1:gPdY1ow4dh3+Fs0ShjpiX9u+lQLjSHuH9OCBXuoin+Q=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.562/go.mod h1:eC3p0uhPlovCmDlIhwQTej95aj33O5TI4nNHJQpH+8g=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.403 h1:rD9H4dQkULnRpq1BiD2KuDKsd9VEKHun2gMT+V6DNOE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.403/go.mod h1:yWwwGj2gV0hRPfM9GXG4EgDee0cEWYcAwl/M8CTTvzM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.445 h1:ZUtZLAXy7xQbDipfEIPEBahjHBoJ+hTAbQYaqjiwFAg=
@@ -529,6 +531,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.549 h1:j/bk
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.549/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.553 h1:RB8GWKSifv5QdBQUUWfzCo06FU4mmqH1VG7dTWMm5nQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.553/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.562/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.564 h1:nAs/LXDw+ut10MI0TmWO+lejvGyqXLIk5Wefzru7MWM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.564/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445 h1:Bh7XD0ypNMHYyBOM8hhKsSu+y0VVKUnJVS+YKKhfpGg=
