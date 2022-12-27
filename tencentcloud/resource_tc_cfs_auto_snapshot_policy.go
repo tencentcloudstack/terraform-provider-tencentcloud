@@ -136,7 +136,7 @@ func resourceTencentCloudCfsAutoSnapshotPolicyRead(d *schema.ResourceData, meta 
 
 	if autoSnapshotPolicy == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `track` %s does not exist", d.Id())
+		return fmt.Errorf("resource `tencentcloud_cfs_auto_snapshot_policy` %s does not exist", d.Id())
 	}
 
 	if autoSnapshotPolicy.DayOfWeek != nil {
