@@ -876,6 +876,7 @@ Cloud Infinite(CI)
 	tencentcloud_ci_media_super_resolution_template
 	tencentcloud_ci_media_pic_process_template
 	tencentcloud_ci_media_watermark_template
+	tencentcloud_ci_media_tts_template
 	tencentcloud_ci_media_transcode_pro_template
 	tencentcloud_ci_media_smart_cover_template
 	tencentcloud_ci_media_speech_recognition_template
