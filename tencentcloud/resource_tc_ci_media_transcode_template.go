@@ -96,7 +96,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentyun/cos-go-sdk-v5"
-	ci "github.com/tencentyun/cos-go-sdk-v5"
 )
 
 func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
@@ -462,7 +461,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request = ci.CreateMediaTranscodeTemplateOptions{
+		request = cos.CreateMediaTranscodeTemplateOptions{
 			Tag: "Transcode",
 		}
 		bucket     string
@@ -479,12 +478,12 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "container"); ok {
-		container := ci.Container{}
+		container := cos.Container{}
 		if v, ok := dMap["format"]; ok {
 			container.Format = v.(string)
 		}
 		if clipConfigMap, ok := helper.InterfaceToMap(dMap, "clip_config"); ok {
-			clipConfig := ci.ClipConfig{}
+			clipConfig := cos.ClipConfig{}
 			if v, ok := clipConfigMap["duration"]; ok {
 				clipConfig.Duration = v.(string)
 			}
@@ -494,7 +493,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "video"); ok {
-		video := ci.Video{}
+		video := cos.Video{}
 		if v, ok := dMap["codec"]; ok {
 			video.Codec = v.(string)
 		}
@@ -544,7 +543,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "time_interval"); ok {
-		timeInterval := ci.TimeInterval{}
+		timeInterval := cos.TimeInterval{}
 		if v, ok := dMap["start"]; ok {
 			timeInterval.Start = v.(string)
 		}
@@ -555,7 +554,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "audio"); ok {
-		audio := ci.Audio{}
+		audio := cos.Audio{}
 		if v, ok := dMap["codec"]; ok {
 			audio.Codec = v.(string)
 		}
@@ -584,7 +583,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "trans_config"); ok {
-		transConfig := ci.TransConfig{}
+		transConfig := cos.TransConfig{}
 		if v, ok := dMap["adj_dar_method"]; ok {
 			transConfig.AdjDarMethod = v.(string)
 		}
@@ -613,7 +612,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 			transConfig.IsHdr2Sdr = v.(string)
 		}
 		if hlsEncryptMap, ok := helper.InterfaceToMap(dMap, "hls_encrypt"); ok {
-			hlsEncrypt := ci.HlsEncrypt{}
+			hlsEncrypt := cos.HlsEncrypt{}
 			if v, ok := hlsEncryptMap["is_hls_encrypt"]; ok {
 				if v.(string) == "true" {
 					hlsEncrypt.IsHlsEncrypt = true
@@ -632,7 +631,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 	if v, ok := d.GetOk("audio_mix"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
-			audioMix := ci.AudioMix{}
+			audioMix := cos.AudioMix{}
 			if v, ok := dMap["audio_source"]; ok {
 				audioMix.AudioSource = v.(string)
 			}
@@ -643,7 +642,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 				audioMix.Replace = v.(string)
 			}
 			if effectConfigMap, ok := helper.InterfaceToMap(dMap, "effect_config"); ok {
-				effectConfig := ci.EffectConfig{}
+				effectConfig := cos.EffectConfig{}
 				if v, ok := effectConfigMap["enable_start_fadein"]; ok {
 					effectConfig.EnableStartFadein = v.(string)
 				}
@@ -977,7 +976,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := ci.CreateMediaTranscodeTemplateOptions{
+	request := cos.CreateMediaTranscodeTemplateOptions{
 		Tag: "Transcode",
 	}
 
@@ -986,12 +985,12 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "container"); ok {
-		container := ci.Container{}
+		container := cos.Container{}
 		if v, ok := dMap["format"]; ok {
 			container.Format = v.(string)
 		}
 		if clipConfigMap, ok := helper.InterfaceToMap(dMap, "clip_config"); ok {
-			clipConfig := ci.ClipConfig{}
+			clipConfig := cos.ClipConfig{}
 			if v, ok := clipConfigMap["duration"]; ok {
 				clipConfig.Duration = v.(string)
 			}
@@ -1002,7 +1001,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 
 	if d.HasChange("video") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "video"); ok {
-			video := ci.Video{}
+			video := cos.Video{}
 			if v, ok := dMap["codec"]; ok {
 				video.Codec = v.(string)
 			}
@@ -1054,7 +1053,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 
 	if d.HasChange("time_interval") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "time_interval"); ok {
-			timeInterval := ci.TimeInterval{}
+			timeInterval := cos.TimeInterval{}
 			if v, ok := dMap["start"]; ok {
 				timeInterval.Start = v.(string)
 			}
@@ -1066,7 +1065,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 	}
 	if d.HasChange("audio") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "audio"); ok {
-			audio := ci.Audio{}
+			audio := cos.Audio{}
 			if v, ok := dMap["codec"]; ok {
 				audio.Codec = v.(string)
 			}
@@ -1097,7 +1096,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 
 	if d.HasChange("trans_config") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "trans_config"); ok {
-			transConfig := ci.TransConfig{}
+			transConfig := cos.TransConfig{}
 			if v, ok := dMap["adj_dar_method"]; ok {
 				transConfig.AdjDarMethod = v.(string)
 			}
@@ -1126,7 +1125,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 				transConfig.IsHdr2Sdr = v.(string)
 			}
 			if hlsEncryptMap, ok := helper.InterfaceToMap(dMap, "hls_encrypt"); ok {
-				hlsEncrypt := ci.HlsEncrypt{}
+				hlsEncrypt := cos.HlsEncrypt{}
 				if v, ok := hlsEncryptMap["is_hls_encrypt"]; ok {
 					if v.(string) == "true" {
 						hlsEncrypt.IsHlsEncrypt = true
@@ -1147,7 +1146,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 		if v, ok := d.GetOk("audio_mix"); ok {
 			for _, item := range v.([]interface{}) {
 				dMap := item.(map[string]interface{})
-				audioMix := ci.AudioMix{}
+				audioMix := cos.AudioMix{}
 				if v, ok := dMap["audio_source"]; ok {
 					audioMix.AudioSource = v.(string)
 				}
@@ -1158,7 +1157,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 					audioMix.Replace = v.(string)
 				}
 				if effectConfigMap, ok := helper.InterfaceToMap(dMap, "effect_config"); ok {
-					effectConfig := ci.EffectConfig{}
+					effectConfig := cos.EffectConfig{}
 					if v, ok := effectConfigMap["enable_start_fadein"]; ok {
 						effectConfig.EnableStartFadein = v.(string)
 					}
