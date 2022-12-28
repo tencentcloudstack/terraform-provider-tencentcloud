@@ -878,6 +878,7 @@ Cloud Infinite(CI)
 	tencentcloud_ci_media_watermark_template
 	tencentcloud_ci_media_transcode_pro_template
 	tencentcloud_ci_media_smart_cover_template
+	tencentcloud_ci_media_speech_recognition_template
 */
 package tencentcloud
 
@@ -1554,6 +1555,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_media_tts_template":                      resourceTencentCloudCiMediaTtsTemplate(),
 			"tencentcloud_ci_media_transcode_pro_template":            resourceTencentCloudCiMediaTranscodeProTemplate(),
 			"tencentcloud_ci_media_smart_cover_template":              resourceTencentCloudCiMediaSmartCoverTemplate(),
+			"tencentcloud_ci_media_speech_recognition_template":       resourceTencentCloudCiMediaSpeechRecognitionTemplate(),
 		},
 
 		ConfigureFunc: providerConfigure,
