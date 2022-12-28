@@ -138,7 +138,7 @@ func resourceTencentCloudCiHotLinkUpdate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	ciClient := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket)
+	ciClient := meta.(*TencentCloudClient).apiV3Conn.UsePicClient(bucket)
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := ciClient.CI.SetHotLink(ctx, &ci.HotLinkOptions{
 			Type: hotLinkType,
@@ -168,7 +168,7 @@ func resourceTencentCloudCiHotLinkDelete(d *schema.ResourceData, meta interface{
 
 	bucket := d.Id()
 
-	ciClient := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket)
+	ciClient := meta.(*TencentCloudClient).apiV3Conn.UsePicClient(bucket)
 	_, err := ciClient.CI.SetHotLink(ctx, &ci.HotLinkOptions{
 		Type: "off",
 		Url:  []string{},

@@ -92,7 +92,7 @@ func resourceTencentCloudCiBucketPicStyleCreate(d *schema.ResourceData, meta int
 		styleBody = v.(string)
 	}
 
-	ciClient := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket)
+	ciClient := meta.(*TencentCloudClient).apiV3Conn.UsePicClient(bucket)
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := ciClient.CI.AddStyle(ctx, &ci.AddStyleOptions{
 			StyleName: styleName,
