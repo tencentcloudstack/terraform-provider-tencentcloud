@@ -867,6 +867,7 @@ Cloud Infinite(CI)
 	tencentcloud_ci_bucket_pic_style
 	tencentcloud_ci_hot_link
 	tencentcloud_ci_media_snapshot_template
+	tencentcloud_ci_media_transcode_template
 */
 package tencentcloud
 
@@ -1531,6 +1532,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_bucket_pic_style":                        resourceTencentCloudCiBucketPicStyle(),
 			"tencentcloud_ci_hot_link":                                resourceTencentCloudCiHotLink(),
 			"tencentcloud_ci_media_snapshot_template":                 resourceTencentCloudCiMediaSnapshotTemplate(),
+			"tencentcloud_ci_media_transcode_template":                resourceTencentCloudCiMediaTranscodeTemplate(),
 		},
 
 		ConfigureFunc: providerConfigure,
