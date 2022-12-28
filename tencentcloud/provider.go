@@ -876,7 +876,7 @@ Cloud Infinite(CI)
 	tencentcloud_ci_media_super_resolution_template
 	tencentcloud_ci_media_pic_process_template
 	tencentcloud_ci_media_watermark_template
-	tencentcloud_ci_media_tts_template
+	tencentcloud_ci_media_transcode_pro_template
 */
 package tencentcloud
 
@@ -1551,6 +1551,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_media_pic_process_template":              resourceTencentCloudCiMediaPicProcessTemplate(),
 			"tencentcloud_ci_media_watermark_template":                resourceTencentCloudCiMediaWatermarkTemplate(),
 			"tencentcloud_ci_media_tts_template":                      resourceTencentCloudCiMediaTtsTemplate(),
+			"tencentcloud_ci_media_transcode_pro_template":            resourceTencentCloudCiMediaTranscodeProTemplate(),
 		},
 
 		ConfigureFunc: providerConfigure,
