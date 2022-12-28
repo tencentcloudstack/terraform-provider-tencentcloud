@@ -5,39 +5,40 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_ci_media_snapshot_template" "media_snapshot_template" {
-  	name = ""
+    bucket = "terraform-ci-xxxxxx"
+  	name = "snapshot_template"
   	snapshot {
-		mode = ""
-		start = ""
-		time_interval = ""
-		count = ""
-		width = ""
-		height = ""
-		ci_param = ""
-		is_check_count = ""
-		is_check_black = ""
-		black_level = ""
-		pixel_black_threshold = ""
-		snapshot_out_mode = ""
-		sprite_snapshot_config {
-			cell_width = ""
-			cell_height = ""
-			padding = ""
-			margin = ""
-			color = ""
-			columns = ""
-			lines = ""
-		}
+      # mode = ""
+      # start = ""
+      # time_interval = ""
+      count = "10"
+      # width = ""
+      # height = ""
+      # ci_param = ""
+      # is_check_count = ""
+      # is_check_black = ""
+      # black_level = ""
+      # pixel_black_threshold = ""
+      # snapshot_out_mode = ""
+      sprite_snapshot_config {
+        # cell_width = ""
+        # cell_height = ""
+        # padding = ""
+        # margin = ""
+        color = "0xF0F8FF"
+        columns = "10"
+        lines = "10"
+      }
   	}
 }
 ```
 
 Import
 
-ci media_snapshot_template can be imported using the id, e.g.
+ci media_snapshot_template can be imported using the bucket#templateId, e.g.
 
 ```
-terraform import tencentcloud_ci_media_snapshot_template.media_snapshot_template media_snapshot_template_id
+terraform import tencentcloud_ci_media_snapshot_template.media_snapshot_template terraform-ci-xxxxxx#t18210645f96564eaf80e86b1f58c20152
 ```
 */
 package tencentcloud
