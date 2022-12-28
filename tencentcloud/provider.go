@@ -873,6 +873,7 @@ Cloud Infinite(CI)
 	tencentcloud_ci_media_video_process_template
 	tencentcloud_ci_media_video_montage_template
 	tencentcloud_ci_media_voice_separate_template
+	tencentcloud_ci_media_super_resolution_template
 */
 package tencentcloud
 
@@ -1543,6 +1544,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_media_video_process_template":            resourceTencentCloudCiMediaVideoProcessTemplate(),
 			"tencentcloud_ci_media_video_montage_template":            resourceTencentCloudCiMediaVideoMontageTemplate(),
 			"tencentcloud_ci_media_voice_separate_template":           resourceTencentCloudCiMediaVoiceSeparateTemplate(),
+			"tencentcloud_ci_media_super_resolution_template":         resourceTencentCloudCiMediaSuperResolutionTemplate(),
 		},
 
 		ConfigureFunc: providerConfigure,
