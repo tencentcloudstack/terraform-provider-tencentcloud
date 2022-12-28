@@ -49,7 +49,7 @@ resource "tencentcloud_as_scaling_group" "scaling_group" {
   scaling_group_name = "tf-as-group-ds-ins-basic"
   configuration_id   = tencentcloud_as_scaling_config.launch_configuration.id
   max_size           = 1
-  min_size           = 0
+  min_size           = 1
   vpc_id             = tencentcloud_vpc.vpc.id
   subnet_ids         = [tencentcloud_subnet.subnet.id]
 
@@ -62,7 +62,6 @@ data "tencentcloud_as_instances" "instances" {
 	filters {
 		name = "auto-scaling-group-id"
 		values = [tencentcloud_as_scaling_group.scaling_group.id]
-
   }
 }
 

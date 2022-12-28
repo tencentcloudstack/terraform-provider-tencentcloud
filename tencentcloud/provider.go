@@ -1209,10 +1209,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_topic":                      dataSourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_role":                       dataSourceTencentCloudTdmqRocketmqRole(),
 			"tencentcloud_tdmq_rocketmq_group":                      dataSourceTencentCloudTdmqRocketmqGroup(),
-			"tencentcloud_as_instances":                             dataSourceTencentCloudAsInstances(),
 			"tencentcloud_tcmq_queue":                               dataSourceTencentCloudTcmqQueue(),
 			"tencentcloud_tcmq_topic":                               dataSourceTencentCloudTcmqTopic(),
 			"tencentcloud_tcmq_subscribe":                           dataSourceTencentCloudTcmqSubscribe(),
+			"tencentcloud_as_instances":                             dataSourceTencentCloudAsInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
