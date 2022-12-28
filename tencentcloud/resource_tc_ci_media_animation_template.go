@@ -50,7 +50,6 @@ import (
 	"github.com/pkg/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentyun/cos-go-sdk-v5"
-	ci "github.com/tencentyun/cos-go-sdk-v5"
 )
 
 func resourceTencentCloudCiMediaAnimationTemplate() *schema.Resource {
@@ -192,7 +191,7 @@ func resourceTencentCloudCiMediaAnimationTemplateCreate(d *schema.ResourceData, 
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "container"); ok {
-		container := ci.Container{}
+		container := cos.Container{}
 		if v, ok := dMap["format"]; ok {
 			container.Format = v.(string)
 		}
@@ -229,7 +228,7 @@ func resourceTencentCloudCiMediaAnimationTemplateCreate(d *schema.ResourceData, 
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "time_interval"); ok {
-		timeInterval := ci.TimeInterval{}
+		timeInterval := cos.TimeInterval{}
 		if v, ok := dMap["start"]; ok {
 			timeInterval.Start = v.(string)
 		}
@@ -376,7 +375,7 @@ func resourceTencentCloudCiMediaAnimationTemplateUpdate(d *schema.ResourceData, 
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "container"); ok {
-		container := ci.Container{}
+		container := cos.Container{}
 		if v, ok := dMap["format"]; ok {
 			container.Format = v.(string)
 		}
@@ -416,7 +415,7 @@ func resourceTencentCloudCiMediaAnimationTemplateUpdate(d *schema.ResourceData, 
 
 	if d.HasChange("time_interval") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "time_interval"); ok {
-			timeInterval := ci.TimeInterval{}
+			timeInterval := cos.TimeInterval{}
 			if v, ok := dMap["start"]; ok {
 				timeInterval.Start = v.(string)
 			}
