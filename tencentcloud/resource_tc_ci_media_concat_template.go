@@ -54,7 +54,7 @@ resource "tencentcloud_ci_media_concat_template" "media_concat_template" {
 
 Import
 
-ci media_concat_template can be imported using the id, e.g.
+ci media_concat_template can be imported using the bucket#templateId, e.g.
 
 ```
 terraform import tencentcloud_ci_media_concat_template.media_concat_template id=terraform-ci-xxxxxx#t1cb115dfa1fcc414284f83b7c69bcedcf
