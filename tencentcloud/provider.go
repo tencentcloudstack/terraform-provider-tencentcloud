@@ -116,6 +116,7 @@ Auto Scaling(AS)
     tencentcloud_as_scaling_configs
     tencentcloud_as_scaling_groups
     tencentcloud_as_scaling_policies
+	tencentcloud_as_instances
 
   Resource
     tencentcloud_as_scaling_config
@@ -1211,6 +1212,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcmq_queue":                               dataSourceTencentCloudTcmqQueue(),
 			"tencentcloud_tcmq_topic":                               dataSourceTencentCloudTcmqTopic(),
 			"tencentcloud_tcmq_subscribe":                           dataSourceTencentCloudTcmqSubscribe(),
+			"tencentcloud_as_instances":                             dataSourceTencentCloudAsInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
