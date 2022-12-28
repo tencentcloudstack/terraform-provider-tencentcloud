@@ -185,7 +185,7 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-ci media_transcode_template can be imported using the id, e.g.
+ci media_transcode_template can be imported using the bucket#templateId, e.g.
 
 ```
 terraform import tencentcloud_ci_media_transcode_template.media_transcode_template media_transcode_template_id
