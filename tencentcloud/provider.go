@@ -224,6 +224,8 @@ Cloud File Storage(CFS)
     tencentcloud_cfs_file_system
     tencentcloud_cfs_access_group
     tencentcloud_cfs_access_rule
+	tencentcloud_cfs_auto_snapshot_policy
+	tencentcloud_cfs_auto_snapshot_policy_attachment
 
 Container Cluster
   Data Source
@@ -865,6 +867,17 @@ TDMQ for RocketMQ(trocket)
 Cloud Infinite(CI)
   Resource
 	tencentcloud_ci_bucket_attachment
+
+TDMQ for CMQ
+  Data Source
+    tencentcloud_tcmq_queue
+	tencentcloud_tcmq_topic
+	tencentcloud_tcmq_subscribe
+
+  Resource
+    tencentcloud_tcmq_queue
+	tencentcloud_tcmq_topic
+	tencentcloud_tcmq_subscribe
 */
 package tencentcloud
 
@@ -1197,6 +1210,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_role":                       dataSourceTencentCloudTdmqRocketmqRole(),
 			"tencentcloud_tdmq_rocketmq_group":                      dataSourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_as_instances":                             dataSourceTencentCloudAsInstances(),
+			"tencentcloud_tcmq_queue":                               dataSourceTencentCloudTcmqQueue(),
+			"tencentcloud_tcmq_topic":                               dataSourceTencentCloudTcmqTopic(),
+			"tencentcloud_tcmq_subscribe":                           dataSourceTencentCloudTcmqSubscribe(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1284,6 +1300,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_file_system":                          resourceTencentCloudCfsFileSystem(),
 			"tencentcloud_cfs_access_group":                         resourceTencentCloudCfsAccessGroup(),
 			"tencentcloud_cfs_access_rule":                          resourceTencentCloudCfsAccessRule(),
+			"tencentcloud_cfs_auto_snapshot_policy":                 resourceTencentCloudCfsAutoSnapshotPolicy(),
+			"tencentcloud_cfs_auto_snapshot_policy_attachment":      resourceTencentCloudCfsAutoSnapshotPolicyAttachment(),
 			"tencentcloud_redis_instance":                           resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                      resourceTencentCloudRedisBackupConfig(),
 			"tencentcloud_redis_param_template":                     resourceTencentCloudRedisParamTemplate(),
@@ -1527,6 +1545,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc_end_point":                              resourceTencentCloudVpcEndPoint(),
 			"tencentcloud_vpc_end_point_service_white_list":           resourceTencentCloudVpcEndPointServiceWhiteList(),
 			"tencentcloud_ci_bucket_attachment":                       resourceTencentCloudCiBucketAttachment(),
+			"tencentcloud_tcmq_queue":                                 resourceTencentCloudTcmqQueue(),
+			"tencentcloud_tcmq_topic":                                 resourceTencentCloudTcmqTopic(),
+			"tencentcloud_tcmq_subscribe":                             resourceTencentCloudTcmqSubscribe(),
 		},
 
 		ConfigureFunc: providerConfigure,
