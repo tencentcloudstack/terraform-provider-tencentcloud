@@ -534,6 +534,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.553/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.562/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.564 h1:nAs/LXDw+ut10MI0TmWO+lejvGyqXLIk5Wefzru7MWM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.564/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.567 h1:0IRm7OM1jdBdd1jU3PFf3FOmXcGBwGjICr/pcILEZ3M=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.567/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445 h1:Bh7XD0ypNMHYyBOM8hhKsSu+y0VVKUnJVS+YKKhfpGg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445/go.mod h1:jMDD351efCFpT1+KVFbcpu6SbmP4TYmp4qkoCfr63nQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.553 h1:Pl1kYgFhJp0QSoVFSzRsiGk+HfEAkBTQg7+O60tytNA=
@@ -556,6 +558,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.546 h1:GonOZJm
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.546/go.mod h1:IS4LxoCyQ98nqI5Cqp8aJG3+yi9CcAUCG8Sv8FtIjjc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.549 h1:ABAR2iLRo3J99J/FkC0GBccc0MG4v1vga0UVy6Jwym0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.549/go.mod h1:DygU3Q8E2WT0fhJ81//0sWzMf2faiyFTd0B3wNYtRvc=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.567 h1:N5aTesA129t5GuSlQyzwgrAx69nMg5lsyLChyJHzMUw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.567/go.mod h1:GkPxIo1C2WtyoX2eMSx8w1Q8DmYR9brs+es/fZc5nb4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.287 h1:+9COBXAbQmL7aJ39Q/mF50Ykxq4m5kq/y6vbO+u3zgI=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.287/go.mod h1:xRvd0xsyCoviCiMRfJMh5lODPnLx+bnTfENNx6GHzFA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.383 h1:OhKvreaRPhwBEButv45yBcu6BvfvR1JAEXbU/NTck94=
