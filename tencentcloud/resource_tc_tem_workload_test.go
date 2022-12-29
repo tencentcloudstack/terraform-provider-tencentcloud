@@ -11,8 +11,8 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixTemWorkloadResource_basic -v
-func TestAccTencentCloudNeedFixTemWorkloadResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTemWorkloadResource_basic -v
+func TestAccTencentCloudTemWorkloadResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
