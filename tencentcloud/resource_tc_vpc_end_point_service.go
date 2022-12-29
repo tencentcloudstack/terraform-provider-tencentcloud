@@ -9,6 +9,7 @@ resource "tencentcloud_vpc_end_point_service" "end_point_service" {
   end_point_service_name = "terraform-endpoint-service"
   auto_accept_flag = false
   service_instance_id = "lb-o5f6x7ke"
+  service_type = "CLB"
 }
 ```
 
@@ -67,6 +68,13 @@ func resourceTencentCloudVpcEndPointService() *schema.Resource {
 				Description: "Id of service instance, like lb-xxx.",
 			},
 
+			"service_type": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Type of service instance, like `CLB`, `CDB`, `CRS`, default is `CLB`.",
+			},
+
 			"service_owner": {
 				Computed:    true,
 				Type:        schema.TypeString,
@@ -119,6 +127,10 @@ func resourceTencentCloudVpcEndPointServiceCreate(d *schema.ResourceData, meta i
 
 	if v, ok := d.GetOk("service_instance_id"); ok {
 		request.ServiceInstanceId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("service_type"); ok {
+		request.ServiceType = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -181,6 +193,10 @@ func resourceTencentCloudVpcEndPointServiceRead(d *schema.ResourceData, meta int
 		_ = d.Set("service_instance_id", endPointService.ServiceInstanceId)
 	}
 
+	if endPointService.ServiceType != nil {
+		_ = d.Set("service_type", endPointService.ServiceType)
+	}
+
 	if endPointService.ServiceOwner != nil {
 		_ = d.Set("service_owner", endPointService.ServiceOwner)
 	}
@@ -218,6 +234,7 @@ func resourceTencentCloudVpcEndPointServiceUpdate(d *schema.ResourceData, meta i
 
 	unsupportedUpdateFields := []string{
 		"vpc_id",
+		"service_type",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {

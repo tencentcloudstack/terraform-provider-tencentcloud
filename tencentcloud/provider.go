@@ -630,6 +630,7 @@ Private Link(PLS)
   Resource
 	tencentcloud_vpc_end_point_service
 	tencentcloud_vpc_end_point
+	tencentcloud_vpc_end_point_service_white_list
 
 Flow Logs(FL)
   Resource
