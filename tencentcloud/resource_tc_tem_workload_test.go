@@ -13,7 +13,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudTemWorkloadResource_basic -v
 func TestAccTencentCloudTemWorkloadResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -28,7 +28,7 @@ func TestAccTencentCloudTemWorkloadResource_basic(t *testing.T) {
 					testAccCheckTemWorkloadExists("tencentcloud_tem_workload.workload"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tem_workload.workload", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_workload.workload", "environment_id", defaultEnvironmentId),
-					resource.TestCheckResourceAttr("tencentcloud_tem_workload.workload", "application_id", defaultApplicationId),
+					resource.TestCheckResourceAttrSet("tencentcloud_tem_workload.workload", "application_id"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_workload.workload", "deploy_version", "hello-world"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_workload.workload", "deploy_mode", "IMAGE"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_workload.workload", "img_repo", "tem_demo/tem_demo"),
@@ -69,7 +69,7 @@ func testAccCheckTemWorkloadDestroy(s *terraform.State) error {
 			if !ok {
 				return err
 			}
-			if ee.Code == "ResourceNotFound.ServiceRunningVersionNotFound" {
+			if ee.Code == "ResourceNotFound.ServiceRunningVersionNotFound" || ee.Code == "ResourceNotFound.ServiceNotFound" {
 				return nil
 			}
 			return err
@@ -116,16 +116,12 @@ const testAccTemWorkloadVar = `
 variable "environment_id" {
 	default = "` + defaultEnvironmentId + `"
 }
-
-variable "application_id" {
-	default = "` + defaultApplicationId + `"
-}
 `
 
-const testAccTemWorkload = testAccTemWorkloadVar + `
+const testAccTemWorkload = testAccTemApplication + testAccTemWorkloadVar + `
 
 resource "tencentcloud_tem_workload" "workload" {
-  application_id     = var.application_id
+  application_id     = tencentcloud_tem_application.application.id
   environment_id     = var.environment_id
   deploy_version     = "hello-world"
   deploy_mode        = "IMAGE"
