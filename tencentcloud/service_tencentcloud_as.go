@@ -545,6 +545,57 @@ func (me *AsService) DeleteNotification(ctx context.Context, notificationId stri
 	return nil
 }
 
+func (me *AsService) DescribeAsInstancesByFilter(ctx context.Context, param map[string]interface{}) (instances []*as.Instance, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = as.NewDescribeAutoScalingInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_ids" {
+			request.InstanceIds = helper.Strings(v.([]string))
+		}
+		if k == "filters" {
+			request.Filters = v.([]*as.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseAsClient().DescribeAutoScalingInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AutoScalingInstanceSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.AutoScalingInstanceSet...)
+		if len(response.Response.AutoScalingInstanceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
 func flattenDataDiskMappings(list []*as.DataDisk) []map[string]interface{} {
 	result := make([]map[string]interface{}, 0, len(list))
 	for _, v := range list {

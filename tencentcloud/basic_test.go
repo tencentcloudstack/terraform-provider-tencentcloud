@@ -864,8 +864,12 @@ const (
 
 // TEM
 const (
-	defaultEnvironmentId = "en-758oo2ej"
+	defaultEnvironmentId = "en-85377m6j"
 	defaultApplicationId = "app-joqr9bd5"
+	defaultTemVpcId      = "vpc-4owdpnwr"
+	defaultTemSubnetId   = "subnet-c1l35990"
+	defaultLogsetId      = "33aaf0ae-6163-411b-a415-9f27450f68db"
+	defaultTopicId       = "88735a07-bea4-4985-8763-e9deb6da4fad"
 )
 
 // End of TEM

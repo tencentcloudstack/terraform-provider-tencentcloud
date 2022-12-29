@@ -14,12 +14,6 @@ resource "tencentcloud_tem_application" "application" {
   repo_server = "ccr.ccs.tencentyun.com"
 }
 ```
-Import
-
-tem application can be imported using the id, e.g.
-```
-$ terraform import tencentcloud_tem_application.application application_id
-```
 */
 package tencentcloud
 
@@ -40,9 +34,9 @@ func resourceTencentCloudTemApplication() *schema.Resource {
 		Create: resourceTencentCloudTemApplicationCreate,
 		Update: resourceTencentCloudTemApplicationUpdate,
 		Delete: resourceTencentCloudTemApplicationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"application_name": {
 				Type:        schema.TypeString,

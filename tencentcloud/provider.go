@@ -116,6 +116,7 @@ Auto Scaling(AS)
     tencentcloud_as_scaling_configs
     tencentcloud_as_scaling_groups
     tencentcloud_as_scaling_policies
+	tencentcloud_as_instances
 
   Resource
     tencentcloud_as_scaling_config
@@ -223,6 +224,8 @@ Cloud File Storage(CFS)
     tencentcloud_cfs_file_system
     tencentcloud_cfs_access_group
     tencentcloud_cfs_access_rule
+	tencentcloud_cfs_auto_snapshot_policy
+	tencentcloud_cfs_auto_snapshot_policy_attachment
 
 Container Cluster
   Data Source
@@ -880,6 +883,17 @@ Cloud Infinite(CI)
 	tencentcloud_ci_media_transcode_pro_template
 	tencentcloud_ci_media_smart_cover_template
 	tencentcloud_ci_media_speech_recognition_template
+
+TDMQ for CMQ
+  Data Source
+    tencentcloud_tcmq_queue
+	tencentcloud_tcmq_topic
+	tencentcloud_tcmq_subscribe
+
+  Resource
+    tencentcloud_tcmq_queue
+	tencentcloud_tcmq_topic
+	tencentcloud_tcmq_subscribe
 */
 package tencentcloud
 
@@ -1211,6 +1225,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_topic":                      dataSourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_role":                       dataSourceTencentCloudTdmqRocketmqRole(),
 			"tencentcloud_tdmq_rocketmq_group":                      dataSourceTencentCloudTdmqRocketmqGroup(),
+			"tencentcloud_tcmq_queue":                               dataSourceTencentCloudTcmqQueue(),
+			"tencentcloud_tcmq_topic":                               dataSourceTencentCloudTcmqTopic(),
+			"tencentcloud_tcmq_subscribe":                           dataSourceTencentCloudTcmqSubscribe(),
+			"tencentcloud_as_instances":                             dataSourceTencentCloudAsInstances(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1298,6 +1316,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_file_system":                          resourceTencentCloudCfsFileSystem(),
 			"tencentcloud_cfs_access_group":                         resourceTencentCloudCfsAccessGroup(),
 			"tencentcloud_cfs_access_rule":                          resourceTencentCloudCfsAccessRule(),
+			"tencentcloud_cfs_auto_snapshot_policy":                 resourceTencentCloudCfsAutoSnapshotPolicy(),
+			"tencentcloud_cfs_auto_snapshot_policy_attachment":      resourceTencentCloudCfsAutoSnapshotPolicyAttachment(),
 			"tencentcloud_redis_instance":                           resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                      resourceTencentCloudRedisBackupConfig(),
 			"tencentcloud_redis_param_template":                     resourceTencentCloudRedisParamTemplate(),
@@ -1541,6 +1561,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc_end_point":                              resourceTencentCloudVpcEndPoint(),
 			"tencentcloud_vpc_end_point_service_white_list":           resourceTencentCloudVpcEndPointServiceWhiteList(),
 			"tencentcloud_ci_bucket_attachment":                       resourceTencentCloudCiBucketAttachment(),
+			"tencentcloud_tcmq_queue":                                 resourceTencentCloudTcmqQueue(),
+			"tencentcloud_tcmq_topic":                                 resourceTencentCloudTcmqTopic(),
+			"tencentcloud_tcmq_subscribe":                             resourceTencentCloudTcmqSubscribe(),
 			"tencentcloud_ci_bucket_pic_style":                        resourceTencentCloudCiBucketPicStyle(),
 			"tencentcloud_ci_hot_link":                                resourceTencentCloudCiHotLink(),
 			"tencentcloud_ci_media_snapshot_template":                 resourceTencentCloudCiMediaSnapshotTemplate(),
