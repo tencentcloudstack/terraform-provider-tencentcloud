@@ -1,0 +1,8 @@
+```release-note:enhancement
+resource/tencentcloud_vpc_end_point_service: support service type.
+```
+
+```release-note:new-resource
+tencentcloud_vpc_end_point_service_white_list
+```
+
