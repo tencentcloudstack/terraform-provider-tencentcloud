@@ -873,3 +873,10 @@ const (
 )
 
 // End of TEM
+
+// CI
+const (
+	defaultCiBucket = "terraform-ci-1308919341"
+)
+
+// End of CI
