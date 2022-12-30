@@ -1537,6 +1537,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
+			"tencentcloud_dts_migrate_service":                        resourceTencentCloudDtsMigrateService(),
 			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),

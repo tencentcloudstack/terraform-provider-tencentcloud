@@ -1,77 +1,21 @@
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
-	"strings"
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"testing"
 )
-
-func init() {
-	resource.AddTestSweepers("tencentcloud_dts_migrate_job", &resource.Sweeper{
-		Name: "tencentcloud_dts_migrate_job",
-		F:    testSweepDtsMigrateJob,
-	})
-}
-
-// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_dts_migrate_job
-func testSweepDtsMigrateJob(r string) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cli, _ := sharedClientForRegion(r)
-	dtsService := DtsService{client: cli.(*TencentCloudClient).apiV3Conn}
-	param := map[string]interface{}{}
-
-	ret, err := dtsService.DescribeDtsMigrateJobsByFilter(ctx, param)
-	if err != nil {
-		return err
-	}
-
-	for _, v := range ret {
-		delId := *v.JobId
-
-		if strings.HasPrefix(*v.JobName, keepResource) || strings.HasPrefix(*v.JobName, defaultResource) {
-			continue
-		}
-
-		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			err := dtsService.DeleteDtsMigrateJobById(ctx, delId)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-		if err != nil {
-			return fmt.Errorf("[ERROR] sweeper tencentcloud_dts_migrate_job:[%v] failed! reason:[%s]", delId, err.Error())
-		}
-	}
-	return nil
-}
 
 func TestAccTencentCloudDtsMigrateJobResource_basic(t *testing.T) {
 	t.Parallel()
-
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
-		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckDtsMigrateJobDestroy,
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDtsMigrateJob,
-				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDtsMigrateJobExists("tencentcloud_dts_migrate_job.migrate_job"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.migrate_job", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.migrate_job", "src_database_type", "mysql"),
-					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.migrate_job", "src_region", "ap-guangzhou"),
-					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.migrate_job", "dst_database_type", "cynosdbmysql"),
-					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.migrate_job", "dst_region", "ap-guangzhou"),
-					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.migrate_job", "instance_class", "small"),
-					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.migrate_job", "job_name", "tf_test_migration_job"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.migrate_job", "tags.#"),
-				),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.migrate_job", "id")),
 			},
 			{
 				ResourceName:      "tencentcloud_dts_migrate_job.migrate_job",
@@ -82,70 +26,129 @@ func TestAccTencentCloudDtsMigrateJobResource_basic(t *testing.T) {
 	})
 }
 
-func testAccCheckDtsMigrateJobDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	dtsService := DtsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_dts_migrate_job" {
-			continue
-		}
-
-		job, err := dtsService.DescribeDtsMigrateJob(ctx, rs.Primary.ID)
-		if err != nil {
-			return err
-		}
-
-		if job != nil {
-			status := *job.TradeInfo.TradeStatus
-			if status != "isolated" && status != "offlined" {
-				return fmt.Errorf("DTS migrate job still exist, Id: %v, status:%s", rs.Primary.ID, status)
-			}
-		}
-	}
-	return nil
-}
-
-func testAccCheckDtsMigrateJobExists(re string) resource.TestCheckFunc {
-	return func(s *terraform.State) error {
-		logId := getLogId(contextNil)
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		dtsService := DtsService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-
-		rs, ok := s.RootModule().Resources[re]
-		if !ok {
-			return fmt.Errorf("DTS migrate job %s is not found", re)
-		}
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("DTS migrate job id is not set")
-		}
-
-		job, err := dtsService.DescribeDtsMigrateJob(ctx, rs.Primary.ID)
-		if err != nil {
-			return err
-		}
-
-		if job == nil {
-			return fmt.Errorf("DTS migrate job not found, Id: %v", rs.Primary.ID)
-		}
-		return nil
-	}
-}
-
 const testAccDtsMigrateJob = `
 
 resource "tencentcloud_dts_migrate_job" "migrate_job" {
-  src_database_type = "mysql"
-  dst_database_type = "cynosdbmysql"
-  src_region = "ap-guangzhou"
-  dst_region = "ap-guangzhou"
-  instance_class = "small"
-  job_name = "tf_test_migration_job"
-  tags {
-	tag_key = "aaa"
-	tag_value = "bbb"
+  job_id = ""
+  run_mode = ""
+  migrate_option {
+		database_table {
+			object_mode = ""
+			databases {
+				db_name = ""
+				new_db_name = ""
+				schema_name = ""
+				new_schema_name = ""
+				d_b_mode = ""
+				schema_mode = ""
+				table_mode = ""
+				tables {
+				}
+				view_mode = ""
+				views {
+					view_name = ""
+					new_view_name = ""
+				}
+				role_mode = ""
+				roles {
+					role_name = ""
+					new_role_name = ""
+				}
+				function_mode = ""
+				trigger_mode = ""
+				event_mode = ""
+				procedure_mode = ""
+				functions = 
+				procedures = 
+				events = 
+				triggers = 
+			}
+			advanced_objects = 
+		}
+		migrate_type = ""
+		consistency {
+			mode = ""
+		}
+		is_migrate_account = 
+		is_override_root = 
+		is_dst_read_only = 
+		extra_attr {
+			key = ""
+			value = ""
+		}
+
   }
+  src_info {
+		region = ""
+		access_type = ""
+		database_type = ""
+		node_type = ""
+		info {
+			role = ""
+			db_kernel = ""
+			host = ""
+			port = 
+			user = ""
+			password = ""
+			cvm_instance_id = ""
+			uniq_vpn_gw_id = ""
+			uniq_dcg_id = ""
+			instance_id = ""
+			ccn_gw_id = ""
+			vpc_id = ""
+			subnet_id = ""
+			engine_version = ""
+			account = ""
+			account_role = ""
+			account_mode = ""
+			tmp_secret_id = ""
+			tmp_secret_key = ""
+			tmp_token = ""
+		}
+		supplier = ""
+		extra_attr {
+			key = ""
+			value = ""
+		}
+
+  }
+  dst_info {
+		region = ""
+		access_type = ""
+		database_type = ""
+		node_type = ""
+		info {
+			role = ""
+			db_kernel = ""
+			host = ""
+			port = 
+			user = ""
+			password = ""
+			cvm_instance_id = ""
+			uniq_vpn_gw_id = ""
+			uniq_dcg_id = ""
+			instance_id = ""
+			ccn_gw_id = ""
+			vpc_id = ""
+			subnet_id = ""
+			engine_version = ""
+			account = ""
+			account_role = ""
+			account_mode = ""
+			tmp_secret_id = ""
+			tmp_secret_key = ""
+			tmp_token = ""
+		}
+		supplier = ""
+		extra_attr {
+			key = ""
+			value = ""
+		}
+
+  }
+  job_name = ""
+  expect_run_time = ""
+  auto_retry_time_range_minutes = 
 }
 
 `
