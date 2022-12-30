@@ -175,3 +175,139 @@ func (me *CiService) DeleteCiMediaTemplateById(ctx context.Context, bucket, temp
 
 	return
 }
+
+func (me *CiService) CloseCiOriginalImageProtectionById(ctx context.Context, bucket string) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "CloseCIOriginalImageProtection", bucket, errRet.Error())
+		}
+	}()
+
+	_, err := RetryWithContext(ctx, writeRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		return me.client.UsePicClient(bucket).CI.CloseOriginProtect(ctx)
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "CloseCIOriginalImageProtection", bucket)
+
+	return
+}
+
+func (me *CiService) OpenCiOriginalImageProtectionById(ctx context.Context, bucket string) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "OpenCIOriginalImageProtection", bucket, errRet.Error())
+		}
+	}()
+
+	_, err := RetryWithContext(ctx, writeRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		return me.client.UsePicClient(bucket).CI.OpenOriginProtect(ctx)
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "OpenCIOriginalImageProtection", bucket)
+
+	return
+}
+
+func (me *CiService) GetCiOriginalImageProtectionById(ctx context.Context, bucket string) (*ci.OriginProtectResult, error) {
+	var errRet error
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "GetCIOriginalImageProtection", bucket, errRet.Error())
+		}
+	}()
+
+	resRaw, err := RetryWithContext(ctx, readRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		res, _, err := me.client.UsePicClient(bucket).CI.GetOriginProtect(ctx)
+		return res, err
+	})
+
+	if err != nil {
+		errRet = err
+		return nil, errRet
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIOriginalImageProtection", bucket)
+
+	return resRaw.(*ci.OriginProtectResult), nil
+}
+
+func (me *CiService) CloseCiGuetzliById(ctx context.Context, bucket string) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "CloseCIGuetzli", bucket, errRet.Error())
+		}
+	}()
+
+	_, err := RetryWithContext(ctx, writeRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		return me.client.UsePicClient(bucket).CI.DeleteGuetzli(ctx)
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "CloseCIGuetzli", bucket)
+
+	return
+}
+
+func (me *CiService) OpenCiGuetzliById(ctx context.Context, bucket string) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "OpenCIGuetzli", bucket, errRet.Error())
+		}
+	}()
+
+	_, err := RetryWithContext(ctx, writeRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		return me.client.UsePicClient(bucket).CI.PutGuetzli(ctx)
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "OpenCIGuetzli", bucket)
+
+	return
+}
+
+func (me *CiService) GetCiGuetzliById(ctx context.Context, bucket string) (*ci.GetGuetzliResult, error) {
+	var errRet error
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "GetCIGuetzli", bucket, errRet.Error())
+		}
+	}()
+
+	resRaw, err := RetryWithContext(ctx, readRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		res, _, err := me.client.UsePicClient(bucket).CI.GetGuetzli(ctx)
+		return res, err
+	})
+
+	if err != nil {
+		errRet = err
+		return nil, errRet
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIGuetzli", bucket)
+
+	return resRaw.(*ci.GetGuetzliResult), nil
+}
