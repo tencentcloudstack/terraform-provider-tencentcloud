@@ -25,7 +25,7 @@ func testSweepDtsMigrateService(r string) error {
 	dtsService := DtsService{client: cli.(*TencentCloudClient).apiV3Conn}
 	param := map[string]interface{}{}
 
-	ret, err := dtsService.DescribeDtsMigrateServicesByFilter(ctx, param)
+	ret, err := dtsService.DescribeDtsMigrateJobsByFilter(ctx, param)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func testAccCheckDtsMigrateServiceDestroy(s *terraform.State) error {
 			continue
 		}
 
-		job, err := dtsService.DescribeDtsMigrateJob(ctx, rs.Primary.ID)
+		job, err := dtsService.DescribeDtsMigrateJobById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}
@@ -121,7 +121,7 @@ func testAccCheckDtsMigrateServiceExists(re string) resource.TestCheckFunc {
 			return fmt.Errorf("DTS migrate job id is not set")
 		}
 
-		job, err := dtsService.DescribeDtsMigrateJob(ctx, rs.Primary.ID)
+		job, err := dtsService.DescribeDtsMigrateJobById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
 		}

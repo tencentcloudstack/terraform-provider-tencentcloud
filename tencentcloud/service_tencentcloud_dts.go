@@ -674,6 +674,31 @@ func (me *DtsService) DescribeDtsMigrateServiceById(ctx context.Context, jobId s
 	return
 }
 
+func (me *DtsService) DescribeDtsMigrateCheckById(ctx context.Context, jobId string) (migrateCheckJob *dts.DescribeMigrationCheckJobResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeMigrationCheckJobRequest()
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeMigrationCheckJob(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	migrateCheckJob = response.Response
+	return
+}
+
 func (me *DtsService) DtsMigrateServiceStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil
@@ -685,5 +710,33 @@ func (me *DtsService) DtsMigrateServiceStateRefreshFunc(jobId string, failStates
 		}
 
 		return object, fmt.Sprint(object.TradeInfo.TradeStatus), nil
+	}
+}
+
+func (me *DtsService) DtsMigrateJobStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsMigrateJobById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, fmt.Sprint(object.Status), nil
+	}
+}
+
+func (me *DtsService) DtsMigrateCheckConfigStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsMigrateCheckById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, fmt.Sprint(object.CheckFlag), nil
 	}
 }

@@ -499,7 +499,6 @@ func resourceTencentCloudDtsCompareTaskUpdate(d *schema.ResourceData, meta inter
 
 			request.Objects = &compareObject
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

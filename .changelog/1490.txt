@@ -1,0 +1,15 @@
+```release-note:new-data-source
+
+```
+
+```release-note:new-resource
+tencentcloud_dts_migrate_service
+```
+
+```release-note:new-resource
+tencentcloud_dts_migrate_job
+```
+
+```release-note:new-resource
+tencentcloud_dts_migrate_check_config
+```

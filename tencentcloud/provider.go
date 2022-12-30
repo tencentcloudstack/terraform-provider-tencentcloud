@@ -845,8 +845,10 @@ Data Transmission Service(DTS)
 
   Resource
 	tencentcloud_dts_sync_job
-	tencentcloud_dts_migrate_job
 	tencentcloud_dts_compare_task
+	tencentcloud_dts_migrate_service
+	tencentcloud_dts_migrate_job
+	tencentcloud_dts_migrate_check_config
 
 TDMQ for RocketMQ(trocket)
   Data Source
@@ -1540,6 +1542,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dts_migrate_service":                        resourceTencentCloudDtsMigrateService(),
 			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
+			"tencentcloud_dts_migrate_check_config":                   resourceTencentCloudDtsMigrateCheckConfig(),
 			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),
 			"tencentcloud_vpc_flow_log":                               resourceTencentCloudVpcFlowLog(),
 			"tencentcloud_vpc_end_point_service":                      resourceTencentCloudVpcEndPointService(),

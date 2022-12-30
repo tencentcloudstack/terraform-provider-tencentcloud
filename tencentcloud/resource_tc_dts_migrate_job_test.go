@@ -31,6 +31,8 @@ const testAccDtsMigrateJob = `
 resource "tencentcloud_dts_migrate_job" "migrate_job" {
   job_id = ""
   run_mode = ""
+  compare_task_id = ""
+  status = ""
   migrate_option {
 		database_table {
 			object_mode = ""
@@ -43,6 +45,10 @@ resource "tencentcloud_dts_migrate_job" "migrate_job" {
 				schema_mode = ""
 				table_mode = ""
 				tables {
+					table_name = &lt;nil&gt;
+					new_table_name = &lt;nil&gt;
+					tmp_tables = &lt;nil&gt;
+					table_edit_mode = &lt;nil&gt;
 				}
 				view_mode = ""
 				views {
