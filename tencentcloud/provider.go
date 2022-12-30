@@ -630,6 +630,7 @@ Private Link(PLS)
   Resource
 	tencentcloud_vpc_end_point_service
 	tencentcloud_vpc_end_point
+	tencentcloud_vpc_end_point_service_white_list
 
 Flow Logs(FL)
   Resource
@@ -867,6 +868,22 @@ TDMQ for RocketMQ(trocket)
 Cloud Infinite(CI)
   Resource
 	tencentcloud_ci_bucket_attachment
+	tencentcloud_ci_bucket_pic_style
+	tencentcloud_ci_hot_link
+	tencentcloud_ci_media_snapshot_template
+	tencentcloud_ci_media_transcode_template
+	tencentcloud_ci_media_animation_template
+	tencentcloud_ci_media_concat_template
+	tencentcloud_ci_media_video_process_template
+	tencentcloud_ci_media_video_montage_template
+	tencentcloud_ci_media_voice_separate_template
+	tencentcloud_ci_media_super_resolution_template
+	tencentcloud_ci_media_pic_process_template
+	tencentcloud_ci_media_watermark_template
+	tencentcloud_ci_media_tts_template
+	tencentcloud_ci_media_transcode_pro_template
+	tencentcloud_ci_media_smart_cover_template
+	tencentcloud_ci_media_speech_recognition_template
 
 TDMQ for CMQ
   Data Source
@@ -1548,6 +1565,22 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcmq_queue":                                 resourceTencentCloudTcmqQueue(),
 			"tencentcloud_tcmq_topic":                                 resourceTencentCloudTcmqTopic(),
 			"tencentcloud_tcmq_subscribe":                             resourceTencentCloudTcmqSubscribe(),
+			"tencentcloud_ci_bucket_pic_style":                        resourceTencentCloudCiBucketPicStyle(),
+			"tencentcloud_ci_hot_link":                                resourceTencentCloudCiHotLink(),
+			"tencentcloud_ci_media_snapshot_template":                 resourceTencentCloudCiMediaSnapshotTemplate(),
+			"tencentcloud_ci_media_transcode_template":                resourceTencentCloudCiMediaTranscodeTemplate(),
+			"tencentcloud_ci_media_animation_template":                resourceTencentCloudCiMediaAnimationTemplate(),
+			"tencentcloud_ci_media_concat_template":                   resourceTencentCloudCiMediaConcatTemplate(),
+			"tencentcloud_ci_media_video_process_template":            resourceTencentCloudCiMediaVideoProcessTemplate(),
+			"tencentcloud_ci_media_video_montage_template":            resourceTencentCloudCiMediaVideoMontageTemplate(),
+			"tencentcloud_ci_media_voice_separate_template":           resourceTencentCloudCiMediaVoiceSeparateTemplate(),
+			"tencentcloud_ci_media_super_resolution_template":         resourceTencentCloudCiMediaSuperResolutionTemplate(),
+			"tencentcloud_ci_media_pic_process_template":              resourceTencentCloudCiMediaPicProcessTemplate(),
+			"tencentcloud_ci_media_watermark_template":                resourceTencentCloudCiMediaWatermarkTemplate(),
+			"tencentcloud_ci_media_tts_template":                      resourceTencentCloudCiMediaTtsTemplate(),
+			"tencentcloud_ci_media_transcode_pro_template":            resourceTencentCloudCiMediaTranscodeProTemplate(),
+			"tencentcloud_ci_media_smart_cover_template":              resourceTencentCloudCiMediaSmartCoverTemplate(),
+			"tencentcloud_ci_media_speech_recognition_template":       resourceTencentCloudCiMediaSpeechRecognitionTemplate(),
 		},
 
 		ConfigureFunc: providerConfigure,

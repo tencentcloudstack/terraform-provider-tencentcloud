@@ -1,7 +1,7 @@
 /*
 Use this resource to create ckafka instance.
 
-~> **NOTE:** It only support create profession ckafka instance.
+~> **NOTE:** It only support create profession and prepaid ckafka instance.
 
 Example Usage
 
@@ -102,13 +102,13 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Vpc id.",
+				Optional:    true,
+				Description: "Vpc id, it will be basic network if not set.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Subnet id.",
+				Optional:    true,
+				Description: "Subnet id, it will be basic network if not set.",
 			},
 			"msg_retention_time": {
 				Type:     schema.TypeInt,
@@ -272,7 +272,7 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Timestamp.",
+				Description: "Bandwidth of the public network.",
 			},
 			"vip": {
 				Type:        schema.TypeString,

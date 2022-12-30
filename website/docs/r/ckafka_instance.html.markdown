@@ -11,7 +11,7 @@ description: |-
 
 Use this resource to create ckafka instance.
 
-~> **NOTE:** It only support create profession ckafka instance.
+~> **NOTE:** It only support create profession and prepaid ckafka instance.
 
 ## Example Usage
 
@@ -56,8 +56,6 @@ resource "tencentcloud_ckafka_instance" "foo" {
 The following arguments are supported:
 
 * `instance_name` - (Required, String) Instance name.
-* `subnet_id` - (Required, String) Subnet id.
-* `vpc_id` - (Required, String) Vpc id.
 * `zone_id` - (Required, Int) Available zone id.
 * `band_width` - (Optional, Int) Instance bandwidth in MBps.
 * `config` - (Optional, List) Instance configuration.
@@ -69,11 +67,13 @@ The following arguments are supported:
 * `multi_zone_flag` - (Optional, Bool) Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.
 * `partition` - (Optional, Int) Partition Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
 * `period` - (Optional, Int) Prepaid purchase time, such as 1, is one month.
-* `public_network` - (Optional, Int) Timestamp.
+* `public_network` - (Optional, Int) Bandwidth of the public network.
 * `rebalance_time` - (Optional, Int) Modification of the rebalancing time after upgrade.
 * `renew_flag` - (Optional, Int) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
+* `subnet_id` - (Optional, String) Subnet id, it will be basic network if not set.
 * `tag_set` - (Optional, Map) Tag set of instance.
 * `tags` - (Optional, List, **Deprecated**) It has been deprecated from version 1.78.5, because it do not support change. Use `tag_set` instead. Tags of instance. Partition size, the professional version does not need tag.
+* `vpc_id` - (Optional, String) Vpc id, it will be basic network if not set.
 * `zone_ids` - (Optional, Set: [`Int`]) List of available zone id. NOTE: this argument must set together with `multi_zone_flag`.
 
 The `config` object supports the following:
