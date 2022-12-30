@@ -1,9 +1,8 @@
 package tencentcloud
 
 import (
-	"testing"
-
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"testing"
 )
 
 func TestAccTencentCloudCiMediaPicProcessTemplateResource_basic(t *testing.T) {
