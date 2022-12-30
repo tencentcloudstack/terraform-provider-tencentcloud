@@ -980,7 +980,7 @@ func (me *TencentCloudClient) UseDtsClient() *dts.Client {
 func (me *TencentCloudClient) UseCiClient(bucket string) *cos.Client {
 	u, _ := url.Parse(fmt.Sprintf("https://%s.ci.%s.myqcloud.com", bucket, me.Region))
 
-	if me.ciConn != nil && me.ciConn.BaseURL.BucketURL == u {
+	if me.ciConn != nil && me.ciConn.BaseURL.CIURL == u {
 		return me.ciConn
 	}
 

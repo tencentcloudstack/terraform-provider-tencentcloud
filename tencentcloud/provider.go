@@ -884,6 +884,8 @@ Cloud Infinite(CI)
 	tencentcloud_ci_media_transcode_pro_template
 	tencentcloud_ci_media_smart_cover_template
 	tencentcloud_ci_media_speech_recognition_template
+	tencentcloud_ci_guetzli
+	tencentcloud_ci_original_image_protection
 
 TDMQ for CMQ
   Data Source
@@ -1581,6 +1583,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_media_transcode_pro_template":            resourceTencentCloudCiMediaTranscodeProTemplate(),
 			"tencentcloud_ci_media_smart_cover_template":              resourceTencentCloudCiMediaSmartCoverTemplate(),
 			"tencentcloud_ci_media_speech_recognition_template":       resourceTencentCloudCiMediaSpeechRecognitionTemplate(),
+			"tencentcloud_ci_guetzli":                                 resourceTencentCloudCIGuetzli(),
+			"tencentcloud_ci_original_image_protection":               resourceTencentCloudCIOriginalImageProtection(),
 		},
 
 		ConfigureFunc: providerConfigure,

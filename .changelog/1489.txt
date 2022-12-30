@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_ci_guetzli
+```
+
+```release-note:new-resource
+tencentcloud_ci_original_image_protection
+```
