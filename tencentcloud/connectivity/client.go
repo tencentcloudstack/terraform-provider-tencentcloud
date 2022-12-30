@@ -79,9 +79,13 @@ import (
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
 )
 
+type CiHostType string
+
 const (
-	PROVIDER_CVM_REQUEST_TIMEOUT = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
-	PROVIDER_CBS_REQUEST_TIMEOUT = "TENCENTCLOUD_CBS_REQUEST_TIMEOUT"
+	PROVIDER_CVM_REQUEST_TIMEOUT            = "TENCENTCLOUD_CVM_REQUEST_TIMEOUT"
+	PROVIDER_CBS_REQUEST_TIMEOUT            = "TENCENTCLOUD_CBS_REQUEST_TIMEOUT"
+	CI_HOST_PIC                  CiHostType = "pic"
+	CI_HOST_CI                   CiHostType = "ci"
 )
 
 // TencentCloudClient is client for all TencentCloud service
