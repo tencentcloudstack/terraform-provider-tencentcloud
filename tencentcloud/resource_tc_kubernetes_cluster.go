@@ -771,6 +771,11 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Description: "Indicate to set desired pod number in node. valid when enable_customized_pod_cidr=true, " +
 				"and it override `[globe_]desired_pod_num` for current node. Either all the fields `desired_pod_num` or none.",
 		},
+		"hpc_cluster_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Id of cvm hpc cluster.",
+		},
 	}
 }
 
@@ -1712,6 +1717,10 @@ func tkeGetCvmRunInstancesPara(dMap map[string]interface{}, meta interface{},
 
 	if v, ok := dMap["img_id"]; ok && v.(string) != "" {
 		request.ImageId = helper.String(v.(string))
+	}
+
+	if v, ok := dMap["hpc_cluster_id"]; ok && v.(string) != "" {
+		request.HpcClusterId = helper.String(v.(string))
 	}
 
 	cvmJson = request.ToJsonString()
