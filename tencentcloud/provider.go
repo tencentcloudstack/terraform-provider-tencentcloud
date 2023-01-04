@@ -754,6 +754,7 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_hourdb_instance
 	tencentcloud_dcdb_security_group_attachment
 	tencentcloud_dcdb_db_instance
+	tencentcloud_dcdb_account_privileges
 
 Short Message Service(SMS)
   Resource
@@ -1521,6 +1522,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcdb_hourdb_instance":                       resourceTencentCloudDcdbHourdbInstance(),
 			"tencentcloud_dcdb_security_group_attachment":             resourceTencentCloudDcdbSecurityGroupAttachment(),
 			"tencentcloud_dcdb_db_instance":                           resourceTencentCloudDcdbDbInstance(),
+			"tencentcloud_dcdb_account_privileges":                    resourceTencentCloudDcdbAccountPrivileges(),
 			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":       resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_hour_db_instance":                   resourceTencentCloudMariadbHourDbInstance(),

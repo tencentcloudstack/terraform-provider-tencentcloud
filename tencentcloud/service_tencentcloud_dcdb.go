@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -644,4 +645,62 @@ func (me *DcdbService) DcdbDbInstanceStateRefreshFunc(flowId *uint64, failStates
 
 		return object, helper.Int64ToStr(*object.Status), nil
 	}
+}
+
+func (me *DcdbService) DescribeDcdbAccountPrivilegesById(ctx context.Context, ids string, dbName, aType, object, colName *string) (accountPrivileges *dcdb.DescribeAccountPrivilegesResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDescribeAccountPrivilegesRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	idSplit := strings.Split(ids, FILED_SP)
+	if len(idSplit) != 3 {
+		return nil, fmt.Errorf("id is broken,%s", ids)
+	}
+
+	request.InstanceId = helper.String(idSplit[0])
+	request.UserName = helper.String(idSplit[1])
+	request.Host = helper.String(idSplit[2])
+
+	all := helper.String("*")
+
+	if dbName != nil {
+		request.DbName = dbName
+	} else {
+		request.DbName = all
+	}
+
+	if aType != nil {
+		request.Type = aType
+	} else {
+		request.Type = all
+	}
+
+	if object != nil {
+		request.Object = object
+	} else {
+		request.Object = all
+	}
+
+	if colName != nil {
+		request.ColName = colName
+	} else {
+		request.ColName = all
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeAccountPrivileges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	accountPrivileges = response.Response
+	return
 }
