@@ -5,34 +5,37 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dcdb_db_instance" "db_instance" {
-  zones = &lt;nil&gt;
-  period = &lt;nil&gt;
-  shard_memory = &lt;nil&gt;
-  shard_storage = &lt;nil&gt;
-  shard_node_count = &lt;nil&gt;
-  shard_count = &lt;nil&gt;
-  project_id = &lt;nil&gt;
-  vpc_id = &lt;nil&gt;
-  subnet_id = &lt;nil&gt;
-  db_version_id = "5.7.17"
-  auto_voucher = &lt;nil&gt;
-  voucher_ids = &lt;nil&gt;
-  instance_name = &lt;nil&gt;
-  ipv6_flag = &lt;nil&gt;
+  instance_name = "test_dcdb_db_instance"
+  zones = ["ap-guangzhou-5"]
+  period = 1
+  shard_memory = "2"
+  shard_storage = "10"
+  shard_node_count = "2"
+  shard_count = "2"
+  vpc_id = local.vpc_id
+  subnet_id = local.subnet_id
+  db_version_id = "8.0"
   resource_tags {
-		tag_key = &lt;nil&gt;
-		tag_value = &lt;nil&gt;
-
+	tag_key = "aaa"
+	tag_value = "bbb"
   }
   init_params {
-		param = &lt;nil&gt;
-		value = ""
-
+	 param = "character_set_server"
+	 value = "utf8mb4"
   }
-  dcn_region = &lt;nil&gt;
-  dcn_instance_id = &lt;nil&gt;
-  auto_renew_flag = &lt;nil&gt;
-  security_group_ids = &lt;nil&gt;
+  init_params {
+	param = "lower_case_table_names"
+	value = "1"
+  }
+  init_params {
+	param = "sync_mode"
+	value = "2"
+  }
+  init_params {
+	param = "innodb_page_size"
+	value = "16384"
+  }
+  security_group_ids = [local.sg_id]
 }
 ```
 

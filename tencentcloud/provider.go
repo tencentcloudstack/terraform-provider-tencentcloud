@@ -753,7 +753,7 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_account
 	tencentcloud_dcdb_hourdb_instance
 	tencentcloud_dcdb_security_group_attachment
-	tencentcloud_dcdb_instance
+	tencentcloud_dcdb_db_instance
 
 Short Message Service(SMS)
   Resource
