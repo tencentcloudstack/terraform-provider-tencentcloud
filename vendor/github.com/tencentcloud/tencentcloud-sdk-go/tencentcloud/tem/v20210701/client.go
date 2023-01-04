@@ -70,6 +70,7 @@ func NewCreateApplicationResponse() (response *CreateApplicationResponse) {
 //  INTERNALERROR_ACTIONREADTIMEOUT = "InternalError.ActionReadTimeout"
 //  INTERNALERROR_CREATESERVICEERROR = "InternalError.CreateServiceError"
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
+//  INTERNALERROR_TAGINTERFACEERROR = "InternalError.TagInterfaceError"
 //  INVALIDPARAMETERVALUE_INVALIDSERVICENAME = "InvalidParameterValue.InvalidServiceName"
 //  INVALIDPARAMETERVALUE_PUBLICREPOTYPEPARAMETERERROR = "InvalidParameterValue.PublicRepoTypeParameterError"
 //  INVALIDPARAMETERVALUE_SERVICELOWERCASE = "InvalidParameterValue.ServiceLowerCase"
@@ -91,6 +92,7 @@ func (c *Client) CreateApplication(request *CreateApplicationRequest) (response 
 //  INTERNALERROR_ACTIONREADTIMEOUT = "InternalError.ActionReadTimeout"
 //  INTERNALERROR_CREATESERVICEERROR = "InternalError.CreateServiceError"
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
+//  INTERNALERROR_TAGINTERFACEERROR = "InternalError.TagInterfaceError"
 //  INVALIDPARAMETERVALUE_INVALIDSERVICENAME = "InvalidParameterValue.InvalidServiceName"
 //  INVALIDPARAMETERVALUE_PUBLICREPOTYPEPARAMETERERROR = "InvalidParameterValue.PublicRepoTypeParameterError"
 //  INVALIDPARAMETERVALUE_SERVICELOWERCASE = "InvalidParameterValue.ServiceLowerCase"
@@ -144,9 +146,11 @@ func NewCreateApplicationAutoscalerResponse() (response *CreateApplicationAutosc
 //  INVALIDPARAMETERVALUE_AUTOSCALERLARGERTHANONE = "InvalidParameterValue.AutoScalerLargerThanOne"
 //  INVALIDPARAMETERVALUE_CRONHPAREPLICASINVALID = "InvalidParameterValue.CronHpaReplicasInvalid"
 //  INVALIDPARAMETERVALUE_HPAMETRICSINVALID = "InvalidParameterValue.HpaMetricsInvalid"
+//  INVALIDPARAMETERVALUE_HPATHRESHOLDINVALID = "InvalidParameterValue.HpaThresholdInvalid"
 //  INVALIDPARAMETERVALUE_INVALIDCRONSCALERPERIOD = "InvalidParameterValue.InvalidCronScalerPeriod"
 //  INVALIDPARAMETERVALUE_NAMESPACENOTBELONGTOAPPID = "InvalidParameterValue.NamespaceNotBelongToAppid"
 //  INVALIDPARAMETERVALUE_SCALERNAMEDUPLICATED = "InvalidParameterValue.ScalerNameDuplicated"
+//  MISSINGPARAMETER_AUTOSCALERNAMENULL = "MissingParameter.AutoScalerNameNull"
 //  MISSINGPARAMETER_MINMAXNUMNULL = "MissingParameter.MinMaxNumNull"
 //  RESOURCENOTFOUND_SERVICENOTFOUND = "ResourceNotFound.ServiceNotFound"
 //  RESOURCENOTFOUND_SERVICERUNNINGVERSIONNOTFOUND = "ResourceNotFound.ServiceRunningVersionNotFound"
@@ -165,9 +169,11 @@ func (c *Client) CreateApplicationAutoscaler(request *CreateApplicationAutoscale
 //  INVALIDPARAMETERVALUE_AUTOSCALERLARGERTHANONE = "InvalidParameterValue.AutoScalerLargerThanOne"
 //  INVALIDPARAMETERVALUE_CRONHPAREPLICASINVALID = "InvalidParameterValue.CronHpaReplicasInvalid"
 //  INVALIDPARAMETERVALUE_HPAMETRICSINVALID = "InvalidParameterValue.HpaMetricsInvalid"
+//  INVALIDPARAMETERVALUE_HPATHRESHOLDINVALID = "InvalidParameterValue.HpaThresholdInvalid"
 //  INVALIDPARAMETERVALUE_INVALIDCRONSCALERPERIOD = "InvalidParameterValue.InvalidCronScalerPeriod"
 //  INVALIDPARAMETERVALUE_NAMESPACENOTBELONGTOAPPID = "InvalidParameterValue.NamespaceNotBelongToAppid"
 //  INVALIDPARAMETERVALUE_SCALERNAMEDUPLICATED = "InvalidParameterValue.ScalerNameDuplicated"
+//  MISSINGPARAMETER_AUTOSCALERNAMENULL = "MissingParameter.AutoScalerNameNull"
 //  MISSINGPARAMETER_MINMAXNUMNULL = "MissingParameter.MinMaxNumNull"
 //  RESOURCENOTFOUND_SERVICENOTFOUND = "ResourceNotFound.ServiceNotFound"
 //  RESOURCENOTFOUND_SERVICERUNNINGVERSIONNOTFOUND = "ResourceNotFound.ServiceRunningVersionNotFound"
@@ -467,11 +473,13 @@ func NewCreateLogConfigResponse() (response *CreateLogConfigResponse) {
 // 可能返回的错误码:
 //  INTERNALERROR_CREATECONFIGDATAERROR = "InternalError.CreateConfigDataError"
 //  INTERNALERROR_CREATELOGCONFIGERROR = "InternalError.CreateLogConfigError"
+//  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INVALIDPARAMETERVALUE_CONFIGDATAALREADYEXIST = "InvalidParameterValue.ConfigDataAlreadyExist"
 //  INVALIDPARAMETERVALUE_LOGCONFIGALREADYEXIST = "InvalidParameterValue.LogConfigAlreadyExist"
 //  INVALIDPARAMETERVALUE_NAMESPACENOTBELONGTOAPPID = "InvalidParameterValue.NamespaceNotBelongToAppid"
 //  INVALIDPARAMETERVALUE_TEMIDINVALID = "InvalidParameterValue.TemIdInvalid"
 //  MISSINGPARAMETER_NAMESPACEIDNULL = "MissingParameter.NamespaceIdNull"
+//  RESOURCENOTFOUND_VERSIONNAMESPACENOTFOUND = "ResourceNotFound.VersionNamespaceNotFound"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
 func (c *Client) CreateLogConfig(request *CreateLogConfigRequest) (response *CreateLogConfigResponse, err error) {
     return c.CreateLogConfigWithContext(context.Background(), request)
@@ -483,11 +491,13 @@ func (c *Client) CreateLogConfig(request *CreateLogConfigRequest) (response *Cre
 // 可能返回的错误码:
 //  INTERNALERROR_CREATECONFIGDATAERROR = "InternalError.CreateConfigDataError"
 //  INTERNALERROR_CREATELOGCONFIGERROR = "InternalError.CreateLogConfigError"
+//  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INVALIDPARAMETERVALUE_CONFIGDATAALREADYEXIST = "InvalidParameterValue.ConfigDataAlreadyExist"
 //  INVALIDPARAMETERVALUE_LOGCONFIGALREADYEXIST = "InvalidParameterValue.LogConfigAlreadyExist"
 //  INVALIDPARAMETERVALUE_NAMESPACENOTBELONGTOAPPID = "InvalidParameterValue.NamespaceNotBelongToAppid"
 //  INVALIDPARAMETERVALUE_TEMIDINVALID = "InvalidParameterValue.TemIdInvalid"
 //  MISSINGPARAMETER_NAMESPACEIDNULL = "MissingParameter.NamespaceIdNull"
+//  RESOURCENOTFOUND_VERSIONNAMESPACENOTFOUND = "ResourceNotFound.VersionNamespaceNotFound"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
 func (c *Client) CreateLogConfigWithContext(ctx context.Context, request *CreateLogConfigRequest) (response *CreateLogConfigResponse, err error) {
     if request == nil {
@@ -527,10 +537,12 @@ func NewCreateResourceResponse() (response *CreateResourceResponse) {
 // 绑定云资源
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEFAULTINTERNALERROR = "FailedOperation.DefaultInternalError"
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INVALIDPARAMETERVALUE_NAMESPACEREACHMAXIMUM = "InvalidParameterValue.NamespaceReachMaximum"
 //  INVALIDPARAMETERVALUE_NAMESPACERESOURCEREACHMAXIMUM = "InvalidParameterValue.NamespaceResourceReachMaximum"
 //  INVALIDPARAMETERVALUE_TEMIDINVALID = "InvalidParameterValue.TemIdInvalid"
+//  INVALIDPARAMETERVALUE_VPCINVALID = "InvalidParameterValue.VpcInvalid"
 //  RESOURCEINUSE_RESOURCEALREADYUSED = "ResourceInUse.ResourceAlreadyUsed"
 //  RESOURCENOTFOUND_NAMESPACENOTFOUND = "ResourceNotFound.NamespaceNotFound"
 //  RESOURCENOTFOUND_VERSIONNAMESPACENOTFOUND = "ResourceNotFound.VersionNamespaceNotFound"
@@ -543,10 +555,12 @@ func (c *Client) CreateResource(request *CreateResourceRequest) (response *Creat
 // 绑定云资源
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DEFAULTINTERNALERROR = "FailedOperation.DefaultInternalError"
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INVALIDPARAMETERVALUE_NAMESPACEREACHMAXIMUM = "InvalidParameterValue.NamespaceReachMaximum"
 //  INVALIDPARAMETERVALUE_NAMESPACERESOURCEREACHMAXIMUM = "InvalidParameterValue.NamespaceResourceReachMaximum"
 //  INVALIDPARAMETERVALUE_TEMIDINVALID = "InvalidParameterValue.TemIdInvalid"
+//  INVALIDPARAMETERVALUE_VPCINVALID = "InvalidParameterValue.VpcInvalid"
 //  RESOURCEINUSE_RESOURCEALREADYUSED = "ResourceInUse.ResourceAlreadyUsed"
 //  RESOURCENOTFOUND_NAMESPACENOTFOUND = "ResourceNotFound.NamespaceNotFound"
 //  RESOURCENOTFOUND_VERSIONNAMESPACENOTFOUND = "ResourceNotFound.VersionNamespaceNotFound"
@@ -595,9 +609,11 @@ func NewDeleteApplicationResponse() (response *DeleteApplicationResponse) {
 //   - 删除服务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DELETESERVICEERROR = "FailedOperation.DeleteServiceError"
 //  INTERNALERROR_ACTIONREADTIMEOUT = "InternalError.ActionReadTimeout"
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INTERNALERROR_DELETESERVICEERROR = "InternalError.DeleteServiceError"
+//  INTERNALERROR_DESCRIBEINGRESSLISTERROR = "InternalError.DescribeIngressListError"
 //  INVALIDPARAMETERVALUE_NAMESPACENOTBELONGTOAPPID = "InvalidParameterValue.NamespaceNotBelongToAppid"
 //  INVALIDPARAMETERVALUE_SERVICEFOUNDRUNNINGVERSION = "InvalidParameterValue.ServiceFoundRunningVersion"
 //  INVALIDPARAMETERVALUE_TEMIDINVALID = "InvalidParameterValue.TemIdInvalid"
@@ -624,9 +640,11 @@ func (c *Client) DeleteApplication(request *DeleteApplicationRequest) (response 
 //   - 删除服务
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DELETESERVICEERROR = "FailedOperation.DeleteServiceError"
 //  INTERNALERROR_ACTIONREADTIMEOUT = "InternalError.ActionReadTimeout"
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INTERNALERROR_DELETESERVICEERROR = "InternalError.DeleteServiceError"
+//  INTERNALERROR_DESCRIBEINGRESSLISTERROR = "InternalError.DescribeIngressListError"
 //  INVALIDPARAMETERVALUE_NAMESPACENOTBELONGTOAPPID = "InvalidParameterValue.NamespaceNotBelongToAppid"
 //  INVALIDPARAMETERVALUE_SERVICEFOUNDRUNNINGVERSION = "InvalidParameterValue.ServiceFoundRunningVersion"
 //  INVALIDPARAMETERVALUE_TEMIDINVALID = "InvalidParameterValue.TemIdInvalid"
@@ -849,7 +867,9 @@ func NewDeployApplicationResponse() (response *DeployApplicationResponse) {
 // 应用部署
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ACTIONREADTIMEOUT = "InternalError.ActionReadTimeout"
 //  INTERNALERROR_CREATEAPMRESOURCEERROR = "InternalError.CreateApmResourceError"
+//  INTERNALERROR_CREATESERVICEERROR = "InternalError.CreateServiceError"
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INTERNALERROR_DEPLOYVERSIONERROR = "InternalError.DeployVersionError"
 //  INVALIDPARAMETERVALUE_APMNOTBIND = "InvalidParameterValue.ApmNotBind"
@@ -859,6 +879,7 @@ func NewDeployApplicationResponse() (response *DeployApplicationResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDENVNAME = "InvalidParameterValue.InvalidEnvName"
 //  INVALIDPARAMETERVALUE_INVALIDENVVALUE = "InvalidParameterValue.InvalidEnvValue"
 //  INVALIDPARAMETERVALUE_INVALIDMOUNTPATH = "InvalidParameterValue.InvalidMountPath"
+//  INVALIDPARAMETERVALUE_INVALIDTENANTINFO = "InvalidParameterValue.InvalidTenantInfo"
 //  INVALIDPARAMETERVALUE_JDKVERSIONREQUIRED = "InvalidParameterValue.JdkVersionRequired"
 //  INVALIDPARAMETERVALUE_MUSTPROVIDEPORTMAPPINGRULES = "InvalidParameterValue.MustProvidePortMappingRules"
 //  INVALIDPARAMETERVALUE_NAMESPACENOTBELONGTOAPPID = "InvalidParameterValue.NamespaceNotBelongToAppid"
@@ -867,6 +888,7 @@ func NewDeployApplicationResponse() (response *DeployApplicationResponse) {
 //  INVALIDPARAMETERVALUE_SERVICENAMEDUPLICATEERROR = "InvalidParameterValue.ServiceNameDuplicateError"
 //  INVALIDPARAMETERVALUE_SERVICENOTBELONGTOAPPID = "InvalidParameterValue.ServiceNotBelongToAppid"
 //  INVALIDPARAMETERVALUE_SERVICEPODREACHMAXIMUM = "InvalidParameterValue.ServicePodReachMaximum"
+//  INVALIDPARAMETERVALUE_SERVICEUSERESERVESUFFIX = "InvalidParameterValue.ServiceUseReserveSuffix"
 //  INVALIDPARAMETERVALUE_TEMIDINVALID = "InvalidParameterValue.TemIdInvalid"
 //  INVALIDPARAMETERVALUE_TRAITSTRACINGNOTSUPPORTED = "InvalidParameterValue.TraitsTracingNotSupported"
 //  INVALIDPARAMETERVALUE_VERSIONLENGTHLIMIT = "InvalidParameterValue.VersionLengthLimit"
@@ -893,7 +915,9 @@ func (c *Client) DeployApplication(request *DeployApplicationRequest) (response 
 // 应用部署
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ACTIONREADTIMEOUT = "InternalError.ActionReadTimeout"
 //  INTERNALERROR_CREATEAPMRESOURCEERROR = "InternalError.CreateApmResourceError"
+//  INTERNALERROR_CREATESERVICEERROR = "InternalError.CreateServiceError"
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INTERNALERROR_DEPLOYVERSIONERROR = "InternalError.DeployVersionError"
 //  INVALIDPARAMETERVALUE_APMNOTBIND = "InvalidParameterValue.ApmNotBind"
@@ -903,6 +927,7 @@ func (c *Client) DeployApplication(request *DeployApplicationRequest) (response 
 //  INVALIDPARAMETERVALUE_INVALIDENVNAME = "InvalidParameterValue.InvalidEnvName"
 //  INVALIDPARAMETERVALUE_INVALIDENVVALUE = "InvalidParameterValue.InvalidEnvValue"
 //  INVALIDPARAMETERVALUE_INVALIDMOUNTPATH = "InvalidParameterValue.InvalidMountPath"
+//  INVALIDPARAMETERVALUE_INVALIDTENANTINFO = "InvalidParameterValue.InvalidTenantInfo"
 //  INVALIDPARAMETERVALUE_JDKVERSIONREQUIRED = "InvalidParameterValue.JdkVersionRequired"
 //  INVALIDPARAMETERVALUE_MUSTPROVIDEPORTMAPPINGRULES = "InvalidParameterValue.MustProvidePortMappingRules"
 //  INVALIDPARAMETERVALUE_NAMESPACENOTBELONGTOAPPID = "InvalidParameterValue.NamespaceNotBelongToAppid"
@@ -911,6 +936,7 @@ func (c *Client) DeployApplication(request *DeployApplicationRequest) (response 
 //  INVALIDPARAMETERVALUE_SERVICENAMEDUPLICATEERROR = "InvalidParameterValue.ServiceNameDuplicateError"
 //  INVALIDPARAMETERVALUE_SERVICENOTBELONGTOAPPID = "InvalidParameterValue.ServiceNotBelongToAppid"
 //  INVALIDPARAMETERVALUE_SERVICEPODREACHMAXIMUM = "InvalidParameterValue.ServicePodReachMaximum"
+//  INVALIDPARAMETERVALUE_SERVICEUSERESERVESUFFIX = "InvalidParameterValue.ServiceUseReserveSuffix"
 //  INVALIDPARAMETERVALUE_TEMIDINVALID = "InvalidParameterValue.TemIdInvalid"
 //  INVALIDPARAMETERVALUE_TRAITSTRACINGNOTSUPPORTED = "InvalidParameterValue.TraitsTracingNotSupported"
 //  INVALIDPARAMETERVALUE_VERSIONLENGTHLIMIT = "InvalidParameterValue.VersionLengthLimit"
@@ -1157,6 +1183,7 @@ func NewDescribeApplicationServiceListResponse() (response *DescribeApplicationS
 // 查询应用访问方式列表
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_TEMIDINVALID = "InvalidParameterValue.TemIdInvalid"
 //  RESOURCENOTFOUND_INTERFACENOTFOUND = "ResourceNotFound.InterfaceNotFound"
 //  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
 //  RESOURCENOTFOUND_SERVICENOTFOUND = "ResourceNotFound.ServiceNotFound"
@@ -1171,6 +1198,7 @@ func (c *Client) DescribeApplicationServiceList(request *DescribeApplicationServ
 // 查询应用访问方式列表
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_TEMIDINVALID = "InvalidParameterValue.TemIdInvalid"
 //  RESOURCENOTFOUND_INTERFACENOTFOUND = "ResourceNotFound.InterfaceNotFound"
 //  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
 //  RESOURCENOTFOUND_SERVICENOTFOUND = "ResourceNotFound.ServiceNotFound"
@@ -1268,6 +1296,8 @@ func NewDescribeApplicationsStatusResponse() (response *DescribeApplicationsStat
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
+//  MISSINGPARAMETER_NAMESPACEIDNULL = "MissingParameter.NamespaceIdNull"
+//  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
 //  RESOURCENOTFOUND_VERSIONNAMESPACENOTFOUND = "ResourceNotFound.VersionNamespaceNotFound"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
 func (c *Client) DescribeApplicationsStatus(request *DescribeApplicationsStatusRequest) (response *DescribeApplicationsStatusResponse, err error) {
@@ -1279,6 +1309,8 @@ func (c *Client) DescribeApplicationsStatus(request *DescribeApplicationsStatusR
 //
 // 可能返回的错误码:
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
+//  MISSINGPARAMETER_NAMESPACEIDNULL = "MissingParameter.NamespaceIdNull"
+//  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
 //  RESOURCENOTFOUND_VERSIONNAMESPACENOTFOUND = "ResourceNotFound.VersionNamespaceNotFound"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
 func (c *Client) DescribeApplicationsStatusWithContext(ctx context.Context, request *DescribeApplicationsStatusRequest) (response *DescribeApplicationsStatusResponse, err error) {
@@ -2264,6 +2296,7 @@ func NewModifyApplicationAutoscalerResponse() (response *ModifyApplicationAutosc
 //  INVALIDPARAMETERVALUE_AUTOSCALERLARGERTHANONE = "InvalidParameterValue.AutoScalerLargerThanOne"
 //  INVALIDPARAMETERVALUE_CRONHPAREPLICASINVALID = "InvalidParameterValue.CronHpaReplicasInvalid"
 //  INVALIDPARAMETERVALUE_HPAMINMAXINVALID = "InvalidParameterValue.HpaMinMaxInvalid"
+//  MISSINGPARAMETER_MINMAXNUMNULL = "MissingParameter.MinMaxNumNull"
 //  MISSINGPARAMETER_SCALERIDNULL = "MissingParameter.ScalerIdNull"
 //  RESOURCEUNAVAILABLE_APPLICATIONSTOPPED = "ResourceUnavailable.ApplicationStopped"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
@@ -2280,6 +2313,7 @@ func (c *Client) ModifyApplicationAutoscaler(request *ModifyApplicationAutoscale
 //  INVALIDPARAMETERVALUE_AUTOSCALERLARGERTHANONE = "InvalidParameterValue.AutoScalerLargerThanOne"
 //  INVALIDPARAMETERVALUE_CRONHPAREPLICASINVALID = "InvalidParameterValue.CronHpaReplicasInvalid"
 //  INVALIDPARAMETERVALUE_HPAMINMAXINVALID = "InvalidParameterValue.HpaMinMaxInvalid"
+//  MISSINGPARAMETER_MINMAXNUMNULL = "MissingParameter.MinMaxNumNull"
 //  MISSINGPARAMETER_SCALERIDNULL = "MissingParameter.ScalerIdNull"
 //  RESOURCEUNAVAILABLE_APPLICATIONSTOPPED = "ResourceUnavailable.ApplicationStopped"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
@@ -2665,6 +2699,7 @@ func NewModifyLogConfigResponse() (response *ModifyLogConfigResponse) {
 // 可能返回的错误码:
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INTERNALERROR_MODIFYLOGCONFIGERROR = "InternalError.ModifyLogConfigError"
+//  RESOURCENOTFOUND_SERVICENOTFOUND = "ResourceNotFound.ServiceNotFound"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
 func (c *Client) ModifyLogConfig(request *ModifyLogConfigRequest) (response *ModifyLogConfigResponse, err error) {
     return c.ModifyLogConfigWithContext(context.Background(), request)
@@ -2676,6 +2711,7 @@ func (c *Client) ModifyLogConfig(request *ModifyLogConfigRequest) (response *Mod
 // 可能返回的错误码:
 //  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INTERNALERROR_MODIFYLOGCONFIGERROR = "InternalError.ModifyLogConfigError"
+//  RESOURCENOTFOUND_SERVICENOTFOUND = "ResourceNotFound.ServiceNotFound"
 //  UNAUTHORIZEDOPERATION_UNAUTHORIZEDOPERATION = "UnauthorizedOperation.UnauthorizedOperation"
 func (c *Client) ModifyLogConfigWithContext(ctx context.Context, request *ModifyLogConfigRequest) (response *ModifyLogConfigResponse, err error) {
     if request == nil {
@@ -2715,6 +2751,7 @@ func NewRestartApplicationResponse() (response *RestartApplicationResponse) {
 // 服务重启
 //
 // 可能返回的错误码:
+//  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INTERNALERROR_RESTARTAPPLICATIONERROR = "InternalError.RestartApplicationError"
 //  MISSINGPARAMETER_NAMESPACEIDNULL = "MissingParameter.NamespaceIdNull"
 //  OPERATIONDENIED_RESOURCEISOLATED = "OperationDenied.ResourceIsolated"
@@ -2729,6 +2766,7 @@ func (c *Client) RestartApplication(request *RestartApplicationRequest) (respons
 // 服务重启
 //
 // 可能返回的错误码:
+//  INTERNALERROR_DEFAULTINTERNALERROR = "InternalError.DefaultInternalError"
 //  INTERNALERROR_RESTARTAPPLICATIONERROR = "InternalError.RestartApplicationError"
 //  MISSINGPARAMETER_NAMESPACEIDNULL = "MissingParameter.NamespaceIdNull"
 //  OPERATIONDENIED_RESOURCEISOLATED = "OperationDenied.ResourceIsolated"
@@ -2943,6 +2981,7 @@ func NewRollingUpdateApplicationByVersionResponse() (response *RollingUpdateAppl
 //  MISSINGPARAMETER_DEPLOYMODENULL = "MissingParameter.DeployModeNull"
 //  MISSINGPARAMETER_LOGSETORTOPICNULL = "MissingParameter.LogsetOrTopicNull"
 //  MISSINGPARAMETER_NAMESPACEIDNULL = "MissingParameter.NamespaceIdNull"
+//  MISSINGPARAMETER_SVCREPONOTREADY = "MissingParameter.SvcRepoNotReady"
 //  RESOURCEINUSE_SERVICEDEPLOYING = "ResourceInUse.ServiceDeploying"
 //  RESOURCENOTFOUND_SERVICENOTFOUND = "ResourceNotFound.ServiceNotFound"
 //  RESOURCENOTFOUND_VERSIONNAMESPACENOTFOUND = "ResourceNotFound.VersionNamespaceNotFound"
@@ -2975,6 +3014,7 @@ func (c *Client) RollingUpdateApplicationByVersion(request *RollingUpdateApplica
 //  MISSINGPARAMETER_DEPLOYMODENULL = "MissingParameter.DeployModeNull"
 //  MISSINGPARAMETER_LOGSETORTOPICNULL = "MissingParameter.LogsetOrTopicNull"
 //  MISSINGPARAMETER_NAMESPACEIDNULL = "MissingParameter.NamespaceIdNull"
+//  MISSINGPARAMETER_SVCREPONOTREADY = "MissingParameter.SvcRepoNotReady"
 //  RESOURCEINUSE_SERVICEDEPLOYING = "ResourceInUse.ServiceDeploying"
 //  RESOURCENOTFOUND_SERVICENOTFOUND = "ResourceNotFound.ServiceNotFound"
 //  RESOURCENOTFOUND_VERSIONNAMESPACENOTFOUND = "ResourceNotFound.VersionNamespaceNotFound"

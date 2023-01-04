@@ -17,6 +17,12 @@ package v20210701
 const (
 	// 此产品的特有错误码
 
+	// 服务器繁忙,请稍后再试。
+	FAILEDOPERATION_DEFAULTINTERNALERROR = "FailedOperation.DefaultInternalError"
+
+	// 删除应用失败。
+	FAILEDOPERATION_DELETESERVICEERROR = "FailedOperation.DeleteServiceError"
+
 	// 请求响应超时。
 	INTERNALERROR_ACTIONREADTIMEOUT = "InternalError.ActionReadTimeout"
 
@@ -62,6 +68,9 @@ const (
 	// 查询 ingress 失败。
 	INTERNALERROR_DESCRIBEINGRESSERROR = "InternalError.DescribeIngressError"
 
+	// 查询 ingress 列表失败。
+	INTERNALERROR_DESCRIBEINGRESSLISTERROR = "InternalError.DescribeIngressListError"
+
 	// 查询 LogConfig 错误。
 	INTERNALERROR_DESCRIBELOGCONFIGERROR = "InternalError.DescribeLogConfigError"
 
@@ -91,6 +100,9 @@ const (
 
 	// 停止应用失败。
 	INTERNALERROR_STOPAPPLICATIONERROR = "InternalError.StopApplicationError"
+
+	// 调用标签接口异常。
+	INTERNALERROR_TAGINTERFACEERROR = "InternalError.TagInterfaceError"
 
 	// 更新 ingress 失败。
 	INTERNALERROR_UPDATEINGRESSERROR = "InternalError.UpdateIngressError"
@@ -160,6 +172,9 @@ const (
 
 	// 弹性伸缩最小值/最大值不合法。
 	INVALIDPARAMETERVALUE_HPAMINMAXINVALID = "InvalidParameterValue.HpaMinMaxInvalid"
+
+	// 弹性伸缩阈值不合法。
+	INVALIDPARAMETERVALUE_HPATHRESHOLDINVALID = "InvalidParameterValue.HpaThresholdInvalid"
 
 	// 访问配置重定向需要启用 HTTPS。
 	INVALIDPARAMETERVALUE_INGRESSREWRITEREQUIREDHTTPSENABLE = "InvalidParameterValue.IngressRewriteRequiredHttpsEnable"
@@ -248,6 +263,9 @@ const (
 	// 应用创建失败，达到上限。
 	INVALIDPARAMETERVALUE_SERVICEREACHMAXIMUM = "InvalidParameterValue.ServiceReachMaximum"
 
+	// 服务名使用了保留后缀。
+	INVALIDPARAMETERVALUE_SERVICEUSERESERVESUFFIX = "InvalidParameterValue.ServiceUseReserveSuffix"
+
 	// 企业版 TCR 实例名称不合法。
 	INVALIDPARAMETERVALUE_TCRENTINSTANCENAMENOTVALID = "InvalidParameterValue.TcrEntInstanceNameNotValid"
 
@@ -265,6 +283,12 @@ const (
 
 	// 版本的路由流量不为0。
 	INVALIDPARAMETERVALUE_VERSIONROUTERATENOTZERO = "InvalidParameterValue.VersionRouteRateNotZero"
+
+	// vpc错误, 与环境vpc不一致。
+	INVALIDPARAMETERVALUE_VPCINVALID = "InvalidParameterValue.VpcInvalid"
+
+	// 弹性规则名称不能为空。
+	MISSINGPARAMETER_AUTOSCALERNAMENULL = "MissingParameter.AutoScalerNameNull"
 
 	// 部署方式不能为空。
 	MISSINGPARAMETER_DEPLOYMODENULL = "MissingParameter.DeployModeNull"
