@@ -180,6 +180,8 @@ func resourceTencentCloudCiMediaTtsTemplateRead(d *schema.ResourceData, meta int
 		return err
 	}
 
+	_ = d.Set("bucket", bucket)
+
 	if template == nil {
 		d.SetId("")
 		return fmt.Errorf("resource `track` %s does not exist", d.Id())

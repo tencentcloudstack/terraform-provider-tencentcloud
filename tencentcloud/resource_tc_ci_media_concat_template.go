@@ -469,6 +469,8 @@ func resourceTencentCloudCiMediaConcatTemplateRead(d *schema.ResourceData, meta 
 		return fmt.Errorf("resource `track` %s does not exist", d.Id())
 	}
 
+	_ = d.Set("bucket", bucket)
+
 	if mediaConcatTemplate.Name != "" {
 		_ = d.Set("name", mediaConcatTemplate.Name)
 	}

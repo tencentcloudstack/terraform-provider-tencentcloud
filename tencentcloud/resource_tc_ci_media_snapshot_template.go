@@ -298,7 +298,7 @@ func resourceTencentCloudCiMediaSnapshotTemplateCreate(d *schema.ResourceData, m
 		if v, ok := dMap["snapshot_out_mode"]; ok {
 			snapshot.SnapshotOutMode = v.(string)
 		}
-		if spriteSnapshotConfigMap, ok := helper.InterfacesHeadMap(d, "sprite_snapshot_config"); ok {
+		if spriteSnapshotConfigMap, ok := helper.InterfaceToMap(dMap, "sprite_snapshot_config"); ok {
 			spriteSnapshotConfig := cos.SpriteSnapshotConfig{}
 			if v, ok := spriteSnapshotConfigMap["cell_width"]; ok {
 				spriteSnapshotConfig.CellWidth = v.(string)
@@ -327,13 +327,13 @@ func resourceTencentCloudCiMediaSnapshotTemplateCreate(d *schema.ResourceData, m
 	}
 
 	var response *cos.CreateMediaTemplateResult
-	ciClient := meta.(*TencentCloudClient).apiV3Conn.UsePicClient(bucket)
+	ciClient := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket)
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, _, e := ciClient.CI.CreateMediaSnapshotTemplate(ctx, &request)
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "CreateMediaSnapshotTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%+v]\n", logId, "CreateMediaSnapshotTemplate", request, result)
 		}
 		response = result
 		return nil
@@ -380,6 +380,7 @@ func resourceTencentCloudCiMediaSnapshotTemplateRead(d *schema.ResourceData, met
 		_ = d.Set("name", mediaSnapshotTemplate.Name)
 	}
 
+	log.Printf("[DEBUG]Snapshot api[%+v]", mediaSnapshotTemplate.Snapshot)
 	if mediaSnapshotTemplate.Snapshot != nil {
 		snapshotMap := map[string]interface{}{}
 
@@ -411,8 +412,8 @@ func resourceTencentCloudCiMediaSnapshotTemplateRead(d *schema.ResourceData, met
 			snapshotMap["ci_param"] = mediaSnapshotTemplate.Snapshot.CIParam
 		}
 
-		snapshotMap["is_check_count"] = mediaSnapshotTemplate.Snapshot.IsCheckCount
-		snapshotMap["is_check_black"] = mediaSnapshotTemplate.Snapshot.IsCheckBlack
+		snapshotMap["is_check_count"] = fmt.Sprintf("%t", mediaSnapshotTemplate.Snapshot.IsCheckCount)
+		snapshotMap["is_check_black"] = fmt.Sprintf("%t", mediaSnapshotTemplate.Snapshot.IsCheckBlack)
 
 		if mediaSnapshotTemplate.Snapshot.BlackLevel != "" {
 			snapshotMap["black_level"] = mediaSnapshotTemplate.Snapshot.BlackLevel
@@ -460,7 +461,10 @@ func resourceTencentCloudCiMediaSnapshotTemplateRead(d *schema.ResourceData, met
 			snapshotMap["sprite_snapshot_config"] = []interface{}{spriteSnapshotConfigMap}
 		}
 
-		_ = d.Set("snapshot", []interface{}{snapshotMap})
+		err = d.Set("snapshot", []interface{}{snapshotMap})
+		if err != nil {
+			return err
+		}
 	}
 
 	if mediaSnapshotTemplate.TemplateId != "" {
@@ -568,7 +572,7 @@ func resourceTencentCloudCiMediaSnapshotTemplateUpdate(d *schema.ResourceData, m
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UsePicClient(bucket).CI.UpdateMediaSnapshotTemplate(ctx, &request, templateId)
+		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket).CI.UpdateMediaSnapshotTemplate(ctx, &request, templateId)
 		if e != nil {
 			return retryError(e)
 		} else {

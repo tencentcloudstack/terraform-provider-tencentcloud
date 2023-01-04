@@ -194,6 +194,8 @@ func resourceTencentCloudCiMediaSmartCoverTemplateRead(d *schema.ResourceData, m
 		return fmt.Errorf("resource `track` %s does not exist", d.Id())
 	}
 
+	_ = d.Set("bucket", bucket)
+
 	if mediaSmartCoverTemplate.Name != "" {
 		_ = d.Set("name", mediaSmartCoverTemplate.Name)
 	}

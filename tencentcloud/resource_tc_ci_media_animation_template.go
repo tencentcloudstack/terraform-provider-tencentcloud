@@ -28,14 +28,6 @@ resource "tencentcloud_ci_media_animation_template" "media_animation_template" {
   }
 }
 ```
-
-Import
-
-ci media_animation_template can be imported using the bucket#templateId, e.g.
-
-```
-terraform import tencentcloud_ci_media_animation_template.media_animation_template terraform-ci-xxxxxx#t18210645f96564eaf80e86b1f58c20152
-```
 */
 package tencentcloud
 
@@ -58,9 +50,9 @@ func resourceTencentCloudCiMediaAnimationTemplate() *schema.Resource {
 		Read:   resourceTencentCloudCiMediaAnimationTemplateRead,
 		Update: resourceTencentCloudCiMediaAnimationTemplateUpdate,
 		Delete: resourceTencentCloudCiMediaAnimationTemplateDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"bucket": {
 				Required:    true,
@@ -244,7 +236,7 @@ func resourceTencentCloudCiMediaAnimationTemplateCreate(d *schema.ResourceData, 
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "CreateMediaAnimationTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%+v], response body [%+v]\n", logId, "CreateMediaAnimationTemplate", request, result)
 		}
 		response = result
 		return nil
@@ -287,11 +279,13 @@ func resourceTencentCloudCiMediaAnimationTemplateRead(d *schema.ResourceData, me
 		return fmt.Errorf("resource `track` %s does not exist", d.Id())
 	}
 
+	_ = d.Set("bucket", bucket)
+
 	if template.Name != "" {
 		_ = d.Set("name", template.Name)
 	}
 
-	mediaAnimationTemplate := template.Animation
+	mediaAnimationTemplate := template.TransTpl
 	if mediaAnimationTemplate != nil {
 		if mediaAnimationTemplate.Container != nil {
 			containerMap := map[string]interface{}{}
@@ -322,23 +316,26 @@ func resourceTencentCloudCiMediaAnimationTemplateRead(d *schema.ResourceData, me
 				videoMap["fps"] = mediaAnimationTemplate.Video.Fps
 			}
 
-			if mediaAnimationTemplate.Video.AnimateOnlyKeepKeyFrame != "" {
-				videoMap["animate_only_keep_key_frame"] = mediaAnimationTemplate.Video.AnimateOnlyKeepKeyFrame
-			}
+			// if mediaAnimationTemplate.Video.AnimateOnlyKeepKeyFrame != "" {
+			// 	videoMap["animate_only_keep_key_frame"] = mediaAnimationTemplate.Video.AnimateOnlyKeepKeyFrame
+			// }
 
-			if mediaAnimationTemplate.Video.AnimateTimeIntervalOfFrame != "" {
-				videoMap["animate_time_interval_of_frame"] = mediaAnimationTemplate.Video.AnimateTimeIntervalOfFrame
-			}
+			// if mediaAnimationTemplate.Video.AnimateTimeIntervalOfFrame != "" {
+			// 	videoMap["animate_time_interval_of_frame"] = mediaAnimationTemplate.Video.AnimateTimeIntervalOfFrame
+			// }
 
-			if mediaAnimationTemplate.Video.AnimateFramesPerSecond != "" {
-				videoMap["animate_frames_per_second"] = mediaAnimationTemplate.Video.AnimateFramesPerSecond
-			}
+			// if mediaAnimationTemplate.Video.AnimateFramesPerSecond != "" {
+			// 	videoMap["animate_frames_per_second"] = mediaAnimationTemplate.Video.AnimateFramesPerSecond
+			// }
 
-			if mediaAnimationTemplate.Video.Quality != "" {
-				videoMap["quality"] = mediaAnimationTemplate.Video.Quality
-			}
+			// if mediaAnimationTemplate.Video.Quality != "" {
+			// 	videoMap["quality"] = mediaAnimationTemplate.Video.Quality
+			// }
 
-			_ = d.Set("video", []interface{}{videoMap})
+			err = d.Set("video", []interface{}{videoMap})
+			if err != nil {
+				return err
+			}
 		}
 
 		if mediaAnimationTemplate.TimeInterval != nil {
@@ -352,7 +349,10 @@ func resourceTencentCloudCiMediaAnimationTemplateRead(d *schema.ResourceData, me
 				timeIntervalMap["duration"] = mediaAnimationTemplate.TimeInterval.Duration
 			}
 
-			_ = d.Set("time_interval", []interface{}{timeIntervalMap})
+			err = d.Set("time_interval", []interface{}{timeIntervalMap})
+			if err != nil {
+				return err
+			}
 		}
 	}
 

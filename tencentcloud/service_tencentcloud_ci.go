@@ -147,7 +147,7 @@ func (me *CiService) DescribeCiMediaTemplateById(ctx context.Context, bucket, te
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "DescribeMediaTemplate", bucket, response)
+	log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%+v]\n", logId, "DescribeMediaTemplate", bucket, response)
 
 	if len(response.TemplateList) < 1 {
 		return
@@ -171,7 +171,7 @@ func (me *CiService) DeleteCiMediaTemplateById(ctx context.Context, bucket, temp
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, "DeleteMediaTemplate", bucket, response)
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%+v]\n", logId, "DeleteMediaTemplate", bucket, response)
 
 	return
 }
