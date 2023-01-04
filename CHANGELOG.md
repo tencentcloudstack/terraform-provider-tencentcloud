@@ -1,3 +1,43 @@
+## 1.79.3 (December 29, 2022)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_as_instances` ([#1482](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1482))
+* **New Data Source:** `tencentcloud_tcmq_queue` ([#1480](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1480))
+* **New Data Source:** `tencentcloud_tcmq_subscribe` ([#1480](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1480))
+* **New Data Source:** `tencentcloud_tcmq_topic` ([#1480](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1480))
+* **New Resource:** `tencentcloud_cfs_auto_snapshot_policy` ([#1481](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1481))
+* **New Resource:** `tencentcloud_cfs_auto_snapshot_policy_attachment` ([#1481](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1481))
+* **New Resource:** `tencentcloud_ci_bucket_attachment` ([#1471](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1471))
+* **New Resource:** `tencentcloud_ci_bucket_attachment` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_bucket_pic_style` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_hot_link` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_animation_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_concat_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_pic_process_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_smart_cover_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_snapshot_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_speech_recognition_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_super_resolution_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_transcode_pro_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_transcode_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_tts_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_video_montage_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_video_process_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_voice_separate_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_ci_media_watermark_template` ([#1483](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1483))
+* **New Resource:** `tencentcloud_tcmq_queue` ([#1480](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1480))
+* **New Resource:** `tencentcloud_tcmq_subscribe` ([#1480](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1480))
+* **New Resource:** `tencentcloud_tcmq_topic` ([#1480](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1480))
+* **New Resource:** `tencentcloud_vpc_end_point_service_white_list` ([#1485](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1485))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: change `vpc_id` and `subnet_id` to optional, and optimize doc ([#1486](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1486))
+* resource/tencentcloud_scf_function: optimize the retry logic when deleting the scf function ([#1478](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1478))
+* resource/tencentcloud_ssl_pay_certificate: update the `product_id` value, support `confirm_letter` and `dv_auths` ([#1472](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1472))
+* resource/tencentcloud_vpc_end_point_service: support service type. ([#1485](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1485))
+
 ## 1.79.2 (December 13, 2022)
 
 FEATURES:

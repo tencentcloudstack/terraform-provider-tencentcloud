@@ -68,7 +68,7 @@ func resourceTencentCloudCiBucketAttachmentCreate(d *schema.ResourceData, meta i
 		return errors.New("get bucket failed!")
 	}
 
-	ciClient := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucket)
+	ciClient := meta.(*TencentCloudClient).apiV3Conn.UsePicClient(bucket)
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := ciClient.CI.OpenCIService(ctx)
 		if e != nil {
