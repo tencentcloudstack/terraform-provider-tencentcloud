@@ -267,15 +267,6 @@ func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, met
 
 	logId := getLogId(contextNil)
 
-	unsupportedUpdateFields := []string{
-		"service",
-	}
-	for _, field := range unsupportedUpdateFields {
-		if d.HasChange(field) {
-			return fmt.Errorf("tencentcloud_tem_application_service update on %s is not support yet", field)
-		}
-	}
-
 	request := tem.NewModifyApplicationServiceRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
