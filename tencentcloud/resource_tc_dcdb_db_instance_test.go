@@ -57,7 +57,7 @@ func TestAccTencentCloudDCDBDbInstanceResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckDcdbHourdbInstanceDestroy,
+		CheckDestroy: testAccCheckDCDBDbInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDcdbDbInstance_basic,
@@ -92,7 +92,7 @@ func TestAccTencentCloudDCDBDbInstanceResource_basic(t *testing.T) {
 			{
 				Config: testAccDcdbDbInstance_update,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDcdbHourdbInstanceExists("tencentcloud_dcdb_db_instance.db_instance"),
+					testAccCheckDCDBDbInstanceExists("tencentcloud_dcdb_db_instance.db_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "instance_name", "test_dcdb_db_instance_CHANGED"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_db_instance.db_instance", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_db_instance.db_instance", "subnet_id"),
