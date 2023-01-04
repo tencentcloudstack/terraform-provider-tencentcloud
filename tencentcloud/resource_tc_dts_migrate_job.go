@@ -4,134 +4,67 @@ Provides a resource to create a dts migrate_job
 Example Usage
 
 ```hcl
-resource "tencentcloud_dts_migrate_job" "migrate_job" {
-  job_id = ""
-  compare_task_id = ""
-  run_mode = ""
-  resume_option = ""
-  status = ""
-  migrate_option {
+resource "tencentcloud_dts_migrate_service" "service" {
+	src_database_type = "mysql"
+	dst_database_type = "cynosdbmysql"
+	src_region = "ap-guangzhou"
+	dst_region = "ap-guangzhou"
+	instance_class = "small"
+	job_name = "tf_test_migration_service_1"
+	tags {
+	  tag_key = "aaa"
+	  tag_value = "bbb"
+	}
+  }
+
+resource "tencentcloud_dts_migrate_job" "job" {
+  	service_id = tencentcloud_dts_migrate_service.service.id
+	run_mode = "immediate"
+	migrate_option {
 		database_table {
-			object_mode = ""
+			object_mode = "partial"
 			databases {
-				db_name = ""
-				new_db_name = ""
-				schema_name = ""
-				new_schema_name = ""
-				d_b_mode = ""
-				schema_mode = ""
-				table_mode = ""
+				db_name = "tf_ci_test"
+				db_mode = "partial"
+				table_mode = "partial"
+				// view_mode = "partial"
 				tables {
-					table_name = &lt;nil&gt;
-					new_table_name = &lt;nil&gt;
-					tmp_tables = &lt;nil&gt;
-					table_edit_mode = &lt;nil&gt;
+					table_name = "test"
+					new_table_name = "test_xxx"
+					table_edit_mode = "rename"
 				}
-				view_mode = ""
-				views {
-					view_name = ""
-					new_view_name = ""
-				}
-				role_mode = ""
-				roles {
-					role_name = ""
-					new_role_name = ""
-				}
-				function_mode = ""
-				trigger_mode = ""
-				event_mode = ""
-				procedure_mode = ""
-				functions =
-				procedures =
-				events =
-				triggers =
 			}
-			advanced_objects =
 		}
-		migrate_type = ""
-		consistency {
-			mode = ""
-		}
-		is_migrate_account =
-		is_override_root =
-		is_dst_read_only =
-		extra_attr {
-			key = ""
-			value = ""
-		}
+	}
+	src_info {
+			region = "ap-guangzhou"
+			access_type = "cdb"
+			database_type = "mysql"
+			node_type = "simple"
+			info {
+				user = "user"
+				password = "password"
+				instance_id = "cdb-xxx"
+			}
 
-  }
-  src_info {
-		region = ""
-		access_type = ""
-		database_type = ""
-		node_type = ""
-		info {
-			role = ""
-			db_kernel = ""
-			host = ""
-			port =
-			user = ""
-			password = ""
-			cvm_instance_id = ""
-			uniq_vpn_gw_id = ""
-			uniq_dcg_id = ""
-			instance_id = ""
-			ccn_gw_id = ""
-			vpc_id = ""
-			subnet_id = ""
-			engine_version = ""
-			account = ""
-			account_role = ""
-			account_mode = ""
-			tmp_secret_id = ""
-			tmp_secret_key = ""
-			tmp_token = ""
-		}
-		supplier = ""
-		extra_attr {
-			key = ""
-			value = ""
-		}
+	}
+	dst_info {
+			region = "ap-guangzhou"
+			access_type = "cdb"
+			database_type = "cynosdbmysql"
+			node_type = "simple"
+			info {
+				user = "user"
+				password = "password"
+				instance_id = "cynosdbmysql-xxx"
+			}
+	}
+	job_name = "tf_migrate_job_config_test"
+	auto_retry_time_range_minutes = 0
+}
 
-  }
-  dst_info {
-		region = ""
-		access_type = ""
-		database_type = ""
-		node_type = ""
-		info {
-			role = ""
-			db_kernel = ""
-			host = ""
-			port =
-			user = ""
-			password = ""
-			cvm_instance_id = ""
-			uniq_vpn_gw_id = ""
-			uniq_dcg_id = ""
-			instance_id = ""
-			ccn_gw_id = ""
-			vpc_id = ""
-			subnet_id = ""
-			engine_version = ""
-			account = ""
-			account_role = ""
-			account_mode = ""
-			tmp_secret_id = ""
-			tmp_secret_key = ""
-			tmp_token = ""
-		}
-		supplier = ""
-		extra_attr {
-			key = ""
-			value = ""
-		}
-
-  }
-  job_name = ""
-  expect_run_time = ""
-  auto_retry_time_range_minutes =
+resource "tencentcloud_dts_migrate_job_start_operation" "start"{
+	job_id = tencentcloud_dts_migrate_job.job.id
 }
 ```
 
@@ -140,7 +73,7 @@ Import
 dts migrate_job can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dts_migrate_job.migrate_job migrate_job_id
+terraform import tencentcloud_dts_migrate_job.migrate_job migrate_config_id
 ```
 */
 package tencentcloud
@@ -162,50 +95,49 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDtsMigrateJobCreate,
 		Read:   resourceTencentCloudDtsMigrateJobRead,
-		Update: resourceTencentCloudDtsMigrateJobUpdate,
-		// Delete: resourceTencentCloudDtsMigrateJobDelete,
+		// Update: resourceTencentCloudDtsMigrateJobUpdate,
+		Delete: resourceTencentCloudDtsMigrateJobDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"job_id": {
+			"service_id": {
+				ForceNew:    true,
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Job Id.",
-			},
-
-			"compare_task_id": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "Compare taskId.",
+				Description: "Migrate service Id from `tencentcloud_dts_migrate_service`.",
 			},
 
 			"status": {
-				Required:     true,
-				Type:         schema.TypeString,
-				ValidateFunc: validateAllowedStringValue([]string{"config", "start", "resume", "compare", "complete", "stop"}),
-				Description:  "Change status to specify the migrate step. Valid values: `config`,`start`,`resume`,`compare`,`complete`,`stop`.",
-			},
-
-			"run_mode": {
-				Required:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "Run Mode. eg:immediate,timed.",
+				Description: "Migrate job status.",
 			},
 
-			"resume_option": {
+			"resume_option": { // for resume operation
+				ForceNew:    true,
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "The mode of the recovery task, the valid values: `clearData`: clears the target instance data. `overwrite`: executes the task in an overwriting way. `normal`: the normal process, no additional action is performed.",
 			},
 
-			"complete_mode": {
+			"complete_mode": { // for complete operation
+				ForceNew:    true,
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "The way to complete the task, only support the old version of MySQL migration task, the valid values: waitForSync,immediately.",
 			},
 
+			// for modify operation
+			"run_mode": {
+				ForceNew:    true,
+				Required:    true,
+				Type:        schema.TypeString,
+				Description: "Run Mode. eg:immediate,timed.",
+			},
+
 			"migrate_option": {
+				ForceNew:    true,
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -250,7 +182,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 													Optional:    true,
 													Description: "schema name after migration or synchronization.",
 												},
-												"d_b_mode": {
+												"db_mode": {
 													Type:        schema.TypeString,
 													Optional:    true,
 													Description: "DB selection mode:all (for all objects under the current object), partial (partial objects), when the ObjectMode is partial, this item is required.",
@@ -470,6 +402,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 			},
 
 			"src_info": {
+				ForceNew:    true,
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -530,6 +463,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 									"password": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Sensitive:   true,
 										Description: "Password.",
 									},
 									"cvm_instance_id": {
@@ -634,6 +568,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 			},
 
 			"dst_info": {
+				ForceNew:    true,
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -694,6 +629,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 									"password": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Sensitive:   true,
 										Description: "Password.",
 									},
 									"cvm_instance_id": {
@@ -798,18 +734,21 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 			},
 
 			"job_name": {
+				ForceNew:    true,
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "JobName.",
 			},
 
 			"expect_run_time": {
+				ForceNew:    true,
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "ExpectRunTime.",
 			},
 
 			"auto_retry_time_range_minutes": {
+				ForceNew:    true,
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "AutoRetryTimeRangeMinutes.",
@@ -823,429 +762,67 @@ func resourceTencentCloudDtsMigrateJobCreate(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	// ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request = dts.NewModifyMigrationJobRequest()
-		service = DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
-		jobId   string
+		tcClient  = meta.(*TencentCloudClient).apiV3Conn
+		service   = DtsService{client: tcClient}
+		serviceId string
+		conf      *resource.StateChangeConf
 	)
-	if v, ok := d.GetOk("job_id"); ok {
-		request.JobId = helper.String(v.(string))
-		jobId = *request.JobId
+
+	if v, ok := d.GetOk("service_id"); ok {
+		serviceId = v.(string)
 	}
 
-	if v, ok := d.GetOk("run_mode"); ok {
-		request.RunMode = helper.String(v.(string))
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "migrate_option"); ok {
-		migrateOption := dts.MigrateOption{}
-		if databaseTableMap, ok := helper.InterfaceToMap(dMap, "database_table"); ok {
-			databaseTableObject := dts.DatabaseTableObject{}
-			if v, ok := databaseTableMap["object_mode"]; ok {
-				databaseTableObject.ObjectMode = helper.String(v.(string))
-			}
-			if v, ok := databaseTableMap["databases"]; ok {
-				for _, item := range v.([]interface{}) {
-					databasesMap := item.(map[string]interface{})
-					dBItem := dts.DBItem{}
-					if v, ok := databasesMap["db_name"]; ok {
-						dBItem.DbName = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["new_db_name"]; ok {
-						dBItem.NewDbName = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["schema_name"]; ok {
-						dBItem.SchemaName = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["new_schema_name"]; ok {
-						dBItem.NewSchemaName = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["d_b_mode"]; ok {
-						dBItem.DBMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["schema_mode"]; ok {
-						dBItem.SchemaMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["table_mode"]; ok {
-						dBItem.TableMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["tables"]; ok {
-						for _, item := range v.([]interface{}) {
-							tablesMap := item.(map[string]interface{})
-							tableItem := dts.TableItem{}
-							if v, ok := tablesMap["table_name"]; ok {
-								tableItem.TableName = helper.String(v.(string))
-							}
-							if v, ok := tablesMap["new_table_name"]; ok {
-								tableItem.NewTableName = helper.String(v.(string))
-							}
-							if v, ok := tablesMap["tmp_tables"]; ok {
-								tmpTablesSet := v.(*schema.Set).List()
-								for i := range tmpTablesSet {
-									tmpTables := tmpTablesSet[i].(string)
-									tableItem.TmpTables = append(tableItem.TmpTables, &tmpTables)
-								}
-							}
-							if v, ok := tablesMap["table_edit_mode"]; ok {
-								tableItem.TableEditMode = helper.String(v.(string))
-							}
-							dBItem.Tables = append(dBItem.Tables, &tableItem)
-						}
-					}
-					if v, ok := databasesMap["view_mode"]; ok {
-						dBItem.ViewMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["views"]; ok {
-						for _, item := range v.([]interface{}) {
-							viewsMap := item.(map[string]interface{})
-							viewItem := dts.ViewItem{}
-							if v, ok := viewsMap["view_name"]; ok {
-								viewItem.ViewName = helper.String(v.(string))
-							}
-							if v, ok := viewsMap["new_view_name"]; ok {
-								viewItem.NewViewName = helper.String(v.(string))
-							}
-							dBItem.Views = append(dBItem.Views, &viewItem)
-						}
-					}
-					if v, ok := databasesMap["role_mode"]; ok {
-						dBItem.RoleMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["roles"]; ok {
-						for _, item := range v.([]interface{}) {
-							rolesMap := item.(map[string]interface{})
-							roleItem := dts.RoleItem{}
-							if v, ok := rolesMap["role_name"]; ok {
-								roleItem.RoleName = helper.String(v.(string))
-							}
-							if v, ok := rolesMap["new_role_name"]; ok {
-								roleItem.NewRoleName = helper.String(v.(string))
-							}
-							dBItem.Roles = append(dBItem.Roles, &roleItem)
-						}
-					}
-					if v, ok := databasesMap["function_mode"]; ok {
-						dBItem.FunctionMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["trigger_mode"]; ok {
-						dBItem.TriggerMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["event_mode"]; ok {
-						dBItem.EventMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["procedure_mode"]; ok {
-						dBItem.ProcedureMode = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["functions"]; ok {
-						functionsSet := v.(*schema.Set).List()
-						for i := range functionsSet {
-							functions := functionsSet[i].(string)
-							dBItem.Functions = append(dBItem.Functions, &functions)
-						}
-					}
-					if v, ok := databasesMap["procedures"]; ok {
-						proceduresSet := v.(*schema.Set).List()
-						for i := range proceduresSet {
-							procedures := proceduresSet[i].(string)
-							dBItem.Procedures = append(dBItem.Procedures, &procedures)
-						}
-					}
-					if v, ok := databasesMap["events"]; ok {
-						eventsSet := v.(*schema.Set).List()
-						for i := range eventsSet {
-							events := eventsSet[i].(string)
-							dBItem.Events = append(dBItem.Events, &events)
-						}
-					}
-					if v, ok := databasesMap["triggers"]; ok {
-						triggersSet := v.(*schema.Set).List()
-						for i := range triggersSet {
-							triggers := triggersSet[i].(string)
-							dBItem.Triggers = append(dBItem.Triggers, &triggers)
-						}
-					}
-					databaseTableObject.Databases = append(databaseTableObject.Databases, &dBItem)
-				}
-			}
-			if v, ok := databaseTableMap["advanced_objects"]; ok {
-				advancedObjectsSet := v.(*schema.Set).List()
-				for i := range advancedObjectsSet {
-					advancedObjects := advancedObjectsSet[i].(string)
-					databaseTableObject.AdvancedObjects = append(databaseTableObject.AdvancedObjects, &advancedObjects)
-				}
-			}
-			migrateOption.DatabaseTable = &databaseTableObject
-		}
-		if v, ok := dMap["migrate_type"]; ok {
-			migrateOption.MigrateType = helper.String(v.(string))
-		}
-		if consistencyMap, ok := helper.InterfaceToMap(dMap, "consistency"); ok {
-			consistencyOption := dts.ConsistencyOption{}
-			if v, ok := consistencyMap["mode"]; ok {
-				consistencyOption.Mode = helper.String(v.(string))
-			}
-			migrateOption.Consistency = &consistencyOption
-		}
-		if v, ok := dMap["is_migrate_account"]; ok {
-			migrateOption.IsMigrateAccount = helper.Bool(v.(bool))
-		}
-		if v, ok := dMap["is_override_root"]; ok {
-			migrateOption.IsOverrideRoot = helper.Bool(v.(bool))
-		}
-		if v, ok := dMap["is_dst_read_only"]; ok {
-			migrateOption.IsDstReadOnly = helper.Bool(v.(bool))
-		}
-		if v, ok := dMap["extra_attr"]; ok {
-			for _, item := range v.([]interface{}) {
-				extraAttrMap := item.(map[string]interface{})
-				keyValuePairOption := dts.KeyValuePairOption{}
-				if v, ok := extraAttrMap["key"]; ok {
-					keyValuePairOption.Key = helper.String(v.(string))
-				}
-				if v, ok := extraAttrMap["value"]; ok {
-					keyValuePairOption.Value = helper.String(v.(string))
-				}
-				migrateOption.ExtraAttr = append(migrateOption.ExtraAttr, &keyValuePairOption)
-			}
-		}
-		request.MigrateOption = &migrateOption
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "src_info"); ok {
-		dBEndpointInfo := dts.DBEndpointInfo{}
-		if v, ok := dMap["region"]; ok {
-			dBEndpointInfo.Region = helper.String(v.(string))
-		}
-		if v, ok := dMap["access_type"]; ok {
-			dBEndpointInfo.AccessType = helper.String(v.(string))
-		}
-		if v, ok := dMap["database_type"]; ok {
-			dBEndpointInfo.DatabaseType = helper.String(v.(string))
-		}
-		if v, ok := dMap["node_type"]; ok {
-			dBEndpointInfo.NodeType = helper.String(v.(string))
-		}
-		if v, ok := dMap["info"]; ok {
-			for _, item := range v.([]interface{}) {
-				infoMap := item.(map[string]interface{})
-				dBInfo := dts.DBInfo{}
-				if v, ok := infoMap["role"]; ok {
-					dBInfo.Role = helper.String(v.(string))
-				}
-				if v, ok := infoMap["db_kernel"]; ok {
-					dBInfo.DbKernel = helper.String(v.(string))
-				}
-				if v, ok := infoMap["host"]; ok {
-					dBInfo.Host = helper.String(v.(string))
-				}
-				if v, ok := infoMap["port"]; ok {
-					dBInfo.Port = helper.IntUint64(v.(int))
-				}
-				if v, ok := infoMap["user"]; ok {
-					dBInfo.User = helper.String(v.(string))
-				}
-				if v, ok := infoMap["password"]; ok {
-					dBInfo.Password = helper.String(v.(string))
-				}
-				if v, ok := infoMap["cvm_instance_id"]; ok {
-					dBInfo.CvmInstanceId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["uniq_vpn_gw_id"]; ok {
-					dBInfo.UniqVpnGwId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["uniq_dcg_id"]; ok {
-					dBInfo.UniqDcgId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["instance_id"]; ok {
-					dBInfo.InstanceId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["ccn_gw_id"]; ok {
-					dBInfo.CcnGwId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["vpc_id"]; ok {
-					dBInfo.VpcId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["subnet_id"]; ok {
-					dBInfo.SubnetId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["engine_version"]; ok {
-					dBInfo.EngineVersion = helper.String(v.(string))
-				}
-				if v, ok := infoMap["account"]; ok {
-					dBInfo.Account = helper.String(v.(string))
-				}
-				if v, ok := infoMap["account_role"]; ok {
-					dBInfo.AccountRole = helper.String(v.(string))
-				}
-				if v, ok := infoMap["account_mode"]; ok {
-					dBInfo.AccountMode = helper.String(v.(string))
-				}
-				if v, ok := infoMap["tmp_secret_id"]; ok {
-					dBInfo.TmpSecretId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["tmp_secret_key"]; ok {
-					dBInfo.TmpSecretKey = helper.String(v.(string))
-				}
-				if v, ok := infoMap["tmp_token"]; ok {
-					dBInfo.TmpToken = helper.String(v.(string))
-				}
-				dBEndpointInfo.Info = append(dBEndpointInfo.Info, &dBInfo)
-			}
-		}
-		if v, ok := dMap["supplier"]; ok {
-			dBEndpointInfo.Supplier = helper.String(v.(string))
-		}
-		if v, ok := dMap["extra_attr"]; ok {
-			for _, item := range v.([]interface{}) {
-				extraAttrMap := item.(map[string]interface{})
-				keyValuePairOption := dts.KeyValuePairOption{}
-				if v, ok := extraAttrMap["key"]; ok {
-					keyValuePairOption.Key = helper.String(v.(string))
-				}
-				if v, ok := extraAttrMap["value"]; ok {
-					keyValuePairOption.Value = helper.String(v.(string))
-				}
-				dBEndpointInfo.ExtraAttr = append(dBEndpointInfo.ExtraAttr, &keyValuePairOption)
-			}
-		}
-		request.SrcInfo = &dBEndpointInfo
-	}
-
-	if dMap, ok := helper.InterfacesHeadMap(d, "dst_info"); ok {
-		dBEndpointInfo := dts.DBEndpointInfo{}
-		if v, ok := dMap["region"]; ok {
-			dBEndpointInfo.Region = helper.String(v.(string))
-		}
-		if v, ok := dMap["access_type"]; ok {
-			dBEndpointInfo.AccessType = helper.String(v.(string))
-		}
-		if v, ok := dMap["database_type"]; ok {
-			dBEndpointInfo.DatabaseType = helper.String(v.(string))
-		}
-		if v, ok := dMap["node_type"]; ok {
-			dBEndpointInfo.NodeType = helper.String(v.(string))
-		}
-		if v, ok := dMap["info"]; ok {
-			for _, item := range v.([]interface{}) {
-				infoMap := item.(map[string]interface{})
-				dBInfo := dts.DBInfo{}
-				if v, ok := infoMap["role"]; ok {
-					dBInfo.Role = helper.String(v.(string))
-				}
-				if v, ok := infoMap["db_kernel"]; ok {
-					dBInfo.DbKernel = helper.String(v.(string))
-				}
-				if v, ok := infoMap["host"]; ok {
-					dBInfo.Host = helper.String(v.(string))
-				}
-				if v, ok := infoMap["port"]; ok {
-					dBInfo.Port = helper.IntUint64(v.(int))
-				}
-				if v, ok := infoMap["user"]; ok {
-					dBInfo.User = helper.String(v.(string))
-				}
-				if v, ok := infoMap["password"]; ok {
-					dBInfo.Password = helper.String(v.(string))
-				}
-				if v, ok := infoMap["cvm_instance_id"]; ok {
-					dBInfo.CvmInstanceId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["uniq_vpn_gw_id"]; ok {
-					dBInfo.UniqVpnGwId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["uniq_dcg_id"]; ok {
-					dBInfo.UniqDcgId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["instance_id"]; ok {
-					dBInfo.InstanceId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["ccn_gw_id"]; ok {
-					dBInfo.CcnGwId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["vpc_id"]; ok {
-					dBInfo.VpcId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["subnet_id"]; ok {
-					dBInfo.SubnetId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["engine_version"]; ok {
-					dBInfo.EngineVersion = helper.String(v.(string))
-				}
-				if v, ok := infoMap["account"]; ok {
-					dBInfo.Account = helper.String(v.(string))
-				}
-				if v, ok := infoMap["account_role"]; ok {
-					dBInfo.AccountRole = helper.String(v.(string))
-				}
-				if v, ok := infoMap["account_mode"]; ok {
-					dBInfo.AccountMode = helper.String(v.(string))
-				}
-				if v, ok := infoMap["tmp_secret_id"]; ok {
-					dBInfo.TmpSecretId = helper.String(v.(string))
-				}
-				if v, ok := infoMap["tmp_secret_key"]; ok {
-					dBInfo.TmpSecretKey = helper.String(v.(string))
-				}
-				if v, ok := infoMap["tmp_token"]; ok {
-					dBInfo.TmpToken = helper.String(v.(string))
-				}
-				dBEndpointInfo.Info = append(dBEndpointInfo.Info, &dBInfo)
-			}
-		}
-		if v, ok := dMap["supplier"]; ok {
-			dBEndpointInfo.Supplier = helper.String(v.(string))
-		}
-		if v, ok := dMap["extra_attr"]; ok {
-			for _, item := range v.([]interface{}) {
-				extraAttrMap := item.(map[string]interface{})
-				keyValuePairOption := dts.KeyValuePairOption{}
-				if v, ok := extraAttrMap["key"]; ok {
-					keyValuePairOption.Key = helper.String(v.(string))
-				}
-				if v, ok := extraAttrMap["value"]; ok {
-					keyValuePairOption.Value = helper.String(v.(string))
-				}
-				dBEndpointInfo.ExtraAttr = append(dBEndpointInfo.ExtraAttr, &keyValuePairOption)
-			}
-		}
-		request.DstInfo = &dBEndpointInfo
-	}
-
-	if v, ok := d.GetOk("job_name"); ok {
-		request.JobName = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("expect_run_time"); ok {
-		request.ExpectRunTime = helper.String(v.(string))
-	}
-
-	if v, _ := d.GetOk("auto_retry_time_range_minutes"); v != nil {
-		request.AutoRetryTimeRangeMinutes = helper.IntInt64(v.(int))
-	}
-
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDtsClient().ModifyMigrationJob(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
+	// case "modify":
+	err := handleModifyMigrate(d, tcClient, logId, serviceId)
 	if err != nil {
-		log.Printf("[CRITAL]%s create dts migrateJob failed, reason:%+v", logId, err)
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"created"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(d.Id(), []string{}))
+	conf = BuildStateChangeConf([]string{}, []string{"created"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(serviceId, []string{}))
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
 
-	d.SetId(jobId)
+	// case "check":
+	err = handleCheckMigrate(d, tcClient, logId, serviceId)
+	if err != nil {
+		return err
+	}
 
-	return resourceTencentCloudDtsMigrateJobUpdate(d, meta)
+	conf = BuildStateChangeConf([]string{}, []string{"checkPass", "checkNotPass"}, 3*readRetryTimeout, time.Second, service.DtsMigrateCheckConfigStateRefreshFunc(serviceId, []string{}))
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
+
+	// // case "resume":
+	// err = handleResumeMigrate(d, tcClient, logId, jobId)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// // case "compare":
+	// err = handleCompareMigrate(d, tcClient, logId, jobId)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// // case "complete":
+	// err = handleCompleteMigrate(d, tcClient, logId, jobId)
+	// if err != nil {
+	// 	return err
+	// }
+
+	// // case "stop":
+	// err = handleStopMigrate(d, tcClient, logId, jobId)
+	// if err != nil {
+	// 	return err
+	// }
+
+	d.SetId(serviceId)
+	return resourceTencentCloudDtsMigrateJobRead(d, meta)
 }
 
 func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interface{}) error {
@@ -1271,27 +848,16 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 	}
 
 	if migrateJob.JobId != nil {
-		_ = d.Set("job_id", migrateJob.JobId)
+		_ = d.Set("service_id", migrateJob.JobId)
 	}
-
-	if migrateJob.RunMode != nil {
-		_ = d.Set("run_mode", migrateJob.RunMode)
-	}
-
-	// if migrateJob.CompareTaskId != nil {
-	// 	_ = d.Set("compare_task_id", migrateJob.CompareTaskId)
-	// }
-
-	// if migrateJob.ResumeOption != nil {
-	// 	_ = d.Set("resume_option", migrateJob.ResumeOption)
-	// }
-
-	// if migrateJob.CompleteMode != nil {
-	// 	_ = d.Set("complete_mode", migrateJob.CompleteMode)
-	// }
 
 	if migrateJob.Status != nil {
 		_ = d.Set("status", migrateJob.Status)
+	}
+
+	// for modify operation
+	if migrateJob.RunMode != nil {
+		_ = d.Set("run_mode", migrateJob.RunMode)
 	}
 
 	if migrateJob.MigrateOption != nil {
@@ -1326,7 +892,7 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 					}
 
 					if databases.DBMode != nil {
-						databasesMap["d_b_mode"] = databases.DBMode
+						databasesMap["db_mode"] = databases.DBMode
 					}
 
 					if databases.SchemaMode != nil {
@@ -1783,122 +1349,12 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("expect_run_time", migrateJob.ExpectRunTime)
 	}
 
-	d.Set("status", migrateJob.Status)
 	return nil
 }
 
-func resourceTencentCloudDtsMigrateJobUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dts_migrate_job.update")()
-	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	var (
-		tcClient = meta.(*TencentCloudClient).apiV3Conn
-		service  = DtsService{client: tcClient}
-		jobId    = d.Id()
-	)
-
-	if d.HasChange("status") {
-		targetStatus := d.Get("status").(string)
-		object, err := service.DescribeDtsMigrateJobById(ctx, jobId)
-		if err != nil {
-			return err
-		}
-		curStatus := *object.Status
-		if targetStatus != curStatus {
-			// need to change status
-			// Change status to specify the migrate step. Valid values: `config`,`start`,`resume`,`compare`,`complete`,`stop`.,
-			switch targetStatus {
-			case "config":
-				err := handleConfigMigrate(d, tcClient, logId)
-				if err != nil {
-					return err
-				}
-				conf := BuildStateChangeConf([]string{}, []string{"created"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(d.Id(), []string{}))
-				if _, e := conf.WaitForState(); e != nil {
-					return e
-				}
-
-			case "start":
-				err := handleStartMigrate(d, tcClient, logId)
-				if err != nil {
-					return err
-				}
-				conf := BuildStateChangeConf([]string{}, []string{"running", "error"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(d.Id(), []string{}))
-				if _, e := conf.WaitForState(); e != nil {
-					return e
-				}
-
-			case "resume":
-				err := handleResumeMigrate(d, tcClient, logId)
-				if err != nil {
-					return err
-				}
-				conf := BuildStateChangeConf([]string{}, []string{"readyComplete", "success", "failed"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(d.Id(), []string{}))
-				if _, e := conf.WaitForState(); e != nil {
-					return e
-				}
-
-			case "compare":
-				err := handleCompareMigrate(d, tcClient, logId)
-				if err != nil {
-					return err
-				}
-
-			case "complete":
-				err := handleCompleteMigrate(d, tcClient, logId)
-				if err != nil {
-					return err
-				}
-				conf := BuildStateChangeConf([]string{}, []string{"success", "error", "failed"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(d.Id(), []string{}))
-				if _, e := conf.WaitForState(); e != nil {
-					return e
-				}
-
-			case "stop":
-				err := handleStopMigrate(d, tcClient, logId)
-				if err != nil {
-					return err
-				}
-				conf := BuildStateChangeConf([]string{}, []string{"canceled"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(d.Id(), []string{}))
-				if _, e := conf.WaitForState(); e != nil {
-					return e
-				}
-
-			default:
-			} // switch
-			d.SetPartial("status")
-		}
-	} // status HasChange
-
-	return resourceTencentCloudDtsMigrateJobRead(d, meta)
-}
-
-func handleStartMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId string) error {
-	startMigrateJobRequest := dts.NewStartMigrateJobRequest()
-	startMigrateJobRequest.JobId = helper.String(d.Id())
-
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := tcClient.UseDtsClient().StartMigrateJob(startMigrateJobRequest)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, startMigrateJobRequest.GetAction(), startMigrateJobRequest.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s create dts migrateJob failed, reason:%+v", logId, err)
-		return err
-	}
-	return nil
-}
-
-func handleConfigMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId string) error {
+func handleModifyMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
 	configMigrationJobRequest := dts.NewModifyMigrationJobRequest()
-	configMigrationJobRequest.JobId = helper.String(d.Id())
+	configMigrationJobRequest.JobId = helper.String(jobId)
 
 	if v, ok := d.GetOk("run_mode"); ok {
 		configMigrationJobRequest.RunMode = helper.String(v.(string))
@@ -1908,42 +1364,42 @@ func handleConfigMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 		migrateOption := dts.MigrateOption{}
 		if databaseTableMap, ok := helper.InterfaceToMap(dMap, "database_table"); ok {
 			databaseTableObject := dts.DatabaseTableObject{}
-			if v, ok := databaseTableMap["object_mode"]; ok {
+			if v, ok := databaseTableMap["object_mode"]; ok && v.(string) != "" {
 				databaseTableObject.ObjectMode = helper.String(v.(string))
 			}
 			if v, ok := databaseTableMap["databases"]; ok {
 				for _, item := range v.([]interface{}) {
 					databasesMap := item.(map[string]interface{})
 					dBItem := dts.DBItem{}
-					if v, ok := databasesMap["db_name"]; ok {
+					if v, ok := databasesMap["db_name"]; ok && v.(string) != "" {
 						dBItem.DbName = helper.String(v.(string))
 					}
-					if v, ok := databasesMap["new_db_name"]; ok {
+					if v, ok := databasesMap["new_db_name"]; ok && v.(string) != "" {
 						dBItem.NewDbName = helper.String(v.(string))
 					}
-					if v, ok := databasesMap["schema_name"]; ok {
+					if v, ok := databasesMap["schema_name"]; ok && v.(string) != "" {
 						dBItem.SchemaName = helper.String(v.(string))
 					}
-					if v, ok := databasesMap["new_schema_name"]; ok {
+					if v, ok := databasesMap["new_schema_name"]; ok && v.(string) != "" {
 						dBItem.NewSchemaName = helper.String(v.(string))
 					}
-					if v, ok := databasesMap["d_b_mode"]; ok {
+					if v, ok := databasesMap["db_mode"]; ok && v.(string) != "" {
 						dBItem.DBMode = helper.String(v.(string))
 					}
-					if v, ok := databasesMap["schema_mode"]; ok {
+					if v, ok := databasesMap["schema_mode"]; ok && v.(string) != "" {
 						dBItem.SchemaMode = helper.String(v.(string))
 					}
-					if v, ok := databasesMap["table_mode"]; ok {
+					if v, ok := databasesMap["table_mode"]; ok && v.(string) != "" {
 						dBItem.TableMode = helper.String(v.(string))
 					}
 					if v, ok := databasesMap["tables"]; ok {
 						for _, item := range v.([]interface{}) {
 							tablesMap := item.(map[string]interface{})
 							tableItem := dts.TableItem{}
-							if v, ok := tablesMap["table_name"]; ok {
+							if v, ok := tablesMap["table_name"]; ok && v.(string) != "" {
 								tableItem.TableName = helper.String(v.(string))
 							}
-							if v, ok := tablesMap["new_table_name"]; ok {
+							if v, ok := tablesMap["new_table_name"]; ok && v.(string) != "" {
 								tableItem.NewTableName = helper.String(v.(string))
 							}
 							if v, ok := tablesMap["tmp_tables"]; ok {
@@ -1953,54 +1409,54 @@ func handleConfigMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 									tableItem.TmpTables = append(tableItem.TmpTables, &tmpTables)
 								}
 							}
-							if v, ok := tablesMap["table_edit_mode"]; ok {
+							if v, ok := tablesMap["table_edit_mode"]; ok && v.(string) != "" {
 								tableItem.TableEditMode = helper.String(v.(string))
 							}
 							dBItem.Tables = append(dBItem.Tables, &tableItem)
 						}
 					}
-					if v, ok := databasesMap["view_mode"]; ok {
+					if v, ok := databasesMap["view_mode"]; ok && v.(string) != "" {
 						dBItem.ViewMode = helper.String(v.(string))
 					}
 					if v, ok := databasesMap["views"]; ok {
 						for _, item := range v.([]interface{}) {
 							viewsMap := item.(map[string]interface{})
 							viewItem := dts.ViewItem{}
-							if v, ok := viewsMap["view_name"]; ok {
+							if v, ok := viewsMap["view_name"]; ok && v.(string) != "" {
 								viewItem.ViewName = helper.String(v.(string))
 							}
-							if v, ok := viewsMap["new_view_name"]; ok {
+							if v, ok := viewsMap["new_view_name"]; ok && v.(string) != "" {
 								viewItem.NewViewName = helper.String(v.(string))
 							}
 							dBItem.Views = append(dBItem.Views, &viewItem)
 						}
 					}
-					if v, ok := databasesMap["role_mode"]; ok {
+					if v, ok := databasesMap["role_mode"]; ok && v.(string) != "" {
 						dBItem.RoleMode = helper.String(v.(string))
 					}
 					if v, ok := databasesMap["roles"]; ok {
 						for _, item := range v.([]interface{}) {
 							rolesMap := item.(map[string]interface{})
 							roleItem := dts.RoleItem{}
-							if v, ok := rolesMap["role_name"]; ok {
+							if v, ok := rolesMap["role_name"]; ok && v.(string) != "" {
 								roleItem.RoleName = helper.String(v.(string))
 							}
-							if v, ok := rolesMap["new_role_name"]; ok {
+							if v, ok := rolesMap["new_role_name"]; ok && v.(string) != "" {
 								roleItem.NewRoleName = helper.String(v.(string))
 							}
 							dBItem.Roles = append(dBItem.Roles, &roleItem)
 						}
 					}
-					if v, ok := databasesMap["function_mode"]; ok {
+					if v, ok := databasesMap["function_mode"]; ok && v.(string) != "" {
 						dBItem.FunctionMode = helper.String(v.(string))
 					}
-					if v, ok := databasesMap["trigger_mode"]; ok {
+					if v, ok := databasesMap["trigger_mode"]; ok && v.(string) != "" {
 						dBItem.TriggerMode = helper.String(v.(string))
 					}
-					if v, ok := databasesMap["event_mode"]; ok {
+					if v, ok := databasesMap["event_mode"]; ok && v.(string) != "" {
 						dBItem.EventMode = helper.String(v.(string))
 					}
-					if v, ok := databasesMap["procedure_mode"]; ok {
+					if v, ok := databasesMap["procedure_mode"]; ok && v.(string) != "" {
 						dBItem.ProcedureMode = helper.String(v.(string))
 					}
 					if v, ok := databasesMap["functions"]; ok {
@@ -2043,12 +1499,12 @@ func handleConfigMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 			}
 			migrateOption.DatabaseTable = &databaseTableObject
 		}
-		if v, ok := dMap["migrate_type"]; ok {
+		if v, ok := dMap["migrate_type"]; ok && v.(string) != "" {
 			migrateOption.MigrateType = helper.String(v.(string))
 		}
 		if consistencyMap, ok := helper.InterfaceToMap(dMap, "consistency"); ok {
 			consistencyOption := dts.ConsistencyOption{}
-			if v, ok := consistencyMap["mode"]; ok {
+			if v, ok := consistencyMap["mode"]; ok && v.(string) != "" {
 				consistencyOption.Mode = helper.String(v.(string))
 			}
 			migrateOption.Consistency = &consistencyOption
@@ -2066,10 +1522,10 @@ func handleConfigMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 			for _, item := range v.([]interface{}) {
 				extraAttrMap := item.(map[string]interface{})
 				keyValuePairOption := dts.KeyValuePairOption{}
-				if v, ok := extraAttrMap["key"]; ok {
+				if v, ok := extraAttrMap["key"]; ok && v.(string) != "" {
 					keyValuePairOption.Key = helper.String(v.(string))
 				}
-				if v, ok := extraAttrMap["value"]; ok {
+				if v, ok := extraAttrMap["value"]; ok && v.(string) != "" {
 					keyValuePairOption.Value = helper.String(v.(string))
 				}
 				migrateOption.ExtraAttr = append(migrateOption.ExtraAttr, &keyValuePairOption)
@@ -2081,96 +1537,96 @@ func handleConfigMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 	// if d.HasChange("src_info") {
 	if dMap, ok := helper.InterfacesHeadMap(d, "src_info"); ok {
 		dBEndpointInfo := dts.DBEndpointInfo{}
-		if v, ok := dMap["region"]; ok {
+		if v, ok := dMap["region"]; ok && v.(string) != "" {
 			dBEndpointInfo.Region = helper.String(v.(string))
 		}
-		if v, ok := dMap["access_type"]; ok {
+		if v, ok := dMap["access_type"]; ok && v.(string) != "" {
 			dBEndpointInfo.AccessType = helper.String(v.(string))
 		}
-		if v, ok := dMap["database_type"]; ok {
+		if v, ok := dMap["database_type"]; ok && v.(string) != "" {
 			dBEndpointInfo.DatabaseType = helper.String(v.(string))
 		}
-		if v, ok := dMap["node_type"]; ok {
+		if v, ok := dMap["node_type"]; ok && v.(string) != "" {
 			dBEndpointInfo.NodeType = helper.String(v.(string))
 		}
 		if v, ok := dMap["info"]; ok {
 			for _, item := range v.([]interface{}) {
 				infoMap := item.(map[string]interface{})
 				dBInfo := dts.DBInfo{}
-				if v, ok := infoMap["role"]; ok {
+				if v, ok := infoMap["role"]; ok && v.(string) != "" {
 					dBInfo.Role = helper.String(v.(string))
 				}
-				if v, ok := infoMap["db_kernel"]; ok {
+				if v, ok := infoMap["db_kernel"]; ok && v.(string) != "" {
 					dBInfo.DbKernel = helper.String(v.(string))
 				}
-				if v, ok := infoMap["host"]; ok {
+				if v, ok := infoMap["host"]; ok && v.(string) != "" {
 					dBInfo.Host = helper.String(v.(string))
 				}
 				if v, ok := infoMap["port"]; ok {
 					dBInfo.Port = helper.IntUint64(v.(int))
 				}
-				if v, ok := infoMap["user"]; ok {
+				if v, ok := infoMap["user"]; ok && v.(string) != "" {
 					dBInfo.User = helper.String(v.(string))
 				}
-				if v, ok := infoMap["password"]; ok {
+				if v, ok := infoMap["password"]; ok && v.(string) != "" {
 					dBInfo.Password = helper.String(v.(string))
 				}
-				if v, ok := infoMap["cvm_instance_id"]; ok {
+				if v, ok := infoMap["cvm_instance_id"]; ok && v.(string) != "" {
 					dBInfo.CvmInstanceId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["uniq_vpn_gw_id"]; ok {
+				if v, ok := infoMap["uniq_vpn_gw_id"]; ok && v.(string) != "" {
 					dBInfo.UniqVpnGwId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["uniq_dcg_id"]; ok {
+				if v, ok := infoMap["uniq_dcg_id"]; ok && v.(string) != "" {
 					dBInfo.UniqDcgId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["instance_id"]; ok {
+				if v, ok := infoMap["instance_id"]; ok && v.(string) != "" {
 					dBInfo.InstanceId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["ccn_gw_id"]; ok {
+				if v, ok := infoMap["ccn_gw_id"]; ok && v.(string) != "" {
 					dBInfo.CcnGwId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["vpc_id"]; ok {
+				if v, ok := infoMap["vpc_id"]; ok && v.(string) != "" {
 					dBInfo.VpcId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["subnet_id"]; ok {
+				if v, ok := infoMap["subnet_id"]; ok && v.(string) != "" {
 					dBInfo.SubnetId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["engine_version"]; ok {
+				if v, ok := infoMap["engine_version"]; ok && v.(string) != "" {
 					dBInfo.EngineVersion = helper.String(v.(string))
 				}
-				if v, ok := infoMap["account"]; ok {
+				if v, ok := infoMap["account"]; ok && v.(string) != "" {
 					dBInfo.Account = helper.String(v.(string))
 				}
-				if v, ok := infoMap["account_role"]; ok {
+				if v, ok := infoMap["account_role"]; ok && v.(string) != "" {
 					dBInfo.AccountRole = helper.String(v.(string))
 				}
-				if v, ok := infoMap["account_mode"]; ok {
+				if v, ok := infoMap["account_mode"]; ok && v.(string) != "" {
 					dBInfo.AccountMode = helper.String(v.(string))
 				}
-				if v, ok := infoMap["tmp_secret_id"]; ok {
+				if v, ok := infoMap["tmp_secret_id"]; ok && v.(string) != "" {
 					dBInfo.TmpSecretId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["tmp_secret_key"]; ok {
+				if v, ok := infoMap["tmp_secret_key"]; ok && v.(string) != "" {
 					dBInfo.TmpSecretKey = helper.String(v.(string))
 				}
-				if v, ok := infoMap["tmp_token"]; ok {
+				if v, ok := infoMap["tmp_token"]; ok && v.(string) != "" {
 					dBInfo.TmpToken = helper.String(v.(string))
 				}
 				dBEndpointInfo.Info = append(dBEndpointInfo.Info, &dBInfo)
 			}
 		}
-		if v, ok := dMap["supplier"]; ok {
+		if v, ok := dMap["supplier"]; ok && v.(string) != "" {
 			dBEndpointInfo.Supplier = helper.String(v.(string))
 		}
 		if v, ok := dMap["extra_attr"]; ok {
 			for _, item := range v.([]interface{}) {
 				extraAttrMap := item.(map[string]interface{})
 				keyValuePairOption := dts.KeyValuePairOption{}
-				if v, ok := extraAttrMap["key"]; ok {
+				if v, ok := extraAttrMap["key"]; ok && v.(string) != "" {
 					keyValuePairOption.Key = helper.String(v.(string))
 				}
-				if v, ok := extraAttrMap["value"]; ok {
+				if v, ok := extraAttrMap["value"]; ok && v.(string) != "" {
 					keyValuePairOption.Value = helper.String(v.(string))
 				}
 				dBEndpointInfo.ExtraAttr = append(dBEndpointInfo.ExtraAttr, &keyValuePairOption)
@@ -2183,96 +1639,96 @@ func handleConfigMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 	// if d.HasChange("dst_info") {
 	if dMap, ok := helper.InterfacesHeadMap(d, "dst_info"); ok {
 		dBEndpointInfo := dts.DBEndpointInfo{}
-		if v, ok := dMap["region"]; ok {
+		if v, ok := dMap["region"]; ok && v.(string) != "" {
 			dBEndpointInfo.Region = helper.String(v.(string))
 		}
-		if v, ok := dMap["access_type"]; ok {
+		if v, ok := dMap["access_type"]; ok && v.(string) != "" {
 			dBEndpointInfo.AccessType = helper.String(v.(string))
 		}
-		if v, ok := dMap["database_type"]; ok {
+		if v, ok := dMap["database_type"]; ok && v.(string) != "" {
 			dBEndpointInfo.DatabaseType = helper.String(v.(string))
 		}
-		if v, ok := dMap["node_type"]; ok {
+		if v, ok := dMap["node_type"]; ok && v.(string) != "" {
 			dBEndpointInfo.NodeType = helper.String(v.(string))
 		}
 		if v, ok := dMap["info"]; ok {
 			for _, item := range v.([]interface{}) {
 				infoMap := item.(map[string]interface{})
 				dBInfo := dts.DBInfo{}
-				if v, ok := infoMap["role"]; ok {
+				if v, ok := infoMap["role"]; ok && v.(string) != "" {
 					dBInfo.Role = helper.String(v.(string))
 				}
-				if v, ok := infoMap["db_kernel"]; ok {
+				if v, ok := infoMap["db_kernel"]; ok && v.(string) != "" {
 					dBInfo.DbKernel = helper.String(v.(string))
 				}
-				if v, ok := infoMap["host"]; ok {
+				if v, ok := infoMap["host"]; ok && v.(string) != "" {
 					dBInfo.Host = helper.String(v.(string))
 				}
 				if v, ok := infoMap["port"]; ok {
 					dBInfo.Port = helper.IntUint64(v.(int))
 				}
-				if v, ok := infoMap["user"]; ok {
+				if v, ok := infoMap["user"]; ok && v.(string) != "" {
 					dBInfo.User = helper.String(v.(string))
 				}
-				if v, ok := infoMap["password"]; ok {
+				if v, ok := infoMap["password"]; ok && v.(string) != "" {
 					dBInfo.Password = helper.String(v.(string))
 				}
-				if v, ok := infoMap["cvm_instance_id"]; ok {
+				if v, ok := infoMap["cvm_instance_id"]; ok && v.(string) != "" {
 					dBInfo.CvmInstanceId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["uniq_vpn_gw_id"]; ok {
+				if v, ok := infoMap["uniq_vpn_gw_id"]; ok && v.(string) != "" {
 					dBInfo.UniqVpnGwId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["uniq_dcg_id"]; ok {
+				if v, ok := infoMap["uniq_dcg_id"]; ok && v.(string) != "" {
 					dBInfo.UniqDcgId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["instance_id"]; ok {
+				if v, ok := infoMap["instance_id"]; ok && v.(string) != "" {
 					dBInfo.InstanceId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["ccn_gw_id"]; ok {
+				if v, ok := infoMap["ccn_gw_id"]; ok && v.(string) != "" {
 					dBInfo.CcnGwId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["vpc_id"]; ok {
+				if v, ok := infoMap["vpc_id"]; ok && v.(string) != "" {
 					dBInfo.VpcId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["subnet_id"]; ok {
+				if v, ok := infoMap["subnet_id"]; ok && v.(string) != "" {
 					dBInfo.SubnetId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["engine_version"]; ok {
+				if v, ok := infoMap["engine_version"]; ok && v.(string) != "" {
 					dBInfo.EngineVersion = helper.String(v.(string))
 				}
-				if v, ok := infoMap["account"]; ok {
+				if v, ok := infoMap["account"]; ok && v.(string) != "" {
 					dBInfo.Account = helper.String(v.(string))
 				}
-				if v, ok := infoMap["account_role"]; ok {
+				if v, ok := infoMap["account_role"]; ok && v.(string) != "" {
 					dBInfo.AccountRole = helper.String(v.(string))
 				}
-				if v, ok := infoMap["account_mode"]; ok {
+				if v, ok := infoMap["account_mode"]; ok && v.(string) != "" {
 					dBInfo.AccountMode = helper.String(v.(string))
 				}
-				if v, ok := infoMap["tmp_secret_id"]; ok {
+				if v, ok := infoMap["tmp_secret_id"]; ok && v.(string) != "" {
 					dBInfo.TmpSecretId = helper.String(v.(string))
 				}
-				if v, ok := infoMap["tmp_secret_key"]; ok {
+				if v, ok := infoMap["tmp_secret_key"]; ok && v.(string) != "" {
 					dBInfo.TmpSecretKey = helper.String(v.(string))
 				}
-				if v, ok := infoMap["tmp_token"]; ok {
+				if v, ok := infoMap["tmp_token"]; ok && v.(string) != "" {
 					dBInfo.TmpToken = helper.String(v.(string))
 				}
 				dBEndpointInfo.Info = append(dBEndpointInfo.Info, &dBInfo)
 			}
 		}
-		if v, ok := dMap["supplier"]; ok {
+		if v, ok := dMap["supplier"]; ok && v.(string) != "" {
 			dBEndpointInfo.Supplier = helper.String(v.(string))
 		}
 		if v, ok := dMap["extra_attr"]; ok {
 			for _, item := range v.([]interface{}) {
 				extraAttrMap := item.(map[string]interface{})
 				keyValuePairOption := dts.KeyValuePairOption{}
-				if v, ok := extraAttrMap["key"]; ok {
+				if v, ok := extraAttrMap["key"]; ok && v.(string) != "" {
 					keyValuePairOption.Key = helper.String(v.(string))
 				}
-				if v, ok := extraAttrMap["value"]; ok {
+				if v, ok := extraAttrMap["value"]; ok && v.(string) != "" {
 					keyValuePairOption.Value = helper.String(v.(string))
 				}
 				dBEndpointInfo.ExtraAttr = append(dBEndpointInfo.ExtraAttr, &keyValuePairOption)
@@ -2283,13 +1739,13 @@ func handleConfigMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 	// }
 
 	// if d.HasChange("job_name") {
-	if v, ok := d.GetOk("job_name"); ok {
+	if v, ok := d.GetOk("job_name"); ok && v.(string) != "" {
 		configMigrationJobRequest.JobName = helper.String(v.(string))
 	}
 	// }
 
 	// if d.HasChange("expect_run_time") {
-	if v, ok := d.GetOk("expect_run_time"); ok {
+	if v, ok := d.GetOk("expect_run_time"); ok && v.(string) != "" {
 		configMigrationJobRequest.ExpectRunTime = helper.String(v.(string))
 	}
 	// }
@@ -2316,9 +1772,31 @@ func handleConfigMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 	return nil
 }
 
-func handleResumeMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId string) error {
+func handleCheckMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
+	checkMigrateJobRequest := dts.NewCreateMigrateCheckJobRequest()
+	checkMigrateJobRequest.JobId = helper.String(jobId)
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := tcClient.UseDtsClient().CreateMigrateCheckJob(checkMigrateJobRequest)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, checkMigrateJobRequest.GetAction(), checkMigrateJobRequest.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s check dts migrateJob failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return nil
+}
+
+func handleResumeMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
 	resumeMigrateJobRequest := dts.NewResumeMigrateJobRequest()
-	resumeMigrateJobRequest.JobId = helper.String(d.Id())
+	resumeMigrateJobRequest.JobId = helper.String(jobId)
+	service := DtsService{client: tcClient}
 
 	if d.HasChange("resume_option") {
 		if v, ok := d.GetOk("resume_option"); ok {
@@ -2336,16 +1814,22 @@ func handleResumeMigrate(d *schema.ResourceData, tcClient *connectivity.TencentC
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create dts migrateJob failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s resume dts migrateJob failed, reason:%+v", logId, err)
 		return err
+	}
+
+	conf := BuildStateChangeConf([]string{}, []string{"readyComplete", "success", "failed"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil
 }
 
-func handleCompleteMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId string) error {
+func handleCompleteMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
 	completeMigrateJobRequest := dts.NewCompleteMigrateJobRequest()
-	completeMigrateJobRequest.JobId = helper.String(d.Id())
+	completeMigrateJobRequest.JobId = helper.String(jobId)
+	service := DtsService{client: tcClient}
 
 	if d.HasChange("complete_mode") {
 		if v, ok := d.GetOk("complete_mode"); ok {
@@ -2363,16 +1847,21 @@ func handleCompleteMigrate(d *schema.ResourceData, tcClient *connectivity.Tencen
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create dts migrateJob failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s complete dts migrateJob failed, reason:%+v", logId, err)
 		return err
+	}
+
+	conf := BuildStateChangeConf([]string{}, []string{"success", "error", "failed"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil
 }
 
-func handleCompareMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId string) error {
+func handleCompareMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
 	startCompareRequest := dts.NewStartCompareRequest()
-	startCompareRequest.JobId = helper.String(d.Id())
+	startCompareRequest.JobId = helper.String(jobId)
 
 	if d.HasChange("compare_task_id") {
 		if v, ok := d.GetOk("compare_task_id"); ok {
@@ -2390,16 +1879,17 @@ func handleCompareMigrate(d *schema.ResourceData, tcClient *connectivity.Tencent
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create dts migrateJob failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s compare dts migrate job failed, reason:%+v", logId, err)
 		return err
 	}
 
 	return nil
 }
 
-func handleStopMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId string) error {
+func handleStopMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
 	stopMigrateJobRequest := dts.NewStopMigrateJobRequest()
-	stopMigrateJobRequest.JobId = helper.String(d.Id())
+	stopMigrateJobRequest.JobId = helper.String(jobId)
+	service := DtsService{client: tcClient}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := tcClient.UseDtsClient().StopMigrateJob(stopMigrateJobRequest)
@@ -2411,9 +1901,21 @@ func handleStopMigrate(d *schema.ResourceData, tcClient *connectivity.TencentClo
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create dts migrateJob failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s stop dts migrateJob failed, reason:%+v", logId, err)
 		return err
 	}
+
+	conf := BuildStateChangeConf([]string{}, []string{"canceled"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
+
+	return nil
+}
+
+func resourceTencentCloudDtsMigrateJobDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dts_migrate_job.delete")()
+	defer inconsistentCheck(d, meta)()
 
 	return nil
 }

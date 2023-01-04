@@ -69,7 +69,7 @@ func TestAccTencentCloudDtsMigrateServiceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_service.migrate_service", "dst_database_type", "cynosdbmysql"),
 					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_service.migrate_service", "dst_region", "ap-guangzhou"),
 					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_service.migrate_service", "instance_class", "small"),
-					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_service.migrate_service", "job_name", "tf_test_migration_job"),
+					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_service.migrate_service", "job_name", "tf_test_migration_service"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_service.migrate_service", "tags.#"),
 				),
 			},
@@ -141,7 +141,7 @@ resource "tencentcloud_dts_migrate_service" "migrate_service" {
   src_region = "ap-guangzhou"
   dst_region = "ap-guangzhou"
   instance_class = "small"
-  job_name = "tf_test_migration_job"
+  job_name = "tf_test_migration_service"
   tags {
 	tag_key = "aaa"
 	tag_value = "bbb"

@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dts_compare_task" "compare_task" {
-  job_id = ""
+  config_id = ""
   task_name = ""
   object_mode = ""
   objects {
@@ -53,7 +53,7 @@ func resourceTencentCloudDtsCompareTask() *schema.Resource {
 		// 	State: schema.ImportStatePassthrough,
 		// },
 		Schema: map[string]*schema.Schema{
-			"job_id": {
+			"config_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "job id.",
@@ -184,7 +184,7 @@ func resourceTencentCloudDtsCompareTaskCreate(d *schema.ResourceData, meta inter
 		compareTaskId string
 	)
 
-	if v, ok := d.GetOk("job_id"); ok {
+	if v, ok := d.GetOk("config_id"); ok {
 		jobId = v.(string)
 		request.JobId = helper.String(v.(string))
 		startRequest.JobId = helper.String(v.(string))
@@ -333,7 +333,7 @@ func resourceTencentCloudDtsCompareTaskRead(d *schema.ResourceData, meta interfa
 		compareTask := ret[0]
 
 		if compareTask.JobId != nil {
-			_ = d.Set("job_id", compareTask.JobId)
+			_ = d.Set("config_id", compareTask.JobId)
 		}
 
 		if compareTask.TaskName != nil {
@@ -432,8 +432,8 @@ func resourceTencentCloudDtsCompareTaskUpdate(d *schema.ResourceData, meta inter
 	request.JobId = &jobId
 	request.CompareTaskId = &compareTaskId
 
-	if d.HasChange("job_id") {
-		return fmt.Errorf("`job_id` do not support change now.")
+	if d.HasChange("config_id") {
+		return fmt.Errorf("`config_id` do not support change now.")
 	}
 
 	if d.HasChange("task_name") {

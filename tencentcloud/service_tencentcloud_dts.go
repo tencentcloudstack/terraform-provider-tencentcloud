@@ -678,7 +678,9 @@ func (me *DtsService) DescribeDtsMigrateCheckById(ctx context.Context, jobId str
 	logId := getLogId(ctx)
 
 	request := dts.NewDescribeMigrationCheckJobRequest()
-	request.JobId = &jobId
+	if jobId != "" {
+		request.JobId = &jobId
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -709,7 +711,7 @@ func (me *DtsService) DtsMigrateServiceStateRefreshFunc(jobId string, failStates
 			return nil, "", err
 		}
 
-		return object, fmt.Sprint(object.TradeInfo.TradeStatus), nil
+		return object, helper.PString(object.TradeInfo.TradeStatus), nil
 	}
 }
 
@@ -723,7 +725,7 @@ func (me *DtsService) DtsMigrateJobStateRefreshFunc(jobId string, failStates []s
 			return nil, "", err
 		}
 
-		return object, fmt.Sprint(object.Status), nil
+		return object, helper.PString(object.Status), nil
 	}
 }
 
@@ -737,6 +739,6 @@ func (me *DtsService) DtsMigrateCheckConfigStateRefreshFunc(jobId string, failSt
 			return nil, "", err
 		}
 
-		return object, fmt.Sprint(object.CheckFlag), nil
+		return object, helper.PString(object.CheckFlag), nil
 	}
 }
