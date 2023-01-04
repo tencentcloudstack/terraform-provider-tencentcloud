@@ -10,8 +10,8 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixTemEnvironmentResource_basic -v
-func TestAccTencentCloudNeedFixTemEnvironmentResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTemEnvironmentResource_basic -v
+func TestAccTencentCloudTemEnvironmentResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

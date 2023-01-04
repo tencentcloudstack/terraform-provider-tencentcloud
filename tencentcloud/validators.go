@@ -236,15 +236,16 @@ func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
 }
 
 // Only support lowercase letters, numbers and "-". It cannot be longer than 60 characters.
+// specification: https://cloud.tencent.com/document/product/436/13312
 func validateCosBucketName(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
 	if len(value) > 60 || len(value) < 0 {
 		errors = append(errors, fmt.Errorf("the length of %s must be 1-60: %s", k, value))
 	}
 
-	pattern := `^[a-z0-9-]+$`
+	pattern := `^[a-z0-9]+[a-z0-9-]+[a-z0-9]+-[0-9]{10}$`
 	if match, _ := regexp.Match(pattern, []byte(value)); !match {
-		errors = append(errors, fmt.Errorf("%s only support lowercase letters, numbers and \"-\": %s", k, value))
+		errors = append(errors, fmt.Errorf("%s is not valid, please refer to the official documents: %s", k, value))
 	}
 	return
 }

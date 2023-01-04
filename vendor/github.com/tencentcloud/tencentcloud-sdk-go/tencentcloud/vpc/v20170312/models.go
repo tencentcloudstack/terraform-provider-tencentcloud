@@ -584,6 +584,9 @@ type AllocateAddressesRequestParams struct {
 
 	// EIP名称，用于申请EIP时用户自定义该EIP的个性化名称，默认值：未命名
 	AddressName *string `json:"AddressName,omitempty" name:"AddressName"`
+
+	// 网络出口，默认是：center_egress1
+	Egress *string `json:"Egress,omitempty" name:"Egress"`
 }
 
 type AllocateAddressesRequest struct {
@@ -640,6 +643,9 @@ type AllocateAddressesRequest struct {
 
 	// EIP名称，用于申请EIP时用户自定义该EIP的个性化名称，默认值：未命名
 	AddressName *string `json:"AddressName,omitempty" name:"AddressName"`
+
+	// 网络出口，默认是：center_egress1
+	Egress *string `json:"Egress,omitempty" name:"Egress"`
 }
 
 func (r *AllocateAddressesRequest) ToJsonString() string {
@@ -665,6 +671,7 @@ func (r *AllocateAddressesRequest) FromJsonString(s string) error {
 	delete(f, "Tags")
 	delete(f, "BandwidthPackageId")
 	delete(f, "AddressName")
+	delete(f, "Egress")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AllocateAddressesRequest has unknown keys!", "")
 	}
@@ -1063,7 +1070,7 @@ type AssociateAddressRequestParams struct {
 	// 标识 EIP 的唯一 ID。EIP 唯一 ID 形如：`eip-11112222`。
 	AddressId *string `json:"AddressId,omitempty" name:"AddressId"`
 
-	// 要绑定的实例 ID。实例 ID 形如：`ins-11112222`。可通过登录[控制台](https://console.cloud.tencent.com/cvm)查询，也可通过 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口返回值中的`InstanceId`获取。
+	// 要绑定的实例 ID。实例 ID 形如：`ins-11112222`、`lb-11112222`。可通过登录[控制台](https://console.cloud.tencent.com/cvm)查询，也可通过 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口返回值中的`InstanceId`获取。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 要绑定的弹性网卡 ID。 弹性网卡 ID 形如：`eni-11112222`。`NetworkInterfaceId` 与 `InstanceId` 不可同时指定。弹性网卡 ID 可通过登录[控制台](https://console.cloud.tencent.com/vpc/eni)查询，也可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)接口返回值中的`networkInterfaceId`获取。
@@ -1082,7 +1089,7 @@ type AssociateAddressRequest struct {
 	// 标识 EIP 的唯一 ID。EIP 唯一 ID 形如：`eip-11112222`。
 	AddressId *string `json:"AddressId,omitempty" name:"AddressId"`
 
-	// 要绑定的实例 ID。实例 ID 形如：`ins-11112222`。可通过登录[控制台](https://console.cloud.tencent.com/cvm)查询，也可通过 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口返回值中的`InstanceId`获取。
+	// 要绑定的实例 ID。实例 ID 形如：`ins-11112222`、`lb-11112222`。可通过登录[控制台](https://console.cloud.tencent.com/cvm)查询，也可通过 [DescribeInstances](https://cloud.tencent.com/document/api/213/15728) 接口返回值中的`InstanceId`获取。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 要绑定的弹性网卡 ID。 弹性网卡 ID 形如：`eni-11112222`。`NetworkInterfaceId` 与 `InstanceId` 不可同时指定。弹性网卡 ID 可通过登录[控制台](https://console.cloud.tencent.com/vpc/eni)查询，也可通过[DescribeNetworkInterfaces](https://cloud.tencent.com/document/api/215/15817)接口返回值中的`networkInterfaceId`获取。
@@ -1829,6 +1836,10 @@ type CCN struct {
 	// 是否开启云联网多路由表特性。False：未开启，True：开启。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RouteTableFlag *bool `json:"RouteTableFlag,omitempty" name:"RouteTableFlag"`
+
+	// 是否开启云联网路由传播策略。`False` 未开启，`True` 开启。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RouteBroadcastPolicyFlag *bool `json:"RouteBroadcastPolicyFlag,omitempty" name:"RouteBroadcastPolicyFlag"`
 }
 
 type CcnAttachedInstance struct {
@@ -5081,8 +5092,11 @@ type CreateVpcEndPointServiceRequestParams struct {
 	// 后端服务ID，比如lb-xxx。
 	ServiceInstanceId *string `json:"ServiceInstanceId,omitempty" name:"ServiceInstanceId"`
 
-	// 是否是PassService类型。
+	// ~~是否是PassService类型。该字段已废弃，请不要使用该字段。~~
 	IsPassService *bool `json:"IsPassService,omitempty" name:"IsPassService"`
+
+	// 挂载的PAAS服务类型，CLB,CDB,CRS，不填默认挂载为CLB。
+	ServiceType *string `json:"ServiceType,omitempty" name:"ServiceType"`
 }
 
 type CreateVpcEndPointServiceRequest struct {
@@ -5100,8 +5114,11 @@ type CreateVpcEndPointServiceRequest struct {
 	// 后端服务ID，比如lb-xxx。
 	ServiceInstanceId *string `json:"ServiceInstanceId,omitempty" name:"ServiceInstanceId"`
 
-	// 是否是PassService类型。
+	// ~~是否是PassService类型。该字段已废弃，请不要使用该字段。~~
 	IsPassService *bool `json:"IsPassService,omitempty" name:"IsPassService"`
+
+	// 挂载的PAAS服务类型，CLB,CDB,CRS，不填默认挂载为CLB。
+	ServiceType *string `json:"ServiceType,omitempty" name:"ServiceType"`
 }
 
 func (r *CreateVpcEndPointServiceRequest) ToJsonString() string {
@@ -5121,6 +5138,7 @@ func (r *CreateVpcEndPointServiceRequest) FromJsonString(s string) error {
 	delete(f, "AutoAcceptFlag")
 	delete(f, "ServiceInstanceId")
 	delete(f, "IsPassService")
+	delete(f, "ServiceType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpcEndPointServiceRequest has unknown keys!", "")
 	}
@@ -15968,6 +15986,9 @@ type EndPointService struct {
 
 	// 创建时间。
 	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 挂载的PAAS服务类型，CLB,CDB,CRS
+	ServiceType *string `json:"ServiceType,omitempty" name:"ServiceType"`
 }
 
 type Filter struct {
@@ -17568,11 +17589,9 @@ type ModifyBandwidthPackageAttributeRequestParams struct {
 	// 带宽包名称
 	BandwidthPackageName *string `json:"BandwidthPackageName,omitempty" name:"BandwidthPackageName"`
 
-	// 带宽包计费模式
+	// 带宽包计费模式，示例 ：
+	// 'TOP5_POSTPAID_BY_MONTH'（后付费-TOP5计费）
 	ChargeType *string `json:"ChargeType,omitempty" name:"ChargeType"`
-
-	// 退款时迁移为后付费带宽包。默认值：否
-	MigrateOnRefund *bool `json:"MigrateOnRefund,omitempty" name:"MigrateOnRefund"`
 }
 
 type ModifyBandwidthPackageAttributeRequest struct {
@@ -17584,11 +17603,9 @@ type ModifyBandwidthPackageAttributeRequest struct {
 	// 带宽包名称
 	BandwidthPackageName *string `json:"BandwidthPackageName,omitempty" name:"BandwidthPackageName"`
 
-	// 带宽包计费模式
+	// 带宽包计费模式，示例 ：
+	// 'TOP5_POSTPAID_BY_MONTH'（后付费-TOP5计费）
 	ChargeType *string `json:"ChargeType,omitempty" name:"ChargeType"`
-
-	// 退款时迁移为后付费带宽包。默认值：否
-	MigrateOnRefund *bool `json:"MigrateOnRefund,omitempty" name:"MigrateOnRefund"`
 }
 
 func (r *ModifyBandwidthPackageAttributeRequest) ToJsonString() string {
@@ -17606,7 +17623,6 @@ func (r *ModifyBandwidthPackageAttributeRequest) FromJsonString(s string) error 
 	delete(f, "BandwidthPackageId")
 	delete(f, "BandwidthPackageName")
 	delete(f, "ChargeType")
-	delete(f, "MigrateOnRefund")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyBandwidthPackageAttributeRequest has unknown keys!", "")
 	}
@@ -19185,6 +19201,9 @@ type ModifyNetworkInterfaceQosRequestParams struct {
 
 	// 服务质量，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
+
+	// DirectSend端口范围最大值。
+	DirectSendMaxPort *uint64 `json:"DirectSendMaxPort,omitempty" name:"DirectSendMaxPort"`
 }
 
 type ModifyNetworkInterfaceQosRequest struct {
@@ -19195,6 +19214,9 @@ type ModifyNetworkInterfaceQosRequest struct {
 
 	// 服务质量，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
+
+	// DirectSend端口范围最大值。
+	DirectSendMaxPort *uint64 `json:"DirectSendMaxPort,omitempty" name:"DirectSendMaxPort"`
 }
 
 func (r *ModifyNetworkInterfaceQosRequest) ToJsonString() string {
@@ -19211,6 +19233,7 @@ func (r *ModifyNetworkInterfaceQosRequest) FromJsonString(s string) error {
 	}
 	delete(f, "NetworkInterfaceIds")
 	delete(f, "QosLevel")
+	delete(f, "DirectSendMaxPort")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyNetworkInterfaceQosRequest has unknown keys!", "")
 	}
@@ -20789,6 +20812,18 @@ type NetworkInterface struct {
 	// 弹性网卡类型：0:标准型/1:扩展型。默认值为0。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AttachType *uint64 `json:"AttachType,omitempty" name:"AttachType"`
+
+	// 用于保留网卡主IP的资源ID用于保留网卡主IP的资源ID。用于删除网卡时作为入参数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ResourceId *string `json:"ResourceId,omitempty" name:"ResourceId"`
+
+	// 服务质量级别：
+	// <li>`DEFAULT`：默认</li>
+	// <li>`PT`：云金</li>
+	// <li>`AU`：云银</li>
+	// <li>`AG`：云铜</li>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 }
 
 type NetworkInterfaceAttachment struct {
@@ -22154,6 +22189,60 @@ type ResourceDashboard struct {
 
 	// 路由表。
 	RouteTable *uint64 `json:"RouteTable,omitempty" name:"RouteTable"`
+}
+
+// Predefined struct for user
+type ReturnNormalAddressesRequestParams struct {
+	// 1
+	AddressIps []*string `json:"AddressIps,omitempty" name:"AddressIps"`
+}
+
+type ReturnNormalAddressesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 1
+	AddressIps []*string `json:"AddressIps,omitempty" name:"AddressIps"`
+}
+
+func (r *ReturnNormalAddressesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ReturnNormalAddressesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "AddressIps")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ReturnNormalAddressesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ReturnNormalAddressesResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ReturnNormalAddressesResponse struct {
+	*tchttp.BaseResponse
+	Response *ReturnNormalAddressesResponseParams `json:"Response"`
+}
+
+func (r *ReturnNormalAddressesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ReturnNormalAddressesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type Route struct {

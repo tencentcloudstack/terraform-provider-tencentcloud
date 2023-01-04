@@ -19,6 +19,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentyun/cos-go-sdk-v5"
 	"gopkg.in/yaml.v2"
 )
 
@@ -79,6 +80,15 @@ var retryableErrorCode = []string{
 	"ResourceBusy",
 	// teo
 	"InvalidParameter.ActionInProgress",
+}
+
+// retryableCosErrorCode is retryable error code for COS/CI SDK
+var retryableCosErrorCode = []string{
+	"RequestTimeout",
+	"InternalError",
+	"KmsInternalException",
+	"ServiceUnavailable",
+	"SlowDown",
 }
 
 func init() {
@@ -161,12 +171,62 @@ func retryError(err error, additionRetryableError ...string) *resource.RetryErro
 				return resource.RetryableError(err)
 			}
 		}
-
+	case *cos.ErrorResponse:
+		if isCosExpectedError(realErr, retryableCosErrorCode) {
+			log.Printf("[CRITAL] Retryable defined error: %v", err)
+			return resource.RetryableError(err)
+		}
+		if len(additionRetryableError) > 0 {
+			if isCosExpectedError(realErr, additionRetryableError) {
+				log.Printf("[CRITAL] Retryable additional error: %v", err)
+				return resource.RetryableError(err)
+			}
+		}
 	default:
 	}
 
 	log.Printf("[CRITAL] NonRetryable error: %v", err)
 	return resource.NonRetryableError(err)
+}
+
+// RetryWhenContext retries the function `f` when the error it returns satisfies `predicate`.
+// `f` is retried until `timeout` expires.
+func RetryWithContext(
+	ctx context.Context,
+	timeout time.Duration,
+	f func(context.Context) (interface{}, error),
+	additionRetryableError ...string) (interface{}, error) {
+	var output interface{}
+
+	retryErr := resource.Retry(timeout, func() *resource.RetryError {
+		var err error
+		output, err = f(ctx)
+
+		if err != nil {
+			return retryError(err, additionRetryableError...)
+		}
+		return nil
+
+	})
+	if retryErr != nil {
+		return nil, retryErr
+	}
+	return output, nil
+}
+
+// isCosExpectedError returns whether error is expected error when using COS SDK
+func isCosExpectedError(err error, expectedError []string) bool {
+	e, ok := err.(*cos.ErrorResponse)
+	if !ok {
+		return false
+	}
+
+	errCode := e.Code
+	if IsContains(expectedError, errCode) {
+		return true
+	} else {
+		return false
+	}
 }
 
 // isExpectError returns whether error is expected error
