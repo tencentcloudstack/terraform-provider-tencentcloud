@@ -261,7 +261,7 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 		},
 	}
 
-	initRet, err := service.InitDcdbDbInstance(ctx, instanceId, defaultInitParams)
+	initRet, _, err := service.InitDcdbDbInstance(ctx, instanceId, defaultInitParams)
 	if err != nil {
 		return err
 	}

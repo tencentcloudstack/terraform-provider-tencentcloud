@@ -91,7 +91,7 @@ func (me *DcdbService) DescribeDcdbDbInstance(ctx context.Context, instanceId st
 	return result, nil
 }
 
-func (me *DcdbService) InitDcdbDbInstance(ctx context.Context, instanceId string, params []*dcdb.DBParamValue) (initRet bool, errRet error) {
+func (me *DcdbService) InitDcdbDbInstance(ctx context.Context, instanceId string, params []*dcdb.DBParamValue) (initRet bool, flowId *uint64, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = dcdb.NewDescribeDCDBInstancesRequest()
@@ -132,6 +132,7 @@ func (me *DcdbService) InitDcdbDbInstance(ctx context.Context, instanceId string
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 						logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 				}
+				flowId = result.Response.FlowIds[0]
 				return nil
 			})
 			if initErr != nil {
@@ -143,9 +144,9 @@ func (me *DcdbService) InitDcdbDbInstance(ctx context.Context, instanceId string
 		return resource.RetryableError(fmt.Errorf("dcdb instance init status is %v, retry...", *dbInstance.Status))
 	})
 	if err != nil {
-		return false, err
+		return false, nil, err
 	}
-	return true, nil
+	return true, flowId, nil
 }
 
 //dc_hourdb_instance
@@ -549,4 +550,98 @@ func (me *DcdbService) DescribeDcdbSecurityGroupsByFilter(ctx context.Context, p
 	securityGroups = append(securityGroups, response.Response.Groups...)
 
 	return
+}
+
+func (me *DcdbService) DeleteDcdbDbInstanceById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDestroyDCDBInstanceRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DestroyDCDBInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId string) (dbInstance *dcdb.DcnDetailItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDescribeDcnDetailRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDcnDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DcnDetails) < 1 {
+		return
+	}
+
+	dbInstance = response.Response.DcnDetails[0]
+	return
+}
+
+func (me *DcdbService) DescribeDcdbFlowById(ctx context.Context, flowId *uint64) (dbInstance *dcdb.DescribeFlowResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDescribeFlowRequest()
+	if flowId != nil {
+		request.FlowId = helper.UInt64Int64(*flowId)
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeFlow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	dbInstance = response.Response
+	return
+}
+
+func (me *DcdbService) DcdbDbInstanceStateRefreshFunc(flowId *uint64, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDcdbFlowById(ctx, flowId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.Int64ToStr(*object.Status), nil
+	}
 }
