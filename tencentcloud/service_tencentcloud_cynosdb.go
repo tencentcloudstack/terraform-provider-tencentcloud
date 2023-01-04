@@ -637,3 +637,58 @@ func (me *CynosdbService) SwitchServerlessCluster(ctx context.Context, clusterId
 		return nil
 	})
 }
+
+func (me *CynosdbService) DescribeCynosdbAuditLogFileById(ctx context.Context, instanceId string, fileName string) (auditLogFile *cynosdb.AuditLogFile, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeAuditLogFilesRequest()
+	request.InstanceId = &instanceId
+	request.FileName = &fileName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeAuditLogFiles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) < 1 {
+		return
+	}
+
+	auditLogFile = response.Response.Items[0]
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbAuditLogFileById(ctx context.Context, instanceId string, fileName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDeleteAuditLogFileRequest()
+	request.InstanceId = &instanceId
+	request.FileName = &fileName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DeleteAuditLogFile(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

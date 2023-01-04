@@ -1592,6 +1592,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_media_speech_recognition_template":       resourceTencentCloudCiMediaSpeechRecognitionTemplate(),
 			"tencentcloud_ci_guetzli":                                 resourceTencentCloudCIGuetzli(),
 			"tencentcloud_ci_original_image_protection":               resourceTencentCloudCIOriginalImageProtection(),
+			"tencentcloud_cynosdb_audit_log_file":                     resourceTencentCloudCynosdbAuditLogFile(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -554,6 +554,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.553 h1:Pl1kYgF
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.553/go.mod h1:dnnqPxXYK+kax3e1MKo/PI3iWJtytm6ogWKQHJS7SGE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.488 h1:A1seXWtMf2atBjSNYvcwxyDoFzCMgqyVnsxnWzhqJEA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.488/go.mod h1:T8mL4dQLkPTL6VtVMeBYol3asSUS53ycP9PJf5Qp1GE=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.572 h1:s6YaKNJla+zow8j+9UDFVWblPRv8kwS4dlAY1IWT15o=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.572/go.mod h1:Wp8vjOiPCqWs8ERh6+XcMYdGul6L8bU/icFY6JzxGdU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335 h1:D8qrelkK5udv8RzJJIABMzItGIyaZoYnxEVeIsYqiNw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335/go.mod h1:pz4s3nOhoB9cY0+uWzifuwr7lfh/Gvi1rv0ADxpPzD4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.542 h1:96OU+NJZKgx6VC7KTu4syZ4I71LwUHLAl5BeKNHanio=
