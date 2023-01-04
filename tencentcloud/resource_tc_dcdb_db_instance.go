@@ -407,8 +407,8 @@ func resourceTencentCloudDcdbDbInstanceCreate(d *schema.ResourceData, meta inter
 	}
 
 	if flowId != nil {
-		// need to wait init operation sucess
-		// 0:sucess; 1:failed, 2:running
+		// need to wait init operation success
+		// 0:success; 1:failed, 2:running
 		conf := BuildStateChangeConf([]string{}, []string{"0"}, 3*readRetryTimeout, time.Second, service.DcdbDbInstanceStateRefreshFunc(flowId, []string{}))
 		if _, e := conf.WaitForState(); e != nil {
 			return e
