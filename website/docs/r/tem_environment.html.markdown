@@ -19,6 +19,10 @@ resource "tencentcloud_tem_environment" "environment" {
   description      = "demo for test"
   vpc              = "vpc-2hfyray3"
   subnet_ids       = ["subnet-rdkj0agk", "subnet-r1c4pn5m", "subnet-02hcj95c"]
+  tag {
+    tag_key   = "createdBy"
+    tag_value = "terraform"
+  }
 }
 ```
 
@@ -30,6 +34,12 @@ The following arguments are supported:
 * `subnet_ids` - (Required, Set: [`String`]) subnet IDs.
 * `vpc` - (Required, String) vpc ID.
 * `description` - (Optional, String) environment description.
+* `tag` - (Optional, List) application tag list.
+
+The `tag` object supports the following:
+
+* `tag_key` - (Optional, String) tag key.
+* `tag_value` - (Optional, String) tag value.
 
 ## Attributes Reference
 
