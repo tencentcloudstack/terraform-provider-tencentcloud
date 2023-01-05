@@ -107,7 +107,7 @@ resource "tencentcloud_tem_environment" "environment" {
 	description      = "demo for test"
 	vpc              = var.vpc_id
 	subnet_ids       = [var.subnet_id]
-	tags {
+	tags = {
 		"createdBy" = "terraform"
 	}
   }
