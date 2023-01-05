@@ -12,9 +12,8 @@ resource "tencentcloud_tem_application" "application" {
   repo_type = 2
   repo_name = "qcloud/nginx"
   repo_server = "ccr.ccs.tencentyun.com"
-  tag {
-    tag_key = "createdBy"
-    tag_value = "terraform"
+  tags = {
+    "created" = "terraform"
   }
 }
 ```
@@ -91,25 +90,10 @@ func resourceTencentCloudTemApplication() *schema.Resource {
 				Computed:    true,
 				Description: "tcr instance id.",
 			},
-			"tag": {
-				Type:        schema.TypeList,
+			"tags": {
+				Type:        schema.TypeMap,
 				Optional:    true,
-				Computed:    true,
 				Description: "application tag list.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"tag_key": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "tag key.",
-						},
-						"tag_value": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "tag value.",
-						},
-					},
-				},
 			},
 		},
 	}
@@ -120,6 +104,7 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request  = tem.NewCreateApplicationRequest()
@@ -156,15 +141,11 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 		request.InstanceId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("tag"); ok {
-		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			tag := tem.Tag{}
-			if v, ok := dMap["tag_key"]; ok {
-				tag.TagKey = helper.String(v.(string))
-			}
-			if v, ok := dMap["tag_value"]; ok {
-				tag.TagValue = helper.String(v.(string))
+	if v, ok := d.GetOk("tags"); ok {
+		for key, value := range v.(map[string]interface{}) {
+			tag := tem.Tag{
+				TagKey:   helper.String(key),
+				TagValue: helper.String(value.(string)),
 			}
 			request.Tags = append(request.Tags, &tag)
 		}
@@ -192,6 +173,16 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 	applicationId := *response.Response.Result
 
 	d.SetId(applicationId)
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::tem:%s:uin/:tem-application/%s", region, applicationId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudTemApplicationRead(d, meta)
 }
 
@@ -247,20 +238,14 @@ func resourceTencentCloudTemApplicationRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("instance_id", application.InstanceId)
 	}
 
-	if application.Tags != nil {
-		tagList := []interface{}{}
-		for _, tag := range application.Tags {
-			tagMap := map[string]interface{}{}
-			if tag.TagKey != nil {
-				tagMap["tag_key"] = tag.TagKey
-			}
-			if tag.TagValue != nil {
-				tagMap["tag_value"] = tag.TagValue
-			}
-			tagList = append(tagList, tagMap)
-		}
-		_ = d.Set("tag", tagList)
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "tem", "tem-application", region, applicationId)
+	if err != nil {
+		return err
 	}
+	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -309,8 +294,8 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`instance_id` do not support change now.")
 	}
 
-	if d.HasChange("tag") {
-		return fmt.Errorf("`tag` do not support change now.")
+	if d.HasChange("tags") {
+		return fmt.Errorf("`tags` do not support change now.")
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

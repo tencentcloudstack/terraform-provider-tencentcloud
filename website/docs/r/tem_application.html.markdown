@@ -22,9 +22,8 @@ resource "tencentcloud_tem_application" "application" {
   repo_type                 = 2
   repo_name                 = "qcloud/nginx"
   repo_server               = "ccr.ccs.tencentyun.com"
-  tag {
-    tag_key   = "createdBy"
-    tag_value = "terraform"
+  tags = {
+    "created" = "terraform"
   }
 }
 ```
@@ -40,13 +39,8 @@ The following arguments are supported:
 * `repo_name` - (Optional, String) repository name.
 * `repo_server` - (Optional, String) registry address.
 * `repo_type` - (Optional, Int) repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 3: tcr hosted by tem, 4: demo image.
-* `tag` - (Optional, List) application tag list.
+* `tags` - (Optional, Map) application tag list.
 * `use_default_image_service` - (Optional, Int) create image repo or not.
-
-The `tag` object supports the following:
-
-* `tag_key` - (Optional, String) tag key.
-* `tag_value` - (Optional, String) tag value.
 
 ## Attributes Reference
 
