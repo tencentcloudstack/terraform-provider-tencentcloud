@@ -76,7 +76,7 @@ func resourceTencentCloudTemEnvironment() *schema.Resource {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Computed:    true,
-				Description: "application tag list.",
+				Description: "environment tag list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"tag_key": {

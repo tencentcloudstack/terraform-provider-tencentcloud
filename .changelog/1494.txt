@@ -1,12 +1,12 @@
 ```release-note:enhancement
-resource/tencentcloud_tem_application: support tag
+resource/tencentcloud_tem_application: support tag creation, but currently does not support modification
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_tem_application_service: support update
+resource/tencentcloud_tem_application_service: support service modification
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_tem_environment: support update
+resource/tencentcloud_tem_environment: support service modification and support tag creation, but currently does not support modification
 ```
 

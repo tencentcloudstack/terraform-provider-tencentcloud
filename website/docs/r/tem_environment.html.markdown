@@ -34,7 +34,7 @@ The following arguments are supported:
 * `subnet_ids` - (Required, Set: [`String`]) subnet IDs.
 * `vpc` - (Required, String) vpc ID.
 * `description` - (Optional, String) environment description.
-* `tag` - (Optional, List) application tag list.
+* `tag` - (Optional, List) environment tag list.
 
 The `tag` object supports the following:
 
