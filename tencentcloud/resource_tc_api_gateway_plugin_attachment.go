@@ -82,7 +82,6 @@ func resourceTencentCloudApiGatewayPluginAttachmentCreate(d *schema.ResourceData
 
 	var (
 		request         = apiGateway.NewAttachPluginRequest()
-		response        = apiGateway.NewAttachPluginResponse()
 		pluginId        string
 		serviceId       string
 		environmentName string
@@ -115,7 +114,6 @@ func resourceTencentCloudApiGatewayPluginAttachmentCreate(d *schema.ResourceData
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
