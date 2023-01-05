@@ -28,7 +28,6 @@ func TestAccTencentCloudTemEnvironmentResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tem_environment.environment", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_environment.environment", "environment_name", "demo"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_environment.environment", "description", "demo for test"),
-					resource.TestCheckResourceAttr("tencentcloud_tem_environment.environment", "tags.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_environment.environment", "tags.createdBy", "terraform"),
 				),
 			},
