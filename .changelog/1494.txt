@@ -3,10 +3,10 @@ resource/tencentcloud_tem_application: Support tags field
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_tem_application_service: support service modification
+resource/tencentcloud_tem_application_service: Support service modification
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_tem_environment: support service modification and support tags field
+resource/tencentcloud_tem_environment: Support service modification and support tags field
 ```
 
