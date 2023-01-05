@@ -35,6 +35,11 @@ func Int64Uint64(i int64) *uint64 {
 	return &u
 }
 
+func UInt64Int64(i uint64) *int64 {
+	u := int64(i)
+	return &u
+}
+
 func Strings(strs []string) []*string {
 	if len(strs) == 0 {
 		return nil
