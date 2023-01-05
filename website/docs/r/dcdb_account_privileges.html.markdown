@@ -88,6 +88,6 @@ In addition to all arguments above, the following attributes are exported:
 dcdb account_privileges can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dcdb_account_privileges.account_privileges account_privileges_id
+terraform import tencentcloud_dcdb_account_privileges.account_privileges instanceId#userName#host#dbName#tabName#viewName#colName
 ```
 
