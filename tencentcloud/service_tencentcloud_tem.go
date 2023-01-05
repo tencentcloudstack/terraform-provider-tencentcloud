@@ -430,6 +430,7 @@ func (me *TemService) DescribeTemGateway(ctx context.Context, environmentId stri
 		if *gateway.ClbId != "" && *gateway.Vip != "" {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] if you enter a clb_id that does not exist, it may cause the vip to be empty", logId, request.GetAction())
 			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("gateway clb is not ready..."))

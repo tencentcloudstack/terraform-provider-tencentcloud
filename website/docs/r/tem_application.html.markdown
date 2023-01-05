@@ -22,6 +22,9 @@ resource "tencentcloud_tem_application" "application" {
   repo_type                 = 2
   repo_name                 = "qcloud/nginx"
   repo_server               = "ccr.ccs.tencentyun.com"
+  tags = {
+    "created" = "terraform"
+  }
 }
 ```
 
@@ -36,6 +39,7 @@ The following arguments are supported:
 * `repo_name` - (Optional, String) repository name.
 * `repo_server` - (Optional, String) registry address.
 * `repo_type` - (Optional, Int) repo type, 0: tcr personal, 1: tcr enterprise, 2: public repository, 3: tcr hosted by tem, 4: demo image.
+* `tags` - (Optional, Map) application tag list.
 * `use_default_image_service` - (Optional, Int) create image repo or not.
 
 ## Attributes Reference
