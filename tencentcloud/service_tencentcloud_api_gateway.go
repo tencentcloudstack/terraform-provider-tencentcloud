@@ -1639,3 +1639,64 @@ func (me *APIGatewayService) DeleteApiGatewayPluginById(ctx context.Context, plu
 
 	return
 }
+
+func (me *APIGatewayService) DescribeApiGatewayPluginAttachmentById(ctx context.Context, pluginId string, serviceId string, environmentName string, apiId string) (pluginAttachment *apigateway.AttachedApiInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewDescribePluginApisRequest()
+	request.PluginId = &pluginId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DescribePluginApis(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Result.AttachedApis) < 1 {
+		return
+	}
+
+	for _, api := range response.Response.Result.AttachedApis {
+		if *api.ServiceId == serviceId && *api.Environment == environmentName && *api.ApiId == apiId {
+			pluginAttachment = api
+			return
+		}
+	}
+	return
+}
+
+func (me *APIGatewayService) DeleteApiGatewayPluginAttachmentById(ctx context.Context, pluginId string, serviceId string, environmentName string, apiId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewDetachPluginRequest()
+	request.PluginId = &pluginId
+	request.ServiceId = &serviceId
+	request.EnvironmentName = &environmentName
+	request.ApiId = &apiId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DetachPlugin(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
