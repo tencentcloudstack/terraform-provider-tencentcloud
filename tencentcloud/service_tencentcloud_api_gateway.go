@@ -1586,3 +1586,56 @@ func (me *APIGatewayService) DescribeServiceEnvironmentReleaseHistory(ctx contex
 		offset += limit
 	}
 }
+
+func (me *APIGatewayService) DescribeApiGatewayPluginById(ctx context.Context, pluginId string) (plugin *apigateway.Plugin, errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewDescribePluginsRequest()
+	request.PluginIds = []*string{&pluginId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DescribePlugins(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Result.PluginSet) < 1 {
+		return
+	}
+
+	plugin = response.Response.Result.PluginSet[0]
+	return
+}
+
+func (me *APIGatewayService) DeleteApiGatewayPluginById(ctx context.Context, pluginId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewDeletePluginRequest()
+	request.PluginId = &pluginId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DeletePlugin(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

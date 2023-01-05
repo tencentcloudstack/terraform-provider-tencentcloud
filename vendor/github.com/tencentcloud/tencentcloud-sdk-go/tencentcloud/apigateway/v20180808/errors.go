@@ -68,6 +68,9 @@ const (
 	// Apis 证书为空，请上传证书。
 	FAILEDOPERATION_CERTIFICATEISNULL = "FailedOperation.CertificateIsNull"
 
+	// 调用CLS服务失败。
+	FAILEDOPERATION_CLSERROR = "FailedOperation.ClsError"
+
 	// API文档操作失败。
 	FAILEDOPERATION_CODINGERROR = "FailedOperation.CodingError"
 
@@ -95,6 +98,9 @@ const (
 	// 该域名已经绑定该服务。
 	FAILEDOPERATION_DOMAINALREADYBINDSERVICE = "FailedOperation.DomainAlreadyBindService"
 
+	// 当前域名不满足合规要求，无法进行接入。
+	FAILEDOPERATION_DOMAININBLACKLIST = "FailedOperation.DomainInBlackList"
+
 	// 该域名还未在腾讯云备案，请备案之后再绑定域名。
 	FAILEDOPERATION_DOMAINNEEDBEIAN = "FailedOperation.DomainNeedBeian"
 
@@ -103,6 +109,9 @@ const (
 
 	// 该域名未配置cname到默认域名，或者解析未生效。
 	FAILEDOPERATION_DOMAINRESOLVEERROR = "FailedOperation.DomainResolveError"
+
+	// EIAM返回错误。
+	FAILEDOPERATION_EIAMERROR = "FailedOperation.EIAMError"
 
 	// 事件总线绑定/解绑失败。
 	FAILEDOPERATION_EBERROR = "FailedOperation.EbError"
@@ -125,6 +134,9 @@ const (
 	// 默认的二级域名输入错误。
 	FAILEDOPERATION_NETSUBDOMAINERROR = "FailedOperation.NetSubDomainError"
 
+	// 操作后端通道失败。
+	FAILEDOPERATION_OPERATEUPSTREAM = "FailedOperation.OperateUpstream"
+
 	// 设置路径映射错误。
 	FAILEDOPERATION_PATHMAPPINGSETERROR = "FailedOperation.PathMappingSetError"
 
@@ -133,6 +145,9 @@ const (
 
 	// 服务相关的错误。
 	FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
+
+	// 当前Service正在操作中, 请稍后再试。
+	FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 
 	// 服务不存在。
 	FAILEDOPERATION_SERVICENOTEXIST = "FailedOperation.ServiceNotExist"
@@ -155,6 +170,12 @@ const (
 	// API网关内部请求错误，请稍后重试。若无法解决，请联系智能客服或提交工单。
 	INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
 
+	// CAuth内部请求错误，请稍后重试。若无法解决，请联系智能客服或提交工单。
+	INTERNALERROR_CAUTHEXCEPTION = "InternalError.CauthException"
+
+	// CLB内部请求错误，请稍后重试。若无法解决，请联系智能客服或提交工单。
+	INTERNALERROR_CLBEXCEPTION = "InternalError.ClbException"
+
 	// oss内部请求错误，请稍后重试。若无法解决，请联系智能客服或提交工单。
 	INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 
@@ -170,11 +191,23 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 基础版服务不能绑定插件。
+	INVALIDPARAMETER_BASICSERVICENOTALLOWATTACHPLUGIN = "InvalidParameter.BasicServiceNotAllowAttachPlugin"
+
+	// 当前绑定插件和已有插件冲突。
+	INVALIDPARAMETER_DUPLICATEPLUGINCONFIG = "InvalidParameter.DuplicatePluginConfig"
+
 	// 参数格式错误。
 	INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 插件定义参数取值重复，请修改后重新操作。
+	INVALIDPARAMETERVALUE_DUPLICATEPLUGINCONFIG = "InvalidParameterValue.DuplicatePluginConfig"
+
+	// 非法的后端ip地址。
+	INVALIDPARAMETERVALUE_ILLEGALPROXYIP = "InvalidParameterValue.IllegalProxyIp"
 
 	// 密钥错误。
 	INVALIDPARAMETERVALUE_INVALIDACCESSKEYIDS = "InvalidParameterValue.InvalidAccessKeyIds"
@@ -197,8 +230,17 @@ const (
 	// 不合法的clb。
 	INVALIDPARAMETERVALUE_INVALIDCLB = "InvalidParameterValue.InvalidClb"
 
+	// 策略错误。
+	INVALIDPARAMETERVALUE_INVALIDCONDITION = "InvalidParameterValue.InvalidCondition"
+
 	// 不合法的常量参数。
 	INVALIDPARAMETERVALUE_INVALIDCONSTANTPARAMETERS = "InvalidParameterValue.InvalidConstantParameters"
+
+	// 参数Env取值错误，取值范围为（release, prepub, test）。
+	INVALIDPARAMETERVALUE_INVALIDENV = "InvalidParameterValue.InvalidEnv"
+
+	// 服务当前环境状态，不支持此操作。
+	INVALIDPARAMETERVALUE_INVALIDENVSTATUS = "InvalidParameterValue.InvalidEnvStatus"
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE_INVALIDFILTERNOTSUPPORTEDNAME = "InvalidParameterValue.InvalidFilterNotSupportedName"
@@ -209,8 +251,14 @@ const (
 	// 参数后端地址取值错误。
 	INVALIDPARAMETERVALUE_INVALIDIPADDRESS = "InvalidParameterValue.InvalidIPAddress"
 
+	// 参数请求配额总数取值错误。
+	INVALIDPARAMETERVALUE_INVALIDMAXREQUESTNUM = "InvalidParameterValue.InvalidMaxRequestNum"
+
 	// 方法错误。仅支持 ANY, BEGIN, GET, POST, DELETE, HEAD, PUT, OPTIONS, TRACE, PATCH，请修改后重新操作。
 	INVALIDPARAMETERVALUE_INVALIDMETHOD = "InvalidParameterValue.InvalidMethod"
+
+	// 插件定义参数取值错误，请修改后重新操作。
+	INVALIDPARAMETERVALUE_INVALIDPLUGINCONFIG = "InvalidParameterValue.InvalidPluginConfig"
 
 	// 后端服务端口错误。
 	INVALIDPARAMETERVALUE_INVALIDPORT = "InvalidParameterValue.InvalidPort"
@@ -251,8 +299,14 @@ const (
 	// TSF类型API配置错误。
 	INVALIDPARAMETERVALUE_INVALIDTSFCONFIG = "InvalidParameterValue.InvalidTsfConfig"
 
+	// 当前后端通道不存在或者是无效状态。
+	INVALIDPARAMETERVALUE_INVALIDUPSTREAM = "InvalidParameterValue.InvalidUpstream"
+
 	// URL参数错误。
 	INVALIDPARAMETERVALUE_INVALIDURL = "InvalidParameterValue.InvalidUrl"
+
+	// 无效vpc信息。
+	INVALIDPARAMETERVALUE_INVALIDVPCCONFIG = "InvalidParameterValue.InvalidVpcConfig"
 
 	// 方法错误。WEBSOCKET类型的后端服务，前端方法需要配置为GET。
 	INVALIDPARAMETERVALUE_INVALIDWSMETHOD = "InvalidParameterValue.InvalidWSMethod"
@@ -278,11 +332,20 @@ const (
 	// 参数取值错误，不在参数范围内。
 	INVALIDPARAMETERVALUE_RANGEEXCEEDED = "InvalidParameterValue.RangeExceeded"
 
+	// 参数取值错误。
+	INVALIDPARAMETERVALUE_UNSUPPORTEDPARAMETER = "InvalidParameterValue.UnsupportedParameter"
+
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
 
 	// API文档数量超出限制。
 	LIMITEXCEEDED_APIDOCLIMITEXCEEDED = "LimitExceeded.APIDocLimitExceeded"
+
+	// 访问密钥数量超出限制。
+	LIMITEXCEEDED_ACCESSKEYCOUNTINUSAGEPLANLIMITEXCEEDED = "LimitExceeded.AccessKeyCountInUsagePlanLimitExceeded"
+
+	// 服务绑定的应用数量超过限制。
+	LIMITEXCEEDED_APIAPPCOUNTLIMITEXCEEDED = "LimitExceeded.ApiAppCountLimitExceeded"
 
 	// API数量超过限制。
 	LIMITEXCEEDED_APICOUNTLIMITEXCEEDED = "LimitExceeded.ApiCountLimitExceeded"
@@ -302,6 +365,9 @@ const (
 	// 请求频率超限制，请稍等再试。
 	LIMITEXCEEDED_REQUESTLIMITEXCEEDED = "LimitExceeded.RequestLimitExceeded"
 
+	// 插件绑定的服务数量超出限制，请解绑服务或提升限额后重试。
+	LIMITEXCEEDED_SERVICECOUNTFORPLUGINLIMITEXCEEDED = "LimitExceeded.ServiceCountForPluginLimitExceeded"
+
 	// 服务数量超过限制，请删除服务或提升限额后重试。
 	LIMITEXCEEDED_SERVICECOUNTLIMITEXCEEDED = "LimitExceeded.ServiceCountLimitExceeded"
 
@@ -310,6 +376,12 @@ const (
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
+
+	// 缺少后端服务参数。
+	MISSINGPARAMETER_BACKENDSPECIFICPARAM = "MissingParameter.BackendSpecificParam"
+
+	// 插件缺少参数，请按规则重新操作。
+	MISSINGPARAMETER_PLUGINCONFIG = "MissingParameter.PluginConfig"
 
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
@@ -331,6 +403,9 @@ const (
 
 	// ApiId错误。
 	RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
+
+	// 应用ID错误。
+	RESOURCENOTFOUND_INVALIDAPIAPP = "ResourceNotFound.InvalidApiApp"
 
 	// API文档不存在。
 	RESOURCENOTFOUND_INVALIDAPIDOC = "ResourceNotFound.InvalidApiDoc"
@@ -371,8 +446,20 @@ const (
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
+	// 账号余额不足
+	UNSUPPORTEDOPERATION_ACCOUNTARREARS = "UnsupportedOperation.AccountArrears"
+
 	// 密钥已绑定使用计划。
 	UNSUPPORTEDOPERATION_ALREADYBINDUSAGEPLAN = "UnsupportedOperation.AlreadyBindUsagePlan"
+
+	// 当前插件不支持绑定。
+	UNSUPPORTEDOPERATION_ATTACHPLUGIN = "UnsupportedOperation.AttachPlugin"
+
+	// 基础版服务不能创建超过一个API。
+	UNSUPPORTEDOPERATION_BASICSERVICENOMOREAPI = "UnsupportedOperation.BasicServiceNoMoreApi"
+
+	// 日志检索起始时间间隔。
+	UNSUPPORTEDOPERATION_CLSSEARCHTIME = "UnsupportedOperation.ClsSearchTime"
 
 	// 协议为HTTP时，不支持强制Https。
 	UNSUPPORTEDOPERATION_FORCEHTTPS = "UnsupportedOperation.ForceHttps"
@@ -383,11 +470,20 @@ const (
 	// 不支持后端类型。
 	UNSUPPORTEDOPERATION_INVALIDENDPOINTTYPE = "UnsupportedOperation.InvalidEndpointType"
 
+	// 当前实例状态，不支持当前操作。
+	UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+
 	// 当前服务处于隔离中，暂不支持此操作。
 	UNSUPPORTEDOPERATION_INVALIDSERVICETRADE = "UnsupportedOperation.InvalidServiceTrade"
 
 	// 当前密钥状态不支持此操作。
 	UNSUPPORTEDOPERATION_INVALIDSTATUS = "UnsupportedOperation.InvalidStatus"
+
+	// 不支持修改EIAM类型授权API。
+	UNSUPPORTEDOPERATION_MODIFYEIAMAUTHAPI = "UnsupportedOperation.ModifyEIAMAuthApi"
+
+	// 网络类型不支持修改。
+	UNSUPPORTEDOPERATION_MODIFYNETTYPE = "UnsupportedOperation.ModifyNetType"
 
 	// 前端协议类型不支持修改。
 	UNSUPPORTEDOPERATION_MODIFYPROTOCOL = "UnsupportedOperation.ModifyProtocol"
@@ -404,6 +500,9 @@ const (
 	// 密钥已绑定使用计划，请先解绑再试。
 	UNSUPPORTEDOPERATION_RESOURCEISINUSE = "UnsupportedOperation.ResourceIsInUse"
 
+	// 资源未关联。
+	UNSUPPORTEDOPERATION_RESOURCEUNASSOCIATED = "UnsupportedOperation.ResourceUnassociated"
+
 	// 当前Uin未在手工密钥白名单列表内。
 	UNSUPPORTEDOPERATION_UINNOTINWHITELIST = "UnsupportedOperation.UinNotInWhiteList"
 
@@ -413,8 +512,17 @@ const (
 	// 不支持绑定环境。
 	UNSUPPORTEDOPERATION_UNSUPPORTEDBINDENVIRONMENT = "UnsupportedOperation.UnsupportedBindEnvironment"
 
+	// 当前API已绑定业务API，请先解绑再试。
+	UNSUPPORTEDOPERATION_UNSUPPORTEDDELETEAPI = "UnsupportedOperation.UnsupportedDeleteApi"
+
 	// 服务使用中，不能被删除。
 	UNSUPPORTEDOPERATION_UNSUPPORTEDDELETESERVICE = "UnsupportedOperation.UnsupportedDeleteService"
+
+	// 当前VPC通道存在绑定关系，不支持当前操作。
+	UNSUPPORTEDOPERATION_UNSUPPORTEDDELETEUPSTREAM = "UnsupportedOperation.UnsupportedDeleteUpstream"
+
+	// 不支持网络类型。
+	UNSUPPORTEDOPERATION_UNSUPPORTEDNETTYPE = "UnsupportedOperation.UnsupportedNetType"
 
 	// 不支持解绑环境，存在未绑定使用计划的API。
 	UNSUPPORTEDOPERATION_UNSUPPORTEDUNBINDENVIRONMENT = "UnsupportedOperation.UnsupportedUnBindEnvironment"
