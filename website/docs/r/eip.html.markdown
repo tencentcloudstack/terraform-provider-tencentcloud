@@ -15,7 +15,10 @@ Provides an EIP resource.
 
 ```hcl
 resource "tencentcloud_eip" "foo" {
-  name = "awesome_gateway_ip"
+  name                 = "awesome_gateway_ip"
+  bandwidth_package_id = "bwp-jtvzuky6"
+  internet_charge_type = "BANDWIDTH_PACKAGE"
+  type                 = "EIP"
 }
 ```
 
@@ -25,6 +28,7 @@ The following arguments are supported:
 
 * `anycast_zone` - (Optional, String, ForceNew) The zone of anycast. Valid value: `ANYCAST_ZONE_GLOBAL` and `ANYCAST_ZONE_OVERSEAS`.
 * `applicable_for_clb` - (Optional, Bool, **Deprecated**) It has been deprecated from version 1.27.0. Indicates whether the anycast eip can be associated to a CLB.
+* `bandwidth_package_id` - (Optional, String) ID of bandwidth package, it will set when `internet_charge_type` is `BANDWIDTH_PACKAGE`.
 * `internet_charge_type` - (Optional, String, ForceNew) The charge type of eip. Valid values: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR`, `BANDWIDTH_PREPAID_BY_MONTH` and `TRAFFIC_POSTPAID_BY_HOUR`.
 * `internet_max_bandwidth_out` - (Optional, Int) The bandwidth limit of EIP, unit is Mbps.
 * `internet_service_provider` - (Optional, String, ForceNew) Internet service provider of eip. Valid value: `BGP`, `CMCC`, `CTCC` and `CUCC`.
