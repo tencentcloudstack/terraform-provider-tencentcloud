@@ -577,7 +577,9 @@ func NewCreateSyncJobResponse() (response *CreateSyncJobResponse) {
 // 创建一个同步任务
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATIONERROR = "AuthFailure.UnauthorizedOperationError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
 //  INTERNALERROR_INTERNALINNERCOMMONERROR = "InternalError.InternalInnerCommonError"
 //  INTERNALERROR_INTERNALTRADEERROR = "InternalError.InternalTradeError"
 //  INTERNALERROR_NOTENOUGHMONEYERROR = "InternalError.NotEnoughMoneyError"
@@ -594,7 +596,9 @@ func (c *Client) CreateSyncJob(request *CreateSyncJobRequest) (response *CreateS
 // 创建一个同步任务
 //
 // 可能返回的错误码:
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
 //  AUTHFAILURE_UNAUTHORIZEDOPERATIONERROR = "AuthFailure.UnauthorizedOperationError"
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
 //  INTERNALERROR_INTERNALINNERCOMMONERROR = "InternalError.InternalInnerCommonError"
 //  INTERNALERROR_INTERNALTRADEERROR = "InternalError.InternalTradeError"
 //  INTERNALERROR_NOTENOUGHMONEYERROR = "InternalError.NotEnoughMoneyError"
@@ -638,13 +642,14 @@ func NewDeleteCompareTaskResponse() (response *DeleteCompareTaskResponse) {
 }
 
 // DeleteCompareTask
-// 删除一致性校验任务
+// 删除一致性校验任务。当一致性校验任务状态为success、failed、canceled 时可以执行此操作。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
 //  DRYRUNOPERATION_DRYRUNOPERATIONERROR = "DryRunOperation.DryRunOperationError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
 //  LIMITEXCEEDED_LIMITEXCEEDEDERROR = "LimitExceeded.LimitExceededError"
@@ -664,13 +669,14 @@ func (c *Client) DeleteCompareTask(request *DeleteCompareTaskRequest) (response 
 }
 
 // DeleteCompareTask
-// 删除一致性校验任务
+// 删除一致性校验任务。当一致性校验任务状态为success、failed、canceled 时可以执行此操作。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
 //  DRYRUNOPERATION_DRYRUNOPERATIONERROR = "DryRunOperation.DryRunOperationError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUE = "InvalidParameterValue.InvalidParameterValue"
 //  LIMITEXCEEDED_LIMITEXCEEDEDERROR = "LimitExceeded.LimitExceededError"
@@ -1635,6 +1641,7 @@ func NewModifyCompareTaskResponse() (response *ModifyCompareTaskResponse) {
 //  DRYRUNOPERATION_DRYRUNOPERATIONERROR = "DryRunOperation.DryRunOperationError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  LIMITEXCEEDED_LIMITEXCEEDEDERROR = "LimitExceeded.LimitExceededError"
@@ -1661,6 +1668,7 @@ func (c *Client) ModifyCompareTask(request *ModifyCompareTaskRequest) (response 
 //  DRYRUNOPERATION_DRYRUNOPERATIONERROR = "DryRunOperation.DryRunOperationError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  LIMITEXCEEDED_LIMITEXCEEDEDERROR = "LimitExceeded.LimitExceededError"
@@ -2353,6 +2361,124 @@ func (c *Client) ResumeSyncJobWithContext(ctx context.Context, request *ResumeSy
     return
 }
 
+func NewSkipCheckItemRequest() (request *SkipCheckItemRequest) {
+    request = &SkipCheckItemRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "SkipCheckItem")
+    
+    
+    return
+}
+
+func NewSkipCheckItemResponse() (response *SkipCheckItemResponse) {
+    response = &SkipCheckItemResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// SkipCheckItem
+// 本接口用于校验检查项不通过后，可进行跳过此校验项操作，后端将不再校验该项。任何校验步骤都是不应该跳过的，通过校验是能正确执行的前置条件。支持跳过的产品及链路的校验项可 [参考文档](https://cloud.tencent.com/document/product/571/61639)。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) SkipCheckItem(request *SkipCheckItemRequest) (response *SkipCheckItemResponse, err error) {
+    return c.SkipCheckItemWithContext(context.Background(), request)
+}
+
+// SkipCheckItem
+// 本接口用于校验检查项不通过后，可进行跳过此校验项操作，后端将不再校验该项。任何校验步骤都是不应该跳过的，通过校验是能正确执行的前置条件。支持跳过的产品及链路的校验项可 [参考文档](https://cloud.tencent.com/document/product/571/61639)。
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) SkipCheckItemWithContext(ctx context.Context, request *SkipCheckItemRequest) (response *SkipCheckItemResponse, err error) {
+    if request == nil {
+        request = NewSkipCheckItemRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SkipCheckItem require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSkipCheckItemResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSkipSyncCheckItemRequest() (request *SkipSyncCheckItemRequest) {
+    request = &SkipSyncCheckItemRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "SkipSyncCheckItem")
+    
+    
+    return
+}
+
+func NewSkipSyncCheckItemResponse() (response *SkipSyncCheckItemResponse) {
+    response = &SkipSyncCheckItemResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// SkipSyncCheckItem
+// 本接口用于校验检查项不通过后，可进行跳过此校验项操作，后端将不再校验该项。任何校验步骤都是不应该跳过的，通过校验是能正确执行的前置条件。支持跳过的产品及链路的校验项可 [参考文档](https://cloud.tencent.com/document/product/571/61639)。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DATABASEERROR = "InternalError.DatabaseError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) SkipSyncCheckItem(request *SkipSyncCheckItemRequest) (response *SkipSyncCheckItemResponse, err error) {
+    return c.SkipSyncCheckItemWithContext(context.Background(), request)
+}
+
+// SkipSyncCheckItem
+// 本接口用于校验检查项不通过后，可进行跳过此校验项操作，后端将不再校验该项。任何校验步骤都是不应该跳过的，通过校验是能正确执行的前置条件。支持跳过的产品及链路的校验项可 [参考文档](https://cloud.tencent.com/document/product/571/61639)。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE_AUTHFAILUREERROR = "AuthFailure.AuthFailureError"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DATABASEERROR = "InternalError.DatabaseError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) SkipSyncCheckItemWithContext(ctx context.Context, request *SkipSyncCheckItemRequest) (response *SkipSyncCheckItemResponse, err error) {
+    if request == nil {
+        request = NewSkipSyncCheckItemRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SkipSyncCheckItem require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSkipSyncCheckItemResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewStartCompareRequest() (request *StartCompareRequest) {
     request = &StartCompareRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2804,7 +2930,7 @@ func NewStopSyncJobResponse() (response *StopSyncJobResponse) {
 }
 
 // StopSyncJob
-// 终止同步任务
+// 结束同步任务，操作后可通过查询同步任务信息接口DescribeSyncJobs，获取操作后的状态。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -2814,7 +2940,7 @@ func (c *Client) StopSyncJob(request *StopSyncJobRequest) (response *StopSyncJob
 }
 
 // StopSyncJob
-// 终止同步任务
+// 结束同步任务，操作后可通过查询同步任务信息接口DescribeSyncJobs，获取操作后的状态。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
