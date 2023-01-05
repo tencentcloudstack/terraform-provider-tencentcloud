@@ -27,8 +27,8 @@ func TestAccTencentCloudPtsCronJobResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "project_id", defaultPtsProjectId),
 					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "scenario_id", defaultScenarioId),
 					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "scenario_name", "keep-pts-js"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "frequency_type", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "cron_expression", "4 22 10 11 ? 2022"),
+					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "frequency_type", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "cron_expression", "* 1 * * *"),
 					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "job_owner", "userName"),
 					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "notice_id", defaultPtsNoticeId),
 					resource.TestCheckResourceAttr("tencentcloud_pts_cron_job.cron_job", "note", "desc"),
@@ -120,8 +120,8 @@ resource "tencentcloud_pts_cron_job" "cron_job" {
 	project_id = var.project_id
 	scenario_id = var.scenario_id
 	scenario_name = "keep-pts-js"
-	frequency_type = 1
-	cron_expression = "4 22 10 11 ? 2022"
+	frequency_type = 2
+	cron_expression = "* 1 * * *"
 	job_owner = "userName"
 	# end_time = ""
 	notice_id = var.notice_id
