@@ -33,8 +33,7 @@ func TestAccTencentCloudTemApplicationResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tem_application.application", "repo_name", "qcloud/nginx"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_application.application", "repo_server", "ccr.ccs.tencentyun.com"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_application.application", "tag.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_tem_application.application", "tag.0.tag_key", "createdBy"),
-					resource.TestCheckResourceAttr("tencentcloud_tem_application.application", "tag.0.tag_value", "terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_tem_environment.environment", "tags.createdBy", "terraform"),
 				),
 			},
 			// {
@@ -101,9 +100,8 @@ resource "tencentcloud_tem_application" "application" {
   repo_type = 2
   repo_name = "qcloud/nginx"
   repo_server = "ccr.ccs.tencentyun.com"
-  tag {
-    tag_key = "createdBy"
-    tag_value = "terraform"
+  tags {
+	"createdBy" = "terraform"
   }
 }
 
