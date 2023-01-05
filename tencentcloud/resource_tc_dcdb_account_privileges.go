@@ -252,12 +252,6 @@ func resourceTencentCloudDcdbAccountPrivilegesRead(d *schema.ResourceData, meta 
 
 	if globalPrivileges.Privileges != nil {
 		log.Printf("[DEBUG]%s read globalPrivileges. Privileges:[%v]\n", logId, globalPrivileges.Privileges)
-		// var pris []string
-		// for _, v := range globalPrivileges.Privileges {
-		// 	log.Printf("[DEBUG]%s read globalPrivileges. Privilege:[%s]\n", logId, *v)
-		// 	pris = append(pris, *v)
-		// }
-		// _ = d.Set("global_privileges", pris)
 		_ = d.Set("global_privileges", helper.StringsInterfaces(globalPrivileges.Privileges))
 	}
 
