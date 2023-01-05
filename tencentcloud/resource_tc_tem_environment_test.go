@@ -28,6 +28,7 @@ func TestAccTencentCloudTemEnvironmentResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tem_environment.environment", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_environment.environment", "environment_name", "demo"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_environment.environment", "description", "demo for test"),
+					resource.TestCheckResourceAttr("tencentcloud_tem_environment.environment", "tags.createdBy", "terraform"),
 				),
 			},
 			{
@@ -106,6 +107,9 @@ resource "tencentcloud_tem_environment" "environment" {
 	description      = "demo for test"
 	vpc              = var.vpc_id
 	subnet_ids       = [var.subnet_id]
+	tags = {
+		"createdBy" = "terraform"
+	}
   }
 
 `
