@@ -65,7 +65,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudCdnDomainResource(t *testing.T) {
+func TestAccTencentCloudCdnDomainResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -91,6 +91,16 @@ func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "authentication.0.switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "authentication.0.type_a.#", "1"),
 					// extends
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.full_url_cache", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.ignore_case", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.query_string.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.query_string.0.value", "t"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.key_rules.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.key_rules.0.rule_paths.0", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.key_rules.1.rule_paths.#", "3"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.key_rules.0.query_string.0.value", "sign;s"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.key_rules.1.query_string.0.value", "t;timestamp"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "status_code_cache.0.switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "status_code_cache.0.cache_rules.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "status_code_cache.0.cache_rules.0.status_code", "403"),
@@ -115,6 +125,17 @@ func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "status_code_cache.0.cache_rules.1.cache_time", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "post_max_size.0.switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "post_max_size.0.max_size", "63"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.full_url_cache", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.ignore_case", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.query_string.0.switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.query_string.0.action", "excludeCustom"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.query_string.0.value", "timestamp"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.key_rules.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.key_rules.0.rule_paths.0", "/"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.key_rules.1.rule_paths.0", "/vendor.js"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.key_rules.0.query_string.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "cache_key.0.key_rules.1.query_string.0.value", "t"),
 				),
 			},
 			{
@@ -122,6 +143,7 @@ func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
+					"full_url_cache",
 					"https_config",
 					"ip_filter",
 					"ip_freq_limit",
@@ -135,6 +157,7 @@ func TestAccTencentCloudCdnDomainResource(t *testing.T) {
 					"post_max_size",
 					"referer",
 					"max_age",
+					"cache_key",
 					"aws_private_access",
 					"oss_private_access",
 					"hw_private_access",
@@ -210,7 +233,7 @@ func TestAccTencentCloudCdnDomainDryRun(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
+func TestAccTencentCloudCdnDomainResource_HTTPs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
@@ -227,11 +250,11 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 				PreConfig: func() {
 
 				},
-				Check: resource.ComposeTestCheckFunc(
+				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "domain"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "service_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "area"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "full_url_cache", "false"),
+					//resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "full_url_cache", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "range_origin_switch", "off"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.cache_time", "10000"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.rule_paths.#", "1"),
@@ -243,6 +266,9 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.no_cache_switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.re_validate", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.follow_origin_switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.1.follow_origin_switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.1.heuristic_cache_switch", "on"),
+					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.1.heuristic_cache_time", "3600"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "request_header.0.switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "request_header.0.header_rules.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "origin.0.origin_type", "cos"),
@@ -266,11 +292,11 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 			},
 			{
 				Config: testAccCdnDomainFullUpdate,
-				Check: resource.ComposeTestCheckFunc(
+				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "domain"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "service_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cdn_domain.foo", "area"),
-					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "full_url_cache", "false"),
+					//resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "full_url_cache", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "range_origin_switch", "on"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.cache_time", "20000"),
 					resource.TestCheckResourceAttr("tencentcloud_cdn_domain.foo", "rule_cache.0.rule_paths.#", "1"),
@@ -303,10 +329,15 @@ func TestAccTencentCloudCdnDomainWithHTTPs(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_cdn_domain.foo",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"https_config", "authentication"},
+				ResourceName:      "tencentcloud_cdn_domain.foo",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"https_config",
+					"authentication",
+					"full_url_cache",
+					"cache_key",
+				},
 			},
 		},
 	})
@@ -528,6 +559,37 @@ resource "tencentcloud_cdn_domain" "foo" {
 	server_name			 = local.bucket_url
     origin_pull_protocol = "follow"
   }
+  cache_key {
+    full_url_cache = "off"
+    ignore_case = "off"
+    query_string {
+      switch = "on"
+      action = "includeCustom"
+      value = "t"
+    }
+    key_rules {
+      rule_paths = ["/"]
+      rule_type = "index"
+      full_url_cache = "off"
+      ignore_case = "off"
+      query_string {
+        action = "excludeCustom"
+        switch = "on"
+        value = "sign;s"
+      }
+    }
+    key_rules {
+      rule_paths = ["css", "js", "map"]
+      rule_type = "file"
+      full_url_cache = "off"
+      ignore_case = "off"
+      query_string {
+        action = "excludeCustom"
+        switch = "on"
+        value = "t;timestamp"
+      }
+    }
+  }
   authentication {
     switch = "on"
     type_a {
@@ -564,6 +626,33 @@ resource "tencentcloud_cdn_domain" "foo" {
 	origin_list          = [local.bucket_url]
 	server_name			 = local.bucket_url
     origin_pull_protocol = "follow"
+  }
+  cache_key {
+    full_url_cache = "off"
+    ignore_case = "off"
+    query_string {
+      switch = "on"
+      action = "excludeCustom"
+      value = "timestamp"
+    }
+    key_rules {
+      rule_paths = ["/"]
+      rule_type = "index"
+      query_string {
+        switch = "off"
+      }
+    }
+    key_rules {
+      rule_paths = ["/vendor.js"]
+      rule_type = "path"
+      full_url_cache = "off"
+      ignore_case = "off"
+      query_string {
+        action = "includeCustom"
+        switch = "on"
+        value = "t"
+      }
+    }
   }
   authentication {
     switch = "on"
@@ -1035,16 +1124,23 @@ resource "tencentcloud_cdn_domain" "foo" {
   domain         = "c.${local.domain}"
   service_type   = "web"
   area           = "overseas"
-  full_url_cache = false
   range_origin_switch = "off"
   
-  rule_cache{
+  rule_cache {
 	cache_time = 10000
 	no_cache_switch="on"
 	re_validate="on"
   }
+  rule_cache {
+	cache_time = 10000
+    follow_origin_switch="on"
+    rule_paths=["jpg", "png"]
+	rule_type="file"
+    heuristic_cache_switch = "on"
+	heuristic_cache_time = 3600
+  }
 
-  request_header{
+  request_header {
 	switch = "on"
 
 	header_rules {
@@ -1094,7 +1190,6 @@ resource "tencentcloud_cdn_domain" "foo" {
   domain         = "c.${local.domain}"
   service_type   = "web"
   area           = "overseas"
-  full_url_cache = false
   range_origin_switch = "on"
 
   rule_cache {
@@ -1110,7 +1205,15 @@ resource "tencentcloud_cdn_domain" "foo" {
 	follow_origin_switch="off"
   }
 
-  request_header{
+  rule_cache {
+    cache_time = 10000
+    rule_paths=["jpg", "png"]
+	rule_type="file"
+    follow_origin_switch = "on"
+    heuristic_cache_switch = "off"
+  }
+
+  request_header {
 	switch = "off"
   }
 
