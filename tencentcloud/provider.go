@@ -100,6 +100,7 @@ API GateWay
 	tencentcloud_api_gateway_api_key
 	tencentcloud_api_gateway_api_key_attachment
     tencentcloud_api_gateway_service_release
+	tencentcloud_api_gateway_plugin
 
 Cloud Audit(Audit)
   Data Source
@@ -1448,6 +1449,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_api_gateway_api_key":                      resourceTencentCloudAPIGatewayAPIKey(),
 			"tencentcloud_api_gateway_api_key_attachment":           resourceTencentCloudAPIGatewayAPIKeyAttachment(),
 			"tencentcloud_api_gateway_service_release":              resourceTencentCloudAPIGatewayServiceRelease(),
+			"tencentcloud_api_gateway_plugin":                       resourceTencentCloudApiGatewayPlugin(),
 			"tencentcloud_sqlserver_basic_instance":                 resourceTencentCloudSqlserverBasicInstance(),
 			"tencentcloud_tcr_instance":                             resourceTencentCloudTcrInstance(),
 			"tencentcloud_tcr_namespace":                            resourceTencentCloudTcrNamespace(),

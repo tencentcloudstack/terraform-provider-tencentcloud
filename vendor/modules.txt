@@ -535,7 +535,7 @@ github.com/tdakkota/asciicheck
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.571
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.466
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
@@ -559,7 +559,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.569
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.571
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
