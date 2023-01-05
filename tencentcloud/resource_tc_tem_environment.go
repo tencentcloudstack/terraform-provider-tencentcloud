@@ -229,6 +229,7 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tem.NewModifyEnvironmentRequest()
 
@@ -260,10 +261,6 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if d.HasChange("tags") {
-		return fmt.Errorf("`tags` do not support change now.")
-	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().ModifyEnvironment(request)
 		if e != nil {
@@ -277,6 +274,17 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 
 	if err != nil {
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("tem", "environment", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudTemEnvironmentRead(d, meta)

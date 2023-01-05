@@ -177,7 +177,7 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::tem:%s:uin/:tem-application/%s", region, applicationId)
+		resourceName := fmt.Sprintf("qcs::tem:%s:uin/:application/%s", region, applicationId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -241,7 +241,7 @@ func resourceTencentCloudTemApplicationRead(d *schema.ResourceData, meta interfa
 	client := meta.(*TencentCloudClient).apiV3Conn
 	tagService := TagService{client: client}
 	region := client.Region
-	tags, err := tagService.DescribeResourceTags(ctx, "tem", "tem-application", region, applicationId)
+	tags, err := tagService.DescribeResourceTags(ctx, "tem", "application", region, applicationId)
 	if err != nil {
 		return err
 	}
@@ -255,6 +255,7 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tem.NewModifyApplicationInfoRequest()
 
@@ -264,10 +265,8 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`application_name` do not support change now.")
 	}
 
-	if d.HasChange("description") {
-		if v, ok := d.GetOk("description"); ok {
-			request.Description = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("description"); ok {
+		request.Description = helper.String(v.(string))
 	}
 
 	if d.HasChange("coding_language") {
@@ -294,10 +293,6 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`instance_id` do not support change now.")
 	}
 
-	if d.HasChange("tags") {
-		return fmt.Errorf("`tags` do not support change now.")
-	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTemClient().ModifyApplicationInfo(request)
 		if e != nil {
@@ -311,6 +306,17 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 
 	if err != nil {
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("tem", "application", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudTemApplicationRead(d, meta)
