@@ -18,13 +18,15 @@ func TestAccTencentCloudDCDBAccountPrivilegesResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccDCDBAccountPrivileges_basic, defaultDcdbInstanceId, "%"),
+				PreventDiskCleanup: true,
+				Config:             fmt.Sprintf(testAccDCDBAccountPrivileges_basic, defaultDcdbInstanceId, "%"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDCDBAccountPrivilegesExists("tencentcloud_dcdb_account_privileges.account_privileges"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account_privileges.account_privileges", "account.#"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_account_privileges.account_privileges", "account.0.user", "tf_test"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_account_privileges.account_privileges", "account.0.host", "%"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account_privileges.account_privileges", "global_privileges"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account_privileges.account_privileges", "table_privileges"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account_privileges.account_privileges", "global_privileges.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account_privileges.account_privileges", "table_privileges.#"),
 				),
 			},
 			{
@@ -71,16 +73,16 @@ resource "tencentcloud_dcdb_account_privileges" "account_privileges" {
 		user = "tf_test"
 		host = "%s"
   }
-  global_privileges = {"SHOW DATABASES","SHOW VIEW"}
+  global_privileges = ["SELECT","INSERT","CREATE"]
   database_privileges {
-		privileges = ["SELECT","INSERT","UPDATE","DELETE","CREATE"]
+		privileges = ["SELECT","INSERT","UPDATE","INDEX","CREATE"]
 		database = "tf_test_db"
   }
 
   table_privileges {
 		database = "tf_test_db"
 		table = "tf_test_table"
-		privileges = ["SELECT","INSERT","UPDATE","DELETE","CREATE"]
+		privileges = ["SELECT","INSERT","UPDATE","DROP","CREATE"]
 
   }
 

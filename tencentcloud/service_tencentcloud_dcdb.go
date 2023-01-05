@@ -658,8 +658,8 @@ func (me *DcdbService) DescribeDcdbAccountPrivilegesById(ctx context.Context, id
 	}()
 
 	idSplit := strings.Split(ids, FILED_SP)
-	if len(idSplit) != 3 {
-		return nil, fmt.Errorf("id is broken,%s", ids)
+	if len(idSplit) != 7 {
+		return nil, fmt.Errorf("[service_tc_dbdb]id is broken,%s", ids)
 	}
 
 	request.InstanceId = helper.String(idSplit[0])
@@ -702,5 +702,83 @@ func (me *DcdbService) DescribeDcdbAccountPrivilegesById(ctx context.Context, id
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	accountPrivileges = response.Response
+	return
+}
+
+func (me *DcdbService) DescribeDcdbDatabases(ctx context.Context, instanceId string) (rets *dcdb.DescribeDatabasesResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDescribeDatabasesRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDatabases(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	rets = response.Response
+	return
+}
+
+func (me *DcdbService) DescribeDcdbDBTables(ctx context.Context, instanceId string, dbName string, tableName string) (rets *dcdb.DescribeDatabaseTableResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDescribeDatabaseTableRequest()
+	request.InstanceId = &instanceId
+	request.DbName = &dbName
+	request.Table = &tableName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDatabaseTable(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	rets = response.Response
+	return
+}
+
+func (me *DcdbService) DescribeDcdbDBObjects(ctx context.Context, instanceId string, dbName string) (rets *dcdb.DescribeDatabaseObjectsResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDescribeDatabaseObjectsRequest()
+	request.InstanceId = &instanceId
+	request.DbName = &dbName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDatabaseObjects(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	rets = response.Response
 	return
 }

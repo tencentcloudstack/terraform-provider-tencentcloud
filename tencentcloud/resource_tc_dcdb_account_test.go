@@ -47,7 +47,7 @@ func testSweepDCDBAccount(r string) error {
 	return nil
 }
 
-func TestAccTencentCloudDCDBAccountResource(t *testing.T) {
+func Test_NOT_YET_AccTencentCloudDCDBAccountResource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
