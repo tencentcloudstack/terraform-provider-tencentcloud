@@ -612,6 +612,12 @@ type CreateEnvironmentRequestParams struct {
 
 	// 标签
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 环境类型：test、pre、prod
+	EnvType *string `json:"EnvType,omitempty" name:"EnvType"`
+
+	// 创建环境的region
+	CreateRegion *string `json:"CreateRegion,omitempty" name:"CreateRegion"`
 }
 
 type CreateEnvironmentRequest struct {
@@ -640,6 +646,12 @@ type CreateEnvironmentRequest struct {
 
 	// 标签
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 环境类型：test、pre、prod
+	EnvType *string `json:"EnvType,omitempty" name:"EnvType"`
+
+	// 创建环境的region
+	CreateRegion *string `json:"CreateRegion,omitempty" name:"CreateRegion"`
 }
 
 func (r *CreateEnvironmentRequest) ToJsonString() string {
@@ -662,6 +674,8 @@ func (r *CreateEnvironmentRequest) FromJsonString(s string) error {
 	delete(f, "SourceChannel")
 	delete(f, "EnableTswTraceService")
 	delete(f, "Tags")
+	delete(f, "EnvType")
+	delete(f, "CreateRegion")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateEnvironmentRequest has unknown keys!", "")
 	}
@@ -714,7 +728,7 @@ type CreateLogConfigRequestParams struct {
 	// 日志主题 ID
 	TopicId *string `json:"TopicId,omitempty" name:"TopicId"`
 
-	// 日志提取模式，minimalist_log 为单行全文；multiline_log 为多行全文；
+	// 日志提取模式，minimalist_log 为单行全文；multiline_log 为多行全文；json_log 为 json格式；fullregex_log 为单行正则；multiline_fullregex_log 为多行正则
 	LogType *string `json:"LogType,omitempty" name:"LogType"`
 
 	// 首行正则表达式，当LogType=multiline_log 时生效
@@ -725,6 +739,9 @@ type CreateLogConfigRequestParams struct {
 
 	// 收集文件名模式，当 InputType=container_file 时生效
 	FilePattern *string `json:"FilePattern,omitempty" name:"FilePattern"`
+
+	// 导出规则
+	ExtractRule *LogConfigExtractRule `json:"ExtractRule,omitempty" name:"ExtractRule"`
 }
 
 type CreateLogConfigRequest struct {
@@ -748,7 +765,7 @@ type CreateLogConfigRequest struct {
 	// 日志主题 ID
 	TopicId *string `json:"TopicId,omitempty" name:"TopicId"`
 
-	// 日志提取模式，minimalist_log 为单行全文；multiline_log 为多行全文；
+	// 日志提取模式，minimalist_log 为单行全文；multiline_log 为多行全文；json_log 为 json格式；fullregex_log 为单行正则；multiline_fullregex_log 为多行正则
 	LogType *string `json:"LogType,omitempty" name:"LogType"`
 
 	// 首行正则表达式，当LogType=multiline_log 时生效
@@ -759,6 +776,9 @@ type CreateLogConfigRequest struct {
 
 	// 收集文件名模式，当 InputType=container_file 时生效
 	FilePattern *string `json:"FilePattern,omitempty" name:"FilePattern"`
+
+	// 导出规则
+	ExtractRule *LogConfigExtractRule `json:"ExtractRule,omitempty" name:"ExtractRule"`
 }
 
 func (r *CreateLogConfigRequest) ToJsonString() string {
@@ -783,6 +803,7 @@ func (r *CreateLogConfigRequest) FromJsonString(s string) error {
 	delete(f, "BeginningRegex")
 	delete(f, "LogPath")
 	delete(f, "FilePattern")
+	delete(f, "ExtractRule")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateLogConfigRequest has unknown keys!", "")
 	}
@@ -2076,6 +2097,9 @@ type DescribeApplicationsRequestParams struct {
 
 	// 查询过滤器
 	Filters []*QueryFilter `json:"Filters,omitempty" name:"Filters"`
+
+	// 排序字段
+	SortInfo *SortType `json:"SortInfo,omitempty" name:"SortInfo"`
 }
 
 type DescribeApplicationsRequest struct {
@@ -2101,6 +2125,9 @@ type DescribeApplicationsRequest struct {
 
 	// 查询过滤器
 	Filters []*QueryFilter `json:"Filters,omitempty" name:"Filters"`
+
+	// 排序字段
+	SortInfo *SortType `json:"SortInfo,omitempty" name:"SortInfo"`
 }
 
 func (r *DescribeApplicationsRequest) ToJsonString() string {
@@ -2122,6 +2149,7 @@ func (r *DescribeApplicationsRequest) FromJsonString(s string) error {
 	delete(f, "ApplicationId")
 	delete(f, "Keyword")
 	delete(f, "Filters")
+	delete(f, "SortInfo")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeApplicationsRequest has unknown keys!", "")
 	}
@@ -2591,6 +2619,12 @@ type DescribeEnvironmentsRequestParams struct {
 
 	// 查询过滤器
 	Filters []*QueryFilter `json:"Filters,omitempty" name:"Filters"`
+
+	// 排序字段
+	SortInfo *SortType `json:"SortInfo,omitempty" name:"SortInfo"`
+
+	// 环境id
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
 }
 
 type DescribeEnvironmentsRequest struct {
@@ -2607,6 +2641,12 @@ type DescribeEnvironmentsRequest struct {
 
 	// 查询过滤器
 	Filters []*QueryFilter `json:"Filters,omitempty" name:"Filters"`
+
+	// 排序字段
+	SortInfo *SortType `json:"SortInfo,omitempty" name:"SortInfo"`
+
+	// 环境id
+	EnvironmentId *string `json:"EnvironmentId,omitempty" name:"EnvironmentId"`
 }
 
 func (r *DescribeEnvironmentsRequest) ToJsonString() string {
@@ -2625,6 +2665,8 @@ func (r *DescribeEnvironmentsRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "SourceChannel")
 	delete(f, "Filters")
+	delete(f, "SortInfo")
+	delete(f, "EnvironmentId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeEnvironmentsRequest has unknown keys!", "")
 	}
@@ -3639,14 +3681,32 @@ type HorizontalAutoscaler struct {
 	// 最大实例数（可以不传）
 	MaxReplicas *int64 `json:"MaxReplicas,omitempty" name:"MaxReplicas"`
 
-	// 指标度量（CPU or MEMORY）
+	// 指标度量
+	// CPU（CPU使用率，%）
+	// MEMORY（内存使用率，%）
+	// CPU_CORE_USED（CPU使用量，core）
+	// MEMORY_SIZE_USED(内存使用量，MiB)
+	// NETWORK_BANDWIDTH_RECEIVE(网络入带宽，MBps)
+	// NETWORK_BANDWIDTH_TRANSMIT(网络出带宽，MBps)
+	// NETWORK_TRAFFIC_RECEIVE(网络入流量，MiB/s)
+	// NETWORK_TRAFFIC_TRANSMIT(网络出流量，MiB/s)
+	// NETWORK_PACKETS_RECEIVE(网络入包量，Count/s)
+	// NETWORK_PACKETS_TRANSMIT(网络出包量，Count/s)
+	// FS_IOPS_WRITE(磁盘写次数，Count/s)
+	// FS_IOPS_READ(磁盘读次数，Count/s)
+	// FS_SIZE_WRITE(磁盘写大小，MiB/s)
+	// FS_SIZE_READ(磁盘读大小，MiB/s)
 	Metrics *string `json:"Metrics,omitempty" name:"Metrics"`
 
-	// 阈值（百分比）
+	// 阈值（整数）
 	Threshold *int64 `json:"Threshold,omitempty" name:"Threshold"`
 
 	// 是否启用
 	Enabled *bool `json:"Enabled,omitempty" name:"Enabled"`
+
+	// 阈值（小数，优先使用）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DoubleThreshold *float64 `json:"DoubleThreshold,omitempty" name:"DoubleThreshold"`
 }
 
 type IngressInfo struct {
@@ -3755,10 +3815,10 @@ type LogConfig struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TopicId *string `json:"TopicId,omitempty" name:"TopicId"`
 
-	// 日志提取模式，minimalist_log 为单行全文；multiline_log 为多行全文；
+	// 日志提取模式，minimalist_log 为单行全文；multiline_log 为多行全文；  fullregex_log 为单行正则； multiline_fullregex_log 为多行正则； json_log 为 json；
 	LogType *string `json:"LogType,omitempty" name:"LogType"`
 
-	// 首行正则表达式，当LogType=multiline_log 时生效
+	// 首行正则表达式，当 LogType 为多行全文、多行正则时生效
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BeginningRegex *string `json:"BeginningRegex,omitempty" name:"BeginningRegex"`
 
@@ -3785,6 +3845,48 @@ type LogConfig struct {
 	// 应用名
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApplicationName *string `json:"ApplicationName,omitempty" name:"ApplicationName"`
+
+	// 导出规则
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExtractRule *LogConfigExtractRule `json:"ExtractRule,omitempty" name:"ExtractRule"`
+}
+
+type LogConfigExtractRule struct {
+	// 首行正则表达式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BeginningRegex *string `json:"BeginningRegex,omitempty" name:"BeginningRegex"`
+
+	// 提取结果
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Keys []*string `json:"Keys,omitempty" name:"Keys"`
+
+	// 过滤键
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FilterKeys []*string `json:"FilterKeys,omitempty" name:"FilterKeys"`
+
+	// 过滤值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FilterRegex []*string `json:"FilterRegex,omitempty" name:"FilterRegex"`
+
+	// 日志正则表达式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LogRegex *string `json:"LogRegex,omitempty" name:"LogRegex"`
+
+	// 时间字段
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeKey *string `json:"TimeKey,omitempty" name:"TimeKey"`
+
+	// 时间格式
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeFormat *string `json:"TimeFormat,omitempty" name:"TimeFormat"`
+
+	// 是否上传解析失败日志
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UnMatchUpload *string `json:"UnMatchUpload,omitempty" name:"UnMatchUpload"`
+
+	// 解析失败日志的键名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UnMatchedKey *string `json:"UnMatchedKey,omitempty" name:"UnMatchedKey"`
 }
 
 type LogConfigListPage struct {
@@ -4241,6 +4343,9 @@ type ModifyEnvironmentRequestParams struct {
 
 	// 来源渠道
 	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 环境类型：test、pre、prod
+	EnvType *string `json:"EnvType,omitempty" name:"EnvType"`
 }
 
 type ModifyEnvironmentRequest struct {
@@ -4263,6 +4368,9 @@ type ModifyEnvironmentRequest struct {
 
 	// 来源渠道
 	SourceChannel *int64 `json:"SourceChannel,omitempty" name:"SourceChannel"`
+
+	// 环境类型：test、pre、prod
+	EnvType *string `json:"EnvType,omitempty" name:"EnvType"`
 }
 
 func (r *ModifyEnvironmentRequest) ToJsonString() string {
@@ -4283,6 +4391,7 @@ func (r *ModifyEnvironmentRequest) FromJsonString(s string) error {
 	delete(f, "Vpc")
 	delete(f, "SubnetIds")
 	delete(f, "SourceChannel")
+	delete(f, "EnvType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyEnvironmentRequest has unknown keys!", "")
 	}
@@ -4509,6 +4618,10 @@ type NamespaceInfo struct {
 	// 标签
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 环境类型：test、pre、prod
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnvType *string `json:"EnvType,omitempty" name:"EnvType"`
 }
 
 type NamespacePage struct {
@@ -5245,6 +5358,14 @@ type ServiceVersionBrief struct {
 	CreateDate *string `json:"CreateDate,omitempty" name:"CreateDate"`
 }
 
+type SortType struct {
+	// 排序字段名称
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// 0：升序，1：倒序
+	Type *int64 `json:"Type,omitempty" name:"Type"`
+}
+
 // Predefined struct for user
 type StopApplicationRequestParams struct {
 	// 服务id
@@ -5496,6 +5617,18 @@ type TemNamespaceInfo struct {
 	// 标签
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 资源是否有权限
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HasAuthority *bool `json:"HasAuthority,omitempty" name:"HasAuthority"`
+
+	// 环境类型: test、pre、prod
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EnvType *string `json:"EnvType,omitempty" name:"EnvType"`
+
+	// 地域码
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RegionId *string `json:"RegionId,omitempty" name:"RegionId"`
 }
 
 type TemService struct {
@@ -5566,6 +5699,10 @@ type TemService struct {
 	// 标签
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 是否有资源权限
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HasAuthority *bool `json:"HasAuthority,omitempty" name:"HasAuthority"`
 }
 
 type TemServiceVersionInfo struct {

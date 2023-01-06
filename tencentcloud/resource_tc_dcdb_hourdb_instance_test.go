@@ -36,7 +36,7 @@ func testSweepDCDBHourdbInstance(r string) error {
 		delId := *v.InstanceId
 		delName := *v.InstanceName
 
-		if strings.HasPrefix(delName, "test_dcdc_") {
+		if strings.HasPrefix(delName, "test_dcdb_") {
 			err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 				err := dcdbService.DeleteDcdbHourdbInstanceById(ctx, delId)
 				if err != nil {
@@ -68,7 +68,7 @@ func TestAccTencentCloudDCDBHourdbInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "subnet_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "security_group_id"),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "instance_name", "test_dcdc_dc_instance"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "instance_name", "test_dcdb_hourdb_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "shard_memory", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "shard_storage", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "shard_node_count", "2"),
@@ -86,7 +86,7 @@ func TestAccTencentCloudDCDBHourdbInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "subnet_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "security_group_id"),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "instance_name", "test_dcdc_dc_instance_CHANGED"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "instance_name", "test_dcdb_hourdb_instance_CHANGED"),
 				),
 			},
 			{
@@ -170,7 +170,7 @@ locals {
 const testAccDcdbHourdbInstance_basic = testAccDcdbHourdb_vpc_config + `
 
 resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
-  instance_name = "test_dcdc_dc_instance"
+  instance_name = "test_dcdb_hourdb_instance"
   zones = ["ap-guangzhou-5"]
   shard_memory = "2"
   shard_storage = "10"
@@ -191,7 +191,7 @@ resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
 const testAccDcdbHourdbInstance_update = testAccDcdbHourdb_vpc_config + `
 
 resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
-  instance_name = "test_dcdc_dc_instance_CHANGED"
+  instance_name = "test_dcdb_hourdb_instance_CHANGED"
   zones = ["ap-guangzhou-5"]
   shard_memory = "2"
   shard_storage = "10"

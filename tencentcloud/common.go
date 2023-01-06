@@ -474,3 +474,14 @@ func Base64ToString(config string) (string, error) {
 	}
 	return string(strConfig), nil
 }
+
+func BuildStateChangeConf(pending, target []string, timeout, delay time.Duration, refresh resource.StateRefreshFunc) *resource.StateChangeConf {
+	return &resource.StateChangeConf{
+		Pending:    pending,
+		Target:     target,
+		Refresh:    refresh,
+		Timeout:    timeout,
+		Delay:      delay,
+		MinTimeout: 3 * time.Second,
+	}
+}

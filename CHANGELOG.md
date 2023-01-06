@@ -1,3 +1,22 @@
+## 1.79.4 (January 5, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_api_gateway_plugin` ([#1496](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1496))
+* **New Resource:** `tencentcloud_api_gateway_plugin_attachment` ([#1498](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1498))
+* **New Resource:** `tencentcloud_ci_guetzli` ([#1489](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1489))
+* **New Resource:** `tencentcloud_ci_original_image_protection` ([#1489](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1489))
+* **New Resource:** `tencentcloud_dcdb_account_privileges` ([#1493](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1493))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdn_domain: support cache_key ([#1475](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1475))
+* resource/tencentcloud_eip: support set `BandwidthPackageId` ([#1499](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1499))
+* resource/tencentcloud_kubernetes_scale_worker: support adding hpc cluster id in worker config para ([#1477](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1477))
+* resource/tencentcloud_tem_application: Support tags field ([#1494](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1494))
+* resource/tencentcloud_tem_application_service: Support service modification ([#1494](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1494))
+* resource/tencentcloud_tem_environment: Support service modification and support tags field ([#1494](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1494))
+
 ## 1.79.3 (December 29, 2022)
 
 FEATURES:

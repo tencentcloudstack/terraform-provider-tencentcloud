@@ -203,8 +203,9 @@ func resourceTencentCloudTemGateway() *schema.Resource {
 						},
 						"clb_id": {
 							Type:        schema.TypeString,
+							Optional:    true,
 							Computed:    true,
-							Description: "related CLB ID.",
+							Description: "related CLB ID, support binding existing clb, does not support modification.",
 						},
 						"create_time": {
 							Type:        schema.TypeString,
@@ -308,6 +309,9 @@ func resourceTencentCloudTemGatewayCreate(d *schema.ResourceData, meta interface
 				}
 				ingressInfo.Rules = append(ingressInfo.Rules, &ingressRule)
 			}
+		}
+		if v, ok := dMap["clb_id"]; ok {
+			ingressInfo.ClbId = helper.String(v.(string))
 		}
 		request.Ingress = &ingressInfo
 	}
