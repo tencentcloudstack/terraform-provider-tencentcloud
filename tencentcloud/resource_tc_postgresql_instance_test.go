@@ -169,7 +169,6 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 }
 
 func TestAccTencentCloudPostgresqlInstanceResource_prepaid(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
