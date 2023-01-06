@@ -766,20 +766,14 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	instanceId := d.Id()
 	d.Partial(true)
 
-	immutableArgs := []string{
+	if err := helper.ImmutableArgsChek(d,
 		"charge_type",
 		"period",
 		"auto_renew_flag",
 		"auto_voucher",
 		"voucher_ids",
-	}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			o, _ := d.GetChange(v)
-			_ = d.Set(v, o)
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
+	); err != nil {
+		return err
 	}
 
 	var outErr, inErr, checkErr error

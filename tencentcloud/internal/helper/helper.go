@@ -202,6 +202,17 @@ func ImportWithDefaultValue(defaultValues map[string]interface{}) schema.StateFu
 	}
 }
 
+func ImmutableArgsChek(d *schema.ResourceData, arguments ...string) error {
+	for _, v := range arguments {
+		if d.HasChange(v) {
+			o, _ := d.GetChange(v)
+			_ = d.Set(v, o)
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+	return nil
+}
+
 func IsEmptyStr(s *string) bool {
 	if s == nil {
 		return true

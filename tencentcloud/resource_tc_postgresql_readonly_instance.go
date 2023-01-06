@@ -120,12 +120,28 @@ func resourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue(POSTGRESQL_PAYTYPE),
 				Description:  "instance billing mode. Valid values: PREPAID (monthly subscription), POSTPAID_BY_HOUR (pay-as-you-go).",
 			},
+			"period": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
+			},
 			"auto_renew_flag": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
-				ForceNew:    true,
-				Description: "Renewal flag. Valid values: 0 (manual renewal), 1 (auto-renewal). Default value: 0.",
+				Description: "Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.",
+			},
+			"auto_voucher": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Whether to use voucher, `1` for enabled.",
+			},
+			"voucher_ids": {
+				Type:         schema.TypeList,
+				Optional:     true,
+				RequiredWith: []string{"auto_voucher"},
+				Description:  "Specify Voucher Ids if `auto_voucher` was `1`, only support using 1 vouchers for now.",
+				Elem:         &schema.Schema{Type: schema.TypeString},
 			},
 			"need_support_ipv6": {
 				Type:        schema.TypeInt,
@@ -193,6 +209,15 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceCreate(d *schema.ResourceData
 	}
 	if v, ok := d.GetOk("auto_renew_flag"); ok {
 		request.AutoRenewFlag = helper.IntInt64(v.(int))
+	}
+	if v, ok := d.Get("period").(int); ok && v > 0 {
+		request.Period = helper.IntUint64(v)
+	}
+	if v, ok := d.Get("auto_voucher").(int); ok && v > 0 {
+		request.AutoVoucher = helper.IntUint64(v)
+	}
+	if v, ok := d.GetOk("voucher_ids"); ok {
+		request.VoucherIds = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = helper.String(v.(string))
@@ -372,6 +397,16 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	instanceId := d.Id()
 	d.Partial(true)
+
+	if err := helper.ImmutableArgsChek(d,
+		"charge_type",
+		"period",
+		"auto_renew_flag",
+		"auto_voucher",
+		"voucher_ids",
+	); err != nil {
+		return err
+	}
 
 	var outErr, inErr, checkErr error
 	// update name
