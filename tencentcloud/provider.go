@@ -750,6 +750,8 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_parameters
 	tencentcloud_dcdb_shards
 	tencentcloud_dcdb_security_groups
+	tencentcloud_dcdb_database_objects
+	tencentcloud_dcdb_database_tables
 
   Resource
 	tencentcloud_dcdb_account
@@ -1208,6 +1210,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcdb_parameters":                          dataSourceTencentCloudDcdbParameters(),
 			"tencentcloud_dcdb_shards":                              dataSourceTencentCloudDcdbShards(),
 			"tencentcloud_dcdb_security_groups":                     dataSourceTencentCloudDcdbSecurityGroups(),
+			"tencentcloud_dcdb_database_objects":                    dataSourceTencentCloudDcdbDatabaseObjects(),
+			"tencentcloud_dcdb_database_tables":                     dataSourceTencentCloudDcdbDatabaseTables(),
 			"tencentcloud_mariadb_db_instances":                     dataSourceTencentCloudMariadbDbInstances(),
 			"tencentcloud_mariadb_accounts":                         dataSourceTencentCloudMariadbAccounts(),
 			"tencentcloud_mariadb_security_groups":                  dataSourceTencentCloudMariadbSecurityGroups(),
