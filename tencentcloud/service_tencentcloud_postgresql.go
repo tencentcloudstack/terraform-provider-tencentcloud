@@ -27,7 +27,7 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 	storage int,
 	username, password, charset string,
 	dbNodeSet []*postgresql.DBNode,
-	needSupportTde int, kmsKeyId, kmsRegion string,
+	needSupportTde int, kmsKeyId, kmsRegion string, autoVoucher int, voucherIds []*string,
 ) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewCreateInstancesRequest()
@@ -79,6 +79,14 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 		request.DBNodeSet = dbNodeSet
 	}
 
+	if autoVoucher > 0 {
+		request.AutoVoucher = helper.IntUint64(autoVoucher)
+	}
+
+	if len(voucherIds) > 0 {
+		request.VoucherIds = voucherIds
+	}
+
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UsePostgresqlClient().CreateInstances(request)
 	if err != nil {
@@ -89,13 +97,68 @@ func (me *PostgresqlService) CreatePostgresqlInstance(
 		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
 	}
 	if len(response.Response.DBInstanceIdSet) == 0 {
-		errRet = errors.New("TencentCloud SDK returns empty postgresql ID")
-		return
+		if len(response.Response.DealNames) == 0 {
+			errRet = errors.New("TencentCloud SDK returns empty postgresql ID and Deals")
+			return
+		}
+		log.Printf("[WARN] No postgresql ID returns, requesting Deal Id")
+		dealId := response.Response.DealNames[0]
+		deals, err := me.DescribeOrders(ctx, []*string{dealId})
+		if err != nil {
+			errRet = err
+			return
+		}
+		if len(deals) > 0 && len(deals[0].DBInstanceIdSet) > 0 {
+			instanceId = *deals[0].DBInstanceIdSet[0]
+		}
 	} else if len(response.Response.DBInstanceIdSet) > 1 {
 		errRet = errors.New("TencentCloud SDK returns more than one postgresql ID")
 		return
+	} else {
+		instanceId = *response.Response.DBInstanceIdSet[0]
 	}
-	instanceId = *response.Response.DBInstanceIdSet[0]
+	return
+}
+
+func (me *PostgresqlService) DescribeOrders(ctx context.Context, dealIds []*string) (deals []*postgresql.PgDeal, errRet error) {
+	logId := getLogId(ctx)
+	request := postgresql.NewDescribeOrdersRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.DealNames = dealIds
+
+	ratelimit.Check(request.GetAction())
+
+	var response *postgresql.DescribeOrdersResponse
+	err := resource.Retry(readRetryTimeout*5, func() *resource.RetryError {
+		res, err := me.client.UsePostgresqlClient().DescribeOrders(request)
+		if err != nil {
+			return retryError(err)
+		}
+		if len(res.Response.Deals) == 0 {
+			return resource.RetryableError(fmt.Errorf("waiting for deal return instance id"))
+		}
+		response = res
+		return nil
+	})
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response != nil {
+		deals = response.Response.Deals
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }
 
