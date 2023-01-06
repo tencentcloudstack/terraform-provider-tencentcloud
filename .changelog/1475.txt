@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cdn_domain: support cache_key
+```
+
+```release-note:deprecation
+resource/tencentcloud_cdn_domain: full_url_cache, use cache_key/full_url_cache instead
+```

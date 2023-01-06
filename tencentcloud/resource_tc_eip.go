@@ -5,7 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_eip" "foo" {
-  name = "awesome_gateway_ip"
+  name                 = "awesome_gateway_ip"
+  bandwidth_package_id = "bwp-jtvzuky6"
+  internet_charge_type = "BANDWIDTH_PACKAGE"
+  type                 = "EIP"
 }
 ```
 
@@ -50,19 +53,17 @@ func resourceTencentCloudEip() *schema.Resource {
 				Description:  "The name of eip.",
 			},
 			"type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      EIP_TYPE_EIP,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(EIP_TYPE),
-				Description:  "The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP`. Default is `EIP`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     EIP_TYPE_EIP,
+				ForceNew:    true,
+				Description: "The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP`. Default is `EIP`.",
 			},
 			"anycast_zone": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(EIP_ANYCAST_ZONE),
-				Description:  "The zone of anycast. Valid value: `ANYCAST_ZONE_GLOBAL` and `ANYCAST_ZONE_OVERSEAS`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The zone of anycast. Valid value: `ANYCAST_ZONE_GLOBAL` and `ANYCAST_ZONE_OVERSEAS`.",
 			},
 			"applicable_for_clb": {
 				Type:        schema.TypeBool,
@@ -71,19 +72,17 @@ func resourceTencentCloudEip() *schema.Resource {
 				Deprecated:  "It has been deprecated from version 1.27.0.",
 			},
 			"internet_service_provider": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(EIP_INTERNET_PROVIDER),
-				Description:  "Internet service provider of eip. Valid value: `BGP`, `CMCC`, `CTCC` and `CUCC`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Internet service provider of eip. Valid value: `BGP`, `CMCC`, `CTCC` and `CUCC`.",
 			},
 			"internet_charge_type": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(CVM_INTERNET_CHARGE_TYPE),
-				Description:  "The charge type of eip. Valid value: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR` and `TRAFFIC_POSTPAID_BY_HOUR`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "The charge type of eip. Valid values: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR`, `BANDWIDTH_PREPAID_BY_MONTH` and `TRAFFIC_POSTPAID_BY_HOUR`.",
 			},
 			"internet_max_bandwidth_out": {
 				Type:        schema.TypeInt,
@@ -95,7 +94,11 @@ func resourceTencentCloudEip() *schema.Resource {
 				Optional:    true,
 				Description: "The tags of eip.",
 			},
-
+			"bandwidth_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "ID of bandwidth package, it will set when `internet_charge_type` is `BANDWIDTH_PACKAGE`.",
+			},
 			// computed
 			"public_ip": {
 				Type:        schema.TypeString,
@@ -146,6 +149,9 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 			}
 			request.Tags = append(request.Tags, &tag)
 		}
+	}
+	if v, ok := d.GetOk("bandwidth_package_id"); ok {
+		request.BandwidthPackageId = helper.String(v.(string))
 	}
 
 	eipId := ""
@@ -247,12 +253,20 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 		return err
 	}
 
+	bgp, err := vpcService.DescribeVpcBandwidthPackageByEip(ctx, eipId)
+	if err != nil {
+		log.Printf("[CRITAL]%s describe eip tags failed: %+v", logId, err)
+		return err
+	}
 	_ = d.Set("name", eip.AddressName)
 	_ = d.Set("type", eip.AddressType)
 	_ = d.Set("public_ip", eip.AddressIp)
 	_ = d.Set("status", eip.AddressStatus)
 	_ = d.Set("internet_charge_type", eip.InternetChargeType)
 	_ = d.Set("tags", tags)
+	if bgp != nil {
+		_ = d.Set("bandwidth_package_id", bgp.BandwidthPackageId)
+	}
 	return nil
 }
 
@@ -270,6 +284,15 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 	eipId := d.Id()
 
 	d.Partial(true)
+
+	unsupportedUpdateFields := []string{
+		"bandwidth_package_id",
+	}
+	for _, field := range unsupportedUpdateFields {
+		if d.HasChange(field) {
+			return fmt.Errorf("tencentcloud_eip update on %s is not support yet", field)
+		}
+	}
 
 	if d.HasChange("name") {
 		name := d.Get("name").(string)

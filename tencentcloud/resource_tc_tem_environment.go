@@ -9,6 +9,9 @@ resource "tencentcloud_tem_environment" "environment" {
   description      = "demo for test"
   vpc              = "vpc-2hfyray3"
   subnet_ids       = ["subnet-rdkj0agk", "subnet-r1c4pn5m", "subnet-02hcj95c"]
+  tags = {
+    "created" = "terraform"
+  }
 }
 
 ```
@@ -68,6 +71,11 @@ func resourceTencentCloudTemEnvironment() *schema.Resource {
 				Required:    true,
 				Description: "subnet IDs.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "environment tag list.",
+			},
 		},
 	}
 }
@@ -100,6 +108,16 @@ func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta inter
 		for i := range subnetIdsSet {
 			subnetIds := subnetIdsSet[i].(string)
 			request.SubnetIds = append(request.SubnetIds, &subnetIds)
+		}
+	}
+
+	if v, ok := d.GetOk("tags"); ok {
+		for key, value := range v.(map[string]interface{}) {
+			tag := tem.Tag{
+				TagKey:   helper.String(key),
+				TagValue: helper.String(value.(string)),
+			}
+			request.Tags = append(request.Tags, &tag)
 		}
 	}
 
@@ -143,6 +161,16 @@ func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta inter
 	}
 
 	d.SetId(environmentId)
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::tem:%s:uin/:tem-environment/%s", region, environmentId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudTemEnvironmentRead(d, meta)
 }
 
@@ -184,6 +212,15 @@ func resourceTencentCloudTemEnvironmentRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("subnet_ids", environment.SubnetIds)
 	}
 
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "tem", "tem-environment", region, environmentId)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -192,6 +229,7 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tem.NewModifyEnvironmentRequest()
 
@@ -236,6 +274,17 @@ func resourceTencentCloudTemEnvironmentUpdate(d *schema.ResourceData, meta inter
 
 	if err != nil {
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("tem", "environment", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudTemEnvironmentRead(d, meta)

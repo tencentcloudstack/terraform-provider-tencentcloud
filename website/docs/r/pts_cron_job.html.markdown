@@ -19,8 +19,8 @@ resource "tencentcloud_pts_cron_job" "cron_job" {
   project_id      = "project-7qkzxhea"
   scenario_id     = "scenario-c22lqb1w"
   scenario_name   = "pts-js(2022-11-10 21:53:53)"
-  frequency_type  = 1
-  cron_expression = "4 22 10 11 ? 2022"
+  frequency_type  = 2
+  cron_expression = "* 1 * * *"
   job_owner       = "userName"
   # end_time = ""
   notice_id = "notice-vp6i38jt"
@@ -32,7 +32,7 @@ resource "tencentcloud_pts_cron_job" "cron_job" {
 
 The following arguments are supported:
 
-* `cron_expression` - (Required, String) Cron expression.
+* `cron_expression` - (Required, String) Cron expression, When setting cron_expression at that time, frequency_type must be greater than 1.
 * `frequency_type` - (Required, Int) Execution frequency type, `1`: execute only once; `2`: daily granularity; `3`: weekly granularity; `4`: advanced.
 * `job_owner` - (Required, String) Job Owner.
 * `name` - (Required, String) Cron Job Name.
