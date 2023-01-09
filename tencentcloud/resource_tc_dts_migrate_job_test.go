@@ -34,9 +34,10 @@ func TestAccTencentCloudDtsMigrateJobResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_dts_migrate_job.job",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_dts_migrate_job.job",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"auto_retry_time_range_minutes"}, // dts don't support to query auto_retry_time_range_minutes in Read
 			},
 		},
 	})

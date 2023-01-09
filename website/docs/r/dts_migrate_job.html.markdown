@@ -14,6 +14,53 @@ Provides a resource to create a dts migrate_job
 ## Example Usage
 
 ```hcl
+resource "tencentcloud_cynosdb_cluster" "foo" {
+  available_zone               = var.availability_zone
+  vpc_id                       = local.vpc_id
+  subnet_id                    = local.subnet_id
+  db_type                      = "MYSQL"
+  db_version                   = "5.7"
+  storage_limit                = 1000
+  cluster_name                 = "tf-cynosdb-mysql"
+  password                     = "cynos@123"
+  instance_maintain_duration   = 3600
+  instance_maintain_start_time = 10800
+  instance_maintain_weekdays = [
+    "Fri",
+    "Mon",
+    "Sat",
+    "Sun",
+    "Thu",
+    "Wed",
+    "Tue",
+  ]
+
+  instance_cpu_core    = 1
+  instance_memory_size = 2
+  param_items {
+    name          = "character_set_server"
+    current_value = "utf8"
+  }
+  param_items {
+    name          = "time_zone"
+    current_value = "+09:00"
+  }
+  param_items {
+    name          = "lower_case_table_names"
+    current_value = "1"
+  }
+
+  force_delete = true
+
+  rw_group_sg = [
+    local.sg_id
+  ]
+  ro_group_sg = [
+    local.sg_id
+  ]
+  prarm_template_id = var.my_param_template
+}
+
 resource "tencentcloud_dts_migrate_service" "service" {
   src_database_type = "mysql"
   dst_database_type = "cynosdbmysql"
@@ -37,10 +84,9 @@ resource "tencentcloud_dts_migrate_job" "job" {
         db_name    = "tf_ci_test"
         db_mode    = "partial"
         table_mode = "partial"
-        // view_mode = "partial"
         tables {
           table_name      = "test"
-          new_table_name  = "test_xxx"
+          new_table_name  = "test_%s"
           table_edit_mode = "rename"
         }
       }
@@ -52,9 +98,9 @@ resource "tencentcloud_dts_migrate_job" "job" {
     database_type = "mysql"
     node_type     = "simple"
     info {
-      user        = "user"
-      password    = "password"
-      instance_id = "cdb-xxx"
+      user        = "user_name"
+      password    = "your_pw"
+      instance_id = "cdb-fitq5t9h"
     }
 
   }
@@ -64,12 +110,11 @@ resource "tencentcloud_dts_migrate_job" "job" {
     database_type = "cynosdbmysql"
     node_type     = "simple"
     info {
-      user        = "user"
-      password    = "password"
-      instance_id = "cynosdbmysql-xxx"
+      user        = "user_name"
+      password    = "your_pw"
+      instance_id = tencentcloud_cynosdb_cluster.foo.id
     }
   }
-  job_name                      = "tf_migrate_job_config_test"
   auto_retry_time_range_minutes = 0
 }
 
@@ -82,16 +127,15 @@ resource "tencentcloud_dts_migrate_job_start_operation" "start" {
 
 The following arguments are supported:
 
-* `dst_info` - (Required, List, ForceNew) DstInfo.
-* `migrate_option` - (Required, List, ForceNew) Migration job configuration options, used to describe how the task performs migration.
-* `run_mode` - (Required, String, ForceNew) Run Mode. eg:immediate,timed.
-* `service_id` - (Required, String, ForceNew) Migrate service Id from `tencentcloud_dts_migrate_service`.
-* `src_info` - (Required, List, ForceNew) SrcInfo.
-* `auto_retry_time_range_minutes` - (Optional, Int, ForceNew) AutoRetryTimeRangeMinutes.
-* `complete_mode` - (Optional, String, ForceNew) The way to complete the task, only support the old version of MySQL migration task, the valid values: waitForSync,immediately.
-* `expect_run_time` - (Optional, String, ForceNew) ExpectRunTime.
-* `job_name` - (Optional, String, ForceNew) JobName.
-* `resume_option` - (Optional, String, ForceNew) The mode of the recovery task, the valid values: `clearData`: clears the target instance data. `overwrite`: executes the task in an overwriting way. `normal`: the normal process, no additional action is performed.
+* `dst_info` - (Required, List) DstInfo.
+* `migrate_option` - (Required, List) Migration job configuration options, used to describe how the task performs migration.
+* `run_mode` - (Required, String) Run Mode. eg:immediate,timed.
+* `service_id` - (Required, String) Migrate service Id from `tencentcloud_dts_migrate_service`.
+* `src_info` - (Required, List) SrcInfo.
+* `auto_retry_time_range_minutes` - (Optional, Int) AutoRetryTimeRangeMinutes.
+* `complete_mode` - (Optional, String) The way to complete the task, only support the old version of MySQL migration task, the valid values: waitForSync,immediately.
+* `expect_run_time` - (Optional, String) ExpectRunTime.
+* `resume_option` - (Optional, String) The mode of the recovery task, the valid values: `clearData`: clears the target instance data. `overwrite`: executes the task in an overwriting way. `normal`: the normal process, no additional action is performed.
 
 The `consistency` object supports the following:
 
