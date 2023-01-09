@@ -21,9 +21,17 @@ func TestAccTencentCloudDtsMigrateJobResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckDtsMigrateJobDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreventDiskCleanup: true,
-				Config:             fmt.Sprintf(testAccDtsMigrateJob_basic, curSec),
-				Check:              resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.job", "id")),
+				// PreventDiskCleanup: true,
+				Config: fmt.Sprintf(testAccDtsMigrateJob_basic, curSec),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDtsMigrateServiceExists("tencentcloud_dts_migrate_job.job"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.job", "service_id"),
+					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.job", "run_mode", "immediate"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.job", "migrate_option.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.job", "src_info.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.job", "dst_info.#"),
+					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.job", "auto_retry_time_range_minutes", "0"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_dts_migrate_job.job",
@@ -85,15 +93,43 @@ func testAccCheckDtsMigrateJobExists(re string) resource.TestCheckFunc {
 	}
 }
 
-const testAccDtsCynosdb_mysql = `
+const testAccDtsMigrateJob_vpc_config = `
+data "tencentcloud_security_groups" "internal" {
+	name = "default"
+}
+
+data "tencentcloud_vpc_instances" "vpc" {
+	name ="Default-VPC"
+}
+	
+data "tencentcloud_vpc_subnets" "subnet" {
+	vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
+}
+	
+locals {
+	vpc_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
+	subnet_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
+	sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+}
+
+variable "availability_zone" {
+	default = "ap-guangzhou-4"
+  }
+  
+variable "my_param_template" {
+	  default = "15765"
+  }
+`
+
+const testAccDtsMigrateJob_cynosdb_mysql = testAccDtsMigrateJob_vpc_config + `
 resource "tencentcloud_cynosdb_cluster" "foo" {
 	available_zone               = var.availability_zone
-	vpc_id                       = var.my_vpc
-	subnet_id                    = var.my_subnet
+	vpc_id                       = local.vpc_id
+	subnet_id                    = local.subnet_id
 	db_type                      = "MYSQL"
 	db_version                   = "5.7"
 	storage_limit                = 1000
-	cluster_name                 = "tf-cynosdb"
+	cluster_name                 = "tf-cynosdb-mysql"
 	password                     = "cynos@123"
 	instance_maintain_duration   = 3600
 	instance_maintain_start_time = 10800
@@ -117,6 +153,10 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
 	  name = "time_zone"
 	  current_value = "+09:00"
 	}
+	param_items {
+		name = "lower_case_table_names"
+		current_value = "1"
+	}
   
 	force_delete = true
   
@@ -130,7 +170,7 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   }
 `
 
-const testAccDtsMigrateJob_basic = testAccDtsCynosdb_mysql + `
+const testAccDtsMigrateJob_basic = testAccDtsMigrateJob_cynosdb_mysql + `
 
 resource "tencentcloud_dts_migrate_service" "service" {
 	src_database_type = "mysql"
@@ -182,12 +222,11 @@ resource "tencentcloud_dts_migrate_job" "job" {
 			database_type = "cynosdbmysql"
 			node_type = "simple"
 			info {
-				user = "keep_dts"
-				password = "Letmein123"
-				instance_id = "cynosdbmysql-quqtcs13"
+				user = "root"
+				password = "cynos@123"
+				instance_id = tencentcloud_cynosdb_cluster.foo.id
 			}
 	}
-	job_name = "tf_migrate_job_config_test"
 	auto_retry_time_range_minutes = 0
 }
 

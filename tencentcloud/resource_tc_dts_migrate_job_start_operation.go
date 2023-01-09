@@ -71,7 +71,15 @@ func resourceTencentCloudDtsMigrateJobStartOperationCreate(d *schema.ResourceDat
 
 	result := *object.CheckFlag
 	if result == "checkNotPass" {
-		return fmt.Errorf("The DTS migration check not passed. Please re-check the job. check_result:[%s]", result)
+		var errorLog []string
+		for _, step := range object.StepInfo {
+			if *step.StepStatus == "failed" {
+				for i, item := range step.DetailCheckItems {
+					errorLog = append(errorLog, fmt.Sprintf("[error %v] %s\n", i, *item.ErrorLog[0]))
+				}
+			}
+		}
+		return fmt.Errorf("The DTS migration check not passed. Please re-check the job. check_result:[%s], reason:[%s]", result, errorLog)
 	}
 
 	startMigrateJobRequest := dts.NewStartMigrateJobRequest()
