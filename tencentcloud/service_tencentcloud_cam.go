@@ -12,6 +12,7 @@ import (
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -1302,6 +1303,55 @@ func (me *CamService) DescribeCamServiceLinkedRoleDeleteStatus(ctx context.Conte
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CamService) DescribeCamUserSamlConfigById(ctx context.Context) (userSamlConfig *cam.DescribeUserSAMLConfigResponse, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewDescribeUserSAMLConfigRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().DescribeUserSAMLConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	userSamlConfig = response
+	return
+}
+
+func (me *CamService) DeleteCamUserSamlConfigById(ctx context.Context) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewUpdateUserSAMLConfigRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Operate = helper.String("disable")
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().UpdateUserSAMLConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

@@ -1,0 +1,43 @@
+---
+subcategory: "Cloud Access Management(CAM)"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_cam_user_saml_config"
+sidebar_current: "docs-tencentcloud-resource-cam_user_saml_config"
+description: |-
+  Provides a resource to create a cam user_saml_config
+---
+
+# tencentcloud_cam_user_saml_config
+
+Provides a resource to create a cam user_saml_config
+
+## Example Usage
+
+```hcl
+resource "tencentcloud_cam_user_saml_config" "user_saml_config" {
+  saml_metadata_document = ""
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `saml_metadata_document` - (Required, String) SAML metadata document, xml format.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+* `status` - Status: `0`: not set, `11`: enabled, `2`: disabled.
+
+
+## Import
+
+cam user_saml_config can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cam_user_saml_config.user_saml_config user_id
+```
+
