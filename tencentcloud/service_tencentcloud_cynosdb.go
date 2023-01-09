@@ -950,3 +950,66 @@ func (me *CynosdbService) DescribeClusterParamsByFilter(ctx context.Context, clu
 	}
 	return
 }
+
+func (me *CynosdbService) DescribeCynosdbParamTemplatesByFilter(ctx context.Context, paramMap map[string]interface{}) (items []*cynosdb.ParamTemplateListInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewDescribeParamTemplatesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	if v, ok := paramMap["engine_versions"]; ok {
+		request.EngineVersions = v.([]*string)
+	}
+	if v, ok := paramMap["template_names"]; ok {
+		request.TemplateNames = v.([]*string)
+	}
+	if v, ok := paramMap["template_ids"]; ok {
+		request.TemplateIds = v.([]*int64)
+	}
+	if v, ok := paramMap["db_modes"]; ok {
+		request.DbModes = v.([]*string)
+	}
+	if v, ok := paramMap["products"]; ok {
+		request.Products = v.([]*string)
+	}
+	if v, ok := paramMap["template_types"]; ok {
+		request.TemplateTypes = v.([]*string)
+	}
+	if v, ok := paramMap["engine_types"]; ok {
+		request.EngineTypes = v.([]*string)
+	}
+	if v, ok := paramMap["offset"]; ok {
+		request.Offset = v.(*int64)
+	}
+	if v, ok := paramMap["limit"]; ok {
+		request.Limit = v.(*int64)
+	}
+	if v, ok := paramMap["engine_types"]; ok {
+		request.EngineTypes = v.([]*string)
+	}
+	if v, ok := paramMap["order_by"]; ok {
+		request.OrderBy = v.(*string)
+	}
+	if v, ok := paramMap["order_direction"]; ok {
+		request.OrderDirection = v.(*string)
+	}
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, e := me.client.UseCynosdbClient().DescribeParamTemplates(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+		items = response.Response.Items
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
