@@ -26,7 +26,7 @@ resource "tencentcloud_ci_media_concat_template" "media_concat_template" {
 			codec = "H.264"
 			width = "1280"
 			height = ""
-      bitrate = "1000"
+      		bitrate = "1000"
 			fps = "25"
 			crf = ""
 			remove = ""
