@@ -16,7 +16,7 @@ Import
 cynosdb backup can be imported using the id, e.g. cynosdbmysql-bws8h88b#297272
 
 ```
-terraform import tencentcloud_cynosdb_backup.backup {cluster_id}#${backup_id}
+terraform import tencentcloud_cynosdb_backup.backup {cluster_id}#{backup_id}
 ```
 */
 package tencentcloud
