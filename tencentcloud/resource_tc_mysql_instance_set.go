@@ -60,7 +60,6 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-
 func resourceTencentCloudMysqlInstanceSet() *schema.Resource {
 	specialInfo := map[string]*schema.Schema{
 		"parameters": {
@@ -172,7 +171,6 @@ func resourceTencentCloudMysqlInstanceSet() *schema.Resource {
 		},
 	}
 }
-
 
 func resourceTencentCloudMysqlInstanceSetCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_instance.create")()
