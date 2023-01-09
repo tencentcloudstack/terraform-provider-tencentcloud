@@ -919,3 +919,34 @@ func (me *CynosdbService) DescribeCynosdbAccountsByFilter(ctx context.Context, c
 	}
 	return
 }
+
+func (me *CynosdbService) DescribeClusterParamsByFilter(ctx context.Context, clusterId string, paramMap map[string]interface{}) (items []*cynosdb.ParamInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewDescribeClusterParamsRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = helper.String(clusterId)
+	if v, ok := paramMap["param_name"]; ok {
+		request.ParamName = helper.String(v.(string))
+	}
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		response, e := me.client.UseCynosdbClient().DescribeClusterParams(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+		items = response.Response.Items
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
