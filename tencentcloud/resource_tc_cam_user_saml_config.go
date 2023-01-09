@@ -5,7 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_user_saml_config" "user_saml_config" {
-  saml_metadata_document = ""
+  saml_metadata_document = "./metadataDocument.xml"
+  # saml_metadata_document  = <<-EOT
+  # <?xml version="1.0" encoding="utf-8"?></EntityDescriptor>
+  # EOT
 }
 ```
 
@@ -23,6 +26,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -43,7 +47,18 @@ func resourceTencentCloudCamUserSamlConfig() *schema.Resource {
 			"saml_metadata_document": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "SAML metadata document, xml format.",
+				Description: "SAML metadata document, xml format, support string content or file path.",
+				StateFunc: func(v interface{}) string {
+					saml := v.(string)
+					if saml != "" {
+						b := strings.HasSuffix(saml, ".xml")
+						if b {
+							metadata, _ := ReadFromFile(saml)
+							return string(metadata)
+						}
+					}
+					return saml
+				},
 			},
 
 			"status": {
@@ -66,7 +81,16 @@ func resourceTencentCloudCamUserSamlConfigCreate(d *schema.ResourceData, meta in
 		response = cam.NewCreateUserSAMLConfigResponse()
 	)
 	if v, ok := d.GetOk("saml_metadata_document"); ok {
-		request.SAMLMetadataDocument = helper.String(StringToBase64(v.(string)))
+		saml := v.(string)
+		b := strings.HasSuffix(saml, ".xml")
+		if b {
+			metadata, err := ReadFromFile(v.(string))
+			if err != nil {
+				return err
+			}
+			saml = string(metadata)
+		}
+		request.SAMLMetadataDocument = helper.String(StringToBase64(saml))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -135,7 +159,16 @@ func resourceTencentCloudCamUserSamlConfigUpdate(d *schema.ResourceData, meta in
 
 	if d.HasChange("saml_metadata_document") {
 		if v, ok := d.GetOk("saml_metadata_document"); ok {
-			request.SAMLMetadataDocument = helper.String(StringToBase64(v.(string)))
+			saml := v.(string)
+			b := strings.HasSuffix(saml, ".xml")
+			if b {
+				metadata, err := ReadFromFile(v.(string))
+				if err != nil {
+					return err
+				}
+				saml = string(metadata)
+			}
+			request.SAMLMetadataDocument = helper.String(StringToBase64(saml))
 		}
 	}
 

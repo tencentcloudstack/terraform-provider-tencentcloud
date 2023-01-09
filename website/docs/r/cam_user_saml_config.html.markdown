@@ -15,7 +15,10 @@ Provides a resource to create a cam user_saml_config
 
 ```hcl
 resource "tencentcloud_cam_user_saml_config" "user_saml_config" {
-  saml_metadata_document = ""
+  saml_metadata_document = "./metadataDocument.xml"
+  # saml_metadata_document  = <<-EOT
+  # <?xml version="1.0" encoding="utf-8"?></EntityDescriptor>
+  # EOT
 }
 ```
 
@@ -23,7 +26,7 @@ resource "tencentcloud_cam_user_saml_config" "user_saml_config" {
 
 The following arguments are supported:
 
-* `saml_metadata_document` - (Required, String) SAML metadata document, xml format.
+* `saml_metadata_document` - (Required, String) SAML metadata document, xml format, support string content or file path.
 
 ## Attributes Reference
 

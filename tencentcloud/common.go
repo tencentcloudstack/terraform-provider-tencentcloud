@@ -17,6 +17,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -283,6 +284,21 @@ func writeToFile(filePath string, data interface{}) error {
 	}
 
 	return ioutil.WriteFile(filePath, jsonStr, 0422)
+}
+
+// ReadFromFile return file content
+func ReadFromFile(file string) ([]byte, error) {
+	fileName, err := homedir.Expand(file)
+	if err != nil {
+		log.Printf("[CRITAL] wrong file path, error: %v", err)
+		return nil, err
+	}
+	content, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		log.Printf("[CRITAL] file read failed, error: %v", err)
+		return nil, err
+	}
+	return content, nil
 }
 
 func CheckNil(object interface{}, fields map[string]string) (nilFields []string) {
