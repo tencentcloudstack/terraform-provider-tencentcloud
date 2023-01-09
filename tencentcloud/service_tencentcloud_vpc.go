@@ -5374,6 +5374,9 @@ func (me *VpcService) DescribeVpcBandwidthPackageAttachment(ctx context.Context,
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if len(response.Response.ResourceSet) < 1 {
+		return
+	}
 	bandwidthPackageResources = response.Response.ResourceSet[0]
 
 	return
