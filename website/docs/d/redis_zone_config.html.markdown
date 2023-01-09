@@ -38,6 +38,7 @@ In addition to all arguments above, the following attributes are exported:
   * `redis_shard_nums` - The support numbers of instance shard.
   * `shard_memories` - The memory volume list of an available instance shard(in MB).
   * `type_id` - Instance type. Which redis type supports in this zone.
+  * `type_name` - Instance type name.
   * `type` - (**Deprecated**) It has been deprecated from version 1.33.1. Please use 'type_id' instead. Instance type. Available values: `master_slave_redis`, `master_slave_ckv`, `cluster_ckv`, `cluster_redis` and `standalone_redis`.
   * `version` - Version description of an available instance. Possible values: `Redis 3.2`, `Redis 4.0`.
   * `zone` - ID of available zone.

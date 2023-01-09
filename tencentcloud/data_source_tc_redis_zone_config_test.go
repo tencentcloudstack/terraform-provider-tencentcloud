@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccDataSourceRedisZoneConfig_basic(t *testing.T) {
+func TestAccRedisZoneConfigDataSource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -19,7 +19,7 @@ func TestAccDataSourceRedisZoneConfig_basic(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_redis_zone_config.test"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.0.zone"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.0.type"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.0.type_name"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.0.version"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.0.mem_sizes.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.test", "list.0.shard_memories.#"),
@@ -32,6 +32,7 @@ func TestAccDataSourceRedisZoneConfig_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.zone"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.type_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.type_name"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.version"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.mem_sizes.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_zone_config.testWithRegion", "list.0.shard_memories.#"),

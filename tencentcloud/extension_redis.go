@@ -12,6 +12,7 @@ const (
 	REDIS_VERSION_CLUSTER_REDIS5      = 9
 )
 
+// Deprecated: PLEASE USE STANDARD NAME WHERE REQUEST FROM CLOUD API
 var REDIS_NAMES = map[int64]string{
 	REDIS_VERSION_MASTER_SLAVE_REDIS:  "master_slave_redis",
 	REDIS_VERSION_MASTER_SLAVE_CKV:    "master_slave_ckv",

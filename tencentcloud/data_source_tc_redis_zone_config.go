@@ -59,6 +59,11 @@ func dataSourceTencentRedisZoneConfig() *schema.Resource {
 							Computed:    true,
 							Description: "Instance type. Which redis type supports in this zone.",
 						},
+						"type_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Instance type name.",
+						},
 						"type": {
 							Type:        schema.TypeString,
 							Computed:    true,
@@ -152,6 +157,7 @@ func dataSourceTencentRedisZoneConfigRead(d *schema.ResourceData, meta interface
 			zoneConfigures["zone"] = zoneName
 			zoneConfigures["version"] = *products.Version
 			zoneConfigures["type_id"] = products.Type
+			zoneConfigures["type_name"] = products.TypeName
 			//this products sale out.
 			if *products.Saleout {
 				continue
