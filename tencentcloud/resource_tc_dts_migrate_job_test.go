@@ -24,7 +24,7 @@ func TestAccTencentCloudDtsMigrateJobResource_basic(t *testing.T) {
 				// PreventDiskCleanup: true,
 				Config: fmt.Sprintf(testAccDtsMigrateJob_basic, curSec),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDtsMigrateServiceExists("tencentcloud_dts_migrate_job.job"),
+					testAccCheckDtsMigrateJobExists("tencentcloud_dts_migrate_job.job"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.job", "service_id"),
 					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job.job", "run_mode", "immediate"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.job", "migrate_option.#"),

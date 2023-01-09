@@ -11,5 +11,5 @@ tencentcloud_dts_migrate_job
 ```
 
 ```release-note:new-resource
-tencentcloud_dts_migrate_check_config
+tencentcloud_dts_migrate_job_start_operation
 ```

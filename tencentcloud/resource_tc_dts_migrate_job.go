@@ -1082,7 +1082,6 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 			consistencyMap := make(map[string]interface{}, 0)
 
 			mode := migrateJob.MigrateOption.Consistency.Mode
-			log.Printf("[DEBUG]%s read  migrateJob.MigrateOption.Consistency.Mode:[%v]", logId, *mode)
 			if mode != nil && *mode != "" {
 				consistencyMap["mode"] = migrateJob.MigrateOption.Consistency.Mode
 				migrateOptionMap["consistency"] = []interface{}{consistencyMap}
@@ -1838,125 +1837,125 @@ func handleCheckMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCl
 	return nil
 }
 
-func handleResumeMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
-	resumeMigrateJobRequest := dts.NewResumeMigrateJobRequest()
-	resumeMigrateJobRequest.JobId = helper.String(jobId)
-	service := DtsService{client: tcClient}
+// func handleResumeMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
+// 	resumeMigrateJobRequest := dts.NewResumeMigrateJobRequest()
+// 	resumeMigrateJobRequest.JobId = helper.String(jobId)
+// 	service := DtsService{client: tcClient}
 
-	if d.HasChange("resume_option") {
-		if v, ok := d.GetOk("resume_option"); ok {
-			resumeMigrateJobRequest.ResumeOption = helper.String(v.(string))
-		}
-	}
+// 	if d.HasChange("resume_option") {
+// 		if v, ok := d.GetOk("resume_option"); ok {
+// 			resumeMigrateJobRequest.ResumeOption = helper.String(v.(string))
+// 		}
+// 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := tcClient.UseDtsClient().ResumeMigrateJob(resumeMigrateJobRequest)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, resumeMigrateJobRequest.GetAction(), resumeMigrateJobRequest.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s resume dts migrateJob failed, reason:%+v", logId, err)
-		return err
-	}
+// 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+// 		result, e := tcClient.UseDtsClient().ResumeMigrateJob(resumeMigrateJobRequest)
+// 		if e != nil {
+// 			return retryError(e)
+// 		} else {
+// 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, resumeMigrateJobRequest.GetAction(), resumeMigrateJobRequest.ToJsonString(), result.ToJsonString())
+// 		}
+// 		return nil
+// 	})
+// 	if err != nil {
+// 		log.Printf("[CRITAL]%s resume dts migrateJob failed, reason:%+v", logId, err)
+// 		return err
+// 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"readyComplete", "success", "failed"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
-	if _, e := conf.WaitForState(); e != nil {
-		return e
-	}
+// 	conf := BuildStateChangeConf([]string{}, []string{"readyComplete", "success", "failed"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
+// 	if _, e := conf.WaitForState(); e != nil {
+// 		return e
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
-func handleCompleteMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
-	completeMigrateJobRequest := dts.NewCompleteMigrateJobRequest()
-	completeMigrateJobRequest.JobId = helper.String(jobId)
-	service := DtsService{client: tcClient}
+// func handleCompleteMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
+// 	completeMigrateJobRequest := dts.NewCompleteMigrateJobRequest()
+// 	completeMigrateJobRequest.JobId = helper.String(jobId)
+// 	service := DtsService{client: tcClient}
 
-	if d.HasChange("complete_mode") {
-		if v, ok := d.GetOk("complete_mode"); ok {
-			completeMigrateJobRequest.CompleteMode = helper.String(v.(string))
-		}
-	}
+// 	if d.HasChange("complete_mode") {
+// 		if v, ok := d.GetOk("complete_mode"); ok {
+// 			completeMigrateJobRequest.CompleteMode = helper.String(v.(string))
+// 		}
+// 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := tcClient.UseDtsClient().CompleteMigrateJob(completeMigrateJobRequest)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, completeMigrateJobRequest.GetAction(), completeMigrateJobRequest.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s complete dts migrateJob failed, reason:%+v", logId, err)
-		return err
-	}
+// 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+// 		result, e := tcClient.UseDtsClient().CompleteMigrateJob(completeMigrateJobRequest)
+// 		if e != nil {
+// 			return retryError(e)
+// 		} else {
+// 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, completeMigrateJobRequest.GetAction(), completeMigrateJobRequest.ToJsonString(), result.ToJsonString())
+// 		}
+// 		return nil
+// 	})
+// 	if err != nil {
+// 		log.Printf("[CRITAL]%s complete dts migrateJob failed, reason:%+v", logId, err)
+// 		return err
+// 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"success", "error", "failed"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
-	if _, e := conf.WaitForState(); e != nil {
-		return e
-	}
+// 	conf := BuildStateChangeConf([]string{}, []string{"success", "error", "failed"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
+// 	if _, e := conf.WaitForState(); e != nil {
+// 		return e
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
-func handleCompareMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
-	startCompareRequest := dts.NewStartCompareRequest()
-	startCompareRequest.JobId = helper.String(jobId)
+// func handleCompareMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
+// 	startCompareRequest := dts.NewStartCompareRequest()
+// 	startCompareRequest.JobId = helper.String(jobId)
 
-	if d.HasChange("compare_task_id") {
-		if v, ok := d.GetOk("compare_task_id"); ok {
-			startCompareRequest.CompareTaskId = helper.String(v.(string))
-		}
-	}
+// 	if d.HasChange("compare_task_id") {
+// 		if v, ok := d.GetOk("compare_task_id"); ok {
+// 			startCompareRequest.CompareTaskId = helper.String(v.(string))
+// 		}
+// 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := tcClient.UseDtsClient().StartCompare(startCompareRequest)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, startCompareRequest.GetAction(), startCompareRequest.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s compare dts migrate job failed, reason:%+v", logId, err)
-		return err
-	}
+// 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+// 		result, e := tcClient.UseDtsClient().StartCompare(startCompareRequest)
+// 		if e != nil {
+// 			return retryError(e)
+// 		} else {
+// 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, startCompareRequest.GetAction(), startCompareRequest.ToJsonString(), result.ToJsonString())
+// 		}
+// 		return nil
+// 	})
+// 	if err != nil {
+// 		log.Printf("[CRITAL]%s compare dts migrate job failed, reason:%+v", logId, err)
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
-func handleStopMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
-	stopMigrateJobRequest := dts.NewStopMigrateJobRequest()
-	stopMigrateJobRequest.JobId = helper.String(jobId)
-	service := DtsService{client: tcClient}
+// func handleStopMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
+// 	stopMigrateJobRequest := dts.NewStopMigrateJobRequest()
+// 	stopMigrateJobRequest.JobId = helper.String(jobId)
+// 	service := DtsService{client: tcClient}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := tcClient.UseDtsClient().StopMigrateJob(stopMigrateJobRequest)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, stopMigrateJobRequest.GetAction(), stopMigrateJobRequest.ToJsonString(), result.ToJsonString())
-		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s stop dts migrateJob failed, reason:%+v", logId, err)
-		return err
-	}
+// 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+// 		result, e := tcClient.UseDtsClient().StopMigrateJob(stopMigrateJobRequest)
+// 		if e != nil {
+// 			return retryError(e)
+// 		} else {
+// 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, stopMigrateJobRequest.GetAction(), stopMigrateJobRequest.ToJsonString(), result.ToJsonString())
+// 		}
+// 		return nil
+// 	})
+// 	if err != nil {
+// 		log.Printf("[CRITAL]%s stop dts migrateJob failed, reason:%+v", logId, err)
+// 		return err
+// 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"canceled"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
-	if _, e := conf.WaitForState(); e != nil {
-		return e
-	}
+// 	conf := BuildStateChangeConf([]string{}, []string{"canceled"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
+// 	if _, e := conf.WaitForState(); e != nil {
+// 		return e
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
 func resourceTencentCloudDtsMigrateJobDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dts_migrate_job.delete")()
