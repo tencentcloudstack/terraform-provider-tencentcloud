@@ -304,10 +304,16 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_clusters
 	tencentcloud_cynosdb_instances
 	tencentcloud_cynosdb_zone_config
+	tencentcloud_cynosdb_accounts
+	tencentcloud_cynosdb_cluster_instance_groups
+	tencentcloud_cynosdb_cluster_params
+	tencentcloud_cynosdb_param_templates
 
   Resource
     tencentcloud_cynosdb_cluster
     tencentcloud_cynosdb_readonly_instance
+	tencentcloud_cynosdb_security_group
+	tencentcloud_cynosdb_audit_log_file
 
 Direct Connect(DC)
   Data Source
@@ -1598,7 +1604,6 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_original_image_protection":               resourceTencentCloudCIOriginalImageProtection(),
 			"tencentcloud_cynosdb_audit_log_file":                     resourceTencentCloudCynosdbAuditLogFile(),
 			"tencentcloud_cynosdb_security_group":                     resourceTencentCloudCynosdbSecurityGroup(),
-			"tencentcloud_cynosdb_backup":                             resourceTencentCloudCynosdbBackup(),
 		},
 
 		ConfigureFunc: providerConfigure,

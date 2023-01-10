@@ -40,7 +40,7 @@ func dataSourceTencentCloudCynosdbClusterParams() *schema.Resource {
 			"items": {
 				Type:        schema.TypeList,
 				Computed:    true,
-				Description: "&amp;quot;Instance parameter list.&amp;quot;&amp;quot;Note: This field may return null, indicating that no valid value can be obtained.&amp;quot;.",
+				Description: "Instance parameter list. Note: This field may return null, indicating that no valid value can be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"current_value": {

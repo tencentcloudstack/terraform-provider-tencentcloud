@@ -57,14 +57,14 @@ func resourceTencentCloudCynosdbAuditLogFile() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Sort by. Supported values are: &amp;quot;ASC&amp;quot; - ascending, &amp;quot;DESC&amp;quot; - descending.",
+				Description: "Sort by. Supported values are: `ASC` - ascending, `DESC` - descending.",
 			},
 
 			"order_by": {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "&amp;quot;Sort field. supported values are:\n`timestamp` - timestamp\n`affectRows` - affected rows\n`execTime` - execution time&amp;quot;.",
+				Description: "Sort field. supported values are:\n`timestamp` - timestamp\n`affectRows` - affected rows\n`execTime` - execution time.",
 			},
 
 			"filter": {
@@ -141,7 +141,7 @@ func resourceTencentCloudCynosdbAuditLogFile() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "&quot;SQL type. Supports simultaneous query of multiple types. currently supported:&quot;&quot;SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, SET, REPLACE, EXECUTE.&quot;.",
+							Description: "SQL type. Supports simultaneous query of multiple types. currently supported: SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, SET, REPLACE, EXECUTE.",
 						},
 						"sqls": {
 							Type: schema.TypeSet,

@@ -7,7 +7,6 @@ Example Usage
 resource "tencentcloud_cynosdb_security_group" "test" {
   cluster_id = "cynosdbmysql-bws8h88b"
   security_group_ids = ["sg-baxfiao5"]
-  zone = "ap-guangzhou-6"
   instance_group_type = "RO"
 }
 ```

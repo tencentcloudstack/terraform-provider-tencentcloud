@@ -5,19 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_accounts" "accounts" {
-  cluster_id = &lt;nil&gt;
-  account_names = &lt;nil&gt;
-  hosts = &lt;nil&gt;
-  account_set {
-		account_name = &lt;nil&gt;
-		description = &lt;nil&gt;
-		create_time = &lt;nil&gt;
-		update_time = &lt;nil&gt;
-		host = &lt;nil&gt;
-		max_user_connections = &lt;nil&gt;
-
-  }
-  total_count = &lt;nil&gt;
+	cluster_id = "cynosdbmysql-bws8h88b"
+	account_names = ["root"]
 }
 ```
 */

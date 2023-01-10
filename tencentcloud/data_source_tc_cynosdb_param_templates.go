@@ -5,18 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_cynosdb_param_templates" "param_templates" {
-  engine_versions = &lt;nil&gt;
-  template_names = &lt;nil&gt;
-  template_ids = &lt;nil&gt;
-  db_modes = &lt;nil&gt;
-  offset = &lt;nil&gt;
-  limit = &lt;nil&gt;
-  products = &lt;nil&gt;
-  template_types = &lt;nil&gt;
-  engine_types = &lt;nil&gt;
-  order_by = &lt;nil&gt;
-  order_direction = &lt;nil&gt;
-  }
+}
 ```
 */
 package tencentcloud
@@ -158,7 +147,7 @@ func dataSourceTencentCloudCynosdbParamTemplates() *schema.Resource {
 						"param_info_set": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "&quot;Parameter template details.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+							Description: "Parameter template details.Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"current_value": {
@@ -177,17 +166,17 @@ func dataSourceTencentCloudCynosdbParamTemplates() *schema.Resource {
 										Elem: &schema.Schema{
 											Type: schema.TypeString,
 										},
-										Description: "&quot;An optional set of value types when the parameter type is enum.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+										Description: "An optional set of value types when the parameter type is enum.Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"max": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "&quot;The maximum value when the parameter type is float/integer.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+										Description: "The maximum value when the parameter type is float/integer.Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"min": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "&quot;The minimum value when the parameter type is float/integer.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+										Description: "The minimum value when the parameter type is float/integer.Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"param_name": {
 										Type:        schema.TypeString,

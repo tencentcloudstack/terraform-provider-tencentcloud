@@ -310,12 +310,12 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroups() *schema.Resource {
 									"serverless_status": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "&quot;Serverless instance status, optional values:&quot;&quot;resume&quot;&quot;pause&quot;.",
+										Description: "Serverless instance status, optional values:resumepause.",
 									},
 									"storage_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "&quot;Prepaid Storage Id.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+										Description: "Prepaid Storage Id.Note: This field may return null, indicating that no valid value can be obtained..",
 									},
 									"storage_pay_mode": {
 										Type:        schema.TypeInt,
@@ -330,38 +330,38 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroups() *schema.Resource {
 									"business_type": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "&quot;Business type.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+										Description: "Business type.Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"tasks": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "&quot;Task list.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+										Description: "Task list.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"task_id": {
 													Type:        schema.TypeInt,
 													Computed:    true,
-													Description: "&quot;Task auto-increment ID.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+													Description: "Task auto-increment ID.Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"task_type": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "&quot;Task type.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+													Description: "Task type.Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"task_status": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "&quot;Task status.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+													Description: "Task status.Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"object_id": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "&quot;Task ID (cluster ID|instance group ID|instance ID).&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+													Description: "Task ID (cluster ID|instance group ID|instance ID).Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"object_type": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "&quot;Object type.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+													Description: "Object type.Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 											},
 										},
@@ -369,12 +369,12 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroups() *schema.Resource {
 									"is_freeze": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "&quot;Whether to freeze.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+										Description: "Whether to freeze.Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"resource_tags": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "&quot;Resource tags.&quot;&quot;Note: This field may return null, indicating that no valid value can be obtained.&quot;.",
+										Description: "Resource tags.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"tag_key": {
