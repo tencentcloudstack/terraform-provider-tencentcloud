@@ -15,7 +15,7 @@ Provides a resource to create a dts compare_task
 
 ```hcl
 resource "tencentcloud_dts_compare_task" "compare_task" {
-  config_id   = ""
+  job_id      = ""
   task_name   = ""
   object_mode = ""
   objects {
@@ -42,7 +42,7 @@ resource "tencentcloud_dts_compare_task" "compare_task" {
 
 The following arguments are supported:
 
-* `config_id` - (Required, String) job id.
+* `job_id` - (Required, String) job id.
 * `object_mode` - (Optional, String) object mode.
 * `objects` - (Optional, List) objects.
 * `task_name` - (Optional, String) task name.
