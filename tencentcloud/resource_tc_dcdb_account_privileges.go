@@ -29,7 +29,7 @@ Import
 dcdb account_privileges can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dcdb_account_privileges.account_privileges account_privileges_id
+terraform import tencentcloud_dcdb_account_privileges.account_privileges instanceId#userName#host#dbName#tabName#viewName#colName
 ```
 */
 package tencentcloud
@@ -252,13 +252,7 @@ func resourceTencentCloudDcdbAccountPrivilegesRead(d *schema.ResourceData, meta 
 
 	if globalPrivileges.Privileges != nil {
 		log.Printf("[DEBUG]%s read globalPrivileges. Privileges:[%v]\n", logId, globalPrivileges.Privileges)
-		var pris []string
-		for _, v := range globalPrivileges.Privileges {
-			log.Printf("[DEBUG]%s read globalPrivileges. Privilege:[%s]\n", logId, *v)
-			pris = append(pris, *v)
-		}
-		_ = d.Set("global_privileges", pris)
-		// _ = d.Set("global_privileges", helper.StringsInterfaces(globalPrivileges.Privileges))
+		_ = d.Set("global_privileges", helper.StringsInterfaces(globalPrivileges.Privileges))
 	}
 
 	// set common info
@@ -419,6 +413,8 @@ func resourceTencentCloudDcdbAccountPrivilegesUpdate(d *schema.ResourceData, met
 		tabName    string
 		viewName   string
 		colName    string
+		flowId     *int64
+		service    = DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -553,11 +549,12 @@ func resourceTencentCloudDcdbAccountPrivilegesUpdate(d *schema.ResourceData, met
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcdbClient().ModifyAccountPrivileges(request)
+		response, e := meta.(*TencentCloudClient).apiV3Conn.UseDcdbClient().ModifyAccountPrivileges(request)
+		flowId = response.Response.FlowId
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 		}
 		return nil
 	})
@@ -566,8 +563,16 @@ func resourceTencentCloudDcdbAccountPrivilegesUpdate(d *schema.ResourceData, met
 		return err
 	}
 
+	if flowId != nil {
+		// need to wait modify operation success
+		// 0:success; 1:failed, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"0"}, 3*readRetryTimeout, time.Second, service.DcdbDbInstanceStateRefreshFunc(flowId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
 	d.SetId(strings.Join([]string{instanceId, userName, host, dbName, tabName, viewName, colName}, FILED_SP))
-	time.Sleep(10 * time.Second) // wait a while for privileges enable
 
 	return resourceTencentCloudDcdbAccountPrivilegesRead(d, meta)
 }

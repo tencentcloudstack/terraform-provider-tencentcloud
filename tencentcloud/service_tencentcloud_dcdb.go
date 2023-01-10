@@ -443,7 +443,6 @@ func (me *DcdbService) DescribeDcdbParametersByFilter(ctx context.Context, param
 		if k == "instance_id" {
 			request.InstanceId = v.(*string)
 		}
-
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -553,6 +552,7 @@ func (me *DcdbService) DescribeDcdbSecurityGroupsByFilter(ctx context.Context, p
 	return
 }
 
+// tencentcloud_dcdb_db_instance
 func (me *DcdbService) DeleteDcdbDbInstanceById(ctx context.Context, instanceId string) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -606,12 +606,12 @@ func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId str
 	return
 }
 
-func (me *DcdbService) DescribeDcdbFlowById(ctx context.Context, flowId *uint64) (dbInstance *dcdb.DescribeFlowResponseParams, errRet error) {
+func (me *DcdbService) DescribeDcdbFlowById(ctx context.Context, flowId *int64) (dbInstance *dcdb.DescribeFlowResponseParams, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dcdb.NewDescribeFlowRequest()
 	if flowId != nil {
-		request.FlowId = helper.UInt64Int64(*flowId)
+		request.FlowId = flowId
 	}
 
 	defer func() {
@@ -633,7 +633,7 @@ func (me *DcdbService) DescribeDcdbFlowById(ctx context.Context, flowId *uint64)
 	return
 }
 
-func (me *DcdbService) DcdbDbInstanceStateRefreshFunc(flowId *uint64, failStates []string) resource.StateRefreshFunc {
+func (me *DcdbService) DcdbDbInstanceStateRefreshFunc(flowId *int64, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil
 
@@ -647,6 +647,7 @@ func (me *DcdbService) DcdbDbInstanceStateRefreshFunc(flowId *uint64, failStates
 	}
 }
 
+// tencentcloud_dcdb_account_privileges
 func (me *DcdbService) DescribeDcdbAccountPrivilegesById(ctx context.Context, ids string, dbName, aType, object, colName *string) (accountPrivileges *dcdb.DescribeAccountPrivilegesResponseParams, errRet error) {
 	logId := getLogId(ctx)
 
@@ -780,5 +781,99 @@ func (me *DcdbService) DescribeDcdbDBObjects(ctx context.Context, instanceId str
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	rets = response.Response
+	return
+}
+
+// tencentcloud_dcdb_db_parameters
+func (me *DcdbService) DescribeDcdbDbParametersById(ctx context.Context, instanceId string) (dbParameters *dcdb.DescribeDBParametersResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDescribeDBParametersRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDBParameters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	dbParameters = response.Response
+	return
+}
+
+// tencentcloud_dcdb_database_objects
+func (me *DcdbService) DescribeDcdbDBObjectsByFilter(ctx context.Context, param map[string]interface{}) (response *dcdb.DescribeDatabaseObjectsResponseParams, errRet error) {
+	var (
+		logId      = getLogId(ctx)
+		instanceId *string
+		dbName     *string
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s filter api[%s] fail, reason[%s]\n",
+				logId, "query db objects", errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			instanceId = v.(*string)
+		}
+		if k == "db_name" {
+			dbName = v.(*string)
+		}
+	}
+
+	response, errRet = me.DescribeDcdbDBObjects(ctx, *instanceId, *dbName)
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+// tencentcloud_dcdb_database_tables
+func (me *DcdbService) DescribeDcdbDBTablesByFilter(ctx context.Context, param map[string]interface{}) (response *dcdb.DescribeDatabaseTableResponseParams, errRet error) {
+	var (
+		logId      = getLogId(ctx)
+		instanceId *string
+		dbName     *string
+		tableName  *string
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s filter api[%s] fail, reason[%s]\n",
+				logId, "query db tables", errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			instanceId = v.(*string)
+		}
+		if k == "db_name" {
+			dbName = v.(*string)
+		}
+		if k == "table" {
+			tableName = v.(*string)
+		}
+	}
+
+	response, errRet = me.DescribeDcdbDBTables(ctx, *instanceId, *dbName, *tableName)
+	if errRet != nil {
+		return
+	}
+
 	return
 }

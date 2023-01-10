@@ -756,12 +756,15 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_parameters
 	tencentcloud_dcdb_shards
 	tencentcloud_dcdb_security_groups
+	tencentcloud_dcdb_database_objects
+	tencentcloud_dcdb_database_tables
 
   Resource
 	tencentcloud_dcdb_account
 	tencentcloud_dcdb_hourdb_instance
 	tencentcloud_dcdb_security_group_attachment
 	tencentcloud_dcdb_account_privileges
+	tencentcloud_dcdb_db_parameters
 
 Short Message Service(SMS)
   Resource
@@ -1213,6 +1216,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcdb_parameters":                          dataSourceTencentCloudDcdbParameters(),
 			"tencentcloud_dcdb_shards":                              dataSourceTencentCloudDcdbShards(),
 			"tencentcloud_dcdb_security_groups":                     dataSourceTencentCloudDcdbSecurityGroups(),
+			"tencentcloud_dcdb_database_objects":                    dataSourceTencentCloudDcdbDatabaseObjects(),
+			"tencentcloud_dcdb_database_tables":                     dataSourceTencentCloudDcdbDatabaseTables(),
 			"tencentcloud_mariadb_db_instances":                     dataSourceTencentCloudMariadbDbInstances(),
 			"tencentcloud_mariadb_accounts":                         dataSourceTencentCloudMariadbAccounts(),
 			"tencentcloud_mariadb_security_groups":                  dataSourceTencentCloudMariadbSecurityGroups(),
@@ -1536,6 +1541,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcdb_security_group_attachment":             resourceTencentCloudDcdbSecurityGroupAttachment(),
 			"tencentcloud_dcdb_db_instance":                           resourceTencentCloudDcdbDbInstance(),
 			"tencentcloud_dcdb_account_privileges":                    resourceTencentCloudDcdbAccountPrivileges(),
+			"tencentcloud_dcdb_db_parameters":                         resourceTencentCloudDcdbDbParameters(),
 			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":       resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_hour_db_instance":                   resourceTencentCloudMariadbHourDbInstance(),

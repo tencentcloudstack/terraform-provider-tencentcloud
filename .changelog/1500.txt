@@ -1,0 +1,16 @@
+
+```release-note:new-resource
+tencentcloud_dcdb_db_parameters
+```
+
+```release-note:new-data-source
+tencentcloud_dcdb_database_objects
+```
+
+```release-note:new-data-source
+tencentcloud_dcdb_database_tables
+```
+
+```release-note:enhancement
+resource/tencentcloud_dcdb_account_privileges: optimize the logic after modifing the AccountPrivileges
+```

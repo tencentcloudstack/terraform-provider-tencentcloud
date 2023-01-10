@@ -18,8 +18,7 @@ func TestAccTencentCloudDCDBAccountPrivilegesResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				PreventDiskCleanup: true,
-				Config:             fmt.Sprintf(testAccDCDBAccountPrivileges_basic, defaultDcdbInstanceId, "%"),
+				Config: fmt.Sprintf(testAccDCDBAccountPrivileges_basic, defaultDcdbInstanceId, "%"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDCDBAccountPrivilegesExists("tencentcloud_dcdb_account_privileges.account_privileges"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account_privileges.account_privileges", "account.#"),
