@@ -99,7 +99,7 @@ func resourceTencentCloudTemApplicationService() *schema.Resource {
 									"protocol": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "udp or tcp.",
+										Description: "UDP or TCP.",
 									},
 								},
 							},

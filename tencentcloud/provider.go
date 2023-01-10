@@ -182,6 +182,7 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_oidc_sso
 	tencentcloud_cam_role_sso
 	tencentcloud_cam_service_linked_role
+	tencentcloud_cam_user_saml_config
 
 Cloud Block Storage(CBS)
   Data Source
@@ -304,10 +305,16 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_clusters
 	tencentcloud_cynosdb_instances
 	tencentcloud_cynosdb_zone_config
+	tencentcloud_cynosdb_accounts
+	tencentcloud_cynosdb_cluster_instance_groups
+	tencentcloud_cynosdb_cluster_params
+	tencentcloud_cynosdb_param_templates
 
   Resource
     tencentcloud_cynosdb_cluster
     tencentcloud_cynosdb_readonly_instance
+	tencentcloud_cynosdb_security_group
+	tencentcloud_cynosdb_audit_log_file
 
 Direct Connect(DC)
   Data Source
@@ -419,6 +426,7 @@ TencentDB for MySQL(cdb)
     tencentcloud_mysql_privilege
     tencentcloud_mysql_account_privilege
     tencentcloud_mysql_backup_policy
+	tencentcloud_mysql_time_window
 
 Cloud Monitor(Monitor)
   Data Source
@@ -750,12 +758,15 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_parameters
 	tencentcloud_dcdb_shards
 	tencentcloud_dcdb_security_groups
+	tencentcloud_dcdb_database_objects
+	tencentcloud_dcdb_database_tables
 
   Resource
 	tencentcloud_dcdb_account
 	tencentcloud_dcdb_hourdb_instance
 	tencentcloud_dcdb_security_group_attachment
 	tencentcloud_dcdb_account_privileges
+	tencentcloud_dcdb_db_parameters
 
 Short Message Service(SMS)
   Resource
@@ -849,8 +860,10 @@ Data Transmission Service(DTS)
 
   Resource
 	tencentcloud_dts_sync_job
-	tencentcloud_dts_migrate_job
 	tencentcloud_dts_compare_task
+	tencentcloud_dts_migrate_service
+	tencentcloud_dts_migrate_job
+	tencentcloud_dts_migrate_job_start_operation
 
 TDMQ for RocketMQ(trocket)
   Data Source
@@ -1207,6 +1220,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcdb_parameters":                          dataSourceTencentCloudDcdbParameters(),
 			"tencentcloud_dcdb_shards":                              dataSourceTencentCloudDcdbShards(),
 			"tencentcloud_dcdb_security_groups":                     dataSourceTencentCloudDcdbSecurityGroups(),
+			"tencentcloud_dcdb_database_objects":                    dataSourceTencentCloudDcdbDatabaseObjects(),
+			"tencentcloud_dcdb_database_tables":                     dataSourceTencentCloudDcdbDatabaseTables(),
 			"tencentcloud_mariadb_db_instances":                     dataSourceTencentCloudMariadbDbInstances(),
 			"tencentcloud_mariadb_accounts":                         dataSourceTencentCloudMariadbAccounts(),
 			"tencentcloud_mariadb_security_groups":                  dataSourceTencentCloudMariadbSecurityGroups(),
@@ -1235,6 +1250,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcmq_topic":                               dataSourceTencentCloudTcmqTopic(),
 			"tencentcloud_tcmq_subscribe":                           dataSourceTencentCloudTcmqSubscribe(),
 			"tencentcloud_as_instances":                             dataSourceTencentCloudAsInstances(),
+			"tencentcloud_cynosdb_accounts":                         dataSourceTencentCloudCynosdbAccounts(),
+			"tencentcloud_cynosdb_cluster_instance_groups":          dataSourceTencentCloudCynosdbClusterInstanceGroups(),
+			"tencentcloud_cynosdb_cluster_params":                   dataSourceTencentCloudCynosdbClusterParams(),
+			"tencentcloud_cynosdb_param_templates":                  dataSourceTencentCloudCynosdbParamTemplates(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1317,6 +1336,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mysql_privilege":                          resourceTencentCloudMysqlPrivilege(),
 			"tencentcloud_mysql_instance":                           resourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_readonly_instance":                  resourceTencentCloudMysqlReadonlyInstance(),
+			"tencentcloud_mysql_time_window":                        resourceTencentCloudMysqlTimeWindow(),
 			"tencentcloud_cos_bucket":                               resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                        resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                          resourceTencentCloudCfsFileSystem(),
@@ -1380,6 +1400,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cam_group_membership":                     resourceTencentCloudCamGroupMembership(),
 			"tencentcloud_cam_saml_provider":                        resourceTencentCloudCamSAMLProvider(),
 			"tencentcloud_cam_service_linked_role":                  resourceTencentCloudCamServiceLinkedRole(),
+			"tencentcloud_cam_user_saml_config":                     resourceTencentCloudCamUserSamlConfig(),
 			"tencentcloud_scf_function":                             resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_namespace":                            resourceTencentCloudScfNamespace(),
 			"tencentcloud_scf_layer":                                resourceTencentCloudScfLayer(),
@@ -1526,6 +1547,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcdb_security_group_attachment":             resourceTencentCloudDcdbSecurityGroupAttachment(),
 			"tencentcloud_dcdb_db_instance":                           resourceTencentCloudDcdbDbInstance(),
 			"tencentcloud_dcdb_account_privileges":                    resourceTencentCloudDcdbAccountPrivileges(),
+			"tencentcloud_dcdb_db_parameters":                         resourceTencentCloudDcdbDbParameters(),
 			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":       resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_hour_db_instance":                   resourceTencentCloudMariadbHourDbInstance(),
@@ -1563,7 +1585,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
+			"tencentcloud_dts_migrate_service":                        resourceTencentCloudDtsMigrateService(),
 			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
+			"tencentcloud_dts_migrate_job_start_operation":            resourceTencentCloudDtsMigrateJobStartOperation(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),
 			"tencentcloud_vpc_flow_log":                               resourceTencentCloudVpcFlowLog(),
@@ -1592,6 +1616,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_media_speech_recognition_template":       resourceTencentCloudCiMediaSpeechRecognitionTemplate(),
 			"tencentcloud_ci_guetzli":                                 resourceTencentCloudCIGuetzli(),
 			"tencentcloud_ci_original_image_protection":               resourceTencentCloudCIOriginalImageProtection(),
+			"tencentcloud_cynosdb_audit_log_file":                     resourceTencentCloudCynosdbAuditLogFile(),
+			"tencentcloud_cynosdb_security_group":                     resourceTencentCloudCynosdbSecurityGroup(),
 		},
 
 		ConfigureFunc: providerConfigure,

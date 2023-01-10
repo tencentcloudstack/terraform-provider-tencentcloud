@@ -17,6 +17,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -251,6 +252,34 @@ func isExpectError(err error, expectError []string) bool {
 	return false
 }
 
+// IsNil Determine whether i is empty
+func IsNil(v interface{}) bool {
+
+	valueOf := reflect.ValueOf(v)
+
+	k := valueOf.Kind()
+
+	switch k {
+	case reflect.Chan, reflect.Func, reflect.Map, reflect.Ptr, reflect.UnsafePointer, reflect.Interface, reflect.Slice:
+		return valueOf.IsNil()
+	default:
+		return v == nil
+	}
+}
+
+// IsString Determine whether data is a string
+func IsString(data interface{}) bool {
+	if IsNil(data) {
+		return false
+	}
+
+	if _, ok := data.(string); ok {
+		return true
+	}
+
+	return false
+}
+
 // writeToFile write data to file
 func writeToFile(filePath string, data interface{}) error {
 	if strings.HasPrefix(filePath, "~") {
@@ -277,12 +306,31 @@ func writeToFile(filePath string, data interface{}) error {
 		}
 	}
 
+	if IsString(data) {
+		return ioutil.WriteFile(filePath, []byte(data.(string)), 0422)
+	}
+
 	jsonStr, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return fmt.Errorf("json decode error,reason %s", err.Error())
 	}
 
 	return ioutil.WriteFile(filePath, jsonStr, 0422)
+}
+
+// ReadFromFile return file content
+func ReadFromFile(file string) ([]byte, error) {
+	fileName, err := homedir.Expand(file)
+	if err != nil {
+		log.Printf("[CRITAL] wrong file path, error: %v", err)
+		return nil, err
+	}
+	content, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		log.Printf("[CRITAL] file read failed, error: %v", err)
+		return nil, err
+	}
+	return content, nil
 }
 
 func CheckNil(object interface{}, fields map[string]string) (nilFields []string) {

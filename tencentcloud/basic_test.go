@@ -880,3 +880,25 @@ const (
 )
 
 // End of CI
+
+// Cynosdb
+const (
+	defaultCynosdbClusterId         = "cynosdbmysql-bws8h88b"
+	defaultCynosdbClusterInstanceId = "cynosdbmysql-ins-afqx1hy0"
+	defaultCynosdbSecurityGroup     = "sg-baxfiao5"
+)
+
+const CommonCynosdb = `
+
+variable "cynosdb_cluster_id" {
+  default = "` + defaultCynosdbClusterId + `"
+}
+variable "cynosdb_cluster_instance_id" {
+  default = "` + defaultCynosdbClusterInstanceId + `"
+}
+variable "cynosdb_cluster_security_group_id" {
+  default = "` + defaultCynosdbSecurityGroup + `"
+}
+`
+
+// End of Cynosdb

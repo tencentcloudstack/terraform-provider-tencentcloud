@@ -321,6 +321,64 @@ func (c *Client) AssociateSecurityGroupsWithContext(ctx context.Context, request
     return
 }
 
+func NewCloseAuditServiceRequest() (request *CloseAuditServiceRequest) {
+    request = &CloseAuditServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "CloseAuditService")
+    
+    
+    return
+}
+
+func NewCloseAuditServiceResponse() (response *CloseAuditServiceResponse) {
+    response = &CloseAuditServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CloseAuditService
+// TDSQL-C for MySQL实例关闭审计服务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CloseAuditService(request *CloseAuditServiceRequest) (response *CloseAuditServiceResponse, err error) {
+    return c.CloseAuditServiceWithContext(context.Background(), request)
+}
+
+// CloseAuditService
+// TDSQL-C for MySQL实例关闭审计服务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CloseAuditServiceWithContext(ctx context.Context, request *CloseAuditServiceRequest) (response *CloseAuditServiceResponse, err error) {
+    if request == nil {
+        request = NewCloseAuditServiceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloseAuditService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCloseAuditServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateAccountsRequest() (request *CreateAccountsRequest) {
     request = &CreateAccountsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -441,6 +499,306 @@ func (c *Client) CreateAccountsWithContext(ctx context.Context, request *CreateA
     return
 }
 
+func NewCreateAuditLogFileRequest() (request *CreateAuditLogFileRequest) {
+    request = &CreateAuditLogFileRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "CreateAuditLogFile")
+    
+    
+    return
+}
+
+func NewCreateAuditLogFileResponse() (response *CreateAuditLogFileResponse) {
+    response = &CreateAuditLogFileResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateAuditLogFile
+// 本接口(CreateAuditLogFile)用于创建云数据库实例的审计日志文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTALREADYEXISTERROR = "InvalidParameterValue.AccountAlreadyExistError"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateAuditLogFile(request *CreateAuditLogFileRequest) (response *CreateAuditLogFileResponse, err error) {
+    return c.CreateAuditLogFileWithContext(context.Background(), request)
+}
+
+// CreateAuditLogFile
+// 本接口(CreateAuditLogFile)用于创建云数据库实例的审计日志文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTALREADYEXISTERROR = "InvalidParameterValue.AccountAlreadyExistError"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateAuditLogFileWithContext(ctx context.Context, request *CreateAuditLogFileRequest) (response *CreateAuditLogFileResponse, err error) {
+    if request == nil {
+        request = NewCreateAuditLogFileRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAuditLogFile require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAuditLogFileResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateAuditRuleTemplateRequest() (request *CreateAuditRuleTemplateRequest) {
+    request = &CreateAuditRuleTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "CreateAuditRuleTemplate")
+    
+    
+    return
+}
+
+func NewCreateAuditRuleTemplateResponse() (response *CreateAuditRuleTemplateResponse) {
+    response = &CreateAuditRuleTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateAuditRuleTemplate
+// 创建审计规则模版
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTALREADYEXISTERROR = "InvalidParameterValue.AccountAlreadyExistError"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateAuditRuleTemplate(request *CreateAuditRuleTemplateRequest) (response *CreateAuditRuleTemplateResponse, err error) {
+    return c.CreateAuditRuleTemplateWithContext(context.Background(), request)
+}
+
+// CreateAuditRuleTemplate
+// 创建审计规则模版
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTALREADYEXISTERROR = "InvalidParameterValue.AccountAlreadyExistError"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateAuditRuleTemplateWithContext(ctx context.Context, request *CreateAuditRuleTemplateRequest) (response *CreateAuditRuleTemplateResponse, err error) {
+    if request == nil {
+        request = NewCreateAuditRuleTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateAuditRuleTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateAuditRuleTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateBackupRequest() (request *CreateBackupRequest) {
+    request = &CreateBackupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "CreateBackup")
+    
+    
+    return
+}
+
+func NewCreateBackupResponse() (response *CreateBackupResponse) {
+    response = &CreateBackupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateBackup
+// 为集群创建手动备份
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateBackup(request *CreateBackupRequest) (response *CreateBackupResponse, err error) {
+    return c.CreateBackupWithContext(context.Background(), request)
+}
+
+// CreateBackup
+// 为集群创建手动备份
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateBackupWithContext(ctx context.Context, request *CreateBackupRequest) (response *CreateBackupResponse, err error) {
+    if request == nil {
+        request = NewCreateBackupRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateBackup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateBackupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateClustersRequest() (request *CreateClustersRequest) {
     request = &CreateClustersRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -531,6 +889,256 @@ func (c *Client) CreateClustersWithContext(ctx context.Context, request *CreateC
     request.SetContext(ctx)
     
     response = NewCreateClustersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteAuditLogFileRequest() (request *DeleteAuditLogFileRequest) {
+    request = &DeleteAuditLogFileRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DeleteAuditLogFile")
+    
+    
+    return
+}
+
+func NewDeleteAuditLogFileResponse() (response *DeleteAuditLogFileResponse) {
+    response = &DeleteAuditLogFileResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteAuditLogFile
+// 本接口(DeleteAuditLogFile)用于删除云数据库实例的审计日志文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
+//  OPERATIONDENIED_USERNOTAUTHENTICATEDERROR = "OperationDenied.UserNotAuthenticatedError"
+//  UNAUTHORIZEDOPERATION_NOTREALNAMEACCOUNT = "UnauthorizedOperation.NotRealNameAccount"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DeleteAuditLogFile(request *DeleteAuditLogFileRequest) (response *DeleteAuditLogFileResponse, err error) {
+    return c.DeleteAuditLogFileWithContext(context.Background(), request)
+}
+
+// DeleteAuditLogFile
+// 本接口(DeleteAuditLogFile)用于删除云数据库实例的审计日志文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
+//  OPERATIONDENIED_USERNOTAUTHENTICATEDERROR = "OperationDenied.UserNotAuthenticatedError"
+//  UNAUTHORIZEDOPERATION_NOTREALNAMEACCOUNT = "UnauthorizedOperation.NotRealNameAccount"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DeleteAuditLogFileWithContext(ctx context.Context, request *DeleteAuditLogFileRequest) (response *DeleteAuditLogFileResponse, err error) {
+    if request == nil {
+        request = NewDeleteAuditLogFileRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAuditLogFile require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAuditLogFileResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteAuditRuleTemplatesRequest() (request *DeleteAuditRuleTemplatesRequest) {
+    request = &DeleteAuditRuleTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DeleteAuditRuleTemplates")
+    
+    
+    return
+}
+
+func NewDeleteAuditRuleTemplatesResponse() (response *DeleteAuditRuleTemplatesResponse) {
+    response = &DeleteAuditRuleTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteAuditRuleTemplates
+// 删除审计规则模版
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
+//  OPERATIONDENIED_USERNOTAUTHENTICATEDERROR = "OperationDenied.UserNotAuthenticatedError"
+//  UNAUTHORIZEDOPERATION_NOTREALNAMEACCOUNT = "UnauthorizedOperation.NotRealNameAccount"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DeleteAuditRuleTemplates(request *DeleteAuditRuleTemplatesRequest) (response *DeleteAuditRuleTemplatesResponse, err error) {
+    return c.DeleteAuditRuleTemplatesWithContext(context.Background(), request)
+}
+
+// DeleteAuditRuleTemplates
+// 删除审计规则模版
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSUFFICIENTBALANCEERROR = "OperationDenied.InsufficientBalanceError"
+//  OPERATIONDENIED_USERNOTAUTHENTICATEDERROR = "OperationDenied.UserNotAuthenticatedError"
+//  UNAUTHORIZEDOPERATION_NOTREALNAMEACCOUNT = "UnauthorizedOperation.NotRealNameAccount"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DeleteAuditRuleTemplatesWithContext(ctx context.Context, request *DeleteAuditRuleTemplatesRequest) (response *DeleteAuditRuleTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDeleteAuditRuleTemplatesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteAuditRuleTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteAuditRuleTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteBackupRequest() (request *DeleteBackupRequest) {
+    request = &DeleteBackupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DeleteBackup")
+    
+    
+    return
+}
+
+func NewDeleteBackupResponse() (response *DeleteBackupResponse) {
+    response = &DeleteBackupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteBackup
+// 为集群删除手动备份，无法删除自动备份
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DeleteBackup(request *DeleteBackupRequest) (response *DeleteBackupResponse, err error) {
+    return c.DeleteBackupWithContext(context.Background(), request)
+}
+
+// DeleteBackup
+// 为集群删除手动备份，无法删除自动备份
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DeleteBackupWithContext(ctx context.Context, request *DeleteBackupRequest) (response *DeleteBackupResponse, err error) {
+    if request == nil {
+        request = NewDeleteBackupRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteBackup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteBackupResponse()
     err = c.Send(request, response)
     return
 }
@@ -711,6 +1319,246 @@ func (c *Client) DescribeAccountsWithContext(ctx context.Context, request *Descr
     request.SetContext(ctx)
     
     response = NewDescribeAccountsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAuditLogFilesRequest() (request *DescribeAuditLogFilesRequest) {
+    request = &DescribeAuditLogFilesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeAuditLogFiles")
+    
+    
+    return
+}
+
+func NewDescribeAuditLogFilesResponse() (response *DescribeAuditLogFilesResponse) {
+    response = &DescribeAuditLogFilesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAuditLogFiles
+// 本接口(DescribeAuditLogFiles)用于查询云数据库实例的审计日志文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeAuditLogFiles(request *DescribeAuditLogFilesRequest) (response *DescribeAuditLogFilesResponse, err error) {
+    return c.DescribeAuditLogFilesWithContext(context.Background(), request)
+}
+
+// DescribeAuditLogFiles
+// 本接口(DescribeAuditLogFiles)用于查询云数据库实例的审计日志文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeAuditLogFilesWithContext(ctx context.Context, request *DescribeAuditLogFilesRequest) (response *DescribeAuditLogFilesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditLogFilesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuditLogFiles require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuditLogFilesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAuditLogsRequest() (request *DescribeAuditLogsRequest) {
+    request = &DescribeAuditLogsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeAuditLogs")
+    
+    
+    return
+}
+
+func NewDescribeAuditLogsResponse() (response *DescribeAuditLogsResponse) {
+    response = &DescribeAuditLogsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAuditLogs
+// 本接口(DescribeAuditLogs)用于查询数据库审计日志。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeAuditLogs(request *DescribeAuditLogsRequest) (response *DescribeAuditLogsResponse, err error) {
+    return c.DescribeAuditLogsWithContext(context.Background(), request)
+}
+
+// DescribeAuditLogs
+// 本接口(DescribeAuditLogs)用于查询数据库审计日志。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeAuditLogsWithContext(ctx context.Context, request *DescribeAuditLogsRequest) (response *DescribeAuditLogsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditLogsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuditLogs require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuditLogsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAuditRuleTemplatesRequest() (request *DescribeAuditRuleTemplatesRequest) {
+    request = &DescribeAuditRuleTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeAuditRuleTemplates")
+    
+    
+    return
+}
+
+func NewDescribeAuditRuleTemplatesResponse() (response *DescribeAuditRuleTemplatesResponse) {
+    response = &DescribeAuditRuleTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAuditRuleTemplates
+// 查询审计规则模版信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeAuditRuleTemplates(request *DescribeAuditRuleTemplatesRequest) (response *DescribeAuditRuleTemplatesResponse, err error) {
+    return c.DescribeAuditRuleTemplatesWithContext(context.Background(), request)
+}
+
+// DescribeAuditRuleTemplates
+// 查询审计规则模版信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeAuditRuleTemplatesWithContext(ctx context.Context, request *DescribeAuditRuleTemplatesRequest) (response *DescribeAuditRuleTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditRuleTemplatesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuditRuleTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuditRuleTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeAuditRuleWithInstanceIdsRequest() (request *DescribeAuditRuleWithInstanceIdsRequest) {
+    request = &DescribeAuditRuleWithInstanceIdsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "DescribeAuditRuleWithInstanceIds")
+    
+    
+    return
+}
+
+func NewDescribeAuditRuleWithInstanceIdsResponse() (response *DescribeAuditRuleWithInstanceIdsResponse) {
+    response = &DescribeAuditRuleWithInstanceIdsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAuditRuleWithInstanceIds
+// 获取实例的审计规则
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+func (c *Client) DescribeAuditRuleWithInstanceIds(request *DescribeAuditRuleWithInstanceIdsRequest) (response *DescribeAuditRuleWithInstanceIdsResponse, err error) {
+    return c.DescribeAuditRuleWithInstanceIdsWithContext(context.Background(), request)
+}
+
+// DescribeAuditRuleWithInstanceIds
+// 获取实例的审计规则
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER_EXCEPTIONPARAM = "InvalidParameter.ExceptionParam"
+func (c *Client) DescribeAuditRuleWithInstanceIdsWithContext(ctx context.Context, request *DescribeAuditRuleWithInstanceIdsRequest) (response *DescribeAuditRuleWithInstanceIdsResponse, err error) {
+    if request == nil {
+        request = NewDescribeAuditRuleWithInstanceIdsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAuditRuleWithInstanceIds require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAuditRuleWithInstanceIdsResponse()
     err = c.Send(request, response)
     return
 }
@@ -1072,7 +1920,7 @@ func NewDescribeClusterDetailResponse() (response *DescribeClusterDetailResponse
 }
 
 // DescribeClusterDetail
-// 显示集群详情
+// 该接口（DescribeClusterDetail）显示集群详情
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
@@ -1095,7 +1943,7 @@ func (c *Client) DescribeClusterDetail(request *DescribeClusterDetailRequest) (r
 }
 
 // DescribeClusterDetail
-// 显示集群详情
+// 该接口（DescribeClusterDetail）显示集群详情
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
@@ -1148,7 +1996,7 @@ func NewDescribeClusterInstanceGrpsResponse() (response *DescribeClusterInstance
 }
 
 // DescribeClusterInstanceGrps
-// 本接口（DescribeClusterInstanceGrps）用于查询实例组
+// 本接口（DescribeClusterInstanceGrps）用于查询实例组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1162,7 +2010,7 @@ func (c *Client) DescribeClusterInstanceGrps(request *DescribeClusterInstanceGrp
 }
 
 // DescribeClusterInstanceGrps
-// 本接口（DescribeClusterInstanceGrps）用于查询实例组
+// 本接口（DescribeClusterInstanceGrps）用于查询实例组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -2082,6 +2930,7 @@ func NewExportInstanceSlowQueriesResponse() (response *ExportInstanceSlowQueries
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ExportInstanceSlowQueries(request *ExportInstanceSlowQueriesRequest) (response *ExportInstanceSlowQueriesResponse, err error) {
     return c.ExportInstanceSlowQueriesWithContext(context.Background(), request)
@@ -2092,6 +2941,7 @@ func (c *Client) ExportInstanceSlowQueries(request *ExportInstanceSlowQueriesReq
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ExportInstanceSlowQueriesWithContext(ctx context.Context, request *ExportInstanceSlowQueriesRequest) (response *ExportInstanceSlowQueriesResponse, err error) {
     if request == nil {
@@ -2306,6 +3156,7 @@ func NewInquirePriceRenewResponse() (response *InquirePriceRenewResponse) {
 //  FAILEDOPERATION_BATCHGETINSTANCEERROR = "FailedOperation.BatchGetInstanceError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
@@ -2322,6 +3173,7 @@ func (c *Client) InquirePriceRenew(request *InquirePriceRenewRequest) (response 
 //  FAILEDOPERATION_BATCHGETINSTANCEERROR = "FailedOperation.BatchGetInstanceError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
@@ -2601,6 +3453,238 @@ func (c *Client) ModifyAccountParamsWithContext(ctx context.Context, request *Mo
     return
 }
 
+func NewModifyAuditRuleTemplatesRequest() (request *ModifyAuditRuleTemplatesRequest) {
+    request = &ModifyAuditRuleTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyAuditRuleTemplates")
+    
+    
+    return
+}
+
+func NewModifyAuditRuleTemplatesResponse() (response *ModifyAuditRuleTemplatesResponse) {
+    response = &ModifyAuditRuleTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyAuditRuleTemplates
+// 修改审计规则模版
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_ACCOUNTNOTEXISTERROR = "InvalidParameterValue.AccountNotExistError"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyAuditRuleTemplates(request *ModifyAuditRuleTemplatesRequest) (response *ModifyAuditRuleTemplatesResponse, err error) {
+    return c.ModifyAuditRuleTemplatesWithContext(context.Background(), request)
+}
+
+// ModifyAuditRuleTemplates
+// 修改审计规则模版
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_ACCOUNTNOTEXISTERROR = "InvalidParameterValue.AccountNotExistError"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyAuditRuleTemplatesWithContext(ctx context.Context, request *ModifyAuditRuleTemplatesRequest) (response *ModifyAuditRuleTemplatesResponse, err error) {
+    if request == nil {
+        request = NewModifyAuditRuleTemplatesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAuditRuleTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAuditRuleTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyAuditServiceRequest() (request *ModifyAuditServiceRequest) {
+    request = &ModifyAuditServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyAuditService")
+    
+    
+    return
+}
+
+func NewModifyAuditServiceResponse() (response *ModifyAuditServiceResponse) {
+    response = &ModifyAuditServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyAuditService
+// 本接口(ModifyAuditService)用于修改云数据库审计日志保存时长、审计规则等服务配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_ACCOUNTNOTEXISTERROR = "InvalidParameterValue.AccountNotExistError"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyAuditService(request *ModifyAuditServiceRequest) (response *ModifyAuditServiceResponse, err error) {
+    return c.ModifyAuditServiceWithContext(context.Background(), request)
+}
+
+// ModifyAuditService
+// 本接口(ModifyAuditService)用于修改云数据库审计日志保存时长、审计规则等服务配置。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_GETSECURITYGROUPDETAILFAILED = "InternalError.GetSecurityGroupDetailFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_LISTINSTANCEFAILED = "InternalError.ListInstanceFailed"
+//  INTERNALERROR_OPERATEWANFAIL = "InternalError.OperateWanFail"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_QUERYDATABASEFAILED = "InternalError.QueryDatabaseFailed"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_ISOLATENOTALLOWED = "InvalidParameter.IsolateNotAllowed"
+//  INVALIDPARAMETERVALUE_ACCOUNTEXIST = "InvalidParameterValue.AccountExist"
+//  INVALIDPARAMETERVALUE_ACCOUNTNOTEXISTERROR = "InvalidParameterValue.AccountNotExistError"
+//  INVALIDPARAMETERVALUE_DBTYPENOTFOUND = "InvalidParameterValue.DBTypeNotFound"
+//  INVALIDPARAMETERVALUE_FLOWNOTFOUND = "InvalidParameterValue.FlowNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALINSTANCENAME = "InvalidParameterValue.IllegalInstanceName"
+//  INVALIDPARAMETERVALUE_ILLEGALORDERBY = "InvalidParameterValue.IllegalOrderBy"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDDBVERSION = "InvalidParameterValue.InvalidDBVersion"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  INVALIDPARAMETERVALUE_REGIONZONEUNAVAILABLE = "InvalidParameterValue.RegionZoneUnavailable"
+//  INVALIDPARAMETERVALUE_STORAGEPOOLNOTFOUND = "InvalidParameterValue.StoragePoolNotFound"
+//  INVALIDPARAMETERVALUE_SUBNETNOTFOUND = "InvalidParameterValue.SubnetNotFound"
+//  INVALIDPARAMETERVALUE_VPCNOTFOUND = "InvalidParameterValue.VpcNotFound"
+//  LIMITEXCEEDED_USERINSTANCELIMIT = "LimitExceeded.UserInstanceLimit"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyAuditServiceWithContext(ctx context.Context, request *ModifyAuditServiceRequest) (response *ModifyAuditServiceResponse, err error) {
+    if request == nil {
+        request = NewModifyAuditServiceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAuditService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAuditServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyBackupConfigRequest() (request *ModifyBackupConfigRequest) {
     request = &ModifyBackupConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2796,7 +3880,9 @@ func NewModifyClusterParamResponse() (response *ModifyClusterParamResponse) {
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
@@ -2814,7 +3900,9 @@ func (c *Client) ModifyClusterParam(request *ModifyClusterParamRequest) (respons
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_SERVERLESSCLUSTERSTATUSDENIED = "OperationDenied.ServerlessClusterStatusDenied"
@@ -2889,6 +3977,80 @@ func (c *Client) ModifyClusterSlaveZoneWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewModifyClusterSlaveZoneResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyClusterStorageRequest() (request *ModifyClusterStorageRequest) {
+    request = &ModifyClusterStorageRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ModifyClusterStorage")
+    
+    
+    return
+}
+
+func NewModifyClusterStorageResponse() (response *ModifyClusterStorageResponse) {
+    response = &ModifyClusterStorageResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyClusterStorage
+// 升级预付费存储
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyClusterStorage(request *ModifyClusterStorageRequest) (response *ModifyClusterStorageResponse, err error) {
+    return c.ModifyClusterStorageWithContext(context.Background(), request)
+}
+
+// ModifyClusterStorage
+// 升级预付费存储
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_CREATEORDER = "FailedOperation.CreateOrder"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_TRADECREATEORDERERROR = "FailedOperation.TradeCreateOrderError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_CLUSTERNOTFOUND = "InvalidParameterValue.ClusterNotFound"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDSPEC = "InvalidParameterValue.InvalidSpec"
+//  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ModifyClusterStorageWithContext(ctx context.Context, request *ModifyClusterStorageRequest) (response *ModifyClusterStorageResponse, err error) {
+    if request == nil {
+        request = NewModifyClusterStorageRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyClusterStorage require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyClusterStorageResponse()
     err = c.Send(request, response)
     return
 }
@@ -3201,6 +4363,74 @@ func (c *Client) OfflineInstanceWithContext(ctx context.Context, request *Offlin
     return
 }
 
+func NewOpenAuditServiceRequest() (request *OpenAuditServiceRequest) {
+    request = &OpenAuditServiceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "OpenAuditService")
+    
+    
+    return
+}
+
+func NewOpenAuditServiceResponse() (response *OpenAuditServiceResponse) {
+    response = &OpenAuditServiceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// OpenAuditService
+// TDSQL-C for MySQL实例开通审计服务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCEERROR = "ResourceNotFound.ResourceError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) OpenAuditService(request *OpenAuditServiceRequest) (response *OpenAuditServiceResponse, err error) {
+    return c.OpenAuditServiceWithContext(context.Background(), request)
+}
+
+// OpenAuditService
+// TDSQL-C for MySQL实例开通审计服务
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_INSTANCENOTFOUND = "InvalidParameterValue.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCEERROR = "ResourceNotFound.ResourceError"
+//  RESOURCEUNAVAILABLE_INSTANCELOCKFAIL = "ResourceUnavailable.InstanceLockFail"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) OpenAuditServiceWithContext(ctx context.Context, request *OpenAuditServiceRequest) (response *OpenAuditServiceResponse, err error) {
+    if request == nil {
+        request = NewOpenAuditServiceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OpenAuditService require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewOpenAuditServiceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewPauseServerlessRequest() (request *PauseServerlessRequest) {
     request = &PauseServerlessRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3313,6 +4543,82 @@ func (c *Client) RemoveClusterSlaveZoneWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewRemoveClusterSlaveZoneResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewResetAccountPasswordRequest() (request *ResetAccountPasswordRequest) {
+    request = &ResetAccountPasswordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "ResetAccountPassword")
+    
+    
+    return
+}
+
+func NewResetAccountPasswordResponse() (response *ResetAccountPasswordResponse) {
+    response = &ResetAccountPasswordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ResetAccountPassword
+// 本接口(ResetAccountPassword)用于重置实例的数据库账号密码。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDPASSWORDVALUEERROR = "InvalidParameterValue.InvalidPasswordValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ResetAccountPassword(request *ResetAccountPasswordRequest) (response *ResetAccountPasswordResponse, err error) {
+    return c.ResetAccountPasswordWithContext(context.Background(), request)
+}
+
+// ResetAccountPassword
+// 本接口(ResetAccountPassword)用于重置实例的数据库账号密码。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_OPERATIONNOTSUPPORT = "InternalError.OperationNotSupport"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_ILLEGALPASSWORD = "InvalidParameterValue.IllegalPassword"
+//  INVALIDPARAMETERVALUE_INTERNALACCOUNT = "InvalidParameterValue.InternalAccount"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDPASSWORDVALUEERROR = "InvalidParameterValue.InvalidPasswordValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
+//  OPERATIONDENIED_SERVERLESSINSTANCESTATUSDENIED = "OperationDenied.ServerlessInstanceStatusDenied"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) ResetAccountPasswordWithContext(ctx context.Context, request *ResetAccountPasswordRequest) (response *ResetAccountPasswordResponse, err error) {
+    if request == nil {
+        request = NewResetAccountPasswordRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetAccountPassword require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetAccountPasswordResponse()
     err = c.Send(request, response)
     return
 }
@@ -3563,6 +4869,112 @@ func (c *Client) RollBackClusterWithContext(ctx context.Context, request *RollBa
     return
 }
 
+func NewSearchClusterDatabasesRequest() (request *SearchClusterDatabasesRequest) {
+    request = &SearchClusterDatabasesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "SearchClusterDatabases")
+    
+    
+    return
+}
+
+func NewSearchClusterDatabasesResponse() (response *SearchClusterDatabasesResponse) {
+    response = &SearchClusterDatabasesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// SearchClusterDatabases
+// 本接口(SearchClusterDatabases)搜索集群database列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+func (c *Client) SearchClusterDatabases(request *SearchClusterDatabasesRequest) (response *SearchClusterDatabasesResponse, err error) {
+    return c.SearchClusterDatabasesWithContext(context.Background(), request)
+}
+
+// SearchClusterDatabases
+// 本接口(SearchClusterDatabases)搜索集群database列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+func (c *Client) SearchClusterDatabasesWithContext(ctx context.Context, request *SearchClusterDatabasesRequest) (response *SearchClusterDatabasesResponse, err error) {
+    if request == nil {
+        request = NewSearchClusterDatabasesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SearchClusterDatabases require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSearchClusterDatabasesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSearchClusterTablesRequest() (request *SearchClusterTablesRequest) {
+    request = &SearchClusterTablesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "SearchClusterTables")
+    
+    
+    return
+}
+
+func NewSearchClusterTablesResponse() (response *SearchClusterTablesResponse) {
+    response = &SearchClusterTablesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// SearchClusterTables
+// 本接口(SearchClusterTables)搜索集群数据表列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+func (c *Client) SearchClusterTables(request *SearchClusterTablesRequest) (response *SearchClusterTablesResponse, err error) {
+    return c.SearchClusterTablesWithContext(context.Background(), request)
+}
+
+// SearchClusterTables
+// 本接口(SearchClusterTables)搜索集群数据表列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+func (c *Client) SearchClusterTablesWithContext(ctx context.Context, request *SearchClusterTablesRequest) (response *SearchClusterTablesResponse, err error) {
+    if request == nil {
+        request = NewSearchClusterTablesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SearchClusterTables require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSearchClusterTablesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewSetRenewFlagRequest() (request *SetRenewFlagRequest) {
     request = &SetRenewFlagRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3693,6 +5105,68 @@ func (c *Client) SwitchClusterZoneWithContext(ctx context.Context, request *Swit
     request.SetContext(ctx)
     
     response = NewSwitchClusterZoneResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewSwitchProxyVpcRequest() (request *SwitchProxyVpcRequest) {
+    request = &SwitchProxyVpcRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cynosdb", APIVersion, "SwitchProxyVpc")
+    
+    
+    return
+}
+
+func NewSwitchProxyVpcResponse() (response *SwitchProxyVpcResponse) {
+    response = &SwitchProxyVpcResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// SwitchProxyVpc
+// 本接口(SwitchProxyVpc)更换数据库代理vpc
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) SwitchProxyVpc(request *SwitchProxyVpcRequest) (response *SwitchProxyVpcResponse, err error) {
+    return c.SwitchProxyVpcWithContext(context.Background(), request)
+}
+
+// SwitchProxyVpc
+// 本接口(SwitchProxyVpc)更换数据库代理vpc
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+//  FAILEDOPERATION_OPERATIONFAILEDERROR = "FailedOperation.OperationFailedError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_PARAMERROR = "InvalidParameterValue.ParamError"
+//  RESOURCENOTFOUND_CLUSTERNOTFOUNDERROR = "ResourceNotFound.ClusterNotFoundError"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) SwitchProxyVpcWithContext(ctx context.Context, request *SwitchProxyVpcRequest) (response *SwitchProxyVpcResponse, err error) {
+    if request == nil {
+        request = NewSwitchProxyVpcRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("SwitchProxyVpc require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewSwitchProxyVpcResponse()
     err = c.Send(request, response)
     return
 }
