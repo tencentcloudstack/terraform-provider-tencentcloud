@@ -312,8 +312,8 @@ func dataSourceTencentCloudCynosdbParamTemplatesRead(d *schema.ResourceData, met
 				paramInfoMap["default"] = paramInfo.Default
 				enumValues := make([]string, 0)
 				if paramInfo.EnumValue != nil {
-					for _, enumValue := range enumValues {
-						enumValues = append(enumValues, enumValue)
+					for _, enumValue := range paramInfo.EnumValue {
+						enumValues = append(enumValues, *enumValue)
 					}
 				}
 				paramInfoMap["enum_value"] = enumValues
