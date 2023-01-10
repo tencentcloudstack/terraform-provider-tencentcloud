@@ -1077,7 +1077,7 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 
 		log.Printf("[DEBUG]%s read  migrateJob.MigrateOption.Consistency:[%v]", logId, migrateJob.MigrateOption.Consistency)
 		if migrateJob.MigrateOption.Consistency != nil {
-			consistencyMap := make(map[string]interface{}, 0)
+			consistencyMap := make(map[string]interface{})
 
 			mode := migrateJob.MigrateOption.Consistency.Mode
 			if mode != nil && *mode != "" {
