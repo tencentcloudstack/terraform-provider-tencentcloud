@@ -66,6 +66,12 @@ func resourceTencentCloudCamUserSamlConfig() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "Status: `0`: not set, `11`: enabled, `2`: disabled.",
 			},
+
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save samlMetadata.",
+			},
 		},
 	}
 }
@@ -143,6 +149,14 @@ func resourceTencentCloudCamUserSamlConfigRead(d *schema.ResourceData, meta inte
 
 	if userSamlConfig.Status != nil {
 		_ = d.Set("status", userSamlConfig.Status)
+	}
+
+	output, ok := d.GetOk("result_output_file")
+	// if ok && output.(string) != "" {
+	if ok {
+		if err = writeToFile(output.(string), d.Get("saml_metadata_document")); err != nil {
+			return err
+		}
 	}
 
 	return nil

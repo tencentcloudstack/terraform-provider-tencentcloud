@@ -27,6 +27,7 @@ resource "tencentcloud_cam_user_saml_config" "user_saml_config" {
 The following arguments are supported:
 
 * `saml_metadata_document` - (Required, String) SAML metadata document, xml format, support string content or file path.
+* `result_output_file` - (Optional, String) Used to save samlMetadata.
 
 ## Attributes Reference
 
