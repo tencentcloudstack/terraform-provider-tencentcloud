@@ -165,7 +165,7 @@ func resourceTencentCloudTemEnvironmentCreate(d *schema.ResourceData, meta inter
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::tem:%s:uin/:tem-environment/%s", region, environmentId)
+		resourceName := fmt.Sprintf("qcs::tem:%s:uin/:environment/%s", region, environmentId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -215,7 +215,7 @@ func resourceTencentCloudTemEnvironmentRead(d *schema.ResourceData, meta interfa
 	client := meta.(*TencentCloudClient).apiV3Conn
 	tagService := TagService{client: client}
 	region := client.Region
-	tags, err := tagService.DescribeResourceTags(ctx, "tem", "tem-environment", region, environmentId)
+	tags, err := tagService.DescribeResourceTags(ctx, "tem", "environment", region, environmentId)
 	if err != nil {
 		return err
 	}

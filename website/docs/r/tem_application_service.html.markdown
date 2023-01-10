@@ -40,7 +40,7 @@ The following arguments are supported:
 The `port_mapping_item_list` object supports the following:
 
 * `port` - (Optional, Int) container port.
-* `protocol` - (Optional, String) udp or tcp.
+* `protocol` - (Optional, String) UDP or TCP.
 * `target_port` - (Optional, Int) application listen port.
 
 The `service` object supports the following:
