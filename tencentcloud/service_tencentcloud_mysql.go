@@ -1295,3 +1295,52 @@ func (me *MysqlService) OfflineIsolatedInstances(ctx context.Context, mysqlId st
 
 	return
 }
+
+func (me *MysqlService) DescribeMysqlTimeWindowById(ctx context.Context, instanceId string) (timeWindow *cdb.DescribeTimeWindowResponse, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDescribeTimeWindowRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DescribeTimeWindow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	timeWindow = response
+	return
+}
+
+func (me *MysqlService) DeleteMysqlTimeWindowById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDeleteTimeWindowRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DeleteTimeWindow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

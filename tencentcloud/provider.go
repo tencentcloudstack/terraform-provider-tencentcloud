@@ -419,6 +419,7 @@ TencentDB for MySQL(cdb)
     tencentcloud_mysql_privilege
     tencentcloud_mysql_account_privilege
     tencentcloud_mysql_backup_policy
+	tencentcloud_mysql_time_window
 
 Cloud Monitor(Monitor)
   Data Source
@@ -1317,6 +1318,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mysql_privilege":                          resourceTencentCloudMysqlPrivilege(),
 			"tencentcloud_mysql_instance":                           resourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_readonly_instance":                  resourceTencentCloudMysqlReadonlyInstance(),
+			"tencentcloud_mysql_time_window":                        resourceTencentCloudMysqlTimeWindow(),
 			"tencentcloud_cos_bucket":                               resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                        resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                          resourceTencentCloudCfsFileSystem(),
