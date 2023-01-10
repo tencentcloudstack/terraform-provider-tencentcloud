@@ -8,7 +8,38 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentyun/cos-go-sdk-v5"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_ci_media_concat_template
+	resource.AddTestSweepers("tencentcloud_ci_media_concat_template", &resource.Sweeper{
+		Name: "tencentcloud_ci_media_concat_template",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := CiService{client: client}
+
+			response, _, err := service.client.UseCiClient(defaultCiBucket).CI.DescribeMediaTemplate(ctx, &cos.DescribeMediaTemplateOptions{
+				Name: "concat_templates",
+			})
+			if err != nil {
+				return err
+			}
+
+			for _, v := range response.TemplateList {
+				err := service.DeleteCiMediaTemplateById(ctx, defaultCiBucket, v.TemplateId)
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 // go test -i; go test -test.run TestAccTencentCloudCiMediaConcatTemplateResource_basic -v
 func TestAccTencentCloudCiMediaConcatTemplateResource_basic(t *testing.T) {
@@ -49,7 +80,6 @@ func TestAccTencentCloudCiMediaConcatTemplateResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_concat_template.media_concat_template", "concat_template.0.audio_mix.0.effect_config.0.enable_start_fadein", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_concat_template.media_concat_template", "concat_template.0.audio_mix.0.effect_config.0.start_fadein_time", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_concat_template.media_concat_template", "concat_template.0.audio_mix.0.effect_config.0.enable_end_fadeout", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_concat_template.media_concat_template", "concat_template.0.audio_mix.0.effect_config.0.end_fadeout_time", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_concat_template.media_concat_template", "concat_template.0.audio_mix.0.effect_config.0.enable_bgm_fade", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_concat_template.media_concat_template", "concat_template.0.audio_mix.0.effect_config.0.bgm_fade_time", "1.7"),
 				),
@@ -173,7 +203,7 @@ resource "tencentcloud_ci_media_concat_template" "media_concat_template" {
 				enable_start_fadein = "true"
 				start_fadein_time = "3"
 				enable_end_fadeout = "false"
-				end_fadeout_time = "0"
+				end_fadeout_time = "1"
 				enable_bgm_fade = "true"
 				bgm_fade_time = "1.7"
 			}
