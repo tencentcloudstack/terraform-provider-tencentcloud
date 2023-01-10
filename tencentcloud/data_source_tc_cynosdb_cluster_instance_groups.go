@@ -280,7 +280,7 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroups() *schema.Resource {
 									"destroy_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Instance destory time.",
+										Description: "Instance destroy time.",
 									},
 									"cynos_version": {
 										Type:        schema.TypeString,

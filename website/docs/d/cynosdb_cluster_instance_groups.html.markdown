@@ -47,7 +47,7 @@ In addition to all arguments above, the following attributes are exported:
     * `db_type` - Database type.
     * `db_version` - Database version.
     * `destroy_deadline_text` - Destroy deadline.
-    * `destroy_time` - Instance destory time.
+    * `destroy_time` - Instance destroy time.
     * `instance_id` - The id of instance.
     * `instance_name` - The name of instance.
     * `instance_role` - Instance role.

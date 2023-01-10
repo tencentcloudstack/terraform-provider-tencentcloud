@@ -186,7 +186,7 @@ func dataSourceTencentCloudCynosdbParamTemplates() *schema.Resource {
 									"need_reboot": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "Wheter to reboot.",
+										Description: "Whether to reboot.",
 									},
 									"description": {
 										Type:        schema.TypeString,

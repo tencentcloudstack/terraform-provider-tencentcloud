@@ -50,7 +50,7 @@ In addition to all arguments above, the following attributes are exported:
     * `enum_value` - An optional set of value types when the parameter type is enum.Note: This field may return null, indicating that no valid value can be obtained.
     * `max` - The maximum value when the parameter type is float/integer.Note: This field may return null, indicating that no valid value can be obtained.
     * `min` - The minimum value when the parameter type is float/integer.Note: This field may return null, indicating that no valid value can be obtained.
-    * `need_reboot` - Wheter to reboot.
+    * `need_reboot` - Whether to reboot.
     * `param_name` - The name of parameter.
     * `param_type` - Parameter type: integer/float/string/enum.
   * `template_description` - The description of template.
