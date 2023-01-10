@@ -168,6 +168,42 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudPostgresqlInstanceResource_prepaid(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccPostgresqlInstancePrepaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "name", "tf_postsql_pre"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "PREPAID"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "vpc_id"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "subnet_id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "memory", "2"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "storage", "50"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "create_time"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "public_access_switch", "false"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "availability_zone"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_ip"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "private_access_port"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "db_major_vesion"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "db_major_version"),
+				),
+			},
+			{
+				ResourceName:            testPostgresqlInstanceResourceKey,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"root_password", "spec_code", "public_access_switch", "charset", "backup_plan"},
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -288,6 +324,34 @@ resource "tencentcloud_postgresql_instance" "test" {
   }
 }
 `
+
+const testAccPostgresqlInstancePrepaid = defaultVpcSubnets + `
+data "tencentcloud_availability_zones_by_product" "zone" {
+  product = "postgres"
+}
+
+data "tencentcloud_security_groups" "internal" {
+  name = "default"
+}
+
+locals {
+  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+}
+
+resource "tencentcloud_postgresql_instance" "test" {
+  name 				= "tf_postsql_pre"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
+  charge_type 		= "PREPAID"
+  vpc_id  	  		= local.vpc_id
+  subnet_id 		= local.subnet_id
+  engine_version	= "10.4"
+  root_password	    = "t1qaA2k1wgvfa3?ZZZ"
+  security_groups   = [local.sg_id]
+  charset			= "LATIN1"
+  project_id 		= 0
+  memory 			= 2
+  storage 			= 50
+}`
 
 const testAccPostgresqlInstanceOpenPublic string = testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
 resource "tencentcloud_postgresql_instance" "test" {
