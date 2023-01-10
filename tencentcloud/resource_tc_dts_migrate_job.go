@@ -351,7 +351,6 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
-													Computed:    true,
 													Description: "Procedures.",
 												},
 												"events": {
@@ -387,12 +386,14 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 						"migrate_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "MigrateType.",
 						},
 						"consistency": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "Consistency.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -407,19 +408,16 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 						"is_migrate_account": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 							Description: "IsMigrateAccount.",
 						},
 						"is_override_root": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 							Description: "IsOverrideRoot.",
 						},
 						"is_dst_read_only": {
 							Type:        schema.TypeBool,
 							Optional:    true,
-							Computed:    true,
 							Description: "IsDstReadOnly.",
 						},
 						"extra_attr": {
@@ -547,6 +545,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 									"engine_version": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "EngineVersion.",
 									},
 									"account": {
@@ -1072,10 +1071,9 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 			migrateOptionMap["database_table"] = []interface{}{databaseTableMap}
 		}
 
-		// DTS return a dafault value when user didn't input this field
-		// if migrateJob.MigrateOption.MigrateType != nil {
-		// 	migrateOptionMap["migrate_type"] = migrateJob.MigrateOption.MigrateType
-		// }
+		if migrateJob.MigrateOption.MigrateType != nil {
+			migrateOptionMap["migrate_type"] = migrateJob.MigrateOption.MigrateType
+		}
 
 		log.Printf("[DEBUG]%s read  migrateJob.MigrateOption.Consistency:[%v]", logId, migrateJob.MigrateOption.Consistency)
 		if migrateJob.MigrateOption.Consistency != nil {
@@ -1084,8 +1082,8 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 			mode := migrateJob.MigrateOption.Consistency.Mode
 			if mode != nil && *mode != "" {
 				consistencyMap["mode"] = migrateJob.MigrateOption.Consistency.Mode
-				migrateOptionMap["consistency"] = []interface{}{consistencyMap}
 			}
+			migrateOptionMap["consistency"] = []interface{}{consistencyMap}
 		}
 
 		if migrateJob.MigrateOption.IsMigrateAccount != nil {
@@ -1199,10 +1197,9 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 				}
 
 				log.Printf("[DEBUG]%s read  migrateJob.SrcInfo.Info.EngineVersion:[%v,%s]", logId, info.EngineVersion, *info.EngineVersion)
-				// DTS return a dafault value when user didn't input this field
-				// if info.EngineVersion != nil {
-				// 	infoMap["engine_version"] = info.EngineVersion
-				// }
+				if info.EngineVersion != nil {
+					infoMap["engine_version"] = info.EngineVersion
+				}
 
 				if info.Account != nil {
 					infoMap["account"] = info.Account
@@ -1337,8 +1334,10 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 				}
 
 				log.Printf("[DEBUG]%s read  migrateJob.DstInfo.Info.EngineVersion:[%v,%s]", logId, info.EngineVersion, *info.EngineVersion)
-				if info.EngineVersion != nil {
-					infoMap["engine_version"] = info.EngineVersion
+				if d.HasChange("engine_version") {
+					if info.EngineVersion != nil {
+						infoMap["engine_version"] = info.EngineVersion
+					}
 				}
 
 				if info.Account != nil {
@@ -1837,6 +1836,7 @@ func handleCheckMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCl
 	return nil
 }
 
+// reserve for future implementation
 // func handleResumeMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
 // 	resumeMigrateJobRequest := dts.NewResumeMigrateJobRequest()
 // 	resumeMigrateJobRequest.JobId = helper.String(jobId)

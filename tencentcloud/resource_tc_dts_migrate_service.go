@@ -269,10 +269,8 @@ func resourceTencentCloudDtsMigrateServiceUpdate(d *schema.ResourceData, meta in
 	request := dts.NewModifyMigrateJobSpecRequest()
 	request.JobId = helper.String(d.Id())
 
-	if d.HasChange("instance_class") {
-		if v, ok := d.GetOk("instance_class"); ok {
-			request.NewInstanceClass = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("instance_class"); ok {
+		request.NewInstanceClass = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
