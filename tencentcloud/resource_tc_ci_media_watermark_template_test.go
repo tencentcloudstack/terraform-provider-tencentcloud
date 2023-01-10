@@ -8,7 +8,38 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentyun/cos-go-sdk-v5"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_ci_media_watermark_template
+	resource.AddTestSweepers("tencentcloud_ci_media_watermark_template", &resource.Sweeper{
+		Name: "tencentcloud_ci_media_watermark_template",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+			client := cli.(*TencentCloudClient).apiV3Conn
+			service := CiService{client: client}
+
+			response, _, err := service.client.UseCiClient(defaultCiBucket).CI.DescribeMediaTemplate(ctx, &cos.DescribeMediaTemplateOptions{
+				Name: "watermark_template",
+			})
+			if err != nil {
+				return err
+			}
+
+			for _, v := range response.TemplateList {
+				err := service.DeleteCiMediaTemplateById(ctx, defaultCiBucket, v.TemplateId)
+				if err != nil {
+					continue
+				}
+			}
+
+			return nil
+		},
+	})
+}
 
 // go test -i; go test -test.run TestAccTencentCloudCiMediaWatermarkTemplateResource_basic -v
 func TestAccTencentCloudCiMediaWatermarkTemplateResource_basic(t *testing.T) {
