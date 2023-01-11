@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudDayuDDosIpAttachment_basic(t *testing.T) {
+func TestAccTencentCloudDayuDdosIpAttachmentV2Resource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_INTERNATIONAL) },
@@ -47,7 +47,7 @@ func testAccCheckDayuDdosIpAttachmentDestroy(s *terraform.State) error {
 		bgpInstanceId := idSplit[0]
 		boundIps := idSplit[1]
 		boundIpMap := make(map[string]bool)
-		for _, boundIp := range strings.Split(boundIps, ",") {
+		for _, boundIp := range strings.Split(boundIps, COMMA_SP) {
 			boundIpMap[boundIp] = true
 		}
 		boundip, err := service.DescribeAntiddosBoundipById(ctx, bgpInstanceId)
@@ -103,7 +103,7 @@ func testAccCheckDayuDdosIpAttachmentExists(n string) resource.TestCheckFunc {
 			for _, item := range boundip.EipProductInfos {
 				boundIpMap[*item.Ip] = true
 			}
-			for _, item := range strings.Split(boundIps, ",") {
+			for _, item := range strings.Split(boundIps, COMMA_SP) {
 				if _, ok := boundIpMap[item]; !ok {
 					return fmt.Errorf("DDoS ip attachment not exists: %s, %s", rs.Primary.ID, item)
 				}

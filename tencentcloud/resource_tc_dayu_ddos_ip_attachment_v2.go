@@ -149,7 +149,7 @@ func resourceTencentCloudDayuDDosIpAttachmentCreateV2(d *schema.ResourceData, me
 		return err
 	}
 
-	d.SetId(bgpInstanceId + FILED_SP + strings.Join(boundIps, ","))
+	d.SetId(bgpInstanceId + FILED_SP + strings.Join(boundIps, COMMA_SP))
 
 	return resourceTencentCloudDayuDDosIpAttachmentReadV2(d, meta)
 }
@@ -171,7 +171,7 @@ func resourceTencentCloudDayuDDosIpAttachmentReadV2(d *schema.ResourceData, meta
 	bgpInstanceId := idSplit[0]
 	boundIps := idSplit[1]
 	boundIpMap := make(map[string]bool)
-	for _, boundIp := range strings.Split(boundIps, ",") {
+	for _, boundIp := range strings.Split(boundIps, COMMA_SP) {
 		boundIpMap[boundIp] = true
 	}
 
@@ -225,7 +225,7 @@ func resourceTencentCloudDayuDDosIpAttachmentDeleteV2(d *schema.ResourceData, me
 	request.Business = helper.String(BUSINESS_BGP_MULTIP)
 	request.Id = helper.String(bgpInstanceId)
 	ubBoundDevList := make([]*antiddos.BoundIpInfo, 0)
-	for _, boundIp := range strings.Split(boundIps, ",") {
+	for _, boundIp := range strings.Split(boundIps, COMMA_SP) {
 		ubBoundDevList = append(
 			ubBoundDevList,
 			&antiddos.BoundIpInfo{
