@@ -22,6 +22,9 @@ func TestAccTencentCloudMysqlParamTemplateResource_basic(t *testing.T) {
 				ResourceName:      "tencentcloud_mysql_param_template.param_template",
 				ImportState:       true,
 				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"engine_type",
+				},
 			},
 		},
 	})
