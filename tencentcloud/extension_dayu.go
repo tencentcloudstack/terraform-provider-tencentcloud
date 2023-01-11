@@ -173,3 +173,11 @@ const (
 	DAYU_L7_HEALTH_STATUS_SETTING  = 1
 	DAYU_L7_HEALTH_STATUS_SET_FAIL = 2
 )
+
+const DAYU_BOUNDSTATUS_IDLE = "idle"
+
+const RESPONSE_SUCCESS_CODE = "Success"
+
+const BUSINESS_BGP_MULTIP = "bgp-multip"
+
+const ISP_CODE_BGP = 5

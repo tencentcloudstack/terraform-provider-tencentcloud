@@ -57,6 +57,7 @@ Anti-DDoS(DayuV2)
 	tencentcloud_dayu_l7_rule_v2
 	tencentcloud_dayu_ddos_policy_v2
 	tencentcloud_dayu_cc_policy_v2
+	tencentcloud_dayu_ddos_ip_attachment_v2
 
 Anti-DDoS(Dayu)
   Data Source
@@ -864,8 +865,10 @@ Data Transmission Service(DTS)
 
   Resource
 	tencentcloud_dts_sync_job
-	tencentcloud_dts_migrate_job
 	tencentcloud_dts_compare_task
+	tencentcloud_dts_migrate_service
+	tencentcloud_dts_migrate_job
+	tencentcloud_dts_migrate_job_start_operation
 
 TDMQ for RocketMQ(trocket)
   Data Source
@@ -1591,7 +1594,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
+			"tencentcloud_dts_migrate_service":                        resourceTencentCloudDtsMigrateService(),
 			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
+			"tencentcloud_dts_migrate_job_start_operation":            resourceTencentCloudDtsMigrateJobStartOperation(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),
 			"tencentcloud_vpc_flow_log":                               resourceTencentCloudVpcFlowLog(),
@@ -1622,6 +1627,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_original_image_protection":               resourceTencentCloudCIOriginalImageProtection(),
 			"tencentcloud_cynosdb_audit_log_file":                     resourceTencentCloudCynosdbAuditLogFile(),
 			"tencentcloud_cynosdb_security_group":                     resourceTencentCloudCynosdbSecurityGroup(),
+			"tencentcloud_dayu_ddos_ip_attachment_v2":                 resourceTencentCloudDayuDDosIpAttachmentV2(),
 		},
 
 		ConfigureFunc: providerConfigure,
