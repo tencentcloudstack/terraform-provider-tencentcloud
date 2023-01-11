@@ -66,7 +66,6 @@ func resourceTencentCloudMysqlSecurityGroupsAttachmentCreate(d *schema.ResourceD
 
 	var (
 		request         = mysql.NewAssociateSecurityGroupsRequest()
-		response        = mysql.NewAssociateSecurityGroupsResponse()
 		securityGroupId string
 		instanceId      string
 	)
@@ -87,7 +86,6 @@ func resourceTencentCloudMysqlSecurityGroupsAttachmentCreate(d *schema.ResourceD
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
