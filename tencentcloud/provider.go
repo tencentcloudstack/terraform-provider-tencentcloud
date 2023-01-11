@@ -428,6 +428,10 @@ TencentDB for MySQL(cdb)
     tencentcloud_mysql_account_privilege
     tencentcloud_mysql_backup_policy
 	tencentcloud_mysql_time_window
+	tencentcloud_mysql_param_template
+	tencentcloud_mysql_deploy_group
+	tencentcloud_mysql_security_groups_attachment
+	tencentcloud_mysql_local_binlog_config
 
 Cloud Monitor(Monitor)
   Data Source
@@ -1338,6 +1342,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mysql_instance":                           resourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_readonly_instance":                  resourceTencentCloudMysqlReadonlyInstance(),
 			"tencentcloud_mysql_time_window":                        resourceTencentCloudMysqlTimeWindow(),
+			"tencentcloud_mysql_param_template":                     resourceTencentCloudMysqlParamTemplate(),
+			"tencentcloud_mysql_security_groups_attachment":         resourceTencentCloudMysqlSecurityGroupsAttachment(),
+			"tencentcloud_mysql_deploy_group":                       resourceTencentCloudMysqlDeployGroup(),
+			"tencentcloud_mysql_local_binlog_config":                resourceTencentCloudMysqlLocalBinlogConfig(),
 			"tencentcloud_cos_bucket":                               resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                        resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                          resourceTencentCloudCfsFileSystem(),
