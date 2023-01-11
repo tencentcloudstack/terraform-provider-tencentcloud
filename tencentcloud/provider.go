@@ -57,6 +57,7 @@ Anti-DDoS(DayuV2)
 	tencentcloud_dayu_l7_rule_v2
 	tencentcloud_dayu_ddos_policy_v2
 	tencentcloud_dayu_cc_policy_v2
+	tencentcloud_dayu_ddos_ip_attachment_v2
 
 Anti-DDoS(Dayu)
   Data Source
@@ -1618,6 +1619,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_original_image_protection":               resourceTencentCloudCIOriginalImageProtection(),
 			"tencentcloud_cynosdb_audit_log_file":                     resourceTencentCloudCynosdbAuditLogFile(),
 			"tencentcloud_cynosdb_security_group":                     resourceTencentCloudCynosdbSecurityGroup(),
+			"tencentcloud_dayu_ddos_ip_attachment_v2":                 resourceTencentCloudDayuDDosIpAttachmentV2(),
 		},
 
 		ConfigureFunc: providerConfigure,
