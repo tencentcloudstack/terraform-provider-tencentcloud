@@ -95,9 +95,6 @@ const (
 	// 查询日志失败。
 	FAILEDOPERATION_QUERYLOGERROR = "FailedOperation.QueryLogError"
 
-	// 代理创建中或则已存在，请勿重复创建。
-	FAILEDOPERATION_REPEATCREATEPROXYERROR = "FailedOperation.RepeatCreateProxyError"
-
 	// 后台请求服务异常，请您联系客服解决。
 	FAILEDOPERATION_RESPONSEVALUEERROR = "FailedOperation.ResponseValueError"
 
@@ -176,11 +173,20 @@ const (
 	// sql错误。
 	INTERNALERROR_EXESQLERROR = "InternalError.ExeSqlError"
 
+	// 执行http请求错误。
+	INTERNALERROR_EXECHTTPREQUESTERROR = "InternalError.ExecHttpRequestError"
+
+	// sql执行失败。
+	INTERNALERROR_EXECUTESQLERROR = "InternalError.ExecuteSQLError"
+
 	// 文件传输异常。
 	INTERNALERROR_FTPERROR = "InternalError.FtpError"
 
 	// Http请求异常。
 	INTERNALERROR_HTTPERROR = "InternalError.HttpError"
+
+	// 导入失败。
+	INTERNALERROR_IMPORTERROR = "InternalError.ImportError"
 
 	// 内部服务错误。
 	INTERNALERROR_INNERCOMMONERROR = "InternalError.InnerCommonError"
@@ -416,6 +422,9 @@ const (
 	// 该实例无此功能权限。
 	OPERATIONDENIED_FUNCTIONDENIED = "OperationDenied.FunctionDenied"
 
+	// 当前类型实例不支持该操作。
+	OPERATIONDENIED_INSTTYPENOTSUPPORT = "OperationDenied.InstTypeNotSupport"
+
 	// 实例锁冲突，请稍后重试。
 	OPERATIONDENIED_INSTANCELOCKERCONFLICT = "OperationDenied.InstanceLockerConflict"
 
@@ -424,6 +433,9 @@ const (
 
 	// 当前实例正在进行其他任务，不能执行延迟复制。
 	OPERATIONDENIED_INSTANCETASKRUNNING = "OperationDenied.InstanceTaskRunning"
+
+	// 实例任务状态异常。
+	OPERATIONDENIED_INSTANCETASKSTATUSERROR = "OperationDenied.InstanceTaskStatusError"
 
 	// 实例不支持该操作。
 	OPERATIONDENIED_INSTANCEUNSUPPORTEDOPERATEERROR = "OperationDenied.InstanceUnsupportedOperateError"
