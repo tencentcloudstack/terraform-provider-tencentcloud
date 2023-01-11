@@ -15,7 +15,7 @@ Import
 mysql security_groups_attachment can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_mysql_security_groups_attachment.security_groups_attachment security_groups_attachment_id
+terraform import tencentcloud_mysql_security_groups_attachment.security_groups_attachment securityGroupId#instanceId
 ```
 */
 package tencentcloud
