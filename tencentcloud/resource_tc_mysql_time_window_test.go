@@ -15,7 +15,7 @@ func TestAccTencentCloudMysqlTimeWindowResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCdbTimeWindow,
+				Config: testAccMysqlTimeWindow,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mysql_time_window.time_window", "id")),
 			},
 			{
@@ -27,7 +27,7 @@ func TestAccTencentCloudMysqlTimeWindowResource_basic(t *testing.T) {
 	})
 }
 
-const testAccCdbTimeWindow = `
+const testAccMysqlTimeWindow = `
 
 resource "tencentcloud_mysql_time_window" "time_window" {
   instance_id    = "cdb-fitq5t9h"

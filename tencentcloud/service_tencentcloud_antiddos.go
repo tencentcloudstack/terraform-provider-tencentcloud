@@ -1390,3 +1390,34 @@ func (me *AntiddosService) DeleteCCThresholdPolicy(ctx context.Context, instance
 	}
 	return
 }
+
+func (me *AntiddosService) DescribeAntiddosBoundipById(ctx context.Context, id string) (boundip *antiddos.BGPInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := antiddos.NewDescribeListBGPInstancesRequest()
+	request.FilterInstanceId = &id
+	request.Limit = helper.IntUint64(10)
+	request.Offset = helper.IntUint64(0)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAntiddosClient().DescribeListBGPInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceList) < 1 {
+		return
+	}
+
+	boundip = response.Response.InstanceList[0]
+	return
+}

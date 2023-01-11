@@ -1,0 +1,19 @@
+```release-note:new-resource
+tencentcloud_mysql_local_binlog_config
+```
+
+```release-note:new-resource
+tencentcloud_mysql_security_groups_attachment
+```
+
+```release-note:new-resource
+tencentcloud_mysql_deploy_group
+```
+
+```release-note:new-resource
+tencentcloud_mysql_param_template
+```
+
+```release-note:enhancement
+datasource/tencentcloud_mysql_zone_config: update the called api
+```

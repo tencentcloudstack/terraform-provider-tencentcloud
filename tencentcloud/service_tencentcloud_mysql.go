@@ -114,10 +114,10 @@ func (me *MysqlService) CreateBackup(ctx context.Context, mysqlId string) (backu
 	return
 }
 
-func (me *MysqlService) DescribeDBZoneConfig(ctx context.Context) (sellConfigures []*cdb.RegionSellConf, errRet error) {
+func (me *MysqlService) DescribeDBZoneConfig(ctx context.Context) (sellConfigures *cdb.CdbZoneDataResult, errRet error) {
 
 	logId := getLogId(ctx)
-	request := cdb.NewDescribeDBZoneConfigRequest()
+	request := cdb.NewDescribeCdbZoneConfigRequest()
 
 	defer func() {
 		if errRet != nil {
@@ -126,12 +126,12 @@ func (me *MysqlService) DescribeDBZoneConfig(ctx context.Context) (sellConfigure
 		}
 	}()
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseMysqlClient().DescribeDBZoneConfig(request)
+	response, err := me.client.UseMysqlClient().DescribeCdbZoneConfig(request)
 	if err != nil {
 		errRet = err
 		return
 	}
-	sellConfigures = response.Response.Items
+	sellConfigures = response.Response.DataResult
 	return
 }
 
@@ -1342,5 +1342,209 @@ func (me *MysqlService) DeleteMysqlTimeWindowById(ctx context.Context, instanceI
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *MysqlService) DescribeMysqlParamTemplateById(ctx context.Context, templateId string) (paramTemplate *cdb.DescribeParamTemplateInfoResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDescribeParamTemplateInfoRequest()
+	request.TemplateId = helper.StrToInt64Point(templateId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DescribeParamTemplateInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	paramTemplate = response.Response
+	return
+}
+
+func (me *MysqlService) DeleteMysqlParamTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDeleteParamTemplateRequest()
+	request.TemplateId = helper.StrToInt64Point(templateId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DeleteParamTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlDeployGroupById(ctx context.Context, deployGroupId string) (deployGroup *cdb.DeployGroupInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDescribeDeployGroupListRequest()
+	request.DeployGroupId = &deployGroupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*cdb.DeployGroupInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMysqlClient().DescribeDeployGroupList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	deployGroup = instances[0]
+	return
+}
+
+func (me *MysqlService) DeleteMysqlDeployGroupById(ctx context.Context, deployGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDeleteDeployGroupsRequest()
+	request.DeployGroupIds = []*string{&deployGroupId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DeleteDeployGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlSecurityGroupsAttachmentById(ctx context.Context, securityGroupId string, instanceId string) (securityGroupsAttachment *cdb.SecurityGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDescribeDBSecurityGroupsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DescribeDBSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Groups) < 1 {
+		return
+	}
+
+	for _, sg := range response.Response.Groups {
+		if *sg.SecurityGroupId == securityGroupId {
+			securityGroupsAttachment = sg
+			break
+		}
+	}
+	return
+}
+
+func (me *MysqlService) DeleteMysqlSecurityGroupsAttachmentById(ctx context.Context, securityGroupId string, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDisassociateSecurityGroupsRequest()
+	request.SecurityGroupId = &securityGroupId
+	request.InstanceIds = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DisassociateSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlLocalBinlogConfigById(ctx context.Context, instanceId string) (localBinlogConfig *cdb.LocalBinlogConfig, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDescribeLocalBinlogConfigRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DescribeLocalBinlogConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	localBinlogConfig = response.Response.LocalBinlogConfig
 	return
 }

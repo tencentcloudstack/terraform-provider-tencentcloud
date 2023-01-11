@@ -1,3 +1,33 @@
+## 1.79.5 (January 11, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cynosdb_accounts` ([#1508](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1508))
+* **New Data Source:** `tencentcloud_cynosdb_cluster_instance_groups` ([#1508](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1508))
+* **New Data Source:** `tencentcloud_cynosdb_cluster_params` ([#1508](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1508))
+* **New Data Source:** `tencentcloud_cynosdb_param_templates` ([#1508](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1508))
+* **New Data Source:** `tencentcloud_dcdb_database_objects` ([#1500](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1500))
+* **New Data Source:** `tencentcloud_dcdb_database_tables` ([#1500](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1500))
+* **New Resource:** `tencentcloud_cynosdb_audit_log_file` ([#1508](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1508))
+* **New Resource:** `tencentcloud_cynosdb_security_group` ([#1508](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1508))
+* **New Resource:** `tencentcloud_dayu_ddos_ip_attachment_v2` ([#1511](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1511))
+* **New Resource:** `tencentcloud_dcdb_db_parameters` ([#1500](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1500))
+* **New Resource:** `tencentcloud_dts_migrate_job` ([#1490](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1490))
+* **New Resource:** `tencentcloud_dts_migrate_job_start_operation` ([#1490](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1490))
+* **New Resource:** `tencentcloud_dts_migrate_service` ([#1490](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1490))
+* **New Resource:** `tencentcloud_mysql_deploy_group` ([#1512](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1512))
+* **New Resource:** `tencentcloud_mysql_local_binlog_config` ([#1512](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1512))
+* **New Resource:** `tencentcloud_mysql_param_template` ([#1512](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1512))
+* **New Resource:** `tencentcloud_mysql_security_groups_attachment` ([#1512](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1512))
+* **New Resource:** `tencentcloud_mysql_time_window` ([#1509](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1509))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_mysql_zone_config: update the called api ([#1512](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1512))
+* resource/tencentcloud_dcdb_account_privileges: optimize the logic after modifing the AccountPrivileges ([#1500](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1500))
+* resource/tencentcloud_postgresql_instance: feat: pg - support prepaid arguments ([#1502](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1502))
+* resource/tencentcloud_vpc_bandwidth_package_attachment: catch the error when bgp attach is nil ([#1504](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1504))
+
 ## 1.79.4 (January 5, 2023)
 
 FEATURES:
