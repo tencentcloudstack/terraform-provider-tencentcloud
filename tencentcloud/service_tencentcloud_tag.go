@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/pkg/errors"
@@ -117,4 +118,36 @@ func diffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]s
 		}
 	}
 	return
+}
+
+func waitTagsEnable(tcClient *connectivity.TencentCloudClient, region, redisId string, tags map[string]string) (retErr error) {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	tagService := &TagService{client: tcClient}
+	retErr = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+		ret, err := tagService.DescribeResourceTags(ctx, "redis", "instance", region, redisId)
+		if err != nil {
+			return retryError(err)
+		}
+		if ret != nil {
+			if tagEqual(ret, tags) {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("the redis.instance %s is uncomplete, retry ...", redisId))
+		}
+		return resource.RetryableError(fmt.Errorf("the redis.instance %s's tags is nil, retry ...", redisId))
+	})
+	return retErr
+}
+
+func tagEqual(dst, orig map[string]string) bool {
+	for k := range orig {
+		if dst[k] == "" {
+			return false
+		}
+		if dst[k] != orig[k] {
+			return false
+		}
+	}
+	return true
 }

@@ -367,7 +367,7 @@ func (me *RedisService) CheckRedisOnlineOk(ctx context.Context, redisId string, 
 
 	// Post https://cdb.tencentcloudapi.com/: always get "Gateway Time-out"
 	var response *redis.DescribeInstancesResponse
-	err := resource.Retry(retryTimeout, func() *resource.RetryError {
+	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseRedisClient().DescribeInstances(request)
 		if e != nil {

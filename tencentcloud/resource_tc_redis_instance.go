@@ -223,6 +223,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
+				Computed:    true,
 				Description: "Instance tags.",
 			},
 
@@ -482,6 +483,25 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		return fmt.Errorf("redis api CreateInstances return empty redis id")
 	}
 	var redisId = *instanceIds[0]
+
+	var tags map[string]string
+	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
+		log.Printf("[DEBUG]%s begin to modify tags, len(tags):[%v], tags:[%s]\n", logId, len(tags), tags)
+		for k, v := range tags {
+			log.Printf("[DEBUG]%s tags[k:%s, v:%s]", logId, k, v)
+		}
+		resourceName := BuildTagResourceName("redis", "instance", region, redisId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			log.Printf("[CRITAL]%s modify tags failed, reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
+
+	// Wait for a while
+	err = waitTagsEnable(client, region, redisId, tags)
+	if err != nil {
+		return err
+	}
 	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, redisId, 20*readRetryTimeout)
 
 	if err != nil {
@@ -489,13 +509,6 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 	d.SetId(redisId)
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := BuildTagResourceName("redis", "instance", region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 
 	return resourceTencentCloudRedisInstanceRead(d, meta)
 }
@@ -833,14 +846,23 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	var (
+		replaceTags map[string]string
+		deleteTags  []string
+	)
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags = diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
 		resourceName := BuildTagResourceName("redis", "instance", region, id)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
+	}
+
+	err := waitTagsEnable(client, region, id, replaceTags)
+	if err != nil {
+		return err
 	}
 
 	d.Partial(false)
