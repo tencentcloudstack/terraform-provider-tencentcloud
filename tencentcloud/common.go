@@ -25,6 +25,7 @@ import (
 )
 
 const FILED_SP = "#"
+const COMMA_SP = ","
 
 var contextNil context.Context = nil
 

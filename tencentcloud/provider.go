@@ -57,6 +57,7 @@ Anti-DDoS(DayuV2)
 	tencentcloud_dayu_l7_rule_v2
 	tencentcloud_dayu_ddos_policy_v2
 	tencentcloud_dayu_cc_policy_v2
+	tencentcloud_dayu_ddos_ip_attachment_v2
 
 Anti-DDoS(Dayu)
   Data Source
@@ -427,6 +428,10 @@ TencentDB for MySQL(cdb)
     tencentcloud_mysql_account_privilege
     tencentcloud_mysql_backup_policy
 	tencentcloud_mysql_time_window
+	tencentcloud_mysql_param_template
+	tencentcloud_mysql_deploy_group
+	tencentcloud_mysql_security_groups_attachment
+	tencentcloud_mysql_local_binlog_config
 
 Cloud Monitor(Monitor)
   Data Source
@@ -1337,6 +1342,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mysql_instance":                           resourceTencentCloudMysqlInstance(),
 			"tencentcloud_mysql_readonly_instance":                  resourceTencentCloudMysqlReadonlyInstance(),
 			"tencentcloud_mysql_time_window":                        resourceTencentCloudMysqlTimeWindow(),
+			"tencentcloud_mysql_param_template":                     resourceTencentCloudMysqlParamTemplate(),
+			"tencentcloud_mysql_security_groups_attachment":         resourceTencentCloudMysqlSecurityGroupsAttachment(),
+			"tencentcloud_mysql_deploy_group":                       resourceTencentCloudMysqlDeployGroup(),
+			"tencentcloud_mysql_local_binlog_config":                resourceTencentCloudMysqlLocalBinlogConfig(),
 			"tencentcloud_cos_bucket":                               resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                        resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                          resourceTencentCloudCfsFileSystem(),
@@ -1618,6 +1627,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ci_original_image_protection":               resourceTencentCloudCIOriginalImageProtection(),
 			"tencentcloud_cynosdb_audit_log_file":                     resourceTencentCloudCynosdbAuditLogFile(),
 			"tencentcloud_cynosdb_security_group":                     resourceTencentCloudCynosdbSecurityGroup(),
+			"tencentcloud_dayu_ddos_ip_attachment_v2":                 resourceTencentCloudDayuDDosIpAttachmentV2(),
 		},
 
 		ConfigureFunc: providerConfigure,

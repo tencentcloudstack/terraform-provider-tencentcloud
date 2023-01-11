@@ -187,8 +187,9 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 	if err != nil {
 		return fmt.Errorf("api[DescribeBackups]fail, return %s", err.Error())
 	}
-	var regionItem *cdb.RegionSellConf
-	for _, regionItem = range sellConfigures {
+	var regionItem *cdb.CdbRegionSellConf
+
+	for _, regionItem = range sellConfigures.Regions {
 		if *regionItem.Region == region {
 			break
 		}
@@ -196,13 +197,12 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 	if regionItem == nil {
 		return nil
 	}
+
 	var zoneConfigs []interface{}
-	for _, sellItem := range regionItem.ZonesConf {
-		if *sellItem.Status != ZONE_SELL_STATUS_ONLINE && *sellItem.Status != ZONE_SELL_STATUS_NEW {
-			continue
-		}
-		var zoneConfig = make(map[string]interface{})
-		zoneConfig["name"] = *sellItem.Zone
+	var zoneConfig = make(map[string]interface{})
+
+	for _, sellItem := range regionItem.RegionConfig {
+		zoneConfig["name"] = regionItem.RegionName
 		if sellItem.HourInstanceSaleMaxNum != nil {
 			zoneConfig["hour_instance_sale_max_num"] = *sellItem.HourInstanceSaleMaxNum
 		}
@@ -256,9 +256,8 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 		zoneConfig["disaster_recovery_zones"] = disasterRecoveryZones
 
 		var (
-			slaveDeployModes                                                 []int
-			firstSlaveZones, secondSlaveZones, engineVersions, remoteRoZones []string
-			sells                                                            []interface{}
+			slaveDeployModes                                 []int
+			firstSlaveZones, secondSlaveZones, remoteRoZones []string
 		)
 		if sellItem.ZoneConf != nil {
 			for _, mode := range sellItem.ZoneConf.DeployMode {
@@ -278,22 +277,28 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 		zoneConfig["first_slave_zones"] = firstSlaveZones
 		zoneConfig["second_slave_zones"] = secondSlaveZones
 		zoneConfig["remote_ro_zones"] = remoteRoZones
+	}
 
-		for _, mysqlConfigs := range sellItem.SellType {
-			for _, strPtr := range mysqlConfigs.EngineVersion {
-				engineVersions = append(engineVersions, *strPtr)
-			}
-			for _, mysqlConfig := range mysqlConfigs.Configs {
-				var showConfigMap = make(map[string]interface{})
-				showConfigMap["cdb_type"] = *mysqlConfig.CdbType
-				showConfigMap["mem_size"] = int(*mysqlConfig.Memory)
-				showConfigMap["max_volume_size"] = int(*mysqlConfig.VolumeMax)
-				showConfigMap["min_volume_size"] = int(*mysqlConfig.VolumeMin)
-				showConfigMap["volume_step"] = int(*mysqlConfig.VolumeStep)
-				showConfigMap["qps"] = int(*mysqlConfig.Qps)
-				sells = append(sells, showConfigMap)
-			}
+	var (
+		engineVersions []string
+		sells          []interface{}
+	)
+
+	for _, sellItem := range sellConfigures.Configs {
+		if *sellItem.Status != ZONE_SELL_STATUS_ONLINE {
+			continue
 		}
+		engineVersions = append(engineVersions, *sellItem.EngineType)
+
+		var showConfigMap = make(map[string]interface{})
+		showConfigMap["cdb_type"] = *sellItem.DeviceType
+		showConfigMap["mem_size"] = int(*sellItem.Memory)
+		showConfigMap["max_volume_size"] = int(*sellItem.VolumeMax)
+		showConfigMap["min_volume_size"] = int(*sellItem.VolumeMin)
+		showConfigMap["volume_step"] = int(*sellItem.VolumeStep)
+		showConfigMap["qps"] = int(*sellItem.Iops)
+		sells = append(sells, showConfigMap)
+
 		zoneConfig["engine_versions"] = engineVersions
 		zoneConfig["sells"] = sells
 
