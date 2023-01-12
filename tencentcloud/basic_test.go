@@ -902,3 +902,10 @@ variable "cynosdb_cluster_security_group_id" {
 `
 
 // End of Cynosdb
+
+// TSF
+const (
+	defaultNamespaceId = "namespace-ym9mkeza"
+)
+
+// End of TSF
