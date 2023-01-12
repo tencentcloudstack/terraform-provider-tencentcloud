@@ -208,7 +208,10 @@ func resourceTencentCloudDtsMigrateServiceRead(d *schema.ResourceData, meta inte
 
 	if migrateJob == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `migrateJob` %s does not exist", jobId)
+		log.Printf("[WARN]%s resource `tencentcloud_redis_instance` [%s] not found, please check if it has been deleted.",
+			logId, jobId,
+		)
+		return nil
 	}
 
 	if migrateJob.SrcInfo != nil {

@@ -497,11 +497,13 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	// Wait for a while
+	// Wait the tags enabled
 	err = waitTagsEnable(client, region, redisId, tags)
 	if err != nil {
 		return err
 	}
+	// time.Sleep(5 * time.Second)
+
 	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, redisId, 20*readRetryTimeout)
 
 	if err != nil {
@@ -520,7 +522,11 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	service := RedisService{client: tcClient}
+	tagService := &TagService{client: tcClient}
+
+	instanceId := d.Id()
 	var onlineHas = true
 	var (
 		has  bool
@@ -547,7 +553,9 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		return nil
 	})
 	if err != nil {
-		return fmt.Errorf("Fail to get info from redis, reaseon %s", err.Error())
+		// return fmt.Errorf("Fail to get info from redis, reaseon %s", err.Error())
+		log.Printf("[WARN]%s resource `tencentcloud_redis_instance` [%s] not found, please check if it has been deleted.", logId, instanceId)
+		return nil
 	}
 	if !onlineHas {
 		return nil
@@ -645,9 +653,8 @@ func resourceTencentCloudRedisInstanceRead(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "redis", "instance", tcClient.Region, d.Id())
+	var tags map[string]string
+	tags, err = tagService.DescribeResourceTags(ctx, "redis", "instance", tcClient.Region, instanceId)
 	if err != nil {
 		return err
 	}
@@ -860,6 +867,8 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	// time.Sleep(5 * time.Second)
+	// Wait the tags enabled
 	err := waitTagsEnable(client, region, id, replaceTags)
 	if err != nil {
 		return err
