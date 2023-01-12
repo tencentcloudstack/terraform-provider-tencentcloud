@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -17,7 +18,7 @@ type TCRService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *TCRService) CreateTCRInstance(ctx context.Context, name string, instanceType string, tags map[string]string) (instanceId string, errRet error) {
+func (me *TCRService) CreateTCRInstance(ctx context.Context, name string, instanceType string, params map[string]interface{}) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewCreateInstanceRequest()
 	defer func() {
@@ -28,6 +29,33 @@ func (me *TCRService) CreateTCRInstance(ctx context.Context, name string, instan
 	request.RegistryName = &name
 	request.RegistryType = &instanceType
 
+	var chargeType, period, renewFlag int
+	if v, ok := params["registry_charge_type"]; ok {
+		chargeType = v.(int)
+		request.RegistryChargeType = helper.IntInt64(chargeType - 1)
+	}
+
+	if v, ok := params["instance_charge_type_prepaid_period"]; ok {
+		period = v.(int)
+	}
+	if v, ok := params["instance_charge_type_prepaid_renew_flag"]; ok {
+		renewFlag = v.(int)
+	}
+	if chargeType == 2 {
+		if period == 0 || renewFlag == 0 {
+			errRet = errors.New("Must set instance_charge_type_prepaid_period and instance_charge_type_prepaid_renew_flag when registry_charge_type is postpaid")
+			return
+		}
+		request.RegistryChargePrepaid = &tcr.RegistryChargePrepaid{
+			Period:    helper.IntInt64(period),
+			RenewFlag: helper.IntInt64(renewFlag - 1),
+		}
+	}
+
+	var tags map[string]string
+	if v, ok := params["tags"]; ok {
+		tags = v.(map[string]string)
+	}
 	if len(tags) > 0 {
 		tagSpec := tcr.TagSpecification{ResourceType: helper.String("instance"), Tags: make([]*tcr.Tag, 0)}
 		for k, v := range tags {

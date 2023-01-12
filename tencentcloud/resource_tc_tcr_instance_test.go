@@ -83,7 +83,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
+func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -140,7 +140,35 @@ func TestAccTencentCloudTCRInstance_basic_and_update(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudTCRInstance_replication(t *testing.T) {
+func TestAccTencentCloudTcrInstanceResource_paypaid(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckTCRInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTCRInstance_paypaid,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "name", "paypaidtcrinstance"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_type", "basic"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "registry_charge_type", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_charge_type_prepaid_renew_flag", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_instance.mytcr_instance_paypaid", "expired_at"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_tcr_instance.mytcr_instance_paypaid",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"delete_bucket", "instance_charge_type_prepaid_period"},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -171,7 +199,7 @@ func TestAccTencentCloudTCRInstance_replication(t *testing.T) {
 	})
 }
 
-func TestUnitTencentCloudTCRReplicaSet(t *testing.T) {
+func TestAccTencentCloudTcrInstanceResource_replica_set(t *testing.T) {
 
 	inputs := []interface{}{
 		map[string]interface{}{
@@ -319,6 +347,19 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
   instance_type = "basic"
   delete_bucket = true
 
+  tags ={
+	test = "test"
+  }
+}`
+
+const testAccTCRInstance_paypaid = `
+resource "tencentcloud_tcr_instance" "mytcr_instance_paypaid" {
+  name        = "paypaidtcrinstance"
+  instance_type = "basic"
+  delete_bucket = true
+  registry_charge_type = 2
+  instance_charge_type_prepaid_period = 1
+  instance_charge_type_prepaid_renew_flag = 1
   tags ={
 	test = "test"
   }
