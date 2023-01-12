@@ -45,7 +45,7 @@ func testAccCheckTsfMicroserviceDestroy(s *terraform.State) error {
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TsfService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_tem_workload" {
+		if rs.Type != "tencentcloud_tsf_microservice" {
 			continue
 		}
 
@@ -62,7 +62,7 @@ func testAccCheckTsfMicroserviceDestroy(s *terraform.State) error {
 		}
 
 		if res != nil {
-			return fmt.Errorf("tem workload %s still exists", rs.Primary.ID)
+			return fmt.Errorf("tsf microservice %s still exists", rs.Primary.ID)
 		}
 	}
 	return nil
@@ -91,7 +91,7 @@ func testAccCheckTsfMicroserviceExists(r string) resource.TestCheckFunc {
 		}
 
 		if res == nil {
-			return fmt.Errorf("tem workload %s is not found", rs.Primary.ID)
+			return fmt.Errorf("tsf microservice %s is not found", rs.Primary.ID)
 		}
 
 		return nil
