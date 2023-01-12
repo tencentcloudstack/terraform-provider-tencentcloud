@@ -86,7 +86,7 @@ func init() {
 func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -143,7 +143,7 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 func TestAccTencentCloudTcrInstanceResource_paypaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -171,7 +171,7 @@ func TestAccTencentCloudTcrInstanceResource_paypaid(t *testing.T) {
 func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRInstanceDestroy,
 		Steps: []resource.TestStep{
