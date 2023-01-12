@@ -556,6 +556,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.573 h1:H2p5
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.573/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.576 h1:6L4MeAnCk1NkuKoSfJvNPxqOrXq/HG9FqV3jl6i5t+w=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.576/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.577/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.578 h1:dfSNB1i1dOgGQ/WBAlWax7iLFAIiodDSr9xDIwPNLDM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.578/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445 h1:Bh7XD0ypNMHYyBOM8hhKsSu+y0VVKUnJVS+YKKhfpGg=
@@ -665,6 +666,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.519 h1:o8NsQPL
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.519/go.mod h1:ydWSzYKc8AwtT9I8Cd0JdICqiyp9h+u2J5maDWxC9Mo=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.549 h1:WWKxOUMmhH5U2VxKtAKp5Hp0RDSxWJUk87pUjI5hmYM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.549/go.mod h1:UPffPhIo23aJ3N40bwWhxhr0fIR9jn0Lfboxh17km8E=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.577 h1:IR6FJYLGSQ6isnbGQon6E9Ucc4PEUE+d3l9+/4pnH70=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.577/go.mod h1:6cRxUX1QsRcd9EHDg1BVBlC524oupmN0DuAFGAdJLC0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199 h1:6Yt74l4pA5QtzhwMNIEUt0spXdSBKH744DDqTHJOCP0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199/go.mod h1:Yw6OQ33z3s4k0HVYTNSffB12qOzEJ2Zf1Vj4+5S3sRs=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.515 h1:OWA3zSqC+tY42DwnlzAZVNYkB5dWgcwk435n+84jXNM=
