@@ -23,7 +23,7 @@ resource "tencentcloud_tem_application_service" "application_service" {
     port_mapping_item_list {
       port        = 80
       target_port = 80
-      protocol    = "tcp"
+      protocol    = "TCP"
     }
   }
 }
@@ -47,7 +47,9 @@ The `service` object supports the following:
 
 * `port_mapping_item_list` - (Optional, List) port mapping item list.
 * `service_name` - (Optional, String) application service name.
+* `subnet_id` - (Optional, String) ID of subnet instance, required when type is `VPC`.
 * `type` - (Optional, String) application service type: EXTERNAL | VPC | CLUSTER.
+* `vpc_id` - (Optional, String) ID of vpc instance, required when type is `VPC`.
 
 ## Attributes Reference
 

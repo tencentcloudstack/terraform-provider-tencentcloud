@@ -13,7 +13,7 @@ resource "tencentcloud_tem_application_service" "application_service" {
 		port_mapping_item_list {
 			port = 80
 			target_port = 80
-			protocol = "tcp"
+			protocol = "TCP"
 		}
   }
 }
@@ -71,14 +71,30 @@ func resourceTencentCloudTemApplicationService() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "application service type: EXTERNAL | VPC | CLUSTER.",
+							Type:         schema.TypeString,
+							Optional:     true,
+							Description:  "application service type: EXTERNAL | VPC | CLUSTER.",
+							ValidateFunc: validateAllowedStringValue([]string{"EXTERNAL", "VPC", "CLUSTER"}),
 						},
 						"service_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "application service name.",
+						},
+						"vpc_id": {
+							Optional:    true,
+							Type:        schema.TypeString,
+							Description: "ID of vpc instance, required when type is `VPC`.",
+						},
+						"subnet_id": {
+							Optional:    true,
+							Type:        schema.TypeString,
+							Description: "ID of subnet instance, required when type is `VPC`.",
+						},
+						"ip": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ip address of application service.",
 						},
 						"port_mapping_item_list": {
 							Type:        schema.TypeList,
@@ -137,6 +153,18 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 		servicePortMapping := tem.ServicePortMapping{}
 		if v, ok := dMap["type"]; ok {
 			servicePortMapping.Type = helper.String(v.(string))
+			if v.(string) == "VPC" {
+				if vv, ok := dMap["vpc_id"]; ok && vv != "" {
+					servicePortMapping.VpcId = helper.String(vv.(string))
+				} else {
+					return fmt.Errorf("vpc_id is required when type is `VPC`")
+				}
+				if vv, ok := dMap["subnet_id"]; ok && vv != "" {
+					servicePortMapping.SubnetId = helper.String(vv.(string))
+				} else {
+					return fmt.Errorf("subnet_id is required when type is `VPC`")
+				}
+			}
 		}
 		if v, ok := dMap["service_name"]; ok {
 			serviceName = v.(string)
@@ -172,6 +200,22 @@ func resourceTencentCloudTemApplicationServiceCreate(d *schema.ResourceData, met
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s create tem applicationService failed, reason:%+v", logId, err)
+		return err
+	}
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+		service, errRet := service.DescribeTemApplicationServiceById(ctx, environmentId, applicationId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if *service.Result.AllIpDone {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("service is not ready %v, retry...", *service.Result.AllIpDone))
+	})
+	if err != nil {
 		return err
 	}
 
@@ -223,10 +267,27 @@ func resourceTencentCloudTemApplicationServiceRead(d *schema.ResourceData, meta 
 
 		if applicationService.Type != nil {
 			serviceMap["type"] = applicationService.Type
+			if *applicationService.Type == "VPC" {
+				if applicationService.VpcId != nil {
+					serviceMap["vpc_id"] = applicationService.VpcId
+				}
+
+				if applicationService.SubnetId != nil {
+					serviceMap["subnet_id"] = applicationService.SubnetId
+				}
+			}
 		}
 
 		if applicationService.ServiceName != nil {
 			serviceMap["service_name"] = applicationService.ServiceName
+		}
+
+		if applicationService.Type != nil {
+			if *applicationService.Type == "CLUSTER" {
+				serviceMap["ip"] = applicationService.ClusterIp
+			} else {
+				serviceMap["ip"] = applicationService.ExternalIp
+			}
 		}
 
 		if applicationService.PortMappingItemList != nil {
@@ -284,6 +345,18 @@ func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, met
 			servicePortMapping := tem.ServicePortMapping{}
 			if v, ok := dMap["type"]; ok {
 				servicePortMapping.Type = helper.String(v.(string))
+				if v.(string) == "VPC" {
+					if vv, ok := dMap["vpc_id"]; ok && vv != "" {
+						servicePortMapping.VpcId = helper.String(vv.(string))
+					} else {
+						return fmt.Errorf("vpc_id is required when type is `VPC`")
+					}
+					if vv, ok := dMap["subnet_id"]; ok && vv != "" {
+						servicePortMapping.SubnetId = helper.String(vv.(string))
+					} else {
+						return fmt.Errorf("subnet_id is required when type is `VPC`")
+					}
+				}
 			}
 
 			servicePortMapping.ServiceName = &serviceName
