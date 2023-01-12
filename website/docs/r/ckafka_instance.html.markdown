@@ -62,6 +62,7 @@ The following arguments are supported:
 * `disk_size` - (Optional, Int) Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
 * `disk_type` - (Optional, String) Type of disk.
 * `dynamic_retention_config` - (Optional, List) Dynamic message retention policy configuration.
+* `instance_type` - (Optional, Int) Instance type of instance. 1: entry; 2: standard; 3: advanced; 4: capacity; 5: high-level-1; 6: high-level-2; 7: high-level-3; 8: high-level-4; 9: exclusive. Default is 1.
 * `kafka_version` - (Optional, String) Kafka version (0.10.2/1.1.1/2.4.1).
 * `msg_retention_time` - (Optional, Int) The maximum retention time of instance logs, in minutes. the default is 10080 (7 days), the maximum is 30 days, and the default 0 is not filled, which means that the log retention time recovery policy is not enabled.
 * `multi_zone_flag` - (Optional, Bool) Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.
@@ -70,6 +71,7 @@ The following arguments are supported:
 * `public_network` - (Optional, Int) Bandwidth of the public network.
 * `rebalance_time` - (Optional, Int) Modification of the rebalancing time after upgrade.
 * `renew_flag` - (Optional, Int) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
+* `specifications_type` - (Optional, String) Specifications type of instance. Allowed values are `standard`, `profession`. Default is `profession`.
 * `subnet_id` - (Optional, String) Subnet id, it will be basic network if not set.
 * `tag_set` - (Optional, Map) Tag set of instance.
 * `tags` - (Optional, List, **Deprecated**) It has been deprecated from version 1.78.5, because it do not support change. Use `tag_set` instead. Tags of instance. Partition size, the professional version does not need tag.

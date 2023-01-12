@@ -95,6 +95,21 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 					return zoneIds.Contains(zoneId)
 				},
 			},
+			"instance_type": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      1,
+				ValidateFunc: validateIntegerInRange(1, 9),
+				Description: "Instance type of instance. 1: entry; 2: standard; 3: advanced; 4: capacity; 5: high-level-1; " +
+					"6: high-level-2; 7: high-level-3; 8: high-level-4; 9: exclusive. Default is 1.",
+			},
+			"specifications_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      "profession",
+				ValidateFunc: validateAllowedStringValue([]string{"standard", "profession"}),
+				Description:  "Specifications type of instance. Allowed values are `standard`, `profession`. Default is `profession`.",
+			},
 			"period": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -307,9 +322,14 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 
 	period := int64(d.Get("period").(int))
 	request.Period = helper.String(fmt.Sprintf("%dm", period))
-	// only support create profession instance
-	request.InstanceType = helper.Int64(1)
-	request.SpecificationsType = helper.String("profession")
+
+	if v, ok := d.GetOk("instance_type"); ok {
+		request.InstanceType = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("specifications_type"); ok {
+		request.SpecificationsType = helper.String(v.(string))
+	}
 
 	if v, ok := d.GetOk("vpc_id"); ok {
 		vpcId := v.(string)
@@ -623,11 +643,17 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 		client: meta.(*TencentCloudClient).apiV3Conn,
 	}
 
-	if d.HasChange("zone_id") || d.HasChange("period") || d.HasChange("vpc_id") || d.HasChange("subnet_id") ||
-		d.HasChange("renew_flag") || d.HasChange("kafka_version") || d.HasChange("multi_zone_flag") || d.HasChange("zone_ids") || d.HasChange("disk_type") {
+	immutableArgs := []string{
+		"zone_id", "period", "vpc_id",
+		"subnet_id", "renew_flag", "kafka_version",
+		"multi_zone_flag", "zone_ids", "disk_type",
+		"instance_type", "specifications_type",
+	}
 
-		return fmt.Errorf("parms like 'zone_id | period | vpc_id | subnet_id | renew_flag | " +
-			"kafka_version | multi_zone_flag | zone_id | disk_type', do not support change now.")
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	instanceId := d.Id()
