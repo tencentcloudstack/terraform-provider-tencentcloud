@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_tem_application_service: Support for inputting vpc_id and subnet_id, and adding IP for output
+```
