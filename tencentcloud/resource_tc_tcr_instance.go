@@ -441,8 +441,13 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("internal_end_point", instance.InternalEndpoint)
 	_ = d.Set("public_status", publicStatus)
 	_ = d.Set("registry_charge_type", *instance.PayMod+1)
-	_ = d.Set("instance_charge_type_prepaid_renew_flag", *instance.RenewFlag+1)
-	_ = d.Set("expired_at", instance.ExpiredAt)
+	if *instance.PayMod == REGISTRY_CHARGE_TYPE_PREPAID && instance.RenewFlag != nil {
+		_ = d.Set("instance_charge_type_prepaid_renew_flag", *instance.RenewFlag+1)
+	}
+	if *instance.PayMod == REGISTRY_CHARGE_TYPE_PREPAID && instance.ExpiredAt != nil {
+		_ = d.Set("expired_at", instance.ExpiredAt)
+
+	}
 
 	request := tcr.NewDescribeSecurityPoliciesRequest()
 	request.RegistryId = helper.String(d.Id())
