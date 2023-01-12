@@ -120,6 +120,11 @@ func dataSourceTencentCloudCfsFileSystems() *schema.Resource {
 							Computed:    true,
 							Description: "IP of the file system.",
 						},
+						"fs_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Mount root-directory.",
+						},
 					},
 				},
 			},
@@ -200,6 +205,7 @@ func dataSourceTencentCloudCfsFileSystemsRead(d *schema.ResourceData, meta inter
 		}
 		if mountTarget != nil {
 			mapping["mount_ip"] = mountTarget.IpAddress
+			mapping["fs_id"] = mountTarget.FSID
 		}
 		fileSystemList = append(fileSystemList, mapping)
 		ids = append(ids, *fileSystem.FileSystemId)
