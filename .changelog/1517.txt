@@ -1,0 +1,7 @@
+```release-note:enhancement
+datasource/tencentcloud_cfs_file_systems: add computed fs_id
+```
+
+```release-note:enhancement
+resource/tencentcloud_cfs_file_system: add computed fs_id
+```
