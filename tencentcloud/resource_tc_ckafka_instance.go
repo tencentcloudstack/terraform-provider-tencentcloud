@@ -1,27 +1,28 @@
 /*
 Use this resource to create ckafka instance.
 
-~> **NOTE:** It only support create profession and prepaid ckafka instance.
+~> **NOTE:** It only support create prepaid ckafka instance.
 
 Example Usage
 
 ```hcl
 resource "tencentcloud_ckafka_instance" "foo" {
-  band_width         = 40
-  disk_size          = 500
-  disk_type          = "CLOUD_BASIC"
-  period             = 1
-  instance_name      = "ckafka-instance-tf-test"
-  kafka_version      = "1.1.1"
-  msg_retention_time = 1300
-  multi_zone_flag    = true
-  partition          = 800
-  public_network     = 3
-  renew_flag         = 0
-  subnet_id          = "subnet-4vwihrzk"
-  vpc_id             = "vpc-82p1t1nv"
-  zone_id            = 100006
-  zone_ids           = [
+  band_width          = 40
+  disk_size           = 500
+  disk_type           = "CLOUD_BASIC"
+  period              = 1
+  instance_name       = "ckafka-instance-tf-test"
+  specifications_type = "profession"
+  kafka_version       = "1.1.1"
+  msg_retention_time  = 1300
+  multi_zone_flag     = true
+  partition           = 800
+  public_network      = 3
+  renew_flag          = 0
+  subnet_id           = "subnet-4vwihrzk"
+  vpc_id              = "vpc-82p1t1nv"
+  zone_id             = 100006
+  zone_ids            = [
     100006,
     100007,
   ]
@@ -94,14 +95,6 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 					zoneIds := v.(*schema.Set)
 					return zoneIds.Contains(zoneId)
 				},
-			},
-			"instance_type": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      1,
-				ValidateFunc: validateIntegerInRange(1, 9),
-				Description: "Instance type of instance. 1: entry; 2: standard; 3: advanced; 4: capacity; 5: high-level-1; " +
-					"6: high-level-2; 7: high-level-3; 8: high-level-4; 9: exclusive. Default is 1.",
 			},
 			"specifications_type": {
 				Type:         schema.TypeString,
@@ -322,10 +315,7 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 
 	period := int64(d.Get("period").(int))
 	request.Period = helper.String(fmt.Sprintf("%dm", period))
-
-	if v, ok := d.GetOk("instance_type"); ok {
-		request.InstanceType = helper.IntInt64(v.(int))
-	}
+	request.InstanceType = helper.IntInt64(1)
 
 	if v, ok := d.GetOk("specifications_type"); ok {
 		request.SpecificationsType = helper.String(v.(string))
@@ -559,8 +549,13 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("vport", info.Vport)
 	_ = d.Set("band_width", *bandWidth/8)
 	_ = d.Set("partition", info.MaxPartitionNumber)
+	if *info.InstanceType == "profession" {
+		_ = d.Set("specifications_type", "profession")
+	} else {
+		_ = d.Set("specifications_type", "standard")
+	}
 
-	if len(info.ZoneIds) > 0 {
+	if len(info.ZoneIds) > 1 {
 		_ = d.Set("multi_zone_flag", true)
 		ids := helper.Int64sInterfaces(info.ZoneIds)
 		idSet := schema.NewSet(func(i interface{}) int {
@@ -647,7 +642,7 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 		"zone_id", "period", "vpc_id",
 		"subnet_id", "renew_flag", "kafka_version",
 		"multi_zone_flag", "zone_ids", "disk_type",
-		"instance_type", "specifications_type",
+		"specifications_type",
 	}
 
 	for _, v := range immutableArgs {

@@ -11,26 +11,27 @@ description: |-
 
 Use this resource to create ckafka instance.
 
-~> **NOTE:** It only support create profession and prepaid ckafka instance.
+~> **NOTE:** It only support create prepaid ckafka instance.
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_ckafka_instance" "foo" {
-  band_width         = 40
-  disk_size          = 500
-  disk_type          = "CLOUD_BASIC"
-  period             = 1
-  instance_name      = "ckafka-instance-tf-test"
-  kafka_version      = "1.1.1"
-  msg_retention_time = 1300
-  multi_zone_flag    = true
-  partition          = 800
-  public_network     = 3
-  renew_flag         = 0
-  subnet_id          = "subnet-4vwihrzk"
-  vpc_id             = "vpc-82p1t1nv"
-  zone_id            = 100006
+  band_width          = 40
+  disk_size           = 500
+  disk_type           = "CLOUD_BASIC"
+  period              = 1
+  instance_name       = "ckafka-instance-tf-test"
+  specifications_type = "profession"
+  kafka_version       = "1.1.1"
+  msg_retention_time  = 1300
+  multi_zone_flag     = true
+  partition           = 800
+  public_network      = 3
+  renew_flag          = 0
+  subnet_id           = "subnet-4vwihrzk"
+  vpc_id              = "vpc-82p1t1nv"
+  zone_id             = 100006
   zone_ids = [
     100006,
     100007,
@@ -62,7 +63,6 @@ The following arguments are supported:
 * `disk_size` - (Optional, Int) Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
 * `disk_type` - (Optional, String) Type of disk.
 * `dynamic_retention_config` - (Optional, List) Dynamic message retention policy configuration.
-* `instance_type` - (Optional, Int) Instance type of instance. 1: entry; 2: standard; 3: advanced; 4: capacity; 5: high-level-1; 6: high-level-2; 7: high-level-3; 8: high-level-4; 9: exclusive. Default is 1.
 * `kafka_version` - (Optional, String) Kafka version (0.10.2/1.1.1/2.4.1).
 * `msg_retention_time` - (Optional, Int) The maximum retention time of instance logs, in minutes. the default is 10080 (7 days), the maximum is 30 days, and the default 0 is not filled, which means that the log retention time recovery policy is not enabled.
 * `multi_zone_flag` - (Optional, Bool) Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.
