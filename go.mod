@@ -74,7 +74,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr v1.0.578
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg v1.0.533
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.564
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.573
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.529
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.549
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.577

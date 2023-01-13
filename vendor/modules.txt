@@ -641,7 +641,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.564
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.573
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.529
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901
