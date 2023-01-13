@@ -10,7 +10,7 @@ ENHANCEMENTS:
 * datasource/tencentcloud_cfs_file_systems: add computed fs_id ([#1517](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1517))
 * resource/tencentcloud_cfs_file_system: add computed fs_id ([#1517](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1517))
 * resource/tencentcloud_ckafka_instance: support create standard instance ([#1518](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1518))
-* resource/tencentcloud_tcr_instance: support paypaid arguments ([#1515](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1515))
+* resource/tencentcloud_tcr_instance: support prepaid arguments ([#1515](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1515))
 * resource/tencentcloud_tem_application_service: Support for inputting vpc_id and subnet_id, and adding IP for output ([#1514](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1514))
 
 ## 1.79.5 (January 11, 2023)
