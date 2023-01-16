@@ -23,6 +23,7 @@ import (
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
+	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
@@ -152,6 +153,7 @@ type TencentCloudClient struct {
 	dbbrainConn        *dbbrain.Client
 	dtsConn            *dts.Client
 	ciConn             *cos.Client
+	billingConn        *billing.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1022,6 +1024,19 @@ func (me *TencentCloudClient) UsePicClient(bucket string) *cos.Client {
 	})
 
 	return me.ciConn
+}
+
+// UseBillingClient returns tem client for service
+func (me *TencentCloudClient) UseBillingClient() *billing.Client {
+	if me.billingConn != nil {
+		return me.billingConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.billingConn, _ = billing.NewClient(me.Credential, me.Region, cpf)
+	me.billingConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.billingConn
 }
 
 func getEnvDefault(key string, defVal int) int {

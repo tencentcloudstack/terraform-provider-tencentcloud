@@ -67,12 +67,14 @@ func resourceTencentCloudVpcACL() *schema.Resource {
 			"ingress": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Ingress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80,443`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.",
 			},
 			"egress": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Egress rules. A rule must match the following format: [action]#[cidr_ip]#[port]#[protocol]. The available value of 'action' is `ACCEPT` and `DROP`. The 'cidr_ip' must be an IP address network or segment. The 'port' valid format is `80`, `80,443`, `80-90` or `ALL`. The available value of 'protocol' is `TCP`, `UDP`, `ICMP` and `ALL`. When 'protocol' is `ICMP` or `ALL`, the 'port' must be `ALL`.",
 			},
@@ -188,13 +190,19 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 	_ = d.Set("name", info.NetworkAclName)
 	egressList := make([]string, 0, len(info.EgressEntries))
 	for i := range info.EgressEntries {
-		if info.EgressEntries[i].Port == nil || *info.EgressEntries[i].Port == "" {
+		// skip the default config from api
+		if info.EgressEntries[i].CidrBlock == nil || *info.EgressEntries[i].CidrBlock == "" {
 			continue
+		}
+		// fill the default value for ALL
+		port := "ALL"
+		if info.EgressEntries[i].Port != nil && *info.EgressEntries[i].Port != "" {
+			port = *info.EgressEntries[i].Port
 		}
 		result := strings.Join([]string{
 			*info.EgressEntries[i].Action,
 			*info.EgressEntries[i].CidrBlock,
-			*info.EgressEntries[i].Port,
+			port,
 			*info.EgressEntries[i].Protocol,
 		}, FILED_SP)
 		egressList = append(egressList, strings.ToUpper(result))
@@ -202,13 +210,19 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 
 	ingressList := make([]string, 0, len(info.IngressEntries))
 	for i := range info.IngressEntries {
-		if info.IngressEntries[i].Port == nil || *info.IngressEntries[i].Port == "" {
+		// skip the default config from api
+		if info.IngressEntries[i].CidrBlock == nil || *info.IngressEntries[i].CidrBlock == "" {
 			continue
+		}
+		// fill the default value for ALL
+		port := "ALL"
+		if info.IngressEntries[i].Port != nil && *info.IngressEntries[i].Port != "" {
+			port = *info.IngressEntries[i].Port
 		}
 		result := strings.Join([]string{
 			*info.IngressEntries[i].Action,
 			*info.IngressEntries[i].CidrBlock,
-			*info.IngressEntries[i].Port,
+			port,
 			*info.IngressEntries[i].Protocol,
 		}, FILED_SP)
 		ingressList = append(ingressList, strings.ToUpper(result))

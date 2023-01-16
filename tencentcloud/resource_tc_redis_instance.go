@@ -70,6 +70,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -475,14 +476,46 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		paramsTemplateId,
 	)
 
+	var resourceId string
+	var redisId string
 	if err != nil {
+		log.Printf("[CRITAL]%s api[CreateInstances] fail, reason[%s]\n",
+			logId, err.Error())
+
+		if chargeType == REDIS_CHARGE_TYPE_PREPAID {
+			e, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
+				errStr := err.Error()
+				re := regexp.MustCompile("\"dealNames\":\\[\"(.*)\"\\]") // dealNames:\["(.*)"\]
+				result := re.FindStringSubmatch(errStr)
+				for i, str := range result {
+					log.Printf("[DEBUG] FindStringSubmatch sub[%v]:%s,\n", i, str)
+				}
+				dealId := re.FindStringSubmatch(errStr)[1]
+				billingService := BillingService{client: meta.(*TencentCloudClient).apiV3Conn}
+				deal, billErr := billingService.DescribeDeals(ctx, dealId)
+				if billErr != nil {
+					log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, err.Error())
+					return err
+				}
+				resourceId = *deal.ResourceId[0]
+				log.Printf("[DEBUG]%s query deal for PREPAID user, dealId:[%s] resourceId:[%s]\n", logId, dealId, resourceId)
+			} else {
+				return err
+			}
+		}
 		return err
 	}
 
 	if len(instanceIds) == 0 {
 		return fmt.Errorf("redis api CreateInstances return empty redis id")
 	}
-	var redisId = *instanceIds[0]
+
+	if chargeType == REDIS_CHARGE_TYPE_PREPAID {
+		redisId = resourceId
+	} else {
+		redisId = *instanceIds[0]
+	}
 
 	var tags map[string]string
 	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
