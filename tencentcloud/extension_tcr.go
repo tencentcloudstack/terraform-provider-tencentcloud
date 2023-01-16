@@ -51,3 +51,8 @@ var RegionIdMap = map[string]string{
 	"ap-shenzhen-sycft":  "77",
 	"ap-shanghai-adc":    "78",
 }
+
+const (
+	REGISTRY_CHARGE_TYPE_POSTPAID = 0
+	REGISTRY_CHARGE_TYPE_PREPAID  = 1
+)

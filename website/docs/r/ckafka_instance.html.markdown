@@ -11,26 +11,27 @@ description: |-
 
 Use this resource to create ckafka instance.
 
-~> **NOTE:** It only support create profession and prepaid ckafka instance.
+~> **NOTE:** It only support create prepaid ckafka instance.
 
 ## Example Usage
 
 ```hcl
 resource "tencentcloud_ckafka_instance" "foo" {
-  band_width         = 40
-  disk_size          = 500
-  disk_type          = "CLOUD_BASIC"
-  period             = 1
-  instance_name      = "ckafka-instance-tf-test"
-  kafka_version      = "1.1.1"
-  msg_retention_time = 1300
-  multi_zone_flag    = true
-  partition          = 800
-  public_network     = 3
-  renew_flag         = 0
-  subnet_id          = "subnet-4vwihrzk"
-  vpc_id             = "vpc-82p1t1nv"
-  zone_id            = 100006
+  band_width          = 40
+  disk_size           = 500
+  disk_type           = "CLOUD_BASIC"
+  period              = 1
+  instance_name       = "ckafka-instance-tf-test"
+  specifications_type = "profession"
+  kafka_version       = "1.1.1"
+  msg_retention_time  = 1300
+  multi_zone_flag     = true
+  partition           = 800
+  public_network      = 3
+  renew_flag          = 0
+  subnet_id           = "subnet-4vwihrzk"
+  vpc_id              = "vpc-82p1t1nv"
+  zone_id             = 100006
   zone_ids = [
     100006,
     100007,
@@ -70,6 +71,7 @@ The following arguments are supported:
 * `public_network` - (Optional, Int) Bandwidth of the public network.
 * `rebalance_time` - (Optional, Int) Modification of the rebalancing time after upgrade.
 * `renew_flag` - (Optional, Int) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
+* `specifications_type` - (Optional, String) Specifications type of instance. Allowed values are `standard`, `profession`. Default is `profession`.
 * `subnet_id` - (Optional, String) Subnet id, it will be basic network if not set.
 * `tag_set` - (Optional, Map) Tag set of instance.
 * `tags` - (Optional, List, **Deprecated**) It has been deprecated from version 1.78.5, because it do not support change. Use `tag_set` instead. Tags of instance. Partition size, the professional version does not need tag.

@@ -918,6 +918,12 @@ TDMQ for CMQ
     tencentcloud_tcmq_queue
 	tencentcloud_tcmq_topic
 	tencentcloud_tcmq_subscribe
+
+Tencent Service Framework(TSF)
+  Resource
+	tencentcloud_tsf_microservice
+	tencentcloud_tsf_application_config
+
 */
 package tencentcloud
 
@@ -1628,6 +1634,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cynosdb_audit_log_file":                     resourceTencentCloudCynosdbAuditLogFile(),
 			"tencentcloud_cynosdb_security_group":                     resourceTencentCloudCynosdbSecurityGroup(),
 			"tencentcloud_dayu_ddos_ip_attachment_v2":                 resourceTencentCloudDayuDDosIpAttachmentV2(),
+			"tencentcloud_tsf_microservice":                           resourceTencentCloudTsfMicroservice(),
+			"tencentcloud_tsf_application_config":                     resourceTencentCloudTsfApplicationConfig(),
 		},
 
 		ConfigureFunc: providerConfigure,
