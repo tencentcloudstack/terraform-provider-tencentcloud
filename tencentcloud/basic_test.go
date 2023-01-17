@@ -145,6 +145,14 @@ variable "snap_id" {
 }
 `
 
+// cvm-modification
+const defaultCommonCvmId = "ins-cr2rfq78"
+const defaultCvmModificationVariable = `
+variable "cvm_id" {
+  default = "` + defaultCommonCvmId + `"
+}
+`
+
 // AS
 const defaultAsVariable = `
 variable "availability_zone" {

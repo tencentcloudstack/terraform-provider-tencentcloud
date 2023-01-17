@@ -1265,6 +1265,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cynosdb_cluster_instance_groups":          dataSourceTencentCloudCynosdbClusterInstanceGroups(),
 			"tencentcloud_cynosdb_cluster_params":                   dataSourceTencentCloudCynosdbClusterParams(),
 			"tencentcloud_cynosdb_param_templates":                  dataSourceTencentCloudCynosdbParamTemplates(),
+			"tencentcloud_cvm_instances_modification":               dataSourceTencentCloudCvmInstancesModification(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
