@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_cvm_instances_modification"
 sidebar_current: "docs-tencentcloud-datasource-cvm_instances_modification"
 description: |-
-  Use this data source to query cvm instances.
+  Use this data source to query cvm instances modification.
 ---
 
 # tencentcloud_cvm_instances_modification
 
-Use this data source to query cvm instances.
+Use this data source to query cvm instances modification.
 
 ## Example Usage
 
