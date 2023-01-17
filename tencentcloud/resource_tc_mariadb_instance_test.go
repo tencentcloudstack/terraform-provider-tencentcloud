@@ -93,7 +93,17 @@ func testAccCheckMariadbInstanceExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccMariadbInstance = `
+const testAccMariadbInstanceVar = `
+variable "subnet_id" {
+  default = "` + defaultMariadbSubnetId + `"
+}
+
+variable "vpc_id" {
+  default = "` + defaultMariadbVpcId + `"
+}
+`
+
+const testAccMariadbInstance = testAccMariadbInstanceVar + `
 
 resource "tencentcloud_mariadb_instance" "instance" {
 	zones = ["ap-guangzhou-3",]
@@ -103,8 +113,8 @@ resource "tencentcloud_mariadb_instance" "instance" {
 	period = 1
 	# auto_voucher =
 	# voucher_ids =
-	vpc_id = "vpc-ii1jfbhl"
-	subnet_id = "subnet-3ku415by"
+	vpc_id = var.vpc_id
+	subnet_id = var.subnet_id
 	# project_id = ""
 	db_version_id = "8.0"
 	instance_name = "terraform-test"
