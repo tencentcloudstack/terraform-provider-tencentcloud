@@ -793,6 +793,7 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_security_groups
   Resource
     tencentcloud_mariadb_dedicatedcluster_db_instance
+	tencentcloud_mariadb_instance
     tencentcloud_mariadb_hour_db_instance
 	tencentcloud_mariadb_account
 	tencentcloud_mariadb_parameters
@@ -1565,6 +1566,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcdb_db_parameters":                         resourceTencentCloudDcdbDbParameters(),
 			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":       resourceTencentCloudMariadbDedicatedclusterDbInstance(),
+			"tencentcloud_mariadb_instance":                           resourceTencentCloudMariadbInstance(),
 			"tencentcloud_mariadb_hour_db_instance":                   resourceTencentCloudMariadbHourDbInstance(),
 			"tencentcloud_mariadb_account":                            resourceTencentCloudMariadbAccount(),
 			"tencentcloud_mariadb_parameters":                         resourceTencentCloudMariadbParameters(),
