@@ -289,6 +289,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_placement_groups
     tencentcloud_reserved_instance_configs
     tencentcloud_reserved_instances
+	tencentcloud_cvm_instances_modification
 
   Resource
     tencentcloud_instance
@@ -300,6 +301,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_reserved_instance
     tencentcloud_image
 	tencentcloud_cvm_hpc_cluster
+	tencentcloud_cvm_launch_template
 
 TDSQL-C MySQL(CynosDB)
   Data Source

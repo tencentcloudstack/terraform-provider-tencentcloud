@@ -237,7 +237,7 @@ func resourceTencentCloudCvmLaunchTemplate() *schema.Resource {
 				ForceNew:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "The information settings of public network bandwidth. If you do not specify this parameter, the default Internet bandwidth is 0 Mbps",
+				Description: "The information settings of public network bandwidth. If you do not specify this parameter, the default Internet bandwidth is 0 Mbps.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"internet_charge_type": {
@@ -277,7 +277,7 @@ func resourceTencentCloudCvmLaunchTemplate() *schema.Resource {
 				Computed:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "The name of instance. If you do not specify an instance display name, 'Unnamed' is displayed by default",
+				Description: "The name of instance. If you do not specify an instance display name, 'Unnamed' is displayed by default.",
 			},
 
 			"login_settings": {
