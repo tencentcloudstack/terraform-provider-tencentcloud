@@ -1636,6 +1636,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dayu_ddos_ip_attachment_v2":                 resourceTencentCloudDayuDDosIpAttachmentV2(),
 			"tencentcloud_tsf_microservice":                           resourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_application_config":                     resourceTencentCloudTsfApplicationConfig(),
+			"tencentcloud_cvm_launch_template":                        resourceTencentCloudCvmLaunchTemplate(),
 		},
 
 		ConfigureFunc: providerConfigure,
