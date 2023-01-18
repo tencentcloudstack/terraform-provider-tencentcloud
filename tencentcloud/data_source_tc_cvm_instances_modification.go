@@ -81,7 +81,6 @@ func dataSourceTencentCloudCvmInstancesModification() *schema.Resource {
 						"instance_type_config": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							MaxItems:    1,
 							Description: "Configuration information.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
