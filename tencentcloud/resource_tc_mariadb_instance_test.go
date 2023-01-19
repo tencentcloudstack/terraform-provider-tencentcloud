@@ -14,7 +14,7 @@ func TestAccTencentCloudMariadbInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckMariadbInstanceDestroy,
 		Steps: []resource.TestStep{
@@ -95,11 +95,11 @@ func testAccCheckMariadbInstanceExists(r string) resource.TestCheckFunc {
 
 const testAccMariadbInstanceVar = `
 variable "subnet_id" {
-  default = "` + defaultMariadbSubnetId + `"
+  default = "` + defaultMariadbInstanceSubnetId + `"
 }
 
 variable "vpc_id" {
-  default = "` + defaultMariadbVpcId + `"
+  default = "` + defaultMariadbInstanceVpcId + `"
 }
 `
 
@@ -108,7 +108,7 @@ const testAccMariadbInstance = testAccMariadbInstanceVar + `
 resource "tencentcloud_mariadb_instance" "instance" {
 	zones = ["ap-guangzhou-3",]
 	node_count = 2
-	memory = 8
+	memory = 2
 	storage = 10
 	period = 1
 	# auto_voucher =
