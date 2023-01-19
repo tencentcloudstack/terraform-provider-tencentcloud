@@ -792,9 +792,9 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_accounts
 	tencentcloud_mariadb_security_groups
   Resource
-    tencentcloud_mariadb_dedicatedcluster_db_instance
+	tencentcloud_mariadb_dedicatedcluster_db_instance
 	tencentcloud_mariadb_instance
-    tencentcloud_mariadb_hour_db_instance
+	tencentcloud_mariadb_hour_db_instance
 	tencentcloud_mariadb_account
 	tencentcloud_mariadb_parameters
 	tencentcloud_mariadb_log_file_retention_period
