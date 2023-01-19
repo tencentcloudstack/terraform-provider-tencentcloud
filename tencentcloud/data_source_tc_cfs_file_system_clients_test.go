@@ -25,7 +25,7 @@ func TestAccTencentCloudCfsFileSystemClientsDataSource_basic(t *testing.T) {
 const testAccCfsFileSystemClientsDataSource = `
 
 data "tencentcloud_cfs_file_system_clients" "file_system_clients" {
-  file_system_id = ""
-  }
+  file_system_id = "cfs-iobiaxtj"
+}
 
 `
