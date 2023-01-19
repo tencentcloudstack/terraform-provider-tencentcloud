@@ -51,13 +51,13 @@ func resourceTencentCloudCfsSignUpCfsServiceCreate(d *schema.ResourceData, meta 
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Println("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
 	if err != nil {
-		log.Println("[CRITAL]%s operate cfs signUpCfsService failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate cfs signUpCfsService failed, reason:%+v", logId, err)
 		return nil
 	}
 
@@ -82,13 +82,13 @@ func resourceTencentCloudCfsSignUpCfsServiceRead(d *schema.ResourceData, meta in
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Println("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
 	})
 	if err != nil {
-		log.Println("[CRITAL]%s operate cfs signUpCfsService failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate cfs signUpCfsService failed, reason:%+v", logId, err)
 		return nil
 	}
 

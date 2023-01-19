@@ -155,93 +155,91 @@ func dataSourceTencentCloudCfsAvailableZoneRead(d *schema.ResourceData, meta int
 	ids := make([]string, 0, len(regionZones))
 	tmpList := make([]map[string]interface{}, 0, len(regionZones))
 
-	if regionZones != nil {
-		for _, availableRegion := range regionZones {
-			availableRegionMap := map[string]interface{}{}
+	for _, availableRegion := range regionZones {
+		availableRegionMap := map[string]interface{}{}
 
-			if availableRegion.Region != nil {
-				availableRegionMap["region"] = availableRegion.Region
-			}
+		if availableRegion.Region != nil {
+			availableRegionMap["region"] = availableRegion.Region
+		}
 
-			if availableRegion.RegionName != nil {
-				availableRegionMap["region_name"] = availableRegion.RegionName
-			}
+		if availableRegion.RegionName != nil {
+			availableRegionMap["region_name"] = availableRegion.RegionName
+		}
 
-			if availableRegion.RegionStatus != nil {
-				availableRegionMap["region_status"] = availableRegion.RegionStatus
-			}
+		if availableRegion.RegionStatus != nil {
+			availableRegionMap["region_status"] = availableRegion.RegionStatus
+		}
 
-			if availableRegion.Zones != nil {
-				zonesList := []interface{}{}
-				for _, zones := range availableRegion.Zones {
-					zonesMap := map[string]interface{}{}
+		if availableRegion.Zones != nil {
+			zonesList := []interface{}{}
+			for _, zones := range availableRegion.Zones {
+				zonesMap := map[string]interface{}{}
 
-					if zones.Zone != nil {
-						zonesMap["zone"] = zones.Zone
-					}
-
-					if zones.ZoneId != nil {
-						zonesMap["zone_id"] = zones.ZoneId
-					}
-
-					if zones.ZoneCnName != nil {
-						zonesMap["zone_cn_name"] = zones.ZoneCnName
-					}
-
-					if zones.Types != nil {
-						typesList := []interface{}{}
-						for _, types := range zones.Types {
-							typesMap := map[string]interface{}{}
-
-							if types.Protocols != nil {
-								protocolsList := []interface{}{}
-								for _, protocols := range types.Protocols {
-									protocolsMap := map[string]interface{}{}
-
-									if protocols.SaleStatus != nil {
-										protocolsMap["sale_status"] = protocols.SaleStatus
-									}
-
-									if protocols.Protocol != nil {
-										protocolsMap["protocol"] = protocols.Protocol
-									}
-
-									protocolsList = append(protocolsList, protocolsMap)
-								}
-
-								typesMap["protocols"] = protocolsList
-							}
-
-							if types.Type != nil {
-								typesMap["type"] = types.Type
-							}
-
-							if types.Prepayment != nil {
-								typesMap["prepayment"] = types.Prepayment
-							}
-
-							typesList = append(typesList, typesMap)
-						}
-
-						zonesMap["types"] = typesList
-					}
-
-					if zones.ZoneName != nil {
-						zonesMap["zone_name"] = zones.ZoneName
-					}
-
-					zonesList = append(zonesList, zonesMap)
+				if zones.Zone != nil {
+					zonesMap["zone"] = zones.Zone
 				}
 
-				availableRegionMap["zones"] = zonesList
+				if zones.ZoneId != nil {
+					zonesMap["zone_id"] = zones.ZoneId
+				}
+
+				if zones.ZoneCnName != nil {
+					zonesMap["zone_cn_name"] = zones.ZoneCnName
+				}
+
+				if zones.Types != nil {
+					typesList := []interface{}{}
+					for _, types := range zones.Types {
+						typesMap := map[string]interface{}{}
+
+						if types.Protocols != nil {
+							protocolsList := []interface{}{}
+							for _, protocols := range types.Protocols {
+								protocolsMap := map[string]interface{}{}
+
+								if protocols.SaleStatus != nil {
+									protocolsMap["sale_status"] = protocols.SaleStatus
+								}
+
+								if protocols.Protocol != nil {
+									protocolsMap["protocol"] = protocols.Protocol
+								}
+
+								protocolsList = append(protocolsList, protocolsMap)
+							}
+
+							typesMap["protocols"] = protocolsList
+						}
+
+						if types.Type != nil {
+							typesMap["type"] = types.Type
+						}
+
+						if types.Prepayment != nil {
+							typesMap["prepayment"] = types.Prepayment
+						}
+
+						typesList = append(typesList, typesMap)
+					}
+
+					zonesMap["types"] = typesList
+				}
+
+				if zones.ZoneName != nil {
+					zonesMap["zone_name"] = zones.ZoneName
+				}
+
+				zonesList = append(zonesList, zonesMap)
 			}
 
-			if availableRegion.RegionCnName != nil {
-				availableRegionMap["region_cn_name"] = availableRegion.RegionCnName
-			}
-			ids = append(ids, *availableRegion.Region)
-			tmpList = append(tmpList, availableRegionMap)
+			availableRegionMap["zones"] = zonesList
 		}
+
+		if availableRegion.RegionCnName != nil {
+			availableRegionMap["region_cn_name"] = availableRegion.RegionCnName
+		}
+		ids = append(ids, *availableRegion.Region)
+		tmpList = append(tmpList, availableRegionMap)
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
