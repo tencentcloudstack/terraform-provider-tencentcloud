@@ -294,6 +294,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_placement_groups
     tencentcloud_reserved_instance_configs
     tencentcloud_reserved_instances
+	tencentcloud_cvm_instances_modification
 
   Resource
     tencentcloud_instance
@@ -305,6 +306,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_reserved_instance
     tencentcloud_image
 	tencentcloud_cvm_hpc_cluster
+	tencentcloud_cvm_launch_template
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -1273,6 +1275,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cynosdb_cluster_instance_groups":          dataSourceTencentCloudCynosdbClusterInstanceGroups(),
 			"tencentcloud_cynosdb_cluster_params":                   dataSourceTencentCloudCynosdbClusterParams(),
 			"tencentcloud_cynosdb_param_templates":                  dataSourceTencentCloudCynosdbParamTemplates(),
+			"tencentcloud_cvm_instances_modification":               dataSourceTencentCloudCvmInstancesModification(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1647,6 +1650,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dayu_ddos_ip_attachment_v2":                 resourceTencentCloudDayuDDosIpAttachmentV2(),
 			"tencentcloud_tsf_microservice":                           resourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_application_config":                     resourceTencentCloudTsfApplicationConfig(),
+			"tencentcloud_cvm_launch_template":                        resourceTencentCloudCvmLaunchTemplate(),
 		},
 
 		ConfigureFunc: providerConfigure,
