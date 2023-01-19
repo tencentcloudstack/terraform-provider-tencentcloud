@@ -225,6 +225,7 @@ Cloud File Storage(CFS)
     tencentcloud_cfs_file_systems
 	tencentcloud_cfs_mount_targets
 	tencentcloud_cfs_file_system_clients
+	tencentcloud_cfs_available_zone
 
   Resource
     tencentcloud_cfs_file_system
