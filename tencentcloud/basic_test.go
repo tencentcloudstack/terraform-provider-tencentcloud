@@ -400,6 +400,7 @@ data "tencentcloud_sqlserver_accounts" "test"{
 locals {
   # local.sqlserver_id
   sqlserver_account = data.tencentcloud_sqlserver_accounts.test.list.0.name
+  sqlserver_pwd = data.tencentcloud_sqlserver_accounts.test.list.0.name
 }
 `
 

@@ -49,6 +49,7 @@ func NewAssociateSecurityGroupsRequest() (request *AssociateSecurityGroupsReques
     request = &AssociateSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "AssociateSecurityGroups")
     
     
@@ -108,6 +109,7 @@ func NewCloneDBRequest() (request *CloneDBRequest) {
     request = &CloneDBRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CloneDB")
     
     
@@ -193,10 +195,67 @@ func (c *Client) CloneDBWithContext(ctx context.Context, request *CloneDBRequest
     return
 }
 
+func NewCloseInterCommunicationRequest() (request *CloseInterCommunicationRequest) {
+    request = &CloseInterCommunicationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "CloseInterCommunication")
+    
+    
+    return
+}
+
+func NewCloseInterCommunicationResponse() (response *CloseInterCommunicationResponse) {
+    response = &CloseInterCommunicationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CloseInterCommunication
+// 本接口（CloseInterCommunication）用于关闭实例互通。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CloseInterCommunication(request *CloseInterCommunicationRequest) (response *CloseInterCommunicationResponse, err error) {
+    return c.CloseInterCommunicationWithContext(context.Background(), request)
+}
+
+// CloseInterCommunication
+// 本接口（CloseInterCommunication）用于关闭实例互通。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CloseInterCommunicationWithContext(ctx context.Context, request *CloseInterCommunicationRequest) (response *CloseInterCommunicationResponse, err error) {
+    if request == nil {
+        request = NewCloseInterCommunicationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CloseInterCommunication require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCloseInterCommunicationResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCompleteExpansionRequest() (request *CompleteExpansionRequest) {
     request = &CompleteExpansionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CompleteExpansion")
     
     
@@ -218,6 +277,7 @@ func NewCompleteExpansionResponse() (response *CompleteExpansionResponse) {
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CompleteExpansion(request *CompleteExpansionRequest) (response *CompleteExpansionResponse, err error) {
     return c.CompleteExpansionWithContext(context.Background(), request)
 }
@@ -230,6 +290,7 @@ func (c *Client) CompleteExpansion(request *CompleteExpansionRequest) (response 
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CompleteExpansionWithContext(ctx context.Context, request *CompleteExpansionRequest) (response *CompleteExpansionResponse, err error) {
     if request == nil {
         request = NewCompleteExpansionRequest()
@@ -250,6 +311,7 @@ func NewCompleteMigrationRequest() (request *CompleteMigrationRequest) {
     request = &CompleteMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CompleteMigration")
     
     
@@ -321,6 +383,7 @@ func NewCreateAccountRequest() (request *CreateAccountRequest) {
     request = &CreateAccountRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CreateAccount")
     
     
@@ -392,6 +455,7 @@ func NewCreateBackupRequest() (request *CreateBackupRequest) {
     request = &CreateBackupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CreateBackup")
     
     
@@ -467,6 +531,7 @@ func NewCreateBackupMigrationRequest() (request *CreateBackupMigrationRequest) {
     request = &CreateBackupMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CreateBackupMigration")
     
     
@@ -528,6 +593,7 @@ func NewCreateBasicDBInstancesRequest() (request *CreateBasicDBInstancesRequest)
     request = &CreateBasicDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CreateBasicDBInstances")
     
     
@@ -546,6 +612,7 @@ func NewCreateBasicDBInstancesResponse() (response *CreateBasicDBInstancesRespon
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_VPCERROR = "InternalError.VPCError"
@@ -567,6 +634,7 @@ func (c *Client) CreateBasicDBInstances(request *CreateBasicDBInstancesRequest) 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_VPCERROR = "InternalError.VPCError"
@@ -595,10 +663,143 @@ func (c *Client) CreateBasicDBInstancesWithContext(ctx context.Context, request 
     return
 }
 
+func NewCreateBusinessDBInstancesRequest() (request *CreateBusinessDBInstancesRequest) {
+    request = &CreateBusinessDBInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "CreateBusinessDBInstances")
+    
+    
+    return
+}
+
+func NewCreateBusinessDBInstancesResponse() (response *CreateBusinessDBInstancesResponse) {
+    response = &CreateBusinessDBInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateBusinessDBInstances
+// 本接口（CreateBusinessDBInstances）用于创建商业智能服务实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
+//  INVALIDPARAMETER_PAYORDERFAILED = "InvalidParameter.PayOrderFailed"
+//  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
+//  INVALIDPARAMETERVALUE_ILLEGALSPEC = "InvalidParameterValue.IllegalSpec"
+//  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
+//  INVALIDPARAMETERVALUE_SECURITYGROUPIDISILLEGAL = "InvalidParameterValue.SecurityGroupIdIsIllegal"
+//  RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
+//  RESOURCEUNAVAILABLE_VPCNOTEXIST = "ResourceUnavailable.VpcNotExist"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateBusinessDBInstances(request *CreateBusinessDBInstancesRequest) (response *CreateBusinessDBInstancesResponse, err error) {
+    return c.CreateBusinessDBInstancesWithContext(context.Background(), request)
+}
+
+// CreateBusinessDBInstances
+// 本接口（CreateBusinessDBInstances）用于创建商业智能服务实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
+//  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
+//  INVALIDPARAMETER_PAYORDERFAILED = "InvalidParameter.PayOrderFailed"
+//  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
+//  INVALIDPARAMETERVALUE_ILLEGALSPEC = "InvalidParameterValue.IllegalSpec"
+//  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
+//  INVALIDPARAMETERVALUE_SECURITYGROUPIDISILLEGAL = "InvalidParameterValue.SecurityGroupIdIsIllegal"
+//  RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
+//  RESOURCEUNAVAILABLE_VPCNOTEXIST = "ResourceUnavailable.VpcNotExist"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateBusinessDBInstancesWithContext(ctx context.Context, request *CreateBusinessDBInstancesRequest) (response *CreateBusinessDBInstancesResponse, err error) {
+    if request == nil {
+        request = NewCreateBusinessDBInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateBusinessDBInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateBusinessDBInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateBusinessIntelligenceFileRequest() (request *CreateBusinessIntelligenceFileRequest) {
+    request = &CreateBusinessIntelligenceFileRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "CreateBusinessIntelligenceFile")
+    
+    
+    return
+}
+
+func NewCreateBusinessIntelligenceFileResponse() (response *CreateBusinessIntelligenceFileResponse) {
+    response = &CreateBusinessIntelligenceFileResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateBusinessIntelligenceFile
+// 本接口（CreateBusinessIntelligenceFile）用于添加商业智能服务文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateBusinessIntelligenceFile(request *CreateBusinessIntelligenceFileRequest) (response *CreateBusinessIntelligenceFileResponse, err error) {
+    return c.CreateBusinessIntelligenceFileWithContext(context.Background(), request)
+}
+
+// CreateBusinessIntelligenceFile
+// 本接口（CreateBusinessIntelligenceFile）用于添加商业智能服务文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateBusinessIntelligenceFileWithContext(ctx context.Context, request *CreateBusinessIntelligenceFileRequest) (response *CreateBusinessIntelligenceFileResponse, err error) {
+    if request == nil {
+        request = NewCreateBusinessIntelligenceFileRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateBusinessIntelligenceFile require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateBusinessIntelligenceFileResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateDBRequest() (request *CreateDBRequest) {
     request = &CreateDBRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CreateDB")
     
     
@@ -678,6 +879,7 @@ func NewCreateDBInstancesRequest() (request *CreateDBInstancesRequest) {
     request = &CreateDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CreateDBInstances")
     
     
@@ -696,6 +898,7 @@ func NewCreateDBInstancesResponse() (response *CreateDBInstancesResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -718,6 +921,7 @@ func (c *Client) CreateDBInstances(request *CreateDBInstancesRequest) (response 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GETVPCFAILED = "FailedOperation.GetVpcFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
@@ -751,6 +955,7 @@ func NewCreateIncrementalMigrationRequest() (request *CreateIncrementalMigration
     request = &CreateIncrementalMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CreateIncrementalMigration")
     
     
@@ -818,6 +1023,7 @@ func NewCreateMigrationRequest() (request *CreateMigrationRequest) {
     request = &CreateMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CreateMigration")
     
     
@@ -901,6 +1107,7 @@ func NewCreatePublishSubscribeRequest() (request *CreatePublishSubscribeRequest)
     request = &CreatePublishSubscribeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CreatePublishSubscribe")
     
     
@@ -926,6 +1133,7 @@ func NewCreatePublishSubscribeResponse() (response *CreatePublishSubscribeRespon
 //  RESOURCENOTFOUND_DBNOTFOUND = "ResourceNotFound.DBNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CreatePublishSubscribe(request *CreatePublishSubscribeRequest) (response *CreatePublishSubscribeResponse, err error) {
     return c.CreatePublishSubscribeWithContext(context.Background(), request)
 }
@@ -942,6 +1150,7 @@ func (c *Client) CreatePublishSubscribe(request *CreatePublishSubscribeRequest) 
 //  RESOURCENOTFOUND_DBNOTFOUND = "ResourceNotFound.DBNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) CreatePublishSubscribeWithContext(ctx context.Context, request *CreatePublishSubscribeRequest) (response *CreatePublishSubscribeResponse, err error) {
     if request == nil {
         request = NewCreatePublishSubscribeRequest()
@@ -962,6 +1171,7 @@ func NewCreateReadOnlyDBInstancesRequest() (request *CreateReadOnlyDBInstancesRe
     request = &CreateReadOnlyDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "CreateReadOnlyDBInstances")
     
     
@@ -1039,6 +1249,7 @@ func NewDeleteAccountRequest() (request *DeleteAccountRequest) {
     request = &DeleteAccountRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DeleteAccount")
     
     
@@ -1102,6 +1313,7 @@ func NewDeleteBackupMigrationRequest() (request *DeleteBackupMigrationRequest) {
     request = &DeleteBackupMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DeleteBackupMigration")
     
     
@@ -1124,6 +1336,7 @@ func NewDeleteBackupMigrationResponse() (response *DeleteBackupMigrationResponse
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_FULLBACKUPMIGRATIONNOTEXIST = "ResourceNotFound.FullBackupMigrationNotExist"
 //  RESOURCEUNAVAILABLE_COSSTATUSERR = "ResourceUnavailable.CosStatusErr"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DeleteBackupMigration(request *DeleteBackupMigrationRequest) (response *DeleteBackupMigrationResponse, err error) {
     return c.DeleteBackupMigrationWithContext(context.Background(), request)
 }
@@ -1137,6 +1350,7 @@ func (c *Client) DeleteBackupMigration(request *DeleteBackupMigrationRequest) (r
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_FULLBACKUPMIGRATIONNOTEXIST = "ResourceNotFound.FullBackupMigrationNotExist"
 //  RESOURCEUNAVAILABLE_COSSTATUSERR = "ResourceUnavailable.CosStatusErr"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DeleteBackupMigrationWithContext(ctx context.Context, request *DeleteBackupMigrationRequest) (response *DeleteBackupMigrationResponse, err error) {
     if request == nil {
         request = NewDeleteBackupMigrationRequest()
@@ -1153,10 +1367,67 @@ func (c *Client) DeleteBackupMigrationWithContext(ctx context.Context, request *
     return
 }
 
+func NewDeleteBusinessIntelligenceFileRequest() (request *DeleteBusinessIntelligenceFileRequest) {
+    request = &DeleteBusinessIntelligenceFileRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "DeleteBusinessIntelligenceFile")
+    
+    
+    return
+}
+
+func NewDeleteBusinessIntelligenceFileResponse() (response *DeleteBusinessIntelligenceFileResponse) {
+    response = &DeleteBusinessIntelligenceFileResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteBusinessIntelligenceFile
+// 本接口（DeleteBusinessIntelligenceFile）用于删除商业智能文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DeleteBusinessIntelligenceFile(request *DeleteBusinessIntelligenceFileRequest) (response *DeleteBusinessIntelligenceFileResponse, err error) {
+    return c.DeleteBusinessIntelligenceFileWithContext(context.Background(), request)
+}
+
+// DeleteBusinessIntelligenceFile
+// 本接口（DeleteBusinessIntelligenceFile）用于删除商业智能文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DeleteBusinessIntelligenceFileWithContext(ctx context.Context, request *DeleteBusinessIntelligenceFileRequest) (response *DeleteBusinessIntelligenceFileResponse, err error) {
+    if request == nil {
+        request = NewDeleteBusinessIntelligenceFileRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteBusinessIntelligenceFile require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteBusinessIntelligenceFileResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteDBRequest() (request *DeleteDBRequest) {
     request = &DeleteDBRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DeleteDB")
     
     
@@ -1220,6 +1491,7 @@ func NewDeleteDBInstanceRequest() (request *DeleteDBInstanceRequest) {
     request = &DeleteDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DeleteDBInstance")
     
     
@@ -1275,6 +1547,7 @@ func NewDeleteIncrementalMigrationRequest() (request *DeleteIncrementalMigration
     request = &DeleteIncrementalMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DeleteIncrementalMigration")
     
     
@@ -1332,6 +1605,7 @@ func NewDeleteMigrationRequest() (request *DeleteMigrationRequest) {
     request = &DeleteMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DeleteMigration")
     
     
@@ -1395,6 +1669,7 @@ func NewDeletePublishSubscribeRequest() (request *DeletePublishSubscribeRequest)
     request = &DeletePublishSubscribeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DeletePublishSubscribe")
     
     
@@ -1418,6 +1693,7 @@ func NewDeletePublishSubscribeResponse() (response *DeletePublishSubscribeRespon
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DeletePublishSubscribe(request *DeletePublishSubscribeRequest) (response *DeletePublishSubscribeResponse, err error) {
     return c.DeletePublishSubscribeWithContext(context.Background(), request)
 }
@@ -1432,6 +1708,7 @@ func (c *Client) DeletePublishSubscribe(request *DeletePublishSubscribeRequest) 
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DeletePublishSubscribeWithContext(ctx context.Context, request *DeletePublishSubscribeRequest) (response *DeletePublishSubscribeResponse, err error) {
     if request == nil {
         request = NewDeletePublishSubscribeRequest()
@@ -1452,6 +1729,7 @@ func NewDescribeAccountsRequest() (request *DescribeAccountsRequest) {
     request = &DescribeAccountsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeAccounts")
     
     
@@ -1511,6 +1789,7 @@ func NewDescribeBackupByFlowIdRequest() (request *DescribeBackupByFlowIdRequest)
     request = &DescribeBackupByFlowIdRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeBackupByFlowId")
     
     
@@ -1568,6 +1847,7 @@ func NewDescribeBackupCommandRequest() (request *DescribeBackupCommandRequest) {
     request = &DescribeBackupCommandRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeBackupCommand")
     
     
@@ -1619,6 +1899,7 @@ func NewDescribeBackupFilesRequest() (request *DescribeBackupFilesRequest) {
     request = &DescribeBackupFilesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeBackupFiles")
     
     
@@ -1686,6 +1967,7 @@ func NewDescribeBackupMigrationRequest() (request *DescribeBackupMigrationReques
     request = &DescribeBackupMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeBackupMigration")
     
     
@@ -1739,6 +2021,7 @@ func NewDescribeBackupUploadSizeRequest() (request *DescribeBackupUploadSizeRequ
     request = &DescribeBackupUploadSizeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeBackupUploadSize")
     
     
@@ -1798,6 +2081,7 @@ func NewDescribeBackupsRequest() (request *DescribeBackupsRequest) {
     request = &DescribeBackupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeBackups")
     
     
@@ -1861,10 +2145,67 @@ func (c *Client) DescribeBackupsWithContext(ctx context.Context, request *Descri
     return
 }
 
+func NewDescribeBusinessIntelligenceFileRequest() (request *DescribeBusinessIntelligenceFileRequest) {
+    request = &DescribeBusinessIntelligenceFileRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeBusinessIntelligenceFile")
+    
+    
+    return
+}
+
+func NewDescribeBusinessIntelligenceFileResponse() (response *DescribeBusinessIntelligenceFileResponse) {
+    response = &DescribeBusinessIntelligenceFileResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBusinessIntelligenceFile
+// 本接口（DescribeBusinessIntelligenceFile）用于查询商业智能服务需要的文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBusinessIntelligenceFile(request *DescribeBusinessIntelligenceFileRequest) (response *DescribeBusinessIntelligenceFileResponse, err error) {
+    return c.DescribeBusinessIntelligenceFileWithContext(context.Background(), request)
+}
+
+// DescribeBusinessIntelligenceFile
+// 本接口（DescribeBusinessIntelligenceFile）用于查询商业智能服务需要的文件。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBusinessIntelligenceFileWithContext(ctx context.Context, request *DescribeBusinessIntelligenceFileRequest) (response *DescribeBusinessIntelligenceFileResponse, err error) {
+    if request == nil {
+        request = NewDescribeBusinessIntelligenceFileRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBusinessIntelligenceFile require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBusinessIntelligenceFileResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeCrossRegionZoneRequest() (request *DescribeCrossRegionZoneRequest) {
     request = &DescribeCrossRegionZoneRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeCrossRegionZone")
     
     
@@ -1918,6 +2259,7 @@ func NewDescribeDBCharsetsRequest() (request *DescribeDBCharsetsRequest) {
     request = &DescribeDBCharsetsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeDBCharsets")
     
     
@@ -1989,10 +2331,65 @@ func (c *Client) DescribeDBCharsetsWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeDBInstanceInterRequest() (request *DescribeDBInstanceInterRequest) {
+    request = &DescribeDBInstanceInterRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeDBInstanceInter")
+    
+    
+    return
+}
+
+func NewDescribeDBInstanceInterResponse() (response *DescribeDBInstanceInterResponse) {
+    response = &DescribeDBInstanceInterResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDBInstanceInter
+// 本接口（DescribeDBInstanceInter）用于查询互通实例的信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeDBInstanceInter(request *DescribeDBInstanceInterRequest) (response *DescribeDBInstanceInterResponse, err error) {
+    return c.DescribeDBInstanceInterWithContext(context.Background(), request)
+}
+
+// DescribeDBInstanceInter
+// 本接口（DescribeDBInstanceInter）用于查询互通实例的信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeDBInstanceInterWithContext(ctx context.Context, request *DescribeDBInstanceInterRequest) (response *DescribeDBInstanceInterResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBInstanceInterRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBInstanceInter require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBInstanceInterResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBInstancesRequest() (request *DescribeDBInstancesRequest) {
     request = &DescribeDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeDBInstances")
     
     
@@ -2058,6 +2455,7 @@ func NewDescribeDBSecurityGroupsRequest() (request *DescribeDBSecurityGroupsRequ
     request = &DescribeDBSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeDBSecurityGroups")
     
     
@@ -2115,6 +2513,7 @@ func NewDescribeDBsRequest() (request *DescribeDBsRequest) {
     request = &DescribeDBsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeDBs")
     
     
@@ -2174,6 +2573,7 @@ func NewDescribeDBsNormalRequest() (request *DescribeDBsNormalRequest) {
     request = &DescribeDBsNormalRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeDBsNormal")
     
     
@@ -2235,6 +2635,7 @@ func NewDescribeFlowStatusRequest() (request *DescribeFlowStatusRequest) {
     request = &DescribeFlowStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeFlowStatus")
     
     
@@ -2294,6 +2695,7 @@ func NewDescribeIncrementalMigrationRequest() (request *DescribeIncrementalMigra
     request = &DescribeIncrementalMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeIncrementalMigration")
     
     
@@ -2347,6 +2749,7 @@ func NewDescribeInstanceParamRecordsRequest() (request *DescribeInstanceParamRec
     request = &DescribeInstanceParamRecordsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeInstanceParamRecords")
     
     
@@ -2406,6 +2809,7 @@ func NewDescribeInstanceParamsRequest() (request *DescribeInstanceParamsRequest)
     request = &DescribeInstanceParamsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeInstanceParams")
     
     
@@ -2424,6 +2828,7 @@ func NewDescribeInstanceParamsResponse() (response *DescribeInstanceParamsRespon
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2441,6 +2846,7 @@ func (c *Client) DescribeInstanceParams(request *DescribeInstanceParamsRequest) 
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2469,6 +2875,7 @@ func NewDescribeMaintenanceSpanRequest() (request *DescribeMaintenanceSpanReques
     request = &DescribeMaintenanceSpanRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeMaintenanceSpan")
     
     
@@ -2486,6 +2893,7 @@ func NewDescribeMaintenanceSpanResponse() (response *DescribeMaintenanceSpanResp
 // 本接口（DescribeMaintenanceSpan）根据实例ID查询该实例的可维护时间窗。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2500,6 +2908,7 @@ func (c *Client) DescribeMaintenanceSpan(request *DescribeMaintenanceSpanRequest
 // 本接口（DescribeMaintenanceSpan）根据实例ID查询该实例的可维护时间窗。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2526,6 +2935,7 @@ func NewDescribeMigrationDatabasesRequest() (request *DescribeMigrationDatabases
     request = &DescribeMigrationDatabasesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeMigrationDatabases")
     
     
@@ -2595,6 +3005,7 @@ func NewDescribeMigrationDetailRequest() (request *DescribeMigrationDetailReques
     request = &DescribeMigrationDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeMigrationDetail")
     
     
@@ -2656,6 +3067,7 @@ func NewDescribeMigrationsRequest() (request *DescribeMigrationsRequest) {
     request = &DescribeMigrationsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeMigrations")
     
     
@@ -2717,6 +3129,7 @@ func NewDescribeOrdersRequest() (request *DescribeOrdersRequest) {
     request = &DescribeOrdersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeOrders")
     
     
@@ -2772,6 +3185,7 @@ func NewDescribeProductConfigRequest() (request *DescribeProductConfigRequest) {
     request = &DescribeProductConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeProductConfig")
     
     
@@ -2833,6 +3247,7 @@ func NewDescribeProjectSecurityGroupsRequest() (request *DescribeProjectSecurity
     request = &DescribeProjectSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeProjectSecurityGroups")
     
     
@@ -2886,6 +3301,7 @@ func NewDescribePublishSubscribeRequest() (request *DescribePublishSubscribeRequ
     request = &DescribePublishSubscribeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribePublishSubscribe")
     
     
@@ -2903,6 +3319,7 @@ func NewDescribePublishSubscribeResponse() (response *DescribePublishSubscribeRe
 // 本接口（DescribePublishSubscribe）用于查询发布订阅关系列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2918,6 +3335,7 @@ func (c *Client) DescribePublishSubscribe(request *DescribePublishSubscribeReque
 // 本接口（DescribePublishSubscribe）用于查询发布订阅关系列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -2945,6 +3363,7 @@ func NewDescribeReadOnlyGroupByReadOnlyInstanceRequest() (request *DescribeReadO
     request = &DescribeReadOnlyGroupByReadOnlyInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeReadOnlyGroupByReadOnlyInstance")
     
     
@@ -3002,6 +3421,7 @@ func NewDescribeReadOnlyGroupDetailsRequest() (request *DescribeReadOnlyGroupDet
     request = &DescribeReadOnlyGroupDetailsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeReadOnlyGroupDetails")
     
     
@@ -3059,6 +3479,7 @@ func NewDescribeReadOnlyGroupListRequest() (request *DescribeReadOnlyGroupListRe
     request = &DescribeReadOnlyGroupListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeReadOnlyGroupList")
     
     
@@ -3114,6 +3535,7 @@ func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
     request = &DescribeRegionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeRegions")
     
     
@@ -3131,6 +3553,7 @@ func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
 // 本接口 (DescribeRegions) 用于查询售卖地域信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
@@ -3145,6 +3568,7 @@ func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *Des
 // 本接口 (DescribeRegions) 用于查询售卖地域信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
@@ -3171,6 +3595,7 @@ func NewDescribeRollbackTimeRequest() (request *DescribeRollbackTimeRequest) {
     request = &DescribeRollbackTimeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeRollbackTime")
     
     
@@ -3230,6 +3655,7 @@ func NewDescribeSlowlogsRequest() (request *DescribeSlowlogsRequest) {
     request = &DescribeSlowlogsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeSlowlogs")
     
     
@@ -3247,6 +3673,7 @@ func NewDescribeSlowlogsResponse() (response *DescribeSlowlogsResponse) {
 // 本接口（DescribeSlowlogs）用于获取慢查询日志文件信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_COSERROR = "InternalError.CosError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
@@ -3263,6 +3690,7 @@ func (c *Client) DescribeSlowlogs(request *DescribeSlowlogsRequest) (response *D
 // 本接口（DescribeSlowlogs）用于获取慢查询日志文件信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_COSERROR = "InternalError.CosError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
@@ -3291,6 +3719,7 @@ func NewDescribeUploadBackupInfoRequest() (request *DescribeUploadBackupInfoRequ
     request = &DescribeUploadBackupInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeUploadBackupInfo")
     
     
@@ -3358,6 +3787,7 @@ func NewDescribeUploadIncrementalInfoRequest() (request *DescribeUploadIncrement
     request = &DescribeUploadIncrementalInfoRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeUploadIncrementalInfo")
     
     
@@ -3425,6 +3855,7 @@ func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
     request = &DescribeZonesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DescribeZones")
     
     
@@ -3482,6 +3913,7 @@ func NewDisassociateSecurityGroupsRequest() (request *DisassociateSecurityGroups
     request = &DisassociateSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "DisassociateSecurityGroups")
     
     
@@ -3541,6 +3973,7 @@ func NewInquiryPriceCreateDBInstancesRequest() (request *InquiryPriceCreateDBIns
     request = &InquiryPriceCreateDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "InquiryPriceCreateDBInstances")
     
     
@@ -3558,6 +3991,7 @@ func NewInquiryPriceCreateDBInstancesResponse() (response *InquiryPriceCreateDBI
 // 本接口（InquiryPriceCreateDBInstances）用于查询申请实例价格。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -3577,6 +4011,7 @@ func (c *Client) InquiryPriceCreateDBInstances(request *InquiryPriceCreateDBInst
 // 本接口（InquiryPriceCreateDBInstances）用于查询申请实例价格。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
@@ -3608,6 +4043,7 @@ func NewInquiryPriceRenewDBInstanceRequest() (request *InquiryPriceRenewDBInstan
     request = &InquiryPriceRenewDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "InquiryPriceRenewDBInstance")
     
     
@@ -3673,6 +4109,7 @@ func NewInquiryPriceUpgradeDBInstanceRequest() (request *InquiryPriceUpgradeDBIn
     request = &InquiryPriceUpgradeDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "InquiryPriceUpgradeDBInstance")
     
     
@@ -3740,6 +4177,7 @@ func NewModifyAccountPrivilegeRequest() (request *ModifyAccountPrivilegeRequest)
     request = &ModifyAccountPrivilegeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyAccountPrivilege")
     
     
@@ -3815,6 +4253,7 @@ func NewModifyAccountRemarkRequest() (request *ModifyAccountRemarkRequest) {
     request = &ModifyAccountRemarkRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyAccountRemark")
     
     
@@ -3878,6 +4317,7 @@ func NewModifyBackupMigrationRequest() (request *ModifyBackupMigrationRequest) {
     request = &ModifyBackupMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyBackupMigration")
     
     
@@ -3945,6 +4385,7 @@ func NewModifyBackupNameRequest() (request *ModifyBackupNameRequest) {
     request = &ModifyBackupNameRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyBackupName")
     
     
@@ -3966,9 +4407,11 @@ func NewModifyBackupNameResponse() (response *ModifyBackupNameResponse) {
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETERVALUE_BACKUPNAMEISILLEGAL = "InvalidParameterValue.BackupNameIsIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyBackupName(request *ModifyBackupNameRequest) (response *ModifyBackupNameResponse, err error) {
     return c.ModifyBackupNameWithContext(context.Background(), request)
@@ -3982,9 +4425,11 @@ func (c *Client) ModifyBackupName(request *ModifyBackupNameRequest) (response *M
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETERVALUE_BACKUPNAMEISILLEGAL = "InvalidParameterValue.BackupNameIsIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyBackupNameWithContext(ctx context.Context, request *ModifyBackupNameRequest) (response *ModifyBackupNameResponse, err error) {
     if request == nil {
@@ -4006,6 +4451,7 @@ func NewModifyBackupStrategyRequest() (request *ModifyBackupStrategyRequest) {
     request = &ModifyBackupStrategyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyBackupStrategy")
     
     
@@ -4028,6 +4474,7 @@ func NewModifyBackupStrategyResponse() (response *ModifyBackupStrategyResponse) 
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyBackupStrategy(request *ModifyBackupStrategyRequest) (response *ModifyBackupStrategyResponse, err error) {
     return c.ModifyBackupStrategyWithContext(context.Background(), request)
@@ -4042,6 +4489,7 @@ func (c *Client) ModifyBackupStrategy(request *ModifyBackupStrategyRequest) (res
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyBackupStrategyWithContext(ctx context.Context, request *ModifyBackupStrategyRequest) (response *ModifyBackupStrategyResponse, err error) {
     if request == nil {
@@ -4063,6 +4511,7 @@ func NewModifyDBInstanceNameRequest() (request *ModifyDBInstanceNameRequest) {
     request = &ModifyDBInstanceNameRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDBInstanceName")
     
     
@@ -4122,6 +4571,7 @@ func NewModifyDBInstanceNetworkRequest() (request *ModifyDBInstanceNetworkReques
     request = &ModifyDBInstanceNetworkRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDBInstanceNetwork")
     
     
@@ -4157,6 +4607,7 @@ func NewModifyDBInstanceNetworkResponse() (response *ModifyDBInstanceNetworkResp
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  RESOURCEUNAVAILABLE_VPCNOTEXIST = "ResourceUnavailable.VpcNotExist"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -4187,6 +4638,7 @@ func (c *Client) ModifyDBInstanceNetwork(request *ModifyDBInstanceNetworkRequest
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCENOTFOUND_VPCNOTEXIST = "ResourceNotFound.VpcNotExist"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  RESOURCEUNAVAILABLE_VPCNOTEXIST = "ResourceUnavailable.VpcNotExist"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -4211,6 +4663,7 @@ func NewModifyDBInstanceProjectRequest() (request *ModifyDBInstanceProjectReques
     request = &ModifyDBInstanceProjectRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDBInstanceProject")
     
     
@@ -4268,6 +4721,7 @@ func NewModifyDBInstanceRenewFlagRequest() (request *ModifyDBInstanceRenewFlagRe
     request = &ModifyDBInstanceRenewFlagRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDBInstanceRenewFlag")
     
     
@@ -4327,6 +4781,7 @@ func NewModifyDBInstanceSecurityGroupsRequest() (request *ModifyDBInstanceSecuri
     request = &ModifyDBInstanceSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDBInstanceSecurityGroups")
     
     
@@ -4384,6 +4839,7 @@ func NewModifyDBNameRequest() (request *ModifyDBNameRequest) {
     request = &ModifyDBNameRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDBName")
     
     
@@ -4455,6 +4911,7 @@ func NewModifyDBRemarkRequest() (request *ModifyDBRemarkRequest) {
     request = &ModifyDBRemarkRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDBRemark")
     
     
@@ -4520,6 +4977,7 @@ func NewModifyDatabaseCDCRequest() (request *ModifyDatabaseCDCRequest) {
     request = &ModifyDatabaseCDCRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDatabaseCDC")
     
     
@@ -4583,6 +5041,7 @@ func NewModifyDatabaseCTRequest() (request *ModifyDatabaseCTRequest) {
     request = &ModifyDatabaseCTRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDatabaseCT")
     
     
@@ -4607,6 +5066,7 @@ func NewModifyDatabaseCTResponse() (response *ModifyDatabaseCTResponse) {
 //  RESOURCEUNAVAILABLE_DBINVALIDSTATUS = "ResourceUnavailable.DBInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTROINSTANCE = "ResourceUnavailable.NotSupportRoInstance"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTREPEAT = "UnsupportedOperation.NotSupportRepeat"
 func (c *Client) ModifyDatabaseCT(request *ModifyDatabaseCTRequest) (response *ModifyDatabaseCTResponse, err error) {
     return c.ModifyDatabaseCTWithContext(context.Background(), request)
@@ -4623,6 +5083,7 @@ func (c *Client) ModifyDatabaseCT(request *ModifyDatabaseCTRequest) (response *M
 //  RESOURCEUNAVAILABLE_DBINVALIDSTATUS = "ResourceUnavailable.DBInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTROINSTANCE = "ResourceUnavailable.NotSupportRoInstance"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 //  UNSUPPORTEDOPERATION_NOTSUPPORTREPEAT = "UnsupportedOperation.NotSupportRepeat"
 func (c *Client) ModifyDatabaseCTWithContext(ctx context.Context, request *ModifyDatabaseCTRequest) (response *ModifyDatabaseCTResponse, err error) {
     if request == nil {
@@ -4644,6 +5105,7 @@ func NewModifyDatabaseMdfRequest() (request *ModifyDatabaseMdfRequest) {
     request = &ModifyDatabaseMdfRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyDatabaseMdf")
     
     
@@ -4668,6 +5130,7 @@ func NewModifyDatabaseMdfResponse() (response *ModifyDatabaseMdfResponse) {
 //  RESOURCEUNAVAILABLE_DBINVALIDSTATUS = "ResourceUnavailable.DBInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTROINSTANCE = "ResourceUnavailable.NotSupportRoInstance"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyDatabaseMdf(request *ModifyDatabaseMdfRequest) (response *ModifyDatabaseMdfResponse, err error) {
     return c.ModifyDatabaseMdfWithContext(context.Background(), request)
 }
@@ -4683,6 +5146,7 @@ func (c *Client) ModifyDatabaseMdf(request *ModifyDatabaseMdfRequest) (response 
 //  RESOURCEUNAVAILABLE_DBINVALIDSTATUS = "ResourceUnavailable.DBInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTROINSTANCE = "ResourceUnavailable.NotSupportRoInstance"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyDatabaseMdfWithContext(ctx context.Context, request *ModifyDatabaseMdfRequest) (response *ModifyDatabaseMdfResponse, err error) {
     if request == nil {
         request = NewModifyDatabaseMdfRequest()
@@ -4703,6 +5167,7 @@ func NewModifyIncrementalMigrationRequest() (request *ModifyIncrementalMigration
     request = &ModifyIncrementalMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyIncrementalMigration")
     
     
@@ -4770,6 +5235,7 @@ func NewModifyInstanceParamRequest() (request *ModifyInstanceParamRequest) {
     request = &ModifyInstanceParamRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyInstanceParam")
     
     
@@ -4837,6 +5303,7 @@ func NewModifyMaintenanceSpanRequest() (request *ModifyMaintenanceSpanRequest) {
     request = &ModifyMaintenanceSpanRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyMaintenanceSpan")
     
     
@@ -4859,6 +5326,7 @@ func NewModifyMaintenanceSpanResponse() (response *ModifyMaintenanceSpanResponse
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyMaintenanceSpan(request *ModifyMaintenanceSpanRequest) (response *ModifyMaintenanceSpanResponse, err error) {
     return c.ModifyMaintenanceSpanWithContext(context.Background(), request)
 }
@@ -4872,6 +5340,7 @@ func (c *Client) ModifyMaintenanceSpan(request *ModifyMaintenanceSpanRequest) (r
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyMaintenanceSpanWithContext(ctx context.Context, request *ModifyMaintenanceSpanRequest) (response *ModifyMaintenanceSpanResponse, err error) {
     if request == nil {
         request = NewModifyMaintenanceSpanRequest()
@@ -4892,6 +5361,7 @@ func NewModifyMigrationRequest() (request *ModifyMigrationRequest) {
     request = &ModifyMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyMigration")
     
     
@@ -4967,6 +5437,7 @@ func NewModifyPublishSubscribeNameRequest() (request *ModifyPublishSubscribeName
     request = &ModifyPublishSubscribeNameRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyPublishSubscribeName")
     
     
@@ -4988,6 +5459,7 @@ func NewModifyPublishSubscribeNameResponse() (response *ModifyPublishSubscribeNa
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETERVALUE_PUBSUBNAMEISILLEGAL = "InvalidParameterValue.PubSubNameIsIllegal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyPublishSubscribeName(request *ModifyPublishSubscribeNameRequest) (response *ModifyPublishSubscribeNameResponse, err error) {
     return c.ModifyPublishSubscribeNameWithContext(context.Background(), request)
 }
@@ -5000,6 +5472,7 @@ func (c *Client) ModifyPublishSubscribeName(request *ModifyPublishSubscribeNameR
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETERVALUE_PUBSUBNAMEISILLEGAL = "InvalidParameterValue.PubSubNameIsIllegal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ModifyPublishSubscribeNameWithContext(ctx context.Context, request *ModifyPublishSubscribeNameRequest) (response *ModifyPublishSubscribeNameResponse, err error) {
     if request == nil {
         request = NewModifyPublishSubscribeNameRequest()
@@ -5020,6 +5493,7 @@ func NewModifyReadOnlyGroupDetailsRequest() (request *ModifyReadOnlyGroupDetails
     request = &ModifyReadOnlyGroupDetailsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ModifyReadOnlyGroupDetails")
     
     
@@ -5071,10 +5545,67 @@ func (c *Client) ModifyReadOnlyGroupDetailsWithContext(ctx context.Context, requ
     return
 }
 
+func NewOpenInterCommunicationRequest() (request *OpenInterCommunicationRequest) {
+    request = &OpenInterCommunicationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("sqlserver", APIVersion, "OpenInterCommunication")
+    
+    
+    return
+}
+
+func NewOpenInterCommunicationResponse() (response *OpenInterCommunicationResponse) {
+    response = &OpenInterCommunicationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// OpenInterCommunication
+// 本接口（OpenInterCommunication）用于打开实例的互通，实例互通可以实现商业智能服务相互联通。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) OpenInterCommunication(request *OpenInterCommunicationRequest) (response *OpenInterCommunicationResponse, err error) {
+    return c.OpenInterCommunicationWithContext(context.Background(), request)
+}
+
+// OpenInterCommunication
+// 本接口（OpenInterCommunication）用于打开实例的互通，实例互通可以实现商业智能服务相互联通。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
+//  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) OpenInterCommunicationWithContext(ctx context.Context, request *OpenInterCommunicationRequest) (response *OpenInterCommunicationResponse, err error) {
+    if request == nil {
+        request = NewOpenInterCommunicationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("OpenInterCommunication require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewOpenInterCommunicationResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewQueryMigrationCheckProcessRequest() (request *QueryMigrationCheckProcessRequest) {
     request = &QueryMigrationCheckProcessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "QueryMigrationCheckProcess")
     
     
@@ -5101,6 +5632,7 @@ func NewQueryMigrationCheckProcessResponse() (response *QueryMigrationCheckProce
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_DBNOTFOUND = "ResourceNotFound.DBNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) QueryMigrationCheckProcess(request *QueryMigrationCheckProcessRequest) (response *QueryMigrationCheckProcessResponse, err error) {
     return c.QueryMigrationCheckProcessWithContext(context.Background(), request)
 }
@@ -5118,6 +5650,7 @@ func (c *Client) QueryMigrationCheckProcess(request *QueryMigrationCheckProcessR
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_DBNOTFOUND = "ResourceNotFound.DBNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) QueryMigrationCheckProcessWithContext(ctx context.Context, request *QueryMigrationCheckProcessRequest) (response *QueryMigrationCheckProcessResponse, err error) {
     if request == nil {
         request = NewQueryMigrationCheckProcessRequest()
@@ -5138,6 +5671,7 @@ func NewRecycleDBInstanceRequest() (request *RecycleDBInstanceRequest) {
     request = &RecycleDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "RecycleDBInstance")
     
     
@@ -5195,6 +5729,7 @@ func NewRecycleReadOnlyGroupRequest() (request *RecycleReadOnlyGroupRequest) {
     request = &RecycleReadOnlyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "RecycleReadOnlyGroup")
     
     
@@ -5252,6 +5787,7 @@ func NewRemoveBackupsRequest() (request *RemoveBackupsRequest) {
     request = &RemoveBackupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "RemoveBackups")
     
     
@@ -5274,6 +5810,8 @@ func NewRemoveBackupsResponse() (response *RemoveBackupsResponse) {
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) RemoveBackups(request *RemoveBackupsRequest) (response *RemoveBackupsResponse, err error) {
     return c.RemoveBackupsWithContext(context.Background(), request)
 }
@@ -5287,6 +5825,8 @@ func (c *Client) RemoveBackups(request *RemoveBackupsRequest) (response *RemoveB
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) RemoveBackupsWithContext(ctx context.Context, request *RemoveBackupsRequest) (response *RemoveBackupsResponse, err error) {
     if request == nil {
         request = NewRemoveBackupsRequest()
@@ -5307,6 +5847,7 @@ func NewRenewDBInstanceRequest() (request *RenewDBInstanceRequest) {
     request = &RenewDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "RenewDBInstance")
     
     
@@ -5372,6 +5913,7 @@ func NewRenewPostpaidDBInstanceRequest() (request *RenewPostpaidDBInstanceReques
     request = &RenewPostpaidDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "RenewPostpaidDBInstance")
     
     
@@ -5427,6 +5969,7 @@ func NewResetAccountPasswordRequest() (request *ResetAccountPasswordRequest) {
     request = &ResetAccountPasswordRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "ResetAccountPassword")
     
     
@@ -5454,6 +5997,7 @@ func NewResetAccountPasswordResponse() (response *ResetAccountPasswordResponse) 
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_ACCOUNTINVALIDSTATUS = "ResourceUnavailable.AccountInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ResetAccountPassword(request *ResetAccountPasswordRequest) (response *ResetAccountPasswordResponse, err error) {
     return c.ResetAccountPasswordWithContext(context.Background(), request)
 }
@@ -5472,6 +6016,7 @@ func (c *Client) ResetAccountPassword(request *ResetAccountPasswordRequest) (res
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_ACCOUNTINVALIDSTATUS = "ResourceUnavailable.AccountInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) ResetAccountPasswordWithContext(ctx context.Context, request *ResetAccountPasswordRequest) (response *ResetAccountPasswordResponse, err error) {
     if request == nil {
         request = NewResetAccountPasswordRequest()
@@ -5492,6 +6037,7 @@ func NewRestartDBInstanceRequest() (request *RestartDBInstanceRequest) {
     request = &RestartDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "RestartDBInstance")
     
     
@@ -5551,6 +6097,7 @@ func NewRestoreInstanceRequest() (request *RestoreInstanceRequest) {
     request = &RestoreInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "RestoreInstance")
     
     
@@ -5568,6 +6115,7 @@ func NewRestoreInstanceResponse() (response *RestoreInstanceResponse) {
 // 本接口（RestoreInstance）用于根据备份文件恢复实例。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
@@ -5586,6 +6134,7 @@ func (c *Client) RestoreInstance(request *RestoreInstanceRequest) (response *Res
 // 本接口（RestoreInstance）用于根据备份文件恢复实例。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
@@ -5616,6 +6165,7 @@ func NewRollbackInstanceRequest() (request *RollbackInstanceRequest) {
     request = &RollbackInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "RollbackInstance")
     
     
@@ -5639,6 +6189,7 @@ func NewRollbackInstanceResponse() (response *RollbackInstanceResponse) {
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_DBINVALIDSTATUS = "ResourceUnavailable.DBInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) RollbackInstance(request *RollbackInstanceRequest) (response *RollbackInstanceResponse, err error) {
@@ -5655,6 +6206,7 @@ func (c *Client) RollbackInstance(request *RollbackInstanceRequest) (response *R
 //  INVALIDPARAMETER_INPUTILLEGAL = "InvalidParameter.InputIllegal"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_DBINVALIDSTATUS = "ResourceUnavailable.DBInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) RollbackInstanceWithContext(ctx context.Context, request *RollbackInstanceRequest) (response *RollbackInstanceResponse, err error) {
@@ -5677,6 +6229,7 @@ func NewRunMigrationRequest() (request *RunMigrationRequest) {
     request = &RunMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "RunMigration")
     
     
@@ -5740,6 +6293,7 @@ func NewStartBackupMigrationRequest() (request *StartBackupMigrationRequest) {
     request = &StartBackupMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "StartBackupMigration")
     
     
@@ -5809,6 +6363,7 @@ func NewStartIncrementalMigrationRequest() (request *StartIncrementalMigrationRe
     request = &StartIncrementalMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "StartIncrementalMigration")
     
     
@@ -5876,6 +6431,7 @@ func NewStartMigrationCheckRequest() (request *StartMigrationCheckRequest) {
     request = &StartMigrationCheckRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "StartMigrationCheck")
     
     
@@ -5947,6 +6503,7 @@ func NewStopMigrationRequest() (request *StopMigrationRequest) {
     request = &StopMigrationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "StopMigration")
     
     
@@ -6018,6 +6575,7 @@ func NewTerminateDBInstanceRequest() (request *TerminateDBInstanceRequest) {
     request = &TerminateDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "TerminateDBInstance")
     
     
@@ -6071,6 +6629,7 @@ func NewUpgradeDBInstanceRequest() (request *UpgradeDBInstanceRequest) {
     request = &UpgradeDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("sqlserver", APIVersion, "UpgradeDBInstance")
     
     
