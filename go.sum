@@ -478,6 +478,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.199 h1:VyOKZOl
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.199/go.mod h1:9ldm0D1ToaztnlD2bFC5yjMMqvQfVeAMhvcoCCVnZb8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.562 h1:gPdY1ow4dh3+Fs0ShjpiX9u+lQLjSHuH9OCBXuoin+Q=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.562/go.mod h1:eC3p0uhPlovCmDlIhwQTej95aj33O5TI4nNHJQpH+8g=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.581 h1:Ei818gJRB9wd1sGux9x9Hi3l9XwfYbPBhri6T3aYorc=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.581/go.mod h1:T7/YP64GYsB74saN6wG9IOQ1/XZFWX2MKEM9tphORYk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.403 h1:rD9H4dQkULnRpq1BiD2KuDKsd9VEKHun2gMT+V6DNOE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.403/go.mod h1:yWwwGj2gV0hRPfM9GXG4EgDee0cEWYcAwl/M8CTTvzM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.445 h1:ZUtZLAXy7xQbDipfEIPEBahjHBoJ+hTAbQYaqjiwFAg=
@@ -559,6 +561,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.576/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.577/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.578 h1:dfSNB1i1dOgGQ/WBAlWax7iLFAIiodDSr9xDIwPNLDM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.578/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.581 h1:D9CgaCBTobVR13v0ZTGV/41hbv+l5DFCsWD2Sia83i4=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.581/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445 h1:Bh7XD0ypNMHYyBOM8hhKsSu+y0VVKUnJVS+YKKhfpGg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.445/go.mod h1:jMDD351efCFpT1+KVFbcpu6SbmP4TYmp4qkoCfr63nQ=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.553 h1:Pl1kYgFhJp0QSoVFSzRsiGk+HfEAkBTQg7+O60tytNA=
