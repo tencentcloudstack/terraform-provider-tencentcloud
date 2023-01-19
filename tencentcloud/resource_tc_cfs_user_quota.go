@@ -86,7 +86,6 @@ func resourceTencentCloudCfsUserQuotaCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		request      = cfs.NewSetUserQuotaRequest()
-		response     = cfs.NewSetUserQuotaResponse()
 		fileSystemId string
 		userType     string
 		userId       string
@@ -121,7 +120,6 @@ func resourceTencentCloudCfsUserQuotaCreate(d *schema.ResourceData, meta interfa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
