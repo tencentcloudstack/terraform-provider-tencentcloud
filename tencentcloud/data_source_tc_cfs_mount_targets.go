@@ -50,7 +50,7 @@ func dataSourceTencentCloudCfsMountTargets() *schema.Resource {
 							Computed:    true,
 							Description: "Mount target IP.",
 						},
-						"f_s_i_d": {
+						"fs_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Mount root-directory.",
@@ -85,7 +85,7 @@ func dataSourceTencentCloudCfsMountTargets() *schema.Resource {
 							Computed:    true,
 							Description: "Subnet name.",
 						},
-						"ccn_i_d": {
+						"ccn_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "CCN instance ID used by CFS Turbo.",
@@ -152,7 +152,7 @@ func dataSourceTencentCloudCfsMountTargetsRead(d *schema.ResourceData, meta inte
 			}
 
 			if mountInfo.FSID != nil {
-				mountInfoMap["f_s_i_d"] = mountInfo.FSID
+				mountInfoMap["fs_id"] = mountInfo.FSID
 			}
 
 			if mountInfo.LifeCycleState != nil {
@@ -180,7 +180,7 @@ func dataSourceTencentCloudCfsMountTargetsRead(d *schema.ResourceData, meta inte
 			}
 
 			if mountInfo.CcnID != nil {
-				mountInfoMap["ccn_i_d"] = mountInfo.CcnID
+				mountInfoMap["ccn_id"] = mountInfo.CcnID
 			}
 
 			if mountInfo.CidrBlock != nil {

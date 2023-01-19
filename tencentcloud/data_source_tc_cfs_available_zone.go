@@ -15,6 +15,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func dataSourceTencentCloudCfsAvailableZone() *schema.Resource {
@@ -151,6 +152,7 @@ func dataSourceTencentCloudCfsAvailableZoneRead(d *schema.ResourceData, meta int
 		return err
 	}
 
+	ids := make([]string, 0, len(regionZones))
 	tmpList := make([]map[string]interface{}, 0, len(regionZones))
 
 	if regionZones != nil {
@@ -207,7 +209,7 @@ func dataSourceTencentCloudCfsAvailableZoneRead(d *schema.ResourceData, meta int
 									protocolsList = append(protocolsList, protocolsMap)
 								}
 
-								typesMap["protocols"] = []interface{}{protocolsList}
+								typesMap["protocols"] = protocolsList
 							}
 
 							if types.Type != nil {
@@ -221,7 +223,7 @@ func dataSourceTencentCloudCfsAvailableZoneRead(d *schema.ResourceData, meta int
 							typesList = append(typesList, typesMap)
 						}
 
-						zonesMap["types"] = []interface{}{typesList}
+						zonesMap["types"] = typesList
 					}
 
 					if zones.ZoneName != nil {
@@ -231,19 +233,22 @@ func dataSourceTencentCloudCfsAvailableZoneRead(d *schema.ResourceData, meta int
 					zonesList = append(zonesList, zonesMap)
 				}
 
-				availableRegionMap["zones"] = []interface{}{zonesList}
+				availableRegionMap["zones"] = zonesList
 			}
 
 			if availableRegion.RegionCnName != nil {
 				availableRegionMap["region_cn_name"] = availableRegion.RegionCnName
 			}
+			ids = append(ids, *availableRegion.Region)
 			tmpList = append(tmpList, availableRegionMap)
 		}
-
-		_ = d.Set("region_zones", tmpList)
 	}
 
-	d.SetId("CfsAvailableZone")
+	d.SetId(helper.DataResourceIdsHash(ids))
+	err = d.Set("region_zones", tmpList)
+	if err != nil {
+		return err
+	}
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

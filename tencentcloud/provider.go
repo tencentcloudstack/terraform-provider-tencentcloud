@@ -233,7 +233,7 @@ Cloud File Storage(CFS)
 	tencentcloud_cfs_auto_snapshot_policy
 	tencentcloud_cfs_auto_snapshot_policy_attachment
 	tencentcloud_cfs_snapshot
-	tencentcloud_cfs_user_quota
+	tencentcloud_cfs_sign_up_cfs_service
 
 Container Cluster
   Data Source
@@ -1368,6 +1368,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_auto_snapshot_policy_attachment":      resourceTencentCloudCfsAutoSnapshotPolicyAttachment(),
 			"tencentcloud_cfs_snapshot":                             resourceTencentCloudCfsSnapshot(),
 			"tencentcloud_cfs_user_quota":                           resourceTencentCloudCfsUserQuota(),
+			"tencentcloud_cfs_sign_up_cfs_service":                  resourceTencentCloudCfsSignUpCfsService(),
 			"tencentcloud_redis_instance":                           resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                      resourceTencentCloudRedisBackupConfig(),
 			"tencentcloud_redis_param_template":                     resourceTencentCloudRedisParamTemplate(),

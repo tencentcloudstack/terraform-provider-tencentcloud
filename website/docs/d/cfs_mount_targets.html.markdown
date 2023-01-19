@@ -31,10 +31,10 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `mount_targets` - Mount target details.
-  * `ccn_i_d` - CCN instance ID used by CFS Turbo.
+  * `ccn_id` - CCN instance ID used by CFS Turbo.
   * `cidr_block` - CCN IP range used by CFS Turbo.
-  * `f_s_i_d` - Mount root-directory.
   * `file_system_id` - File system ID.
+  * `fs_id` - Mount root-directory.
   * `ip_address` - Mount target IP.
   * `life_cycle_state` - Mount target status.
   * `mount_target_id` - Mount target ID.

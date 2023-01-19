@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudCfsUserQuotaResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixCfsUserQuotaResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,11 +30,11 @@ func TestAccTencentCloudCfsUserQuotaResource_basic(t *testing.T) {
 const testAccCfsUserQuota = `
 
 resource "tencentcloud_cfs_user_quota" "user_quota" {
-  file_system_id = ""
-  user_type = ""
-  user_id = ""
-  capacity_hard_limit = 
-  file_hard_limit = 
+  file_system_id = "cfs-4636029bc"
+  user_type = "Uid"
+  user_id = "2159973417"
+  capacity_hard_limit = 10
+  file_hard_limit = 10000
 }
 
 `

@@ -18,7 +18,7 @@ Import
 cfs user_quota can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cfs_user_quota.user_quota user_quota_id
+terraform import tencentcloud_cfs_user_quota.user_quota fileSystemId#userType#userId
 ```
 */
 package tencentcloud
