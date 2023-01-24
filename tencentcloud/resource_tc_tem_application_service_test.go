@@ -30,6 +30,23 @@ func TestAccTencentCloudTemApplicationServiceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.type", "CLUSTER"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.service_name", "terraform-test-0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tem_application_service.application_service", "service.0.ip"),
+					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.port_mapping_item_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.port_mapping_item_list.0.port", "80"),
+					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.port_mapping_item_list.0.target_port", "80"),
+					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.port_mapping_item_list.0.protocol", "TCP"),
+				),
+			},
+			{
+				Config: testAccTemApplicationServiceUp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTemApplicationServiceExists("tencentcloud_tem_application_service.application_service"),
+					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "environment_id", defaultEnvironmentId),
+					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "application_id", defaultApplicationId),
+					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.type", "EXTERNAL"),
+					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.service_name", "terraform-test-0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tem_application_service.application_service", "service.0.ip"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.port_mapping_item_list.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.port_mapping_item_list.0.port", "80"),
 					resource.TestCheckResourceAttr("tencentcloud_tem_application_service.application_service", "service.0.port_mapping_item_list.0.target_port", "80"),
@@ -133,6 +150,24 @@ resource "tencentcloud_tem_application_service" "application_service" {
 	application_id = var.application_id
 	service {
 		type = "CLUSTER"
+		service_name = "terraform-test-0"
+		port_mapping_item_list {
+			port = 80
+			target_port = 80
+			protocol = "TCP"
+		}
+	}
+}
+
+`
+
+const testAccTemApplicationServiceUp = testAccTemApplicationServiceVar + `
+
+resource "tencentcloud_tem_application_service" "application_service" {
+	environment_id = var.environment_id
+	application_id = var.application_id
+	service {
+		type = "EXTERNAL"
 		service_name = "terraform-test-0"
 		port_mapping_item_list {
 			port = 80
