@@ -26,12 +26,13 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
+      - uses: actions/setup-go@v3
+        with:
+          go-version-file: .go-version
+
+      - name: install goimports
+        run: go get golang.org/x/tools/cmd/goimports@latest
+
       # Runs a set of commands using the runners shell
       - name: gofmt check
-        run: |
-          make fmtcheck
-          if [ $? -ne 0 ]; then
-              printf "FMT FAILED\n"
-              exit 1
-          fi
-
+        run: make fmtcheck
