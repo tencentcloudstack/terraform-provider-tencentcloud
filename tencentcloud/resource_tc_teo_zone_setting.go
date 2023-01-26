@@ -1,115 +1,116 @@
 /*
 Provides a resource to create a teo zone_setting
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_zone_setting" "zone_setting" {
-  zone_id = "zone-297z8rf93cfw"
 
-  cache {
+	resource "tencentcloud_teo_zone_setting" "zone_setting" {
+	  zone_id = "zone-297z8rf93cfw"
 
-    follow_origin {
-      switch = "on"
-    }
+	  cache {
 
-    no_cache {
-      switch = "off"
-    }
-  }
+	    follow_origin {
+	      switch = "on"
+	    }
 
-  cache_key {
-    full_url_cache = "on"
-    ignore_case    = "off"
+	    no_cache {
+	      switch = "off"
+	    }
+	  }
 
-    query_string {
-      action = "includeCustom"
-      switch = "off"
-      value  = []
-    }
-  }
+	  cache_key {
+	    full_url_cache = "on"
+	    ignore_case    = "off"
 
-  cache_prefresh {
-    percent = 90
-    switch  = "off"
-  }
+	    query_string {
+	      action = "includeCustom"
+	      switch = "off"
+	      value  = []
+	    }
+	  }
 
-  client_ip_header {
-    switch = "off"
-  }
+	  cache_prefresh {
+	    percent = 90
+	    switch  = "off"
+	  }
 
-  compression {
-    algorithms = [
-      "brotli",
-      "gzip",
-    ]
-    switch     = "on"
-  }
+	  client_ip_header {
+	    switch = "off"
+	  }
 
-  force_redirect {
-    redirect_status_code = 302
-    switch               = "off"
-  }
+	  compression {
+	    algorithms = [
+	      "brotli",
+	      "gzip",
+	    ]
+	    switch     = "on"
+	  }
 
-  https {
-    http2         = "on"
-    ocsp_stapling = "off"
-    tls_version   = [
-      "TLSv1",
-      "TLSv1.1",
-      "TLSv1.2",
-      "TLSv1.3",
-    ]
+	  force_redirect {
+	    redirect_status_code = 302
+	    switch               = "off"
+	  }
 
-    hsts {
-      include_sub_domains = "off"
-      max_age             = 0
-      preload             = "off"
-      switch              = "off"
-    }
-  }
+	  https {
+	    http2         = "on"
+	    ocsp_stapling = "off"
+	    tls_version   = [
+	      "TLSv1",
+	      "TLSv1.1",
+	      "TLSv1.2",
+	      "TLSv1.3",
+	    ]
 
-  ipv6 {
-    switch = "off"
-  }
+	    hsts {
+	      include_sub_domains = "off"
+	      max_age             = 0
+	      preload             = "off"
+	      switch              = "off"
+	    }
+	  }
 
-  max_age {
-    follow_origin = "on"
-    max_age_time  = 0
-  }
+	  ipv6 {
+	    switch = "off"
+	  }
 
-  offline_cache {
-    switch = "on"
-  }
+	  max_age {
+	    follow_origin = "on"
+	    max_age_time  = 0
+	  }
 
-  origin {
-    backup_origins       = []
-    origin_pull_protocol = "follow"
-    origins              = []
-  }
+	  offline_cache {
+	    switch = "on"
+	  }
 
-  post_max_size {
-    max_size = 524288000
-    switch   = "on"
-  }
+	  origin {
+	    backup_origins       = []
+	    origin_pull_protocol = "follow"
+	    origins              = []
+	  }
 
-  quic {
-    switch = "off"
-  }
+	  post_max_size {
+	    max_size = 524288000
+	    switch   = "on"
+	  }
 
-  smart_routing {
-    switch = "off"
-  }
+	  quic {
+	    switch = "off"
+	  }
 
-  upstream_http2 {
-    switch = "off"
-  }
+	  smart_routing {
+	    switch = "off"
+	  }
 
-  web_socket {
-    switch  = "off"
-    timeout = 30
-  }
-}
+	  upstream_http2 {
+	    switch = "off"
+	  }
+
+	  web_socket {
+	    switch  = "off"
+	    timeout = 30
+	  }
+	}
 
 ```
 Import

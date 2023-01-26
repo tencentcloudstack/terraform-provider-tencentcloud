@@ -1,19 +1,20 @@
 /*
 Provides a resource to create a sms sign
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_sms_sign" "sign" {
-  sign_name     = "terraform"
-  sign_type     = 1
-  document_type = 4
-  international = 0
-  sign_purpose  = 0
-  proof_image = "dGhpcyBpcyBhIGV4YW1wbGU="
-}
-```
 
+	resource "tencentcloud_sms_sign" "sign" {
+	  sign_name     = "terraform"
+	  sign_type     = 1
+	  document_type = 4
+	  international = 0
+	  sign_purpose  = 0
+	  proof_image = "dGhpcyBpcyBhIGV4YW1wbGU="
+	}
+
+```
 */
 package tencentcloud
 

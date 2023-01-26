@@ -1,40 +1,42 @@
 /*
 Provides a resource to create a ci media_watermark_template
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ci_media_watermark_template" "media_watermark_template" {
-  name = ""
-  watermark {
-		type = ""
-		pos = ""
-		loc_mode = ""
-		dx = ""
-		dy = ""
-		start_time = ""
-		end_time = ""
-		image {
-			url = ""
-			mode = ""
-			width = ""
-			height = ""
-			transparency = ""
-			background = ""
-		}
-		text {
-			font_size = ""
-			font_type = ""
-			font_color = ""
-			transparency = ""
-			text = ""
-		}
 
-  }
-}
+	resource "tencentcloud_ci_media_watermark_template" "media_watermark_template" {
+	  name = ""
+	  watermark {
+			type = ""
+			pos = ""
+			loc_mode = ""
+			dx = ""
+			dy = ""
+			start_time = ""
+			end_time = ""
+			image {
+				url = ""
+				mode = ""
+				width = ""
+				height = ""
+				transparency = ""
+				background = ""
+			}
+			text {
+				font_size = ""
+				font_type = ""
+				font_color = ""
+				transparency = ""
+				text = ""
+			}
+
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 ci media_watermark_template can be imported using the id, e.g.
 

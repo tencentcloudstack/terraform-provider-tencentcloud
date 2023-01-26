@@ -1,29 +1,31 @@
 /*
 Provides a resource to create a tdmqRocketmq topic
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
-}
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace"
-  ttl = 65000
-  retention_time = 65000
-  remark = "test namespace"
-}
+	resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
+		cluster_name = "test_rocketmq"
+		remark = "test recket mq"
+	}
 
-resource "tencentcloud_tdmq_rocketmq_topic" "topic" {
-  topic_name = "test_rocketmq_topic"
-  namespace_name = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-  type = "Normal"
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  remark = "test rocketmq topic"
-}
+	resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
+	  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+	  namespace_name = "test_namespace"
+	  ttl = 65000
+	  retention_time = 65000
+	  remark = "test namespace"
+	}
+
+	resource "tencentcloud_tdmq_rocketmq_topic" "topic" {
+	  topic_name = "test_rocketmq_topic"
+	  namespace_name = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
+	  type = "Normal"
+	  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+	  remark = "test rocketmq topic"
+	}
+
 ```
 Import
 

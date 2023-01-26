@@ -1,16 +1,17 @@
 /*
 Provides a resource to create a as stop_instances
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_as_stop_instances" "stop_instances" {
-  auto_scaling_group_id = tencentcloud_as_scaling_group.scaling_group.id
-  instance_ids = ["ins-xxxx"]
-  stopped_mode = "STOP_CHARGING"
-}
-```
 
+	resource "tencentcloud_as_stop_instances" "stop_instances" {
+	  auto_scaling_group_id = tencentcloud_as_scaling_group.scaling_group.id
+	  instance_ids = ["ins-xxxx"]
+	  stopped_mode = "STOP_CHARGING"
+	}
+
+```
 */
 package tencentcloud
 

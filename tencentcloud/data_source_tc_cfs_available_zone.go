@@ -1,7 +1,7 @@
 /*
 Use this data source to query detailed information of cfs available_zone
 
-Example Usage
+# Example Usage
 
 ```hcl
 data "tencentcloud_cfs_available_zone" "available_zone" {}
@@ -77,8 +77,8 @@ func dataSourceTencentCloudCfsAvailableZone() *schema.Resource {
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"sale_status": {
-																Type:     schema.TypeString,
-																Computed: true,
+																Type:        schema.TypeString,
+																Computed:    true,
 																Description: "	Sale status. Valid values: sale_out (sold out), saling (purchasable), no_saling (non-purchasable).",
 															},
 															"protocol": {

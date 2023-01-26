@@ -1,18 +1,19 @@
 /*
 Provides a resource to create a monitor grafana ssoAccount
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_grafana_sso_account" "ssoAccount" {
-  instance_id = "grafana-50nj6v00"
-  user_id     = "111"
-  notes       = "desc12222"
-  role {
-    organization  = "Main Org."
-    role          = "Admin"
-  }
-}
+
+	resource "tencentcloud_monitor_grafana_sso_account" "ssoAccount" {
+	  instance_id = "grafana-50nj6v00"
+	  user_id     = "111"
+	  notes       = "desc12222"
+	  role {
+	    organization  = "Main Org."
+	    role          = "Admin"
+	  }
+	}
 
 ```
 Import

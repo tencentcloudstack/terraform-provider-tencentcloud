@@ -1,17 +1,18 @@
 /*
 Provides a resource to create a CLB target group.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_clb_target_group" "test"{
-    target_group_name = "test"
-    port              = 33
-}
+
+	resource "tencentcloud_clb_target_group" "test"{
+	    target_group_name = "test"
+	    port              = 33
+	}
+
 ```
 
-
-Import
+# Import
 
 CLB target group can be imported using the id, e.g.
 

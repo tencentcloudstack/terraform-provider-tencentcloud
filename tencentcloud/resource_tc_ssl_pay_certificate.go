@@ -7,42 +7,44 @@ and belonging items can be updated. The Destroy operation will only cancel the c
 certificate and refund the fee. If you need a refund, you need to check the current certificate status in the console
 as `Review Cancel`, and then you can click `Request a refund` to refund the fee.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_pay_certificate" "ssl" {
-    product_id = 33
-    domain_num = 1
-    alias      = "test-ssl"
-    project_id = 0
-    information {
-        csr_type              = "online"
-        certificate_domain    = "www.domain.com"
-        organization_name     = "test"
-        organization_division = "test"
-        organization_address  = "test"
-        organization_country  = "CN"
-        organization_city     = "test"
-        organization_region   = "test"
-        postal_code           = "0755"
-        phone_area_code       = "0755"
-        phone_number          = "12345678901"
-        verify_type           = "DNS"
-        admin_first_name      = "test"
-        admin_last_name       = "test"
-        admin_phone_num       = "12345678901"
-        admin_email           = "test@tencent.com"
-        admin_position        = "dev"
-        contact_first_name    = "test"
-        contact_last_name     = "test"
-        contact_email         = "test@tencent.com"
-        contact_number        = "12345678901"
-        contact_position      = "dev"
-    }
-}
+
+	resource "tencentcloud_ssl_pay_certificate" "ssl" {
+	    product_id = 33
+	    domain_num = 1
+	    alias      = "test-ssl"
+	    project_id = 0
+	    information {
+	        csr_type              = "online"
+	        certificate_domain    = "www.domain.com"
+	        organization_name     = "test"
+	        organization_division = "test"
+	        organization_address  = "test"
+	        organization_country  = "CN"
+	        organization_city     = "test"
+	        organization_region   = "test"
+	        postal_code           = "0755"
+	        phone_area_code       = "0755"
+	        phone_number          = "12345678901"
+	        verify_type           = "DNS"
+	        admin_first_name      = "test"
+	        admin_last_name       = "test"
+	        admin_phone_num       = "12345678901"
+	        admin_email           = "test@tencent.com"
+	        admin_position        = "dev"
+	        contact_first_name    = "test"
+	        contact_last_name     = "test"
+	        contact_email         = "test@tencent.com"
+	        contact_number        = "12345678901"
+	        contact_position      = "dev"
+	    }
+	}
+
 ```
 
-Import
+# Import
 
 payment SSL instance can be imported, e.g.
 

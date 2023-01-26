@@ -1,27 +1,28 @@
 /*
 Provide a resource to create a VPC ACL instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
 data "tencentcloud_vpc_instances" "default" {
 }
 
-resource "tencentcloud_vpc_acl" "foo" {
-    vpc_id  = data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
-    name  	= "test_acl_update"
-	ingress = [
-		"ACCEPT#192.168.1.0/24#800#TCP",
-		"ACCEPT#192.168.1.0/24#800-900#TCP",
-	]
-	egress = [
-    	"ACCEPT#192.168.1.0/24#800#TCP",
-    	"ACCEPT#192.168.1.0/24#800-900#TCP",
-	]
-}
+	resource "tencentcloud_vpc_acl" "foo" {
+	    vpc_id  = data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
+	    name  	= "test_acl_update"
+		ingress = [
+			"ACCEPT#192.168.1.0/24#800#TCP",
+			"ACCEPT#192.168.1.0/24#800-900#TCP",
+		]
+		egress = [
+	    	"ACCEPT#192.168.1.0/24#800#TCP",
+	    	"ACCEPT#192.168.1.0/24#800-900#TCP",
+		]
+	}
+
 ```
 
-Import
+# Import
 
 Vpc ACL can be imported, e.g.
 

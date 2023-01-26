@@ -1,21 +1,23 @@
 /*
 Provides a resource to create a ci media_tts_template
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ci_media_tts_template" "media_tts_template" {
-  bucket = "terraform-ci-xxxxxx"
-  name = "tts_template"
-  mode = "Asyc"
-  codec = "pcm"
-  voice_type = "ruxue"
-  volume = "0"
-  speed = "100"
-}
+
+	resource "tencentcloud_ci_media_tts_template" "media_tts_template" {
+	  bucket = "terraform-ci-xxxxxx"
+	  name = "tts_template"
+	  mode = "Asyc"
+	  codec = "pcm"
+	  voice_type = "ruxue"
+	  volume = "0"
+	  speed = "100"
+	}
+
 ```
 
-Import
+# Import
 
 ci media_tts_template can be imported using the bucket#templateId, e.g.
 

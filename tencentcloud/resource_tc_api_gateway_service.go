@@ -1,22 +1,24 @@
 /*
 Use this resource to create API gateway service.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name   = "niceservice"
-  protocol       = "http&https"
-  service_desc   = "your nice service"
-  net_type       = ["INNER", "OUTER"]
-  ip_version     = "IPv4"
-  release_limit  = 500
-  pre_limit      = 500
-  test_limit     = 500
-}
+
+	resource "tencentcloud_api_gateway_service" "service" {
+	  service_name   = "niceservice"
+	  protocol       = "http&https"
+	  service_desc   = "your nice service"
+	  net_type       = ["INNER", "OUTER"]
+	  ip_version     = "IPv4"
+	  release_limit  = 500
+	  pre_limit      = 500
+	  test_limit     = 500
+	}
+
 ```
 
-Import
+# Import
 
 API gateway service can be imported using the id, e.g.
 

@@ -1,13 +1,15 @@
 /*
 Use this data source to query the list of SQL Server account DB privileges.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_account_db_attachments" "test"{
-  instance_id = tencentcloud_sqlserver_instance.test.id
-  account_name = tencentcloud_sqlserver_account_db_attachment.test.account_name
-}
+
+	data "tencentcloud_sqlserver_account_db_attachments" "test"{
+	  instance_id = tencentcloud_sqlserver_instance.test.id
+	  account_name = tencentcloud_sqlserver_account_db_attachment.test.account_name
+	}
+
 ```
 */
 package tencentcloud

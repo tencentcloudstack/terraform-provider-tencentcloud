@@ -23,7 +23,7 @@ type DcgInstanceInfo struct {
 	enableBGP         bool
 }
 
-//info for direct connect gateway[ ccn type] route.
+// info for direct connect gateway[ ccn type] route.
 type DcgRouteInfo struct {
 	dcgId     string
 	routeId   string

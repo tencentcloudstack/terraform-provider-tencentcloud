@@ -1,36 +1,40 @@
 /*
 Provide a resource to create a VPC.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_vpc" "foo" {
-  name         = "ci-temp-test-updated"
-  cidr_block   = "10.0.0.0/16"
-  dns_servers  = ["119.29.29.29", "8.8.8.8"]
-  is_multicast = false
 
-  tags = {
-    "test" = "test"
-  }
-}
+	resource "tencentcloud_vpc" "foo" {
+	  name         = "ci-temp-test-updated"
+	  cidr_block   = "10.0.0.0/16"
+	  dns_servers  = ["119.29.29.29", "8.8.8.8"]
+	  is_multicast = false
+
+	  tags = {
+	    "test" = "test"
+	  }
+	}
+
 ```
 
 Using Assistant CIDR
 ```hcl
-resource "tencentcloud_vpc" "foo" {
-  name         = "ci-temp-test-updated"
-  cidr_block   = "10.0.0.0/16"
-  is_multicast = false
-  assistant_cidr = ["172.16.0.0/24"]
 
-  tags = {
-    "test" = "test"
-  }
-}
+	resource "tencentcloud_vpc" "foo" {
+	  name         = "ci-temp-test-updated"
+	  cidr_block   = "10.0.0.0/16"
+	  is_multicast = false
+	  assistant_cidr = ["172.16.0.0/24"]
+
+	  tags = {
+	    "test" = "test"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 Vpc instance can be imported, e.g.
 

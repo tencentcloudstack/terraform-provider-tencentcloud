@@ -1,14 +1,16 @@
 /*
 Use this data source to query detailed information of cat node
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_cat_node" "node"{
-  node_type = 1
-  location = 2
-  is_ipv6 = false
-}
+
+	data "tencentcloud_cat_node" "node"{
+	  node_type = 1
+	  location = 2
+	  is_ipv6 = false
+	}
+
 ```
 */
 package tencentcloud

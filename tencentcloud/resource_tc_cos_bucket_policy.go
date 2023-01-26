@@ -1,38 +1,41 @@
 /*
 Provides a COS resource to create a COS bucket policy and set its attributes.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cos_bucket_policy" "cos_policy" {
-  bucket = "mycos-1258798060"
 
-  policy = <<EOF
-{
-  "version": "2.0",
-  "Statement": [
-    {
-      "Principal": {
-        "qcs": [
-          "qcs::cam::uin/<your-account-id>:uin/<your-account-id>"
-        ]
-      },
-      "Action": [
-        "name/cos:DeleteBucket",
-        "name/cos:PutBucketACL"
-      ],
-      "Effect": "allow",
-      "Resource": [
-        "qcs::cos:<bucket region>:uid/<your-account-id>:<bucket name>/*"
-      ]
-    }
-  ]
-}
+	resource "tencentcloud_cos_bucket_policy" "cos_policy" {
+	  bucket = "mycos-1258798060"
+
+	  policy = <<EOF
+
+	{
+	  "version": "2.0",
+	  "Statement": [
+	    {
+	      "Principal": {
+	        "qcs": [
+	          "qcs::cam::uin/<your-account-id>:uin/<your-account-id>"
+	        ]
+	      },
+	      "Action": [
+	        "name/cos:DeleteBucket",
+	        "name/cos:PutBucketACL"
+	      ],
+	      "Effect": "allow",
+	      "Resource": [
+	        "qcs::cos:<bucket region>:uid/<your-account-id>:<bucket name>/*"
+	      ]
+	    }
+	  ]
+	}
+
 EOF
 }
 ```
 
-Import
+# Import
 
 COS bucket policy can be imported, e.g.
 
@@ -213,7 +216,7 @@ func resourceTencentCloudCosBucketPolicyDelete(d *schema.ResourceData, meta inte
 	return nil
 }
 
-//In the returned JSON, the SDK automatically adds the Sid, which needs to be removed
+// In the returned JSON, the SDK automatically adds the Sid, which needs to be removed
 func removeSid(v string) (result string, err error) {
 	m := make(map[string]interface{})
 	err = json.Unmarshal([]byte(v), &m)

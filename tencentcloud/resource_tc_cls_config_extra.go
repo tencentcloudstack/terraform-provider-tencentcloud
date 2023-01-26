@@ -1,37 +1,41 @@
 /*
 Provides a resource to create a cls config extra
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cls_config_extra" "extra" {
-  name = "helloworld"
-  topic_id = tencentcloud_cls_topic.topic.id
-  type = "container_file"
-  log_type = "json_log"
-  config_flag = "label_k8s"
-  logset_id = tencentcloud_cls_logset.logset.id
-  logset_name = tencentcloud_cls_logset.logset.logset_name
-  topic_name = tencentcloud_cls_topic.topic.topic_name
+
+	resource "tencentcloud_cls_config_extra" "extra" {
+	  name = "helloworld"
+	  topic_id = tencentcloud_cls_topic.topic.id
+	  type = "container_file"
+	  log_type = "json_log"
+	  config_flag = "label_k8s"
+	  logset_id = tencentcloud_cls_logset.logset.id
+	  logset_name = tencentcloud_cls_logset.logset.logset_name
+	  topic_name = tencentcloud_cls_topic.topic.topic_name
+
 #  host_file {
 #    log_path = "/var/log/tmep"
 #    file_pattern = "*.log"
 #    custom_labels = ["key1=value1"]
 #  }
-  container_file {
-    container = "nginx"
-    file_pattern = "log"
-    log_path = "/nginx"
-    namespace = "default"
-    workload {
-      container ="nginx"
-      kind = "deployment"
-      name = "nginx"
-      namespace = "default"
-    }
-  }
-  group_id ="27752a9b-9918-440a-8ee7-9c84a14a47ed"
-}
+
+	  container_file {
+	    container = "nginx"
+	    file_pattern = "log"
+	    log_path = "/nginx"
+	    namespace = "default"
+	    workload {
+	      container ="nginx"
+	      kind = "deployment"
+	      name = "nginx"
+	      namespace = "default"
+	    }
+	  }
+	  group_id ="27752a9b-9918-440a-8ee7-9c84a14a47ed"
+	}
+
 ```
 */
 package tencentcloud

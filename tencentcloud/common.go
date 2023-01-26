@@ -46,21 +46,21 @@ var logFirstTime = ""
 var logAtomicId int64 = 0
 
 // readRetryTimeout is read retry timeout
-//const readRetryTimeout = 3 * time.Minute
+// const readRetryTimeout = 3 * time.Minute
 var readRetry = getEnvDefault(PROVIDER_READ_RETRY_TIMEOUT, 3)
 var readRetryTimeout = time.Duration(readRetry) * time.Minute
 
 // writeRetryTimeout is write retry timeout
-//const writeRetryTimeout = 5 * time.Minute
+// const writeRetryTimeout = 5 * time.Minute
 var writeRetry = getEnvDefault(PROVIDER_WRITE_RETRY_TIMEOUT, 5)
 var writeRetryTimeout = time.Duration(writeRetry) * time.Minute
 
 // writeRetryTimeout is write retry timeout
-//const writeRetryTimeout = 5 * time.Minute
+// const writeRetryTimeout = 5 * time.Minute
 var waitRead = getEnvDefault(PROVIDER_WAIT_READ_TIMEOUT, 1)
 var waitReadTimeout = time.Duration(waitRead) * time.Second
 
-//const writeRetryTimeout = 5 * time.Minute
+// const writeRetryTimeout = 5 * time.Minute
 var needProtect = getEnvDefault(SWEEPER_NEED_PROTECT, 0)
 
 // InternalError common internalError, do not add in retryableErrorCode,
@@ -480,7 +480,7 @@ func GetListDiffs(o []int, n []int) (adds []int, lacks []int) {
 	return
 }
 
-//GoRoutine Limit
+// GoRoutine Limit
 type GoRoutineLimit struct {
 	Count int
 	Chan  chan struct{}

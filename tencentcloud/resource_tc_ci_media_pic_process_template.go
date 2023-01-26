@@ -1,21 +1,23 @@
 /*
 Provides a resource to create a ci media_pic_process_template
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ci_media_pic_process_template" "media_pic_process_template" {
-  bucket = "terraform-ci-xxxxxx"
-  name = "pic_process_template"
-  pic_process {
-		is_pic_info = "true"
-		process_rule = "imageMogr2/rotate/90"
 
-  }
-}
+	resource "tencentcloud_ci_media_pic_process_template" "media_pic_process_template" {
+	  bucket = "terraform-ci-xxxxxx"
+	  name = "pic_process_template"
+	  pic_process {
+			is_pic_info = "true"
+			process_rule = "imageMogr2/rotate/90"
+
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 ci media_pic_process_template can be imported using the bucket#templateId, e.g.
 

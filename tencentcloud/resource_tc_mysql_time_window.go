@@ -1,27 +1,29 @@
 /*
 Provides a resource to create a mysql time_window
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_time_window" "time_window" {
-  instance_id    = "cdb-lw71b6ar"
-  max_delay_time = 10
-  time_ranges    = [
-    "01:00-02:01"
-  ]
-  weekdays       = [
-    "friday",
-    "monday",
-    "saturday",
-    "thursday",
-    "tuesday",
-    "wednesday",
-  ]
-}
+
+	resource "tencentcloud_mysql_time_window" "time_window" {
+	  instance_id    = "cdb-lw71b6ar"
+	  max_delay_time = 10
+	  time_ranges    = [
+	    "01:00-02:01"
+	  ]
+	  weekdays       = [
+	    "friday",
+	    "monday",
+	    "saturday",
+	    "thursday",
+	    "tuesday",
+	    "wednesday",
+	  ]
+	}
+
 ```
 
-Import
+# Import
 
 mysql time_window can be imported using the id, e.g.
 

@@ -79,7 +79,7 @@ func testAccCheckCamUserPolicyAttachmentExists(n string) resource.TestCheckFunc 
 	}
 }
 
-//need to add policy resource definition
+// need to add policy resource definition
 const testAccCamUserPolicyAttachment_basic = defaultCamVariables + `
 
 resource "tencentcloud_cam_policy" "policy_basic" {

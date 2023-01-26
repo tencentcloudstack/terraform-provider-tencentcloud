@@ -1,12 +1,14 @@
 /*
 Use this data source to query detailed information of address templates.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_address_templates" "name" {
-  name       = "test"
-}
+
+	data "tencentcloud_address_templates" "name" {
+	  name       = "test"
+	}
+
 ```
 */
 package tencentcloud

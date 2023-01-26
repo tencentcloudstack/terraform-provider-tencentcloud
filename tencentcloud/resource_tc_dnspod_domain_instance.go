@@ -1,16 +1,18 @@
 /*
 Provide a resource to create a DnsPod Domain instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_dnspod_domain_instance" "foo" {
-  domain = "hello.com"
-  remark = "this is demo"
-}
+
+	resource "tencentcloud_dnspod_domain_instance" "foo" {
+	  domain = "hello.com"
+	  remark = "this is demo"
+	}
+
 ```
 
-Import
+# Import
 
 DnsPod Domain instance can be imported, e.g.
 

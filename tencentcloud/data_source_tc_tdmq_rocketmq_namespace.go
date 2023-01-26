@@ -1,26 +1,28 @@
 /*
 Use this data source to query detailed information of tdmqRocketmq namespace
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq_namespace_sdatasource"
-	remark = "test recket mq"
-}
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespacedata" {
-	cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-	namespace_name = "test_namespace_datasource"
-	ttl = 65000
-	retention_time = 65000
-	remark = "test namespace"
-}
+	resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
+		cluster_name = "test_rocketmq_namespace_sdatasource"
+		remark = "test recket mq"
+	}
 
-data "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-	cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-	name_keyword = tencentcloud_tdmq_rocketmq_namespace.namespacedata.namespace_name
-}
+	resource "tencentcloud_tdmq_rocketmq_namespace" "namespacedata" {
+		cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+		namespace_name = "test_namespace_datasource"
+		ttl = 65000
+		retention_time = 65000
+		remark = "test namespace"
+	}
+
+	data "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
+		cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+		name_keyword = tencentcloud_tdmq_rocketmq_namespace.namespacedata.namespace_name
+	}
+
 ```
 */
 package tencentcloud

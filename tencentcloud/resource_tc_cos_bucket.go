@@ -1,230 +1,250 @@
 /*
 Provides a COS resource to create a COS bucket and set its attributes.
 
-Example Usage
+# Example Usage
 
-Private Bucket
+# Private Bucket
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
-  acl    = "private"
-}
+
+	resource "tencentcloud_cos_bucket" "mycos" {
+	  bucket = "mycos-1258798060"
+	  acl    = "private"
+	}
+
 ```
 
-
-Creation of multiple available zone bucket
+# Creation of multiple available zone bucket
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket   = "mycos-1258798060"
-  acl      = "private"
-  multi_az = true
-  versioning_enable = true
-  force_clean       = true
-}
+
+	resource "tencentcloud_cos_bucket" "mycos" {
+	  bucket   = "mycos-1258798060"
+	  acl      = "private"
+	  multi_az = true
+	  versioning_enable = true
+	  force_clean       = true
+	}
+
 ```
 
 Using verbose acl
 ```hcl
-resource "tencentcloud_cos_bucket" "with_acl_body" {
-  bucket = "mycos-1258798060"
-  # NOTE: Granting http://cam.qcloud.com/groups/global/AllUsers `READ` Permission is equivalent to "public-read" acl
-  acl_body = <<EOF
+
+	resource "tencentcloud_cos_bucket" "with_acl_body" {
+	  bucket = "mycos-1258798060"
+	  # NOTE: Granting http://cam.qcloud.com/groups/global/AllUsers `READ` Permission is equivalent to "public-read" acl
+	  acl_body = <<EOF
+
 <AccessControlPolicy>
-    <Owner>
-        <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-    </Owner>
-    <AccessControlList>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
-                <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
-            </Grantee>
-            <Permission>READ</Permission>
-        </Grant>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
-            </Grantee>
-            <Permission>WRITE</Permission>
-        </Grant>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
-            </Grantee>
-            <Permission>READ_ACP</Permission>
-        </Grant>
-    </AccessControlList>
+
+	<Owner>
+	    <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+	</Owner>
+	<AccessControlList>
+	    <Grant>
+	        <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+	            <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+	        </Grantee>
+	        <Permission>READ</Permission>
+	    </Grant>
+	    <Grant>
+	        <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+	            <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+	            <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
+	        </Grantee>
+	        <Permission>WRITE</Permission>
+	    </Grant>
+	    <Grant>
+	        <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+	            <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
+	            <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
+	        </Grantee>
+	        <Permission>READ_ACP</Permission>
+	    </Grant>
+	</AccessControlList>
+
 </AccessControlPolicy>
 EOF
 }
 ```
 
-Static Website
+# Static Website
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
 
-  website {
-    index_document = "index.html"
-    error_document = "error.html"
-  }
-}
+	resource "tencentcloud_cos_bucket" "mycos" {
+	  bucket = "mycos-1258798060"
+
+	  website {
+	    index_document = "index.html"
+	    error_document = "error.html"
+	  }
+	}
+
 ```
 
-Using CORS
+# Using CORS
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
-  acl    = "public-read-write"
 
-  cors_rules {
-    allowed_origins = ["http://*.abc.com"]
-    allowed_methods = ["PUT", "POST"]
-    allowed_headers = ["*"]
-    max_age_seconds = 300
-    expose_headers  = ["Etag"]
-  }
-}
+	resource "tencentcloud_cos_bucket" "mycos" {
+	  bucket = "mycos-1258798060"
+	  acl    = "public-read-write"
+
+	  cors_rules {
+	    allowed_origins = ["http://*.abc.com"]
+	    allowed_methods = ["PUT", "POST"]
+	    allowed_headers = ["*"]
+	    max_age_seconds = 300
+	    expose_headers  = ["Etag"]
+	  }
+	}
+
 ```
 
-Using object lifecycle
+# Using object lifecycle
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
-  acl    = "public-read-write"
 
-  lifecycle_rules {
-    filter_prefix = "path1/"
+	resource "tencentcloud_cos_bucket" "mycos" {
+	  bucket = "mycos-1258798060"
+	  acl    = "public-read-write"
 
-    transition {
-      date          = "2019-06-01"
-      storage_class = "STANDARD_IA"
-    }
+	  lifecycle_rules {
+	    filter_prefix = "path1/"
 
-    expiration {
-      days = 90
-    }
-  }
-}
+	    transition {
+	      date          = "2019-06-01"
+	      storage_class = "STANDARD_IA"
+	    }
+
+	    expiration {
+	      days = 90
+	    }
+	  }
+	}
+
 ```
 
-Using custom origin domain settings
+# Using custom origin domain settings
 
 ```hcl
-resource "tencentcloud_cos_bucket" "with_origin" {
-  bucket = "mycos-1258798060"
-  acl    = "private"
-  origin_domain_rules {
-    domain = "abc.example.com"
-    type = "REST"
-    status = "ENABLE"
-  }
-}
+
+	resource "tencentcloud_cos_bucket" "with_origin" {
+	  bucket = "mycos-1258798060"
+	  acl    = "private"
+	  origin_domain_rules {
+	    domain = "abc.example.com"
+	    type = "REST"
+	    status = "ENABLE"
+	  }
+	}
+
 ```
 
 Using origin-pull settings
 ```hcl
-resource "tencentcloud_cos_bucket" "with_origin" {
-  bucket = "mycos-1258798060"
-  acl    = "private"
-  origin_pull_rules {
-    priority = 1
-    sync_back_to_source = false
-    host = "abc.example.com"
-    prefix = "/"
-    protocol = "FOLLOW" // "HTTP" "HTTPS"
-    follow_query_string = true
-    follow_redirection = true
-    follow_http_headers = ["origin", "host"]
-    custom_http_headers = {
-	  "x-custom-header" = "custom_value"
-    }
-  }
-}
+
+	resource "tencentcloud_cos_bucket" "with_origin" {
+	  bucket = "mycos-1258798060"
+	  acl    = "private"
+	  origin_pull_rules {
+	    priority = 1
+	    sync_back_to_source = false
+	    host = "abc.example.com"
+	    prefix = "/"
+	    protocol = "FOLLOW" // "HTTP" "HTTPS"
+	    follow_query_string = true
+	    follow_redirection = true
+	    follow_http_headers = ["origin", "host"]
+	    custom_http_headers = {
+		  "x-custom-header" = "custom_value"
+	    }
+	  }
+	}
+
 ```
 
 Using replication
 ```hcl
-resource "tencentcloud_cos_bucket" "replica1" {
-  bucket = "tf-replica-foo-1234567890"
-  acl    = "private"
-  versioning_enable = true
-}
 
-resource "tencentcloud_cos_bucket" "with_replication" {
-  bucket = "tf-bucket-replica-1234567890"
-  acl    = "private"
-  versioning_enable = true
-  replica_role = "qcs::cam::uin/100000000001:uin/100000000001"
-  replica_rules {
-    id = "test-rep1"
-    status = "Enabled"
-    prefix = "dist"
-    destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
-  }
-}
+	resource "tencentcloud_cos_bucket" "replica1" {
+	  bucket = "tf-replica-foo-1234567890"
+	  acl    = "private"
+	  versioning_enable = true
+	}
+
+	resource "tencentcloud_cos_bucket" "with_replication" {
+	  bucket = "tf-bucket-replica-1234567890"
+	  acl    = "private"
+	  versioning_enable = true
+	  replica_role = "qcs::cam::uin/100000000001:uin/100000000001"
+	  replica_rules {
+	    id = "test-rep1"
+	    status = "Enabled"
+	    prefix = "dist"
+	    destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
+	  }
+	}
+
 ```
 
-Setting log status
+# Setting log status
 
 ```hcl
-resource "tencentcloud_cam_role" "cosLogGrant" {
-  name          = "CLS_QcsRole"
-  document      = <<EOF
-{
-  "version": "2.0",
-  "statement": [
-    {
-      "action": [
-        "name/sts:AssumeRole"
-      ],
-      "effect": "allow",
-      "principal": {
-        "service": [
-          "cls.cloud.tencent.com"
-        ]
-      }
-    }
-  ]
-}
+
+	resource "tencentcloud_cam_role" "cosLogGrant" {
+	  name          = "CLS_QcsRole"
+	  document      = <<EOF
+
+	{
+	  "version": "2.0",
+	  "statement": [
+	    {
+	      "action": [
+	        "name/sts:AssumeRole"
+	      ],
+	      "effect": "allow",
+	      "principal": {
+	        "service": [
+	          "cls.cloud.tencent.com"
+	        ]
+	      }
+	    }
+	  ]
+	}
+
 EOF
 
-  description   = "cos log enable grant"
-}
+	  description   = "cos log enable grant"
+	}
 
+	data "tencentcloud_cam_policies" "cosAccess" {
+	  name      = "QcloudCOSAccessForCLSRole"
+	}
 
-data "tencentcloud_cam_policies" "cosAccess" {
-  name      = "QcloudCOSAccessForCLSRole"
-}
+	resource "tencentcloud_cam_role_policy_attachment" "cosLogGrant" {
+	  role_id   = tencentcloud_cam_role.cosLogGrant.id
+	  policy_id = data.tencentcloud_cam_policies.cosAccess.policy_list.0.policy_id
+	}
 
+	resource "tencentcloud_cos_bucket" "mylog" {
+	  bucket = "mylog-1258798060"
+	  acl    = "private"
+	}
 
-resource "tencentcloud_cam_role_policy_attachment" "cosLogGrant" {
-  role_id   = tencentcloud_cam_role.cosLogGrant.id
-  policy_id = data.tencentcloud_cam_policies.cosAccess.policy_list.0.policy_id
-}
+	resource "tencentcloud_cos_bucket" "mycos" {
+	  bucket = "mycos-1258798060"
+	  acl    = "private"
+	  log_enable = true
+	  log_target_bucket = "mylog-1258798060"
+	  log_prefix = "MyLogPrefix"
+	}
 
-
-resource "tencentcloud_cos_bucket" "mylog" {
-  bucket = "mylog-1258798060"
-  acl    = "private"
-}
-
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
-  acl    = "private"
-  log_enable = true
-  log_target_bucket = "mylog-1258798060"
-  log_prefix = "MyLogPrefix"
-}
 ```
 
-Import
+# Import
 
 COS bucket can be imported, e.g.
 

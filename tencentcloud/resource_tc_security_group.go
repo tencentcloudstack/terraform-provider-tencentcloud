@@ -1,22 +1,26 @@
 /*
 Provides a resource to create security group.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_security_group" "sglab" {
-  name        = "mysg"
-  description = "favourite sg"
-  project_id  = 0
-}
+
+	resource "tencentcloud_security_group" "sglab" {
+	  name        = "mysg"
+	  description = "favourite sg"
+	  project_id  = 0
+	}
+
 ```
 
-Import
+# Import
 
 Security group can be imported using the id, e.g.
 
 ```
-  $ terraform import tencentcloud_security_group.sglab sg-ey3wmiz1
+
+	$ terraform import tencentcloud_security_group.sglab sg-ey3wmiz1
+
 ```
 */
 package tencentcloud

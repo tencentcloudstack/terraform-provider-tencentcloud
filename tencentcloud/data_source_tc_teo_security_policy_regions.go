@@ -1,7 +1,7 @@
 /*
 Use this data source to query detailed information of teo securityPolicyRegions
 
-Example Usage
+# Example Usage
 
 ```hcl
 data "tencentcloud_teo_security_policy_regions" "securityPolicyRegions" {

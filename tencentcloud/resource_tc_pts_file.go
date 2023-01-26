@@ -3,26 +3,27 @@ Provides a resource to create a pts file
 
 ~> **NOTE:** Modification is not currently supported, please go to the console to modify.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_pts_file" "file" {
-    file_id        = "file-de2dbaf8"
-    header_in_file = false
-    kind           = 3
-    line_count     = 0
-    name           = "iac.txt"
-    project_id     = "project-45vw7v82"
-    size           = 10799
-    type           = "text/plain"
-    # header_columns = ""
-    # file_infos {
-    # name = ""
-    # size = ""
-    # type = ""
-    # updated_at = ""
-    # }
-}
+
+	resource "tencentcloud_pts_file" "file" {
+	    file_id        = "file-de2dbaf8"
+	    header_in_file = false
+	    kind           = 3
+	    line_count     = 0
+	    name           = "iac.txt"
+	    project_id     = "project-45vw7v82"
+	    size           = 10799
+	    type           = "text/plain"
+	    # header_columns = ""
+	    # file_infos {
+	    # name = ""
+	    # size = ""
+	    # type = ""
+	    # updated_at = ""
+	    # }
+	}
 
 ```
 Import

@@ -1,18 +1,19 @@
 /*
 Provides a resource to create a teo dns_record
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_dns_record" "dns_record" {
-  zone_id   = "zone-297z8rf93cfw"
-  type      = "A"
-  name      = "www.toutiao2.com"
-  content   = "150.109.8.2"
-  mode      = "proxied"
-  ttl       = "1"
-  priority  = 1
-}
+
+	resource "tencentcloud_teo_dns_record" "dns_record" {
+	  zone_id   = "zone-297z8rf93cfw"
+	  type      = "A"
+	  name      = "www.toutiao2.com"
+	  content   = "150.109.8.2"
+	  mode      = "proxied"
+	  ttl       = "1"
+	  priority  = 1
+	}
 
 ```
 Import

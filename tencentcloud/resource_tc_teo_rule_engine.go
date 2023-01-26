@@ -1,77 +1,78 @@
 /*
 Provides a resource to create a teo rule_engine
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_rule_engine" "rule1" {
-  zone_id   = tencentcloud_teo_zone.example.id
-  rule_name = "test-rule"
-  status    = "disable"
 
-  rules {
-    or {
-      and {
-        operator = "equal"
-        target   = "host"
-        values   = [
-          tencentcloud_teo_dns_record.example.name,
-        ]
-      }
-      and {
-        operator = "equal"
-        target   = "extension"
-        values   = [
-          "mp4",
-        ]
-      }
-    }
+	resource "tencentcloud_teo_rule_engine" "rule1" {
+	  zone_id   = tencentcloud_teo_zone.example.id
+	  rule_name = "test-rule"
+	  status    = "disable"
 
-    actions {
-      normal_action {
-        action = "CachePrefresh"
+	  rules {
+	    or {
+	      and {
+	        operator = "equal"
+	        target   = "host"
+	        values   = [
+	          tencentcloud_teo_dns_record.example.name,
+	        ]
+	      }
+	      and {
+	        operator = "equal"
+	        target   = "extension"
+	        values   = [
+	          "mp4",
+	        ]
+	      }
+	    }
 
-        parameters {
-          name   = "Switch"
-          values = [
-            "on",
-          ]
-        }
-        parameters {
-          name   = "Percent"
-          values = [
-            "80",
-          ]
-        }
-      }
-    }
+	    actions {
+	      normal_action {
+	        action = "CachePrefresh"
 
-    actions {
-      normal_action {
-        action = "CacheKey"
+	        parameters {
+	          name   = "Switch"
+	          values = [
+	            "on",
+	          ]
+	        }
+	        parameters {
+	          name   = "Percent"
+	          values = [
+	            "80",
+	          ]
+	        }
+	      }
+	    }
 
-        parameters {
-          name   = "Type"
-          values = [
-            "Header",
-          ]
-        }
-        parameters {
-          name   = "Switch"
-          values = [
-            "on",
-          ]
-        }
-        parameters {
-          name   = "Value"
-          values = [
-            "Duck",
-          ]
-        }
-      }
-    }
-  }
-}
+	    actions {
+	      normal_action {
+	        action = "CacheKey"
+
+	        parameters {
+	          name   = "Type"
+	          values = [
+	            "Header",
+	          ]
+	        }
+	        parameters {
+	          name   = "Switch"
+	          values = [
+	            "on",
+	          ]
+	        }
+	        parameters {
+	          name   = "Value"
+	          values = [
+	            "Duck",
+	          ]
+	        }
+	      }
+	    }
+	  }
+	}
 
 ```
 Import

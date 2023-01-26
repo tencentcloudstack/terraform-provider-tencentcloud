@@ -253,7 +253,7 @@ func (me *TCRService) DeleteTCRInstance(ctx context.Context, instanceId string, 
 
 //long term token
 
-//name space
+// name space
 func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string, name string, isPublic bool) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewCreateNamespaceRequest()
@@ -390,7 +390,7 @@ func (me *TCRService) DescribeTCRNameSpaceById(ctx context.Context, instanceId s
 	return
 }
 
-//repository
+// repository
 func (me *TCRService) CreateTCRRepository(ctx context.Context, instanceId string, namespace string, repositoryName string, briefDesc string, description string) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewCreateRepositoryRequest()
@@ -531,7 +531,7 @@ func (me *TCRService) DescribeTCRRepositoryById(ctx context.Context, instanceId 
 	return
 }
 
-//longterm token
+// longterm token
 func (me *TCRService) CreateTCRLongTermToken(ctx context.Context, instanceId string, description string) (tokenId string, token string, userName string, errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewCreateInstanceTokenRequest()
@@ -650,7 +650,7 @@ func (me *TCRService) DescribeTCRLongTermTokenById(ctx context.Context, instance
 	return
 }
 
-//VPC attachment
+// VPC attachment
 func (me *TCRService) CreateTCRVPCAttachment(ctx context.Context, instanceId string, vpcId string,
 	subnetId string, regionId int64, regionName string) (errRet error) {
 	logId := getLogId(ctx)

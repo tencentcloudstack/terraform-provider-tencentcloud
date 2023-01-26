@@ -1,16 +1,18 @@
 /*
 Provides a resource to create a CBS snapshot.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cbs_snapshot" "snapshot" {
-  snapshot_name = "unnamed"
-  storage_id    = "disk-kdt0sq6m"
-}
+
+	resource "tencentcloud_cbs_snapshot" "snapshot" {
+	  snapshot_name = "unnamed"
+	  storage_id    = "disk-kdt0sq6m"
+	}
+
 ```
 
-Import
+# Import
 
 CBS snapshot can be imported using the id, e.g.
 

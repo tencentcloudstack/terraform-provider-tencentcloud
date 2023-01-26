@@ -3,33 +3,35 @@ Provide a datasource to query EKS cluster credential info (offlined).
 
 ~> **NOTE:**  This resource was offline no longer supported.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_eks_cluster_credential" "foo" {
-  cluster_id = "cls-xxxxxxxx"
-}
+
+	data "tencentcloud_eks_cluster_credential" "foo" {
+	  cluster_id = "cls-xxxxxxxx"
+	}
 
 # example outputs
-output "addresses" {
-  value = data.tencentcloud_eks_cluster_credential.cred.addresses
-}
 
-output "ca_cert" {
-  value = data.tencentcloud_eks_cluster_credential.cred.credential.ca_cert
-}
+	output "addresses" {
+	  value = data.tencentcloud_eks_cluster_credential.cred.addresses
+	}
 
-output "token" {
-  value = data.tencentcloud_eks_cluster_credential.cred.credential.token
-}
+	output "ca_cert" {
+	  value = data.tencentcloud_eks_cluster_credential.cred.credential.ca_cert
+	}
 
-output "public_lb_param" {
-  value = data.tencentcloud_eks_cluster_credential.cred.public_lb.0.extra_param
-}
+	output "token" {
+	  value = data.tencentcloud_eks_cluster_credential.cred.credential.token
+	}
 
-output "internal_lb_subnet" {
-  value = data.tencentcloud_eks_cluster_credential.cred.internal_lb.0.subnet_id
-}
+	output "public_lb_param" {
+	  value = data.tencentcloud_eks_cluster_credential.cred.public_lb.0.extra_param
+	}
+
+	output "internal_lb_subnet" {
+	  value = data.tencentcloud_eks_cluster_credential.cred.internal_lb.0.subnet_id
+	}
 
 ```
 */

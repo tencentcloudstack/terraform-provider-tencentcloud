@@ -1,18 +1,20 @@
 /*
 Use this resource to create API gateway usage plan.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_usage_plan" "plan" {
-  usage_plan_name         = "my_plan"
-  usage_plan_desc         = "nice plan"
-  max_request_num         = 100
-  max_request_num_pre_sec = 10
-}
+
+	resource "tencentcloud_api_gateway_usage_plan" "plan" {
+	  usage_plan_name         = "my_plan"
+	  usage_plan_desc         = "nice plan"
+	  max_request_num         = 100
+	  max_request_num_pre_sec = 10
+	}
+
 ```
 
-Import
+# Import
 
 API gateway usage plan can be imported using the id, e.g.
 

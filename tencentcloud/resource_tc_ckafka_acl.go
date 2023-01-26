@@ -1,23 +1,25 @@
 /*
 Provides a resource to create a Ckafka Acl.
 
-Example Usage
+# Example Usage
 
-Ckafka Acl
+# Ckafka Acl
 
 ```hcl
-resource "tencentcloud_ckafka_acl" "foo" {
-  instance_id     = "ckafka-f9ife4zz"
-  resource_type   = "TOPIC"
-  resource_name   = "topic-tf-test"
-  operation_type  = "WRITE"
-  permission_type = "ALLOW"
-  host            = "*"
-  principal       = tencentcloud_ckafka_user.foo.account_name
-}
+
+	resource "tencentcloud_ckafka_acl" "foo" {
+	  instance_id     = "ckafka-f9ife4zz"
+	  resource_type   = "TOPIC"
+	  resource_name   = "topic-tf-test"
+	  operation_type  = "WRITE"
+	  permission_type = "ALLOW"
+	  host            = "*"
+	  principal       = tencentcloud_ckafka_user.foo.account_name
+	}
+
 ```
 
-Import
+# Import
 
 Ckafka acl can be imported using the instance_id#permission_type#principal#host#operation_type#resource_type#resource_name, e.g.
 

@@ -1,29 +1,30 @@
 /*
 Provides a resource to create a ci media_video_process_template
 
-Example Usage
+# Example Usage
 
 ```hcl
 
-resource "tencentcloud_ci_media_video_process_template" "media_video_process_template" {
-  bucket = "terraform-ci-xxxxxx"
-  name = "video_process_template"
-  color_enhance {
-		enable = "true"
-		contrast = ""
-		correction = ""
-		saturation = ""
+	resource "tencentcloud_ci_media_video_process_template" "media_video_process_template" {
+	  bucket = "terraform-ci-xxxxxx"
+	  name = "video_process_template"
+	  color_enhance {
+			enable = "true"
+			contrast = ""
+			correction = ""
+			saturation = ""
 
-  }
-  ms_sharpen {
-		enable = "false"
-		sharpen_level = ""
+	  }
+	  ms_sharpen {
+			enable = "false"
+			sharpen_level = ""
 
-  }
-}
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 ci media_video_process_template can be imported using the bucket#templateId, e.g.
 

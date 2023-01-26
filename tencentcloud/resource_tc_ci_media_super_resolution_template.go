@@ -1,19 +1,21 @@
 /*
 Provides a resource to create a ci media_super_resolution_template
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ci_media_super_resolution_template" "media_super_resolution_template" {
-  bucket = "terraform-ci-1308919341"
-  name = "super_resolution_template"
-  resolution = "sdtohd"
-  enable_scale_up = "true"
-  version = "Enhance"
-}
+
+	resource "tencentcloud_ci_media_super_resolution_template" "media_super_resolution_template" {
+	  bucket = "terraform-ci-1308919341"
+	  name = "super_resolution_template"
+	  resolution = "sdtohd"
+	  enable_scale_up = "true"
+	  version = "Enhance"
+	}
+
 ```
 
-Import
+# Import
 
 ci media_super_resolution_template can be imported using the bucket#templateId, e.g.
 

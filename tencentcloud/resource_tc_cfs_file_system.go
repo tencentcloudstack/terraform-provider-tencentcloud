@@ -1,20 +1,22 @@
 /*
 Provides a resource to create a cloud file system(CFS).
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cfs_file_system" "foo" {
-  name              = "test_file_system"
-  availability_zone = "ap-guangzhou-3"
-  access_group_id   = "pgroup-7nx89k7l"
-  protocol          = "NFS"
-  vpc_id            = "vpc-ah9fbkap"
-  subnet_id         = "subnet-9mu2t9iw"
-}
+
+	resource "tencentcloud_cfs_file_system" "foo" {
+	  name              = "test_file_system"
+	  availability_zone = "ap-guangzhou-3"
+	  access_group_id   = "pgroup-7nx89k7l"
+	  protocol          = "NFS"
+	  vpc_id            = "vpc-ah9fbkap"
+	  subnet_id         = "subnet-9mu2t9iw"
+	}
+
 ```
 
-Import
+# Import
 
 Cloud file system can be imported using the id, e.g.
 

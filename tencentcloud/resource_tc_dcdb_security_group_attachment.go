@@ -1,13 +1,14 @@
 /*
 Provides a resource to create a dcdb security_group_attachment
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_dcdb_security_group_attachment" "security_group_attachment" {
-  security_group_id = ""
-  instance_id = ""
-}
+
+	resource "tencentcloud_dcdb_security_group_attachment" "security_group_attachment" {
+	  security_group_id = ""
+	  instance_id = ""
+	}
 
 ```
 Import

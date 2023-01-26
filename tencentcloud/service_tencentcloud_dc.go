@@ -14,7 +14,7 @@ type DcService struct {
 	client *connectivity.TencentCloudClient
 }
 
-/////////common
+// ///////common
 func (me *DcService) fillFilter(ins []*dc.Filter, key, value string) (outs []*dc.Filter) {
 	if ins == nil {
 		ins = make([]*dc.Filter, 0, 2)

@@ -1,16 +1,17 @@
 /*
 Provides a resource to create a sms template
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_sms_template" "template" {
-  template_name = "Template By Terraform"
-  template_content = "Template Content"
-  international = 0
-  sms_type = 0
-  remark = "terraform test"
-}
+
+	resource "tencentcloud_sms_template" "template" {
+	  template_name = "Template By Terraform"
+	  template_content = "Template Content"
+	  international = 0
+	  sms_type = 0
+	  remark = "terraform test"
+	}
 
 ```
 */

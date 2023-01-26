@@ -1,17 +1,19 @@
 /*
 Provides a resource to create a mysql local_binlog_config
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_local_binlog_config" "local_binlog_config" {
-  instance_id = "cdb-fitq5t9h"
-  save_hours = 140
-  max_usage = 50
-}
+
+	resource "tencentcloud_mysql_local_binlog_config" "local_binlog_config" {
+	  instance_id = "cdb-fitq5t9h"
+	  save_hours = 140
+	  max_usage = 50
+	}
+
 ```
 
-Import
+# Import
 
 mysql local_binlog_config can be imported using the id, e.g.
 

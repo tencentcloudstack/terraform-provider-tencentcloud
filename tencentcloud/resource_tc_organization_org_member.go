@@ -1,21 +1,22 @@
 /*
 Provides a resource to create a organization org_member
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_organization_org_member" "org_member" {
-  name            = "terraform_test"
-  node_id         = 2003721
-  permission_ids  = [
-    1,
-    2,
-    3,
-    4,
-  ]
-  policy_type     = "Financial"
-  remark          = "for terraform test"
-}
+
+	resource "tencentcloud_organization_org_member" "org_member" {
+	  name            = "terraform_test"
+	  node_id         = 2003721
+	  permission_ids  = [
+	    1,
+	    2,
+	    3,
+	    4,
+	  ]
+	  policy_type     = "Financial"
+	  remark          = "for terraform test"
+	}
 
 ```
 Import

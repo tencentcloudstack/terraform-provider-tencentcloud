@@ -82,10 +82,12 @@ func (me *CynosdbService) DescribeClusters(ctx context.Context, filters map[stri
 	return
 }
 
-/**
+/*
+*
 Return values:
-	clusterItem: ResponseBody of DescribeClusters, include `renew_flag` and `db_mode`
-    clusterInfo: ResponseBody of DescribeClusterDetailResponse, primary args setter.
+
+		clusterItem: ResponseBody of DescribeClusters, include `renew_flag` and `db_mode`
+	    clusterInfo: ResponseBody of DescribeClusterDetailResponse, primary args setter.
 */
 func (me *CynosdbService) DescribeClusterById(ctx context.Context, clusterId string) (clusterItem *cynosdb.CynosdbCluster, clusterInfo *cynosdb.CynosdbClusterDetail, has bool, errRet error) {
 	logId := getLogId(ctx)

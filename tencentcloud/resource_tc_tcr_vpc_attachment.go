@@ -1,17 +1,19 @@
 /*
 Use this resource to create tcr vpc attachment to manage access of internal endpoint.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tcr_vpc_attachment" "foo" {
-  instance_id		= "cls-satg5125"
-  vpc_id			= "vpc-asg3sfa3"
-  subnet_id		 	= "subnet-1uwh63so"
-}
+
+	resource "tencentcloud_tcr_vpc_attachment" "foo" {
+	  instance_id		= "cls-satg5125"
+	  vpc_id			= "vpc-asg3sfa3"
+	  subnet_id		 	= "subnet-1uwh63so"
+	}
+
 ```
 
-Import
+# Import
 
 tcr vpc attachment can be imported using the id, e.g.
 

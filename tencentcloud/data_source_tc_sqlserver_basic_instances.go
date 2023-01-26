@@ -1,27 +1,28 @@
 /*
 Use this data source to query SQL Server basic instances
 
-Example Usage
+# Example Usage
 
 ```hcl
 
-resource "tencentcloud_sqlserver_basic_instance" "test" {
-	name                = "tf_sqlserver_basic_instance"
-	availability_zone   = var.availability_zone
-	charge_type         = "POSTPAID_BY_HOUR"
-	vpc_id              = "vpc-26w7r56z"
-	subnet_id           = "subnet-lvlr6eeu"
-	machine_type        = "CLOUD_PREMIUM"
-	project_id          = 0
-	memory              = 2
-	storage             = 10
-	cpu                 = 1
-	security_groups     = ["sg-nltpbqg1"]
+	resource "tencentcloud_sqlserver_basic_instance" "test" {
+		name                = "tf_sqlserver_basic_instance"
+		availability_zone   = var.availability_zone
+		charge_type         = "POSTPAID_BY_HOUR"
+		vpc_id              = "vpc-26w7r56z"
+		subnet_id           = "subnet-lvlr6eeu"
+		machine_type        = "CLOUD_PREMIUM"
+		project_id          = 0
+		memory              = 2
+		storage             = 10
+		cpu                 = 1
+		security_groups     = ["sg-nltpbqg1"]
 
-	tags = {
-		"test" = "test"
+		tags = {
+			"test" = "test"
+		}
 	}
-}
+
 ```
 */
 package tencentcloud

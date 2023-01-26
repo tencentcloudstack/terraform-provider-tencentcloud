@@ -1,36 +1,38 @@
 /*
 Provides a resource to create a group of AS (Auto scaling) instances.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_as_scaling_group" "scaling_group" {
-  scaling_group_name   = "tf-as-scaling-group"
-  configuration_id     = "asc-oqio4yyj"
-  max_size             = 1
-  min_size             = 0
-  vpc_id               = "vpc-3efmz0z"
-  subnet_ids           = ["subnet-mc3egos"]
-  project_id           = 0
-  default_cooldown     = 400
-  desired_capacity     = 1
-  termination_policies = ["NEWEST_INSTANCE"]
-  retry_policy         = "INCREMENTAL_INTERVALS"
 
-  forward_balancer_ids {
-    load_balancer_id = "lb-hk693b1l"
-    listener_id      = "lbl-81wr497k"
-    rule_id          = "loc-kiodx943"
+	resource "tencentcloud_as_scaling_group" "scaling_group" {
+	  scaling_group_name   = "tf-as-scaling-group"
+	  configuration_id     = "asc-oqio4yyj"
+	  max_size             = 1
+	  min_size             = 0
+	  vpc_id               = "vpc-3efmz0z"
+	  subnet_ids           = ["subnet-mc3egos"]
+	  project_id           = 0
+	  default_cooldown     = 400
+	  desired_capacity     = 1
+	  termination_policies = ["NEWEST_INSTANCE"]
+	  retry_policy         = "INCREMENTAL_INTERVALS"
 
-    target_attribute {
-      port   = 80
-      weight = 90
-    }
-  }
-}
+	  forward_balancer_ids {
+	    load_balancer_id = "lb-hk693b1l"
+	    listener_id      = "lbl-81wr497k"
+	    rule_id          = "loc-kiodx943"
+
+	    target_attribute {
+	      port   = 80
+	      weight = 90
+	    }
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 AutoScaling Groups can be imported using the id, e.g.
 

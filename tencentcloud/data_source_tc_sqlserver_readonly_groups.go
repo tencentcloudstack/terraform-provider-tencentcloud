@@ -1,12 +1,14 @@
 /*
 Use this data source to query the list of SQL Server readonly groups.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_readonly_groups" "master" {
-  master_instance_id           = "mssql-3cdq7kx5"
-}
+
+	data "tencentcloud_sqlserver_readonly_groups" "master" {
+	  master_instance_id           = "mssql-3cdq7kx5"
+	}
+
 ```
 */
 package tencentcloud

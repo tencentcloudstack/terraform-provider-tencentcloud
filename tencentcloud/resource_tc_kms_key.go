@@ -1,22 +1,24 @@
 /*
 Provide a resource to create a KMS key.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_kms_key" "foo" {
-	alias = "test"
-	description = "describe key test message."
-	key_rotation_enabled = true
-	is_enabled = true
 
-	tags = {
-		"test-tag":"key-test"
+	resource "tencentcloud_kms_key" "foo" {
+		alias = "test"
+		description = "describe key test message."
+		key_rotation_enabled = true
+		is_enabled = true
+
+		tags = {
+			"test-tag":"key-test"
+		}
 	}
-}
+
 ```
 
-Import
+# Import
 
 KMS keys can be imported using the id, e.g.
 

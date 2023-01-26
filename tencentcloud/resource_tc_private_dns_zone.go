@@ -1,30 +1,32 @@
 /*
 Provide a resource to create a Private Dns Zone.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_private_dns_zone" "foo" {
-  domain = "domain.com"
-  tags {
-    "created_by" : "terraform"
-  }
-  vpc_set {
-    region = "ap-guangzhou"
-    uniq_vpc_id = "vpc-xxxxx"
-  }
-  remark = "test"
-  dns_forward_status = "DISABLED"
-  account_vpc_set {
-    uin = "454xxxxxxx"
-    region = "ap-guangzhou"
-    uniq_vpc_id = "vpc-xxxxx"
-    vpc_name = "test-redis"
-  }
-}
+
+	resource "tencentcloud_private_dns_zone" "foo" {
+	  domain = "domain.com"
+	  tags {
+	    "created_by" : "terraform"
+	  }
+	  vpc_set {
+	    region = "ap-guangzhou"
+	    uniq_vpc_id = "vpc-xxxxx"
+	  }
+	  remark = "test"
+	  dns_forward_status = "DISABLED"
+	  account_vpc_set {
+	    uin = "454xxxxxxx"
+	    region = "ap-guangzhou"
+	    uniq_vpc_id = "vpc-xxxxx"
+	    vpc_name = "test-redis"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 Private Dns Zone can be imported, e.g.
 

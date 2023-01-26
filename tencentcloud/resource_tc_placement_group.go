@@ -1,16 +1,18 @@
 /*
 Provide a resource to create a placement group.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_placement_group" "foo" {
-  name = "test"
-  type = "HOST"
-}
+
+	resource "tencentcloud_placement_group" "foo" {
+	  name = "test"
+	  type = "HOST"
+	}
+
 ```
 
-Import
+# Import
 
 Placement group can be imported using the id, e.g.
 

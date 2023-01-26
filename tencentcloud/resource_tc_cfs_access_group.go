@@ -1,16 +1,18 @@
 /*
 Provides a resource to create a CFS access group.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cfs_access_group" "foo" {
-  name        = "test_access_group"
-  description = "test"
-}
+
+	resource "tencentcloud_cfs_access_group" "foo" {
+	  name        = "test_access_group"
+	  description = "test"
+	}
+
 ```
 
-Import
+# Import
 
 CFS access group can be imported using the id, e.g.
 

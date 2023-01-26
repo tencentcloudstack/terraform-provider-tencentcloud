@@ -1,13 +1,15 @@
 /*
 Use this data source to query detailed information of teo botPortraitRules
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_teo_bot_portrait_rules" "botPortraitRules" {
-  zone_id = ""
-  entity = ""
-}
+
+	data "tencentcloud_teo_bot_portrait_rules" "botPortraitRules" {
+	  zone_id = ""
+	  entity = ""
+	}
+
 ```
 */
 package tencentcloud

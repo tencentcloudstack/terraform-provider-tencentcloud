@@ -1,13 +1,15 @@
 /*
 Use this data source to query detailed information of cynosdb accounts
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_cynosdb_accounts" "accounts" {
-	cluster_id = "cynosdbmysql-bws8h88b"
-	account_names = ["root"]
-}
+
+	data "tencentcloud_cynosdb_accounts" "accounts" {
+		cluster_id = "cynosdbmysql-bws8h88b"
+		account_names = ["root"]
+	}
+
 ```
 */
 package tencentcloud

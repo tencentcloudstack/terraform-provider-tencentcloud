@@ -1,15 +1,17 @@
 /*
 Provides a resource to create a tcmq topic
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tcmq_topic" "topic" {
-  topic_name = "topic_name"
-}
+
+	resource "tencentcloud_tcmq_topic" "topic" {
+	  topic_name = "topic_name"
+	}
+
 ```
 
-Import
+# Import
 
 tcmq topic can be imported using the id, e.g.
 

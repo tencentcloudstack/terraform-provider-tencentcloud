@@ -1,13 +1,14 @@
 /*
 Provides a resource to create a monitor tmpCvmAgent
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_cvm_agent" "tmpCvmAgent" {
-  instance_id = "prom-dko9d0nu"
-  name = "agent"
-}
+
+	resource "tencentcloud_monitor_tmp_cvm_agent" "tmpCvmAgent" {
+	  instance_id = "prom-dko9d0nu"
+	  name = "agent"
+	}
 
 ```
 Import

@@ -1,15 +1,16 @@
 /*
 Provides a resource to create a ses template
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ses_template" "template" {
-  template_name = "sesTemplateName"
-  template_content {
-    text = "This is the content of the test"
-  }
-}
+
+	resource "tencentcloud_ses_template" "template" {
+	  template_name = "sesTemplateName"
+	  template_content {
+	    text = "This is the content of the test"
+	  }
+	}
 
 ```
 Import

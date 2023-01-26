@@ -1,50 +1,52 @@
 /*
 Provide a resource to create a Mongodb standby instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-provider "tencentcloud" {
-  region = "ap-guangzhou"
-}
 
-provider "tencentcloud" {
-  alias  = "shanghai"
-  region = "ap-shanghai"
-}
+	provider "tencentcloud" {
+	  region = "ap-guangzhou"
+	}
 
-resource "tencentcloud_mongodb_instance" "mongodb" {
-  instance_name  = "tf-mongodb-test"
-  memory         = 4
-  volume         = 100
-  engine_version = "MONGO_40_WT"
-  machine_type   = "HIO10G"
-  available_zone = var.availability_zone
-  project_id     = 0
-  password       = "test1234"
+	provider "tencentcloud" {
+	  alias  = "shanghai"
+	  region = "ap-shanghai"
+	}
 
-  tags = {
-    test = "test"
-  }
-}
+	resource "tencentcloud_mongodb_instance" "mongodb" {
+	  instance_name  = "tf-mongodb-test"
+	  memory         = 4
+	  volume         = 100
+	  engine_version = "MONGO_40_WT"
+	  machine_type   = "HIO10G"
+	  available_zone = var.availability_zone
+	  project_id     = 0
+	  password       = "test1234"
 
-resource "tencentcloud_mongodb_standby_instance" "mongodb" {
-  provider               = tencentcloud.shanghai
-  instance_name          = "tf-mongodb-standby-test"
-  memory                 = 4
-  volume                 = 100
-  available_zone         = "ap-shanghai-2"
-  project_id             = 0
-  father_instance_id     = tencentcloud_mongodb_instance.mongodb.id
-  father_instance_region = "ap-guangzhou"
+	  tags = {
+	    test = "test"
+	  }
+	}
 
-  tags = {
-    test = "test"
-  }
-}
+	resource "tencentcloud_mongodb_standby_instance" "mongodb" {
+	  provider               = tencentcloud.shanghai
+	  instance_name          = "tf-mongodb-standby-test"
+	  memory                 = 4
+	  volume                 = 100
+	  available_zone         = "ap-shanghai-2"
+	  project_id             = 0
+	  father_instance_id     = tencentcloud_mongodb_instance.mongodb.id
+	  father_instance_region = "ap-guangzhou"
+
+	  tags = {
+	    test = "test"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 Mongodb instance can be imported using the id, e.g.
 

@@ -1,19 +1,21 @@
 /*
 Provides a resource to create a mysql param template
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_param_template" "param_template" {
-  name           = "terraform-test"
-  description    = "terraform-test"
-  engine_version = "8.0"
-  template_type  = "HIGH_STABILITY"
-  engine_type    = "InnoDB"
-}
+
+	resource "tencentcloud_mysql_param_template" "param_template" {
+	  name           = "terraform-test"
+	  description    = "terraform-test"
+	  engine_version = "8.0"
+	  template_type  = "HIGH_STABILITY"
+	  engine_type    = "InnoDB"
+	}
+
 ```
 
-Import
+# Import
 
 mysql param template can be imported using the id, e.g.
 

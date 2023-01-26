@@ -1,15 +1,17 @@
 /*
 Provides a MySQL account resource for database management. A MySQL instance supports multiple database account.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_account" "default" {
-  mysql_id    = "my-test-database"
-  name        = "tf_account"
-  password    = "********"
-  description = "My test account"
-}
+
+	resource "tencentcloud_mysql_account" "default" {
+	  mysql_id    = "my-test-database"
+	  name        = "tf_account"
+	  password    = "********"
+	  description = "My test account"
+	}
+
 ```
 */
 package tencentcloud

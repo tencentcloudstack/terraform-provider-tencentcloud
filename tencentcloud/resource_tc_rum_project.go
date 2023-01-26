@@ -1,19 +1,20 @@
 /*
 Provides a resource to create a rum project
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_rum_project" "project" {
-  name = "projectName"
-  instance_id = "rum-pasZKEI3RLgakj"
-  rate = "100"
-  enable_url_group = "0"
-  type = "web"
-  repo = ""
-  url = "iac-tf.com"
-  desc = "projectDesc-1"
-}
+
+	resource "tencentcloud_rum_project" "project" {
+	  name = "projectName"
+	  instance_id = "rum-pasZKEI3RLgakj"
+	  rate = "100"
+	  enable_url_group = "0"
+	  type = "web"
+	  repo = ""
+	  url = "iac-tf.com"
+	  desc = "projectDesc-1"
+	}
 
 ```
 Import
@@ -90,8 +91,8 @@ func resourceTencentCloudRumProject() *schema.Resource {
 			},
 
 			"desc": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
 				Description: "	Description of the created project (optional and up to 1,000 characters).",
 			},
 

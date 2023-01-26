@@ -1,32 +1,37 @@
 /*
 Provides a resource to create a CAM policy.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cam_policy" "foo" {
-  name        = "cam-policy-test"
-  document    = <<EOF
-{
-  "version": "2.0",
-  "statement": [
-    {
-      "action": [
-        "name/sts:AssumeRole"
-      ],
-      "effect": "allow",
-      "resource": [
-        "*"
-      ]
-    }
-  ]
-}
+
+	resource "tencentcloud_cam_policy" "foo" {
+	  name        = "cam-policy-test"
+	  document    = <<EOF
+
+	{
+	  "version": "2.0",
+	  "statement": [
+	    {
+	      "action": [
+	        "name/sts:AssumeRole"
+	      ],
+	      "effect": "allow",
+	      "resource": [
+	        "*"
+	      ]
+	    }
+	  ]
+	}
+
 EOF
-  description = "test"
-}
+
+	  description = "test"
+	}
+
 ```
 
-Import
+# Import
 
 CAM policy can be imported using the id, e.g.
 

@@ -1,12 +1,14 @@
 /*
 Use this data source to query detailed information of address template groups.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_address_template_groups" "name" {
-  name       = "test"
-}
+
+	data "tencentcloud_address_template_groups" "name" {
+	  name       = "test"
+	}
+
 ```
 */
 package tencentcloud

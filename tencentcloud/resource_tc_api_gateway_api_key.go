@@ -1,16 +1,18 @@
 /*
 Use this resource to create API gateway access key.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_api_key" "test" {
-  secret_name = "my_api_key"
-  status      = "on"
-}
+
+	resource "tencentcloud_api_gateway_api_key" "test" {
+	  secret_name = "my_api_key"
+	  status      = "on"
+	}
+
 ```
 
-Import
+# Import
 
 API gateway access key can be imported using the id, e.g.
 

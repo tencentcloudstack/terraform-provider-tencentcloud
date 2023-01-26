@@ -1,19 +1,21 @@
 /*
 Provide a resource to create a TDMQ instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_instance" "foo" {
-  cluster_name = "example"
-  remark = "this is description."
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
+
+	resource "tencentcloud_tdmq_instance" "foo" {
+	  cluster_name = "example"
+	  remark = "this is description."
+	  tags = {
+	    "createdBy" = "terraform"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 Tdmq instance can be imported, e.g.
 

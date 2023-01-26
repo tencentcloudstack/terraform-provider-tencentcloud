@@ -1,12 +1,14 @@
 /*
 Use this data source to query detailed information of dcdb databases
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_dcdb_databases" "databases" {
-  instance_id = "your_dcdb_instance_id"
-  }
+
+	data "tencentcloud_dcdb_databases" "databases" {
+	  instance_id = "your_dcdb_instance_id"
+	  }
+
 ```
 */
 package tencentcloud

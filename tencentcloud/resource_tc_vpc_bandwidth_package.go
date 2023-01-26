@@ -1,17 +1,18 @@
 /*
 Provides a resource to create a vpc bandwidth_package
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
-  network_type            = "BGP"
-  charge_type             = "TOP5_POSTPAID_BY_MONTH"
-  bandwidth_package_name  = "test-001"
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
+
+	resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
+	  network_type            = "BGP"
+	  charge_type             = "TOP5_POSTPAID_BY_MONTH"
+	  bandwidth_package_name  = "test-001"
+	  tags = {
+	    "createdBy" = "terraform"
+	  }
+	}
 
 ```
 Import

@@ -1,13 +1,15 @@
 /*
 Provides a resource to create a as remove_instances
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_as_remove_instances" "remove_instances" {
-  auto_scaling_group_id = tencentcloud_as_scaling_group.scaling_group.id
-  instance_ids = ["ins-xxxxxx"]
-}
+
+	resource "tencentcloud_as_remove_instances" "remove_instances" {
+	  auto_scaling_group_id = tencentcloud_as_scaling_group.scaling_group.id
+	  instance_ids = ["ins-xxxxxx"]
+	}
+
 ```
 */
 package tencentcloud

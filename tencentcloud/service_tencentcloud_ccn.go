@@ -11,7 +11,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
-//Ccn basic information
+// Ccn basic information
 type CcnBasicInfo struct {
 	ccnId             string
 	name              string

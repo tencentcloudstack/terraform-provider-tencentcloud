@@ -1,20 +1,21 @@
 /*
 Provides a resource to create a tcm cluster_attachment
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tcm_cluster_attachment" "cluster_attachment" {
-  mesh_id = "mesh-b9q6vf9l"
-  cluster_list {
-    cluster_id = "cls-rc5uy6dy"
-    region = "ap-guangzhou"
-    role = "REMOTE"
-    vpc_id = "vpc-a1jycmbx"
-    subnet_id = "subnet-lkyb3ayc"
-    type = "TKE"
-  }
-}
+
+	resource "tencentcloud_tcm_cluster_attachment" "cluster_attachment" {
+	  mesh_id = "mesh-b9q6vf9l"
+	  cluster_list {
+	    cluster_id = "cls-rc5uy6dy"
+	    region = "ap-guangzhou"
+	    role = "REMOTE"
+	    vpc_id = "vpc-a1jycmbx"
+	    subnet_id = "subnet-lkyb3ayc"
+	    type = "TKE"
+	  }
+	}
 
 ```
 Import

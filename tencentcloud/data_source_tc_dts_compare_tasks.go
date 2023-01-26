@@ -1,12 +1,14 @@
 /*
 Use this data source to query detailed information of dts compareTasks
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_dts_compare_tasks" "compareTasks" {
-  job_id = ""
-  }
+
+	data "tencentcloud_dts_compare_tasks" "compareTasks" {
+	  job_id = ""
+	  }
+
 ```
 */
 package tencentcloud

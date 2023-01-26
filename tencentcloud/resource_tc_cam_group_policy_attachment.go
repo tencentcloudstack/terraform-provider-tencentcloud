@@ -1,16 +1,18 @@
 /*
 Provides a resource to create a CAM group policy attachment.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cam_group_policy_attachment" "foo" {
-  group_id  = tencentcloud_cam_group.foo.id
-  policy_id = tencentcloud_cam_policy.foo.id
-}
+
+	resource "tencentcloud_cam_group_policy_attachment" "foo" {
+	  group_id  = tencentcloud_cam_group.foo.id
+	  policy_id = tencentcloud_cam_policy.foo.id
+	}
+
 ```
 
-Import
+# Import
 
 CAM group policy attachment can be imported using the id, e.g.
 

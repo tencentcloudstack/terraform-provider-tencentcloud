@@ -3,30 +3,31 @@ Provide a resource to create a Free Certificate.
 
 ~> **NOTE:** Once certificat created, it cannot be removed within 1 hours.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_free_certificate" "foo" {
-	dv_auth_method = "DNS_AUTO"
-	domain = "example.com"
-    package_type = "2"
-	contact_email = "foo@example.com"
-	contact_phone = "12345678901"
-	validity_period = 12
-	csr_encrypt_algo = "RSA"
-	csr_key_parameter = "2048"
-	csr_key_password = "xxxxxxxx"
-	alias = "my_free_cert"
-}
+
+	resource "tencentcloud_ssl_free_certificate" "foo" {
+		dv_auth_method = "DNS_AUTO"
+		domain = "example.com"
+	    package_type = "2"
+		contact_email = "foo@example.com"
+		contact_phone = "12345678901"
+		validity_period = 12
+		csr_encrypt_algo = "RSA"
+		csr_key_parameter = "2048"
+		csr_key_password = "xxxxxxxx"
+		alias = "my_free_cert"
+	}
+
 ```
 
-Import
+# Import
 
 FreeCertificate instance can be imported, e.g.
 ```
 $ terraform import tencentcloud_ssl_free_certificate.test free_certificate-id
 ```
-
 */
 package tencentcloud
 

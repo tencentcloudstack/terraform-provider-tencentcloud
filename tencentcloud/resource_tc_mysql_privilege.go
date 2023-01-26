@@ -1,59 +1,61 @@
 /*
 Provides a mysql account privilege resource to grant different access privilege to different database. A database can be granted by multiple account.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_instance" "default" {
-  mem_size          = 1000
-  volume_size       = 25
-  instance_name     = "guagua"
-  engine_version    = "5.7"
-  root_password     = "0153Y474"
-  availability_zone = "ap-guangzhou-3"
-  internet_service  = 1
+
+	resource "tencentcloud_mysql_instance" "default" {
+	  mem_size          = 1000
+	  volume_size       = 25
+	  instance_name     = "guagua"
+	  engine_version    = "5.7"
+	  root_password     = "0153Y474"
+	  availability_zone = "ap-guangzhou-3"
+	  internet_service  = 1
 
 }
 
-resource "tencentcloud_mysql_account" "mysql_account2" {
-  mysql_id    = tencentcloud_mysql_instance.default.id
-  name        = "test11"
-  password    = "test1234"
-  description = "test from terraform"
-}
+	resource "tencentcloud_mysql_account" "mysql_account2" {
+	  mysql_id    = tencentcloud_mysql_instance.default.id
+	  name        = "test11"
+	  password    = "test1234"
+	  description = "test from terraform"
+	}
 
-resource "tencentcloud_mysql_privilege" "tttt" {
-  mysql_id     = tencentcloud_mysql_instance.default.id
-  account_name = tencentcloud_mysql_account.mysql_account2.name
-  global       = ["TRIGGER"]
-  database {
-    privileges    = ["SELECT", "INSERT", "UPDATE", "DELETE", "CREATE"]
-    database_name = "sys"
-  }
-  database {
-    privileges    = ["SELECT"]
-    database_name = "performance_schema"
-  }
+	resource "tencentcloud_mysql_privilege" "tttt" {
+	  mysql_id     = tencentcloud_mysql_instance.default.id
+	  account_name = tencentcloud_mysql_account.mysql_account2.name
+	  global       = ["TRIGGER"]
+	  database {
+	    privileges    = ["SELECT", "INSERT", "UPDATE", "DELETE", "CREATE"]
+	    database_name = "sys"
+	  }
+	  database {
+	    privileges    = ["SELECT"]
+	    database_name = "performance_schema"
+	  }
 
-  table {
-    privileges    = ["SELECT", "INSERT", "UPDATE", "DELETE", "CREATE"]
-    database_name = "mysql"
-    table_name    = "slow_log"
-  }
+	  table {
+	    privileges    = ["SELECT", "INSERT", "UPDATE", "DELETE", "CREATE"]
+	    database_name = "mysql"
+	    table_name    = "slow_log"
+	  }
 
-  table {
-    privileges    = ["SELECT", "INSERT", "UPDATE"]
-    database_name = "mysql"
-    table_name    = "user"
-  }
+	  table {
+	    privileges    = ["SELECT", "INSERT", "UPDATE"]
+	    database_name = "mysql"
+	    table_name    = "user"
+	  }
 
-  column {
-    privileges    = ["SELECT", "INSERT", "UPDATE", "REFERENCES"]
-    database_name = "mysql"
-    table_name    = "user"
-    column_name   = "host"
-  }
-}
+	  column {
+	    privileges    = ["SELECT", "INSERT", "UPDATE", "REFERENCES"]
+	    database_name = "mysql"
+	    table_name    = "user"
+	    column_name   = "host"
+	  }
+	}
+
 ```
 */
 package tencentcloud

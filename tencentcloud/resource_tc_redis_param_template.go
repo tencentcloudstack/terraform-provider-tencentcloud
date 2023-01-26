@@ -1,35 +1,38 @@
 /*
 Provides a resource to create a redis parameter template
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_redis_param_template" "param_template" {
-  name = "example-template"
-  description = "This is an example redis param template."
-  product_type = 6
-  params_override {
-	key = "timeout"
-	value = "7200"
-  }
-}
+
+	resource "tencentcloud_redis_param_template" "param_template" {
+	  name = "example-template"
+	  description = "This is an example redis param template."
+	  product_type = 6
+	  params_override {
+		key = "timeout"
+		value = "7200"
+	  }
+	}
+
 ```
 
 Copy from another template
 ```hcl
-resource "tencentcloud_redis_param_template" "param_template" {
-  name = "example-copied"
-  description = "This is an copied redis param template from xxx."
-  template_id = "xxx"
-  params_override {
-	key = "timeout"
-	value = "7200"
-  }
-}
+
+	resource "tencentcloud_redis_param_template" "param_template" {
+	  name = "example-copied"
+	  description = "This is an copied redis param template from xxx."
+	  template_id = "xxx"
+	  params_override {
+		key = "timeout"
+		value = "7200"
+	  }
+	}
+
 ```
 
-
-Import
+# Import
 
 redis param_template can be imported using the id, e.g.
 ```

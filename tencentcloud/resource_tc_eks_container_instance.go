@@ -3,82 +3,83 @@ Provides an elastic kubernetes service container instance (offlined).
 
 ~> **NOTE:**  This resource was offline and no longer supported.
 
-Example Usage
+# Example Usage
 
 ```
 data "tencentcloud_security_groups" "group" {
 }
 
-data "tencentcloud_availability_zones_by_product" "zone" {
-  product = "cvm"
-}
+	data "tencentcloud_availability_zones_by_product" "zone" {
+	  product = "cvm"
+	}
 
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/24"
-  name       = "tf-test-eksci"
-}
+	resource "tencentcloud_vpc" "vpc" {
+	  cidr_block = "10.0.0.0/24"
+	  name       = "tf-test-eksci"
+	}
 
-resource "tencentcloud_subnet" "sub" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[0].name
-  cidr_block        = "10.0.0.0/24"
-  name              = "sub"
-  vpc_id            = tencentcloud_vpc.vpc.id
-}
+	resource "tencentcloud_subnet" "sub" {
+	  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[0].name
+	  cidr_block        = "10.0.0.0/24"
+	  name              = "sub"
+	  vpc_id            = tencentcloud_vpc.vpc.id
+	}
 
-resource "tencentcloud_cbs_storage" "cbs" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[0].name
-  storage_name      = "cbs1"
-  storage_size      = 10
-  storage_type      = "CLOUD_PREMIUM"
-}
+	resource "tencentcloud_cbs_storage" "cbs" {
+	  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[0].name
+	  storage_name      = "cbs1"
+	  storage_size      = 10
+	  storage_type      = "CLOUD_PREMIUM"
+	}
 
-resource "tencentcloud_eks_container_instance" "eci1" {
-  name = "foo"
-  vpc_id = tencentcloud_vpc.vpc.id
-  subnet_id = tencentcloud_subnet.sub.id
-  cpu = 2
-  cpu_type = "intel"
-  restart_policy = "Always"
-  memory = 4
-  security_groups = [data.tencentcloud_security_groups.group.security_groups[0].security_group_id]
-  cbs_volume {
-    name = "vol1"
-    disk_id = tencentcloud_cbs_storage.cbs.id
-  }
-  container {
-    name = "redis1"
-    image = "redis"
-    liveness_probe {
-      init_delay_seconds = 1
-      timeout_seconds = 3
-      period_seconds = 11
-      success_threshold = 1
-      failure_threshold = 3
-      http_get_path = "/"
-      http_get_port = 443
-      http_get_scheme = "HTTPS"
-    }
-    readiness_probe {
-      init_delay_seconds = 1
-      timeout_seconds = 3
-      period_seconds = 10
-      success_threshold = 1
-      failure_threshold = 3
-      tcp_socket_port = 81
-    }
-  }
-  container {
-    name = "nginx"
-    image = "nginx"
-  }
-  init_container {
-    name = "alpine"
-    image = "alpine:latest"
-  }
-}
+	resource "tencentcloud_eks_container_instance" "eci1" {
+	  name = "foo"
+	  vpc_id = tencentcloud_vpc.vpc.id
+	  subnet_id = tencentcloud_subnet.sub.id
+	  cpu = 2
+	  cpu_type = "intel"
+	  restart_policy = "Always"
+	  memory = 4
+	  security_groups = [data.tencentcloud_security_groups.group.security_groups[0].security_group_id]
+	  cbs_volume {
+	    name = "vol1"
+	    disk_id = tencentcloud_cbs_storage.cbs.id
+	  }
+	  container {
+	    name = "redis1"
+	    image = "redis"
+	    liveness_probe {
+	      init_delay_seconds = 1
+	      timeout_seconds = 3
+	      period_seconds = 11
+	      success_threshold = 1
+	      failure_threshold = 3
+	      http_get_path = "/"
+	      http_get_port = 443
+	      http_get_scheme = "HTTPS"
+	    }
+	    readiness_probe {
+	      init_delay_seconds = 1
+	      timeout_seconds = 3
+	      period_seconds = 10
+	      success_threshold = 1
+	      failure_threshold = 3
+	      tcp_socket_port = 81
+	    }
+	  }
+	  container {
+	    name = "nginx"
+	    image = "nginx"
+	  }
+	  init_container {
+	    name = "alpine"
+	    image = "alpine:latest"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 ```
 terraform import tencentcloud_eks_container_instance.foo container-instance-id

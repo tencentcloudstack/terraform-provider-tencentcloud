@@ -5,126 +5,132 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** At present, 'PREPAID' instance cannot be deleted and must wait it to be outdated and released automatically.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_images" "my_favorite_image" {
-  image_type = ["PUBLIC_IMAGE"]
-  os_name    = "Tencent Linux release 3.2 (Final)"
-}
 
-data "tencentcloud_instance_types" "my_favorite_instance_types" {
-  filter {
-    name   = "instance-family"
-    values = ["S3"]
-  }
+	data "tencentcloud_images" "my_favorite_image" {
+	  image_type = ["PUBLIC_IMAGE"]
+	  os_name    = "Tencent Linux release 3.2 (Final)"
+	}
 
-  cpu_core_count = 1
-  memory_size    = 1
-}
+	data "tencentcloud_instance_types" "my_favorite_instance_types" {
+	  filter {
+	    name   = "instance-family"
+	    values = ["S3"]
+	  }
+
+	  cpu_core_count = 1
+	  memory_size    = 1
+	}
 
 data "tencentcloud_availability_zones" "my_favorite_zones" {
 }
 
 // Create VPC resource
-resource "tencentcloud_vpc" "app" {
-  cidr_block = "10.0.0.0/16"
-  name       = "awesome_app_vpc"
-}
 
-resource "tencentcloud_subnet" "app" {
-  vpc_id            = tencentcloud_vpc.app.id
-  availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
-  name              = "awesome_app_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
+	resource "tencentcloud_vpc" "app" {
+	  cidr_block = "10.0.0.0/16"
+	  name       = "awesome_app_vpc"
+	}
+
+	resource "tencentcloud_subnet" "app" {
+	  vpc_id            = tencentcloud_vpc.app.id
+	  availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
+	  name              = "awesome_app_subnet"
+	  cidr_block        = "10.0.1.0/24"
+	}
 
 // Create 2 CVM instances to host awesome_app
-resource "tencentcloud_instance" "my_awesome_app" {
-  instance_name              = "awesome_app"
-  availability_zone          = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
-  image_id                   = data.tencentcloud_images.my_favorite_image.images.0.image_id
-  instance_type              = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
-  system_disk_type           = "CLOUD_PREMIUM"
-  system_disk_size           = 50
-  hostname                   = "user"
-  project_id                 = 0
-  vpc_id                     = tencentcloud_vpc.app.id
-  subnet_id                  = tencentcloud_subnet.app.id
-  count                      = 2
 
-  data_disks {
-    data_disk_type = "CLOUD_PREMIUM"
-    data_disk_size = 50
-	encrypt = false
-  }
+	resource "tencentcloud_instance" "my_awesome_app" {
+	  instance_name              = "awesome_app"
+	  availability_zone          = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
+	  image_id                   = data.tencentcloud_images.my_favorite_image.images.0.image_id
+	  instance_type              = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
+	  system_disk_type           = "CLOUD_PREMIUM"
+	  system_disk_size           = 50
+	  hostname                   = "user"
+	  project_id                 = 0
+	  vpc_id                     = tencentcloud_vpc.app.id
+	  subnet_id                  = tencentcloud_subnet.app.id
+	  count                      = 2
 
-  tags = {
-    tagKey = "tagValue"
-  }
-}
+	  data_disks {
+	    data_disk_type = "CLOUD_PREMIUM"
+	    data_disk_size = 50
+		encrypt = false
+	  }
+
+	  tags = {
+	    tagKey = "tagValue"
+	  }
+	}
+
 ```
 
 Create CVM instance based on CDH
 ```hcl
-variable "availability_zone" {
-  default = "ap-shanghai-4"
-}
 
-resource "tencentcloud_cdh_instance" "foo" {
-  availability_zone = var.availability_zone
-  host_type = "HM50"
-  charge_type = "PREPAID"
-  instance_charge_type_prepaid_period = 1
-  hostname = "test"
-  prepaid_renew_flag = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
-}
+	variable "availability_zone" {
+	  default = "ap-shanghai-4"
+	}
 
-data "tencentcloud_cdh_instances" "list" {
-  availability_zone = var.availability_zone
-  host_id = tencentcloud_cdh_instance.foo.id
-  hostname = "test"
-  host_state = "RUNNING"
-}
+	resource "tencentcloud_cdh_instance" "foo" {
+	  availability_zone = var.availability_zone
+	  host_type = "HM50"
+	  charge_type = "PREPAID"
+	  instance_charge_type_prepaid_period = 1
+	  hostname = "test"
+	  prepaid_renew_flag = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
+	}
 
-resource "tencentcloud_key_pair" "random_key" {
-  key_ids   = ["tf_example_key6"]
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
-}
+	data "tencentcloud_cdh_instances" "list" {
+	  availability_zone = var.availability_zone
+	  host_id = tencentcloud_cdh_instance.foo.id
+	  hostname = "test"
+	  host_state = "RUNNING"
+	}
 
-resource "tencentcloud_placement_group" "foo" {
-  name = "test"
-  type = "HOST"
-}
+	resource "tencentcloud_key_pair" "random_key" {
+	  key_ids   = ["tf_example_key6"]
+	  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
+	}
 
-resource "tencentcloud_instance" "foo" {
-  availability_zone = var.availability_zone
-  instance_name     = "terraform-testing"
-  image_id          = "img-ix05e4px"
-  key_ids           = [tencentcloud_key_pair.random_key.id]
-  placement_group_id = tencentcloud_placement_group.foo.id
-  security_groups               = ["sg-9c3f33xk"]
-  system_disk_type  = "CLOUD_PREMIUM"
+	resource "tencentcloud_placement_group" "foo" {
+	  name = "test"
+	  type = "HOST"
+	}
 
-  instance_charge_type = "CDHPAID"
-  cdh_instance_type     = "CDH_10C10G"
-  cdh_host_id = tencentcloud_cdh_instance.foo.id
+	resource "tencentcloud_instance" "foo" {
+	  availability_zone = var.availability_zone
+	  instance_name     = "terraform-testing"
+	  image_id          = "img-ix05e4px"
+	  key_ids           = [tencentcloud_key_pair.random_key.id]
+	  placement_group_id = tencentcloud_placement_group.foo.id
+	  security_groups               = ["sg-9c3f33xk"]
+	  system_disk_type  = "CLOUD_PREMIUM"
 
-  vpc_id                     = "vpc-31zmeluu"
-  subnet_id                  = "subnet-aujc02np"
-  allocate_public_ip    = true
-  internet_max_bandwidth_out = 2
-  count                      = 3
+	  instance_charge_type = "CDHPAID"
+	  cdh_instance_type     = "CDH_10C10G"
+	  cdh_host_id = tencentcloud_cdh_instance.foo.id
 
-  data_disks {
-    data_disk_type = "CLOUD_PREMIUM"
-    data_disk_size = 50
-    encrypt = false
-  }
-}
+	  vpc_id                     = "vpc-31zmeluu"
+	  subnet_id                  = "subnet-aujc02np"
+	  allocate_public_ip    = true
+	  internet_max_bandwidth_out = 2
+	  count                      = 3
+
+	  data_disks {
+	    data_disk_type = "CLOUD_PREMIUM"
+	    data_disk_size = 50
+	    encrypt = false
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 CVM instance can be imported using the id, e.g.
 

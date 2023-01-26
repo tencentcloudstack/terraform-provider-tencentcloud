@@ -1,14 +1,15 @@
 /*
 Use this data source to query product namespace in monitor)
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_monitor_product_namespace" "instances" {
-  name = "Redis"
-}
-```
 
+	data "tencentcloud_monitor_product_namespace" "instances" {
+	  name = "Redis"
+	}
+
+```
 */
 package tencentcloud
 

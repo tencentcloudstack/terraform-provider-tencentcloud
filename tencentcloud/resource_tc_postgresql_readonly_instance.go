@@ -1,29 +1,31 @@
 /*
 Use this resource to create postgresql readonly instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_postgresql_readonly_instance" "foo" {
-  auto_renew_flag       = 0
-  db_version            = "10.4"
-  instance_charge_type  = "POSTPAID_BY_HOUR"
-  master_db_instance_id = "postgres-j4pm65id"
-  memory                = 4
-  name                  = "hello"
-  need_support_ipv6     = 0
-  project_id            = 0
-  security_groups_ids   = [
-    "sg-fefj5n6r",
-  ]
-  storage               = 250
-  subnet_id             = "subnet-enm92y0m"
-  vpc_id                = "vpc-86v957zb"
-  zone                  = "ap-guangzhou-6"
-}
+
+	resource "tencentcloud_postgresql_readonly_instance" "foo" {
+	  auto_renew_flag       = 0
+	  db_version            = "10.4"
+	  instance_charge_type  = "POSTPAID_BY_HOUR"
+	  master_db_instance_id = "postgres-j4pm65id"
+	  memory                = 4
+	  name                  = "hello"
+	  need_support_ipv6     = 0
+	  project_id            = 0
+	  security_groups_ids   = [
+	    "sg-fefj5n6r",
+	  ]
+	  storage               = 250
+	  subnet_id             = "subnet-enm92y0m"
+	  vpc_id                = "vpc-86v957zb"
+	  zone                  = "ap-guangzhou-6"
+	}
+
 ```
 
-Import
+# Import
 
 postgresql readonly instance can be imported using the id, e.g.
 

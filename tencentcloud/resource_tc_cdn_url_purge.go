@@ -1,27 +1,30 @@
 /*
 Provide a resource to invoke a Url Purge Request.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cdn_url_purge" "foo" {
-  urls = [
-    "https://www.example.com/a"
-  ]
-}
+
+	resource "tencentcloud_cdn_url_purge" "foo" {
+	  urls = [
+	    "https://www.example.com/a"
+	  ]
+	}
+
 ```
 
-Change `redo` argument to request new purge task with same urls
+# Change `redo` argument to request new purge task with same urls
 
 ```hcl
-resource "tencentcloud_cdn_url_purge" "foo" {
-  urls = [
-    "https://www.example.com/a"
-  ]
-  redo = 1
-}
-```
 
+	resource "tencentcloud_cdn_url_purge" "foo" {
+	  urls = [
+	    "https://www.example.com/a"
+	  ]
+	  redo = 1
+	}
+
+```
 */
 package tencentcloud
 

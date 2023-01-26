@@ -1,8 +1,8 @@
 package tencentcloud
 
 /*
- all gate way types
- https://cloud.tencent.com/document/api/215/15824#Route
+all gate way types
+https://cloud.tencent.com/document/api/215/15824#Route
 */
 const GATE_WAY_TYPE_CVM = "CVM"
 const GATE_WAY_TYPE_VPN = "VPN"

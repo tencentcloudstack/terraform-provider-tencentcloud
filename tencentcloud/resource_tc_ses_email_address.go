@@ -1,13 +1,14 @@
 /*
 Provides a resource to create a ses email_address
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ses_email_address" "email_address" {
-  email_address     = "aaa@iac-tf.cloud"
-  email_sender_name = "aaa"
-}
+
+	resource "tencentcloud_ses_email_address" "email_address" {
+	  email_address     = "aaa@iac-tf.cloud"
+	  email_sender_name = "aaa"
+	}
 
 ```
 Import

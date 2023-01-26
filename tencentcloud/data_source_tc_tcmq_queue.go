@@ -1,12 +1,14 @@
 /*
 Use this data source to query detailed information of tcmq queue
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_tcmq_queue" "queue" {
-  queue_name = "queue_name"
-}
+
+	data "tencentcloud_tcmq_queue" "queue" {
+	  queue_name = "queue_name"
+	}
+
 ```
 */
 package tencentcloud

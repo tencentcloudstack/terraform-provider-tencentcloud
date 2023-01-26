@@ -5,22 +5,23 @@ Provides a resource to create a Redis instance and set its attributes.
 
 ~> **NOTE:** Both adding and removing replications in one change is supported but not recommend.
 
-Example Usage
+# Example Usage
 
 ```hcl
 data "tencentcloud_redis_zone_config" "zone" {
 }
 
-resource "tencentcloud_redis_instance" "redis_instance_test_2" {
-  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
-  type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
-  password           = "test12345789"
-  mem_size           = 8192
-  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
-  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
-  name               = "terrform_test"
-  port               = 6379
-}
+	resource "tencentcloud_redis_instance" "redis_instance_test_2" {
+	  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
+	  type_id            = data.tencentcloud_redis_zone_config.zone.list[0].type_id
+	  password           = "test12345789"
+	  mem_size           = 8192
+	  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[0].redis_shard_nums[0]
+	  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[0].redis_replicas_nums[0]
+	  name               = "terrform_test"
+	  port               = 6379
+	}
+
 ```
 
 Using multi replica zone set
@@ -29,34 +30,35 @@ data "tencentcloud_availability_zones" "az" {
 
 }
 
-variable "redis_replicas_num" {
-  default = 3
-}
+	variable "redis_replicas_num" {
+	  default = 3
+	}
 
-resource "tencentcloud_redis_instance" "red1" {
-  availability_zone  = data.tencentcloud_availability_zones.az.zones[0].name
-  charge_type        = "POSTPAID"
-  mem_size           = 1024
-  name               = "test-redis"
-  port               = 6379
-  project_id         = 0
-  redis_replicas_num = var.redis_replicas_num
-  redis_shard_num    = 1
-  security_groups    = [
-    "sg-d765yoec",
-  ]
-  subnet_id          = "subnet-ie01x91v"
-  type_id            = 6
-  vpc_id             = "vpc-k4lrsafc"
-  password = "a12121312334"
+	resource "tencentcloud_redis_instance" "red1" {
+	  availability_zone  = data.tencentcloud_availability_zones.az.zones[0].name
+	  charge_type        = "POSTPAID"
+	  mem_size           = 1024
+	  name               = "test-redis"
+	  port               = 6379
+	  project_id         = 0
+	  redis_replicas_num = var.redis_replicas_num
+	  redis_shard_num    = 1
+	  security_groups    = [
+	    "sg-d765yoec",
+	  ]
+	  subnet_id          = "subnet-ie01x91v"
+	  type_id            = 6
+	  vpc_id             = "vpc-k4lrsafc"
+	  password = "a12121312334"
 
-  replica_zone_ids = [
-    for i in range(var.redis_replicas_num)
-    : data.tencentcloud_availability_zones.az.zones[i % length(data.tencentcloud_availability_zones.az.zones)].id ]
-}
+	  replica_zone_ids = [
+	    for i in range(var.redis_replicas_num)
+	    : data.tencentcloud_availability_zones.az.zones[i % length(data.tencentcloud_availability_zones.az.zones)].id ]
+	}
+
 ```
 
-Import
+# Import
 
 Redis instance can be imported, e.g.
 

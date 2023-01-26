@@ -5,17 +5,19 @@ The Images data source fetch proper image, which could be one of the private ima
 
 ~> **NOTE:** This data source will be deprecated, please use `tencentcloud_images` instead.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_image" "my_favorate_image" {
-  os_name = "centos"
 
-  filter {
-    name   = "image-type"
-    values = ["PUBLIC_IMAGE"]
-  }
-}
+	data "tencentcloud_image" "my_favorate_image" {
+	  os_name = "centos"
+
+	  filter {
+	    name   = "image-type"
+	    values = ["PUBLIC_IMAGE"]
+	  }
+	}
+
 ```
 */
 package tencentcloud

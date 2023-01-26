@@ -6,932 +6,1005 @@ Use the navigation on the left to read about the available resources.
 
 -> **Note:** From version 1.9.0 (June 18, 2019), the provider start to support Terraform 0.12.x.
 
-Example Usage
+# Example Usage
 
 ```hcl
-terraform {
-  required_providers {
-    tencentcloud = {
-      source = "tencentcloudstack/tencentcloud"
-    }
-  }
-}
+
+	terraform {
+	  required_providers {
+	    tencentcloud = {
+	      source = "tencentcloudstack/tencentcloud"
+	    }
+	  }
+	}
 
 # Configure the TencentCloud Provider
-provider "tencentcloud" {
-  secret_id  = var.secret_id
-  secret_key = var.secret_key
-  region     = var.region
-}
+
+	provider "tencentcloud" {
+	  secret_id  = var.secret_id
+	  secret_key = var.secret_key
+	  region     = var.region
+	}
 
 #Configure the TencentCloud Provider with STS
-provider "tencentcloud" {
-  secret_id  = var.secret_id
-  secret_key = var.secret_key
-  region     = var.region
-  assume_role {
-    role_arn         = var.assume_role_arn
-    session_name     = var.session_name
-    session_duration = var.session_duration
-    policy           = var.policy
-  }
-}
+
+	provider "tencentcloud" {
+	  secret_id  = var.secret_id
+	  secret_key = var.secret_key
+	  region     = var.region
+	  assume_role {
+	    role_arn         = var.assume_role_arn
+	    session_name     = var.session_name
+	    session_duration = var.session_duration
+	    policy           = var.policy
+	  }
+	}
+
 ```
 
-Resources List
+# Resources List
 
 Provider Data Sources
-  tencentcloud_availability_regions
-  tencentcloud_availability_zones_by_product
-  tencentcloud_availability_zones
+
+	tencentcloud_availability_regions
+	tencentcloud_availability_zones_by_product
+	tencentcloud_availability_zones
 
 Anti-DDoS(DayuV2)
-  Data Source
-    tencentcloud_dayu_eip
-	tencentcloud_dayu_l4_rules_v2
-	tencentcloud_dayu_l7_rules_v2
 
-  Resource
-	tencentcloud_dayu_eip
-	tencentcloud_dayu_l4_rule
-	tencentcloud_dayu_l7_rule_v2
-	tencentcloud_dayu_ddos_policy_v2
-	tencentcloud_dayu_cc_policy_v2
-	tencentcloud_dayu_ddos_ip_attachment_v2
+	  Data Source
+	    tencentcloud_dayu_eip
+		tencentcloud_dayu_l4_rules_v2
+		tencentcloud_dayu_l7_rules_v2
+
+	  Resource
+		tencentcloud_dayu_eip
+		tencentcloud_dayu_l4_rule
+		tencentcloud_dayu_l7_rule_v2
+		tencentcloud_dayu_ddos_policy_v2
+		tencentcloud_dayu_cc_policy_v2
+		tencentcloud_dayu_ddos_ip_attachment_v2
 
 Anti-DDoS(Dayu)
-  Data Source
-    tencentcloud_dayu_cc_http_policies
-    tencentcloud_dayu_cc_https_policies
-    tencentcloud_dayu_ddos_policies
-    tencentcloud_dayu_ddos_policy_attachments
-    tencentcloud_dayu_ddos_policy_cases
-    tencentcloud_dayu_l4_rules
-    tencentcloud_dayu_l7_rules
 
-  Resource
-    tencentcloud_dayu_cc_http_policy
-    tencentcloud_dayu_cc_https_policy
-    tencentcloud_dayu_ddos_policy
-    tencentcloud_dayu_ddos_policy_attachment
-    tencentcloud_dayu_ddos_policy_case
-    tencentcloud_dayu_l4_rule
-    tencentcloud_dayu_l7_rule
+	Data Source
+	  tencentcloud_dayu_cc_http_policies
+	  tencentcloud_dayu_cc_https_policies
+	  tencentcloud_dayu_ddos_policies
+	  tencentcloud_dayu_ddos_policy_attachments
+	  tencentcloud_dayu_ddos_policy_cases
+	  tencentcloud_dayu_l4_rules
+	  tencentcloud_dayu_l7_rules
+
+	Resource
+	  tencentcloud_dayu_cc_http_policy
+	  tencentcloud_dayu_cc_https_policy
+	  tencentcloud_dayu_ddos_policy
+	  tencentcloud_dayu_ddos_policy_attachment
+	  tencentcloud_dayu_ddos_policy_case
+	  tencentcloud_dayu_l4_rule
+	  tencentcloud_dayu_l7_rule
 
 API GateWay
-  Data Source
-	tencentcloud_api_gateway_apis
-	tencentcloud_api_gateway_services
-	tencentcloud_api_gateway_throttling_services
-	tencentcloud_api_gateway_throttling_apis
-	tencentcloud_api_gateway_usage_plans
-	tencentcloud_api_gateway_ip_strategies
-	tencentcloud_api_gateway_customer_domains
-	tencentcloud_api_gateway_usage_plan_environments
-	tencentcloud_api_gateway_api_keys
 
-  Resource
-  	tencentcloud_api_gateway_api
-	tencentcloud_api_gateway_service
-	tencentcloud_api_gateway_custom_domain
-	tencentcloud_api_gateway_usage_plan
-	tencentcloud_api_gateway_usage_plan_attachment
-	tencentcloud_api_gateway_ip_strategy
-	tencentcloud_api_gateway_strategy_attachment
-	tencentcloud_api_gateway_api_key
-	tencentcloud_api_gateway_api_key_attachment
-    tencentcloud_api_gateway_service_release
-	tencentcloud_api_gateway_plugin
-	tencentcloud_api_gateway_plugin_attachment
+	  Data Source
+		tencentcloud_api_gateway_apis
+		tencentcloud_api_gateway_services
+		tencentcloud_api_gateway_throttling_services
+		tencentcloud_api_gateway_throttling_apis
+		tencentcloud_api_gateway_usage_plans
+		tencentcloud_api_gateway_ip_strategies
+		tencentcloud_api_gateway_customer_domains
+		tencentcloud_api_gateway_usage_plan_environments
+		tencentcloud_api_gateway_api_keys
+
+	  Resource
+	  	tencentcloud_api_gateway_api
+		tencentcloud_api_gateway_service
+		tencentcloud_api_gateway_custom_domain
+		tencentcloud_api_gateway_usage_plan
+		tencentcloud_api_gateway_usage_plan_attachment
+		tencentcloud_api_gateway_ip_strategy
+		tencentcloud_api_gateway_strategy_attachment
+		tencentcloud_api_gateway_api_key
+		tencentcloud_api_gateway_api_key_attachment
+	    tencentcloud_api_gateway_service_release
+		tencentcloud_api_gateway_plugin
+		tencentcloud_api_gateway_plugin_attachment
 
 Cloud Audit(Audit)
-  Data Source
-	tencentcloud_audit_cos_regions
-	tencentcloud_audit_key_alias
-	tencentcloud_audits
 
-  Resource
-	tencentcloud_audit
-	tencentcloud_audit_track
+	  Data Source
+		tencentcloud_audit_cos_regions
+		tencentcloud_audit_key_alias
+		tencentcloud_audits
+
+	  Resource
+		tencentcloud_audit
+		tencentcloud_audit_track
 
 Auto Scaling(AS)
-  Data Source
-    tencentcloud_as_scaling_configs
-    tencentcloud_as_scaling_groups
-    tencentcloud_as_scaling_policies
-	tencentcloud_as_instances
 
-  Resource
-    tencentcloud_as_scaling_config
-    tencentcloud_as_scaling_group
-    tencentcloud_as_attachment
-    tencentcloud_as_scaling_policy
-    tencentcloud_as_schedule
-    tencentcloud_as_lifecycle_hook
-    tencentcloud_as_notification
-	tencentcloud_as_remove_instances
-    tencentcloud_as_protect_instances
-    tencentcloud_as_start_instances
-    tencentcloud_as_stop_instances
+	  Data Source
+	    tencentcloud_as_scaling_configs
+	    tencentcloud_as_scaling_groups
+	    tencentcloud_as_scaling_policies
+		tencentcloud_as_instances
+
+	  Resource
+	    tencentcloud_as_scaling_config
+	    tencentcloud_as_scaling_group
+	    tencentcloud_as_attachment
+	    tencentcloud_as_scaling_policy
+	    tencentcloud_as_schedule
+	    tencentcloud_as_lifecycle_hook
+	    tencentcloud_as_notification
+		tencentcloud_as_remove_instances
+	    tencentcloud_as_protect_instances
+	    tencentcloud_as_start_instances
+	    tencentcloud_as_stop_instances
 
 Content Delivery Network(CDN)
-  Data Source
-    tencentcloud_cdn_domains
-    tencentcloud_cdn_domain_verifier
 
-  Resource
-	tencentcloud_cdn_domain
-	tencentcloud_cdn_url_push
-	tencentcloud_cdn_url_purge
+	  Data Source
+	    tencentcloud_cdn_domains
+	    tencentcloud_cdn_domain_verifier
+
+	  Resource
+		tencentcloud_cdn_domain
+		tencentcloud_cdn_url_push
+		tencentcloud_cdn_url_purge
 
 Cloud Kafka(ckafka)
-  Data Source
-    tencentcloud_ckafka_users
-    tencentcloud_ckafka_acls
-    tencentcloud_ckafka_topics
-    tencentcloud_ckafka_instances
 
-  Resource
-	tencentcloud_ckafka_instance
-    tencentcloud_ckafka_user
-    tencentcloud_ckafka_acl
-    tencentcloud_ckafka_topic
+	  Data Source
+	    tencentcloud_ckafka_users
+	    tencentcloud_ckafka_acls
+	    tencentcloud_ckafka_topics
+	    tencentcloud_ckafka_instances
+
+	  Resource
+		tencentcloud_ckafka_instance
+	    tencentcloud_ckafka_user
+	    tencentcloud_ckafka_acl
+	    tencentcloud_ckafka_topic
 
 Cloud Access Management(CAM)
-  Data Source
-    tencentcloud_cam_group_memberships
-    tencentcloud_cam_group_policy_attachments
-    tencentcloud_cam_groups
-    tencentcloud_cam_policies
-    tencentcloud_cam_role_policy_attachments
-    tencentcloud_cam_roles
-    tencentcloud_cam_saml_providers
-    tencentcloud_cam_user_policy_attachments
-    tencentcloud_cam_users
-    tencentcloud_user_info
 
-  Resource
-    tencentcloud_cam_role
-    tencentcloud_cam_role_policy_attachment
-    tencentcloud_cam_policy
-    tencentcloud_cam_user
-    tencentcloud_cam_user_policy_attachment
-    tencentcloud_cam_group
-    tencentcloud_cam_group_policy_attachment
-    tencentcloud_cam_group_membership
-    tencentcloud_cam_saml_provider
-	tencentcloud_cam_oidc_sso
-	tencentcloud_cam_role_sso
-	tencentcloud_cam_service_linked_role
-	tencentcloud_cam_user_saml_config
+	  Data Source
+	    tencentcloud_cam_group_memberships
+	    tencentcloud_cam_group_policy_attachments
+	    tencentcloud_cam_groups
+	    tencentcloud_cam_policies
+	    tencentcloud_cam_role_policy_attachments
+	    tencentcloud_cam_roles
+	    tencentcloud_cam_saml_providers
+	    tencentcloud_cam_user_policy_attachments
+	    tencentcloud_cam_users
+	    tencentcloud_user_info
+
+	  Resource
+	    tencentcloud_cam_role
+	    tencentcloud_cam_role_policy_attachment
+	    tencentcloud_cam_policy
+	    tencentcloud_cam_user
+	    tencentcloud_cam_user_policy_attachment
+	    tencentcloud_cam_group
+	    tencentcloud_cam_group_policy_attachment
+	    tencentcloud_cam_group_membership
+	    tencentcloud_cam_saml_provider
+		tencentcloud_cam_oidc_sso
+		tencentcloud_cam_role_sso
+		tencentcloud_cam_service_linked_role
+		tencentcloud_cam_user_saml_config
 
 Cloud Block Storage(CBS)
-  Data Source
-    tencentcloud_cbs_snapshots
-    tencentcloud_cbs_storages
-	tencentcloud_cbs_storages_set
-    tencentcloud_cbs_snapshot_policies
 
-  Resource
-    tencentcloud_cbs_storage
-	tencentcloud_cbs_storage_set
-    tencentcloud_cbs_storage_attachment
-	tencentcloud_cbs_storage_set_attachment
-    tencentcloud_cbs_snapshot
-    tencentcloud_cbs_snapshot_policy
-    tencentcloud_cbs_snapshot_policy_attachment
+	  Data Source
+	    tencentcloud_cbs_snapshots
+	    tencentcloud_cbs_storages
+		tencentcloud_cbs_storages_set
+	    tencentcloud_cbs_snapshot_policies
+
+	  Resource
+	    tencentcloud_cbs_storage
+		tencentcloud_cbs_storage_set
+	    tencentcloud_cbs_storage_attachment
+		tencentcloud_cbs_storage_set_attachment
+	    tencentcloud_cbs_snapshot
+	    tencentcloud_cbs_snapshot_policy
+	    tencentcloud_cbs_snapshot_policy_attachment
 
 Cloud Connect Network(CCN)
-  Data Source
-    tencentcloud_ccn_bandwidth_limits
-    tencentcloud_ccn_instances
 
-  Resource
-    tencentcloud_ccn
-    tencentcloud_ccn_attachment
-    tencentcloud_ccn_bandwidth_limit
+	Data Source
+	  tencentcloud_ccn_bandwidth_limits
+	  tencentcloud_ccn_instances
+
+	Resource
+	  tencentcloud_ccn
+	  tencentcloud_ccn_attachment
+	  tencentcloud_ccn_bandwidth_limit
 
 CVM Dedicated Host(CDH)
-  Data Source
-    tencentcloud_cdh_instances
 
-  Resource
-    tencentcloud_cdh_instance
+	Data Source
+	  tencentcloud_cdh_instances
+
+	Resource
+	  tencentcloud_cdh_instance
 
 Cloud File Storage(CFS)
-  Data Source
-    tencentcloud_cfs_access_groups
-    tencentcloud_cfs_access_rules
-    tencentcloud_cfs_file_systems
-	tencentcloud_cfs_mount_targets
-	tencentcloud_cfs_file_system_clients
-	tencentcloud_cfs_available_zone
 
-  Resource
-    tencentcloud_cfs_file_system
-    tencentcloud_cfs_access_group
-    tencentcloud_cfs_access_rule
-	tencentcloud_cfs_auto_snapshot_policy
-	tencentcloud_cfs_auto_snapshot_policy_attachment
-	tencentcloud_cfs_snapshot
-	tencentcloud_cfs_sign_up_cfs_service
+	  Data Source
+	    tencentcloud_cfs_access_groups
+	    tencentcloud_cfs_access_rules
+	    tencentcloud_cfs_file_systems
+		tencentcloud_cfs_mount_targets
+		tencentcloud_cfs_file_system_clients
+		tencentcloud_cfs_available_zone
+
+	  Resource
+	    tencentcloud_cfs_file_system
+	    tencentcloud_cfs_access_group
+	    tencentcloud_cfs_access_rule
+		tencentcloud_cfs_auto_snapshot_policy
+		tencentcloud_cfs_auto_snapshot_policy_attachment
+		tencentcloud_cfs_snapshot
+		tencentcloud_cfs_sign_up_cfs_service
 
 Container Cluster
-  Data Source
-    tencentcloud_container_cluster_instances
-    tencentcloud_container_clusters
 
-  Resource
-    tencentcloud_container_cluster
-    tencentcloud_container_cluster_instance
+	Data Source
+	  tencentcloud_container_cluster_instances
+	  tencentcloud_container_clusters
+
+	Resource
+	  tencentcloud_container_cluster
+	  tencentcloud_container_cluster_instance
 
 Cloud Load Balancer(CLB)
-  Data Source
-    tencentcloud_clb_attachments
-    tencentcloud_clb_instances
-    tencentcloud_clb_listener_rules
-    tencentcloud_clb_listeners
-    tencentcloud_clb_redirections
-    tencentcloud_clb_target_groups
 
-  Resource
-    tencentcloud_clb_instance
-    tencentcloud_clb_listener
-    tencentcloud_clb_listener_rule
-    tencentcloud_clb_attachment
-    tencentcloud_clb_redirection
-    tencentcloud_lb
-    tencentcloud_alb_server_attachment
-    tencentcloud_clb_target_group
-    tencentcloud_clb_target_group_instance_attachment
-    tencentcloud_clb_target_group_attachment
-    tencentcloud_clb_log_set
-	tencentcloud_clb_log_topic
-	tencentcloud_clb_customized_config
-    tencentcloud_clb_snat_ip
+	  Data Source
+	    tencentcloud_clb_attachments
+	    tencentcloud_clb_instances
+	    tencentcloud_clb_listener_rules
+	    tencentcloud_clb_listeners
+	    tencentcloud_clb_redirections
+	    tencentcloud_clb_target_groups
+
+	  Resource
+	    tencentcloud_clb_instance
+	    tencentcloud_clb_listener
+	    tencentcloud_clb_listener_rule
+	    tencentcloud_clb_attachment
+	    tencentcloud_clb_redirection
+	    tencentcloud_lb
+	    tencentcloud_alb_server_attachment
+	    tencentcloud_clb_target_group
+	    tencentcloud_clb_target_group_instance_attachment
+	    tencentcloud_clb_target_group_attachment
+	    tencentcloud_clb_log_set
+		tencentcloud_clb_log_topic
+		tencentcloud_clb_customized_config
+	    tencentcloud_clb_snat_ip
 
 Cloud Object Storage(COS)
-  Data Source
-    tencentcloud_cos_bucket_object
-    tencentcloud_cos_buckets
 
-  Resource
-    tencentcloud_cos_bucket
-    tencentcloud_cos_bucket_object
-    tencentcloud_cos_bucket_policy
-	tencentcloud_cos_bucket_domain_certificate_attachment
+	  Data Source
+	    tencentcloud_cos_bucket_object
+	    tencentcloud_cos_buckets
+
+	  Resource
+	    tencentcloud_cos_bucket
+	    tencentcloud_cos_bucket_object
+	    tencentcloud_cos_bucket_policy
+		tencentcloud_cos_bucket_domain_certificate_attachment
 
 Cloud Virtual Machine(CVM)
-  Data Source
-    tencentcloud_image
-    tencentcloud_images
-    tencentcloud_instance_types
-    tencentcloud_instances
-	tencentcloud_instances_set
-    tencentcloud_key_pairs
-    tencentcloud_eip
-    tencentcloud_eips
-    tencentcloud_placement_groups
-    tencentcloud_reserved_instance_configs
-    tencentcloud_reserved_instances
-	tencentcloud_cvm_instances_modification
 
-  Resource
-    tencentcloud_instance
-	tencentcloud_instance_set
-    tencentcloud_eip
-    tencentcloud_eip_association
-    tencentcloud_key_pair
-    tencentcloud_placement_group
-    tencentcloud_reserved_instance
-    tencentcloud_image
-	tencentcloud_cvm_hpc_cluster
-	tencentcloud_cvm_launch_template
+	  Data Source
+	    tencentcloud_image
+	    tencentcloud_images
+	    tencentcloud_instance_types
+	    tencentcloud_instances
+		tencentcloud_instances_set
+	    tencentcloud_key_pairs
+	    tencentcloud_eip
+	    tencentcloud_eips
+	    tencentcloud_placement_groups
+	    tencentcloud_reserved_instance_configs
+	    tencentcloud_reserved_instances
+		tencentcloud_cvm_instances_modification
+
+	  Resource
+	    tencentcloud_instance
+		tencentcloud_instance_set
+	    tencentcloud_eip
+	    tencentcloud_eip_association
+	    tencentcloud_key_pair
+	    tencentcloud_placement_group
+	    tencentcloud_reserved_instance
+	    tencentcloud_image
+		tencentcloud_cvm_hpc_cluster
+		tencentcloud_cvm_launch_template
 
 TDSQL-C MySQL(CynosDB)
-  Data Source
-	tencentcloud_cynosdb_clusters
-	tencentcloud_cynosdb_instances
-	tencentcloud_cynosdb_zone_config
-	tencentcloud_cynosdb_accounts
-	tencentcloud_cynosdb_cluster_instance_groups
-	tencentcloud_cynosdb_cluster_params
-	tencentcloud_cynosdb_param_templates
 
-  Resource
-    tencentcloud_cynosdb_cluster
-    tencentcloud_cynosdb_readonly_instance
-	tencentcloud_cynosdb_security_group
-	tencentcloud_cynosdb_audit_log_file
+	  Data Source
+		tencentcloud_cynosdb_clusters
+		tencentcloud_cynosdb_instances
+		tencentcloud_cynosdb_zone_config
+		tencentcloud_cynosdb_accounts
+		tencentcloud_cynosdb_cluster_instance_groups
+		tencentcloud_cynosdb_cluster_params
+		tencentcloud_cynosdb_param_templates
+
+	  Resource
+	    tencentcloud_cynosdb_cluster
+	    tencentcloud_cynosdb_readonly_instance
+		tencentcloud_cynosdb_security_group
+		tencentcloud_cynosdb_audit_log_file
 
 Direct Connect(DC)
-  Data Source
-    tencentcloud_dc_instances
-    tencentcloud_dcx_instances
 
-  Resource
-    tencentcloud_dcx
+	Data Source
+	  tencentcloud_dc_instances
+	  tencentcloud_dcx_instances
+
+	Resource
+	  tencentcloud_dcx
 
 Direct Connect Gateway(DCG)
-  Data Source
-    tencentcloud_dc_gateway_ccn_routes
-    tencentcloud_dc_gateway_instances
 
-  Resource
-    tencentcloud_dc_gateway
-    tencentcloud_dc_gateway_ccn_route
+	Data Source
+	  tencentcloud_dc_gateway_ccn_routes
+	  tencentcloud_dc_gateway_instances
+
+	Resource
+	  tencentcloud_dc_gateway
+	  tencentcloud_dc_gateway_ccn_route
 
 Domain
-  Data Source
-    tencentcloud_domains
+
+	Data Source
+	  tencentcloud_domains
 
 Elasticsearch Service(ES)
-  Data Source
-    tencentcloud_elasticsearch_instances
 
-  Resource
-    tencentcloud_elasticsearch_instance
+	Data Source
+	  tencentcloud_elasticsearch_instances
+
+	Resource
+	  tencentcloud_elasticsearch_instance
 
 Global Application Acceleration(GAAP)
-  Data Source
-    tencentcloud_gaap_certificates
-    tencentcloud_gaap_http_domains
-    tencentcloud_gaap_http_rules
-    tencentcloud_gaap_layer4_listeners
-    tencentcloud_gaap_layer7_listeners
-    tencentcloud_gaap_proxies
-    tencentcloud_gaap_realservers
-    tencentcloud_gaap_security_policies
-    tencentcloud_gaap_security_rules
-    tencentcloud_gaap_domain_error_pages
 
-  Resource
-    tencentcloud_gaap_proxy
-    tencentcloud_gaap_realserver
-    tencentcloud_gaap_layer4_listener
-    tencentcloud_gaap_layer7_listener
-    tencentcloud_gaap_http_domain
-    tencentcloud_gaap_http_rule
-    tencentcloud_gaap_certificate
-    tencentcloud_gaap_security_policy
-    tencentcloud_gaap_security_rule
-    tencentcloud_gaap_domain_error_page
+	Data Source
+	  tencentcloud_gaap_certificates
+	  tencentcloud_gaap_http_domains
+	  tencentcloud_gaap_http_rules
+	  tencentcloud_gaap_layer4_listeners
+	  tencentcloud_gaap_layer7_listeners
+	  tencentcloud_gaap_proxies
+	  tencentcloud_gaap_realservers
+	  tencentcloud_gaap_security_policies
+	  tencentcloud_gaap_security_rules
+	  tencentcloud_gaap_domain_error_pages
+
+	Resource
+	  tencentcloud_gaap_proxy
+	  tencentcloud_gaap_realserver
+	  tencentcloud_gaap_layer4_listener
+	  tencentcloud_gaap_layer7_listener
+	  tencentcloud_gaap_http_domain
+	  tencentcloud_gaap_http_rule
+	  tencentcloud_gaap_certificate
+	  tencentcloud_gaap_security_policy
+	  tencentcloud_gaap_security_rule
+	  tencentcloud_gaap_domain_error_page
 
 Key Management Service(KMS)
-  Data Source
-    tencentcloud_kms_keys
 
-  Resource
-    tencentcloud_kms_key
-    tencentcloud_kms_external_key
+	Data Source
+	  tencentcloud_kms_keys
+
+	Resource
+	  tencentcloud_kms_key
+	  tencentcloud_kms_external_key
 
 Tencent Kubernetes Engine(TKE)
-  Data Source
-    tencentcloud_kubernetes_clusters
-    tencentcloud_kubernetes_cluster_levels
-    tencentcloud_kubernetes_charts
-    tencentcloud_kubernetes_cluster_common_names
 
-  Resource
-    tencentcloud_kubernetes_cluster
-    tencentcloud_kubernetes_scale_worker
-    tencentcloud_kubernetes_cluster_attachment
-	tencentcloud_kubernetes_node_pool
-    tencentcloud_kubernetes_auth_attachment
-    tencentcloud_kubernetes_addon_attachment
-	tencentcloud_kubernetes_cluster_endpoint
+	  Data Source
+	    tencentcloud_kubernetes_clusters
+	    tencentcloud_kubernetes_cluster_levels
+	    tencentcloud_kubernetes_charts
+	    tencentcloud_kubernetes_cluster_common_names
+
+	  Resource
+	    tencentcloud_kubernetes_cluster
+	    tencentcloud_kubernetes_scale_worker
+	    tencentcloud_kubernetes_cluster_attachment
+		tencentcloud_kubernetes_node_pool
+	    tencentcloud_kubernetes_auth_attachment
+	    tencentcloud_kubernetes_addon_attachment
+		tencentcloud_kubernetes_cluster_endpoint
 
 TDMQ for Pulsar(tpulsar)
-  Resource
-    tencentcloud_tdmq_instance
-	tencentcloud_tdmq_namespace
-	tencentcloud_tdmq_topic
-	tencentcloud_tdmq_role
-	tencentcloud_tdmq_namespace_role_attachment
+
+	  Resource
+	    tencentcloud_tdmq_instance
+		tencentcloud_tdmq_namespace
+		tencentcloud_tdmq_topic
+		tencentcloud_tdmq_role
+		tencentcloud_tdmq_namespace_role_attachment
 
 TencentDB for MongoDB(mongodb)
-  Data Source
-    tencentcloud_mongodb_instances
-    tencentcloud_mongodb_zone_config
 
-  Resource
-    tencentcloud_mongodb_instance
-    tencentcloud_mongodb_sharding_instance
-    tencentcloud_mongodb_standby_instance
+	Data Source
+	  tencentcloud_mongodb_instances
+	  tencentcloud_mongodb_zone_config
+
+	Resource
+	  tencentcloud_mongodb_instance
+	  tencentcloud_mongodb_sharding_instance
+	  tencentcloud_mongodb_standby_instance
 
 TencentDB for MySQL(cdb)
-  Data Source
-    tencentcloud_mysql_backup_list
-    tencentcloud_mysql_instance
-    tencentcloud_mysql_parameter_list
-    tencentcloud_mysql_default_params
-    tencentcloud_mysql_zone_config
 
-  Resource
-    tencentcloud_mysql_instance
-    tencentcloud_mysql_readonly_instance
-    tencentcloud_mysql_account
-    tencentcloud_mysql_privilege
-    tencentcloud_mysql_account_privilege
-    tencentcloud_mysql_backup_policy
-	tencentcloud_mysql_time_window
-	tencentcloud_mysql_param_template
-	tencentcloud_mysql_deploy_group
-	tencentcloud_mysql_security_groups_attachment
-	tencentcloud_mysql_local_binlog_config
+	  Data Source
+	    tencentcloud_mysql_backup_list
+	    tencentcloud_mysql_instance
+	    tencentcloud_mysql_parameter_list
+	    tencentcloud_mysql_default_params
+	    tencentcloud_mysql_zone_config
+
+	  Resource
+	    tencentcloud_mysql_instance
+	    tencentcloud_mysql_readonly_instance
+	    tencentcloud_mysql_account
+	    tencentcloud_mysql_privilege
+	    tencentcloud_mysql_account_privilege
+	    tencentcloud_mysql_backup_policy
+		tencentcloud_mysql_time_window
+		tencentcloud_mysql_param_template
+		tencentcloud_mysql_deploy_group
+		tencentcloud_mysql_security_groups_attachment
+		tencentcloud_mysql_local_binlog_config
 
 Cloud Monitor(Monitor)
-  Data Source
-	tencentcloud_monitor_policy_conditions
-	tencentcloud_monitor_data
-	tencentcloud_monitor_product_event
-	tencentcloud_monitor_binding_objects
-	tencentcloud_monitor_policy_groups
-	tencentcloud_monitor_product_namespace
-	tencentcloud_monitor_alarm_notices
 
-  Resource
-    tencentcloud_monitor_policy_group
-    tencentcloud_monitor_binding_object
-	tencentcloud_monitor_policy_binding_object
-    tencentcloud_monitor_binding_receiver
-	tencentcloud_monitor_alarm_policy
-	tencentcloud_monitor_tmp_tke_template
-	tencentcloud_monitor_tmp_tke_template_attachment
-	tencentcloud_monitor_tmp_tke_alert_policy
-	tencentcloud_monitor_tmp_tke_config
-	tencentcloud_monitor_alarm_notice
-	tencentcloud_monitor_tmp_tke_record_rule_yaml
-	tencentcloud_monitor_tmp_tke_global_notification
-	tencentcloud_monitor_tmp_tke_cluster_agent
+	  Data Source
+		tencentcloud_monitor_policy_conditions
+		tencentcloud_monitor_data
+		tencentcloud_monitor_product_event
+		tencentcloud_monitor_binding_objects
+		tencentcloud_monitor_policy_groups
+		tencentcloud_monitor_product_namespace
+		tencentcloud_monitor_alarm_notices
+
+	  Resource
+	    tencentcloud_monitor_policy_group
+	    tencentcloud_monitor_binding_object
+		tencentcloud_monitor_policy_binding_object
+	    tencentcloud_monitor_binding_receiver
+		tencentcloud_monitor_alarm_policy
+		tencentcloud_monitor_tmp_tke_template
+		tencentcloud_monitor_tmp_tke_template_attachment
+		tencentcloud_monitor_tmp_tke_alert_policy
+		tencentcloud_monitor_tmp_tke_config
+		tencentcloud_monitor_alarm_notice
+		tencentcloud_monitor_tmp_tke_record_rule_yaml
+		tencentcloud_monitor_tmp_tke_global_notification
+		tencentcloud_monitor_tmp_tke_cluster_agent
 
 Managed Service for Prometheus(TMP)
-  Resource
-  	tencentcloud_monitor_tmp_instance
-	tencentcloud_monitor_tmp_alert_rule
-	tencentcloud_monitor_tmp_exporter_integration
-	tencentcloud_monitor_tmp_cvm_agent
-	tencentcloud_monitor_tmp_scrape_job
-	tencentcloud_monitor_tmp_recording_rule
+
+	  Resource
+	  	tencentcloud_monitor_tmp_instance
+		tencentcloud_monitor_tmp_alert_rule
+		tencentcloud_monitor_tmp_exporter_integration
+		tencentcloud_monitor_tmp_cvm_agent
+		tencentcloud_monitor_tmp_scrape_job
+		tencentcloud_monitor_tmp_recording_rule
 
 TencentCloud Managed Service for Grafana(TCMG)
-  Resource
-	tencentcloud_monitor_grafana_instance
-	tencentcloud_monitor_grafana_integration
-	tencentcloud_monitor_grafana_notification_channel
-	tencentcloud_monitor_grafana_plugin
-	tencentcloud_monitor_grafana_sso_account
+
+	  Resource
+		tencentcloud_monitor_grafana_instance
+		tencentcloud_monitor_grafana_integration
+		tencentcloud_monitor_grafana_notification_channel
+		tencentcloud_monitor_grafana_plugin
+		tencentcloud_monitor_grafana_sso_account
 
 TencentDB for PostgreSQL(PostgreSQL)
-  Data Source
-	tencentcloud_postgresql_instances
-	tencentcloud_postgresql_specinfos
-	tencentcloud_postgresql_xlogs
 
-  Resource
-	tencentcloud_postgresql_instance
-	tencentcloud_postgresql_readonly_instance
-	tencentcloud_postgresql_readonly_group
-	tencentcloud_postgresql_readonly_attachment
+	  Data Source
+		tencentcloud_postgresql_instances
+		tencentcloud_postgresql_specinfos
+		tencentcloud_postgresql_xlogs
+
+	  Resource
+		tencentcloud_postgresql_instance
+		tencentcloud_postgresql_readonly_instance
+		tencentcloud_postgresql_readonly_group
+		tencentcloud_postgresql_readonly_attachment
 
 TencentDB for Redis(crs)
-  Data Source
-    tencentcloud_redis_zone_config
-    tencentcloud_redis_instances
 
-  Resource
-    tencentcloud_redis_instance
-    tencentcloud_redis_backup_config
-    tencentcloud_redis_param_template
+	Data Source
+	  tencentcloud_redis_zone_config
+	  tencentcloud_redis_instances
+
+	Resource
+	  tencentcloud_redis_instance
+	  tencentcloud_redis_backup_config
+	  tencentcloud_redis_param_template
 
 Serverless Cloud Function(SCF)
-  Data Source
-    tencentcloud_scf_functions
-    tencentcloud_scf_logs
-    tencentcloud_scf_namespaces
 
-  Resource
-    tencentcloud_scf_function
-    tencentcloud_scf_namespace
-	tencentcloud_scf_layer
+	  Data Source
+	    tencentcloud_scf_functions
+	    tencentcloud_scf_logs
+	    tencentcloud_scf_namespaces
+
+	  Resource
+	    tencentcloud_scf_function
+	    tencentcloud_scf_namespace
+		tencentcloud_scf_layer
 
 SQLServer
-  Data Source
-    tencentcloud_sqlserver_zone_config
-	tencentcloud_sqlserver_instances
-    tencentcloud_sqlserver_dbs
-	tencentcloud_sqlserver_accounts
-	tencentcloud_sqlserver_account_db_attachments
-	tencentcloud_sqlserver_backups
-  	tencentcloud_sqlserver_readonly_groups
-	tencentcloud_sqlserver_publish_subscribes
-	tencentcloud_sqlserver_basic_instances
 
-  Resource
-	tencentcloud_sqlserver_instance
-	tencentcloud_sqlserver_readonly_instance
-    tencentcloud_sqlserver_db
-	tencentcloud_sqlserver_account
-	tencentcloud_sqlserver_account_db_attachment
-	tencentcloud_sqlserver_publish_subscribe
-	tencentcloud_sqlserver_basic_instance
-	tencentcloud_sqlserver_migration
+	  Data Source
+	    tencentcloud_sqlserver_zone_config
+		tencentcloud_sqlserver_instances
+	    tencentcloud_sqlserver_dbs
+		tencentcloud_sqlserver_accounts
+		tencentcloud_sqlserver_account_db_attachments
+		tencentcloud_sqlserver_backups
+	  	tencentcloud_sqlserver_readonly_groups
+		tencentcloud_sqlserver_publish_subscribes
+		tencentcloud_sqlserver_basic_instances
+
+	  Resource
+		tencentcloud_sqlserver_instance
+		tencentcloud_sqlserver_readonly_instance
+	    tencentcloud_sqlserver_db
+		tencentcloud_sqlserver_account
+		tencentcloud_sqlserver_account_db_attachment
+		tencentcloud_sqlserver_publish_subscribe
+		tencentcloud_sqlserver_basic_instance
+		tencentcloud_sqlserver_migration
 
 SSL Certificates
-  Data Source
-    tencentcloud_ssl_certificates
 
-  Resource
-    tencentcloud_ssl_certificate
-    tencentcloud_ssl_pay_certificate
-	tencentcloud_ssl_free_certificate
+	  Data Source
+	    tencentcloud_ssl_certificates
+
+	  Resource
+	    tencentcloud_ssl_certificate
+	    tencentcloud_ssl_pay_certificate
+		tencentcloud_ssl_free_certificate
 
 Secrets Manager(SSM)
-  Data Source
-    tencentcloud_ssm_secrets
-    tencentcloud_ssm_secret_versions
 
-  Resource
-    tencentcloud_ssm_secret
-    tencentcloud_ssm_secret_version
+	Data Source
+	  tencentcloud_ssm_secrets
+	  tencentcloud_ssm_secret_versions
+
+	Resource
+	  tencentcloud_ssm_secret
+	  tencentcloud_ssm_secret_version
 
 TcaplusDB
-  Data Source
-    tencentcloud_tcaplus_clusters
-    tencentcloud_tcaplus_idls
-    tencentcloud_tcaplus_tables
-    tencentcloud_tcaplus_tablegroups
 
-  Resource
-    tencentcloud_tcaplus_cluster
-    tencentcloud_tcaplus_tablegroup
-    tencentcloud_tcaplus_idl
-    tencentcloud_tcaplus_table
+	Data Source
+	  tencentcloud_tcaplus_clusters
+	  tencentcloud_tcaplus_idls
+	  tencentcloud_tcaplus_tables
+	  tencentcloud_tcaplus_tablegroups
+
+	Resource
+	  tencentcloud_tcaplus_cluster
+	  tencentcloud_tcaplus_tablegroup
+	  tencentcloud_tcaplus_idl
+	  tencentcloud_tcaplus_table
 
 Tencent Container Registry(TCR)
-  Data Source
-	tencentcloud_tcr_instances
-	tencentcloud_tcr_namespaces
-	tencentcloud_tcr_repositories
-	tencentcloud_tcr_tokens
-	tencentcloud_tcr_vpc_attachments
 
-  Resource
-	tencentcloud_tcr_instance
-	tencentcloud_tcr_namespace
-	tencentcloud_tcr_repository
-	tencentcloud_tcr_token
-	tencentcloud_tcr_vpc_attachment
+	  Data Source
+		tencentcloud_tcr_instances
+		tencentcloud_tcr_namespaces
+		tencentcloud_tcr_repositories
+		tencentcloud_tcr_tokens
+		tencentcloud_tcr_vpc_attachments
+
+	  Resource
+		tencentcloud_tcr_instance
+		tencentcloud_tcr_namespace
+		tencentcloud_tcr_repository
+		tencentcloud_tcr_token
+		tencentcloud_tcr_vpc_attachment
 
 Video on Demand(VOD)
-  Data Source
-	tencentcloud_vod_adaptive_dynamic_streaming_templates
-	tencentcloud_vod_snapshot_by_time_offset_templates
-	tencentcloud_vod_super_player_configs
-	tencentcloud_vod_image_sprite_templates
-	tencentcloud_vod_procedure_templates
+
+	  Data Source
+		tencentcloud_vod_adaptive_dynamic_streaming_templates
+		tencentcloud_vod_snapshot_by_time_offset_templates
+		tencentcloud_vod_super_player_configs
+		tencentcloud_vod_image_sprite_templates
+		tencentcloud_vod_procedure_templates
 
 
-  Resource
-    tencentcloud_vod_adaptive_dynamic_streaming_template
-    tencentcloud_vod_procedure_template
-    tencentcloud_vod_snapshot_by_time_offset_template
-    tencentcloud_vod_image_sprite_template
-    tencentcloud_vod_super_player_config
-	tencentcloud_vod_sub_application
+	  Resource
+	    tencentcloud_vod_adaptive_dynamic_streaming_template
+	    tencentcloud_vod_procedure_template
+	    tencentcloud_vod_snapshot_by_time_offset_template
+	    tencentcloud_vod_image_sprite_template
+	    tencentcloud_vod_super_player_config
+		tencentcloud_vod_sub_application
 
 Virtual Private Cloud(VPC)
-  Data Source
-    tencentcloud_route_table
-    tencentcloud_security_group
-    tencentcloud_security_groups
-	tencentcloud_address_templates
-	tencentcloud_address_template_groups
-	tencentcloud_protocol_templates
-	tencentcloud_protocol_template_groups
-    tencentcloud_subnet
-    tencentcloud_vpc
-    tencentcloud_vpc_acls
-    tencentcloud_vpc_instances
-    tencentcloud_vpc_route_tables
-    tencentcloud_vpc_subnets
-    tencentcloud_dnats
-    tencentcloud_enis
-    tencentcloud_ha_vip_eip_attachments
-    tencentcloud_ha_vips
-    tencentcloud_nat_gateways
-    tencentcloud_nat_gateway_snats
-    tencentcloud_nats
 
-  Resource
-    tencentcloud_eni
-    tencentcloud_eni_attachment
-    tencentcloud_vpc
-	tencentcloud_vpc_acl
-	tencentcloud_vpc_acl_attachment
-    tencentcloud_subnet
-    tencentcloud_security_group
-    tencentcloud_security_group_rule
-    tencentcloud_security_group_rule_set
-    tencentcloud_security_group_lite_rule
-	tencentcloud_address_template
-	tencentcloud_address_template_group
-	tencentcloud_protocol_template
-	tencentcloud_protocol_template_group
-    tencentcloud_route_table
-    tencentcloud_route_entry
-    tencentcloud_route_table_entry
-    tencentcloud_dnat
-    tencentcloud_nat_gateway
-    tencentcloud_nat_gateway_snat
-    tencentcloud_ha_vip
-    tencentcloud_ha_vip_eip_attachment
-	tencentcloud_vpc_bandwidth_package
-	tencentcloud_vpc_bandwidth_package_attachment
+	  Data Source
+	    tencentcloud_route_table
+	    tencentcloud_security_group
+	    tencentcloud_security_groups
+		tencentcloud_address_templates
+		tencentcloud_address_template_groups
+		tencentcloud_protocol_templates
+		tencentcloud_protocol_template_groups
+	    tencentcloud_subnet
+	    tencentcloud_vpc
+	    tencentcloud_vpc_acls
+	    tencentcloud_vpc_instances
+	    tencentcloud_vpc_route_tables
+	    tencentcloud_vpc_subnets
+	    tencentcloud_dnats
+	    tencentcloud_enis
+	    tencentcloud_ha_vip_eip_attachments
+	    tencentcloud_ha_vips
+	    tencentcloud_nat_gateways
+	    tencentcloud_nat_gateway_snats
+	    tencentcloud_nats
+
+	  Resource
+	    tencentcloud_eni
+	    tencentcloud_eni_attachment
+	    tencentcloud_vpc
+		tencentcloud_vpc_acl
+		tencentcloud_vpc_acl_attachment
+	    tencentcloud_subnet
+	    tencentcloud_security_group
+	    tencentcloud_security_group_rule
+	    tencentcloud_security_group_rule_set
+	    tencentcloud_security_group_lite_rule
+		tencentcloud_address_template
+		tencentcloud_address_template_group
+		tencentcloud_protocol_template
+		tencentcloud_protocol_template_group
+	    tencentcloud_route_table
+	    tencentcloud_route_entry
+	    tencentcloud_route_table_entry
+	    tencentcloud_dnat
+	    tencentcloud_nat_gateway
+	    tencentcloud_nat_gateway_snat
+	    tencentcloud_ha_vip
+	    tencentcloud_ha_vip_eip_attachment
+		tencentcloud_vpc_bandwidth_package
+		tencentcloud_vpc_bandwidth_package_attachment
 
 Private Link(PLS)
-  Resource
-	tencentcloud_vpc_end_point_service
-	tencentcloud_vpc_end_point
-	tencentcloud_vpc_end_point_service_white_list
+
+	  Resource
+		tencentcloud_vpc_end_point_service
+		tencentcloud_vpc_end_point
+		tencentcloud_vpc_end_point_service_white_list
 
 Flow Logs(FL)
-  Resource
- 	tencentcloud_vpc_flow_log
+
+	 Resource
+		tencentcloud_vpc_flow_log
 
 VPN Connections(VPN)
-  Data Source
-    tencentcloud_vpn_connections
-    tencentcloud_vpn_customer_gateways
-    tencentcloud_vpn_gateways
-    tencentcloud_vpn_gateway_routes
 
-  Resource
-    tencentcloud_vpn_customer_gateway
-    tencentcloud_vpn_gateway
-    tencentcloud_vpn_gateway_route
-    tencentcloud_vpn_connection
-	tencentcloud_vpn_ssl_server
-	tencentcloud_vpn_ssl_client
+	  Data Source
+	    tencentcloud_vpn_connections
+	    tencentcloud_vpn_customer_gateways
+	    tencentcloud_vpn_gateways
+	    tencentcloud_vpn_gateway_routes
+
+	  Resource
+	    tencentcloud_vpn_customer_gateway
+	    tencentcloud_vpn_gateway
+	    tencentcloud_vpn_gateway_route
+	    tencentcloud_vpn_connection
+		tencentcloud_vpn_ssl_server
+		tencentcloud_vpn_ssl_client
 
 MapReduce(EMR)
-  Data Source
-    tencentcloud_emr
-    tencentcloud_emr_nodes
 
-  Resource
-    tencentcloud_emr_cluster
+	Data Source
+	  tencentcloud_emr
+	  tencentcloud_emr_nodes
+
+	Resource
+	  tencentcloud_emr_cluster
 
 DNSPOD
-  Resource
-    tencentcloud_dnspod_domain_instance
-    tencentcloud_dnspod_record
-  Data Source
-    tencentcloud_dnspod_records
+
+	Resource
+	  tencentcloud_dnspod_domain_instance
+	  tencentcloud_dnspod_record
+	Data Source
+	  tencentcloud_dnspod_records
 
 PrivateDNS
-  Resource
-    tencentcloud_private_dns_zone
-	tencentcloud_private_dns_record
+
+	  Resource
+	    tencentcloud_private_dns_zone
+		tencentcloud_private_dns_record
 
 Cloud Log Service(CLS)
-  Resource
-	tencentcloud_cls_logset
-	tencentcloud_cls_topic
-	tencentcloud_cls_config
-	tencentcloud_cls_config_extra
-	tencentcloud_cls_config_attachment
-	tencentcloud_cls_machine_group
-	tencentcloud_cls_cos_shipper
-	tencentcloud_cls_index
+
+	  Resource
+		tencentcloud_cls_logset
+		tencentcloud_cls_topic
+		tencentcloud_cls_config
+		tencentcloud_cls_config_extra
+		tencentcloud_cls_config_attachment
+		tencentcloud_cls_machine_group
+		tencentcloud_cls_cos_shipper
+		tencentcloud_cls_index
 
 TencentCloud Lighthouse(Lighthouse)
-  Resource
-	tencentcloud_lighthouse_instance
+
+	  Resource
+		tencentcloud_lighthouse_instance
 
 TencentCloud Elastic Microservice(TEM)
-  Resource
-	tencentcloud_tem_environment
-	tencentcloud_tem_application
-	tencentcloud_tem_workload
-	tencentcloud_tem_app_config
-	tencentcloud_tem_log_config
-	tencentcloud_tem_scale_rule
-	tencentcloud_tem_gateway
-	tencentcloud_tem_application_service
+
+	  Resource
+		tencentcloud_tem_environment
+		tencentcloud_tem_application
+		tencentcloud_tem_workload
+		tencentcloud_tem_app_config
+		tencentcloud_tem_log_config
+		tencentcloud_tem_scale_rule
+		tencentcloud_tem_gateway
+		tencentcloud_tem_application_service
 
 TencentCloud EdgeOne(TEO)
-  Data Source
-	tencentcloud_teo_zone_available_plans
-	tencentcloud_teo_bot_managed_rules
-	tencentcloud_teo_bot_portrait_rules
-	tencentcloud_teo_rule_engine_settings
-	tencentcloud_teo_security_policy_regions
-	tencentcloud_teo_waf_rule_groups
-	tencentcloud_teo_zone_ddos_policy
 
-  Resource
-	tencentcloud_teo_zone
-	tencentcloud_teo_zone_setting
-	tencentcloud_teo_dns_record
-	tencentcloud_teo_dns_sec
-	tencentcloud_teo_load_balancing
-	tencentcloud_teo_origin_group
-	tencentcloud_teo_rule_engine
-	tencentcloud_teo_rule_engine_priority
-	tencentcloud_teo_application_proxy
-	tencentcloud_teo_application_proxy_rule
-	tencentcloud_teo_ddos_policy
-	tencentcloud_teo_security_policy
-	tencentcloud_teo_custom_error_page
+	  Data Source
+		tencentcloud_teo_zone_available_plans
+		tencentcloud_teo_bot_managed_rules
+		tencentcloud_teo_bot_portrait_rules
+		tencentcloud_teo_rule_engine_settings
+		tencentcloud_teo_security_policy_regions
+		tencentcloud_teo_waf_rule_groups
+		tencentcloud_teo_zone_ddos_policy
+
+	  Resource
+		tencentcloud_teo_zone
+		tencentcloud_teo_zone_setting
+		tencentcloud_teo_dns_record
+		tencentcloud_teo_dns_sec
+		tencentcloud_teo_load_balancing
+		tencentcloud_teo_origin_group
+		tencentcloud_teo_rule_engine
+		tencentcloud_teo_rule_engine_priority
+		tencentcloud_teo_application_proxy
+		tencentcloud_teo_application_proxy_rule
+		tencentcloud_teo_ddos_policy
+		tencentcloud_teo_security_policy
+		tencentcloud_teo_custom_error_page
 
 TencentCloud ServiceMesh(TCM)
-  Resource
-	tencentcloud_tcm_mesh
-	tencentcloud_tcm_cluster_attachment
-	tencentcloud_tcm_prometheus_attachment
-	tencentcloud_tcm_tracing_config
-	tencentcloud_tcm_access_log_config
+
+	  Resource
+		tencentcloud_tcm_mesh
+		tencentcloud_tcm_cluster_attachment
+		tencentcloud_tcm_prometheus_attachment
+		tencentcloud_tcm_tracing_config
+		tencentcloud_tcm_access_log_config
 
 Simple Email Service(SES)
-  Resource
-	tencentcloud_ses_domain
-	tencentcloud_ses_template
-	tencentcloud_ses_email_address
+
+	  Resource
+		tencentcloud_ses_domain
+		tencentcloud_ses_template
+		tencentcloud_ses_email_address
 
 Security Token Service(STS)
-  Data Source
-	tencentcloud_sts_caller_identity
+
+	  Data Source
+		tencentcloud_sts_caller_identity
 
 TDSQL for MySQL(DCDB)
-  Data Source
-	tencentcloud_dcdb_instances
-	tencentcloud_dcdb_accounts
-	tencentcloud_dcdb_databases
-	tencentcloud_dcdb_parameters
-	tencentcloud_dcdb_shards
-	tencentcloud_dcdb_security_groups
-	tencentcloud_dcdb_database_objects
-	tencentcloud_dcdb_database_tables
 
-  Resource
-	tencentcloud_dcdb_account
-	tencentcloud_dcdb_hourdb_instance
-	tencentcloud_dcdb_security_group_attachment
-	tencentcloud_dcdb_account_privileges
-	tencentcloud_dcdb_db_parameters
+	  Data Source
+		tencentcloud_dcdb_instances
+		tencentcloud_dcdb_accounts
+		tencentcloud_dcdb_databases
+		tencentcloud_dcdb_parameters
+		tencentcloud_dcdb_shards
+		tencentcloud_dcdb_security_groups
+		tencentcloud_dcdb_database_objects
+		tencentcloud_dcdb_database_tables
+
+	  Resource
+		tencentcloud_dcdb_account
+		tencentcloud_dcdb_hourdb_instance
+		tencentcloud_dcdb_security_group_attachment
+		tencentcloud_dcdb_account_privileges
+		tencentcloud_dcdb_db_parameters
 
 Short Message Service(SMS)
-  Resource
-	tencentcloud_sms_sign
-	tencentcloud_sms_template
+
+	  Resource
+		tencentcloud_sms_sign
+		tencentcloud_sms_template
 
 Cloud Automated Testing(CAT)
-  Data Source
-	tencentcloud_cat_probe_data
-	tencentcloud_cat_node
 
-  Resource
- 	tencentcloud_cat_task_set
+	  Data Source
+		tencentcloud_cat_probe_data
+		tencentcloud_cat_node
+
+	  Resource
+	 	tencentcloud_cat_task_set
 
 TencentDB for MariaDB(MariaDB)
-  Data Source
-    tencentcloud_mariadb_db_instances
-	tencentcloud_mariadb_accounts
-	tencentcloud_mariadb_security_groups
-  Resource
-    tencentcloud_mariadb_dedicatedcluster_db_instance
-    tencentcloud_mariadb_hour_db_instance
-	tencentcloud_mariadb_account
-	tencentcloud_mariadb_parameters
-	tencentcloud_mariadb_log_file_retention_period
-	tencentcloud_mariadb_security_groups
+
+	  Data Source
+	    tencentcloud_mariadb_db_instances
+		tencentcloud_mariadb_accounts
+		tencentcloud_mariadb_security_groups
+	  Resource
+	    tencentcloud_mariadb_dedicatedcluster_db_instance
+	    tencentcloud_mariadb_hour_db_instance
+		tencentcloud_mariadb_account
+		tencentcloud_mariadb_parameters
+		tencentcloud_mariadb_log_file_retention_period
+		tencentcloud_mariadb_security_groups
 
 Real User Monitoring(RUM)
-  Data Source
-	tencentcloud_rum_project
-	tencentcloud_rum_offline_log_config
-	tencentcloud_rum_whitelist
-	tencentcloud_rum_taw_instance
-  Resource
-	tencentcloud_rum_project
-	tencentcloud_rum_taw_instance
-	tencentcloud_rum_whitelist
-	tencentcloud_rum_offline_log_config_attachment
+
+	  Data Source
+		tencentcloud_rum_project
+		tencentcloud_rum_offline_log_config
+		tencentcloud_rum_whitelist
+		tencentcloud_rum_taw_instance
+	  Resource
+		tencentcloud_rum_project
+		tencentcloud_rum_taw_instance
+		tencentcloud_rum_whitelist
+		tencentcloud_rum_offline_log_config_attachment
 
 Cloud Streaming Services(CSS)
-  Resource
-    tencentcloud_css_watermark
-	tencentcloud_css_pull_stream_task
-	tencentcloud_css_live_transcode_template
-	tencentcloud_css_live_transcode_rule_attachment
+
+	  Resource
+	    tencentcloud_css_watermark
+		tencentcloud_css_pull_stream_task
+		tencentcloud_css_live_transcode_template
+		tencentcloud_css_live_transcode_rule_attachment
 
 Performance Testing Service(PTS)
-  Resource
-	tencentcloud_pts_project
-	tencentcloud_pts_alert_channel
-	tencentcloud_pts_scenario
-	tencentcloud_pts_file
-	tencentcloud_pts_job
-	tencentcloud_pts_cron_job
+
+	  Resource
+		tencentcloud_pts_project
+		tencentcloud_pts_alert_channel
+		tencentcloud_pts_scenario
+		tencentcloud_pts_file
+		tencentcloud_pts_job
+		tencentcloud_pts_cron_job
 
 TencentCloud Automation Tools(TAT)
-  Data Source
-	tencentcloud_tat_command
-	tencentcloud_tat_invoker
-  Resource
-	tencentcloud_tat_command
-	tencentcloud_tat_invoker
+
+	  Data Source
+		tencentcloud_tat_command
+		tencentcloud_tat_invoker
+	  Resource
+		tencentcloud_tat_command
+		tencentcloud_tat_invoker
 
 Tencent Cloud Organization (TCO)
-  Resource
-	tencentcloud_organization_org_node
-	tencentcloud_organization_org_member
-	tencentcloud_organization_policy_sub_account_attachment
+
+	  Resource
+		tencentcloud_organization_org_node
+		tencentcloud_organization_org_member
+		tencentcloud_organization_policy_sub_account_attachment
 
 TDSQL-C for PostgreSQL(TDCPG)
-  Data Source
-	tencentcloud_tdcpg_clusters
-	tencentcloud_tdcpg_instances
-  Resource
-	tencentcloud_tdcpg_cluster
-	tencentcloud_tdcpg_instance
+
+	  Data Source
+		tencentcloud_tdcpg_clusters
+		tencentcloud_tdcpg_instances
+	  Resource
+		tencentcloud_tdcpg_cluster
+		tencentcloud_tdcpg_instance
 
 TencentDB for DBbrain(dbbrain)
-  Data Source
-	tencentcloud_dbbrain_sql_filters
-	tencentcloud_dbbrain_security_audit_log_export_tasks
-  Resource
-	tencentcloud_dbbrain_sql_filter
-	tencentcloud_dbbrain_security_audit_log_export_task
+
+	  Data Source
+		tencentcloud_dbbrain_sql_filters
+		tencentcloud_dbbrain_security_audit_log_export_tasks
+	  Resource
+		tencentcloud_dbbrain_sql_filter
+		tencentcloud_dbbrain_security_audit_log_export_task
 
 Data Transmission Service(DTS)
-  Data Source
-	tencentcloud_dts_sync_jobs
-	tencentcloud_dts_migrate_jobs
-	tencentcloud_dts_compare_tasks
 
-  Resource
-	tencentcloud_dts_sync_job
-	tencentcloud_dts_compare_task
-	tencentcloud_dts_migrate_service
-	tencentcloud_dts_migrate_job
-	tencentcloud_dts_migrate_job_start_operation
+	  Data Source
+		tencentcloud_dts_sync_jobs
+		tencentcloud_dts_migrate_jobs
+		tencentcloud_dts_compare_tasks
+
+	  Resource
+		tencentcloud_dts_sync_job
+		tencentcloud_dts_compare_task
+		tencentcloud_dts_migrate_service
+		tencentcloud_dts_migrate_job
+		tencentcloud_dts_migrate_job_start_operation
 
 TDMQ for RocketMQ(trocket)
-  Data Source
-	tencentcloud_tdmq_rocketmq_cluster
-	tencentcloud_tdmq_rocketmq_namespace
-	tencentcloud_tdmq_rocketmq_topic
-	tencentcloud_tdmq_rocketmq_role
-	tencentcloud_tdmq_rocketmq_group
 
-  Resource
-	tencentcloud_tdmq_rocketmq_cluster
-	tencentcloud_tdmq_rocketmq_namespace
-	tencentcloud_tdmq_rocketmq_role
-	tencentcloud_tdmq_rocketmq_topic
-	tencentcloud_tdmq_rocketmq_group
-	tencentcloud_tdmq_rocketmq_environment_role
+	  Data Source
+		tencentcloud_tdmq_rocketmq_cluster
+		tencentcloud_tdmq_rocketmq_namespace
+		tencentcloud_tdmq_rocketmq_topic
+		tencentcloud_tdmq_rocketmq_role
+		tencentcloud_tdmq_rocketmq_group
+
+	  Resource
+		tencentcloud_tdmq_rocketmq_cluster
+		tencentcloud_tdmq_rocketmq_namespace
+		tencentcloud_tdmq_rocketmq_role
+		tencentcloud_tdmq_rocketmq_topic
+		tencentcloud_tdmq_rocketmq_group
+		tencentcloud_tdmq_rocketmq_environment_role
 
 Cloud Infinite(CI)
-  Resource
-	tencentcloud_ci_bucket_attachment
-	tencentcloud_ci_bucket_pic_style
-	tencentcloud_ci_hot_link
-	tencentcloud_ci_media_snapshot_template
-	tencentcloud_ci_media_transcode_template
-	tencentcloud_ci_media_animation_template
-	tencentcloud_ci_media_concat_template
-	tencentcloud_ci_media_video_process_template
-	tencentcloud_ci_media_video_montage_template
-	tencentcloud_ci_media_voice_separate_template
-	tencentcloud_ci_media_super_resolution_template
-	tencentcloud_ci_media_pic_process_template
-	tencentcloud_ci_media_watermark_template
-	tencentcloud_ci_media_tts_template
-	tencentcloud_ci_media_transcode_pro_template
-	tencentcloud_ci_media_smart_cover_template
-	tencentcloud_ci_media_speech_recognition_template
-	tencentcloud_ci_guetzli
-	tencentcloud_ci_original_image_protection
+
+	  Resource
+		tencentcloud_ci_bucket_attachment
+		tencentcloud_ci_bucket_pic_style
+		tencentcloud_ci_hot_link
+		tencentcloud_ci_media_snapshot_template
+		tencentcloud_ci_media_transcode_template
+		tencentcloud_ci_media_animation_template
+		tencentcloud_ci_media_concat_template
+		tencentcloud_ci_media_video_process_template
+		tencentcloud_ci_media_video_montage_template
+		tencentcloud_ci_media_voice_separate_template
+		tencentcloud_ci_media_super_resolution_template
+		tencentcloud_ci_media_pic_process_template
+		tencentcloud_ci_media_watermark_template
+		tencentcloud_ci_media_tts_template
+		tencentcloud_ci_media_transcode_pro_template
+		tencentcloud_ci_media_smart_cover_template
+		tencentcloud_ci_media_speech_recognition_template
+		tencentcloud_ci_guetzli
+		tencentcloud_ci_original_image_protection
 
 TDMQ for CMQ
-  Data Source
-    tencentcloud_tcmq_queue
-	tencentcloud_tcmq_topic
-	tencentcloud_tcmq_subscribe
 
-  Resource
-    tencentcloud_tcmq_queue
-	tencentcloud_tcmq_topic
-	tencentcloud_tcmq_subscribe
+	  Data Source
+	    tencentcloud_tcmq_queue
+		tencentcloud_tcmq_topic
+		tencentcloud_tcmq_subscribe
+
+	  Resource
+	    tencentcloud_tcmq_queue
+		tencentcloud_tcmq_topic
+		tencentcloud_tcmq_subscribe
 
 Tencent Service Framework(TSF)
-  Resource
-	tencentcloud_tsf_microservice
-	tencentcloud_tsf_application_config
 
+	  Resource
+		tencentcloud_tsf_microservice
+		tencentcloud_tsf_application_config
 */
 package tencentcloud
 

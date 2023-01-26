@@ -5,7 +5,7 @@ Use this data source to get container clusters in the current region. By default
 
 ~> **NOTE:** It has been deprecated and replaced by tencentcloud_kubernetes_clusters.
 
-Example Usage
+# Example Usage
 
 ```hcl
 data "tencentcloud_container_clusters" "foo" {

@@ -1,17 +1,19 @@
 /*
 Use this data source to query the list of SQL Server accounts.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_accounts" "name" {
-  instance_id           = "mssql-3cdq7kx5"
-  name = "myaccount"
-}
 
-data "tencentcloud_sqlserver_accounts" "foo" {
-  instance_id           = "mssql-3cdq7kx5"
-}
+	data "tencentcloud_sqlserver_accounts" "name" {
+	  instance_id           = "mssql-3cdq7kx5"
+	  name = "myaccount"
+	}
+
+	data "tencentcloud_sqlserver_accounts" "foo" {
+	  instance_id           = "mssql-3cdq7kx5"
+	}
+
 ```
 */
 package tencentcloud

@@ -1,18 +1,20 @@
 /*
 Provides a SQL Server DB resource belongs to SQL Server instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_db" "example" {
-  instance_id = tencentcloud_sqlserver_instance.example.id
-  name = "example"
-  charset = "Chinese_PRC_BIN"
-  remark = "test-remark"
-}
+
+	resource "tencentcloud_sqlserver_db" "example" {
+	  instance_id = tencentcloud_sqlserver_instance.example.id
+	  name = "example"
+	  charset = "Chinese_PRC_BIN"
+	  remark = "test-remark"
+	}
+
 ```
 
-Import
+# Import
 
 SQL Server DB can be imported using the id, e.g.
 

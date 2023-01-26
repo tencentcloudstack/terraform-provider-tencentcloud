@@ -1,21 +1,23 @@
 /*
 Provides a resource to create a apiGateway plugin
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_plugin" "plugin" {
-  plugin_name = "terraform-plugin-test"
-  plugin_type = "IPControl"
-  plugin_data = jsonencode({
-    "type" : "white_list",
-    "blocks" : "1.1.1.1\n2.2.2.2",
-  })
-  description = "terraform test"
-}
+
+	resource "tencentcloud_api_gateway_plugin" "plugin" {
+	  plugin_name = "terraform-plugin-test"
+	  plugin_type = "IPControl"
+	  plugin_data = jsonencode({
+	    "type" : "white_list",
+	    "blocks" : "1.1.1.1\n2.2.2.2",
+	  })
+	  description = "terraform test"
+	}
+
 ```
 
-Import
+# Import
 
 apiGateway plugin can be imported using the id, e.g.
 

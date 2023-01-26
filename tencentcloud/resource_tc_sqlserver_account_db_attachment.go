@@ -1,18 +1,20 @@
 /*
 Use this resource to create SQL Server account DB attachment
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_account_db_attachment" "foo" {
-  instance_id = "mssql-3cdq7kx5"
-  account_name = tencentcloud_sqlserver_account.example.name
-  db_name = tencentcloud_sqlserver_db.example.name
-  privilege = "ReadWrite"
-}
+
+	resource "tencentcloud_sqlserver_account_db_attachment" "foo" {
+	  instance_id = "mssql-3cdq7kx5"
+	  account_name = tencentcloud_sqlserver_account.example.name
+	  db_name = tencentcloud_sqlserver_db.example.name
+	  privilege = "ReadWrite"
+	}
+
 ```
 
-Import
+# Import
 
 SQL Server account DB attachment can be imported using the id, e.g.
 

@@ -134,8 +134,8 @@ func DiffSupressJSON(k, olds, news string, d *schema.ResourceData) bool {
 }
 
 /*
-    Serialize slice into the usage document
-	eg["status_change","abnormal"] will be "`abnormal`,`status_change`"
+	    Serialize slice into the usage document
+		eg["status_change","abnormal"] will be "`abnormal`,`status_change`"
 */
 func SliceFieldSerialize(slice []string) string {
 	types := []string{}

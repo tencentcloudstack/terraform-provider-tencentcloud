@@ -1,22 +1,24 @@
 /*
 Provides a resource to create a NAT forwarding.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_dnat" "foo" {
-  vpc_id       = "vpc-asg3sfa3"
-  nat_id       = "nat-2515tdg"
-  protocol     = "tcp"
-  elastic_ip   = "139.199.232.238"
-  elastic_port = 80
-  private_ip   = "10.0.0.1"
-  private_port = 22
-  description  = "test"
-}
+
+	resource "tencentcloud_dnat" "foo" {
+	  vpc_id       = "vpc-asg3sfa3"
+	  nat_id       = "nat-2515tdg"
+	  protocol     = "tcp"
+	  elastic_ip   = "139.199.232.238"
+	  elastic_port = 80
+	  private_ip   = "10.0.0.1"
+	  private_port = 22
+	  description  = "test"
+	}
+
 ```
 
-Import
+# Import
 
 NAT forwarding can be imported using the id, e.g.
 
@@ -351,7 +353,7 @@ func buildDnatId(entry *vpc.DestinationIpPortTranslationNatRule, vpcId string, n
 	return
 }
 
-//Parse Forward Entry id
+// Parse Forward Entry id
 func parseDnatId(entryId string) (entry *vpc.DestinationIpPortTranslationNatRule, params map[string]string, err error) {
 	log.Printf("[DEBUG] parseDnatId entryId: %s", entryId)
 	params = make(map[string]string)

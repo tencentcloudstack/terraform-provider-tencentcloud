@@ -1,18 +1,20 @@
 /*
 Provides an EIP resource.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_eip" "foo" {
-  name                 = "awesome_gateway_ip"
-  bandwidth_package_id = "bwp-jtvzuky6"
-  internet_charge_type = "BANDWIDTH_PACKAGE"
-  type                 = "EIP"
-}
+
+	resource "tencentcloud_eip" "foo" {
+	  name                 = "awesome_gateway_ip"
+	  bandwidth_package_id = "bwp-jtvzuky6"
+	  internet_charge_type = "BANDWIDTH_PACKAGE"
+	  type                 = "EIP"
+	}
+
 ```
 
-Import
+# Import
 
 EIP can be imported using the id, e.g.
 

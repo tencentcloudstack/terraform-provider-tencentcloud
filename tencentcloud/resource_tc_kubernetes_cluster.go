@@ -4,431 +4,443 @@ Provide a resource to create a kubernetes cluster.
 ~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
 ~> **NOTE:**  We recommend the usage of one cluster without worker config + node pool to manage cluster and nodes. It's a more flexible way than manage worker config with tencentcloud_kubernetes_cluster, tencentcloud_kubernetes_scale_worker or exist node management of `tencentcloud_kubernetes_attachment`. Cause some unchangeable parameters of `worker_config` may cause the whole cluster resource `force new`.
 
-Example Usage
+# Example Usage
 
 ```hcl
-variable "availability_zone_first" {
-  default = "ap-guangzhou-3"
-}
 
-variable "availability_zone_second" {
-  default = "ap-guangzhou-4"
-}
+	variable "availability_zone_first" {
+	  default = "ap-guangzhou-3"
+	}
 
-variable "cluster_cidr" {
-  default = "10.31.0.0/16"
-}
+	variable "availability_zone_second" {
+	  default = "ap-guangzhou-4"
+	}
 
-variable "default_instance_type" {
-  default = "SA2.2XLARGE16"
-}
+	variable "cluster_cidr" {
+	  default = "10.31.0.0/16"
+	}
 
-data "tencentcloud_vpc_subnets" "vpc_first" {
-  is_default        = true
-  availability_zone = var.availability_zone_first
-}
+	variable "default_instance_type" {
+	  default = "SA2.2XLARGE16"
+	}
 
-data "tencentcloud_vpc_subnets" "vpc_second" {
-  is_default        = true
-  availability_zone = var.availability_zone_second
-}
+	data "tencentcloud_vpc_subnets" "vpc_first" {
+	  is_default        = true
+	  availability_zone = var.availability_zone_first
+	}
 
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr                               = var.cluster_cidr
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
+	data "tencentcloud_vpc_subnets" "vpc_second" {
+	  is_default        = true
+	  availability_zone = var.availability_zone_second
+	}
 
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
-	img_id                     = "img-rkiynh11"
+	resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+	  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
+	  cluster_cidr                               = var.cluster_cidr
+	  cluster_max_pod_num                        = 32
+	  cluster_name                               = "test"
+	  cluster_desc                               = "test cluster desc"
+	  cluster_max_service_num                    = 32
+	  cluster_internet                           = true
+	  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+	  cluster_deploy_type                        = "MANAGED_CLUSTER"
 
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
+	  worker_config {
+	    count                      = 1
+	    availability_zone          = var.availability_zone_first
+	    instance_type              = var.default_instance_type
+	    system_disk_type           = "CLOUD_SSD"
+	    system_disk_size           = 60
+	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	    internet_max_bandwidth_out = 100
+	    public_ip_assigned         = true
+	    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
+		img_id                     = "img-rkiynh11"
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
+	    data_disk {
+	      disk_type = "CLOUD_PREMIUM"
+	      disk_size = 50
+	    }
 
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_second
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_second.instance_list.0.subnet_id
+	    enhanced_security_service = false
+	    enhanced_monitor_service  = false
+	    user_data                 = "dGVzdA=="
+	    password                  = "ZZXXccvv1212"
+	  }
 
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
+	  worker_config {
+	    count                      = 1
+	    availability_zone          = var.availability_zone_second
+	    instance_type              = var.default_instance_type
+	    system_disk_type           = "CLOUD_SSD"
+	    system_disk_size           = 60
+	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	    internet_max_bandwidth_out = 100
+	    public_ip_assigned         = true
+	    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_second.instance_list.0.subnet_id
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-	cam_role_name			  = "CVM_QcsRole"
-  }
+	    data_disk {
+	      disk_type = "CLOUD_PREMIUM"
+	      disk_size = 50
+	    }
 
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
-}
+	    enhanced_security_service = false
+	    enhanced_monitor_service  = false
+	    user_data                 = "dGVzdA=="
+	    password                  = "ZZXXccvv1212"
+		cam_role_name			  = "CVM_QcsRole"
+	  }
+
+	  labels = {
+	    "test1" = "test1",
+	    "test2" = "test2",
+	  }
+	}
+
 ```
 
-Use Kubelet
+# Use Kubelet
 
 ```hcl
-variable "availability_zone_first" {
-  default = "ap-guangzhou-3"
-}
 
-variable "availability_zone_second" {
-  default = "ap-guangzhou-4"
-}
+	variable "availability_zone_first" {
+	  default = "ap-guangzhou-3"
+	}
 
-variable "cluster_cidr" {
-  default = "10.31.0.0/16"
-}
+	variable "availability_zone_second" {
+	  default = "ap-guangzhou-4"
+	}
 
-variable "default_instance_type" {
-  default = "SA2.2XLARGE16"
-}
+	variable "cluster_cidr" {
+	  default = "10.31.0.0/16"
+	}
 
-data "tencentcloud_vpc_subnets" "vpc_first" {
-  is_default        = true
-  availability_zone = var.availability_zone_first
-}
+	variable "default_instance_type" {
+	  default = "SA2.2XLARGE16"
+	}
 
-data "tencentcloud_vpc_subnets" "vpc_second" {
-  is_default        = true
-  availability_zone = var.availability_zone_second
-}
+	data "tencentcloud_vpc_subnets" "vpc_first" {
+	  is_default        = true
+	  availability_zone = var.availability_zone_first
+	}
 
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr                               = var.cluster_cidr
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
+	data "tencentcloud_vpc_subnets" "vpc_second" {
+	  is_default        = true
+	  availability_zone = var.availability_zone_second
+	}
 
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
+	resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+	  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
+	  cluster_cidr                               = var.cluster_cidr
+	  cluster_max_pod_num                        = 32
+	  cluster_name                               = "test"
+	  cluster_desc                               = "test cluster desc"
+	  cluster_max_service_num                    = 32
+	  cluster_internet                           = true
+	  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+	  cluster_deploy_type                        = "MANAGED_CLUSTER"
 
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
+	  worker_config {
+	    count                      = 1
+	    availability_zone          = var.availability_zone_first
+	    instance_type              = var.default_instance_type
+	    system_disk_type           = "CLOUD_SSD"
+	    system_disk_size           = 60
+	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	    internet_max_bandwidth_out = 100
+	    public_ip_assigned         = true
+	    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
+	    data_disk {
+	      disk_type = "CLOUD_PREMIUM"
+	      disk_size = 50
+	    }
 
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_second
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_second.instance_list.0.subnet_id
+	    enhanced_security_service = false
+	    enhanced_monitor_service  = false
+	    user_data                 = "dGVzdA=="
+	    password                  = "ZZXXccvv1212"
+	  }
 
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
+	  worker_config {
+	    count                      = 1
+	    availability_zone          = var.availability_zone_second
+	    instance_type              = var.default_instance_type
+	    system_disk_type           = "CLOUD_SSD"
+	    system_disk_size           = 60
+	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	    internet_max_bandwidth_out = 100
+	    public_ip_assigned         = true
+	    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_second.instance_list.0.subnet_id
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-	cam_role_name			  = "CVM_QcsRole"
-  }
+	    data_disk {
+	      disk_type = "CLOUD_PREMIUM"
+	      disk_size = 50
+	    }
 
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
+	    enhanced_security_service = false
+	    enhanced_monitor_service  = false
+	    user_data                 = "dGVzdA=="
+	    password                  = "ZZXXccvv1212"
+		cam_role_name			  = "CVM_QcsRole"
+	  }
 
-  extra_args = [
- 	"root-dir=/var/lib/kubelet"
-  ]
-}
+	  labels = {
+	    "test1" = "test1",
+	    "test2" = "test2",
+	  }
+
+	  extra_args = [
+	 	"root-dir=/var/lib/kubelet"
+	  ]
+	}
+
 ```
 
-Use extension addons
+# Use extension addons
 
 ```hcl
-variable "availability_zone_first" {
-  default = "ap-guangzhou-3"
-}
 
-variable "cluster_cidr" {
-  default = "10.31.0.0/16"
-}
+	variable "availability_zone_first" {
+	  default = "ap-guangzhou-3"
+	}
 
-variable "default_instance_type" {
-  default = "S5.SMALL1"
-}
+	variable "cluster_cidr" {
+	  default = "10.31.0.0/16"
+	}
 
-data "tencentcloud_vpc_subnets" "vpc_first" {
-  is_default        = true
-  availability_zone = var.availability_zone_first
-}
+	variable "default_instance_type" {
+	  default = "S5.SMALL1"
+	}
+
+	data "tencentcloud_vpc_subnets" "vpc_first" {
+	  is_default        = true
+	  availability_zone = var.availability_zone_first
+	}
 
 # fetch latest addon(chart) versions
 data "tencentcloud_kubernetes_charts" "charts" {}
 
-locals {
-  chartNames = data.tencentcloud_kubernetes_charts.charts.chart_list.*.name
-  chartVersions = data.tencentcloud_kubernetes_charts.charts.chart_list.*.latest_version
-  chartMap = zipmap(local.chartNames, local.chartVersions)
-}
+	locals {
+	  chartNames = data.tencentcloud_kubernetes_charts.charts.chart_list.*.name
+	  chartVersions = data.tencentcloud_kubernetes_charts.charts.chart_list.*.latest_version
+	  chartMap = zipmap(local.chartNames, local.chartVersions)
+	}
 
-resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
-  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr                               = var.cluster_cidr
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
+	resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
+	  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
+	  cluster_cidr                               = var.cluster_cidr
+	  cluster_max_pod_num                        = 32
+	  cluster_name                               = "test"
+	  cluster_desc                               = "test cluster desc"
+	  cluster_max_service_num                    = 32
+	  cluster_internet                           = true
+	  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+	  cluster_deploy_type                        = "MANAGED_CLUSTER"
 
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone_first
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
-    img_id                     = "img-rkiynh11"
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
+	  worker_config {
+	    count                      = 1
+	    availability_zone          = var.availability_zone_first
+	    instance_type              = var.default_instance_type
+	    system_disk_type           = "CLOUD_SSD"
+	    system_disk_size           = 60
+	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	    internet_max_bandwidth_out = 100
+	    public_ip_assigned         = true
+	    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
+	    img_id                     = "img-rkiynh11"
+	    enhanced_security_service = false
+	    enhanced_monitor_service  = false
+	    user_data                 = "dGVzdA=="
+	    password                  = "ZZXXccvv1212"
+	  }
 
-  extension_addon {
-    name  = "COS"
-    param = jsonencode({
-      "kind" : "App", "spec" : {
-        "chart" : { "chartName" : "cos", "chartVersion" : local.chartMap["cos"] },
-        "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
-      }
-    })
-  }
-  extension_addon {
-    name  = "SecurityGroupPolicy"
-    param = jsonencode({
-      "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : local.chartMap["securitygrouppolicy"] } }
-    })
-  }
-  extension_addon {
-    name  = "OOMGuard"
-    param = jsonencode({
-      "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : local.chartMap["oomguard"] } }
-    })
-  }
-  extension_addon {
-    name  = "OLM"
-    param = jsonencode({
-      "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : local.chartMap["olm"] } }
-    })
-  }
-}
+	  extension_addon {
+	    name  = "COS"
+	    param = jsonencode({
+	      "kind" : "App", "spec" : {
+	        "chart" : { "chartName" : "cos", "chartVersion" : local.chartMap["cos"] },
+	        "values" : { "values" : [], "rawValues" : "e30=", "rawValuesType" : "json" }
+	      }
+	    })
+	  }
+	  extension_addon {
+	    name  = "SecurityGroupPolicy"
+	    param = jsonencode({
+	      "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : local.chartMap["securitygrouppolicy"] } }
+	    })
+	  }
+	  extension_addon {
+	    name  = "OOMGuard"
+	    param = jsonencode({
+	      "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : local.chartMap["oomguard"] } }
+	    })
+	  }
+	  extension_addon {
+	    name  = "OLM"
+	    param = jsonencode({
+	      "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : local.chartMap["olm"] } }
+	    })
+	  }
+	}
+
 ```
 
-Use node pool global config
+# Use node pool global config
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
 
-variable "vpc" {
-  default = "vpc-dk8zmwuf"
-}
+	variable "availability_zone" {
+	  default = "ap-guangzhou-3"
+	}
 
-variable "subnet" {
-  default = "subnet-pqfek0t8"
-}
+	variable "vpc" {
+	  default = "vpc-dk8zmwuf"
+	}
 
-variable "default_instance_type" {
-  default = "SA1.LARGE8"
-}
+	variable "subnet" {
+	  default = "subnet-pqfek0t8"
+	}
 
-resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
-  vpc_id                                     = var.vpc
-  cluster_cidr                               = "10.1.0.0/16"
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
+	variable "default_instance_type" {
+	  default = "SA1.LARGE8"
+	}
 
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = var.subnet
+	resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
+	  vpc_id                                     = var.vpc
+	  cluster_cidr                               = "10.1.0.0/16"
+	  cluster_max_pod_num                        = 32
+	  cluster_name                               = "test"
+	  cluster_desc                               = "test cluster desc"
+	  cluster_max_service_num                    = 32
+	  cluster_internet                           = true
+	  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+	  cluster_deploy_type                        = "MANAGED_CLUSTER"
 
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
+	  worker_config {
+	    count                      = 1
+	    availability_zone          = var.availability_zone
+	    instance_type              = var.default_instance_type
+	    system_disk_type           = "CLOUD_SSD"
+	    system_disk_size           = 60
+	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	    internet_max_bandwidth_out = 100
+	    public_ip_assigned         = true
+	    subnet_id                  = var.subnet
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
+	    data_disk {
+	      disk_type = "CLOUD_PREMIUM"
+	      disk_size = 50
+	    }
 
-  node_pool_global_config {
-    is_scale_in_enabled = true
-    expander = "random"
-    ignore_daemon_sets_utilization = true
-    max_concurrent_scale_in = 5
-    scale_in_delay = 15
-    scale_in_unneeded_time = 15
-    scale_in_utilization_threshold = 30
-    skip_nodes_with_local_storage = false
-    skip_nodes_with_system_pods = true
-  }
+	    enhanced_security_service = false
+	    enhanced_monitor_service  = false
+	    user_data                 = "dGVzdA=="
+	    password                  = "ZZXXccvv1212"
+	  }
 
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
-}
+	  node_pool_global_config {
+	    is_scale_in_enabled = true
+	    expander = "random"
+	    ignore_daemon_sets_utilization = true
+	    max_concurrent_scale_in = 5
+	    scale_in_delay = 15
+	    scale_in_unneeded_time = 15
+	    scale_in_utilization_threshold = 30
+	    skip_nodes_with_local_storage = false
+	    skip_nodes_with_system_pods = true
+	  }
+
+	  labels = {
+	    "test1" = "test1",
+	    "test2" = "test2",
+	  }
+	}
+
 ```
 
 Using VPC-CNI network type
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-1"
-}
 
-variable "vpc" {
-  default = "vpc-r1m1fyx5"
-}
+	variable "availability_zone" {
+	  default = "ap-guangzhou-1"
+	}
 
-variable "default_instance_type" {
-  default = "SA2.SMALL2"
-}
+	variable "vpc" {
+	  default = "vpc-r1m1fyx5"
+	}
 
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = var.vpc
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 256
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
-  network_type								 = "VPC-CNI"
-  eni_subnet_ids							 = ["subnet-bk1etlyu"]
-  service_cidr								 = "10.1.0.0/24"
+	variable "default_instance_type" {
+	  default = "SA2.SMALL2"
+	}
 
-  worker_config {
-    count                      = 1
-    availability_zone          = var.availability_zone
-    instance_type              = var.default_instance_type
-    system_disk_type           = "CLOUD_PREMIUM"
-    system_disk_size           = 60
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 100
-    public_ip_assigned         = true
-    subnet_id                  = "subnet-t5dv27rs"
+	resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+	  vpc_id                                     = var.vpc
+	  cluster_max_pod_num                        = 32
+	  cluster_name                               = "test"
+	  cluster_desc                               = "test cluster desc"
+	  cluster_max_service_num                    = 256
+	  cluster_internet                           = true
+	  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
+	  cluster_deploy_type                        = "MANAGED_CLUSTER"
+	  network_type								 = "VPC-CNI"
+	  eni_subnet_ids							 = ["subnet-bk1etlyu"]
+	  service_cidr								 = "10.1.0.0/24"
 
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
+	  worker_config {
+	    count                      = 1
+	    availability_zone          = var.availability_zone
+	    instance_type              = var.default_instance_type
+	    system_disk_type           = "CLOUD_PREMIUM"
+	    system_disk_size           = 60
+	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	    internet_max_bandwidth_out = 100
+	    public_ip_assigned         = true
+	    subnet_id                  = "subnet-t5dv27rs"
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-  }
+	    data_disk {
+	      disk_type = "CLOUD_PREMIUM"
+	      disk_size = 50
+	    }
 
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
-}
+	    enhanced_security_service = false
+	    enhanced_monitor_service  = false
+	    user_data                 = "dGVzdA=="
+	    password                  = "ZZXXccvv1212"
+	  }
+
+	  labels = {
+	    "test1" = "test1",
+	    "test2" = "test2",
+	  }
+	}
+
 ```
 
 Using ops options
 ```
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  # ...your basic fields
 
-  log_agent {
-    enabled = true
-    kubelet_root_dir = "" # optional
-  }
+	resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+	  # ...your basic fields
 
-  event_persistence {
-    enabled = true
-	log_set_id = "" # optional
-    log_set_topic = "" # optional
-  }
+	  log_agent {
+	    enabled = true
+	    kubelet_root_dir = "" # optional
+	  }
 
-  cluster_audit {
-    enabled = true
-	log_set_id = "" # optional
-    log_set_topic = "" # optional
-  }
-}
+	  event_persistence {
+	    enabled = true
+		log_set_id = "" # optional
+	    log_set_topic = "" # optional
+	  }
+
+	  cluster_audit {
+	    enabled = true
+		log_set_id = "" # optional
+	    log_set_topic = "" # optional
+	  }
+	}
+
 ```
 */
 package tencentcloud

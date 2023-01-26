@@ -1,18 +1,20 @@
 /*
 Use this resource to create SQL Server account
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_account" "foo" {
-  instance_id = tencentcloud_sqlserver_instance.example.id
-  name = "tf_sqlserver_account"
-  password = "test1233"
-  remark = "testt"
-}
+
+	resource "tencentcloud_sqlserver_account" "foo" {
+	  instance_id = tencentcloud_sqlserver_instance.example.id
+	  name = "tf_sqlserver_account"
+	  password = "test1233"
+	  remark = "testt"
+	}
+
 ```
 
-Import
+# Import
 
 SQL Server account can be imported using the id, e.g.
 

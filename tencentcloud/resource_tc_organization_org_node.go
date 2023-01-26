@@ -1,15 +1,15 @@
 /*
 Provides a resource to create a organization org_node
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_organization_org_node" "org_node" {
-  name           = "terraform_test"
-  parent_node_id = 2003721
-  remark         = "for terraform test"
-}
 
+	resource "tencentcloud_organization_org_node" "org_node" {
+	  name           = "terraform_test"
+	  parent_node_id = 2003721
+	  remark         = "for terraform test"
+	}
 
 ```
 Import

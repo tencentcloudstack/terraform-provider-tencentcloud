@@ -18,7 +18,7 @@ type DcdbService struct {
 	client *connectivity.TencentCloudClient
 }
 
-//dc_account
+// dc_account
 func (me *DcdbService) DescribeDcdbAccount(ctx context.Context, instanceId, userName string) (account *dcdb.DescribeAccountsResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -74,7 +74,7 @@ func (me *DcdbService) DeleteDcdbAccountById(ctx context.Context, instanceId, us
 	return
 }
 
-//dc_db_instance
+// dc_db_instance
 func (me *DcdbService) DescribeDcdbDbInstance(ctx context.Context, instanceId string) (instances *dcdb.DescribeDCDBInstancesResponseParams, errRet error) {
 	params := make(map[string]interface{})
 	params["instance_ids"] = []*string{&instanceId}
@@ -150,7 +150,7 @@ func (me *DcdbService) InitDcdbDbInstance(ctx context.Context, instanceId string
 	return true, flowId, nil
 }
 
-//dc_hourdb_instance
+// dc_hourdb_instance
 func (me *DcdbService) DescribeDcdbHourdbInstance(ctx context.Context, instanceId string) (hourdbInstance *dcdb.DescribeDCDBInstancesResponseParams, errRet error) {
 	return me.DescribeDcdbDbInstance(ctx, instanceId)
 }
@@ -181,7 +181,7 @@ func (me *DcdbService) DeleteDcdbHourdbInstanceById(ctx context.Context, instanc
 	return
 }
 
-//dc_sg
+// dc_sg
 func (me *DcdbService) DescribeDcdbSecurityGroup(ctx context.Context, instanceId string) (securityGroup *dcdb.DescribeDBSecurityGroupsResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)

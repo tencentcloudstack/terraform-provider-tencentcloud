@@ -1,22 +1,24 @@
 /*
 Use this resource to create SQL Server instance
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_instance" "foo" {
-  name = "example"
-  availability_zone = var.availability_zone
-  charge_type = "POSTPAID_BY_HOUR"
-  vpc_id      = "vpc-409mvdvv"
-  subnet_id = "subnet-nf9n81ps"
-  project_id = 123
-  memory = 2
-  storage = 100
-}
+
+	resource "tencentcloud_sqlserver_instance" "foo" {
+	  name = "example"
+	  availability_zone = var.availability_zone
+	  charge_type = "POSTPAID_BY_HOUR"
+	  vpc_id      = "vpc-409mvdvv"
+	  subnet_id = "subnet-nf9n81ps"
+	  project_id = 123
+	  memory = 2
+	  storage = 100
+	}
+
 ```
 
-Import
+# Import
 
 SQL Server instance can be imported using the id, e.g.
 

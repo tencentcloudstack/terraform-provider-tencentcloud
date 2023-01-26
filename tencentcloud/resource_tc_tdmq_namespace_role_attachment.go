@@ -1,42 +1,44 @@
 /*
 Provide a resource to create a TDMQ role.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_instance" "foo" {
-  cluster_name = "example"
-  remark = "this is description."
-}
 
-resource "tencentcloud_tdmq_namespace" "bar" {
-  environ_name = "example"
-  msg_ttl = 300
-  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
-  remark = "this is description."
-}
+	resource "tencentcloud_tdmq_instance" "foo" {
+	  cluster_name = "example"
+	  remark = "this is description."
+	}
 
-resource "tencentcloud_tdmq_topic" "bar" {
-  environ_id = "${tencentcloud_tdmq_namespace.bar.id}"
-  topic_name = "example"
-  partitions = 6
-  topic_type = 0
-  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
-  remark = "this is description."
-}
+	resource "tencentcloud_tdmq_namespace" "bar" {
+	  environ_name = "example"
+	  msg_ttl = 300
+	  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
+	  remark = "this is description."
+	}
 
-resource "tencentcloud_tdmq_role" "bar" {
-  role_name = "example"
-  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
-  remark = "this is description world"
-}
+	resource "tencentcloud_tdmq_topic" "bar" {
+	  environ_id = "${tencentcloud_tdmq_namespace.bar.id}"
+	  topic_name = "example"
+	  partitions = 6
+	  topic_type = 0
+	  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
+	  remark = "this is description."
+	}
 
-resource "tencentcloud_tdmq_namespace_role_attachment" "bar" {
-  environ_id = "${tencentcloud_tdmq_namespace.bar.id}"
-  role_name = "${tencentcloud_tdmq_role.bar.role_name}"
-  permissions = ["produce", "consume"]
-  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
-}
+	resource "tencentcloud_tdmq_role" "bar" {
+	  role_name = "example"
+	  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
+	  remark = "this is description world"
+	}
+
+	resource "tencentcloud_tdmq_namespace_role_attachment" "bar" {
+	  environ_id = "${tencentcloud_tdmq_namespace.bar.id}"
+	  role_name = "${tencentcloud_tdmq_role.bar.role_name}"
+	  permissions = ["produce", "consume"]
+	  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
+	}
+
 ```
 */
 package tencentcloud

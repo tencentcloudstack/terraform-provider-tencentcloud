@@ -1,14 +1,15 @@
 /*
 Provides a resource to create a monitor grafanaPlugin
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_grafana_plugin" "grafanaPlugin" {
-  instance_id = "grafana-50nj6v00"
-  plugin_id   = "grafana-piechart-panel"
-  version     = "1.6.2"
-}
+
+	resource "tencentcloud_monitor_grafana_plugin" "grafanaPlugin" {
+	  instance_id = "grafana-50nj6v00"
+	  plugin_id   = "grafana-piechart-panel"
+	  version     = "1.6.2"
+	}
 
 ```
 Import

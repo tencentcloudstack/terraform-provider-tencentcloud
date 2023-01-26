@@ -1,17 +1,18 @@
 /*
 Provides a resource to create a mariadb account
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mariadb_account" "account" {
-	instance_id = "tdsql-4pzs5b67"
-	user_name   = "account-test"
-	host        = "10.101.202.22"
-	password    = "Password123."
-	read_only   = 0
-	description = "desc"
-}
+
+	resource "tencentcloud_mariadb_account" "account" {
+		instance_id = "tdsql-4pzs5b67"
+		user_name   = "account-test"
+		host        = "10.101.202.22"
+		password    = "Password123."
+		read_only   = 0
+		description = "desc"
+	}
 
 ```
 Import

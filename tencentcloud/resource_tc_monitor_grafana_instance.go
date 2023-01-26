@@ -1,20 +1,21 @@
 /*
 Provides a resource to create a monitor grafanaInstance
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
-  instance_name         = "test-grafana"
-  vpc_id                = "vpc-2hfyray3"
-  subnet_ids            = ["subnet-rdkj0agk"]
-  grafana_init_password = "1234567890"
-  enable_internet = false
 
-  tags = {
-    "createdBy" = "test"
-  }
-}
+	resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
+	  instance_name         = "test-grafana"
+	  vpc_id                = "vpc-2hfyray3"
+	  subnet_ids            = ["subnet-rdkj0agk"]
+	  grafana_init_password = "1234567890"
+	  enable_internet = false
+
+	  tags = {
+	    "createdBy" = "test"
+	  }
+	}
 
 ```
 Import

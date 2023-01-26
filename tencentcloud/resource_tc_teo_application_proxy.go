@@ -1,24 +1,25 @@
 /*
 Provides a resource to create a teo application_proxy
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_application_proxy" "application_proxy" {
-  accelerate_type      = 1
-  plat_type            = "domain"
-  proxy_name           = "applicationProxies-test-1"
-  proxy_type           = "instance"
-  security_type        = 1
-  session_persist_time = 2400
-  status               = "online"
-  tags                 = {}
-  zone_id              = "zone-2983wizgxqvm"
 
-  ipv6 {
-    switch = "off"
-  }
-}
+	resource "tencentcloud_teo_application_proxy" "application_proxy" {
+	  accelerate_type      = 1
+	  plat_type            = "domain"
+	  proxy_name           = "applicationProxies-test-1"
+	  proxy_type           = "instance"
+	  security_type        = 1
+	  session_persist_time = 2400
+	  status               = "online"
+	  tags                 = {}
+	  zone_id              = "zone-2983wizgxqvm"
+
+	  ipv6 {
+	    switch = "off"
+	  }
+	}
 
 ```
 Import

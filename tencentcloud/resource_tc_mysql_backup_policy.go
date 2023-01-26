@@ -3,15 +3,17 @@ Provides a mysql policy resource to create a backup policy.
 
 ~> **NOTE:** This attribute `backup_model` only support 'physical' in Terraform TencentCloud provider version 1.16.2
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_backup_policy" "default" {
-  mysql_id         = "cdb-dnqksd9f"
-  retention_period = 7
-  backup_model     = "physical"
-  backup_time      = "02:00-06:00"
-}
+
+	resource "tencentcloud_mysql_backup_policy" "default" {
+	  mysql_id         = "cdb-dnqksd9f"
+	  retention_period = 7
+	  backup_model     = "physical"
+	  backup_time      = "02:00-06:00"
+	}
+
 ```
 */
 package tencentcloud
@@ -152,7 +154,7 @@ func resourceTencentCloudMysqlBackupPolicyUpdate(d *schema.ResourceData, meta in
 	return resourceTencentCloudMysqlBackupPolicyRead(d, meta)
 }
 
-//set all config to default
+// set all config to default
 func resourceTencentCloudMysqlBackupPolicyDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_backup_policy.delete")()
 

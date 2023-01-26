@@ -3,46 +3,48 @@ Use this resource to create ckafka instance.
 
 ~> **NOTE:** It only support create prepaid ckafka instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ckafka_instance" "foo" {
-  band_width          = 40
-  disk_size           = 500
-  disk_type           = "CLOUD_BASIC"
-  period              = 1
-  instance_name       = "ckafka-instance-tf-test"
-  specifications_type = "profession"
-  kafka_version       = "1.1.1"
-  msg_retention_time  = 1300
-  multi_zone_flag     = true
-  partition           = 800
-  public_network      = 3
-  renew_flag          = 0
-  subnet_id           = "subnet-4vwihrzk"
-  vpc_id              = "vpc-82p1t1nv"
-  zone_id             = 100006
-  zone_ids            = [
-    100006,
-    100007,
-  ]
 
-  config {
-    auto_create_topic_enable   = true
-    default_num_partitions     = 3
-    default_replication_factor = 3
-  }
+	resource "tencentcloud_ckafka_instance" "foo" {
+	  band_width          = 40
+	  disk_size           = 500
+	  disk_type           = "CLOUD_BASIC"
+	  period              = 1
+	  instance_name       = "ckafka-instance-tf-test"
+	  specifications_type = "profession"
+	  kafka_version       = "1.1.1"
+	  msg_retention_time  = 1300
+	  multi_zone_flag     = true
+	  partition           = 800
+	  public_network      = 3
+	  renew_flag          = 0
+	  subnet_id           = "subnet-4vwihrzk"
+	  vpc_id              = "vpc-82p1t1nv"
+	  zone_id             = 100006
+	  zone_ids            = [
+	    100006,
+	    100007,
+	  ]
 
-  dynamic_retention_config {
-    bottom_retention        = 0
-    disk_quota_percentage   = 0
-    enable                  = 1
-    step_forward_percentage = 0
-  }
-}
+	  config {
+	    auto_create_topic_enable   = true
+	    default_num_partitions     = 3
+	    default_replication_factor = 3
+	  }
+
+	  dynamic_retention_config {
+	    bottom_retention        = 0
+	    disk_quota_percentage   = 0
+	    enable                  = 1
+	    step_forward_percentage = 0
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 ckafka instance can be imported using the instance_id, e.g.
 

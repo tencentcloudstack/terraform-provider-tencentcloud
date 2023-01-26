@@ -1,14 +1,16 @@
 /*
 Use this data source to query new dayu layer 7 rules
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_dayu_l7_rules_v2" "test" {
-    business = "bgpip"
-    offset = 0
-    limit = 10
-}
+
+	data "tencentcloud_dayu_l7_rules_v2" "test" {
+	    business = "bgpip"
+	    offset = 0
+	    limit = 10
+	}
+
 ```
 */
 package tencentcloud

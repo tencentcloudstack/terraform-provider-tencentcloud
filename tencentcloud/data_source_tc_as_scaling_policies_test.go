@@ -47,7 +47,7 @@ func TestAccTencentCloudAsScalingPoliciesDataSource(t *testing.T) {
 	})
 }
 
-//todo
+// todo
 func testAccAsScalingPoliciesDataSource() string {
 	return defaultAsVariable + `
 resource "tencentcloud_vpc" "vpc" {

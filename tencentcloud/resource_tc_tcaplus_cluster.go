@@ -3,27 +3,28 @@ Use this resource to create TcaplusDB cluster.
 
 ~> **NOTE:** TcaplusDB now only supports the following regions: `ap-shanghai,ap-hongkong,na-siliconvalley,ap-singapore,ap-seoul,ap-tokyo,eu-frankfurt, and na-ashburn`.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tcaplus_cluster" "test" {
-  idl_type                 = "PROTO"
-  cluster_name             = "tf_tcaplus_cluster_test"
-  vpc_id                   = "vpc-7k6gzox6"
-  subnet_id                = "subnet-akwgvfa3"
-  password                 = "1qaA2k1wgvfa3ZZZ"
-  old_password_expire_last = 3600
-}
+
+	resource "tencentcloud_tcaplus_cluster" "test" {
+	  idl_type                 = "PROTO"
+	  cluster_name             = "tf_tcaplus_cluster_test"
+	  vpc_id                   = "vpc-7k6gzox6"
+	  subnet_id                = "subnet-akwgvfa3"
+	  password                 = "1qaA2k1wgvfa3ZZZ"
+	  old_password_expire_last = 3600
+	}
+
 ```
 
-Import
+# Import
 
 tcaplus cluster can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_tcaplus_cluster.test 26655801
 ```
-
 */
 package tencentcloud
 

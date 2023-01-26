@@ -1,12 +1,14 @@
 /*
 Use this data source to query detailed information of teo zoneDDoSPolicy
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_teo_zone_ddos_policy" "zoneDDoSPolicy" {
-  zone_id = ""
-}
+
+	data "tencentcloud_teo_zone_ddos_policy" "zoneDDoSPolicy" {
+	  zone_id = ""
+	}
+
 ```
 */
 package tencentcloud

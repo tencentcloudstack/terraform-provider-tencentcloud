@@ -3,47 +3,48 @@ Provides a mysql instance resource to create master database instances.
 
 ~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_instance" "default" {
-  internet_service = 1
-  engine_version   = "5.7"
-  charge_type = "POSTPAID"
-  root_password     = "********"
-  slave_deploy_mode = 0
-  first_slave_zone  = "ap-guangzhou-4"
-  second_slave_zone = "ap-guangzhou-4"
-  slave_sync_mode   = 1
-  availability_zone = "ap-guangzhou-4"
-  project_id        = 201901010001
-  instance_name     = "myTestMysql"
-  mem_size          = 128000
-  volume_size       = 250
-  vpc_id            = "vpc-12mt3l31"
-  subnet_id         = "subnet-9uivyb1g"
-  intranet_port     = 3306
-  security_groups   = ["sg-ot8eclwz"]
 
-  tags = {
-    name = "test"
-  }
+	resource "tencentcloud_mysql_instance" "default" {
+	  internet_service = 1
+	  engine_version   = "5.7"
+	  charge_type = "POSTPAID"
+	  root_password     = "********"
+	  slave_deploy_mode = 0
+	  first_slave_zone  = "ap-guangzhou-4"
+	  second_slave_zone = "ap-guangzhou-4"
+	  slave_sync_mode   = 1
+	  availability_zone = "ap-guangzhou-4"
+	  project_id        = 201901010001
+	  instance_name     = "myTestMysql"
+	  mem_size          = 128000
+	  volume_size       = 250
+	  vpc_id            = "vpc-12mt3l31"
+	  subnet_id         = "subnet-9uivyb1g"
+	  intranet_port     = 3306
+	  security_groups   = ["sg-ot8eclwz"]
 
-  parameters = {
-    character_set_server = "UTF8"
-    max_connections = "1000"
-  }
-}
+	  tags = {
+	    name = "test"
+	  }
+
+	  parameters = {
+	    character_set_server = "UTF8"
+	    max_connections = "1000"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 MySQL instance can be imported using the id, e.g.
 
 ```
 $ terraform import tencentcloud_mysql_instance.foo cdb-12345678"
 ```
-
 */
 package tencentcloud
 
@@ -346,7 +347,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 }
 
 /*
-   [master] and [dr] and [ro] all need set
+[master] and [dr] and [ro] all need set
 */
 func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *schema.ResourceData, meta interface{}) error {
 	requestByMonth, okByMonth := requestInter.(*cdb.CreateDBInstanceRequest)
@@ -466,7 +467,7 @@ func mysqlAllInstanceRoleSet(ctx context.Context, requestInter interface{}, d *s
 }
 
 /*
- [master] need set
+[master] need set
 */
 func mysqlMasterInstanceRoleSet(ctx context.Context, requestInter interface{}, d *schema.ResourceData, meta interface{}) error {
 	requestByMonth, okByMonth := requestInter.(*cdb.CreateDBInstanceRequest)
@@ -967,7 +968,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 }
 
 /*
-   [master] and [dr] and [ro] all need update
+[master] and [dr] and [ro] all need update
 */
 func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
 
@@ -1127,7 +1128,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 }
 
 /*
- [master] need set
+[master] need set
 */
 func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) error {
 	logId := getLogId(ctx)

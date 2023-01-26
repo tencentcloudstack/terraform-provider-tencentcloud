@@ -8,7 +8,7 @@ var MYSQL_ALLOW_BACKUP_TIME = []string{"02:00-06:00", "06:00-10:00", "10:00-14:0
 
 var MYSQL_ALLOW_BACKUP_MODEL = []string{"logical", "physical"}
 
-//mysql Status	https://cloud.tencent.com/document/api/236/15872
+// mysql Status	https://cloud.tencent.com/document/api/236/15872
 const (
 	MYSQL_STATUS_DELIVING  = 0
 	MYSQL_STATUS_RUNNING   = 1
@@ -20,7 +20,7 @@ const (
 	MYSQL_STATUS_ISOLATED_2 = 7
 )
 
-//Async  task  status,  from  https://cloud.tencent.com/document/api/236/20410
+// Async  task  status,  from  https://cloud.tencent.com/document/api/236/20410
 const (
 	MYSQL_TASK_STATUS_INITIAL = "INITIAL"
 	MYSQL_TASK_STATUS_RUNNING = "RUNNING"
@@ -30,7 +30,7 @@ const (
 	MYSQL_TASK_STATUS_PAUSED  = "PAUSED "
 )
 
-//default to all host
+// default to all host
 var MYSQL_DEFAULT_ACCOUNT_HOST = "%"
 
 var MYSQL_GlOBAL_PRIVILEGE = []string{
@@ -68,19 +68,19 @@ var MysqlDelStates = map[int64]bool{
 	MYSQL_STATUS_ISOLATED_2: true,
 }
 
-//mysql available period value
+// mysql available period value
 var MYSQL_AVAILABLE_PERIOD = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}
 
 var MYSQL_SUPPORTS_ENGINE = []string{"5.5", "5.6", "5.7", "8.0"}
 
-//automatic renewal status code
+// automatic renewal status code
 const (
 	MYSQL_RENEW_NOUSE = 0
 	MYSQL_RENEW_OPEN  = 1
 	MYSQL_RENEW_CLOSE = 2
 )
 
-//type of pay
+// type of pay
 var (
 	MysqlPayByMonth = 0
 	MysqlPayByUse   = 1

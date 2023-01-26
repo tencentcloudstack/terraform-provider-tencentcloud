@@ -1,16 +1,18 @@
 /*
 Provides a resource to create a CAM role policy attachment.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cam_role_policy_attachment" "foo" {
-  role_id   = tencentcloud_cam_role.foo.id
-  policy_id = tencentcloud_cam_policy.foo.id
-}
+
+	resource "tencentcloud_cam_role_policy_attachment" "foo" {
+	  role_id   = tencentcloud_cam_role.foo.id
+	  policy_id = tencentcloud_cam_policy.foo.id
+	}
+
 ```
 
-Import
+# Import
 
 CAM role policy attachment can be imported using the id, e.g.
 

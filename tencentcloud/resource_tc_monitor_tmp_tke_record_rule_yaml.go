@@ -1,27 +1,28 @@
 /*
 Provides a resource to create a tke tmpRecordRule
 
-Example Usage
+# Example Usage
 
 ```hcl
 
-resource "tencentcloud_monitor_tmp_tke_record_rule_yaml" "foo" {
-  instance_id       = ""
-  content           = <<-EOT
-        apiVersion: monitoring.coreos.com/v1
-        kind: PrometheusRule
-        metadata:
-          name: example-record
-        spec:
-          groups:
-            - name: kube-apiserver.rules
-              rules:
-                - expr: sum(metrics_test)
-                  labels:
-                    verb: read
-                  record: 'apiserver_request:burnrate1d'
-    EOT
-}
+	resource "tencentcloud_monitor_tmp_tke_record_rule_yaml" "foo" {
+	  instance_id       = ""
+	  content           = <<-EOT
+	        apiVersion: monitoring.coreos.com/v1
+	        kind: PrometheusRule
+	        metadata:
+	          name: example-record
+	        spec:
+	          groups:
+	            - name: kube-apiserver.rules
+	              rules:
+	                - expr: sum(metrics_test)
+	                  labels:
+	                    verb: read
+	                  record: 'apiserver_request:burnrate1d'
+	    EOT
+	}
+
 ```
 */
 package tencentcloud

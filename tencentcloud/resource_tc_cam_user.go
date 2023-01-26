@@ -1,27 +1,29 @@
 /*
 Provides a resource to manage CAM user.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cam_user" "foo" {
-  name                = "cam-user-test"
-  remark              = "test"
-  console_login       = true
-  use_api             = true
-  need_reset_password = true
-  password            = "Gail@1234"
-  phone_num           = "12345678910"
-  email               = "hello@test.com"
-  country_code        = "86"
-  force_delete        = true
-  tags = {
-    test  = "tf-cam-user",
-  }
-}
+
+	resource "tencentcloud_cam_user" "foo" {
+	  name                = "cam-user-test"
+	  remark              = "test"
+	  console_login       = true
+	  use_api             = true
+	  need_reset_password = true
+	  password            = "Gail@1234"
+	  phone_num           = "12345678910"
+	  email               = "hello@test.com"
+	  country_code        = "86"
+	  force_delete        = true
+	  tags = {
+	    test  = "tf-cam-user",
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 CAM user can be imported using the user name, e.g.
 

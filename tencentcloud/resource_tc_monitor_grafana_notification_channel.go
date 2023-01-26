@@ -1,16 +1,17 @@
 /*
 Provides a resource to create a monitor grafanaNotificationChannel
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_grafana_notification_channel" "grafanaNotificationChannel" {
-  instance_id   = "grafana-50nj6v00"
-  channel_name  = "create-channel"
-  org_id        = 1
-  receivers     = ["Consumer-6vkna7pevq"]
-  extra_org_ids = []
-}
+
+	resource "tencentcloud_monitor_grafana_notification_channel" "grafanaNotificationChannel" {
+	  instance_id   = "grafana-50nj6v00"
+	  channel_name  = "create-channel"
+	  org_id        = 1
+	  receivers     = ["Consumer-6vkna7pevq"]
+	  extra_org_ids = []
+	}
 
 ```
 */

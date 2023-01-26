@@ -1,12 +1,14 @@
 /*
 Use this data source to query the available mongodb specifications for different zone.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_mongodb_zone_config" "mongodb" {
-  available_zone = "ap-guangzhou-2"
-}
+
+	data "tencentcloud_mongodb_zone_config" "mongodb" {
+	  available_zone = "ap-guangzhou-2"
+	}
+
 ```
 */
 package tencentcloud

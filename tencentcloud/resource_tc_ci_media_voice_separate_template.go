@@ -1,23 +1,25 @@
 /*
 Provides a resource to create a ci media_voice_separate_template
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ci_media_voice_separate_template" "media_voice_separate_template" {
-  bucket = "terraform-ci-xxxxx"
-  name = "voice_separate_template"
-  audio_mode = "IsAudio"
-  audio_config {
-		codec = "aac"
-		samplerate = "44100"
-		bitrate = "128"
-		channels = "4"
-  }
-}
+
+	resource "tencentcloud_ci_media_voice_separate_template" "media_voice_separate_template" {
+	  bucket = "terraform-ci-xxxxx"
+	  name = "voice_separate_template"
+	  audio_mode = "IsAudio"
+	  audio_config {
+			codec = "aac"
+			samplerate = "44100"
+			bitrate = "128"
+			channels = "4"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 ci media_voice_separate_template can be imported using the id, e.g.
 

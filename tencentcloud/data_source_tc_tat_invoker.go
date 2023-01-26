@@ -1,14 +1,16 @@
 /*
 Use this data source to query detailed information of tat invoker
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_tat_invoker" "invoker" {
-	# invoker_id = ""
-	# command_id = ""
-	# type = ""
-}
+
+	data "tencentcloud_tat_invoker" "invoker" {
+		# invoker_id = ""
+		# command_id = ""
+		# type = ""
+	}
+
 ```
 */
 package tencentcloud

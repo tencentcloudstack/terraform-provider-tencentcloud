@@ -1,19 +1,21 @@
 /*
 Provides a resource to create a CAM-ROLE-SSO (Only support OIDC).
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cam_role_sso" "foo" {
-	name="test"
-	identity_url="https://login.microsoftonline.com/.../v2.0"
-	identity_key="..."
-	client_ids=["..."]
-	description="this is a description"
-}
+
+	resource "tencentcloud_cam_role_sso" "foo" {
+		name="test"
+		identity_url="https://login.microsoftonline.com/.../v2.0"
+		identity_key="..."
+		client_ids=["..."]
+		description="this is a description"
+	}
+
 ```
 
-Import
+# Import
 
 CAM-ROLE-SSO can be imported using the `name`, e.g.
 

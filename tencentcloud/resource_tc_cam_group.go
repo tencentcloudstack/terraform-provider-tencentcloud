@@ -1,16 +1,18 @@
 /*
 Provides a resource to create a CAM group.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cam_group" "foo" {
-  name   = "cam-group-test"
-  remark = "test"
-}
+
+	resource "tencentcloud_cam_group" "foo" {
+	  name   = "cam-group-test"
+	  remark = "test"
+	}
+
 ```
 
-Import
+# Import
 
 CAM group can be imported using the id, e.g.
 

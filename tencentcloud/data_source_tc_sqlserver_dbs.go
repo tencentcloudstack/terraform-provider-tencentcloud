@@ -1,12 +1,14 @@
 /*
 Use this data source to query DB resources for the specific SQL Server instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_dbs" "example" {
-  instance_id = "mssql-3cdq7kx5"
-}
+
+	data "tencentcloud_sqlserver_dbs" "example" {
+	  instance_id = "mssql-3cdq7kx5"
+	}
+
 ```
 */
 package tencentcloud

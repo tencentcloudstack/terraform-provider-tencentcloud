@@ -1,18 +1,20 @@
 /*
 Provides a resource to create a cfs auto_snapshot_policy
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
-  day_of_week = "1,2"
-  hour = "2,3"
-  policy_name = "policy_name"
-  alive_days = 7
-}
+
+	resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
+	  day_of_week = "1,2"
+	  hour = "2,3"
+	  policy_name = "policy_name"
+	  alive_days = 7
+	}
+
 ```
 
-Import
+# Import
 
 cfs auto_snapshot_policy can be imported using the id, e.g.
 

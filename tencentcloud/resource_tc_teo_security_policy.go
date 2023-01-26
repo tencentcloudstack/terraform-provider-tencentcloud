@@ -1,160 +1,161 @@
 /*
 Provides a resource to create a teo security_policy
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_security_policy" "security_policy" {
-  entity  = "aaa.sfurnace.work"
-  zone_id = "zone-2983wizgxqvm"
 
-  config {
-    acl_config {
-      switch = "off"
-    }
+	resource "tencentcloud_teo_security_policy" "security_policy" {
+	  entity  = "aaa.sfurnace.work"
+	  zone_id = "zone-2983wizgxqvm"
 
-    bot_config {
-      switch = "off"
+	  config {
+	    acl_config {
+	      switch = "off"
+	    }
 
-      intelligence_rule {
-        switch = "off"
+	    bot_config {
+	      switch = "off"
 
-        items {
-          action = "drop"
-          label  = "evil_bot"
-        }
-        items {
-          action = "alg"
-          label  = "suspect_bot"
-        }
-        items {
-          action = "monitor"
-          label  = "good_bot"
-        }
-        items {
-          action = "trans"
-          label  = "normal"
-        }
-      }
+	      intelligence_rule {
+	        switch = "off"
 
-      managed_rule {
-        action            = "monitor"
-        alg_managed_ids   = []
-        cap_managed_ids   = []
-        drop_managed_ids  = []
-        mon_managed_ids   = []
-        page_id           = 0
-        punish_time       = 0
-        response_code     = 0
-        rule_id           = 0
-        trans_managed_ids = []
-      }
+	        items {
+	          action = "drop"
+	          label  = "evil_bot"
+	        }
+	        items {
+	          action = "alg"
+	          label  = "suspect_bot"
+	        }
+	        items {
+	          action = "monitor"
+	          label  = "good_bot"
+	        }
+	        items {
+	          action = "trans"
+	          label  = "normal"
+	        }
+	      }
 
-      portrait_rule {
-        alg_managed_ids  = []
-        cap_managed_ids  = []
-        drop_managed_ids = []
-        mon_managed_ids  = []
-        rule_id          = -1
-        switch           = "off"
-      }
-    }
+	      managed_rule {
+	        action            = "monitor"
+	        alg_managed_ids   = []
+	        cap_managed_ids   = []
+	        drop_managed_ids  = []
+	        mon_managed_ids   = []
+	        page_id           = 0
+	        punish_time       = 0
+	        response_code     = 0
+	        rule_id           = 0
+	        trans_managed_ids = []
+	      }
 
-    drop_page_config {
-      switch = "on"
+	      portrait_rule {
+	        alg_managed_ids  = []
+	        cap_managed_ids  = []
+	        drop_managed_ids = []
+	        mon_managed_ids  = []
+	        rule_id          = -1
+	        switch           = "off"
+	      }
+	    }
 
-      acl_drop_page_detail {
-        name        = "-"
-        page_id     = 0
-        status_code = 569
-        type        = "default"
-      }
+	    drop_page_config {
+	      switch = "on"
 
-      waf_drop_page_detail {
-        name        = "-"
-        page_id     = 0
-        status_code = 566
-        type        = "default"
-      }
-    }
+	      acl_drop_page_detail {
+	        name        = "-"
+	        page_id     = 0
+	        status_code = 569
+	        type        = "default"
+	      }
 
-    except_config {
-      switch = "on"
-    }
+	      waf_drop_page_detail {
+	        name        = "-"
+	        page_id     = 0
+	        status_code = 566
+	        type        = "default"
+	      }
+	    }
 
-    ip_table_config {
-      switch = "off"
-    }
+	    except_config {
+	      switch = "on"
+	    }
 
-    rate_limit_config {
-      switch = "on"
+	    ip_table_config {
+	      switch = "off"
+	    }
 
-      intelligence {
-        action = "monitor"
-        switch = "off"
-      }
+	    rate_limit_config {
+	      switch = "on"
 
-      template {
-        mode = "sup_loose"
+	      intelligence {
+	        action = "monitor"
+	        switch = "off"
+	      }
 
-        detail {
-          action      = "alg"
-          id          = 831807989
-          mode        = "sup_loose"
-          period      = 1
-          punish_time = 0
-          threshold   = 2000
-        }
-      }
-    }
+	      template {
+	        mode = "sup_loose"
 
-    switch_config {
-      web_switch = "on"
-    }
+	        detail {
+	          action      = "alg"
+	          id          = 831807989
+	          mode        = "sup_loose"
+	          period      = 1
+	          punish_time = 0
+	          threshold   = 2000
+	        }
+	      }
+	    }
 
-    waf_config {
-      level  = "strict"
-      mode   = "block"
-      switch = "on"
+	    switch_config {
+	      web_switch = "on"
+	    }
 
-      ai_rule {
-        mode = "smart_status_close"
-      }
+	    waf_config {
+	      level  = "strict"
+	      mode   = "block"
+	      switch = "on"
 
-      waf_rules {
-        block_rule_ids   = [
-          22,
-          84214562,
-          106246133,
-          106246507,
-          106246508,
-          106246523,
-          106246524,
-          106246679,
-          106247029,
-          106247048,
-          106247140,
-          106247356,
-          106247357,
-          106247358,
-          106247378,
-          106247389,
-          106247392,
-          106247394,
-          106247405,
-          106247409,
-          106247413,
-          106247558,
-          106247795,
-          106247819,
-          106248021,
-        ]
-        observe_rule_ids = []
-        switch           = "off"
-      }
-    }
-  }
-}
+	      ai_rule {
+	        mode = "smart_status_close"
+	      }
+
+	      waf_rules {
+	        block_rule_ids   = [
+	          22,
+	          84214562,
+	          106246133,
+	          106246507,
+	          106246508,
+	          106246523,
+	          106246524,
+	          106246679,
+	          106247029,
+	          106247048,
+	          106247140,
+	          106247356,
+	          106247357,
+	          106247358,
+	          106247378,
+	          106247389,
+	          106247392,
+	          106247394,
+	          106247405,
+	          106247409,
+	          106247413,
+	          106247558,
+	          106247795,
+	          106247819,
+	          106248021,
+	        ]
+	        observe_rule_ids = []
+	        switch           = "off"
+	      }
+	    }
+	  }
+	}
 
 ```
 Import

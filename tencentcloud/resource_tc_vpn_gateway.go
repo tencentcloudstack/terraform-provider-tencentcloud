@@ -3,39 +3,43 @@ Provides a resource to create a VPN gateway.
 
 -> **NOTE:** The prepaid VPN gateway do not support renew operation or delete operation with terraform.
 
-Example Usage
+# Example Usage
 
 POSTPAID_BY_HOUR VPN gateway
 ```hcl
-resource "tencentcloud_vpn_gateway" "my_cgw" {
-  name      = "test"
-  vpc_id    = "vpc-dk8zmwuf"
-  bandwidth = 5
-  zone      = "ap-guangzhou-3"
 
-  tags = {
-    test = "test"
-  }
-}
+	resource "tencentcloud_vpn_gateway" "my_cgw" {
+	  name      = "test"
+	  vpc_id    = "vpc-dk8zmwuf"
+	  bandwidth = 5
+	  zone      = "ap-guangzhou-3"
+
+	  tags = {
+	    test = "test"
+	  }
+	}
+
 ```
 
 PREPAID VPN gateway
 ```hcl
-resource "tencentcloud_vpn_gateway" "my_cgw" {
-  name           = "test"
-  vpc_id         = "vpc-dk8zmwuf"
-  bandwidth      = 5
-  zone           = "ap-guangzhou-3"
-  charge_type    = "PREPAID"
-  prepaid_period = 1
 
-  tags = {
-    test = "test"
-  }
-}
+	resource "tencentcloud_vpn_gateway" "my_cgw" {
+	  name           = "test"
+	  vpc_id         = "vpc-dk8zmwuf"
+	  bandwidth      = 5
+	  zone           = "ap-guangzhou-3"
+	  charge_type    = "PREPAID"
+	  prepaid_period = 1
+
+	  tags = {
+	    test = "test"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 VPN gateway can be imported using the id, e.g.
 

@@ -1,12 +1,14 @@
 /*
 Use this data source to query detailed information of TCR tokens.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_tcr_tokens" "name" {
-  instance_id 			= "cls-satg5125"
-}
+
+	data "tencentcloud_tcr_tokens" "name" {
+	  instance_id 			= "cls-satg5125"
+	}
+
 ```
 */
 package tencentcloud

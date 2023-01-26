@@ -1,18 +1,20 @@
 /*
 Provides a resource to create a mysql deploy_group
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_deploy_group" "deploy_group" {
-  deploy_group_name = "terrform-deploy"
-  description       = "deploy test"
-  limit_num         = 1
-  dev_class         = ["TS85"]
-}
+
+	resource "tencentcloud_mysql_deploy_group" "deploy_group" {
+	  deploy_group_name = "terrform-deploy"
+	  description       = "deploy test"
+	  limit_num         = 1
+	  dev_class         = ["TS85"]
+	}
+
 ```
 
-Import
+# Import
 
 mysql deploy_group can be imported using the id, e.g.
 

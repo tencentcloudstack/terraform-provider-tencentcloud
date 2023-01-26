@@ -1,12 +1,14 @@
 /*
 Use this data source to query detailed information of rum project
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_rum_project" "project" {
-	instance_id = "rum-pasZKEI3RLgakj"
-}
+
+	data "tencentcloud_rum_project" "project" {
+		instance_id = "rum-pasZKEI3RLgakj"
+	}
+
 ```
 */
 package tencentcloud

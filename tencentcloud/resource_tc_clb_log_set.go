@@ -1,15 +1,17 @@
 /*
 Provides a resource to create an exclusive CLB Logset.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_clb_log_set" "foo" {
-  period = 7
-}
+
+	resource "tencentcloud_clb_log_set" "foo" {
+	  period = 7
+	}
+
 ```
 
-Import
+# Import
 
 CLB log set can be imported using the id, e.g.
 

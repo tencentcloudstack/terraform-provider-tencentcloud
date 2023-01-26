@@ -1,76 +1,77 @@
 /*
 Provides a resource to create a lighthouse instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_lighthouse_instance" "lighthouse" {
-  bundle_id    = "bundle2022_gen_01"
-  blueprint_id = "lhbp-f1lkcd41"
 
-  period     = 1
-  renew_flag = "NOTIFY_AND_AUTO_RENEW"
+	resource "tencentcloud_lighthouse_instance" "lighthouse" {
+	  bundle_id    = "bundle2022_gen_01"
+	  blueprint_id = "lhbp-f1lkcd41"
 
-  instance_name = "hello world"
-  zone          = "ap-guangzhou-3"
+	  period     = 1
+	  renew_flag = "NOTIFY_AND_AUTO_RENEW"
 
-  containers {
-    container_image = "ccr.ccs.tencentyun.com/qcloud/nginx"
-    container_name = "nginx"
-    envs {
-      key = "key"
-      value = "value"
-    }
-    envs {
-      key = "key2"
-      value = "value2"
-    }
-    publish_ports {
-      host_port = 80
-      container_port = 80
-      ip = "127.0.0.1"
-      protocol = "tcp"
-    }
-    publish_ports {
-      host_port = 36000
-      container_port = 36000
-      ip = "127.0.0.1"
-      protocol = "tcp"
-    }
-    volumes {
-      container_path = "/data"
-      host_path = "/tmp"
-    }
-    volumes {
-      container_path = "/var"
-      host_path = "/tmp"
-    }
-    command = "ls -l"
-  }
+	  instance_name = "hello world"
+	  zone          = "ap-guangzhou-3"
 
-  containers {
-    container_image = "ccr.ccs.tencentyun.com/qcloud/resty"
-    container_name = "resty"
-    envs {
-      key = "key2"
-      value = "value2"
-    }
-    publish_ports {
-      host_port = 80
-      container_port = 80
-      ip = "127.0.0.1"
-      protocol = "udp"
-    }
+	  containers {
+	    container_image = "ccr.ccs.tencentyun.com/qcloud/nginx"
+	    container_name = "nginx"
+	    envs {
+	      key = "key"
+	      value = "value"
+	    }
+	    envs {
+	      key = "key2"
+	      value = "value2"
+	    }
+	    publish_ports {
+	      host_port = 80
+	      container_port = 80
+	      ip = "127.0.0.1"
+	      protocol = "tcp"
+	    }
+	    publish_ports {
+	      host_port = 36000
+	      container_port = 36000
+	      ip = "127.0.0.1"
+	      protocol = "tcp"
+	    }
+	    volumes {
+	      container_path = "/data"
+	      host_path = "/tmp"
+	    }
+	    volumes {
+	      container_path = "/var"
+	      host_path = "/tmp"
+	    }
+	    command = "ls -l"
+	  }
 
-    volumes {
-      container_path = "/var"
-      host_path = "/tmp"
-    }
-    command = "echo \"hello\""
-  }
-}
+	  containers {
+	    container_image = "ccr.ccs.tencentyun.com/qcloud/resty"
+	    container_name = "resty"
+	    envs {
+	      key = "key2"
+	      value = "value2"
+	    }
+	    publish_ports {
+	      host_port = 80
+	      container_port = 80
+	      ip = "127.0.0.1"
+	      protocol = "udp"
+	    }
+
+	    volumes {
+	      container_path = "/var"
+	      host_path = "/tmp"
+	    }
+	    command = "echo \"hello\""
+	  }
+	}
+
 ```
-
 */
 package tencentcloud
 

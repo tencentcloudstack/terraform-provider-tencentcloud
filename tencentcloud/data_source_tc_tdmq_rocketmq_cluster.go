@@ -1,12 +1,14 @@
 /*
 Use this data source to query detailed information of tdmqRocketmq cluster
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-  name_keyword = "test_rocketmq"
-}
+
+	data "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
+	  name_keyword = "test_rocketmq"
+	}
+
 ```
 */
 package tencentcloud

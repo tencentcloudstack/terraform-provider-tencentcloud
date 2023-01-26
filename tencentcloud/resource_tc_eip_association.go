@@ -3,26 +3,30 @@ Provides an eip resource associated with other resource like CVM, ENI and CLB.
 
 ~> **NOTE:** Please DO NOT define `allocate_public_ip` in `tencentcloud_instance` resource when using `tencentcloud_eip_association`.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_eip_association" "foo" {
-  eip_id      = "eip-xxxxxx"
-  instance_id = "ins-xxxxxx"
-}
+
+	resource "tencentcloud_eip_association" "foo" {
+	  eip_id      = "eip-xxxxxx"
+	  instance_id = "ins-xxxxxx"
+	}
+
 ```
 
 or
 
 ```hcl
-resource "tencentcloud_eip_association" "bar" {
-  eip_id               = "eip-xxxxxx"
-  network_interface_id = "eni-xxxxxx"
-  private_ip           = "10.0.1.22"
-}
+
+	resource "tencentcloud_eip_association" "bar" {
+	  eip_id               = "eip-xxxxxx"
+	  network_interface_id = "eni-xxxxxx"
+	  private_ip           = "10.0.1.22"
+	}
+
 ```
 
-Import
+# Import
 
 Eip association can be imported using the id, e.g.
 

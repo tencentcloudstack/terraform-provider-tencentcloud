@@ -1,23 +1,25 @@
 /*
 Provides a resource to create a CLB attachment.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_clb_attachment" "foo" {
-  clb_id      = "lb-k2zjp9lv"
-  listener_id = "lbl-hh141sn9"
-  rule_id     = "loc-4xxr2cy7"
 
-  targets {
-    instance_id = "ins-1flbqyp8"
-    port        = 80
-    weight      = 10
-  }
-}
+	resource "tencentcloud_clb_attachment" "foo" {
+	  clb_id      = "lb-k2zjp9lv"
+	  listener_id = "lbl-hh141sn9"
+	  rule_id     = "loc-4xxr2cy7"
+
+	  targets {
+	    instance_id = "ins-1flbqyp8"
+	    port        = 80
+	    weight      = 10
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 CLB attachment can be imported using the id, e.g.
 

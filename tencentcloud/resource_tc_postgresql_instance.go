@@ -1,138 +1,150 @@
 /*
 Use this resource to create postgresql instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-1"
-}
+
+	variable "availability_zone" {
+	  default = "ap-guangzhou-1"
+	}
 
 # create vpc
-resource "tencentcloud_vpc" "vpc" {
-  name       = "guagua_vpc_instance_test"
-  cidr_block = "10.0.0.0/16"
-}
+
+	resource "tencentcloud_vpc" "vpc" {
+	  name       = "guagua_vpc_instance_test"
+	  cidr_block = "10.0.0.0/16"
+	}
 
 # create vpc subnet
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = var.availability_zone
-  name              = "guagua_vpc_subnet_test"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.20.0/28"
-  is_multicast      = false
-}
+
+	resource "tencentcloud_subnet" "subnet" {
+	  availability_zone = var.availability_zone
+	  name              = "guagua_vpc_subnet_test"
+	  vpc_id            = tencentcloud_vpc.vpc.id
+	  cidr_block        = "10.0.20.0/28"
+	  is_multicast      = false
+	}
 
 # create postgresql
-resource "tencentcloud_postgresql_instance" "foo" {
-  name              = "example"
-  availability_zone = var.availability_zone
-  charge_type       = "POSTPAID_BY_HOUR"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version    = "10.4"
-  root_user         = "root123"
-  root_password     = "Root123$"
-  charset           = "UTF8"
-  project_id        = 0
-  memory            = 2
-  storage           = 10
 
-  tags = {
-    test = "tf"
-  }
-}
+	resource "tencentcloud_postgresql_instance" "foo" {
+	  name              = "example"
+	  availability_zone = var.availability_zone
+	  charge_type       = "POSTPAID_BY_HOUR"
+	  vpc_id            = tencentcloud_vpc.vpc.id
+	  subnet_id         = tencentcloud_subnet.subnet.id
+	  engine_version    = "10.4"
+	  root_user         = "root123"
+	  root_password     = "Root123$"
+	  charset           = "UTF8"
+	  project_id        = 0
+	  memory            = 2
+	  storage           = 10
+
+	  tags = {
+	    test = "tf"
+	  }
+	}
+
 ```
 
-Create a multi available zone bucket
+# Create a multi available zone bucket
 
 ```hcl
-variable "availability_zone" {
-  default = "ap-guangzhou-6"
-}
 
-variable "standby_availability_zone" {
-  default = "ap-guangzhou-7"
-}
+	variable "availability_zone" {
+	  default = "ap-guangzhou-6"
+	}
+
+	variable "standby_availability_zone" {
+	  default = "ap-guangzhou-7"
+	}
 
 # create vpc
-resource "tencentcloud_vpc" "vpc" {
-  name       = "guagua_vpc_instance_test"
-  cidr_block = "10.0.0.0/16"
-}
+
+	resource "tencentcloud_vpc" "vpc" {
+	  name       = "guagua_vpc_instance_test"
+	  cidr_block = "10.0.0.0/16"
+	}
 
 # create vpc subnet
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = var.availability_zone
-  name              = "guagua_vpc_subnet_test"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.20.0/28"
-  is_multicast      = false
-}
+
+	resource "tencentcloud_subnet" "subnet" {
+	  availability_zone = var.availability_zone
+	  name              = "guagua_vpc_subnet_test"
+	  vpc_id            = tencentcloud_vpc.vpc.id
+	  cidr_block        = "10.0.20.0/28"
+	  is_multicast      = false
+	}
 
 # create postgresql
-resource "tencentcloud_postgresql_instance" "foo" {
-  name              = "example"
-  availability_zone = var.availability_zone
-  charge_type       = "POSTPAID_BY_HOUR"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version    = "10.4"
-  root_user         = "root123"
-  root_password     = "Root123$"
-  charset           = "UTF8"
-  project_id        = 0
-  memory            = 2
-  storage           = 10
 
-  db_node_set {
-    role = "Primary"
-    zone = var.availability_zone
-  }
-  db_node_set {
-    zone = var.standby_availability_zone
-  }
+	resource "tencentcloud_postgresql_instance" "foo" {
+	  name              = "example"
+	  availability_zone = var.availability_zone
+	  charge_type       = "POSTPAID_BY_HOUR"
+	  vpc_id            = tencentcloud_vpc.vpc.id
+	  subnet_id         = tencentcloud_subnet.subnet.id
+	  engine_version    = "10.4"
+	  root_user         = "root123"
+	  root_password     = "Root123$"
+	  charset           = "UTF8"
+	  project_id        = 0
+	  memory            = 2
+	  storage           = 10
 
-  tags = {
-    test = "tf"
-  }
-}
+	  db_node_set {
+	    role = "Primary"
+	    zone = var.availability_zone
+	  }
+	  db_node_set {
+	    zone = var.standby_availability_zone
+	  }
+
+	  tags = {
+	    test = "tf"
+	  }
+	}
+
 ```
 
 create pgsql with kms key
 ```
-resource "tencentcloud_postgresql_instance" "pg" {
-  name              = "tf_postsql_instance"
-  availability_zone = "ap-guangzhou-6"
-  charge_type       = "POSTPAID_BY_HOUR"
-  vpc_id            = "vpc-86v957zb"
-  subnet_id         = "subnet-enm92y0m"
-  engine_version    = "11.12"
-  #  db_major_vesion   = "11"
-  db_kernel_version = "v11.12_r1.3"
-  need_support_tde  = 1
-  kms_key_id        = "788c606a-c7b7-11ec-82d1-5254001e5c4e"
-  kms_region        = "ap-guangzhou"
-  root_password     = "xxxxxxxxxx"
-  charset           = "LATIN1"
-  project_id        = 0
-  memory            = 4
-  storage           = 100
 
-  backup_plan {
-    min_backup_start_time        = "00:10:11"
-    max_backup_start_time        = "01:10:11"
-    base_backup_retention_period = 7
-    backup_period                = ["tuesday", "wednesday"]
-  }
+	resource "tencentcloud_postgresql_instance" "pg" {
+	  name              = "tf_postsql_instance"
+	  availability_zone = "ap-guangzhou-6"
+	  charge_type       = "POSTPAID_BY_HOUR"
+	  vpc_id            = "vpc-86v957zb"
+	  subnet_id         = "subnet-enm92y0m"
+	  engine_version    = "11.12"
+	  #  db_major_vesion   = "11"
+	  db_kernel_version = "v11.12_r1.3"
+	  need_support_tde  = 1
+	  kms_key_id        = "788c606a-c7b7-11ec-82d1-5254001e5c4e"
+	  kms_region        = "ap-guangzhou"
+	  root_password     = "xxxxxxxxxx"
+	  charset           = "LATIN1"
+	  project_id        = 0
+	  memory            = 4
+	  storage           = 100
 
-  tags = {
-    tf = "test"
-  }
-}
+	  backup_plan {
+	    min_backup_start_time        = "00:10:11"
+	    max_backup_start_time        = "01:10:11"
+	    base_backup_retention_period = 7
+	    backup_period                = ["tuesday", "wednesday"]
+	  }
+
+	  tags = {
+	    tf = "test"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 postgresql instance can be imported using the id, e.g.
 

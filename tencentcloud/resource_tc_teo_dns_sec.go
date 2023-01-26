@@ -1,13 +1,14 @@
 /*
 Provides a resource to create a teo dns_sec
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_dns_sec" "dns_sec" {
-  zone_id = "zone-297z8rf93cfw"
-  status = "enabled"
-}
+
+	resource "tencentcloud_teo_dns_sec" "dns_sec" {
+	  zone_id = "zone-297z8rf93cfw"
+	  status = "enabled"
+	}
 
 ```
 Import

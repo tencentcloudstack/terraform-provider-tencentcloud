@@ -1,16 +1,18 @@
 /*
 Provides a resource to create a CLB instance topic.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_clb_log_topic" "topic" {
-  log_set_id = "${tencentcloud_clb_log_set.set.id}"
-  topic_name = "clb-topic"
-}
+
+	resource "tencentcloud_clb_log_topic" "topic" {
+	  log_set_id = "${tencentcloud_clb_log_set.set.id}"
+	  topic_name = "clb-topic"
+	}
+
 ```
 
-Import
+# Import
 
 CLB log topic can be imported using the id, e.g.
 

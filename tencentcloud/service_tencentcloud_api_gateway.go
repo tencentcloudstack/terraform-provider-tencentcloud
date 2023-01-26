@@ -921,7 +921,7 @@ func (me *APIGatewayService) DescribeApisStatus(ctx context.Context,
 	}
 }
 
-//limit & domain
+// limit & domain
 func (me *APIGatewayService) DescribeServiceEnvironmentStrategyList(ctx context.Context,
 	serviceId string) (environmentList []*apigateway.ServiceEnvironmentStrategy, errRet error) {
 	var (

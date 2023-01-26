@@ -1,21 +1,23 @@
 /*
 Provides a SQL Server PublishSubscribe resource belongs to SQL Server instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-	publish_instance_id             = tencentcloud_sqlserver_instance.publish_instance.id
-	subscribe_instance_id           = tencentcloud_sqlserver_instance.subscribe_instance.id
-	publish_subscribe_name          = "example"
-	delete_subscribe_db             = false
-	database_tuples {
-		publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
+
+	resource "tencentcloud_sqlserver_publish_subscribe" "example" {
+		publish_instance_id             = tencentcloud_sqlserver_instance.publish_instance.id
+		subscribe_instance_id           = tencentcloud_sqlserver_instance.subscribe_instance.id
+		publish_subscribe_name          = "example"
+		delete_subscribe_db             = false
+		database_tuples {
+			publish_database            = tencentcloud_sqlserver_db.test_publish_subscribe.name
+		}
 	}
-}
+
 ```
 
-Import
+# Import
 
 SQL Server PublishSubscribe can be imported using the publish_sqlserver_id#subscribe_sqlserver_id, e.g.
 

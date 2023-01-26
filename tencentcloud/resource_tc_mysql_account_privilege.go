@@ -3,15 +3,17 @@ Provides a mysql account privilege resource to grant different access privilege 
 
 ~> **NOTE:** It has been deprecated and replaced by  tencentcloud_mysql_privilege.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_account_privilege" "default" {
-  mysql_id       = "my-test-database"
-  account_name   = "tf_account"
-  privileges     = ["SELECT"]
-  database_names = ["instance.name"]
-}
+
+	resource "tencentcloud_mysql_account_privilege" "default" {
+	  mysql_id       = "my-test-database"
+	  account_name   = "tf_account"
+	  privileges     = ["SELECT"]
+	  database_names = ["instance.name"]
+	}
+
 ```
 */
 package tencentcloud

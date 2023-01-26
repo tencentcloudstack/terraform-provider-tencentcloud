@@ -1,21 +1,23 @@
 /*
 Use this resource to create tcr repository.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_tcr_instances" "test" {
-  name = "test"
-}
 
-resource "tencentcloud_tcr_repository" "foo" {
-  instance_id		= data.tencentcloud_tcr_instances.test.instance_list[0].id
-  namespace_name 	= "exampleNamespace"
-  name              = "example"
-}
+	data "tencentcloud_tcr_instances" "test" {
+	  name = "test"
+	}
+
+	resource "tencentcloud_tcr_repository" "foo" {
+	  instance_id		= data.tencentcloud_tcr_instances.test.instance_list[0].id
+	  namespace_name 	= "exampleNamespace"
+	  name              = "example"
+	}
+
 ```
 
-Import
+# Import
 
 tcr repository can be imported using the id, e.g.
 

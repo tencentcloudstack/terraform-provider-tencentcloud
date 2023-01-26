@@ -1,16 +1,18 @@
 /*
 Provides a resource to manage address template.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_address_template" "foo" {
-  name                = "cam-user-test"
-  addresses = ["10.0.0.1","10.0.1.0/24","10.0.0.1-10.0.0.100"]
-}
+
+	resource "tencentcloud_address_template" "foo" {
+	  name                = "cam-user-test"
+	  addresses = ["10.0.0.1","10.0.1.0/24","10.0.0.1-10.0.0.100"]
+	}
+
 ```
 
-Import
+# Import
 
 Address template can be imported using the id, e.g.
 

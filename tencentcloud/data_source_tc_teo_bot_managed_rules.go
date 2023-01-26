@@ -1,13 +1,15 @@
 /*
 Use this data source to query detailed information of teo botManagedRules
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_teo_bot_managed_rules" "botManagedRules" {
-  zone_id = ""
-  entity = ""
-}
+
+	data "tencentcloud_teo_bot_managed_rules" "botManagedRules" {
+	  zone_id = ""
+	  entity = ""
+	}
+
 ```
 */
 package tencentcloud

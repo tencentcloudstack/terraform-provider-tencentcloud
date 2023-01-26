@@ -1,37 +1,41 @@
 /*
 Provides a resource to create an ENI.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_vpc" "foo" {
-  name       = "ci-test-eni-vpc"
-  cidr_block = "10.0.0.0/16"
-}
 
-resource "tencentcloud_subnet" "foo" {
-  availability_zone = "ap-guangzhou-3"
-  name              = "ci-test-eni-subnet"
-  vpc_id            = tencentcloud_vpc.foo.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
+	resource "tencentcloud_vpc" "foo" {
+	  name       = "ci-test-eni-vpc"
+	  cidr_block = "10.0.0.0/16"
+	}
 
-resource "tencentcloud_eni" "foo" {
-  name        = "ci-test-eni"
-  vpc_id      = tencentcloud_vpc.foo.id
-  subnet_id   = tencentcloud_subnet.foo.id
-  description = "eni desc"
-  ipv4_count  = 1
-}
+	resource "tencentcloud_subnet" "foo" {
+	  availability_zone = "ap-guangzhou-3"
+	  name              = "ci-test-eni-subnet"
+	  vpc_id            = tencentcloud_vpc.foo.id
+	  cidr_block        = "10.0.0.0/16"
+	  is_multicast      = false
+	}
+
+	resource "tencentcloud_eni" "foo" {
+	  name        = "ci-test-eni"
+	  vpc_id      = tencentcloud_vpc.foo.id
+	  subnet_id   = tencentcloud_subnet.foo.id
+	  description = "eni desc"
+	  ipv4_count  = 1
+	}
+
 ```
 
-Import
+# Import
 
 ENI can be imported using the id, e.g.
 
 ```
-  $ terraform import tencentcloud_eni.foo eni-qka182br
+
+	$ terraform import tencentcloud_eni.foo eni-qka182br
+
 ```
 */
 package tencentcloud

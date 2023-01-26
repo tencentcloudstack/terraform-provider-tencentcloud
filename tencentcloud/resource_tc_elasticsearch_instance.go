@@ -1,46 +1,48 @@
 /*
 Provides an elasticsearch instance resource.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_elasticsearch_instance" "foo" {
-  instance_name     = "tf-test"
-  availability_zone = "ap-guangzhou-3"
-  version           = "7.5.1"
-  vpc_id            = var.vpc_id
-  subnet_id         = var.subnet_id
-  password          = "Test12345"
-  license_type      = "oss"
 
-  web_node_type_info {
-    node_num = 1
-    node_type = "ES.S1.MEDIUM4"
-  }
+	resource "tencentcloud_elasticsearch_instance" "foo" {
+	  instance_name     = "tf-test"
+	  availability_zone = "ap-guangzhou-3"
+	  version           = "7.5.1"
+	  vpc_id            = var.vpc_id
+	  subnet_id         = var.subnet_id
+	  password          = "Test12345"
+	  license_type      = "oss"
 
-  node_info_list {
-    node_num  = 2
-    node_type = "ES.S1.MEDIUM4"
-    encrypt = false
-  }
+	  web_node_type_info {
+	    node_num = 1
+	    node_type = "ES.S1.MEDIUM4"
+	  }
 
-  es_acl {
-    black_list = [
-	  "9.9.9.9",
-	  "8.8.8.8",
-  ]
-    white_list = [
-	  "0.0.0.0",
-    ]
-  }
+	  node_info_list {
+	    node_num  = 2
+	    node_type = "ES.S1.MEDIUM4"
+	    encrypt = false
+	  }
 
-  tags = {
-    test = "test"
-  }
-}
+	  es_acl {
+	    black_list = [
+		  "9.9.9.9",
+		  "8.8.8.8",
+	  ]
+	    white_list = [
+		  "0.0.0.0",
+	    ]
+	  }
+
+	  tags = {
+	    test = "test"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 Elasticsearch instance can be imported using the id, e.g.
 

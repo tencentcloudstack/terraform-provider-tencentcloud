@@ -1,13 +1,14 @@
 /*
 Provides a resource to create a tdmqRocketmq cluster
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test rocket mq"
-}
+
+	resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
+		cluster_name = "test_rocketmq"
+		remark = "test rocket mq"
+	}
 
 ```
 Import

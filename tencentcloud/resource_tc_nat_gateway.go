@@ -1,23 +1,25 @@
 /*
 Provides a resource to create a NAT gateway.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_nat_gateway" "foo" {
-  name             = "test_nat_gateway"
-  vpc_id           = "vpc-4xxr2cy7"
-  bandwidth        = 100
-  max_concurrent   = 1000000
-  assigned_eip_set = ["1.1.1.1"]
 
-  tags = {
-    test = "tf"
-  }
-}
+	resource "tencentcloud_nat_gateway" "foo" {
+	  name             = "test_nat_gateway"
+	  vpc_id           = "vpc-4xxr2cy7"
+	  bandwidth        = 100
+	  max_concurrent   = 1000000
+	  assigned_eip_set = ["1.1.1.1"]
+
+	  tags = {
+	    test = "tf"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 NAT gateway can be imported using the id, e.g.
 

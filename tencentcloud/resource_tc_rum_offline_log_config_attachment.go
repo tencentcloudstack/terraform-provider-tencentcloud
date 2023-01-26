@@ -1,13 +1,14 @@
 /*
 Provides a resource to create a rum offline_log_config_attachment
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_rum_offline_log_config_attachment" "offline_log_config_attachment" {
-  project_key = "ZEYrYfvaYQ30jRdmPx"
-  unique_id = "100027012454"
-}
+
+	resource "tencentcloud_rum_offline_log_config_attachment" "offline_log_config_attachment" {
+	  project_key = "ZEYrYfvaYQ30jRdmPx"
+	  unique_id = "100027012454"
+	}
 
 ```
 Import

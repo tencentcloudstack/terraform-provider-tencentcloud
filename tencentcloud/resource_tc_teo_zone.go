@@ -1,29 +1,34 @@
 /*
 Provides a resource to create a teo zone
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_zone" "zone" {
-  zone_name = "toutiao2.com"
-  plan_type = "sta"
-  type      = "full"
-  paused    = false
+
+	resource "tencentcloud_teo_zone" "zone" {
+	  zone_name = "toutiao2.com"
+	  plan_type = "sta"
+	  type      = "full"
+	  paused    = false
+
 #  vanity_name_servers {
 #    switch = ""
 #    servers = ""
 #
 #  }
-  cname_speed_up = "enabled"
+
+	cname_speed_up = "enabled"
+
 #  tags {
 #    tag_key = ""
 #    tag_value = ""
 #
 #  }
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
+
+	  tags = {
+	    "createdBy" = "terraform"
+	  }
+	}
 
 ```
 Import

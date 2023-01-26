@@ -1,16 +1,18 @@
 /*
 Use this data source to query detailed information of rum tawInstance
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_rum_taw_instance" "tawInstance" {
-  charge_statuses = ""
-  charge_types = ""
-  area_ids = ""
-  instance_statuses = ""
-  instance_ids = ""
-}
+
+	data "tencentcloud_rum_taw_instance" "tawInstance" {
+	  charge_statuses = ""
+	  charge_types = ""
+	  area_ids = ""
+	  instance_statuses = ""
+	  instance_ids = ""
+	}
+
 ```
 */
 package tencentcloud

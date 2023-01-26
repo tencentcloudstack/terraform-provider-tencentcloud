@@ -361,7 +361,7 @@ func (me *TdmqService) DeleteTdmqTopic(ctx context.Context, environId string, to
 	return
 }
 
-//tdmq role
+// tdmq role
 func (me *TdmqService) CreateTdmqRole(ctx context.Context, roleName string, clusterId string,
 	remark string) (roleId string, errRet error) {
 	logId := getLogId(ctx)
@@ -486,7 +486,7 @@ func (me *TdmqService) DeleteTdmqRole(ctx context.Context, roleName string, clus
 	return
 }
 
-//tdmq role
+// tdmq role
 func (me *TdmqService) CreateTdmqNamespaceRoleAttachment(ctx context.Context, environId string,
 	roleName string, permissions []*string, clusterId string) (errRet error) {
 	logId := getLogId(ctx)

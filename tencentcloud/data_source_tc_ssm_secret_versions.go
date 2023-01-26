@@ -3,10 +3,11 @@ Use this data source to query detailed information of SSM secret version
 Example Usage
 ```hcl
 
-data "tencentcloud_ssm_secret_versions" "foo" {
-  secret_name = "test"
-  version_id = "v1"
-}
+	data "tencentcloud_ssm_secret_versions" "foo" {
+	  secret_name = "test"
+	  version_id = "v1"
+	}
+
 ```
 */
 package tencentcloud

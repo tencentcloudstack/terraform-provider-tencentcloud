@@ -1,25 +1,27 @@
 /*
 Provides a resource to create a vpc flow_log
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_vpc_flow_log" "flow_log" {
-  flow_log_name = "foo"
-  resource_type = "NETWORKINTERFACE"
-  resource_id = "eni-xxxxxxxx"
-  traffic_type = "ALL"
-  vpc_id = "vpc-xxxxxxxx"
-  flow_log_description = "My testing log"
-  cloud_log_id = "a1b2c3d4-e5f6a7b8-c9d0e1f2-a3b4c5d6"
-  storage_type = "cls"
-  tags = {
-	"createdBy" = "terraform"
-  }
-}
+
+	resource "tencentcloud_vpc_flow_log" "flow_log" {
+	  flow_log_name = "foo"
+	  resource_type = "NETWORKINTERFACE"
+	  resource_id = "eni-xxxxxxxx"
+	  traffic_type = "ALL"
+	  vpc_id = "vpc-xxxxxxxx"
+	  flow_log_description = "My testing log"
+	  cloud_log_id = "a1b2c3d4-e5f6a7b8-c9d0e1f2-a3b4c5d6"
+	  storage_type = "cls"
+	  tags = {
+		"createdBy" = "terraform"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 vpc flow_log can be imported using the flow log Id combine vpc Id, e.g.
 

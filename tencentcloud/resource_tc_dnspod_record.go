@@ -1,19 +1,21 @@
 /*
 Provide a resource to create a DnsPod record.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_dnspod_record" "demo" {
-  domain="mikatong.com"
-  record_type="A"
-  record_line="默认"
-  value="1.2.3.9"
-  sub_domain="demo"
-}
+
+	resource "tencentcloud_dnspod_record" "demo" {
+	  domain="mikatong.com"
+	  record_type="A"
+	  record_line="默认"
+	  value="1.2.3.9"
+	  sub_domain="demo"
+	}
+
 ```
 
-Import
+# Import
 
 DnsPod Domain record can be imported using the Domain#RecordId, e.g.
 

@@ -1,36 +1,37 @@
 /*
 Provides a resource to create a tcm tracing_config
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tcm_tracing_config" "tracing_config" {
-  mesh_id = "mesh-xxxxxxxx"
-  enable = true
-  apm {
-	enable = true
-	region = "ap-guangzhou"
-	instance_id = "apm-xxx"
-  }
-  sampling =
-  zipkin {
-	address = "10.10.10.10:9411"
-  }
-}
 
-resource "tencentcloud_tcm_tracing_config" "delete_config" {
-  mesh_id = "mesh-rofjmxxx"
-  enable = true
-  apm {
-    enable = false
-    # region = "ap-guangzhou"
-    # instance_id = "apm-xxx"
-  }
-  sampling = 0
-  zipkin {
-    address = ""
-  }
-}
+	resource "tencentcloud_tcm_tracing_config" "tracing_config" {
+	  mesh_id = "mesh-xxxxxxxx"
+	  enable = true
+	  apm {
+		enable = true
+		region = "ap-guangzhou"
+		instance_id = "apm-xxx"
+	  }
+	  sampling =
+	  zipkin {
+		address = "10.10.10.10:9411"
+	  }
+	}
+
+	resource "tencentcloud_tcm_tracing_config" "delete_config" {
+	  mesh_id = "mesh-rofjmxxx"
+	  enable = true
+	  apm {
+	    enable = false
+	    # region = "ap-guangzhou"
+	    # instance_id = "apm-xxx"
+	  }
+	  sampling = 0
+	  zipkin {
+	    address = ""
+	  }
+	}
 
 ```
 Import

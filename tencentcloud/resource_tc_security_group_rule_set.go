@@ -3,52 +3,54 @@ Provides a resource to create security group rule. This resource is similar with
 
 ~> **NOTE:** This resource must exclusive in one security group, do not declare additional rule resources of this security group elsewhere.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_security_group" "sglab_1" {
-  name        = "mysg_1"
-  description = "favourite sg_1"
-}
 
-resource "tencentcloud_security_group_rule_set" "sglab_1" {
-  security_group_id = tencentcloud_security_group.sglab_1.id
-  ingress {
-    cidr_block  = "10.0.0.0/16" # Accept IP or CIDR
-    protocol    = "TCP" # Default is ALL
-    port        = "80" # Accept port e.g. 80 or PortRange e.g. 8080-8089
-    action      = "ACCEPT"
-    description = "favourite sg rule_1"
-  }
-  ingress {
-    protocol           = "TCP"
-    port               = "80"
-    action             = "ACCEPT"
-    source_security_id = tencentcloud_security_group.sglab_3.id
-    description        = "favourite sg rule_2"
-  }
+	resource "tencentcloud_security_group" "sglab_1" {
+	  name        = "mysg_1"
+	  description = "favourite sg_1"
+	}
 
-  egress {
-    action              = "ACCEPT"
-    address_template_id = "ipm-xxxxxxxx" # Support address template (group)
-    description         = "Allow address template"
-  }
-  egress {
-    action                 = "ACCEPT"
-    service_template_group = "ppmg-xxxxxxxx" # Support protocol template (group)
-    description            = "Allow protocol template"
-  }
-  egress {
-    cidr_block  = "10.0.0.0/16"
-    protocol    = "TCP"
-    port        = "80"
-    action      = "DROP"
-    description = "favourite sg egress rule"
-  }
-}
+	resource "tencentcloud_security_group_rule_set" "sglab_1" {
+	  security_group_id = tencentcloud_security_group.sglab_1.id
+	  ingress {
+	    cidr_block  = "10.0.0.0/16" # Accept IP or CIDR
+	    protocol    = "TCP" # Default is ALL
+	    port        = "80" # Accept port e.g. 80 or PortRange e.g. 8080-8089
+	    action      = "ACCEPT"
+	    description = "favourite sg rule_1"
+	  }
+	  ingress {
+	    protocol           = "TCP"
+	    port               = "80"
+	    action             = "ACCEPT"
+	    source_security_id = tencentcloud_security_group.sglab_3.id
+	    description        = "favourite sg rule_2"
+	  }
+
+	  egress {
+	    action              = "ACCEPT"
+	    address_template_id = "ipm-xxxxxxxx" # Support address template (group)
+	    description         = "Allow address template"
+	  }
+	  egress {
+	    action                 = "ACCEPT"
+	    service_template_group = "ppmg-xxxxxxxx" # Support protocol template (group)
+	    description            = "Allow protocol template"
+	  }
+	  egress {
+	    cidr_block  = "10.0.0.0/16"
+	    protocol    = "TCP"
+	    port        = "80"
+	    action      = "DROP"
+	    description = "favourite sg egress rule"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 Resource tencentcloud_security_group_rule_set can be imported by passing security grou id:
 

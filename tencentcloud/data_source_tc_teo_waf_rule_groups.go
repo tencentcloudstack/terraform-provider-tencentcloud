@@ -1,13 +1,15 @@
 /*
 Use this data source to query detailed information of teo wafRuleGroups
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_teo_waf_rule_groups" "wafRuleGroups" {
-  zone_id = ""
-  entity = ""
-}
+
+	data "tencentcloud_teo_waf_rule_groups" "wafRuleGroups" {
+	  zone_id = ""
+	  entity = ""
+	}
+
 ```
 */
 package tencentcloud

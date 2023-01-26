@@ -1,12 +1,14 @@
 /*
 Use this data source to get the available zones in current region. By default only `AVAILABLE` zones will be returned, but `UNAVAILABLE` zones can also be fetched when `include_unavailable` is specified.
 
-Example Usage
+# Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "my_favourite_zone" {
-  name = "ap-guangzhou-3"
-}
+
+	data "tencentcloud_availability_zones" "my_favourite_zone" {
+	  name = "ap-guangzhou-3"
+	}
+
 ```
 */
 package tencentcloud

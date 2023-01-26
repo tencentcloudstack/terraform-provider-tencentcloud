@@ -1,29 +1,31 @@
 /*
 Provides a SQL Server instance resource to create basic database instances.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_basic_instance" "foo" {
-	name                    = "example"
-	availability_zone       = var.availability_zone
-	charge_type             = "POSTPAID_BY_HOUR"
-	vpc_id                  = "vpc-26w7r56z"
-	subnet_id               = "subnet-lvlr6eeu"
-	project_id              = 0
-	memory                  = 2
-	storage                 = 20
-	cpu                     = 1
-	machine_type            = "CLOUD_PREMIUM"
-	maintenance_week_set    = [1,2,3]
-	maintenance_start_time  = "09:00"
-	maintenance_time_span   = 3
-	security_groups         = ["sg-nltpbqg1"]
 
-	tags = {
-		"test"  = "test"
+	resource "tencentcloud_sqlserver_basic_instance" "foo" {
+		name                    = "example"
+		availability_zone       = var.availability_zone
+		charge_type             = "POSTPAID_BY_HOUR"
+		vpc_id                  = "vpc-26w7r56z"
+		subnet_id               = "subnet-lvlr6eeu"
+		project_id              = 0
+		memory                  = 2
+		storage                 = 20
+		cpu                     = 1
+		machine_type            = "CLOUD_PREMIUM"
+		maintenance_week_set    = [1,2,3]
+		maintenance_start_time  = "09:00"
+		maintenance_time_span   = 3
+		security_groups         = ["sg-nltpbqg1"]
+
+		tags = {
+			"test"  = "test"
+		}
 	}
-}
+
 ```
 Import
 

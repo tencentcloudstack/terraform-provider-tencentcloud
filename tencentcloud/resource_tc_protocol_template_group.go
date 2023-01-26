@@ -1,16 +1,18 @@
 /*
 Provides a resource to manage protocol template group.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_protocol_template_group" "foo" {
-  name                = "group-test"
-  protocols = ["ipl-axaf24151","ipl-axaf24152"]
-}
+
+	resource "tencentcloud_protocol_template_group" "foo" {
+	  name                = "group-test"
+	  protocols = ["ipl-axaf24151","ipl-axaf24152"]
+	}
+
 ```
 
-Import
+# Import
 
 Protocol template group can be imported using the id, e.g.
 

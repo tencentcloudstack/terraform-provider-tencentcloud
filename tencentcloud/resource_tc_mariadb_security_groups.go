@@ -1,14 +1,15 @@
 /*
 Provides a resource to create a mariadb security_groups
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mariadb_security_groups" "security_groups" {
-  instance_id       = "tdsql-4pzs5b67"
-  security_group_id = "sg-7kpsbxdb"
-  product           = "mariadb"
-}
+
+	resource "tencentcloud_mariadb_security_groups" "security_groups" {
+	  instance_id       = "tdsql-4pzs5b67"
+	  security_group_id = "sg-7kpsbxdb"
+	  product           = "mariadb"
+	}
 
 ```
 Import

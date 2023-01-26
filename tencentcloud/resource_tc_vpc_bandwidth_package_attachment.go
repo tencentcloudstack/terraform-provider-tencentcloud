@@ -1,16 +1,17 @@
 /*
 Provides a resource to create a vpc bandwidth_package_attachment
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_vpc_bandwidth_package_attachment" "bandwidth_package_attachment" {
-  resource_id           = "lb-dv1ai6ma"
-  bandwidth_package_id  = "bwp-atmf0p9g"
-  network_type          = "BGP"
-  resource_type         = "LoadBalance"
-  protocol              = ""
-}
+
+	resource "tencentcloud_vpc_bandwidth_package_attachment" "bandwidth_package_attachment" {
+	  resource_id           = "lb-dv1ai6ma"
+	  bandwidth_package_id  = "bwp-atmf0p9g"
+	  network_type          = "BGP"
+	  resource_type         = "LoadBalance"
+	  protocol              = ""
+	}
 
 ```
 */

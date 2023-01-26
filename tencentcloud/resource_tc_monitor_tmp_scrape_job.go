@@ -1,13 +1,15 @@
 /*
 Provides a resource to create a monitor tmpScrapeJob
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_scrape_job" "tmpScrapeJob" {
-  instance_id = "prom-dko9d0nu"
-  agent_id = "agent-6a7g40k2"
-  config = <<-EOT
+
+	resource "tencentcloud_monitor_tmp_scrape_job" "tmpScrapeJob" {
+	  instance_id = "prom-dko9d0nu"
+	  agent_id = "agent-6a7g40k2"
+	  config = <<-EOT
+
 job_name: demo-config
 honor_timestamps: true
 metrics_path: /metrics

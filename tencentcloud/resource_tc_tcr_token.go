@@ -1,16 +1,18 @@
 /*
 Use this resource to create tcr long term token.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tcr_token" "foo" {
-  instance_id		= "cls-cda1iex1"
-  description		= "test"
-}
+
+	resource "tencentcloud_tcr_token" "foo" {
+	  instance_id		= "cls-cda1iex1"
+	  description		= "test"
+	}
+
 ```
 
-Import
+# Import
 
 tcr token can be imported using the id, e.g.
 

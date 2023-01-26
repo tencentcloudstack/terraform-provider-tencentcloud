@@ -1,15 +1,16 @@
 /*
 Provides a resource to create a cls logset
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cls_logset" "logset" {
-  logset_name = "demo"
-  tags = {
-    "createdBy" = "terraform"
-  }
-}
+
+	resource "tencentcloud_cls_logset" "logset" {
+	  logset_name = "demo"
+	  tags = {
+	    "createdBy" = "terraform"
+	  }
+	}
 
 ```
 Import

@@ -1,15 +1,17 @@
 /*
 Provide a resource to create a SCF namespace.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_scf_namespace" "foo" {
-  namespace = "ci-test-scf"
-}
+
+	resource "tencentcloud_scf_namespace" "foo" {
+	  namespace = "ci-test-scf"
+	}
+
 ```
 
-Import
+# Import
 
 SCF namespace can be imported, e.g.
 

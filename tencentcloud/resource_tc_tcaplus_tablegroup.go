@@ -1,22 +1,24 @@
 /*
 Use this resource to create TcaplusDB table group.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tcaplus_cluster" "test" {
-  idl_type                 = "PROTO"
-  cluster_name             = "tf_tcaplus_cluster_test"
-  vpc_id                   = "vpc-7k6gzox6"
-  subnet_id                = "subnet-akwgvfa3"
-  password                 = "1qaA2k1wgvfa3ZZZ"
-  old_password_expire_last = 3600
-}
 
-resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
-  cluster_id      = tencentcloud_tcaplus_cluster.test.id
-  tablegroup_name = "tf_test_group_name"
-}
+	resource "tencentcloud_tcaplus_cluster" "test" {
+	  idl_type                 = "PROTO"
+	  cluster_name             = "tf_tcaplus_cluster_test"
+	  vpc_id                   = "vpc-7k6gzox6"
+	  subnet_id                = "subnet-akwgvfa3"
+	  password                 = "1qaA2k1wgvfa3ZZZ"
+	  old_password_expire_last = 3600
+	}
+
+	resource "tencentcloud_tcaplus_tablegroup" "tablegroup" {
+	  cluster_id      = tencentcloud_tcaplus_cluster.test.id
+	  tablegroup_name = "tf_test_group_name"
+	}
+
 ```
 */
 package tencentcloud

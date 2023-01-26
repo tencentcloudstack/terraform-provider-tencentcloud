@@ -1,31 +1,33 @@
 /*
 Provide a resource to attach an existing subnet to Network ACL.
 
-Example Usage
+# Example Usage
 
 ```hcl
 data "tencentcloud_vpc_instances" "id_instances" {
 }
-resource "tencentcloud_vpc_acl" "foo" {
-    vpc_id  = data.tencentcloud_vpc_instances.id_instances.instance_list.0.vpc_id
-    name  	= "test_acl"
-	ingress = [
-		"ACCEPT#192.168.1.0/24#800#TCP",
-		"ACCEPT#192.168.1.0/24#800-900#TCP",
-	]
-	egress = [
-    	"ACCEPT#192.168.1.0/24#800#TCP",
-    	"ACCEPT#192.168.1.0/24#800-900#TCP",
-	]
-}
 
-resource "tencentcloud_vpc_acl_attachment" "attachment"{
-		acl_id = tencentcloud_vpc_acl.foo.id
-		subnet_id = data.tencentcloud_vpc_instances.id_instances.instance_list[0].subnet_ids[0]
-}
+	resource "tencentcloud_vpc_acl" "foo" {
+	    vpc_id  = data.tencentcloud_vpc_instances.id_instances.instance_list.0.vpc_id
+	    name  	= "test_acl"
+		ingress = [
+			"ACCEPT#192.168.1.0/24#800#TCP",
+			"ACCEPT#192.168.1.0/24#800-900#TCP",
+		]
+		egress = [
+	    	"ACCEPT#192.168.1.0/24#800#TCP",
+	    	"ACCEPT#192.168.1.0/24#800-900#TCP",
+		]
+	}
+
+	resource "tencentcloud_vpc_acl_attachment" "attachment"{
+			acl_id = tencentcloud_vpc_acl.foo.id
+			subnet_id = data.tencentcloud_vpc_instances.id_instances.instance_list[0].subnet_ids[0]
+	}
+
 ```
 
-Import
+# Import
 
 Acl attachment can be imported using the id, e.g.
 

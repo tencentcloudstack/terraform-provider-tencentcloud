@@ -2,22 +2,24 @@
 Provide a resource to create a SSM secret version.
 Example Usage
 ```hcl
-resource "tencentcloud_ssm_secret" "foo" {
-  secret_name = "test"
-  description = "test secret"
-  recovery_window_in_days = 0
-  is_enabled = true
 
-  tags = {
-    test-tag = "test"
-  }
-}
+	resource "tencentcloud_ssm_secret" "foo" {
+	  secret_name = "test"
+	  description = "test secret"
+	  recovery_window_in_days = 0
+	  is_enabled = true
 
-resource "tencentcloud_ssm_secret_version" "v1" {
-  secret_name = tencentcloud_ssm_secret.foo.secret_name
-  version_id = "v1"
-  secret_binary = "MTIzMTIzMTIzMTIzMTIzQQ=="
-}
+	  tags = {
+	    test-tag = "test"
+	  }
+	}
+
+	resource "tencentcloud_ssm_secret_version" "v1" {
+	  secret_name = tencentcloud_ssm_secret.foo.secret_name
+	  version_id = "v1"
+	  secret_binary = "MTIzMTIzMTIzMTIzMTIzQQ=="
+	}
+
 ```
 Import
 SSM secret version can be imported using the secretName#versionId, e.g.

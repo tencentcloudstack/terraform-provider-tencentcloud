@@ -1,20 +1,22 @@
 /*
 Provide a resource to create a KMS external key.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_kms_external_key" "foo" {
-	alias = "test"
-	description = "describe key test message."
-	wrapping_algorithm = "RSAES_PKCS1_V1_5"
-	key_material_base64 = "MTIzMTIzMTIzMTIzMTIzQQ=="
-	valid_to = 2147443200
-	is_enabled = true
-}
+
+	resource "tencentcloud_kms_external_key" "foo" {
+		alias = "test"
+		description = "describe key test message."
+		wrapping_algorithm = "RSAES_PKCS1_V1_5"
+		key_material_base64 = "MTIzMTIzMTIzMTIzMTIzQQ=="
+		valid_to = 2147443200
+		is_enabled = true
+	}
+
 ```
 
-Import
+# Import
 
 KMS external keys can be imported using the id, e.g.
 

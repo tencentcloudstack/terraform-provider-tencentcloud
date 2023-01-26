@@ -1,61 +1,61 @@
 /*
 Provides a resource to create a teo ddos_policy
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_ddos_policy" "ddos_policy" {
-  policy_id = 1278
-  zone_id   = "zone-2983wizgxqvm"
 
-  ddos_rule {
-    switch = "on"
+	resource "tencentcloud_teo_ddos_policy" "ddos_policy" {
+	  policy_id = 1278
+	  zone_id   = "zone-2983wizgxqvm"
 
-    acl {
-      switch = "on"
-    }
+	  ddos_rule {
+	    switch = "on"
 
-    allow_block {
-      switch = "on"
-    }
+	    acl {
+	      switch = "on"
+	    }
 
-    anti_ply {
-      abnormal_connect_num      = 0
-      abnormal_syn_num          = 0
-      abnormal_syn_ratio        = 0
-      connect_timeout           = 0
-      destination_connect_limit = 0
-      destination_create_limit  = 0
-      drop_icmp                 = "off"
-      drop_other                = "off"
-      drop_tcp                  = "off"
-      drop_udp                  = "off"
-      empty_connect_protect     = "off"
-      source_connect_limit      = 0
-      source_create_limit       = 0
-      udp_shard                 = "off"
-    }
+	    allow_block {
+	      switch = "on"
+	    }
 
-    geo_ip {
-      region_ids = []
-      switch     = "on"
-    }
+	    anti_ply {
+	      abnormal_connect_num      = 0
+	      abnormal_syn_num          = 0
+	      abnormal_syn_ratio        = 0
+	      connect_timeout           = 0
+	      destination_connect_limit = 0
+	      destination_create_limit  = 0
+	      drop_icmp                 = "off"
+	      drop_other                = "off"
+	      drop_tcp                  = "off"
+	      drop_udp                  = "off"
+	      empty_connect_protect     = "off"
+	      source_connect_limit      = 0
+	      source_create_limit       = 0
+	      udp_shard                 = "off"
+	    }
 
-    packet_filter {
-      switch = "on"
-    }
+	    geo_ip {
+	      region_ids = []
+	      switch     = "on"
+	    }
 
-    speed_limit {
-      flux_limit    = "0 bps"
-      package_limit = "0 pps"
-    }
+	    packet_filter {
+	      switch = "on"
+	    }
 
-    status_info {
-      ply_level = "middle"
-    }
-  }
-}
+	    speed_limit {
+	      flux_limit    = "0 bps"
+	      package_limit = "0 pps"
+	    }
 
+	    status_info {
+	      ply_level = "middle"
+	    }
+	  }
+	}
 
 ```
 Import

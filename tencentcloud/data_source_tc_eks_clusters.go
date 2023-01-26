@@ -3,12 +3,14 @@ Use this data source to query elastic kubernetes cluster resource (offlined).
 
 ~> **NOTE:**  This resource was offline and no longer supported.
 
-Example Usage
+# Example Usage
 
 ```
-data "tencentcloud_eks_clusters" "foo" {
-  cluster_id = "cls-xxxxxxxx"
-}
+
+	data "tencentcloud_eks_clusters" "foo" {
+	  cluster_id = "cls-xxxxxxxx"
+	}
+
 ```
 */
 package tencentcloud

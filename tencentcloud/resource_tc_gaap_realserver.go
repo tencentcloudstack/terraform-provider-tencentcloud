@@ -1,25 +1,29 @@
 /*
 Provides a resource to create a GAAP realserver.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_gaap_realserver" "foo" {
-  ip   = "1.1.1.1"
-  name = "ci-test-gaap-realserver"
 
-  tags = {
-    test = "test"
-  }
-}
+	resource "tencentcloud_gaap_realserver" "foo" {
+	  ip   = "1.1.1.1"
+	  name = "ci-test-gaap-realserver"
+
+	  tags = {
+	    test = "test"
+	  }
+	}
+
 ```
 
-Import
+# Import
 
 GAAP realserver can be imported using the id, e.g.
 
 ```
-  $ terraform import tencentcloud_gaap_realserver.foo rs-4ftghy6
+
+	$ terraform import tencentcloud_gaap_realserver.foo rs-4ftghy6
+
 ```
 */
 package tencentcloud

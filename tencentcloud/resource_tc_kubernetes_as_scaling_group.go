@@ -3,48 +3,49 @@ Auto scaling group for kubernetes cluster (offlined).
 
 ~> **NOTE:**  This resource was offline and no longer supported.
 
-Example Usage
+# Example Usage
 
 ```hcl
 # Use tencentcloud_kubernetes_node_pool instead
-resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
-  name = "mynodepool"
-  cluster_id = "cls-xxxxxxxx"
-  max_size = 6
-  min_size = 1
-  vpc_id               = "vpc-xxxxxxxx"
-  subnet_ids           = ["subnet-xxxxxxxx"]
-  retry_policy         = "INCREMENTAL_INTERVALS"
-  desired_capacity     = 4
-  enable_auto_scale    = true
-  multi_zone_subnet_policy = "EQUALITY"
 
-  auto_scaling_config {
-    instance_type      = var.default_instance_type
-    system_disk_type   = "CLOUD_PREMIUM"
-    system_disk_size   = "50"
-    security_group_ids = ["sg-24vswocp"]
-	instance_charge_type = "SPOTPAID"
-    spot_instance_type = "one-time"
-    spot_max_price = "1000"
+	resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
+	  name = "mynodepool"
+	  cluster_id = "cls-xxxxxxxx"
+	  max_size = 6
+	  min_size = 1
+	  vpc_id               = "vpc-xxxxxxxx"
+	  subnet_ids           = ["subnet-xxxxxxxx"]
+	  retry_policy         = "INCREMENTAL_INTERVALS"
+	  desired_capacity     = 4
+	  enable_auto_scale    = true
+	  multi_zone_subnet_policy = "EQUALITY"
 
-    data_disk {
-      disk_type = "CLOUD_PREMIUM"
-      disk_size = 50
-    }
+	  auto_scaling_config {
+	    instance_type      = var.default_instance_type
+	    system_disk_type   = "CLOUD_PREMIUM"
+	    system_disk_size   = "50"
+	    security_group_ids = ["sg-24vswocp"]
+		instance_charge_type = "SPOTPAID"
+	    spot_instance_type = "one-time"
+	    spot_max_price = "1000"
 
-    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-    internet_max_bandwidth_out = 10
-    public_ip_assigned         = true
-    password                   = input_your_password
-    enhanced_security_service  = false
-    enhanced_monitor_service   = false
-  }
+	    data_disk {
+	      disk_type = "CLOUD_PREMIUM"
+	      disk_size = 50
+	    }
 
-  labels = {
-    "test1" = "test1",
-    "test2" = "test2",
-  }
+	    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	    internet_max_bandwidth_out = 10
+	    public_ip_assigned         = true
+	    password                   = input_your_password
+	    enhanced_security_service  = false
+	    enhanced_monitor_service   = false
+	  }
+
+	  labels = {
+	    "test1" = "test1",
+	    "test2" = "test2",
+	  }
 
 }
 */

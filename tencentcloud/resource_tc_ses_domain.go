@@ -1,12 +1,13 @@
 /*
 Provides a resource to create a ses domain
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ses_domain" "domain" {
-    email_identity = "iac.cloud"
-}
+
+	resource "tencentcloud_ses_domain" "domain" {
+	    email_identity = "iac.cloud"
+	}
 
 ```
 Import

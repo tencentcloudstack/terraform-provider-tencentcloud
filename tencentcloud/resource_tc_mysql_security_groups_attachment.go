@@ -1,16 +1,18 @@
 /*
 Provides a resource to create a mysql security_groups_attachment
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_security_groups_attachment" "security_groups_attachment" {
-  security_group_id = "sg-baxfiao5"
-  instance_id       = "cdb-fitq5t9h"
-}
+
+	resource "tencentcloud_mysql_security_groups_attachment" "security_groups_attachment" {
+	  security_group_id = "sg-baxfiao5"
+	  instance_id       = "cdb-fitq5t9h"
+	}
+
 ```
 
-Import
+# Import
 
 mysql security_groups_attachment can be imported using the id, e.g.
 

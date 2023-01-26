@@ -1,22 +1,23 @@
 /*
 Provides a resource to create a tat command
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tat_command" "command" {
-  username          = "root"
-  command_name      = "ls"
-  content           = "bHM="
-  description       = "xxx"
-  command_type      = "SHELL"
-  working_directory = "/root"
-  timeout = 50
-  tags {
-	key = ""
-	value = ""
-  }
-}
+
+	resource "tencentcloud_tat_command" "command" {
+	  username          = "root"
+	  command_name      = "ls"
+	  content           = "bHM="
+	  description       = "xxx"
+	  command_type      = "SHELL"
+	  working_directory = "/root"
+	  timeout = 50
+	  tags {
+		key = ""
+		value = ""
+	  }
+	}
 
 ```
 Import

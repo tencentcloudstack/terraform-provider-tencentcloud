@@ -1,17 +1,19 @@
 /*
 Use this resource to create tcr namespace.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_tcr_namespace" "foo" {
-  instance_id		= ""
-  name              = "example"
-  is_public		 	= true
-}
+
+	resource "tencentcloud_tcr_namespace" "foo" {
+	  instance_id		= ""
+	  name              = "example"
+	  is_public		 	= true
+	}
+
 ```
 
-Import
+# Import
 
 tcr namespace can be imported using the id, e.g.
 

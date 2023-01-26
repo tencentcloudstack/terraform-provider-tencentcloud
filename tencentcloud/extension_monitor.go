@@ -18,7 +18,7 @@ var monitorEventStatus = []string{
 	monitorEventStatusNothing,
 }
 
-//notify_way
+// notify_way
 const monitorNotifyWaySMS = "SMS"
 const monitorNotifyWaySITE = "SITE"
 const monitorNotifyWayEMAIL = "EMAIL"
@@ -33,7 +33,7 @@ var monitorNotifyWays = []string{
 	monitorNotifyWayWECHAT,
 }
 
-//receiver_type
+// receiver_type
 const monitorReceiverTypeUser = "user"
 const monitorReceiverTypeGroup = "group"
 
@@ -42,7 +42,7 @@ var monitorReceiverTypes = []string{
 	monitorReceiverTypeGroup,
 }
 
-//receive_language
+// receive_language
 const monitorReceiveLanguageCN = "zh-CN"
 const monitorReceiveLanguageUS = "en-US"
 

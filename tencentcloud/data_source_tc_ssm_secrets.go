@@ -3,11 +3,12 @@ Use this data source to query detailed information of SSM secret
 Example Usage
 ```hcl
 
-data "tencentcloud_ssm_secrets" "foo" {
-  secret_name = "test"
-  order_type = 1
-  state = 1
-}
+	data "tencentcloud_ssm_secrets" "foo" {
+	  secret_name = "test"
+	  order_type = 1
+	  state = 1
+	}
+
 ```
 */
 package tencentcloud

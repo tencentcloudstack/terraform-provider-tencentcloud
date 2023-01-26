@@ -1,16 +1,18 @@
 /*
 Provides a resource to create a monitor tmpExporterIntegration
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration" {
-  instance_id = "prom-dko9d0nu"
-  kind = "blackbox-exporter"
-  content = "{\"name\":\"test\",\"kind\":\"blackbox-exporter\",\"spec\":{\"instanceSpec\":{\"module\":\"http_get\",\"urls\":[\"xx\"]}}}"
-  kube_type = 1
-  cluster_id = "cls-bmuaukfu"
-}
+
+	resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration" {
+	  instance_id = "prom-dko9d0nu"
+	  kind = "blackbox-exporter"
+	  content = "{\"name\":\"test\",\"kind\":\"blackbox-exporter\",\"spec\":{\"instanceSpec\":{\"module\":\"http_get\",\"urls\":[\"xx\"]}}}"
+	  kube_type = 1
+	  cluster_id = "cls-bmuaukfu"
+	}
+
 ```
 */
 package tencentcloud

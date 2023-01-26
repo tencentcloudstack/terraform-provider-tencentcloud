@@ -1,18 +1,20 @@
 /*
 Provides a resource to create a apiGateway plugin_attachment
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_plugin_attachment" "plugin_attachment" {
-  plugin_id        = "plugin-ny74siyz"
-  service_id       = "service-n1mgl0sq"
-  environment_name = "test"
-  api_id           = "api-6tfrdysk"
-}
+
+	resource "tencentcloud_api_gateway_plugin_attachment" "plugin_attachment" {
+	  plugin_id        = "plugin-ny74siyz"
+	  service_id       = "service-n1mgl0sq"
+	  environment_name = "test"
+	  api_id           = "api-6tfrdysk"
+	}
+
 ```
 
-Import
+# Import
 
 apiGateway plugin_attachment can be imported using the id, e.g.
 

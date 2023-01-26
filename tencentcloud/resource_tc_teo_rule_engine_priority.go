@@ -1,21 +1,22 @@
 /*
 Provides a resource to create a teo rule_engine_priority
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_teo_rule_engine_priority" "rule_engine_priority" {
-  zone_id = "zone-294v965lwmn6"
 
-  rules_priority {
-    index = 0
-    value = "rule-m9jlttua"
-  }
-  rules_priority {
-    index = 1
-    value = "rule-m5l9t4k1"
-  }
-}
+	resource "tencentcloud_teo_rule_engine_priority" "rule_engine_priority" {
+	  zone_id = "zone-294v965lwmn6"
+
+	  rules_priority {
+	    index = 0
+	    value = "rule-m9jlttua"
+	  }
+	  rules_priority {
+	    index = 1
+	    value = "rule-m5l9t4k1"
+	  }
+	}
 
 ```
 Import

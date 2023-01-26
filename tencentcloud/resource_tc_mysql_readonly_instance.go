@@ -4,23 +4,25 @@ Provides a mysql instance resource to create read-only database instances.
 ~> **NOTE:** Read-only instances can be purchased only for two-node or three-node source instances on MySQL 5.6 or above with the InnoDB engine at a specification of 1 GB memory and 50 GB disk capacity or above.
 ~> **NOTE:** The terminate operation of read only mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_readonly_instance" "default" {
-  master_instance_id = "cdb-dnqksd9f"
-  instance_name      = "myTestMysql"
-  mem_size           = 128000
-  volume_size        = 255
-  vpc_id             = "vpc-12mt3l31"
-  subnet_id          = "subnet-9uivyb1g"
-  intranet_port      = 3306
-  security_groups    = ["sg-ot8eclwz"]
 
-  tags = {
-    name = "test"
-  }
-}
+	resource "tencentcloud_mysql_readonly_instance" "default" {
+	  master_instance_id = "cdb-dnqksd9f"
+	  instance_name      = "myTestMysql"
+	  mem_size           = 128000
+	  volume_size        = 255
+	  vpc_id             = "vpc-12mt3l31"
+	  subnet_id          = "subnet-9uivyb1g"
+	  intranet_port      = 3306
+	  security_groups    = ["sg-ot8eclwz"]
+
+	  tags = {
+	    name = "test"
+	  }
+	}
+
 ```
 */
 package tencentcloud

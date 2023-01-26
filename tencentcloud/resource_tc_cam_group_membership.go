@@ -1,16 +1,18 @@
 /*
 Provides a resource to create a CAM group membership.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_cam_group_membership" "foo" {
-  group_id = tencentcloud_cam_group.foo.id
-  user_names = [tencentcloud_cam_user.foo.name, tencentcloud_cam_user.bar.name]
-}
+
+	resource "tencentcloud_cam_group_membership" "foo" {
+	  group_id = tencentcloud_cam_group.foo.id
+	  user_names = [tencentcloud_cam_user.foo.name, tencentcloud_cam_user.bar.name]
+	}
+
 ```
 
-Import
+# Import
 
 CAM group membership can be imported using the id, e.g.
 

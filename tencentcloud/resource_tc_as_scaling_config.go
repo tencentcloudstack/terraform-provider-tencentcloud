@@ -1,49 +1,53 @@
 /*
 Provides a resource to create a configuration for an AS (Auto scaling) instance.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "launch-configuration"
-  image_id           = "img-9qabwvbn"
-  instance_types     = ["SA1.SMALL1"]
-  project_id         = 0
-  system_disk_type   = "CLOUD_PREMIUM"
-  system_disk_size   = "50"
 
-  data_disk {
-    disk_type = "CLOUD_PREMIUM"
-    disk_size = 50
-  }
+	resource "tencentcloud_as_scaling_config" "launch_configuration" {
+	  configuration_name = "launch-configuration"
+	  image_id           = "img-9qabwvbn"
+	  instance_types     = ["SA1.SMALL1"]
+	  project_id         = 0
+	  system_disk_type   = "CLOUD_PREMIUM"
+	  system_disk_size   = "50"
 
-  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
-  internet_max_bandwidth_out = 10
-  public_ip_assigned         = true
-  password                   = "test123#"
-  enhanced_security_service  = false
-  enhanced_monitor_service   = false
-  user_data                  = "dGVzdA=="
+	  data_disk {
+	    disk_type = "CLOUD_PREMIUM"
+	    disk_size = 50
+	  }
 
-  instance_tags = {
-    tag = "as"
-  }
-}
+	  internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+	  internet_max_bandwidth_out = 10
+	  public_ip_assigned         = true
+	  password                   = "test123#"
+	  enhanced_security_service  = false
+	  enhanced_monitor_service   = false
+	  user_data                  = "dGVzdA=="
+
+	  instance_tags = {
+	    tag = "as"
+	  }
+	}
+
 ```
 
 Using SPOT charge type
 ```
-resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "launch-configuration"
-  image_id           = "img-9qabwvbn"
-  instance_types     = ["SA1.SMALL1"]
-  instance_charge_type = "SPOTPAID"
-  spot_instance_type = "one-time"
-  spot_max_price = "1000"
-}
+
+	resource "tencentcloud_as_scaling_config" "launch_configuration" {
+	  configuration_name = "launch-configuration"
+	  image_id           = "img-9qabwvbn"
+	  instance_types     = ["SA1.SMALL1"]
+	  instance_charge_type = "SPOTPAID"
+	  spot_instance_type = "one-time"
+	  spot_max_price = "1000"
+	}
+
 ```
 
-Import
+# Import
 
 AutoScaling Configuration can be imported using the id, e.g.
 

@@ -1,39 +1,41 @@
 /*
 Provides a resource to create a ci media_snapshot_template
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ci_media_snapshot_template" "media_snapshot_template" {
-    bucket = "terraform-ci-xxxxxx"
-  	name = "snapshot_template"
-  	snapshot {
-      # mode = ""
-      # start = ""
-      # time_interval = ""
-      count = "10"
-      # width = ""
-      # height = ""
-      # ci_param = ""
-      # is_check_count = ""
-      # is_check_black = ""
-      # black_level = ""
-      # pixel_black_threshold = ""
-      # snapshot_out_mode = ""
-      sprite_snapshot_config {
-        # cell_width = ""
-        # cell_height = ""
-        # padding = ""
-        # margin = ""
-        color = "0xF0F8FF"
-        columns = "10"
-        lines = "10"
-      }
-  	}
-}
+
+	resource "tencentcloud_ci_media_snapshot_template" "media_snapshot_template" {
+	    bucket = "terraform-ci-xxxxxx"
+	  	name = "snapshot_template"
+	  	snapshot {
+	      # mode = ""
+	      # start = ""
+	      # time_interval = ""
+	      count = "10"
+	      # width = ""
+	      # height = ""
+	      # ci_param = ""
+	      # is_check_count = ""
+	      # is_check_black = ""
+	      # black_level = ""
+	      # pixel_black_threshold = ""
+	      # snapshot_out_mode = ""
+	      sprite_snapshot_config {
+	        # cell_width = ""
+	        # cell_height = ""
+	        # padding = ""
+	        # margin = ""
+	        color = "0xF0F8FF"
+	        columns = "10"
+	        lines = "10"
+	      }
+	  	}
+	}
+
 ```
 
-Import
+# Import
 
 ci media_snapshot_template can be imported using the bucket#templateId, e.g.
 
