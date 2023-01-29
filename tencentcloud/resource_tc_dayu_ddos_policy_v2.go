@@ -764,16 +764,18 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
-	dropIcmp := protocolBlockRelation.ProtocolBlockConfig.DropIcmp
-	dropTcp := protocolBlockRelation.ProtocolBlockConfig.DropTcp
-	dropUdp := protocolBlockRelation.ProtocolBlockConfig.DropUdp
-	dropOther := protocolBlockRelation.ProtocolBlockConfig.DropOther
-	protocolBlockConfig := make(map[string]interface{})
-	protocolBlockConfig["drop_icmp"] = dropIcmp
-	protocolBlockConfig["drop_tcp"] = dropTcp
-	protocolBlockConfig["drop_udp"] = dropUdp
-	protocolBlockConfig["drop_other"] = dropOther
-	d.Set("protocol_block_config", []map[string]interface{}{protocolBlockConfig})
+	if protocolBlockRelation.ProtocolBlockConfig != nil {
+		dropIcmp := protocolBlockRelation.ProtocolBlockConfig.DropIcmp
+		dropTcp := protocolBlockRelation.ProtocolBlockConfig.DropTcp
+		dropUdp := protocolBlockRelation.ProtocolBlockConfig.DropUdp
+		dropOther := protocolBlockRelation.ProtocolBlockConfig.DropOther
+		protocolBlockConfig := make(map[string]interface{})
+		protocolBlockConfig["drop_icmp"] = dropIcmp
+		protocolBlockConfig["drop_tcp"] = dropTcp
+		protocolBlockConfig["drop_udp"] = dropUdp
+		protocolBlockConfig["drop_other"] = dropOther
+		d.Set("protocol_block_config", []map[string]interface{}{protocolBlockConfig})
+	}
 
 	connectLimitRelation, err := antiddosService.DescribeDDoSConnectLimitList(ctx, instanceId)
 	if err != nil {
