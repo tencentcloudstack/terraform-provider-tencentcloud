@@ -66,7 +66,7 @@ data "tencentcloud_vpn_connections" "example" {
 
 # The example below shows how to create a vpn gateway in ccn type if it is needed. Then could be used when creating
 # vpn tunnel in the usual way.
-resource tencentcloud_vpn_gateway ccn_vpngw_example {
+resource "tencentcloud_vpn_gateway" "ccn_vpngw_example" {
   name      = "ccn-vpngw-example"
   vpc_id    = data.tencentcloud_vpc_instances.example.instance_list.0.vpc_id
   bandwidth = 5
@@ -79,12 +79,12 @@ resource tencentcloud_vpn_gateway ccn_vpngw_example {
 }
 
 resource "tencentcloud_vpn_gateway_route" "example" {
-    vpn_gateway_id = tencentcloud_vpn_gateway.example.id
-    destination_cidr_block = "10.0.0.0/16"
-    instance_type = "VPNCONN"
-    instance_id = "vpnx-5b5dmao3"
-    priority = "100"
-    status = "DISABLE"
+  vpn_gateway_id         = tencentcloud_vpn_gateway.example.id
+  destination_cidr_block = "10.0.0.0/16"
+  instance_type          = "VPNCONN"
+  instance_id            = "vpnx-5b5dmao3"
+  priority               = "100"
+  status                 = "DISABLE"
 }
 
 data "tencentcloud_vpn_gateway_routes" "example" {

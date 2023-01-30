@@ -1,4 +1,4 @@
-resource tencentcloud_gaap_proxy "foo" {
+resource "tencentcloud_gaap_proxy" "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
@@ -6,12 +6,12 @@ resource tencentcloud_gaap_proxy "foo" {
   realserver_region = "NorthChina"
 }
 
-resource tencentcloud_gaap_security_policy "foo" {
+resource "tencentcloud_gaap_security_policy" "foo" {
   proxy_id = tencentcloud_gaap_proxy.foo.id
   action   = "ACCEPT"
 }
 
-resource tencentcloud_gaap_security_rule "foo" {
+resource "tencentcloud_gaap_security_rule" "foo" {
   name      = "ci-test-gaap-sr"
   policy_id = tencentcloud_gaap_security_policy.foo.id
   cidr_ip   = "1.1.1.1"
@@ -20,11 +20,11 @@ resource tencentcloud_gaap_security_rule "foo" {
   port      = "80"
 }
 
-data tencentcloud_gaap_security_policies "foo" {
+data "tencentcloud_gaap_security_policies" "foo" {
   id = tencentcloud_gaap_security_policy.foo.id
 }
 
-data tencentcloud_gaap_security_rules "ruleId" {
+data "tencentcloud_gaap_security_rules" "ruleId" {
   policy_id = tencentcloud_gaap_security_policy.foo.id
   rule_id   = tencentcloud_gaap_security_rule.foo.id
 }

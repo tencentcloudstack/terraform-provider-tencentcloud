@@ -158,8 +158,8 @@ resource "tencentcloud_clb_listener_rule" "rule_basic" {
   target_type         = "TARGETGROUP"
 }
 
-resource "tencentcloud_clb_target_group" "test"{
-    target_group_name = "test-target-keep-1"
+resource "tencentcloud_clb_target_group" "test" {
+  target_group_name = "test-target-keep-1"
 }
 
 data "tencentcloud_images" "my_favorite_image" {
@@ -220,12 +220,12 @@ data "tencentcloud_instances" "foo" {
   instance_id = tencentcloud_instance.my_awesome_app.id
 }
 
-resource "tencentcloud_clb_target_group" "test_instance_attachment"{
+resource "tencentcloud_clb_target_group" "test_instance_attachment" {
   target_group_name = "test"
   vpc_id            = tencentcloud_vpc.app.id
 }
 
-resource "tencentcloud_clb_target_group_instance_attachment" "test"{
+resource "tencentcloud_clb_target_group_instance_attachment" "test" {
   target_group_id = tencentcloud_clb_target_group.test_instance_attachment.id
   bind_ip         = data.tencentcloud_instances.foo.instance_list[0].private_ip
   port            = 88

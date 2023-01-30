@@ -1,25 +1,25 @@
 resource "tencentcloud_cdn_domain" "foo" {
-  domain       = "xxxx.com"
-  service_type = "web"
-  area         = "mainland"
+  domain              = "xxxx.com"
+  service_type        = "web"
+  area                = "mainland"
   range_origin_switch = "off"
 
-  rule_cache{
-  	cache_time = 10000
-  	no_cache_switch="on"
-  	re_validate="on"
+  rule_cache {
+    cache_time      = 10000
+    no_cache_switch = "on"
+    re_validate     = "on"
   }
 
-  request_header{
-  	switch = "on"
+  request_header {
+    switch = "on"
 
-  	header_rules {
-  		header_mode = "add"
-  		header_name = "tf-header-name"
-  		header_value = "tf-header-value"
-  		rule_type = "all"
-  		rule_paths = ["*"]
-  	}
+    header_rules {
+      header_mode  = "add"
+      header_name  = "tf-header-name"
+      header_value = "tf-header-value"
+      rule_type    = "all"
+      rule_paths   = ["*"]
+    }
   }
 
   origin {

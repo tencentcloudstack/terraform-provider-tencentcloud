@@ -1,4 +1,4 @@
-resource tencentcloud_gaap_proxy "foo" {
+resource "tencentcloud_gaap_proxy" "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
@@ -6,48 +6,48 @@ resource tencentcloud_gaap_proxy "foo" {
   realserver_region = "NorthChina"
 }
 
-resource tencentcloud_gaap_certificate "foo" {
+resource "tencentcloud_gaap_certificate" "foo" {
   type    = "SERVER"
   content = var.server_cert
   key     = var.server_key
 }
 
-resource tencentcloud_gaap_certificate "bar" {
+resource "tencentcloud_gaap_certificate" "bar" {
   type    = "CLIENT"
   content = var.client_ca
   key     = var.client_ca_key
 }
 
-resource tencentcloud_gaap_certificate "server" {
+resource "tencentcloud_gaap_certificate" "server" {
   type    = "SERVER"
   content = var.server_cert
   key     = var.server_key
 }
 
-resource tencentcloud_gaap_certificate "client" {
+resource "tencentcloud_gaap_certificate" "client" {
   type    = "CLIENT"
   content = var.client_ca
   key     = var.client_ca_key
 }
 
-resource tencentcloud_gaap_certificate "realserver" {
+resource "tencentcloud_gaap_certificate" "realserver" {
   type    = "REALSERVER"
   content = var.client_ca
   key     = var.client_ca_key
 }
 
-resource tencentcloud_gaap_certificate "basic" {
+resource "tencentcloud_gaap_certificate" "basic" {
   type    = "BASIC"
   content = "test:tx2KGdo3zJg/."
 }
 
-resource tencentcloud_gaap_certificate "gaap" {
+resource "tencentcloud_gaap_certificate" "gaap" {
   type    = "PROXY"
   content = var.server_cert
   key     = var.server_key
 }
 
-resource tencentcloud_gaap_layer7_listener "foo" {
+resource "tencentcloud_gaap_layer7_listener" "foo" {
   protocol               = "HTTPS"
   name                   = "ci-test-gaap-l7-listener"
   port                   = 80
@@ -58,17 +58,17 @@ resource tencentcloud_gaap_layer7_listener "foo" {
   auth_type              = 1
 }
 
-resource tencentcloud_gaap_realserver "foo" {
+resource "tencentcloud_gaap_realserver" "foo" {
   domain = "www.qq.com"
   name   = "ci-test-gaap-realserver"
 }
 
-resource tencentcloud_gaap_realserver "bar" {
+resource "tencentcloud_gaap_realserver" "bar" {
   domain = "qq.com"
   name   = "ci-test-gaap-realserver"
 }
 
-resource tencentcloud_gaap_http_domain "foo" {
+resource "tencentcloud_gaap_http_domain" "foo" {
   listener_id            = tencentcloud_gaap_layer7_listener.foo.id
   domain                 = "www.qq.com"
   certificate_id         = tencentcloud_gaap_certificate.server.id
@@ -85,7 +85,7 @@ resource tencentcloud_gaap_http_domain "foo" {
   gaap_auth_id = tencentcloud_gaap_certificate.gaap.id
 }
 
-resource tencentcloud_gaap_http_rule "foo" {
+resource "tencentcloud_gaap_http_rule" "foo" {
   listener_id     = tencentcloud_gaap_layer7_listener.foo.id
   domain          = tencentcloud_gaap_http_domain.foo.domain
   path            = "/"
@@ -106,7 +106,7 @@ resource tencentcloud_gaap_http_rule "foo" {
   }
 }
 
-resource tencentcloud_gaap_domain_error_page "foo" {
+resource "tencentcloud_gaap_domain_error_page" "foo" {
   listener_id    = tencentcloud_gaap_layer7_listener.foo.id
   domain         = tencentcloud_gaap_http_domain.foo.domain
   error_codes    = [406, 504]
@@ -124,13 +124,13 @@ data "tencentcloud_gaap_http_domains" "foo" {
   domain      = tencentcloud_gaap_http_domain.foo.domain
 }
 
-data tencentcloud_gaap_http_rules "foo" {
+data "tencentcloud_gaap_http_rules" "foo" {
   listener_id  = tencentcloud_gaap_layer7_listener.foo.id
   path         = tencentcloud_gaap_http_rule.foo.path
   forward_host = tencentcloud_gaap_http_rule.foo.forward_host
 }
 
-data tencentcloud_gaap_domain_error_pages "foo" {
+data "tencentcloud_gaap_domain_error_pages" "foo" {
   listener_id = tencentcloud_gaap_domain_error_page.foo.listener_id
   domain      = tencentcloud_gaap_domain_error_page.foo.domain
   ids         = [tencentcloud_gaap_domain_error_page.foo.id]

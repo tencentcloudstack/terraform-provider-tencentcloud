@@ -1,6 +1,6 @@
 resource "tencentcloud_cls_logset" "logset" {
   logset_name = "tf-topic-test"
-  tags        = {
+  tags = {
     "test" = "test"
   }
 }
@@ -12,10 +12,10 @@ resource "tencentcloud_cls_topic" "topic" {
   partition_count      = 1
   period               = 10
   storage_type         = "hot"
-  tags                 = {
+  tags = {
     "test" = "test"
   }
-  topic_name           = "tf-topic-test"
+  topic_name = "tf-topic-test"
 }
 
 resource "tencentcloud_cls_machine_group" "group" {
@@ -26,7 +26,7 @@ resource "tencentcloud_cls_machine_group" "group" {
   update_start_time = "17:05:00"
 
   machine_group_type {
-    type   = "ip"
+    type = "ip"
     values = [
       "192.168.1.1",
       "192.168.1.2",

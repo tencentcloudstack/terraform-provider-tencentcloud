@@ -67,8 +67,8 @@ resource "tencentcloud_vod_snapshot_by_time_offset_template" "foo" {
 }
 
 resource "tencentcloud_vod_super_player_config" "foo" {
-  name                    = "tf-super-player"
-  drm_switch              = true
+  name       = "tf-super-player"
+  drm_switch = true
   drm_streaming_info {
     simple_aes_definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
   }
@@ -81,9 +81,9 @@ resource "tencentcloud_vod_super_player_config" "foo" {
     min_edge_length = 890
     name            = "test2"
   }
-  domain                  = "Default"
-  scheme                  = "Default"
-  comment                 = "test"
+  domain  = "Default"
+  scheme  = "Default"
+  comment = "test"
 }
 
 resource "tencentcloud_vod_procedure_template" "foo" {
@@ -94,7 +94,7 @@ resource "tencentcloud_vod_procedure_template" "foo" {
       definition = tencentcloud_vod_adaptive_dynamic_streaming_template.foo.id
     }
     snapshot_by_time_offset_task_list {
-      definition           = tencentcloud_vod_snapshot_by_time_offset_template.foo.id
+      definition = tencentcloud_vod_snapshot_by_time_offset_template.foo.id
       ext_time_offset_list = [
         "3.5s"
       ]

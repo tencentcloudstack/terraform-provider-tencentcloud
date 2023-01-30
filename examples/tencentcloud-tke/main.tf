@@ -64,14 +64,14 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     public_ip_assigned         = true
     subnet_id                  = var.subnet
     img_id                     = "img-rkiynh11"
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    user_data                  = "dGVzdA=="
+    password                   = "ZZXXccvv1212"
   }
 
   extension_addon {
-    name  = "CBS",
+    name = "CBS"
     param = jsonencode({
       "kind" : "App", "spec" : {
         "chart" : { "chartName" : "cbs", "chartVersion" : "1.0.7" },
@@ -80,19 +80,19 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     })
   }
   extension_addon {
-    name  = "SecurityGroupPolicy",
+    name = "SecurityGroupPolicy"
     param = jsonencode({
       "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : "0.1.0" } }
     })
   }
   extension_addon {
-    name  = "OOMGuard",
+    name = "OOMGuard"
     param = jsonencode({
       "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : "1.0.1" } }
     })
   }
   extension_addon {
-    name  = "OLM",
+    name = "OLM"
     param = jsonencode({
       "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : "1.0.0" } }
     })
@@ -214,7 +214,7 @@ resource "tencentcloud_kubernetes_cluster" "independing_cluster" {
 }
 
 #examples for scale  worker
-resource tencentcloud_kubernetes_scale_worker test_scale {
+resource "tencentcloud_kubernetes_scale_worker" "test_scale" {
   cluster_id = tencentcloud_kubernetes_cluster.managed_cluster.id
 
   worker_config {
@@ -331,15 +331,15 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
   }
 
   node_pool_global_config {
-    is_scale_in_enabled = true
-    expander = "random"
+    is_scale_in_enabled            = true
+    expander                       = "random"
     ignore_daemon_sets_utilization = true
-    max_concurrent_scale_in = 5
-    scale_in_delay = 15
-    scale_in_unneeded_time = 15
+    max_concurrent_scale_in        = 5
+    scale_in_delay                 = 15
+    scale_in_unneeded_time         = 15
     scale_in_utilization_threshold = 30
-    skip_nodes_with_local_storage = false
-    skip_nodes_with_system_pods = true
+    skip_nodes_with_local_storage  = false
+    skip_nodes_with_system_pods    = true
   }
 
   labels = {

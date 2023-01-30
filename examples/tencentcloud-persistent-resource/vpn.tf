@@ -32,10 +32,10 @@ resource "tencentcloud_vpn_connection" "example" {
   pre_share_key              = "test"
   tags                       = {}
   vpc_id                     = "vpc-4owdpnwr"
-  vpn_gateway_id             =  resource.tencentcloud_vpn_gateway.example.id
+  vpn_gateway_id             = resource.tencentcloud_vpn_gateway.example.id
 
   security_group_policy {
-    local_cidr_block  = "172.16.0.0/16"
+    local_cidr_block = "172.16.0.0/16"
     remote_cidr_block = [
       "3.3.3.0/26",
     ]

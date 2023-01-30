@@ -1,10 +1,10 @@
 data "tencentcloud_vpc_subnets" "gz3" {
   availability_zone = "ap-guangzhou-3"
-  is_default = true
+  is_default        = true
 }
 
 locals {
-  vpc_id = data.tencentcloud_vpc_subnets.gz3.instance_list.0.vpc_id
+  vpc_id    = data.tencentcloud_vpc_subnets.gz3.instance_list.0.vpc_id
   subnet_id = data.tencentcloud_vpc_subnets.gz3.instance_list.0.subnet_id
 }
 

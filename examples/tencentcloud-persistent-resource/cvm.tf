@@ -5,7 +5,7 @@ resource "tencentcloud_instance" "cvm" {
 }
 
 data "tencentcloud_images" "default" {
-  image_type = ["PUBLIC_IMAGE"]
+  image_type       = ["PUBLIC_IMAGE"]
   image_name_regex = "Final"
 }
 
@@ -14,7 +14,7 @@ data "tencentcloud_instance_types" "default" {
     name   = "zone"
     values = ["ap-guangzhou-3"]
   }
-  cpu_core_count = 2
+  cpu_core_count   = 2
   exclude_sold_out = true
 }
 
@@ -30,6 +30,6 @@ resource "tencentcloud_instance" "foo" {
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
     data_disk_size = 50
-    encrypt = false
+    encrypt        = false
   }
 }

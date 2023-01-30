@@ -18,20 +18,20 @@ resource "tencentcloud_subnet" "sub2" {
 
 resource "tencentcloud_eks_cluster" "foo" {
   cluster_name = "tf-test-eks"
-  k8s_version = "1.18.4"
-  vpc_id = tencentcloud_vpc.vpc.id
+  k8s_version  = "1.18.4"
+  vpc_id       = tencentcloud_vpc.vpc.id
   subnet_ids = [
     tencentcloud_subnet.sub.id,
     tencentcloud_subnet.sub2.id,
   ]
-  cluster_desc = "test eks cluster created by terraform"
-  service_subnet_id =     tencentcloud_subnet.sub.id
+  cluster_desc      = "test eks cluster created by terraform"
+  service_subnet_id = tencentcloud_subnet.sub.id
   dns_servers {
-    domain = "www.example1.com"
+    domain  = "www.example1.com"
     servers = ["1.1.1.1:8080", "1.1.1.1:8081", "1.1.1.1:8082"]
   }
   enable_vpc_core_dns = true
-  need_delete_cbs = true
+  need_delete_cbs     = true
   tags = {
     hello = "world"
   }

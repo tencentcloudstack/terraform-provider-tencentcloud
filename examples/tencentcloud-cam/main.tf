@@ -29,7 +29,7 @@ resource "tencentcloud_cam_role" "example" {
 }
 
 resource "tencentcloud_cam_group_membership" "example" {
-  group_id = tencentcloud_cam_group.example.id
+  group_id   = tencentcloud_cam_group.example.id
   user_names = [tencentcloud_cam_user.example.name]
 }
 
@@ -39,7 +39,7 @@ resource "tencentcloud_cam_role_policy_attachment" "example" {
 }
 
 resource "tencentcloud_cam_user_policy_attachment" "example" {
-  user_name   = tencentcloud_cam_user.example.name
+  user_name = tencentcloud_cam_user.example.name
   policy_id = tencentcloud_cam_policy.example.id
 }
 

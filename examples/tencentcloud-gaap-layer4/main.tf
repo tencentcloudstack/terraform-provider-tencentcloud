@@ -1,4 +1,4 @@
-resource tencentcloud_gaap_proxy "foo" {
+resource "tencentcloud_gaap_proxy" "foo" {
   name              = "ci-test-gaap-proxy"
   bandwidth         = 10
   concurrent        = 2
@@ -6,17 +6,17 @@ resource tencentcloud_gaap_proxy "foo" {
   realserver_region = "NorthChina"
 }
 
-resource tencentcloud_gaap_realserver "foo" {
+resource "tencentcloud_gaap_realserver" "foo" {
   ip   = "1.1.1.1"
   name = "ci-test-gaap-realserver"
 }
 
-resource tencentcloud_gaap_realserver "bar" {
+resource "tencentcloud_gaap_realserver" "bar" {
   ip   = "119.29.29.29"
   name = "ci-test-gaap-realserver2"
 }
 
-resource tencentcloud_gaap_layer4_listener "foo" {
+resource "tencentcloud_gaap_layer4_listener" "foo" {
   protocol        = "TCP"
   name            = "ci-test-gaap-4-listener-new"
   port            = 80
@@ -42,7 +42,7 @@ resource tencentcloud_gaap_layer4_listener "foo" {
   }
 }
 
-data tencentcloud_gaap_layer4_listeners "foo" {
+data "tencentcloud_gaap_layer4_listeners" "foo" {
   protocol    = "TCP"
   proxy_id    = tencentcloud_gaap_proxy.foo.id
   listener_id = tencentcloud_gaap_layer4_listener.foo.id

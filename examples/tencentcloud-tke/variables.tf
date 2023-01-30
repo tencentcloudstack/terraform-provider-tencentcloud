@@ -17,4 +17,3 @@ variable "default_instance_type" {
 variable "scale_instance_type" {
   default = "S2.LARGE16"
 }
-

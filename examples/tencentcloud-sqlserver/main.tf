@@ -2,16 +2,16 @@ data "tencentcloud_sqlserver_zone_config" "foo" {
 }
 
 resource "tencentcloud_vpc" "sqlserver_vpc" {
-	name       = "tf-sqlserver-vpc"
-	cidr_block = "10.0.0.0/16"
+  name       = "tf-sqlserver-vpc"
+  cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_subnet" "sqlserver_subnet" {
-	availability_zone = "ap-guangzhou-3"
-	name              = "tf-sqlserver-subnet"
-	vpc_id            = tencentcloud_vpc.sqlserver_vpc.id
-	cidr_block        = "10.0.0.0/16"
-	is_multicast      = false
+  availability_zone = "ap-guangzhou-3"
+  name              = "tf-sqlserver-subnet"
+  vpc_id            = tencentcloud_vpc.sqlserver_vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
 }
 
 resource "tencentcloud_vpc" "foo" {
@@ -38,30 +38,30 @@ resource "tencentcloud_sqlserver_instance" "example" {
   memory            = 2
   storage           = 10
   tags = {
-      "test" = "test"
+    "test" = "test"
   }
 }
 
 resource "tencentcloud_sqlserver_basic_instance" "test" {
-    name                    = "tf_sqlserver_basic_instance"
-    availability_zone       = "ap-guangzhou-3"
-    charge_type             = "POSTPAID_BY_HOUR"
-    vpc_id                  = tencentcloud_vpc.sqlserver_vpc.id
-    subnet_id               = tencentcloud_subnet.sqlserver_subnet.id
-    machine_type            ="CLOUD_PREMIUM"
-    project_id              = 0
-    memory                  = 2
-    storage                 = 20
-    cpu                     = 1
-    security_groups         = ["sg-nltpbqg1"]
-    goods_num               = 1
-    maintenance_week_set    = [1,2,3]
-    maintenance_start_time  = "09:00"
-    maintenance_time_span   = 3
+  name                   = "tf_sqlserver_basic_instance"
+  availability_zone      = "ap-guangzhou-3"
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = tencentcloud_vpc.sqlserver_vpc.id
+  subnet_id              = tencentcloud_subnet.sqlserver_subnet.id
+  machine_type           = "CLOUD_PREMIUM"
+  project_id             = 0
+  memory                 = 2
+  storage                = 20
+  cpu                    = 1
+  security_groups        = ["sg-nltpbqg1"]
+  goods_num              = 1
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
 
-    tags = {
-        "test" = "test"
-    }
+  tags = {
+    "test" = "test"
+  }
 }
 
 resource "tencentcloud_sqlserver_db" "example" {
@@ -97,17 +97,17 @@ resource "tencentcloud_sqlserver_readonly_instance" "example" {
   readonly_group_type = 1
   force_upgrade       = true
   tags = {
-      "test" = "test"
+    "test" = "test"
   }
 }
 
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-	publish_instance_id             = tencentcloud_sqlserver_instance.example.id
-	subscribe_instance_id           = tencentcloud_sqlserver_instance.example_other.id
-	publish_subscribe_name          = "example"
-	database_tuples {
-		publish_database            = tencentcloud_sqlserver_db.example.name
-	}
+  publish_instance_id    = tencentcloud_sqlserver_instance.example.id
+  subscribe_instance_id  = tencentcloud_sqlserver_instance.example_other.id
+  publish_subscribe_name = "example"
+  database_tuples {
+    publish_database = tencentcloud_sqlserver_db.example.name
+  }
 }
 
 
@@ -148,11 +148,11 @@ data "tencentcloud_sqlserver_readonly_groups" "example" {
 }
 
 data "tencentcloud_sqlserver_publish_subscribes" "publish_subscribes" {
-	instance_id                     = tencentcloud_sqlserver_publish_subscribe.example.publish_instance_id
-	pub_or_sub_instance_id          = tencentcloud_sqlserver_publish_subscribe.example.subscribe_instance_id
-	publish_subscribe_name          = tencentcloud_sqlserver_publish_subscribe.example.publish_subscribe_name
+  instance_id            = tencentcloud_sqlserver_publish_subscribe.example.publish_instance_id
+  pub_or_sub_instance_id = tencentcloud_sqlserver_publish_subscribe.example.subscribe_instance_id
+  publish_subscribe_name = tencentcloud_sqlserver_publish_subscribe.example.publish_subscribe_name
 }
 
-data "tencentcloud_sqlserver_basic_instances" "id_test"{
-	id = tencentcloud_sqlserver_basic_instance.test.id
+data "tencentcloud_sqlserver_basic_instances" "id_test" {
+  id = tencentcloud_sqlserver_basic_instance.test.id
 }

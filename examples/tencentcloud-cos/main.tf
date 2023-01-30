@@ -56,11 +56,11 @@ data "tencentcloud_cos_buckets" "data_bucket" {
 }
 
 resource "tencentcloud_cos_bucket_policy" "cos_policy" {
-  bucket        = "mycos-1258798060"
-  policy        = var.policy
+  bucket = "mycos-1258798060"
+  policy = var.policy
 }
 
 resource "tencentcloud_cos_buckets" "verbose_acl_bucket" {
   bucket_prefix = "mycos-1258798060"
-  acl_body = var.acl_body
+  acl_body      = var.acl_body
 }
