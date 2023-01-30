@@ -233,13 +233,13 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether public net config enabled. NOTE: only `vpc_id` specified can disable public net config.",
+				Description: "Indicates whether public net config enabled. Default `false`. NOTE: only `vpc_id` specified can disable public net config.",
 			},
 			"enable_eip_config": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true.",
+				Description: "Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true. Default `false`.",
 			},
 			// cos code
 			"cos_bucket_name": {
