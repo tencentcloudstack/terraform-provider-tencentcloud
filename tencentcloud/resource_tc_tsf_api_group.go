@@ -5,16 +5,16 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_api_group" "api_group" {
-  group_name = ""
-  group_context = ""
-  auth_type = ""
-  description = ""
-  group_type = ""
-  gateway_instance_id = ""
-  namespace_name_key = ""
-  service_name_key = ""
-  namespace_name_key_position = ""
-  service_name_key_position = ""
+  group_name = "terraform_test_group"
+  group_context = "/terraform-test"
+  auth_type = "none"
+  description = "terraform-test"
+  group_type = "ms"
+  gateway_instance_id = "gw-ins-i6mjpgm8"
+  # namespace_name_key = "path"
+  # service_name_key = "path"
+  namespace_name_key_position = "path"
+  service_name_key_position = "path"
 }
 ```
 
@@ -386,7 +386,7 @@ func resourceTencentCloudTsfApiGroupRead(d *schema.ResourceData, meta interface{
 			bindedGatewayDeployGroupsList = append(bindedGatewayDeployGroupsList, bindedGatewayDeployGroupsMap)
 		}
 
-		_ = d.Set("binded_gateway_deploy_groups", []interface{}{bindedGatewayDeployGroupsList})
+		_ = d.Set("binded_gateway_deploy_groups", bindedGatewayDeployGroupsList)
 	}
 
 	if apiGroup.ApiCount != nil {
@@ -416,17 +416,11 @@ func resourceTencentCloudTsfApiGroupUpdate(d *schema.ResourceData, meta interfac
 
 	request.GroupId = &groupId
 
-	immutableArgs := []string{"group_name", "group_context", "auth_type", "description", "group_type", "gateway_instance_id", "namespace_name_key", "service_name_key", "namespace_name_key_position", "service_name_key_position", "result"}
+	immutableArgs := []string{"group_name", "group_type", "gateway_instance_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
-	if d.HasChange("group_name") {
-		if v, ok := d.GetOk("group_name"); ok {
-			request.GroupName = helper.String(v.(string))
 		}
 	}
 

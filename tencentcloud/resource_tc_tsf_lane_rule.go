@@ -109,7 +109,8 @@ func resourceTencentCloudTsfLaneRule() *schema.Resource {
 						},
 						"update_time": {
 							Type:        schema.TypeInt,
-							Required:    true,
+							Optional:    true,
+							Computed:    true,
 							Description: "update time.",
 						},
 					},

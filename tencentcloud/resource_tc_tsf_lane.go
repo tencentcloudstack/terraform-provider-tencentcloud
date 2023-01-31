@@ -5,23 +5,22 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_lane" "lane" {
-  lane_name = ""
-  remark = ""
+  lane_name = "lane-name-1"
+  remark = "lane desc1"
   lane_group_list {
-		group_id = ""
-		entrance =
-		lane_group_id = ""
-		lane_id = ""
-		group_name = ""
-		application_id = ""
-		application_name = ""
-		namespace_id = ""
-		namespace_name = ""
-		create_time =
-		update_time =
-		cluster_type = ""
+		group_id = "group-yn7j5l8a"
+		entrance = true
+		# lane_group_id = ""
+		# lane_id = ""
+		# group_name = ""
+		# application_id = ""
+		# application_name = ""
+		# namespace_id = ""
+		# namespace_name = ""
+		# create_time =
+		# update_time =
+		# cluster_type = ""
   }
-  program_id_list =
 }
 ```
 
@@ -400,7 +399,7 @@ func resourceTencentCloudTsfLaneUpdate(d *schema.ResourceData, meta interface{})
 
 	request.LaneId = &laneId
 
-	immutableArgs := []string{"lane_name", "remark", "lane_group_list", "program_id_list", "result"}
+	immutableArgs := []string{"lane_group_list", "program_id_list", "result"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
