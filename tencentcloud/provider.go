@@ -932,6 +932,10 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_microservice
 	tencentcloud_tsf_application_config
 
+Media Processing Service(MPS)
+  Resource
+	tencentcloud_mps_workflow
+
 */
 package tencentcloud
 
@@ -1653,6 +1657,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_microservice":                           resourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_application_config":                     resourceTencentCloudTsfApplicationConfig(),
 			"tencentcloud_cvm_launch_template":                        resourceTencentCloudCvmLaunchTemplate(),
+			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 		},
 
 		ConfigureFunc: providerConfigure,
