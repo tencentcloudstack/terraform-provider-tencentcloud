@@ -2263,3 +2263,114 @@ func (me *TkeService) DeletePrometheusClusterAgent(ctx context.Context, instance
 
 	return
 }
+
+func (me *TkeService) DescribeServerlessNodePoolByClusterIdAndNodePoolId(ctx context.Context, clusterId, nodePoolId string) (instance *tke.VirtualNodePool, has bool, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDescribeClusterVirtualNodePoolsRequest()
+	request.ClusterId = common.StringPtr(clusterId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterVirtualNodePools(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && len(response.Response.NodePoolSet) > 0 {
+		for _, nodePool := range response.Response.NodePoolSet {
+			if nodePool != nil && nodePool.NodePoolId != nil && *nodePool.NodePoolId == nodePoolId {
+				has = true
+				instance = nodePool
+			}
+		}
+	}
+	return
+}
+
+func (me *TkeService) CreateClusterVirtualNodePool(ctx context.Context, request *tke.CreateClusterVirtualNodePoolRequest) (id string, errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().CreateClusterVirtualNodePool(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && response.Response != nil && response.Response.NodePoolId != nil {
+		id = *response.Response.NodePoolId
+	}
+
+	return
+}
+
+func (me *TkeService) DeleteClusterVirtualNodePool(ctx context.Context, request *tke.DeleteClusterVirtualNodePoolRequest) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DeleteClusterVirtualNodePool(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) ModifyClusterVirtualNodePool(ctx context.Context, request *tke.ModifyClusterVirtualNodePoolRequest) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().ModifyClusterVirtualNodePool(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
