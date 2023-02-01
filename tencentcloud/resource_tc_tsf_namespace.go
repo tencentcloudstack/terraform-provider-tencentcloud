@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_tsf_namespace" "namespace" {
   namespace_name = "namespace-name"
-  # cluster_id = ""
+  # cluster_id = "cls-xxxx"
   namespace_desc = "namespace desc"
   # namespace_resource_type = ""
   namespace_type = "DEF"
