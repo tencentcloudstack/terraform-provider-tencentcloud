@@ -1599,3 +1599,148 @@ func (me *SqlserverService) DescribeSqlserverMigrationsByFilter(ctx context.Cont
 	}
 	return
 }
+
+func (me *SqlserverService) DescribeSqlserverBackupMigrationById(ctx context.Context, backupMigrationId string) (backupMigration *sqlserver.Migration, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeBackupMigrationRequest()
+	request.BackupMigrationId = &backupMigrationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeBackupMigration(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.BackupMigrationSet) < 1 {
+		return
+	}
+
+	backupMigration = response.Response.BackupMigrationSet[0]
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverBackupMigrationById(ctx context.Context, backupMigrationId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDeleteBackupMigrationRequest()
+	request.BackupMigrationId = &backupMigrationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DeleteBackupMigration(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverBackupById(ctx context.Context, instanceId string) (backup *sqlserver.Backup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeBackupsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeBackups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Backups) < 1 {
+		return
+	}
+
+	backup = response.Response.Backups[0]
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverBackupById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewRemoveBackupsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().RemoveBackups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverBackupByFlowId(ctx context.Context, flowId string) (backup *sqlserver.DescribeBackupByFlowIdResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeBackupByFlowIdRequest()
+	request.FlowId = helper.String(flowId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeBackupByFlowId(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	backup = response.Response
+	return
+}
+
+func (me *SqlserverService) SqlserverBackupStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeSqlserverBackupByFlowId(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.Int64ToStr(*object.Status), nil
+	}
+}
