@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_namespace" "namespace" {
-  namespace_name = "xxx"
+  namespace_name = "namespace-name"
   # cluster_id = ""
-  namespace_desc = "xxx"
+  namespace_desc = "namespace desc"
   # namespace_resource_type = ""
   namespace_type = "DEF"
   # namespace_id = ""
   is_ha_enable = "0"
   # program_id = ""
-  # program_id_list =
 }
 ```
 
