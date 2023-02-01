@@ -20,7 +20,7 @@ func TestAccTencentCloudNeedFixTsfLaneResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckTsfLaneDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTsfNamespace,
+				Config: testAccTsfLane,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTsfLaneExists("tencentcloud_tsf_lane.lane"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_lane.lane", "id"),
