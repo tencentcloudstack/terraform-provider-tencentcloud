@@ -145,6 +145,14 @@ variable "snap_id" {
 }
 `
 
+// cvm-modification
+const defaultCommonCvmId = "ins-cr2rfq78"
+const defaultCvmModificationVariable = `
+variable "cvm_id" {
+  default = "` + defaultCommonCvmId + `"
+}
+`
+
 // AS
 const defaultAsVariable = `
 variable "availability_zone" {
@@ -392,6 +400,7 @@ data "tencentcloud_sqlserver_accounts" "test"{
 locals {
   # local.sqlserver_id
   sqlserver_account = data.tencentcloud_sqlserver_accounts.test.list.0.name
+  sqlserver_pwd = data.tencentcloud_sqlserver_accounts.test.list.0.name
 }
 `
 
