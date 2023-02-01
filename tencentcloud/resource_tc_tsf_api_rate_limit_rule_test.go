@@ -1,11 +1,12 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudTsfApiRateLimitRuleResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixTsfApiRateLimitRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
