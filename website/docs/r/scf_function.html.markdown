@@ -58,8 +58,8 @@ The following arguments are supported:
 * `cos_bucket_region` - (Optional, String) Cos bucket region of the SCF function, conflict with `zip_file`.
 * `cos_object_name` - (Optional, String) Cos object name of the SCF function, should have suffix `.zip` or `.jar`, conflict with `zip_file`.
 * `description` - (Optional, String) Description of the SCF function. Description supports English letters, numbers, spaces, commas, newlines, periods and Chinese, the maximum length is 1000.
-* `enable_eip_config` - (Optional, Bool) Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true.
-* `enable_public_net` - (Optional, Bool) Indicates whether public net config enabled. NOTE: only `vpc_id` specified can disable public net config.
+* `enable_eip_config` - (Optional, Bool) Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true. Default `false`.
+* `enable_public_net` - (Optional, Bool) Indicates whether public net config enabled. Default `false`. NOTE: only `vpc_id` specified can disable public net config.
 * `environment` - (Optional, Map) Environment of the SCF function.
 * `image_config` - (Optional, List) Image of the SCF function, conflict with ``.
 * `l5_enable` - (Optional, Bool) Enable L5 for SCF function, default is `false`.

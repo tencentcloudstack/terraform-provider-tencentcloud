@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_cvm_instances_modification
+```
+
+```release-note:new-resource
+tencentcloud_cvm_launch_template
+```
