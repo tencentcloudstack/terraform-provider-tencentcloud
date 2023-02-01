@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cos_bucket: add `endpoint` field for static website
+```
