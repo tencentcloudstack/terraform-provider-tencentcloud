@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_clb_log_set" "foo" {
-  perioid = 7
+  period = 7
 }
 ```
 

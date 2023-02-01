@@ -233,13 +233,13 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether public net config enabled. NOTE: only `vpc_id` specified can disable public net config.",
+				Description: "Indicates whether public net config enabled. Default `false`. NOTE: only `vpc_id` specified can disable public net config.",
 			},
 			"enable_eip_config": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true.",
+				Description: "Indicates whether EIP config set to `ENABLE` when `enable_public_net` was true. Default `false`.",
 			},
 			// cos code
 			"cos_bucket_name": {
@@ -593,10 +593,10 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		functionInfo.layers = layers
 	}
 
-	enablePublicNet, enablePublicNetOk := d.GetOk("enable_public_net")
-	enableEipConfig, enableEipConfigOk := d.GetOk("enable_eip_config")
+	enablePublicNet, _ := d.GetOk("enable_public_net")
+	enableEipConfig, _ := d.GetOk("enable_eip_config")
 
-	if enablePublicNetOk {
+	if enablePublicNet != nil {
 		enable := enablePublicNet.(bool)
 		publicNetStatus := helper.String("ENABLE")
 		if !enable {
@@ -610,7 +610,7 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 		}
 	}
 
-	if enableEipConfigOk {
+	if enableEipConfig != nil {
 		enableEip := enableEipConfig.(bool)
 		eipStatus := "DISABLE"
 		if enableEip {
@@ -1156,7 +1156,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		updateAttrs = append(updateAttrs, "enable_eip_config")
 	}
 
-	if raw, ok := d.GetOk("enable_public_net"); ok {
+	if raw, _ := d.GetOk("enable_public_net"); raw != nil {
 		enablePublicNet := raw.(bool)
 		publicNetStatus := helper.String("ENABLE")
 		if !enablePublicNet {
@@ -1170,7 +1170,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		}
 	}
 
-	if raw, ok := d.GetOk("enable_eip_config"); ok {
+	if raw, _ := d.GetOk("enable_eip_config"); raw != nil {
 		status := "DISABLE"
 		enablePublicNet := d.Get("enable_public_net").(bool)
 		if raw.(bool) {

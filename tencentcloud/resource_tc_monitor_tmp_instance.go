@@ -81,6 +81,30 @@ func resourceTencentCloudMonitorTmpInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
+
+			"ipv4_address": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Instance IPv4 address.",
+			},
+
+			"remote_write": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Prometheus remote write address.",
+			},
+
+			"api_root_path": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Prometheus HTTP API root address.",
+			},
+
+			"proxy_address": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Proxy address.",
+			},
 		},
 	}
 }
@@ -186,7 +210,8 @@ func resourceTencentCloudMonitorTmpInstanceRead(d *schema.ResourceData, meta int
 
 	if tmpInstance == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `tmpInstance` %s does not exist", tmpInstanceId)
+		log.Printf("[WARN]%s resource `tmpInstance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if tmpInstance.InstanceName != nil {
@@ -207,6 +232,22 @@ func resourceTencentCloudMonitorTmpInstanceRead(d *schema.ResourceData, meta int
 
 	if tmpInstance.Zone != nil {
 		_ = d.Set("zone", tmpInstance.Zone)
+	}
+
+	if tmpInstance.IPv4Address != nil {
+		_ = d.Set("ipv4_address", tmpInstance.IPv4Address)
+	}
+
+	if tmpInstance.RemoteWrite != nil {
+		_ = d.Set("remote_write", tmpInstance.RemoteWrite)
+	}
+
+	if tmpInstance.ApiRootPath != nil {
+		_ = d.Set("api_root_path", tmpInstance.ApiRootPath)
+	}
+
+	if tmpInstance.ProxyAddress != nil {
+		_ = d.Set("proxy_address", tmpInstance.ProxyAddress)
 	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn

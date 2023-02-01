@@ -394,6 +394,22 @@ func resourceTencentCloudTemApplicationServiceUpdate(d *schema.ResourceData, met
 		return err
 	}
 
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := TemService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
+		service, errRet := service.DescribeTemApplicationServiceById(ctx, environmentId, applicationId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if *service.Result.AllIpDone {
+			return nil
+		}
+		return resource.RetryableError(fmt.Errorf("service is not ready %v, retry...", *service.Result.AllIpDone))
+	})
+	if err != nil {
+		return err
+	}
+
 	return resourceTencentCloudTemApplicationServiceRead(d, meta)
 }
 

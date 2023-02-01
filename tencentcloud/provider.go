@@ -223,6 +223,9 @@ Cloud File Storage(CFS)
     tencentcloud_cfs_access_groups
     tencentcloud_cfs_access_rules
     tencentcloud_cfs_file_systems
+	tencentcloud_cfs_mount_targets
+	tencentcloud_cfs_file_system_clients
+	tencentcloud_cfs_available_zone
 
   Resource
     tencentcloud_cfs_file_system
@@ -230,6 +233,8 @@ Cloud File Storage(CFS)
     tencentcloud_cfs_access_rule
 	tencentcloud_cfs_auto_snapshot_policy
 	tencentcloud_cfs_auto_snapshot_policy_attachment
+	tencentcloud_cfs_snapshot
+	tencentcloud_cfs_sign_up_cfs_service
 
 Container Cluster
   Data Source
@@ -289,6 +294,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_placement_groups
     tencentcloud_reserved_instance_configs
     tencentcloud_reserved_instances
+	tencentcloud_cvm_instances_modification
 
   Resource
     tencentcloud_instance
@@ -300,6 +306,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_reserved_instance
     tencentcloud_image
 	tencentcloud_cvm_hpc_cluster
+	tencentcloud_cvm_launch_template
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -528,6 +535,7 @@ SQLServer
 	tencentcloud_sqlserver_account_db_attachment
 	tencentcloud_sqlserver_publish_subscribe
 	tencentcloud_sqlserver_basic_instance
+	tencentcloud_sqlserver_migration
 
 SSL Certificates
   Data Source
@@ -1105,6 +1113,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_file_systems":                         dataSourceTencentCloudCfsFileSystems(),
 			"tencentcloud_cfs_access_groups":                        dataSourceTencentCloudCfsAccessGroups(),
 			"tencentcloud_cfs_access_rules":                         dataSourceTencentCloudCfsAccessRules(),
+			"tencentcloud_cfs_mount_targets":                        dataSourceTencentCloudCfsMountTargets(),
+			"tencentcloud_cfs_file_system_clients":                  dataSourceTencentCloudCfsFileSystemClients(),
+			"tencentcloud_cfs_available_zone":                       dataSourceTencentCloudCfsAvailableZone(),
 			"tencentcloud_redis_zone_config":                        dataSourceTencentRedisZoneConfig(),
 			"tencentcloud_redis_instances":                          dataSourceTencentRedisInstances(),
 			"tencentcloud_as_scaling_configs":                       dataSourceTencentCloudAsScalingConfigs(),
@@ -1267,6 +1278,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cynosdb_cluster_instance_groups":          dataSourceTencentCloudCynosdbClusterInstanceGroups(),
 			"tencentcloud_cynosdb_cluster_params":                   dataSourceTencentCloudCynosdbClusterParams(),
 			"tencentcloud_cynosdb_param_templates":                  dataSourceTencentCloudCynosdbParamTemplates(),
+			"tencentcloud_cvm_instances_modification":               dataSourceTencentCloudCvmInstancesModification(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1361,6 +1373,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_access_rule":                          resourceTencentCloudCfsAccessRule(),
 			"tencentcloud_cfs_auto_snapshot_policy":                 resourceTencentCloudCfsAutoSnapshotPolicy(),
 			"tencentcloud_cfs_auto_snapshot_policy_attachment":      resourceTencentCloudCfsAutoSnapshotPolicyAttachment(),
+			"tencentcloud_cfs_snapshot":                             resourceTencentCloudCfsSnapshot(),
+			"tencentcloud_cfs_user_quota":                           resourceTencentCloudCfsUserQuota(),
+			"tencentcloud_cfs_sign_up_cfs_service":                  resourceTencentCloudCfsSignUpCfsService(),
 			"tencentcloud_redis_instance":                           resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                      resourceTencentCloudRedisBackupConfig(),
 			"tencentcloud_redis_param_template":                     resourceTencentCloudRedisParamTemplate(),
@@ -1463,6 +1478,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_sqlserver_account":                        resourceTencentCloudSqlserverAccount(),
 			"tencentcloud_sqlserver_account_db_attachment":          resourceTencentCloudSqlserverAccountDBAttachment(),
 			"tencentcloud_sqlserver_readonly_instance":              resourceTencentCloudSqlserverReadonlyInstance(),
+			"tencentcloud_sqlserver_migration":                      resourceTencentCloudSqlserverMigration(),
 			"tencentcloud_ckafka_instance":                          resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                              resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                               resourceTencentCloudCkafkaAcl(),
@@ -1638,6 +1654,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dayu_ddos_ip_attachment_v2":                 resourceTencentCloudDayuDDosIpAttachmentV2(),
 			"tencentcloud_tsf_microservice":                           resourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_application_config":                     resourceTencentCloudTsfApplicationConfig(),
+			"tencentcloud_cvm_launch_template":                        resourceTencentCloudCvmLaunchTemplate(),
 			"tencentcloud_tsf_api_group":                              resourceTencentCloudTsfApiGroup(),
 			"tencentcloud_tsf_namespace":                              resourceTencentCloudTsfNamespace(),
 			// "tencentcloud_tsf_path_rewrite":                           resourceTencentCloudTsfPathRewrite(),

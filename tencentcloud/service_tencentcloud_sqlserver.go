@@ -1488,3 +1488,114 @@ func (me *SqlserverService) NewModifyDBInstanceRenewFlag(ctx context.Context, in
 
 	return err
 }
+
+func (me *SqlserverService) DescribeSqlserverMigrationById(ctx context.Context, migrateId string) (migration *sqlserver.DescribeMigrationDetailResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeMigrationDetailRequest()
+	request.MigrateId = helper.StrToUint64Point(migrateId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeMigrationDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	migration = response.Response
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverMigrationById(ctx context.Context, migrateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDeleteMigrationRequest()
+	request.MigrateId = helper.StrToUint64Point(migrateId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DeleteMigration(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverMigrationsByFilter(ctx context.Context, param map[string]interface{}) (migrateTasks []*sqlserver.MigrateTask, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeMigrationsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "migrate_name" {
+			request.MigrateName = v.(*string)
+		}
+
+		if k == "status_set" {
+			request.StatusSet = v.([]*int64)
+		}
+
+		if k == "order_by" {
+			request.OrderBy = v.(*string)
+		}
+
+		if k == "order_by_type" {
+			request.OrderByType = v.(*string)
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 20
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseSqlserverClient().DescribeMigrations(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.MigrateTaskSet) < 1 {
+			break
+		}
+		migrateTasks = append(migrateTasks, response.Response.MigrateTaskSet...)
+		if len(response.Response.MigrateTaskSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
