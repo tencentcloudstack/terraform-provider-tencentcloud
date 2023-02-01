@@ -737,6 +737,37 @@ func (me *CosService) GetBucketVersioning(ctx context.Context, bucket string) (v
 	return
 }
 
+func (me *CosService) GetBucketAccleration(ctx context.Context, bucket string) (accelerationEnable bool, errRet error) {
+	logId := getLogId(ctx)
+
+	request := s3.GetBucketAccelerateConfigurationInput{
+		Bucket: aws.String(bucket),
+	}
+	ratelimit.Check("GetBucketAccelerateConfiguration")
+	response, err := me.client.UseCosClient().GetBucketAccelerateConfiguration(&request)
+	if err != nil {
+		awsError, ok := err.(awserr.Error)
+		if ok && awsError.Code() == "NoSuchAccelerateConfiguration" {
+			return
+		}
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "get bucket acceleration", request.String(), err.Error())
+		errRet = fmt.Errorf("cos get bucket acceleration error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "get bucket acceleration", request.String(), response.String())
+
+	if response.Status == nil || *response.Status == "Suspended" {
+		accelerationEnable = false
+	} else if *response.Status == "Enabled" {
+		accelerationEnable = true
+	}
+
+	return
+}
+
 func (me *CosService) GetBucketLogStatus(ctx context.Context, bucket string) (logEnable bool, logTargetBucket string, logPrefix string, errRet error) {
 	logId := getLogId(ctx)
 

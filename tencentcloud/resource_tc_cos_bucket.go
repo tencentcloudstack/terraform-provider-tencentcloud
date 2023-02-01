@@ -430,6 +430,12 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Default:     false,
 				Description: "Enable bucket versioning.",
 			},
+			"acceleration_enable": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Enable bucket acceleration.",
+			},
 			"force_clean": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -891,6 +897,15 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 		return fmt.Errorf("setting versioning_enable error: %v", err)
 	}
 
+	// read the acceleration
+	acceleration, err := cosService.GetBucketAccleration(ctx, bucket)
+	if err != nil {
+		return err
+	}
+	if err = d.Set("acceleration_enable", acceleration); err != nil {
+		return fmt.Errorf("setting acceleration_enable error: %v", err)
+	}
+
 	replicaResult, err := cosService.GetBucketReplication(ctx, bucket)
 	if err != nil {
 		return err
@@ -1011,6 +1026,14 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 		d.SetPartial("versioning_enable")
+	}
+
+	if d.HasChange("acceleration_enable") {
+		err := resourceTencentCloudCosBucketAccelerationUpdate(ctx, client, d)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("acceleration_enable")
 	}
 
 	if d.HasChange("replica_role") || d.HasChange("replica_rules") {
@@ -1147,6 +1170,34 @@ func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, client *
 		logId, "put bucket encryption", request.String(), response.String())
 
 	return nil
+}
+
+func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+	logId := getLogId(ctx)
+
+	bucket := d.Get("bucket").(string)
+	enabled := d.Get("acceleration_enable").(bool)
+	status := "Suspended"
+	if enabled {
+		status = "Enabled"
+	}
+
+	request := s3.PutBucketAccelerateConfigurationInput{
+		Bucket: aws.String(bucket),
+		AccelerateConfiguration: &s3.AccelerateConfiguration{
+			Status: aws.String(status),
+		},
+	}
+	response, err := client.PutBucketAccelerateConfiguration(&request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, "put bucket acceleration", request.String(), err.Error())
+		return fmt.Errorf("cos put bucket acceleration error: %s, bucket: %s", err.Error(), bucket)
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, "put bucket acceleration", request.String(), response.String())
+
+	return err
 }
 
 func resourceTencentCloudCosBucketReplicaUpdate(ctx context.Context, service CosService, d *schema.ResourceData) error {
