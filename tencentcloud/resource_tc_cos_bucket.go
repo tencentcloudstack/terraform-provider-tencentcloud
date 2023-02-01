@@ -73,6 +73,10 @@ resource "tencentcloud_cos_bucket" "mycos" {
     error_document = "error.html"
   }
 }
+
+output "endpoint_test" {
+    value = tencentcloud_cos_bucket.mycos.website.0.endpoint
+}
 ```
 
 Using CORS
@@ -682,6 +686,11 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 							Optional:    true,
 							Description: "An absolute path to the document to return in case of a 4XX error.",
 						},
+						"endpoint": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "`Endpoint` of the static website.",
+						},
 					},
 				},
 			},
@@ -868,6 +877,11 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	website, err := cosService.GetBucketWebsite(ctx, bucket)
 	if err != nil {
 		return err
+	}
+	if len(website) > 0 {
+		// {bucket}.cos-website.{region}.myqcloud.com
+		endPointUrl := fmt.Sprintf("%s.cos-website.%s.myqcloud.com", d.Id(), meta.(*TencentCloudClient).apiV3Conn.Region)
+		website[0]["endpoint"] = endPointUrl
 	}
 	if err = d.Set("website", website); err != nil {
 		return fmt.Errorf("setting website error: %v", err)
