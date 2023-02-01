@@ -13,7 +13,7 @@ resource "tencentcloud_tsf_unit_rule" "unit_rule" {
 		dest_namespace_id = ""
 		dest_namespace_name = ""
 		name = ""
-		id = ""
+		rule_id = ""
 		unit_rule_id = ""
 		priority =
 		description = ""
@@ -23,7 +23,7 @@ resource "tencentcloud_tsf_unit_rule" "unit_rule" {
 			tag_operator = ""
 			tag_value = ""
 			unit_rule_item_id = ""
-			id = ""
+			rule_id = ""
 		}
 
   }
@@ -73,7 +73,7 @@ func resourceTencentCloudTsfUnitRule() *schema.Resource {
 				Description: "rule name.",
 			},
 
-			"id": {
+			"rule_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "rule ID.",
@@ -118,7 +118,7 @@ func resourceTencentCloudTsfUnitRule() *schema.Resource {
 							Required:    true,
 							Description: "rule item name.",
 						},
-						"id": {
+						"rule_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "rule item ID.",
@@ -169,7 +169,7 @@ func resourceTencentCloudTsfUnitRule() *schema.Resource {
 										Optional:    true,
 										Description: "Unitization rule item ID.",
 									},
-									"id": {
+									"rule_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Description: "rule ID.",
@@ -193,7 +193,7 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 	var (
 		request = tsf.NewCreateUnitRuleRequest()
 		// response = tsf.NewCreateUnitRuleResponse()
-		id string
+		ruleId string
 	)
 	if v, ok := d.GetOk("gateway_instance_id"); ok {
 		request.GatewayInstanceId = helper.String(v.(string))
@@ -223,7 +223,7 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 			if v, ok := dMap["name"]; ok {
 				unitRuleItem.Name = helper.String(v.(string))
 			}
-			if v, ok := dMap["id"]; ok {
+			if v, ok := dMap["rule_id"]; ok {
 				unitRuleItem.Id = helper.String(v.(string))
 			}
 			if v, ok := dMap["unit_rule_id"]; ok {
@@ -254,7 +254,7 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 					if v, ok := unitRuleTagListMap["unit_rule_item_id"]; ok {
 						unitRuleTag.UnitRuleItemId = helper.String(v.(string))
 					}
-					if v, ok := unitRuleTagListMap["id"]; ok {
+					if v, ok := unitRuleTagListMap["rule_id"]; ok {
 						unitRuleTag.Id = helper.String(v.(string))
 					}
 					unitRuleItem.UnitRuleTagList = append(unitRuleItem.UnitRuleTagList, &unitRuleTag)
@@ -279,8 +279,8 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	// id = *response.Response.Id
-	d.SetId(id)
+	// ruleId = *response.Response.RuleId
+	d.SetId(ruleId)
 
 	return resourceTencentCloudTsfUnitRuleRead(d, meta)
 }
@@ -317,7 +317,7 @@ func resourceTencentCloudTsfUnitRuleRead(d *schema.ResourceData, meta interface{
 	}
 
 	if unitRule.Id != nil {
-		_ = d.Set("id", unitRule.Id)
+		_ = d.Set("rule_id", unitRule.Id)
 	}
 
 	if unitRule.Status != nil {
@@ -350,7 +350,7 @@ func resourceTencentCloudTsfUnitRuleRead(d *schema.ResourceData, meta interface{
 			}
 
 			if unitRuleItemList.Id != nil {
-				unitRuleItemListMap["id"] = unitRuleItemList.Id
+				unitRuleItemListMap["rule_id"] = unitRuleItemList.Id
 			}
 
 			if unitRuleItemList.UnitRuleId != nil {
@@ -391,7 +391,7 @@ func resourceTencentCloudTsfUnitRuleRead(d *schema.ResourceData, meta interface{
 					}
 
 					if unitRuleTagList.Id != nil {
-						unitRuleTagListMap["id"] = unitRuleTagList.Id
+						unitRuleTagListMap["rule_id"] = unitRuleTagList.Id
 					}
 
 					unitRuleTagListList = append(unitRuleTagListList, unitRuleTagListMap)
@@ -422,7 +422,7 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 
 	request.Id = &id
 
-	immutableArgs := []string{"gateway_instance_id", "name", "id", "status", "description", "unit_rule_item_list"}
+	immutableArgs := []string{"gateway_instance_id", "name", "rule_id", "status", "description", "unit_rule_item_list"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -459,7 +459,7 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 				if v, ok := dMap["name"]; ok {
 					unitRuleItem.Name = helper.String(v.(string))
 				}
-				if v, ok := dMap["id"]; ok {
+				if v, ok := dMap["rule_id"]; ok {
 					unitRuleItem.Id = helper.String(v.(string))
 				}
 				if v, ok := dMap["unit_rule_id"]; ok {
@@ -490,7 +490,7 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 						if v, ok := unitRuleTagListMap["unit_rule_item_id"]; ok {
 							unitRuleTag.UnitRuleItemId = helper.String(v.(string))
 						}
-						if v, ok := unitRuleTagListMap["id"]; ok {
+						if v, ok := unitRuleTagListMap["rule_id"]; ok {
 							unitRuleTag.Id = helper.String(v.(string))
 						}
 						unitRuleItem.UnitRuleTagList = append(unitRuleItem.UnitRuleTagList, &unitRuleTag)
