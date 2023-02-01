@@ -66,70 +66,60 @@ func resourceTencentCloudTsfApplicationReleaseConfig() *schema.Resource {
 
 			"config_release_id": {
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "configuration item release ID.",
 			},
 
 			"config_name": {
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "configuration item name.",
 			},
 
 			"config_version": {
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "configuration item version.",
 			},
 
 			"release_time": {
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "release time.",
 			},
 
 			"group_name": {
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "deployment group name.",
 			},
 
 			"namespace_id": {
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Namespace ID.",
 			},
 
 			"namespace_name": {
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "namespace name.",
 			},
 
 			"cluster_id": {
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "cluster ID.",
 			},
 
 			"cluster_name": {
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "cluster name.",
 			},
 
 			"application_id": {
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Application ID.",
 			},
