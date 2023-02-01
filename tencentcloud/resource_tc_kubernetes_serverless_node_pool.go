@@ -27,6 +27,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -115,6 +116,9 @@ func resourceTkeServerLessNodePool() *schema.Resource {
 				Description: "life state of serverless node pool.",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 	}
 }
 
@@ -122,8 +126,13 @@ func resourceTkeServerlessNodePoolRead(d *schema.ResourceData, meta interface{})
 	defer logElapsed("resource.tencentcloud_eks_cluster.read")()
 
 	var (
-		clusterId = d.Get("cluster_id").(string)
+		items = strings.Split(d.Id(), FILED_SP)
 	)
+	if len(items) != 2 {
+		return fmt.Errorf("resource_tc_kubernetes_node_pool id  is broken")
+	}
+	clusterId := items[0]
+	nodePoolId := items[1]
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -135,7 +144,7 @@ func resourceTkeServerlessNodePoolRead(d *schema.ResourceData, meta interface{})
 
 	outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		var err error
-		nodePool, has, err = service.DescribeServerlessNodePoolByClusterIdAndNodePoolId(ctx, clusterId, d.Id())
+		nodePool, has, err = service.DescribeServerlessNodePoolByClusterIdAndNodePoolId(ctx, clusterId, nodePoolId)
 		if err != nil {
 			return resource.NonRetryableError(err)
 		}
@@ -157,7 +166,7 @@ func resourceTkeServerlessNodePoolRead(d *schema.ResourceData, meta interface{})
 		return nil
 	}
 
-	if err := setDataFromDescribeVirtualNodePoolResponse(nodePool, d); err != nil {
+	if err := setDataFromDescribeVirtualNodePoolResponse(clusterId, nodePool, d); err != nil {
 		return err
 	}
 
@@ -174,13 +183,14 @@ func resourceTkeServerlessNodePoolCreate(d *schema.ResourceData, meta interface{
 
 	request := genCreateClusterVirtualNodePoolReq(d)
 
-	id, err := service.CreateClusterVirtualNodePool(ctx, request)
+	nodePoolId, err := service.CreateClusterVirtualNodePool(ctx, request)
 
 	if err != nil {
 		return err
 	}
 
-	d.SetId(id)
+	clusterId := *request.ClusterId
+	d.SetId(clusterId + FILED_SP + nodePoolId)
 
 	return resourceTkeServerlessNodePoolRead(d, meta)
 }
@@ -190,13 +200,22 @@ func resourceTkeServerlessNodePoolUpdate(d *schema.ResourceData, meta interface{
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	id := d.Id()
+
+	var (
+		items = strings.Split(d.Id(), FILED_SP)
+	)
+	if len(items) != 2 {
+		return fmt.Errorf("resource_tc_kubernetes_node_pool id  is broken")
+	}
+	clusterId := items[0]
+	nodePoolId := items[1]
+
 	client := meta.(*TencentCloudClient).apiV3Conn
 	service := TkeService{client: client}
 
 	request := tke.NewModifyClusterVirtualNodePoolRequest()
-	request.ClusterId = common.StringPtr(d.Get("cluster_id").(string))
-	request.NodePoolId = &id
+	request.ClusterId = common.StringPtr(clusterId)
+	request.NodePoolId = &nodePoolId
 
 	if d.HasChange("labels") {
 		request.Labels = GetOptimizedTkeLabels(d, "labels")
@@ -221,14 +240,23 @@ func resourceTkeServerlessNodePoolDelete(d *schema.ResourceData, meta interface{
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	id := d.Id()
+
+	var (
+		items = strings.Split(d.Id(), FILED_SP)
+	)
+	if len(items) != 2 {
+		return fmt.Errorf("resource_tc_kubernetes_node_pool id  is broken")
+	}
+	clusterId := items[0]
+	nodePoolId := items[1]
+
 	client := meta.(*TencentCloudClient).apiV3Conn
 	service := TkeService{client: client}
 
 	request := tke.NewDeleteClusterVirtualNodePoolRequest()
-	request.NodePoolIds = []*string{&id}
-	request.ClusterId = common.StringPtr(d.Get("cluster_id").(string))
-	request.Force = common.BoolPtr(true) // should user aware of this para?
+	request.NodePoolIds = []*string{&nodePoolId}
+	request.ClusterId = common.StringPtr(clusterId)
+	request.Force = common.BoolPtr(true)
 
 	if err := service.DeleteClusterVirtualNodePool(ctx, request); err != nil {
 		return err
@@ -269,8 +297,8 @@ func genCreateClusterVirtualNodePoolReq(d *schema.ResourceData) *tke.CreateClust
 	return request
 }
 
-func setDataFromDescribeVirtualNodePoolResponse(res *tke.VirtualNodePool, d *schema.ResourceData) error {
-	d.SetId(*res.NodePoolId)
+func setDataFromDescribeVirtualNodePoolResponse(clusterId string, res *tke.VirtualNodePool, d *schema.ResourceData) error {
+	d.SetId(clusterId + FILED_SP + *res.NodePoolId)
 	_ = d.Set("name", res.Name)
 	_ = d.Set("life_state", res.LifeState)
 	labels := make(map[string]interface{})
