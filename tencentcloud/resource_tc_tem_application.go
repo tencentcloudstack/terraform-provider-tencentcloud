@@ -12,6 +12,9 @@ resource "tencentcloud_tem_application" "application" {
   repo_type = 2
   repo_name = "qcloud/nginx"
   repo_server = "ccr.ccs.tencentyun.com"
+  tags = {
+    "created" = "terraform"
+  }
 }
 ```
 */
@@ -87,6 +90,11 @@ func resourceTencentCloudTemApplication() *schema.Resource {
 				Computed:    true,
 				Description: "tcr instance id.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "application tag list.",
+			},
 		},
 	}
 }
@@ -96,6 +104,7 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request  = tem.NewCreateApplicationRequest()
@@ -132,6 +141,16 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 		request.InstanceId = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("tags"); ok {
+		for key, value := range v.(map[string]interface{}) {
+			tag := tem.Tag{
+				TagKey:   helper.String(key),
+				TagValue: helper.String(value.(string)),
+			}
+			request.Tags = append(request.Tags, &tag)
+		}
+	}
+
 	request.DeployMode = helper.String("IMAGE")
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -154,6 +173,16 @@ func resourceTencentCloudTemApplicationCreate(d *schema.ResourceData, meta inter
 	applicationId := *response.Response.Result
 
 	d.SetId(applicationId)
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::tem:%s:uin/:application/%s", region, applicationId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudTemApplicationRead(d, meta)
 }
 
@@ -209,6 +238,15 @@ func resourceTencentCloudTemApplicationRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("instance_id", application.InstanceId)
 	}
 
+	client := meta.(*TencentCloudClient).apiV3Conn
+	tagService := TagService{client: client}
+	region := client.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "tem", "application", region, applicationId)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -217,6 +255,7 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tem.NewModifyApplicationInfoRequest()
 
@@ -226,10 +265,8 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`application_name` do not support change now.")
 	}
 
-	if d.HasChange("description") {
-		if v, ok := d.GetOk("description"); ok {
-			request.Description = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("description"); ok {
+		request.Description = helper.String(v.(string))
 	}
 
 	if d.HasChange("coding_language") {
@@ -269,6 +306,17 @@ func resourceTencentCloudTemApplicationUpdate(d *schema.ResourceData, meta inter
 
 	if err != nil {
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("tem", "application", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudTemApplicationRead(d, meta)

@@ -52,10 +52,13 @@ Example Usage of cdn uses cache and request headers
 
 ```hcl
 resource "tencentcloud_cdn_domain" "foo" {
-  domain              = "xxxx.com"
-  service_type        = "web"
-  area                = "mainland"
-  full_url_cache      = false
+  domain       = "xxxx.com"
+  service_type = "web"
+  area         = "mainland"
+  # full_url_cache = true # Deprecated, use cache_key below.
+  cache_key {
+    full_url_cache = "on"
+  }
   range_origin_switch = "off"
 
   rule_cache {
@@ -113,10 +116,13 @@ resource "tencentcloud_cos_bucket" "bucket" {
 
 # Create cdn domain
 resource "tencentcloud_cdn_domain" "cdn" {
-  domain         = "abc.com"
-  service_type   = "web"
-  area           = "mainland"
-  full_url_cache = false
+  domain       = "abc.com"
+  service_type = "web"
+  area         = "mainland"
+  # full_url_cache = false # Deprecated
+  cache_key {
+    full_url_cache = "off"
+  }
 
   origin {
     origin_type          = "cos"
@@ -147,12 +153,13 @@ The following arguments are supported:
 * `authentication` - (Optional, List) Specify timestamp hotlink protection configuration, NOTE: only one type can choose for the sub elements.
 * `aws_private_access` - (Optional, List) Access authentication for S3 origin.
 * `band_width_alert` - (Optional, List) Bandwidth cap configuration.
+* `cache_key` - (Optional, List) Cache key configuration (Ignore Query String configuration). NOTE: All of `full_url_cache` default value is `on`.
 * `compression` - (Optional, List) Smart compression configurations.
 * `downstream_capping` - (Optional, List) Downstream capping configuration.
 * `error_page` - (Optional, List) Error page configurations.
 * `explicit_using_dry_run` - (Optional, Bool) Used for validate only by store arguments to request json string as expected, WARNING: if set to `true`, NO Cloud Api will be invoked but store as local data, do not use this argument unless you really know what you are doing.
 * `follow_redirect_switch` - (Optional, String) 301/302 redirect following switch, available values: `on`, `off` (default).
-* `full_url_cache` - (Optional, Bool) Whether to enable full-path cache. Default value is `true`.
+* `full_url_cache` - (Optional, Bool, **Deprecated**) Use `cache_key` -> `full_url_cache` instead. Whether to enable full-path cache. Default value is `true`.
 * `https_config` - (Optional, List) HTTPS acceleration configuration. It's a list and consist of at most one item.
 * `hw_private_access` - (Optional, List) Access authentication for OBS origin.
 * `ip_filter` - (Optional, List) Specify Ip filter configurations.
@@ -205,6 +212,13 @@ The `band_width_alert` object supports the following:
 * `counter_measure` - (Optional, String) Counter measure.
 * `metric` - (Optional, String) Metric.
 * `statistic_item` - (Optional, List) Specify statistic item configuration.
+
+The `cache_key` object supports the following:
+
+* `full_url_cache` - (Optional, String) Whether to enable full-path cache, values `on` (DEFAULT ON), `off`.
+* `ignore_case` - (Optional, String) Specifies whether the cache key is case sensitive.
+* `key_rules` - (Optional, List) Path-specific cache key configuration.
+* `query_string` - (Optional, List) Request parameter contained in CacheKey.
 
 The `cache_rules` object supports the following:
 
@@ -308,6 +322,15 @@ The `ip_freq_limit` object supports the following:
 * `switch` - (Required, String) Configuration switch, available values: `on`, `off` (default).
 * `qps` - (Optional, Int) Sets the limited number of requests per second, 514 will be returned for requests that exceed the limit.
 
+The `key_rules` object supports the following:
+
+* `query_string` - (Required, List) Request parameter contained in CacheKey.
+* `rule_paths` - (Required, List) List of rule paths for each `key_rules`: `/` for `index`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.
+* `rule_type` - (Required, String) Rule type, available: `file`, `directory`, `path`, `index`.
+* `full_url_cache` - (Optional, String) Whether to enable full-path cache, values `on` (DEFAULT ON), `off`.
+* `ignore_case` - (Optional, String) Whether caches are case insensitive.
+* `rule_tag` - (Optional, String) Specify rule tag, default value is `user`.
+
 The `max_age_rules` object supports the following:
 
 * `max_age_contents` - (Required, List) List of rule paths for each `max_age_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.
@@ -366,6 +389,19 @@ The `qn_private_access` object supports the following:
 * `access_key` - (Optional, String) Access ID.
 * `secret_key` - (Optional, String) Key.
 
+The `query_string` object supports the following:
+
+* `action` - (Optional, String) Include/exclude query parameters. Values: `includeAll` (Default), `excludeAll`, `includeCustom`, `excludeCustom`.
+* `reorder` - (Optional, String) Whether to sort again, values `on`, `off` (Default).
+* `switch` - (Optional, String) Whether to use QueryString as part of CacheKey, values `on`, `off` (Default).
+* `value` - (Optional, String) Array of included/excluded query strings (separated by `;`).
+
+The `query_string` object supports the following:
+
+* `action` - (Optional, String) Specify key rule QS action, values: `includeCustom`, `excludeCustom`.
+* `switch` - (Optional, String) Whether to use QueryString as part of CacheKey, values `on`, `off` (Default).
+* `value` - (Optional, String) Array of included/excluded query strings (separated by `;`).
+
 The `referer_rules` object supports the following:
 
 * `allow_empty` - (Required, Bool) Whether to allow emptpy.
@@ -394,6 +430,8 @@ The `rule_cache` object supports the following:
 * `cache_time` - (Required, Int) Cache expiration time setting, the unit is second, the maximum can be set to 365 days.
 * `compare_max_age` - (Optional, String) Advanced cache expiration configuration. When it is turned on, it will compare the max-age value returned by the origin site with the cache expiration time set in CacheRules, and take the minimum value to cache at the node. Valid values are `on` and `off`. Default value is `off`.
 * `follow_origin_switch` - (Optional, String) Follow the source station configuration switch. Valid values are `on` and `off`.
+* `heuristic_cache_switch` - (Optional, String) Specify whether to enable heuristic cache, only available while `follow_origin_switch` enabled, values: `on`, `off` (Default).
+* `heuristic_cache_time` - (Optional, Int) Specify heuristic cache time in second, only available while `follow_origin_switch` and `heuristic_cache_switch` enabled.
 * `ignore_cache_control` - (Optional, String) Force caching. After opening, the no-store and no-cache resources returned by the origin site will also be cached in accordance with the CacheRules rules. Valid values are `on` and `off`. Default value is `off`.
 * `ignore_set_cookie` - (Optional, String) Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. This parameter is for white-list customer.
 * `no_cache_switch` - (Optional, String) Cache configuration switch. Valid values are `on` and `off`.

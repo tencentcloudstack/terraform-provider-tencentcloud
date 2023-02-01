@@ -19,6 +19,9 @@ resource "tencentcloud_tem_environment" "environment" {
   description      = "demo for test"
   vpc              = "vpc-2hfyray3"
   subnet_ids       = ["subnet-rdkj0agk", "subnet-r1c4pn5m", "subnet-02hcj95c"]
+  tags = {
+    "created" = "terraform"
+  }
 }
 ```
 
@@ -30,6 +33,7 @@ The following arguments are supported:
 * `subnet_ids` - (Required, Set: [`String`]) subnet IDs.
 * `vpc` - (Required, String) vpc ID.
 * `description` - (Optional, String) environment description.
+* `tags` - (Optional, Map) environment tag list.
 
 ## Attributes Reference
 

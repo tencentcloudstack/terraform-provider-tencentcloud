@@ -662,6 +662,7 @@ func NewCreateInstanceCustomizedDomainResponse() (response *CreateInstanceCustom
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_UNSUPPORTEDREGION = "InvalidParameter.UnsupportedRegion"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -683,6 +684,7 @@ func (c *Client) CreateInstanceCustomizedDomain(request *CreateInstanceCustomize
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_UNSUPPORTEDREGION = "InvalidParameter.UnsupportedRegion"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 //  UNKNOWNPARAMETER = "UnknownParameter"
@@ -799,6 +801,12 @@ func NewCreateInternalEndpointDnsResponse() (response *CreateInternalEndpointDns
 //  INTERNALERROR_MODIFYPRIVATEZONEVPC = "InternalError.ModifyPrivateZoneVpc"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_CREATEPRIVATEZONE = "UnsupportedOperation.CreatePrivateZone"
+//  UNSUPPORTEDOPERATION_CREATEPRIVATEZONERECORD = "UnsupportedOperation.CreatePrivateZoneRecord"
+//  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONELIST = "UnsupportedOperation.DescribePrivateZoneList"
+//  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONERECORDLIST = "UnsupportedOperation.DescribePrivateZoneRecordList"
+//  UNSUPPORTEDOPERATION_MODIFYPRIVATEZONERECORD = "UnsupportedOperation.ModifyPrivateZoneRecord"
+//  UNSUPPORTEDOPERATION_MODIFYPRIVATEZONEVPC = "UnsupportedOperation.ModifyPrivateZoneVpc"
 func (c *Client) CreateInternalEndpointDns(request *CreateInternalEndpointDnsRequest) (response *CreateInternalEndpointDnsResponse, err error) {
     return c.CreateInternalEndpointDnsWithContext(context.Background(), request)
 }
@@ -819,6 +827,12 @@ func (c *Client) CreateInternalEndpointDns(request *CreateInternalEndpointDnsReq
 //  INTERNALERROR_MODIFYPRIVATEZONEVPC = "InternalError.ModifyPrivateZoneVpc"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_CREATEPRIVATEZONE = "UnsupportedOperation.CreatePrivateZone"
+//  UNSUPPORTEDOPERATION_CREATEPRIVATEZONERECORD = "UnsupportedOperation.CreatePrivateZoneRecord"
+//  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONELIST = "UnsupportedOperation.DescribePrivateZoneList"
+//  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONERECORDLIST = "UnsupportedOperation.DescribePrivateZoneRecordList"
+//  UNSUPPORTEDOPERATION_MODIFYPRIVATEZONERECORD = "UnsupportedOperation.ModifyPrivateZoneRecord"
+//  UNSUPPORTEDOPERATION_MODIFYPRIVATEZONEVPC = "UnsupportedOperation.ModifyPrivateZoneVpc"
 func (c *Client) CreateInternalEndpointDnsWithContext(ctx context.Context, request *CreateInternalEndpointDnsRequest) (response *CreateInternalEndpointDnsResponse, err error) {
     if request == nil {
         request = NewCreateInternalEndpointDnsRequest()
@@ -1013,6 +1027,7 @@ func NewCreateNamespacePersonalResponse() (response *CreateNamespacePersonalResp
 //  LIMITEXCEEDED_ERRNAMESPACEMAXLIMIT = "LimitExceeded.ErrNamespaceMaxLimit"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
+//  UNSUPPORTEDOPERATION_ERRNOUSERINITIALIZED = "UnsupportedOperation.ErrNoUserInitialized"
 func (c *Client) CreateNamespacePersonal(request *CreateNamespacePersonalRequest) (response *CreateNamespacePersonalResponse, err error) {
     return c.CreateNamespacePersonalWithContext(context.Background(), request)
 }
@@ -1027,6 +1042,7 @@ func (c *Client) CreateNamespacePersonal(request *CreateNamespacePersonalRequest
 //  LIMITEXCEEDED_ERRNAMESPACEMAXLIMIT = "LimitExceeded.ErrNamespaceMaxLimit"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
+//  UNSUPPORTEDOPERATION_ERRNOUSERINITIALIZED = "UnsupportedOperation.ErrNoUserInitialized"
 func (c *Client) CreateNamespacePersonalWithContext(ctx context.Context, request *CreateNamespacePersonalRequest) (response *CreateNamespacePersonalResponse, err error) {
     if request == nil {
         request = NewCreateNamespacePersonalRequest()
@@ -1065,6 +1081,7 @@ func NewCreateReplicationInstanceResponse() (response *CreateReplicationInstance
 // 创建从实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -1072,6 +1089,7 @@ func NewCreateReplicationInstanceResponse() (response *CreateReplicationInstance
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_REPLICATIONEXISTS = "InvalidParameter.ReplicationExists"
 //  INVALIDPARAMETER_UNSUPPORTEDREGION = "InvalidParameter.UnsupportedRegion"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -1086,6 +1104,7 @@ func (c *Client) CreateReplicationInstance(request *CreateReplicationInstanceReq
 // 创建从实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRCONFLICT = "InternalError.ErrConflict"
@@ -1093,6 +1112,7 @@ func (c *Client) CreateReplicationInstance(request *CreateReplicationInstanceReq
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_REPLICATIONEXISTS = "InvalidParameter.ReplicationExists"
 //  INVALIDPARAMETER_UNSUPPORTEDREGION = "InvalidParameter.UnsupportedRegion"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -1239,66 +1259,6 @@ func (c *Client) CreateRepositoryPersonalWithContext(ctx context.Context, reques
     return
 }
 
-func NewCreateSecurityPoliciesRequest() (request *CreateSecurityPoliciesRequest) {
-    request = &CreateSecurityPoliciesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateSecurityPolicies")
-    
-    
-    return
-}
-
-func NewCreateSecurityPoliciesResponse() (response *CreateSecurityPoliciesResponse) {
-    response = &CreateSecurityPoliciesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// CreateSecurityPolicies
-// 创建实例公网访问白名单策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DBERROR = "InternalError.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) CreateSecurityPolicies(request *CreateSecurityPoliciesRequest) (response *CreateSecurityPoliciesResponse, err error) {
-    return c.CreateSecurityPoliciesWithContext(context.Background(), request)
-}
-
-// CreateSecurityPolicies
-// 创建实例公网访问白名单策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DBERROR = "InternalError.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  MISSINGPARAMETER = "MissingParameter"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) CreateSecurityPoliciesWithContext(ctx context.Context, request *CreateSecurityPoliciesRequest) (response *CreateSecurityPoliciesResponse, err error) {
-    if request == nil {
-        request = NewCreateSecurityPoliciesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateSecurityPolicies require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateSecurityPoliciesResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewCreateSecurityPolicyRequest() (request *CreateSecurityPolicyRequest) {
     request = &CreateSecurityPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1393,6 +1353,7 @@ func NewCreateSignatureResponse() (response *CreateSignatureResponse) {
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSignature(request *CreateSignatureRequest) (response *CreateSignatureResponse, err error) {
     return c.CreateSignatureWithContext(context.Background(), request)
@@ -1412,6 +1373,7 @@ func (c *Client) CreateSignature(request *CreateSignatureRequest) (response *Cre
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSignatureWithContext(ctx context.Context, request *CreateSignatureRequest) (response *CreateSignatureResponse, err error) {
     if request == nil {
@@ -2352,6 +2314,9 @@ func NewDeleteInternalEndpointDnsResponse() (response *DeleteInternalEndpointDns
 //  INTERNALERROR_DESCRIBEPRIVATEZONESERVICELIST = "InternalError.DescribePrivateZoneServiceList"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_DELETEPRIVATEZONERECORD = "UnsupportedOperation.DeletePrivateZoneRecord"
+//  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONELIST = "UnsupportedOperation.DescribePrivateZoneList"
+//  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONERECORDLIST = "UnsupportedOperation.DescribePrivateZoneRecordList"
 func (c *Client) DeleteInternalEndpointDns(request *DeleteInternalEndpointDnsRequest) (response *DeleteInternalEndpointDnsResponse, err error) {
     return c.DeleteInternalEndpointDnsWithContext(context.Background(), request)
 }
@@ -2371,6 +2336,9 @@ func (c *Client) DeleteInternalEndpointDns(request *DeleteInternalEndpointDnsReq
 //  INTERNALERROR_DESCRIBEPRIVATEZONESERVICELIST = "InternalError.DescribePrivateZoneServiceList"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_DELETEPRIVATEZONERECORD = "UnsupportedOperation.DeletePrivateZoneRecord"
+//  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONELIST = "UnsupportedOperation.DescribePrivateZoneList"
+//  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONERECORDLIST = "UnsupportedOperation.DescribePrivateZoneRecordList"
 func (c *Client) DeleteInternalEndpointDnsWithContext(ctx context.Context, request *DeleteInternalEndpointDnsRequest) (response *DeleteInternalEndpointDnsResponse, err error) {
     if request == nil {
         request = NewDeleteInternalEndpointDnsRequest()
@@ -3076,6 +3044,7 @@ func NewDeleteWebhookTriggerResponse() (response *DeleteWebhookTriggerResponse) 
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DeleteWebhookTrigger(request *DeleteWebhookTriggerRequest) (response *DeleteWebhookTriggerResponse, err error) {
@@ -3091,6 +3060,7 @@ func (c *Client) DeleteWebhookTrigger(request *DeleteWebhookTriggerRequest) (res
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DeleteWebhookTriggerWithContext(ctx context.Context, request *DeleteWebhookTriggerRequest) (response *DeleteWebhookTriggerResponse, err error) {
@@ -3998,7 +3968,7 @@ func NewDescribeInstanceAllNamespacesResponse() (response *DescribeInstanceAllNa
 }
 
 // DescribeInstanceAllNamespaces
-// 查询所有有实例命名空间列表
+// 查询所有实例命名空间列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
@@ -4021,7 +3991,7 @@ func (c *Client) DescribeInstanceAllNamespaces(request *DescribeInstanceAllNames
 }
 
 // DescribeInstanceAllNamespaces
-// 查询所有有实例命名空间列表
+// 查询所有实例命名空间列表
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
@@ -4837,6 +4807,7 @@ func NewDescribeRepositoriesResponse() (response *DescribeRepositoriesResponse) 
 // 查询镜像仓库列表或指定镜像仓库信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -4847,6 +4818,7 @@ func NewDescribeRepositoriesResponse() (response *DescribeRepositoriesResponse) 
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRepositories(request *DescribeRepositoriesRequest) (response *DescribeRepositoriesResponse, err error) {
     return c.DescribeRepositoriesWithContext(context.Background(), request)
@@ -4856,6 +4828,7 @@ func (c *Client) DescribeRepositories(request *DescribeRepositoriesRequest) (res
 // 查询镜像仓库列表或指定镜像仓库信息
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_EMPTYCOREBODY = "FailedOperation.EmptyCoreBody"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
 //  INTERNALERROR_ERRORTCRINVALIDMEDIATYPE = "InternalError.ErrorTcrInvalidMediaType"
@@ -4866,6 +4839,7 @@ func (c *Client) DescribeRepositories(request *DescribeRepositoriesRequest) (res
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRepositoriesWithContext(ctx context.Context, request *DescribeRepositoriesRequest) (response *DescribeRepositoriesResponse, err error) {
     if request == nil {
@@ -5733,6 +5707,7 @@ func NewManageInternalEndpointResponse() (response *ManageInternalEndpointRespon
 // 管理实例内网访问VPC链接
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
@@ -5753,6 +5728,7 @@ func (c *Client) ManageInternalEndpoint(request *ManageInternalEndpointRequest) 
 // 管理实例内网访问VPC链接
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"

@@ -73,6 +73,7 @@ The `ingress` object supports the following:
 * `ingress_name` - (Required, String, ForceNew) gateway name.
 * `mixed` - (Required, Bool) mixing HTTP and HTTPS.
 * `rules` - (Required, List) proxy rules.
+* `clb_id` - (Optional, String) related CLB ID, support binding existing clb, does not support modification.
 * `rewrite_type` - (Optional, String) redirect mode, support AUTO and NONE.
 * `tls` - (Optional, List) ingress TLS configurations.
 

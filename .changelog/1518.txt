@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_ckafka_instance: support create standard instance
+```

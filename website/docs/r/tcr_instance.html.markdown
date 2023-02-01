@@ -85,7 +85,10 @@ The following arguments are supported:
 * `instance_type` - (Required, String) TCR types. Valid values are: `standard`, `basic`, `premium`.
 * `name` - (Required, String, ForceNew) Name of the TCR instance.
 * `delete_bucket` - (Optional, Bool) Indicate to delete the COS bucket which is auto-created with the instance or not.
+* `instance_charge_type_prepaid_period` - (Optional, Int) Length of time to purchase an instance (in month). Must set when registry_charge_type is prepaid.
+* `instance_charge_type_prepaid_renew_flag` - (Optional, Int) Auto renewal flag. 1: manual renewal, 2: automatic renewal, 3: no renewal and no notification. Must set when registry_charge_type is prepaid.
 * `open_public_operation` - (Optional, Bool) Control public network access.
+* `registry_charge_type` - (Optional, Int) Charge type of instance. 1: postpaid; 2: prepaid. Default is postpaid.
 * `replications` - (Optional, List) Specify List of instance Replications, premium only. The available [source region list](https://www.tencentcloud.com/document/api/1051/41101) is here.
 * `security_policy` - (Optional, Set) Public network access allowlist policies of the TCR instance. Only available when `open_public_operation` is `true`.
 * `tags` - (Optional, Map) The available tags within this TCR instance.
@@ -105,6 +108,7 @@ The `security_policy` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `expired_at` - Instance expiration time (prepaid).
 * `internal_end_point` - Internal address for access of the TCR instance.
 * `public_domain` - Public address for access of the TCR instance.
 * `public_status` - Status of the TCR instance public network access.

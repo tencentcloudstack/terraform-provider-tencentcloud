@@ -510,7 +510,7 @@ func (me *DtsService) DescribeDtsMigrateJobsByFilter(ctx context.Context, param 
 	return
 }
 
-func (me *DtsService) DescribeDtsMigrateJob(ctx context.Context, jobId string) (migrateJob *dts.DescribeMigrationDetailResponseParams, errRet error) {
+func (me *DtsService) DescribeDtsMigrateJobById(ctx context.Context, jobId string) (migrateJob *dts.DescribeMigrationDetailResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = dts.NewDescribeMigrationDetailRequest()
@@ -562,7 +562,7 @@ func (me *DtsService) IsolateDtsMigrateJobById(ctx context.Context, jobId string
 	return
 }
 
-func (me *DtsService) DeleteDtsMigrateJobById(ctx context.Context, jobId string) (errRet error) {
+func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId string) (errRet error) {
 	var (
 		logId    = getLogId(ctx)
 		request  = dts.NewDestroyMigrateJobRequest()
@@ -616,7 +616,7 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 	logId := getLogId(ctx)
 
 	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		ret, err := me.DescribeDtsMigrateJob(ctx, jobId)
+		ret, err := me.DescribeDtsMigrateJobById(ctx, jobId)
 		if err != nil {
 			return retryError(err)
 		}
@@ -647,4 +647,98 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 		return err
 	}
 	return nil
+}
+
+func (me *DtsService) DescribeDtsMigrateServiceById(ctx context.Context, jobId string) (migrateService *dts.DescribeMigrationDetailResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeMigrationDetailRequest()
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeMigrationDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	migrateService = response.Response
+	return
+}
+
+func (me *DtsService) DescribeDtsMigrateCheckById(ctx context.Context, jobId string) (migrateCheckJob *dts.DescribeMigrationCheckJobResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeMigrationCheckJobRequest()
+	if jobId != "" {
+		request.JobId = &jobId
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeMigrationCheckJob(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	migrateCheckJob = response.Response
+	return
+}
+
+func (me *DtsService) DtsMigrateServiceStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsMigrateServiceById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.TradeInfo.TradeStatus), nil
+	}
+}
+
+func (me *DtsService) DtsMigrateJobStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsMigrateJobById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
+func (me *DtsService) DtsMigrateCheckConfigStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsMigrateCheckById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.CheckFlag), nil
+	}
 }

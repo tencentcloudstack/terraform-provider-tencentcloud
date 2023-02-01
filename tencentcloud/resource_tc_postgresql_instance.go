@@ -178,12 +178,33 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Description:  "Name of the postgresql instance.",
 			},
 			"charge_type": {
-				Type:         schema.TypeString,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     COMMON_PAYTYPE_POSTPAID,
+				ForceNew:    true,
+				Description: "Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`.",
+			},
+			"period": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
+			},
+			"auto_renew_flag": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.",
+			},
+			"auto_voucher": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Whether to use voucher, `1` for enabled.",
+			},
+			"voucher_ids": {
+				Type:         schema.TypeList,
 				Optional:     true,
-				Default:      COMMON_PAYTYPE_POSTPAID,
-				ForceNew:     true,
-				ValidateFunc: validateAllowedStringValue(POSTGRESQL_PAYTYPE),
-				Description:  "Pay type of the postgresql instance. For now, only `POSTPAID_BY_HOUR` is valid.",
+				RequiredWith: []string{"auto_voucher"},
+				Description:  "Specify Voucher Ids if `auto_voucher` was `1`, only support using 1 vouchers for now.",
+				Elem:         &schema.Schema{Type: schema.TypeString},
 			},
 			"engine_version": {
 				Type:        schema.TypeString,
@@ -449,7 +470,6 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		nodeSet        = d.Get("db_node_set").(*schema.Set).List()
 	)
 
-	var period = 1
 	// the sdk asks to set value with 1 when paytype is postpaid
 
 	var instanceId, specVersion, specCode string
@@ -462,8 +482,18 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		needSupportTde  = 0
 		kmsKeyId        = ""
 		kmsRegion       = ""
+		period          = 1
+		autoRenewFlag   = 0
+		autoVoucher     = 0
+		voucherIds      []*string
 	)
 
+	if v, ok := d.GetOk("period"); ok {
+		log.Printf("period set")
+		period = v.(int)
+	} else {
+		log.Printf("period not set")
+	}
 	if v, ok := d.GetOk("db_major_vesion"); ok {
 		dbMajorVersion = v.(string)
 	}
@@ -481,6 +511,15 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 	if v, ok := d.GetOk("kms_region"); ok {
 		kmsRegion = v.(string)
+	}
+	if v, ok := d.Get("auto_renew_flag").(int); ok {
+		autoRenewFlag = v
+	}
+	if v, ok := d.Get("auto_voucher").(int); ok {
+		autoVoucher = v
+	}
+	if v, ok := d.GetOk("voucher_ids"); ok {
+		voucherIds = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
 	requestSecurityGroup := make([]string, 0, len(securityGroups))
 
@@ -552,8 +591,9 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			dbVersion,
 			dbMajorVersion,
 			dbKernelVersion,
-			payType, specCode,
-			0,
+			payType,
+			specCode,
+			autoRenewFlag,
 			projectId,
 			period,
 			subnetId,
@@ -568,6 +608,8 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			needSupportTde,
 			kmsKeyId,
 			kmsRegion,
+			autoVoucher,
+			voucherIds,
 		)
 		if inErr != nil {
 			return retryError(inErr)
@@ -723,6 +765,16 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	instanceId := d.Id()
 	d.Partial(true)
+
+	if err := helper.ImmutableArgsChek(d,
+		"charge_type",
+		"period",
+		"auto_renew_flag",
+		"auto_voucher",
+		"voucher_ids",
+	); err != nil {
+		return err
+	}
 
 	var outErr, inErr, checkErr error
 	// update name

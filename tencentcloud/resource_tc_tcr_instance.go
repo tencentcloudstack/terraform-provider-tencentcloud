@@ -180,6 +180,25 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 					},
 				},
 			},
+			"registry_charge_type": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Default:      1,
+				ValidateFunc: validateIntegerInRange(1, 2),
+				Description:  "Charge type of instance. 1: postpaid; 2: prepaid. Default is postpaid.",
+			},
+			"instance_charge_type_prepaid_period": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateIntegerMin(1),
+				Description:  "Length of time to purchase an instance (in month). Must set when registry_charge_type is prepaid.",
+			},
+			"instance_charge_type_prepaid_renew_flag": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateIntegerInRange(1, 3),
+				Description:  "Auto renewal flag. 1: manual renewal, 2: automatic renewal, 3: no renewal and no notification. Must set when registry_charge_type is prepaid.",
+			},
 			//Computed values
 			"status": {
 				Type:        schema.TypeString,
@@ -206,6 +225,11 @@ func resourceTencentCloudTcrInstance() *schema.Resource {
 				Optional:    true,
 				Default:     false,
 				Description: "Indicate to delete the COS bucket which is auto-created with the instance or not.",
+			},
+			"expired_at": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Instance expiration time (prepaid).",
 			},
 		},
 	}
@@ -245,9 +269,19 @@ func resourceTencentCloudTcrInstanceCreate(d *schema.ResourceData, meta interfac
 			}
 		}
 	}
+	params := make(map[string]interface{})
+	if v, ok := d.GetOk("registry_charge_type"); ok {
+		params["registry_charge_type"] = v.(int)
+	}
+	if v, ok := d.GetOk("instance_charge_type_prepaid_period"); ok {
+		params["instance_charge_type_prepaid_period"] = v.(int)
+	}
+	if v, ok := d.GetOk("instance_charge_type_prepaid_renew_flag"); ok {
+		params["instance_charge_type_prepaid_renew_flag"] = v.(int)
+	}
 
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		instanceId, inErr = tcrService.CreateTCRInstance(ctx, name, insType, map[string]string{})
+		instanceId, inErr = tcrService.CreateTCRInstance(ctx, name, insType, params)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -406,6 +440,14 @@ func resourceTencentCloudTcrInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("public_domain", instance.PublicDomain)
 	_ = d.Set("internal_end_point", instance.InternalEndpoint)
 	_ = d.Set("public_status", publicStatus)
+	_ = d.Set("registry_charge_type", *instance.PayMod+1)
+	if *instance.PayMod == REGISTRY_CHARGE_TYPE_PREPAID && instance.RenewFlag != nil {
+		_ = d.Set("instance_charge_type_prepaid_renew_flag", *instance.RenewFlag+1)
+	}
+	if *instance.PayMod == REGISTRY_CHARGE_TYPE_PREPAID && instance.ExpiredAt != nil {
+		_ = d.Set("expired_at", instance.ExpiredAt)
+
+	}
 
 	request := tcr.NewDescribeSecurityPoliciesRequest()
 	request.RegistryId = helper.String(d.Id())

@@ -47,9 +47,12 @@ The following arguments are supported:
 * `subnet_id` - (Required, String) VPC subnet ID.
 * `vpc_id` - (Required, String, ForceNew) VPC ID.
 * `zone` - (Required, String, ForceNew) Availability zone ID, which can be obtained through the Zone field in the returned value of the DescribeZones API.
-* `auto_renew_flag` - (Optional, Int, ForceNew) Renewal flag. Valid values: 0 (manual renewal), 1 (auto-renewal). Default value: 0.
+* `auto_renew_flag` - (Optional, Int) Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.
+* `auto_voucher` - (Optional, Int) Whether to use voucher, `1` for enabled.
 * `instance_charge_type` - (Optional, String, ForceNew) instance billing mode. Valid values: PREPAID (monthly subscription), POSTPAID_BY_HOUR (pay-as-you-go).
 * `need_support_ipv6` - (Optional, Int, ForceNew) Whether to support IPv6 address access. Valid values: 1 (yes), 0 (no).
+* `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
+* `voucher_ids` - (Optional, List: [`String`]) Specify Voucher Ids if `auto_voucher` was `1`, only support using 1 vouchers for now.
 
 ## Attributes Reference
 

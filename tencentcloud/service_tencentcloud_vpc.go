@@ -5374,6 +5374,9 @@ func (me *VpcService) DescribeVpcBandwidthPackageAttachment(ctx context.Context,
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if len(response.Response.ResourceSet) < 1 {
+		return
+	}
 	bandwidthPackageResources = response.Response.ResourceSet[0]
 
 	return
@@ -5723,6 +5726,44 @@ func (me *VpcService) DeleteVpcEndPointServiceWhiteListById(ctx context.Context,
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DescribeVpcBandwidthPackageByEip(ctx context.Context, eipId string) (resource *vpc.BandwidthPackage, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeBandwidthPackagesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = append(
+		request.Filters,
+		&vpc.Filter{
+			Name:   helper.String("resource.resource-id"),
+			Values: []*string{&eipId},
+		},
+	)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().DescribeBandwidthPackages(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && len(response.Response.BandwidthPackageSet) > 0 {
+		resource = response.Response.BandwidthPackageSet[0]
+	}
 
 	return
 }

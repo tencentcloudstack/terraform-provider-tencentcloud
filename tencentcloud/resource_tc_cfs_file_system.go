@@ -106,6 +106,11 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 				Computed:    true,
 				Description: "Create time of the file system.",
 			},
+			"fs_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Mount root-directory.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -256,6 +261,7 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("vpc_id", mountTarget.VpcId)
 		_ = d.Set("subnet_id", mountTarget.SubnetId)
 		_ = d.Set("mount_ip", mountTarget.IpAddress)
+		_ = d.Set("fs_id", mountTarget.FSID)
 	}
 
 	return nil

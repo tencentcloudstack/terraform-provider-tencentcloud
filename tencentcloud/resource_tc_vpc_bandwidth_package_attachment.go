@@ -153,7 +153,10 @@ func resourceTencentCloudVpcBandwidthPackageAttachmentRead(d *schema.ResourceDat
 
 	if bandwidthPackageAttachment == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `bandwidthPackageAttachment` %s does not exist", bandwidthPackageId)
+		log.Printf("[WARN]%s resource `tencentcloud_vpc_bandwidth_package_attachment` [%s] not found, please check if it has been deleted.",
+			logId, bandwidthPackageId,
+		)
+		return nil
 	}
 
 	_ = d.Set("bandwidth_package_id", bandwidthPackageId)

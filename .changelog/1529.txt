@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_monitor_tmp_instance: add computed field: `ipv4_address`, `proxy_address`, `remote_write`, `api_root_path`
+```

@@ -128,7 +128,7 @@ const testAlertRule_basic = testAlertRuleVar + `
 resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
   instance_id	= var.prometheus_id
   rule_name		= "test-rule_name"
-  receivers 	= ["Consumer-6vkna7pevq"]
+  receivers 	= ["notice-tj75hgqj"]
   expr			= "increase(mysql_global_status_slow_queries[1m]) > 0"
   duration	    = "4m"
   rule_state	= 2
@@ -146,7 +146,7 @@ const testAlertRule_update = testAlertRuleVar + `
 resource "tencentcloud_monitor_tmp_alert_rule" "basic" {
   instance_id	= var.prometheus_id
   rule_name		= "test-rule_name_update"
-  receivers 	= ["Consumer-6vkna7pevq"]
+  receivers 	= ["notice-tj75hgqj"]
   expr			= "increase(mysql_global_status_slow_queries[1m]) > 1"
   duration	    = "2m"
   rule_state	= 2
