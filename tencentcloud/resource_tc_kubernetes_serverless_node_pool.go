@@ -21,6 +21,14 @@ resource "tencentcloud_kubernetes_serverless_node_pool" "example_serverless_node
 	}
 }
 ```
+
+Import
+
+serverless node pool can be imported, e.g.
+
+```
+$ terraform import tencentcloud_kubernetes_serverless_node_pool.test cls-xxx#np-xxx
+```
 */
 package tencentcloud
 
@@ -38,6 +46,9 @@ import (
 
 func resourceTkeServerLessNodePool() *schema.Resource {
 	return &schema.Resource{
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Read:   resourceTkeServerlessNodePoolRead,
 		Create: resourceTkeServerlessNodePoolCreate,
 		Update: resourceTkeServerlessNodePoolUpdate,
@@ -115,9 +126,6 @@ func resourceTkeServerLessNodePool() *schema.Resource {
 				Computed:    true,
 				Description: "life state of serverless node pool.",
 			},
-		},
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
 		},
 	}
 }
