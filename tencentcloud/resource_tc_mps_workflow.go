@@ -49,7 +49,7 @@ resource "tencentcloud_mps_workflow" "workflow" {
 					sample_rate = &lt;nil&gt;
 					audio_channel = 2
 				}
-				t_e_h_d_config {
+				tehd_config {
 					type = &lt;nil&gt;
 					max_video_bitrate = &lt;nil&gt;
 				}
@@ -77,7 +77,7 @@ resource "tencentcloud_mps_workflow" "workflow" {
 					audio_channel = &lt;nil&gt;
 					stream_selects = &lt;nil&gt;
 				}
-				t_e_h_d_config {
+				tehd_config {
 					type = &lt;nil&gt;
 					max_video_bitrate = &lt;nil&gt;
 				}
@@ -618,7 +618,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 														},
 													},
 												},
-												"t_e_h_d_config": {
+												"tehd_config": {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
@@ -761,7 +761,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 														},
 													},
 												},
-												"t_e_h_d_config": {
+												"tehd_config": {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
@@ -2291,7 +2291,7 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 						}
 						rawTranscodeParameter.AudioTemplate = &audioTemplateInfo
 					}
-					if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "t_e_h_d_config"); ok {
+					if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "tehd_config"); ok {
 						tEHDConfig := mps.TEHDConfig{}
 						if v, ok := tEHDConfigMap["type"]; ok {
 							tEHDConfig.Type = helper.String(v.(string))
@@ -2371,7 +2371,7 @@ func resourceTencentCloudMpsWorkflowCreate(d *schema.ResourceData, meta interfac
 						}
 						overrideTranscodeParameter.AudioTemplate = &audioTemplateInfoForUpdate
 					}
-					if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "t_e_h_d_config"); ok {
+					if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "tehd_config"); ok {
 						tEHDConfigForUpdate := mps.TEHDConfigForUpdate{}
 						if v, ok := tEHDConfigMap["type"]; ok {
 							tEHDConfigForUpdate.Type = helper.String(v.(string))
@@ -3350,7 +3350,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 							tEHDConfigMap["max_video_bitrate"] = transcodeTaskSet.RawParameter.TEHDConfig.MaxVideoBitrate
 						}
 
-						rawParameterMap["t_e_h_d_config"] = []interface{}{tEHDConfigMap}
+						rawParameterMap["tehd_config"] = []interface{}{tEHDConfigMap}
 					}
 
 					transcodeTaskSetMap["raw_parameter"] = []interface{}{rawParameterMap}
@@ -3454,7 +3454,7 @@ func resourceTencentCloudMpsWorkflowRead(d *schema.ResourceData, meta interface{
 							tEHDConfigMap["max_video_bitrate"] = transcodeTaskSet.OverrideParameter.TEHDConfig.MaxVideoBitrate
 						}
 
-						overrideParameterMap["t_e_h_d_config"] = []interface{}{tEHDConfigMap}
+						overrideParameterMap["tehd_config"] = []interface{}{tEHDConfigMap}
 					}
 
 					if transcodeTaskSet.OverrideParameter.SubtitleTemplate != nil {
@@ -4652,7 +4652,7 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 							}
 							rawTranscodeParameter.AudioTemplate = &audioTemplateInfo
 						}
-						if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "t_e_h_d_config"); ok {
+						if tEHDConfigMap, ok := helper.InterfaceToMap(rawParameterMap, "tehd_config"); ok {
 							tEHDConfig := mps.TEHDConfig{}
 							if v, ok := tEHDConfigMap["type"]; ok {
 								tEHDConfig.Type = helper.String(v.(string))
@@ -4732,7 +4732,7 @@ func resourceTencentCloudMpsWorkflowUpdate(d *schema.ResourceData, meta interfac
 							}
 							overrideTranscodeParameter.AudioTemplate = &audioTemplateInfoForUpdate
 						}
-						if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "t_e_h_d_config"); ok {
+						if tEHDConfigMap, ok := helper.InterfaceToMap(overrideParameterMap, "tehd_config"); ok {
 							tEHDConfigForUpdate := mps.TEHDConfigForUpdate{}
 							if v, ok := tEHDConfigMap["type"]; ok {
 								tEHDConfigForUpdate.Type = helper.String(v.(string))

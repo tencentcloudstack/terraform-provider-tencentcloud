@@ -59,7 +59,7 @@ resource "tencentcloud_mps_workflow" "workflow" {
           sample_rate   = & lt ; nil & gt ;
           audio_channel = 2
         }
-        t_e_h_d_config {
+        tehd_config {
           type              = & lt ; nil & gt ;
           max_video_bitrate = & lt ; nil & gt ;
         }
@@ -87,7 +87,7 @@ resource "tencentcloud_mps_workflow" "workflow" {
           audio_channel  = & lt ; nil & gt ;
           stream_selects = & lt ; nil & gt ;
         }
-        t_e_h_d_config {
+        tehd_config {
           type              = & lt ; nil & gt ;
           max_video_bitrate = & lt ; nil & gt ;
         }
@@ -531,7 +531,7 @@ The `override_parameter` object supports the following:
 * `remove_audio` - (Optional, Int) &quot;Whether to remove audio data, value:&quot;&quot;0: reserved.&quot;&quot;1: remove.&quot;.
 * `remove_video` - (Optional, Int) &quot;Whether to remove video data, value:&quot;&quot;0: reserved.&quot;&quot;1: remove.&quot;.
 * `subtitle_template` - (Optional, List) Subtitle Stream Configuration Parameters.
-* `t_e_h_d_config` - (Optional, List) Ultra-fast HD transcoding parameters.
+* `tehd_config` - (Optional, List) Ultra-fast HD transcoding parameters.
 * `video_template` - (Optional, List) Video streaming configuration parameters.
 
 The `raw_parameter` object supports the following:
@@ -540,7 +540,7 @@ The `raw_parameter` object supports the following:
 * `audio_template` - (Optional, List) Audio stream configuration parameters, when RemoveAudio is 0, this field is required.
 * `remove_audio` - (Optional, Int) &quot;Whether to remove audio data, value:&quot;&quot;0: reserved.&quot;&quot;1: remove.&quot;&quot;Default: 0.&quot;.
 * `remove_video` - (Optional, Int) &quot;Whether to remove video data, value:&quot;&quot;0: reserved.&quot;&quot;1: remove.&quot;&quot;Default: 0.&quot;.
-* `t_e_h_d_config` - (Optional, List) Ultra-fast HD transcoding parameters.
+* `tehd_config` - (Optional, List) Ultra-fast HD transcoding parameters.
 * `video_template` - (Optional, List) Video stream configuration parameters, when RemoveVideo is 0, this field is required.
 
 The `raw_parameter` object supports the following:
@@ -578,16 +578,6 @@ The `subtitle_template` object supports the following:
 * `path` - (Optional, String) The address of the subtitle file to be compressed into the video.
 * `stream_index` - (Optional, Int) Specifies the subtitle track to be compressed into the video. If there is a specified Path, the Path has a higher priority. Path and StreamIndex specify at least one.
 
-The `t_e_h_d_config` object supports the following:
-
-* `max_video_bitrate` - (Optional, Int) The upper limit of the video bit rate, No filling means no modification.
-* `type` - (Optional, String) &quot;Extremely high-definition type, optional value:&quot;&quot;TEHD-100: Extreme HD-100.&quot;&quot;Not filling means that the ultra-fast high-definition is not enabled.&quot;.
-
-The `t_e_h_d_config` object supports the following:
-
-* `type` - (Required, String) &quot;Extremely high-definition type, optional value:&quot;&quot;TEHD-100: Extreme HD-100.&quot;&quot;Not filling means that the ultra-fast high-definition is not enabled.&quot;.
-* `max_video_bitrate` - (Optional, Int) &quot;The upper limit of the video bit rate, which is valid when the Type specifies the ultra-fast HD type.&quot;&quot;Do not fill in or fill in 0 means that there is no upper limit on the video bit rate.&quot;.
-
 The `tail_set` object supports the following:
 
 * `type` - (Required, String) Enter the type of source object, which supports COS and URL.
@@ -603,6 +593,16 @@ The `task_notify_config` object supports the following:
 * `notify_url` - (Optional, String) HTTP callback address, required when NotifyType is URL.
 * `queue_name` - (Optional, String) Valid when the model is Queue, indicating the queue name of the CMQ or TDMQ-CMQ that receives the event notification.
 * `topic_name` - (Optional, String) Valid when the model is a Topic, indicating the topic name of the CMQ or TDMQ-CMQ that receives event notifications.
+
+The `tehd_config` object supports the following:
+
+* `max_video_bitrate` - (Optional, Int) The upper limit of the video bit rate, No filling means no modification.
+* `type` - (Optional, String) &quot;Extremely high-definition type, optional value:&quot;&quot;TEHD-100: Extreme HD-100.&quot;&quot;Not filling means that the ultra-fast high-definition is not enabled.&quot;.
+
+The `tehd_config` object supports the following:
+
+* `type` - (Required, String) &quot;Extremely high-definition type, optional value:&quot;&quot;TEHD-100: Extreme HD-100.&quot;&quot;Not filling means that the ultra-fast high-definition is not enabled.&quot;.
+* `max_video_bitrate` - (Optional, Int) &quot;The upper limit of the video bit rate, which is valid when the Type specifies the ultra-fast HD type.&quot;&quot;Do not fill in or fill in 0 means that there is no upper limit on the video bit rate.&quot;.
 
 The `transcode_task_set` object supports the following:
 
