@@ -5,32 +5,26 @@ Example Usage
 
 ```hcl
 
-resource "tencentcloud_monitor_tmp_tke_alert_policy" "tmpAlertPolicy" {
-  instance_id = "xxxxx"
+resource "tencentcloud_monitor_tmp_tke_alert_policy" "basic" {
+  instance_id = "prom-xxxxxx"
   alert_rule {
-    name = "xxx"
+    name = "alert_rule-test"
     rules {
-      name = "xx"
-      rule = "xx"
-      template = "xx"
-      for = "xx"
+      name = "rules-test"
+      rule = "(count(kube_node_status_allocatable_cpu_cores) by (cluster) -1)   / count(kube_node_status_allocatable_cpu_cores) by (cluster)"
+      template = "The CPU requested by the Pod in the cluster {{ $labels.cluster }} is overloaded, and the current CPU application ratio is {{ $value | humanizePercentage }}"
+      for = "5m"
       labels {
-        name  = "xx"
-        value = "xx"
-      }
-      annotations {
-        name  = "xx"
-        value = "xx"
+        name  = "severity"
+        value = "warning"
       }
     }
     notification {
-      type = "xx"
+      type = "amp"
       enabled = true
       alert_manager {
-        url         = "xx"
-        cluster_id   = "xx"
-        cluster_type = "xx"
-      }
+		url	= "xxx"
+	  }
     }
   }
 }
