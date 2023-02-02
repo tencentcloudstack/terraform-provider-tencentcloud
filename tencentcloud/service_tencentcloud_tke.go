@@ -680,7 +680,14 @@ func (me *TkeService) CheckOneOfClusterNodeReady(ctx context.Context, clusterId 
 		if err != nil {
 			return retryError(err)
 		}
-		if len(workers) == 0 {
+
+		// check serverless node
+		virtualNodes, err := me.DescribeClusterVirtualNode(ctx, clusterId)
+		if err != nil {
+			return retryError(err)
+		}
+
+		if len(workers) == 0 && len(virtualNodes) == 0 {
 			if mustHaveWorkers {
 				return resource.RetryableError(fmt.Errorf("waiting for workers created"))
 			}
@@ -693,6 +700,13 @@ func (me *TkeService) CheckOneOfClusterNodeReady(ctx context.Context, clusterId 
 				return nil
 			}
 		}
+		for i := range virtualNodes {
+			virtualNode := virtualNodes[i]
+			if virtualNode.Phase != nil && *virtualNode.Phase == "Running" {
+				return nil
+			}
+		}
+
 		return resource.RetryableError(fmt.Errorf("cluster %s waiting for one of the workers ready", clusterId))
 	})
 }
@@ -2372,5 +2386,39 @@ func (me *TkeService) ModifyClusterVirtualNodePool(ctx context.Context, request 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *TkeService) DescribeClusterVirtualNode(ctx context.Context, clusterId string) (virtualNodes []tke.VirtualNode, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDescribeClusterVirtualNodeRequest()
+	request.ClusterId = common.StringPtr(clusterId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterVirtualNode(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && len(response.Response.Nodes) > 0 {
+		for _, node := range response.Response.Nodes {
+			if node != nil {
+				virtualNodes = append(virtualNodes, *node)
+			}
+		}
+	}
 	return
 }
