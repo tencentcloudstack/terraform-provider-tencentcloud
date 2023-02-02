@@ -21,7 +21,7 @@ resource "tencentcloud_monitor_tmp_tke_alert_policy" "basic" {
     rules {
       name     = "rules-test"
       rule     = "(count(kube_node_status_allocatable_cpu_cores) by (cluster) -1)   / count(kube_node_status_allocatable_cpu_cores) by (cluster)"
-      template = "集群{{ $labels.cluster }}内Pod申请的CPU过载，当前CPU申请占比{{ $value | humanizePercentage }}"
+      template = "The CPU requested by the Pod in the cluster {{ $labels.cluster }} is overloaded, and the current CPU application ratio is {{ $value | humanizePercentage }}"
       for      = "5m"
       labels {
         name  = "severity"
