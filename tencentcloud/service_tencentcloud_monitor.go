@@ -321,20 +321,36 @@ func (me *MonitorService) DescribeMonitorTmpInstance(ctx context.Context, tmpIns
 	}()
 	request.InstanceIds = []*string{&tmpInstanceId}
 
-	response, err := me.client.UseMonitorClient().DescribePrometheusInstances(request)
-	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*monitor.PrometheusInstancesItem, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMonitorClient().DescribePrometheusInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.InstanceSet) < 1 {
+		if response == nil || len(response.Response.InstanceSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.InstanceSet...)
+		if len(response.Response.InstanceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
 		return
 	}
-	tmpInstance = response.Response.InstanceSet[0]
+	tmpInstance = instances[0]
 	return
 }
 

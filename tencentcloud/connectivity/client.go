@@ -75,6 +75,7 @@ import (
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426"
@@ -154,6 +155,7 @@ type TencentCloudClient struct {
 	dtsConn            *dts.Client
 	ciConn             *cos.Client
 	billingConn        *billing.Client
+	tsfConn            *tsf.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1037,6 +1039,20 @@ func (me *TencentCloudClient) UseBillingClient() *billing.Client {
 	me.billingConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.billingConn
+}
+
+// UseTsfClient returns tsf client for service
+func (me *TencentCloudClient) UseTsfClient() *tsf.Client {
+	if me.tsfConn != nil {
+		return me.tsfConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.tsfConn, _ = tsf.NewClient(me.Credential, me.Region, cpf)
+	me.tsfConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.tsfConn
 }
 
 func getEnvDefault(key string, defVal int) int {

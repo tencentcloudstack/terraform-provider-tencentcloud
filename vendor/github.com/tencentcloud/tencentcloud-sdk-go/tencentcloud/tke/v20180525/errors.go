@@ -134,11 +134,20 @@ const (
 	// Kubernetes未知错误。
 	FAILEDOPERATION_KUBERNETESINTERNAL = "FailedOperation.KubernetesInternal"
 
+	// 获取Kubernetes资源列表失败。
+	FAILEDOPERATION_KUBERNETESLISTOPERATIONERROR = "FailedOperation.KubernetesListOperationError"
+
 	// Kubernetes patch 操作失败。
 	FAILEDOPERATION_KUBERNETESPATCHOPERATIONERROR = "FailedOperation.KubernetesPatchOperationError"
 
 	// 底层调用CLB未知错误。
 	FAILEDOPERATION_LBCOMMON = "FailedOperation.LbCommon"
+
+	// 获取集群认证信息失败。
+	FAILEDOPERATION_MARKETGETAUTHFAILED = "FailedOperation.MarketGetAuthFailed"
+
+	// 操作应用Release失败。
+	FAILEDOPERATION_MARKETRELEASEOPERATION = "FailedOperation.MarketReleaseOperation"
 
 	// 修改CLS索引失败。
 	FAILEDOPERATION_MODIFYCLSINDEX = "FailedOperation.ModifyClsIndex"
@@ -151,6 +160,9 @@ const (
 
 	// 参数错误。
 	FAILEDOPERATION_PARAM = "FailedOperation.Param"
+
+	// gpe错误。
+	FAILEDOPERATION_POLICYSERVERCOMMONERROR = "FailedOperation.PolicyServerCommonError"
 
 	// 超过配额限制。
 	FAILEDOPERATION_QUOTAMAXCLSLIMIT = "FailedOperation.QuotaMaxClsLimit"
@@ -314,11 +326,23 @@ const (
 	// Kubernetes未知错误。
 	INTERNALERROR_KUBERNETESINTERNAL = "InternalError.KubernetesInternal"
 
+	// 获取Kubernetes资源列表失败。
+	INTERNALERROR_KUBERNETESLISTOPERATIONERROR = "InternalError.KubernetesListOperationError"
+
 	// Kubernetes Patch操作失败。
 	INTERNALERROR_KUBERNETESPATCHOPERATIONERROR = "InternalError.KubernetesPatchOperationError"
 
 	// 底层调用CLB未知错误。
 	INTERNALERROR_LBCOMMON = "InternalError.LbCommon"
+
+	// 获取集群认证信息失败。
+	INTERNALERROR_MARKETGETAUTHFAILED = "InternalError.MarketGetAuthFailed"
+
+	// 应用市场服务操作错误。
+	INTERNALERROR_MARKETINTERNALSERVERERROR = "InternalError.MarketInternalServerError"
+
+	// 操作应用Release失败。
+	INTERNALERROR_MARKETRELEASEOPERATION = "InternalError.MarketReleaseOperation"
 
 	// 镜像OS不支持。
 	INTERNALERROR_OSNOTSUPPORT = "InternalError.OsNotSupport"
@@ -452,6 +476,12 @@ const (
 	// 路由表非空。
 	INVALIDPARAMETER_ROUTETABLENOTEMPTY = "InvalidParameter.RouteTableNotEmpty"
 
+	// 子网不合法。
+	INVALIDPARAMETER_SUBNETINVALIDERROR = "InvalidParameter.SubnetInvalidError"
+
+	// 子网不存在。
+	INVALIDPARAMETER_SUBNETNOTEXIST = "InvalidParameter.SubnetNotExist"
+
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
 
@@ -467,8 +497,14 @@ const (
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
 
+	// 存在运行中的Pod。
+	RESOURCEINUSE_EXISTRUNNINGPOD = "ResourceInUse.ExistRunningPod"
+
 	// 资源已存在。
 	RESOURCEINUSE_RESOURCEEXISTALREADY = "ResourceInUse.ResourceExistAlready"
+
+	// 所选子网已存在。
+	RESOURCEINUSE_SUBNETALREADYEXIST = "ResourceInUse.SubnetAlreadyExist"
 
 	// 资源不足。
 	RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -506,6 +542,9 @@ const (
 	// Eks Container Instance状态不支持改操作。
 	RESOURCEUNAVAILABLE_EKSCONTAINERSTATUS = "ResourceUnavailable.EksContainerStatus"
 
+	// 节点池状态不正常。
+	RESOURCEUNAVAILABLE_NODEPOOLSTATENOTNORMAL = "ResourceUnavailable.NodePoolStateNotNormal"
+
 	// 资源售罄。
 	RESOURCESSOLDOUT = "ResourcesSoldOut"
 
@@ -532,4 +571,7 @@ const (
 
 	// 非白名单用户。
 	UNSUPPORTEDOPERATION_NOTINWHITELIST = "UnsupportedOperation.NotInWhitelist"
+
+	// 不支持安装虚拟节点。
+	UNSUPPORTEDOPERATION_NOTSUPPORTINSTALLVIRTUALKUBELET = "UnsupportedOperation.NotSupportInstallVirtualKubelet"
 )

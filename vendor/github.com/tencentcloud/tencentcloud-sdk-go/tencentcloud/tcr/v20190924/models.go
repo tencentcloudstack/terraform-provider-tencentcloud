@@ -729,6 +729,9 @@ type CreateInstanceRequestParams struct {
 	// 实例计费类型，0表示按量计费，1表示预付费，默认为按量计费
 	RegistryChargeType *int64 `json:"RegistryChargeType,omitempty" name:"RegistryChargeType"`
 
+	// 预付费自动续费标识和购买时长
+	RegistryChargePrepaid *RegistryChargePrepaid `json:"RegistryChargePrepaid,omitempty" name:"RegistryChargePrepaid"`
+
 	// 是否同步TCR云标签至生成的COS Bucket
 	SyncTag *bool `json:"SyncTag,omitempty" name:"SyncTag"`
 }
@@ -747,6 +750,9 @@ type CreateInstanceRequest struct {
 
 	// 实例计费类型，0表示按量计费，1表示预付费，默认为按量计费
 	RegistryChargeType *int64 `json:"RegistryChargeType,omitempty" name:"RegistryChargeType"`
+
+	// 预付费自动续费标识和购买时长
+	RegistryChargePrepaid *RegistryChargePrepaid `json:"RegistryChargePrepaid,omitempty" name:"RegistryChargePrepaid"`
 
 	// 是否同步TCR云标签至生成的COS Bucket
 	SyncTag *bool `json:"SyncTag,omitempty" name:"SyncTag"`
@@ -768,6 +774,7 @@ func (r *CreateInstanceRequest) FromJsonString(s string) error {
 	delete(f, "RegistryType")
 	delete(f, "TagSpecification")
 	delete(f, "RegistryChargeType")
+	delete(f, "RegistryChargePrepaid")
 	delete(f, "SyncTag")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstanceRequest has unknown keys!", "")
@@ -900,6 +907,9 @@ type CreateInternalEndpointDnsRequestParams struct {
 
 	// 解析地域，需要保证和vpc处于同一地域，如果不填则默认为主实例地域
 	RegionName *string `json:"RegionName,omitempty" name:"RegionName"`
+
+	// 请求的地域ID，用于实例复制地域
+	RegionId *uint64 `json:"RegionId,omitempty" name:"RegionId"`
 }
 
 type CreateInternalEndpointDnsRequest struct {
@@ -921,6 +931,9 @@ type CreateInternalEndpointDnsRequest struct {
 
 	// 解析地域，需要保证和vpc处于同一地域，如果不填则默认为主实例地域
 	RegionName *string `json:"RegionName,omitempty" name:"RegionName"`
+
+	// 请求的地域ID，用于实例复制地域
+	RegionId *uint64 `json:"RegionId,omitempty" name:"RegionId"`
 }
 
 func (r *CreateInternalEndpointDnsRequest) ToJsonString() string {
@@ -940,6 +953,7 @@ func (r *CreateInternalEndpointDnsRequest) FromJsonString(s string) error {
 	delete(f, "EniLBIp")
 	delete(f, "UsePublicDomain")
 	delete(f, "RegionName")
+	delete(f, "RegionId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInternalEndpointDnsRequest has unknown keys!", "")
 	}
@@ -1386,77 +1400,6 @@ func (r *CreateRepositoryResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateRepositoryResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type CreateSecurityPoliciesRequestParams struct {
-	// 实例Id
-	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
-
-	// 192.168.0.0/24
-	CidrBlock *string `json:"CidrBlock,omitempty" name:"CidrBlock"`
-
-	// 描述
-	Description *string `json:"Description,omitempty" name:"Description"`
-}
-
-type CreateSecurityPoliciesRequest struct {
-	*tchttp.BaseRequest
-	
-	// 实例Id
-	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
-
-	// 192.168.0.0/24
-	CidrBlock *string `json:"CidrBlock,omitempty" name:"CidrBlock"`
-
-	// 描述
-	Description *string `json:"Description,omitempty" name:"Description"`
-}
-
-func (r *CreateSecurityPoliciesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *CreateSecurityPoliciesRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "RegistryId")
-	delete(f, "CidrBlock")
-	delete(f, "Description")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateSecurityPoliciesRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type CreateSecurityPoliciesResponseParams struct {
-	// 实例Id
-	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
-
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-}
-
-type CreateSecurityPoliciesResponse struct {
-	*tchttp.BaseResponse
-	Response *CreateSecurityPoliciesResponseParams `json:"Response"`
-}
-
-func (r *CreateSecurityPoliciesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *CreateSecurityPoliciesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4260,6 +4203,9 @@ type DescribeImagesRequestParams struct {
 
 	// 指定镜像 Digest 进行查找
 	Digest *string `json:"Digest,omitempty" name:"Digest"`
+
+	// 指定是否为精准匹配，true为精准匹配，不填为模糊匹配
+	ExactMatch *bool `json:"ExactMatch,omitempty" name:"ExactMatch"`
 }
 
 type DescribeImagesRequest struct {
@@ -4285,6 +4231,9 @@ type DescribeImagesRequest struct {
 
 	// 指定镜像 Digest 进行查找
 	Digest *string `json:"Digest,omitempty" name:"Digest"`
+
+	// 指定是否为精准匹配，true为精准匹配，不填为模糊匹配
+	ExactMatch *bool `json:"ExactMatch,omitempty" name:"ExactMatch"`
 }
 
 func (r *DescribeImagesRequest) ToJsonString() string {
@@ -4306,6 +4255,7 @@ func (r *DescribeImagesRequest) FromJsonString(s string) error {
 	delete(f, "Limit")
 	delete(f, "Offset")
 	delete(f, "Digest")
+	delete(f, "ExactMatch")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeImagesRequest has unknown keys!", "")
 	}
@@ -4407,12 +4357,21 @@ func (r *DescribeImmutableTagRulesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceAllNamespacesRequestParams struct {
+	// 每页个数
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
+	// 起始偏移位置
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 }
 
 type DescribeInstanceAllNamespacesRequest struct {
 	*tchttp.BaseRequest
 	
+	// 每页个数
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 起始偏移位置
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 }
 
 func (r *DescribeInstanceAllNamespacesRequest) ToJsonString() string {
@@ -4427,7 +4386,8 @@ func (r *DescribeInstanceAllNamespacesRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	
+	delete(f, "Limit")
+	delete(f, "Offset")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceAllNamespacesRequest has unknown keys!", "")
 	}
@@ -8270,7 +8230,7 @@ type TagInfo struct {
 	// Tag名称
 	TagName *string `json:"TagName,omitempty" name:"TagName"`
 
-	// 镜像Id
+	// 制品的 ID
 	TagId *string `json:"TagId,omitempty" name:"TagId"`
 
 	// docker image 可以看到的id
@@ -8279,36 +8239,39 @@ type TagInfo struct {
 	// 大小
 	Size *string `json:"Size,omitempty" name:"Size"`
 
-	// 镜像的创建时间
+	// 制品的创建时间
 	CreationTime *string `json:"CreationTime,omitempty" name:"CreationTime"`
 
-	// 镜像创建至今时间长度
+	// 制品创建至今时间长度
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DurationDays *string `json:"DurationDays,omitempty" name:"DurationDays"`
 
-	// 镜像的作者
+	// 标注的制品作者
 	Author *string `json:"Author,omitempty" name:"Author"`
 
-	// 次镜像建议运行的系统架构
+	// 标注的制品平台
 	Architecture *string `json:"Architecture,omitempty" name:"Architecture"`
 
-	// 创建此镜像的docker版本
+	// 创建制品的 Docker 版本
 	DockerVersion *string `json:"DockerVersion,omitempty" name:"DockerVersion"`
 
-	// 此镜像建议运行系统
+	// 标注的制品操作系统
 	OS *string `json:"OS,omitempty" name:"OS"`
 
-	// SizeByte
+	// 制品大小
 	SizeByte *int64 `json:"SizeByte,omitempty" name:"SizeByte"`
 
-	// Id
+	// 序号
 	Id *int64 `json:"Id,omitempty" name:"Id"`
 
 	// 数据更新时间
 	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 
-	// 镜像更新时间
+	// 制品更新时间
 	PushTime *string `json:"PushTime,omitempty" name:"PushTime"`
+
+	// 制品类型
+	Kind *string `json:"Kind,omitempty" name:"Kind"`
 }
 
 type TagInfoResp struct {

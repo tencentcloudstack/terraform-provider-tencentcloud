@@ -1324,3 +1324,85 @@ func (me *CvmService) DeleteCvmHpcClusterById(ctx context.Context, hpcClusterId 
 
 	return
 }
+
+func (me *CvmService) DescribeCvmLaunchTemplateById(ctx context.Context, launchTemplateId string) (launchTemplate *cvm.LaunchTemplateInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDescribeLaunchTemplatesRequest()
+	request.LaunchTemplateIds = []*string{&launchTemplateId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeLaunchTemplates(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.LaunchTemplateSet) < 1 {
+		return
+	}
+
+	launchTemplate = response.Response.LaunchTemplateSet[0]
+	return
+}
+
+func (me *CvmService) DescribeLaunchTemplateVersionsById(ctx context.Context, launchTemplateId string) (launchTemplate *cvm.LaunchTemplateVersionInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDescribeLaunchTemplateVersionsRequest()
+	request.LaunchTemplateId = &launchTemplateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeLaunchTemplateVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.LaunchTemplateVersionSet) < 1 {
+		return
+	}
+
+	launchTemplate = response.Response.LaunchTemplateVersionSet[0]
+	return
+}
+
+func (me *CvmService) DeleteCvmLaunchTemplateById(ctx context.Context, launchTemplateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDeleteLaunchTemplateRequest()
+	request.LaunchTemplateId = &launchTemplateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DeleteLaunchTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
