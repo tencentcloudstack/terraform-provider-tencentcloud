@@ -80,6 +80,30 @@ resource "tencentcloud_teo_rule_engine" "rule1" {
         }
       }
     }
+
+    sub_rules {
+      tags = ["test-tag", ]
+      rules {
+        or {
+          and {
+            operator    = "equal"
+            target      = "filename"
+            ignore_case = false
+            values      = ["test.txt"]
+          }
+        }
+        actions {
+          rewrite_action {
+            action = "RequestHeader"
+            parameters {
+              action = "set"
+              name   = "EO-Client-OS"
+              values = []
+            }
+          }
+        }
+      }
+    }
   }
 }
 ```
@@ -92,6 +116,7 @@ The following arguments are supported:
 * `rules` - (Required, List) Rule items list.
 * `status` - (Required, String) Status of the rule, valid value can be `enable` or `disable`.
 * `zone_id` - (Required, String) Site ID.
+* `tags` - (Optional, Set: [`String`]) rule label.
 
 The `actions` object supports the following:
 
@@ -104,6 +129,8 @@ The `and` object supports the following:
 * `operator` - (Required, String) Condition operator. Valid values are `equal`, `notequal`.
 * `target` - (Required, String) Condition target. Valid values:- `host`: Host of the URL.- `filename`: filename of the URL.- `extension`: file extension of the URL.- `full_url`: full url.- `url`: path of the URL.
 * `values` - (Required, Set) Condition Value.
+* `ignore_case` - (Optional, Bool) Whether to ignore the case of the parameter value, the default value is false.
+* `name` - (Optional, String) The parameter name corresponding to the matching type is valid when the Target value is the following, and the valid value cannot be empty: `query_string` (query string): The parameter name of the query string in the URL request under the current site, such as lang and version in lang=cn&version=1; `request_header` (HTTP request header): HTTP request header field name, such as Accept-Language in Accept-Language:zh-CN,zh;q=0.9.
 
 The `code_action` object supports the following:
 
@@ -145,6 +172,17 @@ The `rules` object supports the following:
 
 * `actions` - (Required, List) Actions list of the rule. See details in data source `rule_engine_setting`.
 * `or` - (Required, List) OR Conditions list of the rule. Rule would be triggered if any of the condition is true.
+
+The `rules` object supports the following:
+
+* `actions` - (Required, List) Actions list of the rule. See details in data source `rule_engine_setting`.
+* `or` - (Required, List) OR Conditions list of the rule. Rule would be triggered if any of the condition is true.
+* `sub_rules` - (Optional, List) Actions list of the rule. See details in data source `rule_engine_setting`.
+
+The `sub_rules` object supports the following:
+
+* `rules` - (Required, List) Rule items list.
+* `tags` - (Optional, Set) rule label.
 
 ## Attributes Reference
 
