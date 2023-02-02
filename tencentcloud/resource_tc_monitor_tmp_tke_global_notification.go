@@ -4,28 +4,28 @@ Provides a resource to create a tmp tke global notification
 Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_tke_global_notification" "tmpGlobalNotification" {
-  instance_id   = xxx
-  notification{
-    enabled     = true
-    type        = "webhook"
-    web_hook    = ""
-    alert_manager {
-      url           = ""
-      cluster_type  = ""
-      cluster_id    = ""
-    }
-    repeat_interval       = ""
-    time_range_start      = ""
-    time_range_end        = ""
-    notify_way            = ["SMS", "EMAIL"]
-    receiver_groups       = [""]
-    phone_notify_order    = []
-    phone_circle_times    = xxx
-    phone_inner_interval  = xxx
-    phone_circle_interval = xxx
-    phone_arrive_notice   = false
-  }
+resource "tencentcloud_monitor_tmp_tke_global_notification" "basic" {
+ instance_id   = "prom-xxxxxx"
+ notification {
+	enabled   	  		 = true
+	type      	  		 = "webhook"
+	alert_manager  {
+     cluster_id   = ""
+     cluster_type = ""
+     url          = ""
+	}
+	web_hook			  = ""
+	repeat_interval       = "5m"
+	time_range_start      = "00:00:00"
+	time_range_end        = "23:59:59"
+	notify_way            = ["SMS", "EMAIL"]
+	receiver_groups       = []
+	phone_notify_order    = []
+	phone_circle_times    = 0
+	phone_inner_interval  = 0
+	phone_circle_interval = 0
+	phone_arrive_notice   = false
+ }
 }
 ```
 */

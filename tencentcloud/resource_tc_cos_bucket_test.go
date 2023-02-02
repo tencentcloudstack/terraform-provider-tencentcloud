@@ -286,6 +286,7 @@ func TestAccTencentCloudCosBucketResource_website(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.0.index_document", "index.html"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.0.error_document", "error.html"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_website", "website.0.endpoint"),
 				),
 			},
 			// test update bucket website
@@ -296,6 +297,7 @@ func TestAccTencentCloudCosBucketResource_website(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.0.index_document", "testindex.html"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.0.error_document", "testerror.html"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_website", "website.0.endpoint"),
 				),
 			},
 			{
