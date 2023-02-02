@@ -237,8 +237,10 @@ package tencentcloud
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"reflect"
 	"time"
@@ -951,6 +953,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	client := meta.(*TencentCloudClient).apiV3Conn.UseCosClient()
+	tcClient := meta.(*TencentCloudClient).apiV3Conn.UseTencentCosClient(d.Id())
 	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	d.Partial(true)
@@ -1029,7 +1032,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	}
 
 	if d.HasChange("acceleration_enable") {
-		err := resourceTencentCloudCosBucketAccelerationUpdate(ctx, client, d)
+		err := resourceTencentCloudCosBucketAccelerationUpdate(ctx, tcClient, d)
 		if err != nil {
 			return err
 		}
@@ -1172,7 +1175,7 @@ func resourceTencentCloudCosBucketVersioningUpdate(ctx context.Context, client *
 	return nil
 }
 
-func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, client *s3.S3, d *schema.ResourceData) error {
+func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, client *cos.Client, d *schema.ResourceData) error {
 	logId := getLogId(ctx)
 
 	bucket := d.Get("bucket").(string)
@@ -1182,20 +1185,19 @@ func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, client
 		status = "Enabled"
 	}
 
-	request := s3.PutBucketAccelerateConfigurationInput{
-		Bucket: aws.String(bucket),
-		AccelerateConfiguration: &s3.AccelerateConfiguration{
-			Status: aws.String(status),
-		},
+	opt := &cos.BucketPutAccelerateOptions{
+		Status: status,
 	}
-	response, err := client.PutBucketAccelerateConfiguration(&request)
+	response, err := client.Bucket.PutAccelerate(ctx, opt)
 	if err != nil {
-		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, "put bucket acceleration", request.String(), err.Error())
+		log.Printf("[CRITAL]%s api[%s] fail, status [%s], reason[%s]\n",
+			logId, "put bucket acceleration", opt.Status, err.Error())
 		return fmt.Errorf("cos put bucket acceleration error: %s, bucket: %s", err.Error(), bucket)
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, "put bucket acceleration", request.String(), response.String())
+	rb, _ := ioutil.ReadAll(response.Body)
+	body, _ := json.Marshal(rb)
+	log.Printf("[DEBUG]%s api[%s] success, status [%s], response body [%s]\n",
+		logId, "put bucket acceleration", opt.Status, string(body))
 
 	return err
 }
