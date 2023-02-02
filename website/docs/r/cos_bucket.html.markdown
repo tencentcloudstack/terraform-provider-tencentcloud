@@ -83,6 +83,10 @@ resource "tencentcloud_cos_bucket" "mycos" {
     error_document = "error.html"
   }
 }
+
+output "endpoint_test" {
+  value = tencentcloud_cos_bucket.mycos.website.0.endpoint
+}
 ```
 
 Using CORS
