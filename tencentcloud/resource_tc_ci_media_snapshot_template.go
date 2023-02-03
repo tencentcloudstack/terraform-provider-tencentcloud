@@ -6,28 +6,16 @@ Example Usage
 ```hcl
 resource "tencentcloud_ci_media_snapshot_template" "media_snapshot_template" {
     bucket = "terraform-ci-xxxxxx"
-  	name = "snapshot_template"
+  	name = "snapshot_template_test"
   	snapshot {
-      # mode = ""
-      # start = ""
-      # time_interval = ""
       count = "10"
-      # width = ""
-      # height = ""
-      # ci_param = ""
-      # is_check_count = ""
-      # is_check_black = ""
-      # black_level = ""
-      # pixel_black_threshold = ""
-      # snapshot_out_mode = ""
+      snapshot_out_mode = "SnapshotAndSprite"
       sprite_snapshot_config {
-        # cell_width = ""
-        # cell_height = ""
-        # padding = ""
-        # margin = ""
-        color = "0xF0F8FF"
+        color = "White"
         columns = "10"
         lines = "10"
+        margin = "10"
+        padding = "10"
       }
   	}
 }

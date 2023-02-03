@@ -28,8 +28,9 @@ func TestAccTencentCloudCiMediaSnapshotTemplateResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "name", "snapshot_template_test"),
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.count", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.snapshot_out_mode", "SnapshotAndSprite"),
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.sprite_snapshot_config.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.sprite_snapshot_config.0.color", "0xF0F8FF"),
+					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.sprite_snapshot_config.0.color", "White"),
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.sprite_snapshot_config.0.columns", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_ci_media_snapshot_template.media_snapshot_template", "snapshot.0.sprite_snapshot_config.0.lines", "10"),
 				),
@@ -119,10 +120,13 @@ resource "tencentcloud_ci_media_snapshot_template" "media_snapshot_template" {
   	name = "snapshot_template_test"
   	snapshot {
       count = "10"
+      snapshot_out_mode = "SnapshotAndSprite"
       sprite_snapshot_config {
-        color = "0xF0F8FF"
+        color = "White"
         columns = "10"
         lines = "10"
+        margin = "10"
+        padding = "10"
       }
   	}
 }
