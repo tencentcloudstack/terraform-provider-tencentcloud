@@ -77,11 +77,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-ci media_animation_template can be imported using the bucket#templateId, e.g.
-
-```
-terraform import tencentcloud_ci_media_animation_template.media_animation_template terraform-ci-xxxxxx#t18210645f96564eaf80e86b1f58c20152
-```
-

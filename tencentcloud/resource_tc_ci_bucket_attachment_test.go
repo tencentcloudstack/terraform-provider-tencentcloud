@@ -95,7 +95,7 @@ func testAccCheckCiBucketAttachmentExists(re string) resource.TestCheckFunc {
 const testAccCiBucketAttachment = `
 
 resource "tencentcloud_ci_bucket_attachment" "bucket_attachment" {
-  bucket = "terraform-ci-1308919341"
+  bucket = "terraform-ci-test-1308919341"
 }
 
 `

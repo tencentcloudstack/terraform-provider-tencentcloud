@@ -6,14 +6,13 @@ import (
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentyun/cos-go-sdk-v5"
-	ci "github.com/tencentyun/cos-go-sdk-v5"
 )
 
 type CiService struct {
 	client *connectivity.TencentCloudClient
 }
 
-func (me *CiService) DescribeCiBucketById(ctx context.Context, bucket string) (serviceResult *ci.CIServiceResult, errRet error) {
+func (me *CiService) DescribeCiBucketById(ctx context.Context, bucket string) (serviceResult *cos.CIServiceResult, errRet error) {
 	logId := getLogId(ctx)
 
 	defer func() {
@@ -52,7 +51,7 @@ func (me *CiService) DeleteCiBucketById(ctx context.Context, bucket string) (err
 	return
 }
 
-func (me *CiService) DescribeCiBucketPicStyleById(ctx context.Context, bucket, styleName string) (styleRule *ci.StyleRule, errRet error) {
+func (me *CiService) DescribeCiBucketPicStyleById(ctx context.Context, bucket, styleName string) (styleRule *cos.StyleRule, errRet error) {
 	logId := getLogId(ctx)
 
 	defer func() {
@@ -61,7 +60,7 @@ func (me *CiService) DescribeCiBucketPicStyleById(ctx context.Context, bucket, s
 		}
 	}()
 
-	styleResult, response, err := me.client.UsePicClient(bucket).CI.GetStyle(ctx, &ci.GetStyleOptions{
+	styleResult, response, err := me.client.UsePicClient(bucket).CI.GetStyle(ctx, &cos.GetStyleOptions{
 		StyleName: styleName,
 	})
 	if err != nil {
@@ -93,7 +92,7 @@ func (me *CiService) DeleteCiBucketPicStyleById(ctx context.Context, bucket, sty
 		}
 	}()
 
-	response, err := me.client.UsePicClient(bucket).CI.DeleteStyle(ctx, &ci.DeleteStyleOptions{
+	response, err := me.client.UsePicClient(bucket).CI.DeleteStyle(ctx, &cos.DeleteStyleOptions{
 		StyleName: styleName,
 	})
 	if err != nil {
@@ -105,7 +104,7 @@ func (me *CiService) DeleteCiBucketPicStyleById(ctx context.Context, bucket, sty
 	return
 }
 
-func (me *CiService) DescribeCiHotLinkById(ctx context.Context, bucket string) (hotLink *ci.HotLinkResult, errRet error) {
+func (me *CiService) DescribeCiHotLinkById(ctx context.Context, bucket string) (hotLink *cos.HotLinkResult, errRet error) {
 	logId := getLogId(ctx)
 
 	defer func() {
@@ -131,7 +130,7 @@ func (me *CiService) DescribeCiHotLinkById(ctx context.Context, bucket string) (
 	return
 }
 
-func (me *CiService) DescribeCiMediaTemplateById(ctx context.Context, bucket, templateId string) (mediaSnapshotTemplate *ci.Template, errRet error) {
+func (me *CiService) DescribeCiMediaTemplateById(ctx context.Context, bucket, templateId string) (mediaSnapshotTemplate *cos.Template, errRet error) {
 	logId := getLogId(ctx)
 
 	defer func() {
@@ -147,7 +146,7 @@ func (me *CiService) DescribeCiMediaTemplateById(ctx context.Context, bucket, te
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "DescribeMediaTemplate", bucket, response)
+	log.Printf("[DEBUG]%s api[%s] success, request body [%v, %v], response body [%+v]\n", logId, "DescribeMediaTemplate", bucket, templateId, response)
 
 	if len(response.TemplateList) < 1 {
 		return
@@ -171,7 +170,7 @@ func (me *CiService) DeleteCiMediaTemplateById(ctx context.Context, bucket, temp
 		errRet = err
 		return
 	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, "DeleteMediaTemplate", bucket, response)
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%+v]\n", logId, "DeleteMediaTemplate", bucket, response)
 
 	return
 }
@@ -220,7 +219,7 @@ func (me *CiService) OpenCiOriginalImageProtectionById(ctx context.Context, buck
 	return
 }
 
-func (me *CiService) GetCiOriginalImageProtectionById(ctx context.Context, bucket string) (*ci.OriginProtectResult, error) {
+func (me *CiService) GetCiOriginalImageProtectionById(ctx context.Context, bucket string) (*cos.OriginProtectResult, error) {
 	var errRet error
 	logId := getLogId(ctx)
 
@@ -241,7 +240,7 @@ func (me *CiService) GetCiOriginalImageProtectionById(ctx context.Context, bucke
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIOriginalImageProtection", bucket)
 
-	return resRaw.(*ci.OriginProtectResult), nil
+	return resRaw.(*cos.OriginProtectResult), nil
 }
 
 func (me *CiService) CloseCiGuetzliById(ctx context.Context, bucket string) (errRet error) {
@@ -288,7 +287,7 @@ func (me *CiService) OpenCiGuetzliById(ctx context.Context, bucket string) (errR
 	return
 }
 
-func (me *CiService) GetCiGuetzliById(ctx context.Context, bucket string) (*ci.GetGuetzliResult, error) {
+func (me *CiService) GetCiGuetzliById(ctx context.Context, bucket string) (*cos.GetGuetzliResult, error) {
 	var errRet error
 	logId := getLogId(ctx)
 
@@ -309,5 +308,5 @@ func (me *CiService) GetCiGuetzliById(ctx context.Context, bucket string) (*ci.G
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIGuetzli", bucket)
 
-	return resRaw.(*ci.GetGuetzliResult), nil
+	return resRaw.(*cos.GetGuetzliResult), nil
 }

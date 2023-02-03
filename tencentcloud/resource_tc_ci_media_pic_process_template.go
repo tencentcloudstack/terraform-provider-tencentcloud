@@ -126,7 +126,7 @@ func resourceTencentCloudCiMediaPicProcessTemplateCreate(d *schema.ResourceData,
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%v]\n", logId, "CreateMediaPicProcessTemplate", request, result)
+			log.Printf("[DEBUG]%s api[%s] success, request body [%v], response body [%+v]\n", logId, "CreateMediaPicProcessTemplate", request, result)
 		}
 		response = result
 		return nil
@@ -168,6 +168,8 @@ func resourceTencentCloudCiMediaPicProcessTemplateRead(d *schema.ResourceData, m
 		return fmt.Errorf("resource `track` %s does not exist", d.Id())
 	}
 
+	_ = d.Set("bucket", bucket)
+
 	if mediaPicProcessTemplate.Name != "" {
 		_ = d.Set("name", mediaPicProcessTemplate.Name)
 	}
@@ -183,7 +185,10 @@ func resourceTencentCloudCiMediaPicProcessTemplateRead(d *schema.ResourceData, m
 			picProcessMap["process_rule"] = mediaPicProcessTemplate.PicProcess.ProcessRule
 		}
 
-		_ = d.Set("pic_process", []interface{}{picProcessMap})
+		err = d.Set("pic_process", []interface{}{picProcessMap})
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

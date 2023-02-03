@@ -196,6 +196,8 @@ func resourceTencentCloudCiMediaVoiceSeparateTemplateRead(d *schema.ResourceData
 		return fmt.Errorf("resource `track` %s does not exist", d.Id())
 	}
 
+	_ = d.Set("bucket", bucket)
+
 	if template.Name != "" {
 		_ = d.Set("name", template.Name)
 	}

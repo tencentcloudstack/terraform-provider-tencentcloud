@@ -19,7 +19,7 @@ resource "tencentcloud_ci_media_transcode_pro_template" "media_transcode_pro_tem
 		profile = "XAVC-HD_422_10bit"
 		width = "1920"
 		height = "1080"
-    interlaced = "true"
+    	interlaced = "true"
 		fps = "30000/1001"
 		bitrate = "50000"
 		# rotate = ""
