@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
+
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
 
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
@@ -154,6 +156,7 @@ type TencentCloudClient struct {
 	dtsConn            *dts.Client
 	ciConn             *cos.Client
 	tsfConn            *tsf.Client
+	mpsConn            *mps.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1038,6 +1041,20 @@ func (me *TencentCloudClient) UseTsfClient() *tsf.Client {
 	me.tsfConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tsfConn
+}
+
+// UseMpsClient returns mps client for service
+func (me *TencentCloudClient) UseMpsClient() *mps.Client {
+	if me.mpsConn != nil {
+		return me.mpsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.mpsConn, _ = mps.NewClient(me.Credential, me.Region, cpf)
+	me.mpsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.mpsConn
 }
 
 func getEnvDefault(key string, defVal int) int {
