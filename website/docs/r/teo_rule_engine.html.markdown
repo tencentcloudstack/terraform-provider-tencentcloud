@@ -20,85 +20,110 @@ resource "tencentcloud_teo_rule_engine" "rule1" {
   status    = "disable"
 
   rules {
-    or {
-      and {
-        operator = "equal"
-        target   = "host"
-        values = [
-          tencentcloud_teo_dns_record.example.name,
-        ]
-      }
-      and {
-        operator = "equal"
-        target   = "extension"
-        values = [
-          "mp4",
-        ]
-      }
-    }
-
     actions {
       normal_action {
-        action = "CachePrefresh"
-
-        parameters {
-          name = "Switch"
-          values = [
-            "on",
-          ]
-        }
-        parameters {
-          name = "Percent"
-          values = [
-            "80",
-          ]
-        }
-      }
-    }
-
-    actions {
-      normal_action {
-        action = "CacheKey"
-
+        action = "UpstreamUrlRedirect"
         parameters {
           name = "Type"
           values = [
-            "Header",
+            "Path",
           ]
         }
         parameters {
-          name = "Switch"
+          name = "Action"
           values = [
-            "on",
+            "addPrefix",
           ]
         }
         parameters {
           name = "Value"
           values = [
-            "Duck",
+            "/sss",
           ]
         }
       }
     }
 
+    or {
+      and {
+        operator    = "equal"
+        target      = "host"
+        ignore_case = false
+        values = [
+          "a.tf-teo-t.xyz",
+        ]
+      }
+      and {
+        operator    = "equal"
+        target      = "extension"
+        ignore_case = false
+        values = [
+          "jpg",
+        ]
+      }
+    }
+    or {
+      and {
+        operator    = "equal"
+        target      = "filename"
+        ignore_case = false
+        values = [
+          "test.txt",
+        ]
+      }
+    }
+
     sub_rules {
-      tags = ["test-tag", ]
+      tags = ["png"]
       rules {
         or {
           and {
+            operator    = "notequal"
+            target      = "host"
+            ignore_case = false
+            values = [
+              "a.tf-teo-t.xyz",
+            ]
+          }
+          and {
             operator    = "equal"
+            target      = "extension"
+            ignore_case = false
+            values = [
+              "png",
+            ]
+          }
+        }
+        or {
+          and {
+            operator    = "notequal"
             target      = "filename"
             ignore_case = false
-            values      = ["test.txt"]
+            values = [
+              "test.txt",
+            ]
           }
         }
         actions {
-          rewrite_action {
-            action = "RequestHeader"
+          normal_action {
+            action = "UpstreamUrlRedirect"
             parameters {
-              action = "set"
-              name   = "EO-Client-OS"
-              values = []
+              name = "Type"
+              values = [
+                "Path",
+              ]
+            }
+            parameters {
+              name = "Action"
+              values = [
+                "addPrefix",
+              ]
+            }
+            parameters {
+              name = "Value"
+              values = [
+                "/www",
+              ]
             }
           }
         }
@@ -116,7 +141,7 @@ The following arguments are supported:
 * `rules` - (Required, List) Rule items list.
 * `status` - (Required, String) Status of the rule, valid value can be `enable` or `disable`.
 * `zone_id` - (Required, String) Site ID.
-* `tags` - (Optional, Set: [`String`]) rule label.
+* `tags` - (Optional, Set: [`String`]) rule tag list.
 
 The `actions` object supports the following:
 
@@ -182,7 +207,7 @@ The `rules` object supports the following:
 The `sub_rules` object supports the following:
 
 * `rules` - (Required, List) Rule items list.
-* `tags` - (Optional, Set) rule label.
+* `tags` - (Optional, Set) rule tag list.
 
 ## Attributes Reference
 

@@ -10,85 +10,110 @@ resource "tencentcloud_teo_rule_engine" "rule1" {
   status    = "disable"
 
   rules {
-    or {
-      and {
-        operator = "equal"
-        target   = "host"
-        values   = [
-          tencentcloud_teo_dns_record.example.name,
-        ]
-      }
-      and {
-        operator = "equal"
-        target   = "extension"
-        values   = [
-          "mp4",
-        ]
-      }
-    }
-
     actions {
       normal_action {
-        action = "CachePrefresh"
-
-        parameters {
-          name   = "Switch"
-          values = [
-            "on",
-          ]
-        }
-        parameters {
-          name   = "Percent"
-          values = [
-            "80",
-          ]
-        }
-      }
-    }
-
-    actions {
-      normal_action {
-        action = "CacheKey"
-
+        action = "UpstreamUrlRedirect"
         parameters {
           name   = "Type"
           values = [
-            "Header",
+            "Path",
           ]
         }
         parameters {
-          name   = "Switch"
+          name   = "Action"
           values = [
-            "on",
+            "addPrefix",
           ]
         }
         parameters {
           name   = "Value"
           values = [
-            "Duck",
+            "/sss",
           ]
         }
       }
     }
 
+    or {
+      and {
+        operator = "equal"
+        target   = "host"
+        ignore_case = false
+        values   = [
+          "a.tf-teo-t.xyz",
+        ]
+      }
+      and {
+        operator = "equal"
+        target   = "extension"
+        ignore_case = false
+        values   = [
+          "jpg",
+        ]
+      }
+    }
+    or {
+      and {
+        operator = "equal"
+        target   = "filename"
+        ignore_case = false
+        values   = [
+          "test.txt",
+        ]
+      }
+    }
+
     sub_rules {
-      tags = ["test-tag",]
+      tags = ["png"]
       rules {
         or {
           and {
-            operator = "equal"
-            target = "filename"
+            operator = "notequal"
+            target   = "host"
             ignore_case = false
-            values = ["test.txt"]
+            values   = [
+              "a.tf-teo-t.xyz",
+            ]
+          }
+          and {
+            operator = "equal"
+            target   = "extension"
+            ignore_case = false
+            values   = [
+              "png",
+            ]
+          }
+        }
+        or {
+          and {
+            operator = "notequal"
+            target   = "filename"
+            ignore_case = false
+            values   = [
+              "test.txt",
+            ]
           }
         }
         actions {
-          rewrite_action {
-            action = "RequestHeader"
+          normal_action {
+            action = "UpstreamUrlRedirect"
             parameters {
-              action = "set"
-              name = "EO-Client-OS"
-              values = []
+              name   = "Type"
+              values = [
+                "Path",
+              ]
+            }
+            parameters {
+              name   = "Action"
+              values = [
+                "addPrefix",
+              ]
+            }
+            parameters {
+              name   = "Value"
+              values = [
+                "/www",
+              ]
             }
           }
         }
@@ -96,6 +121,8 @@ resource "tencentcloud_teo_rule_engine" "rule1" {
     }
   }
 }
+
+
 
 ```
 Import
@@ -160,7 +187,7 @@ func resourceTencentCloudTeoRuleEngine() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "rule label.",
+				Description: "rule tag list.",
 			},
 
 			"rules": {
@@ -357,7 +384,7 @@ func resourceTencentCloudTeoRuleEngine() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
-										Description: "rule label.",
+										Description: "rule tag list.",
 									},
 									"rules": {
 										Type:        schema.TypeList,
@@ -1079,15 +1106,15 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 
 											andList = append(andList, andMap)
 										}
-										orMap["and"] = []interface{}{andList}
+										orMap["and"] = andList
 									}
 									orList = append(orList, orMap)
 								}
-								rulesMap["or"] = []interface{}{orList}
+								rulesMap["or"] = orList
 							}
-							if rules.Actions != nil {
+							if subRule.Actions != nil {
 								actionsList := []interface{}{}
-								for _, actions := range rules.Actions {
+								for _, actions := range subRule.Actions {
 									actionsMap := map[string]interface{}{}
 									if actions.NormalAction != nil {
 										normalActionMap := map[string]interface{}{}
@@ -1106,7 +1133,7 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 												}
 												parametersList = append(parametersList, parametersMap)
 											}
-											normalActionMap["parameters"] = []interface{}{parametersList}
+											normalActionMap["parameters"] = parametersList
 										}
 										actionsMap["normal_action"] = []interface{}{normalActionMap}
 									}
@@ -1130,7 +1157,7 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 												}
 												parametersList = append(parametersList, parametersMap)
 											}
-											rewriteActionMap["parameters"] = []interface{}{parametersList}
+											rewriteActionMap["parameters"] = parametersList
 										}
 										actionsMap["rewrite_action"] = []interface{}{rewriteActionMap}
 									}
@@ -1154,22 +1181,22 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 												}
 												parametersList = append(parametersList, parametersMap)
 											}
-											codeActionMap["parameters"] = []interface{}{parametersList}
+											codeActionMap["parameters"] = parametersList
 										}
 										actionsMap["code_action"] = []interface{}{codeActionMap}
 									}
 									actionsList = append(actionsList, actionsMap)
 								}
-								rulesMap["actions"] = []interface{}{actionsList}
+								rulesMap["actions"] = actionsList
 							}
 							rulesList = append(rulesList, rulesMap)
 						}
-						subRulesMap["rules"] = []interface{}{rulesList}
+						subRulesMap["rules"] = rulesList
 					}
 					subRulesList = append(subRulesList, subRulesMap)
 				}
 
-				rulesMap["sub_rules"] = []interface{}{subRulesList}
+				rulesMap["sub_rules"] = subRulesList
 			}
 
 			rulesList = append(rulesList, rulesMap)
@@ -1211,13 +1238,11 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 		request.Status = helper.String(v.(string))
 	}
 
-	if d.HasChange("tags") {
-		if v, ok := d.GetOk("tags"); ok {
-			tagsSet := v.(*schema.Set).List()
-			for i := range tagsSet {
-				tags := tagsSet[i].(string)
-				request.Tags = append(request.Tags, &tags)
-			}
+	if v, ok := d.GetOk("tags"); ok {
+		tagsSet := v.(*schema.Set).List()
+		for i := range tagsSet {
+			tags := tagsSet[i].(string)
+			request.Tags = append(request.Tags, &tags)
 		}
 	}
 
