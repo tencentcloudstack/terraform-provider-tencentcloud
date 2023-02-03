@@ -11,7 +11,7 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudCiMediaTranscodeTemplateResource_basic -v
-func TestAccTencentCloudCiMediaTranscodeTemplateResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixCiMediaTranscodeTemplateResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
