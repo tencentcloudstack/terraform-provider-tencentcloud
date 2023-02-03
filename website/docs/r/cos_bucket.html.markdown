@@ -242,6 +242,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 The following arguments are supported:
 
 * `bucket` - (Required, String, ForceNew) The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.
+* `acceleration_enable` - (Optional, Bool) Enable bucket acceleration.
 * `acl_body` - (Optional, String) ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.
 * `acl` - (Optional, String) The canned ACL to apply. Valid values: private, public-read, and public-read-write. Defaults to private.
 * `cors_rules` - (Optional, List) A rule of Cross-Origin Resource Sharing (documented below).

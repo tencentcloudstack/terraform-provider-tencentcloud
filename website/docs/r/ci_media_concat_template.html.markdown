@@ -53,7 +53,7 @@ resource "tencentcloud_ci_media_concat_template" "media_concat_template" {
         enable_start_fadein = "true"
         start_fadein_time   = "3"
         enable_end_fadeout  = "false"
-        end_fadeout_time    = "0"
+        end_fadeout_time    = "0.1"
         enable_bgm_fade     = "true"
         bgm_fade_time       = "1.7"
       }

@@ -935,6 +935,10 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_api_group
 	tencentcloud_tsf_namespace
 
+Media Processing Service(MPS)
+  Resource
+	tencentcloud_mps_workflow
+
 */
 package tencentcloud
 
@@ -1677,6 +1681,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_contain_group":                          resourceTencentCloudTsfContainGroup(),
 			"tencentcloud_tsf_lane":                                   resourceTencentCloudTsfLane(),
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
+			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 		},
 
 		ConfigureFunc: providerConfigure,
