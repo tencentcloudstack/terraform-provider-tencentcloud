@@ -246,7 +246,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										MaxItems:    1,
 										Optional:    true,
 										Computed:    true,
-										Description: "Video transcoding custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios. It is recommended that you use Definition to specify transcoding parameters first.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "Video transcoding custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios. It is recommended that you use Definition to specify transcoding parameters first.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"container": {
@@ -257,12 +257,12 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 												"remove_video": {
 													Type:        schema.TypeInt,
 													Optional:    true,
-													Description: "Whether to remove video data, value:0: reserved.1: remove.Default: 0..",
+													Description: "Whether to remove video data, value:0: reserved.1: remove.Default: 0.",
 												},
 												"remove_audio": {
 													Type:        schema.TypeInt,
 													Optional:    true,
-													Description: "Whether to remove audio data, value:0: reserved.1: remove.Default: 0..",
+													Description: "Whether to remove audio data, value:0: reserved.1: remove.Default: 0.",
 												},
 												"video_template": {
 													Type:        schema.TypeList,
@@ -274,22 +274,22 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"codec": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Encoding format of the video stream, optional value:libx264: H.264 encoding.libx265: H.265 encoding.av1: AOMedia Video 1 encoding.Note: Currently H.265 encoding must specify a resolution, and it needs to be within 640*480.Note: av1 encoded containers currently only support mp4..",
+																Description: "Encoding format of the video stream, optional value:libx264: H.264 encoding.libx265: H.265 encoding.av1: AOMedia Video 1 encoding.Note: Currently H.265 encoding must specify a resolution, and it needs to be within 640*480.Note: av1 encoded containers currently only support mp4.",
 															},
 															"fps": {
 																Type:        schema.TypeInt,
 																Required:    true,
-																Description: "Video frame rate, value range: [0, 100], unit: Hz.When the value is 0, it means that the frame rate is consistent with the original video.Note: The value range for adaptive code rate is [0, 60]..",
+																Description: "Video frame rate, value range: [0, 100], unit: Hz.When the value is 0, it means that the frame rate is consistent with the original video.Note: The value range for adaptive code rate is [0, 60].",
 															},
 															"bitrate": {
 																Type:        schema.TypeInt,
 																Required:    true,
-																Description: "Bit rate of the video stream, value range: 0 and [128, 35000], unit: kbps.When the value is 0, it means that the video bit rate is consistent with the original video..",
+																Description: "Bit rate of the video stream, value range: 0 and [128, 35000], unit: kbps.When the value is 0, it means that the video bit rate is consistent with the original video.",
 															},
 															"resolution_adaptive": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Adaptive resolution, optional values:```open: open, at this time, Width represents the long side of the video, Height represents the short side of the video.close: close, at this time, Width represents the width of the video, and Height represents the height of the video.Default: open.Note: In adaptive mode, Width cannot be smaller than Height..",
+																Description: "Adaptive resolution, optional values:```open: open, at this time, Width represents the long side of the video, Height represents the short side of the video.close: close, at this time, Width represents the width of the video, and Height represents the height of the video.Default: open.Note: In adaptive mode, Width cannot be smaller than Height.",
 															},
 															"width": {
 																Type:        schema.TypeInt,
@@ -299,22 +299,22 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"height": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "The maximum value of video stream height (or short side), value range: 0 and [128, 4096], unit: px.When Width and Height are both 0, the resolution is the same.When Width is 0 and Height is not 0, Width is scaled proportionally.When Width is not 0 and Height is 0, Height is scaled proportionally.When both Width and Height are not 0, the resolution is specified by the user.Default: 0..",
+																Description: "The maximum value of video stream height (or short side), value range: 0 and [128, 4096], unit: px.When Width and Height are both 0, the resolution is the same.When Width is 0 and Height is not 0, Width is scaled proportionally.When Width is not 0 and Height is 0, Height is scaled proportionally.When both Width and Height are not 0, the resolution is specified by the user.Default: 0.",
 															},
 															"gop": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "The interval between keyframe I frames, value range: 0 and [1, 100000], unit: number of frames.When filling 0 or not filling, the system will automatically set the gop length..",
+																Description: "The interval between keyframe I frames, value range: 0 and [1, 100000], unit: number of frames.When filling 0 or not filling, the system will automatically set the gop length.",
 															},
 															"fill_type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Filling method, when the aspect ratio of the video stream configuration is inconsistent with the aspect ratio of the original video, the processing method for transcoding is filling. Optional filling method:stretch: Stretch, stretch each frame to fill the entire screen, which may cause the transcoded video to be squashed or stretched;.black: Leave black, keep the aspect ratio of the video unchanged, and fill the rest of the edge with black.white: Leave blank, keep the aspect ratio of the video unchanged, and fill the rest of the edge with white.gauss: Gaussian blur, keep the aspect ratio of the video unchanged, and fill the rest of the edge with Gaussian blur.Default: black.Note: Adaptive stream only supports stretch, black..",
+																Description: "Filling method, when the aspect ratio of the video stream configuration is inconsistent with the aspect ratio of the original video, the processing method for transcoding is filling. Optional filling method:stretch: Stretch, stretch each frame to fill the entire screen, which may cause the transcoded video to be squashed or stretched;.black: Leave black, keep the aspect ratio of the video unchanged, and fill the rest of the edge with black.white: Leave blank, keep the aspect ratio of the video unchanged, and fill the rest of the edge with white.gauss: Gaussian blur, keep the aspect ratio of the video unchanged, and fill the rest of the edge with Gaussian blur.Default: black.Note: Adaptive stream only supports stretch, black.",
 															},
 															"vcrf": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Video constant bit rate control factor, the value range is [1, 51].If this parameter is specified, the code rate control method of CRF will be used for transcoding (the video code rate will no longer take effect).If there is no special requirement, it is not recommended to specify this parameter..",
+																Description: "Video constant bit rate control factor, the value range is [1, 51].If this parameter is specified, the code rate control method of CRF will be used for transcoding (the video code rate will no longer take effect).If there is no special requirement, it is not recommended to specify this parameter.",
 															},
 														},
 													},
@@ -329,22 +329,22 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"codec": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Encoding format of frequency stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame..",
+																Description: "Encoding format of frequency stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame.",
 															},
 															"bitrate": {
 																Type:        schema.TypeInt,
 																Required:    true,
-																Description: "Bit rate of the audio stream, value range: 0 and [26, 256], unit: kbps.When the value is 0, it means that the audio bit rate is consistent with the original audio..",
+																Description: "Bit rate of the audio stream, value range: 0 and [26, 256], unit: kbps.When the value is 0, it means that the audio bit rate is consistent with the original audio.",
 															},
 															"sample_rate": {
 																Type:        schema.TypeInt,
 																Required:    true,
-																Description: "Sampling rate of audio stream, optional value.32000.44100.48000.Unit: Hz..",
+																Description: "Sampling rate of audio stream, optional value.32000.44100.48000.Unit: Hz.",
 															},
 															"audio_channel": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Audio channel mode, optional values:`1: single channel.2: Dual channel.6: Stereo.When the package format of the media is an audio format (flac, ogg, mp3, m4a), the number of channels is not allowed to be set to stereo.Default: 2..",
+																Description: "Audio channel mode, optional values:`1: single channel.2: Dual channel.6: Stereo.When the package format of the media is an audio format (flac, ogg, mp3, m4a), the number of channels is not allowed to be set to stereo.Default: 2.",
 															},
 														},
 													},
@@ -359,12 +359,12 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Extremely high-definition type, optional value:TEHD-100: Extreme HD-100.Not filling means that the ultra-fast high-definition is not enabled..",
+																Description: "Extremely high-definition type, optional value:TEHD-100: Extreme HD-100.Not filling means that the ultra-fast high-definition is not enabled.",
 															},
 															"max_video_bitrate": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "The upper limit of the video bit rate, which is valid when the Type specifies the ultra-fast HD type.Do not fill in or fill in 0 means that there is no upper limit on the video bit rate..",
+																Description: "The upper limit of the video bit rate, which is valid when the Type specifies the ultra-fast HD type.Do not fill in or fill in 0 means that there is no upper limit on the video bit rate.",
 															},
 														},
 													},
@@ -376,7 +376,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "Video transcoding custom parameters, valid when Definition is not filled with 0.When some transcoding parameters in this structure are filled in, the parameters in the transcoding template will be overwritten with the filled parameters.This parameter is used in highly customized scenarios, it is recommended that you only use Definition to specify transcoding parameters.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "Video transcoding custom parameters, valid when Definition is not filled with 0.When some transcoding parameters in this structure are filled in, the parameters in the transcoding template will be overwritten with the filled parameters.This parameter is used in highly customized scenarios, it is recommended that you only use Definition to specify transcoding parameters.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"container": {
@@ -387,12 +387,12 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 												"remove_video": {
 													Type:        schema.TypeInt,
 													Optional:    true,
-													Description: "Whether to remove video data, value:0: reserved.1: remove..",
+													Description: "Whether to remove video data, value:0: reserved.1: remove.",
 												},
 												"remove_audio": {
 													Type:        schema.TypeInt,
 													Optional:    true,
-													Description: "Whether to remove audio data, value:0: reserved.1: remove..",
+													Description: "Whether to remove audio data, value:0: reserved.1: remove.",
 												},
 												"video_template": {
 													Type:        schema.TypeList,
@@ -404,7 +404,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"codec": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Encoding format of the video stream, optional value:libx264: H.264 encoding.libx265: H.265 encoding.av1: AOMedia Video 1 encoding.Note: Currently H.265 encoding must specify a resolution, and it needs to be within 640*480.Note: av1 encoded containers currently only support mp4..",
+																Description: "Encoding format of the video stream, optional value:libx264: H.264 encoding.libx265: H.265 encoding.av1: AOMedia Video 1 encoding.Note: Currently H.265 encoding must specify a resolution, and it needs to be within 640*480.Note: av1 encoded containers currently only support mp4.",
 															},
 															"fps": {
 																Type:        schema.TypeInt,
@@ -444,12 +444,12 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"vcrf": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Video constant bit rate control factor, the value range is [1, 51], Fill in 0 to disable this parameter.If there is no special requirement, it is not recommended to specify this parameter..",
+																Description: "Video constant bit rate control factor, the value range is [1, 51], Fill in 0 to disable this parameter.If there is no special requirement, it is not recommended to specify this parameter.",
 															},
 															"content_adapt_stream": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Content Adaptive Encoding. optional value:0: not open.1: open.Default: 0.When this parameter is turned on, multiple code streams with different resolutions and different bit rates will be adaptively generated. The width and height of the VideoTemplate are the maximum resolutions among the multiple code streams, and the bit rates in the VideoTemplate are multiple code rates. The highest bit rate in the stream, the vcrf in VideoTemplate is the highest quality among multiple bit streams. When the resolution, bit rate and vcrf are not set, the highest resolution generated by the ContentAdaptStream parameter is the resolution of the video source, and the video quality is close to vmaf95. To enable this parameter or learn about billing details, please contact your Tencent Cloud Business..",
+																Description: "Content Adaptive Encoding. optional value:0: not open.1: open.Default: 0.When this parameter is turned on, multiple code streams with different resolutions and different bit rates will be adaptively generated. The width and height of the VideoTemplate are the maximum resolutions among the multiple code streams, and the bit rates in the VideoTemplate are multiple code rates. The highest bit rate in the stream, the vcrf in VideoTemplate is the highest quality among multiple bit streams. When the resolution, bit rate and vcrf are not set, the highest resolution generated by the ContentAdaptStream parameter is the resolution of the video source, and the video quality is close to vmaf95. To enable this parameter or learn about billing details, please contact your Tencent Cloud Business.",
 															},
 														},
 													},
@@ -464,22 +464,22 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"codec": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Encoding format of frequency stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame..",
+																Description: "Encoding format of frequency stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame.",
 															},
 															"bitrate": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Bit rate of the video stream, value range: 0 and [128, 35000], unit: kbps.When the value is 0, it means that the video bit rate is consistent with the original video..",
+																Description: "Bit rate of the video stream, value range: 0 and [128, 35000], unit: kbps.When the value is 0, it means that the video bit rate is consistent with the original video.",
 															},
 															"sample_rate": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Sampling rate of audio stream, optional value.32000.44100.48000.Unit: Hz..",
+																Description: "Sampling rate of audio stream, optional value.32000.44100.48000.Unit: Hz.",
 															},
 															"audio_channel": {
 																Type:        schema.TypeInt,
 																Optional:    true,
-																Description: "Audio channel mode, optional values:`1: single channel.2: Dual channel.6: Stereo.When the package format of the media is an audio format (flac, ogg, mp3, m4a), the number of channels is not allowed to be set to stereo..",
+																Description: "Audio channel mode, optional values:`1: single channel.2: Dual channel.6: Stereo.When the package format of the media is an audio format (flac, ogg, mp3, m4a), the number of channels is not allowed to be set to stereo.",
 															},
 															"stream_selects": {
 																Type: schema.TypeSet,
@@ -502,7 +502,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"type": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Extremely high-definition type, optional value:TEHD-100: Extreme HD-100.Not filling means that the ultra-fast high-definition is not enabled..",
+																Description: "Extremely high-definition type, optional value:TEHD-100: Extreme HD-100.Not filling means that the ultra-fast high-definition is not enabled.",
 															},
 															"max_video_bitrate": {
 																Type:        schema.TypeInt,
@@ -547,7 +547,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 															"font_alpha": {
 																Type:        schema.TypeFloat,
 																Optional:    true,
-																Description: "Text transparency, value range: (0, 1].0: fully transparent.1: fully opaque.Default: 1..",
+																Description: "Text transparency, value range: (0, 1].0: fully transparent.1: fully opaque.Default: 1.",
 															},
 														},
 													},
@@ -558,7 +558,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 									"watermark_set": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: "Watermark list, support multiple pictures or text watermarks, up to 10.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "Watermark list, support multiple pictures or text watermarks, up to 10.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"definition": {
@@ -571,28 +571,28 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													MaxItems:    1,
 													Optional:    true,
 													Computed:    true,
-													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking..",
+													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Watermark type, optional value:image: image watermark..",
+																Description: "Watermark type, optional value:image: image watermark.",
 															},
 															"coordinate_origin": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Origin position, currently only supports:TopLeft: Indicates that the origin of the coordinates is at the upper left corner of the video image, and the origin of the watermark is the upper left corner of the picture or text.Default: TopLeft..",
+																Description: "Origin position, currently only supports:TopLeft: Indicates that the origin of the coordinates is at the upper left corner of the video image, and the origin of the watermark is the upper left corner of the picture or text.Default: TopLeft.",
 															},
 															"x_pos": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px..",
+																Description: "The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px.",
 															},
 															"y_pos": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px..",
+																Description: "The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px.",
 															},
 															"image_template": {
 																Type:        schema.TypeList,
@@ -642,7 +642,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 																						Type:        schema.TypeList,
 																						MaxItems:    1,
 																						Optional:    true,
-																						Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained..",
+																						Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained.",
 																						Elem: &schema.Resource{
 																							Schema: map[string]*schema.Schema{
 																								"url": {
@@ -659,17 +659,17 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 																		"width": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The width of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Width is a percentage of the video width, such as 10% means that the Width is 10% of the video width.When the string ends with px, it means that the watermark Width unit is pixels, such as 100px means that the Width is 100 pixels.Default: 10%..",
+																			Description: "The width of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Width is a percentage of the video width, such as 10% means that the Width is 10% of the video width.When the string ends with px, it means that the watermark Width unit is pixels, such as 100px means that the Width is 100 pixels.Default: 10%.",
 																		},
 																		"height": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The height of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the watermark Height unit is pixel, such as 100px means that the Height is 100 pixels.Default value: 0px, indicating that Height is scaled according to the aspect ratio of the original watermark image..",
+																			Description: "The height of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the watermark Height unit is pixel, such as 100px means that the Height is 100 pixels.Default value: 0px, indicating that Height is scaled according to the aspect ratio of the original watermark image.",
 																		},
 																		"repeat_type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Watermark repeat type. Usage scenario: The watermark is a dynamic image. Ranges.once: After the dynamic watermark is played, it will no longer appear.repeat_last_frame: After the watermark is played, stay on the last frame.repeat: the watermark loops until the end of the video (default)..",
+																			Description: "Watermark repeat type. Usage scenario: The watermark is a dynamic image. Ranges.once: After the dynamic watermark is played, it will no longer appear.repeat_last_frame: After the watermark is played, stay on the last frame.repeat: the watermark loops until the end of the video (default).",
 																		},
 																	},
 																},
@@ -680,22 +680,22 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 												"text_content": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Text content, the length does not exceed 100 characters. Fill in only when the watermark type is text watermark.Text watermark does not support screenshot watermarking..",
+													Description: "Text content, the length does not exceed 100 characters. Fill in only when the watermark type is text watermark.Text watermark does not support screenshot watermarking.",
 												},
 												"svg_content": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "SVG content. The length cannot exceed 2000000 characters. Fill in only if the watermark type is SVG watermark.SVG watermark does not support screenshot watermarking..",
+													Description: "SVG content. The length cannot exceed 2000000 characters. Fill in only if the watermark type is SVG watermark.SVG watermark does not support screenshot watermarking.",
 												},
 												"start_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "The start time offset of the watermark, unit: second. Do not fill in or fill in 0, which means that the watermark will start to appear when the screen appears.Do not fill in or fill in 0, which means the watermark will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the watermark starts to appear n seconds before the end of the screen..",
+													Description: "The start time offset of the watermark, unit: second. Do not fill in or fill in 0, which means that the watermark will start to appear when the screen appears.Do not fill in or fill in 0, which means the watermark will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the watermark starts to appear n seconds before the end of the screen.",
 												},
 												"end_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "End time offset of watermark, unit: second.Do not fill in or fill in 0, indicating that the watermark lasts until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the watermark lasts until it disappears n seconds before the end of the screen..",
+													Description: "End time offset of watermark, unit: second.Do not fill in or fill in 0, indicating that the watermark lasts until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the watermark lasts until it disappears n seconds before the end of the screen.",
 												},
 											},
 										},
@@ -709,37 +709,37 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 												"coordinate_origin": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Origin position, currently only supports:TopLeft: Indicates that the coordinate origin is located in the upper left corner of the video image, and the origin of the mosaic is the upper left corner of the picture or textDefault: TopLeft..",
+													Description: "Origin position, currently only supports:TopLeft: Indicates that the coordinate origin is located in the upper left corner of the video image, and the origin of the mosaic is the upper left corner of the picture or textDefault: TopLeft.",
 												},
 												"x_pos": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px..",
+													Description: "The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px.",
 												},
 												"y_pos": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px..",
+													Description: "The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px.",
 												},
 												"width": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "The width of the mosaic. Support %, px two formats:When the string ends with %, it means that the mosaic Width is the percentage size of the video width, such as 10% means that the Width is 10% of the video width.The string ends with px, indicating that the mosaic Width unit is pixels, such as 100px indicates that the Width is 100 pixels.Default: 10%..",
+													Description: "The width of the mosaic. Support %, px two formats:When the string ends with %, it means that the mosaic Width is the percentage size of the video width, such as 10% means that the Width is 10% of the video width.The string ends with px, indicating that the mosaic Width unit is pixels, such as 100px indicates that the Width is 100 pixels.Default: 10%.",
 												},
 												"height": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "The height of the mosaic. Support %, px two formats.When the string ends with %, it means that the mosaic Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the mosaic Height unit is pixel, such as 100px means that the Height is 100 pixels.Default: 10%..",
+													Description: "The height of the mosaic. Support %, px two formats.When the string ends with %, it means that the mosaic Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the mosaic Height unit is pixel, such as 100px means that the Height is 100 pixels.Default: 10%.",
 												},
 												"start_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "The start time offset of the mosaic, unit: second. Do not fill or fill in 0, which means that the mosaic will start to appear when the screen appears.Fill in or fill in 0, which means that the mosaic will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the mosaic appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the mosaic starts to appear n seconds before the end of the screen..",
+													Description: "The start time offset of the mosaic, unit: second. Do not fill or fill in 0, which means that the mosaic will start to appear when the screen appears.Fill in or fill in 0, which means that the mosaic will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the mosaic appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the mosaic starts to appear n seconds before the end of the screen.",
 												},
 												"end_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "The end time offset of the mosaic, unit: second.Fill in or fill in 0, indicating that the mosaic continues until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the mosaic lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the mosaic lasts until it disappears n seconds before the end of the screen..",
+													Description: "The end time offset of the mosaic, unit: second.Fill in or fill in 0, indicating that the mosaic continues until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the mosaic lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the mosaic lasts until it disappears n seconds before the end of the screen.",
 												},
 											},
 										},
@@ -747,18 +747,18 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 									"start_time_offset": {
 										Type:        schema.TypeFloat,
 										Optional:    true,
-										Description: "The start time offset of the transcoded video, unit: second.Do not fill in or fill in 0, indicating that the transcoded video starts from the beginning of the original video.When the value is greater than 0 (assumed to be n), it means that the transcoded video starts from the nth second position of the original video.When the value is less than 0 (assumed to be -n), it means that the transcoded video starts from the position n seconds before the end of the original video..",
+										Description: "The start time offset of the transcoded video, unit: second.Do not fill in or fill in 0, indicating that the transcoded video starts from the beginning of the original video.When the value is greater than 0 (assumed to be n), it means that the transcoded video starts from the nth second position of the original video.When the value is less than 0 (assumed to be -n), it means that the transcoded video starts from the position n seconds before the end of the original video.",
 									},
 									"end_time_offset": {
 										Type:        schema.TypeFloat,
 										Optional:    true,
-										Description: "End time offset of video after transcoding, unit: second.Do not fill in or fill in 0, indicating that the transcoded video continues until the end of the original video..When the value is greater than 0 (assumed to be n), it means that the transcoded video lasts until the nth second of the original video and terminates.When the value is less than 0 (assumed to be -n), it means that the transcoded video lasts until n seconds before the end of the original video...",
+										Description: "End time offset of video after transcoding, unit: second.Do not fill in or fill in 0, indicating that the transcoded video continues until the end of the original video.When the value is greater than 0 (assumed to be n), it means that the transcoded video lasts until the nth second of the original video and terminates.When the value is less than 0 (assumed to be -n), it means that the transcoded video lasts until n seconds before the end of the original video.",
 									},
 									"output_storage": {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "The target storage of the transcoded file, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "The target storage of the transcoded file, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -770,7 +770,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained..",
+													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"bucket": {
@@ -803,7 +803,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "Rules for the `{number}` variable in the output path after transcoding.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "Rules for the `{number}` variable in the output path after transcoding.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"initial_value": {
@@ -876,7 +876,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
-																Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained..",
+																Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"url": {
@@ -930,7 +930,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
-																Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained..",
+																Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"url": {
@@ -975,7 +975,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "The target storage of the transcoded file, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "The target storage of the transcoded file, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -987,7 +987,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained..",
+													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"bucket": {
@@ -1057,28 +1057,28 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													MaxItems:    1,
 													Optional:    true,
 													Computed:    true,
-													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking..",
+													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Watermark type, optional value:image: image watermark..",
+																Description: "Watermark type, optional value:image: image watermark.",
 															},
 															"coordinate_origin": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Origin position, currently only supports:TopLeft: Indicates that the origin of the coordinates is at the upper left corner of the video image, and the origin of the watermark is the upper left corner of the picture or text.Default: TopLeft..",
+																Description: "Origin position, currently only supports:TopLeft: Indicates that the origin of the coordinates is at the upper left corner of the video image, and the origin of the watermark is the upper left corner of the picture or text.Default: TopLeft.",
 															},
 															"x_pos": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px..",
+																Description: "The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px.",
 															},
 															"y_pos": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px..",
+																Description: "The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px.",
 															},
 															"image_template": {
 																Type:        schema.TypeList,
@@ -1128,7 +1128,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 																						Type:        schema.TypeList,
 																						MaxItems:    1,
 																						Optional:    true,
-																						Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained..",
+																						Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained.",
 																						Elem: &schema.Resource{
 																							Schema: map[string]*schema.Schema{
 																								"url": {
@@ -1145,17 +1145,17 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 																		"width": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The width of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Width is a percentage of the video width, such as 10% means that the Width is 10% of the video width.When the string ends with px, it means that the watermark Width unit is pixels, such as 100px means that the Width is 100 pixels.Default: 10%..",
+																			Description: "The width of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Width is a percentage of the video width, such as 10% means that the Width is 10% of the video width.When the string ends with px, it means that the watermark Width unit is pixels, such as 100px means that the Width is 100 pixels.Default: 10%.",
 																		},
 																		"height": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The height of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the watermark Height unit is pixel, such as 100px means that the Height is 100 pixels.Default value: 0px, indicating that Height is scaled according to the aspect ratio of the original watermark image..",
+																			Description: "The height of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the watermark Height unit is pixel, such as 100px means that the Height is 100 pixels.Default value: 0px, indicating that Height is scaled according to the aspect ratio of the original watermark image.",
 																		},
 																		"repeat_type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Watermark repeat type. Usage scenario: The watermark is a dynamic image. Ranges.once: After the dynamic watermark is played, it will no longer appear.repeat_last_frame: After the watermark is played, stay on the last frame.repeat: the watermark loops until the end of the video (default)..",
+																			Description: "Watermark repeat type. Usage scenario: The watermark is a dynamic image. Ranges.once: After the dynamic watermark is played, it will no longer appear.repeat_last_frame: After the watermark is played, stay on the last frame.repeat: the watermark loops until the end of the video (default).",
 																		},
 																	},
 																},
@@ -1166,22 +1166,22 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 												"text_content": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Text content, the length does not exceed 100 characters. Fill in only when the watermark type is text watermark.Text watermark does not support screenshot watermarking..",
+													Description: "Text content, the length does not exceed 100 characters. Fill in only when the watermark type is text watermark.Text watermark does not support screenshot watermarking.",
 												},
 												"svg_content": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "SVG content. The length cannot exceed 2000000 characters. Fill in only if the watermark type is SVG watermark.SVG watermark does not support screenshot watermarking..",
+													Description: "SVG content. The length cannot exceed 2000000 characters. Fill in only if the watermark type is SVG watermark.SVG watermark does not support screenshot watermarking.",
 												},
 												"start_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "The start time offset of the watermark, unit: second. Do not fill in or fill in 0, which means that the watermark will start to appear when the screen appears.Do not fill in or fill in 0, which means the watermark will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the watermark starts to appear n seconds before the end of the screen..",
+													Description: "The start time offset of the watermark, unit: second. Do not fill in or fill in 0, which means that the watermark will start to appear when the screen appears.Do not fill in or fill in 0, which means the watermark will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the watermark starts to appear n seconds before the end of the screen.",
 												},
 												"end_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "End time offset of watermark, unit: second.Do not fill in or fill in 0, indicating that the watermark lasts until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the watermark lasts until it disappears n seconds before the end of the screen..",
+													Description: "End time offset of watermark, unit: second.Do not fill in or fill in 0, indicating that the watermark lasts until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the watermark lasts until it disappears n seconds before the end of the screen.",
 												},
 											},
 										},
@@ -1190,7 +1190,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "The target storage of the file after the screenshot at the time point, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "The target storage of the file after the screenshot at the time point, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -1202,7 +1202,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained..",
+													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"bucket": {
@@ -1230,7 +1230,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "Rules for the `{number}` variable in the output path after the screenshot at the time point.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "Rules for the `{number}` variable in the output path after the screenshot at the time point.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"initial_value": {
@@ -1286,28 +1286,28 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													MaxItems:    1,
 													Optional:    true,
 													Computed:    true,
-													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking..",
+													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Watermark type, optional value:image: image watermark..",
+																Description: "Watermark type, optional value:image: image watermark.",
 															},
 															"coordinate_origin": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Origin position, currently only supports:TopLeft: Indicates that the origin of the coordinates is at the upper left corner of the video image, and the origin of the watermark is the upper left corner of the picture or text.Default: TopLeft..",
+																Description: "Origin position, currently only supports:TopLeft: Indicates that the origin of the coordinates is at the upper left corner of the video image, and the origin of the watermark is the upper left corner of the picture or text.Default: TopLeft.",
 															},
 															"x_pos": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px..",
+																Description: "The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px.",
 															},
 															"y_pos": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px..",
+																Description: "The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px.",
 															},
 															"image_template": {
 																Type:        schema.TypeList,
@@ -1357,7 +1357,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 																						Type:        schema.TypeList,
 																						MaxItems:    1,
 																						Optional:    true,
-																						Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained..",
+																						Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained.",
 																						Elem: &schema.Resource{
 																							Schema: map[string]*schema.Schema{
 																								"url": {
@@ -1374,17 +1374,17 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 																		"width": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The width of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Width is a percentage of the video width, such as 10% means that the Width is 10% of the video width.When the string ends with px, it means that the watermark Width unit is pixels, such as 100px means that the Width is 100 pixels.Default: 10%..",
+																			Description: "The width of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Width is a percentage of the video width, such as 10% means that the Width is 10% of the video width.When the string ends with px, it means that the watermark Width unit is pixels, such as 100px means that the Width is 100 pixels.Default: 10%.",
 																		},
 																		"height": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The height of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the watermark Height unit is pixel, such as 100px means that the Height is 100 pixels.Default value: 0px, indicating that Height is scaled according to the aspect ratio of the original watermark image..",
+																			Description: "The height of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the watermark Height unit is pixel, such as 100px means that the Height is 100 pixels.Default value: 0px, indicating that Height is scaled according to the aspect ratio of the original watermark image.",
 																		},
 																		"repeat_type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Watermark repeat type. Usage scenario: The watermark is a dynamic image. Ranges.once: After the dynamic watermark is played, it will no longer appear.repeat_last_frame: After the watermark is played, stay on the last frame.repeat: the watermark loops until the end of the video (default)..",
+																			Description: "Watermark repeat type. Usage scenario: The watermark is a dynamic image. Ranges.once: After the dynamic watermark is played, it will no longer appear.repeat_last_frame: After the watermark is played, stay on the last frame.repeat: the watermark loops until the end of the video (default).",
 																		},
 																	},
 																},
@@ -1395,22 +1395,22 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 												"text_content": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Text content, the length does not exceed 100 characters. Fill in only when the watermark type is text watermark.Text watermark does not support screenshot watermarking..",
+													Description: "Text content, the length does not exceed 100 characters. Fill in only when the watermark type is text watermark.Text watermark does not support screenshot watermarking.",
 												},
 												"svg_content": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "SVG content. The length cannot exceed 2000000 characters. Fill in only if the watermark type is SVG watermark.SVG watermark does not support screenshot watermarking..",
+													Description: "SVG content. The length cannot exceed 2000000 characters. Fill in only if the watermark type is SVG watermark.SVG watermark does not support screenshot watermarking.",
 												},
 												"start_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "The start time offset of the watermark, unit: second. Do not fill in or fill in 0, which means that the watermark will start to appear when the screen appears.Do not fill in or fill in 0, which means the watermark will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the watermark starts to appear n seconds before the end of the screen..",
+													Description: "The start time offset of the watermark, unit: second. Do not fill in or fill in 0, which means that the watermark will start to appear when the screen appears.Do not fill in or fill in 0, which means the watermark will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the watermark starts to appear n seconds before the end of the screen.",
 												},
 												"end_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "End time offset of watermark, unit: second.Do not fill in or fill in 0, indicating that the watermark lasts until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the watermark lasts until it disappears n seconds before the end of the screen..",
+													Description: "End time offset of watermark, unit: second.Do not fill in or fill in 0, indicating that the watermark lasts until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the watermark lasts until it disappears n seconds before the end of the screen.",
 												},
 											},
 										},
@@ -1419,7 +1419,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "The target storage of the file after the screenshot at the time point, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "The target storage of the file after the screenshot at the time point, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -1431,7 +1431,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained..",
+													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"bucket": {
@@ -1459,7 +1459,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "Rules for the `{number}` variable in the output path after sampling the screenshot.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "Rules for the `{number}` variable in the output path after sampling the screenshot.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"initial_value": {
@@ -1503,7 +1503,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "The target storage of the file after the sprite image is intercepted, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "The target storage of the file after the sprite image is intercepted, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -1515,7 +1515,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained..",
+													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"bucket": {
@@ -1548,7 +1548,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "Rules for the `{number}` variable in the output path after intercepting the Sprite image.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "Rules for the `{number}` variable in the output path after intercepting the Sprite image.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"initial_value": {
@@ -1604,28 +1604,28 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													MaxItems:    1,
 													Optional:    true,
 													Computed:    true,
-													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking..",
+													Description: "Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"type": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: "Watermark type, optional value:image: image watermark..",
+																Description: "Watermark type, optional value:image: image watermark.",
 															},
 															"coordinate_origin": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Origin position, currently only supports:TopLeft: Indicates that the origin of the coordinates is at the upper left corner of the video image, and the origin of the watermark is the upper left corner of the picture or text.Default: TopLeft..",
+																Description: "Origin position, currently only supports:TopLeft: Indicates that the origin of the coordinates is at the upper left corner of the video image, and the origin of the watermark is the upper left corner of the picture or text.Default: TopLeft.",
 															},
 															"x_pos": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px..",
+																Description: "The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px.",
 															},
 															"y_pos": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px..",
+																Description: "The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px.",
 															},
 															"image_template": {
 																Type:        schema.TypeList,
@@ -1675,7 +1675,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 																						Type:        schema.TypeList,
 																						MaxItems:    1,
 																						Optional:    true,
-																						Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained..",
+																						Description: "Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained.",
 																						Elem: &schema.Resource{
 																							Schema: map[string]*schema.Schema{
 																								"url": {
@@ -1692,17 +1692,17 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 																		"width": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The width of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Width is a percentage of the video width, such as 10% means that the Width is 10% of the video width.When the string ends with px, it means that the watermark Width unit is pixels, such as 100px means that the Width is 100 pixels.Default: 10%..",
+																			Description: "The width of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Width is a percentage of the video width, such as 10% means that the Width is 10% of the video width.When the string ends with px, it means that the watermark Width unit is pixels, such as 100px means that the Width is 100 pixels.Default: 10%.",
 																		},
 																		"height": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "The height of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the watermark Height unit is pixel, such as 100px means that the Height is 100 pixels.Default value: 0px, indicating that Height is scaled according to the aspect ratio of the original watermark image..",
+																			Description: "The height of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the watermark Height unit is pixel, such as 100px means that the Height is 100 pixels.Default value: 0px, indicating that Height is scaled according to the aspect ratio of the original watermark image.",
 																		},
 																		"repeat_type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: "Watermark repeat type. Usage scenario: The watermark is a dynamic image. Ranges.once: After the dynamic watermark is played, it will no longer appear.repeat_last_frame: After the watermark is played, stay on the last frame.repeat: the watermark loops until the end of the video (default)..",
+																			Description: "Watermark repeat type. Usage scenario: The watermark is a dynamic image. Ranges.once: After the dynamic watermark is played, it will no longer appear.repeat_last_frame: After the watermark is played, stay on the last frame.repeat: the watermark loops until the end of the video (default).",
 																		},
 																	},
 																},
@@ -1713,22 +1713,22 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 												"text_content": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Text content, the length does not exceed 100 characters. Fill in only when the watermark type is text watermark.Text watermark does not support screenshot watermarking..",
+													Description: "Text content, the length does not exceed 100 characters. Fill in only when the watermark type is text watermark.Text watermark does not support screenshot watermarking.",
 												},
 												"svg_content": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "SVG content. The length cannot exceed 2000000 characters. Fill in only if the watermark type is SVG watermark.SVG watermark does not support screenshot watermarking..",
+													Description: "SVG content. The length cannot exceed 2000000 characters. Fill in only if the watermark type is SVG watermark.SVG watermark does not support screenshot watermarking.",
 												},
 												"start_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "The start time offset of the watermark, unit: second. Do not fill in or fill in 0, which means that the watermark will start to appear when the screen appears.Do not fill in or fill in 0, which means the watermark will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the watermark starts to appear n seconds before the end of the screen..",
+													Description: "The start time offset of the watermark, unit: second. Do not fill in or fill in 0, which means that the watermark will start to appear when the screen appears.Do not fill in or fill in 0, which means the watermark will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the watermark starts to appear n seconds before the end of the screen.",
 												},
 												"end_time_offset": {
 													Type:        schema.TypeFloat,
 													Optional:    true,
-													Description: "End time offset of watermark, unit: second.Do not fill in or fill in 0, indicating that the watermark lasts until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the watermark lasts until it disappears n seconds before the end of the screen..",
+													Description: "End time offset of watermark, unit: second.Do not fill in or fill in 0, indicating that the watermark lasts until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the watermark lasts until it disappears n seconds before the end of the screen.",
 												},
 											},
 										},
@@ -1737,7 +1737,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
-										Description: "The target storage of the file after converting to the adaptive code stream, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..",
+										Description: "The target storage of the file after converting to the adaptive code stream, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
@@ -1749,7 +1749,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Optional:    true,
-													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained..",
+													Description: "Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"bucket": {
@@ -1821,7 +1821,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 						"extended_parameter": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Extension parameter whose value is a serialized json string.Note: This parameter is a customized demand parameter, which requires offline docking.Note: This field may return null, indicating that no valid value can be obtained..",
+							Description: "Extension parameter whose value is a serialized json string.Note: This parameter is a customized demand parameter, which requires offline docking.Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -1878,7 +1878,7 @@ func resourceTencentCloudMpsWorkflow() *schema.Resource {
 						"notify_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Notification type, optional value:CMQ: offline, it is recommended to switch to TDMQ-CMQ.TDMQ-CMQ: message queue.URL: When the URL is specified, the HTTP callback is pushed to the address specified by NotifyUrl, the callback protocol is http+json, and the package body content is the same as the output parameters of the parsing event notification interface.SCF: not recommended, additional configuration of SCF in the console is required.Note: CMQ is the default when not filled or empty, if you need to use other types, you need to fill in the corresponding type value..",
+							Description: "Notification type, optional value:CMQ: offline, it is recommended to switch to TDMQ-CMQ.TDMQ-CMQ: message queue.URL: When the URL is specified, the HTTP callback is pushed to the address specified by NotifyUrl, the callback protocol is http+json, and the package body content is the same as the output parameters of the parsing event notification interface.SCF: not recommended, additional configuration of SCF in the console is required.Note: CMQ is the default when not filled or empty, if you need to use other types, you need to fill in the corresponding type value.",
 						},
 						"notify_url": {
 							Type:        schema.TypeString,

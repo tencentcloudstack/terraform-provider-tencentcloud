@@ -123,7 +123,7 @@ The `adaptive_dynamic_streaming_task_set` object supports the following:
 
 * `definition` - (Required, Int) Transfer Adaptive Code Stream Template ID.
 * `output_object_path` - (Optional, String) After converting to an adaptive stream, the output path of the manifest file can be a relative path or an absolute path. If not filled, the default is a relative path: `{inputName}_adaptiveDynamicStreaming_{definition}.{format}`.
-* `output_storage` - (Optional, List) The target storage of the file after converting to the adaptive code stream, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..
+* `output_storage` - (Optional, List) The target storage of the file after converting to the adaptive code stream, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.
 * `segment_object_name` - (Optional, String) After converting to an adaptive stream (only HLS), the output path of the fragmented file can only be a relative path. If not filled, the default is a relative path: `{inputName}_adaptiveDynamicStreaming_{definition}_{subStreamNumber}_{segmentNumber}.{format}`.
 * `sub_stream_object_name` - (Optional, String) After converting to an adaptive stream, the output path of the sub-stream file can only be a relative path. If not filled, the default is a relative path: {inputName}_adaptiveDynamicStreaming_{definition}_{subStreamNumber}.{format}`.
 * `watermark_set` - (Optional, List) Watermark list, support multiple pictures or text watermarks, up to 10.
@@ -131,7 +131,7 @@ The `adaptive_dynamic_streaming_task_set` object supports the following:
 The `ai_analysis_task` object supports the following:
 
 * `definition` - (Required, Int) Video Content Analysis Template ID.
-* `extended_parameter` - (Optional, String) Extension parameter whose value is a serialized json string.Note: This parameter is a customized demand parameter, which requires offline docking.Note: This field may return null, indicating that no valid value can be obtained..
+* `extended_parameter` - (Optional, String) Extension parameter whose value is a serialized json string.Note: This parameter is a customized demand parameter, which requires offline docking.Note: This field may return null, indicating that no valid value can be obtained.
 
 The `ai_content_review_task` object supports the following:
 
@@ -147,22 +147,22 @@ The `animated_graphic_task_set` object supports the following:
 * `end_time_offset` - (Required, Float64) The end time of the animation in the video, in seconds.
 * `start_time_offset` - (Required, Float64) The start time of the animation in the video, in seconds.
 * `output_object_path` - (Optional, String) The output path of the file after rotating the image, which can be a relative path or an absolute path. If not filled, the default is a relative path: {inputName}_animatedGraphic_{definition}.{format}.
-* `output_storage` - (Optional, List) The target storage of the transcoded file, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..
+* `output_storage` - (Optional, List) The target storage of the transcoded file, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.
 
 The `audio_template` object supports the following:
 
-* `audio_channel` - (Optional, Int) Audio channel mode, optional values:`1: single channel.2: Dual channel.6: Stereo.When the package format of the media is an audio format (flac, ogg, mp3, m4a), the number of channels is not allowed to be set to stereo..
-* `bitrate` - (Optional, Int) Bit rate of the video stream, value range: 0 and [128, 35000], unit: kbps.When the value is 0, it means that the video bit rate is consistent with the original video..
-* `codec` - (Optional, String) Encoding format of frequency stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame..
-* `sample_rate` - (Optional, Int) Sampling rate of audio stream, optional value.32000.44100.48000.Unit: Hz..
+* `audio_channel` - (Optional, Int) Audio channel mode, optional values:`1: single channel.2: Dual channel.6: Stereo.When the package format of the media is an audio format (flac, ogg, mp3, m4a), the number of channels is not allowed to be set to stereo.
+* `bitrate` - (Optional, Int) Bit rate of the video stream, value range: 0 and [128, 35000], unit: kbps.When the value is 0, it means that the video bit rate is consistent with the original video.
+* `codec` - (Optional, String) Encoding format of frequency stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame.
+* `sample_rate` - (Optional, Int) Sampling rate of audio stream, optional value.32000.44100.48000.Unit: Hz.
 * `stream_selects` - (Optional, Set) Specifies the audio track to preserve for the output. The default is to keep all sources.
 
 The `audio_template` object supports the following:
 
-* `bitrate` - (Required, Int) Bit rate of the audio stream, value range: 0 and [26, 256], unit: kbps.When the value is 0, it means that the audio bit rate is consistent with the original audio..
-* `codec` - (Required, String) Encoding format of frequency stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame..
-* `sample_rate` - (Required, Int) Sampling rate of audio stream, optional value.32000.44100.48000.Unit: Hz..
-* `audio_channel` - (Optional, Int) Audio channel mode, optional values:`1: single channel.2: Dual channel.6: Stereo.When the package format of the media is an audio format (flac, ogg, mp3, m4a), the number of channels is not allowed to be set to stereo.Default: 2..
+* `bitrate` - (Required, Int) Bit rate of the audio stream, value range: 0 and [26, 256], unit: kbps.When the value is 0, it means that the audio bit rate is consistent with the original audio.
+* `codec` - (Required, String) Encoding format of frequency stream.When the outer parameter Container is mp3, the optional value is:libmp3lame.When the outer parameter Container is ogg or flac, the optional value is:flac.When the outer parameter Container is m4a, the optional value is:libfdk_aac.libmp3lame.ac3.When the outer parameter Container is mp4 or flv, the optional value is:libfdk_aac: more suitable for mp4.libmp3lame: more suitable for flv.When the outer parameter Container is hls, the optional value is:libfdk_aac.libmp3lame.
+* `sample_rate` - (Required, Int) Sampling rate of audio stream, optional value.32000.44100.48000.Unit: Hz.
+* `audio_channel` - (Optional, Int) Audio channel mode, optional values:`1: single channel.2: Dual channel.6: Stereo.When the package format of the media is an audio format (flac, ogg, mp3, m4a), the number of channels is not allowed to be set to stereo.Default: 2.
 
 The `cos_file_upload_trigger` object supports the following:
 
@@ -186,7 +186,7 @@ The `head_set` object supports the following:
 
 * `type` - (Required, String) Enter the type of source object, which supports COS and URL.
 * `cos_input_info` - (Optional, List) Valid when Type is COS, this item is required, indicating media processing COS object information.
-* `url_input_info` - (Optional, List) Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained..
+* `url_input_info` - (Optional, List) Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained.
 
 The `head_tail_parameter` object supports the following:
 
@@ -197,22 +197,22 @@ The `image_content` object supports the following:
 
 * `type` - (Required, String) Enter the type of source object, which supports COS and URL.
 * `cos_input_info` - (Optional, List) Valid when Type is COS, this item is required, indicating media processing COS object information.
-* `url_input_info` - (Optional, List) Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained..
+* `url_input_info` - (Optional, List) Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained.
 
 The `image_sprite_task_set` object supports the following:
 
 * `definition` - (Required, Int) Sprite Illustration Template ID.
-* `object_number_format` - (Optional, List) Rules for the `{number}` variable in the output path after intercepting the Sprite image.Note: This field may return null, indicating that no valid value can be obtained..
+* `object_number_format` - (Optional, List) Rules for the `{number}` variable in the output path after intercepting the Sprite image.Note: This field may return null, indicating that no valid value can be obtained.
 * `output_object_path` - (Optional, String) After capturing the sprite image, the output path of the sprite image file can be a relative path or an absolute path. If not filled, the default is a relative path: `{inputName}_imageSprite_{definition}_{number}.{format}`.
-* `output_storage` - (Optional, List) The target storage of the file after the sprite image is intercepted, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..
+* `output_storage` - (Optional, List) The target storage of the file after the sprite image is intercepted, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.
 * `web_vtt_object_name` - (Optional, String) After capturing the sprite image, the output path of the Web VTT file can only be a relative path. If not filled, the default is a relative path: `{inputName}_imageSprite_{definition}.{format}`.
 
 The `image_template` object supports the following:
 
 * `image_content` - (Required, List) The input content of the watermark image. Support jpeg, png image format.
-* `height` - (Optional, String) The height of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the watermark Height unit is pixel, such as 100px means that the Height is 100 pixels.Default value: 0px, indicating that Height is scaled according to the aspect ratio of the original watermark image..
-* `repeat_type` - (Optional, String) Watermark repeat type. Usage scenario: The watermark is a dynamic image. Ranges.once: After the dynamic watermark is played, it will no longer appear.repeat_last_frame: After the watermark is played, stay on the last frame.repeat: the watermark loops until the end of the video (default)..
-* `width` - (Optional, String) The width of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Width is a percentage of the video width, such as 10% means that the Width is 10% of the video width.When the string ends with px, it means that the watermark Width unit is pixels, such as 100px means that the Width is 100 pixels.Default: 10%..
+* `height` - (Optional, String) The height of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the watermark Height unit is pixel, such as 100px means that the Height is 100 pixels.Default value: 0px, indicating that Height is scaled according to the aspect ratio of the original watermark image.
+* `repeat_type` - (Optional, String) Watermark repeat type. Usage scenario: The watermark is a dynamic image. Ranges.once: After the dynamic watermark is played, it will no longer appear.repeat_last_frame: After the watermark is played, stay on the last frame.repeat: the watermark loops until the end of the video (default).
+* `width` - (Optional, String) The width of the watermark. Support %, px two formats:When the string ends with %, it means that the watermark Width is a percentage of the video width, such as 10% means that the Width is 10% of the video width.When the string ends with px, it means that the watermark Width unit is pixels, such as 100px means that the Width is 100 pixels.Default: 10%.
 
 The `media_process_task` object supports the following:
 
@@ -225,13 +225,13 @@ The `media_process_task` object supports the following:
 
 The `mosaic_set` object supports the following:
 
-* `coordinate_origin` - (Optional, String) Origin position, currently only supports:TopLeft: Indicates that the coordinate origin is located in the upper left corner of the video image, and the origin of the mosaic is the upper left corner of the picture or textDefault: TopLeft..
-* `end_time_offset` - (Optional, Float64) The end time offset of the mosaic, unit: second.Fill in or fill in 0, indicating that the mosaic continues until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the mosaic lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the mosaic lasts until it disappears n seconds before the end of the screen..
-* `height` - (Optional, String) The height of the mosaic. Support %, px two formats.When the string ends with %, it means that the mosaic Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the mosaic Height unit is pixel, such as 100px means that the Height is 100 pixels.Default: 10%..
-* `start_time_offset` - (Optional, Float64) The start time offset of the mosaic, unit: second. Do not fill or fill in 0, which means that the mosaic will start to appear when the screen appears.Fill in or fill in 0, which means that the mosaic will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the mosaic appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the mosaic starts to appear n seconds before the end of the screen..
-* `width` - (Optional, String) The width of the mosaic. Support %, px two formats:When the string ends with %, it means that the mosaic Width is the percentage size of the video width, such as 10% means that the Width is 10% of the video width.The string ends with px, indicating that the mosaic Width unit is pixels, such as 100px indicates that the Width is 100 pixels.Default: 10%..
-* `x_pos` - (Optional, String) The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px..
-* `y_pos` - (Optional, String) The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px..
+* `coordinate_origin` - (Optional, String) Origin position, currently only supports:TopLeft: Indicates that the coordinate origin is located in the upper left corner of the video image, and the origin of the mosaic is the upper left corner of the picture or textDefault: TopLeft.
+* `end_time_offset` - (Optional, Float64) The end time offset of the mosaic, unit: second.Fill in or fill in 0, indicating that the mosaic continues until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the mosaic lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the mosaic lasts until it disappears n seconds before the end of the screen.
+* `height` - (Optional, String) The height of the mosaic. Support %, px two formats.When the string ends with %, it means that the mosaic Height is the percentage size of the video height, such as 10% means that the Height is 10% of the video height.When the string ends with px, it means that the mosaic Height unit is pixel, such as 100px means that the Height is 100 pixels.Default: 10%.
+* `start_time_offset` - (Optional, Float64) The start time offset of the mosaic, unit: second. Do not fill or fill in 0, which means that the mosaic will start to appear when the screen appears.Fill in or fill in 0, which means that the mosaic will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the mosaic appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the mosaic starts to appear n seconds before the end of the screen.
+* `width` - (Optional, String) The width of the mosaic. Support %, px two formats:When the string ends with %, it means that the mosaic Width is the percentage size of the video width, such as 10% means that the Width is 10% of the video width.The string ends with px, indicating that the mosaic Width unit is pixels, such as 100px indicates that the Width is 100 pixels.Default: 10%.
+* `x_pos` - (Optional, String) The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px.
+* `y_pos` - (Optional, String) The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px.
 
 The `object_number_format` object supports the following:
 
@@ -252,17 +252,12 @@ The `output_storage` object supports the following:
 * `type` - (Required, String) The type of media processing output object storage location, now only supports COS.
 * `cos_output_storage` - (Optional, List) Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained.
 
-The `output_storage` object supports the following:
-
-* `type` - (Required, String) The type of media processing output object storage location, now only supports COS.
-* `cos_output_storage` - (Optional, List) Valid when Type is COS, this item is required, indicating the media processing COS output location.Note: This field may return null, indicating that no valid value can be obtained..
-
 The `override_parameter` object supports the following:
 
 * `audio_template` - (Optional, List) Audio stream configuration parameters.
 * `container` - (Optional, String) Encapsulation format, optional values: mp4, flv, hls, mp3, flac, ogg, m4a. Among them, mp3, flac, ogg, m4a are pure audio files.
-* `remove_audio` - (Optional, Int) Whether to remove audio data, value:0: reserved.1: remove..
-* `remove_video` - (Optional, Int) Whether to remove video data, value:0: reserved.1: remove..
+* `remove_audio` - (Optional, Int) Whether to remove audio data, value:0: reserved.1: remove.
+* `remove_video` - (Optional, Int) Whether to remove video data, value:0: reserved.1: remove.
 * `subtitle_template` - (Optional, List) Subtitle Stream Configuration Parameters.
 * `tehd_config` - (Optional, List) Ultra-fast HD transcoding parameters.
 * `video_template` - (Optional, List) Video streaming configuration parameters.
@@ -271,40 +266,40 @@ The `raw_parameter` object supports the following:
 
 * `container` - (Required, String) Encapsulation format, optional values: mp4, flv, hls, mp3, flac, ogg, m4a. Among them, mp3, flac, ogg, m4a are pure audio files.
 * `audio_template` - (Optional, List) Audio stream configuration parameters, when RemoveAudio is 0, this field is required.
-* `remove_audio` - (Optional, Int) Whether to remove audio data, value:0: reserved.1: remove.Default: 0..
-* `remove_video` - (Optional, Int) Whether to remove video data, value:0: reserved.1: remove.Default: 0..
+* `remove_audio` - (Optional, Int) Whether to remove audio data, value:0: reserved.1: remove.Default: 0.
+* `remove_video` - (Optional, Int) Whether to remove video data, value:0: reserved.1: remove.Default: 0.
 * `tehd_config` - (Optional, List) Ultra-fast HD transcoding parameters.
 * `video_template` - (Optional, List) Video stream configuration parameters, when RemoveVideo is 0, this field is required.
 
 The `raw_parameter` object supports the following:
 
-* `type` - (Required, String) Watermark type, optional value:image: image watermark..
-* `coordinate_origin` - (Optional, String) Origin position, currently only supports:TopLeft: Indicates that the origin of the coordinates is at the upper left corner of the video image, and the origin of the watermark is the upper left corner of the picture or text.Default: TopLeft..
+* `type` - (Required, String) Watermark type, optional value:image: image watermark.
+* `coordinate_origin` - (Optional, String) Origin position, currently only supports:TopLeft: Indicates that the origin of the coordinates is at the upper left corner of the video image, and the origin of the watermark is the upper left corner of the picture or text.Default: TopLeft.
 * `image_template` - (Optional, List) Image watermark template, when Type is image, this field is required. When Type is text, this field is invalid.
-* `x_pos` - (Optional, String) The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px..
-* `y_pos` - (Optional, String) The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px..
+* `x_pos` - (Optional, String) The horizontal position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark XPos specifies a percentage for the video width, such as 10% means that XPos is 10% of the video width.When the string ends with px, it means that the watermark XPos is the specified pixel, such as 100px means that the XPos is 100 pixels.Default: 0px.
+* `y_pos` - (Optional, String) The vertical position of the origin of the watermark from the origin of the coordinates of the video image. Support %, px two formats:When the string ends with %, it means that the watermark YPos specifies a percentage for the video height, such as 10% means that YPos is 10% of the video height.When the string ends with px, it means that the watermark YPos is the specified pixel, such as 100px means that the YPos is 100 pixels.Default: 0px.
 
 The `sample_snapshot_task_set` object supports the following:
 
 * `definition` - (Required, Int) Sample screenshot template ID.
-* `object_number_format` - (Optional, List) Rules for the `{number}` variable in the output path after sampling the screenshot.Note: This field may return null, indicating that no valid value can be obtained..
+* `object_number_format` - (Optional, List) Rules for the `{number}` variable in the output path after sampling the screenshot.Note: This field may return null, indicating that no valid value can be obtained.
 * `output_object_path` - (Optional, String) The output path of the image file after sampling the screenshot, which can be a relative path or an absolute path. If not filled, the default is a relative path: `{inputName}_sampleSnapshot_{definition}_{number}.{format}`.
-* `output_storage` - (Optional, List) The target storage of the file after the screenshot at the time point, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..
+* `output_storage` - (Optional, List) The target storage of the file after the screenshot at the time point, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.
 * `watermark_set` - (Optional, List) Watermark list, support multiple pictures or text watermarks, up to 10.
 
 The `snapshot_by_time_offset_task_set` object supports the following:
 
 * `definition` - (Required, Int) Specified time point screenshot template ID.
 * `ext_time_offset_set` - (Optional, Set) Screenshot time point list, the time point supports two formats: s and %:;When the string ends with s, it means that the time point is in seconds, such as 3.5s means that the time point is the 3.5th second.When the string ends with %, it means that the time point is the percentage of the video duration, such as 10% means that the time point is the first 10% of the time in the video.
-* `object_number_format` - (Optional, List) Rules for the `{number}` variable in the output path after the screenshot at the time point.Note: This field may return null, indicating that no valid value can be obtained..
+* `object_number_format` - (Optional, List) Rules for the `{number}` variable in the output path after the screenshot at the time point.Note: This field may return null, indicating that no valid value can be obtained.
 * `output_object_path` - (Optional, String) The output path of the picture file after the snapshot at the time point can be a relative path or an absolute path. If not filled, the default is a relative path: `{inputName}_snapshotByTimeOffset_{definition}_{number}.{format}`.
-* `output_storage` - (Optional, List) The target storage of the file after the screenshot at the time point, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..
+* `output_storage` - (Optional, List) The target storage of the file after the screenshot at the time point, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.
 * `time_offset_set` - (Optional, Set) Screenshot time point list, the unit is &lt;font color=red&gt;seconds&lt;/font&gt;. This parameter is no longer recommended, it is recommended that you use the ExtTimeOffsetSet parameter.
 * `watermark_set` - (Optional, List) Watermark list, support multiple pictures or text watermarks, up to 10.
 
 The `subtitle_template` object supports the following:
 
-* `font_alpha` - (Optional, Float64) Text transparency, value range: (0, 1].0: fully transparent.1: fully opaque.Default: 1..
+* `font_alpha` - (Optional, Float64) Text transparency, value range: (0, 1].0: fully transparent.1: fully opaque.Default: 1.
 * `font_color` - (Optional, String) Font color, format: 0xRRGGBB, default value: 0xFFFFFF (white).
 * `font_size` - (Optional, String) Font size, format: Npx, N is a value, if not specified, the subtitle file shall prevail.
 * `font_type` - (Optional, String) Font type.hei.ttf, song.ttf, simkai.ttf, arial.ttf.Default: hei.ttf.
@@ -315,14 +310,14 @@ The `tail_set` object supports the following:
 
 * `type` - (Required, String) Enter the type of source object, which supports COS and URL.
 * `cos_input_info` - (Optional, List) Valid when Type is COS, this item is required, indicating media processing COS object information.
-* `url_input_info` - (Optional, List) Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained..
+* `url_input_info` - (Optional, List) Valid when Type is URL, this item is required, indicating media processing URL object information.Note: This field may return null, indicating that no valid value can be obtained.
 
 The `task_notify_config` object supports the following:
 
 * `cmq_model` - (Optional, String) CMQ or TDMQ-CMQ model, there are two kinds of Queue and Topic.
 * `cmq_region` - (Optional, String) Region of CMQ or TDMQ-CMQ, such as sh, bj, etc.
 * `notify_mode` - (Optional, String) The mode of the workflow notification, the possible values are Finish and Change, leaving blank means Finish.
-* `notify_type` - (Optional, String) Notification type, optional value:CMQ: offline, it is recommended to switch to TDMQ-CMQ.TDMQ-CMQ: message queue.URL: When the URL is specified, the HTTP callback is pushed to the address specified by NotifyUrl, the callback protocol is http+json, and the package body content is the same as the output parameters of the parsing event notification interface.SCF: not recommended, additional configuration of SCF in the console is required.Note: CMQ is the default when not filled or empty, if you need to use other types, you need to fill in the corresponding type value..
+* `notify_type` - (Optional, String) Notification type, optional value:CMQ: offline, it is recommended to switch to TDMQ-CMQ.TDMQ-CMQ: message queue.URL: When the URL is specified, the HTTP callback is pushed to the address specified by NotifyUrl, the callback protocol is http+json, and the package body content is the same as the output parameters of the parsing event notification interface.SCF: not recommended, additional configuration of SCF in the console is required.Note: CMQ is the default when not filled or empty, if you need to use other types, you need to fill in the corresponding type value.
 * `notify_url` - (Optional, String) HTTP callback address, required when NotifyType is URL.
 * `queue_name` - (Optional, String) Valid when the model is Queue, indicating the queue name of the CMQ or TDMQ-CMQ that receives the event notification.
 * `topic_name` - (Optional, String) Valid when the model is a Topic, indicating the topic name of the CMQ or TDMQ-CMQ that receives event notifications.
@@ -330,27 +325,27 @@ The `task_notify_config` object supports the following:
 The `tehd_config` object supports the following:
 
 * `max_video_bitrate` - (Optional, Int) The upper limit of the video bit rate, No filling means no modification.
-* `type` - (Optional, String) Extremely high-definition type, optional value:TEHD-100: Extreme HD-100.Not filling means that the ultra-fast high-definition is not enabled..
+* `type` - (Optional, String) Extremely high-definition type, optional value:TEHD-100: Extreme HD-100.Not filling means that the ultra-fast high-definition is not enabled.
 
 The `tehd_config` object supports the following:
 
-* `type` - (Required, String) Extremely high-definition type, optional value:TEHD-100: Extreme HD-100.Not filling means that the ultra-fast high-definition is not enabled..
-* `max_video_bitrate` - (Optional, Int) The upper limit of the video bit rate, which is valid when the Type specifies the ultra-fast HD type.Do not fill in or fill in 0 means that there is no upper limit on the video bit rate..
+* `type` - (Required, String) Extremely high-definition type, optional value:TEHD-100: Extreme HD-100.Not filling means that the ultra-fast high-definition is not enabled.
+* `max_video_bitrate` - (Optional, Int) The upper limit of the video bit rate, which is valid when the Type specifies the ultra-fast HD type.Do not fill in or fill in 0 means that there is no upper limit on the video bit rate.
 
 The `transcode_task_set` object supports the following:
 
 * `definition` - (Required, Int) Video Transcoding Template ID.
-* `end_time_offset` - (Optional, Float64) End time offset of video after transcoding, unit: second.Do not fill in or fill in 0, indicating that the transcoded video continues until the end of the original video..When the value is greater than 0 (assumed to be n), it means that the transcoded video lasts until the nth second of the original video and terminates.When the value is less than 0 (assumed to be -n), it means that the transcoded video lasts until n seconds before the end of the original video...
+* `end_time_offset` - (Optional, Float64) End time offset of video after transcoding, unit: second.Do not fill in or fill in 0, indicating that the transcoded video continues until the end of the original video.When the value is greater than 0 (assumed to be n), it means that the transcoded video lasts until the nth second of the original video and terminates.When the value is less than 0 (assumed to be -n), it means that the transcoded video lasts until n seconds before the end of the original video.
 * `head_tail_parameter` - (Optional, List) Opening and ending parameters.Note: This field may return null, indicating that no valid value can be obtained.
 * `mosaic_set` - (Optional, List) Mosaic list, up to 10 sheets can be supported.
-* `object_number_format` - (Optional, List) Rules for the `{number}` variable in the output path after transcoding.Note: This field may return null, indicating that no valid value can be obtained..
+* `object_number_format` - (Optional, List) Rules for the `{number}` variable in the output path after transcoding.Note: This field may return null, indicating that no valid value can be obtained.
 * `output_object_path` - (Optional, String) The output path of the main file after transcoding can be a relative path or an absolute path. If not filled, the default is a relative path: {inputName}_transcode_{definition}.{format}.
-* `output_storage` - (Optional, List) The target storage of the transcoded file, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained..
-* `override_parameter` - (Optional, List) Video transcoding custom parameters, valid when Definition is not filled with 0.When some transcoding parameters in this structure are filled in, the parameters in the transcoding template will be overwritten with the filled parameters.This parameter is used in highly customized scenarios, it is recommended that you only use Definition to specify transcoding parameters.Note: This field may return null, indicating that no valid value can be obtained..
-* `raw_parameter` - (Optional, List) Video transcoding custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios. It is recommended that you use Definition to specify transcoding parameters first.Note: This field may return null, indicating that no valid value can be obtained..
+* `output_storage` - (Optional, List) The target storage of the transcoded file, if not filled, it will inherit the OutputStorage value of the upper layer.Note: This field may return null, indicating that no valid value can be obtained.
+* `override_parameter` - (Optional, List) Video transcoding custom parameters, valid when Definition is not filled with 0.When some transcoding parameters in this structure are filled in, the parameters in the transcoding template will be overwritten with the filled parameters.This parameter is used in highly customized scenarios, it is recommended that you only use Definition to specify transcoding parameters.Note: This field may return null, indicating that no valid value can be obtained.
+* `raw_parameter` - (Optional, List) Video transcoding custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios. It is recommended that you use Definition to specify transcoding parameters first.Note: This field may return null, indicating that no valid value can be obtained.
 * `segment_object_name` - (Optional, String) The output path of the transcoded fragment file (the path of ts when transcoding HLS), can only be a relative path. If not filled, the default is: `{inputName}_transcode_{definition}_{number}.{format}.
-* `start_time_offset` - (Optional, Float64) The start time offset of the transcoded video, unit: second.Do not fill in or fill in 0, indicating that the transcoded video starts from the beginning of the original video.When the value is greater than 0 (assumed to be n), it means that the transcoded video starts from the nth second position of the original video.When the value is less than 0 (assumed to be -n), it means that the transcoded video starts from the position n seconds before the end of the original video..
-* `watermark_set` - (Optional, List) Watermark list, support multiple pictures or text watermarks, up to 10.Note: This field may return null, indicating that no valid value can be obtained..
+* `start_time_offset` - (Optional, Float64) The start time offset of the transcoded video, unit: second.Do not fill in or fill in 0, indicating that the transcoded video starts from the beginning of the original video.When the value is greater than 0 (assumed to be n), it means that the transcoded video starts from the nth second position of the original video.When the value is less than 0 (assumed to be -n), it means that the transcoded video starts from the position n seconds before the end of the original video.
+* `watermark_set` - (Optional, List) Watermark list, support multiple pictures or text watermarks, up to 10.Note: This field may return null, indicating that no valid value can be obtained.
 
 The `trigger` object supports the following:
 
@@ -364,36 +359,36 @@ The `url_input_info` object supports the following:
 The `video_template` object supports the following:
 
 * `bitrate` - (Optional, Int) Bit rate of the video stream, value range: 0 and [128, 35000], unit: kbps.When the value is 0, it means that the video bit rate is consistent with the original video.
-* `codec` - (Optional, String) Encoding format of the video stream, optional value:libx264: H.264 encoding.libx265: H.265 encoding.av1: AOMedia Video 1 encoding.Note: Currently H.265 encoding must specify a resolution, and it needs to be within 640*480.Note: av1 encoded containers currently only support mp4..
-* `content_adapt_stream` - (Optional, Int) Content Adaptive Encoding. optional value:0: not open.1: open.Default: 0.When this parameter is turned on, multiple code streams with different resolutions and different bit rates will be adaptively generated. The width and height of the VideoTemplate are the maximum resolutions among the multiple code streams, and the bit rates in the VideoTemplate are multiple code rates. The highest bit rate in the stream, the vcrf in VideoTemplate is the highest quality among multiple bit streams. When the resolution, bit rate and vcrf are not set, the highest resolution generated by the ContentAdaptStream parameter is the resolution of the video source, and the video quality is close to vmaf95. To enable this parameter or learn about billing details, please contact your Tencent Cloud Business..
+* `codec` - (Optional, String) Encoding format of the video stream, optional value:libx264: H.264 encoding.libx265: H.265 encoding.av1: AOMedia Video 1 encoding.Note: Currently H.265 encoding must specify a resolution, and it needs to be within 640*480.Note: av1 encoded containers currently only support mp4.
+* `content_adapt_stream` - (Optional, Int) Content Adaptive Encoding. optional value:0: not open.1: open.Default: 0.When this parameter is turned on, multiple code streams with different resolutions and different bit rates will be adaptively generated. The width and height of the VideoTemplate are the maximum resolutions among the multiple code streams, and the bit rates in the VideoTemplate are multiple code rates. The highest bit rate in the stream, the vcrf in VideoTemplate is the highest quality among multiple bit streams. When the resolution, bit rate and vcrf are not set, the highest resolution generated by the ContentAdaptStream parameter is the resolution of the video source, and the video quality is close to vmaf95. To enable this parameter or learn about billing details, please contact your Tencent Cloud Business.
 * `fill_type` - (Optional, String) Filling method, when the aspect ratio of the video stream configuration is inconsistent with the aspect ratio of the original video, the processing method for transcoding is filling;. Optional filling method:stretch: Stretch, stretch each frame to fill the entire screen, which may cause the transcoded video to be squashed or stretched; black: Leave black, keep the aspect ratio of the video unchanged, and fill the rest of the edge with black.white: Leave blank, keep the aspect ratio of the video unchanged, and fill the rest of the edge with white.gauss: Gaussian blur, keep the aspect ratio of the video unchanged, and fill the rest of the edge with Gaussian blur.
 * `fps` - (Optional, Int) Video frame rate, value range: [0, 100], unit: Hz.When the value is 0, it means that the frame rate is consistent with the original video.
 * `gop` - (Optional, Int) The interval between keyframe I frames, value range: 0 and [1, 100000], unit: number of frames.When filling 0 or not filling, the system will automatically set the gop length.
 * `height` - (Optional, Int) The maximum value of video stream height (or short side), value range: 0 and [128, 4096], unit: px.
 * `resolution_adaptive` - (Optional, String) Adaptive resolution, optional values:```open: open, at this time, Width represents the long side of the video, Height represents the short side of the video.close: close, at this time, Width represents the width of the video, and Height represents the height of the video.Note: In adaptive mode, Width cannot be smaller than Height.
-* `vcrf` - (Optional, Int) Video constant bit rate control factor, the value range is [1, 51], Fill in 0 to disable this parameter.If there is no special requirement, it is not recommended to specify this parameter..
+* `vcrf` - (Optional, Int) Video constant bit rate control factor, the value range is [1, 51], Fill in 0 to disable this parameter.If there is no special requirement, it is not recommended to specify this parameter.
 * `width` - (Optional, Int) The maximum value of video stream width (or long side), value range: 0 and [128, 4096], unit: px.When Width and Height are both 0, the resolution is the same.When Width is 0 and Height is not 0, Width is scaled proportionally.When Width is not 0 and Height is 0, Height is scaled proportionally.When both Width and Height are not 0, the resolution is specified by the user.
 
 The `video_template` object supports the following:
 
-* `bitrate` - (Required, Int) Bit rate of the video stream, value range: 0 and [128, 35000], unit: kbps.When the value is 0, it means that the video bit rate is consistent with the original video..
-* `codec` - (Required, String) Encoding format of the video stream, optional value:libx264: H.264 encoding.libx265: H.265 encoding.av1: AOMedia Video 1 encoding.Note: Currently H.265 encoding must specify a resolution, and it needs to be within 640*480.Note: av1 encoded containers currently only support mp4..
-* `fps` - (Required, Int) Video frame rate, value range: [0, 100], unit: Hz.When the value is 0, it means that the frame rate is consistent with the original video.Note: The value range for adaptive code rate is [0, 60]..
-* `fill_type` - (Optional, String) Filling method, when the aspect ratio of the video stream configuration is inconsistent with the aspect ratio of the original video, the processing method for transcoding is filling. Optional filling method:stretch: Stretch, stretch each frame to fill the entire screen, which may cause the transcoded video to be squashed or stretched;.black: Leave black, keep the aspect ratio of the video unchanged, and fill the rest of the edge with black.white: Leave blank, keep the aspect ratio of the video unchanged, and fill the rest of the edge with white.gauss: Gaussian blur, keep the aspect ratio of the video unchanged, and fill the rest of the edge with Gaussian blur.Default: black.Note: Adaptive stream only supports stretch, black..
-* `gop` - (Optional, Int) The interval between keyframe I frames, value range: 0 and [1, 100000], unit: number of frames.When filling 0 or not filling, the system will automatically set the gop length..
-* `height` - (Optional, Int) The maximum value of video stream height (or short side), value range: 0 and [128, 4096], unit: px.When Width and Height are both 0, the resolution is the same.When Width is 0 and Height is not 0, Width is scaled proportionally.When Width is not 0 and Height is 0, Height is scaled proportionally.When both Width and Height are not 0, the resolution is specified by the user.Default: 0..
-* `resolution_adaptive` - (Optional, String) Adaptive resolution, optional values:```open: open, at this time, Width represents the long side of the video, Height represents the short side of the video.close: close, at this time, Width represents the width of the video, and Height represents the height of the video.Default: open.Note: In adaptive mode, Width cannot be smaller than Height..
-* `vcrf` - (Optional, Int) Video constant bit rate control factor, the value range is [1, 51].If this parameter is specified, the code rate control method of CRF will be used for transcoding (the video code rate will no longer take effect).If there is no special requirement, it is not recommended to specify this parameter..
+* `bitrate` - (Required, Int) Bit rate of the video stream, value range: 0 and [128, 35000], unit: kbps.When the value is 0, it means that the video bit rate is consistent with the original video.
+* `codec` - (Required, String) Encoding format of the video stream, optional value:libx264: H.264 encoding.libx265: H.265 encoding.av1: AOMedia Video 1 encoding.Note: Currently H.265 encoding must specify a resolution, and it needs to be within 640*480.Note: av1 encoded containers currently only support mp4.
+* `fps` - (Required, Int) Video frame rate, value range: [0, 100], unit: Hz.When the value is 0, it means that the frame rate is consistent with the original video.Note: The value range for adaptive code rate is [0, 60].
+* `fill_type` - (Optional, String) Filling method, when the aspect ratio of the video stream configuration is inconsistent with the aspect ratio of the original video, the processing method for transcoding is filling. Optional filling method:stretch: Stretch, stretch each frame to fill the entire screen, which may cause the transcoded video to be squashed or stretched;.black: Leave black, keep the aspect ratio of the video unchanged, and fill the rest of the edge with black.white: Leave blank, keep the aspect ratio of the video unchanged, and fill the rest of the edge with white.gauss: Gaussian blur, keep the aspect ratio of the video unchanged, and fill the rest of the edge with Gaussian blur.Default: black.Note: Adaptive stream only supports stretch, black.
+* `gop` - (Optional, Int) The interval between keyframe I frames, value range: 0 and [1, 100000], unit: number of frames.When filling 0 or not filling, the system will automatically set the gop length.
+* `height` - (Optional, Int) The maximum value of video stream height (or short side), value range: 0 and [128, 4096], unit: px.When Width and Height are both 0, the resolution is the same.When Width is 0 and Height is not 0, Width is scaled proportionally.When Width is not 0 and Height is 0, Height is scaled proportionally.When both Width and Height are not 0, the resolution is specified by the user.Default: 0.
+* `resolution_adaptive` - (Optional, String) Adaptive resolution, optional values:```open: open, at this time, Width represents the long side of the video, Height represents the short side of the video.close: close, at this time, Width represents the width of the video, and Height represents the height of the video.Default: open.Note: In adaptive mode, Width cannot be smaller than Height.
+* `vcrf` - (Optional, Int) Video constant bit rate control factor, the value range is [1, 51].If this parameter is specified, the code rate control method of CRF will be used for transcoding (the video code rate will no longer take effect).If there is no special requirement, it is not recommended to specify this parameter.
 * `width` - (Optional, Int) The maximum value of video stream width (or long side), value range: 0 and [128, 4096], unit: px.When Width and Height are both 0, the resolution is the same.When Width is 0 and Height is not 0, Width is scaled proportionally.When Width is not 0 and Height is 0, Height is scaled proportionally.When both Width and Height are not 0, the resolution is specified by the user.Default: 0.
 
 The `watermark_set` object supports the following:
 
 * `definition` - (Required, Int) Watermark Template ID.
-* `end_time_offset` - (Optional, Float64) End time offset of watermark, unit: second.Do not fill in or fill in 0, indicating that the watermark lasts until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the watermark lasts until it disappears n seconds before the end of the screen..
-* `raw_parameter` - (Optional, List) Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking..
-* `start_time_offset` - (Optional, Float64) The start time offset of the watermark, unit: second. Do not fill in or fill in 0, which means that the watermark will start to appear when the screen appears.Do not fill in or fill in 0, which means the watermark will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the watermark starts to appear n seconds before the end of the screen..
-* `svg_content` - (Optional, String) SVG content. The length cannot exceed 2000000 characters. Fill in only if the watermark type is SVG watermark.SVG watermark does not support screenshot watermarking..
-* `text_content` - (Optional, String) Text content, the length does not exceed 100 characters. Fill in only when the watermark type is text watermark.Text watermark does not support screenshot watermarking..
+* `end_time_offset` - (Optional, Float64) End time offset of watermark, unit: second.Do not fill in or fill in 0, indicating that the watermark lasts until the end of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark lasts until the nth second and disappears.When the value is less than 0 (assumed to be -n), it means that the watermark lasts until it disappears n seconds before the end of the screen.
+* `raw_parameter` - (Optional, List) Watermark custom parameters, valid when Definition is filled with 0.This parameter is used in highly customized scenarios, it is recommended that you use Definition to specify watermark parameters first.Watermark custom parameters do not support screenshot watermarking.
+* `start_time_offset` - (Optional, Float64) The start time offset of the watermark, unit: second. Do not fill in or fill in 0, which means that the watermark will start to appear when the screen appears.Do not fill in or fill in 0, which means the watermark will appear from the beginning of the screen.When the value is greater than 0 (assumed to be n), it means that the watermark appears from the nth second of the screen.When the value is less than 0 (assumed to be -n), it means that the watermark starts to appear n seconds before the end of the screen.
+* `svg_content` - (Optional, String) SVG content. The length cannot exceed 2000000 characters. Fill in only if the watermark type is SVG watermark.SVG watermark does not support screenshot watermarking.
+* `text_content` - (Optional, String) Text content, the length does not exceed 100 characters. Fill in only when the watermark type is text watermark.Text watermark does not support screenshot watermarking.
 
 ## Attributes Reference
 
