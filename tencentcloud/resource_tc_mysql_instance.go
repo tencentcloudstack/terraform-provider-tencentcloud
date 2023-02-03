@@ -51,6 +51,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"regexp"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
@@ -58,6 +60,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -559,6 +562,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	request := cdb.NewCreateDBInstanceRequest()
 	clientToken := helper.BuildToken()
 	request.ClientToken = &clientToken
+	var instanceId string
 
 	payType, oldOk := d.GetOkExists("pay_type")
 	var period int
@@ -579,15 +583,35 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	if err := mysqlMasterInstanceRoleSet(ctx, request, d, meta); err != nil {
 		return err
 	}
-
 	var response *cdb.CreateDBInstanceResponse
+	isYunti := helper.StrToBool(os.Getenv(PROVIDER_ENABLE_YUNTI))
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		// shadowed response will not pass to outside
 		r, inErr := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
 		if inErr != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), inErr.Error())
-			return retryError(inErr)
+			// return retryError(inErr)
+
+			// query deal by bpass
+			e, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+			if isYunti && ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
+				errStr := inErr.Error()
+				re := regexp.MustCompile("dealNames:\\[\"(.*)\"\\]\\],")
+				dealId := re.FindStringSubmatch(errStr)[1]
+				billingService := BillingService{client: meta.(*TencentCloudClient).apiV3Conn}
+				deal, billErr := billingService.DescribeDeals(ctx, dealId)
+				if billErr != nil {
+					log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, billErr.Error())
+					return resource.NonRetryableError(billErr)
+				}
+				// prepaid user
+				instanceId = *deal.ResourceId[0]
+				log.Printf("[DEBUG]%s query deal for PREPAID user, dealId:[%s] instanceId:[%s]\n", logId, dealId, instanceId)
+				return nil
+			} else {
+				return retryError(inErr)
+			}
 		}
 
 		if r.Response.InstanceIds == nil && clientToken != "" {
@@ -595,7 +619,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		}
 
 		response = r
-
+		// postpaid user
+		instanceId = *response.Response.InstanceIds[0]
 		return nil
 	})
 
@@ -604,10 +629,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if len(response.Response.InstanceIds) != 1 {
-		return fmt.Errorf("mysql CreateDBInstance return len(InstanceIds) is not 1,but %d", len(response.Response.InstanceIds))
-	}
-	d.SetId(*response.Response.InstanceIds[0])
+	d.SetId(instanceId)
 	return nil
 }
 
@@ -665,7 +687,10 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	mysqlService := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	client := meta.(*TencentCloudClient).apiV3Conn
+	mysqlService := MysqlService{client: client}
+	region := client.Region
+	isYunti := helper.StrToBool(os.Getenv(PROVIDER_ENABLE_YUNTI))
 
 	payType := getPayType(d).(int)
 
@@ -685,7 +710,9 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	mysqlID := d.Id()
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+	// set tag before query the instance
+	var tags map[string]string
+	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
 		resourceName := BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
@@ -693,6 +720,14 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 			return err
 		}
 	}
+
+	if isYunti {
+		// Wait the tags enabled
+		err := waitTagsEnable(client, region, mysqlID, tags)
+		if err != nil {
+			return err
+		}
+	} // isYunti
 
 	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
@@ -704,17 +739,17 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 			return resource.NonRetryableError(err)
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_DELIVING {
-			return resource.RetryableError(fmt.Errorf("create mysql task  status is MYSQL_STATUS_DELIVING(%d)", MYSQL_STATUS_DELIVING))
+			return resource.RetryableError(fmt.Errorf("create mysql task status is MYSQL_STATUS_DELIVING(%d)", MYSQL_STATUS_DELIVING))
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_RUNNING {
 			return nil
 		}
-		err = fmt.Errorf("create mysql    task status is %v,we won't wait for it finish", *mysqlInfo.Status)
+		err = fmt.Errorf("create mysql task status is %v,we won't wait for it finish", *mysqlInfo.Status)
 		return resource.NonRetryableError(err)
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create mysql task fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 
@@ -1381,7 +1416,7 @@ func resourceTencentCloudMysqlInstanceDelete(d *schema.ResourceData, meta interf
 		_, err := mysqlService.IsolateDBInstance(ctx, d.Id())
 		if err != nil {
 			//for the pay order wait
-			return retryError(err, InternalError)
+			return retryError(err)
 		}
 		return nil
 	})

@@ -70,6 +70,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"regexp"
 	"sort"
 	"strings"
@@ -478,11 +479,13 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 
 	var resourceId string
 	var redisId string
+	isYunti := helper.StrToBool(os.Getenv(PROVIDER_ENABLE_YUNTI))
 	if err != nil {
 		log.Printf("[CRITAL]%s api[CreateInstances] fail, reason[%s]\n",
 			logId, err.Error())
 
-		if chargeType == REDIS_CHARGE_TYPE_PREPAID {
+		// query deal by bpass
+		if isYunti && chargeType == REDIS_CHARGE_TYPE_PREPAID {
 			e, ok := err.(*sdkErrors.TencentCloudSDKError)
 			if ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
 				errStr := err.Error()
@@ -495,7 +498,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 				billingService := BillingService{client: meta.(*TencentCloudClient).apiV3Conn}
 				deal, billErr := billingService.DescribeDeals(ctx, dealId)
 				if billErr != nil {
-					log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, err.Error())
+					log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, billErr.Error())
 					return err
 				}
 				resourceId = *deal.ResourceId[0]
@@ -503,8 +506,9 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 			} else {
 				return err
 			}
+		} else {
+			return err
 		}
-		return err
 	}
 
 	if len(instanceIds) == 0 {
@@ -517,6 +521,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		redisId = *instanceIds[0]
 	}
 
+	// set tag before query the instance
 	var tags map[string]string
 	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
 		log.Printf("[DEBUG]%s begin to modify tags, len(tags):[%v], tags:[%s]\n", logId, len(tags), tags)
@@ -530,12 +535,14 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	// Wait the tags enabled
-	err = waitTagsEnable(client, region, redisId, tags)
-	if err != nil {
-		return err
-	}
-	// time.Sleep(5 * time.Second)
+	if isYunti {
+		// Wait the tags enabled
+		err = waitTagsEnable(client, region, redisId, tags)
+		if err != nil {
+			return err
+		}
+		// time.Sleep(5 * time.Second)
+	} // isYunti
 
 	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, redisId, 20*readRetryTimeout)
 

@@ -224,6 +224,14 @@ func StrToBool(s string) (i bool) {
 	return
 }
 
+func BoolToStr(b bool) (s string) {
+	s = "false"
+	if b {
+		s = "true"
+	}
+	return
+}
+
 func StrListToStr(strList []*string) string {
 	res := ""
 	for i, v := range strList {
