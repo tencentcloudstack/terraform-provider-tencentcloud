@@ -335,7 +335,7 @@ The `max_age_rules` object supports the following:
 
 * `max_age_contents` - (Required, List) List of rule paths for each `max_age_type`: `*` for `all`, file ext like `jpg` for `file`, `/dir/like/` for `directory` and `/path/index.html` for `path`.
 * `max_age_time` - (Required, Int) Max Age time in seconds, this can set to `0` that stands for no cache.
-* `max_age_type` - (Required, String) The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page, `default`: effective when the source site has no max-age.
+* `max_age_type` - (Required, String) The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page.
 * `follow_origin` - (Optional, String) Whether to follow origin, values: `on`/`off`, if set to `on`, the `max_age_time` will be ignored.
 
 The `max_age` object supports the following:
@@ -436,8 +436,8 @@ The `rule_cache` object supports the following:
 * `ignore_set_cookie` - (Optional, String) Ignore the Set-Cookie header of the origin site. Valid values are `on` and `off`. Default value is `off`. This parameter is for white-list customer.
 * `no_cache_switch` - (Optional, String) Cache configuration switch. Valid values are `on` and `off`.
 * `re_validate` - (Optional, String) Always check back to origin. Valid values are `on` and `off`. Default value is `off`.
-* `rule_paths` - (Optional, List) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /, `default`: Fill `no max-age`.
-* `rule_type` - (Optional, String) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page, `default`: effective when the source site has no max-age.
+* `rule_paths` - (Optional, List) Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, `directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /.
+* `rule_type` - (Optional, String) Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page.
 * `switch` - (Optional, String) Cache configuration switch. Valid values are `on` and `off`.
 
 The `server_certificate_config` object supports the following:

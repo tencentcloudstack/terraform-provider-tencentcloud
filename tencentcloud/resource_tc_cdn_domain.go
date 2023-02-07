@@ -656,7 +656,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Description: "Matching content under the corresponding type of CacheType: `all`: fill *, `file`: fill in the suffix name, such as jpg, txt, " +
-								"`directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /, `default`: Fill `no max-age`.",
+								"`directory`: fill in the path, such as /xxx/test, `path`: fill in the absolute path, such as /xxx/test.html, `index`: fill /.",
 						},
 						"rule_type": {
 							Type:         schema.TypeString,
@@ -664,7 +664,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 							Default:      CDN_RULE_TYPE_DEFAULT,
 							ValidateFunc: validateAllowedStringValue(CDN_RULE_TYPE),
 							Description: "Rule type. The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, " +
-								"`directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page, `default`: effective when the source site has no max-age.",
+								"`directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page.",
 						},
 						"switch": {
 							Type:         schema.TypeString,
@@ -1315,7 +1315,7 @@ func resourceTencentCloudCdnDomain() *schema.Resource {
 									"max_age_type": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page, `default`: effective when the source site has no max-age.",
+										Description: "The following types are supported: `all`: all documents take effect, `file`: the specified file suffix takes effect, `directory`: the specified path takes effect, `path`: specify the absolute path to take effect, `index`: home page.",
 									},
 									"max_age_contents": {
 										Type:        schema.TypeList,
