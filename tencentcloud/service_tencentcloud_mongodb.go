@@ -262,6 +262,35 @@ func (me *MongodbService) IsolateInstance(ctx context.Context, instanceId string
 	return
 }
 
+func (me *MongodbService) TerminateDBInstances(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := mongodb.NewTerminateDBInstancesRequest()
+	request.InstanceId = &instanceId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	var response *mongodb.TerminateDBInstancesResponse
+	err := resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseMongodbClient().TerminateDBInstances(request)
+		if e != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), e.Error())
+			return resource.RetryableError(fmt.Errorf("Terminate instance %s error", instanceId))
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
 func (me *MongodbService) ModifyAutoRenewFlag(ctx context.Context, instanceId string, period int, renewFlag int) (errRet error) {
 	logId := getLogId(ctx)
 	request := mongodb.NewRenewDBInstancesRequest()

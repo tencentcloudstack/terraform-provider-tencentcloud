@@ -155,6 +155,24 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 			Optional:    true,
 			Description: "The tags of the Mongodb. Key name `project` is system reserved and can't be used.",
 		},
+		"mongos_cpu": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Number of mongos cpu.",
+		},
+		"mongos_memory": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Mongos memory size.",
+		},
+		"mongos_node_num": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Computed:    true,
+			Description: "Number of mongos.",
+		},
 		// payment
 		"charge_type": {
 			Type:         schema.TypeString,
