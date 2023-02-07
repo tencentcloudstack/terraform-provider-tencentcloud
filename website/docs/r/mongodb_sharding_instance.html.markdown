@@ -20,13 +20,16 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   nodes_per_shard = 3
   memory          = 4
   volume          = 100
-  engine_version  = "MONGO_3_WT"
-  machine_type    = "GIO"
+  engine_version  = "MONGO_36_WT"
+  machine_type    = "HIO10G"
   available_zone  = "ap-guangzhou-3"
   vpc_id          = "vpc-mz3efvbw"
   subnet_id       = "subnet-lk0svi3p"
   project_id      = 0
   password        = "password1234"
+  mongos_cpu      = 1
+  mongos_memory   = 2
+  mongos_node_num = 3
 }
 ```
 
@@ -44,6 +47,9 @@ The following arguments are supported:
 * `volume` - (Required, Int) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
+* `mongos_cpu` - (Optional, Int) Number of mongos cpu.
+* `mongos_memory` - (Optional, Int) Mongos memory size.
+* `mongos_node_num` - (Optional, Int) Number of mongos.
 * `password` - (Optional, String) Password of this Mongodb account.
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, Int) ID of the project which the instance belongs.
@@ -62,12 +68,4 @@ In addition to all arguments above, the following attributes are exported:
 * `vip` - IP of the Mongodb instance.
 * `vport` - IP port of the Mongodb instance.
 
-
-## Import
-
-Mongodb sharding instance can be imported using the id, e.g.
-
-```
-$ terraform import tencentcloud_mongodb_sharding_instance.mongodb cmgo-41s6jwy4
-```
 

@@ -10,23 +10,19 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   nodes_per_shard = 3
   memory          = 4
   volume          = 100
-  engine_version  = "MONGO_3_WT"
-  machine_type    = "GIO"
+  engine_version  = "MONGO_36_WT"
+  machine_type    = "HIO10G"
   available_zone  = "ap-guangzhou-3"
   vpc_id          = "vpc-mz3efvbw"
   subnet_id       = "subnet-lk0svi3p"
   project_id      = 0
   password        = "password1234"
+  mongos_cpu = 1
+  mongos_memory =  2
+  mongos_node_num = 3
 }
 ```
 
-Import
-
-Mongodb sharding instance can be imported using the id, e.g.
-
-```
-$ terraform import tencentcloud_mongodb_sharding_instance.mongodb cmgo-41s6jwy4
-```
 */
 package tencentcloud
 
@@ -72,9 +68,6 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 		Read:   resourceMongodbShardingInstanceRead,
 		Update: resourceMongodbShardingInstanceUpdate,
 		Delete: resourceMongodbShardingInstanceDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 
 		Schema: mongodbShardingInstanceInfo,
 	}
@@ -154,6 +147,15 @@ func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.Resour
 		value.FieldByName("AutoRenewFlag").Set(reflect.ValueOf(helper.IntUint64(d.Get("auto_renew_flag").(int))))
 	}
 
+	if v, ok := d.GetOk("mongos_memory"); ok {
+		value.FieldByName("MongosMemory").Set(reflect.ValueOf(helper.IntUint64(v.(int))))
+	}
+	if v, ok := d.GetOk("mongos_cpu"); ok {
+		value.FieldByName("MongosCpu").Set(reflect.ValueOf(helper.IntUint64(v.(int))))
+	}
+	if v, ok := d.GetOk("mongos_node_num"); ok {
+		value.FieldByName("MongosNodeNum").Set(reflect.ValueOf(helper.IntUint64(v.(int))))
+	}
 	return nil
 }
 
@@ -392,7 +394,9 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	region := client.Region
 
 	d.Partial(true)
-
+	if d.HasChange("mongos_cpu") || d.HasChange("mongos_memory") || d.HasChange("mongos_node_num") {
+		return fmt.Errorf("setting of the field[mongos_cpu, mongos_memory, mongos_node_numZ] does not support update")
+	}
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)
 		volume := d.Get("volume").(int)
@@ -505,25 +509,21 @@ func resourceMongodbShardingInstanceDelete(d *schema.ResourceData, meta interfac
 		return nil
 	}
 	if MONGODB_CHARGE_TYPE[*instanceDetail.PayMode] == MONGODB_CHARGE_TYPE_PREPAID {
-		return fmt.Errorf("PREPAID instances are not allowed to be deleted now, please isolate them on console")
+		err := mongodbService.TerminateDBInstances(ctx, instanceId)
+		if err != nil {
+			return err
+		}
+	} else {
+		err := mongodbService.IsolateInstance(ctx, instanceId)
+		if err != nil {
+			return err
+		}
 	}
 
-	err = mongodbService.IsolateInstance(ctx, instanceId)
-	if err != nil {
-		return err
-	}
 	err = mongodbService.OfflineIsolatedDBInstance(ctx, instanceId, true)
 	if err != nil {
 		log.Printf("[CRITAL]%s mongodb %s fail, reason:%s", logId, "OfflineIsolatedDBInstance", err.Error())
 		return err
 	}
-	//describe and check not exist
-	_, has, errRet := mongodbService.DescribeInstanceById(ctx, instanceId)
-	if errRet != nil {
-		return errRet
-	}
-	if !has {
-		return nil
-	}
-	return fmt.Errorf("[CRITAL]%s mongodb %s fail", logId, "OfflineIsolatedDBInstance")
+	return nil
 }

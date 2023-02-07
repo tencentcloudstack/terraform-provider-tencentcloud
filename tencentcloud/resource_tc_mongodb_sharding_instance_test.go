@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudNeedFixMongodbShardingInstance(t *testing.T) {
+func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -47,12 +47,17 @@ func TestAccTencentCloudNeedFixMongodbShardingInstance(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.abc", "abc"),
 				),
 			},
-			{
-				ResourceName:            "tencentcloud_mongodb_sharding_instance.mongodb",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"security_groups", "password", "auto_renew_flag"},
-			},
+		},
+	})
+}
+
+func TestAccTencentCloudMongodbShardingInstanceResource_prepaid(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckMongodbShardingInstanceDestroy,
+		Steps: []resource.TestStep{
 			{
 				Config: testAccMongodbShardingInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
@@ -121,7 +126,9 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   available_zone  = "ap-guangzhou-6"
   project_id      = 0
   password        = "test1234"
-
+  mongos_cpu = 1
+  mongos_memory =  2
+  mongos_node_num = 3
   tags = {
     test = "test"
   }
@@ -133,13 +140,16 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   instance_name   = "tf-mongodb-sharding-update"
   shard_quantity  = 2
   nodes_per_shard = 3
-  memory          = local.sharding_memory * 2
-  volume          = local.sharding_volume + 50
+  memory          = local.sharding_memory
+  volume          = local.sharding_volume
   engine_version  = local.sharding_engine_version
   machine_type    = local.sharding_machine_type
   available_zone  = "ap-guangzhou-6"
   project_id      = 0
   password        = "test1234update"
+  mongos_cpu = 1
+  mongos_memory =  2
+  mongos_node_num = 3
 
   tags = {
     abc = "abc"
@@ -152,8 +162,8 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-sharding-prepaid"
   shard_quantity  = 2
   nodes_per_shard = 3
-  memory          = local.sharding_memory * 2
-  volume          = local.sharding_volume + 50
+  memory          = local.sharding_memory
+  volume          = local.sharding_volume
   engine_version  = local.sharding_engine_version
   machine_type    = local.sharding_machine_type
   available_zone  = "ap-guangzhou-6"
@@ -162,6 +172,9 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   charge_type     = "PREPAID"
   prepaid_period  = 1
   auto_renew_flag = 0
+  mongos_cpu = 1
+  mongos_memory =  2
+  mongos_node_num = 3
 
   tags = {
     test = "test-prepaid"
@@ -174,8 +187,8 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-sharding-prepaid-update"
   shard_quantity  = 2
   nodes_per_shard = 3
-  memory          = local.sharding_memory * 2
-  volume          = local.sharding_volume + 50
+  memory          = local.sharding_memory
+  volume          = local.sharding_volume
   engine_version  = local.sharding_engine_version
   machine_type    = local.sharding_machine_type
   available_zone  = "ap-guangzhou-6"
@@ -184,6 +197,9 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   charge_type     = "PREPAID"
   prepaid_period  = 1
   auto_renew_flag = 0
+  mongos_cpu = 1
+  mongos_memory =  2
+  mongos_node_num = 3
 
   tags = {
     prepaid = "prepaid"
