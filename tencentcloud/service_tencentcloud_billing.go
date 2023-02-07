@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -11,6 +14,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
 	billing "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 )
 
@@ -74,6 +78,46 @@ func (me *BillingService) DescribeDeals(ctx context.Context, dealId string) (dea
 		return
 	}
 	return
+}
+
+func (me *BillingService) isYunTiAccount() bool {
+	val, ok := os.LookupEnv(PROVIDER_ENABLE_YUNTI)
+	if ok && strings.ToLower(val) == "true" {
+		return true
+	}
+	return false
+}
+
+//query deal by bpass
+func (me *BillingService) QueryDealByBpass(ctx context.Context, dealRegx string, msg error) (resourceId *string, err error) {
+	logId := getLogId(ctx)
+	err = msg
+	if !me.isYunTiAccount() {
+		return nil, err
+	}
+
+	e, ok := msg.(*sdkErrors.TencentCloudSDKError)
+	log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \n", logId, e.Code)
+
+	if ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
+		errStr := msg.Error()
+
+		re := regexp.MustCompile(dealRegx)
+		result := re.FindStringSubmatch(errStr)
+		for i, str := range result {
+			log.Printf("[DEBUG] FindStringSubmatch sub[%v]:%s,\n", i, str)
+		}
+		dealId := re.FindStringSubmatch(errStr)[1]
+		deal, billErr := me.DescribeDeals(ctx, dealId)
+		if billErr != nil {
+			log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, billErr.Error())
+			return nil, billErr
+		}
+		resourceId = deal.ResourceId[0]
+		log.Printf("[DEBUG]%s query deal for PREPAID user succeed, dealId:[%s] resourceId:[%s]\n", logId, dealId, *resourceId)
+		return
+	}
+	return nil, err
 }
 
 func in(target int64, intArr []int64) bool {

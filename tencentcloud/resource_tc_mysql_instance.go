@@ -51,7 +51,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"regexp"
 	"time"
 
@@ -562,6 +561,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 	request := cdb.NewCreateDBInstanceRequest()
 	clientToken := helper.BuildToken()
 	request.ClientToken = &clientToken
+	client := meta.(*TencentCloudClient).apiV3Conn
+	billingService := BillingService{client: client}
 	var instanceId string
 
 	payType, oldOk := d.GetOkExists("pay_type")
@@ -584,7 +585,6 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		return err
 	}
 	var response *cdb.CreateDBInstanceResponse
-	isYunti := helper.StrToBool(os.Getenv(PROVIDER_ENABLE_YUNTI))
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		// shadowed response will not pass to outside
 		r, inErr := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().CreateDBInstance(request)
@@ -595,11 +595,11 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 
 			// query deal by bpass
 			e, ok := inErr.(*sdkErrors.TencentCloudSDKError)
+			isYunti := billingService.isYunTiAccount()
 			if isYunti && ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
 				errStr := inErr.Error()
 				re := regexp.MustCompile("dealNames:\\[\"(.*)\"\\]\\],")
 				dealId := re.FindStringSubmatch(errStr)[1]
-				billingService := BillingService{client: meta.(*TencentCloudClient).apiV3Conn}
 				deal, billErr := billingService.DescribeDeals(ctx, dealId)
 				if billErr != nil {
 					log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, billErr.Error())
@@ -689,8 +689,7 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 
 	client := meta.(*TencentCloudClient).apiV3Conn
 	mysqlService := MysqlService{client: client}
-	region := client.Region
-	isYunti := helper.StrToBool(os.Getenv(PROVIDER_ENABLE_YUNTI))
+	tagService := &TagService{client: client}
 
 	payType := getPayType(d).(int)
 
@@ -713,23 +712,19 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	// set tag before query the instance
 	var tags map[string]string
 	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("cdb", "instanceId", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("cdb", "instanceId", client.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
 
-	if isYunti {
-		// Wait the tags enabled
-		err := waitTagsEnable(client, region, mysqlID, tags)
-		if err != nil {
-			return err
-		}
-	} // isYunti
+	// Wait the tags enabled
+	err := tagService.waitTagsEnable(ctx, "cdb", "instanceId", d.Id(), client.Region, tags)
+	if err != nil {
+		return err
+	}
 
-	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
 			return resource.NonRetryableError(err)

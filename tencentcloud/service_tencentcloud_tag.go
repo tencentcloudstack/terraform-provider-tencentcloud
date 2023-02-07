@@ -120,12 +120,14 @@ func diffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]s
 	return
 }
 
-func waitTagsEnable(tcClient *connectivity.TencentCloudClient, region, redisId string, tags map[string]string) (retErr error) {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	tagService := &TagService{client: tcClient}
+func (me *TagService) waitTagsEnable(ctx context.Context, serviceType, resType, resId, region string, tags map[string]string) (retErr error) {
+	billingService := BillingService{client: me.client}
+	if !billingService.isYunTiAccount() {
+		return nil
+	}
+
 	retErr = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
-		ret, err := tagService.DescribeResourceTags(ctx, "redis", "instance", region, redisId)
+		ret, err := me.DescribeResourceTags(ctx, serviceType, resType, region, resId)
 		if err != nil {
 			return retryError(err)
 		}
@@ -133,9 +135,9 @@ func waitTagsEnable(tcClient *connectivity.TencentCloudClient, region, redisId s
 			if tagEqual(ret, tags) {
 				return nil
 			}
-			return resource.RetryableError(fmt.Errorf("the redis.instance %s is uncomplete, retry ...", redisId))
+			return resource.RetryableError(fmt.Errorf("the redis.instance %s is uncomplete, retry ...", resId))
 		}
-		return resource.RetryableError(fmt.Errorf("the redis.instance %s's tags is nil, retry ...", redisId))
+		return resource.RetryableError(fmt.Errorf("the redis.instance %s's tags is nil, retry ...", resId))
 	})
 	return retErr
 }
