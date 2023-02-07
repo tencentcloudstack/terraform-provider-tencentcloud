@@ -68,7 +68,7 @@ func testAccCheckTemLogConfigDestroy(s *terraform.State) error {
 			if !ok {
 				return err
 			}
-			if ee.Code == "InternalError.DefaultInternalError" {
+			if ee.Code == "ResourceNotFound.LogConfigNotFound" {
 				return nil
 			}
 			return err
