@@ -140,8 +140,8 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   instance_name   = "tf-mongodb-sharding-update"
   shard_quantity  = 2
   nodes_per_shard = 3
-  memory          = local.sharding_memory * 2
-  volume          = local.sharding_volume + 50
+  memory          = local.sharding_memory
+  volume          = local.sharding_volume
   engine_version  = local.sharding_engine_version
   machine_type    = local.sharding_machine_type
   available_zone  = "ap-guangzhou-6"
@@ -162,8 +162,8 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-sharding-prepaid"
   shard_quantity  = 2
   nodes_per_shard = 3
-  memory          = local.sharding_memory * 2
-  volume          = local.sharding_volume + 50
+  memory          = local.sharding_memory
+  volume          = local.sharding_volume
   engine_version  = local.sharding_engine_version
   machine_type    = local.sharding_machine_type
   available_zone  = "ap-guangzhou-6"
@@ -187,8 +187,8 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb_prepaid" {
   instance_name   = "tf-mongodb-sharding-prepaid-update"
   shard_quantity  = 2
   nodes_per_shard = 3
-  memory          = local.sharding_memory * 2
-  volume          = local.sharding_volume + 50
+  memory          = local.sharding_memory
+  volume          = local.sharding_volume
   engine_version  = local.sharding_engine_version
   machine_type    = local.sharding_machine_type
   available_zone  = "ap-guangzhou-6"

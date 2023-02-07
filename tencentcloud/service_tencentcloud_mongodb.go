@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -360,7 +359,7 @@ func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanc
 		ratelimit.Check(request.GetAction())
 		response, err = me.client.UseMongodbClient().OfflineIsolatedDBInstance(request)
 		if err != nil {
-			return retryError(err, mongodb.INVALIDPARAMETERVALUE_LOCKFAILED)
+			return resource.RetryableError(err)
 		}
 		return nil
 	})
@@ -372,14 +371,26 @@ func (me *MongodbService) OfflineIsolatedDBInstance(ctx context.Context, instanc
 	if response == nil || response.Response == nil {
 		return nil
 	}
-	err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId)
-	if err == nil {
-		return nil
+
+	checkRequest := mongodb.NewDescribeDBInstancesRequest()
+	checkRequest.InstanceIds = []*string{&instanceId}
+	err = resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(checkRequest.GetAction())
+		result, e := me.client.UseMongodbClient().DescribeDBInstances(checkRequest)
+		if e != nil {
+			return resource.NonRetryableError(e)
+		}
+
+		if result != nil && result.Response != nil {
+			if len(result.Response.InstanceDetails) != 0 {
+				return resource.RetryableError(fmt.Errorf("Offline mongodb instance is processing"))
+			}
+			return nil
+		}
+		return resource.NonRetryableError(fmt.Errorf("response is null"))
+	})
+	if err != nil {
+		return err
 	}
-	isTimeout := strings.Contains(err.Error(), "retrying")
-	if err != nil && isTimeout && timeOutTolerant {
-		log.Printf("[WARN] Offline Task Timeout but tolerant, process continue.")
-		return nil
-	}
-	return err
+	return nil
 }
