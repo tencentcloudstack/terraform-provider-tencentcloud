@@ -1,3 +1,13 @@
+## 1.79.8 (February 7, 2023)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mongodb_sharding_instance: support mongos params ([#1543](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1543))
+
+BUG FIXES:
+
+* resource/tencentcloud_tem_application: Make the `description` parameter of the TEM Application required ([#1527](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1527))
+
 ## 1.79.7 (February 3, 2023)
 
 FEATURES:
