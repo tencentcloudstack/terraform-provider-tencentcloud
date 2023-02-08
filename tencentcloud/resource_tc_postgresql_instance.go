@@ -456,7 +456,6 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	tagService := TagService{client: client}
 	billingService := BillingService{client: client}
 	region := client.Region
-	var resourceId string
 
 	var (
 		name           = d.Get("name").(string)
@@ -627,7 +626,9 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 					log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
 					return resource.NonRetryableError(billErr)
 				}
-				resourceId = *id
+				// yunti prepaid user
+				instanceId = *id
+				return nil
 			}
 			return retryError(inErr)
 		}
@@ -637,29 +638,24 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return outErr
 	}
 
-	if chargeType == COMMON_PAYTYPE_POSTPAID {
-		resourceId = instanceId
-	}
-
-	d.SetId(resourceId)
+	d.SetId(instanceId)
 
 	// set tag before query the instance
-	var tags map[string]string
-	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := BuildTagResourceName("postgres", "DBInstanceId", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
-	}
 
-	// Wait the tags enabled
-	err := tagService.waitTagsEnable(ctx, "postgres", "DBInstanceId", resourceId, region, tags)
-	if err != nil {
-		return err
+		// Wait the tags enabled
+		err := tagService.waitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), region, tags)
+		if err != nil {
+			return err
+		}
 	}
 
 	// check creation done
-	err = resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
 		instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
 		if err != nil {
 			return retryError(err)
@@ -1023,23 +1019,22 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		d.SetPartial("zone")
 	}
 
-	var replaceTags map[string]string
-	var deleteTags []string
 	if d.HasChange("tags") {
 		oldValue, newValue := d.GetChange("tags")
-		replaceTags, deleteTags = diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 		resourceName := BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
-	}
 
-	// Wait the tags enabled
-	err := tagService.waitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), tcClient.Region, replaceTags)
-	if err != nil {
-		return err
+		// Wait the tags enabled
+		err = tagService.waitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), tcClient.Region, replaceTags)
+		if err != nil {
+			return err
+		}
+
+		d.SetPartial("tags")
 	}
 
 	paramEntrys := make(map[string]string)

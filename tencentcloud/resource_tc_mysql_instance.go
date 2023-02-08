@@ -605,7 +605,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 					log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, billErr.Error())
 					return resource.NonRetryableError(billErr)
 				}
-				// prepaid user
+				// yunti prepaid user
 				instanceId = *deal.ResourceId[0]
 				log.Printf("[DEBUG]%s query deal for PREPAID user, dealId:[%s] instanceId:[%s]\n", logId, dealId, instanceId)
 				return nil
@@ -619,7 +619,7 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		}
 
 		response = r
-		// postpaid user
+		// normal user
 		instanceId = *response.Response.InstanceIds[0]
 		return nil
 	})
@@ -710,21 +710,20 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 	mysqlID := d.Id()
 
 	// set tag before query the instance
-	var tags map[string]string
-	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := BuildTagResourceName("cdb", "instanceId", client.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
+
+		// Wait the tags enabled
+		err := tagService.waitTagsEnable(ctx, "cdb", "instanceId", d.Id(), client.Region, tags)
+		if err != nil {
+			return err
+		}
 	}
 
-	// Wait the tags enabled
-	err := tagService.waitTagsEnable(ctx, "cdb", "instanceId", d.Id(), client.Region, tags)
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
 		mysqlInfo, err := mysqlService.DescribeDBInstanceById(ctx, mysqlID)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -1147,6 +1146,12 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
+		// Wait the tags enabled
+		err = tagService.waitTagsEnable(ctx, "cdb", "instanceId", d.Id(), region, replaceTags)
+		if err != nil {
+			return err
+		}
+
 		d.SetPartial("tags")
 	}
 

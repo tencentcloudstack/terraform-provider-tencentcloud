@@ -213,7 +213,9 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 					log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
 					return resource.NonRetryableError(billErr)
 				}
+				// yunti prepaid user
 				resourceId = *id
+				return nil
 			}
 			return retryError(err)
 		}
@@ -246,24 +248,25 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	if dealRes != nil && dealRes.Response != nil && len(dealRes.Response.BillingResourceInfos) != 1 {
 		return fmt.Errorf("cynosdb cluster id count isn't 1")
 	}
-	if chargeType == CYNOSDB_CHARGE_TYPE_POSTPAID {
+
+	// normal user
+	if !billingService.isYunTiAccount() {
 		resourceId = *dealRes.Response.BillingResourceInfos[0].ClusterId
 	}
 	d.SetId(resourceId)
 
 	// set tag before query the instance
-	var tags map[string]string
-	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		resourceName := BuildTagResourceName("cynosdb", "cluster", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
-	}
 
-	// Wait the tags enabled
-	err = tagService.waitTagsEnable(ctx, "cynosdb", "cluster", resourceId, region, tags)
-	if err != nil {
-		return err
+		// Wait the tags enabled
+		err = tagService.waitTagsEnable(ctx, "cynosdb", "cluster", resourceId, region, tags)
+		if err != nil {
+			return err
+		}
 	}
 
 	_, _, has, err := cynosdbService.DescribeClusterById(ctx, d.Id())
@@ -698,24 +701,22 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 	}
 
 	// update tags
-	var replaceTags map[string]string
-	var deleteTags []string
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags = diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
 		resourceName := BuildTagResourceName("cynosdb", "cluster", region, clusterId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
 
-		d.SetPartial("tags")
-	}
+		// Wait the tags enabled
+		err := tagService.waitTagsEnable(ctx, "cynosdb", "cluster", d.Id(), region, replaceTags)
+		if err != nil {
+			return err
+		}
 
-	// Wait the tags enabled
-	err := tagService.waitTagsEnable(ctx, "cynosdb", "cluster", d.Id(), region, replaceTags)
-	if err != nil {
-		return err
+		d.SetPartial("tags")
 	}
 
 	// update sg

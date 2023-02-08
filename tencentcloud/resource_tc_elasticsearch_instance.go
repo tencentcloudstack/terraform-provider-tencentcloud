@@ -307,13 +307,20 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 
 func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_elasticsearch_instance.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	elasticsearchService := ElasticsearchService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+	var (
+		logId = getLogId(contextNil)
+		ctx   = context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := es.NewCreateInstanceRequest()
+		client               = meta.(*TencentCloudClient).apiV3Conn
+		elasticsearchService = ElasticsearchService{client: client}
+		billingService       = BillingService{client: client}
+		tagService           = TagService{client: client}
+		region               = client.Region
+		chargeType           string
+
+		request = es.NewCreateInstanceRequest()
+	)
+
 	request.Zone = helper.String(d.Get("availability_zone").(string))
 	request.EsVersion = helper.String(d.Get("version").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -323,7 +330,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		request.InstanceName = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("charge_type"); ok {
-		chargeType := v.(string)
+		chargeType = v.(string)
 		request.ChargeType = &chargeType
 		if chargeType == ES_CHARGE_TYPE_PREPAID {
 			if v, ok := d.GetOk("charge_period"); ok {
@@ -407,8 +414,22 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
+
+			if chargeType == ES_CHARGE_TYPE_PREPAID {
+				regx := "\"dealNames\":\\[\"(.*)\"\\]"
+				// query deal by bpass
+				id, billErr := billingService.QueryDealByBpass(ctx, regx, err)
+				if billErr != nil {
+					log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
+					return resource.NonRetryableError(billErr)
+				}
+				// yunti prepaid user
+				instanceId = *id
+				return nil
+			}
 			return retryError(err)
 		}
+		// normal user
 		instanceId = *response.Response.InstanceId
 		return nil
 	})
@@ -416,6 +437,21 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		return err
 	}
 	d.SetId(instanceId)
+
+	// set tag before query the instance
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		// resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
+		resourceName := BuildTagResourceName("es", "instance", region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+
+		// Wait the tags enabled
+		err = tagService.waitTagsEnable(ctx, "es", "instance", d.Id(), region, tags)
+		if err != nil {
+			return err
+		}
+	}
 
 	instanceEmptyRetries := 5
 	err = resource.Retry(15*readRetryTimeout, func() *resource.RetryError {
@@ -437,18 +473,6 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	})
 	if err != nil {
 		return err
-	}
-
-	// tags
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		client := meta.(*TencentCloudClient).apiV3Conn
-		tagService := TagService{client: client}
-		region := client.Region
-		resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
-		err := tagService.ModifyTags(ctx, resourceName, tags, nil)
-		if err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudElasticsearchInstanceRead(d, meta)
@@ -727,8 +751,14 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
-		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
+		// resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
+		resourceName := BuildTagResourceName("es", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		// Wait the tags enabled
+		err := tagService.waitTagsEnable(ctx, "es", "instance", d.Id(), region, replaceTags)
 		if err != nil {
 			return err
 		}
