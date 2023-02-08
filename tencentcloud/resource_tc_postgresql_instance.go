@@ -451,12 +451,17 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	client := meta.(*TencentCloudClient).apiV3Conn
+	postgresqlService := PostgresqlService{client: client}
+	tagService := TagService{client: client}
+	billingService := BillingService{client: client}
+	region := client.Region
+	var resourceId string
 
 	var (
 		name           = d.Get("name").(string)
 		dbVersion      = d.Get("engine_version").(string)
-		payType        = d.Get("charge_type").(string)
+		chargeType     = d.Get("charge_type").(string)
 		projectId      = d.Get("project_id").(int)
 		subnetId       = d.Get("subnet_id").(string)
 		vpcId          = d.Get("vpc_id").(string)
@@ -591,7 +596,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			dbVersion,
 			dbMajorVersion,
 			dbKernelVersion,
-			payType,
+			chargeType,
 			specCode,
 			autoRenewFlag,
 			projectId,
@@ -612,6 +617,18 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			voucherIds,
 		)
 		if inErr != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, "CreatePostgresqlInstance", inErr.Error())
+
+			if chargeType == COMMON_PAYTYPE_PREPAID {
+				regx := "\"dealNames\":\\[\"(.*)\"\\]"
+				// query deal by bpass
+				id, billErr := billingService.QueryDealByBpass(ctx, regx, inErr)
+				if billErr != nil {
+					log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
+					return resource.NonRetryableError(billErr)
+				}
+				resourceId = *id
+			}
 			return retryError(inErr)
 		}
 		return nil
@@ -620,11 +637,30 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 		return outErr
 	}
 
-	d.SetId(instanceId)
+	if chargeType == COMMON_PAYTYPE_POSTPAID {
+		resourceId = instanceId
+	}
+
+	d.SetId(resourceId)
+
+	// set tag before query the instance
+	var tags map[string]string
+	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("postgres", "DBInstanceId", region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
+	// Wait the tags enabled
+	err := tagService.waitTagsEnable(ctx, "postgres", "DBInstanceId", resourceId, region, tags)
+	if err != nil {
+		return err
+	}
 
 	// check creation done
-	err := resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
-		instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
+	err = resource.Retry(20*readRetryTimeout, func() *resource.RetryError {
+		instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
 		if err != nil {
 			return retryError(err)
 		}
@@ -637,7 +673,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 			memory = int(*instance.DBInstanceMemory)
 			return nil
 		}
-		return resource.RetryableError(fmt.Errorf("creating postgresql instance %s , status %s ", instanceId, *instance.DBInstanceStatus))
+		return resource.RetryableError(fmt.Errorf("creating postgresql instance %s , status %s ", d.Id(), *instance.DBInstanceStatus))
 	})
 
 	if err != nil {
@@ -645,7 +681,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	// check init status
-	checkErr := postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	checkErr := postgresqlService.CheckDBInstanceStatus(ctx, d.Id())
 	if checkErr != nil {
 		return checkErr
 	}
@@ -657,7 +693,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	if public_access_switch {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			inErr = postgresqlService.ModifyPublicService(ctx, true, instanceId)
+			inErr = postgresqlService.ModifyPublicService(ctx, true, d.Id())
 			if inErr != nil {
 				return retryError(inErr)
 			}
@@ -669,13 +705,13 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	// check creation done
-	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, d.Id())
 	if checkErr != nil {
 		return checkErr
 	}
 	// set name
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr := postgresqlService.ModifyPostgresqlInstanceName(ctx, instanceId, name)
+		inErr := postgresqlService.ModifyPostgresqlInstanceName(ctx, d.Id(), name)
 		if inErr != nil {
 			return retryError(inErr)
 		}
@@ -686,18 +722,9 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 	}
 
 	// check creation done
-	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId)
+	checkErr = postgresqlService.CheckDBInstanceStatus(ctx, d.Id())
 	if checkErr != nil {
 		return checkErr
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		resourceName := BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
 	}
 
 	// set pg params
@@ -711,7 +738,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	if len(paramEntrys) != 0 {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			inErr := postgresqlService.ModifyPgParams(ctx, instanceId, paramEntrys)
+			inErr := postgresqlService.ModifyPgParams(ctx, d.Id(), paramEntrys)
 			if inErr != nil {
 				return retryError(inErr)
 			}
@@ -728,7 +755,7 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 
 	if plan, ok := helper.InterfacesHeadMap(d, "backup_plan"); ok {
 		request := postgresql.NewModifyBackupPlanRequest()
-		request.DBInstanceId = &instanceId
+		request.DBInstanceId = helper.String(d.Id())
 		if v, ok := plan["min_backup_start_time"].(string); ok && v != "" {
 			request.MinBackupStartTime = &v
 		}
@@ -762,7 +789,9 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	postgresqlService := PostgresqlService{client: tcClient}
 	instanceId := d.Id()
 	d.Partial(true)
 
@@ -994,13 +1023,11 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		d.SetPartial("zone")
 	}
 
+	var replaceTags map[string]string
+	var deleteTags []string
 	if d.HasChange("tags") {
-
 		oldValue, newValue := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
-
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
+		replaceTags, deleteTags = diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
 		resourceName := BuildTagResourceName("postgres", "DBInstanceId", tcClient.Region, d.Id())
 		err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags)
 		if err != nil {
@@ -1008,6 +1035,13 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		}
 		d.SetPartial("tags")
 	}
+
+	// Wait the tags enabled
+	err := tagService.waitTagsEnable(ctx, "postgres", "DBInstanceId", d.Id(), tcClient.Region, replaceTags)
+	if err != nil {
+		return err
+	}
+
 	paramEntrys := make(map[string]string)
 	if d.HasChange("max_standby_archive_delay") {
 		if v, ok := d.GetOkExists("max_standby_archive_delay"); ok {
