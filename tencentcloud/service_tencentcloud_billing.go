@@ -91,9 +91,9 @@ func (me *BillingService) isYunTiAccount() bool {
 //query deal by bpass
 func (me *BillingService) QueryDealByBpass(ctx context.Context, dealRegx string, msg error) (resourceId *string, err error) {
 	logId := getLogId(ctx)
-	err = msg
+
 	if !me.isYunTiAccount() {
-		return nil, err
+		return
 	}
 
 	e, ok := msg.(*sdkErrors.TencentCloudSDKError)
@@ -115,9 +115,9 @@ func (me *BillingService) QueryDealByBpass(ctx context.Context, dealRegx string,
 		}
 		resourceId = deal.ResourceId[0]
 		log.Printf("[DEBUG]%s query deal for PREPAID user succeed, dealId:[%s] resourceId:[%s]\n", logId, dealId, *resourceId)
-		return
+		return resourceId, nil
 	}
-	return nil, err
+	return
 }
 
 func in(target int64, intArr []int64) bool {

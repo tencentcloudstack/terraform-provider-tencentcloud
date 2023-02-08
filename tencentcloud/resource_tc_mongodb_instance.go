@@ -198,25 +198,48 @@ func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, m
 		return err
 	}
 
-	var response *mongodb.CreateDBInstanceResponse
-	var err error
+	var (
+		client         = meta.(*TencentCloudClient).apiV3Conn
+		billingService = BillingService{client: client}
+
+		response   *mongodb.CreateDBInstanceResponse
+		err        error
+		resourceId string
+	)
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err = meta.(*TencentCloudClient).apiV3Conn.UseMongodbClient().CreateDBInstance(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+
+			regx := "\"dealNames\":\\[\"(.*)\"\\]"
+			// query deal by bpass
+			id, billErr := billingService.QueryDealByBpass(ctx, regx, err)
+			if billErr != nil {
+				log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
+				return resource.NonRetryableError(billErr)
+			}
+			if id != nil {
+				// yunti prepaid user
+				resourceId = *id
+				return nil
+			}
 			return retryError(err)
 		}
+
+		if len(response.Response.InstanceIds) < 1 {
+			return resource.NonRetryableError(fmt.Errorf("mongodb instance id is nil"))
+		}
+
+		// normal user
+		resourceId = *response.Response.InstanceIds[0]
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	if len(response.Response.InstanceIds) < 1 {
-		return fmt.Errorf("mongodb instance id is nil")
-	}
-	d.SetId(*response.Response.InstanceIds[0])
+	d.SetId(resourceId)
 
 	return nil
 }
@@ -257,6 +280,20 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 
 	instanceId := d.Id()
 
+	// set tag before query the instance
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+
+		// Wait the tags enabled
+		err := tagService.waitTagsEnable(ctx, "mongodb", "instance", instanceId, region, tags)
+		if err != nil {
+			return err
+		}
+	}
+
 	_, has, err := mongodbService.DescribeInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
@@ -278,13 +315,6 @@ func resourceTencentCloudMongodbInstanceCreate(d *schema.ResourceData, meta inte
 	}
 	if !has {
 		return fmt.Errorf("[CRITAL]%s creating mongodb instance failed, instance doesn't exist", logId)
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		resourceName := BuildTagResourceName("mongodb", "instance", region, instanceId)
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudMongodbInstanceRead(d, meta)

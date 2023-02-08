@@ -591,7 +591,6 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 		if inErr != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), inErr.Error())
-			// return retryError(inErr)
 
 			// query deal by bpass
 			e, ok := inErr.(*sdkErrors.TencentCloudSDKError)
@@ -609,9 +608,8 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 				instanceId = *deal.ResourceId[0]
 				log.Printf("[DEBUG]%s query deal for PREPAID user, dealId:[%s] instanceId:[%s]\n", logId, dealId, instanceId)
 				return nil
-			} else {
-				return retryError(inErr)
 			}
+			return retryError(inErr)
 		}
 
 		if r.Response.InstanceIds == nil && clientToken != "" {
