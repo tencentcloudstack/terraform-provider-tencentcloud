@@ -428,13 +428,11 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		requestSecurityGroup = append(requestSecurityGroup, v.(string))
 	}
 
-	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-
 	nodeInfo := make([]*redis.RedisNodeInfo, 0)
 	if raw, ok := d.GetOk("replica_zone_ids"); ok {
 		zoneIds := raw.([]interface{})
 
-		masterZoneId, err := service.getZoneId(availabilityZone)
+		masterZoneId, err := redisService.getZoneId(availabilityZone)
 		if err != nil {
 			return err
 		}
@@ -476,24 +474,27 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		paramsTemplateId,
 	)
 
-	redisId := ""
+	var resourceId string
 	if err != nil {
 		log.Printf("[CRITAL]%s api[CreateInstances] fail, reason[%s]\n", logId, err.Error())
 
-		regx := "\"dealNames\":\\[\"(.*)\"\\]" // dealNames:\["(.*)"\]
-		// query deal by bpass
-		resId, inErr := billingService.QueryDealByBpass(ctx, chargeType, regx, err)
-		if inErr != nil {
-			return inErr
+		if chargeType == REDIS_CHARGE_TYPE_PREPAID {
+			regx := "\"dealNames\":\\[\"(.*)\"\\]" // dealNames:\["(.*)"\]
+			// query deal by bpass
+			id, inErr := billingService.QueryDealByBpass(ctx, regx, err)
+			if inErr != nil {
+				return inErr
+			}
+			resourceId = *id
 		}
-
-		redisId = *resId
 	}
 
 	if len(instanceIds) == 0 {
 		return fmt.Errorf("redis api CreateInstances return empty redis id")
-	} else {
-		redisId = *instanceIds[0]
+	}
+
+	if chargeType == REDIS_CHARGE_TYPE_POSTPAID {
+		resourceId = *instanceIds[0]
 	}
 
 	// set tag before query the instance
@@ -503,7 +504,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 		for k, v := range tags {
 			log.Printf("[DEBUG]%s tags[k:%s, v:%s]", logId, k, v)
 		}
-		resourceName := BuildTagResourceName("redis", "instance", region, redisId)
+		resourceName := BuildTagResourceName("redis", "instance", region, resourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			log.Printf("[CRITAL]%s modify tags failed, reason:%s\n", logId, err.Error())
 			return err
@@ -511,19 +512,19 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	}
 
 	// Wait the tags enabled
-	err = tagService.waitTagsEnable(ctx, "redis", "instance", redisId, region, tags)
+	err = tagService.waitTagsEnable(ctx, "redis", "instance", resourceId, region, tags)
 	if err != nil {
 		return err
 	}
 
-	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, redisId, 20*readRetryTimeout)
+	_, _, _, err = redisService.CheckRedisOnlineOk(ctx, resourceId, 20*readRetryTimeout)
 
 	if err != nil {
 		log.Printf("[CRITAL]%s create redis task fail, reason:%s\n", logId, err.Error())
 		return err
 	}
-	d.SetId(redisId)
 
+	d.SetId(resourceId)
 	return resourceTencentCloudRedisInstanceRead(d, meta)
 }
 
