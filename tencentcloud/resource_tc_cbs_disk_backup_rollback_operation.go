@@ -68,7 +68,7 @@ func resourceTencentCloudCbsDiskBackupRollbackOperationCreate(d *schema.Resource
 		return err
 	}
 	// deal with state sync delay
-	time.Sleep(time.Duration(time.Second * 1))
+	time.Sleep(time.Second * 1)
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		disk, e := cbsService.DescribeDiskById(ctx, diskId)
 		if e != nil {
