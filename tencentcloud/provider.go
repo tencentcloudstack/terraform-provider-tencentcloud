@@ -1673,6 +1673,11 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_contain_group":                          resourceTencentCloudTsfContainGroup(),
 			"tencentcloud_tsf_lane":                                   resourceTencentCloudTsfLane(),
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
+			"tencentcloud_tsf_application":                            resourceTencentCloudTsfApplication(),
+			"tencentcloud_tsf_cluster":                                resourceTencentCloudTsfCluster(),
+			"tencentcloud_tsf_group":                                  resourceTencentCloudTsfGroup(),
+			"tencentcloud_tsf_instances_attachment":                   resourceTencentCloudTsfInstancesAttachment(),
+			"tencentcloud_tsf_application_file_config":                resourceTencentCloudTsfApplicationFileConfig(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 		},
 
