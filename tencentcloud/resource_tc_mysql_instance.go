@@ -51,7 +51,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"regexp"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
@@ -59,7 +58,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -593,23 +591,16 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 				logId, request.GetAction(), request.ToJsonString(), inErr.Error())
 
 			// query deal by bpass
-			e, ok := inErr.(*sdkErrors.TencentCloudSDKError)
-			isYunti := billingService.isYunTiAccount()
-			if isYunti && ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
-				errStr := inErr.Error()
-				re := regexp.MustCompile("dealNames:\\[\"(.*)\"\\]\\],")
-				dealId := re.FindStringSubmatch(errStr)[1]
-				deal, billErr := billingService.DescribeDeals(ctx, dealId)
-				if billErr != nil {
-					log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, billErr.Error())
-					return resource.NonRetryableError(billErr)
-				}
-				// yunti prepaid user
-				if deal != nil {
-					instanceId = *deal.ResourceId[0]
-					log.Printf("[DEBUG]%s query deal for PREPAID user, dealId:[%s] instanceId:[%s]\n", logId, dealId, instanceId)
-					return nil
-				}
+			regx := "dealNames:\\[\"(.*)\"\\]\\],"
+			id, billErr := billingService.QueryDealByBpass(ctx, regx, inErr)
+			if billErr != nil {
+				log.Printf("[CRITAL]%s api[DescribeDeals] fail, reason[%s]\n", logId, billErr.Error())
+				return resource.NonRetryableError(billErr)
+			}
+			// yunti prepaid user
+			if id != nil {
+				instanceId = *id
+				return nil
 			}
 			return retryError(inErr)
 		}
@@ -729,8 +720,8 @@ func resourceTencentCloudMysqlInstanceCreate(d *schema.ResourceData, meta interf
 			return resource.NonRetryableError(err)
 		}
 		if mysqlInfo == nil {
-			err = fmt.Errorf("mysqlid %s instance not exists", mysqlID)
-			return resource.NonRetryableError(err)
+			err = fmt.Errorf("mysqlid %s instance not exists, retrying...", mysqlID)
+			return resource.RetryableError(err)
 		}
 		if *mysqlInfo.Status == MYSQL_STATUS_DELIVING {
 			return resource.RetryableError(fmt.Errorf("create mysql task status is MYSQL_STATUS_DELIVING(%d)", MYSQL_STATUS_DELIVING))

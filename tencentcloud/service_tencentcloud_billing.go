@@ -97,7 +97,7 @@ func (me *BillingService) QueryDealByBpass(ctx context.Context, dealRegx string,
 	}
 
 	e, ok := msg.(*sdkErrors.TencentCloudSDKError)
-	log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \n", logId, e.Code)
+	log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \n", logId, e.Error())
 
 	if ok && IsContains(TRADE_RETRYABLE_ERROR, e.Code) {
 		errStr := msg.Error()

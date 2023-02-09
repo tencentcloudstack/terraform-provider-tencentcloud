@@ -37,6 +37,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -199,9 +200,6 @@ func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	var (
-		client         = meta.(*TencentCloudClient).apiV3Conn
-		billingService = BillingService{client: client}
-
 		response   *mongodb.CreateDBInstanceResponse
 		err        error
 		resourceId string
@@ -212,18 +210,20 @@ func mongodbCreateInstanceByMonth(ctx context.Context, d *schema.ResourceData, m
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
 
-			regx := "\"dealNames\":\\[\"(.*)\"\\]"
 			// query deal by bpass
-			id, billErr := billingService.QueryDealByBpass(ctx, regx, err)
-			if billErr != nil {
-				log.Printf("[CRITAL]%s api[QueryDealByBpass] fail, reason[%s]\n", logId, billErr.Error())
-				return resource.NonRetryableError(billErr)
-			}
-			if id != nil {
+			e, ok := err.(*sdkErrors.TencentCloudSDKError)
+			log.Printf("[DEBUG]%s query deal for PREPAID user, msg:[%s] \n", logId, e.Error())
+
+			if ok && IsContains("InvalidParameterValue.InvalidTradeOperation", e.Code) {
 				// yunti prepaid user
-				resourceId = *id
-				return nil
+				return retryError(fmt.Errorf("[DEBUG] wait pass the bpass for yunti prepaid user, retry... error msg:[%s]", e.Message))
 			}
+
+			// if id != nil {
+			// 	// yunti prepaid user
+			// 	resourceId = *id
+			// 	return nil
+			// }
 			return retryError(err)
 		}
 

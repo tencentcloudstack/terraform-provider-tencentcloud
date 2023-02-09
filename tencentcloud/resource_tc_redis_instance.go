@@ -499,7 +499,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	}
 
 	// normal user
-	if !billingService.isYunTiAccount() {
+	if !billingService.isYunTiAccount() || chargeType == REDIS_CHARGE_TYPE_POSTPAID {
 		resourceId = *instanceIds[0]
 	}
 
