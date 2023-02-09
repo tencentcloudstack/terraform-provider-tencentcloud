@@ -919,3 +919,14 @@ const (
 )
 
 // End of TSF
+
+// CBS
+const defaultCbsBackupDiskId = "disk-r69pg9vw"
+
+const CbsBackUp = `
+variable "cbs_backup_disk_id" {
+  default = "` + defaultCbsBackupDiskId + `"
+}
+`
+
+// End of CBS

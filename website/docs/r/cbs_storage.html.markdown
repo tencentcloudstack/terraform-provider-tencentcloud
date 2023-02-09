@@ -37,6 +37,7 @@ The following arguments are supported:
 * `storage_size` - (Required, Int) Volume of CBS, and unit is GB.
 * `storage_type` - (Required, String, ForceNew) Type of CBS medium. Valid values: CLOUD_BASIC: HDD cloud disk, CLOUD_PREMIUM: Premium Cloud Storage, CLOUD_BSSD: General Purpose SSD, CLOUD_SSD: SSD, CLOUD_HSSD: Enhanced SSD, CLOUD_TSSD: Tremendous SSD.
 * `charge_type` - (Optional, String) The charge type of CBS instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.
+* `disk_backup_quota` - (Optional, Int) The quota of backup points of cloud disk.
 * `encrypt` - (Optional, Bool, ForceNew) Indicates whether CBS is encrypted.
 * `force_delete` - (Optional, Bool) Indicate whether to delete CBS instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin.
 * `period` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.33.0. Set `prepaid_period` instead. The purchased usage period of CBS. Valid values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36].
