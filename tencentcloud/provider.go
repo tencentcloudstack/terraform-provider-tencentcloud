@@ -1663,6 +1663,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_microservice":                           resourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_application_config":                     resourceTencentCloudTsfApplicationConfig(),
 			"tencentcloud_cvm_launch_template":                        resourceTencentCloudCvmLaunchTemplate(),
+<<<<<<< Updated upstream
 			"tencentcloud_tsf_api_group":                              resourceTencentCloudTsfApiGroup(),
 			"tencentcloud_tsf_namespace":                              resourceTencentCloudTsfNamespace(),
 			"tencentcloud_tsf_path_rewrite":                           resourceTencentCloudTsfPathRewrite(),
@@ -1677,6 +1678,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_cbs_disk_backup":                            resourceTencentCloudCbsDiskBackup(),
+=======
+			"tencentcloud_cbs_snapshot_share_permission":              resourceTencentCloudCbsSnapshotSharePermission(),
+>>>>>>> Stashed changes
 		},
 
 		ConfigureFunc: providerConfigure,
