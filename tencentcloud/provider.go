@@ -1676,6 +1676,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_lane":                                   resourceTencentCloudTsfLane(),
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
+			"tencentcloud_cbs_disk_backup":                            resourceTencentCloudCbsDiskBackup(),
 		},
 
 		ConfigureFunc: providerConfigure,

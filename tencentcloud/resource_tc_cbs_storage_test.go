@@ -116,6 +116,7 @@ func TestAccTencentCloudCbsStorage_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "encrypt", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "tags.test", "tf-test"),
+					resource.TestCheckResourceAttr("tencentcloud_cbs_storage.storage_full", "disk_backup_quota", "2"),
 				),
 			},
 		},
@@ -262,6 +263,7 @@ resource "tencentcloud_cbs_storage" "storage_full" {
 	availability_zone = "ap-guangzhou-3"
 	project_id = 0
 	encrypt = false
+	disk_backup_quota = 2
 	tags = {
 		test = "tf-test"
 	}
