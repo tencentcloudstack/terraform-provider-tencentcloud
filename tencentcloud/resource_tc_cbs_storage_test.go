@@ -57,7 +57,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudCbsStorage_basic(t *testing.T) {
+func TestAccTencentCloudCbsStorageResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -85,7 +85,7 @@ func TestAccTencentCloudCbsStorage_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCbsStorage_full(t *testing.T) {
+func TestAccTencentCloudCbsStorageResource_full(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -124,7 +124,7 @@ func TestAccTencentCloudCbsStorage_full(t *testing.T) {
 }
 
 // Prepaid Disks has quota every period
-func TestAccTencentCloudNeedFixCbsStorage_prepaid(t *testing.T) {
+func TestAccTencentCloudCbsStorageResource_prepaid(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -153,7 +153,7 @@ func TestAccTencentCloudNeedFixCbsStorage_prepaid(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCbsStorage_upgrade(t *testing.T) {
+func TestAccTencentCloudCbsStorageResource_upgrade(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
