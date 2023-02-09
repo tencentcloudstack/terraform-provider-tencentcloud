@@ -486,7 +486,9 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 				return inErr
 			}
 			// yunti prepaid user
-			resourceId = *id
+			if id != nil {
+				resourceId = *id
+			}
 		} else {
 			return err
 		}
@@ -873,7 +875,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		resourceName := BuildTagResourceName("redis", "instance", region, id)
+		resourceName := BuildTagResourceName("redis", "instance", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}

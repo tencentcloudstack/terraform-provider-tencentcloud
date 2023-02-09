@@ -424,8 +424,10 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 					return resource.NonRetryableError(billErr)
 				}
 				// yunti prepaid user
-				instanceId = *id
-				return nil
+				if id != nil {
+					instanceId = *id
+					return nil
+				}
 			}
 			return retryError(err)
 		}
@@ -752,7 +754,7 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
 		// resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
-		resourceName := BuildTagResourceName("es", "instance", region, instanceId)
+		resourceName := BuildTagResourceName("es", "instance", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}

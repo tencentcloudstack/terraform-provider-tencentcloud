@@ -627,8 +627,10 @@ func resourceTencentCloudPostgresqlInstanceCreate(d *schema.ResourceData, meta i
 					return resource.NonRetryableError(billErr)
 				}
 				// yunti prepaid user
-				instanceId = *id
-				return nil
+				if id != nil {
+					instanceId = *id
+					return nil
+				}
 			}
 			return retryError(inErr)
 		}

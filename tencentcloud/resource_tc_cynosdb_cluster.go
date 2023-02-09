@@ -214,8 +214,10 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 					return resource.NonRetryableError(billErr)
 				}
 				// yunti prepaid user
-				resourceId = *id
-				return nil
+				if id != nil {
+					resourceId = *id
+					return nil
+				}
 			}
 			return retryError(err)
 		}
@@ -263,7 +265,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		}
 
 		// Wait the tags enabled
-		err = tagService.waitTagsEnable(ctx, "cynosdb", "cluster", resourceId, region, tags)
+		err = tagService.waitTagsEnable(ctx, "cynosdb", "cluster", d.Id(), region, tags)
 		if err != nil {
 			return err
 		}
@@ -705,7 +707,7 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
 
-		resourceName := BuildTagResourceName("cynosdb", "cluster", region, clusterId)
+		resourceName := BuildTagResourceName("cynosdb", "cluster", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}

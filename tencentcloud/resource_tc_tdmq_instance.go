@@ -25,7 +25,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -72,8 +71,13 @@ func resourceTencentCloudTdmqInstance() *schema.Resource {
 func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tdmq_instance.create")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		client     = meta.(*TencentCloudClient).apiV3Conn
+		tagService = TagService{client: client}
+		region     = client.Region
+	)
 
 	var (
 		request  = tdmq.NewCreateClusterRequest()
@@ -110,11 +114,17 @@ func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) er
 
 	clusterId := *response.Response.ClusterId
 
+	// set tag before query the instance
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::tdmq:%s:uin/:cluster/%s", region, clusterId)
+		// resourceName := fmt.Sprintf("qcs::tdmq:%s:uin/:cluster/%s", region, clusterId)
+		resourceName := BuildTagResourceName("tdmq", "cluster", region, clusterId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+
+		// Wait the tags enabled
+		err = tagService.waitTagsEnable(ctx, "tdmq", "cluster", clusterId, region, tags)
+		if err != nil {
 			return err
 		}
 	}
@@ -167,12 +177,15 @@ func resourceTencentCloudTdmqRead(d *schema.ResourceData, meta interface{}) erro
 func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tdmq_instance.update")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	id := d.Id()
-
-	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		client     = meta.(*TencentCloudClient).apiV3Conn
+		service    = TdmqService{client: client}
+		tagService = TagService{client: client}
+		region     = client.Region
+		id         = d.Id()
+	)
 
 	var (
 		clusterName string
@@ -197,12 +210,16 @@ func resourceTencentCloudTdmqUpdate(d *schema.ResourceData, meta interface{}) er
 	}
 
 	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("tdmq", "cluster", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("tdmq", "cluster", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+		// Wait the tags enabled
+		err := tagService.waitTagsEnable(ctx, "tdmq", "cluster", d.Id(), region, replaceTags)
+		if err != nil {
 			return err
 		}
 	}

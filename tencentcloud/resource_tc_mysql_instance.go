@@ -605,9 +605,11 @@ func mysqlCreateInstancePayByMonth(ctx context.Context, d *schema.ResourceData, 
 					return resource.NonRetryableError(billErr)
 				}
 				// yunti prepaid user
-				instanceId = *deal.ResourceId[0]
-				log.Printf("[DEBUG]%s query deal for PREPAID user, dealId:[%s] instanceId:[%s]\n", logId, dealId, instanceId)
-				return nil
+				if deal != nil {
+					instanceId = *deal.ResourceId[0]
+					log.Printf("[DEBUG]%s query deal for PREPAID user, dealId:[%s] instanceId:[%s]\n", logId, dealId, instanceId)
+					return nil
+				}
 			}
 			return retryError(inErr)
 		}
