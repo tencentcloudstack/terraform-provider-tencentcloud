@@ -1590,3 +1590,70 @@ func extractBindClbList(itemlist []*clb.BindDetailItem) (lbList []interface{}) {
 	}
 	return result
 }
+
+func (me *ClbService) DescribeClbFunctionTargetsAttachmentById(ctx context.Context, loadBalancerId string, listenerId string,
+	locationId string, domain string, url string) (functionTargets []*clb.FunctionTarget, locationIdTarget, domainTarget, urlTarget string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := clb.NewDescribeTargetsRequest()
+	request.LoadBalancerId = &loadBalancerId
+	request.ListenerIds = []*string{&listenerId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().DescribeTargets(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Listeners) < 1 {
+		return
+	}
+
+	for _, listener := range response.Response.Listeners {
+		rules := listener.Rules
+		for _, rule := range rules {
+			if *rule.LocationId == locationId || (*rule.Domain == domain && *rule.Url == url) {
+				locationIdTarget = *rule.LocationId
+				domainTarget = *rule.Domain
+				urlTarget = *rule.Url
+				functionTargets = rule.FunctionTargets
+				break
+			}
+		}
+	}
+	return
+}
+
+func (me *ClbService) DeleteClbFunctionTargetsAttachmentById(ctx context.Context, loadBalancerId string, listenerId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := clb.NewDeregisterFunctionTargetsRequest()
+	request.LoadBalancerId = &loadBalancerId
+	request.ListenerId = &listenerId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().DeregisterFunctionTargets(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
