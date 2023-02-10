@@ -1,3 +1,21 @@
+## 1.79.9 (February 10, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cbs_disk_backup` ([#1548](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1548))
+* **New Resource:** `tencentcloud_cbs_disk_backup_rollback_operation` ([#1548](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1548))
+* **New Resource:** `tencentcloud_cbs_snapshot_share_permission` ([#1548](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1548))
+* **New Resource:** `tencentcloud_clb_function_targets_attachment` ([#1549](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1549))
+* **New Resource:** `tencentcloud_mps_transcode_template` ([#1550](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1550))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cbs_storage: support disk_backup_quota param ([#1548](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1548))
+* resource/tencentcloud_kubernetes_cluster: support creating tke cluster endpoint even if cluster only have serverless node ([#1546](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1546))
+* resource/tencentcloud_kubernetes_cluster_endpoint: support creating tke cluster endpoint even if cluster only have serverless node ([#1546](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1546))
+* resource/tencentcloud_kubernetes_node_pool: adjust enhanced_security_service to not forceNew ([#1545](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1545))
+* resource/tencentcloud_vpc_bandwidth_package: Support internet_max_bandwidth field ([#1551](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1551))
+
 ## 1.79.8 (February 7, 2023)
 
 ENHANCEMENTS:
