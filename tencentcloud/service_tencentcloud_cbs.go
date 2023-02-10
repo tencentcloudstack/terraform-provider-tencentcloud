@@ -667,3 +667,194 @@ func (me *CbsService) ModifyDisksRenewFlag(ctx context.Context, storageId string
 	}
 	return nil
 }
+
+func (me *CbsService) DescribeCbsDiskBackupById(ctx context.Context, diskBackupId string) (DiskBackup *cbs.DiskBackup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cbs.NewDescribeDiskBackupsRequest()
+	request.DiskBackupIds = []*string{&diskBackupId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCbsClient().DescribeDiskBackups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DiskBackupSet) < 1 {
+		return
+	}
+
+	DiskBackup = response.Response.DiskBackupSet[0]
+	return
+}
+
+func (me *CbsService) DeleteCbsDiskBackupById(ctx context.Context, diskBackupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cbs.NewDeleteDiskBackupsRequest()
+	request.DiskBackupIds = []*string{&diskBackupId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCbsClient().DeleteDiskBackups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CbsService) ModifyDiskBackupQuota(ctx context.Context, diskId string, diskBackupQuota int) (errRet error) {
+	logId := getLogId(ctx)
+	request := cbs.NewModifyDiskBackupQuotaRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.DiskId = helper.String(diskId)
+	request.DiskBackupQuota = helper.IntUint64(diskBackupQuota)
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCbsClient().ModifyDiskBackupQuota(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CbsService) CreateDiskBackup(ctx context.Context, diskId, diskBackupName string) (diskBackupId string, errRet error) {
+	logId := getLogId(ctx)
+	request := cbs.NewCreateDiskBackupRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.DiskId = helper.String(diskId)
+	request.DiskBackupName = helper.String(diskBackupName)
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		result, e := me.client.UseCbsClient().CreateDiskBackup(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		diskBackupId = *result.Response.DiskBackupId
+		return nil
+	})
+	if err != nil {
+		errRet = err
+		log.Printf("[CRITAL]%s create cbs DiskBackup failed, reason:%+v", logId, err)
+		return
+	}
+	return
+}
+
+func (me *CbsService) DescribeCbsSnapshotSharePermissionById(ctx context.Context, snapshotId string) (snapshotSharePermissions []*cbs.SharePermission, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cbs.NewDescribeSnapshotSharePermissionRequest()
+	request.SnapshotId = &snapshotId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCbsClient().DescribeSnapshotSharePermission(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	snapshotSharePermissions = response.Response.SharePermissionSet
+	return
+}
+
+func (me *CbsService) ModifySnapshotsSharePermission(ctx context.Context, snapshotId, permission string, accountIds []string) (errRet error) {
+	logId := getLogId(ctx)
+	request := cbs.NewModifySnapshotsSharePermissionRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.SnapshotIds = []*string{&snapshotId}
+	request.Permission = helper.String(permission)
+	request.AccountIds = helper.StringsStringsPoint(accountIds)
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseCbsClient().ModifySnapshotsSharePermission(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create cbs SnapshotSharePermission failed, reason:%+v", logId, err)
+		return err
+	}
+	return
+}
+
+func (me *CbsService) ApplyDiskBackup(ctx context.Context, diskBackupId, diskId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := cbs.NewApplyDiskBackupRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.DiskBackupId = helper.String(diskBackupId)
+	request.DiskId = helper.String(diskId)
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseCbsClient().ApplyDiskBackup(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s ApplyDiskBackup failed, reason:%+v", logId, err)
+		return err
+	}
+	return
+}

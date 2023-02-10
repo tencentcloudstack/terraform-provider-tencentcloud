@@ -17,11 +17,17 @@ package v20170312
 const (
 	// 此产品的特有错误码
 
+	// CAM签名/鉴权错误。
+	AUTHFAILURE = "AuthFailure"
+
 	// 云盘退还数量已达上限，不能再退还。
 	INSUFFICIENTREFUNDQUOTA = "InsufficientRefundQuota"
 
 	// 快照配额不足。
 	INSUFFICIENTSNAPSHOTQUOTA = "InsufficientSnapshotQuota"
+
+	// 内部错误。
+	INTERNALERROR = "InternalError"
 
 	// 依赖组件请求失败，请联系客服人员解决。
 	INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
@@ -148,6 +154,9 @@ const (
 
 	// 云硬盘已挂载至其他云服务器上。
 	RESOURCEUNAVAILABLE_ATTACHED = "ResourceUnavailable.Attached"
+
+	// 云硬盘快照链长度过长，拒绝创建快照。
+	RESOURCEUNAVAILABLE_DISKSNAPSHOTCHAINTOOLARGE = "ResourceUnavailable.DiskSnapshotChainTooLarge"
 
 	// 云硬盘已过期。
 	RESOURCEUNAVAILABLE_EXPIRE = "ResourceUnavailable.Expire"
