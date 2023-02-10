@@ -334,10 +334,10 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Description: "Security groups to which a CVM instance belongs.",
 		},
 		"enhanced_security_service": {
-			Type:        schema.TypeBool,
-			Optional:    true,
-			Default:     true,
-			ForceNew:    true,
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  true,
+			//ForceNew:    true,
 			Description: "To specify whether to enable cloud security service. Default is TRUE.",
 		},
 		"enhanced_monitor_service": {
@@ -964,6 +964,23 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 		}
 	}
 
+	// set enhanced_security_service if necessary
+	if v, ok := dMap["enhanced_security_service"]; ok {
+		securityService := v.(bool)
+		if request.EnhancedService != nil {
+			request.EnhancedService.SecurityService = &as.RunSecurityServiceEnabled{
+				Enabled: helper.Bool(securityService),
+			}
+		} else {
+			request.EnhancedService = &as.EnhancedService{
+				SecurityService: &as.RunSecurityServiceEnabled{
+					Enabled: helper.Bool(securityService),
+				},
+			}
+		}
+
+	}
+
 	request.InstanceChargeType = &chargeType
 
 	return request
@@ -1337,12 +1354,13 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 	defer logElapsed("resource.tencentcloud_kubernetes_node_pool.update")()
 
 	var (
-		logId     = getLogId(contextNil)
-		ctx       = context.WithValue(context.TODO(), logIdKey, logId)
-		client    = meta.(*TencentCloudClient).apiV3Conn
-		service   = TkeService{client: client}
-		asService = AsService{client: client}
-		items     = strings.Split(d.Id(), FILED_SP)
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		client     = meta.(*TencentCloudClient).apiV3Conn
+		service    = TkeService{client: client}
+		asService  = AsService{client: client}
+		cvmService = CvmService{client: client}
+		items      = strings.Split(d.Id(), FILED_SP)
 	)
 	if len(items) != 2 {
 		return fmt.Errorf("resource_tc_kubernetes_node_pool id  is broken")
@@ -1359,6 +1377,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 			return err
 		}
 		launchConfigId := *nodePool.LaunchConfigurationId
+		//  change as config here
 		request := composeAsLaunchConfigModifyRequest(d, launchConfigId)
 		_, err = client.UseAsClient().ModifyLaunchConfigurationAttributes(request)
 		if err != nil {
@@ -1366,6 +1385,12 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 				logId, request.GetAction(), request.ToJsonString(), err.Error())
 			return err
 		}
+
+		// change existed cvm security service if necessary
+		if err := ModifySecurityServiceOfCvmInNodePool(ctx, d, &service, &cvmService, client, clusterId, *nodePool.NodePoolId); err != nil {
+			return err
+		}
+
 		d.SetPartial("auto_scaling_config")
 	}
 

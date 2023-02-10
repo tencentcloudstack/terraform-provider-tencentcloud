@@ -38,6 +38,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
@@ -157,6 +158,7 @@ type TencentCloudClient struct {
 	ciConn             *cos.Client
 	tsfConn            *tsf.Client
 	mpsConn            *mps.Client
+	cwpConn            *cwp.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1055,6 +1057,19 @@ func (me *TencentCloudClient) UseMpsClient() *mps.Client {
 	me.mpsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.mpsConn
+}
+
+// UseTkeClient returns tke client for service
+func (me *TencentCloudClient) UseCwpClient() *cwp.Client {
+	if me.cwpConn != nil {
+		return me.cwpConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.cwpConn, _ = cwp.NewClient(me.Credential, me.Region, cpf)
+	me.cwpConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cwpConn
 }
 
 func getEnvDefault(key string, defVal int) int {
