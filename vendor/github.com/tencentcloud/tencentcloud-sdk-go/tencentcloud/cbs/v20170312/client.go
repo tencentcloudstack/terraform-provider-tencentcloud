@@ -79,6 +79,8 @@ func NewApplyDiskBackupResponse() (response *ApplyDiskBackupResponse) {
 //  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
 //  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  RESOURCEBUSY = "ResourceBusy"
+//  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -103,6 +105,8 @@ func (c *Client) ApplyDiskBackup(request *ApplyDiskBackupRequest) (response *App
 //  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
 //  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
 //  INVALIDINSTANCE_NOTSUPPORTED = "InvalidInstance.NotSupported"
+//  RESOURCEBUSY = "ResourceBusy"
+//  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
@@ -171,6 +175,7 @@ func NewApplySnapshotResponse() (response *ApplySnapshotResponse) {
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
 //  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
+//  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 func (c *Client) ApplySnapshot(request *ApplySnapshotRequest) (response *ApplySnapshotResponse, err error) {
     return c.ApplySnapshotWithContext(context.Background(), request)
 }
@@ -205,6 +210,7 @@ func (c *Client) ApplySnapshot(request *ApplySnapshotRequest) (response *ApplySn
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
 //  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
+//  UNAUTHORIZEDOPERATION_MFAEXPIRED = "UnauthorizedOperation.MFAExpired"
 func (c *Client) ApplySnapshotWithContext(ctx context.Context, request *ApplySnapshotRequest) (response *ApplySnapshotResponse, err error) {
     if request == nil {
         request = NewApplySnapshotRequest()
@@ -539,6 +545,68 @@ func (c *Client) CreateAutoSnapshotPolicyWithContext(ctx context.Context, reques
     return
 }
 
+func NewCreateDiskBackupRequest() (request *CreateDiskBackupRequest) {
+    request = &CreateDiskBackupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cbs", APIVersion, "CreateDiskBackup")
+    
+    
+    return
+}
+
+func NewCreateDiskBackupResponse() (response *CreateDiskBackupResponse) {
+    response = &CreateDiskBackupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateDiskBackup
+// 为云硬盘创建一个备份点。
+//
+// 可能返回的错误码:
+//  INVALIDDISK_BUSY = "InvalidDisk.Busy"
+//  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT_OVERQUOTA = "ResourceInsufficient.OverQuota"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
+//  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
+func (c *Client) CreateDiskBackup(request *CreateDiskBackupRequest) (response *CreateDiskBackupResponse, err error) {
+    return c.CreateDiskBackupWithContext(context.Background(), request)
+}
+
+// CreateDiskBackup
+// 为云硬盘创建一个备份点。
+//
+// 可能返回的错误码:
+//  INVALIDDISK_BUSY = "InvalidDisk.Busy"
+//  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
+//  RESOURCEINSUFFICIENT_OVERQUOTA = "ResourceInsufficient.OverQuota"
+//  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+//  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
+//  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
+func (c *Client) CreateDiskBackupWithContext(ctx context.Context, request *CreateDiskBackupRequest) (response *CreateDiskBackupResponse, err error) {
+    if request == nil {
+        request = NewCreateDiskBackupRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDiskBackup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateDiskBackupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateDisksRequest() (request *CreateDisksRequest) {
     request = &CreateDisksRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -575,6 +643,7 @@ func NewCreateDisksResponse() (response *CreateDisksResponse) {
 //  INVALIDPARAMETER_PROJECTIDNOTEXIST = "InvalidParameter.ProjectIdNotExist"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -605,6 +674,7 @@ func (c *Client) CreateDisks(request *CreateDisksRequest) (response *CreateDisks
 //  INVALIDPARAMETER_PROJECTIDNOTEXIST = "InvalidParameter.ProjectIdNotExist"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEBUSY = "ResourceBusy"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
@@ -677,6 +747,7 @@ func NewCreateSnapshotResponse() (response *CreateSnapshotResponse) {
 //  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 //  RESOURCEINSUFFICIENT_OVERQUOTA = "ResourceInsufficient.OverQuota"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+//  RESOURCEUNAVAILABLE_DISKSNAPSHOTCHAINTOOLARGE = "ResourceUnavailable.DiskSnapshotChainTooLarge"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
 //  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
 //  RESOURCEUNAVAILABLE_TOOMANYCREATINGSNAPSHOT = "ResourceUnavailable.TooManyCreatingSnapshot"
@@ -715,6 +786,7 @@ func (c *Client) CreateSnapshot(request *CreateSnapshotRequest) (response *Creat
 //  RESOURCEINUSE_DISKROLLBACKING = "ResourceInUse.DiskRollbacking"
 //  RESOURCEINSUFFICIENT_OVERQUOTA = "ResourceInsufficient.OverQuota"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+//  RESOURCEUNAVAILABLE_DISKSNAPSHOTCHAINTOOLARGE = "ResourceUnavailable.DiskSnapshotChainTooLarge"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
 //  RESOURCEUNAVAILABLE_SNAPSHOTCREATING = "ResourceUnavailable.SnapshotCreating"
 //  RESOURCEUNAVAILABLE_TOOMANYCREATINGSNAPSHOT = "ResourceUnavailable.TooManyCreatingSnapshot"
@@ -1017,6 +1089,7 @@ func NewDescribeDiskAssociatedAutoSnapshotPolicyResponse() (response *DescribeDi
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDiskAssociatedAutoSnapshotPolicy(request *DescribeDiskAssociatedAutoSnapshotPolicyRequest) (response *DescribeDiskAssociatedAutoSnapshotPolicyResponse, err error) {
     return c.DescribeDiskAssociatedAutoSnapshotPolicyWithContext(context.Background(), request)
 }
@@ -1027,6 +1100,7 @@ func (c *Client) DescribeDiskAssociatedAutoSnapshotPolicy(request *DescribeDiskA
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDiskAssociatedAutoSnapshotPolicyWithContext(ctx context.Context, request *DescribeDiskAssociatedAutoSnapshotPolicyRequest) (response *DescribeDiskAssociatedAutoSnapshotPolicyResponse, err error) {
     if request == nil {
         request = NewDescribeDiskAssociatedAutoSnapshotPolicyRequest()
@@ -1426,11 +1500,7 @@ func NewDescribeSnapshotOperationLogsResponse() (response *DescribeSnapshotOpera
 }
 
 // DescribeSnapshotOperationLogs
-// 本接口（DescribeSnapshotOperationLogs）用于查询快照操作日志列表。
-//
-// 
-//
-// 可根据快照ID过滤。快照ID形如：snap-a1kmcp13。
+// 查询快照操作日志功能已迁移至LookUpEvents接口（https://cloud.tencent.com/document/product/629/12359），本接口（DescribeSnapshotOperationLogs）即将下线，后续不再提供调用，请知悉。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
@@ -1444,11 +1514,7 @@ func (c *Client) DescribeSnapshotOperationLogs(request *DescribeSnapshotOperatio
 }
 
 // DescribeSnapshotOperationLogs
-// 本接口（DescribeSnapshotOperationLogs）用于查询快照操作日志列表。
-//
-// 
-//
-// 可根据快照ID过滤。快照ID形如：snap-a1kmcp13。
+// 查询快照操作日志功能已迁移至LookUpEvents接口（https://cloud.tencent.com/document/product/629/12359），本接口（DescribeSnapshotOperationLogs）即将下线，后续不再提供调用，请知悉。
 //
 // 可能返回的错误码:
 //  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
@@ -1768,6 +1834,7 @@ func NewInitializeDisksResponse() (response *InitializeDisksResponse) {
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  RESOURCEBUSY = "ResourceBusy"
 func (c *Client) InitializeDisks(request *InitializeDisksRequest) (response *InitializeDisksResponse, err error) {
     return c.InitializeDisksWithContext(context.Background(), request)
 }
@@ -1785,6 +1852,7 @@ func (c *Client) InitializeDisks(request *InitializeDisksRequest) (response *Ini
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  RESOURCEBUSY = "ResourceBusy"
 func (c *Client) InitializeDisksWithContext(ctx context.Context, request *InitializeDisksRequest) (response *InitializeDisksResponse, err error) {
     if request == nil {
         request = NewInitializeDisksRequest()
@@ -2284,6 +2352,7 @@ func NewModifyDiskBackupQuotaResponse() (response *ModifyDiskBackupQuotaResponse
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
+//  TRADEDEALCONFLICT = "TradeDealConflict"
 //  UNAUTHORIZEDOPERATION_NOTHAVEPAYMENTRIGHT = "UnauthorizedOperation.NotHavePaymentRight"
 func (c *Client) ModifyDiskBackupQuota(request *ModifyDiskBackupQuotaRequest) (response *ModifyDiskBackupQuotaResponse, err error) {
     return c.ModifyDiskBackupQuotaWithContext(context.Background(), request)
@@ -2296,6 +2365,7 @@ func (c *Client) ModifyDiskBackupQuota(request *ModifyDiskBackupQuotaRequest) (r
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
+//  TRADEDEALCONFLICT = "TradeDealConflict"
 //  UNAUTHORIZEDOPERATION_NOTHAVEPAYMENTRIGHT = "UnauthorizedOperation.NotHavePaymentRight"
 func (c *Client) ModifyDiskBackupQuotaWithContext(ctx context.Context, request *ModifyDiskBackupQuotaRequest) (response *ModifyDiskBackupQuotaResponse, err error) {
     if request == nil {
@@ -2410,8 +2480,6 @@ func NewModifyDisksChargeTypeResponse() (response *ModifyDisksChargeTypeResponse
 //
 // 
 //
-// 只支持从 POSTPAID_BY_HOUR 计费模式切换为PREPAID计费模式。
-//
 // 非弹性云盘不支持此接口，请通过修改实例计费模式接口将实例连同非弹性云盘一起转换。
 //
 // 默认接口请求频率限制：10次/秒。
@@ -2442,8 +2510,6 @@ func (c *Client) ModifyDisksChargeType(request *ModifyDisksChargeTypeRequest) (r
 // 本接口 (ModifyDisksChargeType) 用于切换云盘的计费模式。
 //
 // 
-//
-// 只支持从 POSTPAID_BY_HOUR 计费模式切换为PREPAID计费模式。
 //
 // 非弹性云盘不支持此接口，请通过修改实例计费模式接口将实例连同非弹性云盘一起转换。
 //
@@ -2567,6 +2633,8 @@ func NewModifySnapshotAttributeResponse() (response *ModifySnapshotAttributeResp
 //  INVALIDSNAPSHOT_NOTSUPPORTED = "InvalidSnapshot.NotSupported"
 //  INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
 //  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION_SNAPHASSHARED = "UnsupportedOperation.SnapHasShared"
+//  UNSUPPORTEDOPERATION_SNAPSHOTHASBINDEDIMAGE = "UnsupportedOperation.SnapshotHasBindedImage"
 func (c *Client) ModifySnapshotAttribute(request *ModifySnapshotAttributeRequest) (response *ModifySnapshotAttributeResponse, err error) {
     return c.ModifySnapshotAttributeWithContext(context.Background(), request)
 }
@@ -2585,6 +2653,8 @@ func (c *Client) ModifySnapshotAttribute(request *ModifySnapshotAttributeRequest
 //  INVALIDSNAPSHOT_NOTSUPPORTED = "InvalidSnapshot.NotSupported"
 //  INVALIDSNAPSHOTID_NOTFOUND = "InvalidSnapshotId.NotFound"
 //  MISSINGPARAMETER = "MissingParameter"
+//  UNSUPPORTEDOPERATION_SNAPHASSHARED = "UnsupportedOperation.SnapHasShared"
+//  UNSUPPORTEDOPERATION_SNAPSHOTHASBINDEDIMAGE = "UnsupportedOperation.SnapshotHasBindedImage"
 func (c *Client) ModifySnapshotAttributeWithContext(ctx context.Context, request *ModifySnapshotAttributeRequest) (response *ModifySnapshotAttributeResponse, err error) {
     if request == nil {
         request = NewModifySnapshotAttributeRequest()
@@ -2709,12 +2779,15 @@ func NewRenewDiskResponse() (response *RenewDiskResponse) {
 // * 支持与挂载实例一起续费的场景，需要在[DiskChargePrepaid](/document/product/362/15669#DiskChargePrepaid)参数中指定CurInstanceDeadline，此时会按对齐到子机续费后的到期时间来续费。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDDISK_BUSY = "InvalidDisk.Busy"
 //  INVALIDDISK_NOTPORTABLE = "InvalidDisk.NotPortable"
 //  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
 //  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEUNAVAILABLE_NOTPORTABLE = "ResourceUnavailable.NotPortable"
@@ -2734,12 +2807,15 @@ func (c *Client) RenewDisk(request *RenewDiskRequest) (response *RenewDiskRespon
 // * 支持与挂载实例一起续费的场景，需要在[DiskChargePrepaid](/document/product/362/15669#DiskChargePrepaid)参数中指定CurInstanceDeadline，此时会按对齐到子机续费后的到期时间来续费。
 //
 // 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_COMPONENTERROR = "InternalError.ComponentError"
 //  INVALIDACCOUNT_INSUFFICIENTBALANCE = "InvalidAccount.InsufficientBalance"
 //  INVALIDDISK_BUSY = "InvalidDisk.Busy"
 //  INVALIDDISK_NOTPORTABLE = "InvalidDisk.NotPortable"
 //  INVALIDDISK_NOTSUPPORTED = "InvalidDisk.NotSupported"
 //  INVALIDDISKID_NOTFOUND = "InvalidDiskId.NotFound"
+//  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEUNAVAILABLE_NOTPORTABLE = "ResourceUnavailable.NotPortable"
@@ -2800,6 +2876,7 @@ func NewResizeDiskResponse() (response *ResizeDiskResponse) {
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+//  RESOURCEUNAVAILABLE_EXPIRE = "ResourceUnavailable.Expire"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
 //  TRADEDEALCONFLICT = "TradeDealConflict"
 //  UNAUTHORIZEDOPERATION_NOTHAVEPAYMENTRIGHT = "UnauthorizedOperation.NotHavePaymentRight"
@@ -2829,6 +2906,7 @@ func (c *Client) ResizeDisk(request *ResizeDiskRequest) (response *ResizeDiskRes
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND_NOTFOUND = "ResourceNotFound.NotFound"
+//  RESOURCEUNAVAILABLE_EXPIRE = "ResourceUnavailable.Expire"
 //  RESOURCEUNAVAILABLE_NOTSUPPORTED = "ResourceUnavailable.NotSupported"
 //  TRADEDEALCONFLICT = "TradeDealConflict"
 //  UNAUTHORIZEDOPERATION_NOTHAVEPAYMENTRIGHT = "UnauthorizedOperation.NotHavePaymentRight"

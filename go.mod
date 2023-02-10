@@ -27,7 +27,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.466
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.520
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.493
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.576
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.539
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.581

@@ -562,6 +562,70 @@ func (r *CreateAutoSnapshotPolicyResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateDiskBackupRequestParams struct {
+	// 要创建备份点的云硬盘名称。
+	DiskId *string `json:"DiskId,omitempty" name:"DiskId"`
+
+	// 云硬盘备份点名称。长度不能超过100个字符。
+	DiskBackupName *string `json:"DiskBackupName,omitempty" name:"DiskBackupName"`
+}
+
+type CreateDiskBackupRequest struct {
+	*tchttp.BaseRequest
+	
+	// 要创建备份点的云硬盘名称。
+	DiskId *string `json:"DiskId,omitempty" name:"DiskId"`
+
+	// 云硬盘备份点名称。长度不能超过100个字符。
+	DiskBackupName *string `json:"DiskBackupName,omitempty" name:"DiskBackupName"`
+}
+
+func (r *CreateDiskBackupRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDiskBackupRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DiskId")
+	delete(f, "DiskBackupName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDiskBackupRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDiskBackupResponseParams struct {
+	// 云硬盘备份点的ID。
+	DiskBackupId *string `json:"DiskBackupId,omitempty" name:"DiskBackupId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateDiskBackupResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateDiskBackupResponseParams `json:"Response"`
+}
+
+func (r *CreateDiskBackupResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDiskBackupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateDisksRequestParams struct {
 	// 实例所在的位置。通过该参数可以指定实例所属可用区，所属项目。若不指定项目，将在默认项目下进行创建。
 	Placement *Placement `json:"Placement,omitempty" name:"Placement"`
@@ -1656,11 +1720,11 @@ type DescribeSnapshotOperationLogsRequestParams struct {
 	// <li>snapshot-id - Array of String - 是否必填：是 - 按快照ID过滤，每个请求最多可指定10个快照ID。
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
-	// 要查询的操作日志的起始时间，例如：“2019-11-22 00:00:00"
-	BeginTime *string `json:"BeginTime,omitempty" name:"BeginTime"`
-
 	// 要查询的操作日志的截止时间，例如：“2019-11-22 23:59:59"
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 要查询的操作日志的起始时间，例如：“2019-11-22 00:00:00"
+	BeginTime *string `json:"BeginTime,omitempty" name:"BeginTime"`
 }
 
 type DescribeSnapshotOperationLogsRequest struct {
@@ -1670,11 +1734,11 @@ type DescribeSnapshotOperationLogsRequest struct {
 	// <li>snapshot-id - Array of String - 是否必填：是 - 按快照ID过滤，每个请求最多可指定10个快照ID。
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
-	// 要查询的操作日志的起始时间，例如：“2019-11-22 00:00:00"
-	BeginTime *string `json:"BeginTime,omitempty" name:"BeginTime"`
-
 	// 要查询的操作日志的截止时间，例如：“2019-11-22 23:59:59"
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 要查询的操作日志的起始时间，例如：“2019-11-22 00:00:00"
+	BeginTime *string `json:"BeginTime,omitempty" name:"BeginTime"`
 }
 
 func (r *DescribeSnapshotOperationLogsRequest) ToJsonString() string {
@@ -1690,8 +1754,8 @@ func (r *DescribeSnapshotOperationLogsRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "Filters")
-	delete(f, "BeginTime")
 	delete(f, "EndTime")
+	delete(f, "BeginTime")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSnapshotOperationLogsRequest has unknown keys!", "")
 	}
@@ -2061,6 +2125,9 @@ type Disk struct {
 
 	// 销毁云盘时删除关联的非永久保留快照。0 表示非永久快照不随云盘销毁而销毁，1表示非永久快照随云盘销毁而销毁，默认取0。快照是否永久保留可以通过DescribeSnapshots接口返回的快照详情的IsPermanent字段来判断，true表示永久快照，false表示非永久快照。
 	DeleteSnapshot *int64 `json:"DeleteSnapshot,omitempty" name:"DeleteSnapshot"`
+
+	// 云硬盘备份点配额。表示最大可以保留的备份点数量。
+	DiskBackupQuota *uint64 `json:"DiskBackupQuota,omitempty" name:"DiskBackupQuota"`
 
 	// 云硬盘备份点已使用的数量。
 	DiskBackupCount *uint64 `json:"DiskBackupCount,omitempty" name:"DiskBackupCount"`
@@ -3001,10 +3068,10 @@ type ModifyDisksChargeTypeRequestParams struct {
 	// 一个或多个待操作的云硬盘ID。每次请求批量云盘上限为100。
 	DiskIds []*string `json:"DiskIds,omitempty" name:"DiskIds"`
 
-	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。
+	// 设置为预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。
 	DiskChargePrepaid *DiskChargePrepaid `json:"DiskChargePrepaid,omitempty" name:"DiskChargePrepaid"`
 
-	// 后付费模式
+	// 设置为后付费模式
 	DiskChargePostpaid *bool `json:"DiskChargePostpaid,omitempty" name:"DiskChargePostpaid"`
 }
 
@@ -3014,10 +3081,10 @@ type ModifyDisksChargeTypeRequest struct {
 	// 一个或多个待操作的云硬盘ID。每次请求批量云盘上限为100。
 	DiskIds []*string `json:"DiskIds,omitempty" name:"DiskIds"`
 
-	// 预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。
+	// 设置为预付费模式，即包年包月相关参数设置。通过该参数可以指定包年包月实例的购买时长、是否设置自动续费等属性。
 	DiskChargePrepaid *DiskChargePrepaid `json:"DiskChargePrepaid,omitempty" name:"DiskChargePrepaid"`
 
-	// 后付费模式
+	// 设置为后付费模式
 	DiskChargePostpaid *bool `json:"DiskChargePostpaid,omitempty" name:"DiskChargePostpaid"`
 }
 
@@ -3300,17 +3367,33 @@ type Policy struct {
 }
 
 type PrepayPrice struct {
-	// 预付费云盘或快照预支费用的原价，单位：元。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	OriginalPrice *float64 `json:"OriginalPrice,omitempty" name:"OriginalPrice"`
-
 	// 预付费云盘或快照预支费用的折扣价，单位：元。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiscountPrice *float64 `json:"DiscountPrice,omitempty" name:"DiscountPrice"`
 
+	// 后付费云盘的计价单元，取值范围：<br><li>HOUR：表示后付费云盘的计价单元是按小时计算。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ChargeUnit *string `json:"ChargeUnit,omitempty" name:"ChargeUnit"`
+
+	// 高精度后付费云盘原单价, 单位：元
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UnitPriceHigh *string `json:"UnitPriceHigh,omitempty" name:"UnitPriceHigh"`
+
 	// 高精度预付费云盘或快照预支费用的原价，单位：元
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	OriginalPriceHigh *string `json:"OriginalPriceHigh,omitempty" name:"OriginalPriceHigh"`
+
+	// 预付费云盘或快照预支费用的原价，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OriginalPrice *float64 `json:"OriginalPrice,omitempty" name:"OriginalPrice"`
+
+	// 后付费云盘折扣单价，单位：元。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UnitPriceDiscount *float64 `json:"UnitPriceDiscount,omitempty" name:"UnitPriceDiscount"`
+
+	// 高精度后付费云盘折扣单价, 单位：元
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UnitPriceDiscountHigh *string `json:"UnitPriceDiscountHigh,omitempty" name:"UnitPriceDiscountHigh"`
 
 	// 高精度预付费云盘或快照预支费用的折扣价，单位：元
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -3319,22 +3402,6 @@ type PrepayPrice struct {
 	// 后付费云盘原单价，单位：元。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UnitPrice *float64 `json:"UnitPrice,omitempty" name:"UnitPrice"`
-
-	// 后付费云盘的计价单元，取值范围：<br><li>HOUR：表示后付费云盘的计价单元是按小时计算。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ChargeUnit *string `json:"ChargeUnit,omitempty" name:"ChargeUnit"`
-
-	// 后付费云盘折扣单价，单位：元。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UnitPriceDiscount *float64 `json:"UnitPriceDiscount,omitempty" name:"UnitPriceDiscount"`
-
-	// 高精度后付费云盘原单价, 单位：元
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UnitPriceHigh *string `json:"UnitPriceHigh,omitempty" name:"UnitPriceHigh"`
-
-	// 高精度后付费云盘折扣单价, 单位：元
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	UnitPriceDiscountHigh *string `json:"UnitPriceDiscountHigh,omitempty" name:"UnitPriceDiscountHigh"`
 }
 
 type Price struct {
@@ -3438,21 +3505,21 @@ func (r *RenewDiskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ResizeDiskRequestParams struct {
-	// 云硬盘ID， 通过[DescribeDisks](/document/product/362/16315)接口查询。
-	DiskId *string `json:"DiskId,omitempty" name:"DiskId"`
-
 	// 云硬盘扩容后的大小，单位为GB，必须大于当前云硬盘大小。云盘大小取值范围参见云硬盘[产品分类](/document/product/362/2353)的说明。
 	DiskSize *uint64 `json:"DiskSize,omitempty" name:"DiskSize"`
+
+	// 云硬盘ID， 通过[DescribeDisks](/document/product/362/16315)接口查询。
+	DiskId *string `json:"DiskId,omitempty" name:"DiskId"`
 }
 
 type ResizeDiskRequest struct {
 	*tchttp.BaseRequest
 	
-	// 云硬盘ID， 通过[DescribeDisks](/document/product/362/16315)接口查询。
-	DiskId *string `json:"DiskId,omitempty" name:"DiskId"`
-
 	// 云硬盘扩容后的大小，单位为GB，必须大于当前云硬盘大小。云盘大小取值范围参见云硬盘[产品分类](/document/product/362/2353)的说明。
 	DiskSize *uint64 `json:"DiskSize,omitempty" name:"DiskSize"`
+
+	// 云硬盘ID， 通过[DescribeDisks](/document/product/362/16315)接口查询。
+	DiskId *string `json:"DiskId,omitempty" name:"DiskId"`
 }
 
 func (r *ResizeDiskRequest) ToJsonString() string {
@@ -3467,8 +3534,8 @@ func (r *ResizeDiskRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "DiskId")
 	delete(f, "DiskSize")
+	delete(f, "DiskId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ResizeDiskRequest has unknown keys!", "")
 	}
@@ -3582,9 +3649,21 @@ type SnapshotCopyResult struct {
 }
 
 type SnapshotOperationLog struct {
+	// 操作的状态。取值范围：
+	// SUCCESS :表示操作成功 
+	// FAILED :表示操作失败 
+	// PROCESSING :表示操作中。
+	OperationState *string `json:"OperationState,omitempty" name:"OperationState"`
+
+	// 开始时间。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
 	// 操作者的UIN。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Operator *string `json:"Operator,omitempty" name:"Operator"`
+
+	// 操作的快照ID。
+	SnapshotId *string `json:"SnapshotId,omitempty" name:"SnapshotId"`
 
 	// 操作类型。取值范围：
 	// SNAP_OPERATION_DELETE：删除快照
@@ -3595,18 +3674,6 @@ type SnapshotOperationLog struct {
 	// ASP_OPERATION_CREATE_SNAP：由定期快照策略创建快照
 	// ASP_OPERATION_DELETE_SNAP：由定期快照策略删除快照
 	Operation *string `json:"Operation,omitempty" name:"Operation"`
-
-	// 操作的快照ID。
-	SnapshotId *string `json:"SnapshotId,omitempty" name:"SnapshotId"`
-
-	// 操作的状态。取值范围：
-	// SUCCESS :表示操作成功 
-	// FAILED :表示操作失败 
-	// PROCESSING :表示操作中。
-	OperationState *string `json:"OperationState,omitempty" name:"OperationState"`
-
-	// 开始时间。
-	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
 	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`

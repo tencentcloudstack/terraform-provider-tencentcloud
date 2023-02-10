@@ -136,6 +136,12 @@ func resourceTencentCloudCbsStorage() *schema.Resource {
 				Default:     0,
 				Description: "Add extra performance to the data disk. Only works when disk type is `CLOUD_TSSD` or `CLOUD_HSSD`.",
 			},
+			"disk_backup_quota": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "The quota of backup points of cloud disk.",
+			},
 			// computed
 			"storage_status": {
 				Type:        schema.TypeString,
@@ -231,6 +237,13 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 	d.SetId(storageId)
+
+	if v, ok := d.GetOk("disk_backup_quota"); ok {
+		err = cbsService.ModifyDiskBackupQuota(ctx, storageId, v.(int))
+		if err != nil {
+			return err
+		}
+	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
@@ -462,6 +475,14 @@ func resourceTencentCloudCbsStorageUpdate(d *schema.ResourceData, meta interface
 		d.SetPartial("throughput_performance")
 	}
 
+	if d.HasChange("disk_backup_quota") {
+		diskBackupQuota := d.Get("disk_backup_quota").(int)
+		err := cbsService.ModifyDiskBackupQuota(ctx, storageId, diskBackupQuota)
+		if err != nil {
+			return err
+		}
+		d.SetPartial("disk_backup_quota")
+	}
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
