@@ -1,3 +1,3 @@
 ```release-note:enhancement
-resource/tencentcloud_kubernetes_node_pool: adjust enhanced_security_service to not forceNew.
+resource/tencentcloud_kubernetes_node_pool: adjust enhanced_security_service to not forceNew
 ```

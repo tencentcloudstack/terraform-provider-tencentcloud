@@ -2391,7 +2391,6 @@ func (me *TkeService) ModifyClusterVirtualNodePool(ctx context.Context, request 
 	return
 }
 
-<<<<<<< HEAD
 func (me *TkeService) DescribeClusterVirtualNode(ctx context.Context, clusterId string) (virtualNodes []tke.VirtualNode, errRet error) {
 	logId := getLogId(ctx)
 
@@ -2442,8 +2441,14 @@ func ModifySecurityServiceOfCvmInNodePool(ctx context.Context, d *schema.Resourc
 		}
 
 		const BatchProcessedInsLimit = 100 // limit 100 items to change each request
-		launchConfigRaw := d.Get("auto_scaling_config").([]interface{})
-		dMap := launchConfigRaw[0].(map[string]interface{})
+		var (
+			launchConfigRaw []interface{}
+			dMap            map[string]interface{}
+		)
+		if raw, ok := d.GetOk("auto_scaling_config"); ok {
+			launchConfigRaw = raw.([]interface{})
+			dMap = launchConfigRaw[0].(map[string]interface{})
+		}
 
 		if v, ok := dMap["enhanced_security_service"]; ok && !v.(bool) {
 			// uninstall, cwp/DeleteMachine, need uuid
