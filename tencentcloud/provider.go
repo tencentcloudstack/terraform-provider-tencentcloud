@@ -942,6 +942,7 @@ Tencent Service Framework(TSF)
 Media Processing Service(MPS)
   Resource
 	tencentcloud_mps_workflow
+	tencentcloud_mps_transcode_template
 
 */
 package tencentcloud
@@ -1679,6 +1680,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_lane":                                   resourceTencentCloudTsfLane(),
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
+			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_cbs_disk_backup":                            resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":              resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":         resourceTencentCloudCbsDiskBackupRollbackOperation(),
