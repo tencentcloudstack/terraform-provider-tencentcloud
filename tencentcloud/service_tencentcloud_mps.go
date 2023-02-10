@@ -114,3 +114,56 @@ func (me *MpsService) DisableWorkflow(ctx context.Context, workflowId int64) (er
 
 	return
 }
+
+func (me *MpsService) DescribeMpsTranscodeTemplateById(ctx context.Context, definition string) (transcodeTemplate *mps.TranscodeTemplate, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribeTranscodeTemplatesRequest()
+	request.Definitions = []*int64{helper.StrToInt64Point(definition)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribeTranscodeTemplates(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.TranscodeTemplateSet) < 1 {
+		return
+	}
+
+	transcodeTemplate = response.Response.TranscodeTemplateSet[0]
+	return
+}
+
+func (me *MpsService) DeleteMpsTranscodeTemplateById(ctx context.Context, definition string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDeleteTranscodeTemplateRequest()
+	request.Definition = helper.StrToInt64Point(definition)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DeleteTranscodeTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
