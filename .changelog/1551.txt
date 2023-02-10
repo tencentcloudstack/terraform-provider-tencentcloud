@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_vpc_bandwidth_package: Support internet_max_bandwidth field
+```
