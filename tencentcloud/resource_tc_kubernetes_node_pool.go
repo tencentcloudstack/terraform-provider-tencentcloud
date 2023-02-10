@@ -153,8 +153,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
-	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -1388,73 +1386,77 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 			return err
 		}
 
-		// step 2: change existed cvm security service if necessary
-		workersInsIdOfNodePool := make([]string, 0)
-		_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
-		if err != nil {
+		// change existed cvm security service if necessary
+		if err := ModifySecurityServiceOfCvmInNodePool(ctx, d, &service, &cvmService, client, clusterId, *nodePool.NodePoolId); err != nil {
 			return err
 		}
-		for _, worker := range workers {
-			if worker.NodePoolId != "" && worker.NodePoolId == *nodePool.NodePoolId {
-				workersInsIdOfNodePool = append(workersInsIdOfNodePool, worker.InstanceId)
-			}
-		}
 
-		if d.HasChange("auto_scaling_config.0.enhanced_security_service") {
-			const BatchProcessedInsLimit = 100 // limit 100 items to change each request
-			launchConfigRaw := d.Get("auto_scaling_config").([]interface{})
-			dMap := launchConfigRaw[0].(map[string]interface{})
+		//workersInsIdOfNodePool := make([]string, 0)
+		//_, workers, err := service.DescribeClusterInstances(ctx, clusterId)
+		//if err != nil {
+		//	return err
+		//}
+		//for _, worker := range workers {
+		//	if worker.NodePoolId != "" && worker.NodePoolId == *nodePool.NodePoolId {
+		//		workersInsIdOfNodePool = append(workersInsIdOfNodePool, worker.InstanceId)
+		//	}
+		//}
 
-			if v, ok := dMap["enhanced_security_service"]; ok && !v.(bool) {
-				// uninstall, cwp/DeleteMachine, need uuid
-				// https://cloud.tencent.com/document/product/296/19844
-				for i := 0; i < len(workersInsIdOfNodePool); i += BatchProcessedInsLimit {
-					var reqInstanceIds []string
-					if i+BatchProcessedInsLimit <= len(workersInsIdOfNodePool) {
-						reqInstanceIds = workersInsIdOfNodePool[i : i+BatchProcessedInsLimit]
-					} else {
-						reqInstanceIds = workersInsIdOfNodePool[i:]
-					}
-					// get uuid
-					instanceSet, err := cvmService.DescribeInstanceSetByIds(ctx, helper.StrListToStr(helper.StringsStringsPoint(reqInstanceIds)))
-					if err != nil {
-						return err
-					}
-					// call cwp/DeleteMachine
-					for _, ins := range instanceSet {
-						requestDeleteMachine := cwp.NewDeleteMachineRequest()
-						requestDeleteMachine.Uuid = ins.Uuid
-						if _, err := client.UseCwpClient().DeleteMachine(requestDeleteMachine); err != nil {
-							return err
-						}
-					}
-				}
-			} else {
-				// default is true, install security agent
-				// tat/InvokeCommand, CommandId=cmd-d8jj2skv, instanceId is enough
-				// https://cloud.tencent.com/document/product/1340/52678
-				for i := 0; i < len(workersInsIdOfNodePool); i += BatchProcessedInsLimit {
-					var reqInstanceIds []string
-					if i+BatchProcessedInsLimit <= len(workersInsIdOfNodePool) {
-						reqInstanceIds = workersInsIdOfNodePool[i : i+BatchProcessedInsLimit]
-					} else {
-						reqInstanceIds = workersInsIdOfNodePool[i:]
-					}
-					requestInvokeCommand := tat.NewInvokeCommandRequest()
-					requestInvokeCommand.InstanceIds = helper.StringsStringsPoint(reqInstanceIds)
-					requestInvokeCommand.CommandId = helper.String(InstallSecurityAgentCommandId)
-					requestInvokeCommand.Parameters = helper.String("{}")
-					requestInvokeCommand.Timeout = helper.Uint64(60)
-					_, err := client.UseTatClient().InvokeCommand(requestInvokeCommand)
-					if err != nil {
-						log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-							logId, request.GetAction(), request.ToJsonString(), err.Error())
-						return err
-					}
-				}
-
-			}
-		}
+		//if d.HasChange("auto_scaling_config.0.enhanced_security_service") {
+		//	const BatchProcessedInsLimit = 100 // limit 100 items to change each request
+		//	launchConfigRaw := d.Get("auto_scaling_config").([]interface{})
+		//	dMap := launchConfigRaw[0].(map[string]interface{})
+		//
+		//	if v, ok := dMap["enhanced_security_service"]; ok && !v.(bool) {
+		//		// uninstall, cwp/DeleteMachine, need uuid
+		//		// https://cloud.tencent.com/document/product/296/19844
+		//		for i := 0; i < len(workersInsIdOfNodePool); i += BatchProcessedInsLimit {
+		//			var reqInstanceIds []string
+		//			if i+BatchProcessedInsLimit <= len(workersInsIdOfNodePool) {
+		//				reqInstanceIds = workersInsIdOfNodePool[i : i+BatchProcessedInsLimit]
+		//			} else {
+		//				reqInstanceIds = workersInsIdOfNodePool[i:]
+		//			}
+		//			// get uuid
+		//			instanceSet, err := cvmService.DescribeInstanceSetByIds(ctx, helper.StrListToStr(helper.StringsStringsPoint(reqInstanceIds)))
+		//			if err != nil {
+		//				return err
+		//			}
+		//			// call cwp/DeleteMachine
+		//			for _, ins := range instanceSet {
+		//				requestDeleteMachine := cwp.NewDeleteMachineRequest()
+		//				requestDeleteMachine.Uuid = ins.Uuid
+		//				if _, err := client.UseCwpClient().DeleteMachine(requestDeleteMachine); err != nil {
+		//					return err
+		//				}
+		//			}
+		//		}
+		//	} else {
+		//		// default is true, install security agent
+		//		// tat/InvokeCommand, CommandId=cmd-d8jj2skv, instanceId is enough
+		//		// https://cloud.tencent.com/document/product/1340/52678
+		//		for i := 0; i < len(workersInsIdOfNodePool); i += BatchProcessedInsLimit {
+		//			var reqInstanceIds []string
+		//			if i+BatchProcessedInsLimit <= len(workersInsIdOfNodePool) {
+		//				reqInstanceIds = workersInsIdOfNodePool[i : i+BatchProcessedInsLimit]
+		//			} else {
+		//				reqInstanceIds = workersInsIdOfNodePool[i:]
+		//			}
+		//			requestInvokeCommand := tat.NewInvokeCommandRequest()
+		//			requestInvokeCommand.InstanceIds = helper.StringsStringsPoint(reqInstanceIds)
+		//			requestInvokeCommand.CommandId = helper.String(InstallSecurityAgentCommandId)
+		//			requestInvokeCommand.Parameters = helper.String("{}")
+		//			requestInvokeCommand.Timeout = helper.Uint64(60)
+		//			_, err := client.UseTatClient().InvokeCommand(requestInvokeCommand)
+		//			if err != nil {
+		//				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+		//					logId, request.GetAction(), request.ToJsonString(), err.Error())
+		//				return err
+		//			}
+		//		}
+		//
+		//	}
+		//}
 		d.SetPartial("auto_scaling_config")
 	}
 
