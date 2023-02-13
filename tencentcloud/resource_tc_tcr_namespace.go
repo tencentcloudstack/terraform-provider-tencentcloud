@@ -216,7 +216,7 @@ func resourceTencentCloudTcrNamespaceRead(d *schema.ResourceData, meta interface
 	_ = d.Set("name", namespace.Name)
 	_ = d.Set("is_public", namespace.Public)
 	_ = d.Set("instance_id", instanceId)
-	_ = d.Set("isAutoScan", namespace.AutoScan)
+	_ = d.Set("is_auto_scan", namespace.AutoScan)
 	_ = d.Set("is_prevent_vul", namespace.PreventVUL)
 	_ = d.Set("severity", namespace.Severity)
 
