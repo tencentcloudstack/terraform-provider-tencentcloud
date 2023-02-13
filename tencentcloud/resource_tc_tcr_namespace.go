@@ -68,13 +68,15 @@ func resourceTencentCloudTcrNamespace() *schema.Resource {
 			"is_auto_scan": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "Scanning level, `True` is automatic, `False` is manual.",
+				Default:     false,
+				Description: "Scanning level, `True` is automatic, `False` is manual. Default is `false`.",
 			},
 
 			"is_prevent_vul": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "Blocking switch, `True` is open, `False` is closed.",
+				Default:     false,
+				Description: "Blocking switch, `True` is open, `False` is closed. Default is `false`.",
 			},
 
 			"severity": {

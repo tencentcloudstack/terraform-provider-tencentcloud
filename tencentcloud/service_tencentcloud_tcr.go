@@ -267,7 +267,9 @@ func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string,
 	request.NamespaceName = &name
 	request.IsAutoScan = &isAutoScan
 	request.IsPreventVUL = &isPreventVUL
-	request.Severity = &severity
+	if severity != "" {
+		request.Severity = &severity
+	}
 
 	if len(whitelistItems) > 0 {
 		for _, item := range whitelistItems {
@@ -321,7 +323,9 @@ func (me *TCRService) ModifyTCRNameSpace(ctx context.Context, instanceId string,
 	request.IsPublic = &isPublic
 	request.IsAutoScan = &isAutoScan
 	request.IsPreventVUL = &isPreventVUL
-	request.Severity = &severity
+	if severity != "" {
+		request.Severity = &severity
+	}
 
 	if len(whitelistItems) > 0 {
 		for _, item := range whitelistItems {
