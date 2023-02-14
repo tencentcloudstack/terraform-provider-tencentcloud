@@ -50,7 +50,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
+func TestAccTencentCloudTkeClusterResourceBasic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -102,7 +102,7 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudKubernetesClusterResourceLogsAddons(t *testing.T) {
+func TestAccTencentCloudTkeClusterResourceLogsAddons(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

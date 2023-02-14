@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudKubernetesChartsDataSource(t *testing.T) {
+func TestAccTencentCloudTkeChartsDataSource(t *testing.T) {
 	t.Parallel()
 	dataSourceName := "data.tencentcloud_kubernetes_charts.test"
 
