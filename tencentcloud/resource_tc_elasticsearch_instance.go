@@ -407,6 +407,20 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		}
 	}
 
+	var tags map[string]string
+	if tags = helper.GetTags(d, "tags"); len(tags) > 0 {
+		if billingService.isYunTiAccount() {
+			request.TagList = make([]*es.TagInfo, 0, len(tags))
+			for k, v := range tags {
+				tagInfo := &es.TagInfo{
+					TagKey:   helper.String(k),
+					TagValue: helper.String(v),
+				}
+				request.TagList = append(request.TagList, tagInfo)
+			}
+		}
+	}
+
 	instanceId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -441,7 +455,7 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 	d.SetId(instanceId)
 
 	// set tag before query the instance
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+	if len(tags) > 0 {
 		// resourceName := fmt.Sprintf("qcs::es:%s:uin/:instance/%s", region, instanceId)
 		resourceName := BuildTagResourceName("es", "instance", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
