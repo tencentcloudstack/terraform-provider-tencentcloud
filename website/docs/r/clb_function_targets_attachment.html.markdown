@@ -47,7 +47,7 @@ The following arguments are supported:
 The `function_targets` object supports the following:
 
 * `function` - (Required, List) Information about cloud functions.&quot;Note: This field may return null, indicating that no valid value can be obtained.
-* `weight` - (Optional, Int) Weight.
+* `weight` - (Optional, Int) Weight. The default is `10`.
 
 The `function` object supports the following:
 

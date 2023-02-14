@@ -109,8 +109,9 @@ func resourceTencentCloudClbFunctionTargetsAttachment() *schema.Resource {
 						},
 						"weight": {
 							Type:        schema.TypeInt,
+							Default:     10,
 							Optional:    true,
-							Description: "Weight.",
+							Description: "Weight. The default is `10`.",
 						},
 					},
 				},

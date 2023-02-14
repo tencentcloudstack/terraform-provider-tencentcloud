@@ -39,7 +39,7 @@ resource "tencentcloud_clb_function_targets_attachment" "function_targets" {
     weight = 10
 
     function {
-      function_name           = "keep-tf-test-1675954233"
+      function_name           = "keep-1676351130"
       function_namespace      = "default"
       function_qualifier      = "$LATEST"
       function_qualifier_type = "VERSION"
