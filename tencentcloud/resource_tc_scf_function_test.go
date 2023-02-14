@@ -44,6 +44,9 @@ func init() {
 					createTime := stringTotime(*fun.AddTime)
 					now := time.Now()
 					interval := now.Sub(createTime).Minutes()
+					if strings.HasPrefix(*fun.FunctionName, keepResource) || strings.HasPrefix(*fun.FunctionName, defaultResource) {
+						continue
+					}
 					// less than 30 minute, not delete
 					if needProtect == 1 && int64(interval) < 30 {
 						continue
