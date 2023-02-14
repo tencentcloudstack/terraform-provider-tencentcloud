@@ -120,3 +120,7 @@ var TKE_ADDON_DEFAULT_VALUES_KEY = []string{
 	"global.cluster.kubeversion",
 	"global.cluster.kubeminor",
 }
+
+const (
+	InstallSecurityAgentCommandId = "cmd-d8jj2skv"
+)

@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_cbs_storage: support disk_backup_quota param
+```
+
+```release-note:new-resource
+tencentcloud_cbs_disk_backup
+```
+
+```release-note:new-resource
+tencentcloud_cbs_snapshot_share_permission
+```
+
+```release-note:new-resource
+tencentcloud_cbs_disk_backup_rollback_operation
+```

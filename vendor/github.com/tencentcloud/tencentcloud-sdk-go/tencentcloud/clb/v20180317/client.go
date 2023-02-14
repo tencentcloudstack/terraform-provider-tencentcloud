@@ -49,6 +49,7 @@ func NewAssociateTargetGroupsRequest() (request *AssociateTargetGroupsRequest) {
     request = &AssociateTargetGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "AssociateTargetGroups")
     
     
@@ -110,6 +111,7 @@ func NewAutoRewriteRequest() (request *AutoRewriteRequest) {
     request = &AutoRewriteRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "AutoRewrite")
     
     
@@ -191,6 +193,7 @@ func NewBatchDeregisterTargetsRequest() (request *BatchDeregisterTargetsRequest)
     request = &BatchDeregisterTargetsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "BatchDeregisterTargets")
     
     
@@ -270,6 +273,7 @@ func NewBatchModifyTargetWeightRequest() (request *BatchModifyTargetWeightReques
     request = &BatchModifyTargetWeightRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "BatchModifyTargetWeight")
     
     
@@ -329,6 +333,7 @@ func NewBatchRegisterTargetsRequest() (request *BatchRegisterTargetsRequest) {
     request = &BatchRegisterTargetsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "BatchRegisterTargets")
     
     
@@ -406,6 +411,7 @@ func NewCloneLoadBalancerRequest() (request *CloneLoadBalancerRequest) {
     request = &CloneLoadBalancerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "CloneLoadBalancer")
     
     
@@ -539,6 +545,7 @@ func NewCreateClsLogSetRequest() (request *CreateClsLogSetRequest) {
     request = &CreateClsLogSetRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "CreateClsLogSet")
     
     
@@ -602,6 +609,7 @@ func NewCreateListenerRequest() (request *CreateListenerRequest) {
     request = &CreateListenerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "CreateListener")
     
     
@@ -673,6 +681,7 @@ func NewCreateLoadBalancerRequest() (request *CreateLoadBalancerRequest) {
     request = &CreateLoadBalancerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "CreateLoadBalancer")
     
     
@@ -750,6 +759,7 @@ func NewCreateLoadBalancerSnatIpsRequest() (request *CreateLoadBalancerSnatIpsRe
     request = &CreateLoadBalancerSnatIpsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "CreateLoadBalancerSnatIps")
     
     
@@ -776,6 +786,7 @@ func NewCreateLoadBalancerSnatIpsResponse() (response *CreateLoadBalancerSnatIps
 //  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
 //  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 //  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) CreateLoadBalancerSnatIps(request *CreateLoadBalancerSnatIpsRequest) (response *CreateLoadBalancerSnatIpsResponse, err error) {
     return c.CreateLoadBalancerSnatIpsWithContext(context.Background(), request)
@@ -794,6 +805,7 @@ func (c *Client) CreateLoadBalancerSnatIps(request *CreateLoadBalancerSnatIpsReq
 //  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
 //  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 //  LIMITEXCEEDED = "LimitExceeded"
 func (c *Client) CreateLoadBalancerSnatIpsWithContext(ctx context.Context, request *CreateLoadBalancerSnatIpsRequest) (response *CreateLoadBalancerSnatIpsResponse, err error) {
     if request == nil {
@@ -815,6 +827,7 @@ func NewCreateRuleRequest() (request *CreateRuleRequest) {
     request = &CreateRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "CreateRule")
     
     
@@ -884,6 +897,7 @@ func NewCreateTargetGroupRequest() (request *CreateTargetGroupRequest) {
     request = &CreateTargetGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "CreateTargetGroup")
     
     
@@ -941,6 +955,7 @@ func NewCreateTopicRequest() (request *CreateTopicRequest) {
     request = &CreateTopicRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "CreateTopic")
     
     
@@ -1010,6 +1025,7 @@ func NewDeleteListenerRequest() (request *DeleteListenerRequest) {
     request = &DeleteListenerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DeleteListener")
     
     
@@ -1073,6 +1089,7 @@ func NewDeleteLoadBalancerRequest() (request *DeleteLoadBalancerRequest) {
     request = &DeleteLoadBalancerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DeleteLoadBalancer")
     
     
@@ -1142,6 +1159,7 @@ func NewDeleteLoadBalancerListenersRequest() (request *DeleteLoadBalancerListene
     request = &DeleteLoadBalancerListenersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DeleteLoadBalancerListeners")
     
     
@@ -1207,6 +1225,7 @@ func NewDeleteLoadBalancerSnatIpsRequest() (request *DeleteLoadBalancerSnatIpsRe
     request = &DeleteLoadBalancerSnatIpsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DeleteLoadBalancerSnatIps")
     
     
@@ -1270,6 +1289,7 @@ func NewDeleteRewriteRequest() (request *DeleteRewriteRequest) {
     request = &DeleteRewriteRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DeleteRewrite")
     
     
@@ -1343,6 +1363,7 @@ func NewDeleteRuleRequest() (request *DeleteRuleRequest) {
     request = &DeleteRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DeleteRule")
     
     
@@ -1406,6 +1427,7 @@ func NewDeleteTargetGroupsRequest() (request *DeleteTargetGroupsRequest) {
     request = &DeleteTargetGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DeleteTargetGroups")
     
     
@@ -1457,10 +1479,121 @@ func (c *Client) DeleteTargetGroupsWithContext(ctx context.Context, request *Del
     return
 }
 
+func NewDeregisterFunctionTargetsRequest() (request *DeregisterFunctionTargetsRequest) {
+    request = &DeregisterFunctionTargetsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "DeregisterFunctionTargets")
+    
+    
+    return
+}
+
+func NewDeregisterFunctionTargetsResponse() (response *DeregisterFunctionTargetsResponse) {
+    response = &DeregisterFunctionTargetsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeregisterFunctionTargets
+// DeregisterFunctionTargets 接口用来将一个云函数从负载均衡的转发规则上解绑，对于七层监听器，还需通过 LocationId 或 Domain+Url 指定转发规则。
+//
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+//
+// <br/>限制说明：
+//
+// 
+//
+// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、孟买、东京、硅谷地域支持绑定 SCF。
+//
+// - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。
+//
+// - 传统型负载均衡不支持绑定 SCF。
+//
+// - 基础网络类型不支持绑定 SCF。
+//
+// - CLB 默认支持绑定同地域下的所有 SCF，可支持跨 VPC 绑定 SCF，不支持跨地域绑定。
+//
+// - 目前仅 IPv4、IPv6 NAT64 版本的负载均衡支持绑定 SCF，IPv6 版本的暂不支持。
+//
+// - 仅七层（HTTP、HTTPS）监听器支持绑定 SCF，四层（TCP、UDP、TCP SSL）监听器和七层 QUIC 监听器不支持。
+//
+// - CLB 绑定 SCF 仅支持绑定“Event 函数”类型的云函数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeregisterFunctionTargets(request *DeregisterFunctionTargetsRequest) (response *DeregisterFunctionTargetsResponse, err error) {
+    return c.DeregisterFunctionTargetsWithContext(context.Background(), request)
+}
+
+// DeregisterFunctionTargets
+// DeregisterFunctionTargets 接口用来将一个云函数从负载均衡的转发规则上解绑，对于七层监听器，还需通过 LocationId 或 Domain+Url 指定转发规则。
+//
+// 本接口为异步接口，本接口返回成功后需以返回的 RequestID 为入参，调用 [DescribeTaskStatus](https://cloud.tencent.com/document/product/214/30683) 接口查询本次任务是否成功。
+//
+// <br/>限制说明：
+//
+// 
+//
+// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、孟买、东京、硅谷地域支持绑定 SCF。
+//
+// - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。
+//
+// - 传统型负载均衡不支持绑定 SCF。
+//
+// - 基础网络类型不支持绑定 SCF。
+//
+// - CLB 默认支持绑定同地域下的所有 SCF，可支持跨 VPC 绑定 SCF，不支持跨地域绑定。
+//
+// - 目前仅 IPv4、IPv6 NAT64 版本的负载均衡支持绑定 SCF，IPv6 版本的暂不支持。
+//
+// - 仅七层（HTTP、HTTPS）监听器支持绑定 SCF，四层（TCP、UDP、TCP SSL）监听器和七层 QUIC 监听器不支持。
+//
+// - CLB 绑定 SCF 仅支持绑定“Event 函数”类型的云函数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) DeregisterFunctionTargetsWithContext(ctx context.Context, request *DeregisterFunctionTargetsRequest) (response *DeregisterFunctionTargetsResponse, err error) {
+    if request == nil {
+        request = NewDeregisterFunctionTargetsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeregisterFunctionTargets require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeregisterFunctionTargetsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeregisterTargetGroupInstancesRequest() (request *DeregisterTargetGroupInstancesRequest) {
     request = &DeregisterTargetGroupInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DeregisterTargetGroupInstances")
     
     
@@ -1520,6 +1653,7 @@ func NewDeregisterTargetsRequest() (request *DeregisterTargetsRequest) {
     request = &DeregisterTargetsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DeregisterTargets")
     
     
@@ -1587,6 +1721,7 @@ func NewDeregisterTargetsFromClassicalLBRequest() (request *DeregisterTargetsFro
     request = &DeregisterTargetsFromClassicalLBRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DeregisterTargetsFromClassicalLB")
     
     
@@ -1650,6 +1785,7 @@ func NewDescribeBlockIPListRequest() (request *DescribeBlockIPListRequest) {
     request = &DescribeBlockIPListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeBlockIPList")
     
     
@@ -1709,6 +1845,7 @@ func NewDescribeBlockIPTaskRequest() (request *DescribeBlockIPTaskRequest) {
     request = &DescribeBlockIPTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeBlockIPTask")
     
     
@@ -1760,6 +1897,7 @@ func NewDescribeClassicalLBByInstanceIdRequest() (request *DescribeClassicalLBBy
     request = &DescribeClassicalLBByInstanceIdRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeClassicalLBByInstanceId")
     
     
@@ -1823,6 +1961,7 @@ func NewDescribeClassicalLBHealthStatusRequest() (request *DescribeClassicalLBHe
     request = &DescribeClassicalLBHealthStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeClassicalLBHealthStatus")
     
     
@@ -1886,6 +2025,7 @@ func NewDescribeClassicalLBListenersRequest() (request *DescribeClassicalLBListe
     request = &DescribeClassicalLBListenersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeClassicalLBListeners")
     
     
@@ -1951,6 +2091,7 @@ func NewDescribeClassicalLBTargetsRequest() (request *DescribeClassicalLBTargets
     request = &DescribeClassicalLBTargetsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeClassicalLBTargets")
     
     
@@ -2014,6 +2155,7 @@ func NewDescribeClsLogSetRequest() (request *DescribeClsLogSetRequest) {
     request = &DescribeClsLogSetRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeClsLogSet")
     
     
@@ -2067,6 +2209,7 @@ func NewDescribeClusterResourcesRequest() (request *DescribeClusterResourcesRequ
     request = &DescribeClusterResourcesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeClusterResources")
     
     
@@ -2130,6 +2273,7 @@ func NewDescribeCrossTargetsRequest() (request *DescribeCrossTargetsRequest) {
     request = &DescribeCrossTargetsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeCrossTargets")
     
     
@@ -2193,6 +2337,7 @@ func NewDescribeCustomizedConfigAssociateListRequest() (request *DescribeCustomi
     request = &DescribeCustomizedConfigAssociateListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeCustomizedConfigAssociateList")
     
     
@@ -2254,6 +2399,7 @@ func NewDescribeCustomizedConfigListRequest() (request *DescribeCustomizedConfig
     request = &DescribeCustomizedConfigListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeCustomizedConfigList")
     
     
@@ -2285,6 +2431,7 @@ func NewDescribeCustomizedConfigListResponse() (response *DescribeCustomizedConf
 //  INVALIDPARAMETER_SOMEREWRITENOTFOUND = "InvalidParameter.SomeRewriteNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 //  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -2312,6 +2459,7 @@ func (c *Client) DescribeCustomizedConfigList(request *DescribeCustomizedConfigL
 //  INVALIDPARAMETER_SOMEREWRITENOTFOUND = "InvalidParameter.SomeRewriteNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 //  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -2337,6 +2485,7 @@ func NewDescribeExclusiveClustersRequest() (request *DescribeExclusiveClustersRe
     request = &DescribeExclusiveClustersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeExclusiveClusters")
     
     
@@ -2396,10 +2545,83 @@ func (c *Client) DescribeExclusiveClustersWithContext(ctx context.Context, reque
     return
 }
 
+func NewDescribeIdleLoadBalancersRequest() (request *DescribeIdleLoadBalancersRequest) {
+    request = &DescribeIdleLoadBalancersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "DescribeIdleLoadBalancers")
+    
+    
+    return
+}
+
+func NewDescribeIdleLoadBalancersResponse() (response *DescribeIdleLoadBalancersResponse) {
+    response = &DescribeIdleLoadBalancersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeIdleLoadBalancers
+// 闲置实例是指创建超过7天后付费实例，且没有创建规则或创建规则没有绑定子机的负载均衡实例。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  INVALIDPARAMETER_PORTCHECKFAILED = "InvalidParameter.PortCheckFailed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+func (c *Client) DescribeIdleLoadBalancers(request *DescribeIdleLoadBalancersRequest) (response *DescribeIdleLoadBalancersResponse, err error) {
+    return c.DescribeIdleLoadBalancersWithContext(context.Background(), request)
+}
+
+// DescribeIdleLoadBalancers
+// 闲置实例是指创建超过7天后付费实例，且没有创建规则或创建规则没有绑定子机的负载均衡实例。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  DRYRUNOPERATION = "DryRunOperation"
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_INVALIDLBSTATUS = "FailedOperation.InvalidLBStatus"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  INVALIDPARAMETER_PORTCHECKFAILED = "InvalidParameter.PortCheckFailed"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+func (c *Client) DescribeIdleLoadBalancersWithContext(ctx context.Context, request *DescribeIdleLoadBalancersRequest) (response *DescribeIdleLoadBalancersResponse, err error) {
+    if request == nil {
+        request = NewDescribeIdleLoadBalancersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeIdleLoadBalancers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeIdleLoadBalancersResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeLBListenersRequest() (request *DescribeLBListenersRequest) {
     request = &DescribeLBListenersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeLBListeners")
     
     
@@ -2465,6 +2687,7 @@ func NewDescribeListenersRequest() (request *DescribeListenersRequest) {
     request = &DescribeListenersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeListeners")
     
     
@@ -2487,6 +2710,7 @@ func NewDescribeListenersResponse() (response *DescribeListenersResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 //  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
@@ -2504,6 +2728,7 @@ func (c *Client) DescribeListeners(request *DescribeListenersRequest) (response 
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 //  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
@@ -2528,6 +2753,7 @@ func NewDescribeLoadBalancerListByCertIdRequest() (request *DescribeLoadBalancer
     request = &DescribeLoadBalancerListByCertIdRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeLoadBalancerListByCertId")
     
     
@@ -2587,6 +2813,7 @@ func NewDescribeLoadBalancerOverviewRequest() (request *DescribeLoadBalancerOver
     request = &DescribeLoadBalancerOverviewRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeLoadBalancerOverview")
     
     
@@ -2644,6 +2871,7 @@ func NewDescribeLoadBalancerTrafficRequest() (request *DescribeLoadBalancerTraff
     request = &DescribeLoadBalancerTrafficRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeLoadBalancerTraffic")
     
     
@@ -2699,6 +2927,7 @@ func NewDescribeLoadBalancersRequest() (request *DescribeLoadBalancersRequest) {
     request = &DescribeLoadBalancersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeLoadBalancers")
     
     
@@ -2720,6 +2949,7 @@ func NewDescribeLoadBalancersResponse() (response *DescribeLoadBalancersResponse
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 //  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
@@ -2738,6 +2968,7 @@ func (c *Client) DescribeLoadBalancers(request *DescribeLoadBalancersRequest) (r
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 //  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
@@ -2764,6 +2995,7 @@ func NewDescribeLoadBalancersDetailRequest() (request *DescribeLoadBalancersDeta
     request = &DescribeLoadBalancersDetailRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeLoadBalancersDetail")
     
     
@@ -2827,6 +3059,7 @@ func NewDescribeQuotaRequest() (request *DescribeQuotaRequest) {
     request = &DescribeQuotaRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeQuota")
     
     
@@ -2876,6 +3109,7 @@ func NewDescribeResourcesRequest() (request *DescribeResourcesRequest) {
     request = &DescribeResourcesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeResources")
     
     
@@ -2939,6 +3173,7 @@ func NewDescribeRewriteRequest() (request *DescribeRewriteRequest) {
     request = &DescribeRewriteRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeRewrite")
     
     
@@ -3006,6 +3241,7 @@ func NewDescribeTargetGroupInstancesRequest() (request *DescribeTargetGroupInsta
     request = &DescribeTargetGroupInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeTargetGroupInstances")
     
     
@@ -3061,6 +3297,7 @@ func NewDescribeTargetGroupListRequest() (request *DescribeTargetGroupListReques
     request = &DescribeTargetGroupListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeTargetGroupList")
     
     
@@ -3116,6 +3353,7 @@ func NewDescribeTargetGroupsRequest() (request *DescribeTargetGroupsRequest) {
     request = &DescribeTargetGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeTargetGroups")
     
     
@@ -3171,6 +3409,7 @@ func NewDescribeTargetHealthRequest() (request *DescribeTargetHealthRequest) {
     request = &DescribeTargetHealthRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeTargetHealth")
     
     
@@ -3234,6 +3473,7 @@ func NewDescribeTargetsRequest() (request *DescribeTargetsRequest) {
     request = &DescribeTargetsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeTargets")
     
     
@@ -3297,6 +3537,7 @@ func NewDescribeTaskStatusRequest() (request *DescribeTaskStatusRequest) {
     request = &DescribeTaskStatusRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DescribeTaskStatus")
     
     
@@ -3317,6 +3558,7 @@ func NewDescribeTaskStatusResponse() (response *DescribeTaskStatusResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
 func (c *Client) DescribeTaskStatus(request *DescribeTaskStatusRequest) (response *DescribeTaskStatusResponse, err error) {
     return c.DescribeTaskStatusWithContext(context.Background(), request)
 }
@@ -3328,6 +3570,7 @@ func (c *Client) DescribeTaskStatus(request *DescribeTaskStatusRequest) (respons
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_REGIONNOTFOUND = "InvalidParameter.RegionNotFound"
 func (c *Client) DescribeTaskStatusWithContext(ctx context.Context, request *DescribeTaskStatusRequest) (response *DescribeTaskStatusResponse, err error) {
     if request == nil {
         request = NewDescribeTaskStatusRequest()
@@ -3348,6 +3591,7 @@ func NewDisassociateTargetGroupsRequest() (request *DisassociateTargetGroupsRequ
     request = &DisassociateTargetGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "DisassociateTargetGroups")
     
     
@@ -3407,6 +3651,7 @@ func NewManualRewriteRequest() (request *ManualRewriteRequest) {
     request = &ManualRewriteRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ManualRewrite")
     
     
@@ -3488,6 +3733,7 @@ func NewMigrateClassicalLoadBalancersRequest() (request *MigrateClassicalLoadBal
     request = &MigrateClassicalLoadBalancersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "MigrateClassicalLoadBalancers")
     
     
@@ -3551,6 +3797,7 @@ func NewModifyBlockIPListRequest() (request *ModifyBlockIPListRequest) {
     request = &ModifyBlockIPListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyBlockIPList")
     
     
@@ -3616,6 +3863,7 @@ func NewModifyDomainRequest() (request *ModifyDomainRequest) {
     request = &ModifyDomainRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyDomain")
     
     
@@ -3679,6 +3927,7 @@ func NewModifyDomainAttributesRequest() (request *ModifyDomainAttributesRequest)
     request = &ModifyDomainAttributesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyDomainAttributes")
     
     
@@ -3746,6 +3995,7 @@ func NewModifyListenerRequest() (request *ModifyListenerRequest) {
     request = &ModifyListenerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyListener")
     
     
@@ -3811,6 +4061,7 @@ func NewModifyLoadBalancerAttributesRequest() (request *ModifyLoadBalancerAttrib
     request = &ModifyLoadBalancerAttributesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyLoadBalancerAttributes")
     
     
@@ -3886,6 +4137,7 @@ func NewModifyLoadBalancerMixIpTargetRequest() (request *ModifyLoadBalancerMixIp
     request = &ModifyLoadBalancerMixIpTargetRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyLoadBalancerMixIpTarget")
     
     
@@ -3953,6 +4205,7 @@ func NewModifyLoadBalancerSlaRequest() (request *ModifyLoadBalancerSlaRequest) {
     request = &ModifyLoadBalancerSlaRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyLoadBalancerSla")
     
     
@@ -3967,7 +4220,17 @@ func NewModifyLoadBalancerSlaResponse() (response *ModifyLoadBalancerSlaResponse
 }
 
 // ModifyLoadBalancerSla
-// 支持共享型clb升级到性能容量型clb（不支持性能保障降级到共享型）。
+// 本接口（ModifyLoadBalancerSla）用于将按量计费模式的共享型实例升级为性能容量型实例。<br/>
+//
+// 限制条件：
+//
+// - 本接口只支持升级按量计费的CLB实例，包年包月的CLB实例升级请通过控制台进行升级。
+//
+// - 升级为性能容量型实例后，不支持再回退到共享型实例。
+//
+// - 目前性能容量型实例处于内测中，如需升级为性能容量型实例，请提交 [内测申请](https://cloud.tencent.com/apply/p/hf45esx99lf)。
+//
+// - 传统型负载均衡实例不支持升级为性能容量型实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3983,7 +4246,17 @@ func (c *Client) ModifyLoadBalancerSla(request *ModifyLoadBalancerSlaRequest) (r
 }
 
 // ModifyLoadBalancerSla
-// 支持共享型clb升级到性能容量型clb（不支持性能保障降级到共享型）。
+// 本接口（ModifyLoadBalancerSla）用于将按量计费模式的共享型实例升级为性能容量型实例。<br/>
+//
+// 限制条件：
+//
+// - 本接口只支持升级按量计费的CLB实例，包年包月的CLB实例升级请通过控制台进行升级。
+//
+// - 升级为性能容量型实例后，不支持再回退到共享型实例。
+//
+// - 目前性能容量型实例处于内测中，如需升级为性能容量型实例，请提交 [内测申请](https://cloud.tencent.com/apply/p/hf45esx99lf)。
+//
+// - 传统型负载均衡实例不支持升级为性能容量型实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -4014,6 +4287,7 @@ func NewModifyRuleRequest() (request *ModifyRuleRequest) {
     request = &ModifyRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyRule")
     
     
@@ -4079,6 +4353,7 @@ func NewModifyTargetGroupAttributeRequest() (request *ModifyTargetGroupAttribute
     request = &ModifyTargetGroupAttributeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyTargetGroupAttribute")
     
     
@@ -4134,6 +4409,7 @@ func NewModifyTargetGroupInstancesPortRequest() (request *ModifyTargetGroupInsta
     request = &ModifyTargetGroupInstancesPortRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyTargetGroupInstancesPort")
     
     
@@ -4195,6 +4471,7 @@ func NewModifyTargetGroupInstancesWeightRequest() (request *ModifyTargetGroupIns
     request = &ModifyTargetGroupInstancesWeightRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyTargetGroupInstancesWeight")
     
     
@@ -4254,6 +4531,7 @@ func NewModifyTargetPortRequest() (request *ModifyTargetPortRequest) {
     request = &ModifyTargetPortRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyTargetPort")
     
     
@@ -4319,6 +4597,7 @@ func NewModifyTargetWeightRequest() (request *ModifyTargetWeightRequest) {
     request = &ModifyTargetWeightRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ModifyTargetWeight")
     
     
@@ -4380,10 +4659,127 @@ func (c *Client) ModifyTargetWeightWithContext(ctx context.Context, request *Mod
     return
 }
 
+func NewRegisterFunctionTargetsRequest() (request *RegisterFunctionTargetsRequest) {
+    request = &RegisterFunctionTargetsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("clb", APIVersion, "RegisterFunctionTargets")
+    
+    
+    return
+}
+
+func NewRegisterFunctionTargetsResponse() (response *RegisterFunctionTargetsResponse) {
+    response = &RegisterFunctionTargetsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// RegisterFunctionTargets
+// RegisterFunctionTargets 接口用来将一个云函数绑定到负载均衡的7层转发规则，在此之前您需要先行创建相关的7层监听器（HTTP、HTTPS）和转发规则。
+//
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。<br/>
+//
+// 限制说明：
+//
+// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、孟买、东京、硅谷地域支持绑定 SCF。
+//
+// - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。 
+//
+// - 传统型负载均衡不支持绑定 SCF。
+//
+// - 基础网络类型不支持绑定 SCF。
+//
+// - CLB 默认支持绑定同地域下的所有 SCF，可支持跨 VPC 绑定 SCF，不支持跨地域绑定。
+//
+// - 目前仅 IPv4、IPv6 NAT64 版本的负载均衡支持绑定 SCF，IPv6 版本的暂不支持。
+//
+// - 仅七层（HTTP、HTTPS）监听器支持绑定 SCF，四层（TCP、UDP、TCP SSL）监听器和七层 QUIC 监听器不支持。
+//
+// - CLB 绑定 SCF 仅支持绑定“Event 函数”类型的云函数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  INVALIDPARAMETER_PROTOCOLCHECKFAILED = "InvalidParameter.ProtocolCheckFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) RegisterFunctionTargets(request *RegisterFunctionTargetsRequest) (response *RegisterFunctionTargetsResponse, err error) {
+    return c.RegisterFunctionTargetsWithContext(context.Background(), request)
+}
+
+// RegisterFunctionTargets
+// RegisterFunctionTargets 接口用来将一个云函数绑定到负载均衡的7层转发规则，在此之前您需要先行创建相关的7层监听器（HTTP、HTTPS）和转发规则。
+//
+// 本接口为异步接口，本接口返回成功后需以返回的RequestID为入参，调用DescribeTaskStatus接口查询本次任务是否成功。<br/>
+//
+// 限制说明：
+//
+// - 仅广州、深圳金融、上海、上海金融、北京、成都、中国香港、新加坡、孟买、东京、硅谷地域支持绑定 SCF。
+//
+// - 仅标准账户类型支持绑定 SCF，传统账户类型不支持。建议升级为标准账户类型，详情可参见 [账户类型升级说明](https://cloud.tencent.com/document/product/1199/49090)。 
+//
+// - 传统型负载均衡不支持绑定 SCF。
+//
+// - 基础网络类型不支持绑定 SCF。
+//
+// - CLB 默认支持绑定同地域下的所有 SCF，可支持跨 VPC 绑定 SCF，不支持跨地域绑定。
+//
+// - 目前仅 IPv4、IPv6 NAT64 版本的负载均衡支持绑定 SCF，IPv6 版本的暂不支持。
+//
+// - 仅七层（HTTP、HTTPS）监听器支持绑定 SCF，四层（TCP、UDP、TCP SSL）监听器和七层 QUIC 监听器不支持。
+//
+// - CLB 绑定 SCF 仅支持绑定“Event 函数”类型的云函数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
+//  INVALIDPARAMETER_LBIDNOTFOUND = "InvalidParameter.LBIdNotFound"
+//  INVALIDPARAMETER_LISTENERIDNOTFOUND = "InvalidParameter.ListenerIdNotFound"
+//  INVALIDPARAMETER_LOCATIONNOTFOUND = "InvalidParameter.LocationNotFound"
+//  INVALIDPARAMETER_PROTOCOLCHECKFAILED = "InvalidParameter.ProtocolCheckFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_DUPLICATE = "InvalidParameterValue.Duplicate"
+//  INVALIDPARAMETERVALUE_LENGTH = "InvalidParameterValue.Length"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+func (c *Client) RegisterFunctionTargetsWithContext(ctx context.Context, request *RegisterFunctionTargetsRequest) (response *RegisterFunctionTargetsResponse, err error) {
+    if request == nil {
+        request = NewRegisterFunctionTargetsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RegisterFunctionTargets require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRegisterFunctionTargetsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewRegisterTargetGroupInstancesRequest() (request *RegisterTargetGroupInstancesRequest) {
     request = &RegisterTargetGroupInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "RegisterTargetGroupInstances")
     
     
@@ -4445,6 +4841,7 @@ func NewRegisterTargetsRequest() (request *RegisterTargetsRequest) {
     request = &RegisterTargetsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "RegisterTargets")
     
     
@@ -4516,6 +4913,7 @@ func NewRegisterTargetsWithClassicalLBRequest() (request *RegisterTargetsWithCla
     request = &RegisterTargetsWithClassicalLBRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "RegisterTargetsWithClassicalLB")
     
     
@@ -4579,6 +4977,7 @@ func NewReplaceCertForLoadBalancersRequest() (request *ReplaceCertForLoadBalance
     request = &ReplaceCertForLoadBalancersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "ReplaceCertForLoadBalancers")
     
     
@@ -4648,6 +5047,7 @@ func NewSetCustomizedConfigForLoadBalancerRequest() (request *SetCustomizedConfi
     request = &SetCustomizedConfigForLoadBalancerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "SetCustomizedConfigForLoadBalancer")
     
     
@@ -4713,6 +5113,7 @@ func NewSetLoadBalancerClsLogRequest() (request *SetLoadBalancerClsLogRequest) {
     request = &SetLoadBalancerClsLogRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "SetLoadBalancerClsLog")
     
     
@@ -4776,6 +5177,7 @@ func NewSetLoadBalancerSecurityGroupsRequest() (request *SetLoadBalancerSecurity
     request = &SetLoadBalancerSecurityGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "SetLoadBalancerSecurityGroups")
     
     
@@ -4843,6 +5245,7 @@ func NewSetSecurityGroupForLoadbalancersRequest() (request *SetSecurityGroupForL
     request = &SetSecurityGroupForLoadbalancersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("clb", APIVersion, "SetSecurityGroupForLoadbalancers")
     
     

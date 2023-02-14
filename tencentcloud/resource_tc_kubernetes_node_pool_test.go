@@ -106,6 +106,7 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.security_group_ids.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.host_name", "12.123.0.0"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.host_name_style", "ORIGINAL"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.enhanced_security_service", "false"),
 				),
 			},
 			{
@@ -140,6 +141,7 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.security_group_ids.#", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.host_name", "12.123.1.1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.host_name_style", "UNIQUE"),
+					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.enhanced_security_service", "true"),
 				),
 			},
 		},
@@ -364,7 +366,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     internet_max_bandwidth_out = 20
     public_ip_assigned         = true
     password                   = "test123#"
-    enhanced_security_service  = false
+    enhanced_security_service  = true
     enhanced_monitor_service   = false
 	host_name                  = "12.123.1.1"
 	host_name_style            = "UNIQUE"

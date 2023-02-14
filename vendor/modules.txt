@@ -545,7 +545,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/billing/v20180709
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.520
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.493
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.576
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320
@@ -555,13 +555,13 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.403
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.445
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.591
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.584
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.591
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
@@ -569,6 +569,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/regions
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.553
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.572
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
@@ -599,7 +601,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.532
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.588
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor v1.0.518
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724

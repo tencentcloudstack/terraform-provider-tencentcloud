@@ -200,6 +200,9 @@ Cloud Block Storage(CBS)
     tencentcloud_cbs_snapshot
     tencentcloud_cbs_snapshot_policy
     tencentcloud_cbs_snapshot_policy_attachment
+	tencentcloud_cbs_snapshot_share_permission
+	tencentcloud_cbs_disk_backup
+	tencentcloud_cbs_disk_backup_rollback_operation
 
 Cloud Connect Network(CCN)
   Data Source
@@ -269,6 +272,7 @@ Cloud Load Balancer(CLB)
 	tencentcloud_clb_log_topic
 	tencentcloud_clb_customized_config
     tencentcloud_clb_snat_ip
+	tencentcloud_clb_function_targets_attachment
 
 Cloud Object Storage(COS)
   Data Source
@@ -938,6 +942,7 @@ Tencent Service Framework(TSF)
 Media Processing Service(MPS)
   Resource
 	tencentcloud_mps_workflow
+	tencentcloud_mps_transcode_template
 
 */
 package tencentcloud
@@ -1356,6 +1361,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_clb_log_topic":                            resourceTencentCloudClbLogTopic(),
 			"tencentcloud_clb_customized_config":                    resourceTencentCloudClbCustomizedConfig(),
 			"tencentcloud_clb_snat_ip":                              resourceTencentCloudClbSnatIp(),
+			"tencentcloud_clb_function_targets_attachment":          resourceTencentCloudClbFunctionTargetsAttachment(),
 			"tencentcloud_container_cluster":                        resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":               resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                       resourceTencentCloudTkeCluster(),
@@ -1682,6 +1688,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_lane":                                   resourceTencentCloudTsfLane(),
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
+			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
+			"tencentcloud_cbs_disk_backup":                            resourceTencentCloudCbsDiskBackup(),
+			"tencentcloud_cbs_snapshot_share_permission":              resourceTencentCloudCbsSnapshotSharePermission(),
+			"tencentcloud_cbs_disk_backup_rollback_operation":         resourceTencentCloudCbsDiskBackupRollbackOperation(),
 		},
 
 		ConfigureFunc: providerConfigure,
