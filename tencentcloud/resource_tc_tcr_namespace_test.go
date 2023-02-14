@@ -77,6 +77,11 @@ func TestAccTencentCloudTCRNamespace_basic_and_update(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_public", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_auto_scan", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_prevent_vul", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "severity", "medium"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "cve_whitelist_items.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "cve_whitelist_items.0.cve_id", "cve-xxxxx"),
 				),
 			},
 			{
@@ -90,6 +95,11 @@ func TestAccTencentCloudTCRNamespace_basic_and_update(t *testing.T) {
 					testAccCheckTCRNamespaceExists("tencentcloud_tcr_namespace.mytcr_namespace"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test2"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_public", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_auto_scan", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_prevent_vul", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "severity", "high"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "cve_whitelist_items.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "cve_whitelist_items.0.cve_id", "cve-xxxx"),
 				),
 			},
 		},
@@ -157,15 +167,27 @@ func testAccCheckTCRNamespaceExists(n string) resource.TestCheckFunc {
 const testAccTCRNamespace_basic = defaultTCRInstanceData + `
 
 resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
-  instance_id = local.tcr_id
-  name        = "test"
-  is_public   = true
+  instance_id 	 = local.tcr_id
+  name			 = "test"
+  is_public		 = true
+  is_auto_scan	 = true
+  is_prevent_vul = true
+  severity		 = "medium"
+  cve_whitelist_items	{
+    cve_id = "cve-xxxxx"
+  }
 }`
 
 const testAccTCRNamespace_basic_update_remark = defaultTCRInstanceData + `
 
 resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
-  instance_id = local.tcr_id
-  name        = "test2"
-  is_public   = false
+  instance_id 	 = local.tcr_id
+  name        	 = "test2"
+  is_public   	 = false
+  is_auto_scan	 = false
+  is_prevent_vul = false
+  severity		 = "high"
+  cve_whitelist_items	{
+    cve_id = "cve-xxxx"
+  }
 }`
