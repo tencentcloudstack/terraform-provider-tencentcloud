@@ -10,68 +10,119 @@ resource "tencentcloud_teo_rule_engine" "rule1" {
   status    = "disable"
 
   rules {
-    or {
-      and {
-        operator = "equal"
-        target   = "host"
-        values   = [
-          tencentcloud_teo_dns_record.example.name,
-        ]
-      }
-      and {
-        operator = "equal"
-        target   = "extension"
-        values   = [
-          "mp4",
-        ]
-      }
-    }
-
     actions {
       normal_action {
-        action = "CachePrefresh"
-
-        parameters {
-          name   = "Switch"
-          values = [
-            "on",
-          ]
-        }
-        parameters {
-          name   = "Percent"
-          values = [
-            "80",
-          ]
-        }
-      }
-    }
-
-    actions {
-      normal_action {
-        action = "CacheKey"
-
+        action = "UpstreamUrlRedirect"
         parameters {
           name   = "Type"
           values = [
-            "Header",
+            "Path",
           ]
         }
         parameters {
-          name   = "Switch"
+          name   = "Action"
           values = [
-            "on",
+            "addPrefix",
           ]
         }
         parameters {
           name   = "Value"
           values = [
-            "Duck",
+            "/sss",
           ]
+        }
+      }
+    }
+
+    or {
+      and {
+        operator = "equal"
+        target   = "host"
+        ignore_case = false
+        values   = [
+          "a.tf-teo-t.xyz",
+        ]
+      }
+      and {
+        operator = "equal"
+        target   = "extension"
+        ignore_case = false
+        values   = [
+          "jpg",
+        ]
+      }
+    }
+    or {
+      and {
+        operator = "equal"
+        target   = "filename"
+        ignore_case = false
+        values   = [
+          "test.txt",
+        ]
+      }
+    }
+
+    sub_rules {
+      tags = ["png"]
+      rules {
+        or {
+          and {
+            operator = "notequal"
+            target   = "host"
+            ignore_case = false
+            values   = [
+              "a.tf-teo-t.xyz",
+            ]
+          }
+          and {
+            operator = "equal"
+            target   = "extension"
+            ignore_case = false
+            values   = [
+              "png",
+            ]
+          }
+        }
+        or {
+          and {
+            operator = "notequal"
+            target   = "filename"
+            ignore_case = false
+            values   = [
+              "test.txt",
+            ]
+          }
+        }
+        actions {
+          normal_action {
+            action = "UpstreamUrlRedirect"
+            parameters {
+              name   = "Type"
+              values = [
+                "Path",
+              ]
+            }
+            parameters {
+              name   = "Action"
+              values = [
+                "addPrefix",
+              ]
+            }
+            parameters {
+              name   = "Value"
+              values = [
+                "/www",
+              ]
+            }
+          }
         }
       }
     }
   }
 }
+
+
 
 ```
 Import
@@ -130,6 +181,15 @@ func resourceTencentCloudTeoRuleEngine() *schema.Resource {
 				Description: "Status of the rule, valid value can be `enable` or `disable`.",
 			},
 
+			"tags": {
+				Optional: true,
+				Type:     schema.TypeSet,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "rule tag list.",
+			},
+
 			"rules": {
 				Type:        schema.TypeList,
 				Required:    true,
@@ -165,6 +225,16 @@ func resourceTencentCloudTeoRuleEngine() *schema.Resource {
 													},
 													Required:    true,
 													Description: "Condition Value.",
+												},
+												"ignore_case": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Whether to ignore the case of the parameter value, the default value is false.",
+												},
+												"name": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "The parameter name corresponding to the matching type is valid when the Target value is the following, and the valid value cannot be empty: `query_string` (query string): The parameter name of the query string in the URL request under the current site, such as lang and version in lang=cn&version=1; `request_header` (HTTP request header): HTTP request header field name, such as Accept-Language in Accept-Language:zh-CN,zh;q=0.9.",
 												},
 											},
 										},
@@ -302,6 +372,208 @@ func resourceTencentCloudTeoRuleEngine() *schema.Resource {
 								},
 							},
 						},
+						"sub_rules": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "Actions list of the rule. See details in data source `rule_engine_setting`.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"tags": {
+										Type: schema.TypeSet,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+										Optional:    true,
+										Description: "rule tag list.",
+									},
+									"rules": {
+										Type:        schema.TypeList,
+										Required:    true,
+										Description: "Rule items list.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"or": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: "OR Conditions list of the rule. Rule would be triggered if any of the condition is true.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"and": {
+																Type:        schema.TypeList,
+																Required:    true,
+																Description: "AND Conditions list of the rule. Rule would be triggered if all conditions are true.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"operator": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Condition operator. Valid values are `equal`, `notequal`.",
+																		},
+																		"target": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Condition target. Valid values:- `host`: Host of the URL.- `filename`: filename of the URL.- `extension`: file extension of the URL.- `full_url`: full url.- `url`: path of the URL.",
+																		},
+																		"values": {
+																			Type: schema.TypeSet,
+																			Elem: &schema.Schema{
+																				Type: schema.TypeString,
+																			},
+																			Required:    true,
+																			Description: "Condition Value.",
+																		},
+																		"ignore_case": {
+																			Type:        schema.TypeBool,
+																			Optional:    true,
+																			Description: "Whether to ignore the case of the parameter value, the default value is false.",
+																		},
+																		"name": {
+																			Type:        schema.TypeString,
+																			Optional:    true,
+																			Description: "The parameter name corresponding to the matching type is valid when the Target value is the following, and the valid value cannot be empty: `query_string` (query string): The parameter name of the query string in the URL request under the current site, such as lang and version in lang=cn&version=1; `request_header` (HTTP request header): HTTP request header field name, such as Accept-Language in Accept-Language:zh-CN,zh;q=0.9.",
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+												"actions": {
+													Type:        schema.TypeList,
+													Required:    true,
+													Description: "Actions list of the rule. See details in data source `rule_engine_setting`.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"normal_action": {
+																Type:        schema.TypeList,
+																MaxItems:    1,
+																Optional:    true,
+																Description: "Define a normal action.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"action": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Action name.",
+																		},
+																		"parameters": {
+																			Type:        schema.TypeList,
+																			Required:    true,
+																			Description: "Action parameters.",
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"name": {
+																						Type:        schema.TypeString,
+																						Required:    true,
+																						Description: "Parameter Name.",
+																					},
+																					"values": {
+																						Type: schema.TypeSet,
+																						Elem: &schema.Schema{
+																							Type: schema.TypeString,
+																						},
+																						Required:    true,
+																						Description: "Parameter Values.",
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+															"rewrite_action": {
+																Type:        schema.TypeList,
+																MaxItems:    1,
+																Optional:    true,
+																Description: "Define a rewrite action.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"action": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Action name.",
+																		},
+																		"parameters": {
+																			Type:        schema.TypeList,
+																			Required:    true,
+																			Description: "Action parameters.",
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"action": {
+																						Type:        schema.TypeString,
+																						Required:    true,
+																						Description: "Action to take on the HEADER. Valid values: `add`, `del`, `set`.",
+																					},
+																					"name": {
+																						Type:        schema.TypeString,
+																						Required:    true,
+																						Description: "Target HEADER name.",
+																					},
+																					"values": {
+																						Type: schema.TypeSet,
+																						Elem: &schema.Schema{
+																							Type: schema.TypeString,
+																						},
+																						Required:    true,
+																						Description: "Parameter Value.",
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+															"code_action": {
+																Type:        schema.TypeList,
+																MaxItems:    1,
+																Optional:    true,
+																Description: "Define a code action.",
+																Elem: &schema.Resource{
+																	Schema: map[string]*schema.Schema{
+																		"action": {
+																			Type:        schema.TypeString,
+																			Required:    true,
+																			Description: "Action name.",
+																		},
+																		"parameters": {
+																			Type:        schema.TypeList,
+																			Required:    true,
+																			Description: "Action parameters.",
+																			Elem: &schema.Resource{
+																				Schema: map[string]*schema.Schema{
+																					"name": {
+																						Type:        schema.TypeString,
+																						Required:    true,
+																						Description: "Parameter Name.",
+																					},
+																					"values": {
+																						Type: schema.TypeSet,
+																						Elem: &schema.Schema{
+																							Type: schema.TypeString,
+																						},
+																						Required:    true,
+																						Description: "Parameter Values.",
+																					},
+																					"status_code": {
+																						Type:        schema.TypeInt,
+																						Required:    true,
+																						Description: "HTTP status code to use.",
+																					},
+																				},
+																			},
+																		},
+																	},
+																},
+															},
+														},
+													},
+												},
+											},
+										},
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -335,6 +607,14 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 		request.Status = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("tags"); ok {
+		tagsSet := v.(*schema.Set).List()
+		for i := range tagsSet {
+			tags := tagsSet[i].(string)
+			request.Tags = append(request.Tags, &tags)
+		}
+	}
+
 	if v, ok := d.GetOk("rules"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
@@ -352,6 +632,12 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 							}
 							if v, ok := ConditionsMap["target"]; ok {
 								ruleCondition.Target = helper.String(v.(string))
+							}
+							if v, ok := ConditionsMap["ignore_case"]; ok {
+								ruleCondition.IgnoreCase = helper.Bool(v.(bool))
+							}
+							if v, ok := ConditionsMap["name"]; ok {
+								ruleCondition.Name = helper.String(v.(string))
 							}
 							if v, ok := ConditionsMap["values"]; ok {
 								valuesSet := v.(*schema.Set).List()
@@ -451,6 +737,145 @@ func resourceTencentCloudTeoRuleEngineCreate(d *schema.ResourceData, meta interf
 					ruleItem.Actions = append(ruleItem.Actions, &ruleAction)
 				}
 			}
+			if v, ok := dMap["sub_rules"]; ok {
+				for _, item := range v.([]interface{}) {
+					subRulesMap := item.(map[string]interface{})
+					subRuleItem := teo.SubRuleItem{}
+					if v, ok := subRulesMap["tags"]; ok {
+						tagsSet := v.(*schema.Set).List()
+						for i := range tagsSet {
+							tags := tagsSet[i].(string)
+							subRuleItem.Tags = append(subRuleItem.Tags, &tags)
+						}
+					}
+					if v, ok := subRulesMap["rules"]; ok {
+						for _, item := range v.([]interface{}) {
+							rulesMap := item.(map[string]interface{})
+							ruleItem := teo.SubRule{}
+							if v, ok := rulesMap["or"]; ok {
+								for _, item := range v.([]interface{}) {
+									orMap := item.(map[string]interface{})
+									ruleAndConditions := teo.RuleAndConditions{}
+									if v, ok := orMap["and"]; ok {
+										for _, item := range v.([]interface{}) {
+											andMap := item.(map[string]interface{})
+											ruleCondition := teo.RuleCondition{}
+											if v, ok := andMap["operator"]; ok {
+												ruleCondition.Operator = helper.String(v.(string))
+											}
+											if v, ok := andMap["target"]; ok {
+												ruleCondition.Target = helper.String(v.(string))
+											}
+											if v, ok := andMap["values"]; ok {
+												valuesSet := v.(*schema.Set).List()
+												for i := range valuesSet {
+													values := valuesSet[i].(string)
+													ruleCondition.Values = append(ruleCondition.Values, &values)
+												}
+											}
+											if v, ok := andMap["ignore_case"]; ok {
+												ruleCondition.IgnoreCase = helper.Bool(v.(bool))
+											}
+											if v, ok := andMap["name"]; ok {
+												ruleCondition.Name = helper.String(v.(string))
+											}
+											ruleAndConditions.Conditions = append(ruleAndConditions.Conditions, &ruleCondition)
+										}
+									}
+									ruleItem.Conditions = append(ruleItem.Conditions, &ruleAndConditions)
+								}
+							}
+							if v, ok := rulesMap["actions"]; ok {
+								for _, item := range v.([]interface{}) {
+									actionsMap := item.(map[string]interface{})
+									ruleAction := teo.Action{}
+									if normalActionMap, ok := helper.InterfaceToMap(actionsMap, "normal_action"); ok {
+										ruleNormalAction := teo.NormalAction{}
+										if v, ok := normalActionMap["action"]; ok {
+											ruleNormalAction.Action = helper.String(v.(string))
+										}
+										if v, ok := normalActionMap["parameters"]; ok {
+											for _, item := range v.([]interface{}) {
+												parametersMap := item.(map[string]interface{})
+												ruleNormalActionParams := teo.RuleNormalActionParams{}
+												if v, ok := parametersMap["name"]; ok {
+													ruleNormalActionParams.Name = helper.String(v.(string))
+												}
+												if v, ok := parametersMap["values"]; ok {
+													valuesSet := v.(*schema.Set).List()
+													for i := range valuesSet {
+														values := valuesSet[i].(string)
+														ruleNormalActionParams.Values = append(ruleNormalActionParams.Values, &values)
+													}
+												}
+												ruleNormalAction.Parameters = append(ruleNormalAction.Parameters, &ruleNormalActionParams)
+											}
+										}
+										ruleAction.NormalAction = &ruleNormalAction
+									}
+									if rewriteActionMap, ok := helper.InterfaceToMap(actionsMap, "rewrite_action"); ok {
+										ruleRewriteAction := teo.RewriteAction{}
+										if v, ok := rewriteActionMap["action"]; ok {
+											ruleRewriteAction.Action = helper.String(v.(string))
+										}
+										if v, ok := rewriteActionMap["parameters"]; ok {
+											for _, item := range v.([]interface{}) {
+												parametersMap := item.(map[string]interface{})
+												ruleRewriteActionParams := teo.RuleRewriteActionParams{}
+												if v, ok := parametersMap["action"]; ok {
+													ruleRewriteActionParams.Action = helper.String(v.(string))
+												}
+												if v, ok := parametersMap["name"]; ok {
+													ruleRewriteActionParams.Name = helper.String(v.(string))
+												}
+												if v, ok := parametersMap["values"]; ok {
+													valuesSet := v.(*schema.Set).List()
+													for i := range valuesSet {
+														values := valuesSet[i].(string)
+														ruleRewriteActionParams.Values = append(ruleRewriteActionParams.Values, &values)
+													}
+												}
+												ruleRewriteAction.Parameters = append(ruleRewriteAction.Parameters, &ruleRewriteActionParams)
+											}
+										}
+										ruleAction.RewriteAction = &ruleRewriteAction
+									}
+									if codeActionMap, ok := helper.InterfaceToMap(actionsMap, "code_action"); ok {
+										ruleCodeAction := teo.CodeAction{}
+										if v, ok := codeActionMap["action"]; ok {
+											ruleCodeAction.Action = helper.String(v.(string))
+										}
+										if v, ok := codeActionMap["parameters"]; ok {
+											for _, item := range v.([]interface{}) {
+												parametersMap := item.(map[string]interface{})
+												ruleCodeActionParams := teo.RuleCodeActionParams{}
+												if v, ok := parametersMap["name"]; ok {
+													ruleCodeActionParams.Name = helper.String(v.(string))
+												}
+												if v, ok := parametersMap["values"]; ok {
+													valuesSet := v.(*schema.Set).List()
+													for i := range valuesSet {
+														values := valuesSet[i].(string)
+														ruleCodeActionParams.Values = append(ruleCodeActionParams.Values, &values)
+													}
+												}
+												if v, ok := parametersMap["status_code"]; ok {
+													ruleCodeActionParams.StatusCode = helper.IntInt64(v.(int))
+												}
+												ruleCodeAction.Parameters = append(ruleCodeAction.Parameters, &ruleCodeActionParams)
+											}
+										}
+										ruleAction.CodeAction = &ruleCodeAction
+									}
+									ruleItem.Actions = append(ruleItem.Actions, &ruleAction)
+								}
+							}
+							subRuleItem.Rules = append(subRuleItem.Rules, &ruleItem)
+						}
+					}
+					ruleItem.SubRules = append(ruleItem.SubRules, &subRuleItem)
+				}
+			}
 
 			request.Rules = append(request.Rules, &ruleItem)
 		}
@@ -517,6 +942,10 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("status", ruleEngine.Status)
 	}
 
+	if ruleEngine.Tags != nil {
+		_ = d.Set("tags", ruleEngine.Tags)
+	}
+
 	if ruleEngine.Rules != nil {
 		rulesList := []interface{}{}
 		for _, rules := range ruleEngine.Rules {
@@ -537,6 +966,12 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 							}
 							if conditions.Values != nil {
 								conditionsMap["values"] = conditions.Values
+							}
+							if conditions.IgnoreCase != nil {
+								conditionsMap["ignore_case"] = conditions.IgnoreCase
+							}
+							if conditions.Name != nil {
+								conditionsMap["name"] = conditions.Name
 							}
 
 							conditionsList = append(conditionsList, conditionsMap)
@@ -633,6 +1068,137 @@ func resourceTencentCloudTeoRuleEngineRead(d *schema.ResourceData, meta interfac
 				rulesMap["actions"] = actionsList
 			}
 
+			if rules.SubRules != nil {
+				subRulesList := []interface{}{}
+				for _, subRules := range rules.SubRules {
+					subRulesMap := map[string]interface{}{}
+
+					if subRules.Tags != nil {
+						subRulesMap["tags"] = subRules.Tags
+					}
+					if subRules.Rules != nil {
+						rulesList := []interface{}{}
+						for _, subRule := range subRules.Rules {
+							rulesMap := map[string]interface{}{}
+							if subRule.Conditions != nil {
+								orList := []interface{}{}
+								for _, or := range subRule.Conditions {
+									orMap := map[string]interface{}{}
+									if or.Conditions != nil {
+										andList := []interface{}{}
+										for _, and := range or.Conditions {
+											andMap := map[string]interface{}{}
+											if and.Operator != nil {
+												andMap["operator"] = and.Operator
+											}
+											if and.Target != nil {
+												andMap["target"] = and.Target
+											}
+											if and.Values != nil {
+												andMap["values"] = and.Values
+											}
+											if and.IgnoreCase != nil {
+												andMap["ignore_case"] = and.IgnoreCase
+											}
+											if and.Name != nil {
+												andMap["name"] = and.Name
+											}
+
+											andList = append(andList, andMap)
+										}
+										orMap["and"] = andList
+									}
+									orList = append(orList, orMap)
+								}
+								rulesMap["or"] = orList
+							}
+							if subRule.Actions != nil {
+								actionsList := []interface{}{}
+								for _, actions := range subRule.Actions {
+									actionsMap := map[string]interface{}{}
+									if actions.NormalAction != nil {
+										normalActionMap := map[string]interface{}{}
+										if actions.NormalAction.Action != nil {
+											normalActionMap["action"] = actions.NormalAction.Action
+										}
+										if actions.NormalAction.Parameters != nil {
+											parametersList := []interface{}{}
+											for _, parameters := range actions.NormalAction.Parameters {
+												parametersMap := map[string]interface{}{}
+												if parameters.Name != nil {
+													parametersMap["name"] = parameters.Name
+												}
+												if parameters.Values != nil {
+													parametersMap["values"] = parameters.Values
+												}
+												parametersList = append(parametersList, parametersMap)
+											}
+											normalActionMap["parameters"] = parametersList
+										}
+										actionsMap["normal_action"] = []interface{}{normalActionMap}
+									}
+									if actions.RewriteAction != nil {
+										rewriteActionMap := map[string]interface{}{}
+										if actions.RewriteAction.Action != nil {
+											rewriteActionMap["action"] = actions.RewriteAction.Action
+										}
+										if actions.RewriteAction.Parameters != nil {
+											parametersList := []interface{}{}
+											for _, parameters := range actions.RewriteAction.Parameters {
+												parametersMap := map[string]interface{}{}
+												if parameters.Action != nil {
+													parametersMap["action"] = parameters.Action
+												}
+												if parameters.Name != nil {
+													parametersMap["name"] = parameters.Name
+												}
+												if parameters.Values != nil {
+													parametersMap["values"] = parameters.Values
+												}
+												parametersList = append(parametersList, parametersMap)
+											}
+											rewriteActionMap["parameters"] = parametersList
+										}
+										actionsMap["rewrite_action"] = []interface{}{rewriteActionMap}
+									}
+									if actions.CodeAction != nil {
+										codeActionMap := map[string]interface{}{}
+										if actions.CodeAction.Action != nil {
+											codeActionMap["action"] = actions.CodeAction.Action
+										}
+										if actions.CodeAction.Parameters != nil {
+											parametersList := []interface{}{}
+											for _, parameters := range actions.CodeAction.Parameters {
+												parametersMap := map[string]interface{}{}
+												if parameters.Name != nil {
+													parametersMap["name"] = parameters.Name
+												}
+												if parameters.Values != nil {
+													parametersMap["values"] = parameters.Values
+												}
+												if parameters.StatusCode != nil {
+													parametersMap["status_code"] = parameters.StatusCode
+												}
+												parametersList = append(parametersList, parametersMap)
+											}
+											codeActionMap["parameters"] = parametersList
+										}
+										actionsMap["code_action"] = []interface{}{codeActionMap}
+									}
+									actionsList = append(actionsList, actionsMap)
+								}
+								rulesMap["actions"] = actionsList
+							}
+							rulesList = append(rulesList, rulesMap)
+						}
+						subRulesMap["rules"] = rulesList
+					}
+					subRulesList = append(subRulesList, subRulesMap)
+				}
+
+				rulesMap["sub_rules"] = subRulesList
+			}
+
 			rulesList = append(rulesList, rulesMap)
 		}
 		_ = d.Set("rules", rulesList)
@@ -672,6 +1238,14 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 		request.Status = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("tags"); ok {
+		tagsSet := v.(*schema.Set).List()
+		for i := range tagsSet {
+			tags := tagsSet[i].(string)
+			request.Tags = append(request.Tags, &tags)
+		}
+	}
+
 	if d.HasChange("rules") {
 		if v, ok := d.GetOk("rules"); ok {
 			for _, item := range v.([]interface{}) {
@@ -697,6 +1271,12 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 										values := valuesSet[i].(string)
 										ruleCondition.Values = append(ruleCondition.Values, &values)
 									}
+								}
+								if v, ok := ConditionsMap["ignore_case"]; ok {
+									ruleCondition.IgnoreCase = helper.Bool(v.(bool))
+								}
+								if v, ok := ConditionsMap["name"]; ok {
+									ruleCondition.Name = helper.String(v.(string))
 								}
 								ruleAndConditions.Conditions = append(ruleAndConditions.Conditions, &ruleCondition)
 							}
@@ -787,6 +1367,145 @@ func resourceTencentCloudTeoRuleEngineUpdate(d *schema.ResourceData, meta interf
 							ruleAction.CodeAction = &ruleCodeAction
 						}
 						ruleItem.Actions = append(ruleItem.Actions, &ruleAction)
+					}
+				}
+				if v, ok := dMap["sub_rules"]; ok {
+					for _, item := range v.([]interface{}) {
+						subRulesMap := item.(map[string]interface{})
+						subRuleItem := teo.SubRuleItem{}
+						if v, ok := subRulesMap["tags"]; ok {
+							tagsSet := v.(*schema.Set).List()
+							for i := range tagsSet {
+								tags := tagsSet[i].(string)
+								subRuleItem.Tags = append(subRuleItem.Tags, &tags)
+							}
+						}
+						if v, ok := subRulesMap["rules"]; ok {
+							for _, item := range v.([]interface{}) {
+								rulesMap := item.(map[string]interface{})
+								ruleItem := teo.SubRule{}
+								if v, ok := rulesMap["or"]; ok {
+									for _, item := range v.([]interface{}) {
+										orMap := item.(map[string]interface{})
+										ruleAndConditions := teo.RuleAndConditions{}
+										if v, ok := orMap["and"]; ok {
+											for _, item := range v.([]interface{}) {
+												andMap := item.(map[string]interface{})
+												ruleCondition := teo.RuleCondition{}
+												if v, ok := andMap["operator"]; ok {
+													ruleCondition.Operator = helper.String(v.(string))
+												}
+												if v, ok := andMap["target"]; ok {
+													ruleCondition.Target = helper.String(v.(string))
+												}
+												if v, ok := andMap["values"]; ok {
+													valuesSet := v.(*schema.Set).List()
+													for i := range valuesSet {
+														values := valuesSet[i].(string)
+														ruleCondition.Values = append(ruleCondition.Values, &values)
+													}
+												}
+												if v, ok := andMap["ignore_case"]; ok {
+													ruleCondition.IgnoreCase = helper.Bool(v.(bool))
+												}
+												if v, ok := andMap["name"]; ok {
+													ruleCondition.Name = helper.String(v.(string))
+												}
+												ruleAndConditions.Conditions = append(ruleAndConditions.Conditions, &ruleCondition)
+											}
+										}
+										ruleItem.Conditions = append(ruleItem.Conditions, &ruleAndConditions)
+									}
+								}
+								if v, ok := rulesMap["actions"]; ok {
+									for _, item := range v.([]interface{}) {
+										actionsMap := item.(map[string]interface{})
+										ruleAction := teo.Action{}
+										if normalActionMap, ok := helper.InterfaceToMap(actionsMap, "normal_action"); ok {
+											ruleNormalAction := teo.NormalAction{}
+											if v, ok := normalActionMap["action"]; ok {
+												ruleNormalAction.Action = helper.String(v.(string))
+											}
+											if v, ok := normalActionMap["parameters"]; ok {
+												for _, item := range v.([]interface{}) {
+													parametersMap := item.(map[string]interface{})
+													ruleNormalActionParams := teo.RuleNormalActionParams{}
+													if v, ok := parametersMap["name"]; ok {
+														ruleNormalActionParams.Name = helper.String(v.(string))
+													}
+													if v, ok := parametersMap["values"]; ok {
+														valuesSet := v.(*schema.Set).List()
+														for i := range valuesSet {
+															values := valuesSet[i].(string)
+															ruleNormalActionParams.Values = append(ruleNormalActionParams.Values, &values)
+														}
+													}
+													ruleNormalAction.Parameters = append(ruleNormalAction.Parameters, &ruleNormalActionParams)
+												}
+											}
+											ruleAction.NormalAction = &ruleNormalAction
+										}
+										if rewriteActionMap, ok := helper.InterfaceToMap(actionsMap, "rewrite_action"); ok {
+											ruleRewriteAction := teo.RewriteAction{}
+											if v, ok := rewriteActionMap["action"]; ok {
+												ruleRewriteAction.Action = helper.String(v.(string))
+											}
+											if v, ok := rewriteActionMap["parameters"]; ok {
+												for _, item := range v.([]interface{}) {
+													parametersMap := item.(map[string]interface{})
+													ruleRewriteActionParams := teo.RuleRewriteActionParams{}
+													if v, ok := parametersMap["action"]; ok {
+														ruleRewriteActionParams.Action = helper.String(v.(string))
+													}
+													if v, ok := parametersMap["name"]; ok {
+														ruleRewriteActionParams.Name = helper.String(v.(string))
+													}
+													if v, ok := parametersMap["values"]; ok {
+														valuesSet := v.(*schema.Set).List()
+														for i := range valuesSet {
+															values := valuesSet[i].(string)
+															ruleRewriteActionParams.Values = append(ruleRewriteActionParams.Values, &values)
+														}
+													}
+													ruleRewriteAction.Parameters = append(ruleRewriteAction.Parameters, &ruleRewriteActionParams)
+												}
+											}
+											ruleAction.RewriteAction = &ruleRewriteAction
+										}
+										if codeActionMap, ok := helper.InterfaceToMap(actionsMap, "code_action"); ok {
+											ruleCodeAction := teo.CodeAction{}
+											if v, ok := codeActionMap["action"]; ok {
+												ruleCodeAction.Action = helper.String(v.(string))
+											}
+											if v, ok := codeActionMap["parameters"]; ok {
+												for _, item := range v.([]interface{}) {
+													parametersMap := item.(map[string]interface{})
+													ruleCodeActionParams := teo.RuleCodeActionParams{}
+													if v, ok := parametersMap["name"]; ok {
+														ruleCodeActionParams.Name = helper.String(v.(string))
+													}
+													if v, ok := parametersMap["values"]; ok {
+														valuesSet := v.(*schema.Set).List()
+														for i := range valuesSet {
+															values := valuesSet[i].(string)
+															ruleCodeActionParams.Values = append(ruleCodeActionParams.Values, &values)
+														}
+													}
+													if v, ok := parametersMap["status_code"]; ok {
+														ruleCodeActionParams.StatusCode = helper.IntInt64(v.(int))
+													}
+													ruleCodeAction.Parameters = append(ruleCodeAction.Parameters, &ruleCodeActionParams)
+												}
+											}
+											ruleAction.CodeAction = &ruleCodeAction
+										}
+										ruleItem.Actions = append(ruleItem.Actions, &ruleAction)
+									}
+								}
+								subRuleItem.Rules = append(subRuleItem.Rules, &ruleItem)
+							}
+						}
+						ruleItem.SubRules = append(ruleItem.SubRules, &subRuleItem)
 					}
 				}
 				request.Rules = append(request.Rules, &ruleItem)

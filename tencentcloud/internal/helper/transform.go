@@ -235,6 +235,17 @@ func StrListToStr(strList []*string) string {
 	return base64.StdEncoding.EncodeToString([]byte(res))
 }
 
+func StrListValToStr(strListVal []string) string {
+	res := ""
+	for i, v := range strListVal {
+		res += v
+		if i < len(strListVal)-1 {
+			res += ";"
+		}
+	}
+	return base64.StdEncoding.EncodeToString([]byte(res))
+}
+
 func StrToStrList(str string) (res []string, err error) {
 
 	decodeString, err := base64.StdEncoding.DecodeString(str)

@@ -1,3 +1,57 @@
+## 1.79.9 (February 10, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cbs_disk_backup` ([#1548](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1548))
+* **New Resource:** `tencentcloud_cbs_disk_backup_rollback_operation` ([#1548](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1548))
+* **New Resource:** `tencentcloud_cbs_snapshot_share_permission` ([#1548](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1548))
+* **New Resource:** `tencentcloud_clb_function_targets_attachment` ([#1549](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1549))
+* **New Resource:** `tencentcloud_mps_transcode_template` ([#1550](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1550))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cbs_storage: support disk_backup_quota param ([#1548](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1548))
+* resource/tencentcloud_kubernetes_cluster: support creating tke cluster endpoint even if cluster only have serverless node ([#1546](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1546))
+* resource/tencentcloud_kubernetes_cluster_endpoint: support creating tke cluster endpoint even if cluster only have serverless node ([#1546](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1546))
+* resource/tencentcloud_kubernetes_node_pool: adjust enhanced_security_service to not forceNew ([#1545](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1545))
+* resource/tencentcloud_vpc_bandwidth_package: Support internet_max_bandwidth field ([#1551](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1551))
+
+## 1.79.8 (February 7, 2023)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mongodb_sharding_instance: support mongos params ([#1543](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1543))
+
+BUG FIXES:
+
+* resource/tencentcloud_tem_application: Make the `description` parameter of the TEM Application required ([#1527](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1527))
+
+## 1.79.7 (February 3, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cfs_available_zone` ([#1522](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1522))
+* **New Data Source:** `tencentcloud_cfs_file_system_clients` ([#1522](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1522))
+* **New Data Source:** `tencentcloud_cfs_mount_targets` ([#1522](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1522))
+* **New Data Source:** `tencentcloud_cvm_instances_modification` ([#1521](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1521))
+* **New Resource:** `tencentcloud_cfs_sign_up_cfs_service` ([#1522](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1522))
+* **New Resource:** `tencentcloud_cfs_snapshot` ([#1522](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1522))
+* **New Resource:** `tencentcloud_cvm_launch_template` ([#1521](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1521))
+* **New Resource:** `tencentcloud_kubernetes_serverless_node_pool` ([#1519](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1519))
+* **New Resource:** `tencentcloud_mps_workflow` ([#1541](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1541))
+* **New Resource:** `tencentcloud_sqlserver_migration` ([#1523](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1523))
+* **New Resource:** `tencentcloud_tsf_api_group` ([#1524](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1524))
+* **New Resource:** `tencentcloud_tsf_namespace` ([#1524](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1524))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: support IP query when modifying the type ([#1520](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1520))
+* resource/tencentcloud_cos_bucket: add `acceleration_enable` field ([#1537](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1537))
+* resource/tencentcloud_cos_bucket: add `endpoint` field for static website ([#1535](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1535))
+* resource/tencentcloud_monitor_tmp_instance: add computed field: `ipv4_address`, `proxy_address`, `remote_write`, `api_root_path` ([#1529](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1529))
+* resource/tencentcloud_scf_function: keep state consistent when vpc_id is not set ([#1531](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1531))
+* resource/tencentcloud_teo_rule_engine: Support `sub_rules` field, support multi-layer `if` ([#1538](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1538))
+
 ## 1.79.6 (January 13, 2023)
 
 FEATURES:

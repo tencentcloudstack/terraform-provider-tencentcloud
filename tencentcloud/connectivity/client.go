@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
+
 	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
 
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
@@ -36,6 +38,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
+	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	dayu "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
@@ -154,6 +157,8 @@ type TencentCloudClient struct {
 	dtsConn            *dts.Client
 	ciConn             *cos.Client
 	tsfConn            *tsf.Client
+	mpsConn            *mps.Client
+	cwpConn            *cwp.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1038,6 +1043,33 @@ func (me *TencentCloudClient) UseTsfClient() *tsf.Client {
 	me.tsfConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tsfConn
+}
+
+// UseMpsClient returns mps client for service
+func (me *TencentCloudClient) UseMpsClient() *mps.Client {
+	if me.mpsConn != nil {
+		return me.mpsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.mpsConn, _ = mps.NewClient(me.Credential, me.Region, cpf)
+	me.mpsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.mpsConn
+}
+
+// UseTkeClient returns tke client for service
+func (me *TencentCloudClient) UseCwpClient() *cwp.Client {
+	if me.cwpConn != nil {
+		return me.cwpConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.cwpConn, _ = cwp.NewClient(me.Credential, me.Region, cpf)
+	me.cwpConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cwpConn
 }
 
 func getEnvDefault(key string, defVal int) int {

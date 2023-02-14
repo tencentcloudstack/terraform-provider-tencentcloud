@@ -31,7 +31,7 @@ func init() {
 	})
 }
 
-func TestAccTencentcloudTKEServerlessNodePoolBasic(t *testing.T) {
+func TestAccTencentcloudTKEServerlessNodePoolResource_Basic(t *testing.T) {
 	t.Parallel()
 
 	tkeClusterId := defaultTkeClusterId

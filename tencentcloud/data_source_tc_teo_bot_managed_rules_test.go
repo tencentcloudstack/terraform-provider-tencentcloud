@@ -7,7 +7,7 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudTeoBotManagedRulesDataSource -v
-func TestAccTencentCloudTeoBotManagedRulesDataSource(t *testing.T) {
+func TestAccTencentCloudNeedFixTeoBotManagedRulesDataSource(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{

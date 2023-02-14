@@ -60,7 +60,7 @@ func testAccCheckTemAppConfigDestroy(s *terraform.State) error {
 		res, err := service.DescribeTemAppConfig(ctx, environmentId, name)
 		if err != nil {
 			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
-				if sdkErr.Code == "InternalError.DescribeConfigDataError" {
+				if sdkErr.Code == "ResourceNotFound.ConfigDataNotFound" {
 					return nil
 				}
 			}

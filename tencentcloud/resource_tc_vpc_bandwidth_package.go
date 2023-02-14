@@ -62,6 +62,12 @@ func resourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 				Description: "Bandwidth package name.",
 			},
 
+			"internet_max_bandwidth": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Bandwidth packet speed limit size. Unit: Mbps, -1 means no speed limit.",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -92,6 +98,10 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 
 	if v, ok := d.GetOk("bandwidth_package_name"); ok {
 		request.BandwidthPackageName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("internet_max_bandwidth"); ok {
+		request.InternetMaxBandwidth = helper.IntInt64(v.(int))
 	}
 
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
@@ -194,6 +204,10 @@ func resourceTencentCloudVpcBandwidthPackageRead(d *schema.ResourceData, meta in
 		_ = d.Set("bandwidth_package_name", bandwidthPackage.BandwidthPackageName)
 	}
 
+	if bandwidthPackage.Bandwidth != nil {
+		_ = d.Set("internet_max_bandwidth", bandwidthPackage.Bandwidth)
+	}
+
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
 	tags, err := tagService.DescribeResourceTags(ctx, "vpc", "bandwidthPackage", tcClient.Region, d.Id())
@@ -232,6 +246,10 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 
 	if d.HasChange("protocol") {
 		return fmt.Errorf("`protocol` do not support change now.")
+	}
+
+	if d.HasChange("internet_max_bandwidth") {
+		return fmt.Errorf("`internet_max_bandwidth` do not support change now.")
 	}
 
 	if d.HasChange("charge_type") {

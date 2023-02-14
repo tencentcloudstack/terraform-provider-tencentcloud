@@ -26,7 +26,7 @@ resource "tencentcloud_ci_media_concat_template" "media_concat_template" {
 			codec = "H.264"
 			width = "1280"
 			height = ""
-      bitrate = "1000"
+      		bitrate = "1000"
 			fps = "25"
 			crf = ""
 			remove = ""
@@ -43,7 +43,7 @@ resource "tencentcloud_ci_media_concat_template" "media_concat_template" {
 				enable_start_fadein = "true"
 				start_fadein_time = "3"
 				enable_end_fadeout = "false"
-				end_fadeout_time = "0"
+				end_fadeout_time = "0.1"
 				enable_bgm_fade = "true"
 				bgm_fade_time = "1.7"
 			}
@@ -193,6 +193,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 									"remove": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Whether to delete the source audio stream, the value is true, false.",
 									},
 									"rotate": {
@@ -264,6 +265,7 @@ func resourceTencentCloudCiMediaConcatTemplate() *schema.Resource {
 												"end_fadeout_time": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "fade out time, greater than 0, support floating point numbers.",
 												},
 												"enable_bgm_fade": {
@@ -469,6 +471,8 @@ func resourceTencentCloudCiMediaConcatTemplateRead(d *schema.ResourceData, meta 
 		return fmt.Errorf("resource `track` %s does not exist", d.Id())
 	}
 
+	_ = d.Set("bucket", bucket)
+
 	if mediaConcatTemplate.Name != "" {
 		_ = d.Set("name", mediaConcatTemplate.Name)
 	}
@@ -488,7 +492,7 @@ func resourceTencentCloudCiMediaConcatTemplateRead(d *schema.ResourceData, meta 
 				}
 				concatFragmentList = append(concatFragmentList, concatFragmentMap)
 			}
-			concatTemplateMap["concat_fragment"] = []interface{}{concatFragmentList}
+			concatTemplateMap["concat_fragment"] = concatFragmentList
 		}
 
 		if mediaConcatTemplate.ConcatTemplate.Audio != nil {
@@ -611,7 +615,7 @@ func resourceTencentCloudCiMediaConcatTemplateRead(d *schema.ResourceData, meta 
 				audioMixList = append(audioMixList, audioMixMap)
 			}
 
-			concatTemplateMap["audio_mix"] = []interface{}{audioMixList}
+			concatTemplateMap["audio_mix"] = audioMixList
 		}
 
 		_ = d.Set("concat_template", []interface{}{concatTemplateMap})

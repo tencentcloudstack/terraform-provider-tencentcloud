@@ -30,9 +30,10 @@ func TestAccTencentCloudPtsProjectResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_pts_project.project",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_pts_project.project",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"updated_at"},
 			},
 		},
 	})

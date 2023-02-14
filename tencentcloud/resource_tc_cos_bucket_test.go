@@ -87,6 +87,7 @@ func TestAccTencentCloudCosBucketResource_basic(t *testing.T) {
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "encryption_algorithm", "AES256"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "versioning_enable", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "acceleration_enable", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "force_clean", "true"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_basic", "cos_bucket_url"),
 				),
@@ -286,6 +287,7 @@ func TestAccTencentCloudCosBucketResource_website(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.0.index_document", "index.html"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.0.error_document", "error.html"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_website", "website.0.endpoint"),
 				),
 			},
 			// test update bucket website
@@ -296,6 +298,7 @@ func TestAccTencentCloudCosBucketResource_website(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.0.index_document", "testindex.html"),
 					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_website", "website.0.error_document", "testerror.html"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_website", "website.0.endpoint"),
 				),
 			},
 			{
@@ -557,6 +560,7 @@ resource "tencentcloud_cos_bucket" "bucket_basic" {
   acl                  = "private"
   encryption_algorithm = "AES256"
   versioning_enable    = true
+  acceleration_enable  = true
   force_clean          = true
 }
 `, userInfoData)
