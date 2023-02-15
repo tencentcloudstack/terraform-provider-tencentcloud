@@ -226,10 +226,11 @@ func resourceTencentCloudDayuDDosIpAttachmentDeleteV2(d *schema.ResourceData, me
 	request.Id = helper.String(bgpInstanceId)
 	ubBoundDevList := make([]*antiddos.BoundIpInfo, 0)
 	for _, boundIp := range strings.Split(boundIps, COMMA_SP) {
+		boundIpValue := boundIp
 		ubBoundDevList = append(
 			ubBoundDevList,
 			&antiddos.BoundIpInfo{
-				Ip: &boundIp,
+				Ip: &boundIpValue,
 			},
 		)
 	}
