@@ -8,12 +8,6 @@ import (
 	"strconv"
 	"time"
 
-	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
-
-	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
-
-	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
-
 	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -56,6 +50,7 @@ import (
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
+	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	organization "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization/v20210331"
 	postgre "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
@@ -63,6 +58,7 @@ import (
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	rum "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622"
 	scf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416"
+	ses "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002"
 	sms "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	sslCertificate "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
@@ -71,6 +67,7 @@ import (
 	tag "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag/v20180813"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
 	tcaplusdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcaplusdb/v20190823"
+	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"

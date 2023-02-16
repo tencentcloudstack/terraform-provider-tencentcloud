@@ -5,30 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_watermark_template" "watermark_template" {
-  type = &lt;nil&gt;
-  name = &lt;nil&gt;
-  comment = &lt;nil&gt;
   coordinate_origin = "TopLeft"
-  x_pos = "0px"
-  y_pos = "0px"
+  name              = "xZxasd"
+  type              = "image"
+  x_pos             = "12%"
+  y_pos             = "21%"
+
   image_template {
-		image_content = &lt;nil&gt;
-		width = "10%"
-		height = "0px"
-		repeat_type = "repeat"
-
-  }
-  text_template {
-		font_type = &lt;nil&gt;
-		font_size = &lt;nil&gt;
-		font_color = "0xFFFFFF"
-		font_alpha =
-
-  }
-  svg_template {
-		width = "10W%"
-		height = "0px"
-
+    height        = "17px"
+    image_content = filebase64("./logo.png")
+    repeat_type   = "repeat"
+    width         = "12px"
   }
 }
 ```
@@ -45,11 +32,15 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
+	"io/ioutil"
+	"log"
+	"net/http"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	mps "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps/v20190612"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudMpsWatermarkTemplate() *schema.Resource {
@@ -336,9 +327,19 @@ func resourceTencentCloudMpsWatermarkTemplateRead(d *schema.ResourceData, meta i
 	if watermarkTemplate.ImageTemplate != nil {
 		imageTemplateMap := map[string]interface{}{}
 
-		//if watermarkTemplate.ImageTemplate.ImageContent != nil {
-		//	imageTemplateMap["image_content"] = watermarkTemplate.ImageTemplate.ImageContent
-		//}
+		if watermarkTemplate.ImageTemplate.ImageUrl != nil {
+			url := watermarkTemplate.ImageTemplate.ImageUrl
+			res, err := http.Get(*url)
+			if err != nil {
+				return err
+			}
+			content, err := ioutil.ReadAll(res.Body)
+			if err != nil {
+				return err
+			}
+			base64Encode := base64.StdEncoding.EncodeToString(content)
+			imageTemplateMap["image_content"] = base64Encode
+		}
 
 		if watermarkTemplate.ImageTemplate.Width != nil {
 			imageTemplateMap["width"] = watermarkTemplate.ImageTemplate.Width
