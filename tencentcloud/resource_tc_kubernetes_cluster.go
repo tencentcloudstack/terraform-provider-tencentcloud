@@ -64,7 +64,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
   }
 
   worker_config {
@@ -86,7 +87,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
 	cam_role_name			  = "CVM_QcsRole"
   }
 
@@ -156,7 +158,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
   }
 
   worker_config {
@@ -178,8 +181,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
 	cam_role_name			  = "CVM_QcsRole"
+    keys_id                   = "skey-11112222"
   }
 
   labels = {
@@ -247,7 +251,8 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
   }
 
   extension_addon {
@@ -329,7 +334,8 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
   }
 
   node_pool_global_config {
@@ -397,7 +403,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
   }
 
   labels = {
@@ -910,7 +917,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Optional:     true,
 			Default:      TKE_RUNTIME_DOCKER,
 			ValidateFunc: validateAllowedStringValue(TKE_RUNTIMES),
-			Description:  "Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.",
+			Description: "Runtime type of the cluster, the available values include: 'docker' and 'containerd'." +
+				"The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher." +
+				"Default is 'docker'.",
 		},
 		"cluster_deploy_type": {
 			Type:         schema.TypeString,
