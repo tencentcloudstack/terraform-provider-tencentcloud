@@ -102,6 +102,7 @@ func resourceTencentCloudEip() *schema.Resource {
 			"internet_max_bandwidth_out": {
 				Type:        schema.TypeInt,
 				Optional:    true,
+				Computed:    true,
 				Description: "The bandwidth limit of EIP, unit is Mbps.",
 			},
 			"tags": {
@@ -291,8 +292,12 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("public_ip", eip.AddressIp)
 	_ = d.Set("status", eip.AddressStatus)
 	_ = d.Set("internet_charge_type", eip.InternetChargeType)
-	_ = d.Set("internet_max_bandwidth_out", eip.Bandwidth)
 	_ = d.Set("tags", tags)
+
+	if eip.Bandwidth != nil {
+		_ = d.Set("internet_max_bandwidth_out", eip.Bandwidth)
+	}
+
 	if bgp != nil {
 		_ = d.Set("bandwidth_package_id", bgp.BandwidthPackageId)
 	}
