@@ -113,6 +113,7 @@ func resourceTencentCloudEip() *schema.Resource {
 			"bandwidth_package_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "ID of bandwidth package, it will set when `internet_charge_type` is `BANDWIDTH_PACKAGE`.",
 			},
 			// computed

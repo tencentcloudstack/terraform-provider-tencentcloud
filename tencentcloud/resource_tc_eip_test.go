@@ -348,7 +348,7 @@ resource "tencentcloud_eip" "foo" {
 const testAccEipProvider = `
 resource "tencentcloud_eip" "foo" {
   name = "eip_provider"
-  internet_service_provider = "CUCC"
+  internet_service_provider = "CMCC"
 }
 `
 
