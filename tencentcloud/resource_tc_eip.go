@@ -84,6 +84,21 @@ func resourceTencentCloudEip() *schema.Resource {
 				ForceNew:    true,
 				Description: "The charge type of eip. Valid values: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR`, `BANDWIDTH_PREPAID_BY_MONTH` and `TRAFFIC_POSTPAID_BY_HOUR`.",
 			},
+
+			"prepaid_period": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateAllowedIntValue(EIP_AVAILABLE_PERIOD),
+				Description:  "Period of instance. Default value: `1`. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. NOTES: must set when `internet_charge_type` is `BANDWIDTH_PREPAID_BY_MONTH`.",
+			},
+
+			"auto_renew_flag": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
+				Description:  "Auto renew flag.  0 - default state (manual renew); 1 - automatic renew; 2 - explicit no automatic renew. NOTES: Only supported prepaid EIP.",
+			},
+
 			"internet_max_bandwidth_out": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -125,6 +140,8 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	tagService := TagService{client: client}
 	region := client.Region
 
+	var internetChargeType string
+
 	request := vpc.NewAllocateAddressesRequest()
 	if v, ok := d.GetOk("type"); ok {
 		request.AddressType = helper.String(v.(string))
@@ -136,11 +153,22 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 		request.InternetServiceProvider = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("internet_charge_type"); ok {
+		internetChargeType = v.(string)
 		request.InternetChargeType = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
 		request.InternetMaxBandwidthOut = helper.IntInt64(v.(int))
 	}
+
+	if internetChargeType == "BANDWIDTH_PREPAID_BY_MONTH" {
+		addressChargePrepaid := vpc.AddressChargePrepaid{}
+		period := d.Get("prepaid_period")
+		renewFlag := d.Get("auto_renew_flag")
+		addressChargePrepaid.Period = helper.IntInt64(period.(int))
+		addressChargePrepaid.AutoRenewFlag = helper.IntInt64(renewFlag.(int))
+		request.AddressChargePrepaid = &addressChargePrepaid
+	}
+
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
 		for tagKey, tagValue := range v {
 			tag := vpc.Tag{
@@ -263,6 +291,7 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 	_ = d.Set("public_ip", eip.AddressIp)
 	_ = d.Set("status", eip.AddressStatus)
 	_ = d.Set("internet_charge_type", eip.InternetChargeType)
+	_ = d.Set("internet_max_bandwidth_out", eip.Bandwidth)
 	_ = d.Set("tags", tags)
 	if bgp != nil {
 		_ = d.Set("bandwidth_package_id", bgp.BandwidthPackageId)
@@ -315,6 +344,15 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 		}
 	}
 
+	if d.HasChange("prepaid_period") || d.HasChange("auto_renew_flag") {
+		period := d.Get("prepaid_period").(int)
+		renewFlag := d.Get("auto_renew_flag").(int)
+		err := vpcService.RenewAddress(ctx, eipId, period, renewFlag)
+		if err != nil {
+			return err
+		}
+	}
+
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
@@ -361,6 +399,40 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	})
 	if err != nil {
 		return err
+	}
+
+	var internetChargeType string
+	if v, ok := d.GetOk("internet_charge_type"); ok {
+		internetChargeType = v.(string)
+	}
+
+	if internetChargeType == "BANDWIDTH_PREPAID_BY_MONTH" {
+		// isolated
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			eip, errRet := vpcService.DescribeEipById(ctx, eipId)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			if !*eip.IsArrears {
+				return resource.RetryableError(fmt.Errorf("eip is still isolate"))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		// release
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			errRet := vpcService.DeleteEip(ctx, eipId)
+			if errRet != nil {
+				return retryError(errRet, "DesOperation.MutexTaskRunning")
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
 	}
 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {

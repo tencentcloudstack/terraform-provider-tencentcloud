@@ -2325,6 +2325,27 @@ func (me *VpcService) ModifyEipBandwidthOut(ctx context.Context, eipId string, b
 	return nil
 }
 
+func (me *VpcService) RenewAddress(ctx context.Context, eipId string, period int, renewFlag int) error {
+	logId := getLogId(ctx)
+	request := vpc.NewRenewAddressesRequest()
+	request.AddressIds = []*string{&eipId}
+	addressChargePrepaid := vpc.AddressChargePrepaid{}
+	addressChargePrepaid.AutoRenewFlag = helper.IntInt64(renewFlag)
+	addressChargePrepaid.Period = helper.IntInt64(period)
+	request.AddressChargePrepaid = &addressChargePrepaid
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().RenewAddresses(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
 func (me *VpcService) DeleteEip(ctx context.Context, eipId string) error {
 	logId := getLogId(ctx)
 	request := vpc.NewReleaseAddressesRequest()
