@@ -22,7 +22,7 @@ func TestAccTencentCloudDayuDdosIpAttachmentV2Resource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDayuDdosIpAttachmentExists("tencentcloud_dayu_ddos_ip_attachment_v2.boundip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dayu_ddos_ip_attachment_v2.boundip", "bgp_instance_id"),
-					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_ip_attachment_v2.boundip", "bound_ip_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dayu_ddos_ip_attachment_v2.boundip", "bound_ip_list.#", "2"),
 				),
 			},
 		},
@@ -115,11 +115,17 @@ func testAccCheckDayuDdosIpAttachmentExists(n string) resource.TestCheckFunc {
 
 const testAccDayuDdosIpAttachment_basic = `
 resource "tencentcloud_dayu_ddos_ip_attachment_v2" "boundip" {
-	bgp_instance_id = "bgp-000001co"
+	bgp_instance_id = "bgp-00000fih"
 	bound_ip_list {
 		ip = "43.136.81.73"
 		biz_type = "public"
 		instance_id = "ins-eukucmzm"
+		device_type = "cvm"
+	}
+	bound_ip_list {
+		ip = "43.139.245.210"
+		biz_type = "public"
+		instance_id = "ins-c6vwi48a"
 		device_type = "cvm"
 	}
   }

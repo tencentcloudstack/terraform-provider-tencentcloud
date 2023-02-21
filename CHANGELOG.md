@@ -1,3 +1,14 @@
+## 1.79.10 (February 15, 2023)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_function_targets_attachment: set weight default `10`. ([#1554](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1554))
+* resource/tencentcloud_tcr_namespace: Support is_auto_scan, is_prevent_vul, severity, cve_whitelist_items field ([#1552](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1552))
+
+BUG FIXES:
+
+* resource/tencentcloud_dayu_ddos_ip_attachment_v2: fix delete failed ([#1558](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1558))
+
 ## 1.79.9 (February 10, 2023)
 
 FEATURES:

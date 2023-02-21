@@ -167,3 +167,56 @@ func (me *MpsService) DeleteMpsTranscodeTemplateById(ctx context.Context, defini
 
 	return
 }
+
+func (me *MpsService) DescribeMpsWatermarkTemplateById(ctx context.Context, definition string) (watermarkTemplate *mps.WatermarkTemplate, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribeWatermarkTemplatesRequest()
+	request.Definitions = []*int64{helper.StrToInt64Point(definition)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribeWatermarkTemplates(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.WatermarkTemplateSet) < 1 {
+		return
+	}
+
+	watermarkTemplate = response.Response.WatermarkTemplateSet[0]
+	return
+}
+
+func (me *MpsService) DeleteMpsWatermarkTemplateById(ctx context.Context, definition string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDeleteWatermarkTemplateRequest()
+	request.Definition = helper.StrToInt64Point(definition)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DeleteWatermarkTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

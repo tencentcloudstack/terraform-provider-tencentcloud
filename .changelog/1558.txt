@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_dayu_ddos_ip_attachment_v2: fix delete failed
+```

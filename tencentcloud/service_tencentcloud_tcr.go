@@ -254,7 +254,7 @@ func (me *TCRService) DeleteTCRInstance(ctx context.Context, instanceId string, 
 //long term token
 
 //name space
-func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string, name string, isPublic bool) (errRet error) {
+func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string, name string, isPublic, isAutoScan, isPreventVUL bool, severity string, whitelistItems []interface{}) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewCreateNamespaceRequest()
 	defer func() {
@@ -265,6 +265,22 @@ func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string,
 	request.RegistryId = &instanceId
 	request.IsPublic = &isPublic
 	request.NamespaceName = &name
+	request.IsAutoScan = &isAutoScan
+	request.IsPreventVUL = &isPreventVUL
+	if severity != "" {
+		request.Severity = &severity
+	}
+
+	if len(whitelistItems) > 0 {
+		for _, item := range whitelistItems {
+			whitelistItemMap := item.(map[string]interface{})
+			whitelistItemItem := tcr.CVEWhitelistItem{}
+			if v, ok := whitelistItemMap["cve_id"]; ok {
+				whitelistItemItem.CVEID = helper.String(v.(string))
+			}
+			request.CVEWhitelistItems = append(request.CVEWhitelistItems, &whitelistItemItem)
+		}
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().CreateNamespace(request)
@@ -294,7 +310,7 @@ func (me *TCRService) ModifyInstance(ctx context.Context, registryId, registryTy
 	return err
 
 }
-func (me *TCRService) ModifyTCRNameSpace(ctx context.Context, instanceId string, name string, isPublic bool) (errRet error) {
+func (me *TCRService) ModifyTCRNameSpace(ctx context.Context, instanceId string, name string, isPublic, isAutoScan, isPreventVUL bool, severity string, whitelistItems []interface{}) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewModifyNamespaceRequest()
 	defer func() {
@@ -305,6 +321,22 @@ func (me *TCRService) ModifyTCRNameSpace(ctx context.Context, instanceId string,
 	request.RegistryId = &instanceId
 	request.NamespaceName = &name
 	request.IsPublic = &isPublic
+	request.IsAutoScan = &isAutoScan
+	request.IsPreventVUL = &isPreventVUL
+	if severity != "" {
+		request.Severity = &severity
+	}
+
+	if len(whitelistItems) > 0 {
+		for _, item := range whitelistItems {
+			whitelistItemMap := item.(map[string]interface{})
+			whitelistItemItem := tcr.CVEWhitelistItem{}
+			if v, ok := whitelistItemMap["cve_id"]; ok {
+				whitelistItemItem.CVEID = helper.String(v.(string))
+			}
+			request.CVEWhitelistItems = append(request.CVEWhitelistItems, &whitelistItemItem)
+		}
+	}
 
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTCRClient().ModifyNamespace(request)
