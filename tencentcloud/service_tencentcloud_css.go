@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
@@ -369,5 +370,130 @@ func (me *CssService) DeleteCssLiveTranscodeRuleAttachmentById(ctx context.Conte
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *CssService) DescribeCssDomainById(ctx context.Context, name string) (domain *css.DomainInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := css.NewDescribeLiveDomainRequest()
+	request.DomainName = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCssClient().DescribeLiveDomain(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	result := response.Response.DomainInfo
+	if result != nil {
+		domain = result
+		return
+	}
+
+	return
+}
+
+func (me *CssService) DeleteCssDomainById(ctx context.Context, name *string, dtype *uint64) (errRet error) {
+	logId := getLogId(ctx)
+
+	if name == nil || dtype == nil {
+		return fmt.Errorf("DeleteCssDomainById: the required parameters name and type are nil!")
+	}
+	request := css.NewDeleteLiveDomainRequest()
+	request.DomainName = name
+	request.DomainType = dtype
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCssClient().DeleteLiveDomain(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CssService) DescribeCssDomainsByFilter(ctx context.Context, param map[string]interface{}) (domains []*css.DomainInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = css.NewDescribeLiveDomainsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DomainStatus" {
+			request.DomainStatus = v.(*uint64)
+		}
+
+		if k == "DomainType" {
+			request.DomainType = v.(*uint64)
+		}
+
+		if k == "IsDelayLive" {
+			request.IsDelayLive = v.(*uint64)
+		}
+
+		if k == "DomainPrefix" {
+			request.DomainPrefix = v.(*string)
+		}
+
+		if k == "PlayType" {
+			request.PlayType = v.(*uint64)
+		}
+
+	}
+	ratelimit.Check(request.GetAction())
+
+	var currNumber uint64 = 1
+	var pageSize uint64 = 20
+
+	for {
+		request.PageNum = &currNumber
+		request.PageSize = &pageSize
+
+		response, err := me.client.UseCssClient().DescribeLiveDomains(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.DomainList) < 1 {
+			break
+		}
+
+		domains = append(domains, response.Response.DomainList...)
+		if len(response.Response.DomainList) < int(pageSize) {
+			break
+		}
+		currNumber++
+	}
 	return
 }
