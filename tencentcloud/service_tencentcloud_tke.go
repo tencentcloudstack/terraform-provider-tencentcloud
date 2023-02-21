@@ -825,7 +825,7 @@ func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId s
 /*
   open internet access
 */
-func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool) (errRet error) {
+func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool, domain string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tke.NewCreateClusterEndpointRequest()
@@ -844,6 +844,10 @@ func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subn
 
 	if securityGroupId != "" && internet {
 		request.SecurityGroup = &securityGroupId
+	}
+
+	if domain != "" {
+		request.Domain = helper.String(domain)
 	}
 
 	ratelimit.Check(request.GetAction())
@@ -2499,6 +2503,79 @@ func ModifySecurityServiceOfCvmInNodePool(ctx context.Context, d *schema.Resourc
 					return err
 				}
 			}
+		}
+	}
+	return nil
+}
+
+func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.ResourceData, tkeSvc *TkeService,
+	isInternet bool, enable bool, sg string, subnetId string, domain string) error {
+
+	id := d.Id()
+	var accessType string
+	if isInternet {
+		accessType = "cluster internet"
+	} else {
+		accessType = "cluster intranet"
+	}
+	// open access
+	if enable {
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr := tkeSvc.CreateClusterEndpoint(ctx, id, subnetId, sg, isInternet, domain)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			status, message, inErr := tkeSvc.DescribeClusterEndpointStatus(ctx, id, isInternet)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			if status == TkeInternetStatusCreating {
+				return resource.RetryableError(
+					fmt.Errorf("%s create %s endpoint status still is %s", id, accessType, status))
+			}
+			if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
+				return nil
+			}
+			return resource.NonRetryableError(
+				fmt.Errorf("%s create %s endpoint error ,status is %s,message is %s", id, accessType, status, message))
+		})
+		if err != nil {
+			return err
+		}
+	} else { // close access
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			inErr := tkeSvc.DeleteClusterEndpoint(ctx, id, isInternet)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+		err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+			status, message, inErr := tkeSvc.DescribeClusterEndpointStatus(ctx, id, isInternet)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			if status == TkeInternetStatusDeleting {
+				return resource.RetryableError(
+					fmt.Errorf("%s close %s endpoint status still is %s", id, accessType, status))
+			}
+			if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted || status == TkeInternetStatusCreated {
+				return nil
+			}
+			return resource.NonRetryableError(
+				fmt.Errorf("%s close %s endpoint error ,status is %s,message is %s", id, accessType, status, message))
+		})
+		if err != nil {
+			return err
 		}
 	}
 	return nil
