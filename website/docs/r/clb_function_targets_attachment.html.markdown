@@ -37,7 +37,7 @@ resource "tencentcloud_clb_function_targets_attachment" "function_targets" {
 
 The following arguments are supported:
 
-* `function_targets` - (Required, List, ForceNew) List of cloud functions to be bound.
+* `function_targets` - (Required, List) List of cloud functions to be bound.
 * `listener_id` - (Required, String, ForceNew) Load Balancer Listener ID.
 * `load_balancer_id` - (Required, String, ForceNew) Load Balancer Instance ID.
 * `domain` - (Optional, String, ForceNew) The domain name of the target forwarding rule. If the LocationId parameter has been entered, this parameter will not take effect.
@@ -46,7 +46,7 @@ The following arguments are supported:
 
 The `function_targets` object supports the following:
 
-* `function` - (Required, List) Information about cloud functions.&quot;Note: This field may return null, indicating that no valid value can be obtained.
+* `function` - (Required, List) Information about cloud functions.Note: This field may return null, indicating that no valid value can be obtained.
 * `weight` - (Optional, Int) Weight. The default is `10`.
 
 The `function` object supports the following:

@@ -50,6 +50,7 @@ func resourceTencentCloudClbFunctionTargetsAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudClbFunctionTargetsAttachmentCreate,
 		Read:   resourceTencentCloudClbFunctionTargetsAttachmentRead,
+		Update: resourceTencentCloudClbFunctionTargetsAttachmentUpdate,
 		Delete: resourceTencentCloudClbFunctionTargetsAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -71,7 +72,6 @@ func resourceTencentCloudClbFunctionTargetsAttachment() *schema.Resource {
 
 			"function_targets": {
 				Required:    true,
-				ForceNew:    true,
 				MaxItems:    1,
 				Type:        schema.TypeList,
 				Description: "List of cloud functions to be bound.",
@@ -81,7 +81,7 @@ func resourceTencentCloudClbFunctionTargetsAttachment() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Required:    true,
-							Description: "Information about cloud functions.&quot;Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Information about cloud functions.Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"function_namespace": {
@@ -339,6 +339,97 @@ func resourceTencentCloudClbFunctionTargetsAttachmentRead(d *schema.ResourceData
 	}
 
 	return nil
+}
+
+func resourceTencentCloudClbFunctionTargetsAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_clb_function_targets_attachment.update")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	var (
+		request        = clb.NewModifyFunctionTargetsRequest()
+		loadBalancerId string
+		listenerId     string
+		locationId     string
+		domain         string
+		url            string
+	)
+
+	if len(idSplit) == 3 {
+		loadBalancerId = idSplit[0]
+		listenerId = idSplit[1]
+		locationId = idSplit[2]
+	} else if len(idSplit) == 4 {
+		loadBalancerId = idSplit[0]
+		listenerId = idSplit[1]
+		domain = idSplit[2]
+		url = idSplit[3]
+	} else {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+
+	request.LoadBalancerId = helper.String(loadBalancerId)
+	request.ListenerId = helper.String(listenerId)
+
+	if locationId != "" {
+		request.LocationId = helper.String(locationId)
+	} else {
+		request.Url = helper.String(url)
+		request.Domain = helper.String(domain)
+	}
+
+	if d.HasChange("function_targets") {
+
+		if v, ok := d.GetOk("function_targets"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				functionTarget := clb.FunctionTarget{}
+				if functionMap, ok := helper.InterfaceToMap(dMap, "function"); ok {
+					functionInfo := clb.FunctionInfo{}
+					if v, ok := functionMap["function_namespace"]; ok {
+						functionInfo.FunctionNamespace = helper.String(v.(string))
+					}
+					if v, ok := functionMap["function_name"]; ok {
+						functionInfo.FunctionName = helper.String(v.(string))
+					}
+					if v, ok := functionMap["function_qualifier"]; ok {
+						functionInfo.FunctionQualifier = helper.String(v.(string))
+					}
+					if v, ok := functionMap["function_qualifier_type"]; ok {
+						functionInfo.FunctionQualifierType = helper.String(v.(string))
+					}
+					functionTarget.Function = &functionInfo
+				}
+				if v, ok := dMap["weight"]; ok {
+					functionTarget.Weight = helper.IntUint64(v.(int))
+				}
+				request.FunctionTargets = append(request.FunctionTargets, &functionTarget)
+			}
+		}
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyFunctionTargets(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			requestId := *result.Response.RequestId
+			retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+			if retryErr != nil {
+				return resource.NonRetryableError(errors.WithStack(retryErr))
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update clb functionTargetsAttachment failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return resourceTencentCloudClbFunctionTargetsAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudClbFunctionTargetsAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
