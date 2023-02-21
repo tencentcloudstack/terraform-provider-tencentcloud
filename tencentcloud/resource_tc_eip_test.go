@@ -66,7 +66,7 @@ func testSweepEipInstance(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudEip_basic(t *testing.T) {
+func TestAccTencentCloudEipResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -127,7 +127,7 @@ func TestAccTencentCloudEip_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudEip_anycast(t *testing.T) {
+func TestAccTencentCloudEipResource_anycast(t *testing.T) {
 	defer func() {
 		os.Setenv(PROVIDER_REGION, "")
 	}()
@@ -149,7 +149,7 @@ func TestAccTencentCloudEip_anycast(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudEip_provider(t *testing.T) {
+func TestAccTencentCloudEipResource_provider(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -168,7 +168,7 @@ func TestAccTencentCloudEip_provider(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudEip_bandwidth(t *testing.T) {
+func TestAccTencentCloudEipResource_bandwidth(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -187,7 +187,7 @@ func TestAccTencentCloudEip_bandwidth(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudEip_chargetype(t *testing.T) {
+func TestAccTencentCloudEipResource_chargetype(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -205,6 +205,30 @@ func TestAccTencentCloudEip_chargetype(t *testing.T) {
 				ResourceName:      "tencentcloud_eip.foo",
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudEipResource_prepaid(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckEipDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccEipPrepaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckEipExists("tencentcloud_eip.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_eip.foo", "internet_charge_type", "BANDWIDTH_PREPAID_BY_MONTH"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_eip.foo",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"prepaid_period", "auto_renew_flag"},
 			},
 		},
 	})
@@ -324,7 +348,7 @@ resource "tencentcloud_eip" "foo" {
 const testAccEipProvider = `
 resource "tencentcloud_eip" "foo" {
   name = "eip_provider"
-  internet_service_provider = "CUCC"
+  internet_service_provider = "CMCC"
 }
 `
 
@@ -341,4 +365,14 @@ resource "tencentcloud_eip" "foo" {
 	name = "eip_charge_type"
 	internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
   }
+`
+
+const testAccEipPrepaid = `
+resource "tencentcloud_eip" "foo" {
+  name = "eip_prepaid"
+  internet_charge_type = "BANDWIDTH_PREPAID_BY_MONTH"
+  prepaid_period = 6
+  auto_renew_flag = 1
+  internet_max_bandwidth_out = 2
+}
 `
