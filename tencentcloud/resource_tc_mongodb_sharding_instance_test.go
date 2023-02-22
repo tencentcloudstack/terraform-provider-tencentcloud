@@ -36,6 +36,7 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "charge_type", MONGODB_CHARGE_TYPE_POSTPAID),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "prepaid_period"),
+					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "security_groups"),
 				),
 			},
 			{
@@ -46,6 +47,12 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.abc", "abc"),
 				),
+			},
+			{
+				ResourceName:            "tencentcloud_mongodb_sharding_instance.mongodb",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"password"},
 			},
 		},
 	})
@@ -132,6 +139,7 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   tags = {
     test = "test"
   }
+  security_groups = [var.sg_id]
 }
 `
 
@@ -154,6 +162,7 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
   tags = {
     abc = "abc"
   }
+  security_groups = [var.sg_id]
 }
 `
 

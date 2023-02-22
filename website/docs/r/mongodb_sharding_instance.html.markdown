@@ -69,3 +69,11 @@ In addition to all arguments above, the following attributes are exported:
 * `vport` - IP port of the Mongodb instance.
 
 
+## Import
+
+Mongodb sharding instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_mongodb_sharding_instance.mongodb cmgo-41s6jwy4
+```
+
