@@ -52,7 +52,6 @@ func testSweepCssDomainResource(r string) error {
 }
 
 func TestAccTencentCloudCssDomainResource_basic(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -61,16 +60,29 @@ func TestAccTencentCloudCssDomainResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckCssDomainDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCssDomain_push,
+				Config: testAccCssDomain_push_enable,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCssDomainExists("tencentcloud_css_domain.domain"),
 					resource.TestCheckResourceAttrSet("tencentcloud_css_domain.domain", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "domain_name", "iac-tf.cloud"),
 					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "domain_type", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "play_type", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "is_delay_live", "0"),
+					// resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "is_delay_live", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "is_mini_program_live", "0"),
-					// resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "verify_owner_type", "dbCheck"),
+					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "enable", "true"),
+				),
+			},
+			{
+				Config: testAccCssDomain_push_disable,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckCssDomainExists("tencentcloud_css_domain.domain"),
+					resource.TestCheckResourceAttrSet("tencentcloud_css_domain.domain", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "domain_name", "iac-tf.cloud"),
+					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "domain_type", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "play_type", "1"),
+					// resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "is_delay_live", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "is_mini_program_live", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_css_domain.domain", "enable", "false"),
 				),
 			},
 			{
@@ -135,15 +147,26 @@ func testAccCheckCssDomainExists(re string) resource.TestCheckFunc {
 	}
 }
 
-const testAccCssDomain_push = `
-
+const testAccCssDomain_push_enable = `
 resource "tencentcloud_css_domain" "domain" {
   domain_name = "iac-tf.cloud"
   domain_type = 0
   play_type = 1
-  is_delay_live = 0
   is_mini_program_live = 0
   verify_owner_type = "dbCheck"
+  enable = true
+}
+
+`
+
+const testAccCssDomain_push_disable = `
+resource "tencentcloud_css_domain" "domain" {
+  domain_name = "iac-tf.cloud"
+  domain_type = 0
+  play_type = 1
+  is_mini_program_live = 0
+  verify_owner_type = "dbCheck"
+  enable = false
 }
 
 `

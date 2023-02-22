@@ -36,7 +36,7 @@ resource "tencentcloud_css_authenticate_domain_owner_operation" "fileCheck" {
 The following arguments are supported:
 
 * `domain_name` - (Required, String, ForceNew) The domain name to verify.
-* `verify_type` - (Required, String, ForceNew) Authentication type. Possible values:`dnsCheck`: Immediately verify whether the resolution record of the configured dns is consistent with the content to be verified, and save the record if successful.`fileCheck`: Immediately verify whether the web file is consistent with the content to be verified, and save the record if successful.`dbCheck`: Check if authentication has been successful.
+* `verify_type` - (Optional, String, ForceNew) Authentication type. Possible values:`dnsCheck`: Immediately verify whether the resolution record of the configured dns is consistent with the content to be verified, and save the record if successful.`fileCheck`: Immediately verify whether the web file is consistent with the content to be verified, and save the record if successful.`dbCheck`: Check if authentication has been successful.
 
 ## Attributes Reference
 

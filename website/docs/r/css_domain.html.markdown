@@ -30,9 +30,10 @@ The following arguments are supported:
 
 * `domain_name` - (Required, String) Domain Name.
 * `domain_type` - (Required, Int) Domain type: `0`: push stream. `1`: playback.
-* `is_delay_live` - (Optional, Int) Whether it is LCB: `0`: LVB. `1`: LCB.
-* `is_mini_program_live` - (Optional, Int) `0`: LVB. `1`: LVB on Mini Program. Note: this field may return null, indicating that no valid values can be obtained.
-* `play_type` - (Optional, Int) Play Type. This parameter is valid only if `DomainType` is 1. Available values: `1`: in Mainland China. `2`: global. `3`: outside Mainland China.
+* `enable` - (Optional, Bool) Switch. true: enable the specified domain, false: disable the specified domain.
+* `is_delay_live` - (Optional, Int) Whether it is LCB: `0`: LVB. `1`: LCB. Default value is 0.
+* `is_mini_program_live` - (Optional, Int) `0`: LVB. `1`: LVB on Mini Program. Note: this field may return null, indicating that no valid values can be obtained. Default value is 0.
+* `play_type` - (Optional, Int) Play Type. This parameter is valid only if `DomainType` is 1. Available values: `1`: in Mainland China. `2`: global. `3`: outside Mainland China. Default value is 1.
 * `verify_owner_type` - (Optional, String) Domain name attribution verification type. `dnsCheck`, `fileCheck`, `dbCheck`. The default is `dbCheck`.
 
 ## Attributes Reference

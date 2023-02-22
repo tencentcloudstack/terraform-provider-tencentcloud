@@ -36,9 +36,6 @@ func resourceTencentCloudCssAuthenticateDomainOwnerOperation() *schema.Resource 
 		Create: resourceTencentCloudCssAuthenticateDomainOwnerOperationCreate,
 		Read:   resourceTencentCloudCssAuthenticateDomainOwnerOperationRead,
 		Delete: resourceTencentCloudCssAuthenticateDomainOwnerOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"domain_name": {
 				Required:    true,
@@ -48,9 +45,10 @@ func resourceTencentCloudCssAuthenticateDomainOwnerOperation() *schema.Resource 
 			},
 
 			"verify_type": {
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
+				Default:     CSS_VERIFY_TYPE_DB_CHECK,
 				Description: "Authentication type. Possible values:`dnsCheck`: Immediately verify whether the resolution record of the configured dns is consistent with the content to be verified, and save the record if successful.`fileCheck`: Immediately verify whether the web file is consistent with the content to be verified, and save the record if successful.`dbCheck`: Check if authentication has been successful.",
 			},
 		},

@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_css_domain
+```
+
+```release-note:new-resource
+tencentcloud_css_domain_config
+```
+
+```release-note:new-resource
+tencentcloud_css_authenticate_domain_owner_operation
+```
+
+```release-note:new-data-source
+tencentcloud_css_domains
+```
