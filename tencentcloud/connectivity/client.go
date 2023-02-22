@@ -25,6 +25,7 @@ import (
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
+	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
@@ -156,6 +157,7 @@ type TencentCloudClient struct {
 	tsfConn            *tsf.Client
 	mpsConn            *mps.Client
 	cwpConn            *cwp.Client
+	chdfsConn          *chdfs.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1067,6 +1069,20 @@ func (me *TencentCloudClient) UseCwpClient() *cwp.Client {
 	me.cwpConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cwpConn
+}
+
+// UseChdfsClient returns chdfs client for service
+func (me *TencentCloudClient) UseChdfsClient() *chdfs.Client {
+	if me.chdfsConn != nil {
+		return me.chdfsConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.chdfsConn, _ = chdfs.NewClient(me.Credential, me.Region, cpf)
+	me.chdfsConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.chdfsConn
 }
 
 func getEnvDefault(key string, defVal int) int {
