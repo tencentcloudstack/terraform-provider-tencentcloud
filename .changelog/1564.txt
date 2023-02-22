@@ -1,0 +1,6 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: support setting tke cluster internet/intranet domain
+```
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster_endpoint: support setting tke cluster internet/intranet domain
+```
