@@ -193,3 +193,61 @@ func (me *ChdfsService) DeleteChdfsAccessRulesById(ctx context.Context, accessRu
 
 	return
 }
+
+func (me *ChdfsService) DescribeChdfsLifeCycleRuleById(ctx context.Context, fileSystemId string, lifeCycleRuleId string) (lifeCycleRule *chdfs.LifeCycleRule, errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDescribeLifeCycleRulesRequest()
+	request.FileSystemId = &fileSystemId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeLifeCycleRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.LifeCycleRules) < 1 {
+		return
+	}
+
+	for _, rule := range response.Response.LifeCycleRules {
+		if *rule.LifeCycleRuleId == helper.StrToUInt64(lifeCycleRuleId) {
+			lifeCycleRule = rule
+			break
+		}
+	}
+	return
+}
+
+func (me *ChdfsService) DeleteChdfsLifeCycleRuleById(ctx context.Context, lifeCycleRuleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDeleteLifeCycleRulesRequest()
+	request.LifeCycleRuleIds = []*uint64{helper.StrToUint64Point(lifeCycleRuleId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DeleteLifeCycleRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

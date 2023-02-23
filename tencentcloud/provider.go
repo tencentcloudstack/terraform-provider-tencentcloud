@@ -1702,6 +1702,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_access_group":                         resourceTencentCloudChdfsAccessGroup(),
 			"tencentcloud_chdfs_access_rule":                          resourceTencentCloudChdfsAccessRule(),
 			"tencentcloud_chdfs_file_system":                          resourceTencentCloudChdfsFileSystem(),
+			"tencentcloud_chdfs_life_cycle_rule":                      resourceTencentCloudChdfsLifeCycleRule(),
 		},
 
 		ConfigureFunc: providerConfigure,
