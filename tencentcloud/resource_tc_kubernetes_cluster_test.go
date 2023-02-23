@@ -78,6 +78,8 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "auto_upgrade_cluster_level", "true"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test1", "test1"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "labels.test2", "test2"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_internet_domain", "tf.cluster-internet.com"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_intranet_domain", "tf.cluster-intranet.com"),
 				),
 			},
 			{
@@ -87,6 +89,7 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_name", "test2"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc 2"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_level", "L5"),
+					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_internet_domain", "tf2.cluster-internet.com"),
 				),
 			},
 			{
@@ -356,7 +359,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc"
   cluster_max_service_num                    = 32
   cluster_internet                           = true
+  cluster_internet_domain                    = "tf.cluster-internet.com"
   cluster_intranet                           = true
+  cluster_intranet_domain                    = "tf.cluster-intranet.com"
   cluster_version                            = "1.18.4"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
@@ -423,6 +428,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc 2"
   cluster_max_service_num                    = 32
   cluster_internet                           = true
+  cluster_internet_domain                    = "tf2.cluster-internet.com"
   cluster_intranet                           = false
   cluster_version                            = "1.18.4"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"

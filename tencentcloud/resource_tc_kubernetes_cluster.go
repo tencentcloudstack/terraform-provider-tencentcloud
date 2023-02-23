@@ -2635,7 +2635,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("cluster_intranet") {
-		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, false, clusterIntranet, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTRANET, clusterIntranet, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
 			return err
 		}
 
@@ -2643,7 +2643,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("cluster_internet") {
-		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, true, clusterInternet, clusterInternetSecurityGroup, "", clusterInternetDomain); err != nil {
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTERNET, clusterInternet, clusterInternetSecurityGroup, "", clusterInternetDomain); err != nil {
 			return err
 		}
 	}
@@ -2652,22 +2652,22 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 	if !d.HasChange("cluster_intranet") && clusterIntranet && d.HasChange("cluster_intranet_domain") {
 		// recreate the cluster intranet endpoint using new domain
 		// first close
-		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, false, false, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTRANET, TKE_CLUSTER_CLOSE_ACCESS, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
 			return err
 		}
 		// then reopen
-		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, false, true, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTRANET, TKE_CLUSTER_OPEN_ACCESS, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
 			return err
 		}
 	}
 	if !d.HasChange("cluster_internet") && clusterInternet && d.HasChange("cluster_internet_domain") {
 		// recreate the cluster internet endpoint using new domain
 		// first close
-		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, true, false, clusterInternetSecurityGroup, "", clusterInternetDomain); err != nil {
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTERNET, TKE_CLUSTER_CLOSE_ACCESS, clusterInternetSecurityGroup, "", clusterInternetDomain); err != nil {
 			return err
 		}
 		// then reopen
-		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, true, true, clusterInternetSecurityGroup, "", clusterInternetDomain); err != nil {
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTERNET, TKE_CLUSTER_OPEN_ACCESS, clusterInternetSecurityGroup, "", clusterInternetDomain); err != nil {
 			return err
 		}
 	}
