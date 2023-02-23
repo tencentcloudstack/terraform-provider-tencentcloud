@@ -7,13 +7,13 @@ Example Usage
 resource "tencentcloud_chdfs_life_cycle_rule" "life_cycle_rule" {
   file_system_id = "xxxx"
   life_cycle_rule {
-		life_cycle_rule_name = "test"
-		path = "/"
-		transitions {
-			days = 1
-			type = 1
-		}
-		status = 1
+    life_cycle_rule_name = "test"
+    path                 = "/"
+    transitions {
+      days = 1
+      type = 1
+    }
+    status               = 1
   }
 }
 ```

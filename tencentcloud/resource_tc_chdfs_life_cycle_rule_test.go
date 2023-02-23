@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudChdfsLifeCycleRuleResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixChdfsLifeCycleRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -30,16 +30,15 @@ func TestAccTencentCloudChdfsLifeCycleRuleResource_basic(t *testing.T) {
 const testAccChdfsLifeCycleRule = `
 
 resource "tencentcloud_chdfs_life_cycle_rule" "life_cycle_rule" {
-  file_system_id = &lt;nil&gt;
+  file_system_id = "xxxx"
   life_cycle_rule {
-		life_cycle_rule_name = &lt;nil&gt;
-		path = &lt;nil&gt;
-		transitions {
-			days = &lt;nil&gt;
-			type = &lt;nil&gt;
-		}
-		status = 
-
+    life_cycle_rule_name = "test"
+    path                 = "/"
+    transitions {
+      days = 1
+      type = 1
+    }
+    status               = 1
   }
 }
 
