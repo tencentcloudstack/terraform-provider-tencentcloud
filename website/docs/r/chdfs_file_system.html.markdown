@@ -40,7 +40,7 @@ The following arguments are supported:
 * `posix_acl` - (Required, Bool) check POSIX ACL or not.
 * `description` - (Optional, String) desc of the file system.
 * `enable_ranger` - (Optional, Bool) check the ranger address or not.
-* `ranger_service_addresses` - (Optional, Set: [`String`]) ranger adress list, default empty.
+* `ranger_service_addresses` - (Optional, Set: [`String`]) ranger address list, default empty.
 * `super_users` - (Optional, Set: [`String`]) super users of the file system, default empty.
 
 ## Attributes Reference

@@ -135,3 +135,61 @@ func (me *ChdfsService) ChdfsFileSystemStateRefreshFunc(fileSystemId string, fai
 		return object, helper.UInt64ToStr(*object.Status), nil
 	}
 }
+
+func (me *ChdfsService) DescribeChdfsAccessRulesById(ctx context.Context, accessGroupId string, accessRuleId string) (accessRule *chdfs.AccessRule, errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDescribeAccessRulesRequest()
+	request.AccessGroupId = &accessGroupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeAccessRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AccessRules) < 1 {
+		return
+	}
+
+	for _, rule := range response.Response.AccessRules {
+		if *rule.AccessRuleId == helper.StrToUInt64(accessRuleId) {
+			accessRule = rule
+			break
+		}
+	}
+	return
+}
+
+func (me *ChdfsService) DeleteChdfsAccessRulesById(ctx context.Context, accessRuleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDeleteAccessRulesRequest()
+	request.AccessRuleIds = []*uint64{helper.StrToUint64Point(accessRuleId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DeleteAccessRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

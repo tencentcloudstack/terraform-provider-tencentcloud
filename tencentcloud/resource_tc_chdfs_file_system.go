@@ -97,7 +97,7 @@ func resourceTencentCloudChdfsFileSystem() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "ranger adress list, default empty.",
+				Description: "ranger address list, default empty.",
 			},
 		},
 	}
