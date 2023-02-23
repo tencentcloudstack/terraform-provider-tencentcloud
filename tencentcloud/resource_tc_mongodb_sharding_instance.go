@@ -23,6 +23,13 @@ resource "tencentcloud_mongodb_sharding_instance" "mongodb" {
 }
 ```
 
+Import
+
+Mongodb sharding instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_mongodb_sharding_instance.mongodb cmgo-41s6jwy4
+```
 */
 package tencentcloud
 
@@ -68,6 +75,9 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 		Read:   resourceMongodbShardingInstanceRead,
 		Update: resourceMongodbShardingInstanceUpdate,
 		Delete: resourceMongodbShardingInstanceDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: mongodbShardingInstanceInfo,
 	}
@@ -360,6 +370,20 @@ func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("vip", instance.Vip)
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("create_time", instance.CreateTime)
+	_ = d.Set("mongos_cpu", instance.MongosCpuNum)
+	_ = d.Set("mongos_memory", instance.MongosMemory)
+	_ = d.Set("mongos_node_num", instance.MongosNodeNum)
+	_ = d.Set("auto_renew_flag", instance.AutoRenewFlag)
+
+	groups, err := mongodbService.DescribeSecurityGroup(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	groupIds := make([]string, 0)
+	for _, group := range groups {
+		groupIds = append(groupIds, *group.SecurityGroupId)
+	}
+	_ = d.Set("security_groups", groupIds)
 
 	tags := make(map[string]string, len(instance.Tags))
 	for _, tag := range instance.Tags {

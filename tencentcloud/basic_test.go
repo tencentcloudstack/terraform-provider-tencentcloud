@@ -725,7 +725,7 @@ locals {
 // End of TKE Service
 
 // MongoDB
-
+const defaultMongoDBSecurityGroupId = "sg-if748odn"
 const DefaultMongoDBSpec = `
 data "tencentcloud_mongodb_zone_config" "zone_config" {
   available_zone = "ap-guangzhou-6"
@@ -737,6 +737,9 @@ variable "engine_versions" {
     "4.0": "MONGO_40_WT",
     "4.2": "MONGO_42_WT"
   }
+}
+variable "sg_id" {
+  default = "` + defaultMongoDBSecurityGroupId + `"
 }
 
 locals {
