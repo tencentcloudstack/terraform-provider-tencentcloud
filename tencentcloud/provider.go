@@ -952,6 +952,8 @@ Media Processing Service(MPS)
 Cloud HDFS(CHDFS)
   Resource
 	tencentcloud_chdfs_access_group
+	tencentcloud_chdfs_access_rule
+	tencentcloud_chdfs_file_system
 
 */
 package tencentcloud
@@ -1698,6 +1700,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cbs_snapshot_share_permission":              resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":         resourceTencentCloudCbsDiskBackupRollbackOperation(),
 			"tencentcloud_chdfs_access_group":                         resourceTencentCloudChdfsAccessGroup(),
+			"tencentcloud_chdfs_access_rule":                          resourceTencentCloudChdfsAccessRule(),
+			"tencentcloud_chdfs_file_system":                          resourceTencentCloudChdfsFileSystem(),
+			"tencentcloud_chdfs_life_cycle_rule":                      resourceTencentCloudChdfsLifeCycleRule(),
 		},
 
 		ConfigureFunc: providerConfigure,
