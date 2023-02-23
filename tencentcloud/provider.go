@@ -945,6 +945,10 @@ Media Processing Service(MPS)
 	tencentcloud_mps_transcode_template
 	tencentcloud_mps_watermark_template
 
+Cloud HDFS(CHDFS)
+  Resource
+	tencentcloud_chdfs_access_group
+
 */
 package tencentcloud
 
@@ -1686,6 +1690,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cbs_disk_backup":                            resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":              resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":         resourceTencentCloudCbsDiskBackupRollbackOperation(),
+			"tencentcloud_chdfs_access_group":                         resourceTencentCloudChdfsAccessGroup(),
 		},
 
 		ConfigureFunc: providerConfigure,
