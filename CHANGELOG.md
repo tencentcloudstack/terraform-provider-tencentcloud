@@ -1,3 +1,22 @@
+## 1.79.11 (February 23, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_css_domains` ([#1568](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1568))
+* **New Resource:** `tencentcloud_chdfs_access_group` ([#1567](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1567))
+* **New Resource:** `tencentcloud_chdfs_access_rule` ([#1570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1570))
+* **New Resource:** `tencentcloud_chdfs_file_system` ([#1570](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1570))
+* **New Resource:** `tencentcloud_css_authenticate_domain_owner_operation` ([#1568](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1568))
+* **New Resource:** `tencentcloud_css_domain` ([#1568](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1568))
+* **New Resource:** `tencentcloud_css_domain_config` ([#1568](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1568))
+* **New Resource:** `tencentcloud_mps_watermark_template` ([#1559](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1559))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_function_targets_attachment: support update function targets. ([#1561](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1561))
+* resource/tencentcloud_eip: support create prepaid eip. ([#1563](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1563))
+* resource/tencentcloud_mongodb_sharding_instance: support import. ([#1566](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1566))
+
 ## 1.79.10 (February 15, 2023)
 
 ENHANCEMENTS:
