@@ -830,6 +830,10 @@ Cloud Streaming Services(CSS)
 	tencentcloud_css_pull_stream_task
 	tencentcloud_css_live_transcode_template
 	tencentcloud_css_live_transcode_rule_attachment
+	tencentcloud_css_domain
+	tencentcloud_css_authenticate_domain_owner_operation
+  Data Source
+	tencentcloud_css_domains
 
 Performance Testing Service(PTS)
   Resource
@@ -1294,6 +1298,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cynosdb_cluster_params":                   dataSourceTencentCloudCynosdbClusterParams(),
 			"tencentcloud_cynosdb_param_templates":                  dataSourceTencentCloudCynosdbParamTemplates(),
 			"tencentcloud_cvm_instances_modification":               dataSourceTencentCloudCvmInstancesModification(),
+			"tencentcloud_css_domains":                              dataSourceTencentCloudCssDomains(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1611,6 +1616,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_css_pull_stream_task":                       resourceTencentCloudCssPullStreamTask(),
 			"tencentcloud_css_live_transcode_template":                resourceTencentCloudCssLiveTranscodeTemplate(),
 			"tencentcloud_css_live_transcode_rule_attachment":         resourceTencentCloudCssLiveTranscodeRuleAttachment(),
+			"tencentcloud_css_domain":                                 resourceTencentCloudCssDomain(),
+			"tencentcloud_css_authenticate_domain_owner_operation":    resourceTencentCloudCssAuthenticateDomainOwnerOperation(),
 			"tencentcloud_pts_project":                                resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                          resourceTencentCloudPtsAlertChannel(),
 			"tencentcloud_pts_scenario":                               resourceTencentCloudPtsScenario(),
