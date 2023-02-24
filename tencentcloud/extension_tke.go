@@ -124,3 +124,11 @@ var TKE_ADDON_DEFAULT_VALUES_KEY = []string{
 const (
 	InstallSecurityAgentCommandId = "cmd-d8jj2skv"
 )
+
+const (
+	TKE_CLUSTER_INTERNET = true
+	TKE_CLUSTER_INTRANET = false
+
+	TKE_CLUSTER_OPEN_ACCESS  = true
+	TKE_CLUSTER_CLOSE_ACCESS = false
+)
