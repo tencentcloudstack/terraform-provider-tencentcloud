@@ -5,15 +5,17 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_chdfs_life_cycle_rule" "life_cycle_rule" {
-  file_system_id = "xxxx"
+  file_system_id = "f14mpfy5lh4e"
+
   life_cycle_rule {
-    life_cycle_rule_name = "test"
-    path                 = "/"
+    life_cycle_rule_name = "terraform-test"
+    path                 = "/test"
+    status               = 1
+
     transitions {
-      days = 1
+      days = 30
       type = 1
     }
-    status               = 1
   }
 }
 ```
@@ -53,6 +55,7 @@ func resourceTencentCloudChdfsLifeCycleRule() *schema.Resource {
 			"file_system_id": {
 				Required:    true,
 				Type:        schema.TypeString,
+				ForceNew:    true,
 				Description: "file system id.",
 			},
 
@@ -121,10 +124,9 @@ func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 
 	var (
-		request = chdfs.NewCreateLifeCycleRulesRequest()
-		//response        = chdfs.NewCreateLifeCycleRulesResponse()
-		fileSystemId    string
-		lifeCycleRuleId uint64
+		request      = chdfs.NewCreateLifeCycleRulesRequest()
+		fileSystemId string
+		path         string
 	)
 	if v, ok := d.GetOk("file_system_id"); ok {
 		fileSystemId = v.(string)
@@ -137,6 +139,7 @@ func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta i
 			lifeCycleRule.LifeCycleRuleName = helper.String(v.(string))
 		}
 		if v, ok := dMap["path"]; ok {
+			path = v.(string)
 			lifeCycleRule.Path = helper.String(v.(string))
 		}
 		if v, ok := dMap["transitions"]; ok {
@@ -173,7 +176,14 @@ func resourceTencentCloudChdfsLifeCycleRuleCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	d.SetId(fileSystemId + FILED_SP + helper.UInt64ToStr(lifeCycleRuleId))
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := ChdfsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	lifeCycleRule, err := service.DescribeChdfsLifeCycleRuleByPath(ctx, fileSystemId, path)
+	if err != nil {
+		return err
+	}
+
+	d.SetId(fileSystemId + FILED_SP + helper.UInt64ToStr(*lifeCycleRule.LifeCycleRuleId))
 
 	return resourceTencentCloudChdfsLifeCycleRuleRead(d, meta)
 }
@@ -239,7 +249,7 @@ func resourceTencentCloudChdfsLifeCycleRuleRead(d *schema.ResourceData, meta int
 				transitionsList = append(transitionsList, transitionsMap)
 			}
 
-			lifeCycleRuleMap["transitions"] = []interface{}{transitionsList}
+			lifeCycleRuleMap["transitions"] = transitionsList
 		}
 
 		if lifeCycleRule.Status != nil {

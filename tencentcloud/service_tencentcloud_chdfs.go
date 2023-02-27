@@ -228,6 +228,40 @@ func (me *ChdfsService) DescribeChdfsLifeCycleRuleById(ctx context.Context, file
 	return
 }
 
+func (me *ChdfsService) DescribeChdfsLifeCycleRuleByPath(ctx context.Context, fileSystemId string, path string) (lifeCycleRule *chdfs.LifeCycleRule, errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDescribeLifeCycleRulesRequest()
+	request.FileSystemId = &fileSystemId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeLifeCycleRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.LifeCycleRules) < 1 {
+		return
+	}
+
+	for _, rule := range response.Response.LifeCycleRules {
+		if *rule.Path == path {
+			lifeCycleRule = rule
+			break
+		}
+	}
+	return
+}
+
 func (me *ChdfsService) DeleteChdfsLifeCycleRuleById(ctx context.Context, lifeCycleRuleId string) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -248,6 +282,157 @@ func (me *ChdfsService) DeleteChdfsLifeCycleRuleById(ctx context.Context, lifeCy
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ChdfsService) DescribeChdfsMountPointById(ctx context.Context, mountPointId string) (mountPoint *chdfs.MountPoint, errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDescribeMountPointRequest()
+	request.MountPointId = &mountPointId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeMountPoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.MountPoint == nil {
+		return
+	}
+
+	mountPoint = response.Response.MountPoint
+	return
+}
+
+func (me *ChdfsService) DeleteChdfsMountPointById(ctx context.Context, mountPointId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDeleteMountPointRequest()
+	request.MountPointId = &mountPointId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DeleteMountPoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ChdfsService) DeleteChdfsMountPointAttachmentById(ctx context.Context, mountPointId string, accessGroupIds []*string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDisassociateAccessGroupsRequest()
+	request.MountPointId = &mountPointId
+	request.AccessGroupIds = accessGroupIds
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DisassociateAccessGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ChdfsService) DescribeChdfsAccessGroupsByFilter(ctx context.Context, param map[string]interface{}) (AccessGroups []*chdfs.AccessGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = chdfs.NewDescribeAccessGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "vpc_id" {
+			request.VpcId = v.(*string)
+		}
+		if k == "owner_uin" {
+			request.OwnerUin = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeAccessGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	AccessGroups = response.Response.AccessGroups
+
+	return
+}
+
+func (me *ChdfsService) DescribeChdfsMountPointsByFilter(ctx context.Context, param map[string]interface{}) (MountPoints []*chdfs.MountPoint, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = chdfs.NewDescribeMountPointsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "file_system_id" {
+			request.FileSystemId = v.(*string)
+		}
+		if k == "access_group_id" {
+			request.AccessGroupId = v.(*string)
+		}
+		if k == "owner_uin" {
+			request.OwnerUin = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeMountPoints(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	MountPoints = response.Response.MountPoints
 
 	return
 }
