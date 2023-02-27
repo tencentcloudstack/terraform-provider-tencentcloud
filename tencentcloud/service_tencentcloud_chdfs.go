@@ -363,3 +363,76 @@ func (me *ChdfsService) DeleteChdfsMountPointAttachmentById(ctx context.Context,
 
 	return
 }
+
+func (me *ChdfsService) DescribeChdfsAccessGroupsByFilter(ctx context.Context, param map[string]interface{}) (AccessGroups []*chdfs.AccessGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = chdfs.NewDescribeAccessGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "vpc_id" {
+			request.VpcId = v.(*string)
+		}
+		if k == "owner_uin" {
+			request.OwnerUin = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeAccessGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	AccessGroups = response.Response.AccessGroups
+
+	return
+}
+
+func (me *ChdfsService) DescribeChdfsMountPointsByFilter(ctx context.Context, param map[string]interface{}) (MountPoints []*chdfs.MountPoint, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = chdfs.NewDescribeMountPointsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "file_system_id" {
+			request.FileSystemId = v.(*string)
+		}
+		if k == "access_group_id" {
+			request.AccessGroupId = v.(*string)
+		}
+		if k == "owner_uin" {
+			request.OwnerUin = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeMountPoints(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	MountPoints = response.Response.MountPoints
+
+	return
+}
