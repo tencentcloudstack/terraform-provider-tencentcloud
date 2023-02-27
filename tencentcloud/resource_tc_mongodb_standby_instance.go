@@ -102,7 +102,7 @@ func resourceTencentCloudMongodbStandbyInstance() *schema.Resource {
 		},
 	}
 	basic := TencentMongodbBasicInfo()
-	conflictList := []string{"engine_version", "machine_type", "password", "available_zone"}
+	conflictList := []string{"engine_version", "machine_type", "password", "available_zone", "mongos_cpu", "mongos_memory", "mongos_node_num"}
 	for _, item := range conflictList {
 		delete(basic, item)
 	}

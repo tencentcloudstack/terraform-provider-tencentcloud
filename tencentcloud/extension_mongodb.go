@@ -165,7 +165,7 @@ func TencentMongodbBasicInfo() map[string]*schema.Schema {
 			Type:        schema.TypeInt,
 			Optional:    true,
 			Computed:    true,
-			Description: "Mongos memory size.",
+			Description: "Mongos memory size in GB.",
 		},
 		"mongos_node_num": {
 			Type:        schema.TypeInt,
