@@ -1,3 +1,25 @@
+## 1.79.12 (February 27, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_chdfs_access_groups` ([#1572](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1572))
+* **New Data Source:** `tencentcloud_chdfs_mount_points` ([#1572](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1572))
+* **New Resource:** `tencentcloud_chdfs_life_cycle_rule` ([#1572](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1572))
+* **New Resource:** `tencentcloud_chdfs_mount_point` ([#1572](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1572))
+* **New Resource:** `tencentcloud_chdfs_mount_point_attachment` ([#1572](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1572))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_cluster: support setting tke cluster internet/intranet domain ([#1564](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1564))
+* resource/tencentcloud_kubernetes_cluster: update tke cluster resource doc detail ([#1560](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1560))
+* resource/tencentcloud_kubernetes_cluster_endpoint: support setting tke cluster internet/intranet domain ([#1564](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1564))
+
+BUG FIXES:
+
+* resource/tencentcloud_mongodb_instance: clean mongos params ([#1573](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1573))
+* resource/tencentcloud_mongodb_sharding_instance: fix mongos_memory unit ([#1573](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1573))
+* resource/tencentcloud_mongodb_standby_instance: clean mongos params ([#1573](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1573))
+
 ## 1.79.11 (February 23, 2023)
 
 FEATURES:
