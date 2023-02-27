@@ -950,6 +950,10 @@ Media Processing Service(MPS)
 	tencentcloud_mps_watermark_template
 
 Cloud HDFS(CHDFS)
+  Data Source
+	tencentcloud_chdfs_access_groups
+	tencentcloud_chdfs_mount_points
+
   Resource
 	tencentcloud_chdfs_access_group
 	tencentcloud_chdfs_access_rule
