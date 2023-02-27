@@ -371,7 +371,7 @@ func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("vport", instance.Vport)
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("mongos_cpu", instance.MongosCpuNum)
-	_ = d.Set("mongos_memory", instance.MongosMemory)
+	_ = d.Set("mongos_memory", *instance.MongosMemory/1024)
 	_ = d.Set("mongos_node_num", instance.MongosNodeNum)
 	_ = d.Set("auto_renew_flag", instance.AutoRenewFlag)
 
