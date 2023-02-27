@@ -954,6 +954,7 @@ Cloud HDFS(CHDFS)
 	tencentcloud_chdfs_access_group
 	tencentcloud_chdfs_access_rule
 	tencentcloud_chdfs_file_system
+	tencentcloud_chdfs_life_cycle_rule
 
 */
 package tencentcloud
