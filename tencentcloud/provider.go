@@ -955,6 +955,7 @@ Cloud HDFS(CHDFS)
 	tencentcloud_chdfs_access_rule
 	tencentcloud_chdfs_file_system
 	tencentcloud_chdfs_life_cycle_rule
+	tencentcloud_chdfs_mount_point
 
 */
 package tencentcloud
@@ -1704,6 +1705,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_access_rule":                          resourceTencentCloudChdfsAccessRule(),
 			"tencentcloud_chdfs_file_system":                          resourceTencentCloudChdfsFileSystem(),
 			"tencentcloud_chdfs_life_cycle_rule":                      resourceTencentCloudChdfsLifeCycleRule(),
+			"tencentcloud_chdfs_mount_point":                          resourceTencentCloudChdfsMountPoint(),
 		},
 
 		ConfigureFunc: providerConfigure,

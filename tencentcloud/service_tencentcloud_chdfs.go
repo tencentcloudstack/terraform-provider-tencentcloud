@@ -285,3 +285,56 @@ func (me *ChdfsService) DeleteChdfsLifeCycleRuleById(ctx context.Context, lifeCy
 
 	return
 }
+
+func (me *ChdfsService) DescribeChdfsMountPointById(ctx context.Context, mountPointId string) (mountPoint *chdfs.MountPoint, errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDescribeMountPointRequest()
+	request.MountPointId = &mountPointId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeMountPoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.MountPoint == nil {
+		return
+	}
+
+	mountPoint = response.Response.MountPoint
+	return
+}
+
+func (me *ChdfsService) DeleteChdfsMountPointById(ctx context.Context, mountPointId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := chdfs.NewDeleteMountPointRequest()
+	request.MountPointId = &mountPointId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DeleteMountPoint(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

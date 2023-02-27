@@ -34,7 +34,7 @@ resource "tencentcloud_chdfs_life_cycle_rule" "life_cycle_rule" {
 
 The following arguments are supported:
 
-* `file_system_id` - (Required, String) file system id.
+* `file_system_id` - (Required, String, ForceNew) file system id.
 * `life_cycle_rule` - (Required, List) life cycle rule.
 
 The `life_cycle_rule` object supports the following:

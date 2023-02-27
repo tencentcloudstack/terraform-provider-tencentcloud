@@ -55,6 +55,7 @@ func resourceTencentCloudChdfsLifeCycleRule() *schema.Resource {
 			"file_system_id": {
 				Required:    true,
 				Type:        schema.TypeString,
+				ForceNew:    true,
 				Description: "file system id.",
 			},
 
