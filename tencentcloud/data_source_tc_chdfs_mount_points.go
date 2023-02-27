@@ -27,19 +27,19 @@ func dataSourceTencentCloudChdfsMountPoints() *schema.Resource {
 			"file_system_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "get mount points belongs to file system id, only can use one of the AccessGroupId,FileSystemId,OwnerUin paramaters.",
+				Description: "get mount points belongs to file system id, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.",
 			},
 
 			"access_group_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "get mount points belongs to access group id, only can use one of the AccessGroupId,FileSystemId,OwnerUin paramaters.",
+				Description: "get mount points belongs to access group id, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.",
 			},
 
 			"owner_uin": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "get mount points belongs to owner uin, only can use one of the AccessGroupId,FileSystemId,OwnerUin paramaters.",
+				Description: "get mount points belongs to owner uin, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.",
 			},
 
 			"mount_points": {

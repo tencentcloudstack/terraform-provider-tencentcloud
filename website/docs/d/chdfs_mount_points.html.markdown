@@ -23,9 +23,9 @@ data "tencentcloud_chdfs_mount_points" "mount_points" {
 
 The following arguments are supported:
 
-* `access_group_id` - (Optional, String) get mount points belongs to access group id, only can use one of the AccessGroupId,FileSystemId,OwnerUin paramaters.
-* `file_system_id` - (Optional, String) get mount points belongs to file system id, only can use one of the AccessGroupId,FileSystemId,OwnerUin paramaters.
-* `owner_uin` - (Optional, Int) get mount points belongs to owner uin, only can use one of the AccessGroupId,FileSystemId,OwnerUin paramaters.
+* `access_group_id` - (Optional, String) get mount points belongs to access group id, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.
+* `file_system_id` - (Optional, String) get mount points belongs to file system id, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.
+* `owner_uin` - (Optional, Int) get mount points belongs to owner uin, only can use one of the AccessGroupId,FileSystemId,OwnerUin parameters.
 * `result_output_file` - (Optional, String) Used to save results.
 
 ## Attributes Reference
