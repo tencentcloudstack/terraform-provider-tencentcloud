@@ -17,11 +17,11 @@ Provide a resource to create serverless node pool of cluster.
 resource "tencentcloud_kubernetes_serverless_node_pool" "example_serverless_node_pool" {
   cluster_id = tencentcloud_kubernetes_cluster.example.id
   name       = "example_node_pool"
-  serverless_nodes = {
+  serverless_nodes {
     display_name = "serverless_node1"
     subnet_id    = "subnet-xxx"
   }
-  severless_nodes = {
+  serverless_nodes {
     display_name = "serverless_node2"
     subnet_id    = "subnet-xxx"
   }
