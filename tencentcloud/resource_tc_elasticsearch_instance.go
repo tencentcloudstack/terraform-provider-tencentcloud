@@ -11,7 +11,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   vpc_id            = var.vpc_id
   subnet_id         = var.subnet_id
   password          = "Test12345"
-  license_type      = "oss"
+  license_type      = "basic"
 
   web_node_type_info {
     node_num = 1
@@ -214,7 +214,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:     true,
 				Default:      ES_LICENSE_TYPE_PLATINUM,
 				ValidateFunc: validateAllowedStringValue(ES_LICENSE_TYPE),
-				Description:  "License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.",
+				Description:  "License type. Valid values are `basic` and `platinum`. The default value is `platinum`.",
 			},
 			"node_info_list": {
 				Type:        schema.TypeList,
@@ -267,7 +267,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:     true,
 				Default:      ES_BASIC_SECURITY_TYPE_OFF,
 				ValidateFunc: validateAllowedIntValue(ES_BASIC_SECURITY_TYPE),
-				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`.",
+				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`. Notice: this parameter is only for `basic edition.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
@@ -356,11 +356,15 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 			}
 		}
 	}
+	var licenseType string
 	if v, ok := d.GetOk("license_type"); ok {
-		request.LicenseType = helper.String(v.(string))
+		licenseType = v.(string)
+		request.LicenseType = helper.String(licenseType)
 	}
 	if v, ok := d.GetOk("basic_security_type"); ok {
-		request.BasicSecurityType = helper.IntUint64(v.(int))
+		if licenseType == ES_LICENSE_TYPE_BASIC { // this field is only valid for the basic edition
+			request.BasicSecurityType = helper.IntUint64(v.(int))
+		}
 	}
 	if v, ok := d.GetOk("web_node_type_info"); ok {
 		infos := v.([]interface{})
@@ -491,7 +495,10 @@ func resourceTencentCloudElasticsearchInstanceRead(d *schema.ResourceData, meta 
 	_ = d.Set("renew_flag", instance.RenewFlag)
 	_ = d.Set("deploy_mode", instance.DeployMode)
 	_ = d.Set("license_type", instance.LicenseType)
-	_ = d.Set("basic_security_type", instance.SecurityType)
+	licenseType := instance.LicenseType
+	if licenseType != nil && *licenseType == ES_LICENSE_TYPE_BASIC { // this field is only valid for the basic edition
+		_ = d.Set("basic_security_type", instance.SecurityType)
+	}
 	_ = d.Set("elasticsearch_domain", instance.EsDomain)
 	_ = d.Set("elasticsearch_vip", instance.EsVip)
 	_ = d.Set("elasticsearch_port", instance.EsPort)
