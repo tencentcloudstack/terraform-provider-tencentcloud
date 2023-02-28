@@ -60,7 +60,7 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "version", "7.10.1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "vpc_id", defaultVpcId),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "subnet_id", defaultSubnetId),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "oss"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "platinum"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_type", "ES.S1.MEDIUM4"),
@@ -172,8 +172,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	vpc_id              = var.vpc_id
 	subnet_id           = var.subnet_id
 	password            = "Test1234"
-	license_type        = "oss"
-  
+
     web_node_type_info {
       node_num = 1
       node_type = "ES.S1.MEDIUM4"
