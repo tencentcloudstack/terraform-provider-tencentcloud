@@ -74,7 +74,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id = "skey-11112222"
   }
 
   worker_config {
@@ -96,8 +97,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-    cam_role_name             = "CVM_QcsRole"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id       = "skey-11112222"
+    cam_role_name = "CVM_QcsRole"
   }
 
   labels = {
@@ -166,7 +168,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id = "skey-11112222"
   }
 
   worker_config {
@@ -188,8 +191,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
-    cam_role_name             = "CVM_QcsRole"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    cam_role_name = "CVM_QcsRole"
+    keys_id       = "skey-11112222"
   }
 
   labels = {
@@ -257,7 +261,8 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     enhanced_security_service  = false
     enhanced_monitor_service   = false
     user_data                  = "dGVzdA=="
-    password                   = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id = "skey-11112222"
   }
 
   extension_addon {
@@ -339,7 +344,8 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id = "skey-11112222"
   }
 
   node_pool_global_config {
@@ -408,7 +414,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id = "skey-11112222"
   }
 
   labels = {
@@ -459,8 +466,10 @@ The following arguments are supported:
 * `cluster_deploy_type` - (Optional, String, ForceNew) Deployment type of the cluster, the available values include: 'MANAGED_CLUSTER' and 'INDEPENDENT_CLUSTER'. Default is 'MANAGED_CLUSTER'.
 * `cluster_desc` - (Optional, String) Description of the cluster.
 * `cluster_extra_args` - (Optional, List, ForceNew) Customized parameters for master component,such as kube-apiserver, kube-controller-manager, kube-scheduler.
+* `cluster_internet_domain` - (Optional, String) Domain name for cluster Kube-apiserver internet access. Be careful if you modify value of this parameter, the cluster_external_endpoint value may be changed automatically too.
 * `cluster_internet_security_group` - (Optional, String) Specify security group, NOTE: This argument must not be empty if cluster internet enabled.
 * `cluster_internet` - (Optional, Bool) Open internet access or not. If this field is set 'true', the field below `worker_config` must be set. Because only cluster with node is allowed enable access endpoint.
+* `cluster_intranet_domain` - (Optional, String) Domain name for cluster Kube-apiserver intranet access. Be careful if you modify value of this parameter, the pgw_endpoint value may be changed automatically too.
 * `cluster_intranet_subnet_id` - (Optional, String) Subnet id who can access this independent cluster, this field must and can only set  when `cluster_intranet` is true. `cluster_intranet_subnet_id` can not modify once be set.
 * `cluster_intranet` - (Optional, Bool) Open intranet access or not. If this field is set 'true', the field below `worker_config` must be set. Because only cluster with node is allowed enable access endpoint.
 * `cluster_ipvs` - (Optional, Bool, ForceNew) Indicates whether `ipvs` is enabled. Default is true. False means `iptables` is enabled.
@@ -471,7 +480,7 @@ The following arguments are supported:
 * `cluster_os_type` - (Optional, String, ForceNew) Image type of the cluster os, the available values include: 'GENERAL'. Default is 'GENERAL'.
 * `cluster_os` - (Optional, String, ForceNew) Operating system of the cluster, the available values include: 'centos7.6.0_x64','ubuntu18.04.1x86_64','tlinux2.4x86_64'. Default is 'tlinux2.4x86_64'.
 * `cluster_version` - (Optional, String) Version of the cluster, Default is '1.10.5'.
-* `container_runtime` - (Optional, String, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.
+* `container_runtime` - (Optional, String, ForceNew) Runtime type of the cluster, the available values include: 'docker' and 'containerd'.The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher.Default is 'docker'.
 * `deletion_protection` - (Optional, Bool) Indicates whether cluster deletion protection is enabled. Default is false.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `enable_customized_pod_cidr` - (Optional, Bool) Whether to enable the custom mode of node podCIDR size. Default is false.

@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_chdfs_access_rule
+```
+
+```release-note:new-resource
+tencentcloud_chdfs_file_system
+```

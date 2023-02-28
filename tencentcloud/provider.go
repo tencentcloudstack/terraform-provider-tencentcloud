@@ -830,6 +830,10 @@ Cloud Streaming Services(CSS)
 	tencentcloud_css_pull_stream_task
 	tencentcloud_css_live_transcode_template
 	tencentcloud_css_live_transcode_rule_attachment
+	tencentcloud_css_domain
+	tencentcloud_css_authenticate_domain_owner_operation
+  Data Source
+	tencentcloud_css_domains
 
 Performance Testing Service(PTS)
   Resource
@@ -946,8 +950,17 @@ Media Processing Service(MPS)
 	tencentcloud_mps_watermark_template
 
 Cloud HDFS(CHDFS)
+  Data Source
+	tencentcloud_chdfs_access_groups
+	tencentcloud_chdfs_mount_points
+
   Resource
 	tencentcloud_chdfs_access_group
+	tencentcloud_chdfs_access_rule
+	tencentcloud_chdfs_file_system
+	tencentcloud_chdfs_life_cycle_rule
+	tencentcloud_chdfs_mount_point
+	tencentcloud_chdfs_mount_point_attachment
 
 */
 package tencentcloud
@@ -1294,6 +1307,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cynosdb_cluster_params":                   dataSourceTencentCloudCynosdbClusterParams(),
 			"tencentcloud_cynosdb_param_templates":                  dataSourceTencentCloudCynosdbParamTemplates(),
 			"tencentcloud_cvm_instances_modification":               dataSourceTencentCloudCvmInstancesModification(),
+			"tencentcloud_css_domains":                              dataSourceTencentCloudCssDomains(),
+			"tencentcloud_chdfs_access_groups":                      dataSourceTencentCloudChdfsAccessGroups(),
+			"tencentcloud_chdfs_mount_points":                       dataSourceTencentCloudChdfsMountPoints(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1611,6 +1627,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_css_pull_stream_task":                       resourceTencentCloudCssPullStreamTask(),
 			"tencentcloud_css_live_transcode_template":                resourceTencentCloudCssLiveTranscodeTemplate(),
 			"tencentcloud_css_live_transcode_rule_attachment":         resourceTencentCloudCssLiveTranscodeRuleAttachment(),
+			"tencentcloud_css_domain":                                 resourceTencentCloudCssDomain(),
+			"tencentcloud_css_authenticate_domain_owner_operation":    resourceTencentCloudCssAuthenticateDomainOwnerOperation(),
 			"tencentcloud_pts_project":                                resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                          resourceTencentCloudPtsAlertChannel(),
 			"tencentcloud_pts_scenario":                               resourceTencentCloudPtsScenario(),
@@ -1691,6 +1709,11 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cbs_snapshot_share_permission":              resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":         resourceTencentCloudCbsDiskBackupRollbackOperation(),
 			"tencentcloud_chdfs_access_group":                         resourceTencentCloudChdfsAccessGroup(),
+			"tencentcloud_chdfs_access_rule":                          resourceTencentCloudChdfsAccessRule(),
+			"tencentcloud_chdfs_file_system":                          resourceTencentCloudChdfsFileSystem(),
+			"tencentcloud_chdfs_life_cycle_rule":                      resourceTencentCloudChdfsLifeCycleRule(),
+			"tencentcloud_chdfs_mount_point":                          resourceTencentCloudChdfsMountPoint(),
+			"tencentcloud_chdfs_mount_point_attachment":               resourceTencentCloudChdfsMountPointAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,

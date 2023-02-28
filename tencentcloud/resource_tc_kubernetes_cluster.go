@@ -64,7 +64,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
   }
 
   worker_config {
@@ -86,7 +87,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
 	cam_role_name			  = "CVM_QcsRole"
   }
 
@@ -156,7 +158,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
   }
 
   worker_config {
@@ -178,8 +181,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
 	cam_role_name			  = "CVM_QcsRole"
+    keys_id                   = "skey-11112222"
   }
 
   labels = {
@@ -247,7 +251,8 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
   }
 
   extension_addon {
@@ -329,7 +334,8 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
   }
 
   node_pool_global_config {
@@ -397,7 +403,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    password                  = "ZZXXccvv1212"
+    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    keys_id                   = "skey-11112222"
   }
 
   labels = {
@@ -910,7 +917,9 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Optional:     true,
 			Default:      TKE_RUNTIME_DOCKER,
 			ValidateFunc: validateAllowedStringValue(TKE_RUNTIMES),
-			Description:  "Runtime type of the cluster, the available values include: 'docker' and 'containerd'. Default is 'docker'.",
+			Description: "Runtime type of the cluster, the available values include: 'docker' and 'containerd'." +
+				"The Kubernetes v1.24 has removed dockershim, so please use containerd in v1.24 or higher." +
+				"Default is 'docker'.",
 		},
 		"cluster_deploy_type": {
 			Type:         schema.TypeString,
@@ -1068,6 +1077,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 				" If this field is set 'true', the field below `worker_config` must be set." +
 				" Because only cluster with node is allowed enable access endpoint.",
 		},
+		"cluster_internet_domain": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Description: "Domain name for cluster Kube-apiserver internet access." +
+				" Be careful if you modify value of this parameter, the cluster_external_endpoint value may be changed automatically too.",
+		},
 		"cluster_intranet": {
 			Type:     schema.TypeBool,
 			Default:  false,
@@ -1075,6 +1090,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Open intranet access or not." +
 				" If this field is set 'true', the field below `worker_config` must be set." +
 				" Because only cluster with node is allowed enable access endpoint.",
+		},
+		"cluster_intranet_domain": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Description: "Domain name for cluster Kube-apiserver intranet access." +
+				" Be careful if you modify value of this parameter, the pgw_endpoint value may be changed automatically too.",
 		},
 		"cluster_internet_security_group": {
 			Type:        schema.TypeString,
@@ -1902,6 +1923,8 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 		clusterIntranet              = d.Get("cluster_intranet").(bool)
 		intranetSubnetId             = d.Get("cluster_intranet_subnet_id").(string)
 		clusterInternetSecurityGroup = d.Get("cluster_internet_security_group").(string)
+		clusterInternetDomain        = d.Get("cluster_internet_domain").(string)
+		clusterIntranetDomain        = d.Get("cluster_intranet_domain").(string)
 	)
 
 	clusterDeployType := d.Get("cluster_deploy_type").(string)
@@ -2223,7 +2246,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	//intranet
 	if clusterIntranet {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			inErr := service.CreateClusterEndpoint(ctx, id, intranetSubnetId, clusterInternetSecurityGroup, false)
+			inErr := service.CreateClusterEndpoint(ctx, id, intranetSubnetId, clusterInternetSecurityGroup, false, clusterIntranetDomain)
 			if inErr != nil {
 				return retryError(inErr)
 			}
@@ -2254,7 +2277,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 	if clusterInternet {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			inErr := service.CreateClusterEndpoint(ctx, id, "", clusterInternetSecurityGroup, true)
+			inErr := service.CreateClusterEndpoint(ctx, id, "", clusterInternetSecurityGroup, true, clusterInternetDomain)
 			if inErr != nil {
 				return retryError(inErr)
 			}
@@ -2599,6 +2622,8 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		clusterIntranet              = d.Get("cluster_intranet").(bool)
 		intranetSubnetId             = d.Get("cluster_intranet_subnet_id").(string)
 		clusterInternetSecurityGroup = d.Get("cluster_internet_security_group").(string)
+		clusterInternetDomain        = d.Get("cluster_internet_domain").(string)
+		clusterIntranetDomain        = d.Get("cluster_intranet_domain").(string)
 	)
 
 	if clusterIntranet && intranetSubnetId == "" {
@@ -2619,131 +2644,40 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 	}
 
 	if d.HasChange("cluster_intranet") {
-		//open intranet
-		if clusterIntranet {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				inErr := tkeService.CreateClusterEndpoint(ctx, id, intranetSubnetId, clusterInternetSecurityGroup, false)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				return nil
-			})
-			if err != nil {
-				return err
-			}
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				status, message, inErr := tkeService.DescribeClusterEndpointStatus(ctx, id, false)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				if status == TkeInternetStatusCreating {
-					return resource.RetryableError(
-						fmt.Errorf("%s create intranet cluster endpoint status still is %s", id, status))
-				}
-				if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
-					return nil
-				}
-				return resource.NonRetryableError(
-					fmt.Errorf("%s create intranet cluster endpoint error ,status is %s,message is %s", id, status, message))
-			})
-			if err != nil {
-				return err
-			}
-			//close
-		} else {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				inErr := tkeService.DeleteClusterEndpoint(ctx, id, false)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				return nil
-			})
-			if err != nil {
-				return err
-			}
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				status, message, inErr := tkeService.DescribeClusterEndpointStatus(ctx, id, false)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				if status == TkeInternetStatusDeleting {
-					return resource.RetryableError(
-						fmt.Errorf("%s close cluster internet endpoint status still is %s", id, status))
-				}
-				if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted || status == TkeInternetStatusCreated {
-					return nil
-				}
-				return resource.NonRetryableError(
-					fmt.Errorf("%s close cluster internet endpoint error ,status is %s,message is %s", id, status, message))
-			})
-			if err != nil {
-				return err
-			}
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTRANET, clusterIntranet, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
+			return err
 		}
 
 		d.SetPartial("cluster_intranet")
 	}
 
 	if d.HasChange("cluster_internet") {
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTERNET, clusterInternet, clusterInternetSecurityGroup, "", clusterInternetDomain); err != nil {
+			return err
+		}
+	}
 
-		if clusterInternet {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				inErr := tkeService.CreateClusterEndpoint(ctx, id, "", clusterInternetSecurityGroup, true)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				return nil
-			})
-			if err != nil {
-				return err
-			}
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				status, message, inErr := tkeService.DescribeClusterEndpointStatus(ctx, id, true)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				if status == TkeInternetStatusCreating {
-					return resource.RetryableError(
-						fmt.Errorf("%s create cluster internet endpoint status still is %s", id, status))
-				}
-				if status == TkeInternetStatusNotfound || status == TkeInternetStatusCreated {
-					return nil
-				}
-				return resource.NonRetryableError(
-					fmt.Errorf("%s create cluster internet endpoint error ,status is %s,message is %s", id, status, message))
-			})
-			if err != nil {
-				return err
-			}
-		} else {
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				inErr := tkeService.DeleteClusterEndpoint(ctx, id, true)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				return nil
-			})
-			if err != nil {
-				return err
-			}
-			err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
-				status, message, inErr := tkeService.DescribeClusterEndpointStatus(ctx, id, true)
-				if inErr != nil {
-					return retryError(inErr)
-				}
-				if status == TkeInternetStatusDeleting {
-					return resource.RetryableError(
-						fmt.Errorf("%s close cluster internet endpoint status still is %s", id, status))
-				}
-				if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted || status == TkeInternetStatusCreated {
-					return nil
-				}
-				return resource.NonRetryableError(
-					fmt.Errorf("%s close cluster internet endpoint error ,status is %s,message is %s", id, status, message))
-			})
-			if err != nil {
-				return err
-			}
+	// situation when only domain changed
+	if !d.HasChange("cluster_intranet") && clusterIntranet && d.HasChange("cluster_intranet_domain") {
+		// recreate the cluster intranet endpoint using new domain
+		// first close
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTRANET, TKE_CLUSTER_CLOSE_ACCESS, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
+			return err
+		}
+		// then reopen
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTRANET, TKE_CLUSTER_OPEN_ACCESS, clusterInternetSecurityGroup, intranetSubnetId, clusterIntranetDomain); err != nil {
+			return err
+		}
+	}
+	if !d.HasChange("cluster_internet") && clusterInternet && d.HasChange("cluster_internet_domain") {
+		// recreate the cluster internet endpoint using new domain
+		// first close
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTERNET, TKE_CLUSTER_CLOSE_ACCESS, clusterInternetSecurityGroup, "", clusterInternetDomain); err != nil {
+			return err
+		}
+		// then reopen
+		if err := ModifyClusterInternetOrIntranetAccess(ctx, d, &tkeService, TKE_CLUSTER_INTERNET, TKE_CLUSTER_OPEN_ACCESS, clusterInternetSecurityGroup, "", clusterInternetDomain); err != nil {
+			return err
 		}
 	}
 

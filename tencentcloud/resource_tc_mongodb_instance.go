@@ -65,6 +65,10 @@ func resourceTencentCloudMongodbInstance() *schema.Resource {
 		},
 	}
 	basic := TencentMongodbBasicInfo()
+	conflictList := []string{"mongos_cpu", "mongos_memory", "mongos_node_num"}
+	for _, item := range conflictList {
+		delete(basic, item)
+	}
 	for k, v := range basic {
 		mongodbInstanceInfo[k] = v
 	}
