@@ -21,7 +21,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   vpc_id            = var.vpc_id
   subnet_id         = var.subnet_id
   password          = "Test12345"
-  license_type      = "oss"
+  license_type      = "basic"
 
   web_node_type_info {
     node_num  = 1
@@ -65,7 +65,7 @@ The following arguments are supported:
 * `deploy_mode` - (Optional, Int, ForceNew) Cluster deployment mode. Valid values are `0` and `1`. `0` is single-AZ deployment, and `1` is multi-AZ deployment. Default value is `0`.
 * `es_acl` - (Optional, List) Kibana Access Control Configuration.
 * `instance_name` - (Optional, String) Name of the instance, which can contain 1 to 50 English letters, Chinese characters, digits, dashes(-), or underscores(_).
-* `license_type` - (Optional, String) License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.
+* `license_type` - (Optional, String) License type. Valid values are `basic` and `platinum`. The default value is `platinum`.
 * `multi_zone_infos` - (Optional, List, ForceNew) Details of AZs in multi-AZ deployment mode (which is required when deploy_mode is `1`).
 * `renew_flag` - (Optional, String, ForceNew) When enabled, the instance will be renew automatically when it reach the end of the prepaid tenancy. Valid values are `RENEW_FLAG_AUTO` and `RENEW_FLAG_MANUAL`. NOTE: it only works when charge_type is set to `PREPAID`.
 * `subnet_id` - (Optional, String, ForceNew) The ID of a VPC subnetwork. When create multi-az es, this parameter must be omitted.

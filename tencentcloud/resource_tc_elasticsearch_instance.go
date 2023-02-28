@@ -11,7 +11,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
   vpc_id            = var.vpc_id
   subnet_id         = var.subnet_id
   password          = "Test12345"
-  license_type      = "oss"
+  license_type      = "basic"
 
   web_node_type_info {
     node_num = 1
@@ -214,7 +214,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:     true,
 				Default:      ES_LICENSE_TYPE_PLATINUM,
 				ValidateFunc: validateAllowedStringValue(ES_LICENSE_TYPE),
-				Description:  "License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.",
+				Description:  "License type. Valid values are `basic` and `platinum`. The default value is `platinum`.",
 			},
 			"node_info_list": {
 				Type:        schema.TypeList,
