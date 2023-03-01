@@ -95,7 +95,8 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccPostgresqlInstance,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccPostgresqlInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -129,7 +130,8 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"root_password", "spec_code", "public_access_switch", "charset", "backup_plan"},
 			},
 			{
-				Config: testAccPostgresqlInstanceOpenPublic,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccPostgresqlInstanceOpenPublic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -142,7 +144,8 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccPostgresqlInstanceUpdate,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccPostgresqlInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -175,7 +178,8 @@ func TestAccTencentCloudPostgresqlInstanceResource_prepaid(t *testing.T) {
 		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccPostgresqlInstancePrepaid,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccPostgresqlInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -212,7 +216,8 @@ func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccPostgresqlMAZInstance,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccPostgresqlMAZInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -229,7 +234,8 @@ func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 			},
 
 			{
-				Config: testAccPostgresqlMAZInstanceUpdate,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccPostgresqlMAZInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
