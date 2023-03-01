@@ -25,7 +25,7 @@ func testSweepZone(region string) error {
 	client := cli.(*TencentCloudClient).apiV3Conn
 	service := TeoService{client}
 
-	zoneId := clusterPrometheusId
+	zoneId := defaultZoneId
 
 	zone, err := service.DescribeTeoZone(ctx, zoneId)
 	if err != nil {
@@ -57,7 +57,7 @@ func TestAccTencentCloudTeoZone_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckZoneExists("tencentcloud_teo_zone.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "zone_name", "tf-teo.xyz"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "plan_type", "ent_with_bot"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "plan_type", "sta"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "type", "full"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "paused", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone.basic", "cname_speed_up", "enabled"),
@@ -120,7 +120,7 @@ const testAccTeoZone = `
 
 resource "tencentcloud_teo_zone" "basic" {
   cname_speed_up          = "enabled"
-  plan_type               = "ent_with_bot"
+  plan_type               = "sta"
   paused                  = false
   type                    = "full"
   zone_name               = "tf-teo.xyz"

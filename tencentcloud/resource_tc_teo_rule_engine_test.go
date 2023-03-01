@@ -11,6 +11,43 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_teo_rule_engine
+	resource.AddTestSweepers("tencentcloud_teo_rule_engine", &resource.Sweeper{
+		Name: "tencentcloud_teo_rule_engine",
+		F:    testSweepRuleEngine,
+	})
+}
+
+func testSweepRuleEngine(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(region)
+	client := cli.(*TencentCloudClient).apiV3Conn
+	service := TeoService{client}
+
+	zoneId := defaultZoneId
+
+	records, err := service.DescribeTeoRuleEngines(ctx, zoneId)
+	if err != nil {
+		return err
+	}
+
+	if len(records) < 1 {
+		return nil
+	}
+
+	for _, v := range records {
+		if *v.RuleName == "rule-1" {
+			err = service.DeleteTeoRuleEngineById(ctx, zoneId, *v.RuleId)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
 // go test -i; go test -test.run TestAccTencentCloudTeoRuleEngine_basic -v
 func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
 	t.Parallel()
