@@ -36,7 +36,7 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "charge_type", MONGODB_CHARGE_TYPE_POSTPAID),
 					resource.TestCheckNoResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "prepaid_period"),
-					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "security_groups"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "security_groups.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mongodb_sharding_instance.mongodb", "hidden_zone"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "availability_zone_list.#", "3"),
 				),
