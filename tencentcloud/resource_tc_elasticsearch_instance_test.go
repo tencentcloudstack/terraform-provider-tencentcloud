@@ -43,7 +43,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
+func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -60,7 +60,8 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "version", "7.10.1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "vpc_id", defaultVpcId),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "subnet_id", defaultSubnetId),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "platinum"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "basic"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "basic_security_type", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_type", "ES.S1.MEDIUM4"),
@@ -76,8 +77,7 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "instance_name", "tf-ci-test-update"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "basic"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "basic_security_type", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "platinum"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_type", "ES.S1.MEDIUM8"),
@@ -92,7 +92,7 @@ func TestAccTencentCloudElasticsearchInstance_basic(t *testing.T) {
 				ResourceName:            "tencentcloud_elasticsearch_instance.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password"},
+				ImportStateVerifyIgnore: []string{"password", "basic_security_type"},
 			},
 		},
 	})
@@ -172,6 +172,8 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	vpc_id              = var.vpc_id
 	subnet_id           = var.subnet_id
 	password            = "Test1234"
+	license_type        = "basic"
+	basic_security_type = 1
 
     web_node_type_info {
       node_num = 1
@@ -197,8 +199,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	vpc_id              = var.vpc_id
 	subnet_id           = var.subnet_id
 	password            = "Test12345"
-	license_type        = "basic"
-	basic_security_type = 2
+	license_type        = "platinum"
 
 	web_node_type_info {
       node_num = 1
