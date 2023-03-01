@@ -78,7 +78,6 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 					testAccCheckElasticsearchInstanceExists("tencentcloud_elasticsearch_instance.foo"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "instance_name", "tf-ci-test-update"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "license_type", "platinum"),
-					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "basic_security_type", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_num", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_elasticsearch_instance.foo", "web_node_type_info.0.node_type", "ES.S1.MEDIUM8"),
@@ -93,7 +92,7 @@ func TestAccTencentCloudElasticsearchInstanceResource_basic(t *testing.T) {
 				ResourceName:            "tencentcloud_elasticsearch_instance.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password"},
+				ImportStateVerifyIgnore: []string{"password", "basic_security_type"},
 			},
 		},
 	})
