@@ -64,6 +64,27 @@ func resourceTencentCloudMongodbShardingInstance() *schema.Resource {
 			ValidateFunc: validateIntegerInRange(3, 5),
 			Description:  "Number of nodes per shard, at least 3(one master and two slaves).",
 		},
+		"availability_zone_list": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Computed: true,
+			Elem: &schema.Schema{
+				Type: schema.TypeString,
+			},
+			RequiredWith: []string{"hidden_zone"},
+			Description: `A list of nodes deployed in multiple availability zones. For more information, please use the API DescribeSpecInfo.
+			- Multi-availability zone deployment nodes can only be deployed in 3 different availability zones. It is not supported to deploy most nodes of the cluster in the same availability zone. For example, a 3-node cluster does not support the deployment of 2 nodes in the same zone.
+			- Version 4.2 and above are not supported.
+			- Read-only disaster recovery instances are not supported.
+			- Basic network cannot be selected.`,
+		},
+		"hidden_zone": {
+			Type:         schema.TypeString,
+			Optional:     true,
+			Computed:     true,
+			RequiredWith: []string{"availability_zone_list"},
+			Description:  "The availability zone to which the Hidden node belongs. This parameter must be configured to deploy instances across availability zones.",
+		},
 	}
 	basic := TencentMongodbBasicInfo()
 	for k, v := range basic {
@@ -165,6 +186,13 @@ func mongodbAllShardingInstanceReqSet(requestInter interface{}, d *schema.Resour
 	}
 	if v, ok := d.GetOk("mongos_node_num"); ok {
 		value.FieldByName("MongosNodeNum").Set(reflect.ValueOf(helper.IntUint64(v.(int))))
+	}
+	if v, ok := d.GetOk("availability_zone_list"); ok {
+		availabilityZoneList := helper.InterfacesStringsPoint(v.([]interface{}))
+		value.FieldByName("AvailabilityZoneList").Set(reflect.ValueOf(availabilityZoneList))
+	}
+	if v, ok := d.GetOk("hidden_zone"); ok {
+		value.FieldByName("HiddenZone").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 	return nil
 }
@@ -385,6 +413,23 @@ func resourceMongodbShardingInstanceRead(d *schema.ResourceData, meta interface{
 	}
 	_ = d.Set("security_groups", groupIds)
 
+	replicateSets, err := mongodbService.DescribeDBInstanceNodeProperty(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+	if len(replicateSets) > 1 {
+		var hiddenZone string
+		availabilityZoneList := make([]string, 0, 3)
+		for _, replicate := range replicateSets[0].Nodes {
+			itemZone := *replicate.Zone
+			if *replicate.Hidden {
+				hiddenZone = itemZone
+			}
+			availabilityZoneList = append(availabilityZoneList, itemZone)
+		}
+		_ = d.Set("hidden_zone", hiddenZone)
+		_ = d.Set("availability_zone_list", availabilityZoneList)
+	}
 	tags := make(map[string]string, len(instance.Tags))
 	for _, tag := range instance.Tags {
 		if tag.TagKey == nil {
@@ -418,8 +463,11 @@ func resourceMongodbShardingInstanceUpdate(d *schema.ResourceData, meta interfac
 	region := client.Region
 
 	d.Partial(true)
+	if d.HasChange("availability_zone_list") || d.HasChange("hidden_zone") {
+		return fmt.Errorf("setting of the field[availability_zone_list, hidden_zone] does not support update")
+	}
 	if d.HasChange("mongos_cpu") || d.HasChange("mongos_memory") || d.HasChange("mongos_node_num") {
-		return fmt.Errorf("setting of the field[mongos_cpu, mongos_memory, mongos_node_numZ] does not support update")
+		return fmt.Errorf("setting of the field[mongos_cpu, mongos_memory, mongos_node_num] does not support update")
 	}
 	if d.HasChange("memory") || d.HasChange("volume") {
 		memory := d.Get("memory").(int)

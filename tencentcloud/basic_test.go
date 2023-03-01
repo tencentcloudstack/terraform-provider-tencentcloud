@@ -725,6 +725,10 @@ locals {
 // End of TKE Service
 
 // MongoDB
+const (
+	defaultMongoDBVPCId    = "vpc-rwj54lfr"
+	defaultMongoDBSubnetId = "subnet-nyt57zps"
+)
 const defaultMongoDBSecurityGroupId = "sg-if748odn"
 const DefaultMongoDBSpec = `
 data "tencentcloud_mongodb_zone_config" "zone_config" {
@@ -740,6 +744,12 @@ variable "engine_versions" {
 }
 variable "sg_id" {
   default = "` + defaultMongoDBSecurityGroupId + `"
+}
+variable "vpc_id" {
+  default = "` + defaultMongoDBVPCId + `"
+}
+variable "subnet_id" {
+  default = "` + defaultMongoDBSubnetId + `"
 }
 
 locals {
