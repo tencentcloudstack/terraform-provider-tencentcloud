@@ -951,6 +951,7 @@ Media Processing Service(MPS)
 	tencentcloud_mps_image_sprite_template
 	tencentcloud_mps_snapshot_by_timeoffset_template
 	tencentcloud_mps_sample_snapshot_template
+	tencentcloud_mps_animated_graphics_template
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -1711,6 +1712,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mps_image_sprite_template":                  resourceTencentCloudMpsImageSpriteTemplate(),
 			"tencentcloud_mps_snapshot_by_timeoffset_template":        resourceTencentCloudMpsSnapshotByTimeoffsetTemplate(),
 			"tencentcloud_mps_sample_snapshot_template":               resourceTencentCloudMpsSampleSnapshotTemplate(),
+			"tencentcloud_mps_animated_graphics_template":             resourceTencentCloudMpsAnimatedGraphicsTemplate(),
 			"tencentcloud_cbs_disk_backup":                            resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":              resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":         resourceTencentCloudCbsDiskBackupRollbackOperation(),

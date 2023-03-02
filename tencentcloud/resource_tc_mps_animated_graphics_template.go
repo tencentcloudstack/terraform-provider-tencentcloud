@@ -5,14 +5,13 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_animated_graphics_template" "animated_graphics_template" {
-  fps = &lt;nil&gt;
-  width = 0
-  height = 0
+  format              = "gif"
+  fps                 = 20
+  height              = 130
+  name                = "terraform-test"
+  quality             = 75
   resolution_adaptive = "open"
-  format = "gif"
-  quality =
-  name = &lt;nil&gt;
-  comment = &lt;nil&gt;
+  width               = 140
 }
 ```
 
@@ -28,7 +27,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -232,74 +230,64 @@ func resourceTencentCloudMpsAnimatedGraphicsTemplateUpdate(d *schema.ResourceDat
 
 	request.Definition = helper.StrToUint64Point(definition)
 
-	immutableArgs := []string{"fps", "width", "height", "resolution_adaptive", "format", "quality", "name", "comment"}
+	mutableArgs := []string{"fps", "width", "height", "resolution_adaptive", "format", "quality", "name", "comment"}
 
-	for _, v := range immutableArgs {
+	needChange := false
+
+	for _, v := range mutableArgs {
 		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
+			needChange = true
+			break
 		}
 	}
 
-	if d.HasChange("fps") {
+	if needChange {
+
 		if v, ok := d.GetOkExists("fps"); ok {
 			request.Fps = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("width") {
 		if v, ok := d.GetOkExists("width"); ok {
 			request.Width = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("height") {
 		if v, ok := d.GetOkExists("height"); ok {
 			request.Height = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("resolution_adaptive") {
 		if v, ok := d.GetOk("resolution_adaptive"); ok {
 			request.ResolutionAdaptive = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("format") {
 		if v, ok := d.GetOk("format"); ok {
 			request.Format = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("quality") {
 		if v, ok := d.GetOkExists("quality"); ok {
 			request.Quality = helper.Float64(v.(float64))
 		}
-	}
 
-	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("comment") {
 		if v, ok := d.GetOk("comment"); ok {
 			request.Comment = helper.String(v.(string))
 		}
-	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAnimatedGraphicsTemplate(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAnimatedGraphicsTemplate(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update mps animatedGraphicsTemplate failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update mps animatedGraphicsTemplate failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudMpsAnimatedGraphicsTemplateRead(d, meta)
