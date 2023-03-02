@@ -413,3 +413,22 @@ func (me *MongodbService) DescribeSecurityGroup(ctx context.Context, instanceId 
 	groups = response.Response.Groups
 	return
 }
+
+func (me *MongodbService) DescribeDBInstanceNodeProperty(ctx context.Context, instanceId string) (replicateSets []*mongodb.ReplicateSetInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := mongodb.NewDescribeDBInstanceNodePropertyRequest()
+	request.InstanceId = helper.String(instanceId)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMongodbClient().DescribeDBInstanceNodeProperty(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	replicateSets = response.Response.ReplicateSets
+	return
+}
