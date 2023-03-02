@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_sample_snapshot_template" "sample_snapshot_template" {
-  sample_type = &lt;nil&gt;
-  sample_interval = &lt;nil&gt;
-  name = &lt;nil&gt;
-  width = 0
-  height = 0
+  fill_type           = "stretch"
+  format              = "jpg"
+  height              = 128
+  name                = "terraform-test-for"
   resolution_adaptive = "open"
-  format = "jpg"
-  comment = &lt;nil&gt;
-  fill_type = "black"
+  sample_interval     = 10
+  sample_type         = "Percent"
+  width               = 140
 }
 ```
 

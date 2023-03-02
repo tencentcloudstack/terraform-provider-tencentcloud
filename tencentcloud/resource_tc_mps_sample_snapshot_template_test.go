@@ -19,6 +19,13 @@ func TestAccTencentCloudMpsSampleSnapshotTemplateResource_basic(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mps_sample_snapshot_template.sample_snapshot_template", "id")),
 			},
 			{
+				Config: testAccMpsSampleSnapshotTemplateUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_mps_sample_snapshot_template.sample_snapshot_template", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_mps_sample_snapshot_template.sample_snapshot_template", "name", "terraform-for-test"),
+				),
+			},
+			{
 				ResourceName:      "tencentcloud_mps_sample_snapshot_template.sample_snapshot_template",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -30,15 +37,29 @@ func TestAccTencentCloudMpsSampleSnapshotTemplateResource_basic(t *testing.T) {
 const testAccMpsSampleSnapshotTemplate = `
 
 resource "tencentcloud_mps_sample_snapshot_template" "sample_snapshot_template" {
-  sample_type = &lt;nil&gt;
-  sample_interval = &lt;nil&gt;
-  name = &lt;nil&gt;
-  width = 0
-  height = 0
+  fill_type           = "stretch"
+  format              = "jpg"
+  height              = 128
+  name                = "terraform-test"
   resolution_adaptive = "open"
-  format = "jpg"
-  comment = &lt;nil&gt;
-  fill_type = "black"
+  sample_interval     = 10
+  sample_type         = "Percent"
+  width               = 140
+}
+
+`
+
+const testAccMpsSampleSnapshotTemplateUpdate = `
+
+resource "tencentcloud_mps_sample_snapshot_template" "sample_snapshot_template" {
+  fill_type           = "stretch"
+  format              = "jpg"
+  height              = 128
+  name                = "terraform-for-test"
+  resolution_adaptive = "open"
+  sample_interval     = 10
+  sample_type         = "Percent"
+  width               = 140
 }
 
 `
