@@ -4,34 +4,37 @@ Provides a resource to create a mps adaptive_dynamic_streaming_template
 Example Usage
 
 ```hcl
-resource "tencentcloud_mps_adaptive_dynamic_streaming_template" "adaptive_dynamic_streaming_template" {
-  format = &lt;nil&gt;
-  stream_infos {
-		video {
-			codec = &lt;nil&gt;
-			fps = &lt;nil&gt;
-			bitrate = &lt;nil&gt;
-			resolution_adaptive = "open"
-			width = 0
-			height = 0
-			gop = &lt;nil&gt;
-			fill_type = "black"
-			vcrf = &lt;nil&gt;
-		}
-		audio {
-			codec = &lt;nil&gt;
-			bitrate = &lt;nil&gt;
-			sample_rate = &lt;nil&gt;
-			audio_channel = 2
-		}
-		remove_audio = &lt;nil&gt;
-		remove_video = &lt;nil&gt;
+resource "tencentcloud_mps_ai_recognition_template" "ai_recognition_template" {
+  name = "terraform-test"
 
+  asr_full_text_configure {
+    switch = "OFF"
   }
-  name = &lt;nil&gt;
-  disable_higher_video_bitrate = 0
-  disable_higher_video_resolution = 0
-  comment = &lt;nil&gt;
+
+  asr_words_configure {
+    label_set = []
+    switch    = "OFF"
+  }
+
+  face_configure {
+    default_library_label_set     = [
+      "entertainment",
+      "sport",
+    ]
+    face_library                  = "All"
+    score                         = 85
+    switch                        = "ON"
+    user_define_library_label_set = []
+  }
+
+  ocr_full_text_configure {
+    switch = "OFF"
+  }
+
+  ocr_words_configure {
+    label_set = []
+    switch    = "OFF"
+  }
 }
 ```
 
