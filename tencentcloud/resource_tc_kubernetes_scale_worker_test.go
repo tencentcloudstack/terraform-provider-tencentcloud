@@ -76,7 +76,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTkeScaleWorkerResource(t *testing.T) {
+func TestAccTencentCloudKubernetesScaleWorkerResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
