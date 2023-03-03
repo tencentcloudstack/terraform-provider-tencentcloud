@@ -4,38 +4,61 @@ Provides a resource to create a mps adaptive_dynamic_streaming_template
 Example Usage
 
 ```hcl
-resource "tencentcloud_mps_ai_recognition_template" "ai_recognition_template" {
-  name = "terraform-test"
+resource "tencentcloud_mps_adaptive_dynamic_streaming_template" "adaptive_dynamic_streaming_template" {
+  comment                         = "terrraform test"
+  disable_higher_video_bitrate    = 0
+  disable_higher_video_resolution = 1
+  format                          = "HLS"
+  name                            = "terrraform-test"
 
-  asr_full_text_configure {
-    switch = "OFF"
+  stream_infos {
+    remove_audio = 0
+    remove_video = 0
+
+    audio {
+      audio_channel = 1
+      bitrate       = 55
+      codec         = "libmp3lame"
+      sample_rate   = 32000
+    }
+
+    video {
+      bitrate             = 245
+      codec               = "libx264"
+      fill_type           = "black"
+      fps                 = 30
+      gop                 = 0
+      height              = 135
+      resolution_adaptive = "open"
+      vcrf                = 0
+      width               = 145
+    }
   }
+  stream_infos {
+    remove_audio = 0
+    remove_video = 0
 
-  asr_words_configure {
-    label_set = []
-    switch    = "OFF"
-  }
+    audio {
+      audio_channel = 2
+      bitrate       = 60
+      codec         = "libfdk_aac"
+      sample_rate   = 32000
+    }
 
-  face_configure {
-    default_library_label_set     = [
-      "entertainment",
-      "sport",
-    ]
-    face_library                  = "All"
-    score                         = 85
-    switch                        = "ON"
-    user_define_library_label_set = []
-  }
-
-  ocr_full_text_configure {
-    switch = "OFF"
-  }
-
-  ocr_words_configure {
-    label_set = []
-    switch    = "OFF"
+    video {
+      bitrate             = 400
+      codec               = "libx264"
+      fill_type           = "black"
+      fps                 = 40
+      gop                 = 0
+      height              = 150
+      resolution_adaptive = "open"
+      vcrf                = 0
+      width               = 160
+    }
   }
 }
+
 ```
 
 Import
@@ -50,7 +73,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -460,23 +482,25 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 
 	definition := d.Id()
 
+	needChange := false
+
 	request.Definition = helper.StrToUint64Point(definition)
 
-	immutableArgs := []string{"format", "stream_infos", "name", "disable_higher_video_bitrate", "disable_higher_video_resolution", "comment"}
+	mutableArgs := []string{"format", "stream_infos", "name", "disable_higher_video_bitrate", "disable_higher_video_resolution", "comment"}
 
-	for _, v := range immutableArgs {
+	for _, v := range mutableArgs {
 		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
+			needChange = true
+			break
 		}
 	}
 
-	if d.HasChange("format") {
+	if needChange {
+
 		if v, ok := d.GetOk("format"); ok {
 			request.Format = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("stream_infos") {
 		if v, ok := d.GetOk("stream_infos"); ok {
 			for _, item := range v.([]interface{}) {
 				adaptiveStreamTemplateMap := item.(map[string]interface{})
@@ -537,44 +561,36 @@ func resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateUpdate(d *schema.Res
 				request.StreamInfos = append(request.StreamInfos, &adaptiveStreamTemplate)
 			}
 		}
-	}
 
-	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("disable_higher_video_bitrate") {
 		if v, ok := d.GetOkExists("disable_higher_video_bitrate"); ok {
 			request.DisableHigherVideoBitrate = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("disable_higher_video_resolution") {
 		if v, ok := d.GetOkExists("disable_higher_video_resolution"); ok {
 			request.DisableHigherVideoResolution = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("comment") {
 		if v, ok := d.GetOk("comment"); ok {
 			request.Comment = helper.String(v.(string))
 		}
-	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAdaptiveDynamicStreamingTemplate(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAdaptiveDynamicStreamingTemplate(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update mps adaptiveDynamicStreamingTemplate failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update mps adaptiveDynamicStreamingTemplate failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudMpsAdaptiveDynamicStreamingTemplateRead(d, meta)

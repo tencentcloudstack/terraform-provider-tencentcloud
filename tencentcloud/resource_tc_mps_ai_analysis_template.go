@@ -5,25 +5,25 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mps_ai_analysis_template" "ai_analysis_template" {
-  name = &lt;nil&gt;
-  comment = &lt;nil&gt;
+  name = "terraform-test"
+
   classification_configure {
-		switch = &lt;nil&gt;
-
+    switch = "OFF"
   }
-  tag_configure {
-		switch = &lt;nil&gt;
 
-  }
   cover_configure {
-		switch = &lt;nil&gt;
-
+    switch = "ON"
   }
-  frame_tag_configure {
-		switch = &lt;nil&gt;
 
+  frame_tag_configure {
+    switch = "ON"
+  }
+
+  tag_configure {
+    switch = "ON"
   }
 }
+
 ```
 
 Import
@@ -38,7 +38,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -291,30 +290,28 @@ func resourceTencentCloudMpsAiAnalysisTemplateUpdate(d *schema.ResourceData, met
 	request := mps.NewModifyAIAnalysisTemplateRequest()
 
 	definition := d.Id()
+	needChange := false
 
 	request.Definition = helper.StrToInt64Point(definition)
 
-	immutableArgs := []string{"name", "comment", "classification_configure", "tag_configure", "cover_configure", "frame_tag_configure"}
+	mutableArgs := []string{"name", "comment", "classification_configure", "tag_configure", "cover_configure", "frame_tag_configure"}
 
-	for _, v := range immutableArgs {
+	for _, v := range mutableArgs {
 		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
+			needChange = true
+			break
 		}
 	}
 
-	if d.HasChange("name") {
+	if needChange {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("comment") {
 		if v, ok := d.GetOk("comment"); ok {
 			request.Comment = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("classification_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "classification_configure"); ok {
 			classificationConfigureInfo := mps.ClassificationConfigureInfoForUpdate{}
 			if v, ok := dMap["switch"]; ok {
@@ -322,9 +319,7 @@ func resourceTencentCloudMpsAiAnalysisTemplateUpdate(d *schema.ResourceData, met
 			}
 			request.ClassificationConfigure = &classificationConfigureInfo
 		}
-	}
 
-	if d.HasChange("tag_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "tag_configure"); ok {
 			tagConfigureInfo := mps.TagConfigureInfoForUpdate{}
 			if v, ok := dMap["switch"]; ok {
@@ -332,9 +327,7 @@ func resourceTencentCloudMpsAiAnalysisTemplateUpdate(d *schema.ResourceData, met
 			}
 			request.TagConfigure = &tagConfigureInfo
 		}
-	}
 
-	if d.HasChange("cover_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "cover_configure"); ok {
 			coverConfigureInfo := mps.CoverConfigureInfoForUpdate{}
 			if v, ok := dMap["switch"]; ok {
@@ -342,9 +335,7 @@ func resourceTencentCloudMpsAiAnalysisTemplateUpdate(d *schema.ResourceData, met
 			}
 			request.CoverConfigure = &coverConfigureInfo
 		}
-	}
 
-	if d.HasChange("frame_tag_configure") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "frame_tag_configure"); ok {
 			frameTagConfigureInfo := mps.FrameTagConfigureInfoForUpdate{}
 			if v, ok := dMap["switch"]; ok {
@@ -352,20 +343,20 @@ func resourceTencentCloudMpsAiAnalysisTemplateUpdate(d *schema.ResourceData, met
 			}
 			request.FrameTagConfigure = &frameTagConfigureInfo
 		}
-	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAIAnalysisTemplate(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMpsClient().ModifyAIAnalysisTemplate(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update mps aiAnalysisTemplate failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update mps aiAnalysisTemplate failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudMpsAiAnalysisTemplateRead(d, meta)

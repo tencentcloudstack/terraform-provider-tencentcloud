@@ -25,6 +25,11 @@ func TestAccTencentCloudMpsAnimatedGraphicsTemplateResource_basic(t *testing.T) 
 					resource.TestCheckResourceAttr("tencentcloud_mps_animated_graphics_template.animated_graphics_template", "name", "terraform-for-test"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_mps_animated_graphics_template.animated_graphics_template",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

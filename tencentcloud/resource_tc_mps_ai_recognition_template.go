@@ -285,7 +285,7 @@ func resourceTencentCloudMpsAiRecognitionTemplateCreate(d *schema.ResourceData, 
 		if v, ok := dMap["switch"]; ok {
 			asrFullTextConfigureInfo.Switch = helper.String(v.(string))
 		}
-		if v, ok := dMap["subtitle_format"]; ok {
+		if v, _ := dMap["subtitle_format"]; v != "" {
 			asrFullTextConfigureInfo.SubtitleFormat = helper.String(v.(string))
 		}
 		request.AsrFullTextConfigure = &asrFullTextConfigureInfo

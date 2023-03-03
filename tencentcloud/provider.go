@@ -952,6 +952,9 @@ Media Processing Service(MPS)
 	tencentcloud_mps_snapshot_by_timeoffset_template
 	tencentcloud_mps_sample_snapshot_template
 	tencentcloud_mps_animated_graphics_template
+	tencentcloud_mps_ai_recognition_template
+	tencentcloud_mps_ai_analysis_template
+	tencentcloud_mps_adaptive_dynamic_streaming_template
 
 Cloud HDFS(CHDFS)
   Data Source
