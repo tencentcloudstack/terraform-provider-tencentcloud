@@ -1,3 +1,20 @@
+## 1.79.13 (March 03, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_mps_adaptive_dynamic_streaming_template` ([#1585](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1585))
+* **New Resource:** `tencentcloud_mps_ai_analysis_template` ([#1585](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1585))
+* **New Resource:** `tencentcloud_mps_ai_recognition_template` ([#1585](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1585))
+* **New Resource:** `tencentcloud_mps_animated_graphics_template` ([#1585](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1585))
+* **New Resource:** `tencentcloud_mps_image_sprite_template` ([#1585](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1585))
+* **New Resource:** `tencentcloud_mps_sample_snapshot_template` ([#1585](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1585))
+* **New Resource:** `tencentcloud_mps_snapshot_by_timeoffset_template` ([#1585](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1585))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_elasticsearch_instance: adjust the scope of `license_type` field. ([#1574](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1574))
+* resource/tencentcloud_mongodb_sharding_instance: support `availability_zone_list` and `hidden_zone`. ([#1582](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1582))
+
 ## 1.79.12 (February 27, 2023)
 
 FEATURES:
