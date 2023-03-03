@@ -948,6 +948,13 @@ Media Processing Service(MPS)
 	tencentcloud_mps_workflow
 	tencentcloud_mps_transcode_template
 	tencentcloud_mps_watermark_template
+	tencentcloud_mps_image_sprite_template
+	tencentcloud_mps_snapshot_by_timeoffset_template
+	tencentcloud_mps_sample_snapshot_template
+	tencentcloud_mps_animated_graphics_template
+	tencentcloud_mps_ai_recognition_template
+	tencentcloud_mps_ai_analysis_template
+	tencentcloud_mps_adaptive_dynamic_streaming_template
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -1705,6 +1712,13 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                     resourceTencentCloudMpsWatermarkTemplate(),
+			"tencentcloud_mps_image_sprite_template":                  resourceTencentCloudMpsImageSpriteTemplate(),
+			"tencentcloud_mps_snapshot_by_timeoffset_template":        resourceTencentCloudMpsSnapshotByTimeoffsetTemplate(),
+			"tencentcloud_mps_sample_snapshot_template":               resourceTencentCloudMpsSampleSnapshotTemplate(),
+			"tencentcloud_mps_animated_graphics_template":             resourceTencentCloudMpsAnimatedGraphicsTemplate(),
+			"tencentcloud_mps_ai_recognition_template":                resourceTencentCloudMpsAiRecognitionTemplate(),
+			"tencentcloud_mps_ai_analysis_template":                   resourceTencentCloudMpsAiAnalysisTemplate(),
+			"tencentcloud_mps_adaptive_dynamic_streaming_template":    resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_cbs_disk_backup":                            resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":              resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":         resourceTencentCloudCbsDiskBackupRollbackOperation(),
