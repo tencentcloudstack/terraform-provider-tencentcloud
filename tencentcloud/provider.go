@@ -1728,6 +1728,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_life_cycle_rule":                      resourceTencentCloudChdfsLifeCycleRule(),
 			"tencentcloud_chdfs_mount_point":                          resourceTencentCloudChdfsMountPoint(),
 			"tencentcloud_chdfs_mount_point_attachment":               resourceTencentCloudChdfsMountPointAttachment(),
+			"tencentcloud_mdl_streamlive_input":                       resourceTencentCloudMdlStreamLiveInput(),
 		},
 
 		ConfigureFunc: providerConfigure,
