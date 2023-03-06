@@ -41,7 +41,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTkeAddonAttachmentResource(t *testing.T) {
+func TestAccTencentCloudKubernetesAddonAttachmentResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
