@@ -112,6 +112,101 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
+func TKEGpuArgsSetting() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"mig_enable": {
+			Type:        schema.TypeBool,
+			Optional:    true,
+			Default:     false,
+			Description: "Whether to enable MIG.",
+		},
+		"driver": {
+			Type:         schema.TypeMap,
+			Optional:     true,
+			ValidateFunc: validateTkeGpuDriverVersion,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"version": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Version of GPU driver or CUDA.",
+					},
+					"name": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Name of GPU driver or CUDA.",
+					},
+				},
+			},
+			Description: "GPU driver version.",
+		},
+		"cuda": {
+			Type:         schema.TypeMap,
+			Optional:     true,
+			ValidateFunc: validateTkeGpuDriverVersion,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"version": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Version of GPU driver or CUDA.",
+					},
+					"name": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "Name of GPU driver or CUDA.",
+					},
+				},
+			},
+			Description: "CUDA version.",
+		},
+		"cudnn": {
+			Type:         schema.TypeMap,
+			Optional:     true,
+			ValidateFunc: validateTkeGpuDriverVersion,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"version": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "cuDNN version.",
+					},
+					"name": {
+						Type:        schema.TypeString,
+						Required:    true,
+						Description: "cuDNN name.",
+					},
+					"doc_name": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "Doc name of cuDNN.",
+					},
+					"dev_name": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "Dev name of cuDNN.",
+					},
+				},
+			},
+			Description: "cuDNN version.",
+		},
+		"custom_driver": {
+			Type:     schema.TypeMap,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: map[string]*schema.Schema{
+					"address": {
+						Type:        schema.TypeString,
+						Optional:    true,
+						Description: "URL of custom GPU driver address.",
+					},
+				},
+			},
+			Description: "Custom GPU driver.",
+		},
+	}
+}
+
 func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
 		"mount_target": {
@@ -205,6 +300,16 @@ func TkeInstanceAdvancedSetting() map[string]*schema.Schema {
 			ForceNew:    true,
 			Optional:    true,
 			Description: "Indicate to set desired pod number in node. valid when the cluster is podCIDR.",
+		},
+		"gpu_args": {
+			Type:     schema.TypeList,
+			Optional: true,
+			ForceNew: true,
+			MaxItems: 1,
+			Elem: &schema.Resource{
+				Schema: TKEGpuArgsSetting(),
+			},
+			Description: "GPU driver parameters.",
 		},
 	}
 }
@@ -361,6 +466,47 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 			clusterExtraArgs.Kubelet = append(clusterExtraArgs.Kubelet, &extraArgs[i])
 		}
 		setting.ExtraArgs = &clusterExtraArgs
+	}
+
+	// get gpu_args
+	if v, ok := dMap["gpu_args"]; ok {
+		gpuArgs := v.([]interface{})[0].(map[string]interface{})
+
+		var (
+			migEnable    = gpuArgs["mig_enable"].(bool)
+			driver       = gpuArgs["driver"].(map[string]interface{})
+			cuda         = gpuArgs["cuda"].(map[string]interface{})
+			cudnn        = gpuArgs["cudnn"].(map[string]interface{})
+			customDriver = gpuArgs["custom_driver"].(map[string]interface{})
+		)
+		tkeGpuArgs := tke.GPUArgs{}
+		tkeGpuArgs.MIGEnable = &migEnable
+		if driver != nil && len(driver) > 0 {
+			tkeGpuArgs.Driver = &tke.DriverVersion{
+				Version: helper.String(driver["version"].(string)),
+				Name:    helper.String(driver["name"].(string)),
+			}
+		}
+		if cuda != nil && len(cuda) > 0 {
+			tkeGpuArgs.CUDA = &tke.DriverVersion{
+				Version: helper.String(cuda["version"].(string)),
+				Name:    helper.String(cuda["name"].(string)),
+			}
+		}
+		if cudnn != nil && len(cudnn) > 0 {
+			tkeGpuArgs.CUDNN = &tke.CUDNN{
+				Version: helper.String(cudnn["version"].(string)),
+				Name:    helper.String(cudnn["name"].(string)),
+				DocName: helper.String(cudnn["doc_name"].(string)),
+				DevName: helper.String(cudnn["dev_name"].(string)),
+			}
+		}
+		if customDriver != nil && len(customDriver) > 0 {
+			tkeGpuArgs.CustomDriver = &tke.CustomDriver{
+				Address: helper.String(customDriver["address"].(string)),
+			}
+		}
+		setting.GPUArgs = &tkeGpuArgs
 	}
 
 	return setting
