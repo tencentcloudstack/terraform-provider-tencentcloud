@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccDataSourceTencentCloudTke(t *testing.T) {
+func TestAccTencentCloudKubernetesClusterDataSource(t *testing.T) {
 	t.Parallel()
 
 	key := "data.tencentcloud_kubernetes_clusters.name"
@@ -28,7 +28,7 @@ func TestAccDataSourceTencentCloudTke(t *testing.T) {
 	})
 }
 
-func TestAccDataSourceTencentCloudTkeTags(t *testing.T) {
+func TestAccTencentCloudKubernetesClusterTagsDataSource(t *testing.T) {
 	t.Parallel()
 
 	key := "data.tencentcloud_kubernetes_clusters.tags"
