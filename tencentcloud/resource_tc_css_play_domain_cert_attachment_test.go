@@ -20,16 +20,15 @@ func TestAccTencentCloudCssPlayDomainCertAttachmentResource_basic(t *testing.T) 
 		Providers:    testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				// PreventDiskCleanup: true,
 				Config: fmt.Sprintf(testAccCssPlayDomainCertAttachment, defaultCSSBindingCertName, defaultCSSPlayDomainName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_ssl_certificates.foo"),
 					resource.TestCheckResourceAttr("data.tencentcloud_ssl_certificates.foo", "certificates.#", "1"),
 					testAccCheckCssPlayDomainCertAttachmentExists("tencentcloud_css_play_domain_cert_attachment.play_domain_cert_attachment"),
 					resource.TestCheckResourceAttrSet("tencentcloud_css_play_domain_cert_attachment.play_domain_cert_attachment", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_css_play_domain_cert_attachment.play_domain_cert_attachment", "domain_name", defaultCSSPlayDomainName),
 					resource.TestCheckResourceAttrSet("tencentcloud_css_play_domain_cert_attachment.play_domain_cert_attachment", "cloud_cert_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_css_play_domain_cert_attachment.play_domain_cert_attachment", "domain_info.#"),
+					resource.TestCheckResourceAttr("tencentcloud_css_play_domain_cert_attachment.play_domain_cert_attachment", "domain_info.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_css_play_domain_cert_attachment.play_domain_cert_attachment", "domain_info.0.domain_name", defaultCSSPlayDomainName),
 				),
 			},
 			{
