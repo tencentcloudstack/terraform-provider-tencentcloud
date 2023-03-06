@@ -830,7 +830,7 @@ const (
 	defaultCSSOperator        = "tf_admin"
 	defaultCSSPrefix          = "tf_css_"
 	defaultCSSPlayDomainName  = "test122.jingxhu.top"
-	defaultCSSPushDomainName  = "iac-tf.cloud"
+	defaultCSSPushDomainName  = "177154.push.tlivecloud.com"
 	defaultCSSBindingCertName = "keep_ssl_css_domain_test"
 )
 

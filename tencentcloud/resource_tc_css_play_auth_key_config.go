@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_css_play_auth_key_config" "play_auth_key_config" {
-  domain_name = "5000.livepush.myqcloud.com"
+  domain_name = "your_play_domain_name"
   enable = 1
-  auth_key = "xx"
-  auth_delta = 60
-  auth_back_key = "xx"
+  auth_key = "testauthkey"
+  auth_delta = 3600
+  auth_back_key = "testbackkey"
 }
 ```
 
