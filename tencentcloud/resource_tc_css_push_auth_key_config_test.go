@@ -1,8 +1,10 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"fmt"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccTencentCloudCssPushAuthKeyConfigResource_basic(t *testing.T) {
@@ -14,8 +16,24 @@ func TestAccTencentCloudCssPushAuthKeyConfigResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCssPushAuthKeyConfig,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_css_push_auth_key_config.push_auth_key_config", "id")),
+				Config: fmt.Sprintf(testAccCssPushAuthKeyConfig, defaultCSSPushDomainName),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_css_push_auth_key_config.push_auth_key_config", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_css_push_auth_key_config.push_auth_key_config", "domain_name", defaultCSSPushDomainName),
+					resource.TestCheckResourceAttr("tencentcloud_css_push_auth_key_config.push_auth_key_config", "enable", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_css_push_auth_key_config.push_auth_key_config", "master_auth_key", "test000masterkey"),
+					resource.TestCheckResourceAttr("tencentcloud_css_push_auth_key_config.push_auth_key_config", "backup_auth_key", "test000backkey"),
+					resource.TestCheckResourceAttr("tencentcloud_css_push_auth_key_config.push_auth_key_config", "auth_delta", "1800"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(testAccCssPushAuthKeyConfig_update, defaultCSSPushDomainName),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_css_push_auth_key_config.push_auth_key_config", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_css_push_auth_key_config.push_auth_key_config", "domain_name", defaultCSSPushDomainName),
+					resource.TestCheckResourceAttr("tencentcloud_css_push_auth_key_config.push_auth_key_config", "enable", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_css_push_auth_key_config.push_auth_key_config", "master_auth_key", "test000masterkey000updated"),
+					resource.TestCheckResourceAttr("tencentcloud_css_push_auth_key_config.push_auth_key_config", "backup_auth_key", "test000backkey000updated"),
+					resource.TestCheckResourceAttr("tencentcloud_css_push_auth_key_config.push_auth_key_config", "auth_delta", "3600"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_css_push_auth_key_config.push_auth_key_config",
@@ -29,11 +47,23 @@ func TestAccTencentCloudCssPushAuthKeyConfigResource_basic(t *testing.T) {
 const testAccCssPushAuthKeyConfig = `
 
 resource "tencentcloud_css_push_auth_key_config" "push_auth_key_config" {
-  domain_name = "5000.livepush.myqcloud.com"
+  domain_name = "%s"
   enable = 0
-  master_auth_key = "xx"
-  backup_auth_key = "xx"
-  auth_delta = 60
+  master_auth_key = "test000masterkey"
+  backup_auth_key = "test000backkey"
+  auth_delta = 1800
+}
+
+`
+
+const testAccCssPushAuthKeyConfig_update = `
+
+resource "tencentcloud_css_push_auth_key_config" "push_auth_key_config" {
+  domain_name = "%s"
+  enable = 1
+  master_auth_key = "test000masterkey000updated"
+  backup_auth_key = "test000backkey000updated"
+  auth_delta = 3600
 }
 
 `

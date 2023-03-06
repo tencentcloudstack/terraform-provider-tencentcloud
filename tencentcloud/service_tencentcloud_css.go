@@ -595,35 +595,11 @@ func (me *CssService) DescribeCssPlayAuthKeyConfigById(ctx context.Context, doma
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.PlayAuthKeyInfo) < 1 {
+	if response.Response.PlayAuthKeyInfo == nil {
 		return
 	}
 
-	playAuthKeyConfig = response.Response.PlayAuthKeyInfo[0]
-	return
-}
-
-func (me *CssService) DeleteCssPlayAuthKeyConfigById(ctx context.Context, domainName string) (errRet error) {
-	logId := getLogId(ctx)
-
-	request := css.NewfakeRequest()
-	request.DomainName = &domainName
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCssClient().fake(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
+	playAuthKeyConfig = response.Response.PlayAuthKeyInfo
 	return
 }
 
@@ -648,34 +624,10 @@ func (me *CssService) DescribeCssPushAuthKeyConfigById(ctx context.Context, doma
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.PushAuthKeyInfo) < 1 {
+	if response.Response.PushAuthKeyInfo == nil {
 		return
 	}
 
-	pushAuthKeyConfig = response.Response.PushAuthKeyInfo[0]
-	return
-}
-
-func (me *CssService) DeleteCssPushAuthKeyConfigById(ctx context.Context, domainName string) (errRet error) {
-	logId := getLogId(ctx)
-
-	request := css.NewfakeRequest()
-	request.DomainName = &domainName
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseCssClient().fake(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
+	pushAuthKeyConfig = response.Response.PushAuthKeyInfo
 	return
 }

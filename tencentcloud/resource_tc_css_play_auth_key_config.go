@@ -25,12 +25,12 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudCssPlayAuthKeyConfig() *schema.Resource {
@@ -80,9 +80,14 @@ func resourceTencentCloudCssPlayAuthKeyConfigCreate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_css_play_auth_key_config.create")()
 	defer inconsistentCheck(d, meta)()
 
-	d.SetId(helper.UInt64ToStr(domainName))
+	var domainName string
+	if v, ok := d.GetOk("domain_name"); ok {
+		domainName = v.(string)
+	}
 
-	return resourceTencentCloudCssPlayAuthKeyConfigRead(d, meta)
+	d.SetId(domainName)
+
+	return resourceTencentCloudCssPlayAuthKeyConfigUpdate(d, meta)
 }
 
 func resourceTencentCloudCssPlayAuthKeyConfigRead(d *schema.ResourceData, meta interface{}) error {
@@ -95,7 +100,7 @@ func resourceTencentCloudCssPlayAuthKeyConfigRead(d *schema.ResourceData, meta i
 
 	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	playAuthKeyConfigId := d.Id()
+	domainName := d.Id()
 
 	playAuthKeyConfig, err := service.DescribeCssPlayAuthKeyConfigById(ctx, domainName)
 	if err != nil {
@@ -139,15 +144,27 @@ func resourceTencentCloudCssPlayAuthKeyConfigUpdate(d *schema.ResourceData, meta
 
 	request := css.NewModifyLivePlayAuthKeyRequest()
 
-	playAuthKeyConfigId := d.Id()
+	request.DomainName = helper.String(d.Id())
 
-	request.DomainName = &domainName
+	if v, ok := d.GetOkExists("enable"); ok {
+		request.Enable = helper.IntInt64(v.(int))
+	}
 
-	immutableArgs := []string{"domain_name", "enable", "auth_key", "auth_delta", "auth_back_key"}
+	if d.HasChange("auth_key") {
+		if v, ok := d.GetOk("auth_key"); ok {
+			request.AuthKey = helper.String(v.(string))
+		}
+	}
 
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
+	if d.HasChange("auth_delta") {
+		if v, _ := d.GetOk("auth_delta"); v != nil {
+			request.AuthDelta = helper.IntUint64(v.(int))
+		}
+	}
+
+	if d.HasChange("auth_back_key") {
+		if v, ok := d.GetOk("auth_back_key"); ok {
+			request.AuthBackKey = helper.String(v.(string))
 		}
 	}
 
@@ -171,6 +188,6 @@ func resourceTencentCloudCssPlayAuthKeyConfigUpdate(d *schema.ResourceData, meta
 func resourceTencentCloudCssPlayAuthKeyConfigDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_css_play_auth_key_config.delete")()
 	defer inconsistentCheck(d, meta)()
-
+	//donothing
 	return nil
 }

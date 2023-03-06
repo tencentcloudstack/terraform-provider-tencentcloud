@@ -25,12 +25,12 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	css "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudCssPushAuthKeyConfig() *schema.Resource {
@@ -80,9 +80,14 @@ func resourceTencentCloudCssPushAuthKeyConfigCreate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_css_push_auth_key_config.create")()
 	defer inconsistentCheck(d, meta)()
 
-	d.SetId(helper.UInt64ToStr(domainName))
+	var domainName string
+	if v, ok := d.GetOk("domain_name"); ok {
+		domainName = v.(string)
+	}
 
-	return resourceTencentCloudCssPushAuthKeyConfigRead(d, meta)
+	d.SetId(domainName)
+
+	return resourceTencentCloudCssPushAuthKeyConfigUpdate(d, meta)
 }
 
 func resourceTencentCloudCssPushAuthKeyConfigRead(d *schema.ResourceData, meta interface{}) error {
@@ -95,7 +100,7 @@ func resourceTencentCloudCssPushAuthKeyConfigRead(d *schema.ResourceData, meta i
 
 	service := CssService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	pushAuthKeyConfigId := d.Id()
+	domainName := d.Id()
 
 	pushAuthKeyConfig, err := service.DescribeCssPushAuthKeyConfigById(ctx, domainName)
 	if err != nil {
@@ -139,15 +144,27 @@ func resourceTencentCloudCssPushAuthKeyConfigUpdate(d *schema.ResourceData, meta
 
 	request := css.NewModifyLivePushAuthKeyRequest()
 
-	pushAuthKeyConfigId := d.Id()
+	request.DomainName = helper.String(d.Id())
 
-	request.DomainName = &domainName
+	if v, ok := d.GetOkExists("enable"); ok {
+		request.Enable = helper.IntInt64(v.(int))
+	}
 
-	immutableArgs := []string{"domain_name", "enable", "master_auth_key", "backup_auth_key", "auth_delta"}
+	if d.HasChange("master_auth_key") {
+		if v, ok := d.GetOk("master_auth_key"); ok {
+			request.MasterAuthKey = helper.String(v.(string))
+		}
+	}
 
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
+	if d.HasChange("backup_auth_key") {
+		if v, ok := d.GetOk("backup_auth_key"); ok {
+			request.BackupAuthKey = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("auth_delta") {
+		if v, _ := d.GetOk("auth_delta"); v != nil {
+			request.AuthDelta = helper.IntUint64(v.(int))
 		}
 	}
 
@@ -171,6 +188,6 @@ func resourceTencentCloudCssPushAuthKeyConfigUpdate(d *schema.ResourceData, meta
 func resourceTencentCloudCssPushAuthKeyConfigDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_css_push_auth_key_config.delete")()
 	defer inconsistentCheck(d, meta)()
-
+	//donothing
 	return nil
 }

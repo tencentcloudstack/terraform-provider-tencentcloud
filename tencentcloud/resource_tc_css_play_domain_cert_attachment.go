@@ -5,13 +5,17 @@ This resource is used for binding the play domain and specified certification to
 Example Usage
 
 ```hcl
+data "tencentcloud_ssl_certificates" "foo" {
+	name = "your_ssl_cert"
+}
+
 resource "tencentcloud_css_play_domain_cert_attachment" "play_domain_cert_attachment" {
-  cloud_cert_id = &lt;nil&gt;
-
-domain_name = ""
-status =
-
+  cloud_cert_id = data.tencentcloud_ssl_certificates.foo.certificates.0.id
+  domain_info {
+    domain_name = "your_domain_name"
+    status = 1
   }
+}
 ```
 
 Import
@@ -45,23 +49,32 @@ func resourceTencentCloudCssPlayDomainCertAttachment() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"cloud_cert_id": {
+			"domain_info": {
 				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "The playback domains to bind and whether to enable HTTPS for them. If `CloudCertId` is unspecified, and a domain is already bound with a certificate, this API will only update the HTTPS configuration of the domain.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"domain_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "domain name.",
+						},
+						"status": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "Whether to enable the https rule for the domain name. 1: enable, 0: disabled, -1: remain unchanged.",
+						},
+					},
+				},
+			},
+			"cloud_cert_id": {
+				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Tencent cloud ssl certificate Id. Refer to `tencentcloud_ssl_certificate` to create or obtain the resource ID.",
-			},
-			"domain_name": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "domain name.",
-			},
-			"status": {
-				Required:    true,
-				ForceNew:    true,
-				Type:        schema.TypeInt,
-				Description: "Whether to enable the https rule for the domain name. 1: enable, 0: disabled, -1: remain unchanged.",
 			},
 			"certificate_alias": {
 				Type:        schema.TypeString,
@@ -110,17 +123,17 @@ func resourceTencentCloudCssPlayDomainCertAttachmentCreate(d *schema.ResourceDat
 		request.CloudCertId = helper.String(cloudCertId)
 	}
 
-	infos := []*css.LiveCertDomainInfo{}
-	if v, ok := d.GetOk("domain_name"); ok {
-		domainName = v.(string)
-		infos[0].DomainName = helper.String(domainName)
+	if dMap, ok := helper.InterfacesHeadMap(d, "domain_info"); ok {
+		info := css.LiveCertDomainInfo{}
+		if v, ok := dMap["domain_name"]; ok {
+			domainName = v.(string)
+			info.DomainName = helper.String(domainName)
+		}
+		if v, ok := dMap["status"]; ok {
+			info.Status = helper.IntInt64(v.(int))
+		}
+		request.DomainInfos = append(request.DomainInfos, &info)
 	}
-
-	if v, _ := d.GetOk("status"); v != nil {
-		infos[0].Status = helper.IntInt64(v.(int))
-	}
-
-	request.DomainInfos = infos
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCssClient().ModifyLiveDomainCertBindings(request)
@@ -133,12 +146,12 @@ func resourceTencentCloudCssPlayDomainCertAttachmentCreate(d *schema.ResourceDat
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create css playDomainCertAttachment failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create css playDomainCertAttachment failed, error reason: %+v", logId, err)
 		return err
 	}
 
-	if response.Response.Errors != nil {
-		return fmt.Errorf("[CRITAL]%s create css playDomainCertAttachment failed, reason:%+v", logId, response.Response.Errors)
+	if len(response.Response.Errors) > 0 {
+		return fmt.Errorf("[CRITAL]%s create css playDomainCertAttachment failed, reason: response.Response.Errors[%+v]", logId, response.Response.Errors)
 	}
 
 	d.SetId(strings.Join([]string{domainName, cloudCertId}, FILED_SP))
@@ -178,13 +191,15 @@ func resourceTencentCloudCssPlayDomainCertAttachmentRead(d *schema.ResourceData,
 		_ = d.Set("cloud_cert_id", playDomainCertAttachment.CloudCertId)
 	}
 
+	domainInfosMap := map[string]interface{}{}
 	if playDomainCertAttachment.DomainName != nil {
-		_ = d.Set("domain_name", playDomainCertAttachment.DomainName)
+		domainInfosMap["domain_name"] = playDomainCertAttachment.DomainName
 	}
 
 	if playDomainCertAttachment.Status != nil {
-		_ = d.Set("status", playDomainCertAttachment.Status)
+		domainInfosMap["status"] = playDomainCertAttachment.Status
 	}
+	_ = d.Set("domain_info", []interface{}{domainInfosMap})
 
 	if playDomainCertAttachment.CertificateAlias != nil {
 		_ = d.Set("certificate_alias", playDomainCertAttachment.CertificateAlias)
