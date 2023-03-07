@@ -225,6 +225,9 @@ func TestAccTencentCloudEipResource_prepaid(t *testing.T) {
 				),
 			},
 			{
+				PreConfig: func() { //sleep 1 min after update
+					time.Sleep(10 * time.Second)
+				},
 				ResourceName:            "tencentcloud_eip.foo",
 				ImportState:             true,
 				ImportStateVerify:       true,
