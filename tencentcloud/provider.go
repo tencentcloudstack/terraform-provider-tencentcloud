@@ -832,6 +832,9 @@ Cloud Streaming Services(CSS)
 	tencentcloud_css_live_transcode_rule_attachment
 	tencentcloud_css_domain
 	tencentcloud_css_authenticate_domain_owner_operation
+	tencentcloud_css_play_domain_cert_attachment
+	tencentcloud_css_play_auth_key_config
+	tencentcloud_css_push_auth_key_config
   Data Source
 	tencentcloud_css_domains
 
@@ -1640,6 +1643,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_css_live_transcode_rule_attachment":         resourceTencentCloudCssLiveTranscodeRuleAttachment(),
 			"tencentcloud_css_domain":                                 resourceTencentCloudCssDomain(),
 			"tencentcloud_css_authenticate_domain_owner_operation":    resourceTencentCloudCssAuthenticateDomainOwnerOperation(),
+			"tencentcloud_css_play_domain_cert_attachment":            resourceTencentCloudCssPlayDomainCertAttachment(),
+			"tencentcloud_css_play_auth_key_config":                   resourceTencentCloudCssPlayAuthKeyConfig(),
+			"tencentcloud_css_push_auth_key_config":                   resourceTencentCloudCssPushAuthKeyConfig(),
 			"tencentcloud_pts_project":                                resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                          resourceTencentCloudPtsAlertChannel(),
 			"tencentcloud_pts_scenario":                               resourceTencentCloudPtsScenario(),
