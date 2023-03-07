@@ -68,12 +68,12 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 			"bandwidth": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Maximum bandwidth of the GAAP proxy, unit is Mbps. Valid value: `10`, `20`, `50`, `100`, `200`, `500` and `1000`.",
+				Description: "Maximum bandwidth of the GAAP proxy, unit is Mbps. Valid value: `10`, `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000` and `10000`. To set `2000`, `5000` or `10000`, you need to apply for a whitelist from Tencent Cloud.",
 			},
 			"concurrent": {
 				Type:        schema.TypeInt,
 				Required:    true,
-				Description: "Maximum concurrency of the GAAP proxy, unit is 10k. Valid value: `2`, `5`, `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90` and `100`.",
+				Description: "Maximum concurrency of the GAAP proxy, unit is 10k. Valid value: `2`, `5`, `10`, `20`, `30`, `40`, `50`, `60`, `70`, `80`, `90`, `100`, `150`, `200`, `250` and `300`. To set `150`, `200`, `250` or `300`, you need to apply for a whitelist from Tencent Cloud.",
 			},
 			"access_region": {
 				Type:        schema.TypeString,
