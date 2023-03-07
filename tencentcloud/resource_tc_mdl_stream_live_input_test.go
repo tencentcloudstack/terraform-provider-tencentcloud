@@ -13,17 +13,20 @@ func TestAccTencentCloudMdlStreamLiveInputResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMdlStreamLiveInput,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mdl_stream_live_input.stream_live_input", "id")),
+				Config:    testAccMdlStreamLiveInput,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-mumbai") },
+				Check:     resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mdl_stream_live_input.stream_live_input", "id")),
 			},
 			{
-				Config: testAccMdlStreamLiveInputUpdate,
+				Config:    testAccMdlStreamLiveInputUpdate,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-mumbai") },
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_mdl_stream_live_input.stream_live_input", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_mdl_stream_live_input.stream_live_input", "name", "terraform-for-test"),
+					resource.TestCheckResourceAttr("tencentcloud_mdl_stream_live_input.stream_live_input", "name", "terraform_for_test"),
 				),
 			},
 			{
+				PreConfig:         func() { testAccStepSetRegion(t, "ap-mumbai") },
 				ResourceName:      "tencentcloud_mdl_stream_live_input.stream_live_input",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -47,7 +50,7 @@ resource "tencentcloud_mdl_stream_live_input" "stream_live_input" {
 const testAccMdlStreamLiveInputUpdate = `
 
 resource "tencentcloud_mdl_stream_live_input" "stream_live_input" {
-  name               = "terraform-for-test"
+  name               = "terraform_for_test"
   type               = "RTP_PUSH"
   security_group_ids = [
     "6405DF9D000007DFB4EC"
