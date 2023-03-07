@@ -15,6 +15,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
+	intlProfile "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/common/profile"
+	mdl "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/mdl/v20200326"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
@@ -158,11 +160,30 @@ type TencentCloudClient struct {
 	mpsConn            *mps.Client
 	cwpConn            *cwp.Client
 	chdfsConn          *chdfs.Client
+	mdlConn            *mdl.Client
 }
 
 // NewClientProfile returns a new ClientProfile
 func (me *TencentCloudClient) NewClientProfile(timeout int) *profile.ClientProfile {
 	cpf := profile.NewClientProfile()
+
+	// all request use method POST
+	cpf.HttpProfile.ReqMethod = "POST"
+	// request timeout
+	cpf.HttpProfile.ReqTimeout = timeout
+	// request protocol
+	cpf.HttpProfile.Scheme = me.Protocol
+	// request domain
+	cpf.HttpProfile.RootDomain = me.Domain
+	// default language
+	cpf.Language = "en-US"
+
+	return cpf
+}
+
+// NewClientProfile returns a new ClientProfile
+func (me *TencentCloudClient) NewClientIntlProfile(timeout int) *intlProfile.ClientProfile {
+	cpf := intlProfile.NewClientProfile()
 
 	// all request use method POST
 	cpf.HttpProfile.ReqMethod = "POST"
@@ -1083,6 +1104,20 @@ func (me *TencentCloudClient) UseChdfsClient() *chdfs.Client {
 	me.chdfsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.chdfsConn
+}
+
+// UseMdlClient returns mdl client for service
+func (me *TencentCloudClient) UseMdlClient() *mdl.Client {
+	if me.mdlConn != nil {
+		return me.mdlConn
+	}
+
+	cpf := me.NewClientIntlProfile(300)
+	cpf.Language = "zh-CN"
+	me.mdlConn, _ = mdl.NewClient(me.Credential, me.Region, cpf)
+	me.mdlConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.mdlConn
 }
 
 func getEnvDefault(key string, defVal int) int {

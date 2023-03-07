@@ -969,6 +969,10 @@ Cloud HDFS(CHDFS)
 	tencentcloud_chdfs_mount_point
 	tencentcloud_chdfs_mount_point_attachment
 
+StreamLive(MDL)
+  Resource
+	tencentcloud_mdl_stream_live_input
+
 */
 package tencentcloud
 
@@ -1728,6 +1732,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_life_cycle_rule":                      resourceTencentCloudChdfsLifeCycleRule(),
 			"tencentcloud_chdfs_mount_point":                          resourceTencentCloudChdfsMountPoint(),
 			"tencentcloud_chdfs_mount_point_attachment":               resourceTencentCloudChdfsMountPointAttachment(),
+			"tencentcloud_mdl_stream_live_input":                      resourceTencentCloudMdlStreamLiveInput(),
 		},
 
 		ConfigureFunc: providerConfigure,
