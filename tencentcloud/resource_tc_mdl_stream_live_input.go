@@ -4,7 +4,7 @@ Provides a resource to create a mdl streamlive_input
 Example Usage
 
 ```hcl
-resource "tencentcloud_mdl_streamlive_input" "streamlive_input" {
+resource "tencentcloud_mdl_stream_live_input" "stream_live_input" {
   name               = "terraform_test"
   type               = "RTP_PUSH"
   security_group_ids = [
@@ -15,10 +15,10 @@ resource "tencentcloud_mdl_streamlive_input" "streamlive_input" {
 
 Import
 
-mdl streamlive_input can be imported using the id, e.g.
+mdl stream_live_input can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_mdl_streamlive_input.streamlive_input streamlive_input_id
+terraform import tencentcloud_mdl_stream_live_input.stream_live_input id
 ```
 */
 package tencentcloud
@@ -105,7 +105,7 @@ func resourceTencentCloudMdlStreamLiveInput() *schema.Resource {
 						"input_domain": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The domain of an SRT_PUSH address. If this is a request parameter, you don’t need to specify it.Note: This field may return `null`, indicating that no valid value was found.",
+							Description: "The domain of an SRT_PUSH address. If this is a request parameter, you do not need to specify it.Note: This field may return `null`, indicating that no valid value was found.",
 						},
 						"user_name": {
 							Type:        schema.TypeString,
