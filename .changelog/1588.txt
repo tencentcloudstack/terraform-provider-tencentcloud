@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_mdl_stream_live_input
+```
