@@ -108,6 +108,20 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				ValidateFunc: validateIntegerInRange(2, 10),
 				Description:  "Unhealthy threshold of health check, and the default is `3`. If the unhealthy result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is [2-10].  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.",
 			},
+			"health_check_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue(HEALTH_CHECK_TYPE),
+				Description:  "Type of health check. Valid value is `CUSTOM`, `TCP`, `HTTP`.",
+			},
+			"health_check_time_out": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateIntegerInRange(2, 60),
+				Description:  "Time out of health check. The value range is [2-60](SEC).",
+			},
 			"health_check_http_code": {
 				Type:         schema.TypeInt,
 				Optional:     true,
@@ -437,6 +451,8 @@ func resourceTencentCloudClbListenerRuleRead(d *schema.ResourceData, meta interf
 		_ = d.Set("health_check_http_domain", instance.HealthCheck.HttpCheckDomain)
 		_ = d.Set("health_check_http_path", instance.HealthCheck.HttpCheckPath)
 		_ = d.Set("health_check_http_code", instance.HealthCheck.HttpCode)
+		_ = d.Set("health_check_type", instance.HealthCheck.CheckType)
+		_ = d.Set("health_check_time_out", instance.HealthCheck.TimeOut)
 	}
 
 	if instance.Certificate != nil {
