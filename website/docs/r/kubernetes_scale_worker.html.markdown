@@ -120,9 +120,26 @@ The following arguments are supported:
 * `desired_pod_num` - (Optional, Int, ForceNew) Indicate to set desired pod number in current node. Valid when the cluster enable customized pod cidr.
 * `docker_graph_path` - (Optional, String, ForceNew) Docker graph path. Default is `/var/lib/docker`.
 * `extra_args` - (Optional, List: [`String`], ForceNew) Custom parameter information related to the node.
+* `gpu_args` - (Optional, List, ForceNew) GPU driver parameters.
 * `labels` - (Optional, Map, ForceNew) Labels of kubernetes scale worker created nodes.
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
+
+The `cuda` object supports the following:
+
+* `name` - (Required, String) Name of GPU driver or CUDA.
+* `version` - (Required, String) Version of GPU driver or CUDA.
+
+The `cudnn` object supports the following:
+
+* `name` - (Required, String) cuDNN name.
+* `version` - (Required, String) cuDNN version.
+* `dev_name` - (Optional, String) Dev name of cuDNN.
+* `doc_name` - (Optional, String) Doc name of cuDNN.
+
+The `custom_driver` object supports the following:
+
+* `address` - (Optional, String) URL of custom GPU driver address.
 
 The `data_disk` object supports the following:
 
@@ -143,6 +160,19 @@ The `data_disk` object supports the following:
 * `disk_type` - (Optional, String, ForceNew) Types of disk, available values: `CLOUD_PREMIUM` and `CLOUD_SSD` and `CLOUD_HSSD` and `CLOUD_TSSD`.
 * `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
 * `mount_target` - (Optional, String, ForceNew) Mount target.
+
+The `driver` object supports the following:
+
+* `name` - (Required, String) Name of GPU driver or CUDA.
+* `version` - (Required, String) Version of GPU driver or CUDA.
+
+The `gpu_args` object supports the following:
+
+* `cuda` - (Optional, Map) CUDA version.
+* `cudnn` - (Optional, Map) cuDNN version.
+* `custom_driver` - (Optional, Map) Custom GPU driver.
+* `driver` - (Optional, Map) GPU driver version.
+* `mig_enable` - (Optional, Bool) Whether to enable MIG.
 
 The `worker_config` object supports the following:
 
