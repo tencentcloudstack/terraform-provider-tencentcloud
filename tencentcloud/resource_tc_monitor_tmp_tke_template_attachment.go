@@ -25,7 +25,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -103,14 +103,14 @@ func resourceTencentCloudMonitorTmpTkeTemplateAttachmentCreate(d *schema.Resourc
 
 	logId := getLogId(contextNil)
 
-	request := tke.NewSyncPrometheusTempRequest()
+	request := monitor.NewSyncPrometheusTempRequest()
 
 	if v, ok := d.GetOk("template_id"); ok {
 		request.TemplateId = helper.String(v.(string))
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "targets"); ok {
-		var prometheusTarget tke.PrometheusTemplateSyncTarget
+		var prometheusTarget monitor.PrometheusTemplateSyncTarget
 		if v, ok := dMap["region"]; ok {
 			prometheusTarget.Region = helper.String(v.(string))
 		}
@@ -143,14 +143,14 @@ func resourceTencentCloudMonitorTmpTkeTemplateAttachmentCreate(d *schema.Resourc
 			prometheusTarget.ClusterName = helper.String(v.(string))
 		}
 
-		prometheusTargets := make([]*tke.PrometheusTemplateSyncTarget, 0)
+		prometheusTargets := make([]*monitor.PrometheusTemplateSyncTarget, 0)
 		prometheusTargets = append(prometheusTargets, &prometheusTarget)
 		request.Targets = prometheusTargets
 
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().SyncPrometheusTemp(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().SyncPrometheusTemp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -180,7 +180,7 @@ func resourceTencentCloudMonitorTmpTkeTemplateAttachmentRead(d *schema.ResourceD
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ids := strings.Split(d.Id(), FILED_SP)
 	if len(ids) != 3 {
@@ -227,7 +227,7 @@ func resourceTencentCloudMonitorTmpTkeTemplateAttachmentDelete(d *schema.Resourc
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	request := tke.NewDeletePrometheusTempSyncRequest()
+	request := monitor.NewDeletePrometheusTempSyncRequest()
 
 	ids := strings.Split(d.Id(), FILED_SP)
 	if len(ids) != 3 {
@@ -239,8 +239,8 @@ func resourceTencentCloudMonitorTmpTkeTemplateAttachmentDelete(d *schema.Resourc
 	region := ids[2]
 
 	request.TemplateId = &templateId
-	var targets []*tke.PrometheusTemplateSyncTarget
-	target := tke.PrometheusTemplateSyncTarget{
+	var targets []*monitor.PrometheusTemplateSyncTarget
+	target := monitor.PrometheusTemplateSyncTarget{
 		Region:     &region,
 		InstanceId: &instanceId,
 	}
@@ -248,7 +248,7 @@ func resourceTencentCloudMonitorTmpTkeTemplateAttachmentDelete(d *schema.Resourc
 	request.Targets = targets
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().DeletePrometheusTempSync(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().DeletePrometheusTempSync(request)
 		if e != nil {
 			return retryError(e)
 		} else {

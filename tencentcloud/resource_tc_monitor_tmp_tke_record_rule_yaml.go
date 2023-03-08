@@ -34,7 +34,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -94,7 +94,7 @@ func resourceTencentCloudTkeTmpRecordRuleYamlCreate(d *schema.ResourceData, meta
 
 	logId := getLogId(contextNil)
 
-	request := tke.NewCreatePrometheusRecordRuleYamlRequest()
+	request := monitor.NewCreatePrometheusRecordRuleYamlRequest()
 
 	if v, ok := d.GetOk("instance_id"); ok {
 		request.InstanceId = helper.String(v.(string))
@@ -113,7 +113,7 @@ func resourceTencentCloudTkeTmpRecordRuleYamlCreate(d *schema.ResourceData, meta
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().CreatePrometheusRecordRuleYaml(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreatePrometheusRecordRuleYaml(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -148,7 +148,7 @@ func resourceTencentCloudTkeTmpRecordRuleYamlRead(d *schema.ResourceData, meta i
 	instanceId := ids[0]
 	name := ids[1]
 
-	recordRuleService := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	recordRuleService := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 	request, err := recordRuleService.DescribePrometheusRecordRuleByName(ctx, instanceId, name)
 	if err != nil {
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -189,7 +189,7 @@ func resourceTencentCloudTkeTmpRecordRuleYamlUpdate(d *schema.ResourceData, meta
 
 	logId := getLogId(contextNil)
 
-	request := tke.NewModifyPrometheusRecordRuleYamlRequest()
+	request := monitor.NewModifyPrometheusRecordRuleYamlRequest()
 
 	ids := strings.Split(d.Id(), FILED_SP)
 	if len(ids) != 2 {
@@ -204,7 +204,7 @@ func resourceTencentCloudTkeTmpRecordRuleYamlUpdate(d *schema.ResourceData, meta
 			request.Content = helper.String(v.(string))
 
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().ModifyPrometheusRecordRuleYaml(request)
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().ModifyPrometheusRecordRuleYaml(request)
 				if e != nil {
 					return retryError(e)
 				} else {
@@ -237,7 +237,7 @@ func resourceTencentCloudTkeTmpRecordRuleYamlDelete(d *schema.ResourceData, meta
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 	if err := service.DeletePrometheusRecordRuleYaml(ctx, ids[0], ids[1]); err != nil {
 		return err
 	}

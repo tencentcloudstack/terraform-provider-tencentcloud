@@ -44,7 +44,7 @@ func TestAccTencentCloudMonitorTemplate_basic(t *testing.T) {
 func testAccCheckTemplateDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_monitor_tmp_tke_template" {
 			continue
@@ -79,7 +79,7 @@ func testAccCheckTemplateExists(r string) resource.TestCheckFunc {
 			return fmt.Errorf("resource id is not set")
 		}
 
-		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		template, err := service.DescribeTmpTkeTemplateById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err

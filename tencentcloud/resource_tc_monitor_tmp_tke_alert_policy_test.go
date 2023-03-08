@@ -94,7 +94,7 @@ func TestAccTencentCloudMonitorTmpTkeAlertPolicy_basic(t *testing.T) {
 func testAccCheckTmpTkeAlertPolicyDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_monitor_tmp_tke_alert_policy" {
 			continue
@@ -139,7 +139,7 @@ func testAccCheckTmpTkeAlertPolicyExists(r string) resource.TestCheckFunc {
 		instanceId := items[0]
 		tmpAlertPolicyId := items[1]
 
-		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		tmpAlertPolicy, err := service.DescribeTkeTmpAlertPolicy(ctx, instanceId, tmpAlertPolicyId)
 		if tmpAlertPolicy == nil {
 			return fmt.Errorf("alert policy %s is not found", rs.Primary.ID)
