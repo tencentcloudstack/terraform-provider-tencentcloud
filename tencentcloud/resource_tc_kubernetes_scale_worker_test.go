@@ -95,6 +95,15 @@ func TestAccTencentCloudKubernetesScaleWorkerResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "unschedulable"),
 				),
 			},
+			{
+				Config: testAccTkeScaleWorkerInstanceGpuInsTypeUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeScaleWorkerExists(testTkeScaleWorkerResourceKey),
+					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "cluster_id"),
+					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_type", "GN6S.LARGE20"),
+					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "gpu_args.#"),
+				),
+			},
 		},
 	})
 }
@@ -216,7 +225,7 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
   worker_config {
     count                      				= 1
     availability_zone          				= var.default_az
-    instance_type              				= local.scale_instance_type
+    instance_type              				= "GN6S.LARGE20"
     subnet_id                  				= local.subnet_id
     system_disk_type           				= "CLOUD_SSD"
     system_disk_size           				= 50
@@ -232,6 +241,63 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
     enhanced_monitor_service  				= false
     user_data                 				= "dGVzdA=="
     password                  				= "AABBccdd1122"
+  }
+}
+`
+
+const testAccTkeScaleWorkerInstanceGpuInsTypeUpdate string = testAccTkeScaleWorkerInstanceBasic + `
+
+resource tencentcloud_kubernetes_scale_worker test_scale {
+  cluster_id = local.cluster_id
+  
+  extra_args = [
+ 	"root-dir=/var/lib/kubelet"
+  ]	
+
+  labels = {
+    "test1" = "test1",
+    "test2" = "test2",
+  }
+  unschedulable = 0
+
+  worker_config {
+    count                      				= 1
+    availability_zone          				= var.default_az
+    instance_type              				= local.scale_instance_type
+    subnet_id                  				= local.subnet_id
+    system_disk_type           				= "CLOUD_SSD"
+    system_disk_size           				= 50
+    internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"
+    security_group_ids                      = [local.sg_id]
+	img_id 								    = "img-22trbn9x"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service 				= false
+    enhanced_monitor_service  				= false
+    user_data                 				= "dGVzdA=="
+    password                  				= "AABBccdd1122"
+  }
+
+  gpu_args {
+    mig_enable = false
+    driver = {
+      name = "NVIDIA-Linux-x86_64-450.102.04.run"
+      version = "450.102.04"
+    }
+    cuda = {
+      name = "cuda_11.0.3_450.51.06_linux.run"
+      version = "11.0.3"
+    }
+    cudnn = {
+      name = "libcudnn8_8.1.0.77-1+cuda11.2_amd64.deb"
+      version = "8.1.0"
+      doc_name = "libcudnn8-samples_8.1.0.77-1+cuda11.2_amd64.deb"
+      dev_name = "libcudnn8-dev_8.1.0.77-1+cuda11.2_amd64.deb"
+    }
   }
 }
 `
