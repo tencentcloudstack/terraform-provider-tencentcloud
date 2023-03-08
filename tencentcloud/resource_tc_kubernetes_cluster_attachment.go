@@ -469,7 +469,7 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 	}
 
 	// get gpu_args
-	if v, ok := dMap["gpu_args"]; ok {
+	if v, ok := dMap["gpu_args"]; ok && len(v.([]interface{})) > 0 {
 		gpuArgs := v.([]interface{})[0].(map[string]interface{})
 
 		var (
@@ -481,19 +481,19 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 		)
 		tkeGpuArgs := tke.GPUArgs{}
 		tkeGpuArgs.MIGEnable = &migEnable
-		if driver != nil && len(driver) > 0 {
+		if len(driver) > 0 {
 			tkeGpuArgs.Driver = &tke.DriverVersion{
 				Version: helper.String(driver["version"].(string)),
 				Name:    helper.String(driver["name"].(string)),
 			}
 		}
-		if cuda != nil && len(cuda) > 0 {
+		if len(cuda) > 0 {
 			tkeGpuArgs.CUDA = &tke.DriverVersion{
 				Version: helper.String(cuda["version"].(string)),
 				Name:    helper.String(cuda["name"].(string)),
 			}
 		}
-		if cudnn != nil && len(cudnn) > 0 {
+		if len(cudnn) > 0 {
 			tkeGpuArgs.CUDNN = &tke.CUDNN{
 				Version: helper.String(cudnn["version"].(string)),
 				Name:    helper.String(cudnn["name"].(string)),
@@ -501,7 +501,7 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 				DevName: helper.String(cudnn["dev_name"].(string)),
 			}
 		}
-		if customDriver != nil && len(customDriver) > 0 {
+		if len(customDriver) > 0 {
 			tkeGpuArgs.CustomDriver = &tke.CustomDriver{
 				Address: helper.String(customDriver["address"].(string)),
 			}
