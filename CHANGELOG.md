@@ -1,3 +1,17 @@
+## 1.79.14 (March 08, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_css_play_auth_key_config` ([#1587](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1587))
+* **New Resource:** `tencentcloud_css_play_domain_cert_attachment` ([#1587](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1587))
+* **New Resource:** `tencentcloud_css_push_auth_key_config` ([#1587](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1587))
+* **New Resource:** `tencentcloud_mdl_stream_live_input` ([#1588](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1588))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: support set `instance_type` ([#1589](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1589))
+* resource/tencentcloud_clb_listener_rule: support  `health_check_type` and `health_check_time_out` ([#1590](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1590))
+
 ## 1.79.13 (March 03, 2023)
 
 FEATURES:
