@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -62,6 +63,11 @@ func testAccCheckClusterAttachmentDestroy(s *terraform.State) error {
 
 		mesh, err := service.DescribeTcmMesh(ctx, meshId)
 		if err != nil {
+			if sdkErr, ok := err.(*errors.TencentCloudSDKError); ok {
+				if sdkErr.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
 			return err
 		}
 
