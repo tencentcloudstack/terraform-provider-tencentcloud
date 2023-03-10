@@ -11,6 +11,14 @@ resource "tencentcloud_mysql_account" "default" {
   description = "My test account"
 }
 ```
+
+Import
+
+mysql account can be imported using the mysqlId#accountName, e.g.
+
+```
+terraform import tencentcloud_mysql_account.default cdb-gqg6j82x#tf_account
+```
 */
 package tencentcloud
 
@@ -31,7 +39,9 @@ func resourceTencentCloudMysqlAccount() *schema.Resource {
 		Read:   resourceTencentCloudMysqlAccountRead,
 		Update: resourceTencentCloudMysqlAccountUpdate,
 		Delete: resourceTencentCloudMysqlAccountDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"mysql_id": {
 				Type:        schema.TypeString,
