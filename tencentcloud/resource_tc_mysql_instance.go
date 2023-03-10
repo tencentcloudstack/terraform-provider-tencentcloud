@@ -926,7 +926,7 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 			}
 
 			// When mysql8.0 supports lower_case_table_name parameter query, this parameter needs to be obtained from the interface query
-			if *mysqlInfo.EngineVersion == "8.0" {
+			if *mysqlInfo.EngineVersion == "8.0" && parametersMap["lower_case_table_names"] != "" {
 				caresParameters["lower_case_table_names"] = parametersMap["lower_case_table_names"]
 			}
 
