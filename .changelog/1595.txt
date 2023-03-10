@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_mysql_instance: Adapt to mysql8.0, but currently import does not support the parameter lower_case_table_names
+```
