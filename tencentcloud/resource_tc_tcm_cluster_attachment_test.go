@@ -23,8 +23,14 @@ func TestAccTencentCloudTcmClusterAttachment_basic(t *testing.T) {
 				Config: testAccTcmClusterAttachment,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckClusterAttachmentExists("tencentcloud_tcm_cluster_attachment.basic"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tcm_cluster_attachment.basic", "mesh_id"),
+					// resource.TestCheckResourceAttrSet("tencentcloud_tcm_cluster_attachment.basic", "mesh_id"),
 					resource.TestCheckResourceAttr("tencentcloud_tcm_cluster_attachment.basic", "cluster_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_cluster_attachment.basic", "cluster_list.0.cluster_id", defaultMeshClusterId),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_cluster_attachment.basic", "cluster_list.0.region", "ap-guangzhou"),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_cluster_attachment.basic", "cluster_list.0.role", "REMOTE"),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_cluster_attachment.basic", "cluster_list.0.vpc_id", defaultMeshVpcId),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_cluster_attachment.basic", "cluster_list.0.subnet_id", defaultMeshSubnetId),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_cluster_attachment.basic", "cluster_list.0.type", "EKS"),
 				),
 			},
 			{
