@@ -671,11 +671,14 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("health_check_remote_ip", *connection.HealthCheckRemoteIp)
 	// dpd
 	_ = d.Set("dpd_enable", *connection.DpdEnable)
-	dpdTimeoutInt, err := strconv.Atoi(*connection.DpdTimeout)
-	if err != nil {
-		return err
+	if *connection.DpdTimeout != "" {
+		dpdTimeoutInt, err := strconv.Atoi(*connection.DpdTimeout)
+		if err != nil {
+			return err
+		}
+		_ = d.Set("dpd_timeout", dpdTimeoutInt)
 	}
-	_ = d.Set("dpd_timeout", dpdTimeoutInt)
+
 	_ = d.Set("dpd_action", *connection.DpdAction)
 
 	//tags
