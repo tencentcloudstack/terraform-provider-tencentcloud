@@ -72,38 +72,45 @@ func resourceTencentCloudTcmPrometheusAttachment() *schema.Resource {
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Vpc id for TMP.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Subnet id for TMP.",
 						},
 						"region": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Region for TMP.",
 						},
 						"instance_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Existed TMP id, auto create TMP if empty.",
 						},
 						"custom_prom": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "Third party prometheus.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"is_public_addr": {
 										Type:        schema.TypeBool,
 										Optional:    true,
+										Computed:    true,
 										Description: "Whether it is public address, default false.",
 									},
 									"vpc_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Vpc id.",
 									},
 									"url": {
@@ -119,11 +126,13 @@ func resourceTencentCloudTcmPrometheusAttachment() *schema.Resource {
 									"username": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Username of the prometheus, used in basic authentication type.",
 									},
 									"password": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Sensitive:   true,
 										Description: "Password of the prometheus, used in basic authentication type.",
 									},

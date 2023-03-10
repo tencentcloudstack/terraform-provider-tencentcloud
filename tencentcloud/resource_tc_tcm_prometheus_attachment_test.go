@@ -22,7 +22,7 @@ func TestAccTencentCloudTcmPrometheusAttachmentResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPrometheusAttachmentExists("tencentcloud_tcm_prometheus_attachment.prometheus_attachment"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_prometheus_attachment.prometheus_attachment", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tcm_prometheus_attachment.prometheus_attachment", "mesh_id", defaultMeshId),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_prometheus_attachment.prometheus_attachment", "mesh_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_prometheus_attachment.prometheus_attachment", "prometheus.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_prometheus_attachment.prometheus_attachment", "prometheus.0.custom_prom.#"),
 					resource.TestCheckResourceAttr("tencentcloud_tcm_prometheus_attachment.prometheus_attachment", "prometheus.0.custom_prom.0.auth_type", "basic"),
@@ -87,9 +87,6 @@ func testAccCheckPrometheusAttachmentExists(r string) resource.TestCheckFunc {
 }
 
 const testAccTcmPrometheusAttachmentVar = `
-variable "mesh_id" {
-  default = "` + defaultMeshId + `"
-}
 variable "vpc_id" {
   default = "` + defaultMeshVpcId + `"
 }
@@ -97,8 +94,41 @@ variable "vpc_id" {
 
 const testAccTcmPrometheusAttachment = testAccTcmPrometheusAttachmentVar + `
 
+resource "tencentcloud_tcm_mesh" "basic" {
+	display_name = "test_mesh"
+	mesh_version = "1.12.5"
+	type = "HOSTED"
+	config {
+	  istio {
+		outbound_traffic_policy = "ALLOW_ANY"
+		disable_policy_checks = true
+		enable_pilot_http = true
+		disable_http_retry = true
+		smart_dns {
+		  istio_meta_dns_capture = true
+		  istio_meta_dns_auto_allocate = true
+		}
+	  }
+	  tracing {
+		  enable = true
+		  sampling = 1
+		  apm {
+			  enable = false
+		  }
+		  zipkin {
+			  address = "10.0.0.1:1000"
+		  }
+	  }
+	}
+	tag_list {
+	  key = "key"
+	  value = "value"
+	  passthrough = false
+	}
+  }
+
 resource "tencentcloud_tcm_prometheus_attachment" "prometheus_attachment" {
-	mesh_id = var.mesh_id
+	mesh_id = tencentcloud_tcm_mesh.basic.id
 	prometheus {
 	  	# vpc_id = "vpc-pewdpxxx"
 	  	# subnet_id = "subnet-driddxxx"
