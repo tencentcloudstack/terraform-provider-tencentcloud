@@ -31,6 +31,25 @@ func init() {
 			for i := range groups {
 				id := *groups[i].PGroupId
 				name := *groups[i].Name
+
+				rules, err := service.DescribeAccessRule(ctx, id, "")
+
+				if err == nil { // ignore deleting the access rules when an error happened
+					for _, item := range rules {
+						ruleId := *item.RuleId
+						err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+							if delErr := service.DeleteAccessRule(ctx, id, ruleId); delErr != nil {
+								// retry when Pgroup is under deleting rule operation
+								return retryError(delErr)
+							}
+							return nil
+						})
+						if err != nil {
+							return err
+						}
+					}
+				}
+
 				if isResourcePersist(name, nil) || !strings.HasPrefix(name, "test") {
 					continue
 				}
