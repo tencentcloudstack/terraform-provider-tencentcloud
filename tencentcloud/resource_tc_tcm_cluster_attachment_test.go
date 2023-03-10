@@ -169,7 +169,7 @@ resource "tencentcloud_tcm_cluster_attachment" "basic" {
     role = "REMOTE"
     vpc_id = var.vpc_id
     subnet_id = var.subnet_id
-    type = "TKE"
+    type = "EKS"
   }
 }
 
