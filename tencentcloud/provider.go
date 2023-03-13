@@ -1324,6 +1324,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_css_domains":                              dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                      dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                       dataSourceTencentCloudChdfsMountPoints(),
+			"tencentcloud_tcm_mesh":                                 dataSourceTencentCloudTcmMesh(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

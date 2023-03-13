@@ -6,6 +6,7 @@ import (
 
 	tcm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcm/v20210413"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -143,5 +144,58 @@ func (me *TcmService) DescribeTcmAccessLogConfig(ctx context.Context, meshName s
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	accessLogConfig = response.Response
+	return
+}
+
+func (me *TcmService) DescribeTcmMeshByFilter(ctx context.Context, param map[string][]*string) (meshs []*tcm.Mesh, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcm.NewDescribeMeshListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		filter := &tcm.Filter{
+			Name:   helper.String(k),
+			Values: []*string{},
+		}
+		filter.Values = append(filter.Values, v...)
+		request.Filters = append(request.Filters, filter)
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var pageSize int64 = 50
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseTcmClient().DescribeMeshList(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.MeshList) < 1 {
+			break
+		}
+		meshs = append(meshs, response.Response.MeshList...)
+		if *response.Response.Total < pageSize {
+			break
+		}
+		offset += pageSize
+	}
 	return
 }
