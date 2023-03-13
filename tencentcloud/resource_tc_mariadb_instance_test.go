@@ -33,11 +33,11 @@ func TestAccTencentCloudMariadbInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mariadb_instance.instance", "tags.createby", "terrafrom"),
 				),
 			},
-			// {
-			// 	ResourceName:      "tencentcloud_mariadb_instance.instance",
-			// 	ImportState:       true,
-			// 	ImportStateVerify: true,
-			// },
+			{
+				ResourceName:      "tencentcloud_mariadb_instance.instance",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
