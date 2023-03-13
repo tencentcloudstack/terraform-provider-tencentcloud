@@ -751,6 +751,8 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_custom_error_page
 
 TencentCloud ServiceMesh(TCM)
+  Data Source
+	tencentcloud_tcm_mesh
   Resource
 	tencentcloud_tcm_mesh
 	tencentcloud_tcm_cluster_attachment
