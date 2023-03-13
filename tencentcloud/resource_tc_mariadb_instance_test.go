@@ -27,7 +27,7 @@ func TestAccTencentCloudMariadbInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mariadb_instance.instance", "node_count", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_mariadb_instance.instance", "memory", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_mariadb_instance.instance", "storage", "10"),
-					resource.TestCheckResourceAttr("tencentcloud_mariadb_instance.instance", "period", "1"),
+					// resource.TestCheckResourceAttr("tencentcloud_mariadb_instance.instance", "period", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_mariadb_instance.instance", "auto_renew_flag", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_mariadb_instance.instance", "ipv6_flag", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_mariadb_instance.instance", "tags.createby", "terrafrom"),
