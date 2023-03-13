@@ -13,7 +13,19 @@ Provides a resource to create a monitor grafanaIntegration
 
 ## Example Usage
 
+```hcl
+resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration" {
+  instance_id = "grafana-50nj6v00"
+  kind        = "tencentcloud-monitor-app"
+  content     = "{\"kind\":\"tencentcloud-monitor-app\",\"spec\":{\"dataSourceSpec\":{\"authProvider\":{\"__anyOf\":\"使用密钥\",\"useRole\":true,\"secretId\":\"arunma@tencent.com\",\"secretKey\":\"12345678\"},\"name\":\"uint-test\"},\"grafanaSpec\":{\"organizationIds\":[]}}}"
+}
 
+resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration_update" {
+  content     = "{\"id\":\"integration-9st6kqz6\",\"kind\":\"tencentcloud-monitor-app\",\"spec\":{\"dataSourceSpec\":{\"name\":\"uint-test3\",\"authProvider\":{\"secretId\":\"ROLE\",\"useRole\":true,\"__anyOf\":\"使用服务角色\"}},\"grafanaSpec\":{\"organizationIds\":[]}}}"
+  instance_id = "grafana-50nj6v00"
+  kind        = "tencentcloud-monitor-app"
+}
+```
 
 ## Argument Reference
 
