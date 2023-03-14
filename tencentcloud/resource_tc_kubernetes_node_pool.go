@@ -2,7 +2,10 @@
 Provide a resource to create an auto scaling group for kubernetes cluster.
 
 ~> **NOTE:**  We recommend the usage of one cluster with essential worker config + node pool to manage cluster and nodes. Its a more flexible way than manage worker config with tencentcloud_kubernetes_cluster, tencentcloud_kubernetes_scale_worker or exist node management of `tencentcloud_kubernetes_attachment`. Cause some unchangeable parameters of `worker_config` may cause the whole cluster resource `force new`.
+
 ~> **NOTE:**  In order to ensure the integrity of customer data, if you destroy nodepool instance, it will keep the cvm instance associate with nodepool by default. If you want destroy together, please set `delete_keep_instance` to `false`.
+
+~> **NOTE:**  In order to ensure the integrity of customer data, if the cvm instance was destroyed due to shrinking, it will keep the cbs associate with cvm by default. If you want destroy together, please set `delete_with_instance` to `true`.
 
 Example Usage
 
@@ -240,7 +243,7 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 					"delete_with_instance": {
 						Type:        schema.TypeBool,
 						Optional:    true,
-						Description: "Indicates whether the disk remove after instance terminated.",
+						Description: "Indicates whether the disk remove after instance terminated. Default is `false`.",
 					},
 					"encrypt": {
 						Type:        schema.TypeBool,
