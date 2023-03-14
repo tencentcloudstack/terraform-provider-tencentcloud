@@ -69,9 +69,9 @@ func resourceTencentCloudMariadbInstance() *schema.Resource {
 		Read:   resourceTencentCloudMariadbInstanceRead,
 		Update: resourceTencentCloudMariadbInstanceUpdate,
 		Delete: resourceTencentCloudMariadbInstanceDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -114,9 +114,9 @@ func resourceTencentCloudMariadbInstance() *schema.Resource {
 			},
 
 			"period": {
-				Optional: true,
-				Type:     schema.TypeInt,
-				// Sensitive:   true,
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeInt,
 				Description: "The duration of the purchase, unit: month.",
 			},
 
@@ -127,16 +127,16 @@ func resourceTencentCloudMariadbInstance() *schema.Resource {
 			// },
 
 			"auto_voucher": {
-				Optional: true,
-				Type:     schema.TypeBool,
-				// Sensitive:   true,
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeBool,
 				Description: "Whether to automatically use the voucher for payment, the default is not used.",
 			},
 
 			"voucher_ids": {
 				Optional: true,
+				ForceNew: true,
 				Type:     schema.TypeSet,
-				// Sensitive: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -386,6 +386,7 @@ func resourceTencentCloudMariadbInstance() *schema.Resource {
 
 			"init_params": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeList,
 				Description: "Parameter list. The optional values of this interface are: character_set_server (character set, required) enum: utf8,latin1,gbk,utf8mb4,gb18030, lower_case_table_names (table name case sensitive, required, 0 - sensitive; 1 - insensitive), innodb_page_size (innodb data page, Default 16K), sync_mode (sync mode: 0 - asynchronous; 1 - strong synchronous; 2 - strong synchronous can degenerate. The default is strong synchronous can degenerate).",
 				Elem: &schema.Resource{
