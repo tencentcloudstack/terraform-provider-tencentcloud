@@ -1,6 +1,8 @@
 /*
 Provides a resource to create a tcm tracing_config
 
+~> **NOTE:** If you use the config attribute tracing in tencentcloud_tcm_mesh, do not use tencentcloud_tcm_tracing_config
+
 Example Usage
 
 ```hcl
