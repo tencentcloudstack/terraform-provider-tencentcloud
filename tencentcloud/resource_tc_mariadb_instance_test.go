@@ -37,7 +37,7 @@ func TestAccTencentCloudMariadbInstanceResource_basic(t *testing.T) {
 				ResourceName:            "tencentcloud_mariadb_instance.instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "auto_voucher", "voucher_ids", "init_params"},
+				ImportStateVerifyIgnore: []string{"period", "auto_voucher", "voucher_ids", "init_params", "dcn_region", "dcn_instance_id"},
 			},
 		},
 	})

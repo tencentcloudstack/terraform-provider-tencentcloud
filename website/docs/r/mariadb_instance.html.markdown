@@ -65,8 +65,8 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Automatic renewal flag, 1: automatic renewal, 2: no automatic renewal.
 * `auto_voucher` - (Optional, Bool, ForceNew) Whether to automatically use the voucher for payment, the default is not used.
 * `db_version_id` - (Optional, String) Database engine version, currently available: 8.0.18, 10.1.9, 5.7.17. If not passed, the default is Percona 5.7.17.
-* `dcn_instance_id` - (Optional, String) DCN source instance ID.
-* `dcn_region` - (Optional, String) DCN source region.
+* `dcn_instance_id` - (Optional, String, ForceNew) DCN source instance ID.
+* `dcn_region` - (Optional, String, ForceNew) DCN source region.
 * `init_params` - (Optional, List, ForceNew) Parameter list. The optional values of this interface are: character_set_server (character set, required) enum: utf8,latin1,gbk,utf8mb4,gb18030, lower_case_table_names (table name case sensitive, required, 0 - sensitive; 1 - insensitive), innodb_page_size (innodb data page, Default 16K), sync_mode (sync mode: 0 - asynchronous; 1 - strong synchronous; 2 - strong synchronous can degenerate. The default is strong synchronous can degenerate).
 * `instance_name` - (Optional, String) Instance name, you can set the name of the instance independently through this field.
 * `ipv6_flag` - (Optional, Int) Whether IPv6 is supported.
@@ -112,8 +112,6 @@ In addition to all arguments above, the following attributes are exported:
 * `status` - Instance status: 0 creating, 1 process processing, 2 running, 3 instance not initialized, -1 instance isolated, 4 instance initializing, 5 instance deleting, 6 instance restarting, 7 data migration.
 * `tdsql_version` - TDSQL version information.
 * `uin` - The account to which the instance belongs.
-* `unique_subnet_id` - String private network subnet ID.
-* `unique_vpc_id` - String private network ID.
 * `update_time` - The last update time of the instance in the format of 2006-01-02 15:04:05.
 * `vip` - Intranet IP address.
 * `vipv6` - Intranet IPv6.

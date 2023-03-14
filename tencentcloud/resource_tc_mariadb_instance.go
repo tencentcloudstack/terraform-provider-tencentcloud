@@ -261,16 +261,16 @@ func resourceTencentCloudMariadbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "TDSQL version information.",
 			},
-			"unique_vpc_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "String private network ID.",
-			},
-			"unique_subnet_id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "String private network subnet ID.",
-			},
+			// "unique_vpc_id": {
+			// 	Type:        schema.TypeString,
+			// 	Computed:    true,
+			// 	Description: "String private network ID.",
+			// },
+			// "unique_subnet_id": {
+			// 	Type:        schema.TypeString,
+			// 	Computed:    true,
+			// 	Description: "String private network subnet ID.",
+			// },
 			"is_tmp": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -407,12 +407,14 @@ func resourceTencentCloudMariadbInstance() *schema.Resource {
 
 			"dcn_region": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "DCN source region.",
 			},
 
 			"dcn_instance_id": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "DCN source instance ID.",
 			},
@@ -640,11 +642,11 @@ func resourceTencentCloudMariadbInstanceRead(d *schema.ResourceData, meta interf
 		}
 
 		if instance.VpcId != nil {
-			_ = d.Set("vpc_id", instance.VpcId)
+			_ = d.Set("vpc_id", instance.UniqueVpcId)
 		}
 
 		if instance.SubnetId != nil {
-			_ = d.Set("subnet_id", instance.SubnetId)
+			_ = d.Set("subnet_id", instance.UniqueSubnetId)
 		}
 
 		// if instance.Period != nil {
@@ -715,13 +717,13 @@ func resourceTencentCloudMariadbInstanceRead(d *schema.ResourceData, meta interf
 			_ = d.Set("storage", instance.Storage)
 		}
 
-		if instance.UniqueVpcId != nil {
-			_ = d.Set("unique_vpc_id", instance.UniqueVpcId)
-		}
+		// if instance.UniqueVpcId != nil {
+		// 	_ = d.Set("unique_vpc_id", instance.UniqueVpcId)
+		// }
 
-		if instance.UniqueSubnetId != nil {
-			_ = d.Set("unique_subnet_id", instance.UniqueSubnetId)
-		}
+		// if instance.UniqueSubnetId != nil {
+		// 	_ = d.Set("unique_subnet_id", instance.UniqueSubnetId)
+		// }
 
 		if instance.NodeCount != nil {
 			_ = d.Set("node_count", instance.NodeCount)
