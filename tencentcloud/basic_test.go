@@ -818,6 +818,9 @@ const (
 	defaultMariadbSubnetId        = "subnet-jdi5xn22"
 	defaultMariadbVpcId           = "vpc-k1t8ickr"
 	defaultMariadbSecurityGroupId = "sg-7kpsbxdb"
+
+	defaultMariadbInstanceSubnetId = "subnet-4w4twlf4"
+	defaultMariadbInstanceVpcId    = "vpc-9m66acml"
 )
 
 // End of MARIADB
