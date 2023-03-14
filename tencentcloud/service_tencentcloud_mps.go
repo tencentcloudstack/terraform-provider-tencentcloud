@@ -591,3 +591,56 @@ func (me *MpsService) DeleteMpsAiRecognitionTemplateById(ctx context.Context, de
 
 	return
 }
+
+func (me *MpsService) DescribeMpsPersonSampleById(ctx context.Context, personId string) (personSample *mps.AiSamplePerson, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDescribePersonSamplesRequest()
+	request.PersonIds = []*string{helper.String(personId)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DescribePersonSamples(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.PersonSet) < 1 {
+		return
+	}
+
+	personSample = response.Response.PersonSet[0]
+	return
+}
+
+func (me *MpsService) DeleteMpsPersonSampleById(ctx context.Context, personId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mps.NewDeletePersonSampleRequest()
+	request.PersonId = &personId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMpsClient().DeletePersonSample(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
