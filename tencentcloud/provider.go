@@ -960,6 +960,7 @@ Media Processing Service(MPS)
 	tencentcloud_mps_ai_recognition_template
 	tencentcloud_mps_ai_analysis_template
 	tencentcloud_mps_adaptive_dynamic_streaming_template
+	tencentcloud_mps_person_sample
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -1732,6 +1733,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mps_ai_recognition_template":                resourceTencentCloudMpsAiRecognitionTemplate(),
 			"tencentcloud_mps_ai_analysis_template":                   resourceTencentCloudMpsAiAnalysisTemplate(),
 			"tencentcloud_mps_adaptive_dynamic_streaming_template":    resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate(),
+			"tencentcloud_mps_person_sample":                          resourceTencentCloudMpsPersonSample(),
 			"tencentcloud_cbs_disk_backup":                            resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":              resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":         resourceTencentCloudCbsDiskBackupRollbackOperation(),
