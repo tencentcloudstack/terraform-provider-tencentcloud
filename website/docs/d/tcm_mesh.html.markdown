@@ -46,27 +46,6 @@ In addition to all arguments above, the following attributes are exported:
       * `smart_dns` - SmartDNS configuration.
         * `istio_meta_dns_auto_allocate` - Enable auto allocate address.
         * `istio_meta_dns_capture` - Enable dns proxy.
-    * `prometheus` - Prometheus configuration.
-      * `custom_prom` - Custom prometheus.
-        * `auth_type` - Authentication type of the prometheus.
-        * `is_public_addr` - Whether it is public address, default false.
-        * `password` - Password of the prometheus, used in basic authentication type.
-        * `url` - Url of the prometheus.
-        * `username` - Username of the prometheus, used in basic authentication type.
-        * `vpc_id` - Vpc id.
-      * `instance_id` - Instance id.
-      * `region` - Region.
-      * `subnet_id` - Subnet id.
-      * `vpc_id` - Vpc id.
-    * `tracing` - Tracing config.
-      * `apm` - APM config.
-        * `enable` - Whether enable APM.
-        * `instance_id` - Instance id of the APM.
-        * `region` - Region.
-      * `enable` - Whether enable tracing.
-      * `sampling` - Tracing sampling, 0.0-1.0.
-      * `zipkin` - Third party zipkin config.
-        * `address` - Zipkin address.
   * `display_name` - Mesh name.
   * `mesh_id` - Mesh instance Id.
   * `tag_list` - A list of associated tags.
