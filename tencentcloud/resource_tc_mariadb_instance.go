@@ -69,9 +69,9 @@ func resourceTencentCloudMariadbInstance() *schema.Resource {
 		Read:   resourceTencentCloudMariadbInstanceRead,
 		Update: resourceTencentCloudMariadbInstanceUpdate,
 		Delete: resourceTencentCloudMariadbInstanceDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -114,9 +114,9 @@ func resourceTencentCloudMariadbInstance() *schema.Resource {
 			},
 
 			"period": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Sensitive:   true,
+				Optional: true,
+				Type:     schema.TypeInt,
+				// Sensitive:   true,
 				Description: "The duration of the purchase, unit: month.",
 			},
 
@@ -127,16 +127,16 @@ func resourceTencentCloudMariadbInstance() *schema.Resource {
 			// },
 
 			"auto_voucher": {
-				Optional:    true,
-				Type:        schema.TypeBool,
-				Sensitive:   true,
+				Optional: true,
+				Type:     schema.TypeBool,
+				// Sensitive:   true,
 				Description: "Whether to automatically use the voucher for payment, the default is not used.",
 			},
 
 			"voucher_ids": {
-				Optional:  true,
-				Type:      schema.TypeSet,
-				Sensitive: true,
+				Optional: true,
+				Type:     schema.TypeSet,
+				// Sensitive: true,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
