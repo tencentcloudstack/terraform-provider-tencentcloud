@@ -751,6 +751,8 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_custom_error_page
 
 TencentCloud ServiceMesh(TCM)
+  Data Source
+	tencentcloud_tcm_mesh
   Resource
 	tencentcloud_tcm_mesh
 	tencentcloud_tcm_cluster_attachment
@@ -1324,6 +1326,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_css_domains":                              dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                      dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                       dataSourceTencentCloudChdfsMountPoints(),
+			"tencentcloud_tcm_mesh":                                 dataSourceTencentCloudTcmMesh(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
