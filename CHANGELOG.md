@@ -1,3 +1,19 @@
+## 1.79.15 (March 14, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_tcm_mesh` ([#1600](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1600))
+* **New Resource:** `tencentcloud_mariadb_instance` ([#1525](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1525))
+* **New Resource:** `tencentcloud_mps_person_sample` ([#1601](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1601))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mysql_account: support import ([#1598](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1598))
+
+BUG FIXES:
+
+* resource/tencentcloud_vpn_connection: fix dpd_timeout read error ([#1597](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1597))
+
 ## 1.79.14 (March 08, 2023)
 
 FEATURES:
