@@ -57,6 +57,7 @@ func resourceTencentCloudTcmClusterAttachment() *schema.Resource {
 			"cluster_list": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "Cluster list.",
 				Elem: &schema.Resource{
@@ -84,6 +85,7 @@ func resourceTencentCloudTcmClusterAttachment() *schema.Resource {
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Subnet id, only needed if it&#39;s standalone mesh.",
 						},
 						"type": {

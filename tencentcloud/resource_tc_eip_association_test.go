@@ -18,7 +18,8 @@ func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
 		CheckDestroy: testAccCheckEipAssociationDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudEipAssociationWithInstance,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudEipAssociationWithInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEipAssociationExists(id),
 					resource.TestCheckResourceAttrSet(id, "eip_id"),
@@ -48,7 +49,8 @@ func TestAccTencentCloudEipAssociationWithNetworkInterface(t *testing.T) {
 		CheckDestroy: testAccCheckEipAssociationDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudEipAssociationWithNetworkInterface,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudEipAssociationWithNetworkInterface,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEipAssociationExists(id),
 					resource.TestCheckResourceAttrSet(id, "eip_id"),

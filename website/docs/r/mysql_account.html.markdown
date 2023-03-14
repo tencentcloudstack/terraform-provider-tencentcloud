@@ -40,3 +40,11 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
+## Import
+
+mysql account can be imported using the mysqlId#accountName, e.g.
+
+```
+terraform import tencentcloud_mysql_account.default cdb-gqg6j82x#tf_account
+```
+

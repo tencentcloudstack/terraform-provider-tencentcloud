@@ -93,6 +93,14 @@ func TestAccTencentCloudMysqlAccountResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "description", "test from terraform"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_mysql_account.mysql_account",
+				ImportState:       true,
+				ImportStateVerify: true,
+				ImportStateVerifyIgnore: []string{
+					"password",
+				},
+			},
 		},
 	})
 }

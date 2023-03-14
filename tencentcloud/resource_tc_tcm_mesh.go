@@ -94,34 +94,40 @@ func resourceTencentCloudTcmMesh() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "Tracing config.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"enable": {
 										Type:        schema.TypeBool,
 										Optional:    true,
+										Computed:    true,
 										Description: "Whether enable tracing.",
 									},
 									"apm": {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
+										Computed:    true,
 										Description: "APM config.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"enable": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													Computed:    true,
 													Description: "Whether enable APM.",
 												},
 												"region": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Region.",
 												},
 												"instance_id": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Instance id of the APM.",
 												},
 											},
@@ -130,12 +136,14 @@ func resourceTencentCloudTcmMesh() *schema.Resource {
 									"sampling": {
 										Type:        schema.TypeFloat,
 										Optional:    true,
+										Computed:    true,
 										Description: "Tracing sampling, 0.0-1.0.",
 									},
 									"zipkin": {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
+										Computed:    true,
 										Description: "Third party zipkin config.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
@@ -154,44 +162,52 @@ func resourceTencentCloudTcmMesh() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "Prometheus configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"vpc_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Vpc id.",
 									},
 									"subnet_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Subnet id.",
 									},
 									"region": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Region.",
 									},
 									"instance_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Instance id.",
 									},
 									"custom_prom": {
 										Type:        schema.TypeList,
 										MaxItems:    1,
 										Optional:    true,
+										Computed:    true,
 										Description: "Custom prometheus.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"is_public_addr": {
 													Type:        schema.TypeBool,
 													Optional:    true,
+													Computed:    true,
 													Description: "Whether it is public address, default false.",
 												},
 												"vpc_id": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Vpc id.",
 												},
 												"url": {
@@ -207,11 +223,13 @@ func resourceTencentCloudTcmMesh() *schema.Resource {
 												"username": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Username of the prometheus, used in basic authentication type.",
 												},
 												"password": {
 													Type:        schema.TypeString,
 													Optional:    true,
+													Computed:    true,
 													Description: "Password of the prometheus, used in basic authentication type.",
 												},
 											},
@@ -470,7 +488,7 @@ func resourceTencentCloudTcmMeshCreate(d *schema.ResourceData, meta interface{})
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
-		if *mesh.Mesh.State == "PENDING" || *mesh.Mesh.State == "CREATING" {
+		if *mesh.Mesh.State == "PENDING" || *mesh.Mesh.State == "CREATING" || *mesh.Mesh.State != "RUNNING" {
 			return resource.RetryableError(fmt.Errorf("mesh status is %v, retry...", *mesh.Mesh.State))
 		}
 		return nil

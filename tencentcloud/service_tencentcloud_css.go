@@ -497,3 +497,137 @@ func (me *CssService) DescribeCssDomainsByFilter(ctx context.Context, param map[
 	}
 	return
 }
+
+func (me *CssService) DescribeCssPlayDomainCertAttachmentById(ctx context.Context, domainName string, cloudCertId string) (playDomainCertAttachment *css.LiveDomainCertBindings, errRet error) {
+	logId := getLogId(ctx)
+
+	request := css.NewDescribeLiveDomainCertBindingsRequest()
+	request.DomainName = &domainName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*css.LiveDomainCertBindings, 0)
+	for {
+		request.Offset = &offset
+		request.Length = &limit
+		response, err := me.client.UseCssClient().DescribeLiveDomainCertBindings(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.LiveDomainCertBindings) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.LiveDomainCertBindings...)
+		if len(response.Response.LiveDomainCertBindings) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	if *instances[0].CloudCertId != cloudCertId {
+		return nil, fmt.Errorf("The CloudCertId[%s] of API [%s] does not equal to specified cloudCertId:[%s]", *instances[0].CloudCertId, request.GetAction(), cloudCertId)
+	}
+
+	playDomainCertAttachment = instances[0]
+
+	return
+}
+
+func (me *CssService) DeleteCssPlayDomainCertAttachmentById(ctx context.Context, domainName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := css.NewUnBindLiveDomainCertRequest()
+	request.DomainName = &domainName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCssClient().UnBindLiveDomainCert(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CssService) DescribeCssPlayAuthKeyConfigById(ctx context.Context, domainName string) (playAuthKeyConfig *css.PlayAuthKeyInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := css.NewDescribeLivePlayAuthKeyRequest()
+	request.DomainName = &domainName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCssClient().DescribeLivePlayAuthKey(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.PlayAuthKeyInfo == nil {
+		return
+	}
+
+	playAuthKeyConfig = response.Response.PlayAuthKeyInfo
+	return
+}
+
+func (me *CssService) DescribeCssPushAuthKeyConfigById(ctx context.Context, domainName string) (pushAuthKeyConfig *css.PushAuthKeyInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := css.NewDescribeLivePushAuthKeyRequest()
+	request.DomainName = &domainName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCssClient().DescribeLivePushAuthKey(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.PushAuthKeyInfo == nil {
+		return
+	}
+
+	pushAuthKeyConfig = response.Response.PushAuthKeyInfo
+	return
+}

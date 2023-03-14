@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudCkafkaInstance(t *testing.T) {
+func TestAccTencentCloudCkafkaInstanceResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -56,7 +56,7 @@ func TestAccTencentCloudCkafkaInstance(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudKafkaInstanceMAZ(t *testing.T) {
+func TestAccTencentCloudCkafkaInstanceMAZResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -70,6 +70,32 @@ func TestAccTencentCloudKafkaInstanceMAZ(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-maz-tf-test"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100003"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_ids.#", "2"),
+				),
+			},
+			{
+				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"period"},
+			},
+		},
+	})
+}
+
+func TestAccTencentCloudCkafkaInstanceTypeResource(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccTencentCloudKafkaInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccKafkaInstanceType,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckKafkaInstanceExists("tencentcloud_ckafka_instance.kafka_instance"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-type-tf-test"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "specifications_type", "standard"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_type", "2"),
 				),
 			},
 			{
@@ -209,6 +235,35 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   kafka_version      = "1.1.1"
   disk_size          = 500
   disk_type          = "CLOUD_BASIC"
+
+
+  config {
+    auto_create_topic_enable   = true
+    default_num_partitions     = 3
+    default_replication_factor = 3
+  }
+
+  dynamic_retention_config {
+    enable = 1
+  }
+}
+`
+
+const testAccKafkaInstanceType = defaultKafkaVariable + `
+resource "tencentcloud_ckafka_instance" "kafka_instance" {
+  instance_name      = "ckafka-instance-type-tf-test"
+  zone_id            = 100003
+  period             = 1
+  vpc_id             = var.vpc_id
+  subnet_id          = var.subnet_id
+  msg_retention_time = 1300
+  renew_flag         = 0
+  kafka_version      = "1.1.1"
+  disk_size          = 1000
+  disk_type          = "CLOUD_BASIC"
+
+  specifications_type = "standard"
+  instance_type       = 2
 
 
   config {

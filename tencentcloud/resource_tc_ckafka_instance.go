@@ -108,6 +108,13 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Optional:    true,
 				Description: "Prepaid purchase time, such as 1, is one month.",
 			},
+			"instance_type": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 5, 6, 7, 8, 9}),
+				Description:  "Description of instance type. `profession`: 1, `standard`:  1(general), 2(standard), 3(advanced), 4(capacity), 5(specialized-1), 6(specialized-2), 7(specialized-3), 8(specialized-4), 9(exclusive).",
+			},
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -316,6 +323,10 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 	period := int64(d.Get("period").(int))
 	request.Period = helper.String(fmt.Sprintf("%dm", period))
 	request.InstanceType = helper.IntInt64(1)
+
+	if v, ok := d.GetOkExists("instance_type"); ok {
+		request.InstanceType = helper.IntInt64(v.(int))
+	}
 
 	if v, ok := d.GetOk("specifications_type"); ok {
 		request.SpecificationsType = helper.String(v.(string))
@@ -551,8 +562,10 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("partition", info.MaxPartitionNumber)
 	if *info.InstanceType == "profession" {
 		_ = d.Set("specifications_type", "profession")
+		_ = d.Set("instance_type", 1)
 	} else {
 		_ = d.Set("specifications_type", "standard")
+		_ = d.Set("instance_type", CKAFKA_INSTANCE_TYPE[*info.InstanceType])
 	}
 
 	if len(info.ZoneIds) > 1 {
@@ -642,7 +655,7 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 		"zone_id", "period", "vpc_id",
 		"subnet_id", "renew_flag", "kafka_version",
 		"multi_zone_flag", "zone_ids", "disk_type",
-		"specifications_type",
+		"specifications_type", "instance_type",
 	}
 
 	for _, v := range immutableArgs {

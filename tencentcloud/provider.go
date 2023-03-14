@@ -751,6 +751,8 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_custom_error_page
 
 TencentCloud ServiceMesh(TCM)
+  Data Source
+	tencentcloud_tcm_mesh
   Resource
 	tencentcloud_tcm_mesh
 	tencentcloud_tcm_cluster_attachment
@@ -805,8 +807,9 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_accounts
 	tencentcloud_mariadb_security_groups
   Resource
-    tencentcloud_mariadb_dedicatedcluster_db_instance
-    tencentcloud_mariadb_hour_db_instance
+	tencentcloud_mariadb_dedicatedcluster_db_instance
+	tencentcloud_mariadb_instance
+	tencentcloud_mariadb_hour_db_instance
 	tencentcloud_mariadb_account
 	tencentcloud_mariadb_parameters
 	tencentcloud_mariadb_log_file_retention_period
@@ -832,6 +835,9 @@ Cloud Streaming Services(CSS)
 	tencentcloud_css_live_transcode_rule_attachment
 	tencentcloud_css_domain
 	tencentcloud_css_authenticate_domain_owner_operation
+	tencentcloud_css_play_domain_cert_attachment
+	tencentcloud_css_play_auth_key_config
+	tencentcloud_css_push_auth_key_config
   Data Source
 	tencentcloud_css_domains
 
@@ -948,6 +954,14 @@ Media Processing Service(MPS)
 	tencentcloud_mps_workflow
 	tencentcloud_mps_transcode_template
 	tencentcloud_mps_watermark_template
+	tencentcloud_mps_image_sprite_template
+	tencentcloud_mps_snapshot_by_timeoffset_template
+	tencentcloud_mps_sample_snapshot_template
+	tencentcloud_mps_animated_graphics_template
+	tencentcloud_mps_ai_recognition_template
+	tencentcloud_mps_ai_analysis_template
+	tencentcloud_mps_adaptive_dynamic_streaming_template
+	tencentcloud_mps_person_sample
 
 Cloud HDFS(CHDFS)
   Data Source
@@ -961,6 +975,10 @@ Cloud HDFS(CHDFS)
 	tencentcloud_chdfs_life_cycle_rule
 	tencentcloud_chdfs_mount_point
 	tencentcloud_chdfs_mount_point_attachment
+
+StreamLive(MDL)
+  Resource
+	tencentcloud_mdl_stream_live_input
 
 */
 package tencentcloud
@@ -1310,6 +1328,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_css_domains":                              dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                      dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                       dataSourceTencentCloudChdfsMountPoints(),
+			"tencentcloud_tcm_mesh":                                 dataSourceTencentCloudTcmMesh(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1616,6 +1635,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dcdb_db_parameters":                         resourceTencentCloudDcdbDbParameters(),
 			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":       resourceTencentCloudMariadbDedicatedclusterDbInstance(),
+			"tencentcloud_mariadb_instance":                           resourceTencentCloudMariadbInstance(),
 			"tencentcloud_mariadb_hour_db_instance":                   resourceTencentCloudMariadbHourDbInstance(),
 			"tencentcloud_mariadb_account":                            resourceTencentCloudMariadbAccount(),
 			"tencentcloud_mariadb_parameters":                         resourceTencentCloudMariadbParameters(),
@@ -1629,6 +1649,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_css_live_transcode_rule_attachment":         resourceTencentCloudCssLiveTranscodeRuleAttachment(),
 			"tencentcloud_css_domain":                                 resourceTencentCloudCssDomain(),
 			"tencentcloud_css_authenticate_domain_owner_operation":    resourceTencentCloudCssAuthenticateDomainOwnerOperation(),
+			"tencentcloud_css_play_domain_cert_attachment":            resourceTencentCloudCssPlayDomainCertAttachment(),
+			"tencentcloud_css_play_auth_key_config":                   resourceTencentCloudCssPlayAuthKeyConfig(),
+			"tencentcloud_css_push_auth_key_config":                   resourceTencentCloudCssPushAuthKeyConfig(),
 			"tencentcloud_pts_project":                                resourceTencentCloudPtsProject(),
 			"tencentcloud_pts_alert_channel":                          resourceTencentCloudPtsAlertChannel(),
 			"tencentcloud_pts_scenario":                               resourceTencentCloudPtsScenario(),
@@ -1705,6 +1728,14 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                     resourceTencentCloudMpsWatermarkTemplate(),
+			"tencentcloud_mps_image_sprite_template":                  resourceTencentCloudMpsImageSpriteTemplate(),
+			"tencentcloud_mps_snapshot_by_timeoffset_template":        resourceTencentCloudMpsSnapshotByTimeoffsetTemplate(),
+			"tencentcloud_mps_sample_snapshot_template":               resourceTencentCloudMpsSampleSnapshotTemplate(),
+			"tencentcloud_mps_animated_graphics_template":             resourceTencentCloudMpsAnimatedGraphicsTemplate(),
+			"tencentcloud_mps_ai_recognition_template":                resourceTencentCloudMpsAiRecognitionTemplate(),
+			"tencentcloud_mps_ai_analysis_template":                   resourceTencentCloudMpsAiAnalysisTemplate(),
+			"tencentcloud_mps_adaptive_dynamic_streaming_template":    resourceTencentCloudMpsAdaptiveDynamicStreamingTemplate(),
+			"tencentcloud_mps_person_sample":                          resourceTencentCloudMpsPersonSample(),
 			"tencentcloud_cbs_disk_backup":                            resourceTencentCloudCbsDiskBackup(),
 			"tencentcloud_cbs_snapshot_share_permission":              resourceTencentCloudCbsSnapshotSharePermission(),
 			"tencentcloud_cbs_disk_backup_rollback_operation":         resourceTencentCloudCbsDiskBackupRollbackOperation(),
@@ -1714,6 +1745,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_life_cycle_rule":                      resourceTencentCloudChdfsLifeCycleRule(),
 			"tencentcloud_chdfs_mount_point":                          resourceTencentCloudChdfsMountPoint(),
 			"tencentcloud_chdfs_mount_point_attachment":               resourceTencentCloudChdfsMountPointAttachment(),
+			"tencentcloud_mdl_stream_live_input":                      resourceTencentCloudMdlStreamLiveInput(),
 		},
 
 		ConfigureFunc: providerConfigure,

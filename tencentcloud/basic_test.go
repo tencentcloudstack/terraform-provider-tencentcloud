@@ -725,6 +725,10 @@ locals {
 // End of TKE Service
 
 // MongoDB
+const (
+	defaultMongoDBVPCId    = "vpc-rwj54lfr"
+	defaultMongoDBSubnetId = "subnet-nyt57zps"
+)
 const defaultMongoDBSecurityGroupId = "sg-if748odn"
 const DefaultMongoDBSpec = `
 data "tencentcloud_mongodb_zone_config" "zone_config" {
@@ -740,6 +744,12 @@ variable "engine_versions" {
 }
 variable "sg_id" {
   default = "` + defaultMongoDBSecurityGroupId + `"
+}
+variable "vpc_id" {
+  default = "` + defaultMongoDBVPCId + `"
+}
+variable "subnet_id" {
+  default = "` + defaultMongoDBSubnetId + `"
 }
 
 locals {
@@ -779,7 +789,6 @@ const (
 
 const (
 	defaultMeshClusterId = "cls-9ae9qo9k"
-	defaultMeshId        = "mesh-rofjmux7"
 	defaultMeshVpcId     = "vpc-pyyv5k3v"
 	defaultMeshSubnetId  = "subnet-06i8auk6"
 )
@@ -808,6 +817,9 @@ const (
 	defaultMariadbSubnetId        = "subnet-jdi5xn22"
 	defaultMariadbVpcId           = "vpc-k1t8ickr"
 	defaultMariadbSecurityGroupId = "sg-7kpsbxdb"
+
+	defaultMariadbInstanceSubnetId = "subnet-4w4twlf4"
+	defaultMariadbInstanceVpcId    = "vpc-9m66acml"
 )
 
 // End of MARIADB
@@ -823,12 +835,15 @@ const (
 
 // CSS
 const (
-	defaultCSSLiveType   = "PullLivePushLive"
-	defaultCSSDomainName = "177154.push.tlivecloud.com"
-	defaultCSSStreamName = defaultCSSPrefix + "test_stream_name"
-	defaultCSSAppName    = "live"
-	defaultCSSOperator   = "tf_admin"
-	defaultCSSPrefix     = "tf_css_"
+	defaultCSSLiveType        = "PullLivePushLive"
+	defaultCSSDomainName      = "177154.push.tlivecloud.com"
+	defaultCSSStreamName      = defaultCSSPrefix + "test_stream_name"
+	defaultCSSAppName         = "live"
+	defaultCSSOperator        = "tf_admin"
+	defaultCSSPrefix          = "tf_css_"
+	defaultCSSPlayDomainName  = "test122.jingxhu.top"
+	defaultCSSPushDomainName  = "177154.push.tlivecloud.com"
+	defaultCSSBindingCertName = "keep_ssl_css_domain_test"
 )
 
 // End of CSS

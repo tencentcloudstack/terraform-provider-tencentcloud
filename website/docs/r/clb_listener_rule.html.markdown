@@ -56,6 +56,8 @@ The following arguments are supported:
 * `health_check_http_path` - (Optional, String) Path of health check. NOTES: Only supports listeners of `HTTP` and `HTTPS` protocol.
 * `health_check_interval_time` - (Optional, Int) Interval time of health check. Valid value ranges: (5~300) sec. and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `health_check_switch` - (Optional, Bool) Indicates whether health check is enabled.
+* `health_check_time_out` - (Optional, Int) Time out of health check. The value range is [2-60](SEC).
+* `health_check_type` - (Optional, String) Type of health check. Valid value is `CUSTOM`, `TCP`, `HTTP`.
 * `health_check_unhealth_num` - (Optional, Int) Unhealthy threshold of health check, and the default is `3`. If the unhealthy result is returned 3 consecutive times, indicates that the forwarding is abnormal. The value range is [2-10].  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `http2_switch` - (Optional, Bool) Indicate to apply HTTP2.0 protocol or not.
 * `scheduler` - (Optional, String) Scheduling method of the CLB listener rules. Valid values: `WRR`, `IP HASH`, `LEAST_CONN`. The default is `WRR`.  NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.

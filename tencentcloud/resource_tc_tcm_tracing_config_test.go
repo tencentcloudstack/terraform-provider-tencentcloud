@@ -21,7 +21,7 @@ func TestAccTencentCloudTcmTracingConfigResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTcmTracingConfigExists("tencentcloud_tcm_tracing_config.tracing_config"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_tracing_config.tracing_config", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tcm_tracing_config.tracing_config", "mesh_id", defaultMeshId),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_tracing_config.tracing_config", "mesh_id"),
 					resource.TestCheckResourceAttr("tencentcloud_tcm_tracing_config.tracing_config", "sampling", "30"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_tracing_config.tracing_config", "apm.#"),
 					resource.TestCheckResourceAttr("tencentcloud_tcm_tracing_config.tracing_config", "apm.0.enable", "false"),
@@ -61,16 +61,40 @@ func testAccCheckTcmTracingConfigExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcmTracingConfigVar = `
-variable "mesh_id" {
-  default = "` + defaultMeshId + `"
-}
-`
+const testAccTcmTracingConfig = `
 
-const testAccTcmTracingConfig = testAccTcmTracingConfigVar + `
+resource "tencentcloud_tcm_mesh" "basic" {
+	display_name = "test_mesh"
+	mesh_version = "1.12.5"
+	type = "HOSTED"
+	config {
+	  istio {
+		outbound_traffic_policy = "ALLOW_ANY"
+		disable_policy_checks = true
+		enable_pilot_http = true
+		disable_http_retry = true
+		smart_dns {
+		  istio_meta_dns_capture = true
+		  istio_meta_dns_auto_allocate = true
+		}
+	  }
+	  prometheus {
+		  custom_prom {
+			  url = "https://10.0.0.1:1000"
+			  auth_type = "none"
+			  vpc_id = "vpc-j9yhbzpn"
+		  }
+	  }
+	}
+	tag_list {
+	  key = "key"
+	  value = "value"
+	  passthrough = false
+	}
+  }
 
 resource "tencentcloud_tcm_tracing_config" "tracing_config" {
-	mesh_id = var.mesh_id
+	mesh_id = tencentcloud_tcm_mesh.basic.id
 	enable = true
 	apm {
 	  enable = false

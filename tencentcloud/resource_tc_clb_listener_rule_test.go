@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudClbListenerRule_basic(t *testing.T) {
+func TestAccTencentCloudClbListenerRuleResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -54,7 +54,7 @@ func TestAccTencentCloudClbListenerRule_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbListenerRule_full(t *testing.T) {
+func TestAccTencentCloudClbListenerRuleResource_full(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -286,6 +286,8 @@ resource "tencentcloud_clb_listener_rule" "rule_full" {
   health_check_interval_time = 300
   health_check_health_num    = 6
   health_check_unhealth_num  = 6
+  health_check_time_out      = 4
+  health_check_type          = "TCP"
   health_check_http_path     = "/"
   health_check_http_domain   = "abcd.com"
   health_check_http_code     = "1"

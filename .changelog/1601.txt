@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_mps_person_sample
+```

@@ -11,7 +11,7 @@ import (
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 )
 
-func TestAccTencentCloudVpnConnection_basic(t *testing.T) {
+func TestAccTencentCloudVpnConnectionResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
