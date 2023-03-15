@@ -16,6 +16,8 @@ resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration_update" 
   kind        = "tencentcloud-monitor-app"
 }
 
+```
+
 */
 package tencentcloud
 
