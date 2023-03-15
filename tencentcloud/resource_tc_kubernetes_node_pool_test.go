@@ -470,7 +470,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   node_os = "tlinux3.1x86_64"
   scaling_group_project_id = var.default_project
   delete_keep_instance = false
-  scaling_group_name 	   = "asg_np_test_changed"
+  scaling_group_name 	   = "asg_np_test_changed_gpu"
   default_cooldown 		   = 350
   termination_policies 	   = ["NEWEST_INSTANCE"]
   multi_zone_subnet_policy = "EQUALITY"
