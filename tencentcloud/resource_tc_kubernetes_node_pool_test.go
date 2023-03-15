@@ -528,18 +528,16 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 	gpu_args {
       mig_enable = false
       driver = {
-        name = "NVIDIA-Linux-x86_64-450.102.04.run"
-        version = "450.102.04"
+        name = "NVIDIA-Linux-x86_64-470.82.01.run"
+        version = "470.82.01"
       }
       cuda = {
-        name = "cuda_11.0.3_450.51.06_linux.run"
-        version = "11.0.3"
+        name = "cuda_11.4.3_470.82.01_linux.run"
+        version = "11.4.3"
       }
       cudnn = {
-        name = "libcudnn8_8.1.0.77-1+cuda11.2_amd64.deb"
-        version = "8.1.0"
-        doc_name = "libcudnn8-samples_8.1.0.77-1+cuda11.2_amd64.deb"
-        dev_name = "libcudnn8-dev_8.1.0.77-1+cuda11.2_amd64.deb"
+        name = "cudnn-11.4-linux-x64-v8.2.4.15.tgz"
+        version = "8.2.4"
       }
     }
   }
