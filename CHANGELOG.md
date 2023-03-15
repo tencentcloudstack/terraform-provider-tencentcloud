@@ -1,3 +1,9 @@
+## 1.79.16 (March 15, 2023)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_mysql_instance: import support vpc_id and subnet_id ([#1605](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1605))
+
 ## 1.79.15 (March 14, 2023)
 
 FEATURES:
