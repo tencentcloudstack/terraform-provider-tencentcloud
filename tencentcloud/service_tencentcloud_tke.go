@@ -1039,6 +1039,42 @@ func (me *TkeService) ModifyClusterVersion(ctx context.Context, id string, clust
 	return
 }
 
+func (me *TkeService) DescribeKubernetesAvailableClusterVersionsByFilter(ctx context.Context, param map[string]interface{}) (availableClusterVersions *tke.DescribeAvailableClusterVersionResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tke.NewDescribeAvailableClusterVersionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "cluster_id" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "cluster_ids" {
+			request.ClusterIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeAvailableClusterVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil {
+		availableClusterVersions = response.Response
+	}
+	return
+}
+
 func (me *TkeService) CheckClusterVersion(ctx context.Context, id string, clusterVersion string) (isOk bool, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDescribeAvailableClusterVersionRequest()
