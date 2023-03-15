@@ -157,12 +157,14 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"vpc_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
+			Computed:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
 			Description:  "ID of VPC, which can be modified once every 24 hours and can't be removed.",
 		},
 		"subnet_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
+			Computed:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
 			Description:  "Private network ID. If `vpc_id` is set, this value is required.",
 		},
