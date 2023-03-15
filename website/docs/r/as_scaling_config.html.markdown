@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a configuration for an AS (Auto scaling) instance.
 
+~> **NOTE:**  In order to ensure the integrity of customer data, if the cvm instance was destroyed due to shrinking, it will keep the cbs associate with cvm by default. If you want to destroy together, please set `delete_with_instance` to `true`.
+
 ## Example Usage
 
 ```hcl
@@ -87,7 +89,7 @@ The following arguments are supported:
 
 The `data_disk` object supports the following:
 
-* `delete_with_instance` - (Optional, Bool) Indicates whether the disk remove after instance terminated.
+* `delete_with_instance` - (Optional, Bool) Indicates whether the disk remove after instance terminated. Default is `false`.
 * `disk_size` - (Optional, Int) Volume of disk in GB. Default is `0`.
 * `disk_type` - (Optional, String) Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. valid when disk_type_policy is ORIGINAL.
 * `snapshot_id` - (Optional, String) Data disk snapshot ID.
