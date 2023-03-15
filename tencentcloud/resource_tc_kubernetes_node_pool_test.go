@@ -467,7 +467,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   retry_policy         = "INCREMENTAL_INTERVALS"
   desired_capacity     = 1
   enable_auto_scale    = false
-  node_os = "ubuntu20.04x86_64"
+  node_os = "tlinux3.1x86_64"
   scaling_group_project_id = var.default_project
   delete_keep_instance = false
   scaling_group_name 	   = "asg_np_test_changed"
