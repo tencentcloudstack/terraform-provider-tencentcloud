@@ -1313,7 +1313,13 @@ func (me *MonitorService) DescribeTmpTkeTemplateById(ctx context.Context, templa
 	if len(instances) < 1 {
 		return
 	}
-	template = instances[0]
+
+	for _, v := range instances {
+		if *v.TemplateId == templateId {
+			template = v
+			return
+		}
+	}
 
 	return
 }
