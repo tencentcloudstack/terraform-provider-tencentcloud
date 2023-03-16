@@ -45,7 +45,7 @@ func testSweepZone(region string) error {
 }
 
 // go test -i; go test -test.run TestAccTencentCloudTeoZone_basic -v
-func TestAccTencentCloudTeoZone_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixTeoZone_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },

@@ -157,12 +157,14 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"vpc_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
+			Computed:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
 			Description:  "ID of VPC, which can be modified once every 24 hours and can't be removed.",
 		},
 		"subnet_id": {
 			Type:         schema.TypeString,
 			Optional:     true,
+			Computed:     true,
 			ValidateFunc: validateStringLengthInRange(1, 100),
 			Description:  "Private network ID. If `vpc_id` is set, this value is required.",
 		},
@@ -798,12 +800,8 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	_ = d.Set("mem_size", mysqlInfo.Memory)
 	_ = d.Set("cpu", mysqlInfo.Cpu)
 	_ = d.Set("volume_size", mysqlInfo.Volume)
-	if d.Get("vpc_id").(string) != "" {
-		errRet = d.Set("vpc_id", mysqlInfo.UniqVpcId)
-	}
-	if d.Get("subnet_id").(string) != "" {
-		errRet = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
-	}
+	_ = d.Set("vpc_id", mysqlInfo.UniqVpcId)
+	_ = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
 
 	isUniversal := mysqlInfo.DeviceType != nil && *mysqlInfo.DeviceType == "UNIVERSAL"
 	if _, ok := d.GetOk("device_type"); ok || !isUniversal {

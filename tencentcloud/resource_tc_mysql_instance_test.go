@@ -95,6 +95,7 @@ func testSweepMySQLInstance(region string) error {
 	return nil
 }
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlInstanceResource_prepaid -v
 func TestAccTencentCloudMysqlInstanceResource_prepaid(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -107,6 +108,8 @@ func TestAccTencentCloudMysqlInstanceResource_prepaid(t *testing.T) {
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.prepaid"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.prepaid", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "charge_type", "PREPAID"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.prepaid", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.prepaid", "subnet_id"),
 				),
 			},
 			{
