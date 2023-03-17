@@ -155,6 +155,16 @@ func resourceTencentCloudTkeScaleWorker() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Custom parameter information related to the node.",
 			},
+			"gpu_args": {
+				Type:     schema.TypeList,
+				Optional: true,
+				ForceNew: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: TKEGpuArgsSetting(),
+				},
+				Description: "GPU driver parameters.",
+			},
 			"unschedulable": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -277,7 +287,7 @@ func resourceTencentCloudTkeScaleWorkerCreate(d *schema.ResourceData, meta inter
 
 	dMap := make(map[string]interface{}, 5)
 	//mount_target, docker_graph_path, data_disk, extra_args, desired_pod_num
-	iAdvancedParas := []string{"mount_target", "docker_graph_path", "extra_args", "data_disk", "desired_pod_num"}
+	iAdvancedParas := []string{"mount_target", "docker_graph_path", "extra_args", "data_disk", "desired_pod_num", "gpu_args"}
 	for _, k := range iAdvancedParas {
 		if v, ok := d.GetOk(k); ok {
 			dMap[k] = v

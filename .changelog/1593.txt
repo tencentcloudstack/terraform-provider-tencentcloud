@@ -1,0 +1,9 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_scale_worker: support setting tke gpu args
+```
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster_attachment: support setting tke gpu args
+```
+```release-note:enhancement
+resource/tencentcloud_kubernetes_node_pool: support setting tke gpu args
+```

@@ -378,3 +378,16 @@ func validateYaml(v interface{}, k string) (ws []string, errors []error) {
 	}
 	return
 }
+
+func validateTkeGpuDriverVersion(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(map[string]interface{})
+	if len(value) > 0 {
+		keySet := []string{"name", "version"}
+		for _, paraKey := range keySet {
+			if value[paraKey] == nil || strings.TrimSpace(value[paraKey].(string)) == "" {
+				errors = append(errors, fmt.Errorf("%s in %s cannot be empty", paraKey, k))
+			}
+		}
+	}
+	return
+}

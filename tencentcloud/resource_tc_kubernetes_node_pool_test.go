@@ -167,6 +167,25 @@ func TestAccTencentCloudKubernetesNodePoolResource_DiskEncrypt(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudKubernetesNodePoolResource_GPUInstance(t *testing.T) {
+	t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckTkeNodePoolDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccTkeNodePoolClusterGpu,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTkeNodePoolExists,
+					resource.TestCheckResourceAttrSet(testTkeClusterNodePoolResourceKey, "cluster_id"),
+					resource.TestCheckResourceAttrSet(testTkeClusterNodePoolResourceKey, "node_config.0.gpu_args.#"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckTkeNodePoolDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -434,5 +453,93 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 
   }
   unschedulable = 0
+}
+`
+
+const testAccTkeNodePoolClusterGpu string = testAccTkeNodePoolClusterBasic + `
+resource "tencentcloud_kubernetes_node_pool" "np_test" {
+  name = "gpu_args_node_pool"
+  cluster_id = local.cluster_id
+  max_size = 1
+  min_size = 0
+  vpc_id               = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  subnet_ids           = [data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id]
+  retry_policy         = "INCREMENTAL_INTERVALS"
+  desired_capacity     = 1
+  enable_auto_scale    = false
+  node_os = "tlinux3.1x86_64"
+  scaling_group_project_id = var.default_project
+  delete_keep_instance = false
+  scaling_group_name 	   = "asg_np_test_changed_gpu"
+  default_cooldown 		   = 350
+  termination_policies 	   = ["NEWEST_INSTANCE"]
+  multi_zone_subnet_policy = "EQUALITY"
+
+  auto_scaling_config {
+    instance_type      = "GN6S.LARGE20"
+    system_disk_type   = "CLOUD_PREMIUM"
+    system_disk_size   = "100"
+    security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id, data.tencentcloud_security_groups.sg_as.security_groups[0].security_group_id]
+	instance_charge_type = "SPOTPAID"
+    spot_instance_type = "one-time"
+    spot_max_price = "1000"
+    cam_role_name = "TCB_QcsRole"
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+      delete_with_instance = true
+    }
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 100
+      delete_with_instance = true
+    }
+
+    public_ip_assigned         = false
+    password                   = "test123#"
+    enhanced_security_service  = true
+    enhanced_monitor_service   = false
+	host_name                  = "12.123.1.1"
+	host_name_style            = "UNIQUE"
+
+  }
+  unschedulable = 0
+  labels = {
+    "test3" = "test3",
+    "test2" = "test2",
+  }
+  
+  taints {
+	key = "test_taint"
+    value = "taint_value"
+    effect = "PreferNoSchedule"
+  }
+
+  tags = {
+    keep-test-np1 = "testI"
+    keep-test-np3 = "testIII"
+  }
+
+  node_config {
+    extra_args = [
+      "root-dir=/var/lib/kubelet"
+    ]
+	gpu_args {
+      mig_enable = false
+      driver = {
+        name = "NVIDIA-Linux-x86_64-470.82.01.run"
+        version = "470.82.01"
+      }
+      cuda = {
+        name = "cuda_11.4.3_470.82.01_linux.run"
+        version = "11.4.3"
+      }
+      cudnn = {
+        name = "cudnn-11.4-linux-x64-v8.2.4.15.tgz"
+        version = "8.2.4"
+      }
+    }
+  }
 }
 `
