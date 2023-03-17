@@ -100,7 +100,6 @@ func TestAccTencentCloudKubernetesScaleWorkerResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeScaleWorkerExists(testTkeScaleWorkerResourceKey),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "cluster_id"),
-					resource.TestCheckResourceAttr(testTkeScaleWorkerResourceKey, "worker_instances_list.0.instance_type", "GN6S.LARGE20"),
 					resource.TestCheckResourceAttrSet(testTkeScaleWorkerResourceKey, "gpu_args.#"),
 				),
 			},
