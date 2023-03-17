@@ -1,3 +1,15 @@
+## 1.79.17 (March 17 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_kubernetes_available_cluster_versions` ([#1608](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1608))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_kubernetes_cluster_attachment: support setting tke gpu args ([#1593](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1593))
+* resource/tencentcloud_kubernetes_node_pool: support setting tke gpu args ([#1593](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1593))
+* resource/tencentcloud_kubernetes_scale_worker: support setting tke gpu args ([#1593](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1593))
+
 ## 1.79.16 (March 15, 2023)
 
 ENHANCEMENTS:
