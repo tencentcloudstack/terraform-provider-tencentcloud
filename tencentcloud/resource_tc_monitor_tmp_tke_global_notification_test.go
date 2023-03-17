@@ -39,7 +39,7 @@ func TestAccTencentCloudMonitorTmpTkeGlobalNotification_basic(t *testing.T) {
 func testAccCheckTmpTkeGlobalNotificationDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_monitor_tmp_tke_global_notification" {
 			continue
@@ -69,7 +69,7 @@ func testAccCheckTmpTkeGlobalNotificationExists(r string) resource.TestCheckFunc
 			return fmt.Errorf("instance id is not set")
 		}
 
-		tkeService := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		tkeService := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		tmpGlobalNotification, err := tkeService.DescribeTkeTmpGlobalNotification(ctx, rs.Primary.ID)
 		if !*tmpGlobalNotification.Enabled {
 			return fmt.Errorf("global notification %s is not found", rs.Primary.ID)

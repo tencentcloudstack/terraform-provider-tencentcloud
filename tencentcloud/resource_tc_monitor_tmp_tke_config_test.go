@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	"github.com/pkg/errors"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 )
 
 func init() {
@@ -23,7 +23,7 @@ func init() {
 			client := cli.(*TencentCloudClient).apiV3Conn
 			configId := packConfigId(defaultPrometheusId, defaultTkeClusterType, defaultTkeClusterId)
 
-			service := TkeService{client}
+			service := MonitorService{client}
 
 			promConfigs, err := service.DescribeTkeTmpConfigById(ctx, configId)
 
@@ -86,7 +86,7 @@ func TestAccTencentCloudMonitorTmpTkeConfig_basic(t *testing.T) {
 func testAccCheckTmpTkeConfigDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_monitor_tmp_tke_config" {
 			continue
@@ -135,7 +135,7 @@ func testAccCheckTmpTkeConfigExists(r string) resource.TestCheckFunc {
 			return fmt.Errorf("instance id is not set")
 		}
 
-		tkeService := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		tkeService := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		promConfigs, err := tkeService.DescribeTkeTmpConfigById(ctx, rs.Primary.ID)
 		if err != nil {
 			return err
@@ -154,7 +154,7 @@ func packConfigId(instanceId string, clusterType string, clusterId string) (ids 
 	return
 }
 
-func transObj2StrNames(resList []*tke.PrometheusConfigItem) []*string {
+func transObj2StrNames(resList []*monitor.PrometheusConfigItem) []*string {
 	names := make([]*string, 0, len(resList))
 	for _, res := range resList {
 		if res.Name != nil {

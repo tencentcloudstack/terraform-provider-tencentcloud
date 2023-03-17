@@ -33,7 +33,7 @@ func TestAccTencentCloudMonitorTempAttachment_basic(t *testing.T) {
 func testAccCheckTempAttachmentDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	recordService := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	recordService := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_monitor_tmp_tke_template_attachment" {
 			continue
@@ -83,7 +83,7 @@ func testAccCheckTempAttachmentExists(r string) resource.TestCheckFunc {
 		templateId := items[0]
 		instanceId := items[1]
 		region := items[2]
-		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		targets, err := service.DescribePrometheusTempSync(ctx, templateId)
 		if err != nil {
 			return err

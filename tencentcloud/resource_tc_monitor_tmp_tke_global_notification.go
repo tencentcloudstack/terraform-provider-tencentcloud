@@ -36,7 +36,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -191,7 +191,7 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationRead(d *schema.ResourceD
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	instanceId := d.Id()
 
@@ -246,10 +246,10 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationUpdate(d *schema.Resourc
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	if d.HasChange("notification") {
-		notification := tke.PrometheusNotificationItem{}
+		notification := monitor.PrometheusNotificationItem{}
 		if dMap, ok := helper.InterfacesHeadMap(d, "notification"); ok {
 			if v, ok := dMap["enabled"]; ok {
 				notification.Enabled = helper.Bool(v.(bool))
@@ -261,7 +261,7 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationUpdate(d *schema.Resourc
 				notification.WebHook = helper.String(v.(string))
 			}
 			if v, ok := helper.InterfacesHeadMap(d, "alert_manager"); ok {
-				alertManager := tke.PrometheusAlertManagerConfig{}
+				alertManager := monitor.PrometheusAlertManagerConfig{}
 				if vv, ok := v["url"]; ok {
 					alertManager.Url = helper.String(vv.(string))
 				}
@@ -324,10 +324,10 @@ func resourceTencentCloudMonitorTmpTkeGlobalNotificationDelete(d *schema.Resourc
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	id := d.Id()
-	notification := tke.PrometheusNotificationItem{
+	notification := monitor.PrometheusNotificationItem{
 		// Turning off the alarm notification function is to delete the alarm notification
 		Enabled: helper.Bool(false),
 		Type:    helper.String(""),

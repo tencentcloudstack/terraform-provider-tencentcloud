@@ -22,7 +22,7 @@ func testSweepClusterAgent(region string) error {
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cli, _ := sharedClientForRegion(region)
 	client := cli.(*TencentCloudClient).apiV3Conn
-	service := TkeService{client}
+	service := MonitorService{client}
 
 	instanceId := clusterPrometheusId
 	clusterId := tkeClusterIdAgent
@@ -68,7 +68,7 @@ func TestAccTencentCloudMonitorClusterAgent_basic(t *testing.T) {
 func testAccCheckClusterAgentDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "tencentcloud_monitor_tmp_tke_cluster_agent" {
 			continue
@@ -112,7 +112,7 @@ func testAccCheckClusterAgentExists(r string) resource.TestCheckFunc {
 		instanceId := items[0]
 		clusterId := items[1]
 		clusterType := items[2]
-		service := TkeService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		service := MonitorService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		agents, err := service.DescribeTmpTkeClusterAgentsById(ctx, instanceId, clusterId, clusterType)
 		if agents == nil {
 			return fmt.Errorf("cluster agent %s is not found", rs.Primary.ID)

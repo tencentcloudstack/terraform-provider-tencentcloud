@@ -1014,3 +1014,500 @@ func (me *MonitorService) DeleteMonitorGrafanaPluginById(ctx context.Context, in
 
 	return
 }
+
+func (me *MonitorService) DescribeTkeTmpAlertPolicy(ctx context.Context, instanceId, tmpAlertPolicyId string) (tmpAlertPolicy *monitor.PrometheusAlertPolicyItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePrometheusAlertPolicyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+	request.Filters = append(request.Filters, &monitor.Filter{
+		Type:  helper.String("="),
+		Key:   helper.String("ID"),
+		Value: &tmpAlertPolicyId,
+	})
+
+	response, err := me.client.UseMonitorClient().DescribePrometheusAlertPolicy(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AlertRules) < 1 {
+		return
+	}
+	tmpAlertPolicy = response.Response.AlertRules[0]
+	return
+}
+
+func (me *MonitorService) DeleteTkeTmpAlertPolicyById(ctx context.Context, instanceId, tmpAlertPolicyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDeletePrometheusAlertPolicyRequest()
+	request.InstanceId = &instanceId
+	request.AlertIds = []*string{&tmpAlertPolicyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeletePrometheusAlertPolicy(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribeTmpTkeClusterAgentsById(ctx context.Context, instanceId, clusterId, clusterType string) (agents *monitor.PrometheusAgentOverview, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePrometheusClusterAgentsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseMonitorClient().DescribePrometheusClusterAgents(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Agents) < 1 {
+			break
+		}
+		for _, v := range response.Response.Agents {
+			if *v.ClusterId == clusterId && *v.ClusterType == clusterType {
+				return v, nil
+			}
+		}
+		if len(response.Response.Agents) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	return
+}
+
+func (me *MonitorService) DeletePrometheusClusterAgent(ctx context.Context, instanceId, clusterId, clusterType string) (errRet error) {
+	logId := getLogId(ctx)
+	request := monitor.NewDeletePrometheusClusterAgentRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	request.Agents = append(request.Agents, &monitor.PrometheusAgentInfo{
+		ClusterId:   &clusterId,
+		ClusterType: &clusterType,
+	})
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeletePrometheusClusterAgent(request)
+	if err != nil {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribeTkeTmpConfigById(ctx context.Context, configId string) (respParams *monitor.DescribePrometheusConfigResponseParams, errRet error) {
+	logId := getLogId(ctx)
+	request := monitor.NewDescribePrometheusConfigRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, ids [%s], request body [%s], reason[%s]\n",
+				logId, "query object", configId, request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ids, err := me.parseConfigId(configId)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	request.ClusterId = &ids.ClusterId
+	request.ClusterType = &ids.ClusterType
+	request.InstanceId = &ids.InstanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribePrometheusConfig(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail,ids [%s], request body [%s], reason[%s]\n",
+			logId, request.GetAction(), configId, request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success,ids [%s], request body [%s], response body [%s]\n",
+		logId, request.GetAction(), configId, request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.RequestId == nil {
+		return nil, fmt.Errorf("response is invalid,%s", response.ToJsonString())
+	}
+
+	respParams = response.Response
+	return
+}
+
+func (me *MonitorService) DeleteTkeTmpConfigByName(ctx context.Context, configId string, ServiceMonitors []*string, PodMonitors []*string, RawJobs []*string) (errRet error) {
+	logId := getLogId(ctx)
+	request := monitor.NewDeletePrometheusConfigRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail,ids [%s], request body [%s], reason[%s]\n",
+				logId, "delete object", configId, request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ids, err := me.parseConfigId(configId)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	request.ClusterId = &ids.ClusterId
+	request.ClusterType = &ids.ClusterType
+	request.InstanceId = &ids.InstanceId
+
+	if len(ServiceMonitors) > 0 {
+		request.ServiceMonitors = ServiceMonitors
+	}
+
+	if len(PodMonitors) > 0 {
+		request.PodMonitors = PodMonitors
+	}
+
+	if len(RawJobs) > 0 {
+		request.RawJobs = RawJobs
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeletePrometheusConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, ids [%s], request body [%s], response body [%s]\n",
+		logId, request.GetAction(), configId, request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) parseConfigId(configId string) (ret *PrometheusConfigIds, err error) {
+	idSplit := strings.Split(configId, FILED_SP)
+	if len(idSplit) != 3 {
+		return nil, fmt.Errorf("id is broken,%s", configId)
+	}
+
+	instanceId := idSplit[0]
+	clusterType := idSplit[1]
+	clusterId := idSplit[2]
+	if instanceId == "" || clusterType == "" || clusterId == "" {
+		return nil, fmt.Errorf("id is broken,%s", configId)
+	}
+
+	ret = &PrometheusConfigIds{instanceId, clusterType, clusterId}
+	return
+}
+
+func (me *MonitorService) DescribeTmpTkeTemplateById(ctx context.Context, templateId string) (template *monitor.PrometheusTemp, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePrometheusTempRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = append(
+		request.Filters,
+		&monitor.Filter{
+			Type:  helper.String("="),
+			Key:   helper.String("ID"),
+			Value: &templateId,
+		},
+	)
+	ratelimit.Check(request.GetAction())
+
+	var offset uint64 = 0
+	var pageSize uint64 = 100
+	instances := make([]*monitor.PrometheusTemp, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseMonitorClient().DescribePrometheusTemp(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Templates) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Templates...)
+		if len(response.Response.Templates) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	for _, v := range instances {
+		if *v.TemplateId == templateId {
+			template = v
+			return
+		}
+	}
+
+	return
+}
+
+func (me *MonitorService) DeleteTmpTkeTemplate(ctx context.Context, tempId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDeletePrometheusTempRequest()
+	request.TemplateId = &tempId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeletePrometheusTemp(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DeletePrometheusRecordRuleYaml(ctx context.Context, id, name string) (errRet error) {
+	logId := getLogId(ctx)
+	request := monitor.NewDeletePrometheusRecordRuleYamlRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &id
+	request.Names = []*string{&name}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DeletePrometheusRecordRuleYaml(request)
+	if err != nil {
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribePrometheusRecordRuleByName(ctx context.Context, id, name string) (
+	ret *monitor.DescribePrometheusRecordRulesResponse, errRet error) {
+
+	logId := getLogId(ctx)
+	request := monitor.NewDescribePrometheusRecordRulesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &id
+	if name != "" {
+		request.Filters = []*monitor.Filter{
+			{
+				Type:  helper.String("="),
+				Key:   helper.String("Name"),
+				Value: &name,
+			},
+		}
+	}
+
+	response, err := me.client.UseMonitorClient().DescribePrometheusRecordRules(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+	}
+
+	return response, nil
+}
+
+func (me *MonitorService) DescribeTkeTmpGlobalNotification(ctx context.Context, instanceId string) (tmpNotification *monitor.PrometheusNotificationItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePrometheusGlobalNotificationRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+
+	response, err := me.client.UseMonitorClient().DescribePrometheusGlobalNotification(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Notification != nil && response.Response.RequestId != nil {
+		tmpNotification = response.Response.Notification
+		return
+	}
+
+	return
+}
+
+func (me *MonitorService) ModifyTkeTmpGlobalNotification(ctx context.Context, instanceId string, notification monitor.PrometheusNotificationItem) (response *monitor.ModifyPrometheusGlobalNotificationResponse, errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewModifyPrometheusGlobalNotificationRequest()
+	request.InstanceId = &instanceId
+	request.Notification = &notification
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().ModifyPrometheusGlobalNotification(request)
+	if err != nil {
+		errRet = err
+		return nil, err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MonitorService) DescribePrometheusTempSync(ctx context.Context, templateId string) (targets []*monitor.PrometheusTemplateSyncTarget, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = monitor.NewDescribePrometheusTempSyncRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.TemplateId = &templateId
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribePrometheusTempSync(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success,ids [%s], request body [%s], response body [%s]\n",
+		logId, request.GetAction(), templateId, request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.RequestId == nil {
+		return nil, fmt.Errorf("response is invalid, %s", response.ToJsonString())
+	}
+
+	if len(response.Response.Targets) < 1 {
+		return
+	}
+
+	targets = response.Response.Targets
+
+	return
+}

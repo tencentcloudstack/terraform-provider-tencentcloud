@@ -27,7 +27,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -182,7 +182,7 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData,
 
 	logId := getLogId(contextNil)
 
-	request := tke.NewCreatePrometheusClusterAgentRequest()
+	request := monitor.NewCreatePrometheusClusterAgentRequest()
 
 	instanceId := ""
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -193,7 +193,7 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData,
 	clusterId := ""
 	clusterType := ""
 	if dMap, ok := helper.InterfacesHeadMap(d, "agents"); ok {
-		prometheusClusterAgent := tke.PrometheusClusterAgentBasic{}
+		prometheusClusterAgent := monitor.PrometheusClusterAgentBasic{}
 		if v, ok := dMap["region"]; ok {
 			prometheusClusterAgent.Region = helper.String(v.(string))
 		}
@@ -209,7 +209,7 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData,
 			prometheusClusterAgent.EnableExternal = helper.Bool(v.(bool))
 		}
 		if v, ok := dMap["in_cluster_pod_config"]; ok {
-			var clusterAgentPodConfig *tke.PrometheusClusterAgentPodConfig
+			var clusterAgentPodConfig *monitor.PrometheusClusterAgentPodConfig
 			if len(v.([]interface{})) > 0 {
 				podConfig := v.([]interface{})[0].(map[string]interface{})
 
@@ -218,10 +218,10 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData,
 				}
 				if vv, ok := podConfig["node_selector"]; ok {
 					labelsList := vv.([]interface{})
-					nodeSelectorKV := make([]*tke.Label, 0, len(labelsList))
+					nodeSelectorKV := make([]*monitor.Label, 0, len(labelsList))
 					for _, labels := range labelsList {
 						label := labels.(map[string]interface{})
-						var kv tke.Label
+						var kv monitor.Label
 						kv.Name = helper.String(label["name"].(string))
 						kv.Value = helper.String(label["value"].(string))
 						nodeSelectorKV = append(nodeSelectorKV, &kv)
@@ -230,10 +230,10 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData,
 				}
 				if vv, ok := podConfig["tolerations"]; ok {
 					tolerationList := vv.([]interface{})
-					tolerations := make([]*tke.Toleration, 0, len(tolerationList))
+					tolerations := make([]*monitor.Toleration, 0, len(tolerationList))
 					for _, t := range tolerationList {
 						tolerationMap := t.(map[string]interface{})
-						var toleration tke.Toleration
+						var toleration monitor.Toleration
 						toleration.Key = helper.String(tolerationMap["key"].(string))
 						toleration.Operator = helper.String(tolerationMap["operator"].(string))
 						toleration.Effect = helper.String(tolerationMap["effect"].(string))
@@ -246,10 +246,10 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData,
 		}
 		if v, ok := dMap["external_labels"]; ok {
 			labelsList := v.([]interface{})
-			externalKV := make([]*tke.Label, 0, len(labelsList))
+			externalKV := make([]*monitor.Label, 0, len(labelsList))
 			for _, labels := range labelsList {
 				label := labels.(map[string]interface{})
-				var kv tke.Label
+				var kv monitor.Label
 				kv.Name = helper.String(label["name"].(string))
 				kv.Value = helper.String(label["value"].(string))
 				externalKV = append(externalKV, &kv)
@@ -262,13 +262,13 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData,
 		if v, ok := dMap["not_scrape"]; ok {
 			prometheusClusterAgent.NotScrape = helper.Bool(v.(bool))
 		}
-		var prometheusClusterAgents []*tke.PrometheusClusterAgentBasic
+		var prometheusClusterAgents []*monitor.PrometheusClusterAgentBasic
 		prometheusClusterAgents = append(prometheusClusterAgents, &prometheusClusterAgent)
 		request.Agents = prometheusClusterAgents
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().CreatePrometheusClusterAgent(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreatePrometheusClusterAgent(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -283,7 +283,7 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentCreate(d *schema.ResourceData,
 		return err
 	}
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
@@ -315,7 +315,7 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentRead(d *schema.ResourceData, m
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ids := strings.Split(d.Id(), FILED_SP)
 	if len(ids) != 3 {
@@ -369,8 +369,8 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentUpdate(d *schema.ResourceData,
 	logId := getLogId(contextNil)
 
 	var (
-		request  = tke.NewModifyPrometheusAgentExternalLabelsRequest()
-		response *tke.ModifyPrometheusAgentExternalLabelsResponse
+		request  = monitor.NewModifyPrometheusAgentExternalLabelsRequest()
+		response *monitor.ModifyPrometheusAgentExternalLabelsResponse
 	)
 
 	ids := strings.Split(d.Id(), FILED_SP)
@@ -395,10 +395,10 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentUpdate(d *schema.ResourceData,
 		if dMap, ok := helper.InterfacesHeadMap(d, "agents"); ok {
 			if v, ok := dMap["external_labels"]; ok {
 				labelsList := v.([]interface{})
-				externalKV := make([]*tke.Label, 0, len(labelsList))
+				externalKV := make([]*monitor.Label, 0, len(labelsList))
 				for _, labels := range labelsList {
 					label := labels.(map[string]interface{})
-					var kv tke.Label
+					var kv monitor.Label
 					kv.Name = helper.String(label["name"].(string))
 					kv.Value = helper.String(label["value"].(string))
 					externalKV = append(externalKV, &kv)
@@ -409,7 +409,7 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentUpdate(d *schema.ResourceData,
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTkeClient().ModifyPrometheusAgentExternalLabels(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().ModifyPrometheusAgentExternalLabels(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -435,7 +435,7 @@ func resourceTencentCloudMonitorTmpTkeClusterAgentDelete(d *schema.ResourceData,
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	service := MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	ids := strings.Split(d.Id(), FILED_SP)
 	if len(ids) != 3 {

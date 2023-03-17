@@ -38,7 +38,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -155,7 +155,7 @@ func resourceTencentCloudTkeTmpConfigRead(d *schema.ResourceData, meta interface
 	var (
 		logId    = getLogId(contextNil)
 		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-		service  = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+		service  = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		configId = d.Id()
 	)
 
@@ -184,8 +184,8 @@ func resourceTencentCloudTkeTmpConfigCreate(d *schema.ResourceData, meta interfa
 
 	var (
 		logId   = getLogId(contextNil)
-		request = tke.NewCreatePrometheusConfigRequest()
-		client  = meta.(*TencentCloudClient).apiV3Conn.UseTkeClient()
+		request = monitor.NewCreatePrometheusConfigRequest()
+		client  = meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient()
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -235,9 +235,9 @@ func resourceTencentCloudTkeTmpConfigUpdate(d *schema.ResourceData, meta interfa
 
 	var (
 		logId   = getLogId(contextNil)
-		request = tke.NewModifyPrometheusConfigRequest()
+		request = monitor.NewModifyPrometheusConfigRequest()
 		client  = meta.(*TencentCloudClient).apiV3Conn
-		service = TkeService{client: client}
+		service = MonitorService{client: client}
 	)
 
 	ids, err := service.parseConfigId(d.Id())
@@ -267,7 +267,7 @@ func resourceTencentCloudTkeTmpConfigUpdate(d *schema.ResourceData, meta interfa
 	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, e := client.UseTkeClient().ModifyPrometheusConfig(request)
+		response, e := client.UseMonitorClient().ModifyPrometheusConfig(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -291,7 +291,7 @@ func resourceTencentCloudTkeTmpConfigDelete(d *schema.ResourceData, meta interfa
 	var (
 		logId           = getLogId(contextNil)
 		ctx             = context.WithValue(context.TODO(), logIdKey, logId)
-		service         = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+		service         = MonitorService{client: meta.(*TencentCloudClient).apiV3Conn}
 		ServiceMonitors = []*string{}
 		PodMonitors     = []*string{}
 		RawJobs         = []*string{}
@@ -316,12 +316,12 @@ func resourceTencentCloudTkeTmpConfigDelete(d *schema.ResourceData, meta interfa
 	return nil
 }
 
-func serializePromConfigItems(v interface{}) []*tke.PrometheusConfigItem {
+func serializePromConfigItems(v interface{}) []*monitor.PrometheusConfigItem {
 	resList := v.([]interface{})
-	items := make([]*tke.PrometheusConfigItem, 0, len(resList))
+	items := make([]*monitor.PrometheusConfigItem, 0, len(resList))
 	for _, res := range resList {
 		vv := res.(map[string]interface{})
-		var item tke.PrometheusConfigItem
+		var item monitor.PrometheusConfigItem
 		if v, ok := vv["name"]; ok {
 			item.Name = helper.String(v.(string))
 		}

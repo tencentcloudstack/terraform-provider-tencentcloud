@@ -17,7 +17,6 @@ resource "tencentcloud_monitor_grafana_integration" "grafanaIntegration_update" 
 }
 
 ```
-
 */
 package tencentcloud
 
