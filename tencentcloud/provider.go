@@ -877,6 +877,15 @@ TencentDB for DBbrain(dbbrain)
   Data Source
 	tencentcloud_dbbrain_sql_filters
 	tencentcloud_dbbrain_security_audit_log_export_tasks
+	tencentcloud_dbbrain_diag_event
+	tencentcloud_dbbrain_diag_events
+	tencentcloud_dbbrain_diag_history
+	tencentcloud_dbbrain_security_audit_log_download_urls
+	tencentcloud_dbbrain_slow_log_time_series_stats
+	tencentcloud_dbbrain_slow_log_top_sqls
+	tencentcloud_dbbrain_slow_log_user_host_stats
+	tencentcloud_dbbrain_slow_log_user_sql_advice
+
   Resource
 	tencentcloud_dbbrain_sql_filter
 	tencentcloud_dbbrain_security_audit_log_export_task
@@ -1310,6 +1319,14 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
+			"tencentcloud_dbbrain_diag_event":                       dataSourceTencentCloudDbbrainDiagEvent(),
+			"tencentcloud_dbbrain_diag_events":                      dataSourceTencentCloudDbbrainDiagEvents(),
+			"tencentcloud_dbbrain_diag_history":                     dataSourceTencentCloudDbbrainDiagHistory(),
+			"tencentcloud_dbbrain_security_audit_log_download_urls": dataSourceTencentCloudDbbrainSecurityAuditLogDownloadUrls(),
+			"tencentcloud_dbbrain_slow_log_time_series_stats":       dataSourceTencentCloudDbbrainSlowLogTimeSeriesStats(),
+			"tencentcloud_dbbrain_slow_log_top_sqls":                dataSourceTencentCloudDbbrainSlowLogTopSqls(),
+			"tencentcloud_dbbrain_slow_log_user_host_stats":         dataSourceTencentCloudDbbrainSlowLogUserHostStats(),
+			"tencentcloud_dbbrain_slow_log_user_sql_advice":         dataSourceTencentCloudDbbrainSlowLogUserSqlAdvice(),
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                        dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                         dataSourceTencentCloudDtsMigrateJobs(),
