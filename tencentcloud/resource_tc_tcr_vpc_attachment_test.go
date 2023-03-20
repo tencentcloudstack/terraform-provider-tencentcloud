@@ -20,15 +20,15 @@ func TestAccTencentCloudTCRVPCAttachment_basic(t *testing.T) {
 			{
 				Config: testAccTCRVPCAttachment_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckTCRVPCAttachmentExists("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment", "status"),
+					testAccCheckTCRVPCAttachmentExists("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource", "status"),
 					//this access ip will solve out with very long time
-					//resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment", "access_ip"),
+					//resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource", "access_ip"),
 				),
-				Destroy: false,
+				// Destroy: false,
 			},
 			{
-				ResourceName:      "tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment",
+				ResourceName:      "tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -105,7 +105,7 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
   delete_bucket = true
 }
 
-resource "tencentcloud_tcr_vpc_attachment" "mytcr_vpc_attachment" {
+resource "tencentcloud_tcr_vpc_attachment" "mytcr_vpc_attachment_resource" {
   instance_id = tencentcloud_tcr_instance.mytcr_instance.id
   vpc_id = local.vpc_id
   subnet_id = local.subnet_id
