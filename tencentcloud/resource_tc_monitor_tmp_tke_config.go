@@ -27,6 +27,13 @@ resource "tencentcloud_monitor_tmp_tke_config" "foo" {
 }
 
 ```
+Import
+
+monitor tmpTkeConfig can be imported using the instanceId#clusterType#clusterId, e.g.
+```
+$ terraform import tencentcloud_monitor_tmp_tke_config.foo prom-1lspn8sw#eks#cls-2trvpflc
+```
+
 */
 package tencentcloud
 
@@ -48,6 +55,9 @@ func resourceTencentCloudMonitorTmpTkeConfig() *schema.Resource {
 		Read:   resourceTencentCloudTkeTmpConfigRead,
 		Update: resourceTencentCloudTkeTmpConfigUpdate,
 		Delete: resourceTencentCloudTkeTmpConfigDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Type:        schema.TypeString,
@@ -170,9 +180,72 @@ func resourceTencentCloudTkeTmpConfigRead(d *schema.ResourceData, meta interface
 		return fmt.Errorf("resource `prometheus_config` %s does not exist", configId)
 	}
 
+	configIds, _ := service.parseConfigId(configId)
+
+	_ = d.Set("instance_id", configIds.InstanceId)
+	_ = d.Set("cluster_type", configIds.ClusterType)
+	_ = d.Set("cluster_id", configIds.ClusterId)
+
 	if e := d.Set("config", params.Config); e != nil {
 		log.Printf("[CRITAL]%s provider set config fail, reason:%s\n", logId, e.Error())
 		return e
+	}
+
+	if params.ServiceMonitors != nil {
+		serviceMonitorsList := []interface{}{}
+		for _, monitor := range params.ServiceMonitors {
+			monitorMap := map[string]interface{}{}
+			if monitor.Name != nil {
+				monitorMap["name"] = monitor.Name
+			}
+			if monitor.Config != nil {
+				monitorMap["config"] = *monitor.Config
+			}
+			if monitor.TemplateId != nil {
+				monitorMap["template_id"] = monitor.TemplateId
+			}
+
+			serviceMonitorsList = append(serviceMonitorsList, monitorMap)
+		}
+		_ = d.Set("service_monitors", serviceMonitorsList)
+	}
+
+	if params.PodMonitors != nil {
+		podMonitorsList := []interface{}{}
+		for _, monitor := range params.PodMonitors {
+			monitorMap := map[string]interface{}{}
+			if monitor.Name != nil {
+				monitorMap["name"] = monitor.Name
+			}
+			if monitor.Config != nil {
+				monitorMap["config"] = *monitor.Config
+			}
+			if monitor.TemplateId != nil {
+				monitorMap["template_id"] = monitor.TemplateId
+			}
+
+			podMonitorsList = append(podMonitorsList, monitorMap)
+		}
+		_ = d.Set("pod_monitors", podMonitorsList)
+	}
+
+	if params.RawJobs != nil {
+		rawJobsList := []interface{}{}
+		for _, rawJob := range params.RawJobs {
+			rawJobMap := map[string]interface{}{}
+			if rawJob.Name != nil {
+				rawJobMap["name"] = rawJob.Name
+			}
+			if rawJob.Config != nil {
+				rawJobMap["config"] = *rawJob.Config
+			}
+			if rawJob.TemplateId != nil {
+				rawJobMap["template_id"] = rawJob.TemplateId
+			}
+
+			rawJobsList = append(rawJobsList, rawJobMap)
+		}
+		_ = d.Set("raw_jobs", rawJobsList)
 	}
 
 	return nil

@@ -73,3 +73,10 @@ In addition to all arguments above, the following attributes are exported:
 * `config` - Global configuration.
 
 
+## Import
+
+monitor tmpTkeConfig can be imported using the instanceId#clusterType#clusterId, e.g.
+```
+$ terraform import tencentcloud_monitor_tmp_tke_config.foo prom-1lspn8sw#eks#cls-2trvpflc
+```
+
