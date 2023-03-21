@@ -11,6 +11,41 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_ci_bucket_pic_style
+	resource.AddTestSweepers("tencentcloud_ci_bucket_pic_style", &resource.Sweeper{
+		Name: "tencentcloud_ci_bucket_pic_style",
+		F:    testSweepCiBucketPicStyle,
+	})
+}
+
+func testSweepCiBucketPicStyle(region string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(region)
+	client := cli.(*TencentCloudClient).apiV3Conn
+	service := CiService{client}
+
+	bucket := defaultCiBucket
+	styleName := defaultStyleName
+
+	for {
+		bucketPicStyle, err := service.DescribeCiBucketPicStyleById(ctx, bucket, styleName)
+		if err != nil {
+			return nil
+		}
+
+		if bucketPicStyle == nil {
+			return nil
+		}
+
+		err = service.DeleteCiBucketPicStyleById(ctx, bucket, styleName)
+		if err != nil {
+			return err
+		}
+	}
+}
+
 // go test -i; go test -test.run TestAccTencentCloudCiBucketPicStyleResource_basic -v
 func TestAccTencentCloudCiBucketPicStyleResource_basic(t *testing.T) {
 	t.Parallel()
@@ -103,15 +138,17 @@ func testAccCheckCiBucketPicStyleExists(re string) resource.TestCheckFunc {
 const testAccCiBucketPicStyleVar = `
 variable "bucket" {
 	default = "` + defaultCiBucket + `"
-  }
-
+}
+variable "style_name" {
+	default = "` + defaultStyleName + `"
+}
 `
 
 const testAccCiBucketPicStyle = testAccCiBucketPicStyleVar + `
 
 resource "tencentcloud_ci_bucket_pic_style" "bucket_pic_style" {
 	bucket     = var.bucket
-	style_name = "terraform_test"
+	style_name = var.style_name
 	style_body = "imageMogr2/thumbnail/20x/crop/20x20/gravity/center/interlace/0/quality/100"
   }
 
