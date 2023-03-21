@@ -49,7 +49,7 @@ func dataSourceTencentCloudDbbrainSecurityAuditLogDownloadUrls() *schema.Resourc
 			"product": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values： `mysql` - ApsaraDB for MySQL.",
+				Description: "Service product type, supported values: `mysql` - ApsaraDB for MySQL.",
 			},
 
 			"urls": {

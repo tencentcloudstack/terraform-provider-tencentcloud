@@ -48,7 +48,7 @@ func dataSourceTencentCloudDbbrainSlowLogTimeSeriesStats() *schema.Resource {
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include： `mysql` - cloud database MySQL, `cynosdb` - cloud database CynosDB for MySQL, the default is `mysql`.",
+				Description: "Service product type, supported values include: `mysql` - cloud database MySQL, `cynosdb` - cloud database CynosDB for MySQL, the default is `mysql`.",
 			},
 
 			"period": {
@@ -106,7 +106,7 @@ func dataSourceTencentCloudDbbrainSlowLogTimeSeriesStats() *schema.Resource {
 											Type: schema.TypeInt,
 										},
 										Computed:    true,
-										Description: "Index value. Note： This field may return null, indicating that no valid value can be obtained.",
+										Description: "Index value. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},

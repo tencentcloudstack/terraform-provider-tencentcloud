@@ -36,19 +36,19 @@ func dataSourceTencentCloudDbbrainSlowLogUserHostStats() *schema.Resource {
 			"start_time": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Start time of the query range, time format such as：2019-09-10 12:13:14。.",
+				Description: "Start time of the query range, time format such as: 2019-09-10 12:13:14.",
 			},
 
 			"end_time": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "EndTime time of the query range, time format such as：2019-09-10 12:13:14。.",
+				Description: "EndTime time of the query range, time format such as: 2019-09-10 12:13:14.",
 			},
 
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Types of service products, supported values：`mysql` - Cloud Database MySQL; `cynosdb` - Cloud Database TDSQL-C for MySQL, defaults to `mysql`.",
+				Description: "Types of service products, supported values:`mysql` - Cloud Database MySQL; `cynosdb` - Cloud Database TDSQL-C for MySQL, defaults to `mysql`.",
 			},
 
 			"md5": {

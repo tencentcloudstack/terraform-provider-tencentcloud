@@ -4,20 +4,14 @@ Use this data source to query detailed information of dbbrain slow_log_top_sqls
 Example Usage
 
 ```hcl
-data "tencentcloud_dbbrain_slow_log_top_sqls" "slow_log_top_sqls" {
-  instance_id = ""
-  start_time = ""
-  end_time = ""
-  sort_by = ""
-  order_by = ""
-  limit =
-  offset =
-  schema_list {
-		schema = ""
-
-  }
-  product = ""
-      }
+data "tencentcloud_dbbrain_slow_log_top_sqls" "test" {
+  instance_id = "%s"
+  start_time = "%s"
+  end_time = "%s"
+  sort_by = "QueryTimeMax"
+  order_by = "ASC"
+  product = "mysql"
+}
 ```
 */
 package tencentcloud
@@ -83,7 +77,7 @@ func dataSourceTencentCloudDbbrainSlowLogTopSqls() *schema.Resource {
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include： `mysql` - cloud database MySQL, `cynosdb` - cloud database CynosDB for MySQL, the default is `mysql`.",
+				Description: "Service product type, supported values include: `mysql` - cloud database MySQL, `cynosdb` - cloud database CynosDB for MySQL, the default is `mysql`.",
 			},
 
 			"rows": {

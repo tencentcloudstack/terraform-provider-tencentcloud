@@ -11,8 +11,8 @@ import (
 func TestAccTencentCloudDbbrainSecurityAuditLogDownloadUrlsDataSource_basic(t *testing.T) {
 	t.Parallel()
 	loc, _ := time.LoadLocation("Asia/Chongqing")
-	startTime := time.Now().Add(-2 * time.Hour).In(loc).Format("2006-01-02T15:04:05+08:00")
-	endTime := time.Now().Add(2 * time.Hour).In(loc).Format("2006-01-02T15:04:05+08:00")
+	startTime := time.Now().Add(-30 * time.Minute).In(loc).Format("2006-01-02 15:04:05")
+	endTime := time.Now().In(loc).Format("2006-01-02 15:04:05")
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -41,9 +41,9 @@ resource "tencentcloud_dbbrain_security_audit_log_export_task" "task" {
 }
 
 data "tencentcloud_dbbrain_security_audit_log_download_urls" "test" {
-  sec_audit_group_id = "%s"
-  async_request_id = tencentcloud_dbbrain_security_audit_log_export_task.task.async_request_id
-  product = "mysql"
+	sec_audit_group_id = "%s"
+	async_request_id = tencentcloud_dbbrain_security_audit_log_export_task.task.async_request_id
+	product = "mysql"
 }
 
 `

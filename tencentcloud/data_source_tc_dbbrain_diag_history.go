@@ -48,7 +48,7 @@ func dataSourceTencentCloudDbbrainDiagHistory() *schema.Resource {
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include：`mysql` - cloud database MySQL, `cynosdb` - cloud database CynosDB for MySQL, the default is `mysql`.",
+				Description: "Service product type, supported values include: `mysql` - cloud database MySQL, `cynosdb` - cloud database CynosDB for MySQL, the default is `mysql`.",
 			},
 
 			"events": {
@@ -100,7 +100,7 @@ func dataSourceTencentCloudDbbrainDiagHistory() *schema.Resource {
 						"metric": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "reserved text. Note： This field may return null, indicating that no valid value can be obtained.",
+							Description: "reserved text. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"region": {
 							Type:        schema.TypeString,
