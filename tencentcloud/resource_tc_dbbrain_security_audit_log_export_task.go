@@ -150,6 +150,7 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate(d *schema.Resou
 			return retryError(err)
 		}
 		if ret != nil {
+			log.Printf("[DEBUG]%s task.Status:[%s]\n", logId, *ret.Status)
 			return nil
 		}
 		return resource.RetryableError(errors.New("[DEBUG] describe the audit log export task is nil, retry..."))

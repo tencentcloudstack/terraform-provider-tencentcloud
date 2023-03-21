@@ -78,9 +78,9 @@ func dataSourceTencentCloudDbbrainSlowLogTimeSeriesStats() *schema.Resource {
 			},
 
 			"series_data": {
-				Computed:    true,
-				Type:        schema.TypeList,
-				MaxItems:    1,
+				Computed: true,
+				Type:     schema.TypeList,
+				// MaxItems:    1,
 				Description: "Instan1ce cpu utilization monitoring data within a unit time interval.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{

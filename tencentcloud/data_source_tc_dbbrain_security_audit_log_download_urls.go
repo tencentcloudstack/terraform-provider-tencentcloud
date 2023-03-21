@@ -13,9 +13,9 @@ resource "tencentcloud_dbbrain_security_audit_log_export_task" "task" {
 }
 
 data "tencentcloud_dbbrain_security_audit_log_download_urls" "test" {
-  sec_audit_group_id = "%s"
-  async_request_id = tencentcloud_dbbrain_security_audit_log_export_task.task.async_request_id
-  product = "mysql"
+	sec_audit_group_id = "%s"
+	async_request_id = tencentcloud_dbbrain_security_audit_log_export_task.task.async_request_id
+	product = "mysql"
 }
 ```
 */

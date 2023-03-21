@@ -4,8 +4,16 @@ Use this data source to query detailed information of dbbrain diag_event
 Example Usage
 
 ```hcl
+data "tencentcloud_dbbrain_diag_history" "diag_history" {
+	instance_id = "%s"
+	start_time = "%s"
+	end_time = "%s"
+	product = "mysql"
+}
+
 data "tencentcloud_dbbrain_diag_event" "diag_event" {
   instance_id = "%s"
+  event_id = data.tencentcloud_dbbrain_diag_history.diag_history.events.0.event_id
   product = "mysql"
 }
 ```
@@ -124,16 +132,16 @@ func dataSourceTencentCloudDbbrainDiagEventRead(d *schema.ResourceData, meta int
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["InstanceId"] = helper.String(v.(string))
+		paramMap["instance_id"] = helper.String(v.(string))
 		id = v.(string)
 	}
 
 	if v, _ := d.GetOk("event_id"); v != nil {
-		paramMap["EventId"] = helper.IntInt64(v.(int))
+		paramMap["event_id"] = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("product"); ok {
-		paramMap["Product"] = helper.String(v.(string))
+		paramMap["product"] = helper.String(v.(string))
 	}
 
 	var result *dbbrain.DescribeDBDiagEventResponseParams
