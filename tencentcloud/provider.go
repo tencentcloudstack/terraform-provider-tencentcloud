@@ -714,6 +714,7 @@ Cloud Log Service(CLS)
 TencentCloud Lighthouse(Lighthouse)
   Resource
 	tencentcloud_lighthouse_instance
+	tencentcloud_lighthouse_blueprint
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -1748,6 +1749,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_mount_point":                          resourceTencentCloudChdfsMountPoint(),
 			"tencentcloud_chdfs_mount_point_attachment":               resourceTencentCloudChdfsMountPointAttachment(),
 			"tencentcloud_mdl_stream_live_input":                      resourceTencentCloudMdlStreamLiveInput(),
+			"tencentcloud_lighthouse_blueprint":                       resourceTencentCloudLighthouseBlueprint(),
 		},
 
 		ConfigureFunc: providerConfigure,
