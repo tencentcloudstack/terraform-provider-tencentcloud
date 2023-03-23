@@ -2,6 +2,7 @@
 Provides a mysql instance resource to create master database instances.
 
 ~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** Mysql version 8.0 supports modifying parameters. If there is a parameter lower_case_table_names, there will be a change when applying. This does not affect the use, and this problem will be resolved soon.
 
 Example Usage
 
@@ -1164,8 +1165,15 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			supportsParameters[*parameter.Name] = parameter
 		}
 
+		version := d.Get("engine_version").(string)
+		// if version == "8.0" && oldParameters["lower_case_table_names"] != newParameters["lower_case_table_names"] {
+		// 	return fmt.Errorf("this mysql 8.0 not support param `lower_case_table_names` set")
+		// }
 		for parameName := range newParameters {
 			if _, has := supportsParameters[parameName]; !has {
+				if version == "8.0" && parameName == "lower_case_table_names" {
+					continue
+				}
 				return fmt.Errorf("this mysql not support param %s set", parameName)
 			}
 		}

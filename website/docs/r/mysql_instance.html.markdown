@@ -12,6 +12,7 @@ description: |-
 Provides a mysql instance resource to create master database instances.
 
 ~> **NOTE:** If this mysql has readonly instance, the terminate operation of the mysql does NOT take effect immediately, maybe takes for several hours. so during that time, VPCs associated with that mysql instance can't be terminated also.
+~> **NOTE:** Mysql version 8.0 supports modifying parameters. If there is a parameter lower_case_table_names, there will be a change when applying. This does not affect the use, and this problem will be resolved soon.
 
 ## Example Usage
 
