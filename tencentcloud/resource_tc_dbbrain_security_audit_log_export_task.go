@@ -142,6 +142,7 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate(d *schema.Resou
 	}
 
 	asyncRequestId = helper.UInt64ToStr(*response.Response.AsyncRequestId)
+	d.SetId(secAuditGroupId + FILED_SP + asyncRequestId)
 
 	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
 		ret, err := service.DescribeDbbrainSecurityAuditLogExportTask(ctx, helper.String(secAuditGroupId), helper.String(asyncRequestId), nil)
@@ -149,7 +150,7 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate(d *schema.Resou
 			return retryError(err)
 		}
 		if ret != nil {
-			log.Printf("[###########] task.Status:[%s]\n", *ret.Status)
+			log.Printf("[DEBUG]%s task.Status:[%s]\n", logId, *ret.Status)
 			return nil
 		}
 		return resource.RetryableError(errors.New("[DEBUG] describe the audit log export task is nil, retry..."))
@@ -159,7 +160,6 @@ func resourceTencentCloudDbbrainSecurityAuditLogExportTaskCreate(d *schema.Resou
 		return err
 	}
 
-	d.SetId(secAuditGroupId + FILED_SP + asyncRequestId)
 	return resourceTencentCloudDbbrainSecurityAuditLogExportTaskRead(d, meta)
 }
 

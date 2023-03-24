@@ -28,6 +28,7 @@ func testSweepDbbrainSecurityAuditLogExportTask(r string) error {
 	sagId := helper.String(defaultDbBrainsagId)
 	param := map[string]interface{}{
 		"sec_audit_group_id": sagId,
+		"product":            helper.String("mysql"),
 	}
 
 	ret, err := dbbrainService.DescribeDbbrainSecurityAuditLogExportTasksByFilter(ctx, param)

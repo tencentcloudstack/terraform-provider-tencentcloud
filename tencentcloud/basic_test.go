@@ -870,7 +870,8 @@ const (
 
 // DBBRAIN
 const (
-	defaultDbBrainsagId = "sag-01z37l4g"
+	defaultDbBrainsagId      = "sag-01z37l4g"
+	defaultDbBrainInstanceId = "cdb-fitq5t9h"
 )
 
 // End of DBBRAIN
