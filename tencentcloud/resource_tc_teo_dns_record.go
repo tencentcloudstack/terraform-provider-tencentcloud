@@ -1,6 +1,8 @@
 /*
 Provides a resource to create a teo dns_record
 
+~> **NOTE:** Teo product planning changes, this resource will be offline soon
+
 Example Usage
 
 ```hcl
