@@ -182,6 +182,6 @@ In addition to all arguments above, the following attributes are exported:
 cvm launch_template_version can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_cvm_launch_template_version.launch_template_version launch_template_version_id
+terraform import tencentcloud_cvm_launch_template_version.launch_template_version ${launch_template_id}#${launch_template_version}
 ```
 
