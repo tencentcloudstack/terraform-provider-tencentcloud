@@ -993,6 +993,10 @@ StreamLive(MDL)
   Resource
 	tencentcloud_mdl_stream_live_input
 
+Application Performance Management(APM)
+  Resource
+	tencentcloud_apm_instance
+
 */
 package tencentcloud
 
@@ -1771,6 +1775,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mdl_stream_live_input":                      resourceTencentCloudMdlStreamLiveInput(),
 			"tencentcloud_lighthouse_blueprint":                       resourceTencentCloudLighthouseBlueprint(),
 			"tencentcloud_cvm_launch_template_version":                resourceTencentCloudCvmLaunchTemplateVersion(),
+			"tencentcloud_apm_instance":                               resourceTencentCloudApmInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
