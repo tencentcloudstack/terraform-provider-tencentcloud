@@ -229,14 +229,14 @@ func resourceTencentCloudCvmLaunchTemplateVersion() *schema.Resource {
 							Optional:    true,
 							Computed:    true,
 							ForceNew:    true,
-							Description: "ID of the custom CMK in the format of UUID or “kms-abcd1234”. .",
+							Description: "ID of the custom CMK in the format of UUID or `kms-abcd1234`.",
 						},
 						"throughput_performance": {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Computed:    true,
 							ForceNew:    true,
-							Description: "Cloud disk performance, in MB/s .",
+							Description: "Cloud disk performance in MB/s.",
 						},
 						"cdc_id": {
 							Type:        schema.TypeString,
@@ -562,7 +562,7 @@ func resourceTencentCloudCvmLaunchTemplateVersion() *schema.Resource {
 													Type:        schema.TypeInt,
 													Required:    true,
 													ForceNew:    true,
-													Description: "Maximum capacity of local HDD storage .",
+													Description: "Maximum capacity of local HDD storage.",
 												},
 											},
 										},
@@ -680,7 +680,7 @@ func resourceTencentCloudCvmLaunchTemplateVersion() *schema.Resource {
 				Computed:    true,
 				ForceNew:    true,
 				Type:        schema.TypeBool,
-				Description: "Whether the request is a dry run only. .",
+				Description: "Whether the request is a dry run only.",
 			},
 
 			"cam_role_name": {
