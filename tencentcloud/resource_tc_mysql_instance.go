@@ -5,6 +5,8 @@ Provides a mysql instance resource to create master database instances.
 
 ~> **NOTE:** mysql version 8.0 import does not support the parameter lower_case_table_name, we will support it later.
 
+~> **Note: **mysql version 8.0 does not support modifying the parameter lower_case_table_name, please refer to the creation time.
+
 Example Usage
 
 ```hcl
@@ -1175,9 +1177,9 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 		}
 
 		version := d.Get("engine_version").(string)
-		if version == "8.0" && oldParameters["lower_case_table_names"] != newParameters["lower_case_table_names"] {
-			return fmt.Errorf("this mysql 8.0 not support param `lower_case_table_names` set")
-		}
+		// if version == "8.0" && oldParameters["lower_case_table_names"] != newParameters["lower_case_table_names"] {
+		// 	return fmt.Errorf("this mysql 8.0 not support param `lower_case_table_names` set")
+		// }
 		for parameName := range newParameters {
 			if _, has := supportsParameters[parameName]; !has {
 				if version == "8.0" && parameName == "lower_case_table_names" {

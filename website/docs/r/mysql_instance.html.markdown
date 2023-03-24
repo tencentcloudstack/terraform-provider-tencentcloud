@@ -15,6 +15,8 @@ Provides a mysql instance resource to create master database instances.
 
 ~> **NOTE:** mysql version 8.0 import does not support the parameter lower_case_table_name, we will support it later.
 
+~> **Note: **mysql version 8.0 does not support modifying the parameter lower_case_table_name, please refer to the creation time.
+
 ## Example Usage
 
 ```hcl
