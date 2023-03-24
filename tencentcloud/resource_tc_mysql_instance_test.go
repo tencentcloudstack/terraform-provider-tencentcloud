@@ -282,7 +282,7 @@ func TestAccTencentCloudMysqlInstanceResource_MasterInstance_basic_and_update(t 
 	})
 }
 
-// go test -i; go test -test.run TestAccTencentCloudMysqlInstanceResource_mysql8 -v
+// go test -i; go test -test.run TestAccTencentCloudRumWhitelistResource_basic -v
 func TestAccTencentCloudMysqlInstanceResource_mysql8(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -580,6 +580,7 @@ resource "tencentcloud_mysql_instance" "mysql8" {
 	mem_size          = 1000
 	volume_size       = 25
 	intranet_port     = 3306
+	security_groups   = ["sg-ngx2bo7j"]
   
 	tags = {
 	  createdBy = "terraform"
