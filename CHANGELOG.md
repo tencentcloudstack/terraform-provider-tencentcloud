@@ -1,3 +1,24 @@
+## 1.79.18 (March 24 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dbbrain_diag_event` ([#1610](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1610))
+* **New Data Source:** `tencentcloud_dbbrain_diag_events` ([#1610](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1610))
+* **New Data Source:** `tencentcloud_dbbrain_diag_history` ([#1610](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1610))
+* **New Data Source:** `tencentcloud_dbbrain_security_audit_log_download_urls` ([#1610](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1610))
+* **New Data Source:** `tencentcloud_dbbrain_slow_log_time_series_stats` ([#1610](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1610))
+* **New Data Source:** `tencentcloud_dbbrain_slow_log_top_sqls` ([#1610](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1610))
+* **New Data Source:** `tencentcloud_dbbrain_slow_log_user_host_stats` ([#1610](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1610))
+* **New Data Source:** `tencentcloud_dbbrain_slow_log_user_sql_advice` ([#1610](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1610))
+* **New Resource:** `tencentcloud_apm_instance` ([#1619](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1619))
+* **New Resource:** `tencentcloud_cvm_launch_template_version` ([#1617](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1617))
+* **New Resource:** `tencentcloud_lighthouse_blueprint` ([#1613](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1613))
+* **New Resource:** `tencentcloud_monitor_tmp_manage_grafana_attachment` ([#1611](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1611))
+
+BUG FIXES:
+
+* resource/tencentcloud_instance: fix npe ([#1618](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1618))
+
 ## 1.79.17 (March 17 2023)
 
 FEATURES:
