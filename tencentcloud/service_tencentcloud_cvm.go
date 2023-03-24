@@ -1406,3 +1406,58 @@ func (me *CvmService) DeleteCvmLaunchTemplateById(ctx context.Context, launchTem
 
 	return
 }
+
+func (me *CvmService) DescribeCvmLaunchTemplateVersionById(ctx context.Context, launchTemplateId, launchTemplateVersionNumber string) (launchTemplateVersion *cvm.LaunchTemplateVersionInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDescribeLaunchTemplateVersionsRequest()
+	request.LaunchTemplateId = &launchTemplateId
+	request.LaunchTemplateVersions = []*uint64{helper.StrToUint64Point(launchTemplateVersionNumber)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeLaunchTemplateVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.LaunchTemplateVersionSet) < 1 {
+		return
+	}
+
+	launchTemplateVersion = response.Response.LaunchTemplateVersionSet[0]
+	return
+}
+
+func (me *CvmService) DeleteCvmLaunchTemplateVersionById(ctx context.Context, launchTemplateId, launchTemplateVersionNumber string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDeleteLaunchTemplateVersionsRequest()
+	request.LaunchTemplateId = &launchTemplateId
+	request.LaunchTemplateVersions = []*int64{helper.StrToInt64Point(launchTemplateVersionNumber)}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DeleteLaunchTemplateVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

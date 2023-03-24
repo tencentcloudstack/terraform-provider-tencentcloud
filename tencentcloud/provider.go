@@ -311,6 +311,7 @@ Cloud Virtual Machine(CVM)
     tencentcloud_image
 	tencentcloud_cvm_hpc_cluster
 	tencentcloud_cvm_launch_template
+	tencentcloud_cvm_launch_template_version
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -1769,6 +1770,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_mount_point_attachment":               resourceTencentCloudChdfsMountPointAttachment(),
 			"tencentcloud_mdl_stream_live_input":                      resourceTencentCloudMdlStreamLiveInput(),
 			"tencentcloud_lighthouse_blueprint":                       resourceTencentCloudLighthouseBlueprint(),
+			"tencentcloud_cvm_launch_template_version":                resourceTencentCloudCvmLaunchTemplateVersion(),
 		},
 
 		ConfigureFunc: providerConfigure,
