@@ -479,6 +479,7 @@ Managed Service for Prometheus(TMP)
 	tencentcloud_monitor_tmp_cvm_agent
 	tencentcloud_monitor_tmp_scrape_job
 	tencentcloud_monitor_tmp_recording_rule
+	tencentcloud_monitor_tmp_manage_grafana_attachment
 
 TencentCloud Managed Service for Grafana(TCMG)
   Resource
@@ -1534,6 +1535,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_tmp_tke_config":                   resourceTencentCloudMonitorTmpTkeConfig(),
 			"tencentcloud_monitor_tmp_tke_record_rule_yaml":         resourceTencentCloudMonitorTmpTkeRecordRuleYaml(),
 			"tencentcloud_monitor_tmp_tke_global_notification":      resourceTencentCloudMonitorTmpTkeGlobalNotification(),
+			"tencentcloud_monitor_tmp_manage_grafana_attachment":    resourceTencentCloudMonitorTmpManageGrafanaAttachment(),
 			"tencentcloud_monitor_grafana_instance":                 resourceTencentCloudMonitorGrafanaInstance(),
 			"tencentcloud_monitor_grafana_integration":              resourceTencentCloudMonitorGrafanaIntegration(),
 			"tencentcloud_monitor_grafana_notification_channel":     resourceTencentCloudMonitorGrafanaNotificationChannel(),
