@@ -904,7 +904,8 @@ const (
 
 // CI
 const (
-	defaultCiBucket = "terraform-ci-1308919341"
+	defaultCiBucket  = "terraform-ci-1308919341"
+	defaultStyleName = "terraform_test"
 )
 
 // End of CI
