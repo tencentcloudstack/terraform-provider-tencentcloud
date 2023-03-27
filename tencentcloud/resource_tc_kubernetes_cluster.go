@@ -1325,9 +1325,10 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
 					"enabled": {
-						Type:        schema.TypeBool,
-						Required:    true,
-						Description: "Whether the log agent enabled.",
+						Type:     schema.TypeBool,
+						Required: true,
+						Description: "Whether the log agent enabled. If you want to use serverless node pool and collect logs of Pods on serverless nodes, please make sure you account has role TKE_QCSLinkedRoleInEKSLog," +
+							"see [TencentCloud Documentation](https://cloud.tencent.com/document/product/457/83830#.E4.BD.BF.E7.94.A8-terraform-.E5.88.9B.E5.BB.BA-tke-.E9.9B.86.E7.BE.A4).",
 					},
 					"kubelet_root_dir": {
 						Type:        schema.TypeString,
