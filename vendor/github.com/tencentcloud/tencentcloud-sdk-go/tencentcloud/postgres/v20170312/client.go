@@ -49,6 +49,7 @@ func NewAddDBInstanceToReadOnlyGroupRequest() (request *AddDBInstanceToReadOnlyG
     request = &AddDBInstanceToReadOnlyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "AddDBInstanceToReadOnlyGroup")
     
     
@@ -76,6 +77,7 @@ func NewAddDBInstanceToReadOnlyGroupResponse() (response *AddDBInstanceToReadOnl
 //  FAILEDOPERATION_ROINSTANCEHASINROGROUPERROR = "FailedOperation.ROInstanceHasInROGroupError"
 //  INSTANCENOTEXIST = "InstanceNotExist"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDREADONLYGROUPSTATUS = "InvalidParameterValue.InvalidReadOnlyGroupStatus"
@@ -84,6 +86,7 @@ func NewAddDBInstanceToReadOnlyGroupResponse() (response *AddDBInstanceToReadOnl
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
+//  OPERATIONDENIED_ROINSTANCESTATUSLIMITOPERROR = "OperationDenied.ROInstanceStatusLimitOpError"
 //  OPERATIONDENIED_ROINSTANCECOUNTEXEEDERROR = "OperationDenied.RoInstanceCountExeedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
@@ -105,6 +108,7 @@ func (c *Client) AddDBInstanceToReadOnlyGroup(request *AddDBInstanceToReadOnlyGr
 //  FAILEDOPERATION_ROINSTANCEHASINROGROUPERROR = "FailedOperation.ROInstanceHasInROGroupError"
 //  INSTANCENOTEXIST = "InstanceNotExist"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDREADONLYGROUPSTATUS = "InvalidParameterValue.InvalidReadOnlyGroupStatus"
@@ -113,6 +117,7 @@ func (c *Client) AddDBInstanceToReadOnlyGroup(request *AddDBInstanceToReadOnlyGr
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
+//  OPERATIONDENIED_ROINSTANCESTATUSLIMITOPERROR = "OperationDenied.ROInstanceStatusLimitOpError"
 //  OPERATIONDENIED_ROINSTANCECOUNTEXEEDERROR = "OperationDenied.RoInstanceCountExeedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
@@ -136,6 +141,7 @@ func NewCloneDBInstanceRequest() (request *CloneDBInstanceRequest) {
     request = &CloneDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "CloneDBInstance")
     
     
@@ -154,6 +160,7 @@ func NewCloneDBInstanceResponse() (response *CloneDBInstanceResponse) {
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CDBCGWCONNECTERROR = "FailedOperation.CdbCgwConnectError"
@@ -164,12 +171,16 @@ func NewCloneDBInstanceResponse() (response *CloneDBInstanceResponse) {
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
 //  FAILEDOPERATION_QUERYVPCFAILED = "FailedOperation.QueryVpcFailed"
 //  FAILEDOPERATION_QUERYVPCFALIED = "FailedOperation.QueryVpcFalied"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETERVALUE_ILLEGALPROJECTID = "InvalidParameterValue.IllegalProjectId"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
 //  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_SPECNOTRECOGNIZEDERROR = "InvalidParameterValue.SpecNotRecognizedError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 func (c *Client) CloneDBInstance(request *CloneDBInstanceRequest) (response *CloneDBInstanceResponse, err error) {
     return c.CloneDBInstanceWithContext(context.Background(), request)
 }
@@ -179,6 +190,7 @@ func (c *Client) CloneDBInstance(request *CloneDBInstanceRequest) (response *Clo
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CDBCGWCONNECTERROR = "FailedOperation.CdbCgwConnectError"
@@ -189,12 +201,16 @@ func (c *Client) CloneDBInstance(request *CloneDBInstanceRequest) (response *Clo
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
 //  FAILEDOPERATION_QUERYVPCFAILED = "FailedOperation.QueryVpcFailed"
 //  FAILEDOPERATION_QUERYVPCFALIED = "FailedOperation.QueryVpcFalied"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETERVALUE_ILLEGALPROJECTID = "InvalidParameterValue.IllegalProjectId"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
 //  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
+//  INVALIDPARAMETERVALUE_SPECNOTRECOGNIZEDERROR = "InvalidParameterValue.SpecNotRecognizedError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 func (c *Client) CloneDBInstanceWithContext(ctx context.Context, request *CloneDBInstanceRequest) (response *CloneDBInstanceResponse, err error) {
     if request == nil {
         request = NewCloneDBInstanceRequest()
@@ -215,6 +231,7 @@ func NewCloseDBExtranetAccessRequest() (request *CloseDBExtranetAccessRequest) {
     request = &CloseDBExtranetAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "CloseDBExtranetAccess")
     
     
@@ -239,6 +256,7 @@ func NewCloseDBExtranetAccessResponse() (response *CloseDBExtranetAccessResponse
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -265,6 +283,7 @@ func (c *Client) CloseDBExtranetAccess(request *CloseDBExtranetAccessRequest) (r
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -296,6 +315,7 @@ func NewCloseServerlessDBExtranetAccessRequest() (request *CloseServerlessDBExtr
     request = &CloseServerlessDBExtranetAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "CloseServerlessDBExtranetAccess")
     
     
@@ -329,6 +349,7 @@ func NewCloseServerlessDBExtranetAccessResponse() (response *CloseServerlessDBEx
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
@@ -374,6 +395,7 @@ func (c *Client) CloseServerlessDBExtranetAccess(request *CloseServerlessDBExtra
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
@@ -411,10 +433,69 @@ func (c *Client) CloseServerlessDBExtranetAccessWithContext(ctx context.Context,
     return
 }
 
+func NewCreateBaseBackupRequest() (request *CreateBaseBackupRequest) {
+    request = &CreateBaseBackupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "CreateBaseBackup")
+    
+    
+    return
+}
+
+func NewCreateBaseBackupResponse() (response *CreateBaseBackupResponse) {
+    response = &CreateBaseBackupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateBaseBackup
+// 本接口（CreateBaseBackup）用于创建实例的全量备份。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) CreateBaseBackup(request *CreateBaseBackupRequest) (response *CreateBaseBackupResponse, err error) {
+    return c.CreateBaseBackupWithContext(context.Background(), request)
+}
+
+// CreateBaseBackup
+// 本接口（CreateBaseBackup）用于创建实例的全量备份。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) CreateBaseBackupWithContext(ctx context.Context, request *CreateBaseBackupRequest) (response *CreateBaseBackupResponse, err error) {
+    if request == nil {
+        request = NewCreateBaseBackupRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateBaseBackup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateBaseBackupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateDBInstanceNetworkAccessRequest() (request *CreateDBInstanceNetworkAccessRequest) {
     request = &CreateDBInstanceNetworkAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "CreateDBInstanceNetworkAccess")
     
     
@@ -445,7 +526,9 @@ func NewCreateDBInstanceNetworkAccessResponse() (response *CreateDBInstanceNetwo
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
 //  FAILEDOPERATION_SERVERLESSNOTSUPPORTEDERROR = "FailedOperation.ServerlessNotSupportedError"
 //  FLOWERROR = "FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_MARSHALERROR = "InternalError.MarshalError"
+//  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  OPERATIONDENIED_INSTANCEIPV6NOTSUPPORTEDERROR = "OperationDenied.InstanceIpv6NotSupportedError"
@@ -472,7 +555,9 @@ func (c *Client) CreateDBInstanceNetworkAccess(request *CreateDBInstanceNetworkA
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
 //  FAILEDOPERATION_SERVERLESSNOTSUPPORTEDERROR = "FailedOperation.ServerlessNotSupportedError"
 //  FLOWERROR = "FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_MARSHALERROR = "InternalError.MarshalError"
+//  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  OPERATIONDENIED_INSTANCEIPV6NOTSUPPORTEDERROR = "OperationDenied.InstanceIpv6NotSupportedError"
@@ -498,6 +583,7 @@ func NewCreateDBInstancesRequest() (request *CreateDBInstancesRequest) {
     request = &CreateDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "CreateDBInstances")
     
     
@@ -516,12 +602,14 @@ func NewCreateDBInstancesResponse() (response *CreateDBInstancesResponse) {
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CDBCGWCONNECTERROR = "FailedOperation.CdbCgwConnectError"
 //  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_GETSUBNETERROR = "FailedOperation.GetSubnetError"
@@ -541,6 +629,7 @@ func NewCreateDBInstancesResponse() (response *CreateDBInstancesResponse) {
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_DFWERROR = "InternalError.DfwError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
@@ -592,12 +681,14 @@ func (c *Client) CreateDBInstances(request *CreateDBInstancesRequest) (response 
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CDBCGWCONNECTERROR = "FailedOperation.CdbCgwConnectError"
 //  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_GETSUBNETERROR = "FailedOperation.GetSubnetError"
@@ -617,6 +708,7 @@ func (c *Client) CreateDBInstances(request *CreateDBInstancesRequest) (response 
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_DFWERROR = "InternalError.DfwError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
@@ -679,6 +771,7 @@ func NewCreateInstancesRequest() (request *CreateInstancesRequest) {
     request = &CreateInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "CreateInstances")
     
     
@@ -697,12 +790,14 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CDBCGWCONNECTERROR = "FailedOperation.CdbCgwConnectError"
 //  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_GETSUBNETERROR = "FailedOperation.GetSubnetError"
@@ -722,6 +817,7 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_DFWERROR = "InternalError.DfwError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
@@ -777,12 +873,14 @@ func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *Cre
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CDBCGWCONNECTERROR = "FailedOperation.CdbCgwConnectError"
 //  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_GETSUBNETERROR = "FailedOperation.GetSubnetError"
@@ -802,6 +900,7 @@ func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *Cre
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_DFWERROR = "InternalError.DfwError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
@@ -864,10 +963,67 @@ func (c *Client) CreateInstancesWithContext(ctx context.Context, request *Create
     return
 }
 
+func NewCreateParameterTemplateRequest() (request *CreateParameterTemplateRequest) {
+    request = &CreateParameterTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "CreateParameterTemplate")
+    
+    
+    return
+}
+
+func NewCreateParameterTemplateResponse() (response *CreateParameterTemplateResponse) {
+    response = &CreateParameterTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateParameterTemplate
+// 本接口 (CreateParameterTemplate) 用于创建参数模板。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) CreateParameterTemplate(request *CreateParameterTemplateRequest) (response *CreateParameterTemplateResponse, err error) {
+    return c.CreateParameterTemplateWithContext(context.Background(), request)
+}
+
+// CreateParameterTemplate
+// 本接口 (CreateParameterTemplate) 用于创建参数模板。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) CreateParameterTemplateWithContext(ctx context.Context, request *CreateParameterTemplateRequest) (response *CreateParameterTemplateResponse, err error) {
+    if request == nil {
+        request = NewCreateParameterTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateParameterTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateParameterTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateReadOnlyDBInstanceRequest() (request *CreateReadOnlyDBInstanceRequest) {
     request = &CreateReadOnlyDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "CreateReadOnlyDBInstance")
     
     
@@ -886,12 +1042,14 @@ func NewCreateReadOnlyDBInstanceResponse() (response *CreateReadOnlyDBInstanceRe
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CDBCGWCONNECTERROR = "FailedOperation.CdbCgwConnectError"
 //  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_GETSUBNETERROR = "FailedOperation.GetSubnetError"
 //  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
@@ -912,6 +1070,7 @@ func NewCreateReadOnlyDBInstanceResponse() (response *CreateReadOnlyDBInstanceRe
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_DFWERROR = "InternalError.DfwError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
@@ -942,6 +1101,7 @@ func NewCreateReadOnlyDBInstanceResponse() (response *CreateReadOnlyDBInstanceRe
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
 //  INVALIDPID = "InvalidPid"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  OPERATIONDENIED_PAYMODEERROR = "OperationDenied.PayModeError"
 //  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
@@ -964,12 +1124,14 @@ func (c *Client) CreateReadOnlyDBInstance(request *CreateReadOnlyDBInstanceReque
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CDBCGWCONNECTERROR = "FailedOperation.CdbCgwConnectError"
 //  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_GETSUBNETERROR = "FailedOperation.GetSubnetError"
 //  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
@@ -990,6 +1152,7 @@ func (c *Client) CreateReadOnlyDBInstance(request *CreateReadOnlyDBInstanceReque
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_DFWERROR = "InternalError.DfwError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
@@ -1020,6 +1183,7 @@ func (c *Client) CreateReadOnlyDBInstance(request *CreateReadOnlyDBInstanceReque
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
 //  INVALIDPID = "InvalidPid"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  OPERATIONDENIED_PAYMODEERROR = "OperationDenied.PayModeError"
 //  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
@@ -1053,6 +1217,7 @@ func NewCreateReadOnlyGroupRequest() (request *CreateReadOnlyGroupRequest) {
     request = &CreateReadOnlyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "CreateReadOnlyGroup")
     
     
@@ -1071,6 +1236,7 @@ func NewCreateReadOnlyGroupResponse() (response *CreateReadOnlyGroupResponse) {
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1080,6 +1246,7 @@ func NewCreateReadOnlyGroupResponse() (response *CreateReadOnlyGroupResponse) {
 //  FAILEDOPERATION_ILLEGALROINSTANCENUM = "FailedOperation.IllegalROInstanceNum"
 //  FAILEDOPERATION_MASTERINSTANCEQUERYERROR = "FailedOperation.MasterInstanceQueryError"
 //  FAILEDOPERATION_ROGROUPNUMEXCEEDERROR = "FailedOperation.ROGroupNumExceedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
@@ -1104,6 +1271,7 @@ func (c *Client) CreateReadOnlyGroup(request *CreateReadOnlyGroupRequest) (respo
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1113,6 +1281,7 @@ func (c *Client) CreateReadOnlyGroup(request *CreateReadOnlyGroupRequest) (respo
 //  FAILEDOPERATION_ILLEGALROINSTANCENUM = "FailedOperation.IllegalROInstanceNum"
 //  FAILEDOPERATION_MASTERINSTANCEQUERYERROR = "FailedOperation.MasterInstanceQueryError"
 //  FAILEDOPERATION_ROGROUPNUMEXCEEDERROR = "FailedOperation.ROGroupNumExceedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
@@ -1148,6 +1317,7 @@ func NewCreateReadOnlyGroupNetworkAccessRequest() (request *CreateReadOnlyGroupN
     request = &CreateReadOnlyGroupNetworkAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "CreateReadOnlyGroupNetworkAccess")
     
     
@@ -1178,6 +1348,7 @@ func NewCreateReadOnlyGroupNetworkAccessResponse() (response *CreateReadOnlyGrou
 //  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
 //  FLOWERROR = "FlowError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_MARSHALERROR = "InternalError.MarshalError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
@@ -1202,6 +1373,7 @@ func (c *Client) CreateReadOnlyGroupNetworkAccess(request *CreateReadOnlyGroupNe
 //  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
 //  FLOWERROR = "FlowError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_MARSHALERROR = "InternalError.MarshalError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
@@ -1225,6 +1397,7 @@ func NewCreateServerlessDBInstanceRequest() (request *CreateServerlessDBInstance
     request = &CreateServerlessDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "CreateServerlessDBInstance")
     
     
@@ -1243,6 +1416,7 @@ func NewCreateServerlessDBInstanceResponse() (response *CreateServerlessDBInstan
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1254,10 +1428,12 @@ func NewCreateServerlessDBInstanceResponse() (response *CreateServerlessDBInstan
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENAMEEXIST = "InvalidParameter.InstanceNameExist"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
 //  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
 //  INVALIDPARAMETERVALUE_INSTANCENAMEEXIST = "InvalidParameterValue.InstanceNameExist"
@@ -1268,6 +1444,7 @@ func NewCreateServerlessDBInstanceResponse() (response *CreateServerlessDBInstan
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  INVALIDPARAMETERVALUE_PARAMETERCHARACTERERROR = "InvalidParameterValue.ParameterCharacterError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
+//  INVALIDPARAMETERVALUE_PARAMETERLENGTHLIMITERROR = "InvalidParameterValue.ParameterLengthLimitError"
 //  INVALIDPARAMETERVALUE_REGIONNOTSUPPORTED = "InvalidParameterValue.RegionNotSupported"
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
@@ -1285,6 +1462,7 @@ func (c *Client) CreateServerlessDBInstance(request *CreateServerlessDBInstanceR
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION_ALLOCATEQUOTASERROR = "FailedOperation.AllocateQuotasError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_CREATEBASICNETWORKDENIEDERROR = "FailedOperation.CreateBasicNetworkDeniedError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
@@ -1296,10 +1474,12 @@ func (c *Client) CreateServerlessDBInstance(request *CreateServerlessDBInstanceR
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENAMEEXIST = "InvalidParameter.InstanceNameExist"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
 //  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
 //  INVALIDPARAMETERVALUE_INSTANCENAMEEXIST = "InvalidParameterValue.InstanceNameExist"
@@ -1310,6 +1490,7 @@ func (c *Client) CreateServerlessDBInstance(request *CreateServerlessDBInstanceR
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  INVALIDPARAMETERVALUE_PARAMETERCHARACTERERROR = "InvalidParameterValue.ParameterCharacterError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
+//  INVALIDPARAMETERVALUE_PARAMETERLENGTHLIMITERROR = "InvalidParameterValue.ParameterLengthLimitError"
 //  INVALIDPARAMETERVALUE_REGIONNOTSUPPORTED = "InvalidParameterValue.RegionNotSupported"
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
@@ -1334,10 +1515,65 @@ func (c *Client) CreateServerlessDBInstanceWithContext(ctx context.Context, requ
     return
 }
 
+func NewDeleteBaseBackupRequest() (request *DeleteBaseBackupRequest) {
+    request = &DeleteBaseBackupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DeleteBaseBackup")
+    
+    
+    return
+}
+
+func NewDeleteBaseBackupResponse() (response *DeleteBaseBackupResponse) {
+    response = &DeleteBaseBackupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteBaseBackup
+// 本接口（DeleteBaseBackup）用于删除实例指定全量备份。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DeleteBaseBackup(request *DeleteBaseBackupRequest) (response *DeleteBaseBackupResponse, err error) {
+    return c.DeleteBaseBackupWithContext(context.Background(), request)
+}
+
+// DeleteBaseBackup
+// 本接口（DeleteBaseBackup）用于删除实例指定全量备份。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DeleteBaseBackupWithContext(ctx context.Context, request *DeleteBaseBackupRequest) (response *DeleteBaseBackupResponse, err error) {
+    if request == nil {
+        request = NewDeleteBaseBackupRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteBaseBackup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteBaseBackupResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteDBInstanceNetworkAccessRequest() (request *DeleteDBInstanceNetworkAccessRequest) {
     request = &DeleteDBInstanceNetworkAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DeleteDBInstanceNetworkAccess")
     
     
@@ -1366,6 +1602,8 @@ func NewDeleteDBInstanceNetworkAccessResponse() (response *DeleteDBInstanceNetwo
 //  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
 //  FAILEDOPERATION_SERVERLESSNOTSUPPORTEDERROR = "FailedOperation.ServerlessNotSupportedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
@@ -1390,6 +1628,8 @@ func (c *Client) DeleteDBInstanceNetworkAccess(request *DeleteDBInstanceNetworkA
 //  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
 //  FAILEDOPERATION_SERVERLESSNOTSUPPORTEDERROR = "FailedOperation.ServerlessNotSupportedError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
@@ -1411,10 +1651,113 @@ func (c *Client) DeleteDBInstanceNetworkAccessWithContext(ctx context.Context, r
     return
 }
 
+func NewDeleteLogBackupRequest() (request *DeleteLogBackupRequest) {
+    request = &DeleteLogBackupRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DeleteLogBackup")
+    
+    
+    return
+}
+
+func NewDeleteLogBackupResponse() (response *DeleteLogBackupResponse) {
+    response = &DeleteLogBackupResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteLogBackup
+// 本接口（DeleteLogBackup）用于删除实例指定日志备份。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DeleteLogBackup(request *DeleteLogBackupRequest) (response *DeleteLogBackupResponse, err error) {
+    return c.DeleteLogBackupWithContext(context.Background(), request)
+}
+
+// DeleteLogBackup
+// 本接口（DeleteLogBackup）用于删除实例指定日志备份。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DeleteLogBackupWithContext(ctx context.Context, request *DeleteLogBackupRequest) (response *DeleteLogBackupResponse, err error) {
+    if request == nil {
+        request = NewDeleteLogBackupRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteLogBackup require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteLogBackupResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteParameterTemplateRequest() (request *DeleteParameterTemplateRequest) {
+    request = &DeleteParameterTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DeleteParameterTemplate")
+    
+    
+    return
+}
+
+func NewDeleteParameterTemplateResponse() (response *DeleteParameterTemplateResponse) {
+    response = &DeleteParameterTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteParameterTemplate
+// 本接口（DeleteParameterTemplate）主要用于删除某个参数模板。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+func (c *Client) DeleteParameterTemplate(request *DeleteParameterTemplateRequest) (response *DeleteParameterTemplateResponse, err error) {
+    return c.DeleteParameterTemplateWithContext(context.Background(), request)
+}
+
+// DeleteParameterTemplate
+// 本接口（DeleteParameterTemplate）主要用于删除某个参数模板。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+func (c *Client) DeleteParameterTemplateWithContext(ctx context.Context, request *DeleteParameterTemplateRequest) (response *DeleteParameterTemplateResponse, err error) {
+    if request == nil {
+        request = NewDeleteParameterTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteParameterTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteParameterTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteReadOnlyGroupRequest() (request *DeleteReadOnlyGroupRequest) {
     request = &DeleteReadOnlyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DeleteReadOnlyGroup")
     
     
@@ -1438,7 +1781,9 @@ func NewDeleteReadOnlyGroupResponse() (response *DeleteReadOnlyGroupResponse) {
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_ROGROUPCANNOTBEDELETEDERROR = "FailedOperation.ROGroupCannotBeDeletedError"
+//  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INTERFACENAMENOTFOUND = "InvalidParameterValue.InterfaceNameNotFound"
@@ -1461,7 +1806,9 @@ func (c *Client) DeleteReadOnlyGroup(request *DeleteReadOnlyGroupRequest) (respo
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_ROGROUPCANNOTBEDELETEDERROR = "FailedOperation.ROGroupCannotBeDeletedError"
+//  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INTERFACENAMENOTFOUND = "InvalidParameterValue.InterfaceNameNotFound"
@@ -1490,6 +1837,7 @@ func NewDeleteReadOnlyGroupNetworkAccessRequest() (request *DeleteReadOnlyGroupN
     request = &DeleteReadOnlyGroupNetworkAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DeleteReadOnlyGroupNetworkAccess")
     
     
@@ -1517,6 +1865,8 @@ func NewDeleteReadOnlyGroupNetworkAccessResponse() (response *DeleteReadOnlyGrou
 //  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
 //  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
 //  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
 func (c *Client) DeleteReadOnlyGroupNetworkAccess(request *DeleteReadOnlyGroupNetworkAccessRequest) (response *DeleteReadOnlyGroupNetworkAccessResponse, err error) {
@@ -1537,6 +1887,8 @@ func (c *Client) DeleteReadOnlyGroupNetworkAccess(request *DeleteReadOnlyGroupNe
 //  FAILEDOPERATION_GETVPCINFOERROR = "FailedOperation.GetVpcInfoError"
 //  FAILEDOPERATION_NETWORKNUMLIMITERROR = "FailedOperation.NetworkNumLimitError"
 //  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
 func (c *Client) DeleteReadOnlyGroupNetworkAccessWithContext(ctx context.Context, request *DeleteReadOnlyGroupNetworkAccessRequest) (response *DeleteReadOnlyGroupNetworkAccessResponse, err error) {
@@ -1559,6 +1911,7 @@ func NewDeleteServerlessDBInstanceRequest() (request *DeleteServerlessDBInstance
     request = &DeleteServerlessDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DeleteServerlessDBInstance")
     
     
@@ -1584,6 +1937,7 @@ func NewDeleteServerlessDBInstanceResponse() (response *DeleteServerlessDBInstan
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
@@ -1613,6 +1967,7 @@ func (c *Client) DeleteServerlessDBInstance(request *DeleteServerlessDBInstanceR
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
@@ -1646,6 +2001,7 @@ func NewDescribeAccountsRequest() (request *DescribeAccountsRequest) {
     request = &DescribeAccountsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeAccounts")
     
     
@@ -1667,6 +2023,7 @@ func NewDescribeAccountsResponse() (response *DescribeAccountsResponse) {
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_ACCOUNTNOTEXIST = "InvalidParameterValue.AccountNotExist"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -1686,6 +2043,7 @@ func (c *Client) DescribeAccounts(request *DescribeAccountsRequest) (response *D
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_ACCOUNTNOTEXIST = "InvalidParameterValue.AccountNotExist"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -1713,6 +2071,7 @@ func NewDescribeAvailableRecoveryTimeRequest() (request *DescribeAvailableRecove
     request = &DescribeAvailableRecoveryTimeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeAvailableRecoveryTime")
     
     
@@ -1732,6 +2091,7 @@ func NewDescribeAvailableRecoveryTimeResponse() (response *DescribeAvailableReco
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
@@ -1747,6 +2107,7 @@ func (c *Client) DescribeAvailableRecoveryTime(request *DescribeAvailableRecover
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
@@ -1768,10 +2129,123 @@ func (c *Client) DescribeAvailableRecoveryTimeWithContext(ctx context.Context, r
     return
 }
 
+func NewDescribeBackupDownloadURLRequest() (request *DescribeBackupDownloadURLRequest) {
+    request = &DescribeBackupDownloadURLRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeBackupDownloadURL")
+    
+    
+    return
+}
+
+func NewDescribeBackupDownloadURLResponse() (response *DescribeBackupDownloadURLResponse) {
+    response = &DescribeBackupDownloadURLResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBackupDownloadURL
+// 本接口 (DescribeBackupDownloadURL) 用于获取备份下载链接。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeBackupDownloadURL(request *DescribeBackupDownloadURLRequest) (response *DescribeBackupDownloadURLResponse, err error) {
+    return c.DescribeBackupDownloadURLWithContext(context.Background(), request)
+}
+
+// DescribeBackupDownloadURL
+// 本接口 (DescribeBackupDownloadURL) 用于获取备份下载链接。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeBackupDownloadURLWithContext(ctx context.Context, request *DescribeBackupDownloadURLRequest) (response *DescribeBackupDownloadURLResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupDownloadURLRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupDownloadURL require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupDownloadURLResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBackupOverviewRequest() (request *DescribeBackupOverviewRequest) {
+    request = &DescribeBackupOverviewRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeBackupOverview")
+    
+    
+    return
+}
+
+func NewDescribeBackupOverviewResponse() (response *DescribeBackupOverviewResponse) {
+    response = &DescribeBackupOverviewResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBackupOverview
+// 本接口（DescribeBackupOverview）用于查询用户的备份概览信息。返回用户当前备份个数、备份占用容量、免费容量、收费容量等信息（容量单位为字节）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeBackupOverview(request *DescribeBackupOverviewRequest) (response *DescribeBackupOverviewResponse, err error) {
+    return c.DescribeBackupOverviewWithContext(context.Background(), request)
+}
+
+// DescribeBackupOverview
+// 本接口（DescribeBackupOverview）用于查询用户的备份概览信息。返回用户当前备份个数、备份占用容量、免费容量、收费容量等信息（容量单位为字节）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeBackupOverviewWithContext(ctx context.Context, request *DescribeBackupOverviewRequest) (response *DescribeBackupOverviewResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupOverviewRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupOverview require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupOverviewResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeBackupPlansRequest() (request *DescribeBackupPlansRequest) {
     request = &DescribeBackupPlansRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeBackupPlans")
     
     
@@ -1793,6 +2267,7 @@ func NewDescribeBackupPlansResponse() (response *DescribeBackupPlansResponse) {
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
@@ -1810,6 +2285,7 @@ func (c *Client) DescribeBackupPlans(request *DescribeBackupPlansRequest) (respo
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
@@ -1831,10 +2307,177 @@ func (c *Client) DescribeBackupPlansWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDescribeBackupSummariesRequest() (request *DescribeBackupSummariesRequest) {
+    request = &DescribeBackupSummariesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeBackupSummaries")
+    
+    
+    return
+}
+
+func NewDescribeBackupSummariesResponse() (response *DescribeBackupSummariesResponse) {
+    response = &DescribeBackupSummariesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBackupSummaries
+// 本接口(DescribeBackupSummaries)用于查询实例备份的统计信息，返回以实例为维度的备份个数、占用容量等信息（容量单位为字节）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeBackupSummaries(request *DescribeBackupSummariesRequest) (response *DescribeBackupSummariesResponse, err error) {
+    return c.DescribeBackupSummariesWithContext(context.Background(), request)
+}
+
+// DescribeBackupSummaries
+// 本接口(DescribeBackupSummaries)用于查询实例备份的统计信息，返回以实例为维度的备份个数、占用容量等信息（容量单位为字节）。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeBackupSummariesWithContext(ctx context.Context, request *DescribeBackupSummariesRequest) (response *DescribeBackupSummariesResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupSummariesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupSummaries require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupSummariesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBaseBackupsRequest() (request *DescribeBaseBackupsRequest) {
+    request = &DescribeBaseBackupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeBaseBackups")
+    
+    
+    return
+}
+
+func NewDescribeBaseBackupsResponse() (response *DescribeBaseBackupsResponse) {
+    response = &DescribeBaseBackupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBaseBackups
+// 本接口 (DescribeBaseBackups) 用于查询基础备份列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeBaseBackups(request *DescribeBaseBackupsRequest) (response *DescribeBaseBackupsResponse, err error) {
+    return c.DescribeBaseBackupsWithContext(context.Background(), request)
+}
+
+// DescribeBaseBackups
+// 本接口 (DescribeBaseBackups) 用于查询基础备份列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeBaseBackupsWithContext(ctx context.Context, request *DescribeBaseBackupsRequest) (response *DescribeBaseBackupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeBaseBackupsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBaseBackups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBaseBackupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeClassesRequest() (request *DescribeClassesRequest) {
+    request = &DescribeClassesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeClasses")
+    
+    
+    return
+}
+
+func NewDescribeClassesResponse() (response *DescribeClassesResponse) {
+    response = &DescribeClassesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeClasses
+// 本接口（DescribeClasses）用于查询实例售卖规格。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_WHITELISTCONNECTERROR = "FailedOperation.WhitelistConnectError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeClasses(request *DescribeClassesRequest) (response *DescribeClassesResponse, err error) {
+    return c.DescribeClassesWithContext(context.Background(), request)
+}
+
+// DescribeClasses
+// 本接口（DescribeClasses）用于查询实例售卖规格。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_WHITELISTCONNECTERROR = "FailedOperation.WhitelistConnectError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeClassesWithContext(ctx context.Context, request *DescribeClassesRequest) (response *DescribeClassesResponse, err error) {
+    if request == nil {
+        request = NewDescribeClassesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeClasses require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeClassesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeCloneDBInstanceSpecRequest() (request *DescribeCloneDBInstanceSpecRequest) {
     request = &DescribeCloneDBInstanceSpecRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeCloneDBInstanceSpec")
     
     
@@ -1855,10 +2498,12 @@ func NewDescribeCloneDBInstanceSpecResponse() (response *DescribeCloneDBInstance
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeCloneDBInstanceSpec(request *DescribeCloneDBInstanceSpecRequest) (response *DescribeCloneDBInstanceSpecResponse, err error) {
     return c.DescribeCloneDBInstanceSpecWithContext(context.Background(), request)
 }
@@ -1870,10 +2515,12 @@ func (c *Client) DescribeCloneDBInstanceSpec(request *DescribeCloneDBInstanceSpe
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeCloneDBInstanceSpecWithContext(ctx context.Context, request *DescribeCloneDBInstanceSpecRequest) (response *DescribeCloneDBInstanceSpecResponse, err error) {
     if request == nil {
         request = NewDescribeCloneDBInstanceSpecRequest()
@@ -1894,6 +2541,7 @@ func NewDescribeDBBackupsRequest() (request *DescribeDBBackupsRequest) {
     request = &DescribeDBBackupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBBackups")
     
     
@@ -1921,6 +2569,7 @@ func NewDescribeDBBackupsResponse() (response *DescribeDBBackupsResponse) {
 //  FAILEDOPERATION_STOREPATHSPLITERROR = "FailedOperation.StorePathSplitError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -1930,6 +2579,7 @@ func NewDescribeDBBackupsResponse() (response *DescribeDBBackupsResponse) {
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNERROR = "UnknownError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDBBackups(request *DescribeDBBackupsRequest) (response *DescribeDBBackupsResponse, err error) {
     return c.DescribeDBBackupsWithContext(context.Background(), request)
 }
@@ -1948,6 +2598,7 @@ func (c *Client) DescribeDBBackups(request *DescribeDBBackupsRequest) (response 
 //  FAILEDOPERATION_STOREPATHSPLITERROR = "FailedOperation.StorePathSplitError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -1957,6 +2608,7 @@ func (c *Client) DescribeDBBackups(request *DescribeDBBackupsRequest) (response 
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNERROR = "UnknownError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDBBackupsWithContext(ctx context.Context, request *DescribeDBBackupsRequest) (response *DescribeDBBackupsResponse, err error) {
     if request == nil {
         request = NewDescribeDBBackupsRequest()
@@ -1977,6 +2629,7 @@ func NewDescribeDBErrlogsRequest() (request *DescribeDBErrlogsRequest) {
     request = &DescribeDBErrlogsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBErrlogs")
     
     
@@ -2000,6 +2653,7 @@ func NewDescribeDBErrlogsResponse() (response *DescribeDBErrlogsResponse) {
 //  FAILEDOPERATION_ESCONNECTERROR = "FailedOperation.ESConnectError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
@@ -2025,6 +2679,7 @@ func (c *Client) DescribeDBErrlogs(request *DescribeDBErrlogsRequest) (response 
 //  FAILEDOPERATION_ESCONNECTERROR = "FailedOperation.ESConnectError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
@@ -2056,6 +2711,7 @@ func NewDescribeDBInstanceAttributeRequest() (request *DescribeDBInstanceAttribu
     request = &DescribeDBInstanceAttributeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBInstanceAttribute")
     
     
@@ -2077,10 +2733,12 @@ func NewDescribeDBInstanceAttributeResponse() (response *DescribeDBInstanceAttri
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_QUERYINSTANCEBATCHERROR = "FailedOperation.QueryInstanceBatchError"
 //  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2103,10 +2761,12 @@ func (c *Client) DescribeDBInstanceAttribute(request *DescribeDBInstanceAttribut
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_QUERYINSTANCEBATCHERROR = "FailedOperation.QueryInstanceBatchError"
 //  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2137,6 +2797,7 @@ func NewDescribeDBInstanceParametersRequest() (request *DescribeDBInstanceParame
     request = &DescribeDBInstanceParametersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBInstanceParameters")
     
     
@@ -2156,8 +2817,11 @@ func NewDescribeDBInstanceParametersResponse() (response *DescribeDBInstancePara
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) DescribeDBInstanceParameters(request *DescribeDBInstanceParametersRequest) (response *DescribeDBInstanceParametersResponse, err error) {
@@ -2170,8 +2834,11 @@ func (c *Client) DescribeDBInstanceParameters(request *DescribeDBInstanceParamet
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNERROR = "UnknownError"
 func (c *Client) DescribeDBInstanceParametersWithContext(ctx context.Context, request *DescribeDBInstanceParametersRequest) (response *DescribeDBInstanceParametersResponse, err error) {
@@ -2190,10 +2857,73 @@ func (c *Client) DescribeDBInstanceParametersWithContext(ctx context.Context, re
     return
 }
 
+func NewDescribeDBInstanceSecurityGroupsRequest() (request *DescribeDBInstanceSecurityGroupsRequest) {
+    request = &DescribeDBInstanceSecurityGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBInstanceSecurityGroups")
+    
+    
+    return
+}
+
+func NewDescribeDBInstanceSecurityGroupsResponse() (response *DescribeDBInstanceSecurityGroupsResponse) {
+    response = &DescribeDBInstanceSecurityGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDBInstanceSecurityGroups
+// 本接口（DescribeDBInstanceSecurityGroups）用于查询实例安全组信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeDBInstanceSecurityGroups(request *DescribeDBInstanceSecurityGroupsRequest) (response *DescribeDBInstanceSecurityGroupsResponse, err error) {
+    return c.DescribeDBInstanceSecurityGroupsWithContext(context.Background(), request)
+}
+
+// DescribeDBInstanceSecurityGroups
+// 本接口（DescribeDBInstanceSecurityGroups）用于查询实例安全组信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) DescribeDBInstanceSecurityGroupsWithContext(ctx context.Context, request *DescribeDBInstanceSecurityGroupsRequest) (response *DescribeDBInstanceSecurityGroupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBInstanceSecurityGroupsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBInstanceSecurityGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBInstanceSecurityGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBInstancesRequest() (request *DescribeDBInstancesRequest) {
     request = &DescribeDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBInstances")
     
     
@@ -2216,22 +2946,28 @@ func NewDescribeDBInstancesResponse() (response *DescribeDBInstancesResponse) {
 //  FAILEDOPERATION_CAMCHECKRESOURCEFAILED = "FailedOperation.CamCheckResourceFailed"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_LIMITOPERATION = "FailedOperation.LimitOperation"
+//  FAILEDOPERATION_OSSACCESSERROR = "FailedOperation.OssAccessError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_TRANSACTIOBEGINERROR = "InternalError.TransactioBeginError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDREGIONIDERROR = "InvalidParameterValue.InvalidRegionIdError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  INVALIDPARAMETERVALUE_REGIONNOTSUPPORTED = "InvalidParameterValue.RegionNotSupported"
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDBInstances(request *DescribeDBInstancesRequest) (response *DescribeDBInstancesResponse, err error) {
     return c.DescribeDBInstancesWithContext(context.Background(), request)
 }
@@ -2245,22 +2981,28 @@ func (c *Client) DescribeDBInstances(request *DescribeDBInstancesRequest) (respo
 //  FAILEDOPERATION_CAMCHECKRESOURCEFAILED = "FailedOperation.CamCheckResourceFailed"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_LIMITOPERATION = "FailedOperation.LimitOperation"
+//  FAILEDOPERATION_OSSACCESSERROR = "FailedOperation.OssAccessError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INTERNALERROR_TRANSACTIOBEGINERROR = "InternalError.TransactioBeginError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  INVALIDPARAMETERVALUE_INVALIDREGIONIDERROR = "InvalidParameterValue.InvalidRegionIdError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  INVALIDPARAMETERVALUE_REGIONNOTSUPPORTED = "InvalidParameterValue.RegionNotSupported"
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeDBInstancesWithContext(ctx context.Context, request *DescribeDBInstancesRequest) (response *DescribeDBInstancesResponse, err error) {
     if request == nil {
         request = NewDescribeDBInstancesRequest()
@@ -2281,6 +3023,7 @@ func NewDescribeDBSlowlogsRequest() (request *DescribeDBSlowlogsRequest) {
     request = &DescribeDBSlowlogsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBSlowlogs")
     
     
@@ -2304,6 +3047,7 @@ func NewDescribeDBSlowlogsResponse() (response *DescribeDBSlowlogsResponse) {
 //  FAILEDOPERATION_ESCONNECTERROR = "FailedOperation.ESConnectError"
 //  FAILEDOPERATION_ESQUERYERROR = "FailedOperation.ESQueryError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
@@ -2327,6 +3071,7 @@ func (c *Client) DescribeDBSlowlogs(request *DescribeDBSlowlogsRequest) (respons
 //  FAILEDOPERATION_ESCONNECTERROR = "FailedOperation.ESConnectError"
 //  FAILEDOPERATION_ESQUERYERROR = "FailedOperation.ESQueryError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
@@ -2352,10 +3097,65 @@ func (c *Client) DescribeDBSlowlogsWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribeDBVersionsRequest() (request *DescribeDBVersionsRequest) {
+    request = &DescribeDBVersionsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBVersions")
+    
+    
+    return
+}
+
+func NewDescribeDBVersionsResponse() (response *DescribeDBVersionsResponse) {
+    response = &DescribeDBVersionsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDBVersions
+// 本接口（DescribeDBVersions）用于查询支持的数据库版本号列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeDBVersions(request *DescribeDBVersionsRequest) (response *DescribeDBVersionsResponse, err error) {
+    return c.DescribeDBVersionsWithContext(context.Background(), request)
+}
+
+// DescribeDBVersions
+// 本接口（DescribeDBVersions）用于查询支持的数据库版本号列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeDBVersionsWithContext(ctx context.Context, request *DescribeDBVersionsRequest) (response *DescribeDBVersionsResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBVersionsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBVersions require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBVersionsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDBXlogsRequest() (request *DescribeDBXlogsRequest) {
     request = &DescribeDBXlogsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDBXlogs")
     
     
@@ -2383,6 +3183,7 @@ func NewDescribeDBXlogsResponse() (response *DescribeDBXlogsResponse) {
 //  FAILEDOPERATION_STOREPATHSPLITERROR = "FailedOperation.StorePathSplitError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
@@ -2411,6 +3212,7 @@ func (c *Client) DescribeDBXlogs(request *DescribeDBXlogsRequest) (response *Des
 //  FAILEDOPERATION_STOREPATHSPLITERROR = "FailedOperation.StorePathSplitError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
@@ -2441,6 +3243,7 @@ func NewDescribeDatabasesRequest() (request *DescribeDatabasesRequest) {
     request = &DescribeDatabasesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeDatabases")
     
     
@@ -2466,6 +3269,7 @@ func NewDescribeDatabasesResponse() (response *DescribeDatabasesResponse) {
 //  FAILEDOPERATION_OSSACCESSERROR = "FailedOperation.OssAccessError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2495,6 +3299,7 @@ func (c *Client) DescribeDatabases(request *DescribeDatabasesRequest) (response 
 //  FAILEDOPERATION_OSSACCESSERROR = "FailedOperation.OssAccessError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2524,10 +3329,65 @@ func (c *Client) DescribeDatabasesWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDescribeDefaultParametersRequest() (request *DescribeDefaultParametersRequest) {
+    request = &DescribeDefaultParametersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeDefaultParameters")
+    
+    
+    return
+}
+
+func NewDescribeDefaultParametersResponse() (response *DescribeDefaultParametersResponse) {
+    response = &DescribeDefaultParametersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDefaultParameters
+// 本接口（DescribeDefaultParameters）主要用于查询某个数据库版本和引擎支持的所有参数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+func (c *Client) DescribeDefaultParameters(request *DescribeDefaultParametersRequest) (response *DescribeDefaultParametersResponse, err error) {
+    return c.DescribeDefaultParametersWithContext(context.Background(), request)
+}
+
+// DescribeDefaultParameters
+// 本接口（DescribeDefaultParameters）主要用于查询某个数据库版本和引擎支持的所有参数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+func (c *Client) DescribeDefaultParametersWithContext(ctx context.Context, request *DescribeDefaultParametersRequest) (response *DescribeDefaultParametersResponse, err error) {
+    if request == nil {
+        request = NewDescribeDefaultParametersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDefaultParameters require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDefaultParametersResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeEncryptionKeysRequest() (request *DescribeEncryptionKeysRequest) {
     request = &DescribeEncryptionKeysRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeEncryptionKeys")
     
     
@@ -2545,6 +3405,9 @@ func NewDescribeEncryptionKeysResponse() (response *DescribeEncryptionKeysRespon
 // 获取实例的密钥信息列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 func (c *Client) DescribeEncryptionKeys(request *DescribeEncryptionKeysRequest) (response *DescribeEncryptionKeysResponse, err error) {
     return c.DescribeEncryptionKeysWithContext(context.Background(), request)
@@ -2554,6 +3417,9 @@ func (c *Client) DescribeEncryptionKeys(request *DescribeEncryptionKeysRequest) 
 // 获取实例的密钥信息列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 func (c *Client) DescribeEncryptionKeysWithContext(ctx context.Context, request *DescribeEncryptionKeysRequest) (response *DescribeEncryptionKeysResponse, err error) {
     if request == nil {
@@ -2571,10 +3437,65 @@ func (c *Client) DescribeEncryptionKeysWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeLogBackupsRequest() (request *DescribeLogBackupsRequest) {
+    request = &DescribeLogBackupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeLogBackups")
+    
+    
+    return
+}
+
+func NewDescribeLogBackupsResponse() (response *DescribeLogBackupsResponse) {
+    response = &DescribeLogBackupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeLogBackups
+// 本接口 (DescribeLogBackups) 用于查询日志备份列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeLogBackups(request *DescribeLogBackupsRequest) (response *DescribeLogBackupsResponse, err error) {
+    return c.DescribeLogBackupsWithContext(context.Background(), request)
+}
+
+// DescribeLogBackups
+// 本接口 (DescribeLogBackups) 用于查询日志备份列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeLogBackupsWithContext(ctx context.Context, request *DescribeLogBackupsRequest) (response *DescribeLogBackupsResponse, err error) {
+    if request == nil {
+        request = NewDescribeLogBackupsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeLogBackups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeLogBackupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeOrdersRequest() (request *DescribeOrdersRequest) {
     request = &DescribeOrdersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeOrders")
     
     
@@ -2598,6 +3519,7 @@ func NewDescribeOrdersResponse() (response *DescribeOrdersResponse) {
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_QUERYDEALFAILED = "FailedOperation.QueryDealFailed"
 //  FAILEDOPERATION_TRADEQUERYORDERERROR = "FailedOperation.TradeQueryOrderError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -2619,6 +3541,7 @@ func (c *Client) DescribeOrders(request *DescribeOrdersRequest) (response *Descr
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_QUERYDEALFAILED = "FailedOperation.QueryDealFailed"
 //  FAILEDOPERATION_TRADEQUERYORDERERROR = "FailedOperation.TradeQueryOrderError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -2642,10 +3565,111 @@ func (c *Client) DescribeOrdersWithContext(ctx context.Context, request *Describ
     return
 }
 
+func NewDescribeParameterTemplateAttributesRequest() (request *DescribeParameterTemplateAttributesRequest) {
+    request = &DescribeParameterTemplateAttributesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeParameterTemplateAttributes")
+    
+    
+    return
+}
+
+func NewDescribeParameterTemplateAttributesResponse() (response *DescribeParameterTemplateAttributesResponse) {
+    response = &DescribeParameterTemplateAttributesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeParameterTemplateAttributes
+// 本接口（DescribeParameterTemplateAttributes）用于查询某个参数模板的具体内容，包括基本信息和参数信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+func (c *Client) DescribeParameterTemplateAttributes(request *DescribeParameterTemplateAttributesRequest) (response *DescribeParameterTemplateAttributesResponse, err error) {
+    return c.DescribeParameterTemplateAttributesWithContext(context.Background(), request)
+}
+
+// DescribeParameterTemplateAttributes
+// 本接口（DescribeParameterTemplateAttributes）用于查询某个参数模板的具体内容，包括基本信息和参数信息。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+func (c *Client) DescribeParameterTemplateAttributesWithContext(ctx context.Context, request *DescribeParameterTemplateAttributesRequest) (response *DescribeParameterTemplateAttributesResponse, err error) {
+    if request == nil {
+        request = NewDescribeParameterTemplateAttributesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeParameterTemplateAttributes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeParameterTemplateAttributesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeParameterTemplatesRequest() (request *DescribeParameterTemplatesRequest) {
+    request = &DescribeParameterTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "DescribeParameterTemplates")
+    
+    
+    return
+}
+
+func NewDescribeParameterTemplatesResponse() (response *DescribeParameterTemplatesResponse) {
+    response = &DescribeParameterTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeParameterTemplates
+// 本接口 (DescribeParameterTemplates) 用于查询参数模板列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeParameterTemplates(request *DescribeParameterTemplatesRequest) (response *DescribeParameterTemplatesResponse, err error) {
+    return c.DescribeParameterTemplatesWithContext(context.Background(), request)
+}
+
+// DescribeParameterTemplates
+// 本接口 (DescribeParameterTemplates) 用于查询参数模板列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) DescribeParameterTemplatesWithContext(ctx context.Context, request *DescribeParameterTemplatesRequest) (response *DescribeParameterTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDescribeParameterTemplatesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeParameterTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeParameterTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeParamsEventRequest() (request *DescribeParamsEventRequest) {
     request = &DescribeParamsEventRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeParamsEvent")
     
     
@@ -2664,9 +3688,12 @@ func NewDescribeParamsEventResponse() (response *DescribeParamsEventResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeParamsEvent(request *DescribeParamsEventRequest) (response *DescribeParamsEventResponse, err error) {
     return c.DescribeParamsEventWithContext(context.Background(), request)
@@ -2677,9 +3704,12 @@ func (c *Client) DescribeParamsEvent(request *DescribeParamsEventRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) DescribeParamsEventWithContext(ctx context.Context, request *DescribeParamsEventRequest) (response *DescribeParamsEventResponse, err error) {
     if request == nil {
@@ -2701,6 +3731,7 @@ func NewDescribeProductConfigRequest() (request *DescribeProductConfigRequest) {
     request = &DescribeProductConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeProductConfig")
     
     
@@ -2723,6 +3754,7 @@ func NewDescribeProductConfigResponse() (response *DescribeProductConfigResponse
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2745,6 +3777,7 @@ func (c *Client) DescribeProductConfig(request *DescribeProductConfigRequest) (r
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2774,6 +3807,7 @@ func NewDescribeReadOnlyGroupsRequest() (request *DescribeReadOnlyGroupsRequest)
     request = &DescribeReadOnlyGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeReadOnlyGroups")
     
     
@@ -2795,9 +3829,12 @@ func NewDescribeReadOnlyGroupsResponse() (response *DescribeReadOnlyGroupsRespon
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INTERFACENAMENOTFOUND = "InvalidParameterValue.InterfaceNameNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
@@ -2815,9 +3852,12 @@ func (c *Client) DescribeReadOnlyGroups(request *DescribeReadOnlyGroupsRequest) 
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INTERFACENAMENOTFOUND = "InvalidParameterValue.InterfaceNameNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
@@ -2843,6 +3883,7 @@ func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
     request = &DescribeRegionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeRegions")
     
     
@@ -2866,6 +3907,7 @@ func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INTERFACENAMENOTFOUND = "InvalidParameterValue.InterfaceNameNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -2874,6 +3916,7 @@ func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *DescribeRegionsResponse, err error) {
     return c.DescribeRegionsWithContext(context.Background(), request)
 }
@@ -2888,6 +3931,7 @@ func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *Des
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INTERFACENAMENOTFOUND = "InvalidParameterValue.InterfaceNameNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -2896,6 +3940,7 @@ func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *Des
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *DescribeRegionsRequest) (response *DescribeRegionsResponse, err error) {
     if request == nil {
         request = NewDescribeRegionsRequest()
@@ -2916,6 +3961,7 @@ func NewDescribeServerlessDBInstancesRequest() (request *DescribeServerlessDBIns
     request = &DescribeServerlessDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeServerlessDBInstances")
     
     
@@ -2939,10 +3985,12 @@ func NewDescribeServerlessDBInstancesResponse() (response *DescribeServerlessDBI
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERFACENAMENOTFOUND = "InterfaceNameNotFound"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
@@ -2972,10 +4020,12 @@ func (c *Client) DescribeServerlessDBInstances(request *DescribeServerlessDBInst
 //  FAILEDOPERATION_CAMCHECKRESOURCEERROR = "FailedOperation.CamCheckResourceError"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERFACENAMENOTFOUND = "InterfaceNameNotFound"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
@@ -3011,6 +4061,7 @@ func NewDescribeSlowQueryAnalysisRequest() (request *DescribeSlowQueryAnalysisRe
     request = &DescribeSlowQueryAnalysisRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeSlowQueryAnalysis")
     
     
@@ -3029,6 +4080,7 @@ func NewDescribeSlowQueryAnalysisResponse() (response *DescribeSlowQueryAnalysis
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ESQUERYERROR = "FailedOperation.ESQueryError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMETERVALUEEXCEEDERROR = "InvalidParameterValue.ParameterValueExceedError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
@@ -3042,6 +4094,7 @@ func (c *Client) DescribeSlowQueryAnalysis(request *DescribeSlowQueryAnalysisReq
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ESQUERYERROR = "FailedOperation.ESQueryError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMETERVALUEEXCEEDERROR = "InvalidParameterValue.ParameterValueExceedError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
@@ -3066,6 +4119,7 @@ func NewDescribeSlowQueryListRequest() (request *DescribeSlowQueryListRequest) {
     request = &DescribeSlowQueryListRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeSlowQueryList")
     
     
@@ -3083,7 +4137,9 @@ func NewDescribeSlowQueryListResponse() (response *DescribeSlowQueryListResponse
 // 此接口（DescribeSlowQueryList）用于查询指定时间范围内的所有慢查询。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMETERVALUEEXCEEDERROR = "InvalidParameterValue.ParameterValueExceedError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
@@ -3096,7 +4152,9 @@ func (c *Client) DescribeSlowQueryList(request *DescribeSlowQueryListRequest) (r
 // 此接口（DescribeSlowQueryList）用于查询指定时间范围内的所有慢查询。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMETERVALUEEXCEEDERROR = "InvalidParameterValue.ParameterValueExceedError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
@@ -3121,6 +4179,7 @@ func NewDescribeZonesRequest() (request *DescribeZonesRequest) {
     request = &DescribeZonesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DescribeZones")
     
     
@@ -3143,6 +4202,7 @@ func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3152,6 +4212,7 @@ func NewDescribeZonesResponse() (response *DescribeZonesResponse) {
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeZones(request *DescribeZonesRequest) (response *DescribeZonesResponse, err error) {
     return c.DescribeZonesWithContext(context.Background(), request)
 }
@@ -3165,6 +4226,7 @@ func (c *Client) DescribeZones(request *DescribeZonesRequest) (response *Describ
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -3174,6 +4236,7 @@ func (c *Client) DescribeZones(request *DescribeZonesRequest) (response *Describ
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeZonesWithContext(ctx context.Context, request *DescribeZonesRequest) (response *DescribeZonesResponse, err error) {
     if request == nil {
         request = NewDescribeZonesRequest()
@@ -3194,6 +4257,7 @@ func NewDestroyDBInstanceRequest() (request *DestroyDBInstanceRequest) {
     request = &DestroyDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DestroyDBInstance")
     
     
@@ -3208,7 +4272,7 @@ func NewDestroyDBInstanceResponse() (response *DestroyDBInstanceResponse) {
 }
 
 // DestroyDBInstance
-// 本接口 (DestroyDBInstance) 用于彻底下线指定DBInstanceId对应的实例，下线后实例数据将彻底删除，无法找回，只能下线隔离中的实例。
+// 本接口 (DestroyDBInstance) 用于彻底销毁指定DBInstanceId对应的实例，销毁后实例数据将彻底删除，无法找回，只能销毁隔离中的实例。
 //
 // 可能返回的错误码:
 //  ACCOUNTNOTEXIST = "AccountNotExist"
@@ -3220,11 +4284,13 @@ func NewDestroyDBInstanceResponse() (response *DestroyDBInstanceResponse) {
 //  FAILEDOPERATION_DELETERESOURCESTOTAGERROR = "FailedOperation.DeleteResourcesToTagError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_LIMITOPERATION = "FailedOperation.LimitOperation"
+//  FAILEDOPERATION_OPERATEFREQUENCYLIMITEDERROR = "FailedOperation.OperateFrequencyLimitedError"
 //  FAILEDOPERATION_POSTPAIDUNBLOCKERROR = "FailedOperation.PostPaidUnblockError"
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  FAILEDOPERATION_TRADEACCESSERROR = "FailedOperation.TradeAccessError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDACCOUNTSTATUS = "InvalidAccountStatus"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
@@ -3248,7 +4314,7 @@ func (c *Client) DestroyDBInstance(request *DestroyDBInstanceRequest) (response 
 }
 
 // DestroyDBInstance
-// 本接口 (DestroyDBInstance) 用于彻底下线指定DBInstanceId对应的实例，下线后实例数据将彻底删除，无法找回，只能下线隔离中的实例。
+// 本接口 (DestroyDBInstance) 用于彻底销毁指定DBInstanceId对应的实例，销毁后实例数据将彻底删除，无法找回，只能销毁隔离中的实例。
 //
 // 可能返回的错误码:
 //  ACCOUNTNOTEXIST = "AccountNotExist"
@@ -3260,11 +4326,13 @@ func (c *Client) DestroyDBInstance(request *DestroyDBInstanceRequest) (response 
 //  FAILEDOPERATION_DELETERESOURCESTOTAGERROR = "FailedOperation.DeleteResourcesToTagError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_LIMITOPERATION = "FailedOperation.LimitOperation"
+//  FAILEDOPERATION_OPERATEFREQUENCYLIMITEDERROR = "FailedOperation.OperateFrequencyLimitedError"
 //  FAILEDOPERATION_POSTPAIDUNBLOCKERROR = "FailedOperation.PostPaidUnblockError"
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  FAILEDOPERATION_TRADEACCESSERROR = "FailedOperation.TradeAccessError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDACCOUNTSTATUS = "InvalidAccountStatus"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
@@ -3303,6 +4371,7 @@ func NewDisIsolateDBInstancesRequest() (request *DisIsolateDBInstancesRequest) {
     request = &DisIsolateDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "DisIsolateDBInstances")
     
     
@@ -3335,8 +4404,8 @@ func NewDisIsolateDBInstancesResponse() (response *DisIsolateDBInstancesResponse
 //  FAILEDOPERATION_TRADEPAYORDERSERROR = "FailedOperation.TradePayOrdersError"
 //  FAILEDOPERATION_TRADEQUERYORDERERROR = "FailedOperation.TradeQueryOrderError"
 //  FAILEDOPERATION_TRADEQUERYPRICEERROR = "FailedOperation.TradeQueryPriceError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
-//  INVALIDORDERNUM = "InvalidOrderNum"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETER_TRADEACCESSDENIEDERROR = "InvalidParameter.TradeAccessDeniedError"
@@ -3344,7 +4413,6 @@ func NewDisIsolateDBInstancesResponse() (response *DisIsolateDBInstancesResponse
 //  INVALIDPARAMETERVALUE_PARAMETERCHARACTERLIMITERROR = "InvalidParameterValue.ParameterCharacterLimitError"
 //  INVALIDPARAMETERVALUE_PARAMETERLENGTHLIMITERROR = "InvalidParameterValue.ParameterLengthLimitError"
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
-//  INVALIDTRADEOPERATE = "InvalidTradeOperate"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITOPERATION = "LimitOperation"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -3353,7 +4421,6 @@ func NewDisIsolateDBInstancesResponse() (response *DisIsolateDBInstancesResponse
 //  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DisIsolateDBInstances(request *DisIsolateDBInstancesRequest) (response *DisIsolateDBInstancesResponse, err error) {
@@ -3379,8 +4446,8 @@ func (c *Client) DisIsolateDBInstances(request *DisIsolateDBInstancesRequest) (r
 //  FAILEDOPERATION_TRADEPAYORDERSERROR = "FailedOperation.TradePayOrdersError"
 //  FAILEDOPERATION_TRADEQUERYORDERERROR = "FailedOperation.TradeQueryOrderError"
 //  FAILEDOPERATION_TRADEQUERYPRICEERROR = "FailedOperation.TradeQueryPriceError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
-//  INVALIDORDERNUM = "InvalidOrderNum"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETER_TRADEACCESSDENIEDERROR = "InvalidParameter.TradeAccessDeniedError"
@@ -3388,7 +4455,6 @@ func (c *Client) DisIsolateDBInstances(request *DisIsolateDBInstancesRequest) (r
 //  INVALIDPARAMETERVALUE_PARAMETERCHARACTERLIMITERROR = "InvalidParameterValue.ParameterCharacterLimitError"
 //  INVALIDPARAMETERVALUE_PARAMETERLENGTHLIMITERROR = "InvalidParameterValue.ParameterLengthLimitError"
 //  INVALIDPARAMETERVALUE_STRUCTPARSEFAILED = "InvalidParameterValue.StructParseFailed"
-//  INVALIDTRADEOPERATE = "InvalidTradeOperate"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITOPERATION = "LimitOperation"
 //  MISSINGPARAMETER = "MissingParameter"
@@ -3397,7 +4463,6 @@ func (c *Client) DisIsolateDBInstances(request *DisIsolateDBInstancesRequest) (r
 //  OPERATIONDENIED_INSTANCESTATUSDENIEDERROR = "OperationDenied.InstanceStatusDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  UNKNOWNPARAMETER = "UnknownParameter"
 func (c *Client) DisIsolateDBInstancesWithContext(ctx context.Context, request *DisIsolateDBInstancesRequest) (response *DisIsolateDBInstancesResponse, err error) {
@@ -3420,6 +4485,7 @@ func NewInitDBInstancesRequest() (request *InitDBInstancesRequest) {
     request = &InitDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "InitDBInstances")
     
     
@@ -3443,6 +4509,7 @@ func NewInitDBInstancesResponse() (response *InitDBInstancesResponse) {
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
@@ -3477,6 +4544,7 @@ func (c *Client) InitDBInstances(request *InitDBInstancesRequest) (response *Ini
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
@@ -3517,6 +4585,7 @@ func NewInquiryPriceCreateDBInstancesRequest() (request *InquiryPriceCreateDBIns
     request = &InquiryPriceCreateDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "InquiryPriceCreateDBInstances")
     
     
@@ -3537,14 +4606,17 @@ func NewInquiryPriceCreateDBInstancesResponse() (response *InquiryPriceCreateDBI
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
 //  FAILEDOPERATION_TRADEQUERYPRICEERROR = "FailedOperation.TradeQueryPriceError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
 //  INVALIDPARAMETERVALUE_ILLEGALINSTANCECHARGETYPE = "InvalidParameterValue.IllegalInstanceChargeType"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -3565,14 +4637,17 @@ func (c *Client) InquiryPriceCreateDBInstances(request *InquiryPriceCreateDBInst
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  FAILEDOPERATION_QUERYSPECBYSPECCODEERROR = "FailedOperation.QuerySpecBySpecCodeError"
 //  FAILEDOPERATION_TRADEQUERYPRICEERROR = "FailedOperation.TradeQueryPriceError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
 //  INVALIDPARAMETERVALUE_ILLEGALINSTANCECHARGETYPE = "InvalidParameterValue.IllegalInstanceChargeType"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -3602,6 +4677,7 @@ func NewInquiryPriceRenewDBInstanceRequest() (request *InquiryPriceRenewDBInstan
     request = &InquiryPriceRenewDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "InquiryPriceRenewDBInstance")
     
     
@@ -3626,7 +4702,9 @@ func NewInquiryPriceRenewDBInstanceResponse() (response *InquiryPriceRenewDBInst
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  FAILEDOPERATION_TRADEQUERYPRICEERROR = "FailedOperation.TradeQueryPriceError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
 //  INVALIDPARAMETERVALUE_ILLEGALINSTANCECHARGETYPE = "InvalidParameterValue.IllegalInstanceChargeType"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
@@ -3635,6 +4713,7 @@ func NewInquiryPriceRenewDBInstanceResponse() (response *InquiryPriceRenewDBInst
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  OPERATIONDENIED_POSTPAIDPAYMODEERROR = "OperationDenied.PostPaidPayModeError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) InquiryPriceRenewDBInstance(request *InquiryPriceRenewDBInstanceRequest) (response *InquiryPriceRenewDBInstanceResponse, err error) {
@@ -3652,7 +4731,9 @@ func (c *Client) InquiryPriceRenewDBInstance(request *InquiryPriceRenewDBInstanc
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  FAILEDOPERATION_TRADEQUERYPRICEERROR = "FailedOperation.TradeQueryPriceError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
 //  INVALIDPARAMETERVALUE_ILLEGALINSTANCECHARGETYPE = "InvalidParameterValue.IllegalInstanceChargeType"
 //  INVALIDPARAMETERVALUE_ILLEGALREGION = "InvalidParameterValue.IllegalRegion"
@@ -3661,6 +4742,7 @@ func (c *Client) InquiryPriceRenewDBInstance(request *InquiryPriceRenewDBInstanc
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  OPERATIONDENIED_POSTPAIDPAYMODEERROR = "OperationDenied.PostPaidPayModeError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) InquiryPriceRenewDBInstanceWithContext(ctx context.Context, request *InquiryPriceRenewDBInstanceRequest) (response *InquiryPriceRenewDBInstanceResponse, err error) {
@@ -3683,6 +4765,7 @@ func NewInquiryPriceUpgradeDBInstanceRequest() (request *InquiryPriceUpgradeDBIn
     request = &InquiryPriceUpgradeDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "InquiryPriceUpgradeDBInstance")
     
     
@@ -3697,7 +4780,7 @@ func NewInquiryPriceUpgradeDBInstanceResponse() (response *InquiryPriceUpgradeDB
 }
 
 // InquiryPriceUpgradeDBInstance
-// 本接口（InquiryPriceUpgradeDBInstance）用于查询升级实例的价格。
+// 本接口（InquiryPriceUpgradeDBInstance）用于查询升级实例的价格。只支持按量计费实例。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -3709,6 +4792,7 @@ func NewInquiryPriceUpgradeDBInstanceResponse() (response *InquiryPriceUpgradeDB
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  FAILEDOPERATION_TRADEQUERYPRICEERROR = "FailedOperation.TradeQueryPriceError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
 //  INVALIDPARAMETERVALUE_ILLEGALCHARGETYPE = "InvalidParameterValue.IllegalChargeType"
@@ -3721,6 +4805,7 @@ func NewInquiryPriceUpgradeDBInstanceResponse() (response *InquiryPriceUpgradeDB
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) InquiryPriceUpgradeDBInstance(request *InquiryPriceUpgradeDBInstanceRequest) (response *InquiryPriceUpgradeDBInstanceResponse, err error) {
@@ -3728,7 +4813,7 @@ func (c *Client) InquiryPriceUpgradeDBInstance(request *InquiryPriceUpgradeDBIns
 }
 
 // InquiryPriceUpgradeDBInstance
-// 本接口（InquiryPriceUpgradeDBInstance）用于查询升级实例的价格。
+// 本接口（InquiryPriceUpgradeDBInstance）用于查询升级实例的价格。只支持按量计费实例。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
@@ -3740,6 +4825,7 @@ func (c *Client) InquiryPriceUpgradeDBInstance(request *InquiryPriceUpgradeDBIns
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  FAILEDOPERATION_TRADEQUERYPRICEERROR = "FailedOperation.TradeQueryPriceError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
 //  INVALIDPARAMETERVALUE_ILLEGALCHARGETYPE = "InvalidParameterValue.IllegalChargeType"
@@ -3752,6 +4838,7 @@ func (c *Client) InquiryPriceUpgradeDBInstance(request *InquiryPriceUpgradeDBIns
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
 func (c *Client) InquiryPriceUpgradeDBInstanceWithContext(ctx context.Context, request *InquiryPriceUpgradeDBInstanceRequest) (response *InquiryPriceUpgradeDBInstanceResponse, err error) {
@@ -3774,6 +4861,7 @@ func NewIsolateDBInstancesRequest() (request *IsolateDBInstancesRequest) {
     request = &IsolateDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "IsolateDBInstances")
     
     
@@ -3795,8 +4883,12 @@ func NewIsolateDBInstancesResponse() (response *IsolateDBInstancesResponse) {
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  DBERROR = "DBError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_GETINSTANCEBYRESOURCEIDERROR = "FailedOperation.GetInstanceByResourceIdError"
 //  FAILEDOPERATION_INVALIDACCOUNTSTATUS = "FailedOperation.InvalidAccountStatus"
+//  FAILEDOPERATION_OPERATEFREQUENCYLIMITEDERROR = "FailedOperation.OperateFrequencyLimitedError"
 //  FAILEDOPERATION_QUERYTRADESTATUSERROR = "FailedOperation.QueryTradeStatusError"
 //  FAILEDOPERATION_TRADEACCESSERROR = "FailedOperation.TradeAccessError"
 //  FAILEDOPERATION_TRADECREATEERROR = "FailedOperation.TradeCreateError"
@@ -3805,19 +4897,20 @@ func NewIsolateDBInstancesResponse() (response *IsolateDBInstancesResponse) {
 //  FAILEDOPERATION_TRADEQUERYPRICEERROR = "FailedOperation.TradeQueryPriceError"
 //  INSTANCENOTEXIST = "InstanceNotExist"
 //  INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_TRADEACCESSDENIEDERROR = "InvalidParameter.TradeAccessDeniedError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  INVALIDVOUCHERID = "InvalidVoucherId"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITOPERATION = "LimitOperation"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_DTSINSTANCESTATUSERROR = "OperationDenied.DTSInstanceStatusError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  REGIONNOTSUPPORTED = "RegionNotSupported"
 //  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
@@ -3834,8 +4927,12 @@ func (c *Client) IsolateDBInstances(request *IsolateDBInstancesRequest) (respons
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  DBERROR = "DBError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  FAILEDOPERATION_GETINSTANCEBYRESOURCEIDERROR = "FailedOperation.GetInstanceByResourceIdError"
 //  FAILEDOPERATION_INVALIDACCOUNTSTATUS = "FailedOperation.InvalidAccountStatus"
+//  FAILEDOPERATION_OPERATEFREQUENCYLIMITEDERROR = "FailedOperation.OperateFrequencyLimitedError"
 //  FAILEDOPERATION_QUERYTRADESTATUSERROR = "FailedOperation.QueryTradeStatusError"
 //  FAILEDOPERATION_TRADEACCESSERROR = "FailedOperation.TradeAccessError"
 //  FAILEDOPERATION_TRADECREATEERROR = "FailedOperation.TradeCreateError"
@@ -3844,19 +4941,20 @@ func (c *Client) IsolateDBInstances(request *IsolateDBInstancesRequest) (respons
 //  FAILEDOPERATION_TRADEQUERYPRICEERROR = "FailedOperation.TradeQueryPriceError"
 //  INSTANCENOTEXIST = "InstanceNotExist"
 //  INTERNALERROR_INSTANCEDATAERROR = "InternalError.InstanceDataError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_TRADEACCESSDENIEDERROR = "InvalidParameter.TradeAccessDeniedError"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
-//  INVALIDVOUCHERID = "InvalidVoucherId"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITOPERATION = "LimitOperation"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_DTSINSTANCESTATUSERROR = "OperationDenied.DTSInstanceStatusError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  REGIONNOTSUPPORTED = "RegionNotSupported"
 //  REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
@@ -3881,6 +4979,7 @@ func NewModifyAccountRemarkRequest() (request *ModifyAccountRemarkRequest) {
     request = &ModifyAccountRemarkRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyAccountRemark")
     
     
@@ -3902,6 +5001,7 @@ func NewModifyAccountRemarkResponse() (response *ModifyAccountRemarkResponse) {
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_ACCOUNTNOTEXISTERROR = "InvalidParameterValue.AccountNotExistError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
 //  INVALIDPARAMETERVALUE_INVALIDACCOUNTFORMAT = "InvalidParameterValue.InvalidAccountFormat"
@@ -3923,6 +5023,7 @@ func (c *Client) ModifyAccountRemark(request *ModifyAccountRemarkRequest) (respo
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_ACCOUNTNOTEXISTERROR = "InvalidParameterValue.AccountNotExistError"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
 //  INVALIDPARAMETERVALUE_INVALIDACCOUNTFORMAT = "InvalidParameterValue.InvalidAccountFormat"
@@ -3952,6 +5053,7 @@ func NewModifyBackupPlanRequest() (request *ModifyBackupPlanRequest) {
     request = &ModifyBackupPlanRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyBackupPlan")
     
     
@@ -3972,6 +5074,7 @@ func NewModifyBackupPlanResponse() (response *ModifyBackupPlanResponse) {
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
@@ -3988,6 +5091,7 @@ func (c *Client) ModifyBackupPlan(request *ModifyBackupPlanRequest) (response *M
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
@@ -4009,10 +5113,63 @@ func (c *Client) ModifyBackupPlanWithContext(ctx context.Context, request *Modif
     return
 }
 
+func NewModifyBaseBackupExpireTimeRequest() (request *ModifyBaseBackupExpireTimeRequest) {
+    request = &ModifyBaseBackupExpireTimeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "ModifyBaseBackupExpireTime")
+    
+    
+    return
+}
+
+func NewModifyBaseBackupExpireTimeResponse() (response *ModifyBaseBackupExpireTimeResponse) {
+    response = &ModifyBaseBackupExpireTimeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyBaseBackupExpireTime
+// 本接口（DeleteBaseBackup）用于修改实例指定全量备份的过期时间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyBaseBackupExpireTime(request *ModifyBaseBackupExpireTimeRequest) (response *ModifyBaseBackupExpireTimeResponse, err error) {
+    return c.ModifyBaseBackupExpireTimeWithContext(context.Background(), request)
+}
+
+// ModifyBaseBackupExpireTime
+// 本接口（DeleteBaseBackup）用于修改实例指定全量备份的过期时间。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyBaseBackupExpireTimeWithContext(ctx context.Context, request *ModifyBaseBackupExpireTimeRequest) (response *ModifyBaseBackupExpireTimeResponse, err error) {
+    if request == nil {
+        request = NewModifyBaseBackupExpireTimeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyBaseBackupExpireTime require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyBaseBackupExpireTimeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDBInstanceDeploymentRequest() (request *ModifyDBInstanceDeploymentRequest) {
     request = &ModifyDBInstanceDeploymentRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstanceDeployment")
     
     
@@ -4033,9 +5190,11 @@ func NewModifyDBInstanceDeploymentResponse() (response *ModifyDBInstanceDeployme
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 func (c *Client) ModifyDBInstanceDeployment(request *ModifyDBInstanceDeploymentRequest) (response *ModifyDBInstanceDeploymentResponse, err error) {
     return c.ModifyDBInstanceDeploymentWithContext(context.Background(), request)
@@ -4048,9 +5207,11 @@ func (c *Client) ModifyDBInstanceDeployment(request *ModifyDBInstanceDeploymentR
 //  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_INVALIDZONEIDERROR = "InvalidParameterValue.InvalidZoneIdError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 func (c *Client) ModifyDBInstanceDeploymentWithContext(ctx context.Context, request *ModifyDBInstanceDeploymentRequest) (response *ModifyDBInstanceDeploymentResponse, err error) {
     if request == nil {
@@ -4072,6 +5233,7 @@ func NewModifyDBInstanceNameRequest() (request *ModifyDBInstanceNameRequest) {
     request = &ModifyDBInstanceNameRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstanceName")
     
     
@@ -4095,6 +5257,7 @@ func NewModifyDBInstanceNameResponse() (response *ModifyDBInstanceNameResponse) 
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_OSSACCESSERROR = "FailedOperation.OssAccessError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -4120,6 +5283,7 @@ func (c *Client) ModifyDBInstanceName(request *ModifyDBInstanceNameRequest) (res
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_OSSACCESSERROR = "FailedOperation.OssAccessError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -4151,6 +5315,7 @@ func NewModifyDBInstanceParametersRequest() (request *ModifyDBInstanceParameters
     request = &ModifyDBInstanceParametersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstanceParameters")
     
     
@@ -4169,8 +5334,12 @@ func NewModifyDBInstanceParametersResponse() (response *ModifyDBInstanceParamete
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyDBInstanceParameters(request *ModifyDBInstanceParametersRequest) (response *ModifyDBInstanceParametersResponse, err error) {
@@ -4182,8 +5351,12 @@ func (c *Client) ModifyDBInstanceParameters(request *ModifyDBInstanceParametersR
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CAMAUTHFAILED = "FailedOperation.CamAuthFailed"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETERVALUE_DATACONVERTERROR = "InvalidParameterValue.DataConvertError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyDBInstanceParametersWithContext(ctx context.Context, request *ModifyDBInstanceParametersRequest) (response *ModifyDBInstanceParametersResponse, err error) {
@@ -4206,6 +5379,7 @@ func NewModifyDBInstanceReadOnlyGroupRequest() (request *ModifyDBInstanceReadOnl
     request = &ModifyDBInstanceReadOnlyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstanceReadOnlyGroup")
     
     
@@ -4231,6 +5405,7 @@ func NewModifyDBInstanceReadOnlyGroupResponse() (response *ModifyDBInstanceReadO
 //  FAILEDOPERATION_ILLEGALROINSTANCENUM = "FailedOperation.IllegalROInstanceNum"
 //  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
 //  INSTANCENOTEXIST = "InstanceNotExist"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -4258,6 +5433,7 @@ func (c *Client) ModifyDBInstanceReadOnlyGroup(request *ModifyDBInstanceReadOnly
 //  FAILEDOPERATION_ILLEGALROINSTANCENUM = "FailedOperation.IllegalROInstanceNum"
 //  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
 //  INSTANCENOTEXIST = "InstanceNotExist"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -4285,10 +5461,73 @@ func (c *Client) ModifyDBInstanceReadOnlyGroupWithContext(ctx context.Context, r
     return
 }
 
+func NewModifyDBInstanceSecurityGroupsRequest() (request *ModifyDBInstanceSecurityGroupsRequest) {
+    request = &ModifyDBInstanceSecurityGroupsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstanceSecurityGroups")
+    
+    
+    return
+}
+
+func NewModifyDBInstanceSecurityGroupsResponse() (response *ModifyDBInstanceSecurityGroupsResponse) {
+    response = &ModifyDBInstanceSecurityGroupsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyDBInstanceSecurityGroups
+// 本接口（ModifyDBInstanceSecurityGroups）用于修改实例安全组。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyDBInstanceSecurityGroups(request *ModifyDBInstanceSecurityGroupsRequest) (response *ModifyDBInstanceSecurityGroupsResponse, err error) {
+    return c.ModifyDBInstanceSecurityGroupsWithContext(context.Background(), request)
+}
+
+// ModifyDBInstanceSecurityGroups
+// 本接口（ModifyDBInstanceSecurityGroups）用于修改实例安全组。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  OPERATIONDENIED_ROGROUPSTATUSERROR = "OperationDenied.ROGroupStatusError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
+func (c *Client) ModifyDBInstanceSecurityGroupsWithContext(ctx context.Context, request *ModifyDBInstanceSecurityGroupsRequest) (response *ModifyDBInstanceSecurityGroupsResponse, err error) {
+    if request == nil {
+        request = NewModifyDBInstanceSecurityGroupsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBInstanceSecurityGroups require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBInstanceSecurityGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDBInstanceSpecRequest() (request *ModifyDBInstanceSpecRequest) {
     request = &ModifyDBInstanceSpecRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstanceSpec")
     
     
@@ -4314,8 +5553,13 @@ func NewModifyDBInstanceSpecResponse() (response *ModifyDBInstanceSpecResponse) 
 //  FAILEDOPERATION_PAYORDERFAILED = "FailedOperation.PayOrderFailed"
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyDBInstanceSpec(request *ModifyDBInstanceSpecRequest) (response *ModifyDBInstanceSpecResponse, err error) {
     return c.ModifyDBInstanceSpecWithContext(context.Background(), request)
 }
@@ -4332,8 +5576,13 @@ func (c *Client) ModifyDBInstanceSpec(request *ModifyDBInstanceSpecRequest) (res
 //  FAILEDOPERATION_PAYORDERFAILED = "FailedOperation.PayOrderFailed"
 //  FAILEDOPERATION_QUERYPRICEFAILED = "FailedOperation.QueryPriceFailed"
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+//  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 func (c *Client) ModifyDBInstanceSpecWithContext(ctx context.Context, request *ModifyDBInstanceSpecRequest) (response *ModifyDBInstanceSpecResponse, err error) {
     if request == nil {
         request = NewModifyDBInstanceSpecRequest()
@@ -4354,6 +5603,7 @@ func NewModifyDBInstancesProjectRequest() (request *ModifyDBInstancesProjectRequ
     request = &ModifyDBInstancesProjectRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyDBInstancesProject")
     
     
@@ -4378,6 +5628,7 @@ func NewModifyDBInstancesProjectResponse() (response *ModifyDBInstancesProjectRe
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_UPDATERESOURCEPROJECTTAGVALUEERROR = "FailedOperation.UpdateResourceProjectTagValueError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_ILLEGALPROJECTID = "InvalidParameterValue.IllegalProjectId"
@@ -4402,6 +5653,7 @@ func (c *Client) ModifyDBInstancesProject(request *ModifyDBInstancesProjectReque
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_UPDATERESOURCEPROJECTTAGVALUEERROR = "FailedOperation.UpdateResourceProjectTagValueError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_ILLEGALPROJECTID = "InvalidParameterValue.IllegalProjectId"
@@ -4427,10 +5679,63 @@ func (c *Client) ModifyDBInstancesProjectWithContext(ctx context.Context, reques
     return
 }
 
+func NewModifyParameterTemplateRequest() (request *ModifyParameterTemplateRequest) {
+    request = &ModifyParameterTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "ModifyParameterTemplate")
+    
+    
+    return
+}
+
+func NewModifyParameterTemplateResponse() (response *ModifyParameterTemplateResponse) {
+    response = &ModifyParameterTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyParameterTemplate
+// 本接口（ModifyParameterTemplate）主要用于修改参数模板名称，描述，修改，添加和删除参数模板参数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) ModifyParameterTemplate(request *ModifyParameterTemplateRequest) (response *ModifyParameterTemplateResponse, err error) {
+    return c.ModifyParameterTemplateWithContext(context.Background(), request)
+}
+
+// ModifyParameterTemplate
+// 本接口（ModifyParameterTemplate）主要用于修改参数模板名称，描述，修改，添加和删除参数模板参数。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+func (c *Client) ModifyParameterTemplateWithContext(ctx context.Context, request *ModifyParameterTemplateRequest) (response *ModifyParameterTemplateResponse, err error) {
+    if request == nil {
+        request = NewModifyParameterTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyParameterTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyParameterTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyReadOnlyGroupConfigRequest() (request *ModifyReadOnlyGroupConfigRequest) {
     request = &ModifyReadOnlyGroupConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ModifyReadOnlyGroupConfig")
     
     
@@ -4461,6 +5766,7 @@ func NewModifyReadOnlyGroupConfigResponse() (response *ModifyReadOnlyGroupConfig
 //  FAILEDOPERATION_VPCUPDATEROUTEERROR = "FailedOperation.VPCUpdateRouteError"
 //  INTERFACENAMENOTFOUND = "InterfaceNameNotFound"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -4490,6 +5796,7 @@ func (c *Client) ModifyReadOnlyGroupConfig(request *ModifyReadOnlyGroupConfigReq
 //  FAILEDOPERATION_VPCUPDATEROUTEERROR = "FailedOperation.VPCUpdateRouteError"
 //  INTERFACENAMENOTFOUND = "InterfaceNameNotFound"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -4518,6 +5825,7 @@ func NewModifySwitchTimePeriodRequest() (request *ModifySwitchTimePeriodRequest)
     request = &ModifySwitchTimePeriodRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ModifySwitchTimePeriod")
     
     
@@ -4543,6 +5851,7 @@ func NewModifySwitchTimePeriodResponse() (response *ModifySwitchTimePeriodRespon
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
@@ -4564,6 +5873,7 @@ func (c *Client) ModifySwitchTimePeriod(request *ModifySwitchTimePeriodRequest) 
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_QUERYSPECERROR = "FailedOperation.QuerySpecError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
@@ -4589,6 +5899,7 @@ func NewOpenDBExtranetAccessRequest() (request *OpenDBExtranetAccessRequest) {
     request = &OpenDBExtranetAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "OpenDBExtranetAccess")
     
     
@@ -4613,6 +5924,7 @@ func NewOpenDBExtranetAccessResponse() (response *OpenDBExtranetAccessResponse) 
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -4620,6 +5932,7 @@ func NewOpenDBExtranetAccessResponse() (response *OpenDBExtranetAccessResponse) 
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCEIPV6NOTSUPPORTEDERROR = "OperationDenied.InstanceIpv6NotSupportedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
@@ -4638,6 +5951,7 @@ func (c *Client) OpenDBExtranetAccess(request *OpenDBExtranetAccessRequest) (res
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -4645,6 +5959,7 @@ func (c *Client) OpenDBExtranetAccess(request *OpenDBExtranetAccessRequest) (res
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCEIPV6NOTSUPPORTEDERROR = "OperationDenied.InstanceIpv6NotSupportedError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  RESOURCENOTFOUND_INSTANCENOTFOUNDERROR = "ResourceNotFound.InstanceNotFoundError"
 //  RESOURCEUNAVAILABLE_INVALIDINSTANCESTATUS = "ResourceUnavailable.InvalidInstanceStatus"
@@ -4668,6 +5983,7 @@ func NewOpenServerlessDBExtranetAccessRequest() (request *OpenServerlessDBExtran
     request = &OpenServerlessDBExtranetAccessRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "OpenServerlessDBExtranetAccess")
     
     
@@ -4699,6 +6015,7 @@ func NewOpenServerlessDBExtranetAccessResponse() (response *OpenServerlessDBExtr
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
@@ -4743,6 +6060,7 @@ func (c *Client) OpenServerlessDBExtranetAccess(request *OpenServerlessDBExtrane
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INTERNALERROR_VPCERROR = "InternalError.VpcError"
@@ -4785,6 +6103,7 @@ func NewRebalanceReadOnlyGroupRequest() (request *RebalanceReadOnlyGroupRequest)
     request = &RebalanceReadOnlyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "RebalanceReadOnlyGroup")
     
     
@@ -4812,6 +6131,7 @@ func NewRebalanceReadOnlyGroupResponse() (response *RebalanceReadOnlyGroupRespon
 //  FAILEDOPERATION_VPCRESETSERVICEERROR = "FailedOperation.VPCResetServiceError"
 //  FAILEDOPERATION_VPCUPDATEROUTEERROR = "FailedOperation.VPCUpdateRouteError"
 //  INTERFACENAMENOTFOUND = "InterfaceNameNotFound"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
@@ -4836,6 +6156,7 @@ func (c *Client) RebalanceReadOnlyGroup(request *RebalanceReadOnlyGroupRequest) 
 //  FAILEDOPERATION_VPCRESETSERVICEERROR = "FailedOperation.VPCResetServiceError"
 //  FAILEDOPERATION_VPCUPDATEROUTEERROR = "FailedOperation.VPCUpdateRouteError"
 //  INTERFACENAMENOTFOUND = "InterfaceNameNotFound"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
@@ -4862,6 +6183,7 @@ func NewRemoveDBInstanceFromReadOnlyGroupRequest() (request *RemoveDBInstanceFro
     request = &RemoveDBInstanceFromReadOnlyGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "RemoveDBInstanceFromReadOnlyGroup")
     
     
@@ -4888,6 +6210,7 @@ func NewRemoveDBInstanceFromReadOnlyGroupResponse() (response *RemoveDBInstanceF
 //  FAILEDOPERATION_ROGROUPMASTERINSTANCENOTRIGHT = "FailedOperation.ROGroupMasterInstanceNotRight"
 //  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
 //  INSTANCENOTEXIST = "InstanceNotExist"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -4915,6 +6238,7 @@ func (c *Client) RemoveDBInstanceFromReadOnlyGroup(request *RemoveDBInstanceFrom
 //  FAILEDOPERATION_ROGROUPMASTERINSTANCENOTRIGHT = "FailedOperation.ROGroupMasterInstanceNotRight"
 //  FAILEDOPERATION_ROGROUPNOTFOUNDERROR = "FailedOperation.ROGroupNotFoundError"
 //  INSTANCENOTEXIST = "InstanceNotExist"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDINSTANCESTATUS = "InvalidInstanceStatus"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -4945,6 +6269,7 @@ func NewRenewInstanceRequest() (request *RenewInstanceRequest) {
     request = &RenewInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "RenewInstance")
     
     
@@ -4973,6 +6298,7 @@ func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
 //  FAILEDOPERATION_TRADECREATEERROR = "FailedOperation.TradeCreateError"
 //  FAILEDOPERATION_TRADEPAYORDERSERROR = "FailedOperation.TradePayOrdersError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
@@ -4985,6 +6311,7 @@ func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  OPERATIONDENIED_POSTPAIDPAYMODEERROR = "OperationDenied.PostPaidPayModeError"
 //  OPERATIONDENIED_VPCDENIEDERROR = "OperationDenied.VpcDeniedError"
@@ -5010,6 +6337,7 @@ func (c *Client) RenewInstance(request *RenewInstanceRequest) (response *RenewIn
 //  FAILEDOPERATION_TRADECREATEERROR = "FailedOperation.TradeCreateError"
 //  FAILEDOPERATION_TRADEPAYORDERSERROR = "FailedOperation.TradePayOrdersError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_VPCNOTFOUNDERROR = "InvalidParameter.VpcNotFoundError"
@@ -5022,6 +6350,7 @@ func (c *Client) RenewInstance(request *RenewInstanceRequest) (response *RenewIn
 //  INVALIDPARAMETERVALUE_PARAMETERHANDLEERROR = "InvalidParameterValue.ParameterHandleError"
 //  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
 //  OPERATIONDENIED_INSTANCEACCESSDENIEDERROR = "OperationDenied.InstanceAccessDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITERROR = "OperationDenied.InstanceStatusLimitError"
 //  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
 //  OPERATIONDENIED_POSTPAIDPAYMODEERROR = "OperationDenied.PostPaidPayModeError"
 //  OPERATIONDENIED_VPCDENIEDERROR = "OperationDenied.VpcDeniedError"
@@ -5048,6 +6377,7 @@ func NewResetAccountPasswordRequest() (request *ResetAccountPasswordRequest) {
     request = &ResetAccountPasswordRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "ResetAccountPassword")
     
     
@@ -5072,6 +6402,7 @@ func NewResetAccountPasswordResponse() (response *ResetAccountPasswordResponse) 
 //  FAILEDOPERATION_OSSACCESSERROR = "FailedOperation.OssAccessError"
 //  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDACCOUNTPASSWORD = "InvalidAccountPassword"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -5099,6 +6430,7 @@ func (c *Client) ResetAccountPassword(request *ResetAccountPasswordRequest) (res
 //  FAILEDOPERATION_OSSACCESSERROR = "FailedOperation.OssAccessError"
 //  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDACCOUNTPASSWORD = "InvalidAccountPassword"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -5131,6 +6463,7 @@ func NewRestartDBInstanceRequest() (request *RestartDBInstanceRequest) {
     request = &RestartDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "RestartDBInstance")
     
     
@@ -5155,6 +6488,7 @@ func NewRestartDBInstanceResponse() (response *RestartDBInstanceResponse) {
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -5180,6 +6514,7 @@ func (c *Client) RestartDBInstance(request *RestartDBInstanceRequest) (response 
 //  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_FLOWERROR = "InternalError.FlowError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
@@ -5210,6 +6545,7 @@ func NewSetAutoRenewFlagRequest() (request *SetAutoRenewFlagRequest) {
     request = &SetAutoRenewFlagRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "SetAutoRenewFlag")
     
     
@@ -5232,6 +6568,7 @@ func NewSetAutoRenewFlagResponse() (response *SetAutoRenewFlagResponse) {
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_SETAUTORENEWFLAGERROR = "FailedOperation.SetAutoRenewFlagError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_ILLEGALINSTANCECHARGETYPE = "InvalidParameterValue.IllegalInstanceChargeType"
@@ -5257,6 +6594,7 @@ func (c *Client) SetAutoRenewFlag(request *SetAutoRenewFlagRequest) (response *S
 //  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  FAILEDOPERATION_SETAUTORENEWFLAGERROR = "FailedOperation.SetAutoRenewFlagError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_ILLEGALINSTANCECHARGETYPE = "InvalidParameterValue.IllegalInstanceChargeType"
@@ -5289,6 +6627,7 @@ func NewUpgradeDBInstanceRequest() (request *UpgradeDBInstanceRequest) {
     request = &UpgradeDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("postgres", APIVersion, "UpgradeDBInstance")
     
     
@@ -5318,6 +6657,7 @@ func NewUpgradeDBInstanceResponse() (response *UpgradeDBInstanceResponse) {
 //  FAILEDOPERATION_STORAGEMEMORYCHECKERROR = "FailedOperation.StorageMemoryCheckError"
 //  FAILEDOPERATION_TRADEACCESSERROR = "FailedOperation.TradeAccessError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
@@ -5353,6 +6693,7 @@ func (c *Client) UpgradeDBInstance(request *UpgradeDBInstanceRequest) (response 
 //  FAILEDOPERATION_STORAGEMEMORYCHECKERROR = "FailedOperation.StorageMemoryCheckError"
 //  FAILEDOPERATION_TRADEACCESSERROR = "FailedOperation.TradeAccessError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_BADSPEC = "InvalidParameterValue.BadSpec"
@@ -5380,6 +6721,68 @@ func (c *Client) UpgradeDBInstanceWithContext(ctx context.Context, request *Upgr
     request.SetContext(ctx)
     
     response = NewUpgradeDBInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpgradeDBInstanceKernelVersionRequest() (request *UpgradeDBInstanceKernelVersionRequest) {
+    request = &UpgradeDBInstanceKernelVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("postgres", APIVersion, "UpgradeDBInstanceKernelVersion")
+    
+    
+    return
+}
+
+func NewUpgradeDBInstanceKernelVersionResponse() (response *UpgradeDBInstanceKernelVersionResponse) {
+    response = &UpgradeDBInstanceKernelVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpgradeDBInstanceKernelVersion
+// 本接口（UpgradeDBInstanceKernelVersion）用于升级实例的内核版本号。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+func (c *Client) UpgradeDBInstanceKernelVersion(request *UpgradeDBInstanceKernelVersionRequest) (response *UpgradeDBInstanceKernelVersionResponse, err error) {
+    return c.UpgradeDBInstanceKernelVersionWithContext(context.Background(), request)
+}
+
+// UpgradeDBInstanceKernelVersion
+// 本接口（UpgradeDBInstanceKernelVersion）用于升级实例的内核版本号。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CAMSIGANDAUTHERROR = "FailedOperation.CamSigAndAuthError"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_DATABASEAFFECTEDERROR = "FailedOperation.DatabaseAffectedError"
+//  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
+//  INVALIDPARAMETER_PARAMETERCHECKERROR = "InvalidParameter.ParameterCheckError"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
+//  OPERATIONDENIED_CAMDENIEDERROR = "OperationDenied.CamDeniedError"
+//  OPERATIONDENIED_INSTANCESTATUSLIMITOPERROR = "OperationDenied.InstanceStatusLimitOpError"
+func (c *Client) UpgradeDBInstanceKernelVersionWithContext(ctx context.Context, request *UpgradeDBInstanceKernelVersionRequest) (response *UpgradeDBInstanceKernelVersionResponse, err error) {
+    if request == nil {
+        request = NewUpgradeDBInstanceKernelVersionRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeDBInstanceKernelVersion require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpgradeDBInstanceKernelVersionResponse()
     err = c.Send(request, response)
     return
 }
