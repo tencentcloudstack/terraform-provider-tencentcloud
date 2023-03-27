@@ -11,7 +11,7 @@ description: |-
 
 Provides a resource to create a teo dns_record
 
-~> **NOTE:** This resource will be deprecated later since the TEO product planning changed.
+~> **NOTE:** This resource has been deprecated in Terraform TencentCloud Provider Version 1.79.19.
 
 ## Example Usage
 
