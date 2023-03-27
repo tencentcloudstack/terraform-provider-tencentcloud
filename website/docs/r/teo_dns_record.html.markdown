@@ -11,7 +11,7 @@ description: |-
 
 Provides a resource to create a teo dns_record
 
-~> **NOTE:** The teo product planning has changed, and the resource will soon be deprecated.
+~> **NOTE:** This resource will be deprecated later since the TEO product planning changed.
 
 ## Example Usage
 
