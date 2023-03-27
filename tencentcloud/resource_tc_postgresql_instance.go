@@ -813,22 +813,23 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			return outErr
 		}
 		// Wait for status to processing
-		_ = resource.Retry(time.Second*10, func() *resource.RetryError {
+		_ = resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
 			instance, _, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
 			if err != nil {
 				return retryError(err)
 			}
-			if *instance.DBInstanceStatus == POSTGRESQL_STAUTS_RUNNING {
+			if *instance.DBInstanceStatus != POSTGRESQL_STAUTS_RUNNING {
+				log.Printf("[DEBUG] The current instance.DBInstanceStatus:[%s] is not ready(running), retry...", *instance.DBInstanceStatus)
 				return resource.RetryableError(fmt.Errorf("waiting for upgrade status change"))
 			}
 			return nil
 		})
-		time.Sleep(time.Second * 5)
+		// time.Sleep(time.Second * 5)
 		// check update storage and memory done
-		checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, 60)
-		if checkErr != nil {
-			return checkErr
-		}
+		// checkErr = postgresqlService.CheckDBInstanceStatus(ctx, instanceId, 60)
+		// if checkErr != nil {
+		// 	return checkErr
+		// }
 		d.SetPartial("memory")
 		d.SetPartial("storage")
 	}
