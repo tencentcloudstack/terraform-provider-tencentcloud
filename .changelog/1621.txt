@@ -1,0 +1,2 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: update tke log agent doc description
