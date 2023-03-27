@@ -1,7 +1,7 @@
 /*
 Provides a resource to create a teo dns_record
 
-~> **NOTE:** Teo product planning changes, this resource will be offline soon
+~> **NOTE:** The teo product planning has changed, and the resource will soon be deprecated.
 
 Example Usage
 
