@@ -719,6 +719,8 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_instance
 	tencentcloud_lighthouse_blueprint
 	tencentcloud_lighthouse_firewall_rule
+  Data Source
+	tencentcloud_lighthouse_firewall_rules_template
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -1357,6 +1359,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_access_groups":                      dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                       dataSourceTencentCloudChdfsMountPoints(),
 			"tencentcloud_tcm_mesh":                                 dataSourceTencentCloudTcmMesh(),
+			"tencentcloud_lighthouse_firewall_rules_template":       dataSourceTencentCloudLighthouseFirewallRulesTemplate(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
