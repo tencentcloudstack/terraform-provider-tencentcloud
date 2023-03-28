@@ -718,6 +718,7 @@ TencentCloud Lighthouse(Lighthouse)
   Resource
 	tencentcloud_lighthouse_instance
 	tencentcloud_lighthouse_blueprint
+	tencentcloud_lighthouse_firewall_rule
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -1778,6 +1779,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cvm_launch_template_version":                resourceTencentCloudCvmLaunchTemplateVersion(),
 			"tencentcloud_apm_instance":                               resourceTencentCloudApmInstance(),
 			"tencentcloud_cvm_launch_template_default_version":        resourceTencentCloudCvmLaunchTemplateDefaultVersion(),
+			"tencentcloud_lighthouse_firewall_rule":                   resourceTencentCloudLighthouseFirewallRule(),
 		},
 
 		ConfigureFunc: providerConfigure,
