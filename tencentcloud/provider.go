@@ -1555,7 +1555,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_postgresql_readonly_instance":             resourceTencentCloudPostgresqlReadonlyInstance(),
 			"tencentcloud_postgresql_readonly_group":                resourceTencentCloudPostgresqlReadonlyGroup(),
 			"tencentcloud_postgresql_readonly_attachment":           resourceTencentCloudPostgresqlReadonlyAttachment(),
-			"tencentcloud_postgresql_parameter_template":              resourceTencentCloudPostgresqlParameterTemplate(),
+			"tencentcloud_postgresql_parameter_template":            resourceTencentCloudPostgresqlParameterTemplate(),
 			"tencentcloud_sqlserver_instance":                       resourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                             resourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                        resourceTencentCloudSqlserverAccount(),
