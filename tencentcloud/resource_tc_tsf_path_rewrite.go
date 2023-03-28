@@ -90,9 +90,10 @@ func resourceTencentCloudTsfPathRewriteCreate(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 
 	var (
-		request     = tsf.NewCreatePathRewritesRequest()
-		pathRewrite = tsf.PathRewriteCreateObject{}
-		// response      = tsf.NewCreatePathRewritesResponse()
+		request       = tsf.NewCreatePathRewritesWithDetailRespRequest()
+		pathRewrites  = []*tsf.PathRewriteCreateObject{}
+		pathRewrite   = tsf.PathRewriteCreateObject{}
+		response      = tsf.NewCreatePathRewritesWithDetailRespResponse()
 		pathRewriteId string
 	)
 	if v, ok := d.GetOk("gateway_group_id"); ok {
@@ -115,15 +116,16 @@ func resourceTencentCloudTsfPathRewriteCreate(d *schema.ResourceData, meta inter
 		pathRewrite.Order = helper.IntInt64(v.(int))
 	}
 
-	request.PathRewrites = &pathRewrite
+	pathRewrites = append(pathRewrites, &pathRewrite)
+	request.PathRewrites = pathRewrites
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreatePathRewrites(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreatePathRewritesWithDetailResp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -131,7 +133,7 @@ func resourceTencentCloudTsfPathRewriteCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	// pathRewriteId = *response.Response.pathRewriteId
+	pathRewriteId = *response.Response.Result[0]
 	d.SetId(pathRewriteId)
 
 	return resourceTencentCloudTsfPathRewriteRead(d, meta)

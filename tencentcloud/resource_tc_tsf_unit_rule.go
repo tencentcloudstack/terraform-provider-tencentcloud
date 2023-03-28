@@ -191,9 +191,9 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 
 	var (
-		request = tsf.NewCreateUnitRuleRequest()
-		// response = tsf.NewCreateUnitRuleResponse()
-		ruleId string
+		request  = tsf.NewCreateUnitRuleWithDetailRespRequest()
+		response = tsf.NewCreateUnitRuleWithDetailRespResponse()
+		ruleId   string
 	)
 	if v, ok := d.GetOk("gateway_instance_id"); ok {
 		request.GatewayInstanceId = helper.String(v.(string))
@@ -265,13 +265,13 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateUnitRule(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateUnitRuleWithDetailResp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -279,7 +279,7 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	// ruleId = *response.Response.RuleId
+	ruleId = *response.Response.Result.Id
 	d.SetId(ruleId)
 
 	return resourceTencentCloudTsfUnitRuleRead(d, meta)

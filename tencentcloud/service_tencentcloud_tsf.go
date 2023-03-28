@@ -232,29 +232,29 @@ func (me *TsfService) DescribeTsfApiRateLimitRuleById(ctx context.Context, apiId
 	return
 }
 
-// func (me *TsfService) DeleteTsfApiRateLimitRuleById(ctx context.Context, apiId, ruleId string) (errRet error) {
-// 	logId := getLogId(ctx)
+func (me *TsfService) DeleteTsfApiRateLimitRuleById(ctx context.Context, apiId, ruleId string) (errRet error) {
+	logId := getLogId(ctx)
 
-// 	request := tsf.NewDeleteApiRateLimitRuleRequest()
-// 	request.ApiId = &apiId
+	request := tsf.NewDeleteApiRateLimitRuleRequest()
+	request.RuleId = &ruleId
 
-// 	defer func() {
-// 		if errRet != nil {
-// 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-// 		}
-// 	}()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
 
-// 	ratelimit.Check(request.GetAction())
+	ratelimit.Check(request.GetAction())
 
-// 	response, err := me.client.UseTsfClient().DeleteApiRateLimitRule(request)
-// 	if err != nil {
-// 		errRet = err
-// 		return
-// 	}
-// 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	response, err := me.client.UseTsfClient().DeleteApiRateLimitRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-// 	return
-// }
+	return
+}
 
 func (me *TsfService) DescribeTsfConfigTemplateById(ctx context.Context, templateId string) (configTemplate *tsf.ConfigTemplate, errRet error) {
 	logId := getLogId(ctx)

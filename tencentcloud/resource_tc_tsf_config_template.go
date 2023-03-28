@@ -105,8 +105,8 @@ func resourceTencentCloudTsfConfigTemplateCreate(d *schema.ResourceData, meta in
 	logId := getLogId(contextNil)
 
 	var (
-		request = tsf.NewCreateConfigTemplateRequest()
-		// response   = tsf.NewCreateConfigTemplateResponse()
+		request    = tsf.NewCreateConfigTemplateWithDetailRespRequest()
+		response   = tsf.NewCreateConfigTemplateWithDetailRespResponse()
 		templateId string
 	)
 	if v, ok := d.GetOk("config_template_name"); ok {
@@ -134,13 +134,13 @@ func resourceTencentCloudTsfConfigTemplateCreate(d *schema.ResourceData, meta in
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateConfigTemplate(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateConfigTemplateWithDetailResp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -148,7 +148,7 @@ func resourceTencentCloudTsfConfigTemplateCreate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	// templateId = *response.Response.templateId
+	templateId = *response.Response.Result.ConfigTemplateId
 	d.SetId(templateId)
 
 	return resourceTencentCloudTsfConfigTemplateRead(d, meta)
