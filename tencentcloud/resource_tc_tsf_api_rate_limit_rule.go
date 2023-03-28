@@ -241,7 +241,7 @@ func resourceTencentCloudTsfApiRateLimitRuleUpdate(d *schema.ResourceData, meta 
 
 	request.RuleId = &ruleId
 
-	immutableArgs := []string{"api_id", "max_qps"}
+	immutableArgs := []string{"api_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

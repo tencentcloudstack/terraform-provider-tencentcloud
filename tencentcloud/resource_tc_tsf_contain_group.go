@@ -1094,7 +1094,7 @@ func resourceTencentCloudTsfContainGroupUpdate(d *schema.ResourceData, meta inte
 
 	request.GroupId = &groupId
 
-	immutableArgs := []string{"application_id", "namespace_id", "group_name", "instance_num", "access_type", "protocol_ports", "cluster_id", "cpu_limit", "mem_limit", "group_comment", "update_type", "update_ivl", "cpu_request", "mem_request", "group_resource_type", "subnet_id", "agent_cpu_request", "agent_cpu_limit", "agent_mem_request", "agent_mem_limit", "istio_cpu_request", "istio_cpu_limit", "istio_mem_request", "istio_mem_limit", "group_id", "current_num", "create_time", "server", "reponame", "tag_name", "cluster_name", "namespace_name", "lb_ip", "application_type", "cluster_ip", "envs", "application_name", "message", "status", "microservice_type", "instance_count", "updated_time", "max_surge", "max_unavailable", "health_check_settings"}
+	immutableArgs := []string{"application_id", "namespace_id", "group_name", "instance_num", "cluster_id", "cpu_limit", "mem_limit", "group_comment", "cpu_request", "mem_request", "group_resource_type", "agent_cpu_request", "agent_cpu_limit", "agent_mem_request", "agent_mem_limit", "istio_cpu_request", "istio_cpu_limit", "istio_mem_request", "istio_mem_limit", "group_id", "current_num", "create_time", "server", "reponame", "tag_name", "cluster_name", "namespace_name", "lb_ip", "application_type", "cluster_ip", "envs", "application_name", "message", "status", "microservice_type", "instance_count", "updated_time", "max_surge", "max_unavailable", "health_check_settings"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

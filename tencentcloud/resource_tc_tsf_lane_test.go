@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudNeedFixTsfLaneResource_basic -v
 func TestAccTencentCloudNeedFixTsfLaneResource_basic(t *testing.T) {
 	t.Parallel()
 

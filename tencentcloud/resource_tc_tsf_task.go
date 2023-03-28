@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_task" "task" {
-    task_name = ""
+  task_name = ""
   task_content = ""
   execute_type = ""
   task_type = ""
@@ -537,7 +537,7 @@ func resourceTencentCloudTsfTaskUpdate(d *schema.ResourceData, meta interface{})
 
 	request.TaskId = &taskId
 
-	immutableArgs := []string{"task_id", "task_name", "task_content", "execute_type", "task_type", "time_out", "group_id", "task_rule", "retry_count", "retry_interval", "shard_count", "shard_arguments", "success_operator", "success_ratio", "advance_settings", "task_argument", "task_state", "belong_flow_ids", "task_log_id", "trigger_type", "program_id_list"}
+	immutableArgs := []string{"task_id", "task_state", "belong_flow_ids", "task_log_id", "trigger_type"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

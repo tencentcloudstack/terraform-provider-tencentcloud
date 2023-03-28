@@ -422,7 +422,7 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 
 	request.Id = &id
 
-	immutableArgs := []string{"gateway_instance_id", "name", "rule_id", "status", "description", "unit_rule_item_list"}
+	immutableArgs := []string{"gateway_instance_id", "rule_id", "status"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

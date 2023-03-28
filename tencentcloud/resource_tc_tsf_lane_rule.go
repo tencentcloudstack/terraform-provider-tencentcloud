@@ -368,7 +368,7 @@ func resourceTencentCloudTsfLaneRuleUpdate(d *schema.ResourceData, meta interfac
 
 	request.RuleId = &ruleId
 
-	immutableArgs := []string{"rule_id", "rule_name", "remark", "rule_tag_list", "rule_tag_relationship", "lane_id", "priority", "enable", "create_time", "update_time", "program_id_list"}
+	immutableArgs := []string{"rule_id", "priority", "enable", "create_time", "update_time", "program_id_list"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

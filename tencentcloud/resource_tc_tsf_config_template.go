@@ -224,7 +224,7 @@ func resourceTencentCloudTsfConfigTemplateUpdate(d *schema.ResourceData, meta in
 
 	request.ConfigTemplateId = &templateId
 
-	immutableArgs := []string{"config_template_name", "config_template_type", "config_template_value", "config_template_desc", "program_id_list", "create_time", "update_time", "config_template_id"}
+	immutableArgs := []string{"program_id_list", "create_time", "update_time", "config_template_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
