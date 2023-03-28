@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -1383,6 +1385,45 @@ func (me *CvmService) DescribeLaunchTemplateVersionsById(ctx context.Context, la
 	return
 }
 
+func (me *CvmService) DescribeLaunchTemplateVersions(ctx context.Context, launchTemplateId string) (launchTemplates []*cvm.LaunchTemplateVersionInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cvm.NewDescribeLaunchTemplateVersionsRequest()
+	request.LaunchTemplateId = &launchTemplateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	offect := 0
+	limit := 50
+	for {
+		ratelimit.Check(request.GetAction())
+		request.Offset = helper.IntUint64(offect)
+		request.Limit = helper.IntUint64(limit)
+		response, err := me.client.UseCvmClient().DescribeLaunchTemplateVersions(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if response == nil || response.Response == nil || len(response.Response.LaunchTemplateVersionSet) == 0 {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+			return
+		}
+
+		launchTemplates = append(launchTemplates, response.Response.LaunchTemplateVersionSet...)
+
+		if len(response.Response.LaunchTemplateVersionSet) < limit {
+			break
+		}
+	}
+
+	return
+}
+
 func (me *CvmService) DeleteCvmLaunchTemplateById(ctx context.Context, launchTemplateId string) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -1460,4 +1501,28 @@ func (me *CvmService) DeleteCvmLaunchTemplateVersionById(ctx context.Context, la
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
+}
+
+func (me *CvmService) ModifyLaunchTemplateDefaultVersion(ctx context.Context, launchTemplateId string, defaultVersion int) error {
+	logId := getLogId(ctx)
+	request := cvm.NewModifyLaunchTemplateDefaultVersionRequest()
+	request.LaunchTemplateId = helper.String(launchTemplateId)
+	request.DefaultVersion = helper.IntInt64(defaultVersion)
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().ModifyLaunchTemplateDefaultVersion(request)
+	if err != nil {
+		if sdkErr, ok := err.(*sdkError.TencentCloudSDKError); ok {
+			if sdkErr.Code == "InvalidParameterValue.LaunchTemplateIdVerSetAlready" && strings.Contains(sdkErr.Message, "The specified launch template version had been set to default") {
+				return nil
+			}
+		}
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
 }
