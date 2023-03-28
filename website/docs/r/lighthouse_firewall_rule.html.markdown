@@ -38,7 +38,7 @@ resource "tencentcloud_lighthouse_firewall_rule" "firewall_rule" {
 The following arguments are supported:
 
 * `firewall_rules` - (Required, List) Firewall rule list.
-* `instance_id` - (Required, String) Instance ID.
+* `instance_id` - (Required, String, ForceNew) Instance ID.
 
 The `firewall_rules` object supports the following:
 

@@ -55,6 +55,7 @@ func resourceTencentCloudLighthouseFirewallRule() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},
