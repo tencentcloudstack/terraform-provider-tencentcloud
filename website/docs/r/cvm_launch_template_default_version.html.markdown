@@ -25,7 +25,7 @@ resource "tencentcloud_cvm_launch_template_default_version" "launch_template_def
 The following arguments are supported:
 
 * `default_version` - (Required, Int) The number of the version that you want to set as the default version.
-* `launch_template_id` - (Required, String) Instance launch template ID.
+* `launch_template_id` - (Required, String, ForceNew) Instance launch template ID.
 
 ## Attributes Reference
 

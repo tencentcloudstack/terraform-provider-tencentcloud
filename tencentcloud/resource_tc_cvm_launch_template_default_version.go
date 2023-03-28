@@ -40,6 +40,7 @@ func resourceTencentCloudCvmLaunchTemplateDefaultVersion() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"launch_template_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Instance launch template ID.",
 			},
