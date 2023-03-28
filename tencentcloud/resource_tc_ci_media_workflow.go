@@ -82,44 +82,44 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Codec format, value aac, mp3, flac, amr.",
+				Description: "Workflow name, supports Chinese, English, numbers, — and _, the length limit is 128 characters.",
 			},
 
 			"workflow_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: ".",
+				Description: "workflow id.",
 			},
 
 			"state": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Original audio bit rate, unit: Kbps, Value range: [8, 1000].",
+				Description: "workflow state, Paused/Active.",
 			},
 
 			"topology": {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: ".",
+				Description: "topology information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"dependencies": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Required:    true,
-							Description: ".",
+							Description: "node dependencies.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: ".",
+										Description: "key.",
 									},
 									"value": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: ".",
+										Description: "value.",
 									},
 								},
 							},
@@ -127,69 +127,69 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 						"nodes": {
 							Type:        schema.TypeList,
 							Required:    true,
-							Description: ".",
+							Description: "node list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"key": {
 										Type:        schema.TypeString,
-										Optional:    true,
-										Description: ".",
+										Required:    true,
+										Description: "node key.",
 									},
 									"node": {
 										Type:        schema.TypeList,
 										MaxItems:    1,
-										Optional:    true,
-										Description: ".",
+										Required:    true,
+										Description: "node.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"type": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: ".",
+													Description: "node type.",
 												},
 												"input": {
 													Type:        schema.TypeList,
 													MaxItems:    1,
 													Required:    true,
-													Description: ".",
+													Description: "node input.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"queue_id": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: ".",
+																Description: "queue id.",
 															},
 															"object_prefix": {
 																Type:        schema.TypeString,
 																Required:    true,
-																Description: ".",
+																Description: "Object prefix.",
 															},
 															"notify_config": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
-																Required:    true,
-																Description: ".",
+																Optional:    true,
+																Description: "Callback information, if not set, use the callback information of the queue.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"url": {
 																			Type:        schema.TypeString,
-																			Optional:    true,
-																			Description: ".",
+																			Required:    true,
+																			Description: "Callback address, cannot be an intranet address.",
 																		},
 																		"event": {
 																			Type:        schema.TypeString,
-																			Optional:    true,
-																			Description: ".",
+																			Required:    true,
+																			Description: "Callback information `TaskFinish`: task completed; `WorkflowFinish`: workflow completed; multiple events are supported, separated by commas.",
 																		},
 																		"type": {
 																			Type:        schema.TypeString,
-																			Optional:    true,
-																			Description: ".",
+																			Required:    true,
+																			Description: "Callback type `Url`: url callback; `TDMQ`: tdmq message callback.",
 																		},
 																		"result_format": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Callback format `XML`: xml format; `JSON`: json format, default: `XML`.",
 																		},
 																	},
 																},
@@ -197,34 +197,34 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 															"ext_filter": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
-																Required:    true,
-																Description: ".",
+																Optional:    true,
+																Description: "file extension filter.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"state": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "switch, On/Off, default: `Off`.",
 																		},
 																		"audio": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Open audio suffix restriction, false/true, default: `false`.",
 																		},
 																		"custom": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Open custom suffix limit, false/true, default: `false`.",
 																		},
 																		"custom_exts": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Custom suffix, multiple file suffixes are separated by /, and the number of suffixes does not exceed 10. When Custom is true, this parameter is required.",
 																		},
 																		"all_file": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "All files, false/true, default: `false`.",
 																		},
 																	},
 																},
@@ -235,46 +235,46 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 												"operation": {
 													Type:        schema.TypeList,
 													MaxItems:    1,
-													Optional:    true,
-													Description: ".",
+													Required:    true,
+													Description: "operating rules.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
 															"template_id": {
 																Type:        schema.TypeString,
-																Optional:    true,
-																Description: ".",
+																Required:    true,
+																Description: "Video turntable template id.",
 															},
 															"output": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
-																Optional:    true,
-																Description: ".",
+																Required:    true,
+																Description: "output address.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"region": {
 																			Type:        schema.TypeString,
-																			Optional:    true,
-																			Description: ".",
+																			Required:    true,
+																			Description: "The region of the bucket.",
 																		},
 																		"bucket": {
 																			Type:        schema.TypeString,
-																			Optional:    true,
-																			Description: ".",
+																			Required:    true,
+																			Description: "Bucket name.",
 																		},
 																		"object": {
 																			Type:        schema.TypeString,
-																			Optional:    true,
-																			Description: ".",
+																			Required:    true,
+																			Description: "Result file name, when the workflow node type is Snapshot or SmartCover, and there are more than one result file, it must contain ${Number}$; when the workflow node type is Segment, Duration is set, and the Format is not HLS or m3u8, Must contain ${Number}.",
 																		},
 																		"au_object": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Voice result file name, this field is required when the workflow node type is VoiceSeparate and there is a voice output.",
 																		},
 																		"sprite_object": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "The name of the sprite, when the workflow node type is Snapshot and the sprite is opened, this field is required.",
 																		},
 																	},
 																},
@@ -285,79 +285,79 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																	Type: schema.TypeString,
 																},
 																Optional:    true,
-																Description: ".",
+																Description: "Watermark template ID, multiple watermark templates can be used, no more than 3.",
 															},
 															"delogo_param": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
-																Description: ".",
+																Description: "delogo param.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"switch": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "switch.",
 																		},
 																		"dx": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "The x offset from the origin of the upper left corner, value range: [0, 4096], unit: px.",
 																		},
 																		"dy": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "The y offset from the origin of the upper left corner, value range: [0, 4096], unit: px.",
 																		},
 																		"width": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "watermark width, value range: [0, 4096], unit: px.",
 																		},
 																		"height": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "The height of the watermark, value range: [0, 4096], unit: px.",
 																		},
 																	},
 																},
 															},
-															"s_d_rto_h_d_r": {
+															"sdr_to_hdr": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
-																Description: ".",
+																Description: "SDRtoHDR configuration.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"hdr_mode": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "HDR standard, `HLG`, `HDR10`.",
 																		},
 																	},
 																},
 															},
-															"s_c_f": {
+															"scf": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
-																Optional:    true,
-																Description: ".",
+																Required:    true,
+																Description: "SCF function information.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"region": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Function region.",
 																		},
 																		"function_name": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Function name.",
 																		},
 																		"namespace": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Namespaces.",
 																		},
 																	},
 																},
@@ -366,24 +366,24 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
-																Description: ".",
+																Description: "Pack info.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"video_stream_config": {
 																			Type:        schema.TypeList,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Video substream configuration.",
 																			Elem: &schema.Resource{
 																				Schema: map[string]*schema.Schema{
 																					"video_stream_name": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: ".",
+																						Description: "video substream name, must correspond to an existing video node.",
 																					},
 																					"band_width": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: ".",
+																						Description: "Video substream bandwidth limit, unit b/s, range [0, 2000000000], 0 means unlimited, greater than or equal to 0, default value is 0.",
 																					},
 																				},
 																			},
@@ -393,8 +393,8 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 															},
 															"transcode_template_id": {
 																Type:        schema.TypeString,
-																Optional:    true,
-																Description: ".",
+																Required:    true,
+																Description: "Audio and video transcoding template ID.",
 															},
 															"smart_cover": {
 																Type:        schema.TypeList,
@@ -406,27 +406,27 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																		"format": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Image format, `jpg`,`png`,`webp`, default: `jpg`.",
 																		},
 																		"width": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Width, value range: [128, 4096], unit: px, if only Width is set, Height is calculated according to the original ratio of the video.",
 																		},
 																		"height": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Height, value range: [128, 4096], unit: px, if only Height is set, Width is calculated according to the original video ratio.",
 																		},
 																		"count": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Number of screenshots, [1,10], default: `3`.",
 																		},
 																		"delete_duplicates": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "cover deduplication, false/true, default: `false`.",
 																		},
 																	},
 																},
@@ -435,18 +435,18 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
-																Description: ".",
+																Description: "Audio and video conversion package parameters.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"format": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Package format, `aac`, `mp3`, `flac`, `mp4`, `ts`, `mkv`, `avi`, `hls`, `m3u8`.",
 																		},
 																		"duration": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Transpackage duration, unit: second, an integer not less than 5.",
 																		},
 																	},
 																},
@@ -461,17 +461,17 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																		"message": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Watermark information embedded with digital watermark, the length does not exceed 64 characters, only supports `Chinese`, `English`, `numbers`, `_`, `-` and `*`.",
 																		},
 																		"type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Digital watermark type, currently only can be set to Text.",
 																		},
 																		"version": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Digital watermark version, currently only can be set to V1.",
 																		},
 																	},
 																},
@@ -480,23 +480,23 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
-																Description: ".",
+																Description: "Packaging configuration.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"pack_type": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Packaging type. Default: HLS, HLS/DASH.",
 																		},
 																		"ignore_failed_stream": {
 																			Type:        schema.TypeBool,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Ignore substreams that fail to be transcoded and continue packaging. Default: true, true/false.",
 																		},
 																		"reserve_all_stream_node": {
 																			Type:        schema.TypeString,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Reserve all stream node.",
 																		},
 																	},
 																},
@@ -505,24 +505,24 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
-																Description: ".",
+																Description: "Packing rules.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
 																		"video_stream_config": {
 																			Type:        schema.TypeList,
 																			Optional:    true,
-																			Description: ".",
+																			Description: "Video substream configuration.",
 																			Elem: &schema.Resource{
 																				Schema: map[string]*schema.Schema{
 																					"video_stream_name": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: ".",
+																						Description: "video substream name, must correspond to an existing video node.",
 																					},
 																					"band_width": {
 																						Type:        schema.TypeString,
 																						Optional:    true,
-																						Description: ".",
+																						Description: "Video substream bandwidth limit, unit b/s, range [0, 2000000000], 0 means unlimited, greater than or equal to 0, default value is 0.",
 																					},
 																				},
 																			},
@@ -546,19 +546,19 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 			"create_time": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: ".",
+				Description: "Create time.",
 			},
 
 			"update_time": {
 				Computed:    true,
 				Type:        schema.TypeString,
-				Description: ".",
+				Description: "Update time.",
 			},
 
 			"bucket_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: ".",
+				Description: "Bucket id.",
 			},
 		},
 	}
@@ -717,7 +717,7 @@ func resourceTencentCloudCiMediaWorkflowCreate(d *schema.ResourceData, meta inte
 							}
 							nodeOperation.SDRtoHDR = &nodeSDRtoHDR
 						}
-						if sCFMap, ok := helper.InterfaceToMap(operationMap, "s_c_f"); ok {
+						if sCFMap, ok := helper.InterfaceToMap(operationMap, "scf"); ok {
 							nodeSCF := ci.NodeSCF{}
 							if v, ok := sCFMap["region"]; ok {
 								nodeSCF.Region = v.(string)
@@ -837,7 +837,7 @@ func resourceTencentCloudCiMediaWorkflowCreate(d *schema.ResourceData, meta inte
 		bucketId = v.(string)
 		mediaWorkflow.BucketId = v.(string)
 	}
-
+	request.MediaWorkflow = &mediaWorkflow
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucketId).CI.CreateMediaWorkflow(ctx, &request)
 		if e != nil {
@@ -1060,7 +1060,7 @@ func resourceTencentCloudCiMediaWorkflowRead(d *schema.ResourceData, meta interf
 								sDRtoHDRMap["hdr_mode"] = nodes.Operation.SDRtoHDR.HdrMode
 							}
 
-							operationMap["s_d_rto_h_d_r"] = []interface{}{sDRtoHDRMap}
+							operationMap["sdr_to_hdr"] = []interface{}{sDRtoHDRMap}
 						}
 
 						if nodes.Operation.SCF != nil {
@@ -1078,7 +1078,7 @@ func resourceTencentCloudCiMediaWorkflowRead(d *schema.ResourceData, meta interf
 								sCFMap["namespace"] = nodes.Operation.SCF.Namespace
 							}
 
-							operationMap["s_c_f"] = []interface{}{sCFMap}
+							operationMap["scf"] = []interface{}{sCFMap}
 						}
 
 						if nodes.Operation.HlsPackInfo != nil {
