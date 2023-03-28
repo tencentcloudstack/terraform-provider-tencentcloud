@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_api_rate_limit_rule" "api_rate_limit_rule" {
-  api_id = ""
-  max_qps =
-  usable_status = ""
+  api_id = "api-xxxxxx"
+  max_qps = 10
+  usable_status = "enable"
 }
 ```
 
@@ -139,7 +139,7 @@ func resourceTencentCloudTsfApiRateLimitRuleCreate(d *schema.ResourceData, meta 
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -241,7 +241,7 @@ func resourceTencentCloudTsfApiRateLimitRuleUpdate(d *schema.ResourceData, meta 
 
 	request.RuleId = &ruleId
 
-	immutableArgs := []string{"api_id", "max_qps", "usable_status", "result"}
+	immutableArgs := []string{"api_id", "max_qps"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
