@@ -24,14 +24,27 @@ func TestAccTencentCloudNeedFixTsfConfigTemplateResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTsfConfigTemplateExists("tencentcloud_tsf_config_template.config_template"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_config_template.config_template", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_config_template.config_template", "config_template_name", ""),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_config_template.config_template", "config_template_type", ""),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_config_template.config_template", "config_template_name", "terraform-template-name"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_config_template.config_template", "config_template_type", "Ribbon"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tsf_config_template.config_template", "config_template_value"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_config_template.config_template", "config_template_desc", "terraform-test"),
 				),
 			},
 			{
 				ResourceName:      "tencentcloud_tsf_config_template.config_template",
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				Config: testAccTsfConfigTemplateUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTsfConfigTemplateExists("tencentcloud_tsf_config_template.config_template"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tsf_config_template.config_template", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_config_template.config_template", "config_template_name", "terraform-template-name"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_config_template.config_template", "config_template_type", "Ribbon"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tsf_config_template.config_template", "config_template_value"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_config_template.config_template", "config_template_desc", "terraform-test"),
+				),
 			},
 		},
 	})
@@ -85,11 +98,43 @@ func testAccCheckTsfConfigTemplateExists(r string) resource.TestCheckFunc {
 const testAccTsfConfigTemplate = `
 
 resource "tencentcloud_tsf_config_template" "config_template" {
-  config_template_name = ""
-  config_template_type = ""
-  config_template_value = ""
-  config_template_desc = ""
-  program_id_list = 
-      }
+	config_template_name = "terraform-template-name"
+	config_template_type = "Ribbon"
+	config_template_value = <<-EOT
+	  #请求处理超时时间
+	  ribbon.ReadTimeout: 5000
+	  #请求连接超时时间
+	  ribbon.ConnectTimeout: 2000
+	  #同一实例最大重试次数，不包括首次调用
+	  ribbon.MaxAutoRetries: 0
+	  #重试其他实例的最大重试次数，不包括首次所选的server
+	  ribbon.MaxAutoRetriesNextServer: 1
+	  #是否对所有操作请求都进行重试
+	  ribbon.OkToRetryOnAllOperations: true
+	EOT
+	config_template_desc = "terraform-test"
+}
+
+`
+
+const testAccTsfConfigTemplateUpdate = `
+
+resource "tencentcloud_tsf_config_template" "config_template" {
+	config_template_name = "terraform-template-name"
+	config_template_type = "Ribbon"
+	config_template_value = <<-EOT
+	  #请求处理超时时间
+	  ribbon.ReadTimeout: 5000
+	  #请求连接超时时间
+	  ribbon.ConnectTimeout: 2000
+	  #同一实例最大重试次数，不包括首次调用
+	  ribbon.MaxAutoRetries: 0
+	  #重试其他实例的最大重试次数，不包括首次所选的server
+	  ribbon.MaxAutoRetriesNextServer: 1
+	  #是否对所有操作请求都进行重试
+	  ribbon.OkToRetryOnAllOperations: false
+	EOT
+	config_template_desc = "terraform-test"
+}
 
 `

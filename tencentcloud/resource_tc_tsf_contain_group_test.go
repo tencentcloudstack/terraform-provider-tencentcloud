@@ -115,6 +115,6 @@ resource "tencentcloud_tsf_contain_group" "contain_group" {
   istio_cpu_limit = ""
   istio_mem_request = ""
   istio_mem_limit = ""
-                                          }
+}
 
 `

@@ -5,18 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_application_release_config" "application_release_config" {
-  config_id = ""
-  group_id = ""
-  release_desc = ""
+  config_id = "dcfg-nalqbqwv"
+  group_id = "group-yxmz72gv"
+  release_desc = "terraform-test"
 }
 ```
 
 Import
 
-tsf application_release_config can be imported using the id, e.g.
+tsf application_release_config can be imported using the configId#groupId#configReleaseId, e.g.
 
 ```
-terraform import tencentcloud_tsf_application_release_config.application_release_config application_release_config_id
+terraform import tencentcloud_tsf_application_release_config.application_release_config dcfg-nalqbqwv#group-yxmz72gv#dcfgr-maeeq2ea
 ```
 */
 package tencentcloud
@@ -168,8 +168,8 @@ func resourceTencentCloudTsfApplicationReleaseConfigCreate(d *schema.ResourceDat
 		return err
 	}
 
-	id := *response.Response.Result.ConfigReleaseId
-	d.SetId(configId + FILED_SP + groupId + FILED_SP + id)
+	configReleaseId := *response.Response.Result.ConfigReleaseId
+	d.SetId(configId + FILED_SP + groupId + FILED_SP + configReleaseId)
 
 	return resourceTencentCloudTsfApplicationReleaseConfigRead(d, meta)
 }

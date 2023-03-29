@@ -7,6 +7,7 @@ import (
 
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -367,6 +368,8 @@ func (me *TsfService) DescribeTsfLaneRuleById(ctx context.Context, ruleId string
 
 	request := tsf.NewDescribeLaneRulesRequest()
 	request.RuleId = &ruleId
+	request.Limit = helper.IntInt64(10)
+	request.Offset = helper.IntInt64(0)
 
 	defer func() {
 		if errRet != nil {
