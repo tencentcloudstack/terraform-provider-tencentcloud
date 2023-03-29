@@ -86,11 +86,11 @@ func testAccCheckTsfPathRewritekExists(r string) resource.TestCheckFunc {
 const testAccTsfPathRewrite = `
 
 resource "tencentcloud_tsf_path_rewrite" "path_rewrite" {
-  gateway_group_id = ""
-  regex = ""
-  replacement = ""
-  blocked = ""
-  order = 
+	gateway_group_id = "group-a2j9zxpv"
+	regex = "/test"
+	replacement = "/tt"
+	blocked = "N"
+	order = 2
 }
 
 `
