@@ -90,7 +90,7 @@ func dataSourceTencentCloudSsmSecretVersionsRead(d *schema.ResourceData, meta in
 	})
 	if outErr != nil {
 		sdkErr, ok := outErr.(*sdkError.TencentCloudSDKError)
-		if ok && sdkErr.Code == PostgresqlResourceNotFound {
+		if ok && sdkErr.Code == SSMResourceNotFound {
 			d.SetId("")
 			log.Printf("[WARN]%s resource `secretInfo` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 			return nil
