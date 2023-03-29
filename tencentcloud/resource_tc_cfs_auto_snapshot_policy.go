@@ -3,6 +3,8 @@ Provides a resource to create a cfs auto_snapshot_policy
 
 Example Usage
 
+use day of week
+
 ```hcl
 resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
   day_of_week = "1,2"
@@ -11,6 +13,29 @@ resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
   alive_days = 7
 }
 ```
+
+use day of month
+
+```hcl
+resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
+  hour = "2,3"
+  policy_name = "policy_name"
+  alive_days = 7
+  day_of_month = "2,3,4"
+}
+```
+
+use interval days
+
+```hcl
+resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
+  hour = "2,3"
+  policy_name = "policy_name"
+  alive_days = 7
+  interval_days = 1
+}
+```
+
 
 Import
 
@@ -43,12 +68,6 @@ func resourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"day_of_week": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "The day of the week on which to repeat the snapshot operation.",
-			},
-
 			"hour": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -59,6 +78,12 @@ func resourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Policy name.",
+			},
+
+			"day_of_week": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "The day of the week on which to repeat the snapshot operation.",
 			},
 
 			"alive_days": {
