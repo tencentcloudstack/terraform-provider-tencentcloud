@@ -1,0 +1,3 @@
+```release-note:new-resource
+resource/tencentcloud_cfs_auto_snapshot_policy:  support set day_of_month and interval_days
+```
