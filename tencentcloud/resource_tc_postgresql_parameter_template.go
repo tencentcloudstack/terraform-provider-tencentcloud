@@ -594,7 +594,7 @@ func resourceTencentCloudPostgresqlParameterTemplateUpdate(d *schema.ResourceDat
 
 	request.TemplateId = helper.String(d.Id())
 
-	immutableArgs := []string{"template_name", "db_major_version", "db_engine", "template_description"}
+	immutableArgs := []string{"db_major_version", "db_engine"}
 
 	// do not care the param_info_set attribute
 	for _, v := range immutableArgs {

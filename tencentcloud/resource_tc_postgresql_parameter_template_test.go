@@ -156,10 +156,10 @@ resource "tencentcloud_postgresql_parameter_template" "parameter_template" {
 const testAccPostgresqlParameterTemplate_update = `
 
 resource "tencentcloud_postgresql_parameter_template" "parameter_template" {
-  template_name = "tf_test_pg_temp"
+  template_name = "tf_test_pg_temp_updated"
   db_major_version = "13"
   db_engine = "postgresql"
-  template_description = "For_tf_test"
+  template_description = "For_tf_test_updated"
 
   modify_param_entry_set {
 	name = "timezone"
