@@ -1,3 +1,20 @@
+## 1.79.19 (March 29 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_lighthouse_firewall_rules_template` ([#1624](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1624))
+* **New Data Source:** `tencentcloud_postgresql_parameter_templates` ([#1625](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1625))
+* **New Resource:** `tencentcloud_cvm_launch_template_default_version` ([#1626](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1626))
+* **New Resource:** `tencentcloud_lighthouse_firewall_rule` ([#1624](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1624))
+* **New Resource:** `tencentcloud_mysql_audit_log_file` ([#1629](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1629))
+* **New Resource:** `tencentcloud_postgresql_parameter_template` ([#1625](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1625))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfs_auto_snapshot_policy:  support set day_of_month and interval_days ([#1631](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1631))
+* data-source/tencentcloud_ssm_secret_versions: return null when a resource is not found ([#1627](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1627))
+* resource/tencentcloud_monitor_tmp_exporter_integration: update doc to introduce how to upgrade exporter version ([#1630](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1630))
+
 ## 1.79.18 (March 24 2023)
 
 FEATURES:
