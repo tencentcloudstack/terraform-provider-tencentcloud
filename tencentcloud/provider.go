@@ -447,6 +447,7 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_deploy_group
 	tencentcloud_mysql_security_groups_attachment
 	tencentcloud_mysql_local_binlog_config
+	tencentcloud_mysql_audit_log_file
 
 Cloud Monitor(Monitor)
   Data Source
@@ -1452,6 +1453,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mysql_security_groups_attachment":         resourceTencentCloudMysqlSecurityGroupsAttachment(),
 			"tencentcloud_mysql_deploy_group":                       resourceTencentCloudMysqlDeployGroup(),
 			"tencentcloud_mysql_local_binlog_config":                resourceTencentCloudMysqlLocalBinlogConfig(),
+			"tencentcloud_mysql_audit_log_file":                     resourceTencentCloudMysqlAuditLogFile(),
 			"tencentcloud_cos_bucket":                               resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                        resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                          resourceTencentCloudCfsFileSystem(),

@@ -6,6 +6,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -1547,4 +1549,73 @@ func (me *MysqlService) DescribeMysqlLocalBinlogConfigById(ctx context.Context, 
 
 	localBinlogConfig = response.Response.LocalBinlogConfig
 	return
+}
+
+func (me *MysqlService) DescribeMysqlAuditLogFileById(ctx context.Context, instanceId string, fileName string) (auditLogFile *cdb.AuditLogFile, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDescribeAuditLogFilesRequest()
+	request.InstanceId = &instanceId
+	request.FileName = &fileName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DescribeAuditLogFiles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) < 1 {
+		return
+	}
+
+	auditLogFile = response.Response.Items[0]
+	return
+}
+
+func (me *MysqlService) DeleteMysqlAuditLogFileById(ctx context.Context, instanceId string, fileName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDeleteAuditLogFileRequest()
+	request.InstanceId = &instanceId
+	request.FileName = &fileName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DeleteAuditLogFile(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MysqlService) MysqlAuditLogFileStateRefreshFunc(instanceId, fileName string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeMysqlAuditLogFileById(ctx, instanceId, fileName)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
 }
