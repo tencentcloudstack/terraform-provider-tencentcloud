@@ -919,14 +919,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		request := cvm.NewDescribeImagesRequest()
 		response, errRet = client.UseCvmClient().DescribeImages(request)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
 		if *response.Response.TotalCount > 0 {
 			for i := range response.Response.ImageSet {
 				image := response.Response.ImageSet[i]
 				cvmImages = append(cvmImages, *image.ImageId)
 			}
-		}
-		if errRet != nil {
-			return retryError(errRet, InternalError)
 		}
 		return nil
 	})

@@ -46,7 +46,7 @@ func testSweepDnsRecord(region string) error {
 }
 
 // go test -i; go test -test.run TestAccTencentCloudTeoDnsRecord_basic -v
-func TestAccTencentCloudTeoDnsRecord_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixTeoDnsRecord_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },

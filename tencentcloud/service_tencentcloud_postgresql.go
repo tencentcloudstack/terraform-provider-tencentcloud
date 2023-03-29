@@ -890,3 +890,106 @@ func (me *PostgresqlService) DeletePostgresqlReadOnlyGroupById(ctx context.Conte
 	_, err := me.client.UsePostgresqlClient().DeleteReadOnlyGroup(request)
 	return err
 }
+
+func (me *PostgresqlService) DescribePostgresqlParameterTemplatesByFilter(ctx context.Context, param map[string]interface{}) (ParameterTemplates []*postgresql.ParameterTemplate, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeParameterTemplatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "filters" {
+			request.Filters = v.([]*postgresql.Filter)
+		}
+		if k == "order_by" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "order_by_type" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UsePostgresqlClient().DescribeParameterTemplates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ParameterTemplateSet) < 1 {
+			break
+		}
+		ParameterTemplates = append(ParameterTemplates, response.Response.ParameterTemplateSet...)
+		if len(response.Response.ParameterTemplateSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlParameterTemplateById(ctx context.Context, templateId string) (ParameterTemplate *postgresql.DescribeParameterTemplateAttributesResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeParameterTemplateAttributesRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeParameterTemplateAttributes(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ParameterTemplate = response.Response
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlParameterTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteParameterTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteParameterTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

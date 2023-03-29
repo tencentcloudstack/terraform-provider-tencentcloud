@@ -18,6 +18,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -88,6 +89,13 @@ func dataSourceTencentCloudSsmSecretVersionsRead(d *schema.ResourceData, meta in
 		return nil
 	})
 	if outErr != nil {
+		sdkErr, ok := outErr.(*sdkError.TencentCloudSDKError)
+		if ok && sdkErr.Code == SSMResourceNotFound {
+			d.SetId("")
+			log.Printf("[WARN]%s resource `secretInfo` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+			return nil
+		}
+
 		log.Printf("[CRITAL]%s read SSM secret failed, reason:%+v", logId, outErr)
 		return outErr
 	}

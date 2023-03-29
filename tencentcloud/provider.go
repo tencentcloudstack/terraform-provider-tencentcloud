@@ -311,6 +311,8 @@ Cloud Virtual Machine(CVM)
     tencentcloud_image
 	tencentcloud_cvm_hpc_cluster
 	tencentcloud_cvm_launch_template
+	tencentcloud_cvm_launch_template_version
+	tencentcloud_cvm_launch_template_default_version
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -445,6 +447,7 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_deploy_group
 	tencentcloud_mysql_security_groups_attachment
 	tencentcloud_mysql_local_binlog_config
+	tencentcloud_mysql_audit_log_file
 
 Cloud Monitor(Monitor)
   Data Source
@@ -494,12 +497,14 @@ TencentDB for PostgreSQL(PostgreSQL)
 	tencentcloud_postgresql_instances
 	tencentcloud_postgresql_specinfos
 	tencentcloud_postgresql_xlogs
+	tencentcloud_postgresql_parameter_templates
 
   Resource
 	tencentcloud_postgresql_instance
 	tencentcloud_postgresql_readonly_instance
 	tencentcloud_postgresql_readonly_group
 	tencentcloud_postgresql_readonly_attachment
+	tencentcloud_postgresql_parameter_template
 
 TencentDB for Redis(crs)
   Data Source
@@ -716,6 +721,9 @@ TencentCloud Lighthouse(Lighthouse)
   Resource
 	tencentcloud_lighthouse_instance
 	tencentcloud_lighthouse_blueprint
+	tencentcloud_lighthouse_firewall_rule
+  Data Source
+	tencentcloud_lighthouse_firewall_rules_template
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -992,6 +1000,10 @@ StreamLive(MDL)
   Resource
 	tencentcloud_mdl_stream_live_input
 
+Application Performance Management(APM)
+  Resource
+	tencentcloud_apm_instance
+
 */
 package tencentcloud
 
@@ -1242,6 +1254,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_postgresql_instances":                     dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                     dataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                         datasourceTencentCloudPostgresqlXlogs(),
+			"tencentcloud_postgresql_parameter_templates":           dataSourceTencentCloudPostgresqlParameterTemplates(),
 			"tencentcloud_sqlserver_zone_config":                    dataSourceTencentSqlserverZoneConfig(),
 			"tencentcloud_sqlserver_instances":                      dataSourceTencentCloudSqlserverInstances(),
 			"tencentcloud_sqlserver_backups":                        dataSourceTencentCloudSqlserverBackups(),
@@ -1350,6 +1363,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_access_groups":                      dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                       dataSourceTencentCloudChdfsMountPoints(),
 			"tencentcloud_tcm_mesh":                                 dataSourceTencentCloudTcmMesh(),
+			"tencentcloud_lighthouse_firewall_rules_template":       dataSourceTencentCloudLighthouseFirewallRulesTemplate(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1439,6 +1453,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mysql_security_groups_attachment":         resourceTencentCloudMysqlSecurityGroupsAttachment(),
 			"tencentcloud_mysql_deploy_group":                       resourceTencentCloudMysqlDeployGroup(),
 			"tencentcloud_mysql_local_binlog_config":                resourceTencentCloudMysqlLocalBinlogConfig(),
+			"tencentcloud_mysql_audit_log_file":                     resourceTencentCloudMysqlAuditLogFile(),
 			"tencentcloud_cos_bucket":                               resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                        resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                          resourceTencentCloudCfsFileSystem(),
@@ -1547,6 +1562,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_postgresql_readonly_instance":             resourceTencentCloudPostgresqlReadonlyInstance(),
 			"tencentcloud_postgresql_readonly_group":                resourceTencentCloudPostgresqlReadonlyGroup(),
 			"tencentcloud_postgresql_readonly_attachment":           resourceTencentCloudPostgresqlReadonlyAttachment(),
+			"tencentcloud_postgresql_parameter_template":            resourceTencentCloudPostgresqlParameterTemplate(),
 			"tencentcloud_sqlserver_instance":                       resourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                             resourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                        resourceTencentCloudSqlserverAccount(),
@@ -1769,6 +1785,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_mount_point_attachment":               resourceTencentCloudChdfsMountPointAttachment(),
 			"tencentcloud_mdl_stream_live_input":                      resourceTencentCloudMdlStreamLiveInput(),
 			"tencentcloud_lighthouse_blueprint":                       resourceTencentCloudLighthouseBlueprint(),
+			"tencentcloud_cvm_launch_template_version":                resourceTencentCloudCvmLaunchTemplateVersion(),
+			"tencentcloud_apm_instance":                               resourceTencentCloudApmInstance(),
+			"tencentcloud_cvm_launch_template_default_version":        resourceTencentCloudCvmLaunchTemplateDefaultVersion(),
+			"tencentcloud_lighthouse_firewall_rule":                   resourceTencentCloudLighthouseFirewallRule(),
 		},
 
 		ConfigureFunc: providerConfigure,

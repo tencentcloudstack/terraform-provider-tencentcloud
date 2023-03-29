@@ -374,6 +374,9 @@ const (
 	// 无效的appid。
 	INVALIDPARAMETERVALUE_INVALIDAPPIDFORMAT = "InvalidParameterValue.InvalidAppIdFormat"
 
+	// 不支持指定的启动模式。
+	INVALIDPARAMETERVALUE_INVALIDBOOTMODE = "InvalidParameterValue.InvalidBootMode"
+
 	// 请检查存储桶的写入权限是否已放通。
 	INVALIDPARAMETERVALUE_INVALIDBUCKETPERMISSIONFOREXPORT = "InvalidParameterValue.InvalidBucketPermissionForExport"
 
@@ -476,8 +479,17 @@ const (
 	// 子网不属于该cdc集群。
 	INVALIDPARAMETERVALUE_NOTCDCSUBNET = "InvalidParameterValue.NotCdcSubnet"
 
+	// 输入参数值不能为空。
+	INVALIDPARAMETERVALUE_NOTEMPTY = "InvalidParameterValue.NotEmpty"
+
 	// 不支持的操作。
 	INVALIDPARAMETERVALUE_NOTSUPPORTED = "InvalidParameterValue.NotSupported"
+
+	// 该机型不支持预热
+	INVALIDPARAMETERVALUE_PREHEATNOTSUPPORTEDINSTANCETYPE = "InvalidParameterValue.PreheatNotSupportedInstanceType"
+
+	// 该可用区目前不支持预热功能
+	INVALIDPARAMETERVALUE_PREHEATNOTSUPPORTEDZONE = "InvalidParameterValue.PreheatNotSupportedZone"
 
 	//  无效参数值。参数值取值范围不合法。
 	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
@@ -505,6 +517,9 @@ const (
 
 	// 无效参数值。参数值太长。
 	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+
+	// uuid不合要求。
+	INVALIDPARAMETERVALUE_UUIDMALFORMED = "InvalidParameterValue.UuidMalformed"
 
 	// VPC ID`xxx`不合要求，请提供规范的Vpc ID， 类似vpc-xxxxxxxx，字母x代表小写字符或者数字。
 	INVALIDPARAMETERVALUE_VPCIDMALFORMED = "InvalidParameterValue.VpcIdMalformed"
@@ -598,6 +613,9 @@ const (
 
 	// 实例启动模板版本数量超限。
 	LIMITEXCEEDED_LAUNCHTEMPLATEVERSIONQUOTA = "LimitExceeded.LaunchTemplateVersionQuota"
+
+	// 您在该可用区的预热额度已达上限，建议取消不再使用的快照预热
+	LIMITEXCEEDED_PREHEATIMAGESNAPSHOTOUTOFQUOTA = "LimitExceeded.PreheatImageSnapshotOutOfQuota"
 
 	// 预付费实例已购买数量已达到最大配额，请提升配额后重试。
 	LIMITEXCEEDED_PREPAYQUOTA = "LimitExceeded.PrepayQuota"
@@ -734,6 +752,9 @@ const (
 	// 指定的实例付费模式或者网络付费模式不支持共享带宽包
 	UNSUPPORTEDOPERATION_BANDWIDTHPACKAGEIDNOTSUPPORTED = "UnsupportedOperation.BandwidthPackageIdNotSupported"
 
+	// 实例创建快照的时间距今不到24小时。
+	UNSUPPORTEDOPERATION_DISKSNAPCREATETIMETOOOLD = "UnsupportedOperation.DiskSnapCreateTimeTooOld"
+
 	// 所选择的边缘可用区不支持云盘操作。
 	UNSUPPORTEDOPERATION_EDGEZONENOTSUPPORTCLOUDDISK = "UnsupportedOperation.EdgeZoneNotSupportCloudDisk"
 
@@ -745,6 +766,9 @@ const (
 
 	// 异构机型不支持跨机型调整。
 	UNSUPPORTEDOPERATION_HETEROGENEOUSCHANGEINSTANCEFAMILY = "UnsupportedOperation.HeterogeneousChangeInstanceFamily"
+
+	// 不支持未开启休眠功能的实例。
+	UNSUPPORTEDOPERATION_HIBERNATIONFORNORMALINSTANCE = "UnsupportedOperation.HibernationForNormalInstance"
 
 	// IPv6实例不支持VPC迁移
 	UNSUPPORTEDOPERATION_IPV6NOTSUPPORTVPCMIGRATE = "UnsupportedOperation.IPv6NotSupportVpcMigrate"
@@ -845,6 +869,9 @@ const (
 	// 不支持已经设置了释放时间的实例，请在实例详情页撤销实例定时销毁后再试。
 	UNSUPPORTEDOPERATION_INVALIDINSTANCENOTSUPPORTEDPROTECTEDINSTANCE = "UnsupportedOperation.InvalidInstanceNotSupportedProtectedInstance"
 
+	// 不支持有swap盘的实例。
+	UNSUPPORTEDOPERATION_INVALIDINSTANCEWITHSWAPDISK = "UnsupportedOperation.InvalidInstanceWithSwapDisk"
+
 	// 当前操作只支持国际版用户。
 	UNSUPPORTEDOPERATION_INVALIDPERMISSIONNONINTERNATIONALACCOUNT = "UnsupportedOperation.InvalidPermissionNonInternationalAccount"
 
@@ -872,6 +899,9 @@ const (
 	// 绑定负载均衡的实例，不支持修改vpc属性。
 	UNSUPPORTEDOPERATION_MODIFYVPCWITHCLB = "UnsupportedOperation.ModifyVPCWithCLB"
 
+	// 实例基础网络已互通VPC网络，请自行解除关联，再进行切换VPC。
+	UNSUPPORTEDOPERATION_MODIFYVPCWITHCLASSLINK = "UnsupportedOperation.ModifyVPCWithClassLink"
+
 	// 该实例类型不支持竞价计费
 	UNSUPPORTEDOPERATION_NOINSTANCETYPESUPPORTSPOT = "UnsupportedOperation.NoInstanceTypeSupportSpot"
 
@@ -893,11 +923,17 @@ const (
 	// 无效的原机型。
 	UNSUPPORTEDOPERATION_ORIGINALINSTANCETYPEINVALID = "UnsupportedOperation.OriginalInstanceTypeInvalid"
 
+	// 你的账户不支持镜像预热
+	UNSUPPORTEDOPERATION_PREHEATIMAGE = "UnsupportedOperation.PreheatImage"
+
 	// 公共镜像或市场镜像不支持导出。
 	UNSUPPORTEDOPERATION_PUBLICIMAGEEXPORTUNSUPPORTED = "UnsupportedOperation.PublicImageExportUnsupported"
 
 	// 当前镜像不支持对该实例的重装操作。
 	UNSUPPORTEDOPERATION_RAWLOCALDISKINSREINSTALLTOQCOW2 = "UnsupportedOperation.RawLocalDiskInsReinstalltoQcow2"
+
+	// RedHat镜像不支持导出。
+	UNSUPPORTEDOPERATION_REDHATIMAGEEXPORTUNSUPPORTED = "UnsupportedOperation.RedHatImageExportUnsupported"
 
 	// 实例使用商业操作系统，不支持退还。
 	UNSUPPORTEDOPERATION_REDHATINSTANCETERMINATEUNSUPPORTED = "UnsupportedOperation.RedHatInstanceTerminateUnsupported"
