@@ -9,3 +9,7 @@ const (
 	SSM_STATUS_DISABLED      = "Disabled"
 	SSM_STATUS_PENDINGDELETE = "PendingDelete"
 )
+
+const (
+	SSMResourceNotFound = "ResourceNotFound"
+)
