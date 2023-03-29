@@ -496,12 +496,14 @@ TencentDB for PostgreSQL(PostgreSQL)
 	tencentcloud_postgresql_instances
 	tencentcloud_postgresql_specinfos
 	tencentcloud_postgresql_xlogs
+	tencentcloud_postgresql_parameter_templates
 
   Resource
 	tencentcloud_postgresql_instance
 	tencentcloud_postgresql_readonly_instance
 	tencentcloud_postgresql_readonly_group
 	tencentcloud_postgresql_readonly_attachment
+	tencentcloud_postgresql_parameter_template
 
 TencentDB for Redis(crs)
   Data Source
@@ -1251,6 +1253,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_postgresql_instances":                     dataSourceTencentCloudPostgresqlInstances(),
 			"tencentcloud_postgresql_specinfos":                     dataSourceTencentCloudPostgresqlSpecinfos(),
 			"tencentcloud_postgresql_xlogs":                         datasourceTencentCloudPostgresqlXlogs(),
+			"tencentcloud_postgresql_parameter_templates":           dataSourceTencentCloudPostgresqlParameterTemplates(),
 			"tencentcloud_sqlserver_zone_config":                    dataSourceTencentSqlserverZoneConfig(),
 			"tencentcloud_sqlserver_instances":                      dataSourceTencentCloudSqlserverInstances(),
 			"tencentcloud_sqlserver_backups":                        dataSourceTencentCloudSqlserverBackups(),
@@ -1557,6 +1560,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_postgresql_readonly_instance":             resourceTencentCloudPostgresqlReadonlyInstance(),
 			"tencentcloud_postgresql_readonly_group":                resourceTencentCloudPostgresqlReadonlyGroup(),
 			"tencentcloud_postgresql_readonly_attachment":           resourceTencentCloudPostgresqlReadonlyAttachment(),
+			"tencentcloud_postgresql_parameter_template":            resourceTencentCloudPostgresqlParameterTemplate(),
 			"tencentcloud_sqlserver_instance":                       resourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                             resourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                        resourceTencentCloudSqlserverAccount(),
