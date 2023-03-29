@@ -66,6 +66,18 @@ func resourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "Snapshot retention period.",
 			},
+
+			"day_of_month": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "The specific day (day 1 to day 31) of the month on which to create a snapshot.",
+			},
+
+			"interval_days": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "The snapshot interval, in days.",
+			},
 		},
 	}
 }
@@ -93,8 +105,16 @@ func resourceTencentCloudCfsAutoSnapshotPolicyCreate(d *schema.ResourceData, met
 		request.PolicyName = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("alive_days"); v != nil {
+	if v, ok := d.GetOkExists("alive_days"); ok {
 		request.AliveDays = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("day_of_month"); ok {
+		request.DayOfMonth = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("interval_days"); ok {
+		request.IntervalDays = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -156,6 +176,14 @@ func resourceTencentCloudCfsAutoSnapshotPolicyRead(d *schema.ResourceData, meta 
 		_ = d.Set("alive_days", autoSnapshotPolicy.AliveDays)
 	}
 
+	if autoSnapshotPolicy.DayOfMonth != nil {
+		_ = d.Set("day_of_month", autoSnapshotPolicy.DayOfMonth)
+	}
+
+	if autoSnapshotPolicy.IntervalDays != nil {
+		_ = d.Set("interval_days", autoSnapshotPolicy.IntervalDays)
+	}
+
 	return nil
 }
 
@@ -189,8 +217,20 @@ func resourceTencentCloudCfsAutoSnapshotPolicyUpdate(d *schema.ResourceData, met
 	}
 
 	if d.HasChange("alive_days") {
-		if v, _ := d.GetOk("alive_days"); v != nil {
+		if v, ok := d.GetOkExists("alive_days"); ok {
 			request.AliveDays = helper.IntUint64(v.(int))
+		}
+	}
+
+	if d.HasChange("day_of_month") {
+		if v, ok := d.GetOk("day_of_month"); ok {
+			request.DayOfMonth = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("interval_days") {
+		if v, ok := d.GetOkExists("interval_days"); ok {
+			request.IntervalDays = helper.IntUint64(v.(int))
 		}
 	}
 

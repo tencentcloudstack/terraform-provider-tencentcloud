@@ -29,6 +29,8 @@ The following arguments are supported:
 * `day_of_week` - (Required, String) The day of the week on which to repeat the snapshot operation.
 * `hour` - (Required, String) The time point when to repeat the snapshot operation.
 * `alive_days` - (Optional, Int) Snapshot retention period.
+* `day_of_month` - (Optional, String) The specific day (day 1 to day 31) of the month on which to create a snapshot.
+* `interval_days` - (Optional, Int) The snapshot interval, in days.
 * `policy_name` - (Optional, String) Policy name.
 
 ## Attributes Reference
