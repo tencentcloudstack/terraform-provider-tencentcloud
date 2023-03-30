@@ -106,7 +106,6 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"dependencies": {
 							Type:        schema.TypeList,
-							MaxItems:    1,
 							Required:    true,
 							Description: "node dependencies.",
 							Elem: &schema.Resource{
@@ -125,7 +124,7 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 							},
 						},
 						"nodes": {
-							Type:        schema.TypeList,
+							Type:        schema.TypeSet,
 							Required:    true,
 							Description: "node list.",
 							Elem: &schema.Resource{
@@ -150,7 +149,8 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 												"input": {
 													Type:        schema.TypeList,
 													MaxItems:    1,
-													Required:    true,
+													Optional:    true,
+													Computed:    true,
 													Description: "node input.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -235,7 +235,8 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 												"operation": {
 													Type:        schema.TypeList,
 													MaxItems:    1,
-													Required:    true,
+													Optional:    true,
+													Computed:    true,
 													Description: "operating rules.",
 													Elem: &schema.Resource{
 														Schema: map[string]*schema.Schema{
@@ -247,7 +248,8 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 															"output": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
-																Required:    true,
+																Optional:    true,
+																Computed:    true,
 																Description: "output address.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -285,12 +287,14 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																	Type: schema.TypeString,
 																},
 																Optional:    true,
+																Computed:    true,
 																Description: "Watermark template ID, multiple watermark templates can be used, no more than 3.",
 															},
 															"delogo_param": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "delogo param.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -326,6 +330,7 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "SDRtoHDR configuration.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -340,7 +345,8 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 															"scf": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
-																Required:    true,
+																Optional:    true,
+																Computed:    true,
 																Description: "SCF function information.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -366,6 +372,7 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Pack info.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -393,13 +400,15 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 															},
 															"transcode_template_id": {
 																Type:        schema.TypeString,
-																Required:    true,
+																Optional:    true,
+																Computed:    true,
 																Description: "Audio and video transcoding template ID.",
 															},
 															"smart_cover": {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: ".",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -435,6 +444,7 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Audio and video conversion package parameters.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -455,6 +465,7 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: ".",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -480,6 +491,7 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Packaging configuration.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -505,6 +517,7 @@ func resourceTencentCloudCiMediaWorkflow() *schema.Resource {
 																Type:        schema.TypeList,
 																MaxItems:    1,
 																Optional:    true,
+																Computed:    true,
 																Description: "Packing rules.",
 																Elem: &schema.Resource{
 																	Schema: map[string]*schema.Schema{
@@ -592,18 +605,29 @@ func resourceTencentCloudCiMediaWorkflowCreate(d *schema.ResourceData, meta inte
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "topology"); ok {
 		topology := ci.Topology{}
-		if dependenciesMap, ok := helper.InterfaceToMap(dMap, "dependencies"); ok {
-			dependencies := make(map[string]string)
-			if v, ok := dependenciesMap["key"]; ok {
-				dependencies["key"] = v.(string)
-			}
-			if v, ok := dependenciesMap["value"]; ok {
-				dependencies["value"] = v.(string)
-			}
-			topology.Dependencies = dependencies
-		}
-		if v, ok := dMap["nodes"]; ok {
+		dependencie := map[string]string{}
+		if v, ok := dMap["dependencies"]; ok {
 			for _, item := range v.([]interface{}) {
+				if item != nil {
+					dependenciesMap := item.(map[string]interface{})
+					key := ""
+					value := ""
+					if v, ok := dependenciesMap["key"]; ok {
+						key = v.(string)
+					}
+					if v, ok := dependenciesMap["value"]; ok {
+						value = v.(string)
+					}
+					if key != "" {
+						dependencie[key] = value
+					}
+				}
+			}
+			topology.Dependencies = dependencie
+		}
+		topology.Dependencies = dependencie
+		if v, ok := dMap["nodes"]; ok {
+			for _, item := range v.(*schema.Set).List() {
 				nodesMap := item.(map[string]interface{})
 				nodes := map[string]ci.Node{}
 				key := ""
@@ -838,6 +862,7 @@ func resourceTencentCloudCiMediaWorkflowCreate(d *schema.ResourceData, meta inte
 		mediaWorkflow.BucketId = v.(string)
 	}
 	request.MediaWorkflow = &mediaWorkflow
+	log.Printf("[DEBUG]======%s api[%s] success, request body [%+v]\n", logId, "CreateMediaWorkflow", mediaWorkflow.Topology)
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, _, e := meta.(*TencentCloudClient).apiV3Conn.UseCiClient(bucketId).CI.CreateMediaWorkflow(ctx, &request)
 		if e != nil {
@@ -904,13 +929,9 @@ func resourceTencentCloudCiMediaWorkflowRead(d *schema.ResourceData, meta interf
 
 		if mediaWorkflow.Topology.Dependencies != nil {
 			dependenciesMap := map[string]interface{}{}
-
-			if mediaWorkflow.Topology.Dependencies["key"] != "" {
-				dependenciesMap["key"] = mediaWorkflow.Topology.Dependencies["key"]
-			}
-
-			if mediaWorkflow.Topology.Dependencies["value"] != "" {
-				dependenciesMap["value"] = mediaWorkflow.Topology.Dependencies["value"]
+			for k, v := range mediaWorkflow.Topology.Dependencies {
+				dependenciesMap["key"] = k
+				dependenciesMap["value"] = v
 			}
 
 			topologyMap["dependencies"] = []interface{}{dependenciesMap}
@@ -1216,13 +1237,14 @@ func resourceTencentCloudCiMediaWorkflowRead(d *schema.ResourceData, meta interf
 						nodeMap["operation"] = []interface{}{operationMap}
 					}
 
-					nodesMap[key] = []interface{}{nodeMap}
+					nodesMap["key"] = key
+					nodesMap["node"] = []interface{}{nodeMap}
 				}
 
 				nodesList = append(nodesList, nodesMap)
 			}
 
-			topologyMap["nodes"] = []interface{}{nodesList}
+			topologyMap["nodes"] = nodesList
 		}
 
 		_ = d.Set("topology", []interface{}{topologyMap})
@@ -1268,10 +1290,8 @@ func resourceTencentCloudCiMediaWorkflowUpdate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	if d.HasChange("name") {
-		if v, ok := d.GetOk("name"); ok {
-			mediaWorkflow.Name = v.(string)
-		}
+	if v, ok := d.GetOk("name"); ok {
+		mediaWorkflow.Name = v.(string)
 	}
 
 	if d.HasChange("state") {
@@ -1283,18 +1303,26 @@ func resourceTencentCloudCiMediaWorkflowUpdate(d *schema.ResourceData, meta inte
 	if d.HasChange("topology") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "topology"); ok {
 			topology := ci.Topology{}
-			if dependenciesMap, ok := helper.InterfaceToMap(dMap, "dependencies"); ok {
-				dependencies := make(map[string]string)
-				if v, ok := dependenciesMap["key"]; ok {
-					dependencies["key"] = v.(string)
+			if v, ok := dMap["dependencies"]; ok {
+				dependencie := map[string]string{}
+				for _, item := range v.([]interface{}) {
+					dependenciesMap := item.(map[string]interface{})
+					key := ""
+					value := ""
+					if v, ok := dependenciesMap["key"]; ok {
+						key = v.(string)
+					}
+					if v, ok := dependenciesMap["value"]; ok {
+						value = v.(string)
+					}
+					if key != "" {
+						dependencie[key] = value
+					}
 				}
-				if v, ok := dependenciesMap["value"]; ok {
-					dependencies["value"] = v.(string)
-				}
-				topology.Dependencies = dependencies
+				topology.Dependencies = dependencie
 			}
 			if v, ok := dMap["nodes"]; ok {
-				for _, item := range v.([]interface{}) {
+				for _, item := range v.(*schema.Set).List() {
 					nodesMap := item.(map[string]interface{})
 					nodes := map[string]ci.Node{}
 					key := ""

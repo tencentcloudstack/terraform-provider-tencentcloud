@@ -26,6 +26,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -145,6 +146,7 @@ func resourceTencentCloudCiHotLinkUpdate(d *schema.ResourceData, meta interface{
 			Url:  url,
 		})
 		if e != nil {
+			time.Sleep(5 * time.Second)
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response status [%s]\n", logId, "SetHotLink", bucket, result.Status)

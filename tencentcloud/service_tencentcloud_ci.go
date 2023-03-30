@@ -323,7 +323,7 @@ func (me *CiService) DescribeCiMediaWorkflowById(ctx context.Context, bucket, wo
 		}
 	}()
 
-	response, _, err := me.client.UsePicClient(bucket).CI.DescribeMediaWorkflow(ctx, &request)
+	response, _, err := me.client.UseCiClient(bucket).CI.DescribeMediaWorkflow(ctx, &request)
 	if err != nil {
 		errRet = err
 		return
@@ -347,7 +347,7 @@ func (me *CiService) DeleteCiMediaWorkflowById(ctx context.Context, bucket, work
 		}
 	}()
 
-	response, _, err := me.client.UsePicClient(bucket).CI.DeleteMediaWorkflow(ctx, workflowId)
+	response, _, err := me.client.UseCiClient(bucket).CI.DeleteMediaWorkflow(ctx, workflowId)
 	if err != nil {
 		errRet = err
 		return
