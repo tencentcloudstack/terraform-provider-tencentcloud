@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_vpn_connection_reset
+```
+
+```release-note:new-resource
+tencentcloud_vpn_customer_gateway_configuration_download
+```
