@@ -148,7 +148,7 @@ The following arguments are supported:
 
 * `domain` - (Required, String, ForceNew) Name of the acceleration domain.
 * `origin` - (Required, List) Origin server configuration. It's a list and consist of at most one item.
-* `service_type` - (Required, String, ForceNew) Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration.
+* `service_type` - (Required, String, ForceNew) Acceleration domain name service type. `web`: static acceleration, `download`: download acceleration, `media`: streaming media VOD acceleration, `hybrid`: hybrid acceleration, `dynamic`: dynamic acceleration.
 * `area` - (Optional, String) Domain name acceleration region. `mainland`: acceleration inside mainland China, `overseas`: acceleration outside mainland China, `global`: global acceleration. Overseas acceleration service must be enabled to use overseas acceleration and global acceleration.
 * `authentication` - (Optional, List) Specify timestamp hotlink protection configuration, NOTE: only one type can choose for the sub elements.
 * `aws_private_access` - (Optional, List) Access authentication for S3 origin.
