@@ -313,6 +313,7 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_launch_template
 	tencentcloud_cvm_launch_template_version
 	tencentcloud_cvm_launch_template_default_version
+	tencentcloud_cvm_security_group_attachment
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -1793,6 +1794,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_apm_instance":                               resourceTencentCloudApmInstance(),
 			"tencentcloud_cvm_launch_template_default_version":        resourceTencentCloudCvmLaunchTemplateDefaultVersion(),
 			"tencentcloud_lighthouse_firewall_rule":                   resourceTencentCloudLighthouseFirewallRule(),
+			"tencentcloud_cvm_security_group_attachment":              resourceTencentCloudCvmSecurityGroupAttachment(),
 		},
 
 		ConfigureFunc: providerConfigure,
