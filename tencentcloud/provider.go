@@ -474,6 +474,7 @@ Cloud Monitor(Monitor)
 	tencentcloud_monitor_tmp_tke_record_rule_yaml
 	tencentcloud_monitor_tmp_tke_global_notification
 	tencentcloud_monitor_tmp_tke_cluster_agent
+	tencentcloud_monitor_tmp_tke_basic_config
 
 Managed Service for Prometheus(TMP)
   Resource
@@ -1551,6 +1552,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_tmp_tke_template":                    resourceTencentCloudMonitorTmpTkeTemplate(),
 			"tencentcloud_monitor_tmp_tke_template_attachment":         resourceTencentCloudMonitorTmpTkeTemplateAttachment(),
 			"tencentcloud_monitor_tmp_tke_alert_policy":                resourceTencentCloudMonitorTmpTkeAlertPolicy(),
+			"tencentcloud_monitor_tmp_tke_basic_config":                resourceTencentCloudMonitorTmpTkeBasicConfig(),
 			"tencentcloud_monitor_tmp_tke_cluster_agent":               resourceTencentCloudMonitorTmpTkeClusterAgent(),
 			"tencentcloud_monitor_tmp_tke_config":                      resourceTencentCloudMonitorTmpTkeConfig(),
 			"tencentcloud_monitor_tmp_tke_record_rule_yaml":            resourceTencentCloudMonitorTmpTkeRecordRuleYaml(),
