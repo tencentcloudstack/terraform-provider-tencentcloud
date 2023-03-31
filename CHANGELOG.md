@@ -1,3 +1,16 @@
+## 1.80.0 (March 31 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cvm_security_group_attachment` ([#1633](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1633))
+* **New Resource:** `tencentcloud_monitor_tmp_tke_basic_config` ([#1635](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1635))
+* **New Resource:** `tencentcloud_vpn_connection_reset` ([#1636](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1636))
+* **New Resource:** `tencentcloud_vpn_customer_gateway_configuration_download` ([#1636](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1636))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cdn_domain:  `service_type` support set `hybrid`, `dynamic` ([#1637](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1637))
+
 ## 1.79.19 (March 29 2023)
 
 FEATURES:
