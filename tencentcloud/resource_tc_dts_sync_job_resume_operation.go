@@ -61,7 +61,7 @@ func resourceTencentCloudDtsSyncJobResumeOperationCreate(d *schema.ResourceData,
 	}
 	d.SetId(jobId)
 
-	return resourceTencentCloudDtsSyncJobResumeOperationRead(d, meta)
+	return resourceTencentCloudDtsSyncJobResumeOperationUpdate(d, meta)
 }
 
 func resourceTencentCloudDtsSyncJobResumeOperationRead(d *schema.ResourceData, meta interface{}) error {

@@ -791,31 +791,6 @@ func (me *DtsService) DtsSyncCheckJobOperationStateRefreshFunc(jobId string, fai
 	}
 }
 
-func (me *DtsService) DescribeDtsMigrateJobResumeOperationById(ctx context.Context, jobId string) (migrateJobResumeOperation *dts.DescribeMigrationDetailResponseParams, errRet error) {
-	logId := getLogId(ctx)
-
-	request := dts.NewDescribeMigrationDetailRequest()
-	request.JobId = &jobId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseDtsClient().DescribeMigrationDetail(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	migrateJobResumeOperation = response.Response
-	return
-}
-
 func (me *DtsService) DtsMigrateJobResumeOperationStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil
@@ -891,5 +866,48 @@ func (me *DtsService) DtsSyncJobResumeOperationStateRefreshFunc(jobId string, fa
 		}
 
 		return object, status, nil
+	}
+}
+
+func (me *DtsService) DescribeDtsCompareTaskStopOperationById(ctx context.Context, jobId string, compareTaskId string) (result *dts.DescribeCompareReportResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeCompareReportRequest()
+	request.JobId = &jobId
+	request.CompareTaskId = &compareTaskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeCompareReport(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil {
+		result = response.Response
+	}
+
+	return
+}
+
+func (me *DtsService) DtsMigrateJobConfigStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsMigrateJobById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Status), nil
 	}
 }

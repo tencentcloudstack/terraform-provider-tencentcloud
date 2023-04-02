@@ -68,7 +68,7 @@ func resourceTencentCloudDtsMigrateJobResumeOperationCreate(d *schema.ResourceDa
 	}
 	d.SetId(jobId)
 
-	return resourceTencentCloudDtsMigrateJobResumeOperationRead(d, meta)
+	return resourceTencentCloudDtsMigrateJobResumeOperationUpdate(d, meta)
 }
 
 func resourceTencentCloudDtsMigrateJobResumeOperationRead(d *schema.ResourceData, meta interface{}) error {
@@ -83,7 +83,7 @@ func resourceTencentCloudDtsMigrateJobResumeOperationRead(d *schema.ResourceData
 
 	jobId := d.Id()
 
-	migrateJobResumeOperation, err := service.DescribeDtsMigrateJobResumeOperationById(ctx, jobId)
+	migrateJobResumeOperation, err := service.DescribeDtsMigrateJobById(ctx, jobId)
 	if err != nil {
 		return err
 	}
@@ -116,11 +116,17 @@ func resourceTencentCloudDtsMigrateJobResumeOperationUpdate(d *schema.ResourceDa
 
 	request.JobId = helper.String(d.Id())
 
-	immutableArgs := []string{"job_id", "resume_option"}
+	immutableArgs := []string{"job_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
+	if d.HasChange("resume_option") {
+		if v, ok := d.GetOk("resume_option"); ok {
+			request.ResumeOption = helper.String(v.(string))
 		}
 	}
 

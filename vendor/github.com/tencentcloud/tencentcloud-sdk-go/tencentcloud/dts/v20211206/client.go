@@ -181,6 +181,8 @@ func NewConfigureSyncJobResponse() (response *ConfigureSyncJobResponse) {
 // 配置一个同步任务
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) ConfigureSyncJob(request *ConfigureSyncJobRequest) (response *ConfigureSyncJobResponse, err error) {
     return c.ConfigureSyncJobWithContext(context.Background(), request)
@@ -190,6 +192,8 @@ func (c *Client) ConfigureSyncJob(request *ConfigureSyncJobRequest) (response *C
 // 配置一个同步任务
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 func (c *Client) ConfigureSyncJobWithContext(ctx context.Context, request *ConfigureSyncJobRequest) (response *ConfigureSyncJobResponse, err error) {
     if request == nil {
@@ -203,6 +207,122 @@ func (c *Client) ConfigureSyncJobWithContext(ctx context.Context, request *Confi
     request.SetContext(ctx)
     
     response = NewConfigureSyncJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewContinueMigrateJobRequest() (request *ContinueMigrateJobRequest) {
+    request = &ContinueMigrateJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ContinueMigrateJob")
+    
+    
+    return
+}
+
+func NewContinueMigrateJobResponse() (response *ContinueMigrateJobResponse) {
+    response = &ContinueMigrateJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ContinueMigrateJob
+// 恢复一个暂停中的迁移任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) ContinueMigrateJob(request *ContinueMigrateJobRequest) (response *ContinueMigrateJobResponse, err error) {
+    return c.ContinueMigrateJobWithContext(context.Background(), request)
+}
+
+// ContinueMigrateJob
+// 恢复一个暂停中的迁移任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) ContinueMigrateJobWithContext(ctx context.Context, request *ContinueMigrateJobRequest) (response *ContinueMigrateJobResponse, err error) {
+    if request == nil {
+        request = NewContinueMigrateJobRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ContinueMigrateJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewContinueMigrateJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewContinueSyncJobRequest() (request *ContinueSyncJobRequest) {
+    request = &ContinueSyncJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "ContinueSyncJob")
+    
+    
+    return
+}
+
+func NewContinueSyncJobResponse() (response *ContinueSyncJobResponse) {
+    response = &ContinueSyncJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ContinueSyncJob
+// 恢复处于已暂停状态的数据同步任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_BIZOPERATIONDENIEDERROR = "OperationDenied.BizOperationDeniedError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_BIZRESOURCENOTFOUNDERROR = "ResourceNotFound.BizResourceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) ContinueSyncJob(request *ContinueSyncJobRequest) (response *ContinueSyncJobResponse, err error) {
+    return c.ContinueSyncJobWithContext(context.Background(), request)
+}
+
+// ContinueSyncJob
+// 恢复处于已暂停状态的数据同步任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_BIZOPERATIONDENIEDERROR = "OperationDenied.BizOperationDeniedError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_BIZRESOURCENOTFOUNDERROR = "ResourceNotFound.BizResourceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) ContinueSyncJobWithContext(ctx context.Context, request *ContinueSyncJobRequest) (response *ContinueSyncJobResponse, err error) {
+    if request == nil {
+        request = NewContinueSyncJobRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ContinueSyncJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewContinueSyncJobResponse()
     err = c.Send(request, response)
     return
 }
@@ -233,6 +353,7 @@ func NewCreateCheckSyncJobResponse() (response *CreateCheckSyncJobResponse) {
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INTRANETUSERNOTTAGGEDERROR = "UnsupportedOperation.IntraNetUserNotTaggedError"
 //  UNSUPPORTEDOPERATION_INTRANETUSERNOTTAGGEDFORSYNCJOBERROR = "UnsupportedOperation.IntraNetUserNotTaggedForSyncJobError"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
 func (c *Client) CreateCheckSyncJob(request *CreateCheckSyncJobRequest) (response *CreateCheckSyncJobResponse, err error) {
     return c.CreateCheckSyncJobWithContext(context.Background(), request)
 }
@@ -245,6 +366,7 @@ func (c *Client) CreateCheckSyncJob(request *CreateCheckSyncJobRequest) (respons
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 //  UNSUPPORTEDOPERATION_INTRANETUSERNOTTAGGEDERROR = "UnsupportedOperation.IntraNetUserNotTaggedError"
 //  UNSUPPORTEDOPERATION_INTRANETUSERNOTTAGGEDFORSYNCJOBERROR = "UnsupportedOperation.IntraNetUserNotTaggedForSyncJobError"
+//  UNSUPPORTEDOPERATION_UNSUPPORTEDOPERATIONERROR = "UnsupportedOperation.UnsupportedOperationError"
 func (c *Client) CreateCheckSyncJobWithContext(ctx context.Context, request *CreateCheckSyncJobRequest) (response *CreateCheckSyncJobResponse, err error) {
     if request == nil {
         request = NewCreateCheckSyncJobRequest()
@@ -287,6 +409,7 @@ func NewCreateCompareTaskResponse() (response *CreateCompareTaskResponse) {
 //  DRYRUNOPERATION_DRYRUNOPERATIONERROR = "DryRunOperation.DryRunOperationError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  LIMITEXCEEDED_LIMITEXCEEDEDERROR = "LimitExceeded.LimitExceededError"
@@ -313,6 +436,7 @@ func (c *Client) CreateCompareTask(request *CreateCompareTaskRequest) (response 
 //  DRYRUNOPERATION_DRYRUNOPERATIONERROR = "DryRunOperation.DryRunOperationError"
 //  FAILEDOPERATION_FAILEDOPERATIONERROR = "FailedOperation.FailedOperationError"
 //  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_INTERNALHTTPSERVERERROR = "InternalError.InternalHttpServerError"
 //  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
 //  LIMITEXCEEDED_LIMITEXCEEDEDERROR = "LimitExceeded.LimitExceededError"
@@ -726,7 +850,7 @@ func NewDescribeCheckSyncJobResultResponse() (response *DescribeCheckSyncJobResu
 }
 
 // DescribeCheckSyncJobResult
-// 查询同步校验任务结果
+// 查询同步校验任务结果，检查必要参数和周边配置
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -737,7 +861,7 @@ func (c *Client) DescribeCheckSyncJobResult(request *DescribeCheckSyncJobResultR
 }
 
 // DescribeCheckSyncJobResult
-// 查询同步校验任务结果
+// 查询同步校验任务结果，检查必要参数和周边配置
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INVALIDPARAMETERVALUEERROR = "InvalidParameterValue.InvalidParameterValueError"
@@ -2033,6 +2157,122 @@ func (c *Client) ModifyMigrationJobWithContext(ctx context.Context, request *Mod
     request.SetContext(ctx)
     
     response = NewModifyMigrationJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewPauseMigrateJobRequest() (request *PauseMigrateJobRequest) {
+    request = &PauseMigrateJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "PauseMigrateJob")
+    
+    
+    return
+}
+
+func NewPauseMigrateJobResponse() (response *PauseMigrateJobResponse) {
+    response = &PauseMigrateJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// PauseMigrateJob
+// 暂停一个迁移任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) PauseMigrateJob(request *PauseMigrateJobRequest) (response *PauseMigrateJobResponse, err error) {
+    return c.PauseMigrateJobWithContext(context.Background(), request)
+}
+
+// PauseMigrateJob
+// 暂停一个迁移任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INVALIDPARAMETER_INVALIDPARAMETERERROR = "InvalidParameter.InvalidParameterError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) PauseMigrateJobWithContext(ctx context.Context, request *PauseMigrateJobRequest) (response *PauseMigrateJobResponse, err error) {
+    if request == nil {
+        request = NewPauseMigrateJobRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("PauseMigrateJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewPauseMigrateJobResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewPauseSyncJobRequest() (request *PauseSyncJobRequest) {
+    request = &PauseSyncJobRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dts", APIVersion, "PauseSyncJob")
+    
+    
+    return
+}
+
+func NewPauseSyncJobResponse() (response *PauseSyncJobResponse) {
+    response = &PauseSyncJobResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// PauseSyncJob
+// 暂停处于同步中的数据同步任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_BIZOPERATIONDENIEDERROR = "OperationDenied.BizOperationDeniedError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_BIZRESOURCENOTFOUNDERROR = "ResourceNotFound.BizResourceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) PauseSyncJob(request *PauseSyncJobRequest) (response *PauseSyncJobResponse, err error) {
+    return c.PauseSyncJobWithContext(context.Background(), request)
+}
+
+// PauseSyncJob
+// 暂停处于同步中的数据同步任务。
+//
+// 可能返回的错误码:
+//  INTERNALERROR_INTERNALERRORERROR = "InternalError.InternalErrorError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
+//  OPERATIONDENIED_BIZOPERATIONDENIEDERROR = "OperationDenied.BizOperationDeniedError"
+//  OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_BIZRESOURCENOTFOUNDERROR = "ResourceNotFound.BizResourceNotFoundError"
+//  RESOURCENOTFOUND_RESOURCENOTFOUND = "ResourceNotFound.ResourceNotFound"
+//  RESOURCENOTFOUND_RESOURCENOTFOUNDERROR = "ResourceNotFound.ResourceNotFoundError"
+func (c *Client) PauseSyncJobWithContext(ctx context.Context, request *PauseSyncJobRequest) (response *PauseSyncJobResponse, err error) {
+    if request == nil {
+        request = NewPauseSyncJobRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("PauseSyncJob require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewPauseSyncJobResponse()
     err = c.Send(request, response)
     return
 }
