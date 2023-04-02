@@ -742,3 +742,154 @@ func (me *DtsService) DtsMigrateCheckConfigStateRefreshFunc(jobId string, failSt
 		return object, helper.PString(object.CheckFlag), nil
 	}
 }
+
+func (me *DtsService) DescribeDtsSyncCheckJobOperationById(ctx context.Context, jobId string) (syncCheckJobOperation *dts.DescribeCheckSyncJobResultResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeCheckSyncJobResultRequest()
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeCheckSyncJobResult(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	syncCheckJobOperation = response.Response
+	return
+}
+
+func (me *DtsService) DtsSyncCheckJobOperationStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsSyncCheckJobOperationById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		status := helper.PString(object.Status)
+		if len(failStates) > 0 {
+			for _, state := range failStates {
+				if strings.Contains(status, state) {
+					return object, status, fmt.Errorf("DTS sync check job[%s] failed, status is on [%s], return...", jobId, status)
+				}
+			}
+		}
+
+		return object, status, nil
+	}
+}
+
+func (me *DtsService) DescribeDtsMigrateJobResumeOperationById(ctx context.Context, jobId string) (migrateJobResumeOperation *dts.DescribeMigrationDetailResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeMigrationDetailRequest()
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeMigrationDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	migrateJobResumeOperation = response.Response
+	return
+}
+
+func (me *DtsService) DtsMigrateJobResumeOperationStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsMigrateJobById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		status := helper.PString(object.Status)
+		if len(failStates) > 0 {
+			for _, state := range failStates {
+				if strings.Contains(status, state) {
+					return object, status, fmt.Errorf("Resume DTS migrate job[%s] failed, status is on [%s], return...", jobId, status)
+				}
+			}
+		}
+
+		return object, status, nil
+	}
+}
+
+func (me *DtsService) DescribeDtsSyncJobResumeOperationById(ctx context.Context, jobId string) (syncJobResumeOperation *dts.DescribeSyncJobsResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeSyncJobsRequest()
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeSyncJobs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	syncJobResumeOperation = response.Response
+	return
+}
+
+func (me *DtsService) DtsSyncJobResumeOperationStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		param := map[string]interface{}{
+			"job_id": helper.String(jobId),
+		}
+		object, err := me.DescribeDtsSyncJobsByFilter(ctx, param)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if len(object) == 0 {
+			return nil, "", fmt.Errorf("DTS sync job[%s] not found", jobId)
+		}
+
+		status := helper.PString(object[0].Status)
+		if len(failStates) > 0 {
+			for _, state := range failStates {
+				if strings.Contains(status, state) {
+					return object, status, fmt.Errorf("Resume DTS sync job[%s] failed, status is on [%s], return...", jobId, status)
+				}
+			}
+		}
+
+		return object, status, nil
+	}
+}
