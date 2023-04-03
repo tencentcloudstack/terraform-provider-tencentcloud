@@ -10,13 +10,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudNeedFixTsfApiRateLimitRuleResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTsfApiRateLimitRuleResource_basic -v
+func TestAccTencentCloudTsfApiRateLimitRuleResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfApiRateLimitRuleDestroy,
 		Steps: []resource.TestStep{
@@ -25,8 +24,9 @@ func TestAccTencentCloudNeedFixTsfApiRateLimitRuleResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTsfApiRateLimitRuleExists("tencentcloud_tsf_api_rate_limit_rule.api_rate_limit_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_api_rate_limit_rule.api_rate_limit_rule", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_api_rate_limit_rule.api_rate_limit_rule", "api_id", defaultTsfApiId),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_api_rate_limit_rule.api_rate_limit_rule", "max_qps", "10"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_api_rate_limit_rule.api_rate_limit_rule", "usable_status", "enable"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_api_rate_limit_rule.api_rate_limit_rule", "usable_status", "enabled"),
 				),
 			},
 			{
@@ -96,12 +96,18 @@ func testAccCheckTsfApiRateLimitRuleExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTsfApiRateLimitRule = `
+const testAccTsfApiRateLimitRuleVar = `
+variable "api_id" {
+	default = "` + defaultTsfApiId + `"
+}
+`
+
+const testAccTsfApiRateLimitRule = testAccTsfApiRateLimitRuleVar + `
 
 resource "tencentcloud_tsf_api_rate_limit_rule" "api_rate_limit_rule" {
-	api_id = "api-xxxxxx"
+	api_id = var.api_id
 	max_qps = 10
-	usable_status = "enable"
+	usable_status = "enabled"
 }
 
 `

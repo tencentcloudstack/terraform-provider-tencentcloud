@@ -10,13 +10,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudNeedFixTsfApplicationReleaseConfigResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTsfApplicationReleaseConfigResource_basic -v
+func TestAccTencentCloudTsfApplicationReleaseConfigResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfApplicationReleaseConfigDestroy,
 		Steps: []resource.TestStep{
@@ -25,9 +24,9 @@ func TestAccTencentCloudNeedFixTsfApplicationReleaseConfigResource_basic(t *test
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTsfApplicationReleaseConfigExists("tencentcloud_tsf_application_release_config.application_release_config"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_application_release_config.application_release_config", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_application_release_config.application_release_config", "config_id", "10"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_application_release_config.application_release_config", "group_id", "enable"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_application_release_config.application_release_config", "release_desc")),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_application_release_config.application_release_config", "config_id", defaultTsfConfigId),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_application_release_config.application_release_config", "group_id", defaultTsfGroupId),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_application_release_config.application_release_config", "release_desc", "terraform_release_desc")),
 			},
 			{
 				ResourceName:      "tencentcloud_tsf_application_release_config.application_release_config",
@@ -96,12 +95,21 @@ func testAccCheckTsfApplicationReleaseConfigExists(r string) resource.TestCheckF
 	}
 }
 
-const testAccTsfApplicationReleaseConfig = `
+const testAccTsfApplicationReleaseConfigVar = `
+variable "group_id" {
+	default = "` + defaultTsfGroupId + `"
+}
+variable "config_id" {
+	default = "` + defaultTsfConfigId + `"
+}
+`
+
+const testAccTsfApplicationReleaseConfig = testAccTsfApplicationReleaseConfigVar + `
 
 resource "tencentcloud_tsf_application_release_config" "application_release_config" {
-  config_id = ""
-  group_id = ""
-  release_desc = ""
+  config_id = var.config_id
+  group_id = var.group_id
+  release_desc = "terraform_release_desc"
 }
 
 `

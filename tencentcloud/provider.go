@@ -964,10 +964,20 @@ TDMQ for CMQ
 
 Tencent Service Framework(TSF)
   Resource
+  	tencentcloud_tsf_cluster
 	tencentcloud_tsf_microservice
 	tencentcloud_tsf_application_config
 	tencentcloud_tsf_api_group
 	tencentcloud_tsf_namespace
+	tencentcloud_tsf_path_rewrite
+	tencentcloud_tsf_unit_rule
+	tencentcloud_tsf_task
+	tencentcloud_tsf_config_template
+	tencentcloud_tsf_api_rate_limit_rule
+	tencentcloud_tsf_application_release_config
+	tencentcloud_tsf_contain_group
+	tencentcloud_tsf_lane
+	tencentcloud_tsf_lane_rule
 
 Media Processing Service(MPS)
   Resource
@@ -1751,12 +1761,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_microservice":                           resourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_application_config":                     resourceTencentCloudTsfApplicationConfig(),
 			"tencentcloud_cvm_launch_template":                        resourceTencentCloudCvmLaunchTemplate(),
+			"tencentcloud_tsf_cluster":                                resourceTencentCloudTsfCluster(),
 			"tencentcloud_tsf_api_group":                              resourceTencentCloudTsfApiGroup(),
 			"tencentcloud_tsf_namespace":                              resourceTencentCloudTsfNamespace(),
 			"tencentcloud_tsf_path_rewrite":                           resourceTencentCloudTsfPathRewrite(),
 			"tencentcloud_tsf_unit_rule":                              resourceTencentCloudTsfUnitRule(),
 			"tencentcloud_tsf_task":                                   resourceTencentCloudTsfTask(),
-			"tencentcloud_tsf_repository":                             resourceTencentCloudTsfRepository(),
 			"tencentcloud_tsf_config_template":                        resourceTencentCloudTsfConfigTemplate(),
 			"tencentcloud_tsf_api_rate_limit_rule":                    resourceTencentCloudTsfApiRateLimitRule(),
 			"tencentcloud_tsf_application_release_config":             resourceTencentCloudTsfApplicationReleaseConfig(),

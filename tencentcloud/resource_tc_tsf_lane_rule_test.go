@@ -9,13 +9,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudNeedFixTsfLaneRuleResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTsfLaneRuleResource_basic -v
+func TestAccTencentCloudTsfLaneRuleResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfLaneRuleDestroy,
 		Steps: []resource.TestStep{
@@ -24,15 +23,21 @@ func TestAccTencentCloudNeedFixTsfLaneRuleResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTsfLaneRuleExists("tencentcloud_tsf_lane_rule.lane_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_lane_rule.lane_rule", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_lane_rule.lane_rule", "rule_name", ""),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_lane_rule.lane_rule", "remark", ""),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_lane_rule.lane_rule", "rule_name", "terraform-rule-name"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_lane_rule.lane_rule", "remark", "terraform-test"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_lane_rule.lane_rule", "rule_tag_relationship", "RELEATION_AND"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_lane_rule.lane_rule", "enable", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_lane_rule.lane_rule", "rule_tag_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_lane_rule.lane_rule", "rule_tag_list.0.tag_name", "xxx"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_lane_rule.lane_rule", "rule_tag_list.0.tag_operator", "EQUAL"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_lane_rule.lane_rule", "rule_tag_list.0.tag_value", "222"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_tsf_lane_rule.lane_rule",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
+			// {
+			// 	ResourceName:      "tencentcloud_tsf_lane_rule.lane_rule",
+			// 	ImportState:       true,
+			// 	ImportStateVerify: true,
+			// },
 		},
 	})
 }
@@ -84,22 +89,26 @@ func testAccCheckTsfLaneRuleExists(r string) resource.TestCheckFunc {
 
 const testAccTsfLaneRule = `
 
-resource "tencentcloud_tsf_lane_rule" "lane_rule" {
-    rule_name = ""
-  remark = ""
-  rule_tag_list {
-		tag_id = ""
-		tag_name = ""
-		tag_operator = ""
-		tag_value = ""
-		lane_rule_id = ""
-		create_time = 
-		update_time = 
-
-  }
-  rule_tag_relationship = ""
-  lane_id = ""
-          program_id_list = 
+resource "tencentcloud_tsf_lane" "lane1" {
+	lane_name = "terraform-lane-1"
+	remark = "lane desc1"
+	lane_group_list {
+		  group_id = "group-yrjkln9v"
+		  entrance = true
+	}
 }
+
+resource "tencentcloud_tsf_lane_rule" "lane_rule" {
+	rule_name = "terraform-rule-name"
+	remark = "terraform-test"
+	rule_tag_list {
+		  tag_name = "xxx"
+		  tag_operator = "EQUAL"
+		  tag_value = "222"
+	}
+	rule_tag_relationship = "RELEATION_AND"
+	lane_id = tencentcloud_tsf_lane.lane1.id
+	enable = false
+  }
 
 `

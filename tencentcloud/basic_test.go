@@ -934,8 +934,14 @@ variable "cynosdb_cluster_security_group_id" {
 
 // TSF
 const (
-	defaultNamespaceId      = "namespace-ym9mkeza"
-	defaultTsfApplicationId = "application-v69bo6ev"
+	defaultNamespaceId        = "namespace-aemrg36v"
+	defaultTsfApplicationId   = "application-a24x29xv"
+	defaultTsfClustId         = "cluster-vwgj5e6y"
+	defaultTsfGroupId         = "group-yrjkln9v"
+	defaultTsfGateway         = "gw-ins-uaymyaeg"
+	defaultTsfDestNamespaceId = "namespace-aemrg36v"
+	defaultTsfConfigId        = "dcfg-y54wzk3a"
+	defaultTsfApiId           = "api-yl24o73l"
 )
 
 // End of TSF

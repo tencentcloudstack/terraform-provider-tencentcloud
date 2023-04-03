@@ -9,14 +9,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixTsfPathRewriteResource_basics -v
-func TestAccTencentCloudNeedFixTsfPathRewriteResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTsfPathRewriteResource_basic -v
+func TestAccTencentCloudTsfPathRewriteResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfPathRewriteDestroy,
 		Steps: []resource.TestStep{
@@ -25,8 +23,11 @@ func TestAccTencentCloudNeedFixTsfPathRewriteResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTsfPathRewritekExists("tencentcloud_tsf_path_rewrite.path_rewrite"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_path_rewrite.path_rewrite", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_path_rewrite.path_rewrite", "gateway_group_id", ""),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_path_rewrite.path_rewrite", "regex", ""),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_path_rewrite.path_rewrite", "gateway_group_id", defaultTsfGroupId),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_path_rewrite.path_rewrite", "regex", "/test"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_path_rewrite.path_rewrite", "replacement", "/tt"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_path_rewrite.path_rewrite", "blocked", "N"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_path_rewrite.path_rewrite", "order", "2"),
 				),
 			},
 			{
@@ -83,10 +84,16 @@ func testAccCheckTsfPathRewritekExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTsfPathRewrite = `
+const testAccTsfPathRewriteVar = `
+variable "group_id" {
+	default = "` + defaultTsfGroupId + `"
+}
+`
+
+const testAccTsfPathRewrite = testAccTsfPathRewriteVar + `
 
 resource "tencentcloud_tsf_path_rewrite" "path_rewrite" {
-	gateway_group_id = "group-a2j9zxpv"
+	gateway_group_id = var.group_id
 	regex = "/test"
 	replacement = "/tt"
 	blocked = "N"

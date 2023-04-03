@@ -9,14 +9,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixTsfUnitRuleResource_basic -v
-func TestAccTencentCloudNeedFixTsfUnitRuleResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTsfUnitRuleResource_basic -v
+func TestAccTencentCloudTsfUnitRuleResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfUnitRuleDestroy,
 		Steps: []resource.TestStep{
@@ -25,8 +23,19 @@ func TestAccTencentCloudNeedFixTsfUnitRuleResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTsfUnitRuleExists("tencentcloud_tsf_unit_rule.unit_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_unit_rule.unit_rule", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "gateway_instance_id", ""),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "name", ""),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "gateway_instance_id", "terraform-test"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "description", "terraform-desc"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.relationship", "AND"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.dest_namespace_id", defaultTsfDestNamespaceId),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.dest_namespace_name", "terraform_dest_namespace_name"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.name", "Rule1"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.description", "rule1-desc"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.unit_rule_tag_list.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.unit_rule_tag_list.0.tag_type", "U"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.unit_rule_tag_list.0.tag_field", "aaa"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.unit_rule_tag_list.0.tag_operator", "IN"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.unit_rule_tag_list.0.tag_value", "1"),
 				),
 			},
 			{
@@ -83,31 +92,34 @@ func testAccCheckTsfUnitRuleExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTsfUnitRule = `
+const testAccTsfUnitRuleVar = `
+variable "gateway_instance_id" {
+	default = "` + defaultTsfGateway + `"
+}
+variable "dest_namespace_id" {
+	default = "` + defaultTsfDestNamespaceId + `"
+}
+`
+
+const testAccTsfUnitRule = testAccTsfUnitRuleVar + `
 
 resource "tencentcloud_tsf_unit_rule" "unit_rule" {
-  gateway_instance_id = ""
-  name = ""
-  description = ""
-  unit_rule_item_list {
-		relationship = ""
-		dest_namespace_id = ""
-		dest_namespace_name = ""
-		name = ""
-		id = ""
-		unit_rule_id = ""
-		priority = 
-		description = ""
-		unit_rule_tag_list {
-			tag_type = ""
-			tag_field = ""
-			tag_operator = ""
-			tag_value = ""
-			unit_rule_item_id = ""
-			id = ""
+	gateway_instance_id = var.gateway_instance_id
+	name = "terraform-test"
+	description = "terraform-desc"
+	unit_rule_item_list {
+		  relationship = "AND"
+		  dest_namespace_id = var.dest_namespace_id
+		  dest_namespace_name = "terraform_dest_namespace_name"
+		  name = "Rule1"
+		  description = "rule1-desc"
+		  unit_rule_tag_list {
+			  tag_type = "U"
+			  tag_field = "aaa"
+			  tag_operator = "IN"
+			  tag_value = "1"
 		}
-
-  }
+	}
 }
 
 `

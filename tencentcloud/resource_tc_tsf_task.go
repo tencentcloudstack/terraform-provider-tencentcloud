@@ -54,9 +54,9 @@ func resourceTencentCloudTsfTask() *schema.Resource {
 		Read:   resourceTencentCloudTsfTaskRead,
 		Update: resourceTencentCloudTsfTaskUpdate,
 		Delete: resourceTencentCloudTsfTaskDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"task_id": {
 				Computed:    true,

@@ -8,28 +8,16 @@ resource "tencentcloud_tsf_config_template" "config_template" {
   config_template_name = "terraform-template-name"
   config_template_type = "Ribbon"
   config_template_value = <<-EOT
-    #请求处理超时时间
     ribbon.ReadTimeout: 5000
-    #请求连接超时时间
     ribbon.ConnectTimeout: 2000
-    #同一实例最大重试次数，不包括首次调用
     ribbon.MaxAutoRetries: 0
-    #重试其他实例的最大重试次数，不包括首次所选的server
     ribbon.MaxAutoRetriesNextServer: 1
-    #是否对所有操作请求都进行重试
     ribbon.OkToRetryOnAllOperations: true
   EOT
   config_template_desc = "terraform-test"
 }
 ```
 
-Import
-
-tsf config_template can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tsf_config_template.config_template config_template_id
-```
 */
 package tencentcloud
 
@@ -50,9 +38,9 @@ func resourceTencentCloudTsfConfigTemplate() *schema.Resource {
 		Read:   resourceTencentCloudTsfConfigTemplateRead,
 		Update: resourceTencentCloudTsfConfigTemplateUpdate,
 		Delete: resourceTencentCloudTsfConfigTemplateDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"config_template_name": {
 				Required:    true,

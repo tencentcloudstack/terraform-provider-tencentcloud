@@ -56,10 +56,11 @@ func resourceTencentCloudTsfApiRateLimitRule() *schema.Resource {
 			},
 
 			"usable_status": {
-				Optional:    true,
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Enable/disable, enabled/disabled, if not passed, it is enabled by default.",
+				Optional:     true,
+				Computed:     true,
+				Type:         schema.TypeString,
+				ValidateFunc: validateAllowedStringValue([]string{"enabled", "disabled"}),
+				Description:  "Enabled/disabled, enabled/disabled, if not passed, it is enabled by default.",
 			},
 
 			"rule_id": {

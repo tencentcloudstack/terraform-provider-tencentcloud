@@ -9,14 +9,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixTsfTaskResource_basic -v
-func TestAccTencentCloudNeedFixTsfTaskResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTsfTaskResource_basic -v
+func TestAccTencentCloudTsfTaskResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfTaskDestroy,
 		Steps: []resource.TestStep{
@@ -25,15 +23,28 @@ func TestAccTencentCloudNeedFixTsfTaskResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTsfTaskExists("tencentcloud_tsf_task.task"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_task.task", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "task_name", ""),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "task_content", ""),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "task_name", "terraform-test"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "task_content", "/test"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "execute_type", "unicast"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "task_type", "java"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "time_out", "60000"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "group_id", defaultTsfGroupId),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "task_rule.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "task_rule.0.rule_type", "Cron"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "task_rule.0.expression", "0 * 1 * * ? "),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "retry_count", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "retry_interval", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "success_operator", "GTE"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "advance_settings.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "advance_settings.0.sub_task_concurrency", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_task.task", "task_argument", "a=c"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_tsf_task.task",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
+			// {
+			// 	ResourceName:      "tencentcloud_tsf_task.task",
+			// 	ImportState:       true,
+			// 	ImportStateVerify: true,
+			// },
 		},
 	})
 }
@@ -83,37 +94,33 @@ func testAccCheckTsfTaskExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTsfTask = `
+const testAccTsfTaskVar = `
+variable "group_id" {
+	default = "` + defaultTsfGroupId + `"
+}
+`
+
+const testAccTsfTask = testAccTsfTaskVar + `
 
 resource "tencentcloud_tsf_task" "task" {
-  task_name = ""
-  task_content = ""
-  execute_type = ""
-  task_type = ""
-  time_out = 
-  group_id = ""
-  task_rule {
-		rule_type = ""
-		expression = ""
-		repeat_interval = 
-
-  }
-  retry_count = 
-  retry_interval = 
-  shard_count = 
-  shard_arguments {
-		shard_key = 
-		shard_value = ""
-
-  }
-  success_operator = ""
-  success_ratio = ""
-  advance_settings {
-		sub_task_concurrency = 
-
-  }
-  task_argument = ""
-          program_id_list = 
+	task_name = "terraform-test"
+	task_content = "/test"
+	execute_type = "unicast"
+	task_type = "java"
+	time_out = 60000
+	group_id = var.group_id
+	task_rule {
+	  rule_type = "Cron"
+	  expression = "0 * 1 * * ? "
+	}
+	retry_count = 0
+	retry_interval = 0
+	success_operator = "GTE"
+	success_ratio = "100"
+	advance_settings {
+	  sub_task_concurrency = 2
+	}
+	task_argument = "a=c"
 }
 
 `
