@@ -15,14 +15,14 @@ func TestAccTencentCloudTsfApiGroupResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfApiGroupDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTsfApiGroup,
 				Check: resource.ComposeTestCheckFunc(
-					// testAccCheckTsfApiGroupExists("tencentcloud_tsf_api_group.api_group"),
+					testAccCheckTsfApiGroupExists("tencentcloud_tsf_api_group.api_group"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_api_group.api_group", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_api_group.api_group", "group_name", "terraform_test_group"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_api_group.api_group", "group_context", "/terraform-test"),
