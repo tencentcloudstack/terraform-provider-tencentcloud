@@ -409,7 +409,6 @@ func resourceTencentCloudTsfContainGroup() *schema.Resource {
 
 			"health_check_settings": {
 				Computed:    true,
-				MaxItems:    1,
 				Type:        schema.TypeList,
 				Description: "Deployment group health check settings.",
 				Elem: &schema.Resource{
