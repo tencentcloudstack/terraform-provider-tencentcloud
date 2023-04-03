@@ -38,3 +38,10 @@ tencentcloud_tsf_lane_rule
 tencentcloud_tsf_group
 ```
 
+```release-note:enhancement
+resource/tencentcloud_tsf_namespace: Cancel support for import
+```
+
+```release-note:enhancement
+resource/tencentcloud_tsf_application_config: Cancel support for import
+
