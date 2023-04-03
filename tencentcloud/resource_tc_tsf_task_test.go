@@ -64,6 +64,9 @@ func testAccCheckTsfTaskDestroy(s *terraform.State) error {
 		}
 
 		if res != nil {
+			if *res.TaskState == "DELETED" {
+				return nil
+			}
 			return fmt.Errorf("tsf Task %s still exists", rs.Primary.ID)
 		}
 	}
