@@ -11,13 +11,6 @@ resource "tencentcloud_dts_migrate_job_config" "migrate_job_config" {
 }
 ```
 
-Import
-
-dts migrate_job_config can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dts_migrate_job_config.migrate_job_config migrate_job_config_id
-```
 */
 package tencentcloud
 
@@ -56,9 +49,10 @@ func resourceTencentCloudDtsMigrateJobConfig() *schema.Resource {
 			},
 
 			"action": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "The operation want to perform. Valid values are: `pause`, `continue`, `complete`, `recover`,`stop`.",
+				Required:     true,
+				Type:         schema.TypeString,
+				Description:  "The operation want to perform. Valid values are: `pause`, `continue`, `complete`, `recover`,`stop`.",
+				ValidateFunc: validateAllowedStringValue([]string{DTS_MIGRATE_ACTION_PAUSE, DTS_MIGRATE_ACTION_CONTINUE, DTS_MIGRATE_ACTION_COMPLETE, DTS_MIGRATE_ACTION_RECOVER, DTS_MIGRATE_ACTION_STOP, DTS_MIGRATE_ACTION_ISOLATE}),
 			},
 		},
 	}
@@ -75,7 +69,7 @@ func resourceTencentCloudDtsMigrateJobConfigCreate(d *schema.ResourceData, meta 
 	}
 	d.SetId(jobId)
 
-	return resourceTencentCloudDtsMigrateJobConfigRead(d, meta)
+	return resourceTencentCloudDtsMigrateJobConfigUpdate(d, meta)
 }
 
 func resourceTencentCloudDtsMigrateJobConfigRead(d *schema.ResourceData, meta interface{}) error {
@@ -105,13 +99,9 @@ func resourceTencentCloudDtsMigrateJobConfigRead(d *schema.ResourceData, meta in
 		_ = d.Set("job_id", migrateJobConfig.JobId)
 	}
 
-	if migrateJobConfig.RunMode != nil {
-		_ = d.Set("complete_mode", migrateJobConfig.RunMode)
-	}
-
-	if migrateJobConfig.Action != nil {
-		_ = d.Set("action", migrateJobConfig.Action)
-	}
+	// if migrateJobConfig.RunMode != nil {
+	// 	_ = d.Set("complete_mode", migrateJobConfig.RunMode)
+	// }
 
 	return nil
 }
@@ -128,54 +118,45 @@ func resourceTencentCloudDtsMigrateJobConfigUpdate(d *schema.ResourceData, meta 
 
 	jobId := d.Id()
 
-	immutableArgs := []string{"job_id"} //"complete_mode", "action"
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
 	if d.HasChange("action") {
 		if v, ok := d.GetOk("action"); ok {
 			action = v.(string)
 			var inErr error
 			switch action {
-			case "pause":
+			case DTS_MIGRATE_ACTION_PAUSE:
 				inErr = handlePauseMigrate(d, meta, logId, jobId)
 				if inErr != nil {
 					return inErr
 				}
-				break
-			case "continue":
+			case DTS_MIGRATE_ACTION_CONTINUE:
 				inErr = handleContinueMigrate(d, meta, logId, jobId)
 				if inErr != nil {
 					return inErr
 				}
-				break
-			case "complete":
+			case DTS_MIGRATE_ACTION_COMPLETE:
 				inErr = handleCompleteMigrate(d, meta, logId, jobId)
 				if inErr != nil {
 					return inErr
 				}
-				break
-			case "recover":
+			case DTS_MIGRATE_ACTION_RECOVER:
 				inErr = handleRecoverMigrate(d, meta, logId, jobId)
 				if inErr != nil {
 					return inErr
 				}
-				break
-			case "stop":
+			case DTS_MIGRATE_ACTION_STOP:
 				inErr = handleStopMigrate(d, meta, logId, jobId)
 				if inErr != nil {
 					return inErr
 				}
-				break
+			case DTS_MIGRATE_ACTION_ISOLATE:
+				inErr = handleIsolateMigrate(d, meta, logId, jobId)
+				if inErr != nil {
+					return inErr
+				}
 			default:
 				return fmt.Errorf("invalid action: %s", action)
 			} // switch end
 		}
-
 	}
 
 	return resourceTencentCloudDtsMigrateJobConfigRead(d, meta)
@@ -187,93 +168,6 @@ func resourceTencentCloudDtsMigrateJobConfigDelete(d *schema.ResourceData, meta 
 
 	return nil
 }
-
-// func handleCompleteMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
-// 	completeMigrateJobRequest := dts.NewCompleteMigrateJobRequest()
-// 	completeMigrateJobRequest.JobId = helper.String(jobId)
-// 	service := DtsService{client: tcClient}
-
-// 	if d.HasChange("complete_mode") {
-// 		if v, ok := d.GetOk("complete_mode"); ok {
-// 			completeMigrateJobRequest.CompleteMode = helper.String(v.(string))
-// 		}
-// 	}
-
-// 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-// 		result, e := tcClient.UseDtsClient().CompleteMigrateJob(completeMigrateJobRequest)
-// 		if e != nil {
-// 			return retryError(e)
-// 		} else {
-// 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, completeMigrateJobRequest.GetAction(), completeMigrateJobRequest.ToJsonString(), result.ToJsonString())
-// 		}
-// 		return nil
-// 	})
-// 	if err != nil {
-// 		log.Printf("[CRITAL]%s complete dts migrateJob failed, reason:%+v", logId, err)
-// 		return err
-// 	}
-
-// 	conf := BuildStateChangeConf([]string{}, []string{"success", "error", "failed"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
-// 	if _, e := conf.WaitForState(); e != nil {
-// 		return e
-// 	}
-
-// 	return nil
-// }
-
-// func handleCompareMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
-// 	startCompareRequest := dts.NewStartCompareRequest()
-// 	startCompareRequest.JobId = helper.String(jobId)
-
-// 	if d.HasChange("compare_task_id") {
-// 		if v, ok := d.GetOk("compare_task_id"); ok {
-// 			startCompareRequest.CompareTaskId = helper.String(v.(string))
-// 		}
-// 	}
-
-// 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-// 		result, e := tcClient.UseDtsClient().StartCompare(startCompareRequest)
-// 		if e != nil {
-// 			return retryError(e)
-// 		} else {
-// 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, startCompareRequest.GetAction(), startCompareRequest.ToJsonString(), result.ToJsonString())
-// 		}
-// 		return nil
-// 	})
-// 	if err != nil {
-// 		log.Printf("[CRITAL]%s compare dts migrate job failed, reason:%+v", logId, err)
-// 		return err
-// 	}
-
-// 	return nil
-// }
-
-// func handleStopMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
-// 	stopMigrateJobRequest := dts.NewStopMigrateJobRequest()
-// 	stopMigrateJobRequest.JobId = helper.String(jobId)
-// 	service := DtsService{client: tcClient}
-
-// 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-// 		result, e := tcClient.UseDtsClient().StopMigrateJob(stopMigrateJobRequest)
-// 		if e != nil {
-// 			return retryError(e)
-// 		} else {
-// 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, stopMigrateJobRequest.GetAction(), stopMigrateJobRequest.ToJsonString(), result.ToJsonString())
-// 		}
-// 		return nil
-// 	})
-// 	if err != nil {
-// 		log.Printf("[CRITAL]%s stop dts migrateJob failed, reason:%+v", logId, err)
-// 		return err
-// 	}
-
-// 	conf := BuildStateChangeConf([]string{}, []string{"canceled"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
-// 	if _, e := conf.WaitForState(); e != nil {
-// 		return e
-// 	}
-
-// 	return nil
-// }
 
 func handlePauseMigrate(d *schema.ResourceData, meta interface{}, logId, jobId string) error {
 	request := dts.NewPauseMigrateJobRequest()
@@ -422,6 +316,25 @@ func handleStopMigrate(d *schema.ResourceData, meta interface{}, logId, jobId st
 	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	conf := BuildStateChangeConf([]string{}, []string{"canceled"}, 2*readRetryTimeout, time.Second, service.DtsMigrateJobConfigStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
+
+	return nil
+}
+
+func handleIsolateMigrate(d *schema.ResourceData, meta interface{}, logId, jobId string) error {
+	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	err := service.IsolateDtsMigrateJobById(ctx, jobId)
+
+	if err != nil {
+		log.Printf("[CRITAL]%s isolate dts migrateJobConfig failed, reason:%+v", logId, err)
+		return err
+	}
+
+	conf := BuildStateChangeConf([]string{}, []string{"isolated"}, 2*readRetryTimeout, time.Second, service.DtsMigrateJobConfigStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

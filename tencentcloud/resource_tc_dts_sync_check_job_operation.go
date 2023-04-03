@@ -12,7 +12,6 @@ resource "tencentcloud_dts_sync_check_job_operation" "sync_check_job_operation" 
 package tencentcloud
 
 import (
-	"fmt"
 	"log"
 	"time"
 
@@ -75,14 +74,6 @@ func resourceTencentCloudDtsSyncCheckJobOperationUpdate(d *schema.ResourceData, 
 
 	request.JobId = helper.String(d.Id())
 
-	immutableArgs := []string{"job_id", "status"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDtsClient().CreateCheckSyncJob(request)
 		if e != nil {
@@ -99,7 +90,7 @@ func resourceTencentCloudDtsSyncCheckJobOperationUpdate(d *schema.ResourceData, 
 
 	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"failed,success"}, 0*readRetryTimeout, time.Second, service.DtsSyncCheckJobOperationStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"failed", "success"}, 0*readRetryTimeout, time.Second, service.DtsSyncCheckJobOperationStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

@@ -22,7 +22,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -116,14 +115,6 @@ func resourceTencentCloudDtsMigrateJobResumeOperationUpdate(d *schema.ResourceDa
 
 	request.JobId = helper.String(d.Id())
 
-	immutableArgs := []string{"job_id"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
 	if d.HasChange("resume_option") {
 		if v, ok := d.GetOk("resume_option"); ok {
 			request.ResumeOption = helper.String(v.(string))
@@ -146,7 +137,7 @@ func resourceTencentCloudDtsMigrateJobResumeOperationUpdate(d *schema.ResourceDa
 
 	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"running,readyComplete"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobResumeOperationStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"running", "readyComplete"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobResumeOperationStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

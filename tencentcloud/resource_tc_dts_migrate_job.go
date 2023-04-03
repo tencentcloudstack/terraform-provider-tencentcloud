@@ -1930,33 +1930,6 @@ func handleCheckMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCl
 // 	return nil
 // }
 
-// func handleStopMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
-// 	stopMigrateJobRequest := dts.NewStopMigrateJobRequest()
-// 	stopMigrateJobRequest.JobId = helper.String(jobId)
-// 	service := DtsService{client: tcClient}
-
-// 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-// 		result, e := tcClient.UseDtsClient().StopMigrateJob(stopMigrateJobRequest)
-// 		if e != nil {
-// 			return retryError(e)
-// 		} else {
-// 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, stopMigrateJobRequest.GetAction(), stopMigrateJobRequest.ToJsonString(), result.ToJsonString())
-// 		}
-// 		return nil
-// 	})
-// 	if err != nil {
-// 		log.Printf("[CRITAL]%s stop dts migrateJob failed, reason:%+v", logId, err)
-// 		return err
-// 	}
-
-// 	conf := BuildStateChangeConf([]string{}, []string{"canceled"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
-// 	if _, e := conf.WaitForState(); e != nil {
-// 		return e
-// 	}
-
-// 	return nil
-// }
-
 func resourceTencentCloudDtsMigrateJobDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_dts_migrate_job.delete")()
 	defer inconsistentCheck(d, meta)()

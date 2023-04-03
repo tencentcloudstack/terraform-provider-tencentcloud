@@ -21,7 +21,6 @@ package tencentcloud
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -107,14 +106,6 @@ func resourceTencentCloudDtsSyncJobResumeOperationUpdate(d *schema.ResourceData,
 	jobId := d.Id()
 
 	request.JobId = helper.String(jobId)
-
-	immutableArgs := []string{"job_id"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDtsClient().ResumeSyncJob(request)

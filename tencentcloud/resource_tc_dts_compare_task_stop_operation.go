@@ -132,14 +132,6 @@ func resourceTencentCloudDtsCompareTaskStopOperationUpdate(d *schema.ResourceDat
 	request.JobId = &jobId
 	request.CompareTaskId = &compareTaskId
 
-	immutableArgs := []string{"job_id", "compare_task_id"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDtsClient().StopCompare(request)
 		if e != nil {

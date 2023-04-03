@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccTencentCloudDtsMigrateJobResumeOperationResource_basic(t *testing.T) {
@@ -32,5 +33,10 @@ resource "tencentcloud_dts_migrate_job_resume_operation" "migrate_job_resume_ope
   job_id = "dts-ekmhr27i"
   resume_option = "normal"
 }
+
+resource "tencentcloud_dts_migrate_job_resume_operation" "resume" {
+	job_id = "%"
+	resume_option = "normal"
+  }
 
 `
