@@ -873,3 +873,56 @@ func (me *TsfService) DeleteTsfApplicationReleaseConfigById(ctx context.Context,
 
 	return
 }
+
+func (me *TsfService) DescribeTsfGroupById(ctx context.Context, groupId string) (group *tsf.VmGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeGroupRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Result == nil {
+		return
+	}
+
+	group = response.Response.Result
+	return
+}
+
+func (me *TsfService) DeleteTsfGroupById(ctx context.Context, groupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDeleteGroupRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DeleteGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

@@ -975,9 +975,9 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_config_template
 	tencentcloud_tsf_api_rate_limit_rule
 	tencentcloud_tsf_application_release_config
-	tencentcloud_tsf_contain_group
 	tencentcloud_tsf_lane
 	tencentcloud_tsf_lane_rule
+	tencentcloud_tsf_group
 
 Media Processing Service(MPS)
   Resource
@@ -1773,6 +1773,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_contain_group":                          resourceTencentCloudTsfContainGroup(),
 			"tencentcloud_tsf_lane":                                   resourceTencentCloudTsfLane(),
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
+			"tencentcloud_tsf_group":                                  resourceTencentCloudTsfGroup(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                     resourceTencentCloudMpsWatermarkTemplate(),
