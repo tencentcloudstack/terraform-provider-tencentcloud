@@ -1774,6 +1774,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_lane":                                   resourceTencentCloudTsfLane(),
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
 			"tencentcloud_tsf_group":                                  resourceTencentCloudTsfGroup(),
+			"tencentcloud_tsf_repository":                             resourceTencentCloudTsfRepository(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                     resourceTencentCloudMpsWatermarkTemplate(),
