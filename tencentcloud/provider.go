@@ -912,8 +912,6 @@ Data Transmission Service(DTS)
 	tencentcloud_dts_migrate_service
 	tencentcloud_dts_migrate_job
 	tencentcloud_dts_migrate_job_start_operation
-	tencentcloud_dts_sync_check_job_operation
-	tencentcloud_dts_sync_job_resume_operation
 	tencentcloud_dts_migrate_job_resume_operation
 	tencentcloud_dts_compare_task_stop_operation
 	tencentcloud_dts_migrate_job_config
