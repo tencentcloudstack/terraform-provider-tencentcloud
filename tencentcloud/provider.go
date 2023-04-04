@@ -2910,6 +2910,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
+			"tencentcloud_cdwch_instance":                             resourceTencentCloudClickHoustInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
