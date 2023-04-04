@@ -47,11 +47,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-tsf application_config can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tsf_application_config.application_config dcfg-y4e3zngv
-```
-

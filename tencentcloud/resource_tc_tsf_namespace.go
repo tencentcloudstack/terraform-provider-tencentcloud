@@ -16,13 +16,6 @@ resource "tencentcloud_tsf_namespace" "namespace" {
 }
 ```
 
-Import
-
-tsf namespace can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tsf_namespace.namespace namespace_id
-```
 */
 package tencentcloud
 
@@ -43,9 +36,9 @@ func resourceTencentCloudTsfNamespace() *schema.Resource {
 		Read:   resourceTencentCloudTsfNamespaceRead,
 		Update: resourceTencentCloudTsfNamespaceUpdate,
 		Delete: resourceTencentCloudTsfNamespaceDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"namespace_name": {
 				Required:    true,

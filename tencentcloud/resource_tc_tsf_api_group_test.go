@@ -7,16 +7,15 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudTsfApiGroupResource_basic -v
-func TestAccTencentCloudNeedFixTsfApiGroupResource_basic(t *testing.T) {
+func TestAccTencentCloudTsfApiGroupResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfApiGroupDestroy,
 		Steps: []resource.TestStep{
@@ -54,6 +53,10 @@ func testAccCheckTsfApiGroupDestroy(s *terraform.State) error {
 
 		res, err := service.DescribeTsfApiGroupById(ctx, rs.Primary.ID)
 		if err != nil {
+			code := err.(*sdkErrors.TencentCloudSDKError).Code
+			if code == "InvalidParameterValue.GatewayParameterInvalid" {
+				return nil
+			}
 			return err
 		}
 
@@ -88,7 +91,13 @@ func testAccCheckTsfApiGroupExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTsfApiGroup = `
+const testAccTsfApiGroupVar = `
+variable "gateway_instance_id" {
+	default = "` + defaultTsfGateway + `"
+}
+`
+
+const testAccTsfApiGroup = testAccTsfApiGroupVar + `
 
 resource "tencentcloud_tsf_api_group" "api_group" {
 	group_name = "terraform_test_group"
@@ -96,7 +105,7 @@ resource "tencentcloud_tsf_api_group" "api_group" {
 	auth_type = "none"
 	description = "terraform-test"
 	group_type = "ms"
-	gateway_instance_id = "gw-ins-i6mjpgm8"
+	gateway_instance_id = var.gateway_instance_id
 	# namespace_name_key = "path"
 	# service_name_key = "path"
 	namespace_name_key_position = "path"

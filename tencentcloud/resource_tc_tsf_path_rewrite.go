@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_path_rewrite" "path_rewrite" {
-  gateway_group_id = ""
-  regex = ""
-  replacement = ""
-  blocked = ""
-  order =
+  gateway_group_id = "group-a2j9zxpv"
+  regex = "/test"
+  replacement = "/tt"
+  blocked = "N"
+  order = 2
 }
 ```
 
@@ -18,7 +18,7 @@ Import
 tsf path_rewrite can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tsf_path_rewrite.path_rewrite path_rewrite_id
+terraform import tencentcloud_tsf_path_rewrite.path_rewrite rewrite-nygq33v2
 ```
 */
 package tencentcloud
@@ -90,9 +90,10 @@ func resourceTencentCloudTsfPathRewriteCreate(d *schema.ResourceData, meta inter
 	logId := getLogId(contextNil)
 
 	var (
-		request     = tsf.NewCreatePathRewritesRequest()
-		pathRewrite = tsf.PathRewriteCreateObject{}
-		// response      = tsf.NewCreatePathRewritesResponse()
+		request       = tsf.NewCreatePathRewritesWithDetailRespRequest()
+		pathRewrites  = []*tsf.PathRewriteCreateObject{}
+		pathRewrite   = tsf.PathRewriteCreateObject{}
+		response      = tsf.NewCreatePathRewritesWithDetailRespResponse()
 		pathRewriteId string
 	)
 	if v, ok := d.GetOk("gateway_group_id"); ok {
@@ -115,15 +116,16 @@ func resourceTencentCloudTsfPathRewriteCreate(d *schema.ResourceData, meta inter
 		pathRewrite.Order = helper.IntInt64(v.(int))
 	}
 
-	request.PathRewrites = &pathRewrite
+	pathRewrites = append(pathRewrites, &pathRewrite)
+	request.PathRewrites = pathRewrites
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreatePathRewrites(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreatePathRewritesWithDetailResp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -131,7 +133,7 @@ func resourceTencentCloudTsfPathRewriteCreate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	// pathRewriteId = *response.Response.pathRewriteId
+	pathRewriteId = *response.Response.Result[0]
 	d.SetId(pathRewriteId)
 
 	return resourceTencentCloudTsfPathRewriteRead(d, meta)

@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_api_rate_limit_rule" "api_rate_limit_rule" {
-  api_id = ""
-  max_qps =
-  usable_status = ""
+  api_id = "api-xxxxxx"
+  max_qps = 10
+  usable_status = "enable"
 }
 ```
 
@@ -56,10 +56,11 @@ func resourceTencentCloudTsfApiRateLimitRule() *schema.Resource {
 			},
 
 			"usable_status": {
-				Optional:    true,
-				Computed:    true,
-				Type:        schema.TypeString,
-				Description: "Enable/disable, enabled/disabled, if not passed, it is enabled by default.",
+				Optional:     true,
+				Computed:     true,
+				Type:         schema.TypeString,
+				ValidateFunc: validateAllowedStringValue([]string{"enabled", "disabled"}),
+				Description:  "Enabled/disabled, enabled/disabled, if not passed, it is enabled by default.",
 			},
 
 			"rule_id": {
@@ -114,10 +115,10 @@ func resourceTencentCloudTsfApiRateLimitRuleCreate(d *schema.ResourceData, meta 
 	logId := getLogId(contextNil)
 
 	var (
-		request = tsf.NewCreateApiRateLimitRuleRequest()
-		// response = tsf.NewCreateApiRateLimitRuleResponse()
-		apiId  string
-		ruleId string
+		request  = tsf.NewCreateApiRateLimitRuleWithDetailRespRequest()
+		response = tsf.NewCreateApiRateLimitRuleWithDetailRespResponse()
+		apiId    string
+		ruleId   string
 	)
 	if v, ok := d.GetOk("api_id"); ok {
 		apiId = v.(string)
@@ -133,13 +134,13 @@ func resourceTencentCloudTsfApiRateLimitRuleCreate(d *schema.ResourceData, meta 
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateApiRateLimitRule(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateApiRateLimitRuleWithDetailResp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -147,7 +148,7 @@ func resourceTencentCloudTsfApiRateLimitRuleCreate(d *schema.ResourceData, meta 
 		return err
 	}
 
-	// ruleId = *response.Response.RuleId
+	ruleId = *response.Response.Result.RuleId
 	d.SetId(apiId + FILED_SP + ruleId)
 
 	return resourceTencentCloudTsfApiRateLimitRuleRead(d, meta)
@@ -241,7 +242,7 @@ func resourceTencentCloudTsfApiRateLimitRuleUpdate(d *schema.ResourceData, meta 
 
 	request.RuleId = &ruleId
 
-	immutableArgs := []string{"api_id", "max_qps", "usable_status", "result"}
+	immutableArgs := []string{"api_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -282,20 +283,20 @@ func resourceTencentCloudTsfApiRateLimitRuleDelete(d *schema.ResourceData, meta 
 	defer logElapsed("resource.tencentcloud_tsf_api_rate_limit_rule.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	// logId := getLogId(contextNil)
-	// ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	// service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-	// idSplit := strings.Split(d.Id(), FILED_SP)
-	// if len(idSplit) != 2 {
-	// 	return fmt.Errorf("id is broken,%s", d.Id())
-	// }
-	// apiId := idSplit[0]
-	// ruleId := idSplit[1]
+	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	apiId := idSplit[0]
+	ruleId := idSplit[1]
 
-	// if err := service.DeleteTsfApiRateLimitRuleById(ctx, apiId, ruleId); err != nil {
-	// 	return err
-	// }
+	if err := service.DeleteTsfApiRateLimitRuleById(ctx, apiId, ruleId); err != nil {
+		return err
+	}
 
 	return nil
 }
