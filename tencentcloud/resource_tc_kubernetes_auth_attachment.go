@@ -93,18 +93,50 @@ func resourceTencentCloudTKEAuthAttachment() *schema.Resource {
 			"issuer": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Specify service-account-issuer.",
+				Description: "Specify service-account-issuer. If use_tke_default is set to `true`, please set this parameter value to empty string.",
+			},
+			"use_tke_default": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Default value is `false`. If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please use empty string as value of issuer and jwks_uri.",
 			},
 			"jwks_uri": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Specify service-account-jwks-uri.",
+				Description: "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please set this parameter value to empty string or just ignore it.",
 			},
 			"auto_create_discovery_anonymous_auth": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
 				Description: "If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.",
+			},
+			"auto_create_oidc_config": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Create identity provider.",
+			},
+			"auto_create_client_id": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Create ClientId of identity provider.",
+			},
+			"auto_install_pod_identity_webhook_addon": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Create component PodIdentityWebhook in Cluster.",
+			},
+			"tke_default_issuer": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The default issuer of tke. If use_tke_default is set to `true`, this parameter will be set to the default value.",
+			},
+			"tke_default_jwks_uri": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The default jwks_uri of tke. If use_tke_default is set to `true`, this parameter will be set to the default value.",
 			},
 		},
 		Create: resourceTencentCloudTKEAuthAttachmentCreate,
@@ -126,13 +158,35 @@ func resourceTencentCloudTKEAuthAttachmentCreate(d *schema.ResourceData, meta in
 	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
 		Issuer: helper.String(d.Get("issuer").(string)),
 	}
-
-	if v, ok := d.GetOk("jwks_uri"); ok {
-		request.ServiceAccounts.JWKSURI = helper.String(v.(string))
-	}
+	request.OIDCConfig = &tke.OIDCConfigAuthenticationOptions{}
 
 	if v, ok := d.GetOk("auto_create_discovery_anonymous_auth"); ok {
 		request.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("auto_create_oidc_config"); ok {
+		request.OIDCConfig.AutoCreateOIDCConfig = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("auto_create_client_id"); ok {
+		rawClientIds := v.([]interface{})
+		clientIds := make([]string, len(rawClientIds))
+		for i := 0; i < len(rawClientIds); i++ {
+			clientIds[i] = rawClientIds[i].(string)
+		}
+		request.OIDCConfig.AutoCreateClientId = helper.StringsStringsPoint(clientIds)
+	}
+
+	if v, ok := d.GetOk("auto_install_pod_identity_webhook_addon"); ok {
+		request.OIDCConfig.AutoInstallPodIdentityWebhookAddon = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("use_tke_default"); ok && v.(bool) {
+		request.ServiceAccounts.UseTKEDefault = helper.Bool(true)
+	} else {
+		if v, ok := d.GetOk("jwks_uri"); ok {
+			request.ServiceAccounts.JWKSURI = helper.String(v.(string))
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -167,8 +221,13 @@ func resourceTencentCloudTKEAuthAttachmentRead(d *schema.ResourceData, meta inte
 
 	d.SetId(id)
 
-	_ = d.Set("jwks_uri", info.JWKSURI)
-	_ = d.Set("issuer", info.Issuer)
+	if v, ok := d.GetOk("use_tke_default"); ok && v.(bool) {
+		_ = d.Set("tke_default_issuer", info.Issuer)
+		_ = d.Set("tke_default_jwks_uri", info.JWKSURI)
+	} else {
+		_ = d.Set("jwks_uri", info.JWKSURI)
+		_ = d.Set("issuer", info.Issuer)
+	}
 
 	return nil
 }
@@ -184,13 +243,49 @@ func resourceTencentCloudTKEAuthAttachmentUpdate(d *schema.ResourceData, meta in
 	request := tke.NewModifyClusterAuthenticationOptionsRequest()
 	request.ClusterId = &id
 	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{}
+	request.OIDCConfig = &tke.OIDCConfigAuthenticationOptions{}
 
-	if d.HasChange("jwks_uri") {
-		request.ServiceAccounts.JWKSURI = helper.String(d.Get("jwks_uri").(string))
+	useTkeDefault := false
+	if v, ok := d.GetOk("use_tke_default"); ok {
+		request.ServiceAccounts.UseTKEDefault = helper.Bool(v.(bool))
+		useTkeDefault = v.(bool)
 	}
-	if d.HasChange("issuer") {
-		issuer := d.Get("issuer").(string)
-		request.ServiceAccounts.Issuer = helper.String(issuer)
+
+	if !useTkeDefault {
+		if d.HasChange("jwks_uri") {
+			request.ServiceAccounts.JWKSURI = helper.String(d.Get("jwks_uri").(string))
+		}
+		if d.HasChange("issuer") {
+			issuer := d.Get("issuer").(string)
+			request.ServiceAccounts.Issuer = helper.String(issuer)
+		}
+	}
+
+	if d.HasChange("auto_create_discovery_anonymous_auth") {
+		if v, ok := d.GetOk("auto_create_discovery_anonymous_auth"); ok {
+			request.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = helper.Bool(v.(bool))
+		}
+	}
+	if d.HasChange("auto_create_oidc_config") {
+		if v, ok := d.GetOk("auto_create_oidc_config"); ok {
+			request.OIDCConfig.AutoCreateOIDCConfig = helper.Bool(v.(bool))
+		}
+
+	}
+	if d.HasChange("auto_create_client_id") {
+		if v, ok := d.GetOk("auto_create_client_id"); ok {
+			rawClientIds := v.([]interface{})
+			clientIds := make([]string, len(rawClientIds))
+			for i := 0; i < len(rawClientIds); i++ {
+				clientIds[i] = rawClientIds[i].(string)
+			}
+			request.OIDCConfig.AutoCreateClientId = helper.StringsStringsPoint(clientIds)
+		}
+	}
+	if d.HasChange("auto_install_pod_identity_webhook_addon") {
+		if v, ok := d.GetOk("auto_install_pod_identity_webhook_addon"); ok {
+			request.OIDCConfig.AutoInstallPodIdentityWebhookAddon = helper.Bool(v.(bool))
+		}
 	}
 
 	if err := service.ModifyClusterAuthenticationOptions(ctx, request); err != nil {

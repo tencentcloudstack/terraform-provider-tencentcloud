@@ -1278,20 +1278,42 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			MaxItems: 1,
 			Elem: &schema.Resource{
 				Schema: map[string]*schema.Schema{
+					"use_tke_default": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						Default:     false,
+						Description: "Default value is `false`. If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please use empty string as value of issuer and jwks_uri.",
+					},
 					"jwks_uri": {
 						Type:        schema.TypeString,
 						Optional:    true,
-						Description: "Specify service-account-jwks-uri.",
+						Description: "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please set this parameter value to empty string or just ignore it.",
 					},
 					"issuer": {
 						Type:        schema.TypeString,
 						Optional:    true,
-						Description: "Specify service-account-issuer.",
+						Description: "Specify service-account-issuer. If use_tke_default is set to `true`, please set this parameter value to empty string or just ignore it.",
 					},
 					"auto_create_discovery_anonymous_auth": {
 						Type:        schema.TypeBool,
 						Optional:    true,
 						Description: "If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.",
+					},
+					"auto_create_oidc_config": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						Description: "Create identity provider.",
+					},
+					"auto_create_client_id": {
+						Type:        schema.TypeList,
+						Optional:    true,
+						Elem:        &schema.Schema{Type: schema.TypeString},
+						Description: "Create ClientId of identity provider.",
+					},
+					"auto_install_pod_identity_webhook_addon": {
+						Type:        schema.TypeBool,
+						Optional:    true,
+						Description: "Create component PodIdentityWebhook in Cluster.",
 					},
 				},
 			},
@@ -1827,11 +1849,11 @@ func tkeGetAuthOptions(d *schema.ResourceData) *tke.ModifyClusterAuthenticationO
 	request.ClusterId = helper.String(d.Id())
 	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
 		AutoCreateDiscoveryAnonymousAuth: helper.Bool(false),
-		Issuer:                           helper.String(""),
-		JWKSURI:                          helper.String(""),
 	}
+	request.OIDCConfig = &tke.OIDCConfigAuthenticationOptions{}
 
 	if !ok || len(options) == 0 {
+		request.ServiceAccounts.JWKSURI = helper.String("")
 		return request
 	}
 
@@ -1841,12 +1863,33 @@ func tkeGetAuthOptions(d *schema.ResourceData) *tke.ModifyClusterAuthenticationO
 		request.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = helper.Bool(v.(bool))
 	}
 
-	if v, ok := option["issuer"]; ok {
-		request.ServiceAccounts.Issuer = helper.String(v.(string))
+	if v, ok := option["use_tke_default"]; ok && v.(bool) {
+		request.ServiceAccounts.UseTKEDefault = helper.Bool(true)
+	} else {
+		if v, ok := option["issuer"]; ok {
+			request.ServiceAccounts.Issuer = helper.String(v.(string))
+		}
+
+		if v, ok := option["jwks_uri"]; ok {
+			request.ServiceAccounts.JWKSURI = helper.String(v.(string))
+		}
 	}
 
-	if v, ok := option["jwks_uri"]; ok {
-		request.ServiceAccounts.JWKSURI = helper.String(v.(string))
+	if v, ok := option["auto_create_oidc_config"]; ok {
+		request.OIDCConfig.AutoCreateOIDCConfig = helper.Bool(v.(bool))
+	}
+
+	if v, ok := option["auto_create_client_id"]; ok {
+		rawClientIds := v.([]interface{})
+		clientIds := make([]string, len(rawClientIds))
+		for i := 0; i < len(rawClientIds); i++ {
+			clientIds[i] = rawClientIds[i].(string)
+		}
+		request.OIDCConfig.AutoCreateClientId = helper.StringsStringsPoint(clientIds)
+	}
+
+	if v, ok := option["auto_install_pod_identity_webhook_addon"]; ok {
+		request.OIDCConfig.AutoInstallPodIdentityWebhookAddon = helper.Bool(v.(bool))
 	}
 
 	return request
