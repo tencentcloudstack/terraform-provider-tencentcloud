@@ -10,13 +10,6 @@ resource "tencentcloud_dts_compare_task_stop_operation" "compare_task_stop_opera
 }
 ```
 
-Import
-
-dts compare_task_stop_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dts_compare_task_stop_operation.compare_task_stop_operation compare_task_stop_operation_id
-```
 */
 package tencentcloud
 
@@ -37,9 +30,6 @@ func resourceTencentCloudDtsCompareTaskStopOperation() *schema.Resource {
 		Read:   resourceTencentCloudDtsCompareTaskStopOperationRead,
 		Update: resourceTencentCloudDtsCompareTaskStopOperationUpdate,
 		Delete: resourceTencentCloudDtsCompareTaskStopOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"job_id": {
 				Required:    true,

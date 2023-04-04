@@ -259,6 +259,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 																	Type: schema.TypeString,
 																},
 																Optional:    true,
+																Computed:    true,
 																Description: "temporary tables.",
 															},
 															"table_edit_mode": {
@@ -343,6 +344,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
+													Computed:    true,
 													Description: "Functions.",
 												},
 												"procedures": {
@@ -351,6 +353,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
+													Computed:    true,
 													Description: "Procedures.",
 												},
 												"events": {
@@ -359,6 +362,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
+													Computed:    true,
 													Description: "Events.",
 												},
 												"triggers": {
@@ -367,6 +371,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
+													Computed:    true,
 													Description: "Triggers.",
 												},
 											},
@@ -378,6 +383,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
+										Computed:    true,
 										Description: "AdvancedObjects.",
 									},
 								},
@@ -796,7 +802,6 @@ func resourceTencentCloudDtsMigrateJobCreate(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	// ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		tcClient  = meta.(*TencentCloudClient).apiV3Conn
@@ -831,29 +836,6 @@ func resourceTencentCloudDtsMigrateJobCreate(d *schema.ResourceData, meta interf
 		return e
 	}
 
-	// // case "resume":
-	// err = handleResumeMigrate(d, tcClient, logId, jobId)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// // case "compare":
-	// err = handleCompareMigrate(d, tcClient, logId, jobId)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// // case "complete":
-	// err = handleCompleteMigrate(d, tcClient, logId, jobId)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// // case "stop":
-	// err = handleStopMigrate(d, tcClient, logId, jobId)
-	// if err != nil {
-	// 	return err
-	// }
 	d.SetId(serviceId)
 	return resourceTencentCloudDtsMigrateJobRead(d, meta)
 }
@@ -1141,8 +1123,17 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 
 		if migrateJob.SrcInfo.Info != nil {
 			infoList := make([]interface{}, 0, len(migrateJob.SrcInfo.Info))
-			for _, info := range migrateJob.SrcInfo.Info {
+			for i, info := range migrateJob.SrcInfo.Info {
 				infoMap := make(map[string]interface{})
+
+				//reset password
+				if info.Password == nil || *info.Password == "" {
+					key := fmt.Sprintf("src_info.0.info.%v.password", i)
+					if v, ok := d.GetOk(key); ok {
+						infoMap["password"] = helper.String(v.(string))
+						log.Printf("[DEBUG]%s set src_info.0.info.%v.password:[key:%s]", logId, i, key)
+					}
+				}
 
 				if info.Role != nil {
 					infoMap["role"] = info.Role
@@ -1162,10 +1153,6 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 
 				if info.User != nil {
 					infoMap["user"] = info.User
-				}
-
-				if info.Password != nil {
-					infoMap["password"] = info.Password
 				}
 
 				if info.CvmInstanceId != nil {
@@ -1278,8 +1265,17 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 		log.Printf("[DEBUG]%s read migrateJob.DstInfo.Info :[%v], len:[%v]", logId, migrateJob.DstInfo.Info, len(migrateJob.DstInfo.Info))
 		if migrateJob.DstInfo.Info != nil {
 			infoList := make([]interface{}, 0, len(migrateJob.DstInfo.Info))
-			for _, info := range migrateJob.DstInfo.Info {
+			for i, info := range migrateJob.DstInfo.Info {
 				infoMap := make(map[string]interface{})
+
+				//reset password
+				if info.Password == nil || *info.Password == "" {
+					key := fmt.Sprintf("dst_info.0.info.%v.password", i)
+					if v, ok := d.GetOk(key); ok {
+						infoMap["password"] = helper.String(v.(string))
+						log.Printf("[DEBUG]%s set dst_info.0.info.%v.password:[key:%s]", logId, i, key)
+					}
+				}
 
 				if info.Role != nil {
 					infoMap["role"] = info.Role
@@ -1299,10 +1295,6 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 
 				if info.User != nil {
 					infoMap["user"] = info.User
-				}
-
-				if info.Password != nil {
-					infoMap["password"] = info.Password
 				}
 
 				if info.CvmInstanceId != nil {

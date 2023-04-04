@@ -9,13 +9,6 @@ resource "tencentcloud_dts_sync_job_resume_operation" "sync_job_resume_operation
 }
 ```
 
-Import
-
-dts sync_job_resume_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dts_sync_job_resume_operation.sync_job_resume_operation sync_job_resume_operation_id
-```
 */
 package tencentcloud
 
@@ -36,9 +29,6 @@ func resourceTencentCloudDtsSyncJobResumeOperation() *schema.Resource {
 		Read:   resourceTencentCloudDtsSyncJobResumeOperationRead,
 		Update: resourceTencentCloudDtsSyncJobResumeOperationUpdate,
 		Delete: resourceTencentCloudDtsSyncJobResumeOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"job_id": {
 				Required:    true,

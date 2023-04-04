@@ -17,7 +17,6 @@ func TestAccTencentCloudDtsMigrateJobConfigResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				// PreventDiskCleanup: true,
 				Config: testAccDtsMigrateJobConfig_pause(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job_config.config", "id"),
@@ -33,23 +32,23 @@ func TestAccTencentCloudDtsMigrateJobConfigResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job_config.config", "action", "continue"),
 				),
 			},
-			{
-				Config: testAccDtsMigrateJobConfig_complete(),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job_config.config", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job_config.config", "job_id"),
-					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job_config.config", "action", "complete"),
-					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job_config.config", "action", "immediately"),
-				),
-			},
 			// {
-			// 	Config: testAccDtsMigrateJobConfig_stop(),
+			// 	Config: testAccDtsMigrateJobConfig_complete(),
 			// 	Check: resource.ComposeTestCheckFunc(
 			// 		resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job_config.config", "id"),
 			// 		resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job_config.config", "job_id"),
-			// 		resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job_config.config", "action", "stop"),
+			// 		resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job_config.config", "action", "complete"),
+			// 		resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job_config.config", "action", "immediately"),
 			// 	),
 			// },
+			{
+				Config: testAccDtsMigrateJobConfig_stop(),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job_config.config", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job_config.config", "job_id"),
+					resource.TestCheckResourceAttr("tencentcloud_dts_migrate_job_config.config", "action", "stop"),
+				),
+			},
 			{
 				Config: testAccDtsMigrateJobConfig_isolate(),
 				Check: resource.ComposeTestCheckFunc(
@@ -93,19 +92,6 @@ func testAccDtsMigrateJobConfig_continue() string {
 resource "tencentcloud_dts_migrate_job_config" "config" {
   job_id = tencentcloud_dts_migrate_job_start_operation.start.id
   action = "continue"
-}
-
-`)
-	return ret
-}
-
-func testAccDtsMigrateJobConfig_complete() string {
-	ret := fmt.Sprintf(testAccDtsMigrateJobConfig_basic() + `
-
-resource "tencentcloud_dts_migrate_job_config" "config" {
-  job_id = tencentcloud_dts_migrate_job_start_operation.start.id
-  action = "complete"
-  complete_mode = "immediately"
 }
 
 `)

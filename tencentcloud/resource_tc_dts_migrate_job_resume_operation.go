@@ -4,19 +4,12 @@ Provides a resource to create a dts migrate_job_resume_operation
 Example Usage
 
 ```hcl
-resource "tencentcloud_dts_migrate_job_resume_operation" "migrate_job_resume_operation" {
-  job_id = "dts-ekmhr27i"
-  resume_option = "normal"
+resource "tencentcloud_dts_migrate_job_resume_operation" "resume" {
+	job_id = "job_id"
+	resume_option = "normal"
 }
 ```
 
-Import
-
-dts migrate_job_resume_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dts_migrate_job_resume_operation.migrate_job_resume_operation migrate_job_resume_operation_id
-```
 */
 package tencentcloud
 
@@ -37,9 +30,6 @@ func resourceTencentCloudDtsMigrateJobResumeOperation() *schema.Resource {
 		Read:   resourceTencentCloudDtsMigrateJobResumeOperationRead,
 		Update: resourceTencentCloudDtsMigrateJobResumeOperationUpdate,
 		Delete: resourceTencentCloudDtsMigrateJobResumeOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"job_id": {
 				Required:    true,

@@ -360,7 +360,7 @@ func (me *DtsService) DeleteDtsCompareTaskById(ctx context.Context, jobId, compa
 	// }
 
 	// wait success or failed
-	err := me.PollingCompareTaskStatusUntil(ctx, jobId, compareTaskId, "success,failed")
+	err := me.PollingCompareTaskStatusUntil(ctx, jobId, compareTaskId, "success,failed,canceled")
 	if err != nil {
 		return err
 	}
@@ -582,7 +582,7 @@ func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId str
 		return
 	}
 
-	err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, "isolated")
+	err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, []string{"isolated"})
 	if err != nil {
 		return err
 	}
@@ -601,7 +601,7 @@ func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId str
 		return err
 	}
 
-	err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, "offlined")
+	err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, []string{"offlined"})
 	if err != nil {
 		return err
 	}
@@ -612,7 +612,7 @@ func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId str
 	return
 }
 
-func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, statusType, targetStatus string) error {
+func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, statusType string, targetStatus []string) error {
 	logId := getLogId(ctx)
 
 	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
@@ -624,8 +624,10 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 		if statusType == DTSJobStatus {
 			if ret != nil && ret.Status != nil {
 				status := *ret.Status
-				if strings.Contains(targetStatus, status) {
-					return nil
+				for _, target := range targetStatus {
+					if strings.Contains(target, status) {
+						return nil
+					}
 				}
 				return resource.RetryableError(fmt.Errorf("DTS migrate job[%s] Status is still on [%s], retry...", jobId, status))
 			}
@@ -633,8 +635,10 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 		if statusType == DTSTradeStatus {
 			if ret != nil && ret.TradeInfo.TradeStatus != nil {
 				status := *ret.TradeInfo.TradeStatus
-				if strings.Contains(targetStatus, status) {
-					return nil
+				for _, target := range targetStatus {
+					if strings.Contains(target, status) {
+						return nil
+					}
 				}
 				return resource.RetryableError(fmt.Errorf("DTS migrate job[%s] TradeStatus is still on [%s], retry...", jobId, status))
 			}
