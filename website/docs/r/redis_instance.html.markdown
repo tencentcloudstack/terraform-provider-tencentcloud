@@ -77,7 +77,7 @@ The following arguments are supported:
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values: `PREPAID` and `POSTPAID`. Default value is `POSTPAID`. Note: TencentCloud International only supports `POSTPAID`. Caution that update operation on this field will delete old instances and create new with new charge type.
 * `force_delete` - (Optional, Bool) Indicate whether to delete Redis instance directly or not. Default is false. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance.
 * `name` - (Optional, String) Instance name.
-* `no_auth` - (Optional, Bool, ForceNew) Indicates whether the redis instance support no-auth access. NOTE: Only available in private cloud environment.
+* `no_auth` - (Optional, Bool) Indicates whether the redis instance support no-auth access. NOTE: Only available in private cloud environment.
 * `params_template_id` - (Optional, String) Specify params template id. If not set, will use default template.
 * `password` - (Optional, String) Password for a Redis user, which should be 8 to 16 characters. NOTE: Only `no_auth=true` specified can make password empty.
 * `port` - (Optional, Int, ForceNew) The port used to access a redis instance. The default value is 6379. And this value can't be changed after creation, or the Redis instance will be recreated.

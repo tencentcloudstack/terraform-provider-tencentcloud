@@ -163,7 +163,6 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"no_auth": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Indicates whether the redis instance support no-auth access. NOTE: Only available in private cloud environment.",
 			},
 			"replicas_read_only": {
@@ -753,16 +752,17 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if d.HasChange("password") {
+	if d.HasChange("password") || d.HasChange("no_auth") {
 		var (
 			taskId   int64
 			password = d.Get("password").(string)
+			noAuth   = d.Get("no_auth").(bool)
 			err      error
 		)
 
 		// After redis spec modified, reset password may not successfully response immediately.
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			taskId, err = redisService.ResetPassword(ctx, id, password)
+			taskId, err = redisService.ResetPassword(ctx, id, password, noAuth)
 			if err != nil {
 				log.Printf("[CRITAL]%s redis change password error, reason:%s\n", logId, err.Error())
 				return retryError(err, redis.FAILEDOPERATION_SYSTEMERROR)
