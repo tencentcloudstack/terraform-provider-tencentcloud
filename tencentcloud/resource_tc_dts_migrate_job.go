@@ -1126,13 +1126,15 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 			for i, info := range migrateJob.SrcInfo.Info {
 				infoMap := make(map[string]interface{})
 
-				//reset password
 				if info.Password == nil || *info.Password == "" {
+					//reset password
 					key := fmt.Sprintf("src_info.0.info.%v.password", i)
 					if v, ok := d.GetOk(key); ok {
 						infoMap["password"] = helper.String(v.(string))
 						log.Printf("[DEBUG]%s set src_info.0.info.%v.password:[key:%s]", logId, i, key)
 					}
+				} else {
+					infoMap["password"] = info.Password
 				}
 
 				if info.Role != nil {
@@ -1268,13 +1270,15 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 			for i, info := range migrateJob.DstInfo.Info {
 				infoMap := make(map[string]interface{})
 
-				//reset password
 				if info.Password == nil || *info.Password == "" {
+					//reset password
 					key := fmt.Sprintf("dst_info.0.info.%v.password", i)
 					if v, ok := d.GetOk(key); ok {
 						infoMap["password"] = helper.String(v.(string))
 						log.Printf("[DEBUG]%s set dst_info.0.info.%v.password:[key:%s]", logId, i, key)
 					}
+				} else {
+					infoMap["password"] = info.Password
 				}
 
 				if info.Role != nil {
