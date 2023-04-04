@@ -941,7 +941,7 @@ const (
 	defaultTsfGateway         = "gw-ins-lvdypq5k"
 	defaultTsfDestNamespaceId = "namespace-aemrg36v"
 	defaultTsfConfigId        = "dcfg-y54wzk3a"
-	defaultTsfApiId           = "api-yl24o73l"
+	defaultTsfApiId           = "api-j03q029a"
 	defaultTsfGWGroupId       = "group-vzd97zpy"
 )
 
