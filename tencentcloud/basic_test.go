@@ -942,6 +942,7 @@ const (
 	defaultTsfDestNamespaceId = "namespace-aemrg36v"
 	defaultTsfConfigId        = "dcfg-y54wzk3a"
 	defaultTsfApiId           = "api-yl24o73l"
+	defaultTsfGWGroupId       = "group-vzd97zpy"
 )
 
 // End of TSF
