@@ -362,16 +362,38 @@ func resourceTencentCloudClbServerAttachmentUpdate(d *schema.ResourceData, meta 
 		ns := n.(*schema.Set)
 		add := ns.Difference(os).List()
 		remove := os.Difference(ns).List()
-		if len(remove) > 0 {
-			err := resourceTencentCloudClbServerAttachmentRemove(d, meta, remove)
-			if err != nil {
-				return err
+		addLen := len(add)
+		removeLen := len(remove)
+		if removeLen > 0 {
+			for count := 0; count < removeLen; count += 20 {
+				removeList := make([]interface{}, 0, 20)
+				for i := 0; i < 20; i++ {
+					index := count + i
+					if index >= removeLen {
+						break
+					}
+					removeList = append(removeList, remove[index])
+				}
+				err := resourceTencentCloudClbServerAttachmentRemove(d, meta, removeList)
+				if err != nil {
+					return err
+				}
 			}
 		}
-		if len(add) > 0 {
-			err := resourceTencentCloudClbServerAttachmentAdd(d, meta, add)
-			if err != nil {
-				return err
+		if addLen > 0 {
+			for count := 0; count < addLen; count += 20 {
+				addList := make([]interface{}, 0, 20)
+				for i := 0; i < 20; i++ {
+					index := count + i
+					if index >= addLen {
+						break
+					}
+					addList = append(addList, add[index])
+				}
+				err := resourceTencentCloudClbServerAttachmentAdd(d, meta, addList)
+				if err != nil {
+					return err
+				}
 			}
 		}
 		return resourceTencentCloudClbServerAttachmentRead(d, meta)

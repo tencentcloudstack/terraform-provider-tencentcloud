@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudClbServerAttachment_tcp(t *testing.T) {
+func TestAccTencentCloudClbAttachmentResource_tcp(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -50,7 +50,7 @@ func TestAccTencentCloudClbServerAttachment_tcp(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbServerAttachment_http(t *testing.T) {
+func TestAccTencentCloudClbAttachmentResource_http(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -103,7 +103,7 @@ func testAccCheckClbServerAttachmentDestroy(s *terraform.State) error {
 	return nil
 }
 
-func TestAccCheckClbServerAttachmentTargetGroups(t *testing.T) {
+func TestAccTencentCloudClbAttachmentResource_argetGroups(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
