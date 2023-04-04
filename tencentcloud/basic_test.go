@@ -938,7 +938,7 @@ const (
 	defaultTsfApplicationId   = "application-a24x29xv"
 	defaultTsfClustId         = "cluster-vwgj5e6y"
 	defaultTsfGroupId         = "group-yrjkln9v"
-	defaultTsfGateway         = "gw-ins-uaymyaeg"
+	defaultTsfGateway         = "gw-ins-lvdypq5k"
 	defaultTsfDestNamespaceId = "namespace-aemrg36v"
 	defaultTsfConfigId        = "dcfg-y54wzk3a"
 	defaultTsfApiId           = "api-yl24o73l"

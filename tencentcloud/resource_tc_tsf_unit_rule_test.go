@@ -7,6 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudTsfUnitRuleResource_basic -v
@@ -23,15 +24,15 @@ func TestAccTencentCloudTsfUnitRuleResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTsfUnitRuleExists("tencentcloud_tsf_unit_rule.unit_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_unit_rule.unit_rule", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "gateway_instance_id", "terraform-test"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "gateway_instance_id", defaultTsfGateway),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "description", "terraform-desc"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.relationship", "AND"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.dest_namespace_id", defaultTsfDestNamespaceId),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.dest_namespace_name", "terraform_dest_namespace_name"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.dest_namespace_name", "KEEP-terraform-请勿删除_default"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.name", "Rule1"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.description", "rule1-desc"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.unit_rule_tag_list.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.unit_rule_tag_list.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.unit_rule_tag_list.0.tag_type", "U"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.unit_rule_tag_list.0.tag_field", "aaa"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_unit_rule.unit_rule", "unit_rule_item_list.0.unit_rule_tag_list.0.tag_operator", "IN"),
@@ -58,6 +59,10 @@ func testAccCheckTsfUnitRuleDestroy(s *terraform.State) error {
 
 		res, err := service.DescribeTsfUnitRuleById(ctx, rs.Primary.ID)
 		if err != nil {
+			code := err.(*sdkErrors.TencentCloudSDKError).Code
+			if code == "InvalidParameterValue.GatewayParameterInvalid" {
+				return nil
+			}
 			return err
 		}
 
@@ -110,7 +115,7 @@ resource "tencentcloud_tsf_unit_rule" "unit_rule" {
 	unit_rule_item_list {
 		  relationship = "AND"
 		  dest_namespace_id = var.dest_namespace_id
-		  dest_namespace_name = "terraform_dest_namespace_name"
+		  dest_namespace_name = "KEEP-terraform-请勿删除_default"
 		  name = "Rule1"
 		  description = "rule1-desc"
 		  unit_rule_tag_list {
