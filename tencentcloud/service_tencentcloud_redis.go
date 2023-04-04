@@ -844,12 +844,13 @@ func (me *RedisService) DescribeTaskInfo(ctx context.Context, redisId string, ta
 	return
 }
 
-func (me *RedisService) ResetPassword(ctx context.Context, redisId string, newPassword string) (taskId int64, errRet error) {
+func (me *RedisService) ResetPassword(ctx context.Context, redisId string, newPassword string, noAuth bool) (taskId int64, errRet error) {
 	logId := getLogId(ctx)
 
 	request := redis.NewResetPasswordRequest()
 	request.InstanceId = &redisId
 	request.Password = &newPassword
+	request.NoAuth = &noAuth
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
