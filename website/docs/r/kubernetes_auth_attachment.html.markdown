@@ -78,6 +78,14 @@ resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
   issuer                               = "https://${tencentcloud_kubernetes_cluster.managed_cluster.id}.ccs.tencent-cloud.com"
   auto_create_discovery_anonymous_auth = true
 }
+
+# if you want to use tke default issuer and jwks_uri, please set use_tke_default to true and set issuer to empty string.
+resource "tencentcloud_kubernetes_auth_attachment" "test_use_tke_default_auth_attach" {
+  cluster_id                           = tencentcloud_kubernetes_cluster.managed_cluster.id
+  issuer                               = ""
+  auto_create_discovery_anonymous_auth = true
+  use_tke_default                      = true
+}
 ```
 
 ## Argument Reference
@@ -85,15 +93,20 @@ resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
 The following arguments are supported:
 
 * `cluster_id` - (Required, String) ID of clusters.
-* `issuer` - (Required, String) Specify service-account-issuer.
+* `issuer` - (Required, String) Specify service-account-issuer. If use_tke_default is set to `true`, please set this parameter value to empty string.
+* `auto_create_client_id` - (Optional, List: [`String`]) Create ClientId of identity provider.
 * `auto_create_discovery_anonymous_auth` - (Optional, Bool) If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.
-* `jwks_uri` - (Optional, String) Specify service-account-jwks-uri.
+* `auto_create_oidc_config` - (Optional, Bool) Create identity provider.
+* `auto_install_pod_identity_webhook_addon` - (Optional, Bool) Create component PodIdentityWebhook in Cluster.
+* `jwks_uri` - (Optional, String) Specify service-account-jwks-uri. If use_tke_default is set to `true`, please set this parameter value to empty string or just ignore it.
+* `use_tke_default` - (Optional, Bool) Default value is `false`. If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please use empty string as value of issuer and jwks_uri.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `tke_default_issuer` - The default issuer of tke. If use_tke_default is set to `true`, this parameter will be set to the default value.
+* `tke_default_jwks_uri` - The default jwks_uri of tke. If use_tke_default is set to `true`, this parameter will be set to the default value.
 
 
