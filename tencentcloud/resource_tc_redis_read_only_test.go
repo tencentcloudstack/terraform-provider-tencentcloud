@@ -7,7 +7,6 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudRedisReadOnlyResource_basic -v
-
 func TestAccTencentCloudRedisReadOnlyResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -42,7 +41,7 @@ variable "instance_id" {
 const testAccRedisReadOnly = testAccRedisReadOnlyVar + `
 
 resource "tencentcloud_redis_read_only" "read_only" {
-	instance_id = "crs-iw7d9wdd"
+	instance_id = var.instance_id
 	input_mode = "0"
 }
 
