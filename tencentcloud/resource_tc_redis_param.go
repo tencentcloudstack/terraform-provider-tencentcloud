@@ -198,12 +198,12 @@ func resourceTencentCloudRedisParamUpdate(d *schema.ResourceData, meta interface
 		if ok {
 			return nil
 		} else {
-			return resource.RetryableError(fmt.Errorf("create account is processing"))
+			return resource.RetryableError(fmt.Errorf("change param is processing"))
 		}
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s redis create account fail, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s redis change param fail, reason:%s\n", logId, err.Error())
 		return err
 	}
 

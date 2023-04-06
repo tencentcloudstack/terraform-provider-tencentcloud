@@ -1200,7 +1200,7 @@ func (me *RedisService) RedisAccountStateRefreshFunc(instanceId, accountName str
 	}
 }
 
-func (me *RedisService) DescribeRedisConnectionConfigById(ctx context.Context, instanceId string) (param *redis.InstanceSet, errRet error) {
+func (me *RedisService) DescribeRedisInstanceById(ctx context.Context, instanceId string) (param *redis.InstanceSet, errRet error) {
 	logId := getLogId(ctx)
 
 	request := redis.NewDescribeInstancesRequest()
