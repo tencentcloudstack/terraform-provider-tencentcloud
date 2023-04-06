@@ -689,6 +689,7 @@ VPN Connections(VPN)
 	tencentcloud_vpn_ssl_client
 	tencentcloud_vpn_connection_reset
 	tencentcloud_vpn_customer_gateway_configuration_download
+	tencentcloud_vpn_gateway_ssl_client_cert
 
 MapReduce(EMR)
   Data Source
@@ -1424,6 +1425,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpn_ssl_client":                              resourceTencentCloudVpnSslClient(),
 			"tencentcloud_vpn_connection_reset":                        resourceTencentCloudVpnConnectionReset(),
 			"tencentcloud_vpn_customer_gateway_configuration_download": resourceTencentCloudVpnCustomerGatewayConfigurationDownload(),
+			"tencentcloud_vpn_gateway_ssl_client_cert":                 resourceTencentCloudVpnGatewaySslClientCert(),
 			"tencentcloud_ha_vip":                                      resourceTencentCloudHaVip(),
 			"tencentcloud_ha_vip_eip_attachment":                       resourceTencentCloudHaVipEipAttachment(),
 			"tencentcloud_security_group":                              resourceTencentCloudSecurityGroup(),
