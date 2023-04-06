@@ -1,3 +1,25 @@
+## 1.80.1 (April 6 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_tsf_api_rate_limit_rule` ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+* **New Resource:** `tencentcloud_tsf_application_release_config` ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+* **New Resource:** `tencentcloud_tsf_cluster` ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+* **New Resource:** `tencentcloud_tsf_config_template` ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+* **New Resource:** `tencentcloud_tsf_group` ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+* **New Resource:** `tencentcloud_tsf_lane` ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+* **New Resource:** `tencentcloud_tsf_lane_rule` ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+* **New Resource:** `tencentcloud_tsf_path_rewrite` ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+* **New Resource:** `tencentcloud_tsf_task` ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+* **New Resource:** `tencentcloud_tsf_unit_rule` ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_attachment: remove update targets limit ([#1644](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1644))
+* resource/tencentcloud_redis_instance:  `no_auth` support modify. ([#1641](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1641))
+* resource/tencentcloud_tsf_namespace: Cancel support for import ([#1632](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1632))
+* resource/tencentcloud_vpn_gateway: support update `prepaid_period` ([#1649](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1649))## 1.80.0 (March 31 2023)
+
 ## 1.80.0 (March 31 2023)
 
 FEATURES:
