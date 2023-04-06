@@ -950,3 +950,10 @@ variable "cbs_backup_disk_id" {
 `
 
 // End of CBS
+
+// CRS
+const (
+	defaultCrsInstanceId = "crs-2yypjrnv"
+)
+
+// End of CRS

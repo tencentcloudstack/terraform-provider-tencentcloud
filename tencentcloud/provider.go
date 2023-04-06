@@ -510,6 +510,7 @@ TencentDB for Redis(crs)
     tencentcloud_redis_instance
     tencentcloud_redis_backup_config
     tencentcloud_redis_param_template
+	tencentcloud_redis_account
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -1451,6 +1452,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_sign_up_cfs_service":                  resourceTencentCloudCfsSignUpCfsService(),
 			"tencentcloud_redis_instance":                           resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                      resourceTencentCloudRedisBackupConfig(),
+			"tencentcloud_redis_account":                            resourceTencentCloudRedisAccount(),
 			"tencentcloud_redis_param_template":                     resourceTencentCloudRedisParamTemplate(),
 			"tencentcloud_as_scaling_config":                        resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                         resourceTencentCloudAsScalingGroup(),
