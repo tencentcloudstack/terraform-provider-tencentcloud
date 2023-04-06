@@ -96,9 +96,11 @@ func resourceTencentCloudRedisAccountCreate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request     = redis.NewCreateInstanceAccountRequest()
+		response    = redis.NewCreateInstanceAccountResponse()
 		instanceId  string
 		accountName string
 	)
@@ -144,6 +146,7 @@ func resourceTencentCloudRedisAccountCreate(d *schema.ResourceData, meta interfa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -153,12 +156,33 @@ func resourceTencentCloudRedisAccountCreate(d *schema.ResourceData, meta interfa
 
 	d.SetId(instanceId + FILED_SP + accountName)
 
+	taskId := *response.Response.TaskId
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
+		if err != nil {
+			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if ok {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("create account is processing"))
+		}
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s redis create account fail, reason:%s\n", logId, err.Error())
+		return err
+	}
 
 	conf := BuildStateChangeConf(
 		[]string{},
 		[]string{"2"},
-		60*readRetryTimeout,
+		6*readRetryTimeout,
 		time.Second,
 		service.RedisAccountStateRefreshFunc(instanceId, accountName, []string{}),
 	)
@@ -175,7 +199,6 @@ func resourceTencentCloudRedisAccountRead(d *schema.ResourceData, meta interface
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -230,8 +253,10 @@ func resourceTencentCloudRedisAccountUpdate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := redis.NewModifyInstanceAccountRequest()
+	response := redis.NewModifyInstanceAccountResponse()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
@@ -287,6 +312,7 @@ func resourceTencentCloudRedisAccountUpdate(d *schema.ResourceData, meta interfa
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -294,12 +320,33 @@ func resourceTencentCloudRedisAccountUpdate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
+	taskId := *response.Response.TaskId
 	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
+		if err != nil {
+			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if ok {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("change account is processing"))
+		}
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s redis change account fail, reason:%s\n", logId, err.Error())
+		return err
+	}
 
 	conf := BuildStateChangeConf(
 		[]string{},
 		[]string{"2"},
-		60*readRetryTimeout,
+		6*readRetryTimeout,
 		time.Second,
 		service.RedisAccountStateRefreshFunc(instanceId, accountName, []string{}),
 	)
@@ -326,7 +373,29 @@ func resourceTencentCloudRedisAccountDelete(d *schema.ResourceData, meta interfa
 	instanceId := idSplit[0]
 	accountName := idSplit[1]
 
-	if err := service.DeleteRedisAccountById(ctx, instanceId, accountName); err != nil {
+	taskId, err := service.DeleteRedisAccountById(ctx, instanceId, accountName)
+	if err != nil {
+		return err
+	}
+
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
+		if err != nil {
+			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if ok {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("delete account is processing"))
+		}
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s redis delete account fail, reason:%s\n", logId, err.Error())
 		return err
 	}
 

@@ -1157,7 +1157,7 @@ func (me *RedisService) DescribeRedisAccountById(ctx context.Context, instanceId
 	return
 }
 
-func (me *RedisService) DeleteRedisAccountById(ctx context.Context, instanceId, accountName string) (errRet error) {
+func (me *RedisService) DeleteRedisAccountById(ctx context.Context, instanceId, accountName string) (taskId int64, errRet error) {
 	logId := getLogId(ctx)
 
 	request := redis.NewDeleteInstanceAccountRequest()
@@ -1178,6 +1178,7 @@ func (me *RedisService) DeleteRedisAccountById(ctx context.Context, instanceId, 
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	taskId = *response.Response.TaskId
 
 	return
 }
@@ -1197,4 +1198,88 @@ func (me *RedisService) RedisAccountStateRefreshFunc(instanceId, accountName str
 
 		return object, helper.PString(helper.String(strconv.FormatInt(*object.Status, 10))), nil
 	}
+}
+
+func (me *RedisService) DescribeRedisConnectionConfigById(ctx context.Context, instanceId string) (param *redis.InstanceSet, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeInstancesRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceSet) < 1 {
+		return
+	}
+
+	param = response.Response.InstanceSet[0]
+	return
+}
+
+func (me *RedisService) DescribeRedisParamById(ctx context.Context, instanceId string) (params map[string]interface{}, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeInstanceParamsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeInstanceParams(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	param := response.Response
+	instanceParams := make(map[string]interface{})
+	if param.InstanceEnumParam != nil {
+		for _, v := range param.InstanceEnumParam {
+			key := *v.ParamName
+			value := *v.CurrentValue
+			instanceParams[key] = value
+		}
+	}
+	if param.InstanceIntegerParam != nil {
+		for _, v := range param.InstanceIntegerParam {
+			key := *v.ParamName
+			value := *v.CurrentValue
+			instanceParams[key] = value
+		}
+	}
+	if param.InstanceMultiParam != nil {
+		for _, v := range param.InstanceMultiParam {
+			key := *v.ParamName
+			value := *v.CurrentValue
+			instanceParams[key] = value
+		}
+	}
+	if param.InstanceTextParam != nil {
+		for _, v := range param.InstanceTextParam {
+			key := *v.ParamName
+			value := *v.CurrentValue
+			instanceParams[key] = value
+		}
+	}
+	params = instanceParams
+	return
 }

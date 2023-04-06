@@ -953,7 +953,7 @@ variable "cbs_backup_disk_id" {
 
 // CRS
 const (
-	defaultCrsInstanceId = "crs-2yypjrnv"
+	defaultCrsInstanceId = "crs-iw7d9wdd"
 )
 
 // End of CRS
