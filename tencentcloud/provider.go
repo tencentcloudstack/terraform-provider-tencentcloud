@@ -214,6 +214,8 @@ Cloud Connect Network(CCN)
     tencentcloud_ccn_attachment
     tencentcloud_ccn_bandwidth_limit
 	tencentcloud_ccn_routes
+	tencentcloud_ccn_instances_accept_attach
+	tencentcloud_ccn_instances_reset_attach
 
 CVM Dedicated Host(CDH)
   Data Source
@@ -1416,6 +1418,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ccn_attachment":                              resourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":                         resourceTencentCloudCcnBandwidthLimit(),
 			"tencentcloud_ccn_routes":                                  resourceTencentCloudCcnRoutes(),
+			"tencentcloud_ccn_instances_accept_attach":                 resourceTencentCloudCcnInstancesAcceptAttach(),
+			"tencentcloud_ccn_instances_reset_attach":                  resourceTencentCloudCcnInstancesResetAttach(),
 			"tencentcloud_dcx":                                         resourceTencentCloudDcxInstance(),
 			"tencentcloud_dc_gateway":                                  resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":                        resourceTencentCloudDcGatewayCcnRouteInstance(),
