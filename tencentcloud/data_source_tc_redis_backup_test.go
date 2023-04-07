@@ -50,9 +50,9 @@ variable "instance_id" {
 const testAccRedisBackupDataSource = testAccRedisBackupDataSourceVar + `
 
 data "tencentcloud_redis_backup" "backup" {
-	instance_id = var.instance_id
-	begin_time = "2023-04-07 03:57:30"
-	end_time = "2023-04-07 03:57:56"
+	instance_id = "crs-jf4ico4v"
+	begin_time = "2023-04-07 19:50:40"
+	end_time = "2023-04-07 19:50:50"
 	status = [2]
 	instance_name = "Keep-terraform"
 }
