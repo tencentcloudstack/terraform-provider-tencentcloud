@@ -364,7 +364,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_internet_domain                    = "tf.cluster-internet.com"
   cluster_intranet                           = true
   cluster_intranet_domain                    = "tf.cluster-intranet.com"
-  cluster_version                            = "1.18.4"
+  cluster_version                            = "1.22.5"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   auto_upgrade_cluster_level				 = true
@@ -432,7 +432,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_internet                           = true
   cluster_internet_domain                    = "tf2.cluster-internet.com"
   cluster_intranet                           = false
-  cluster_version                            = "1.18.4"
+  cluster_version                            = "1.22.5"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L5"
   cluster_internet_security_group               = local.sg_id2
@@ -503,7 +503,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_desc                               = "test cluster desc 3"
   cluster_max_service_num                    = 32
   cluster_internet                           = false
-  cluster_version                            = "1.18.4"
+  cluster_version                            = "1.22.5"
   cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
   cluster_level								 = "L20"
   auto_upgrade_cluster_level				 = false
