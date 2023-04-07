@@ -21,19 +21,19 @@ func TestAccTencentCloudRedisBackupDataSource_basic(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_redis_backup.backup"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_redis_backup.backup", "instance_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.#", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.backup_id", "641186639-8362913-1516672770"),
-					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.backup_size", "184"),
+					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.backup_id", "641555133-6494882-1224158916"),
+					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.backup_size", "176"),
 					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.backup_type", "0"),
-					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.end_time", "2023-04-07 03:57:36"),
-					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.expire_time", "2023-04-14 03:57:33"),
-					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.file_type", "RDB-Redis 5.0"),
+					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.end_time", "2023-04-07 19:50:48"),
+					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.expire_time", "2023-04-14 19:50:44"),
+					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.file_type", "RDB-Redis 6.2"),
 					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.full_backup", "0"),
 					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.instance_name", "Keep-terraform"),
-					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.instance_type", "8"),
+					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.instance_type", "15"),
 					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.locked", "0"),
 					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.region", "ap-guangzhou"),
-					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.remark", "xx"),
-					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.start_time", "2023-04-07 03:57:33"),
+					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.remark", "keep"),
+					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.start_time", "2023-04-07 19:50:44"),
 					resource.TestCheckResourceAttr("data.tencentcloud_redis_backup.backup", "backup_set.0.status", "2"),
 				),
 			},
@@ -50,7 +50,7 @@ variable "instance_id" {
 const testAccRedisBackupDataSource = testAccRedisBackupDataSourceVar + `
 
 data "tencentcloud_redis_backup" "backup" {
-	instance_id = "crs-jf4ico4v"
+	instance_id = var.instance_id
 	begin_time = "2023-04-07 19:50:40"
 	end_time = "2023-04-07 19:50:50"
 	status = [2]
