@@ -13,7 +13,6 @@ resource "tencentcloud_dts_sync_job_resume_operation" "sync_job_resume_operation
 package tencentcloud
 
 import (
-	"context"
 	"log"
 	"time"
 
@@ -27,11 +26,11 @@ func resourceTencentCloudDtsSyncJobResumeOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDtsSyncJobResumeOperationCreate,
 		Read:   resourceTencentCloudDtsSyncJobResumeOperationRead,
-		Update: resourceTencentCloudDtsSyncJobResumeOperationUpdate,
 		Delete: resourceTencentCloudDtsSyncJobResumeOperationDelete,
 		Schema: map[string]*schema.Schema{
 			"job_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Synchronization instance id (i.e. identifies a synchronization job).",
 			},
@@ -43,59 +42,16 @@ func resourceTencentCloudDtsSyncJobResumeOperationCreate(d *schema.ResourceData,
 	defer logElapsed("resource.tencentcloud_dts_sync_job_resume_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var jobId string
+	logId := getLogId(contextNil)
 
+	var (
+		request = dts.NewResumeSyncJobRequest()
+		jobId   string
+	)
 	if v, ok := d.GetOk("job_id"); ok {
 		jobId = v.(string)
+		request.JobId = helper.String(v.(string))
 	}
-	d.SetId(jobId)
-
-	return resourceTencentCloudDtsSyncJobResumeOperationUpdate(d, meta)
-}
-
-func resourceTencentCloudDtsSyncJobResumeOperationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dts_sync_job_resume_operation.read")()
-	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	jobId := d.Id()
-
-	syncJobResumeOperation, err := service.DescribeDtsSyncJobResumeOperationById(ctx, jobId)
-	if err != nil {
-		return err
-	}
-
-	if syncJobResumeOperation == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `DtsSyncJobResumeOperation` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	if len(syncJobResumeOperation.JobList) == 0 || *syncJobResumeOperation.TotalCount == 0 {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `DtsSyncJobResumeOperation.JobList` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	return nil
-}
-
-func resourceTencentCloudDtsSyncJobResumeOperationUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dts_sync_job_resume_operation.update")()
-	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	request := dts.NewResumeSyncJobRequest()
-
-	jobId := d.Id()
-
-	request.JobId = helper.String(jobId)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDtsClient().ResumeSyncJob(request)
@@ -107,9 +63,11 @@ func resourceTencentCloudDtsSyncJobResumeOperationUpdate(d *schema.ResourceData,
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s update dts syncJobResumeOperation failed, reason:%+v", logId, err)
-		return err
+		log.Printf("[CRITAL]%s operate dts syncJobResumeOperation failed, reason:%+v", logId, err)
+		return nil
 	}
+
+	d.SetId(jobId)
 
 	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -120,6 +78,13 @@ func resourceTencentCloudDtsSyncJobResumeOperationUpdate(d *schema.ResourceData,
 	}
 
 	return resourceTencentCloudDtsSyncJobResumeOperationRead(d, meta)
+}
+
+func resourceTencentCloudDtsSyncJobResumeOperationRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dts_sync_job_resume_operation.read")()
+	defer inconsistentCheck(d, meta)()
+
+	return nil
 }
 
 func resourceTencentCloudDtsSyncJobResumeOperationDelete(d *schema.ResourceData, meta interface{}) error {

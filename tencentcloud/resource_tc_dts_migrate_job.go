@@ -158,18 +158,6 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 				Description: "Migrate job status.",
 			},
 
-			"resume_option": { // for resume operation
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "The mode of the recovery task, the valid values: `clearData`: clears the target instance data. `overwrite`: executes the task in an overwriting way. `normal`: the normal process, no additional action is performed.",
-			},
-
-			"complete_mode": { // for complete operation
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "The way to complete the task, only support the old version of MySQL migration task, the valid values: waitForSync,immediately.",
-			},
-
 			// for modify operation
 			"run_mode": {
 				Required:    true,

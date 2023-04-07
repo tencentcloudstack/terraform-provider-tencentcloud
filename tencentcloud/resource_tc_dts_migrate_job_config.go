@@ -193,9 +193,9 @@ func resourceTencentCloudDtsMigrateJobConfigRead(d *schema.ResourceData, meta in
 		return nil
 	}
 
-	if migrateJobConfig.JobId != nil {
-		_ = d.Set("job_id", migrateJobConfig.JobId)
-	}
+	// if migrateJobConfig.JobId != nil {
+	// 	_ = d.Set("job_id", migrateJobConfig.JobId)
+	// }
 
 	// if migrateJobConfig.RunMode != nil {
 	// 	_ = d.Set("complete_mode", migrateJobConfig.RunMode)

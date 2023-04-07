@@ -14,31 +14,30 @@ resource "tencentcloud_dts_compare_task_stop_operation" "compare_task_stop_opera
 package tencentcloud
 
 import (
-	"context"
-	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	dts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudDtsCompareTaskStopOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDtsCompareTaskStopOperationCreate,
 		Read:   resourceTencentCloudDtsCompareTaskStopOperationRead,
-		Update: resourceTencentCloudDtsCompareTaskStopOperationUpdate,
 		Delete: resourceTencentCloudDtsCompareTaskStopOperationDelete,
 		Schema: map[string]*schema.Schema{
 			"job_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "job id.",
 			},
 
 			"compare_task_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Compare task id.",
 			},
@@ -50,77 +49,26 @@ func resourceTencentCloudDtsCompareTaskStopOperationCreate(d *schema.ResourceDat
 	defer logElapsed("resource.tencentcloud_dts_compare_task_stop_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
+	logId := getLogId(contextNil)
+
 	var (
+		request       = dts.NewStopCompareRequest()
 		jobId         string
 		compareTaskId string
 	)
-
 	if v, ok := d.GetOk("job_id"); ok {
 		jobId = v.(string)
+		request.JobId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("compare_task_id"); ok {
 		compareTaskId = v.(string)
+		request.CompareTaskId = helper.String(v.(string))
 	}
 
-	d.SetId(jobId + FILED_SP + compareTaskId)
-
-	return resourceTencentCloudDtsCompareTaskStopOperationUpdate(d, meta)
-}
-
-func resourceTencentCloudDtsCompareTaskStopOperationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dts_compare_task_stop_operation.read")()
-	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+	if v, ok := d.GetOk("job_id"); ok {
+		request.JobId = helper.String(v.(string))
 	}
-	jobId := idSplit[0]
-	compareTaskId := idSplit[1]
-
-	ret, err := service.DescribeDtsCompareTaskStopOperationById(ctx, jobId, compareTaskId)
-	if err != nil {
-		return err
-	}
-
-	if ret == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `DtsCompareTaskStopOperation` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-	if ret.Abstract.Status == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `DescribeCompareReportResponseParams.Abstract.Status` [%s] not found, please check it.\n", logId, d.Id())
-		return nil
-	}
-
-	return nil
-}
-
-func resourceTencentCloudDtsCompareTaskStopOperationUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dts_compare_task_stop_operation.update")()
-	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	request := dts.NewStopCompareRequest()
-
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
-		return fmt.Errorf("id is broken,%s", d.Id())
-	}
-	jobId := idSplit[0]
-	compareTaskId := idSplit[1]
-
-	request.JobId = &jobId
-	request.CompareTaskId = &compareTaskId
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDtsClient().StopCompare(request)
@@ -132,11 +80,20 @@ func resourceTencentCloudDtsCompareTaskStopOperationUpdate(d *schema.ResourceDat
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s update dts compareTaskStopOperation failed, reason:%+v", logId, err)
-		return err
+		log.Printf("[CRITAL]%s operate dts compareTaskStopOperation failed, reason:%+v", logId, err)
+		return nil
 	}
 
+	d.SetId(jobId + FILED_SP + compareTaskId)
+
 	return resourceTencentCloudDtsCompareTaskStopOperationRead(d, meta)
+}
+
+func resourceTencentCloudDtsCompareTaskStopOperationRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dts_compare_task_stop_operation.read")()
+	defer inconsistentCheck(d, meta)()
+
+	return nil
 }
 
 func resourceTencentCloudDtsCompareTaskStopOperationDelete(d *schema.ResourceData, meta interface{}) error {

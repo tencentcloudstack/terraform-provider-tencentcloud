@@ -24,8 +24,8 @@ resource "tencentcloud_dts_compare_task_stop_operation" "compare_task_stop_opera
 
 The following arguments are supported:
 
-* `compare_task_id` - (Required, String) Compare task id.
-* `job_id` - (Required, String) job id.
+* `compare_task_id` - (Required, String, ForceNew) Compare task id.
+* `job_id` - (Required, String, ForceNew) job id.
 
 ## Attributes Reference
 

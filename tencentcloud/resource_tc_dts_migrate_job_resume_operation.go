@@ -14,7 +14,6 @@ resource "tencentcloud_dts_migrate_job_resume_operation" "resume" {
 package tencentcloud
 
 import (
-	"context"
 	"log"
 	"time"
 
@@ -28,17 +27,18 @@ func resourceTencentCloudDtsMigrateJobResumeOperation() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDtsMigrateJobResumeOperationCreate,
 		Read:   resourceTencentCloudDtsMigrateJobResumeOperationRead,
-		Update: resourceTencentCloudDtsMigrateJobResumeOperationUpdate,
 		Delete: resourceTencentCloudDtsMigrateJobResumeOperationDelete,
 		Schema: map[string]*schema.Schema{
 			"job_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "job id.",
 			},
 
 			"resume_option": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "resume mode: 1.clearData-Clear target data; 2.overwrite-The task is executed in overwrite mode; 3.normal-No extra action. Note that clearData and overwrite are valid only for redis links, normal is valid only for non-Redis links.",
 			},
@@ -50,65 +50,19 @@ func resourceTencentCloudDtsMigrateJobResumeOperationCreate(d *schema.ResourceDa
 	defer logElapsed("resource.tencentcloud_dts_migrate_job_resume_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
-	var jobId string
+	logId := getLogId(contextNil)
 
+	var (
+		request = dts.NewResumeMigrateJobRequest()
+		jobId   string
+	)
 	if v, ok := d.GetOk("job_id"); ok {
 		jobId = v.(string)
-	}
-	d.SetId(jobId)
-
-	return resourceTencentCloudDtsMigrateJobResumeOperationUpdate(d, meta)
-}
-
-func resourceTencentCloudDtsMigrateJobResumeOperationRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dts_migrate_job_resume_operation.read")()
-	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	jobId := d.Id()
-
-	migrateJobResumeOperation, err := service.DescribeDtsMigrateJobById(ctx, jobId)
-	if err != nil {
-		return err
+		request.JobId = helper.String(v.(string))
 	}
 
-	if migrateJobResumeOperation == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource `DtsMigrateJobResumeOperation` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	if migrateJobResumeOperation.JobId != nil {
-		_ = d.Set("job_id", migrateJobResumeOperation.JobId)
-	}
-
-	// operation do not need to check the resume option
-	// if migrateJobResumeOperation.ResumeOption != nil {
-	// 	_ = d.Set("resume_option", migrateJobResumeOperation.ResumeOption)
-	// }
-
-	return nil
-}
-
-func resourceTencentCloudDtsMigrateJobResumeOperationUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dts_migrate_job_resume_operation.update")()
-	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	request := dts.NewResumeMigrateJobRequest()
-
-	request.JobId = helper.String(d.Id())
-
-	if d.HasChange("resume_option") {
-		if v, ok := d.GetOk("resume_option"); ok {
-			request.ResumeOption = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("resume_option"); ok {
+		request.ResumeOption = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -121,9 +75,10 @@ func resourceTencentCloudDtsMigrateJobResumeOperationUpdate(d *schema.ResourceDa
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s update dts migrateJobResumeOperation failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate dts migrateJobResumeOperation failed, reason:%+v", logId, err)
 		return err
 	}
+	d.SetId(jobId)
 
 	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -134,6 +89,13 @@ func resourceTencentCloudDtsMigrateJobResumeOperationUpdate(d *schema.ResourceDa
 	}
 
 	return resourceTencentCloudDtsMigrateJobResumeOperationRead(d, meta)
+}
+
+func resourceTencentCloudDtsMigrateJobResumeOperationRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dts_migrate_job_resume_operation.read")()
+	defer inconsistentCheck(d, meta)()
+
+	return nil
 }
 
 func resourceTencentCloudDtsMigrateJobResumeOperationDelete(d *schema.ResourceData, meta interface{}) error {

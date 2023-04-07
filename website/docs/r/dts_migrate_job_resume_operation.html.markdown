@@ -24,8 +24,8 @@ resource "tencentcloud_dts_migrate_job_resume_operation" "resume" {
 
 The following arguments are supported:
 
-* `job_id` - (Required, String) job id.
-* `resume_option` - (Required, String) resume mode: 1.clearData-Clear target data; 2.overwrite-The task is executed in overwrite mode; 3.normal-No extra action. Note that clearData and overwrite are valid only for redis links, normal is valid only for non-Redis links.
+* `job_id` - (Required, String, ForceNew) job id.
+* `resume_option` - (Required, String, ForceNew) resume mode: 1.clearData-Clear target data; 2.overwrite-The task is executed in overwrite mode; 3.normal-No extra action. Note that clearData and overwrite are valid only for redis links, normal is valid only for non-Redis links.
 
 ## Attributes Reference
 
