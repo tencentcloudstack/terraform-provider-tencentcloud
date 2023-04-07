@@ -517,7 +517,7 @@ The `auth_options` object supports the following:
 * `auto_install_pod_identity_webhook_addon` - (Optional, Bool) Create component PodIdentityWebhook in Cluster.
 * `issuer` - (Optional, String) Specify service-account-issuer. If use_tke_default is set to `true`, please set this parameter value to empty string or just ignore it.
 * `jwks_uri` - (Optional, String) Specify service-account-jwks-uri. If use_tke_default is set to `true`, please set this parameter value to empty string or just ignore it.
-* `use_tke_default` - (Optional, Bool) Default value is `false`. If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please use empty string as value of issuer and jwks_uri.
+* `use_tke_default` - (Optional, Bool) If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please use empty string as value of issuer and jwks_uri.
 
 The `cluster_audit` object supports the following:
 

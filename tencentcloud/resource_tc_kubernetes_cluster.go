@@ -1281,8 +1281,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					"use_tke_default": {
 						Type:        schema.TypeBool,
 						Optional:    true,
-						Default:     false,
-						Description: "Default value is `false`. If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please use empty string as value of issuer and jwks_uri.",
+						Description: "If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please use empty string as value of issuer and jwks_uri.",
 					},
 					"jwks_uri": {
 						Type:        schema.TypeString,
