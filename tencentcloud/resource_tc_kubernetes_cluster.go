@@ -2828,7 +2828,14 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("auth_options") {
 		request := tkeGetAuthOptions(d)
-		if err := tkeService.ModifyClusterAuthenticationOptions(ctx, request); err != nil {
+		err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+			inErr := tkeService.ModifyClusterAuthenticationOptions(ctx, request)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+			return nil
+		})
+		if err != nil {
 			return err
 		}
 		d.SetPartial("auth_options")

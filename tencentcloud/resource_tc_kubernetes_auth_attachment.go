@@ -355,7 +355,15 @@ func resourceTencentCloudTKEAuthAttachmentUpdate(d *schema.ResourceData, meta in
 		}
 	}
 
-	if err := service.ModifyClusterAuthenticationOptions(ctx, request); err != nil {
+	err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+		err := service.ModifyClusterAuthenticationOptions(ctx, request)
+		if err != nil {
+			return retryError(err, tke.RESOURCEUNAVAILABLE_CLUSTERSTATE)
+		}
+		return nil
+	})
+
+	if err != nil {
 		return err
 	}
 
