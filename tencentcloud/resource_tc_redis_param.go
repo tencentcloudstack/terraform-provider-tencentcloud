@@ -142,30 +142,28 @@ func resourceTencentCloudRedisParamUpdate(d *schema.ResourceData, meta interface
 	instanceId := d.Id()
 	request.InstanceId = &instanceId
 
-	if d.HasChange("instance_params") {
-		if v, ok := d.GetOk("instance_params"); ok {
-			service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-			param, err := service.DescribeRedisParamById(ctx, instanceId)
-			if err != nil && len(param) == 0 {
-				return fmt.Errorf("[ERROR] resource `RedisParam` [%s] not found, please check if it has been deleted.\n", d.Id())
-			}
-			for k, v := range v.(map[string]interface{}) {
-				if value, ok := param[k]; ok {
-					if value != v {
-						instanceParam := redis.InstanceParam{}
-						instanceParam.Key = helper.String(k)
-						instanceParam.Value = helper.String(v.(string))
-						request.InstanceParams = append(request.InstanceParams, &instanceParam)
-					}
-				} else {
-					return fmt.Errorf("[ERROR] The parameter name [%v] does not exist, please check the parameter name.\n", k)
+	if v, ok := d.GetOk("instance_params"); ok {
+		service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+		param, err := service.DescribeRedisParamById(ctx, instanceId)
+		if err != nil && len(param) == 0 {
+			return fmt.Errorf("[ERROR] resource `RedisParam` [%s] not found, please check if it has been deleted.\n", d.Id())
+		}
+		for k, v := range v.(map[string]interface{}) {
+			if value, ok := param[k]; ok {
+				if value != v {
+					instanceParam := redis.InstanceParam{}
+					instanceParam.Key = helper.String(k)
+					instanceParam.Value = helper.String(v.(string))
+					request.InstanceParams = append(request.InstanceParams, &instanceParam)
 				}
+			} else {
+				return fmt.Errorf("[ERROR] The parameter name [%v] does not exist, please check the parameter name.\n", k)
 			}
 		}
+	}
 
-		if len(request.InstanceParams) == 0 {
-			return resourceTencentCloudRedisParamRead(d, meta)
-		}
+	if len(request.InstanceParams) == 0 {
+		return resourceTencentCloudRedisParamRead(d, meta)
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

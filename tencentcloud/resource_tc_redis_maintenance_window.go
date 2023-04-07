@@ -126,16 +126,12 @@ func resourceTencentCloudRedisMaintenanceWindowUpdate(d *schema.ResourceData, me
 
 	request.InstanceId = &instanceId
 
-	if d.HasChange("start_time") {
-		if v, ok := d.GetOk("start_time"); ok {
-			request.StartTime = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("start_time"); ok {
+		request.StartTime = helper.String(v.(string))
 	}
 
-	if d.HasChange("end_time") {
-		if v, ok := d.GetOk("end_time"); ok {
-			request.EndTime = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("end_time"); ok {
+		request.EndTime = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

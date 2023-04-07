@@ -4,6 +4,7 @@ Provides a resource to create a redis ssl
 Example Usage
 
 ```hcl
+
 resource "tencentcloud_redis_ssl" "ssl" {
   instance_id = "crs-c1nl9rpv"
   ssl_config = "disabled"
@@ -70,7 +71,7 @@ func resourceTencentCloudRedisSslCreate(d *schema.ResourceData, meta interface{}
 
 	d.SetId(instanceId)
 
-	return resourceTencentCloudRedisSslRead(d, meta)
+	return resourceTencentCloudRedisSslUpdate(d, meta)
 }
 
 func resourceTencentCloudRedisSslRead(d *schema.ResourceData, meta interface{}) error {
@@ -120,41 +121,39 @@ func resourceTencentCloudRedisSslUpdate(d *schema.ResourceData, meta interface{}
 	)
 
 	instanceId := d.Id()
-	if d.HasChange("ssl_config") {
-		if v, ok := d.GetOkExists("ssl_config"); ok {
-			config := v.(string)
-			if config == "enabled" {
-				openSSLRequest.InstanceId = &instanceId
-				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-					result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().OpenSSL(openSSLRequest)
-					if e != nil {
-						return retryError(e)
-					} else {
-						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, openSSLRequest.GetAction(), openSSLRequest.ToJsonString(), result.ToJsonString())
-					}
-					taskId = *result.Response.TaskId
-					return nil
-				})
-				if err != nil {
-					log.Printf("[CRITAL]%s update redis ssl failed, reason:%+v", logId, err)
-					return err
+	if v, ok := d.GetOkExists("ssl_config"); ok {
+		config := v.(string)
+		if config == "enabled" {
+			openSSLRequest.InstanceId = &instanceId
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().OpenSSL(openSSLRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, openSSLRequest.GetAction(), openSSLRequest.ToJsonString(), result.ToJsonString())
 				}
-			} else {
-				closeSSLRequest.InstanceId = &instanceId
-				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-					result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().CloseSSL(closeSSLRequest)
-					if e != nil {
-						return retryError(e)
-					} else {
-						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, closeSSLRequest.GetAction(), closeSSLRequest.ToJsonString(), result.ToJsonString())
-					}
-					taskId = *result.Response.TaskId
-					return nil
-				})
-				if err != nil {
-					log.Printf("[CRITAL]%s update redis ssl failed, reason:%+v", logId, err)
-					return err
+				taskId = *result.Response.TaskId
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update redis ssl failed, reason:%+v", logId, err)
+				return err
+			}
+		} else {
+			closeSSLRequest.InstanceId = &instanceId
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().CloseSSL(closeSSLRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, closeSSLRequest.GetAction(), closeSSLRequest.ToJsonString(), result.ToJsonString())
 				}
+				taskId = *result.Response.TaskId
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update redis ssl failed, reason:%+v", logId, err)
+				return err
 			}
 		}
 	}

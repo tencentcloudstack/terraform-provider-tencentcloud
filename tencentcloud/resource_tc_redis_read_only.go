@@ -121,10 +121,8 @@ func resourceTencentCloudRedisReadOnlyUpdate(d *schema.ResourceData, meta interf
 
 	request.InstanceId = &instanceId
 
-	if d.HasChange("input_mode") {
-		if v, ok := d.GetOk("input_mode"); ok {
-			request.InputMode = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("input_mode"); ok {
+		request.InputMode = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
