@@ -534,6 +534,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.625 h1:cqU4
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.625/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.627 h1:6IYzbYpwLzKatxFIpwWRli11VXfDXkYFZzMJzrG8FYU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.627/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.633 h1:Yj8s35IjbgaHp4Ic9BZLVGWdN2gXBMtwYi1JJ+qYbrc=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.633/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624/go.mod h1:+TXSVyeKwt1IhZRqKPbTREteBcP+K07Q846/ilNzLWA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589 h1:LZihgirMH0vsaGScYexxwY0fTss9vHaSZs/YOQUVESg=
@@ -544,6 +546,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335 h1:D8qrel
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335/go.mod h1:pz4s3nOhoB9cY0+uWzifuwr7lfh/Gvi1rv0ADxpPzD4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.542 h1:96OU+NJZKgx6VC7KTu4syZ4I71LwUHLAl5BeKNHanio=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.542/go.mod h1:3/T0WFIreoZnp4qmZTQwQZImcnwTtYnTMwmsnK/yWhY=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.633 h1:50F5tH6Y0NHuFK2+Fl421mutHujKCVgKKRo41ZL1DHk=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.633/go.mod h1:rzbfBABiU4f0mHjGr55BIQ6OQmigOZ7BpVhEB983JKo=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.199 h1:7ShREKvI8ik2YNtLF42JR9x2YEeZS/gZvhIRfpsI8T0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.199/go.mod h1:5WGSrlIZJOhwIqPjjafb6vzrPEZieSHPhPMjjGPXOSU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.572 h1:Yn1ZzciHvRg1V694c70VSZQ9tzbgZHrInvlpqE/M7wM=
