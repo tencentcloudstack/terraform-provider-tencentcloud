@@ -1298,22 +1298,6 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 						Optional:    true,
 						Description: "If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.",
 					},
-					"auto_create_oidc_config": {
-						Type:        schema.TypeBool,
-						Optional:    true,
-						Description: "Create identity provider.",
-					},
-					"auto_create_client_id": {
-						Type:        schema.TypeList,
-						Optional:    true,
-						Elem:        &schema.Schema{Type: schema.TypeString},
-						Description: "Create ClientId of identity provider.",
-					},
-					"auto_install_pod_identity_webhook_addon": {
-						Type:        schema.TypeBool,
-						Optional:    true,
-						Description: "Create component PodIdentityWebhook in Cluster.",
-					},
 				},
 			},
 			Description: "Specify cluster authentication configuration. Only available for managed cluster and `cluster_version` >= 1.20.",
@@ -1849,7 +1833,6 @@ func tkeGetAuthOptions(d *schema.ResourceData) *tke.ModifyClusterAuthenticationO
 	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
 		AutoCreateDiscoveryAnonymousAuth: helper.Bool(false),
 	}
-	request.OIDCConfig = &tke.OIDCConfigAuthenticationOptions{}
 
 	if !ok || len(options) == 0 {
 		request.ServiceAccounts.JWKSURI = helper.String("")
@@ -1872,23 +1855,6 @@ func tkeGetAuthOptions(d *schema.ResourceData) *tke.ModifyClusterAuthenticationO
 		if v, ok := option["jwks_uri"]; ok {
 			request.ServiceAccounts.JWKSURI = helper.String(v.(string))
 		}
-	}
-
-	if v, ok := option["auto_create_oidc_config"]; ok {
-		request.OIDCConfig.AutoCreateOIDCConfig = helper.Bool(v.(bool))
-	}
-
-	if v, ok := option["auto_create_client_id"]; ok {
-		rawClientIds := v.([]interface{})
-		clientIds := make([]string, len(rawClientIds))
-		for i := 0; i < len(rawClientIds); i++ {
-			clientIds[i] = rawClientIds[i].(string)
-		}
-		request.OIDCConfig.AutoCreateClientId = helper.StringsStringsPoint(clientIds)
-	}
-
-	if v, ok := option["auto_install_pod_identity_webhook_addon"]; ok {
-		request.OIDCConfig.AutoInstallPodIdentityWebhookAddon = helper.Bool(v.(bool))
 	}
 
 	return request

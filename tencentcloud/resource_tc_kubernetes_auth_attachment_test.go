@@ -16,7 +16,6 @@ func TestAccTencentCloudKubernetesAuthAttachResource(t *testing.T) {
 				Config: testAccTkeAuthAttach(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "cluster_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_oidc_config"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "auto_create_discovery_anonymous_auth", "true"),
 				),
 			},
@@ -53,7 +52,6 @@ resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
   issuer                               = "https://${tencentcloud_kubernetes_cluster.managed_cluster.id}.ccs.tencent-cloud.com"
   auto_create_discovery_anonymous_auth = true
   use_tke_default                      = true
-  auto_create_oidc_config               = true
 }
 `
 }

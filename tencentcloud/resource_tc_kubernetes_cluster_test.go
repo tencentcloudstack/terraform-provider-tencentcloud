@@ -90,7 +90,7 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_desc", "test cluster desc 2"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_level", "L5"),
 					resource.TestCheckResourceAttr(testTkeClusterResourceKey, "cluster_internet_domain", "tf2.cluster-internet.com"),
-					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "auth_options.0.auto_create_oidc_config"),
+					resource.TestCheckResourceAttrSet(testTkeClusterResourceKey, "auth_options.0.auto_create_discovery_anonymous_auth"),
 				),
 			},
 			{
@@ -484,8 +484,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   auth_options {
     auto_create_discovery_anonymous_auth = true
     use_tke_default = true
-    auto_create_oidc_config = true
-    auto_create_client_id = ["test", "test2"]
   }
 }
 `
