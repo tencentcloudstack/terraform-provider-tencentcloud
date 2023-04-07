@@ -1,5 +1,5 @@
 /*
-Provides a resource to create a vpc ccn_instances_reset_attach
+Provides a resource to create a vpc ccn_instances_reset_attach, you can use this resource to reset cross-region attachment.
 
 Example Usage
 

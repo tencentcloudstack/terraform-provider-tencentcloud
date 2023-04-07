@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ccn_instances_accept_attach"
 sidebar_current: "docs-tencentcloud-resource-ccn_instances_accept_attach"
 description: |-
-  Provides a resource to create a vpc ccn_instances_accept_attach, you can use this resource to approve
+  Provides a resource to create a vpc ccn_instances_accept_attach, you can use this resource to approve cross-region attachment.
 ---
 
 # tencentcloud_ccn_instances_accept_attach
 
-Provides a resource to create a vpc ccn_instances_accept_attach, you can use this resource to approve
+Provides a resource to create a vpc ccn_instances_accept_attach, you can use this resource to approve cross-region attachment.
 
 ## Example Usage
 

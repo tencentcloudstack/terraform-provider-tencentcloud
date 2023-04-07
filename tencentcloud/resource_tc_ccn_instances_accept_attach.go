@@ -1,5 +1,5 @@
 /*
-Provides a resource to create a vpc ccn_instances_accept_attach, you can use this resource to approve
+Provides a resource to create a vpc ccn_instances_accept_attach, you can use this resource to approve cross-region attachment.
 
 Example Usage
 

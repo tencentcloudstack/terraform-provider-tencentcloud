@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_ccn_instances_reset_attach"
 sidebar_current: "docs-tencentcloud-resource-ccn_instances_reset_attach"
 description: |-
-  Provides a resource to create a vpc ccn_instances_reset_attach
+  Provides a resource to create a vpc ccn_instances_reset_attach, you can use this resource to reset cross-region attachment.
 ---
 
 # tencentcloud_ccn_instances_reset_attach
 
-Provides a resource to create a vpc ccn_instances_reset_attach
+Provides a resource to create a vpc ccn_instances_reset_attach, you can use this resource to reset cross-region attachment.
 
 ## Example Usage
 
