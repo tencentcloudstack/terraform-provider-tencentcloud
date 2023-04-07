@@ -1497,7 +1497,6 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_redis_connection_config":                     resourceTencentCloudRedisConnectionConfig(),
 			"tencentcloud_redis_param":                                 resourceTencentCloudRedisParam(),
 			"tencentcloud_redis_read_only":                             resourceTencentCloudRedisReadOnly(),
-			"tencentcloud_redis_replicate":                             resourceTencentCloudRedisReplicate(),
 			"tencentcloud_redis_ssl":                                   resourceTencentCloudRedisSsl(),
 			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),
