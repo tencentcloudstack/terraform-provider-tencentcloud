@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
-func TestAccTencentCloudVpcVpnGatewaySslClientCertResource_basic(t *testing.T) {
+func TestAccTencentCloudVpnGatewaySslClientCertResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -15,11 +15,11 @@ func TestAccTencentCloudVpcVpnGatewaySslClientCertResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccVpcVpnGatewaySslClientCert,
+				Config: testAccVpnGatewaySslClientCert,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_vpn_gateway_ssl_client_cert.vpn_gateway_ssl_client_cert", "id")),
 			},
 			{
-				Config: testAccVpcVpnGatewaySslClientCertUpdate,
+				Config: testAccVpnGatewaySslClientCertUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_vpn_gateway_ssl_client_cert.vpn_gateway_ssl_client_cert", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_gateway_ssl_client_cert.vpn_gateway_ssl_client_cert", "switch", "on"),
@@ -34,7 +34,7 @@ func TestAccTencentCloudVpcVpnGatewaySslClientCertResource_basic(t *testing.T) {
 	})
 }
 
-const testAccVpcVpnGatewaySslClientCert = `
+const testAccVpnGatewaySslClientCert = `
 
 resource "tencentcloud_vpn_gateway_ssl_client_cert" "vpn_gateway_ssl_client_cert" {
   ssl_vpn_client_id = "vpnc-52f5lnd5"
@@ -43,7 +43,7 @@ resource "tencentcloud_vpn_gateway_ssl_client_cert" "vpn_gateway_ssl_client_cert
 
 `
 
-const testAccVpcVpnGatewaySslClientCertUpdate = `
+const testAccVpnGatewaySslClientCertUpdate = `
 
 resource "tencentcloud_vpn_gateway_ssl_client_cert" "vpn_gateway_ssl_client_cert" {
   ssl_vpn_client_id = "vpnc-52f5lnd5"
