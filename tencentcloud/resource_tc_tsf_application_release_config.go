@@ -5,18 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_application_release_config" "application_release_config" {
-  config_id = ""
-  group_id = ""
-  release_desc = ""
+  config_id = "dcfg-nalqbqwv"
+  group_id = "group-yxmz72gv"
+  release_desc = "terraform-test"
 }
 ```
 
 Import
 
-tsf application_release_config can be imported using the id, e.g.
+tsf application_release_config can be imported using the configId#groupId#configReleaseId, e.g.
 
 ```
-terraform import tencentcloud_tsf_application_release_config.application_release_config application_release_config_id
+terraform import tencentcloud_tsf_application_release_config.application_release_config dcfg-nalqbqwv#group-yxmz72gv#dcfgr-maeeq2ea
 ```
 */
 package tencentcloud
@@ -134,7 +134,8 @@ func resourceTencentCloudTsfApplicationReleaseConfigCreate(d *schema.ResourceDat
 	logId := getLogId(contextNil)
 
 	var (
-		request  = tsf.NewReleaseConfigRequest()
+		request  = tsf.NewReleaseConfigWithDetailRespRequest()
+		response = tsf.NewReleaseConfigWithDetailRespResponse()
 		configId string
 		groupId  string
 	)
@@ -153,15 +154,13 @@ func resourceTencentCloudTsfApplicationReleaseConfigCreate(d *schema.ResourceDat
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().ReleaseConfig(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().ReleaseConfigWithDetailResp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		if !*result.Response.Result {
-			log.Printf("[CRITAL]%s create tsf applicationReleaseConfig failed, result: %v", logId, *result.Response.Result)
-		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -169,7 +168,8 @@ func resourceTencentCloudTsfApplicationReleaseConfigCreate(d *schema.ResourceDat
 		return err
 	}
 
-	d.SetId(configId + FILED_SP + groupId)
+	configReleaseId := *response.Response.Result.ConfigReleaseId
+	d.SetId(configId + FILED_SP + groupId + FILED_SP + configReleaseId)
 
 	return resourceTencentCloudTsfApplicationReleaseConfigRead(d, meta)
 }
@@ -185,7 +185,7 @@ func resourceTencentCloudTsfApplicationReleaseConfigRead(d *schema.ResourceData,
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	configId := idSplit[0]
@@ -266,11 +266,10 @@ func resourceTencentCloudTsfApplicationReleaseConfigDelete(d *schema.ResourceDat
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	configId := idSplit[0]
-	// groupId := idSplit[1]
+	configId := idSplit[2]
 
 	if err := service.DeleteTsfApplicationReleaseConfigById(ctx, configId); err != nil {
 		return err

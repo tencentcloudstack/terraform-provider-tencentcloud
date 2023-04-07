@@ -185,3 +185,67 @@ func (me *LightHouseService) DescribeLighthouseBlueprintById(ctx context.Context
 	blueprint = response.Response.BlueprintSet[0]
 	return
 }
+
+func (me *LightHouseService) DescribeLighthouseFirewallRuleById(ctx context.Context, instance_id string) (firewallRules []*lighthouse.FirewallRuleInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeFirewallRulesRequest()
+
+	request.InstanceId = helper.String(instance_id)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	limit := 50
+	offset := 0
+	firewallRules = make([]*lighthouse.FirewallRuleInfo, 0)
+	for {
+		ratelimit.Check(request.GetAction())
+		request.Limit = helper.IntInt64(limit)
+		request.Offset = helper.IntInt64(offset)
+		response, err := me.client.UseLighthouseClient().DescribeFirewallRules(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		firewallRules = append(firewallRules, response.Response.FirewallRuleSet...)
+
+		if len(response.Response.FirewallRuleSet) < limit {
+			break
+		}
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LightHouseService) DescribeLighthouseFirewallRulesTemplateByFilter(ctx context.Context) (firewallRulesTemplate []*lighthouse.FirewallRuleInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeFirewallRulesTemplateRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeFirewallRulesTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && response.Response != nil && len(response.Response.FirewallRuleSet) != 0 {
+		firewallRulesTemplate = append(firewallRulesTemplate, response.Response.FirewallRuleSet...)
+	}
+	return
+}

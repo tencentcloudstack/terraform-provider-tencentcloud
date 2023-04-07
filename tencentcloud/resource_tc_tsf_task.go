@@ -5,34 +5,24 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_task" "task" {
-    task_name = ""
-  task_content = ""
-  execute_type = ""
-  task_type = ""
-  time_out =
-  group_id = ""
+  task_name = "terraform-test"
+  task_content = "/test"
+  execute_type = "unicast"
+  task_type = "java"
+  time_out = 60000
+  group_id = "group-y8pnmoga"
   task_rule {
-		rule_type = ""
-		expression = ""
-		repeat_interval =
-
+	rule_type = "Cron"
+	expression = "0 * 1 * * ? "
   }
-  retry_count =
-  retry_interval =
-  shard_count =
-  shard_arguments {
-		shard_key =
-		shard_value = ""
-
-  }
-  success_operator = ""
-  success_ratio = ""
+  retry_count = 0
+  retry_interval = 0
+  success_operator = "GTE"
+  success_ratio = "100"
   advance_settings {
-		sub_task_concurrency =
-
+	sub_task_concurrency = 2
   }
-  task_argument = ""
-          program_id_list =
+  task_argument = "a=c"
 }
 ```
 
@@ -41,7 +31,7 @@ Import
 tsf task can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tsf_task.task task_id
+terraform import tencentcloud_tsf_task.task task-y37eqq95
 ```
 */
 package tencentcloud
@@ -50,6 +40,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -63,9 +54,9 @@ func resourceTencentCloudTsfTask() *schema.Resource {
 		Read:   resourceTencentCloudTsfTaskRead,
 		Update: resourceTencentCloudTsfTaskUpdate,
 		Delete: resourceTencentCloudTsfTaskDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"task_id": {
 				Computed:    true,
@@ -485,7 +476,7 @@ func resourceTencentCloudTsfTaskRead(d *schema.ResourceData, meta interface{}) e
 	}
 
 	if task.SuccessRatio != nil {
-		_ = d.Set("success_ratio", task.SuccessRatio)
+		_ = d.Set("success_ratio", strconv.FormatInt(*task.SuccessRatio, 10))
 	}
 
 	if task.AdvanceSettings != nil {
@@ -506,9 +497,13 @@ func resourceTencentCloudTsfTaskRead(d *schema.ResourceData, meta interface{}) e
 		_ = d.Set("task_state", task.TaskState)
 	}
 
-	if task.BelongFlowIds != nil {
-		_ = d.Set("belong_flow_ids", task.BelongFlowIds)
+	var belongFlowIds []string
+	if task.BelongFlowIds != nil && len(task.BelongFlowIds) > 0 {
+		for _, v := range task.BelongFlowIds {
+			belongFlowIds = append(belongFlowIds, *v)
+		}
 	}
+	_ = d.Set("belong_flow_ids", belongFlowIds)
 
 	if task.TaskLogId != nil {
 		_ = d.Set("task_log_id", task.TaskLogId)
@@ -537,7 +532,7 @@ func resourceTencentCloudTsfTaskUpdate(d *schema.ResourceData, meta interface{})
 
 	request.TaskId = &taskId
 
-	immutableArgs := []string{"task_id", "task_name", "task_content", "execute_type", "task_type", "time_out", "group_id", "task_rule", "retry_count", "retry_interval", "shard_count", "shard_arguments", "success_operator", "success_ratio", "advance_settings", "task_argument", "task_state", "belong_flow_ids", "task_log_id", "trigger_type", "program_id_list"}
+	immutableArgs := []string{"task_id", "task_state", "belong_flow_ids", "task_log_id", "trigger_type"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

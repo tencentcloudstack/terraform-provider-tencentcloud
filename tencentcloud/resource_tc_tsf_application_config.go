@@ -16,13 +16,6 @@ resource "tencentcloud_tsf_application_config" "application_config" {
 }
 ```
 
-Import
-
-tsf application_config can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tsf_application_config.application_config dcfg-y4e3zngv
-```
 */
 package tencentcloud
 
@@ -43,9 +36,9 @@ func resourceTencentCloudTsfApplicationConfig() *schema.Resource {
 		Read:   resourceTencentCloudTsfApplicationConfigRead,
 		Update: resourceTencentCloudTsfApplicationConfigUpdate,
 		Delete: resourceTencentCloudTsfApplicationConfigDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"config_name": {
 				Required:    true,

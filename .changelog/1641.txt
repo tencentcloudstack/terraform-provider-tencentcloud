@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_redis_instance:  `no_auth` support modify.
+```

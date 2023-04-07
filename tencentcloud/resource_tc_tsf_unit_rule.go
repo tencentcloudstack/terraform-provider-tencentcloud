@@ -5,25 +5,20 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_unit_rule" "unit_rule" {
-  gateway_instance_id = ""
-  name = ""
-  description = ""
+  gateway_instance_id = "gw-ins-rug79a70"
+  name = "terraform-test"
+  description = "terraform-desc"
   unit_rule_item_list {
-		relationship = ""
-		dest_namespace_id = ""
-		dest_namespace_name = ""
-		name = ""
-		rule_id = ""
-		unit_rule_id = ""
-		priority =
-		description = ""
+		relationship = "AND"
+		dest_namespace_id = "namespace-y8p88eka"
+		dest_namespace_name = "garden-test_default"
+		name = "Rule1"
+		description = "rule1-desc"
 		unit_rule_tag_list {
-			tag_type = ""
-			tag_field = ""
-			tag_operator = ""
-			tag_value = ""
-			unit_rule_item_id = ""
-			rule_id = ""
+			tag_type = "U"
+			tag_field = "aaa"
+			tag_operator = "IN"
+			tag_value = "1"
 		}
 
   }
@@ -35,7 +30,7 @@ Import
 tsf unit_rule can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tsf_unit_rule.unit_rule unit_rule_id
+terraform import tencentcloud_tsf_unit_rule.unit_rule unit-rl-zbywqeca
 ```
 */
 package tencentcloud
@@ -121,11 +116,13 @@ func resourceTencentCloudTsfUnitRule() *schema.Resource {
 						"rule_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "rule item ID.",
 						},
 						"unit_rule_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Unitization rule ID.",
 						},
 						"priority": {
@@ -167,11 +164,13 @@ func resourceTencentCloudTsfUnitRule() *schema.Resource {
 									"unit_rule_item_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Unitization rule item ID.",
 									},
 									"rule_id": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "rule ID.",
 									},
 								},
@@ -191,9 +190,9 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 
 	var (
-		request = tsf.NewCreateUnitRuleRequest()
-		// response = tsf.NewCreateUnitRuleResponse()
-		ruleId string
+		request  = tsf.NewCreateUnitRuleWithDetailRespRequest()
+		response = tsf.NewCreateUnitRuleWithDetailRespResponse()
+		ruleId   string
 	)
 	if v, ok := d.GetOk("gateway_instance_id"); ok {
 		request.GatewayInstanceId = helper.String(v.(string))
@@ -265,13 +264,13 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateUnitRule(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().CreateUnitRuleWithDetailResp(request)
 		if e != nil {
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		// response = result
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -279,7 +278,7 @@ func resourceTencentCloudTsfUnitRuleCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	// ruleId = *response.Response.RuleId
+	ruleId = *response.Response.Result.Id
 	d.SetId(ruleId)
 
 	return resourceTencentCloudTsfUnitRuleRead(d, meta)
@@ -397,14 +396,16 @@ func resourceTencentCloudTsfUnitRuleRead(d *schema.ResourceData, meta interface{
 					unitRuleTagListList = append(unitRuleTagListList, unitRuleTagListMap)
 				}
 
-				unitRuleItemListMap["unit_rule_tag_list"] = []interface{}{unitRuleTagListList}
+				unitRuleItemListMap["unit_rule_tag_list"] = unitRuleTagListList
 			}
 
 			unitRuleItemListList = append(unitRuleItemListList, unitRuleItemListMap)
 		}
 
-		_ = d.Set("unit_rule_item_list", unitRuleItemListList)
-
+		err = d.Set("unit_rule_item_list", unitRuleItemListList)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -422,7 +423,7 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 
 	request.Id = &id
 
-	immutableArgs := []string{"gateway_instance_id", "name", "rule_id", "status", "description", "unit_rule_item_list"}
+	immutableArgs := []string{"gateway_instance_id", "rule_id", "status"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -430,10 +431,8 @@ func resourceTencentCloudTsfUnitRuleUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	if d.HasChange("name") {
-		if v, ok := d.GetOk("name"); ok {
-			request.Name = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("name"); ok {
+		request.Name = helper.String(v.(string))
 	}
 
 	if d.HasChange("description") {

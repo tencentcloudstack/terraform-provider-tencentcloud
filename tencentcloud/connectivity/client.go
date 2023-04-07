@@ -20,6 +20,7 @@ import (
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	api "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api/v20201106"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
+	apm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	cam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
@@ -161,6 +162,7 @@ type TencentCloudClient struct {
 	cwpConn            *cwp.Client
 	chdfsConn          *chdfs.Client
 	mdlConn            *mdl.Client
+	apmConn            *apm.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1118,6 +1120,20 @@ func (me *TencentCloudClient) UseMdlClient() *mdl.Client {
 	me.mdlConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.mdlConn
+}
+
+// UseApmClient returns apm client for service
+func (me *TencentCloudClient) UseApmClient() *apm.Client {
+	if me.apmConn != nil {
+		return me.apmConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.apmConn, _ = apm.NewClient(me.Credential, me.Region, cpf)
+	me.apmConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.apmConn
 }
 
 func getEnvDefault(key string, defVal int) int {

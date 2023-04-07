@@ -3,6 +3,8 @@ Provides a resource to create a cfs auto_snapshot_policy
 
 Example Usage
 
+use day of week
+
 ```hcl
 resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
   day_of_week = "1,2"
@@ -11,6 +13,29 @@ resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
   alive_days = 7
 }
 ```
+
+use day of month
+
+```hcl
+resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
+  hour = "2,3"
+  policy_name = "policy_name"
+  alive_days = 7
+  day_of_month = "2,3,4"
+}
+```
+
+use interval days
+
+```hcl
+resource "tencentcloud_cfs_auto_snapshot_policy" "auto_snapshot_policy" {
+  hour = "2,3"
+  policy_name = "policy_name"
+  alive_days = 7
+  interval_days = 1
+}
+```
+
 
 Import
 
@@ -43,12 +68,6 @@ func resourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"day_of_week": {
-				Required:    true,
-				Type:        schema.TypeString,
-				Description: "The day of the week on which to repeat the snapshot operation.",
-			},
-
 			"hour": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -61,10 +80,28 @@ func resourceTencentCloudCfsAutoSnapshotPolicy() *schema.Resource {
 				Description: "Policy name.",
 			},
 
+			"day_of_week": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "The day of the week on which to repeat the snapshot operation.",
+			},
+
 			"alive_days": {
 				Optional:    true,
 				Type:        schema.TypeInt,
 				Description: "Snapshot retention period.",
+			},
+
+			"day_of_month": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "The specific day (day 1 to day 31) of the month on which to create a snapshot.",
+			},
+
+			"interval_days": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "The snapshot interval, in days.",
 			},
 		},
 	}
@@ -93,8 +130,16 @@ func resourceTencentCloudCfsAutoSnapshotPolicyCreate(d *schema.ResourceData, met
 		request.PolicyName = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("alive_days"); v != nil {
+	if v, ok := d.GetOkExists("alive_days"); ok {
 		request.AliveDays = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("day_of_month"); ok {
+		request.DayOfMonth = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("interval_days"); ok {
+		request.IntervalDays = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -156,6 +201,14 @@ func resourceTencentCloudCfsAutoSnapshotPolicyRead(d *schema.ResourceData, meta 
 		_ = d.Set("alive_days", autoSnapshotPolicy.AliveDays)
 	}
 
+	if autoSnapshotPolicy.DayOfMonth != nil {
+		_ = d.Set("day_of_month", autoSnapshotPolicy.DayOfMonth)
+	}
+
+	if autoSnapshotPolicy.IntervalDays != nil {
+		_ = d.Set("interval_days", autoSnapshotPolicy.IntervalDays)
+	}
+
 	return nil
 }
 
@@ -189,8 +242,20 @@ func resourceTencentCloudCfsAutoSnapshotPolicyUpdate(d *schema.ResourceData, met
 	}
 
 	if d.HasChange("alive_days") {
-		if v, _ := d.GetOk("alive_days"); v != nil {
+		if v, ok := d.GetOkExists("alive_days"); ok {
 			request.AliveDays = helper.IntUint64(v.(int))
+		}
+	}
+
+	if d.HasChange("day_of_month") {
+		if v, ok := d.GetOk("day_of_month"); ok {
+			request.DayOfMonth = helper.String(v.(string))
+		}
+	}
+
+	if d.HasChange("interval_days") {
+		if v, ok := d.GetOkExists("interval_days"); ok {
+			request.IntervalDays = helper.IntUint64(v.(int))
 		}
 	}
 

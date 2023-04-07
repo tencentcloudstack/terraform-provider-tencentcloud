@@ -35,6 +35,9 @@ const (
 	// 查询集群失败。
 	FAILEDOPERATION_CLUSTERQUERYFAILED = "FailedOperation.ClusterQueryFailed"
 
+	// 更新集群失败。
+	FAILEDOPERATION_CLUSTERUPDATEFAILED = "FailedOperation.ClusterUpdateFailed"
+
 	// 应用查询失败。
 	FAILEDOPERATION_CONFIGAPPLICATIONQUERYFAILED = "FailedOperation.ConfigApplicationQueryFailed"
 
@@ -80,6 +83,12 @@ const (
 	// 连接 kube-api-sever 失败。
 	FAILEDOPERATION_CONTAINERGROUPKUBERNETECONNECTERROR = "FailedOperation.ContainergroupKuberneteConnectError"
 
+	// 调用 kube-api-server 失败。
+	FAILEDOPERATION_CONTAINERGROUPKUBERNETESAPIINVOKEERROR = "FailedOperation.ContainergroupKubernetesApiInvokeError"
+
+	// 调用 kube-api-server 失败。
+	FAILEDOPERATION_CONTAINERGROUPKUBERNETESCONNECTERROR = "FailedOperation.ContainergroupKubernetesConnectError"
+
 	// 健康检查配置失败。
 	FAILEDOPERATION_CVMCAEMASTERHEALTHCHECKCONFIGERROR = "FailedOperation.CvmCaeMasterHealthCheckConfigError"
 
@@ -110,6 +119,12 @@ const (
 	// 机器实例更新失败。
 	FAILEDOPERATION_INSTANCEUPDATEFAILED = "FailedOperation.InstanceUpdateFailed"
 
+	// 内部错误。
+	FAILEDOPERATION_INTERNALERROR = "FailedOperation.InternalError"
+
+	// 非法参数。
+	FAILEDOPERATION_INVALIDPARAMETER = "FailedOperation.InvalidParameter"
+
 	// 泳道从consul删除失败。
 	FAILEDOPERATION_LANEINFODELETECONSULFAILED = "FailedOperation.LaneInfoDeleteConsulFailed"
 
@@ -136,6 +151,21 @@ const (
 
 	// 访问配置中心失败。
 	FAILEDOPERATION_RATELIMITCONSULERROR = "FailedOperation.RatelimitConsulError"
+
+	// 调用 Mesh API Server 失败。
+	FAILEDOPERATION_RATELIMITMESHAPISERVICEERROR = "FailedOperation.RatelimitMeshApiServiceError"
+
+	// 资源操作失败。
+	FAILEDOPERATION_RESOURCEOPFAILED = "FailedOperation.ResourceOpFailed"
+
+	// 路由就近访问策略启停用调用MESHAPI失败。
+	FAILEDOPERATION_ROUTEAFFINITYMESHFAILED = "FailedOperation.RouteAffinityMeshFailed"
+
+	// 服务路由规则启用生效失败。
+	FAILEDOPERATION_ROUTEENABLECONSULFAILED = "FailedOperation.RouteEnableConsulFailed"
+
+	// 路由就近访问，查询命名空间失败。
+	FAILEDOPERATION_ROUTENAMESPACEREQUESTERROR = "FailedOperation.RouteNamespaceRequestError"
 
 	// 服务数据库入库失败。
 	FAILEDOPERATION_SERVICEINSERTFAILED = "FailedOperation.ServiceInsertFailed"
@@ -176,11 +206,32 @@ const (
 	// TKE 集群查询失败。
 	FAILEDOPERATION_TKECLUSTERQUERYFAILED = "FailedOperation.TkeClusterQueryFailed"
 
+	// TSF应用性能管理任务数据库查询失败。
+	FAILEDOPERATION_TSFAPMAGENTTASKQUERYERROR = "FailedOperation.TsfApmAgentTaskQueryError"
+
+	// TSF应用性能管理任务数据库写入失败。
+	FAILEDOPERATION_TSFAPMAGENTTASKWRITEERROR = "FailedOperation.TsfApmAgentTaskWriteError"
+
+	// TSF应用性能管理apm-agent无法与该实例建立连接。
+	FAILEDOPERATION_TSFAPMAPMAGENTNOCONNECTION = "FailedOperation.TsfApmApmAgentNoConnection"
+
+	// TSF应用性能管理业务日志配置与应用关联数据库写入失败。
+	FAILEDOPERATION_TSFAPMBUSILOGCFGAPPRELATIONWRITEERROR = "FailedOperation.TsfApmBusiLogCfgAppRelationWriteError"
+
+	// TSF应用性能管理业务日志配置数据库查询失败。
+	FAILEDOPERATION_TSFAPMBUSILOGCFGQUERYERROR = "FailedOperation.TsfApmBusiLogCfgQueryError"
+
 	// TSF应用性能管理业务日志配置解析规则查询失败。
 	FAILEDOPERATION_TSFAPMBUSILOGCFGSCHEMAQUERYERROR = "FailedOperation.TsfApmBusiLogCfgSchemaQueryError"
 
+	// TSF应用性能管理业务日志配置解析规则写入失败。
+	FAILEDOPERATION_TSFAPMBUSILOGCFGSCHEMAWRITEERROR = "FailedOperation.TsfApmBusiLogCfgSchemaWriteError"
+
 	// TSF应用性能管理业务日志配置数据库写入失败。
 	FAILEDOPERATION_TSFAPMBUSILOGCFGWRITEERROR = "FailedOperation.TsfApmBusiLogCfgWriteError"
+
+	// 调用master接口更新部署组失败。
+	FAILEDOPERATION_TSFAPMCALLMASTERINTERFACEFAILED = "FailedOperation.TsfApmCallMasterInterfaceFailed"
 
 	// TSF应用性能管理调用tsf-ms模块失败。
 	FAILEDOPERATION_TSFAPMCALLTSFMSFAILED = "FailedOperation.TsfApmCallTsfMsFailed"
@@ -191,14 +242,38 @@ const (
 	// TSF应用性能管理内部异常, 请稍后重试。
 	FAILEDOPERATION_TSFAPMINTERNALERROR = "FailedOperation.TsfApmInternalError"
 
+	// TSF应用性能管理运行状态统计查询服务查询失败。
+	FAILEDOPERATION_TSFAPMSTATSSEARCHSERVICEQUERYERROR = "FailedOperation.TsfApmStatsSearchServiceQueryError"
+
+	// 数据库插入规则失败。
+	FAILEDOPERATION_TSFASDBINSTERFAIL = "FailedOperation.TsfAsDbInsterFail"
+
+	// 查询数据库失败。
+	FAILEDOPERATION_TSFASDBQUERYFAIL = "FailedOperation.TsfAsDbQueryFail"
+
+	// 扩容规则每次扩容机器数目不能大于机器最大数目。
+	FAILEDOPERATION_TSFASEXPANDCOUNTANDLIMITERROR = "FailedOperation.TsfAsExpandCountAndLimitError"
+
+	// 扩容规则指标不能小于缩容规则。
+	FAILEDOPERATION_TSFASEXPANDINDICATORSLESSSHRINK = "FailedOperation.TsfAsExpandIndicatorsLessShrink"
+
+	// 扩容最大实例数不能小于缩容最小实例数。
+	FAILEDOPERATION_TSFASEXPANDLIMITLESSSHRINKLIMIT = "FailedOperation.TsfAsExpandLimitLessShrinkLimit"
+
 	// ctsdb数据库请求失败。
 	FAILEDOPERATION_TSFCMONITORCTSDBCLIENTREQUESTFAIL = "FailedOperation.TsfCmonitorCtsdbClientRequestFail"
 
 	// TSF监控统计等待超时, 请稍后重试。
 	FAILEDOPERATION_TSFMONITORWAITEDTIMEOUT = "FailedOperation.TsfMonitorWaitedTimeout"
 
+	// 调用ms server失败。
+	FAILEDOPERATION_TSFMSSERVERERROR = "FailedOperation.TsfMsServerError"
+
 	// TSF权限模块异常，请联系系统管理员。。
 	FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
+
+	// 未授权。
+	FAILEDOPERATION_UNAUTHORIZEDOPERATION = "FailedOperation.UnauthorizedOperation"
 
 	// 模块未处理异常。
 	FAILEDOPERATION_UNHANDLEDEXCEPTION = "FailedOperation.UnhandledException"
@@ -259,6 +334,12 @@ const (
 
 	// MASTER通道查询失败。
 	INTERNALERROR_CVMCAEMASTERNONALIVE = "InternalError.CvmCaeMasterNonAlive"
+
+	// 数据查询失败。
+	INTERNALERROR_CVMCAEMASTERQUERYERROR = "InternalError.CvmCaeMasterQueryError"
+
+	// TSF暂时不能响应请求。。
+	INTERNALERROR_DISPATCHCOMMONERROR = "InternalError.DispatchCommonError"
 
 	// 网关通用异常:%s。
 	INTERNALERROR_GATEWAYCOMMONERROR = "InternalError.GatewayCommonError"
@@ -343,6 +424,9 @@ const (
 
 	// 配置模板名称不符合规范。
 	INVALIDPARAMETER_CONFIGTEMPLATENAMEINVALID = "InvalidParameter.ConfigTemplateNameInvalid"
+
+	// TSF MASTER 解包失败。
+	INVALIDPARAMETER_CVMCAEMASTERJSONDECODEFAIL = "InvalidParameter.CvmCaeMasterJsonDecodeFail"
 
 	// TSF MASTER 实例状态异常。
 	INVALIDPARAMETER_CVMCAEMASTERUNKNOWNINSTANCESTATUS = "InvalidParameter.CvmCaeMasterUnknownInstanceStatus"
@@ -497,6 +581,9 @@ const (
 	// 集群命名不能为空。
 	INVALIDPARAMETERVALUE_CLUSTERNAMEREQUIRED = "InvalidParameterValue.ClusterNameRequired"
 
+	// 集群无效的分页参数。
+	INVALIDPARAMETERVALUE_CLUSTERPAGELIMITINVALID = "InvalidParameterValue.ClusterPageLimitInvalid"
+
 	// 创建集群，无效的地域字段。
 	INVALIDPARAMETERVALUE_CLUSTERREGIONINVALID = "InvalidParameterValue.ClusterRegionInvalid"
 
@@ -637,6 +724,9 @@ const (
 
 	// TSF MASTER 部署组中无云主机。
 	INVALIDPARAMETERVALUE_CVMCAEMASTERGROUPNOAGENT = "InvalidParameterValue.CvmCaeMasterGroupNoAgent"
+
+	// 任务不存在。
+	INVALIDPARAMETERVALUE_CVMCAEMASTERTASKNOTEXIST = "InvalidParameterValue.CvmCaeMasterTaskNotExist"
 
 	// 部署组不存在。
 	INVALIDPARAMETERVALUE_DEPLOYGROUPNOTEXISTS = "InvalidParameterValue.DeployGroupNotExists"
@@ -815,6 +905,9 @@ const (
 	// 配置项已经发布，不允许删除。
 	INVALIDPARAMETERVALUE_RELEASEDCONFIGCANNOTBEDELETED = "InvalidParameterValue.ReleasedConfigCanNotBeDeleted"
 
+	// 文件配置项已经发布，不允许删除。
+	INVALIDPARAMETERVALUE_RELEASEDFILECONFIGCANNOTBEDELETED = "InvalidParameterValue.ReleasedFileConfigCanNotBeDeleted"
+
 	// 无权限操作资源%s。
 	INVALIDPARAMETERVALUE_RESOURCEPERMISSIONDENIED = "InvalidParameterValue.ResourcePermissionDenied"
 
@@ -896,6 +989,9 @@ const (
 	// 分组所属应用不能为空。
 	MISSINGPARAMETER_GROUPAPPLICATIONNULL = "MissingParameter.GroupApplicationNull"
 
+	// 分组扩容操作，机器列表为空。
+	MISSINGPARAMETER_GROUPEXPANDSERVERIDNULL = "MissingParameter.GroupExpandServeridNull"
+
 	// 分组ID不能为空。
 	MISSINGPARAMETER_GROUPIDNULL = "MissingParameter.GroupIdNull"
 
@@ -904,6 +1000,9 @@ const (
 
 	// 分组所属命名空间不能为空。
 	MISSINGPARAMETER_GROUPNAMESPACENULL = "MissingParameter.GroupNamespaceNull"
+
+	// 分组缩容操作，机器列表为空。
+	MISSINGPARAMETER_GROUPSHIRKSERVERIDNULL = "MissingParameter.GroupShirkServeridNull"
 
 	// 虚拟机集群导入云主机导入方式为空。
 	MISSINGPARAMETER_INSTANCEIMPORTMODENULL = "MissingParameter.InstanceImportModeNull"
