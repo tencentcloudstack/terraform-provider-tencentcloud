@@ -16,7 +16,7 @@ Import
 vpc ccn_routes can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_ccn_routes.ccn_routes ccn_routes_id
+terraform import tencentcloud_ccn_routes.ccn_routes ccnId#routesId
 ```
 */
 package tencentcloud
@@ -24,11 +24,12 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
-	"log"
-	"strings"
 )
 
 func resourceTencentCloudCcnRoutes() *schema.Resource {
