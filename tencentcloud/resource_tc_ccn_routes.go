@@ -105,6 +105,9 @@ func resourceTencentCloudCcnRoutesRead(d *schema.ResourceData, meta interface{})
 		return nil
 	}
 
+	_ = d.Set("ccn_id", ccnId)
+	_ = d.Set("route_id", routeId)
+
 	if ccnRoutes.Enabled != nil {
 		if *ccnRoutes.Enabled {
 			_ = d.Set("switch", "on")
