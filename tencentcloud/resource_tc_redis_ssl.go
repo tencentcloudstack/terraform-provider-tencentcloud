@@ -128,6 +128,11 @@ func resourceTencentCloudRedisSslUpdate(d *schema.ResourceData, meta interface{}
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().OpenSSL(openSSLRequest)
 				if e != nil {
+					if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+						if ee.Code == "FailedOperation.SystemError" {
+							return resource.NonRetryableError(e)
+						}
+					}
 					return retryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, openSSLRequest.GetAction(), openSSLRequest.ToJsonString(), result.ToJsonString())
@@ -144,6 +149,11 @@ func resourceTencentCloudRedisSslUpdate(d *schema.ResourceData, meta interface{}
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().CloseSSL(closeSSLRequest)
 				if e != nil {
+					if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+						if ee.Code == "FailedOperation.SystemError" {
+							return resource.NonRetryableError(e)
+						}
+					}
 					return retryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, closeSSLRequest.GetAction(), closeSSLRequest.ToJsonString(), result.ToJsonString())

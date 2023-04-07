@@ -20,13 +20,21 @@ func TestAccTencentCloudRedisSslResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_ssl.ssl", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_ssl.ssl", "instance_id", defaultCrsInstanceId),
-					resource.TestCheckResourceAttr("tencentcloud_redis_ssl.ssl", "ssl_config", "disabled"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_ssl.ssl", "ssl_config", "enabled"),
 				),
 			},
 			{
 				ResourceName:      "tencentcloud_redis_ssl.ssl",
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				Config: testAccRedisSslUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_redis_ssl.ssl", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_ssl.ssl", "instance_id", defaultCrsInstanceId),
+					resource.TestCheckResourceAttr("tencentcloud_redis_ssl.ssl", "ssl_config", "disabled"),
+				),
 			},
 		},
 	})
@@ -39,6 +47,15 @@ variable "instance_id" {
 `
 
 const testAccRedisSsl = testAccRedisSslVar + `
+
+resource "tencentcloud_redis_ssl" "ssl" {
+	instance_id = var.instance_id
+	ssl_config = "enabled"
+  }
+
+`
+
+const testAccRedisSslUpdate = testAccRedisSslVar + `
 
 resource "tencentcloud_redis_ssl" "ssl" {
 	instance_id = var.instance_id
