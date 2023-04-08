@@ -69,6 +69,74 @@ resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
   auto_create_discovery_anonymous_auth = true
 }
 ```
+
+Use the TKE default issuer and jwks_uri
+
+```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+variable "cluster_cidr" {
+  default = "172.16.0.0/16"
+}
+
+variable "default_instance_type" {
+  default = "S1.SMALL1"
+}
+
+data "tencentcloud_images" "default" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "centos"
+}
+
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
+  availability_zone = var.availability_zone
+}
+
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  cluster_cidr            = "10.31.0.0/16"
+  cluster_max_pod_num     = 32
+  cluster_name            = "keep"
+  cluster_desc            = "test cluster desc"
+  cluster_version         = "1.20.6"
+  cluster_max_service_num = 32
+
+  worker_config {
+    count                      = 1
+    availability_zone          = var.availability_zone
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_SSD"
+    system_disk_size           = 60
+    internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
+    internet_max_bandwidth_out = 100
+    public_ip_assigned         = true
+    subnet_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.subnet_id
+
+    data_disk {
+      disk_type = "CLOUD_PREMIUM"
+      disk_size = 50
+    }
+
+    enhanced_security_service = false
+    enhanced_monitor_service  = false
+    user_data                 = "dGVzdA=="
+    password                  = "ZZXXccvv1212"
+  }
+
+  cluster_deploy_type = "MANAGED_CLUSTER"
+}
+
+# if you want to use tke default issuer and jwks_uri, please set use_tke_default to true and set issuer to empty string.
+resource "tencentcloud_kubernetes_auth_attachment" "test_use_tke_default_auth_attach" {
+  cluster_id                           = tencentcloud_kubernetes_cluster.managed_cluster.id
+  issuer                               = ""
+  auto_create_discovery_anonymous_auth = true
+  use_tke_default                      = true
+}
+```
 */
 package tencentcloud
 
@@ -93,18 +161,33 @@ func resourceTencentCloudTKEAuthAttachment() *schema.Resource {
 			"issuer": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Specify service-account-issuer.",
+				Description: "Specify service-account-issuer. If use_tke_default is set to `true`, please set this parameter value to empty string.",
+			},
+			"use_tke_default": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please use empty string as value of issuer and jwks_uri.",
 			},
 			"jwks_uri": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Specify service-account-jwks-uri.",
+				Description: "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please set this parameter value to empty string or just ignore it.",
 			},
 			"auto_create_discovery_anonymous_auth": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
 				Description: "If set to `true`, the rbac rule will be created automatically which allow anonymous user to access '/.well-known/openid-configuration' and '/openid/v1/jwks'.",
+			},
+			"tke_default_issuer": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The default issuer of tke. If use_tke_default is set to `true`, this parameter will be set to the default value.",
+			},
+			"tke_default_jwks_uri": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The default jwks_uri of tke. If use_tke_default is set to `true`, this parameter will be set to the default value.",
 			},
 		},
 		Create: resourceTencentCloudTKEAuthAttachmentCreate,
@@ -127,12 +210,16 @@ func resourceTencentCloudTKEAuthAttachmentCreate(d *schema.ResourceData, meta in
 		Issuer: helper.String(d.Get("issuer").(string)),
 	}
 
-	if v, ok := d.GetOk("jwks_uri"); ok {
-		request.ServiceAccounts.JWKSURI = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("auto_create_discovery_anonymous_auth"); ok {
 		request.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("use_tke_default"); ok && v.(bool) {
+		request.ServiceAccounts.UseTKEDefault = helper.Bool(true)
+	} else {
+		if v, ok := d.GetOk("jwks_uri"); ok {
+			request.ServiceAccounts.JWKSURI = helper.String(v.(string))
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -167,8 +254,13 @@ func resourceTencentCloudTKEAuthAttachmentRead(d *schema.ResourceData, meta inte
 
 	d.SetId(id)
 
-	_ = d.Set("jwks_uri", info.JWKSURI)
-	_ = d.Set("issuer", info.Issuer)
+	if v, ok := d.GetOk("use_tke_default"); ok && v.(bool) {
+		_ = d.Set("tke_default_issuer", info.Issuer)
+		_ = d.Set("tke_default_jwks_uri", info.JWKSURI)
+	} else {
+		_ = d.Set("jwks_uri", info.JWKSURI)
+		_ = d.Set("issuer", info.Issuer)
+	}
 
 	return nil
 }
@@ -185,15 +277,37 @@ func resourceTencentCloudTKEAuthAttachmentUpdate(d *schema.ResourceData, meta in
 	request.ClusterId = &id
 	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{}
 
-	if d.HasChange("jwks_uri") {
-		request.ServiceAccounts.JWKSURI = helper.String(d.Get("jwks_uri").(string))
-	}
-	if d.HasChange("issuer") {
-		issuer := d.Get("issuer").(string)
-		request.ServiceAccounts.Issuer = helper.String(issuer)
+	useTkeDefault := false
+	if v, ok := d.GetOk("use_tke_default"); ok {
+		request.ServiceAccounts.UseTKEDefault = helper.Bool(v.(bool))
+		useTkeDefault = v.(bool)
 	}
 
-	if err := service.ModifyClusterAuthenticationOptions(ctx, request); err != nil {
+	if !useTkeDefault {
+		if d.HasChange("jwks_uri") {
+			request.ServiceAccounts.JWKSURI = helper.String(d.Get("jwks_uri").(string))
+		}
+		if d.HasChange("issuer") {
+			issuer := d.Get("issuer").(string)
+			request.ServiceAccounts.Issuer = helper.String(issuer)
+		}
+	}
+
+	if d.HasChange("auto_create_discovery_anonymous_auth") {
+		if v, ok := d.GetOk("auto_create_discovery_anonymous_auth"); ok {
+			request.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = helper.Bool(v.(bool))
+		}
+	}
+
+	err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+		err := service.ModifyClusterAuthenticationOptions(ctx, request)
+		if err != nil {
+			return retryError(err, tke.RESOURCEUNAVAILABLE_CLUSTERSTATE)
+		}
+		return nil
+	})
+
+	if err != nil {
 		return err
 	}
 
