@@ -49,7 +49,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
 resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
   cluster_id                           = tencentcloud_kubernetes_cluster.managed_cluster.id
-  issuer                               = "https://${tencentcloud_kubernetes_cluster.managed_cluster.id}.ccs.tencent-cloud.com"
+  issuer                               = ""
   auto_create_discovery_anonymous_auth = true
   use_tke_default                      = true
 }
