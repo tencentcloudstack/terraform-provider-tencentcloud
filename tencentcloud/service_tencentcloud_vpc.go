@@ -5788,3 +5788,34 @@ func (me *VpcService) DescribeVpcBandwidthPackageByEip(ctx context.Context, eipI
 
 	return
 }
+
+func (me *VpcService) DescribeVpcCcnRoutesById(ctx context.Context, ccnId string, routeId string) (ccnRoutes *vpc.CcnRoute, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeCcnRoutesRequest()
+	request.CcnId = &ccnId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeCcnRoutes(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, route := range response.Response.RouteSet {
+		if *route.RouteId == routeId {
+			ccnRoutes = route
+			return
+		}
+	}
+
+	return
+}

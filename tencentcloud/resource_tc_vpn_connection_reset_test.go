@@ -15,14 +15,14 @@ func TestAccTencentCloudVpnConnectionResetResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccVpcVpnConnectionReset,
+				Config: testAccVpnConnectionReset,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_vpn_connection_reset.vpn_connection_reset", "id")),
 			},
 		},
 	})
 }
 
-const testAccVpcVpnConnectionReset = `
+const testAccVpnConnectionReset = `
 
 resource "tencentcloud_vpn_connection_reset" "vpn_connection_reset" {
   vpn_gateway_id    = "vpngw-gt8bianl"

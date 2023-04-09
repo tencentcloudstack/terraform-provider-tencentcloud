@@ -1,0 +1,6 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: add oidc parameters
+```
+```release-note:enhancement
+resource/tencentcloud_kubernetes_auth_attachment: add oidc parameters
+```
