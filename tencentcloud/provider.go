@@ -520,6 +520,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_param_records
 	tencentcloud_redis_instance_shards
 	tencentcloud_redis_instance_zone_info
+	tencentcloud_redis_instance_task_list
 
   Resource
     tencentcloud_redis_instance
