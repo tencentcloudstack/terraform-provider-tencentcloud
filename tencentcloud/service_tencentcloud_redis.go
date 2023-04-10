@@ -1494,3 +1494,59 @@ func (me *RedisService) DescribeRedisBackupByFilter(ctx context.Context, param m
 
 	return
 }
+
+func (me *RedisService) DescribeRedisSecurityGroupById(ctx context.Context, instanceId string) (securityGroupId string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeDBSecurityGroupsRequest()
+	request.Product = helper.String("redis")
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeDBSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Groups) < 1 || response.Response.Groups[0].SecurityGroupId == nil {
+		return
+	}
+
+	securityGroupId = *response.Response.Groups[0].SecurityGroupId
+	return
+}
+
+func (me *RedisService) DeleteRedisSecurityGroupById(ctx context.Context, instanceId, securityGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDisassociateSecurityGroupsRequest()
+	request.Product = helper.String("redis")
+	request.InstanceIds = []*string{&instanceId}
+	request.SecurityGroupId = &securityGroupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DisassociateSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
