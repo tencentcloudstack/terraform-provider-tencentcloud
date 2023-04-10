@@ -25,13 +25,6 @@ resource "tencentcloud_dbbrain_modify_diag_db_instance_operation" "off" {
 }
 ```
 
-Import
-
-dbbrain modify_diag_db_instance_conf can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dbbrain_modify_diag_db_instance_operation.modify_diag_db_instance_conf modify_diag_db_instance_conf_id
-```
 */
 package tencentcloud
 
@@ -49,10 +42,6 @@ func resourceTencentCloudDbbrainModifyDiagDbInstanceOperation() *schema.Resource
 		Create: resourceTencentCloudDbbrainModifyDiagDbInstanceOperationCreate,
 		Read:   resourceTencentCloudDbbrainModifyDiagDbInstanceOperationRead,
 		Delete: resourceTencentCloudDbbrainModifyDiagDbInstanceOperationDelete,
-		// contact_group, contact_person, send_mail_flag, product can not query by read api
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
 		Schema: map[string]*schema.Schema{
 			"instance_confs": {
 				Required:    true,
@@ -88,7 +77,7 @@ func resourceTencentCloudDbbrainModifyDiagDbInstanceOperation() *schema.Resource
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include： mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL.",
+				Description: "Service product type, supported values include: mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL.",
 			},
 
 			"instance_ids": {
