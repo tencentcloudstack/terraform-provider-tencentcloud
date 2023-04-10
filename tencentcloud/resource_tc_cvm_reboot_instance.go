@@ -7,7 +7,6 @@ Example Usage
 resource "tencentcloud_cvm_reboot_instance" "reboot_instance" {
   instance_id = "ins-xxxxx"
   force_reboot = false
-  stop_type = "SOFT"
 }
 ```
 */
