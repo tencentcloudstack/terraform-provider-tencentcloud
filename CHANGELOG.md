@@ -1,3 +1,30 @@
+## 1.80.2 (April 10 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_redis_backup` ([#1652](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1652))
+* **New Data Source:** `tencentcloud_redis_backup_download_info` ([#1652](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1652))
+* **New Resource:** `tencentcloud_ccn_instances_accept_attach` ([#1653](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1653))
+* **New Resource:** `tencentcloud_ccn_instances_reset_attach` ([#1653](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1653))
+* **New Resource:** `tencentcloud_ccn_routes` ([#1653](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1653))
+* **New Resource:** `tencentcloud_dts_compare_task_stop_operation` ([#1638](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1638))
+* **New Resource:** `tencentcloud_dts_migrate_job_config` ([#1638](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1638))
+* **New Resource:** `tencentcloud_dts_migrate_job_resume_operation` ([#1638](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1638))
+* **New Resource:** `tencentcloud_dts_sync_check_job_operation` ([#1638](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1638))
+* **New Resource:** `tencentcloud_dts_sync_job_resume_operation` ([#1638](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1638))
+* **New Resource:** `tencentcloud_redis_account` ([#1652](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1652))
+* **New Resource:** `tencentcloud_redis_maintenance_window` ([#1652](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1652))
+* **New Resource:** `tencentcloud_redis_read_only` ([#1652](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1652))
+* **New Resource:** `tencentcloud_redis_ssl` ([#1652](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1652))
+* **New Resource:** `tencentcloud_vpn_gateway_ssl_client_cert` ([#1650](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1650))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_dts_migrate_job: adjust to avoid the unexpected diff when the `password` field is not modified ([#1638](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1638))
+* resource/tencentcloud_elasticsearch_instance: set `basic_security_type` default 1 when import instance ([#1655](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1655))
+* resource/tencentcloud_kubernetes_auth_attachment: add oidc parameters ([#1651](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1651))
+* resource/tencentcloud_kubernetes_cluster: add oidc parameters ([#1651](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1651))
+
 ## 1.80.1 (April 6 2023)
 
 FEATURES:
