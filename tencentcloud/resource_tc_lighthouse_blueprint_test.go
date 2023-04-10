@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
@@ -17,6 +18,7 @@ func TestAccTencentCloudLighthouseBlueprintResource_basic(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_lighthouse_blueprint.blueprint", "id")),
 			},
 			{
+				PreConfig:               func() { time.Sleep(time.Minute * 1) },
 				ResourceName:            "tencentcloud_lighthouse_blueprint.blueprint",
 				ImportState:             true,
 				ImportStateVerify:       true,
