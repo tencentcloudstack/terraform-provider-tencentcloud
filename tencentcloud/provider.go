@@ -213,6 +213,9 @@ Cloud Connect Network(CCN)
     tencentcloud_ccn
     tencentcloud_ccn_attachment
     tencentcloud_ccn_bandwidth_limit
+	tencentcloud_ccn_routes
+	tencentcloud_ccn_instances_accept_attach
+	tencentcloud_ccn_instances_reset_attach
 
 CVM Dedicated Host(CDH)
   Data Source
@@ -512,11 +515,17 @@ TencentDB for Redis(crs)
   Data Source
     tencentcloud_redis_zone_config
     tencentcloud_redis_instances
+	tencentcloud_redis_backup
+	tencentcloud_redis_backup_download_info
 
   Resource
     tencentcloud_redis_instance
     tencentcloud_redis_backup_config
     tencentcloud_redis_param_template
+	tencentcloud_redis_account
+	tencentcloud_redis_read_only
+	tencentcloud_redis_ssl
+	tencentcloud_redis_maintenance_window
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -917,6 +926,9 @@ Data Transmission Service(DTS)
 	tencentcloud_dts_migrate_service
 	tencentcloud_dts_migrate_job
 	tencentcloud_dts_migrate_job_start_operation
+	tencentcloud_dts_migrate_job_resume_operation
+	tencentcloud_dts_compare_task_stop_operation
+	tencentcloud_dts_migrate_job_config
 
 TDMQ for RocketMQ(trocket)
   Data Source
@@ -1204,6 +1216,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_available_zone":                       dataSourceTencentCloudCfsAvailableZone(),
 			"tencentcloud_redis_zone_config":                        dataSourceTencentRedisZoneConfig(),
 			"tencentcloud_redis_instances":                          dataSourceTencentRedisInstances(),
+			"tencentcloud_redis_backup":                             dataSourceTencentCloudRedisBackup(),
+			"tencentcloud_redis_backup_download_info":               dataSourceTencentCloudRedisBackupDownloadInfo(),
 			"tencentcloud_as_scaling_configs":                       dataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                        dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                      dataSourceTencentCloudAsScalingPolicies(),
@@ -1414,6 +1428,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ccn":                                         resourceTencentCloudCcn(),
 			"tencentcloud_ccn_attachment":                              resourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":                         resourceTencentCloudCcnBandwidthLimit(),
+			"tencentcloud_ccn_routes":                                  resourceTencentCloudCcnRoutes(),
+			"tencentcloud_ccn_instances_accept_attach":                 resourceTencentCloudCcnInstancesAcceptAttach(),
+			"tencentcloud_ccn_instances_reset_attach":                  resourceTencentCloudCcnInstancesResetAttach(),
 			"tencentcloud_dcx":                                         resourceTencentCloudDcxInstance(),
 			"tencentcloud_dc_gateway":                                  resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":                        resourceTencentCloudDcGatewayCcnRouteInstance(),
@@ -1484,7 +1501,13 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_sign_up_cfs_service":                     resourceTencentCloudCfsSignUpCfsService(),
 			"tencentcloud_redis_instance":                              resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                         resourceTencentCloudRedisBackupConfig(),
+			"tencentcloud_redis_account":                               resourceTencentCloudRedisAccount(),
 			"tencentcloud_redis_param_template":                        resourceTencentCloudRedisParamTemplate(),
+			"tencentcloud_redis_connection_config":                     resourceTencentCloudRedisConnectionConfig(),
+			"tencentcloud_redis_param":                                 resourceTencentCloudRedisParam(),
+			"tencentcloud_redis_read_only":                             resourceTencentCloudRedisReadOnly(),
+			"tencentcloud_redis_ssl":                                   resourceTencentCloudRedisSsl(),
+			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                            resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                               resourceTencentCloudAsAttachment(),
@@ -1735,7 +1758,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
 			"tencentcloud_dts_migrate_service":                        resourceTencentCloudDtsMigrateService(),
 			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
+			"tencentcloud_dts_migrate_job_config":                     resourceTencentCloudDtsMigrateJobConfig(),
 			"tencentcloud_dts_migrate_job_start_operation":            resourceTencentCloudDtsMigrateJobStartOperation(),
+			"tencentcloud_dts_migrate_job_resume_operation":           resourceTencentCloudDtsMigrateJobResumeOperation(),
+			"tencentcloud_dts_sync_check_job_operation":               resourceTencentCloudDtsSyncCheckJobOperation(),
+			"tencentcloud_dts_sync_job_resume_operation":              resourceTencentCloudDtsSyncJobResumeOperation(),
+			"tencentcloud_dts_compare_task_stop_operation":            resourceTencentCloudDtsCompareTaskStopOperation(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),
 			"tencentcloud_vpc_flow_log":                               resourceTencentCloudVpcFlowLog(),

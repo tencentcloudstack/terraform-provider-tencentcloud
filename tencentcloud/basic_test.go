@@ -885,7 +885,7 @@ const (
 
 // DTS
 const (
-	defaultDTSJobId = "dts-iesbn9qg"
+	defaultDTSJobId = "dts-r5gpejpe"
 )
 
 // End of DTS
@@ -957,3 +957,10 @@ variable "cbs_backup_disk_id" {
 `
 
 // End of CBS
+
+// CRS
+const (
+	defaultCrsInstanceId = "crs-jf4ico4v"
+)
+
+// End of CRS

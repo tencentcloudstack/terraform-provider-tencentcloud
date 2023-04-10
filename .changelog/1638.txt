@@ -1,0 +1,23 @@
+```release-note:new-resource
+tencentcloud_dts_sync_check_job_operation
+```
+
+```release-note:new-resource
+tencentcloud_dts_sync_job_resume_operation
+```
+
+```release-note:new-resource
+tencentcloud_dts_migrate_job_resume_operation
+```
+
+```release-note:new-resource
+tencentcloud_dts_compare_task_stop_operation
+```
+
+```release-note:new-resource
+tencentcloud_dts_migrate_job_config
+```
+
+```release-note:enhancement
+resource/tencentcloud_dts_migrate_job: adjust to avoid the unexpected diff when the `password` field is not modified
+```

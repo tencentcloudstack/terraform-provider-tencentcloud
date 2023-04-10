@@ -72,11 +72,22 @@ func TestAccTencentCloudDtsCompareTaskResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckDtsCompareTaskDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDtsCompareTask,
+				Config: fmt.Sprintf(testAccDtsCompareTask_basic, defaultDTSJobId),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDtsCompareTaskExists("tencentcloud_dts_compare_task.compare_task"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_compare_task.compare_task", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_dts_compare_task.compare_task", "task_name", "tf_test_compare_task"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(testAccDtsCompareTask_stop, defaultDTSJobId, defaultDTSJobId),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckDtsCompareTaskExists("tencentcloud_dts_compare_task.compare_task"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_compare_task.compare_task", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_dts_compare_task.compare_task", "task_name", "tf_test_compare_task"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_compare_task_stop_operation.stop", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_compare_task_stop_operation.stop", "job_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_compare_task_stop_operation.stop", "compare_task_id"),
 				),
 			},
 		},
@@ -148,14 +159,31 @@ func testAccCheckDtsCompareTaskExists(re string) resource.TestCheckFunc {
 	}
 }
 
-const testAccDtsCompareTask = `
+const testAccDtsCompareTask_basic = `
 
 resource "tencentcloud_dts_compare_task" "compare_task" {
-  job_id = "dts-iesbn9qg"
+  job_id = "%s"
   task_name = "tf_test_compare_task"
   objects {
-	object_mode = "all"
+	object_mode = "partial"
   }
 }
+
+`
+
+const testAccDtsCompareTask_stop = `
+
+resource "tencentcloud_dts_compare_task" "compare_task" {
+  job_id = "%s"
+  task_name = "tf_test_compare_task"
+  objects {
+	object_mode = "partial"
+  }
+}
+
+resource "tencentcloud_dts_compare_task_stop_operation" "stop" {
+	job_id = "%s"
+	compare_task_id = tencentcloud_dts_compare_task.compare_task.compare_task_id
+  }
 
 `

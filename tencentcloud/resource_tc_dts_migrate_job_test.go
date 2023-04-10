@@ -22,7 +22,7 @@ func TestAccTencentCloudDtsMigrateJobResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				// PreventDiskCleanup: true,
-				Config: fmt.Sprintf(testAccDtsMigrateJob_basic, curSec),
+				Config: fmt.Sprintf(testAccDtsMigrateJob_basic, "migrate_service_1", curSec),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDtsMigrateJobExists("tencentcloud_dts_migrate_job.job"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_migrate_job.job", "service_id"),
@@ -37,7 +37,7 @@ func TestAccTencentCloudDtsMigrateJobResource_basic(t *testing.T) {
 				ResourceName:            "tencentcloud_dts_migrate_job.job",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"auto_retry_time_range_minutes"}, // dts don't support to query auto_retry_time_range_minutes in Read
+				ImportStateVerifyIgnore: []string{"auto_retry_time_range_minutes", "dst_info", "src_info"}, // dts don't support to query auto_retry_time_range_minutes in Read
 			},
 		},
 	})
@@ -179,7 +179,7 @@ resource "tencentcloud_dts_migrate_service" "service" {
 	src_region = "ap-guangzhou"
 	dst_region = "ap-guangzhou"
 	instance_class = "small"
-	job_name = "tf_test_migration_service_1"
+	job_name = "tf_test_%s"
 	tags {
 	  tag_key = "aaa"
 	  tag_value = "bbb"

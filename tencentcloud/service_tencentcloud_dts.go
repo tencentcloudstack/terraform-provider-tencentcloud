@@ -360,7 +360,7 @@ func (me *DtsService) DeleteDtsCompareTaskById(ctx context.Context, jobId, compa
 	// }
 
 	// wait success or failed
-	err := me.PollingCompareTaskStatusUntil(ctx, jobId, compareTaskId, "success,failed")
+	err := me.PollingCompareTaskStatusUntil(ctx, jobId, compareTaskId, "success,failed,canceled")
 	if err != nil {
 		return err
 	}
@@ -582,7 +582,7 @@ func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId str
 		return
 	}
 
-	err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, "isolated")
+	err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, []string{"isolated"})
 	if err != nil {
 		return err
 	}
@@ -601,7 +601,7 @@ func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId str
 		return err
 	}
 
-	err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, "offlined")
+	err = me.PollingMigrateJobStatusUntil(ctx, jobId, DTSTradeStatus, []string{"offlined"})
 	if err != nil {
 		return err
 	}
@@ -612,7 +612,7 @@ func (me *DtsService) DeleteDtsMigrateServiceById(ctx context.Context, jobId str
 	return
 }
 
-func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, statusType, targetStatus string) error {
+func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, statusType string, targetStatus []string) error {
 	logId := getLogId(ctx)
 
 	err := resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
@@ -624,8 +624,10 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 		if statusType == DTSJobStatus {
 			if ret != nil && ret.Status != nil {
 				status := *ret.Status
-				if strings.Contains(targetStatus, status) {
-					return nil
+				for _, target := range targetStatus {
+					if strings.Contains(target, status) {
+						return nil
+					}
 				}
 				return resource.RetryableError(fmt.Errorf("DTS migrate job[%s] Status is still on [%s], retry...", jobId, status))
 			}
@@ -633,8 +635,10 @@ func (me *DtsService) PollingMigrateJobStatusUntil(ctx context.Context, jobId, s
 		if statusType == DTSTradeStatus {
 			if ret != nil && ret.TradeInfo.TradeStatus != nil {
 				status := *ret.TradeInfo.TradeStatus
-				if strings.Contains(targetStatus, status) {
-					return nil
+				for _, target := range targetStatus {
+					if strings.Contains(target, status) {
+						return nil
+					}
 				}
 				return resource.RetryableError(fmt.Errorf("DTS migrate job[%s] TradeStatus is still on [%s], retry...", jobId, status))
 			}
@@ -740,5 +744,174 @@ func (me *DtsService) DtsMigrateCheckConfigStateRefreshFunc(jobId string, failSt
 		}
 
 		return object, helper.PString(object.CheckFlag), nil
+	}
+}
+
+func (me *DtsService) DescribeDtsSyncCheckJobOperationById(ctx context.Context, jobId string) (syncCheckJobOperation *dts.DescribeCheckSyncJobResultResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeCheckSyncJobResultRequest()
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeCheckSyncJobResult(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	syncCheckJobOperation = response.Response
+	return
+}
+
+func (me *DtsService) DtsSyncCheckJobOperationStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsSyncCheckJobOperationById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		status := helper.PString(object.Status)
+		if len(failStates) > 0 {
+			for _, state := range failStates {
+				if strings.Contains(status, state) {
+					return object, status, fmt.Errorf("DTS sync check job[%s] failed, status is on [%s], return...", jobId, status)
+				}
+			}
+		}
+
+		return object, status, nil
+	}
+}
+
+func (me *DtsService) DtsMigrateJobResumeOperationStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsMigrateJobById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		status := helper.PString(object.Status)
+		if len(failStates) > 0 {
+			for _, state := range failStates {
+				if strings.Contains(status, state) {
+					return object, status, fmt.Errorf("Resume DTS migrate job[%s] failed, status is on [%s], return...", jobId, status)
+				}
+			}
+		}
+
+		return object, status, nil
+	}
+}
+
+func (me *DtsService) DescribeDtsSyncJobResumeOperationById(ctx context.Context, jobId string) (syncJobResumeOperation *dts.DescribeSyncJobsResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeSyncJobsRequest()
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeSyncJobs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	syncJobResumeOperation = response.Response
+	return
+}
+
+func (me *DtsService) DtsSyncJobResumeOperationStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		param := map[string]interface{}{
+			"job_id": helper.String(jobId),
+		}
+		object, err := me.DescribeDtsSyncJobsByFilter(ctx, param)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if len(object) == 0 {
+			return nil, "", fmt.Errorf("DTS sync job[%s] not found", jobId)
+		}
+
+		status := helper.PString(object[0].Status)
+		if len(failStates) > 0 {
+			for _, state := range failStates {
+				if strings.Contains(status, state) {
+					return object, status, fmt.Errorf("Resume DTS sync job[%s] failed, status is on [%s], return...", jobId, status)
+				}
+			}
+		}
+
+		return object, status, nil
+	}
+}
+
+func (me *DtsService) DescribeDtsCompareTaskStopOperationById(ctx context.Context, jobId string, compareTaskId string) (result *dts.DescribeCompareReportResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeCompareReportRequest()
+	request.JobId = &jobId
+	request.CompareTaskId = &compareTaskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeCompareReport(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil {
+		result = response.Response
+	}
+
+	return
+}
+
+func (me *DtsService) DtsMigrateJobConfigStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsMigrateJobById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Status), nil
 	}
 }

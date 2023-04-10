@@ -71,7 +71,9 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 		Update: resourceTencentCloudElasticsearchInstanceUpdate,
 		Delete: resourceTencentCloudElasticsearchInstanceDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"basic_security_type": ES_BASIC_SECURITY_TYPE_OFF,
+			}),
 		},
 
 		Schema: map[string]*schema.Schema{
@@ -214,7 +216,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:     true,
 				Default:      ES_LICENSE_TYPE_PLATINUM,
 				ValidateFunc: validateAllowedStringValue(ES_LICENSE_TYPE),
-				Description:  "License type. Valid values are `basic` and `platinum`. The default value is `platinum`.",
+				Description:  "License type. Valid values are `oss`, `basic` and `platinum`. The default value is `platinum`.",
 			},
 			"node_info_list": {
 				Type:        schema.TypeList,
@@ -267,7 +269,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:     true,
 				Default:      ES_BASIC_SECURITY_TYPE_OFF,
 				ValidateFunc: validateAllowedIntValue(ES_BASIC_SECURITY_TYPE),
-				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`. Notice: this parameter is only for `basic edition.",
+				Description:  "Whether to enable X-Pack security authentication in Basic Edition 6.8 and above. Valid values are `1` and `2`. `1` is disabled, `2` is enabled, and default value is `1`. Notice: this parameter is only take effect on `basic` license.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
