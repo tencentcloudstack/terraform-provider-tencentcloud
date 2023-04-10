@@ -518,6 +518,10 @@ TencentDB for Redis(crs)
     tencentcloud_redis_instances
 	tencentcloud_redis_backup
 	tencentcloud_redis_backup_download_info
+	tencentcloud_redis_param_records
+	tencentcloud_redis_instance_shards
+	tencentcloud_redis_instance_zone_info
+	tencentcloud_redis_instance_task_list
 
   Resource
     tencentcloud_redis_instance
@@ -1219,6 +1223,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_redis_instances":                          dataSourceTencentRedisInstances(),
 			"tencentcloud_redis_backup":                             dataSourceTencentCloudRedisBackup(),
 			"tencentcloud_redis_backup_download_info":               dataSourceTencentCloudRedisBackupDownloadInfo(),
+			"tencentcloud_redis_param_records":                      dataSourceTencentCloudRedisRecordsParam(),
+			"tencentcloud_redis_instance_shards":                    dataSourceTencentCloudRedisInstanceShards(),
+			"tencentcloud_redis_instance_zone_info":                 dataSourceTencentCloudRedisInstanceZoneInfo(),
+			"tencentcloud_redis_instance_task_list":                 dataSourceTencentCloudRedisInstanceTaskList(),
 			"tencentcloud_as_scaling_configs":                       dataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                        dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                      dataSourceTencentCloudAsScalingPolicies(),
