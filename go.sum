@@ -529,6 +529,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.616/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.624/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.625/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.627/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.628/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.630 h1:wjTmUzAigRKOYb+avYZCllzosnGqWM+U6u915znVRvs=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.630/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.633 h1:Yj8s35IjbgaHp4Ic9BZLVGWdN2gXBMtwYi1JJ+qYbrc=
@@ -553,6 +554,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414 h1:egwj
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414/go.mod h1:LRWnBUNRxs/Ee8MzJJd3eHzydlqyB5qmia975Ca/Ox0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.567 h1:N5aTesA129t5GuSlQyzwgrAx69nMg5lsyLChyJHzMUw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.567/go.mod h1:GkPxIo1C2WtyoX2eMSx8w1Q8DmYR9brs+es/fZc5nb4=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628 h1:cnhe9uh8tSyBfiPUckfqNI6t51YNZG9POupTrqWG9lM=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628/go.mod h1:JxTXEld643DHk5HeQe4xIvuuoxsCmbTjgmE64Mtrdxw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.287 h1:+9COBXAbQmL7aJ39Q/mF50Ykxq4m5kq/y6vbO+u3zgI=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.287/go.mod h1:xRvd0xsyCoviCiMRfJMh5lODPnLx+bnTfENNx6GHzFA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.383 h1:OhKvreaRPhwBEButv45yBcu6BvfvR1JAEXbU/NTck94=

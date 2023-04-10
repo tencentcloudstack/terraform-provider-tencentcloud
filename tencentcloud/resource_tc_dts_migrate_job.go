@@ -158,18 +158,6 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 				Description: "Migrate job status.",
 			},
 
-			"resume_option": { // for resume operation
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "The mode of the recovery task, the valid values: `clearData`: clears the target instance data. `overwrite`: executes the task in an overwriting way. `normal`: the normal process, no additional action is performed.",
-			},
-
-			"complete_mode": { // for complete operation
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "The way to complete the task, only support the old version of MySQL migration task, the valid values: waitForSync,immediately.",
-			},
-
 			// for modify operation
 			"run_mode": {
 				Required:    true,
@@ -259,6 +247,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 																	Type: schema.TypeString,
 																},
 																Optional:    true,
+																Computed:    true,
 																Description: "temporary tables.",
 															},
 															"table_edit_mode": {
@@ -343,6 +332,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
+													Computed:    true,
 													Description: "Functions.",
 												},
 												"procedures": {
@@ -351,6 +341,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
+													Computed:    true,
 													Description: "Procedures.",
 												},
 												"events": {
@@ -359,6 +350,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
+													Computed:    true,
 													Description: "Events.",
 												},
 												"triggers": {
@@ -367,6 +359,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 														Type: schema.TypeString,
 													},
 													Optional:    true,
+													Computed:    true,
 													Description: "Triggers.",
 												},
 											},
@@ -378,6 +371,7 @@ func resourceTencentCloudDtsMigrateJob() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
+										Computed:    true,
 										Description: "AdvancedObjects.",
 									},
 								},
@@ -796,7 +790,6 @@ func resourceTencentCloudDtsMigrateJobCreate(d *schema.ResourceData, meta interf
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
-	// ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		tcClient  = meta.(*TencentCloudClient).apiV3Conn
@@ -831,29 +824,6 @@ func resourceTencentCloudDtsMigrateJobCreate(d *schema.ResourceData, meta interf
 		return e
 	}
 
-	// // case "resume":
-	// err = handleResumeMigrate(d, tcClient, logId, jobId)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// // case "compare":
-	// err = handleCompareMigrate(d, tcClient, logId, jobId)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// // case "complete":
-	// err = handleCompleteMigrate(d, tcClient, logId, jobId)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// // case "stop":
-	// err = handleStopMigrate(d, tcClient, logId, jobId)
-	// if err != nil {
-	// 	return err
-	// }
 	d.SetId(serviceId)
 	return resourceTencentCloudDtsMigrateJobRead(d, meta)
 }
@@ -1141,8 +1111,19 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 
 		if migrateJob.SrcInfo.Info != nil {
 			infoList := make([]interface{}, 0, len(migrateJob.SrcInfo.Info))
-			for _, info := range migrateJob.SrcInfo.Info {
+			for i, info := range migrateJob.SrcInfo.Info {
 				infoMap := make(map[string]interface{})
+
+				if info.Password == nil || *info.Password == "" {
+					//reset password
+					key := fmt.Sprintf("src_info.0.info.%v.password", i)
+					if v, ok := d.GetOk(key); ok {
+						infoMap["password"] = helper.String(v.(string))
+						log.Printf("[DEBUG]%s set src_info.0.info.%v.password:[key:%s]", logId, i, key)
+					}
+				} else {
+					infoMap["password"] = info.Password
+				}
 
 				if info.Role != nil {
 					infoMap["role"] = info.Role
@@ -1162,10 +1143,6 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 
 				if info.User != nil {
 					infoMap["user"] = info.User
-				}
-
-				if info.Password != nil {
-					infoMap["password"] = info.Password
 				}
 
 				if info.CvmInstanceId != nil {
@@ -1278,8 +1255,19 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 		log.Printf("[DEBUG]%s read migrateJob.DstInfo.Info :[%v], len:[%v]", logId, migrateJob.DstInfo.Info, len(migrateJob.DstInfo.Info))
 		if migrateJob.DstInfo.Info != nil {
 			infoList := make([]interface{}, 0, len(migrateJob.DstInfo.Info))
-			for _, info := range migrateJob.DstInfo.Info {
+			for i, info := range migrateJob.DstInfo.Info {
 				infoMap := make(map[string]interface{})
+
+				if info.Password == nil || *info.Password == "" {
+					//reset password
+					key := fmt.Sprintf("dst_info.0.info.%v.password", i)
+					if v, ok := d.GetOk(key); ok {
+						infoMap["password"] = helper.String(v.(string))
+						log.Printf("[DEBUG]%s set dst_info.0.info.%v.password:[key:%s]", logId, i, key)
+					}
+				} else {
+					infoMap["password"] = info.Password
+				}
 
 				if info.Role != nil {
 					infoMap["role"] = info.Role
@@ -1299,10 +1287,6 @@ func resourceTencentCloudDtsMigrateJobRead(d *schema.ResourceData, meta interfac
 
 				if info.User != nil {
 					infoMap["user"] = info.User
-				}
-
-				if info.Password != nil {
-					infoMap["password"] = info.Password
 				}
 
 				if info.CvmInstanceId != nil {
@@ -1925,33 +1909,6 @@ func handleCheckMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCl
 // 	if err != nil {
 // 		log.Printf("[CRITAL]%s compare dts migrate job failed, reason:%+v", logId, err)
 // 		return err
-// 	}
-
-// 	return nil
-// }
-
-// func handleStopMigrate(d *schema.ResourceData, tcClient *connectivity.TencentCloudClient, logId, jobId string) error {
-// 	stopMigrateJobRequest := dts.NewStopMigrateJobRequest()
-// 	stopMigrateJobRequest.JobId = helper.String(jobId)
-// 	service := DtsService{client: tcClient}
-
-// 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-// 		result, e := tcClient.UseDtsClient().StopMigrateJob(stopMigrateJobRequest)
-// 		if e != nil {
-// 			return retryError(e)
-// 		} else {
-// 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, stopMigrateJobRequest.GetAction(), stopMigrateJobRequest.ToJsonString(), result.ToJsonString())
-// 		}
-// 		return nil
-// 	})
-// 	if err != nil {
-// 		log.Printf("[CRITAL]%s stop dts migrateJob failed, reason:%+v", logId, err)
-// 		return err
-// 	}
-
-// 	conf := BuildStateChangeConf([]string{}, []string{"canceled"}, 3*readRetryTimeout, time.Second, service.DtsMigrateJobStateRefreshFunc(jobId, []string{}))
-// 	if _, e := conf.WaitForState(); e != nil {
-// 		return e
 // 	}
 
 // 	return nil
