@@ -4,15 +4,24 @@ Provides a resource to create a dbbrain modify_diag_db_instance_conf
 Example Usage
 
 ```hcl
-resource "tencentcloud_dbbrain_modify_diag_db_instance_conf" "modify_diag_db_instance_conf" {
+resource "tencentcloud_dbbrain_modify_diag_db_instance_operation" "on" {
   instance_confs {
-		daily_inspection = ""
-		overview_display = ""
-
+	daily_inspection = "Yes"
+	overview_display = "Yes"
   }
-  regions = ""
-  product = ""
-  instance_ids =
+  product = "mysql"
+  instance_ids = ["%s"]
+}
+```
+
+```hcl
+resource "tencentcloud_dbbrain_modify_diag_db_instance_operation" "off" {
+  instance_confs {
+	daily_inspection = "No"
+	overview_display = "No"
+  }
+  product = "mysql"
+  instance_ids = ["%s"]
 }
 ```
 
@@ -21,27 +30,29 @@ Import
 dbbrain modify_diag_db_instance_conf can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_dbbrain_modify_diag_db_instance_conf.modify_diag_db_instance_conf modify_diag_db_instance_conf_id
+terraform import tencentcloud_dbbrain_modify_diag_db_instance_operation.modify_diag_db_instance_conf modify_diag_db_instance_conf_id
 ```
 */
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
-func resourceTencentCloudDbbrainModifyDiagDbInstanceConf() *schema.Resource {
+func resourceTencentCloudDbbrainModifyDiagDbInstanceOperation() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudDbbrainModifyDiagDbInstanceConfCreate,
-		Read:   resourceTencentCloudDbbrainModifyDiagDbInstanceConfRead,
-		Delete: resourceTencentCloudDbbrainModifyDiagDbInstanceConfDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		Create: resourceTencentCloudDbbrainModifyDiagDbInstanceOperationCreate,
+		Read:   resourceTencentCloudDbbrainModifyDiagDbInstanceOperationRead,
+		Delete: resourceTencentCloudDbbrainModifyDiagDbInstanceOperationDelete,
+		// contact_group, contact_person, send_mail_flag, product can not query by read api
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"instance_confs": {
 				Required:    true,
@@ -66,17 +77,18 @@ func resourceTencentCloudDbbrainModifyDiagDbInstanceConf() *schema.Resource {
 			},
 
 			"regions": {
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
+				Default:     "All",
 				Type:        schema.TypeString,
-				Description: "Effective instance region, the value is &amp;quot;All&amp;quot;, which means all regions.",
+				Description: "Effective instance region, the value is All, which means all regions.",
 			},
 
 			"product": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include： &amp;quot;mysql&amp;quot; - cloud database MySQL, &amp;quot;cynosdb&amp;quot; - cloud database CynosDB for MySQL.",
+				Description: "Service product type, supported values include： mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL.",
 			},
 
 			"instance_ids": {
@@ -92,19 +104,19 @@ func resourceTencentCloudDbbrainModifyDiagDbInstanceConf() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudDbbrainModifyDiagDbInstanceConfCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_dbbrain_modify_diag_db_instance_conf.read")()
+func resourceTencentCloudDbbrainModifyDiagDbInstanceOperationCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dbbrain_modify_diag_db_instance_operation.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
-		request    = dbbrain.NewModifyDiagDBInstanceConfRequest()
-		response   = dbbrain.NewModifyDiagDBInstanceConfResponse()
-		instanceId uint64
+		request     = dbbrain.NewModifyDiagDBInstanceConfRequest()
+		operationId string
 	)
+
+	instanceConfs := dbbrain.InstanceConfs{}
 	if dMap, ok := helper.InterfacesHeadMap(d, "instance_confs"); ok {
-		instanceConfs := dbbrain.InstanceConfs{}
 		if v, ok := dMap["daily_inspection"]; ok {
 			instanceConfs.DailyInspection = helper.String(v.(string))
 		}
@@ -135,31 +147,30 @@ func resourceTencentCloudDbbrainModifyDiagDbInstanceConfCreate(d *schema.Resourc
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Println("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
-		response = result
 		return nil
 	})
 	if err != nil {
-		log.Println("[CRITAL]%s operate dbbrain modifyDiagDbInstanceConf failed, reason:%+v", logId, err)
-		return nil
+		log.Printf("[CRITAL]%s operate dbbrain modifyDiagDbInstanceConf failed, reason:%+v", logId, err)
+		return err
 	}
 
-	instanceId = *response.Response.InstanceId
-	d.SetId(helper.UInt64ToStr(instanceId))
+	operationId = helper.ResourceIdsHash([]string{*instanceConfs.DailyInspection, *instanceConfs.OverviewDisplay})
+	d.SetId(operationId)
 
-	return resourceTencentCloudDbbrainModifyDiagDbInstanceConfRead(d, meta)
+	return resourceTencentCloudDbbrainModifyDiagDbInstanceOperationRead(d, meta)
 }
 
-func resourceTencentCloudDbbrainModifyDiagDbInstanceConfRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dbbrain_modify_diag_db_instance_conf.read")()
+func resourceTencentCloudDbbrainModifyDiagDbInstanceOperationRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dbbrain_modify_diag_db_instance_operation.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudDbbrainModifyDiagDbInstanceConfDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dbbrain_modify_diag_db_instance_conf.delete")()
+func resourceTencentCloudDbbrainModifyDiagDbInstanceOperationDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_dbbrain_modify_diag_db_instance_operation.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

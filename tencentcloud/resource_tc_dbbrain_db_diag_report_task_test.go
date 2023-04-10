@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 )
 
 func TestAccTencentCloudDbbrainDbDiagReportTaskResource_basic(t *testing.T) {
@@ -15,12 +16,10 @@ func TestAccTencentCloudDbbrainDbDiagReportTaskResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDbbrainDbDiagReportTask,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_dbbrain_db_diag_report_task.db_diag_report_task", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_dbbrain_db_diag_report_task.db_diag_report_task",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_dbbrain_db_diag_report_task.db_diag_report_task", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dbbrain_db_diag_report_task.db_diag_report_task", "name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dbbrain_db_diag_report_task.db_diag_report_task", "description")),
 			},
 		},
 	})

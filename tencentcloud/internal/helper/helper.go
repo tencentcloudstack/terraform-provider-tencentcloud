@@ -28,6 +28,11 @@ func DataResourceIdsHash(ids []string) string {
 	return fmt.Sprintf("%d", hashcode.String(buf.String()))
 }
 
+// Generates a hash for the resource
+func ResourceIdsHash(ids []string) string {
+	return DataResourceIdsHash(ids)
+}
+
 // HashString hashes a string to a unique hashcode.
 //
 // This will be removed in v2 without replacement. So we place here instead of import.

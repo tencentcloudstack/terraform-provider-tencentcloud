@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
@@ -647,11 +648,12 @@ func (me *DbbrainService) DescribeDbbrainSlowLogUserSqlAdviceByFilter(ctx contex
 	return
 }
 
-func (me *DbbrainService) DescribeDbbrainDbDiagReportTaskById(ctx context.Context, asyncRequestId string) (dbDiagReportTask *dbbrain.HealthReportTask, errRet error) {
+func (me *DbbrainService) DescribeDbbrainDbDiagReportTaskById(ctx context.Context, asyncRequestId *int64, instanceId string, product string) (dbDiagReportTask *dbbrain.HealthReportTask, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dbbrain.NewDescribeDBDiagReportTasksRequest()
-	request.InstanceIds = []*string{helper.String(asyncRequestId)}
+	request.InstanceIds = []*string{helper.String(instanceId)}
+	request.Product = &product
 
 	defer func() {
 		if errRet != nil {
@@ -668,19 +670,27 @@ func (me *DbbrainService) DescribeDbbrainDbDiagReportTaskById(ctx context.Contex
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.Tasks) < 1 {
-		return
+	if asyncRequestId != nil {
+		for _, task := range response.Response.Tasks {
+			if *task.AsyncRequestId == *asyncRequestId {
+				dbDiagReportTask = task
+				return
+			}
+		}
+		return nil, fmt.Errorf("[ERROR]%sThe asyncRequestId[%v] not found in the qurey results. \n", logId, *asyncRequestId)
 	}
 
 	dbDiagReportTask = response.Response.Tasks[0]
 	return
 }
 
-func (me *DbbrainService) DeleteDbbrainDbDiagReportTaskById(ctx context.Context, asyncRequestId string) (errRet error) {
+func (me *DbbrainService) DeleteDbbrainDbDiagReportTaskById(ctx context.Context, asyncRequestId int64, instanceId string, product string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := dbbrain.NewDeleteDBDiagReportTasksRequest()
-	request.AsyncRequestId = &asyncRequestId
+	request.AsyncRequestIds = []*int64{helper.Int64(asyncRequestId)}
+	request.InstanceId = &instanceId
+	request.Product = &product
 
 	defer func() {
 		if errRet != nil {

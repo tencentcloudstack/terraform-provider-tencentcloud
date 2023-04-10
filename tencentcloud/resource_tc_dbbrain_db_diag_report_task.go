@@ -28,18 +28,19 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudDbbrainDbDiagReportTask() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudDbbrainDbDiagReportTaskCreate,
 		Read:   resourceTencentCloudDbbrainDbDiagReportTaskRead,
-		Update: resourceTencentCloudDbbrainDbDiagReportTaskUpdate,
 		Delete: resourceTencentCloudDbbrainDbDiagReportTaskDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -47,30 +48,42 @@ func resourceTencentCloudDbbrainDbDiagReportTask() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "instance id.",
 			},
 
+			"product": {
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "Service product type, supported values include： mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL.",
+			},
+
 			"start_time": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Start time, such as &amp;quot;2020-11-08T14:00:00+08:00&amp;quot;.",
+				Description: "Start time, such as 2020-11-08T14:00:00+08:00.",
 			},
 
 			"end_time": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "End time, such as &amp;quot;2020-11-09T14:00:00+08:00&amp;quot;.",
+				Description: "End time, such as 2020-11-09T14:00:00+08:00.",
 			},
 
 			"send_mail_flag": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeInt,
 				Description: "Whether to send mail: 0 - no, 1 - yes. .",
 			},
 
 			"contact_person": {
 				Optional: true,
+				ForceNew: true,
 				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
@@ -80,17 +93,12 @@ func resourceTencentCloudDbbrainDbDiagReportTask() *schema.Resource {
 
 			"contact_group": {
 				Optional: true,
+				ForceNew: true,
 				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
 				Description: "An array of contact group IDs to receive mail from.",
-			},
-
-			"product": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Service product type, supported values include： &amp;quot;mysql&amp;quot; - cloud database MySQL, &amp;quot;cynosdb&amp;quot; - cloud database CynosDB for MySQL, the default value is &amp;quot;mysql&amp;quot;.",
 			},
 		},
 	}
@@ -106,8 +114,11 @@ func resourceTencentCloudDbbrainDbDiagReportTaskCreate(d *schema.ResourceData, m
 		request        = dbbrain.NewCreateDBDiagReportTaskRequest()
 		response       = dbbrain.NewCreateDBDiagReportTaskResponse()
 		asyncRequestId string
+		instanceId     string
+		product        string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
 		request.InstanceId = helper.String(v.(string))
 	}
 
@@ -119,7 +130,7 @@ func resourceTencentCloudDbbrainDbDiagReportTaskCreate(d *schema.ResourceData, m
 		request.EndTime = helper.String(v.(string))
 	}
 
-	if v, _ := d.GetOk("send_mail_flag"); v != nil {
+	if v, ok := d.GetOkExists("send_mail_flag"); ok {
 		request.SendMailFlag = helper.IntInt64(v.(int))
 	}
 
@@ -140,6 +151,7 @@ func resourceTencentCloudDbbrainDbDiagReportTaskCreate(d *schema.ResourceData, m
 	}
 
 	if v, ok := d.GetOk("product"); ok {
+		product = v.(string)
 		request.Product = helper.String(v.(string))
 	}
 
@@ -157,9 +169,12 @@ func resourceTencentCloudDbbrainDbDiagReportTaskCreate(d *schema.ResourceData, m
 		log.Printf("[CRITAL]%s create dbbrain dbDiagReportTask failed, reason:%+v", logId, err)
 		return err
 	}
+	if response == nil || response.Response.AsyncRequestId == nil {
+		return fmt.Errorf("[CRITAL]%s The dbbrain dbDiagReportTask id not found after creation", logId)
+	}
 
-	asyncRequestId = *response.Response.AsyncRequestId
-	d.SetId(helper.String(asyncRequestId))
+	asyncRequestId = helper.Int64ToStr(*response.Response.AsyncRequestId)
+	d.SetId(asyncRequestId + FILED_SP + instanceId + FILED_SP + product)
 
 	return resourceTencentCloudDbbrainDbDiagReportTaskRead(d, meta)
 }
@@ -174,9 +189,15 @@ func resourceTencentCloudDbbrainDbDiagReportTaskRead(d *schema.ResourceData, met
 
 	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	dbDiagReportTaskId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 3 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	asyncRequestId := idSplit[0]
+	instanceId := idSplit[1]
+	product := idSplit[2]
 
-	dbDiagReportTask, err := service.DescribeDbbrainDbDiagReportTaskById(ctx, asyncRequestId)
+	dbDiagReportTask, err := service.DescribeDbbrainDbDiagReportTaskById(ctx, helper.StrToInt64Point(asyncRequestId), instanceId, product)
 	if err != nil {
 		return err
 	}
@@ -187,10 +208,6 @@ func resourceTencentCloudDbbrainDbDiagReportTaskRead(d *schema.ResourceData, met
 		return nil
 	}
 
-	if dbDiagReportTask.InstanceId != nil {
-		_ = d.Set("instance_id", dbDiagReportTask.InstanceId)
-	}
-
 	if dbDiagReportTask.StartTime != nil {
 		_ = d.Set("start_time", dbDiagReportTask.StartTime)
 	}
@@ -199,39 +216,23 @@ func resourceTencentCloudDbbrainDbDiagReportTaskRead(d *schema.ResourceData, met
 		_ = d.Set("end_time", dbDiagReportTask.EndTime)
 	}
 
-	if dbDiagReportTask.SendMailFlag != nil {
-		_ = d.Set("send_mail_flag", dbDiagReportTask.SendMailFlag)
-	}
+	// if dbDiagReportTask.SendMailFlag != nil {
+	// 	_ = d.Set("send_mail_flag", dbDiagReportTask.SendMailFlag)
+	// }
 
-	if dbDiagReportTask.ContactPerson != nil {
-		_ = d.Set("contact_person", dbDiagReportTask.ContactPerson)
-	}
+	// if dbDiagReportTask. != nil {
+	// 	_ = d.Set("contact_person", dbDiagReportTask.ContactPerson)
+	// }
 
-	if dbDiagReportTask.ContactGroup != nil {
-		_ = d.Set("contact_group", dbDiagReportTask.ContactGroup)
-	}
+	// if dbDiagReportTask.ContactGroup != nil {
+	// 	_ = d.Set("contact_group", dbDiagReportTask.ContactGroup)
+	// }
 
-	if dbDiagReportTask.Product != nil {
-		_ = d.Set("product", dbDiagReportTask.Product)
-	}
+	// if dbDiagReportTask.Product != nil {
+	// 	_ = d.Set("product", dbDiagReportTask.Product)
+	// }
 
 	return nil
-}
-
-func resourceTencentCloudDbbrainDbDiagReportTaskUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_dbbrain_db_diag_report_task.update")()
-	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-
-	immutableArgs := []string{"instance_id", "start_time", "end_time", "send_mail_flag", "contact_person", "contact_group", "product"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-	return resourceTencentCloudDbbrainDbDiagReportTaskRead(d, meta)
 }
 
 func resourceTencentCloudDbbrainDbDiagReportTaskDelete(d *schema.ResourceData, meta interface{}) error {
@@ -242,9 +243,15 @@ func resourceTencentCloudDbbrainDbDiagReportTaskDelete(d *schema.ResourceData, m
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
-	dbDiagReportTaskId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 3 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	asyncRequestId := idSplit[0]
+	instanceId := idSplit[1]
+	product := idSplit[2]
 
-	if err := service.DeleteDbbrainDbDiagReportTaskById(ctx, asyncRequestId); err != nil {
+	if err := service.DeleteDbbrainDbDiagReportTaskById(ctx, *helper.StrToInt64Point(asyncRequestId), instanceId, product); err != nil {
 		return err
 	}
 
