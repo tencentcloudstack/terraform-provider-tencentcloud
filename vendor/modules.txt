@@ -594,7 +594,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.567
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.287
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103

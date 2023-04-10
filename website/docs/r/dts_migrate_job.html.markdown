@@ -133,9 +133,7 @@ The following arguments are supported:
 * `service_id` - (Required, String) Migrate service Id from `tencentcloud_dts_migrate_service`.
 * `src_info` - (Required, List) SrcInfo.
 * `auto_retry_time_range_minutes` - (Optional, Int) AutoRetryTimeRangeMinutes.
-* `complete_mode` - (Optional, String) The way to complete the task, only support the old version of MySQL migration task, the valid values: waitForSync,immediately.
 * `expect_run_time` - (Optional, String) ExpectRunTime.
-* `resume_option` - (Optional, String) The mode of the recovery task, the valid values: `clearData`: clears the target instance data. `overwrite`: executes the task in an overwriting way. `normal`: the normal process, no additional action is performed.
 
 The `consistency` object supports the following:
 

@@ -885,7 +885,7 @@ const (
 
 // DTS
 const (
-	defaultDTSJobId = "dts-iesbn9qg"
+	defaultDTSJobId = "dts-r5gpejpe"
 )
 
 // End of DTS
