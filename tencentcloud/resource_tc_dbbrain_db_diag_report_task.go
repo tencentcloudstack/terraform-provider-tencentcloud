@@ -5,23 +5,14 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dbbrain_db_diag_report_task" "db_diag_report_task" {
-  instance_id = ""
-  start_time = ""
-  end_time = ""
-  send_mail_flag =
-  contact_person =
-  contact_group =
-  product = ""
+  instance_id = "%s"
+  start_time = "%s"
+  end_time = "%s"
+  send_mail_flag = 0
+  product = "mysql"
 }
 ```
 
-Import
-
-dbbrain db_diag_report_task can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dbbrain_db_diag_report_task.db_diag_report_task db_diag_report_task_id
-```
 */
 package tencentcloud
 
@@ -42,9 +33,10 @@ func resourceTencentCloudDbbrainDbDiagReportTask() *schema.Resource {
 		Create: resourceTencentCloudDbbrainDbDiagReportTaskCreate,
 		Read:   resourceTencentCloudDbbrainDbDiagReportTaskRead,
 		Delete: resourceTencentCloudDbbrainDbDiagReportTaskDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// contact_group, contact_person, send_mail_flag and product fileds can not query by read api
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -57,7 +49,7 @@ func resourceTencentCloudDbbrainDbDiagReportTask() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include： mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL.",
+				Description: "Service product type, supported values include: mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL.",
 			},
 
 			"start_time": {
@@ -78,7 +70,7 @@ func resourceTencentCloudDbbrainDbDiagReportTask() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeInt,
-				Description: "Whether to send mail: 0 - no, 1 - yes. .",
+				Description: "Whether to send mail: 0 - no, 1 - yes.",
 			},
 
 			"contact_person": {
@@ -220,7 +212,7 @@ func resourceTencentCloudDbbrainDbDiagReportTaskRead(d *schema.ResourceData, met
 	// 	_ = d.Set("send_mail_flag", dbDiagReportTask.SendMailFlag)
 	// }
 
-	// if dbDiagReportTask. != nil {
+	// if dbDiagReportTask.ContactPerson != nil {
 	// 	_ = d.Set("contact_person", dbDiagReportTask.ContactPerson)
 	// }
 
