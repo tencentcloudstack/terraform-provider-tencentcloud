@@ -156,6 +156,7 @@ Cloud Kafka(ckafka)
     tencentcloud_ckafka_user
     tencentcloud_ckafka_acl
     tencentcloud_ckafka_topic
+	tencentcloud_ckafka_datahub_topic
 
 Cloud Access Management(CAM)
   Data Source
@@ -1615,6 +1616,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_user":                                 resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                  resourceTencentCloudCkafkaAcl(),
 			"tencentcloud_ckafka_topic":                                resourceTencentCloudCkafkaTopic(),
+			"tencentcloud_ckafka_datahub_topic":                        resourceTencentCloudCkafkaDatahubTopic(),
 			"tencentcloud_audit":                                       resourceTencentCloudAudit(),
 			"tencentcloud_audit_track":                                 resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                       resourceTencentCloudImage(),

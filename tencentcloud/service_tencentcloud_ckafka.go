@@ -820,3 +820,56 @@ func (me *CkafkaService) DeleteCkafkaTopic(ctx context.Context, instanceId strin
 	}
 	return
 }
+
+func (me *CkafkaService) DescribeCkafkaDatahubTopicById(ctx context.Context, topicName string) (datahubTopic *ckafka.DescribeDatahubTopicResp, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDescribeDatahubTopicRequest()
+	request.Name = &topicName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeDatahubTopic(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Result == nil {
+		return
+	}
+
+	datahubTopic = response.Response.Result
+	return
+}
+
+func (me *CkafkaService) DeleteCkafkaDatahubTopicById(ctx context.Context, topicName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDeleteDatahubTopicRequest()
+	request.Name = &topicName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DeleteDatahubTopic(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
