@@ -15,12 +15,11 @@
 package v20180326
 
 import (
-	"context"
-	"errors"
-
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+    "context"
+    "errors"
+    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 )
 
 const APIVersion = "2018-03-26"

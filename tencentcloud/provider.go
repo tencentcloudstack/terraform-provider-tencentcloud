@@ -515,11 +515,17 @@ TencentDB for Redis(crs)
   Data Source
     tencentcloud_redis_zone_config
     tencentcloud_redis_instances
+	tencentcloud_redis_backup
+	tencentcloud_redis_backup_download_info
 
   Resource
     tencentcloud_redis_instance
     tencentcloud_redis_backup_config
     tencentcloud_redis_param_template
+	tencentcloud_redis_account
+	tencentcloud_redis_read_only
+	tencentcloud_redis_ssl
+	tencentcloud_redis_maintenance_window
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -1207,6 +1213,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_available_zone":                       dataSourceTencentCloudCfsAvailableZone(),
 			"tencentcloud_redis_zone_config":                        dataSourceTencentRedisZoneConfig(),
 			"tencentcloud_redis_instances":                          dataSourceTencentRedisInstances(),
+			"tencentcloud_redis_backup":                             dataSourceTencentCloudRedisBackup(),
+			"tencentcloud_redis_backup_download_info":               dataSourceTencentCloudRedisBackupDownloadInfo(),
 			"tencentcloud_as_scaling_configs":                       dataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                        dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                      dataSourceTencentCloudAsScalingPolicies(),
@@ -1490,7 +1498,13 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cfs_sign_up_cfs_service":                     resourceTencentCloudCfsSignUpCfsService(),
 			"tencentcloud_redis_instance":                              resourceTencentCloudRedisInstance(),
 			"tencentcloud_redis_backup_config":                         resourceTencentCloudRedisBackupConfig(),
+			"tencentcloud_redis_account":                               resourceTencentCloudRedisAccount(),
 			"tencentcloud_redis_param_template":                        resourceTencentCloudRedisParamTemplate(),
+			"tencentcloud_redis_connection_config":                     resourceTencentCloudRedisConnectionConfig(),
+			"tencentcloud_redis_param":                                 resourceTencentCloudRedisParam(),
+			"tencentcloud_redis_read_only":                             resourceTencentCloudRedisReadOnly(),
+			"tencentcloud_redis_ssl":                                   resourceTencentCloudRedisSsl(),
+			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                            resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                               resourceTencentCloudAsAttachment(),
