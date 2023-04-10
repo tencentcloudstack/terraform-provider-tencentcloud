@@ -287,7 +287,7 @@ func TestAccTencentCloudRedisInstance_Cluster(t *testing.T) {
 		CheckDestroy: testAccTencentCloudRedisInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRedisInstanceCluster(),
+				Config: testAccRedisInstanceCluster,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_cluster"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_cluster", "redis_shard_num", "1"),
@@ -628,8 +628,7 @@ resource "tencentcloud_redis_instance" "redis_maz" {
 }`
 }
 
-func testAccRedisInstanceCluster() string {
-	return defaultVpcVariable + `
+const testAccRedisInstanceCluster = defaultVpcVariable + `
 resource "tencentcloud_redis_instance" "redis_cluster" {
   availability_zone = "ap-guangzhou-3"
   type_id            = 7
@@ -643,7 +642,6 @@ resource "tencentcloud_redis_instance" "redis_cluster" {
   vpc_id 			 = var.vpc_id
   subnet_id			 = var.subnet_id
 }`
-}
 
 func testAccRedisInstanceClusterUpdateShard() string {
 	return defaultVpcVariable + `

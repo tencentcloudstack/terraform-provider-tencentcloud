@@ -32,6 +32,9 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 已存在同名Topic。
+	INVALIDPARAMETER_TOPICEXIST = "InvalidParameter.TopicExist"
+
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
@@ -59,11 +62,17 @@ const (
 	// zone不支持。
 	INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
 
+	// 超过配额限制。
+	LIMITEXCEEDED = "LimitExceeded"
+
 	// 路由数超过限制。
 	LIMITEXCEEDED_ROUTEOVERLIMIT = "LimitExceeded.RouteOverLimit"
 
 	// SASL路由超过限制。
 	LIMITEXCEEDED_ROUTESASLOVERLIMIT = "LimitExceeded.RouteSASLOverLimit"
+
+	// 缺少参数错误。
+	MISSINGPARAMETER = "MissingParameter"
 
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
