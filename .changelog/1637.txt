@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_cdn_domain:  `service_type` support set `hybrid`, `dynamic`
+```

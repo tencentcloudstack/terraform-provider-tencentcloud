@@ -5,36 +5,26 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_contain_group" "contain_group" {
-  application_id = ""
-  namespace_id = ""
-  group_name = ""
-  instance_num =
-  access_type =
-  protocol_ports {
-		protocol = ""
-		port =
-		target_port =
-		node_port =
+    access_type           = 0
+    application_id        = "application-y5r4nejv"
+    cluster_id            = "cls-2yu5kxr8"
+    cpu_limit             = "0.5"
+    cpu_request           = "0.25"
+    group_name            = "terraform-test"
+    group_resource_type   = "DEF"
+    instance_num          = 1
+    mem_limit             = "1280"
+    mem_request           = "640"
+    namespace_id          = "namespace-ydlezgxa"
+    update_ivl            = 10
+    update_type           = 1
 
-  }
-  cluster_id = ""
-  cpu_limit = ""
-  mem_limit = ""
-  group_comment = ""
-  update_type =
-  update_ivl =
-  cpu_request = ""
-  mem_request = ""
-  group_resource_type = ""
-  subnet_id = ""
-  agent_cpu_request = ""
-  agent_cpu_limit = ""
-  agent_mem_request = ""
-  agent_mem_limit = ""
-  istio_cpu_request = ""
-  istio_cpu_limit = ""
-  istio_mem_request = ""
-  istio_mem_limit = ""
+    protocol_ports {
+        node_port   = 0
+        port        = 333
+        protocol    = "TCP"
+        target_port = 333
+    }
 }
 ```
 
@@ -608,7 +598,7 @@ func resourceTencentCloudTsfContainGroupCreate(d *schema.ResourceData, meta inte
 			if v, ok := dMap["target_port"]; ok {
 				protocolPort.TargetPort = helper.IntInt64(v.(int))
 			}
-			if v, ok := dMap["node_port"]; ok {
+			if v, ok := dMap["node_port"]; ok && v.(int) > 0 {
 				protocolPort.NodePort = helper.IntInt64(v.(int))
 			}
 			request.ProtocolPorts = append(request.ProtocolPorts, &protocolPort)
@@ -973,8 +963,8 @@ func resourceTencentCloudTsfContainGroupRead(d *schema.ResourceData, meta interf
 		_ = d.Set("max_unavailable", containGroup.MaxUnavailable)
 	}
 
+	healthCheckSettingsMap := map[string]interface{}{}
 	if containGroup.HealthCheckSettings != nil {
-		healthCheckSettingsMap := map[string]interface{}{}
 
 		if containGroup.HealthCheckSettings.LivenessProbe != nil {
 			livenessProbeMap := map[string]interface{}{}
@@ -1076,8 +1066,8 @@ func resourceTencentCloudTsfContainGroupRead(d *schema.ResourceData, meta interf
 			healthCheckSettingsMap["readiness_probe"] = []interface{}{readinessProbeMap}
 		}
 
-		_ = d.Set("health_check_settings", []interface{}{healthCheckSettingsMap})
 	}
+	_ = d.Set("health_check_settings", []interface{}{healthCheckSettingsMap})
 
 	return nil
 }
@@ -1094,7 +1084,7 @@ func resourceTencentCloudTsfContainGroupUpdate(d *schema.ResourceData, meta inte
 
 	request.GroupId = &groupId
 
-	immutableArgs := []string{"application_id", "namespace_id", "group_name", "instance_num", "access_type", "protocol_ports", "cluster_id", "cpu_limit", "mem_limit", "group_comment", "update_type", "update_ivl", "cpu_request", "mem_request", "group_resource_type", "subnet_id", "agent_cpu_request", "agent_cpu_limit", "agent_mem_request", "agent_mem_limit", "istio_cpu_request", "istio_cpu_limit", "istio_mem_request", "istio_mem_limit", "group_id", "current_num", "create_time", "server", "reponame", "tag_name", "cluster_name", "namespace_name", "lb_ip", "application_type", "cluster_ip", "envs", "application_name", "message", "status", "microservice_type", "instance_count", "updated_time", "max_surge", "max_unavailable", "health_check_settings"}
+	immutableArgs := []string{"application_id", "namespace_id", "group_name", "instance_num", "cluster_id", "cpu_limit", "mem_limit", "group_comment", "cpu_request", "mem_request", "group_resource_type", "agent_cpu_request", "agent_cpu_limit", "agent_mem_request", "agent_mem_limit", "istio_cpu_request", "istio_cpu_limit", "istio_mem_request", "istio_mem_limit", "group_id", "current_num", "create_time", "server", "reponame", "tag_name", "cluster_name", "namespace_name", "lb_ip", "application_type", "cluster_ip", "envs", "application_name", "message", "status", "microservice_type", "instance_count", "updated_time", "max_surge", "max_unavailable", "health_check_settings"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

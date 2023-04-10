@@ -137,7 +137,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudRedisInstanceBasic(t *testing.T) {
+func TestAccTencentCloudRedisInstanceResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -562,6 +562,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   redis_replicas_num = 1
   vpc_id 			 = var.vpc_id
   subnet_id			 = var.subnet_id
+  no_auth            = true
   security_groups    = [var.sg_id]
 
   tags = {

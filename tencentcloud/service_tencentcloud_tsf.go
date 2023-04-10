@@ -5,13 +5,100 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
 type TsfService struct {
 	client *connectivity.TencentCloudClient
+}
+
+func (me *TsfService) DescribeTsfClusterById(ctx context.Context, clusterId string) (cluster *tsf.ClusterV2, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeClustersRequest()
+	request.ClusterIdList = []*string{&clusterId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*tsf.ClusterV2, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeClusters(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	cluster = instances[0]
+	return
+}
+
+func (me *TsfService) DeleteTsfClusterById(ctx context.Context, clusterId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDeleteClusterRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DeleteCluster(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TsfService) TsfClusterStateRefreshFunc(clusterId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeTsfClusterById(ctx, clusterId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.ClusterStatus), nil
+	}
 }
 
 func (me *TsfService) DescribeTsfApplicationConfigById(ctx context.Context, configId, configName string) (applicationConfig *tsf.Config, errRet error) {
@@ -232,29 +319,29 @@ func (me *TsfService) DescribeTsfApiRateLimitRuleById(ctx context.Context, apiId
 	return
 }
 
-// func (me *TsfService) DeleteTsfApiRateLimitRuleById(ctx context.Context, apiId, ruleId string) (errRet error) {
-// 	logId := getLogId(ctx)
+func (me *TsfService) DeleteTsfApiRateLimitRuleById(ctx context.Context, apiId, ruleId string) (errRet error) {
+	logId := getLogId(ctx)
 
-// 	request := tsf.NewDeleteApiRateLimitRuleRequest()
-// 	request.ApiId = &apiId
+	request := tsf.NewDeleteApiRateLimitRuleRequest()
+	request.RuleId = &ruleId
 
-// 	defer func() {
-// 		if errRet != nil {
-// 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-// 		}
-// 	}()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
 
-// 	ratelimit.Check(request.GetAction())
+	ratelimit.Check(request.GetAction())
 
-// 	response, err := me.client.UseTsfClient().DeleteApiRateLimitRule(request)
-// 	if err != nil {
-// 		errRet = err
-// 		return
-// 	}
-// 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	response, err := me.client.UseTsfClient().DeleteApiRateLimitRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-// 	return
-// }
+	return
+}
 
 func (me *TsfService) DescribeTsfConfigTemplateById(ctx context.Context, templateId string) (configTemplate *tsf.ConfigTemplate, errRet error) {
 	logId := getLogId(ctx)
@@ -367,6 +454,8 @@ func (me *TsfService) DescribeTsfLaneRuleById(ctx context.Context, ruleId string
 
 	request := tsf.NewDescribeLaneRulesRequest()
 	request.RuleId = &ruleId
+	request.Limit = helper.IntInt64(10)
+	request.Offset = helper.IntInt64(0)
 
 	defer func() {
 		if errRet != nil {
@@ -776,6 +865,59 @@ func (me *TsfService) DeleteTsfApplicationReleaseConfigById(ctx context.Context,
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseTsfClient().RevocationConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TsfService) DescribeTsfGroupById(ctx context.Context, groupId string) (group *tsf.VmGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeGroupRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Result == nil {
+		return
+	}
+
+	group = response.Response.Result
+	return
+}
+
+func (me *TsfService) DeleteTsfGroupById(ctx context.Context, groupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDeleteGroupRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DeleteGroup(request)
 	if err != nil {
 		errRet = err
 		return

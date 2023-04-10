@@ -14,9 +14,7 @@ func TestAccTencentCloudTsfApplicationConfigResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfApplicationConfigDestroy,
 		Steps: []resource.TestStep{
@@ -32,11 +30,11 @@ func TestAccTencentCloudTsfApplicationConfigResource_basic(t *testing.T) {
 					// resource.TestCheckResourceAttr("tencentcloud_tsf_application_config.application_config", "encode_with_base64", "false"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_tsf_application_config.application_config",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
+			// {
+			// 	ResourceName:      "tencentcloud_tsf_application_config.application_config",
+			// 	ImportState:       true,
+			// 	ImportStateVerify: true,
+			// },
 		},
 	})
 }

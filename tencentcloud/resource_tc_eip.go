@@ -46,11 +46,10 @@ func resourceTencentCloudEip() *schema.Resource {
 
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Computed:     true,
-				ValidateFunc: validateStringLengthInRange(1, 20),
-				Description:  "The name of eip.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The name of eip.",
 			},
 			"type": {
 				Type:        schema.TypeString,

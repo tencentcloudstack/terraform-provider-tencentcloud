@@ -14,9 +14,7 @@ func TestAccTencentCloudTsfNamespaceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfNamespaceDestroy,
 		Steps: []resource.TestStep{
@@ -31,11 +29,11 @@ func TestAccTencentCloudTsfNamespaceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tsf_namespace.namespace", "is_ha_enable", "0"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_tsf_namespace.namespace",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
+			// {
+			// 	ResourceName:      "tencentcloud_tsf_namespace.namespace",
+			// 	ImportState:       true,
+			// 	ImportStateVerify: true,
+			// },
 		},
 	})
 }
@@ -89,14 +87,9 @@ const testAccTsfNamespace = `
 
 resource "tencentcloud_tsf_namespace" "namespace" {
 	namespace_name = "terraform-namespace-name"
-	# cluster_id = ""
 	namespace_desc = "terraform-test"
-	# namespace_resource_type = ""
 	namespace_type = "DEF"
-	# namespace_id = ""
 	is_ha_enable = "0"
-	# program_id = ""
-	# program_id_list =
 }
 
 `

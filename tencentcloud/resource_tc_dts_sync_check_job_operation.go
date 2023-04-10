@@ -63,7 +63,7 @@ func resourceTencentCloudDtsSyncCheckJobOperationCreate(d *schema.ResourceData, 
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s operate dts syncCheckJobOperation failed, reason:%+v", logId, err)
-		return nil
+		return err
 	}
 
 	d.SetId(jobId)

@@ -120,7 +120,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Optional:     true,
 				Default:      1,
 				ValidateFunc: validateAllowedIntValue([]int{1, 2, 3, 4, 6, 7, 8, 9, 12, 24, 36}),
-				Description:  "Period of instance to be prepaid. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be set to take effect in create operation.",
+				Description:  "Period of instance to be prepaid. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be changed on `IPSEC` vpn gateway.",
 			},
 			"charge_type": {
 				Type:        schema.TypeString,
@@ -351,12 +351,38 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 	gatewayId := d.Id()
 
 	unsupportedUpdateFields := []string{
-		"prepaid_period",
 		"type",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {
 			return fmt.Errorf("Template resource_tc_vpn_gateway update on %s is not supportted yet. Please renew it on controller web page.", field)
+		}
+	}
+
+	if d.HasChange("prepaid_period") {
+		chargeType := d.Get("charge_type").(string)
+		period := d.Get("prepaid_period").(int)
+		if chargeType != VPN_CHARGE_TYPE_PREPAID {
+			return fmt.Errorf("Invalid renew flag change. Only support pre-paid vpn.")
+		}
+		request := vpc.NewRenewVpnGatewayRequest()
+		request.VpnGatewayId = &gatewayId
+		var preChargePara vpc.InstanceChargePrepaid
+		preChargePara.Period = helper.IntUint64(period)
+		request.InstanceChargePrepaid = &preChargePara
+
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().RenewVpnGateway(request)
+			if e != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s modify VPN gateway prepaid period failed, reason:%s\n", logId, err.Error())
+			return err
 		}
 	}
 

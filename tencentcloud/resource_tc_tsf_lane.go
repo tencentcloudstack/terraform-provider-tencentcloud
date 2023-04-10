@@ -10,27 +10,10 @@ resource "tencentcloud_tsf_lane" "lane" {
   lane_group_list {
 		group_id = "group-yn7j5l8a"
 		entrance = true
-		# lane_group_id = ""
-		# lane_id = ""
-		# group_name = ""
-		# application_id = ""
-		# application_name = ""
-		# namespace_id = ""
-		# namespace_name = ""
-		# create_time =
-		# update_time =
-		# cluster_type = ""
   }
 }
 ```
 
-Import
-
-tsf lane can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tsf_lane.lane lane_id
-```
 */
 package tencentcloud
 
@@ -51,9 +34,9 @@ func resourceTencentCloudTsfLane() *schema.Resource {
 		Read:   resourceTencentCloudTsfLaneRead,
 		Update: resourceTencentCloudTsfLaneUpdate,
 		Delete: resourceTencentCloudTsfLaneDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"lane_id": {
 				Type:        schema.TypeString,
@@ -407,10 +390,8 @@ func resourceTencentCloudTsfLaneUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if d.HasChange("lane_name") {
-		if v, ok := d.GetOk("lane_name"); ok {
-			request.LaneName = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("lane_name"); ok {
+		request.LaneName = helper.String(v.(string))
 	}
 
 	if d.HasChange("remark") {

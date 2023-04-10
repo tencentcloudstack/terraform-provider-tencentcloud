@@ -9,13 +9,12 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 )
 
-func TestAccTencentCloudNeedFixTsfLaneResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTsfLaneResource_basic -v
+func TestAccTencentCloudTsfLaneResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTsfLaneDestroy,
 		Steps: []resource.TestStep{
@@ -24,18 +23,18 @@ func TestAccTencentCloudNeedFixTsfLaneResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTsfLaneExists("tencentcloud_tsf_lane.lane"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_lane.lane", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_lane.lane", "lane_name", "lane-name"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_lane.lane", "lane_name", "terraform-lane"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_lane.lane", "remark", "lane desc"),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_lane.lane", "lane_group_list.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_tsf_lane.lane", "lane_group_list.0.group_id", "group-yn7j5l8a"),
+					resource.TestCheckResourceAttr("tencentcloud_tsf_lane.lane", "lane_group_list.0.group_id", defaultTsfGroupId),
 					resource.TestCheckResourceAttr("tencentcloud_tsf_lane.lane", "lane_group_list.0.entrance", "true"),
 				),
 			},
-			{
-				ResourceName:      "tencentcloud_tsf_lane.lane",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
+			// {
+			// 	ResourceName:      "tencentcloud_tsf_lane.lane",
+			// 	ImportState:       true,
+			// 	ImportStateVerify: true,
+			// },
 		},
 	})
 }
@@ -85,24 +84,20 @@ func testAccCheckTsfLaneExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTsfLane = `
+const testAccTsfLaneVar = `
+variable "group_id" {
+	default = "` + defaultTsfGroupId + `"
+}
+`
+
+const testAccTsfLane = testAccTsfLaneVar + `
 
 resource "tencentcloud_tsf_lane" "lane" {
-	lane_name = "lane-name"
+	lane_name = "terraform-lane"
 	remark = "lane desc"
 	lane_group_list {
-		  group_id = "group-yn7j5l8a"
+		  group_id = var.group_id
 		  entrance = true
-		  # lane_group_id = ""
-		  # lane_id = ""
-		  # group_name = ""
-		  # application_id = ""
-		  # application_name = ""
-		  # namespace_id = ""
-		  # namespace_name = ""
-		  # create_time =
-		  # update_time =
-		  # cluster_type = ""
 	}
 }
 

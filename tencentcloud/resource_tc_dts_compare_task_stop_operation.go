@@ -81,7 +81,7 @@ func resourceTencentCloudDtsCompareTaskStopOperationCreate(d *schema.ResourceDat
 	})
 	if err != nil {
 		log.Printf("[CRITAL]%s operate dts compareTaskStopOperation failed, reason:%+v", logId, err)
-		return nil
+		return err
 	}
 
 	d.SetId(jobId + FILED_SP + compareTaskId)

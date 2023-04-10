@@ -5,30 +5,19 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_lane_rule" "lane_rule" {
-  rule_name = ""
-  remark = ""
+  rule_name = "terraform-rule-name"
+  remark = "terraform-test"
   rule_tag_list {
-		tag_id = ""
-		tag_name = ""
-		tag_operator = ""
-		tag_value = ""
-		lane_rule_id = ""
-		create_time =
-		update_time =
+		tag_name = "xxx"
+		tag_operator = "EQUAL"
+		tag_value = "222"
   }
-  rule_tag_relationship = ""
-  lane_id = ""
-  program_id_list =
+  rule_tag_relationship = "RELEATION_AND"
+  lane_id = "lane-abw5oo5a"
+  enable = false
 }
 ```
 
-Import
-
-tsf lane_rule can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tsf_lane_rule.lane_rule lane_rule_id
-```
 */
 package tencentcloud
 
@@ -49,9 +38,9 @@ func resourceTencentCloudTsfLaneRule() *schema.Resource {
 		Read:   resourceTencentCloudTsfLaneRuleRead,
 		Update: resourceTencentCloudTsfLaneRuleUpdate,
 		Delete: resourceTencentCloudTsfLaneRuleDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"rule_id": {
 				Computed:    true,
@@ -79,7 +68,8 @@ func resourceTencentCloudTsfLaneRule() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"tag_id": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
+							Computed:    true,
 							Description: "label ID.",
 						},
 						"tag_name": {
@@ -99,12 +89,14 @@ func resourceTencentCloudTsfLaneRule() *schema.Resource {
 						},
 						"lane_rule_id": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
+							Computed:    true,
 							Description: "lane rule ID.",
 						},
 						"create_time": {
 							Type:        schema.TypeInt,
-							Required:    true,
+							Optional:    true,
+							Computed:    true,
 							Description: "creation time.",
 						},
 						"update_time": {
@@ -136,9 +128,9 @@ func resourceTencentCloudTsfLaneRule() *schema.Resource {
 			},
 
 			"enable": {
-				Computed:    true,
+				Required:    true,
 				Type:        schema.TypeBool,
-				Description: "open state.",
+				Description: "open state, true/false, default: false.",
 			},
 
 			"create_time": {
@@ -247,7 +239,7 @@ func resourceTencentCloudTsfLaneRuleCreate(d *schema.ResourceData, meta interfac
 	ruleId = *response.Response.Result
 	d.SetId(ruleId)
 
-	return resourceTencentCloudTsfLaneRuleRead(d, meta)
+	return resourceTencentCloudTsfLaneRuleUpdate(d, meta)
 }
 
 func resourceTencentCloudTsfLaneRuleRead(d *schema.ResourceData, meta interface{}) error {
@@ -368,7 +360,7 @@ func resourceTencentCloudTsfLaneRuleUpdate(d *schema.ResourceData, meta interfac
 
 	request.RuleId = &ruleId
 
-	immutableArgs := []string{"rule_id", "rule_name", "remark", "rule_tag_list", "rule_tag_relationship", "lane_id", "priority", "enable", "create_time", "update_time", "program_id_list"}
+	immutableArgs := []string{"rule_id", "priority", "create_time", "update_time", "program_id_list"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -376,59 +368,52 @@ func resourceTencentCloudTsfLaneRuleUpdate(d *schema.ResourceData, meta interfac
 		}
 	}
 
-	if d.HasChange("rule_name") {
-		if v, ok := d.GetOk("rule_name"); ok {
-			request.RuleName = helper.String(v.(string))
-		}
+	v, _ := d.GetOk("enable")
+	request.Enable = helper.Bool(v.(bool))
+
+	if v, ok := d.GetOk("rule_name"); ok {
+		request.RuleName = helper.String(v.(string))
 	}
 
-	if d.HasChange("remark") {
-		if v, ok := d.GetOk("remark"); ok {
-			request.Remark = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("remark"); ok {
+		request.Remark = helper.String(v.(string))
 	}
 
-	if d.HasChange("rule_tag_list") {
-		if v, ok := d.GetOk("rule_tag_list"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				laneRuleTag := tsf.LaneRuleTag{}
-				if v, ok := dMap["tag_id"]; ok {
-					laneRuleTag.TagId = helper.String(v.(string))
-				}
-				if v, ok := dMap["tag_name"]; ok {
-					laneRuleTag.TagName = helper.String(v.(string))
-				}
-				if v, ok := dMap["tag_operator"]; ok {
-					laneRuleTag.TagOperator = helper.String(v.(string))
-				}
-				if v, ok := dMap["tag_value"]; ok {
-					laneRuleTag.TagValue = helper.String(v.(string))
-				}
-				if v, ok := dMap["lane_rule_id"]; ok {
-					laneRuleTag.LaneRuleId = helper.String(v.(string))
-				}
-				if v, ok := dMap["create_time"]; ok {
-					laneRuleTag.CreateTime = helper.IntInt64(v.(int))
-				}
-				if v, ok := dMap["update_time"]; ok {
-					laneRuleTag.UpdateTime = helper.IntInt64(v.(int))
-				}
-				request.RuleTagList = append(request.RuleTagList, &laneRuleTag)
+	if v, ok := d.GetOk("rule_tag_list"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			laneRuleTag := tsf.LaneRuleTag{}
+			if v, ok := dMap["tag_id"]; ok {
+				laneRuleTag.TagId = helper.String(v.(string))
 			}
+			if v, ok := dMap["tag_name"]; ok {
+				laneRuleTag.TagName = helper.String(v.(string))
+			}
+			if v, ok := dMap["tag_operator"]; ok {
+				laneRuleTag.TagOperator = helper.String(v.(string))
+			}
+			if v, ok := dMap["tag_value"]; ok {
+				laneRuleTag.TagValue = helper.String(v.(string))
+			}
+			if v, ok := dMap["lane_rule_id"]; ok {
+				laneRuleTag.LaneRuleId = helper.String(v.(string))
+			}
+			if v, ok := dMap["create_time"]; ok {
+				laneRuleTag.CreateTime = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["update_time"]; ok {
+				laneRuleTag.UpdateTime = helper.IntInt64(v.(int))
+			}
+			request.RuleTagList = append(request.RuleTagList, &laneRuleTag)
 		}
 	}
 
-	if d.HasChange("rule_tag_relationship") {
-		if v, ok := d.GetOk("rule_tag_relationship"); ok {
-			request.RuleTagRelationship = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("rule_tag_relationship"); ok {
+		request.RuleTagRelationship = helper.String(v.(string))
 	}
 
-	if d.HasChange("lane_id") {
-		if v, ok := d.GetOk("lane_id"); ok {
-			request.LaneId = helper.String(v.(string))
-		}
+	if v, ok := d.GetOk("lane_id"); ok {
+		request.LaneId = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

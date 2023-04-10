@@ -48,26 +48,26 @@ type Account struct {
 
 // Predefined struct for user
 type AddReplicationInstanceRequestParams struct {
-	// 复制组ID
+	// 复制组ID。
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 实例ID
+	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 实例角色，rw可读写，r只读
+	// 给复制组添加的实例分配角色。<ul><li>rw：可读写。</li><li>r：只读。</li></ul>
 	InstanceRole *string `json:"InstanceRole,omitempty" name:"InstanceRole"`
 }
 
 type AddReplicationInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 复制组ID
+	// 复制组ID。
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 实例ID
+	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 实例角色，rw可读写，r只读
+	// 给复制组添加的实例分配角色。<ul><li>rw：可读写。</li><li>r：只读。</li></ul>
 	InstanceRole *string `json:"InstanceRole,omitempty" name:"InstanceRole"`
 }
 
@@ -94,7 +94,7 @@ func (r *AddReplicationInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AddReplicationInstanceResponseParams struct {
-	// 异步流程ID
+	// 异步流程ID。
 	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -243,7 +243,7 @@ func (r *ApplyParamsTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssociateSecurityGroupsRequestParams struct {
-	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb 等。
+	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitempty" name:"Product"`
 
 	// 要绑定的安全组ID，类似sg-efil73jd。
@@ -256,7 +256,7 @@ type AssociateSecurityGroupsRequestParams struct {
 type AssociateSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb 等。
+	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitempty" name:"Product"`
 
 	// 要绑定的安全组ID，类似sg-efil73jd。
@@ -321,6 +321,14 @@ type BackupDownloadInfo struct {
 
 	// 备份文件内网下载地址（6小时）
 	InnerDownloadUrl *string `json:"InnerDownloadUrl,omitempty" name:"InnerDownloadUrl"`
+}
+
+type BackupLimitVpcItem struct {
+	// 自定义下载备份文件的VPC 所属地域。
+	Region *string `json:"Region,omitempty" name:"Region"`
+
+	// 自定义下载备份文件的 VPC 列表。
+	VpcList []*string `json:"VpcList,omitempty" name:"VpcList"`
 }
 
 type BigKeyInfo struct {
@@ -674,6 +682,249 @@ func (r *ClearInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CloneInstancesRequestParams struct {
+	// 当前实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 单次克隆实例的数量。包年包月每次购买最大数量为100。按量计费每次购买最大数量为30，每个地域购买数量取值范围为[1,100]。
+	GoodsNum *uint64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// 克隆实例所属的可用区ID。当前所支持的可用区 ID，请参见[地域和可用区](https://cloud.tencent.com/document/product/239/4106) 。
+	ZoneId *uint64 `json:"ZoneId,omitempty" name:"ZoneId"`
+
+	// 付费方式。<ul><li>0：按量计费。</li><li>1：包年包月。</li></ul>
+	BillingMode *int64 `json:"BillingMode,omitempty" name:"BillingMode"`
+
+	// 购买实例时长。<ul><li>单位：月。</li><li>付费方式选择包年包月计费时，取值范围为[1,2,3,4,5,6,7,8,9,10,11,12,24,36,48,60]。</li><li>付费方式选择按量计费时，设置为1。</li></ul>
+	Period *uint64 `json:"Period,omitempty" name:"Period"`
+
+	// 安全组ID。请登录控制台，在<b>安全组</b>页面获取安全组 ID 信息。
+	SecurityGroupIdList []*string `json:"SecurityGroupIdList,omitempty" name:"SecurityGroupIdList"`
+
+	// 克隆实例使用的备份ID。请通过接口[DescribeInstanceBackups](https://cloud.tencent.com/document/product/239/20011)获取备份ID。
+	BackupId *string `json:"BackupId,omitempty" name:"BackupId"`
+
+	// 配置克隆实例是否支持免密访问。开启 SSL 与外网均不支持免密访问。<ul><li>true：免密实例，</li><li>false：非免密实例。默认为非免密实例。</li></ul>
+	NoAuth *bool `json:"NoAuth,omitempty" name:"NoAuth"`
+
+	// 私有网络ID。如果未配置该参数，默认选择基础网络。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 私有网络所属子网。基础网络时该参数无需配置。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 克隆实例的名称。<br>仅支持长度小于60的中文、英文或者数字，短划线"-"、下划线"_"。</br>
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+
+	// 克隆实例的访问密码。<ul><li>当输入参数<b>NoAuth</b>为<b>true</b>时，可不设置该参数。</li><li>当实例为Redis2.8、4.0和5.0时，其密码格式为：8-30个字符，至少包含小写字母、大写字母、数字和字符 ()`~!@#$%^&*-+=_|{}[]:;<>,.?/ 中的2种，不能以"/"开头；</li><li>当实例为CKV 3.2时，其密码格式为：8-30个字符，必须包含字母和数字，且不包含其他字符。</li></ul>
+	Password *string `json:"Password,omitempty" name:"Password"`
+
+	// 自动续费标识。<ul><li>0：默认状态（手动续费）。</li><li>1：自动续费。</li><li>2：不自动续费，到期自动隔离。</li></ul>
+	AutoRenew *uint64 `json:"AutoRenew,omitempty" name:"AutoRenew"`
+
+	// 用户自定义的端口，默认为6379，取值范围[1024,65535]。
+	VPort *uint64 `json:"VPort,omitempty" name:"VPort"`
+
+	// 实例的节点信息。<ul><li>目前支持配置节点的类型（主节点或者副本节点），及其节点的可用区信息。具体信息，请参见[RedisNodeInfo](https://cloud.tencent.com/document/product/239/20022#RedisNodeInfo)。</li><li>单可用区部署可不配置该参数。</li></ul>
+	NodeSet []*RedisNodeInfo `json:"NodeSet,omitempty" name:"NodeSet"`
+
+	// 项目 ID。登录控制台，可在右上角的<b>账号中心</b> > <b>项目管理</b>中查找项目ID。
+	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 克隆实例需绑定的标签。
+	ResourceTags []*ResourceTag `json:"ResourceTags,omitempty" name:"ResourceTags"`
+
+	// 克隆实例需要应用的参数模板ID,请登录 Redis 控制台，在<b>参数模板</b>页面获取。若不配置该参数，则应用默认的参数模板。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 指定克隆实例的告警策略 ID。请登录控制台，在<b>云监控</b> > <b>告警配置</b> > <b>告警策略</b>页面获取策略 ID 信息。
+	AlarmPolicyList []*string `json:"AlarmPolicyList,omitempty" name:"AlarmPolicyList"`
+}
+
+type CloneInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 当前实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 单次克隆实例的数量。包年包月每次购买最大数量为100。按量计费每次购买最大数量为30，每个地域购买数量取值范围为[1,100]。
+	GoodsNum *uint64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// 克隆实例所属的可用区ID。当前所支持的可用区 ID，请参见[地域和可用区](https://cloud.tencent.com/document/product/239/4106) 。
+	ZoneId *uint64 `json:"ZoneId,omitempty" name:"ZoneId"`
+
+	// 付费方式。<ul><li>0：按量计费。</li><li>1：包年包月。</li></ul>
+	BillingMode *int64 `json:"BillingMode,omitempty" name:"BillingMode"`
+
+	// 购买实例时长。<ul><li>单位：月。</li><li>付费方式选择包年包月计费时，取值范围为[1,2,3,4,5,6,7,8,9,10,11,12,24,36,48,60]。</li><li>付费方式选择按量计费时，设置为1。</li></ul>
+	Period *uint64 `json:"Period,omitempty" name:"Period"`
+
+	// 安全组ID。请登录控制台，在<b>安全组</b>页面获取安全组 ID 信息。
+	SecurityGroupIdList []*string `json:"SecurityGroupIdList,omitempty" name:"SecurityGroupIdList"`
+
+	// 克隆实例使用的备份ID。请通过接口[DescribeInstanceBackups](https://cloud.tencent.com/document/product/239/20011)获取备份ID。
+	BackupId *string `json:"BackupId,omitempty" name:"BackupId"`
+
+	// 配置克隆实例是否支持免密访问。开启 SSL 与外网均不支持免密访问。<ul><li>true：免密实例，</li><li>false：非免密实例。默认为非免密实例。</li></ul>
+	NoAuth *bool `json:"NoAuth,omitempty" name:"NoAuth"`
+
+	// 私有网络ID。如果未配置该参数，默认选择基础网络。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 私有网络所属子网。基础网络时该参数无需配置。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 克隆实例的名称。<br>仅支持长度小于60的中文、英文或者数字，短划线"-"、下划线"_"。</br>
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+
+	// 克隆实例的访问密码。<ul><li>当输入参数<b>NoAuth</b>为<b>true</b>时，可不设置该参数。</li><li>当实例为Redis2.8、4.0和5.0时，其密码格式为：8-30个字符，至少包含小写字母、大写字母、数字和字符 ()`~!@#$%^&*-+=_|{}[]:;<>,.?/ 中的2种，不能以"/"开头；</li><li>当实例为CKV 3.2时，其密码格式为：8-30个字符，必须包含字母和数字，且不包含其他字符。</li></ul>
+	Password *string `json:"Password,omitempty" name:"Password"`
+
+	// 自动续费标识。<ul><li>0：默认状态（手动续费）。</li><li>1：自动续费。</li><li>2：不自动续费，到期自动隔离。</li></ul>
+	AutoRenew *uint64 `json:"AutoRenew,omitempty" name:"AutoRenew"`
+
+	// 用户自定义的端口，默认为6379，取值范围[1024,65535]。
+	VPort *uint64 `json:"VPort,omitempty" name:"VPort"`
+
+	// 实例的节点信息。<ul><li>目前支持配置节点的类型（主节点或者副本节点），及其节点的可用区信息。具体信息，请参见[RedisNodeInfo](https://cloud.tencent.com/document/product/239/20022#RedisNodeInfo)。</li><li>单可用区部署可不配置该参数。</li></ul>
+	NodeSet []*RedisNodeInfo `json:"NodeSet,omitempty" name:"NodeSet"`
+
+	// 项目 ID。登录控制台，可在右上角的<b>账号中心</b> > <b>项目管理</b>中查找项目ID。
+	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 克隆实例需绑定的标签。
+	ResourceTags []*ResourceTag `json:"ResourceTags,omitempty" name:"ResourceTags"`
+
+	// 克隆实例需要应用的参数模板ID,请登录 Redis 控制台，在<b>参数模板</b>页面获取。若不配置该参数，则应用默认的参数模板。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 指定克隆实例的告警策略 ID。请登录控制台，在<b>云监控</b> > <b>告警配置</b> > <b>告警策略</b>页面获取策略 ID 信息。
+	AlarmPolicyList []*string `json:"AlarmPolicyList,omitempty" name:"AlarmPolicyList"`
+}
+
+func (r *CloneInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloneInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "GoodsNum")
+	delete(f, "ZoneId")
+	delete(f, "BillingMode")
+	delete(f, "Period")
+	delete(f, "SecurityGroupIdList")
+	delete(f, "BackupId")
+	delete(f, "NoAuth")
+	delete(f, "VpcId")
+	delete(f, "SubnetId")
+	delete(f, "InstanceName")
+	delete(f, "Password")
+	delete(f, "AutoRenew")
+	delete(f, "VPort")
+	delete(f, "NodeSet")
+	delete(f, "ProjectId")
+	delete(f, "ResourceTags")
+	delete(f, "TemplateId")
+	delete(f, "AlarmPolicyList")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CloneInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CloneInstancesResponseParams struct {
+	// 请求任务 ID。
+	DealId *string `json:"DealId,omitempty" name:"DealId"`
+
+	// 克隆实例的 ID。
+	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CloneInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *CloneInstancesResponseParams `json:"Response"`
+}
+
+func (r *CloneInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloneInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CloseSSLRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type CloseSSLRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *CloseSSLRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloseSSLRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CloseSSLRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CloseSSLResponseParams struct {
+	// 任务ID。
+	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CloseSSLResponse struct {
+	*tchttp.BaseResponse
+	Response *CloseSSLResponseParams `json:"Response"`
+}
+
+func (r *CloseSSLResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloseSSLResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type CommandTake struct {
 	// 命令
 	Cmd *string `json:"Cmd,omitempty" name:"Cmd"`
@@ -788,7 +1039,7 @@ func (r *CreateInstanceAccountResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateInstancesRequestParams struct {
-	// 实例类型：2 – Redis2.8内存版(标准架构)，3 – CKV 3.2内存版(标准架构)，4 – CKV 3.2内存版(集群架构)，6 – Redis4.0内存版(标准架构)，7 – Redis4.0内存版(集群架构)，8 – Redis5.0内存版(标准架构)，9 – Redis5.0内存版(集群架构)。
+	// 实例类型：2 – Redis2.8内存版(标准架构)，3 – CKV 3.2内存版(标准架构)，4 – CKV 3.2内存版(集群架构)，6 – Redis4.0内存版(标准架构)，7 – Redis4.0内存版(集群架构)，8 – Redis5.0内存版(标准架构)，9 – Redis5.0内存版(集群架构)，15 – Redis6.0内存版(标准架构)，16 – Redis6.0内存版(集群架构)。
 	TypeId *uint64 `json:"TypeId,omitempty" name:"TypeId"`
 
 	// 内存容量，单位为MB， 数值需为1024的整数倍，具体规格以 [查询产品售卖规格](https://cloud.tencent.com/document/api/239/30600) 返回的规格为准。
@@ -870,7 +1121,7 @@ type CreateInstancesRequestParams struct {
 type CreateInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例类型：2 – Redis2.8内存版(标准架构)，3 – CKV 3.2内存版(标准架构)，4 – CKV 3.2内存版(集群架构)，6 – Redis4.0内存版(标准架构)，7 – Redis4.0内存版(集群架构)，8 – Redis5.0内存版(标准架构)，9 – Redis5.0内存版(集群架构)。
+	// 实例类型：2 – Redis2.8内存版(标准架构)，3 – CKV 3.2内存版(标准架构)，4 – CKV 3.2内存版(集群架构)，6 – Redis4.0内存版(标准架构)，7 – Redis4.0内存版(集群架构)，8 – Redis5.0内存版(标准架构)，9 – Redis5.0内存版(集群架构)，15 – Redis6.0内存版(标准架构)，16 – Redis6.0内存版(集群架构)。
 	TypeId *uint64 `json:"TypeId,omitempty" name:"TypeId"`
 
 	// 内存容量，单位为MB， 数值需为1024的整数倍，具体规格以 [查询产品售卖规格](https://cloud.tencent.com/document/api/239/30600) 返回的规格为准。
@@ -1107,26 +1358,26 @@ func (r *CreateParamTemplateResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateReplicationGroupRequestParams struct {
-	// 实例ID
+	// 指定复制组中的主实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 复制组名称
+	// 复制组名称。
 	GroupName *string `json:"GroupName,omitempty" name:"GroupName"`
 
-	// 备注信息
+	// 备注信息。
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
 }
 
 type CreateReplicationGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 指定复制组中的主实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 复制组名称
+	// 复制组名称。
 	GroupName *string `json:"GroupName,omitempty" name:"GroupName"`
 
-	// 备注信息
+	// 备注信息。
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
 }
 
@@ -1153,7 +1404,7 @@ func (r *CreateReplicationGroupRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateReplicationGroupResponseParams struct {
-	// 异步流程ID
+	// 异步流程ID。
 	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -1452,22 +1703,139 @@ func (r *DescribeAutoBackupConfigResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeBackupDownloadRestrictionRequestParams struct {
+
+}
+
+type DescribeBackupDownloadRestrictionRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *DescribeBackupDownloadRestrictionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupDownloadRestrictionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBackupDownloadRestrictionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBackupDownloadRestrictionResponseParams struct {
+	// 下载备份文件的网络限制类型：
+	// 
+	// - NoLimit：不限制，腾讯云内外网均可以下载备份文件。
+	// -  LimitOnlyIntranet：仅腾讯云自动分配的内网地址可下载备份文件。
+	// - Customize：指用户自定义的私有网络可下载备份文件。
+	LimitType *string `json:"LimitType,omitempty" name:"LimitType"`
+
+	// 该参数仅支持输入 In，表示自定义的**LimitVpc**可以下载备份文件。
+	VpcComparisonSymbol *string `json:"VpcComparisonSymbol,omitempty" name:"VpcComparisonSymbol"`
+
+	// 标识自定义的 LimitIp 地址是否可下载备份文件。
+	// 
+	// - In: 自定义的 IP 地址可以下载。
+	// - NotIn: 自定义的 IP 不可以下载。
+	IpComparisonSymbol *string `json:"IpComparisonSymbol,omitempty" name:"IpComparisonSymbol"`
+
+	// 自定义的可下载备份文件的 VPC ID。当参数**LimitType**为**Customize **时，显示该参数。
+	LimitVpc []*BackupLimitVpcItem `json:"LimitVpc,omitempty" name:"LimitVpc"`
+
+	// 自定义的可下载备份文件的 VPC ID。当参数**LimitType**为**Customize **时，显示该参数。
+	LimitIp []*string `json:"LimitIp,omitempty" name:"LimitIp"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeBackupDownloadRestrictionResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBackupDownloadRestrictionResponseParams `json:"Response"`
+}
+
+func (r *DescribeBackupDownloadRestrictionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupDownloadRestrictionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeBackupUrlRequestParams struct {
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 备份ID，通过DescribeInstanceBackups接口可查
+	// 备份 ID，可通过 [DescribeInstanceBackups ](https://cloud.tencent.com/document/product/239/20011)接口返回的参数 RedisBackupSet 获取。
 	BackupId *string `json:"BackupId,omitempty" name:"BackupId"`
+
+	// 下载备份文件的网络限制类型，如果不配置该参数，则使用用户自定义的配置。
+	// 
+	// - NoLimit：不限制，腾讯云内外网均可以下载备份文件。
+	// -  LimitOnlyIntranet：仅腾讯云自动分配的内网地址可下载备份文件。
+	// - Customize：指用户自定义的私有网络可下载备份文件。
+	LimitType *string `json:"LimitType,omitempty" name:"LimitType"`
+
+	// 该参数仅支持输入 In，表示自定义的**LimitVpc**可以下载备份文件。
+	VpcComparisonSymbol *string `json:"VpcComparisonSymbol,omitempty" name:"VpcComparisonSymbol"`
+
+	// 标识自定义的 LimitIp 地址是否可下载备份文件。
+	// 
+	// - In: 自定义的 IP 地址可以下载。默认为 In。
+	// - NotIn: 自定义的 IP 不可以下载。
+	IpComparisonSymbol *string `json:"IpComparisonSymbol,omitempty" name:"IpComparisonSymbol"`
+
+	// 自定义的可下载备份文件的 VPC ID。当参数**LimitType**为**Customize **时，需配置该参数。
+	LimitVpc []*BackupLimitVpcItem `json:"LimitVpc,omitempty" name:"LimitVpc"`
+
+	// 自定义的可下载备份文件的 VPC IP 地址。当参数**LimitType**为**Customize **时，需配置该参数。
+	LimitIp []*string `json:"LimitIp,omitempty" name:"LimitIp"`
 }
 
 type DescribeBackupUrlRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 备份ID，通过DescribeInstanceBackups接口可查
+	// 备份 ID，可通过 [DescribeInstanceBackups ](https://cloud.tencent.com/document/product/239/20011)接口返回的参数 RedisBackupSet 获取。
 	BackupId *string `json:"BackupId,omitempty" name:"BackupId"`
+
+	// 下载备份文件的网络限制类型，如果不配置该参数，则使用用户自定义的配置。
+	// 
+	// - NoLimit：不限制，腾讯云内外网均可以下载备份文件。
+	// -  LimitOnlyIntranet：仅腾讯云自动分配的内网地址可下载备份文件。
+	// - Customize：指用户自定义的私有网络可下载备份文件。
+	LimitType *string `json:"LimitType,omitempty" name:"LimitType"`
+
+	// 该参数仅支持输入 In，表示自定义的**LimitVpc**可以下载备份文件。
+	VpcComparisonSymbol *string `json:"VpcComparisonSymbol,omitempty" name:"VpcComparisonSymbol"`
+
+	// 标识自定义的 LimitIp 地址是否可下载备份文件。
+	// 
+	// - In: 自定义的 IP 地址可以下载。默认为 In。
+	// - NotIn: 自定义的 IP 不可以下载。
+	IpComparisonSymbol *string `json:"IpComparisonSymbol,omitempty" name:"IpComparisonSymbol"`
+
+	// 自定义的可下载备份文件的 VPC ID。当参数**LimitType**为**Customize **时，需配置该参数。
+	LimitVpc []*BackupLimitVpcItem `json:"LimitVpc,omitempty" name:"LimitVpc"`
+
+	// 自定义的可下载备份文件的 VPC IP 地址。当参数**LimitType**为**Customize **时，需配置该参数。
+	LimitIp []*string `json:"LimitIp,omitempty" name:"LimitIp"`
 }
 
 func (r *DescribeBackupUrlRequest) ToJsonString() string {
@@ -1484,6 +1852,11 @@ func (r *DescribeBackupUrlRequest) FromJsonString(s string) error {
 	}
 	delete(f, "InstanceId")
 	delete(f, "BackupId")
+	delete(f, "LimitType")
+	delete(f, "VpcComparisonSymbol")
+	delete(f, "IpComparisonSymbol")
+	delete(f, "LimitVpc")
+	delete(f, "LimitIp")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBackupUrlRequest has unknown keys!", "")
 	}
@@ -1502,7 +1875,7 @@ type DescribeBackupUrlResponseParams struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Filenames []*string `json:"Filenames,omitempty" name:"Filenames"`
 
-	// 备份文件信息列表
+	// 备份文件信息列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupInfos []*BackupDownloadInfo `json:"BackupInfos,omitempty" name:"BackupInfos"`
 
@@ -1711,13 +2084,13 @@ func (r *DescribeDBSecurityGroupsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBSecurityGroupsResponseParams struct {
-	// 安全组规则
+	// 安全组规则。
 	Groups []*SecurityGroup `json:"Groups,omitempty" name:"Groups"`
 
-	// 安全组生效内网地址
+	// 安全组生效内网地址。
 	VIP *string `json:"VIP,omitempty" name:"VIP"`
 
-	// 安全组生效内网端口
+	// 安全组生效内网端口。
 	VPort *string `json:"VPort,omitempty" name:"VPort"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -1818,14 +2191,14 @@ func (r *DescribeInstanceAccountResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceBackupsRequestParams struct {
-	// 待操作的实例ID，可通过 DescribeInstance 接口返回值中的 InstanceId 获取。
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
-
-	// 实例列表大小，默认大小20
+	// 每页输出的备份列表大小。默认大小为20，最大值为 100。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 分页偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 待操作的实例ID，可通过 DescribeInstance 接口返回值中的 InstanceId 获取。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 开始时间，格式如：2017-02-08 16:46:34。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表。
 	BeginTime *string `json:"BeginTime,omitempty" name:"BeginTime"`
@@ -1833,21 +2206,30 @@ type DescribeInstanceBackupsRequestParams struct {
 	// 结束时间，格式如：2017-02-08 19:09:26。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 1：备份在流程中，2：备份正常，3：备份转RDB文件处理中，4：已完成RDB转换，-1：备份已过期，-2：备份已删除。
+	// 备份任务的状态：
+	// 1：备份在流程中。
+	// 2：备份正常。
+	// 3：备份转RDB文件处理中。
+	// 4：已完成RDB转换。
+	// -1：备份已过期。
+	// -2：备份已删除。
 	Status []*int64 `json:"Status,omitempty" name:"Status"`
+
+	// 实例名称，支持根据实例名称模糊搜索。
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 }
 
 type DescribeInstanceBackupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 待操作的实例ID，可通过 DescribeInstance 接口返回值中的 InstanceId 获取。
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
-
-	// 实例列表大小，默认大小20
+	// 每页输出的备份列表大小。默认大小为20，最大值为 100。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 分页偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 待操作的实例ID，可通过 DescribeInstance 接口返回值中的 InstanceId 获取。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 开始时间，格式如：2017-02-08 16:46:34。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表。
 	BeginTime *string `json:"BeginTime,omitempty" name:"BeginTime"`
@@ -1855,8 +2237,17 @@ type DescribeInstanceBackupsRequest struct {
 	// 结束时间，格式如：2017-02-08 19:09:26。查询实例在 [beginTime, endTime] 时间段内开始备份的备份列表。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 1：备份在流程中，2：备份正常，3：备份转RDB文件处理中，4：已完成RDB转换，-1：备份已过期，-2：备份已删除。
+	// 备份任务的状态：
+	// 1：备份在流程中。
+	// 2：备份正常。
+	// 3：备份转RDB文件处理中。
+	// 4：已完成RDB转换。
+	// -1：备份已过期。
+	// -2：备份已删除。
 	Status []*int64 `json:"Status,omitempty" name:"Status"`
+
+	// 实例名称，支持根据实例名称模糊搜索。
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 }
 
 func (r *DescribeInstanceBackupsRequest) ToJsonString() string {
@@ -1871,12 +2262,13 @@ func (r *DescribeInstanceBackupsRequest) FromJsonString(s string) error {
 	if err := json.Unmarshal([]byte(s), &f); err != nil {
 		return err
 	}
-	delete(f, "InstanceId")
 	delete(f, "Limit")
 	delete(f, "Offset")
+	delete(f, "InstanceId")
 	delete(f, "BeginTime")
 	delete(f, "EndTime")
 	delete(f, "Status")
+	delete(f, "InstanceName")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceBackupsRequest has unknown keys!", "")
 	}
@@ -1885,10 +2277,10 @@ func (r *DescribeInstanceBackupsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceBackupsResponseParams struct {
-	// 备份总数
+	// 备份总数。
 	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-	// 实例的备份数组
+	// 实例的备份数组。
 	BackupSet []*RedisBackupSet `json:"BackupSet,omitempty" name:"BackupSet"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -2065,7 +2457,7 @@ func (r *DescribeInstanceDealDetailRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceDealDetailResponseParams struct {
-	// 订单详细信息
+	// 订单详细信息。
 	DealDetails []*TradeDealDetail `json:"DealDetails,omitempty" name:"DealDetails"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3025,165 +3417,171 @@ func (r *DescribeInstanceZoneInfoResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstancesRequestParams struct {
-	// 返回数量，参数默认值20，最大值为1000
+	// 每页输出实例的数量，参数默认值20，最大值为1000。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 分页偏移量，取Limit整数倍。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 实例Id，如：crs-6ubhgouj
+	// 实例 ID，如：crs-6ubhgouj。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 枚举范围： projectId,createtime,instancename,type,curDeadline
+	// 实例排序依据，枚举值如下所示：<ul><li>projectId：项目ID。</li><li>createtime：实例创建时间。</li><li>instancename：实例名称。</li><li>type：实例类型。</li><li>curDeadline：实例到期时间。</li></ul>
 	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
 
-	// 1倒序，0顺序，默认倒序
+	// 实例排序方式，默认为倒序排序。<ul><li>1：倒序。</li><li>0：顺序。</li></ul>
 	OrderType *int64 `json:"OrderType,omitempty" name:"OrderType"`
 
-	// 私有网络ID数组，数组下标从0开始，如果不传则默认选择基础网络，如：47525
+	// 私有网络 ID 数组。如果不配置该参数或设置数组为空则默认选择基础网络。例如47525。该参数暂时保留，可忽略。请根据 UniqVpcIds 参数格式设置私有网络ID数组。
 	VpcIds []*string `json:"VpcIds,omitempty" name:"VpcIds"`
 
-	// 子网ID数组，数组下标从0开始，如：56854
+	// 私有网络所属子网 ID 数组，例如：56854。该参数暂时保留，可忽略。请根据 UniqSubnetIds 参数格式设置私有网络子网 ID 数组。
 	SubnetIds []*string `json:"SubnetIds,omitempty" name:"SubnetIds"`
 
-	// 项目ID 组成的数组，数组下标从0开始
-	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds"`
-
-	// 查找实例的ID。
+	// 设置模糊查询关键字，支持根据实例名称或实例ID模糊查询实例。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 
-	// 实例名称
+	// 项目 ID 组成的数组。
+	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds"`
+
+	// 实例名称。
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
-	// 私有网络ID数组，数组下标从0开始，如果不传则默认选择基础网络，如：vpc-sad23jfdfk
+	// 私有网络 ID 数组。如果不配置该参数或者设置数组为空则默认选择基础网络，如：vpc-sad23jfdfk。
 	UniqVpcIds []*string `json:"UniqVpcIds,omitempty" name:"UniqVpcIds"`
 
-	// 子网ID数组，数组下标从0开始，如：subnet-fdj24n34j2
+	// 私有网络所属子网 ID 数组，如：subnet-fdj24n34j2。
 	UniqSubnetIds []*string `json:"UniqSubnetIds,omitempty" name:"UniqSubnetIds"`
 
-	// 地域ID，已经弃用，可通过公共参数Region查询对应地域
+	// 地域 ID 数组，该参数已经弃用，可通过公共参数Region查询对应地域。
 	RegionIds []*int64 `json:"RegionIds,omitempty" name:"RegionIds"`
 
-	// 实例状态：0-待初始化，1-流程中，2-运行中，-2-已隔离，-3-待删除
+	// 实例状态。<ul><li>0：待初始化。</li><li>1：流程中。</li><li>2：运行中。</li><li>-2：已隔离。</li><li>-3：待删除。</li></ul>
 	Status []*int64 `json:"Status,omitempty" name:"Status"`
 
-	// 类型版本：1-单机版,2-主从版,3-集群版
+	// 实例架构版本。<ul><li>1：单机版。</li><li>2：主从版。</li><li>3：集群版。</li></ul>
 	TypeVersion *int64 `json:"TypeVersion,omitempty" name:"TypeVersion"`
 
-	// 引擎信息：Redis-2.8，Redis-4.0，CKV
+	// 存储引擎信息。可设置为Redis-2.8、Redis-4.0、Redis-5.0、Redis-6.0 或者 CKV。
 	EngineName *string `json:"EngineName,omitempty" name:"EngineName"`
 
-	// 续费模式：0 - 默认状态（手动续费）；1 - 自动续费；2 - 明确不自动续费
+	// 续费模式。<ul><li>0：默认状态（手动续费）。</li><li>1：自动续费。</li><li>2：明确不自动续费。</ul>
 	AutoRenew []*int64 `json:"AutoRenew,omitempty" name:"AutoRenew"`
 
-	// 计费模式：postpaid-按量计费；prepaid-包年包月
+	// 计费模式。<ul><li>postpaid：按量计费。</li><li>prepaid：包年包月。</li></ul>
 	BillingMode *string `json:"BillingMode,omitempty" name:"BillingMode"`
 
-	// 实例类型：1-Redis老集群版；2-Redis 2.8主从版；3-CKV主从版；4-CKV集群版；5-Redis 2.8单机版；6-Redis 4.0主从版；7-Redis 4.0集群版；8 – Redis5.0主从版，9 – Redis5.0集群版，
+	// 实例类型。<ul><li>1：Redis 老集群版。</li><li>2：Redis 2.8 主从版。</li><li>3：CKV 主从版。</li><li>4：CKV 集群版。</li><li>5：Redis 2.8 单机版。</li><li>6：Redis 4.0主从版。</li><li>7：Redis 4.0 集群版。</li><li>8：Redis 5.0 主从版。</li><li>9：Redis 5.0 集群版。</li></ul>
 	Type *int64 `json:"Type,omitempty" name:"Type"`
 
-	// 搜索关键词：支持实例Id、实例名称、完整IP
+	// 设置搜索关键字数组，可根据实例ID、实例名称、完整IP地址查询实例。
 	SearchKeys []*string `json:"SearchKeys,omitempty" name:"SearchKeys"`
 
-	// 内部参数，用户可忽略
+	// 内部参数，用户可忽略。
 	TypeList []*int64 `json:"TypeList,omitempty" name:"TypeList"`
 
-	// 内部参数，用户可忽略
+	// 内部参数，用户可忽略。
 	MonitorVersion *string `json:"MonitorVersion,omitempty" name:"MonitorVersion"`
 
-	// 根据标签的Key和Value筛选资源，不传或者传空数组则不进行过滤
+	// 根据标签的 Key 和 Value 筛选资源。该参数不配置或者数组设置为空值，则不根据标签进行过滤。
 	InstanceTags []*InstanceTagInfo `json:"InstanceTags,omitempty" name:"InstanceTags"`
 
-	// 根据标签的Key筛选资源，不传或者传空数组则不进行过滤
+	// 根据标签的 Key 筛选资源，该参数不配置或者数组设置为空值，则不根据标签Key进行过滤。
 	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys"`
 
-	// 需要过滤的产品版本支持多个，"local"本地盘版，"cloud"云盘版，"cdc"独享集群版，如果不传则默认不过滤
+	// 实例的产品版本。如果该参数不配置或者数组设置为空值，则默认不依据此参数过滤实例。<ul><li>local：本地盘版。</li><li>cloud：云盘版。</li><li>cdc：独享集群版。</li></ul>
 	ProductVersions []*string `json:"ProductVersions,omitempty" name:"ProductVersions"`
 
-	// 批量查询指定的实例
+	// 批量查询指定的实例 ID，返回结果已 Limit 限制为主。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
+
+	// 可用区模式。<ul><li>singleaz：单可用区。</li><li>multiaz：多可用区。</li></ul>
+	AzMode *string `json:"AzMode,omitempty" name:"AzMode"`
 }
 
 type DescribeInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 返回数量，参数默认值20，最大值为1000
+	// 每页输出实例的数量，参数默认值20，最大值为1000。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 分页偏移量，取Limit整数倍。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 实例Id，如：crs-6ubhgouj
+	// 实例 ID，如：crs-6ubhgouj。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 枚举范围： projectId,createtime,instancename,type,curDeadline
+	// 实例排序依据，枚举值如下所示：<ul><li>projectId：项目ID。</li><li>createtime：实例创建时间。</li><li>instancename：实例名称。</li><li>type：实例类型。</li><li>curDeadline：实例到期时间。</li></ul>
 	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
 
-	// 1倒序，0顺序，默认倒序
+	// 实例排序方式，默认为倒序排序。<ul><li>1：倒序。</li><li>0：顺序。</li></ul>
 	OrderType *int64 `json:"OrderType,omitempty" name:"OrderType"`
 
-	// 私有网络ID数组，数组下标从0开始，如果不传则默认选择基础网络，如：47525
+	// 私有网络 ID 数组。如果不配置该参数或设置数组为空则默认选择基础网络。例如47525。该参数暂时保留，可忽略。请根据 UniqVpcIds 参数格式设置私有网络ID数组。
 	VpcIds []*string `json:"VpcIds,omitempty" name:"VpcIds"`
 
-	// 子网ID数组，数组下标从0开始，如：56854
+	// 私有网络所属子网 ID 数组，例如：56854。该参数暂时保留，可忽略。请根据 UniqSubnetIds 参数格式设置私有网络子网 ID 数组。
 	SubnetIds []*string `json:"SubnetIds,omitempty" name:"SubnetIds"`
 
-	// 项目ID 组成的数组，数组下标从0开始
-	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds"`
-
-	// 查找实例的ID。
+	// 设置模糊查询关键字，支持根据实例名称或实例ID模糊查询实例。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 
-	// 实例名称
+	// 项目 ID 组成的数组。
+	ProjectIds []*int64 `json:"ProjectIds,omitempty" name:"ProjectIds"`
+
+	// 实例名称。
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
-	// 私有网络ID数组，数组下标从0开始，如果不传则默认选择基础网络，如：vpc-sad23jfdfk
+	// 私有网络 ID 数组。如果不配置该参数或者设置数组为空则默认选择基础网络，如：vpc-sad23jfdfk。
 	UniqVpcIds []*string `json:"UniqVpcIds,omitempty" name:"UniqVpcIds"`
 
-	// 子网ID数组，数组下标从0开始，如：subnet-fdj24n34j2
+	// 私有网络所属子网 ID 数组，如：subnet-fdj24n34j2。
 	UniqSubnetIds []*string `json:"UniqSubnetIds,omitempty" name:"UniqSubnetIds"`
 
-	// 地域ID，已经弃用，可通过公共参数Region查询对应地域
+	// 地域 ID 数组，该参数已经弃用，可通过公共参数Region查询对应地域。
 	RegionIds []*int64 `json:"RegionIds,omitempty" name:"RegionIds"`
 
-	// 实例状态：0-待初始化，1-流程中，2-运行中，-2-已隔离，-3-待删除
+	// 实例状态。<ul><li>0：待初始化。</li><li>1：流程中。</li><li>2：运行中。</li><li>-2：已隔离。</li><li>-3：待删除。</li></ul>
 	Status []*int64 `json:"Status,omitempty" name:"Status"`
 
-	// 类型版本：1-单机版,2-主从版,3-集群版
+	// 实例架构版本。<ul><li>1：单机版。</li><li>2：主从版。</li><li>3：集群版。</li></ul>
 	TypeVersion *int64 `json:"TypeVersion,omitempty" name:"TypeVersion"`
 
-	// 引擎信息：Redis-2.8，Redis-4.0，CKV
+	// 存储引擎信息。可设置为Redis-2.8、Redis-4.0、Redis-5.0、Redis-6.0 或者 CKV。
 	EngineName *string `json:"EngineName,omitempty" name:"EngineName"`
 
-	// 续费模式：0 - 默认状态（手动续费）；1 - 自动续费；2 - 明确不自动续费
+	// 续费模式。<ul><li>0：默认状态（手动续费）。</li><li>1：自动续费。</li><li>2：明确不自动续费。</ul>
 	AutoRenew []*int64 `json:"AutoRenew,omitempty" name:"AutoRenew"`
 
-	// 计费模式：postpaid-按量计费；prepaid-包年包月
+	// 计费模式。<ul><li>postpaid：按量计费。</li><li>prepaid：包年包月。</li></ul>
 	BillingMode *string `json:"BillingMode,omitempty" name:"BillingMode"`
 
-	// 实例类型：1-Redis老集群版；2-Redis 2.8主从版；3-CKV主从版；4-CKV集群版；5-Redis 2.8单机版；6-Redis 4.0主从版；7-Redis 4.0集群版；8 – Redis5.0主从版，9 – Redis5.0集群版，
+	// 实例类型。<ul><li>1：Redis 老集群版。</li><li>2：Redis 2.8 主从版。</li><li>3：CKV 主从版。</li><li>4：CKV 集群版。</li><li>5：Redis 2.8 单机版。</li><li>6：Redis 4.0主从版。</li><li>7：Redis 4.0 集群版。</li><li>8：Redis 5.0 主从版。</li><li>9：Redis 5.0 集群版。</li></ul>
 	Type *int64 `json:"Type,omitempty" name:"Type"`
 
-	// 搜索关键词：支持实例Id、实例名称、完整IP
+	// 设置搜索关键字数组，可根据实例ID、实例名称、完整IP地址查询实例。
 	SearchKeys []*string `json:"SearchKeys,omitempty" name:"SearchKeys"`
 
-	// 内部参数，用户可忽略
+	// 内部参数，用户可忽略。
 	TypeList []*int64 `json:"TypeList,omitempty" name:"TypeList"`
 
-	// 内部参数，用户可忽略
+	// 内部参数，用户可忽略。
 	MonitorVersion *string `json:"MonitorVersion,omitempty" name:"MonitorVersion"`
 
-	// 根据标签的Key和Value筛选资源，不传或者传空数组则不进行过滤
+	// 根据标签的 Key 和 Value 筛选资源。该参数不配置或者数组设置为空值，则不根据标签进行过滤。
 	InstanceTags []*InstanceTagInfo `json:"InstanceTags,omitempty" name:"InstanceTags"`
 
-	// 根据标签的Key筛选资源，不传或者传空数组则不进行过滤
+	// 根据标签的 Key 筛选资源，该参数不配置或者数组设置为空值，则不根据标签Key进行过滤。
 	TagKeys []*string `json:"TagKeys,omitempty" name:"TagKeys"`
 
-	// 需要过滤的产品版本支持多个，"local"本地盘版，"cloud"云盘版，"cdc"独享集群版，如果不传则默认不过滤
+	// 实例的产品版本。如果该参数不配置或者数组设置为空值，则默认不依据此参数过滤实例。<ul><li>local：本地盘版。</li><li>cloud：云盘版。</li><li>cdc：独享集群版。</li></ul>
 	ProductVersions []*string `json:"ProductVersions,omitempty" name:"ProductVersions"`
 
-	// 批量查询指定的实例
+	// 批量查询指定的实例 ID，返回结果已 Limit 限制为主。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
+
+	// 可用区模式。<ul><li>singleaz：单可用区。</li><li>multiaz：多可用区。</li></ul>
+	AzMode *string `json:"AzMode,omitempty" name:"AzMode"`
 }
 
 func (r *DescribeInstancesRequest) ToJsonString() string {
@@ -3205,8 +3603,8 @@ func (r *DescribeInstancesRequest) FromJsonString(s string) error {
 	delete(f, "OrderType")
 	delete(f, "VpcIds")
 	delete(f, "SubnetIds")
-	delete(f, "ProjectIds")
 	delete(f, "SearchKey")
+	delete(f, "ProjectIds")
 	delete(f, "InstanceName")
 	delete(f, "UniqVpcIds")
 	delete(f, "UniqSubnetIds")
@@ -3224,6 +3622,7 @@ func (r *DescribeInstancesRequest) FromJsonString(s string) error {
 	delete(f, "TagKeys")
 	delete(f, "ProductVersions")
 	delete(f, "InstanceIds")
+	delete(f, "AzMode")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstancesRequest has unknown keys!", "")
 	}
@@ -3232,10 +3631,10 @@ func (r *DescribeInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstancesResponseParams struct {
-	// 实例数
+	// 实例总数量。
 	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-	// 实例详细信息列表
+	// 实例详细信息列表。
 	InstanceSet []*InstanceSet `json:"InstanceSet,omitempty" name:"InstanceSet"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3495,7 +3894,7 @@ func (r *DescribeProductInfoRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeProductInfoResponseParams struct {
-	// 地域售卖信息
+	// 地域售卖信息。
 	RegionSet []*RegionConf `json:"RegionSet,omitempty" name:"RegionSet"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3584,38 +3983,38 @@ func (r *DescribeProjectSecurityGroupResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeProjectSecurityGroupsRequestParams struct {
-	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb
+	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitempty" name:"Product"`
 
-	// 项目Id。
+	// 项目 ID。
 	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// 偏移量。
+	// 偏移量，取值为Limit的整数倍。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 拉取数量限制，默认20
+	// 拉取数量限制，默认 20。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 搜索条件，支持安全组id或者安全组名称。
+	// 搜索条件，支持安全组 ID 或者安全组名称。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 }
 
 type DescribeProjectSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb
+	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitempty" name:"Product"`
 
-	// 项目Id。
+	// 项目 ID。
 	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// 偏移量。
+	// 偏移量，取值为Limit的整数倍。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 拉取数量限制，默认20
+	// 拉取数量限制，默认 20。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 搜索条件，支持安全组id或者安全组名称。
+	// 搜索条件，支持安全组 ID 或者安全组名称。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 }
 
@@ -3767,32 +4166,32 @@ func (r *DescribeProxySlowLogResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeReplicationGroupRequestParams struct {
-	// 实例列表的大小，参数默认值20
+	// 每页输出实例列表的大小，参数默认值20。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 分页偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 复制组ID
+	// 复制组ID。
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 实例ID和实例名称，支持模糊查询
+	// 模糊查询的关键字，可以设置为复制组ID或复制组名称进行模糊查询。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 }
 
 type DescribeReplicationGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例列表的大小，参数默认值20
+	// 每页输出实例列表的大小，参数默认值20。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 分页偏移量，取Limit整数倍。计算公式：offset=limit*(页码-1)。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 复制组ID
+	// 复制组ID。
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 实例ID和实例名称，支持模糊查询
+	// 模糊查询的关键字，可以设置为复制组ID或复制组名称进行模糊查询。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 }
 
@@ -3820,10 +4219,10 @@ func (r *DescribeReplicationGroupRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeReplicationGroupResponseParams struct {
-	// 复制组数
+	// 复制组数量。
 	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-	// 复制组信息
+	// 复制组信息。
 	Groups []*Groups `json:"Groups,omitempty" name:"Groups"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -3847,46 +4246,127 @@ func (r *DescribeReplicationGroupResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeSSLStatusRequestParams struct {
+	// 实例 ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type DescribeSSLStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeSSLStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSSLStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSSLStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSSLStatusResponseParams struct {
+	// SSL 证书下载地址。
+	CertDownloadUrl *string `json:"CertDownloadUrl,omitempty" name:"CertDownloadUrl"`
+
+	// 证书下载链接到期时间。
+	UrlExpiredTime *string `json:"UrlExpiredTime,omitempty" name:"UrlExpiredTime"`
+
+	// 标识实例开启 SSL 功能。
+	// - true：开启 。
+	// - false：关闭。
+	SSLConfig *bool `json:"SSLConfig,omitempty" name:"SSLConfig"`
+
+	// 标识实例是否支持 SSL特性。
+	// - true：支持。
+	// - false：不支持。
+	FeatureSupport *bool `json:"FeatureSupport,omitempty" name:"FeatureSupport"`
+
+	// 说明配置 SSL 的状态。
+	// - 1: 配置中。
+	// - 2：配置成功。
+	Status *int64 `json:"Status,omitempty" name:"Status"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeSSLStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSSLStatusResponseParams `json:"Response"`
+}
+
+func (r *DescribeSSLStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSSLStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeSlowLogRequestParams struct {
-	// 实例Id
+	// 实例Id。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 开始时间
+	// 开始时间。
 	BeginTime *string `json:"BeginTime,omitempty" name:"BeginTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 慢查询阈值（单位：微秒）
+	// 慢查询平均执行时间阈值（单位：毫秒）。
 	MinQueryTime *int64 `json:"MinQueryTime,omitempty" name:"MinQueryTime"`
 
-	// 页面大小
+	// 每个页面展示的慢查询条数，默认值为20。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 慢查询条数的偏移量，取Limit整数倍。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 节点所属角色。<ul><li>master：主节点。</li><li>slave：从节点。</li></ul>
+	Role *string `json:"Role,omitempty" name:"Role"`
 }
 
 type DescribeSlowLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例Id
+	// 实例Id。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 开始时间
+	// 开始时间。
 	BeginTime *string `json:"BeginTime,omitempty" name:"BeginTime"`
 
-	// 结束时间
+	// 结束时间。
 	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
 
-	// 慢查询阈值（单位：微秒）
+	// 慢查询平均执行时间阈值（单位：毫秒）。
 	MinQueryTime *int64 `json:"MinQueryTime,omitempty" name:"MinQueryTime"`
 
-	// 页面大小
+	// 每个页面展示的慢查询条数，默认值为20。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，取Limit整数倍
+	// 慢查询条数的偏移量，取Limit整数倍。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 节点所属角色。<ul><li>master：主节点。</li><li>slave：从节点。</li></ul>
+	Role *string `json:"Role,omitempty" name:"Role"`
 }
 
 func (r *DescribeSlowLogRequest) ToJsonString() string {
@@ -3907,6 +4387,7 @@ func (r *DescribeSlowLogRequest) FromJsonString(s string) error {
 	delete(f, "MinQueryTime")
 	delete(f, "Limit")
 	delete(f, "Offset")
+	delete(f, "Role")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSlowLogRequest has unknown keys!", "")
 	}
@@ -3915,10 +4396,10 @@ func (r *DescribeSlowLogRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSlowLogResponseParams struct {
-	// 慢查询总数
+	// 慢查询总数。
 	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-	// 慢查询详情
+	// 慢查询详情。
 	InstanceSlowlogDetail []*InstanceSlowlogDetail `json:"InstanceSlowlogDetail,omitempty" name:"InstanceSlowlogDetail"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -4416,26 +4897,26 @@ func (r *DisableReplicaReadonlyResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DisassociateSecurityGroupsRequestParams struct {
-	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb 等。
+	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitempty" name:"Product"`
 
-	// 安全组Id。
+	// 安全组 ID。
 	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
 
-	// 实例ID列表，一个或者多个实例Id组成的数组。
+	// 实例ID列表，一个或者多个实例 ID 组成的数组。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 }
 
 type DisassociateSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb 等。
+	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitempty" name:"Product"`
 
-	// 安全组Id。
+	// 安全组 ID。
 	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
 
-	// 实例ID列表，一个或者多个实例Id组成的数组。
+	// 实例ID列表，一个或者多个实例 ID 组成的数组。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 }
 
@@ -4555,27 +5036,50 @@ type Groups struct {
 	// 用户AppID
 	AppId *int64 `json:"AppId,omitempty" name:"AppId"`
 
-	// 地域ID 1--广州 4--上海 5-- 中国香港 6--多伦多 7--上海金融 8--北京 9-- 新加坡 11--深圳金融 15--美西（硅谷）16--成都 17--德国 18--韩国 19--重庆 21--印度 22--美东（弗吉尼亚）23--泰国 24--俄罗斯 25--日本
+	// 地域ID 。
+	// - 1：广州 
+	// - 4：上海 
+	// - 5：中国香港 
+	// - 6：多伦多 
+	// - 7：上海金融 
+	// - 8：北京 
+	// - 9：新加坡
+	// - 11：深圳金融
+	// - 15：美西（硅谷）
+	// - 16：成都 
+	// - 17：德国 
+	// - 18：韩国 
+	// - 19：重庆 
+	// - 21：印度 
+	// - 22：美东（弗吉尼亚）
+	// - 23：泰国 
+	// - 24：俄罗斯 
+	// - 25：日本
 	RegionId *int64 `json:"RegionId,omitempty" name:"RegionId"`
 
-	// 复制组信息
+	// 复制组 ID。
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 
-	// 复制组名称
+	// 复制组名称。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	GroupName *string `json:"GroupName,omitempty" name:"GroupName"`
 
-	// 复制组状态，37："绑定复制组中"，38："复制组重连中"，51："解绑复制组中"，52："复制组实例切主中"，53："角色变更中"
+	// 复制组状态。
+	// - 37：绑定复制组中。
+	// - 38：复制组重连中。
+	// - 51：解绑复制组中。
+	// - 52：复制组实例切主中。
+	// - 53：角色变更中。
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 复制组数量
+	// 复制组数量。
 	InstanceCount *int64 `json:"InstanceCount,omitempty" name:"InstanceCount"`
 
-	// 复制组实例
+	// 复制组中的实例信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Instances []*Instances `json:"Instances,omitempty" name:"Instances"`
 
-	// 备注信息
+	// 备注信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
 }
@@ -5055,10 +5559,10 @@ type InstanceNode struct {
 }
 
 type InstanceParam struct {
-	// 设置参数的名字
+	// 设置参数的名称。例如timeout。当前支持自定义的参数，请参见<a href="https://cloud.tencent.com/document/product/239/49925">参数配置</a>。
 	Key *string `json:"Key,omitempty" name:"Key"`
 
-	// 设置参数的值
+	// 设置参数名称对应的运行值。例如timeout对应运行值可设置为120， 单位为秒（s）。指当客户端连接闲置时间达到120 s时，将关闭连接。更多参数取值信息，请参见<a href="https://cloud.tencent.com/document/product/239/49925">参数配置</a>。
 	Value *string `json:"Value,omitempty" name:"Value"`
 }
 
@@ -5080,19 +5584,19 @@ type InstanceParamHistory struct {
 }
 
 type InstanceProxySlowlogDetail struct {
-	// 慢查询耗时
+	// 慢查询耗时（单位：毫秒）。
 	Duration *int64 `json:"Duration,omitempty" name:"Duration"`
 
-	// 客户端地址
+	// 客户端地址。
 	Client *string `json:"Client,omitempty" name:"Client"`
 
-	// 命令
+	// 命令。
 	Command *string `json:"Command,omitempty" name:"Command"`
 
-	// 详细命令行信息
+	// 详细命令行信息。
 	CommandLine *string `json:"CommandLine,omitempty" name:"CommandLine"`
 
-	// 执行时间
+	// 执行时间。
 	ExecuteTime *string `json:"ExecuteTime,omitempty" name:"ExecuteTime"`
 }
 
@@ -5105,168 +5609,192 @@ type InstanceSecurityGroupDetail struct {
 }
 
 type InstanceSet struct {
-	// 实例名称
+	// 实例名称。
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
-	// 实例Id
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 用户的Appid
+	// 用户的 AppID。
 	Appid *int64 `json:"Appid,omitempty" name:"Appid"`
 
-	// 项目Id
+	// 项目 ID。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// 地域id 1--广州 4--上海 5-- 中国香港 6--多伦多 7--上海金融 8--北京 9-- 新加坡 11--深圳金融 15--美西（硅谷）16--成都 17--德国 18--韩国 19--重庆 21--印度 22--美东（弗吉尼亚）23--泰国 24--俄罗斯 25--日本
+	// 地域 ID。<ul><li>1：广州。</li><li>4：上海。</li><li>5：中国香港。</li><li>6：多伦多。</li> <li>7：上海金融。</li> <li>8：北京。</li> <li>9：新加坡。</li> <li>11：深圳金融。</li> <li>15：美西（硅谷）。</li><li>16：成都。</li><li>17：法兰克福。</li><li>18：首尔。</li><li>19：重庆。</li><li>21：孟买。</li><li>22：美东（弗吉尼亚）。</li><li>23：曼谷。</li><li>24：莫斯科。</li><li>25：东京。</li></ul>
 	RegionId *int64 `json:"RegionId,omitempty" name:"RegionId"`
 
-	// 区域id
+	// 区域 ID。
 	ZoneId *int64 `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// vpc网络id 如：75101
+	// vpc网络 ID，例如75101。
 	VpcId *int64 `json:"VpcId,omitempty" name:"VpcId"`
 
-	// vpc网络下子网id 如：46315
+	// vpc网络下子网ID，如：46315。
 	SubnetId *int64 `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 实例当前状态，0：待初始化；1：实例在流程中；2：实例运行中；-2：实例已隔离；-3：实例待删除
+	// 实例当前状态。<ul><li>0：待初始化。</li><li>1：实例在流程中。</li><li>2：实例运行中。</li><li>-2：实例已隔离。</li><li>-3：实例待删除。</li></ul>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 实例vip
+	// 实例 VIP。
 	WanIp *string `json:"WanIp,omitempty" name:"WanIp"`
 
-	// 实例端口号
+	// 实例端口号。
 	Port *int64 `json:"Port,omitempty" name:"Port"`
 
-	// 实例创建时间
+	// 实例创建时间。
 	Createtime *string `json:"Createtime,omitempty" name:"Createtime"`
 
-	// 实例容量大小，单位：MB
+	// 实例容量大小，单位：MB。
 	Size *float64 `json:"Size,omitempty" name:"Size"`
 
-	// 该字段已废弃
+	// 该字段已废弃。可使用云监控 API 接口 [GetMonitorData](https://cloud.tencent.com/document/product/248/31014) 获取实例已使用的内容容量。
 	SizeUsed *float64 `json:"SizeUsed,omitempty" name:"SizeUsed"`
 
-	// 实例类型：1 – Redis2.8内存版（集群架构），2 – Redis2.8内存版（标准架构），3 – CKV 3.2内存版(标准架构)，4 – CKV 3.2内存版(集群架构)，5 – Redis2.8内存版（单机），6 – Redis4.0内存版（标准架构），7 – Redis4.0内存版（集群架构），8 – Redis5.0内存版（标准架构），9 – Redis5.0内存版（集群架构）
+	// 实例类型：<ul><li>1：Redis2.8内存版（集群架构）。</li><li>2：Redis2.8内存版（标准架构）。</li><li>3：CKV 3.2内存版(标准架构)。</li><li>4：CKV 3.2内存版(集群架构)。</li><li>5：Redis2.8内存版（单机）。</li></li><li>6：Redis4.0内存版（标准架构）。</li></li><li>7：Redis4.0内存版（集群架构）。</li></li><li>8：Redis5.0内存版（标准架构）。</li></li><li>9：Redis5.0内存版（集群架构）。</li></ul>
 	Type *int64 `json:"Type,omitempty" name:"Type"`
 
-	// 实例是否设置自动续费标识，1：设置自动续费；0：未设置自动续费
+	// 实例是否设置自动续费标识。<ul><li>1：设置自动续费。</li><li>0：未设置自动续费。</li></ul>
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
 
-	// 实例到期时间
+	// 实例到期时间。
 	DeadlineTime *string `json:"DeadlineTime,omitempty" name:"DeadlineTime"`
 
-	// 引擎：社区版Redis、腾讯云CKV
+	// 引擎：社区版Redis、腾讯云CKV。
 	Engine *string `json:"Engine,omitempty" name:"Engine"`
 
-	// 产品类型：standalone – 标准版，cluster – 集群版
+	// 产品类型。<ul><li>standalone：标准版。</li><li>cluster ：集群版。</li></ul>
 	ProductType *string `json:"ProductType,omitempty" name:"ProductType"`
 
-	// vpc网络id 如：vpc-fk33jsf43kgv
+	// vpc网络id，例如vpc-fk33jsf43kgv。
 	UniqVpcId *string `json:"UniqVpcId,omitempty" name:"UniqVpcId"`
 
-	// vpc网络下子网id 如：subnet-fd3j6l35mm0
+	// vpc网络下子网id，例如：subnet-fd3j6l35mm0。
 	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
 
-	// 计费模式：0-按量计费，1-包年包月
+	// 计费模式。<ul><li>0：按量计费。</li><li>1：包年包月。</li></ul>
 	BillingMode *int64 `json:"BillingMode,omitempty" name:"BillingMode"`
 
-	// 实例运行状态描述：如”实例运行中“
+	// 实例运行状态描述：如”实例运行中“。
 	InstanceTitle *string `json:"InstanceTitle,omitempty" name:"InstanceTitle"`
 
-	// 计划下线时间
+	// 计划下线时间。
 	OfflineTime *string `json:"OfflineTime,omitempty" name:"OfflineTime"`
 
-	// 流程中的实例，返回子状态
+	// 流程中的实例，返回子状态。
 	SubStatus *int64 `json:"SubStatus,omitempty" name:"SubStatus"`
 
-	// 反亲和性标签
+	// 反亲和性标签。
 	Tags []*string `json:"Tags,omitempty" name:"Tags"`
 
-	// 实例节点信息
+	// 实例节点信息。
 	InstanceNode []*InstanceNode `json:"InstanceNode,omitempty" name:"InstanceNode"`
 
-	// 分片大小
+	// 分片大小。
 	RedisShardSize *int64 `json:"RedisShardSize,omitempty" name:"RedisShardSize"`
 
-	// 分片数量
+	// 分片数量。
 	RedisShardNum *int64 `json:"RedisShardNum,omitempty" name:"RedisShardNum"`
 
-	// 副本数量
+	// 副本数量。
 	RedisReplicasNum *int64 `json:"RedisReplicasNum,omitempty" name:"RedisReplicasNum"`
 
-	// 计费Id
+	// 计费 ID。
 	PriceId *int64 `json:"PriceId,omitempty" name:"PriceId"`
 
-	// 隔离时间
+	// 隔离时间。
 	CloseTime *string `json:"CloseTime,omitempty" name:"CloseTime"`
 
-	// 从节点读取权重
+	// 从节点读取权重。
 	SlaveReadWeight *int64 `json:"SlaveReadWeight,omitempty" name:"SlaveReadWeight"`
 
-	// 实例关联的标签信息
+	// 实例关联的标签信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceTags []*InstanceTagInfo `json:"InstanceTags,omitempty" name:"InstanceTags"`
 
-	// 项目名称
+	// 项目名称。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ProjectName *string `json:"ProjectName,omitempty" name:"ProjectName"`
 
-	// 是否为免密实例，true-免密实例；false-非免密实例
+	// 是否为免密实例。<ul><li>true：免密实例。</li><li>false：非免密实例。</li></ul>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NoAuth *bool `json:"NoAuth,omitempty" name:"NoAuth"`
 
-	// 客户端连接数
+	// 客户端连接数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClientLimit *int64 `json:"ClientLimit,omitempty" name:"ClientLimit"`
 
-	// DTS状态（内部参数，用户可忽略）
+	// DTS状态（内部参数，用户可忽略）。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DtsStatus *int64 `json:"DtsStatus,omitempty" name:"DtsStatus"`
 
-	// 分片带宽上限，单位MB
+	// 分片带宽上限，单位MB。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NetLimit *int64 `json:"NetLimit,omitempty" name:"NetLimit"`
 
-	// 免密实例标识（内部参数，用户可忽略）
+	// 免密实例标识（内部参数，用户可忽略）。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	PasswordFree *int64 `json:"PasswordFree,omitempty" name:"PasswordFree"`
 
-	// 实例只读标识（内部参数，用户可忽略）
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ReadOnly *int64 `json:"ReadOnly,omitempty" name:"ReadOnly"`
-
-	// 内部参数，用户可忽略
+	// 内部参数，用户可忽略。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip6 *string `json:"Vip6,omitempty" name:"Vip6"`
 
-	// 内部参数，用户可忽略
+	// 实例只读标识（内部参数，用户可忽略）。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReadOnly *int64 `json:"ReadOnly,omitempty" name:"ReadOnly"`
+
+	// 内部参数，用户可忽略。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RemainBandwidthDuration *string `json:"RemainBandwidthDuration,omitempty" name:"RemainBandwidthDuration"`
 
-	// Tendis实例的磁盘大小
+	// Redis实例请忽略该参数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskSize *int64 `json:"DiskSize,omitempty" name:"DiskSize"`
 
-	// 监控版本: 1m-分钟粒度监控，5s-5秒粒度监控
+	// 监控版本。<ul><li>1m：1分钟粒度监控。</li><li>5s：5秒粒度监控。</li></ul>
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MonitorVersion *string `json:"MonitorVersion,omitempty" name:"MonitorVersion"`
 
-	// 客户端最大连接数可设置的最小值
+	// 客户端最大连接数可设置的最小值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClientLimitMin *int64 `json:"ClientLimitMin,omitempty" name:"ClientLimitMin"`
 
-	// 客户端最大连接数可设置的最大值
+	// 客户端最大连接数可设置的最大值。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ClientLimitMax *int64 `json:"ClientLimitMax,omitempty" name:"ClientLimitMax"`
 
-	// 实例的节点详细信息
+	// 实例的节点详细信息。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NodeSet []*RedisNodeInfo `json:"NodeSet,omitempty" name:"NodeSet"`
 
-	// 实例所在的地域信息，比如ap-guangzhou
+	// 实例所在的地域信息，比如ap-guangzhou。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Region *string `json:"Region,omitempty" name:"Region"`
+
+	// 外网地址。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WanAddress *string `json:"WanAddress,omitempty" name:"WanAddress"`
+
+	// 北极星服务地址。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PolarisServer *string `json:"PolarisServer,omitempty" name:"PolarisServer"`
+
+	// 实例当前Proxy版本。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurrentProxyVersion *string `json:"CurrentProxyVersion,omitempty" name:"CurrentProxyVersion"`
+
+	// 实例当前Cache小版本。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurrentRedisVersion *string `json:"CurrentRedisVersion,omitempty" name:"CurrentRedisVersion"`
+
+	// 实例可升级Proxy版本。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpgradeProxyVersion *string `json:"UpgradeProxyVersion,omitempty" name:"UpgradeProxyVersion"`
+
+	// 实例可升级Cache小版本。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpgradeRedisVersion *string `json:"UpgradeRedisVersion,omitempty" name:"UpgradeRedisVersion"`
 }
 
 type InstanceSlowlogDetail struct {
@@ -5324,66 +5852,66 @@ type InstanceTextParam struct {
 }
 
 type Instances struct {
-	// 用户AppID
+	// 用户AppID。
 	AppId *int64 `json:"AppId,omitempty" name:"AppId"`
 
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 实例名称
+	// 实例名称。
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
-	// 地域ID 1--广州 4--上海 5-- 香港 6--多伦多 7--上海金融 8--北京 9-- 新加坡 11--深圳金融 15--美西（硅谷）
+	// 地域ID。<ul><li>1：广州。</li><li>4：上海。</li><li> 5：香港。</li> <li> 6：多伦多。</li> <li> 7：上海金融。</li> <li> 8：北京。</li> <li> 9：新加坡。</li> <li> 11：深圳金融。</li> <li> 15：美西（硅谷）。</li> </ul>
 	RegionId *uint64 `json:"RegionId,omitempty" name:"RegionId"`
 
-	// 区域ID
+	// 区域 ID。
 	ZoneId *uint64 `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 副本数量
+	// 副本数量。
 	RedisReplicasNum *uint64 `json:"RedisReplicasNum,omitempty" name:"RedisReplicasNum"`
 
-	// 分片数量
+	// 分片数量。
 	RedisShardNum *int64 `json:"RedisShardNum,omitempty" name:"RedisShardNum"`
 
-	// 分片大小
+	// 分片内存大小。
 	RedisShardSize *int64 `json:"RedisShardSize,omitempty" name:"RedisShardSize"`
 
 	// 实例的磁盘大小
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskSize *int64 `json:"DiskSize,omitempty" name:"DiskSize"`
 
-	// 引擎：社区版Redis、腾讯云CKV
+	// 引擎：社区版Redis、腾讯云CKV。
 	Engine *string `json:"Engine,omitempty" name:"Engine"`
 
-	// 实例角色，rw可读写，r只读
+	// 实例读写权限。<ul><li>rw：可读写。</li><li>r：只读。</li></ul>
 	Role *string `json:"Role,omitempty" name:"Role"`
 
-	// 实例VIP
+	// 实例 VIP 地址。
 	Vip *string `json:"Vip,omitempty" name:"Vip"`
 
-	// 内部参数，用户可忽略
+	// 内部参数，用户可忽略。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Vip6 *string `json:"Vip6,omitempty" name:"Vip6"`
 
-	// vpc网络ID 如：75101
+	// VPC 网络ID，如：75101。
 	VpcID *int64 `json:"VpcID,omitempty" name:"VpcID"`
 
-	// 实例端口
+	// 实例端口。
 	VPort *int64 `json:"VPort,omitempty" name:"VPort"`
 
-	// 实例状态：0-待初始化，1-流程中，2-运行中，-2-已隔离，-3-待删除
+	// 实例状态。<ul><li>0：待初始化。</li><li>1：流程中。</li><li>2：运行中。</li><li>-2：已隔离。</li><li>-3：待删除。</li></ul>
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 仓库ID
+	// 仓库ID。
 	GrocerySysId *int64 `json:"GrocerySysId,omitempty" name:"GrocerySysId"`
 
-	// 实例类型：1 – Redis2.8内存版（集群架构），2 – Redis2.8内存版（标准架构），3 – CKV 3.2内存版(标准架构)，4 – CKV 3.2内存版(集群架构)，5 – Redis2.8内存版（单机），6 – Redis4.0内存版（标准架构），7 – Redis4.0内存版（集群架构），8 – Redis5.0内存版（标准架构），9 – Redis5.0内存版（集群架构）
+	// 实例类型。<ul><li>1：Redis 2.8 内存版（集群架构）。</li><li>2：Redis 2.8 内存版（标准架构）。</li><li>3：CKV 3.2 内存版（标准架构）。</li><li>4：CKV 3.2 内存版（集群架构）。</li><li>5：Redis 2.8 单机版。</li><li>6：Redis 4.0 内存版（标准架构）。</li><li>7：Redis 4.0 内存版（集群架构）。</li><li>8：Redis 5.0 内存版（标准架构）。</li><li>9：Redis 5.0 内存版（集群架构）。</li></ul>
 	ProductType *int64 `json:"ProductType,omitempty" name:"ProductType"`
 
-	// 创建时间
+	// 实例加入复制组的时间。
 	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
 
-	// 更新实例
+	// 复制组中实例更新的时间。
 	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
 }
 
@@ -5543,26 +6071,32 @@ func (r *ManualBackupInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModfiyInstancePasswordRequestParams struct {
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 实例旧密码
+	// 实例旧密码。
 	OldPassword *string `json:"OldPassword,omitempty" name:"OldPassword"`
 
-	// 实例新密码
+	// 实例新密码。密码复杂度要求如下：
+	// - 长度8 - 30位, 推荐使用12位以上的密码。
+	// - 不能以"/"开头。
+	// - 至少包含小写字母a - z、大写字母A - Z、数字0 - 9、特殊字符 ()~!@#$%^&*-+=_|{}[]:;<>,.?/中的两项。
 	Password *string `json:"Password,omitempty" name:"Password"`
 }
 
 type ModfiyInstancePasswordRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 实例旧密码
+	// 实例旧密码。
 	OldPassword *string `json:"OldPassword,omitempty" name:"OldPassword"`
 
-	// 实例新密码
+	// 实例新密码。密码复杂度要求如下：
+	// - 长度8 - 30位, 推荐使用12位以上的密码。
+	// - 不能以"/"开头。
+	// - 至少包含小写字母a - z、大写字母A - Z、数字0 - 9、特殊字符 ()~!@#$%^&*-+=_|{}[]:;<>,.?/中的两项。
 	Password *string `json:"Password,omitempty" name:"Password"`
 }
 
@@ -5589,7 +6123,7 @@ func (r *ModfiyInstancePasswordRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModfiyInstancePasswordResponseParams struct {
-	// 任务ID
+	// 任务 ID。
 	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -5614,32 +6148,32 @@ func (r *ModfiyInstancePasswordResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyAutoBackupConfigRequestParams struct {
-	// 实例ID
+	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 日期 Monday，Tuesday，Wednesday，Thursday，Friday，Saturday，Sunday，该参数暂不支持修改。
+	// 设置自动备份周期。可设置为Monday，Tuesday，Wednesday，Thursday，Friday，Saturday，Sunday。该参数暂不支持修改。
 	WeekDays []*string `json:"WeekDays,omitempty" name:"WeekDays"`
 
-	// 时间段 00:00-01:00, 01:00-02:00...... 23:00-00:00
+	// 备份时间段。可设置为每个整点。格式如：00:00-01:00, 01:00-02:00...... 23:00-00:00。
 	TimePeriod *string `json:"TimePeriod,omitempty" name:"TimePeriod"`
 
-	// 自动备份类型： 1 “定时回档”
+	// 自动备份类型： 1 “定时回档”。
 	AutoBackupType *int64 `json:"AutoBackupType,omitempty" name:"AutoBackupType"`
 }
 
 type ModifyAutoBackupConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 日期 Monday，Tuesday，Wednesday，Thursday，Friday，Saturday，Sunday，该参数暂不支持修改。
+	// 设置自动备份周期。可设置为Monday，Tuesday，Wednesday，Thursday，Friday，Saturday，Sunday。该参数暂不支持修改。
 	WeekDays []*string `json:"WeekDays,omitempty" name:"WeekDays"`
 
-	// 时间段 00:00-01:00, 01:00-02:00...... 23:00-00:00
+	// 备份时间段。可设置为每个整点。格式如：00:00-01:00, 01:00-02:00...... 23:00-00:00。
 	TimePeriod *string `json:"TimePeriod,omitempty" name:"TimePeriod"`
 
-	// 自动备份类型： 1 “定时回档”
+	// 自动备份类型： 1 “定时回档”。
 	AutoBackupType *int64 `json:"AutoBackupType,omitempty" name:"AutoBackupType"`
 }
 
@@ -5670,13 +6204,13 @@ type ModifyAutoBackupConfigResponseParams struct {
 	// 自动备份类型： 1 “定时回档”
 	AutoBackupType *int64 `json:"AutoBackupType,omitempty" name:"AutoBackupType"`
 
-	// 日期Monday，Tuesday，Wednesday，Thursday，Friday，Saturday，Sunday。
+	// 自动备份周期。取值为：Monday，Tuesday，Wednesday，Thursday，Friday，Saturday，Sunday。
 	WeekDays []*string `json:"WeekDays,omitempty" name:"WeekDays"`
 
-	// 时间段 00:00-01:00, 01:00-02:00...... 23:00-00:00
+	// 自动备份时间段。格式如：00:00-01:00, 01:00-02:00...... 23:00-00:00。
 	TimePeriod *string `json:"TimePeriod,omitempty" name:"TimePeriod"`
 
-	// 全量备份文件保存天数,单位：天
+	// 全量备份文件保存天数,单位：天。
 	BackupStorageDays *int64 `json:"BackupStorageDays,omitempty" name:"BackupStorageDays"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -5696,6 +6230,102 @@ func (r *ModifyAutoBackupConfigResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAutoBackupConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyBackupDownloadRestrictionRequestParams struct {
+	// 下载备份文件的网络限制类型：
+	// 
+	// - NoLimit：不限制，腾讯云内外网均可以下载备份文件。
+	// -  LimitOnlyIntranet：仅腾讯云自动分配的内网地址可下载备份文件。
+	// - Customize：指用户自定义的私有网络可下载备份文件。
+	LimitType *string `json:"LimitType,omitempty" name:"LimitType"`
+
+	// 该参数仅支持输入 In，表示自定义的**LimitVpc**可以下载备份文件。
+	VpcComparisonSymbol *string `json:"VpcComparisonSymbol,omitempty" name:"VpcComparisonSymbol"`
+
+	// 标识自定义的 LimitIp 地址是否可下载备份文件。
+	// 
+	// - In: 自定义的 IP 地址可以下载。
+	// - NotIn: 自定义的 IP 不可以下载。
+	IpComparisonSymbol *string `json:"IpComparisonSymbol,omitempty" name:"IpComparisonSymbol"`
+
+	// 自定义的可下载备份文件的 VPC ID。当参数**LimitType**为**Customize **时，需配置该参数。
+	LimitVpc []*BackupLimitVpcItem `json:"LimitVpc,omitempty" name:"LimitVpc"`
+
+	// 自定义的可下载备份文件的 VPC IP 地址。当参数**LimitType**为**Customize **时，需配置该参数。
+	LimitIp []*string `json:"LimitIp,omitempty" name:"LimitIp"`
+}
+
+type ModifyBackupDownloadRestrictionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 下载备份文件的网络限制类型：
+	// 
+	// - NoLimit：不限制，腾讯云内外网均可以下载备份文件。
+	// -  LimitOnlyIntranet：仅腾讯云自动分配的内网地址可下载备份文件。
+	// - Customize：指用户自定义的私有网络可下载备份文件。
+	LimitType *string `json:"LimitType,omitempty" name:"LimitType"`
+
+	// 该参数仅支持输入 In，表示自定义的**LimitVpc**可以下载备份文件。
+	VpcComparisonSymbol *string `json:"VpcComparisonSymbol,omitempty" name:"VpcComparisonSymbol"`
+
+	// 标识自定义的 LimitIp 地址是否可下载备份文件。
+	// 
+	// - In: 自定义的 IP 地址可以下载。
+	// - NotIn: 自定义的 IP 不可以下载。
+	IpComparisonSymbol *string `json:"IpComparisonSymbol,omitempty" name:"IpComparisonSymbol"`
+
+	// 自定义的可下载备份文件的 VPC ID。当参数**LimitType**为**Customize **时，需配置该参数。
+	LimitVpc []*BackupLimitVpcItem `json:"LimitVpc,omitempty" name:"LimitVpc"`
+
+	// 自定义的可下载备份文件的 VPC IP 地址。当参数**LimitType**为**Customize **时，需配置该参数。
+	LimitIp []*string `json:"LimitIp,omitempty" name:"LimitIp"`
+}
+
+func (r *ModifyBackupDownloadRestrictionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyBackupDownloadRestrictionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "LimitType")
+	delete(f, "VpcComparisonSymbol")
+	delete(f, "IpComparisonSymbol")
+	delete(f, "LimitVpc")
+	delete(f, "LimitIp")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyBackupDownloadRestrictionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyBackupDownloadRestrictionResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyBackupDownloadRestrictionResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyBackupDownloadRestrictionResponseParams `json:"Response"`
+}
+
+func (r *ModifyBackupDownloadRestrictionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyBackupDownloadRestrictionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5776,26 +6406,26 @@ func (r *ModifyConnectionConfigResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyDBInstanceSecurityGroupsRequestParams struct {
-	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb 等。
+	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitempty" name:"Product"`
 
-	// 要修改的安全组ID列表，一个或者多个安全组Id组成的数组。
+	// 要修改的安全组 ID 列表，一个或者多个安全组 ID 组成的数组。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 
-	// 实例ID，格式如：cdb-c1nl9rpv或者cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同
+	// 实例 ID，格式如：cdb-c1nl9rpv或者cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
 type ModifyDBInstanceSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 数据库引擎名称：mariadb,cdb,cynosdb,dcdb,redis,mongodb 等。
+	// 数据库引擎名称，本接口取值：redis。
 	Product *string `json:"Product,omitempty" name:"Product"`
 
-	// 要修改的安全组ID列表，一个或者多个安全组Id组成的数组。
+	// 要修改的安全组 ID 列表，一个或者多个安全组 ID 组成的数组。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 
-	// 实例ID，格式如：cdb-c1nl9rpv或者cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例ID相同
+	// 实例 ID，格式如：cdb-c1nl9rpv或者cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
@@ -5943,20 +6573,20 @@ func (r *ModifyInstanceAccountResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstanceParamsRequestParams struct {
-	// 实例ID
+	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 实例修改的参数列表
+	// 实例修改的参数列表。
 	InstanceParams []*InstanceParam `json:"InstanceParams,omitempty" name:"InstanceParams"`
 }
 
 type ModifyInstanceParamsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 实例修改的参数列表
+	// 实例修改的参数列表。
 	InstanceParams []*InstanceParam `json:"InstanceParams,omitempty" name:"InstanceParams"`
 }
 
@@ -5982,10 +6612,10 @@ func (r *ModifyInstanceParamsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyInstanceParamsResponseParams struct {
-	// 修改是否成功。
+	// 说明修改参数配置是否成功。<br><li>true：指修改成功；<br><li>false：指修改失败。<br>
 	Changed *bool `json:"Changed,omitempty" name:"Changed"`
 
-	// 任务ID
+	// 任务ID。
 	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -6248,45 +6878,67 @@ func (r *ModifyMaintenanceWindowResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyNetworkConfigRequestParams struct {
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 操作类型：changeVip——修改实例VIP；changeVpc——修改实例子网；changeBaseToVpc——基础网络转VPC网络
+	// 指预修改网络的类别，包括：
+	// - changeVip：指切换私有网络，包含其内网IPv4地址及端口。
+	// - changeVpc：指切换私有网络所属子网。
+	// - changeBaseToVpc：指基础网络切换为私有网络。
+	// - changeVPort：指仅修改实例网络端口。
 	Operation *string `json:"Operation,omitempty" name:"Operation"`
 
-	// VIP地址，changeVip的时候填写，不填则默认分配
+	// 指实例私有网络内网 IPv4 地址。当**Operation**为**changeVip**时，需配置该参数。
 	Vip *string `json:"Vip,omitempty" name:"Vip"`
 
-	// 私有网络ID，changeVpc、changeBaseToVpc的时候需要提供
+	// 指修改后的私有网络 ID，当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 子网ID，changeVpc、changeBaseToVpc的时候需要提供
+	// 指修改后的私有网络所属子网 ID，当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 原VIP保留时间，单位：天，注：需要最新版SDK，否则原VIP立即释放，查看SDK版本，详见 [SDK中心](https://cloud.tencent.com/document/sdk)
+	// 原内网 IPv4 地址保留时长。
+	// - 单位：天。
+	// - 取值范围：0、1、2、3、7、15。
+	// 
+	// **说明**：设置原地址保留时长需最新版SDK，否则原地址将立即释放，查看SDK版本，请参见 [SDK中心](https://cloud.tencent.com/document/sdk)。
 	Recycle *int64 `json:"Recycle,omitempty" name:"Recycle"`
+
+	// 指修改后的网络端口。当**Operation**为**changeVPort**或**changeVip**时，需配置该参数。取值范围为[1024,65535]。
+	VPort *int64 `json:"VPort,omitempty" name:"VPort"`
 }
 
 type ModifyNetworkConfigRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 操作类型：changeVip——修改实例VIP；changeVpc——修改实例子网；changeBaseToVpc——基础网络转VPC网络
+	// 指预修改网络的类别，包括：
+	// - changeVip：指切换私有网络，包含其内网IPv4地址及端口。
+	// - changeVpc：指切换私有网络所属子网。
+	// - changeBaseToVpc：指基础网络切换为私有网络。
+	// - changeVPort：指仅修改实例网络端口。
 	Operation *string `json:"Operation,omitempty" name:"Operation"`
 
-	// VIP地址，changeVip的时候填写，不填则默认分配
+	// 指实例私有网络内网 IPv4 地址。当**Operation**为**changeVip**时，需配置该参数。
 	Vip *string `json:"Vip,omitempty" name:"Vip"`
 
-	// 私有网络ID，changeVpc、changeBaseToVpc的时候需要提供
+	// 指修改后的私有网络 ID，当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 子网ID，changeVpc、changeBaseToVpc的时候需要提供
+	// 指修改后的私有网络所属子网 ID，当**Operation**为**changeVpc**或**changeBaseToVpc**时，需配置该参数。
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 原VIP保留时间，单位：天，注：需要最新版SDK，否则原VIP立即释放，查看SDK版本，详见 [SDK中心](https://cloud.tencent.com/document/sdk)
+	// 原内网 IPv4 地址保留时长。
+	// - 单位：天。
+	// - 取值范围：0、1、2、3、7、15。
+	// 
+	// **说明**：设置原地址保留时长需最新版SDK，否则原地址将立即释放，查看SDK版本，请参见 [SDK中心](https://cloud.tencent.com/document/sdk)。
 	Recycle *int64 `json:"Recycle,omitempty" name:"Recycle"`
+
+	// 指修改后的网络端口。当**Operation**为**changeVPort**或**changeVip**时，需配置该参数。取值范围为[1024,65535]。
+	VPort *int64 `json:"VPort,omitempty" name:"VPort"`
 }
 
 func (r *ModifyNetworkConfigRequest) ToJsonString() string {
@@ -6307,6 +6959,7 @@ func (r *ModifyNetworkConfigRequest) FromJsonString(s string) error {
 	delete(f, "VpcId")
 	delete(f, "SubnetId")
 	delete(f, "Recycle")
+	delete(f, "VPort")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyNetworkConfigRequest has unknown keys!", "")
 	}
@@ -6315,17 +6968,20 @@ func (r *ModifyNetworkConfigRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type ModifyNetworkConfigResponseParams struct {
-	// 执行状态：true|false
+	// 执行状态，请忽略该参数。
 	Status *bool `json:"Status,omitempty" name:"Status"`
 
-	// 子网ID
+	// 指实例新私有网络所属子网 ID。
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 私有网络ID
+	// 指实例新的私有网络ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// VIP地址
+	// 指实例新的内网 IPv4 地址。
 	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// 任务 ID。可获取**taskId**，通过接口 **DescribeTaskInfo **查询任务执行状态。
+	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -6419,6 +7075,63 @@ func (r *ModifyParamTemplateResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyParamTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type OpenSSLRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type OpenSSLRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *OpenSSLRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OpenSSLRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OpenSSLRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type OpenSSLResponseParams struct {
+	// 任务ID。
+	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type OpenSSLResponse struct {
+	*tchttp.BaseResponse
+	Response *OpenSSLResponseParams `json:"Response"`
+}
+
+func (r *OpenSSLResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OpenSSLResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6536,41 +7249,75 @@ type ProductConf struct {
 }
 
 type ProxyNodes struct {
-	// 节点ID
+	// 节点 ID。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NodeId *string `json:"NodeId,omitempty" name:"NodeId"`
+
+	// 可用区 ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ZoneId *int64 `json:"ZoneId,omitempty" name:"ZoneId"`
 }
 
 type RedisBackupSet struct {
-	// 开始备份的时间
+	// 备份开始时间。
 	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 备份ID
+	// 备份ID。
 	BackupId *string `json:"BackupId,omitempty" name:"BackupId"`
 
-	// 备份类型。1：用户发起的手动备份； 0：凌晨系统发起的备份
+	// 备份类型。
+	// 
+	// - 1：用户发起的手动备份。
+	// - 0：凌晨系统发起的备份。
 	BackupType *string `json:"BackupType,omitempty" name:"BackupType"`
 
-	// 备份状态。  1:"备份被其它流程锁定";  2:"备份正常，没有被任何流程锁定";  -1:"备份已过期"； 3:"备份正在被导出";  4:"备份导出成功"
+	// 备份状态。 
+	// 
+	// - 1：备份被其它流程锁定。
+	// - 2：备份正常，没有被任何流程锁定。
+	// - -1：备份已过期。
+	// - 3：备份正在被导出。
+	// - 4：备份导出成功。
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
-	// 备份的备注信息
+	// 备份的备注信息。
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
 
-	// 备份是否被锁定，0：未被锁定；1：已被锁定
+	// 备份是否被锁定。
+	// 
+	// - 0：未被锁定。
+	// - 1：已被锁定。
 	Locked *int64 `json:"Locked,omitempty" name:"Locked"`
 
-	// 内部字段，用户可忽略
+	// 内部字段，用户可忽略。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BackupSize *int64 `json:"BackupSize,omitempty" name:"BackupSize"`
 
-	// 内部字段，用户可忽略
+	// 内部字段，用户可忽略。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	FullBackup *int64 `json:"FullBackup,omitempty" name:"FullBackup"`
 
-	// 内部字段，用户可忽略
+	// 内部字段，用户可忽略。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceType *int64 `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// 实例 ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例名称。
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+
+	// 本地备份所在地域。
+	Region *string `json:"Region,omitempty" name:"Region"`
+
+	// 备份结束时间。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 备份文件类型。
+	FileType *string `json:"FileType,omitempty" name:"FileType"`
+
+	// 备份文件过期时间。
+	ExpireTime *string `json:"ExpireTime,omitempty" name:"ExpireTime"`
 }
 
 type RedisCommonInstanceList struct {
@@ -6635,16 +7382,16 @@ type RedisNode struct {
 }
 
 type RedisNodeInfo struct {
-	// 节点类型，0 为主节点，1 为副本节点
+	// 节点类型。<ul><li>0：为主节点。</li><li>1：为副本节点。</li></ul>
 	NodeType *int64 `json:"NodeType,omitempty" name:"NodeType"`
 
-	// 主节点或者副本节点的ID，创建时不需要传递此参数。
+	// 主节点或者副本节点的 ID。<ul><li>该参数用于创建 Redis 实例接口[CreateInstances](https://cloud.tencent.com/document/product/239/20026) 并不需要设置，而用于变更实例配置的接口 [UpgradeInstance](https://cloud.tencent.com/document/product/239/20013) 则需要设置。</li><li>该参数可使用接口 [DescribeInstances](https://cloud.tencent.com/document/product/239/20018) 获取Integer类型的节点 ID。</li></ul>
 	NodeId *int64 `json:"NodeId,omitempty" name:"NodeId"`
 
-	// 主节点或者副本节点的可用区ID
+	// 主节点或者副本节点的可用区 ID。
 	ZoneId *uint64 `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 主节点或者副本节点的可用区名称
+	// 主节点或者副本节点的可用区名称。
 	ZoneName *string `json:"ZoneName,omitempty" name:"ZoneName"`
 }
 
@@ -6741,21 +7488,27 @@ func (r *ReleaseWanAddressResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RenewInstanceRequestParams struct {
-	// 购买时长，单位：月
+	// 购买时长，单位：月。
 	Period *uint64 `json:"Period,omitempty" name:"Period"`
 
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 标识是否修改计费模式。<ul><li>当前实例计费模式为按量计费方式，预转换为包年包月而续费，请指定该参数为 <b>prepaid</b>。</li><li>当前实例计费模式为包年包月方式，可不设置该参数。</li></ul>
+	ModifyPayMode *string `json:"ModifyPayMode,omitempty" name:"ModifyPayMode"`
 }
 
 type RenewInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 购买时长，单位：月
+	// 购买时长，单位：月。
 	Period *uint64 `json:"Period,omitempty" name:"Period"`
 
-	// 实例ID
+	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 标识是否修改计费模式。<ul><li>当前实例计费模式为按量计费方式，预转换为包年包月而续费，请指定该参数为 <b>prepaid</b>。</li><li>当前实例计费模式为包年包月方式，可不设置该参数。</li></ul>
+	ModifyPayMode *string `json:"ModifyPayMode,omitempty" name:"ModifyPayMode"`
 }
 
 func (r *RenewInstanceRequest) ToJsonString() string {
@@ -6772,6 +7525,7 @@ func (r *RenewInstanceRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Period")
 	delete(f, "InstanceId")
+	delete(f, "ModifyPayMode")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RenewInstanceRequest has unknown keys!", "")
 	}
@@ -6780,7 +7534,7 @@ func (r *RenewInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type RenewInstanceResponseParams struct {
-	// 交易ID
+	// 交易ID。
 	DealId *string `json:"DealId,omitempty" name:"DealId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -7355,38 +8109,38 @@ type TradeDealDetail struct {
 
 // Predefined struct for user
 type UpgradeInstanceRequestParams struct {
-	// 实例ID
+	// 待变更实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 分片大小 单位 MB。该参数不支持与RedisShardNum或RedisReplicasNum同时输入。
+	// 指实例每个分片内存变更后的大小。<ul><li>单位 MB。</li><li>每次只能修改参数MemSize、RedisShardNum和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li><li>缩容时，缩容后的规格务必要大于等于使用容量的1.3倍，否则将执行失败。</li></ul>
 	MemSize *uint64 `json:"MemSize,omitempty" name:"MemSize"`
 
-	// 分片数量，标准架构不需要填写。该参数不支持与RedisReplicasNum或MemSize同时输入。
+	// 指实例变更后的分片数量。<ul><li>标准架构不需要配置该参数，集群架构为必填参数。</li><li>集群架构，每次只能修改参数RedisShardNum、MemSize和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li></ul>
 	RedisShardNum *uint64 `json:"RedisShardNum,omitempty" name:"RedisShardNum"`
 
-	// 副本数量，多AZ实例修改副本时必须要传入NodeSet。该参数不支持与RedisShardNum或MemSize同时输入。
+	// 指实例变更后的副本数量。<ul><li>每次只能修改参数RedisReplicasNum、MemSize和RedisShardNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li><li>多AZ实例修改副本时必须要传入NodeSet。</li></ul>
 	RedisReplicasNum *uint64 `json:"RedisReplicasNum,omitempty" name:"RedisReplicasNum"`
 
-	// 多AZ实例增加副本时的附带信息，非多AZ实例不需要传此参数。多AZ增加副本时此参数为必传参数，传入要增加的副本的信息，包括副本的可用区和副本的类型（NodeType为1）
+	// 多AZ实例，增加副本时的附带信息，包括副本的可用区和副本的类型（NodeType为1）。非多AZ实例不需要配置该参数。
 	NodeSet []*RedisNodeInfo `json:"NodeSet,omitempty" name:"NodeSet"`
 }
 
 type UpgradeInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 待变更实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 分片大小 单位 MB。该参数不支持与RedisShardNum或RedisReplicasNum同时输入。
+	// 指实例每个分片内存变更后的大小。<ul><li>单位 MB。</li><li>每次只能修改参数MemSize、RedisShardNum和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li><li>缩容时，缩容后的规格务必要大于等于使用容量的1.3倍，否则将执行失败。</li></ul>
 	MemSize *uint64 `json:"MemSize,omitempty" name:"MemSize"`
 
-	// 分片数量，标准架构不需要填写。该参数不支持与RedisReplicasNum或MemSize同时输入。
+	// 指实例变更后的分片数量。<ul><li>标准架构不需要配置该参数，集群架构为必填参数。</li><li>集群架构，每次只能修改参数RedisShardNum、MemSize和RedisReplicasNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li></ul>
 	RedisShardNum *uint64 `json:"RedisShardNum,omitempty" name:"RedisShardNum"`
 
-	// 副本数量，多AZ实例修改副本时必须要传入NodeSet。该参数不支持与RedisShardNum或MemSize同时输入。
+	// 指实例变更后的副本数量。<ul><li>每次只能修改参数RedisReplicasNum、MemSize和RedisShardNum其中的一个，不能同时修改。且修改其中一个参数时，其他两个参数需输入实例原有的配置规格。</li><li>多AZ实例修改副本时必须要传入NodeSet。</li></ul>
 	RedisReplicasNum *uint64 `json:"RedisReplicasNum,omitempty" name:"RedisReplicasNum"`
 
-	// 多AZ实例增加副本时的附带信息，非多AZ实例不需要传此参数。多AZ增加副本时此参数为必传参数，传入要增加的副本的信息，包括副本的可用区和副本的类型（NodeType为1）
+	// 多AZ实例，增加副本时的附带信息，包括副本的可用区和副本的类型（NodeType为1）。非多AZ实例不需要配置该参数。
 	NodeSet []*RedisNodeInfo `json:"NodeSet,omitempty" name:"NodeSet"`
 }
 
@@ -7415,7 +8169,7 @@ func (r *UpgradeInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeInstanceResponseParams struct {
-	// 订单ID
+	// 订单ID。
 	DealId *string `json:"DealId,omitempty" name:"DealId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -7667,20 +8421,22 @@ func (r *UpgradeSmallVersionResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type UpgradeVersionToMultiAvailabilityZonesRequestParams struct {
-	// 实例ID
+	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 是否升级proxy和redis内核版本，升级后可支持就近接入
+	// 升级多可用区之后是否支持就近访问功能。
+	// <ul><li>true：支持就近访问功能。升级过程，需同时升级 Proxy 版本和 Redis 内核小版本，涉及数据搬迁，可能会长达数小时。</li><li>false：无需支持就近访问功能。升级多可用区仅涉及管理元数据迁移，对服务没有影响，升级过程通常在3分钟内完成。</li></ul>
 	UpgradeProxyAndRedisServer *bool `json:"UpgradeProxyAndRedisServer,omitempty" name:"UpgradeProxyAndRedisServer"`
 }
 
 type UpgradeVersionToMultiAvailabilityZonesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 是否升级proxy和redis内核版本，升级后可支持就近接入
+	// 升级多可用区之后是否支持就近访问功能。
+	// <ul><li>true：支持就近访问功能。升级过程，需同时升级 Proxy 版本和 Redis 内核小版本，涉及数据搬迁，可能会长达数小时。</li><li>false：无需支持就近访问功能。升级多可用区仅涉及管理元数据迁移，对服务没有影响，升级过程通常在3分钟内完成。</li></ul>
 	UpgradeProxyAndRedisServer *bool `json:"UpgradeProxyAndRedisServer,omitempty" name:"UpgradeProxyAndRedisServer"`
 }
 

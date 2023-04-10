@@ -14,6 +14,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
+	"gopkg.in/yaml.v2"
 )
 
 type MonitorService struct {
@@ -306,7 +307,7 @@ func (me *MonitorService) DescribeBindingAlarmPolicyObjectList(ctx context.Conte
 	return
 }
 
-// tmp
+// DescribeMonitorTmpInstance tmp
 func (me *MonitorService) DescribeMonitorTmpInstance(ctx context.Context, tmpInstanceId string) (tmpInstance *monitor.PrometheusInstancesItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -1570,4 +1571,134 @@ func (me *MonitorService) DeleteMonitorManageGrafanaAttachmentById(ctx context.C
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
+}
+
+func (me *MonitorService) DescribeTkeTmpBasicConfigById(ctx context.Context, clusterId, clusterType, instanceId string) (respParams *monitor.DescribePrometheusConfigResponseParams, errRet error) {
+	logId := getLogId(ctx)
+	request := monitor.NewDescribePrometheusConfigRequest()
+	request.InstanceId = &instanceId
+	request.ClusterType = &clusterType
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().DescribePrometheusConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.RequestId == nil {
+		return nil, fmt.Errorf("response is invalid,%s", response.ToJsonString())
+	}
+
+	respParams = response.Response
+	return
+}
+
+func (me *MonitorService) GetConfigType(name string, respParams *monitor.DescribePrometheusConfigResponseParams) (configType string, config *monitor.PrometheusConfigItem, err error) {
+	for _, v := range respParams.ServiceMonitors {
+		if *v.Name == name {
+			configType = "service_monitors"
+			config = v
+			return
+		}
+	}
+
+	for _, v := range respParams.PodMonitors {
+		if *v.Name == name {
+			configType = "pod_monitors"
+			config = v
+			return
+		}
+	}
+
+	for _, v := range respParams.RawJobs {
+		if *v.Name == name {
+			configType = "raw_jobs"
+			config = v
+			return
+		}
+	}
+	err = fmt.Errorf("[ERROR] name [%v] configuration does not exist", name)
+	return
+}
+
+type PrometheusConfig struct {
+	Config *string
+	Regex  []string
+}
+
+func (r *PrometheusConfig) UnmarshalToMap() (map[interface{}]interface{}, error) {
+	var configMap map[interface{}]interface{}
+	err := yaml.Unmarshal([]byte(*r.Config), &configMap)
+	if err != nil {
+		log.Printf("[ERROR] yaml Unmarshal fail [%v]\n", err)
+		return nil, err
+	}
+	return configMap, nil
+}
+
+func (r *PrometheusConfig) MarshalToYaml(config *map[interface{}]interface{}) (string, error) {
+	data, err := yaml.Marshal(config)
+	if err != nil {
+		log.Printf("[ERROR] yaml Marshal fail [%v]\n", err)
+		return "", err
+	}
+	return string(data), nil
+}
+
+func (r *PrometheusConfig) SetRegex(configs []interface{}) (*[]interface{}, error) {
+	setStatus := false
+	regex := strings.Join(r.Regex, "|")
+	for k, v := range configs {
+		metricRelabelings := v.(map[interface{}]interface{})["metric_relabel_configs"]
+		if metricRelabelings == nil {
+			if v.(map[interface{}]interface{})["metricRelabelings"] != nil {
+				metricRelabelings = v.(map[interface{}]interface{})["metricRelabelings"]
+			} else {
+				metricRelabelings = []interface{}{}
+			}
+		}
+		metricRelabelingList := []interface{}{}
+		for _, vv := range metricRelabelings.([]interface{}) {
+			metricRelabeling := vv.(map[interface{}]interface{})
+			sourceLabels := metricRelabeling["source_labels"]
+			if sourceLabels == nil {
+				sourceLabels = metricRelabeling["sourceLabels"]
+			}
+			if metricRelabeling["action"] == "keep" && sourceLabels.([]interface{})[0] == "__name__" {
+				if regex == "" {
+					metricRelabeling = nil
+				} else {
+					metricRelabeling["regex"] = regex
+					setStatus = true
+				}
+			}
+			if metricRelabeling["action"] == "drop" || metricRelabeling == nil {
+			} else {
+				metricRelabelingList = append(metricRelabelingList, metricRelabeling)
+			}
+		}
+
+		if k == (len(configs)-1) && regex != "" && !setStatus {
+			metricRelabeling := map[interface{}]interface{}{
+				"source_labels": []string{"__name__"},
+				"regex":         regex,
+				"replacement":   "$1",
+				"action":        "keep",
+			}
+			metricRelabelingList = append(metricRelabelingList, metricRelabeling)
+		}
+		if len(metricRelabelingList) > 0 {
+			v.(map[interface{}]interface{})["metric_relabel_configs"] = metricRelabelingList
+		}
+	}
+	return &configs, nil
 }

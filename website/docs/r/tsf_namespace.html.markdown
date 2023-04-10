@@ -54,11 +54,3 @@ In addition to all arguments above, the following attributes are exported:
 * `update_time` - update time.
 
 
-## Import
-
-tsf namespace can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tsf_namespace.namespace namespace_id
-```
-
