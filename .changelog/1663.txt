@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_cvm_instance_vnc_url
+```
+
+```release-note:new-data-source
+tencentcloud_cvm_disaster_recover_group_quota
+```
+
+```release-note:new-resource
+tencentcloud_cvm_reboot_instance
+```

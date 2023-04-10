@@ -153,6 +153,14 @@ variable "cvm_id" {
 }
 `
 
+// cvm-reboot
+const defaultRebootCvmId = "ins-f9jr4bd2"
+const defaultRebootCvmVariable = `
+variable "cvm_id" {
+  default = "` + defaultRebootCvmId + `"
+}
+`
+
 // AS
 const defaultAsVariable = `
 variable "availability_zone" {
