@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	dbbrain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527"
@@ -643,6 +644,68 @@ func (me *DbbrainService) DescribeDbbrainSlowLogUserSqlAdviceByFilter(ctx contex
 	if response != nil && response.Response != nil {
 		slowLogUserSqlAdvice = response.Response
 	}
+
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainDbDiagReportTaskById(ctx context.Context, asyncRequestId *int64, instanceId string, product string) (dbDiagReportTask *dbbrain.HealthReportTask, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dbbrain.NewDescribeDBDiagReportTasksRequest()
+	request.InstanceIds = []*string{helper.String(instanceId)}
+	request.Product = &product
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDbbrainClient().DescribeDBDiagReportTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if asyncRequestId != nil {
+		for _, task := range response.Response.Tasks {
+			if *task.AsyncRequestId == *asyncRequestId {
+				dbDiagReportTask = task
+				return
+			}
+		}
+		return nil, fmt.Errorf("[ERROR]%sThe asyncRequestId[%v] not found in the qurey results. \n", logId, *asyncRequestId)
+	}
+
+	dbDiagReportTask = response.Response.Tasks[0]
+	return
+}
+
+func (me *DbbrainService) DeleteDbbrainDbDiagReportTaskById(ctx context.Context, asyncRequestId int64, instanceId string, product string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dbbrain.NewDeleteDBDiagReportTasksRequest()
+	request.AsyncRequestIds = []*int64{helper.Int64(asyncRequestId)}
+	request.InstanceId = &instanceId
+	request.Product = &product
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDbbrainClient().DeleteDBDiagReportTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

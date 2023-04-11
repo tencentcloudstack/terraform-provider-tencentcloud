@@ -584,7 +584,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.542
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.634
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410

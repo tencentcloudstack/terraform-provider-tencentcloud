@@ -43,7 +43,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.572
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.542
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.634
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.572
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.539

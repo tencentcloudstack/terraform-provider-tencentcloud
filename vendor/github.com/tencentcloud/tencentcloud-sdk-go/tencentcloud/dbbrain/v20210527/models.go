@@ -873,6 +873,79 @@ func (r *CreateSqlFilterResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteDBDiagReportTasksRequestParams struct {
+	// 需要删除的任务id列表
+	AsyncRequestIds []*int64 `json:"AsyncRequestIds,omitempty" name:"AsyncRequestIds"`
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 服务产品类型，支持值包括： "mysql" - 云数据库 MySQL， "cynosdb" - 云数据库 CynosDB for MySQL， "mongodb" - 云数据库 CynosDB for MySQL，
+	// 默认值为"mysql"。
+	Product *string `json:"Product,omitempty" name:"Product"`
+}
+
+type DeleteDBDiagReportTasksRequest struct {
+	*tchttp.BaseRequest
+	
+	// 需要删除的任务id列表
+	AsyncRequestIds []*int64 `json:"AsyncRequestIds,omitempty" name:"AsyncRequestIds"`
+
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 服务产品类型，支持值包括： "mysql" - 云数据库 MySQL， "cynosdb" - 云数据库 CynosDB for MySQL， "mongodb" - 云数据库 CynosDB for MySQL，
+	// 默认值为"mysql"。
+	Product *string `json:"Product,omitempty" name:"Product"`
+}
+
+func (r *DeleteDBDiagReportTasksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDBDiagReportTasksRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "AsyncRequestIds")
+	delete(f, "InstanceId")
+	delete(f, "Product")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteDBDiagReportTasksRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteDBDiagReportTasksResponseParams struct {
+	// 任务删除状态, 0-删除成功
+	Status *int64 `json:"Status,omitempty" name:"Status"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteDBDiagReportTasksResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteDBDiagReportTasksResponseParams `json:"Response"`
+}
+
+func (r *DeleteDBDiagReportTasksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteDBDiagReportTasksResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteSecurityAuditLogExportTasksRequestParams struct {
 	// 安全审计组Id。
 	SecAuditGroupId *string `json:"SecAuditGroupId,omitempty" name:"SecAuditGroupId"`
@@ -2022,7 +2095,7 @@ type DescribeNoPrimaryKeyTablesRequestParams struct {
 	// 偏移量，默认为0。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 服务产品类型，支持值："mysql" - 云数据库 MySQL；"cynosdb" - 云数据库 TDSQL-C for MySQL，默认为"mysql"。
+	// 服务产品类型，支持值："mysql" - 云数据库 MySQL，默认为"mysql"。
 	Product *string `json:"Product,omitempty" name:"Product"`
 }
 
@@ -2041,7 +2114,7 @@ type DescribeNoPrimaryKeyTablesRequest struct {
 	// 偏移量，默认为0。
 	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 服务产品类型，支持值："mysql" - 云数据库 MySQL；"cynosdb" - 云数据库 TDSQL-C for MySQL，默认为"mysql"。
+	// 服务产品类型，支持值："mysql" - 云数据库 MySQL，默认为"mysql"。
 	Product *string `json:"Product,omitempty" name:"Product"`
 }
 
@@ -2102,6 +2175,105 @@ func (r *DescribeNoPrimaryKeyTablesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeNoPrimaryKeyTablesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeProxyProcessStatisticsRequestParams struct {
+	// 实例 ID 。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 该实例下需要查询的某一个 ProxyID 。
+	InstanceProxyId *string `json:"InstanceProxyId,omitempty" name:"InstanceProxyId"`
+
+	// 返回数量。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 服务产品类型，支持值包括： "redis" - 云数据库 Redis。
+	Product *string `json:"Product,omitempty" name:"Product"`
+
+	// 偏移量，默认0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 按照某字断排序。支持值包括："AllConn"，"ActiveConn"，"Ip"。
+	SortBy *string `json:"SortBy,omitempty" name:"SortBy"`
+
+	// 排序方向。支持值包括："DESC"，"ASC"。
+	OrderDirection *string `json:"OrderDirection,omitempty" name:"OrderDirection"`
+}
+
+type DescribeProxyProcessStatisticsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID 。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 该实例下需要查询的某一个 ProxyID 。
+	InstanceProxyId *string `json:"InstanceProxyId,omitempty" name:"InstanceProxyId"`
+
+	// 返回数量。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 服务产品类型，支持值包括： "redis" - 云数据库 Redis。
+	Product *string `json:"Product,omitempty" name:"Product"`
+
+	// 偏移量，默认0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 按照某字断排序。支持值包括："AllConn"，"ActiveConn"，"Ip"。
+	SortBy *string `json:"SortBy,omitempty" name:"SortBy"`
+
+	// 排序方向。支持值包括："DESC"，"ASC"。
+	OrderDirection *string `json:"OrderDirection,omitempty" name:"OrderDirection"`
+}
+
+func (r *DescribeProxyProcessStatisticsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeProxyProcessStatisticsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "InstanceProxyId")
+	delete(f, "Limit")
+	delete(f, "Product")
+	delete(f, "Offset")
+	delete(f, "SortBy")
+	delete(f, "OrderDirection")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProxyProcessStatisticsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeProxyProcessStatisticsResponseParams struct {
+	// 实时会话统计详情。
+	ProcessStatistics *ProcessStatistic `json:"ProcessStatistics,omitempty" name:"ProcessStatistics"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeProxyProcessStatisticsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeProxyProcessStatisticsResponseParams `json:"Response"`
+}
+
+func (r *DescribeProxyProcessStatisticsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeProxyProcessStatisticsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3576,6 +3748,10 @@ type InstanceConfs struct {
 
 	// 实例概览开关，Yes/No。
 	OverviewDisplay *string `json:"OverviewDisplay,omitempty" name:"OverviewDisplay"`
+
+	// redis大key分析的自定义分割符，仅redis使用
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	KeyDelimiters []*string `json:"KeyDelimiters,omitempty" name:"KeyDelimiters"`
 }
 
 type InstanceInfo struct {
@@ -3662,6 +3838,17 @@ type InstanceInfo struct {
 
 	// 实例审计日志运行状态：normal： 运行中； paused： 欠费暂停。
 	AuditRunningStatus *string `json:"AuditRunningStatus,omitempty" name:"AuditRunningStatus"`
+
+	// 内网vip
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InternalVip *string `json:"InternalVip,omitempty" name:"InternalVip"`
+
+	// 内网port
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InternalVport *int64 `json:"InternalVport,omitempty" name:"InternalVport"`
+
+	// 创建时间
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
 }
 
 type IssueTypeInfo struct {
@@ -4004,6 +4191,17 @@ type MySqlProcess struct {
 	Info *string `json:"Info,omitempty" name:"Info"`
 }
 
+type ProcessStatistic struct {
+	// 会话详情数组。
+	Items []*SessionItem `json:"Items,omitempty" name:"Items"`
+
+	// 总连接数。
+	AllConnSum *int64 `json:"AllConnSum,omitempty" name:"AllConnSum"`
+
+	// 总活跃连接数。
+	ActiveConnSum *int64 `json:"ActiveConnSum,omitempty" name:"ActiveConnSum"`
+}
+
 type ProfileInfo struct {
 	// 语言, 如"zh"。
 	Language *string `json:"Language,omitempty" name:"Language"`
@@ -4198,6 +4396,17 @@ type SecLogExportTaskInfo struct {
 	// 风险等级列表。0 无风险；1 低风险；2 中风险；3 高风险。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DangerLevels []*uint64 `json:"DangerLevels,omitempty" name:"DangerLevels"`
+}
+
+type SessionItem struct {
+	// 访问来源。
+	Ip *string `json:"Ip,omitempty" name:"Ip"`
+
+	// 当前访问来源活跃连接数
+	ActiveConn *string `json:"ActiveConn,omitempty" name:"ActiveConn"`
+
+	// 当前访问来源总连接数
+	AllConn *int64 `json:"AllConn,omitempty" name:"AllConn"`
 }
 
 type SlowLogHost struct {
