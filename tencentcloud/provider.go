@@ -887,9 +887,14 @@ TencentCloud Automation Tools(TAT)
   Data Source
 	tencentcloud_tat_command
 	tencentcloud_tat_invoker
+	tencentcloud_tat_invoker_records
+	tencentcloud_tat_agent
   Resource
 	tencentcloud_tat_command
 	tencentcloud_tat_invoker
+	tencentcloud_tat_invoker_config
+	tencentcloud_tat_invocation_invoke_attachment
+	tencentcloud_tat_invocation_command_attachment
 
 Tencent Cloud Organization (TCO)
   Resource
@@ -1373,6 +1378,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dnspod_records":                           dataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_tat_command":                              dataSourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
+			"tencentcloud_tat_invoker_records":                      dataSourceTencentCloudTatInvokerRecords(),
+			"tencentcloud_tat_agent":                                dataSourceTencentCloudTatAgent(),
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dbbrain_diag_event":                       dataSourceTencentCloudDbbrainDiagEvent(),
@@ -1755,6 +1762,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_pts_cron_job":                               resourceTencentCloudPtsCronJob(),
 			"tencentcloud_tat_command":                                resourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                resourceTencentCloudTatInvoker(),
+			"tencentcloud_tat_invoker_config":                         resourceTencentCloudTatInvokerConfig(),
+			"tencentcloud_tat_invocation_invoke_attachment":           resourceTencentCloudTatInvocationInvokeAttachment(),
+			"tencentcloud_tat_invocation_command_attachment":          resourceTencentCloudTatInvocationCommandAttachment(),
 			"tencentcloud_organization_org_node":                      resourceTencentCloudOrganizationOrgNode(),
 			"tencentcloud_organization_org_member":                    resourceTencentCloudOrganizationOrgMember(),
 			"tencentcloud_organization_policy_sub_account_attachment": resourceTencentCloudOrganizationPolicySubAccountAttachment(),
