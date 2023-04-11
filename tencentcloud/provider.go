@@ -156,6 +156,7 @@ Cloud Kafka(ckafka)
     tencentcloud_ckafka_user
     tencentcloud_ckafka_acl
     tencentcloud_ckafka_topic
+	tencentcloud_ckafka_datahub_topic
 
 Cloud Access Management(CAM)
   Data Source
@@ -302,6 +303,8 @@ Cloud Virtual Machine(CVM)
     tencentcloud_reserved_instance_configs
     tencentcloud_reserved_instances
 	tencentcloud_cvm_instances_modification
+	tencentcloud_cvm_instance_vnc_url
+	tencentcloud_cvm_disaster_recover_group_quota
 
   Resource
     tencentcloud_instance
@@ -317,6 +320,7 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_launch_template_version
 	tencentcloud_cvm_launch_template_default_version
 	tencentcloud_cvm_security_group_attachment
+	tencentcloud_cvm_reboot_instance
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -517,6 +521,10 @@ TencentDB for Redis(crs)
     tencentcloud_redis_instances
 	tencentcloud_redis_backup
 	tencentcloud_redis_backup_download_info
+	tencentcloud_redis_param_records
+	tencentcloud_redis_instance_shards
+	tencentcloud_redis_instance_zone_info
+	tencentcloud_redis_instance_task_list
 
   Resource
     tencentcloud_redis_instance
@@ -914,6 +922,7 @@ TencentDB for DBbrain(dbbrain)
 	tencentcloud_dbbrain_sql_filter
 	tencentcloud_dbbrain_security_audit_log_export_task
 	tencentcloud_dbbrain_db_diag_report_task
+	tencentcloud_dbbrain_modify_diag_db_instance_operation
 
 Data Transmission Service(DTS)
   Data Source
@@ -1219,6 +1228,10 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_redis_instances":                          dataSourceTencentRedisInstances(),
 			"tencentcloud_redis_backup":                             dataSourceTencentCloudRedisBackup(),
 			"tencentcloud_redis_backup_download_info":               dataSourceTencentCloudRedisBackupDownloadInfo(),
+			"tencentcloud_redis_param_records":                      dataSourceTencentCloudRedisRecordsParam(),
+			"tencentcloud_redis_instance_shards":                    dataSourceTencentCloudRedisInstanceShards(),
+			"tencentcloud_redis_instance_zone_info":                 dataSourceTencentCloudRedisInstanceZoneInfo(),
+			"tencentcloud_redis_instance_task_list":                 dataSourceTencentCloudRedisInstanceTaskList(),
 			"tencentcloud_as_scaling_configs":                       dataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                        dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                      dataSourceTencentCloudAsScalingPolicies(),
@@ -1394,6 +1407,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_chdfs_mount_points":                       dataSourceTencentCloudChdfsMountPoints(),
 			"tencentcloud_tcm_mesh":                                 dataSourceTencentCloudTcmMesh(),
 			"tencentcloud_lighthouse_firewall_rules_template":       dataSourceTencentCloudLighthouseFirewallRulesTemplate(),
+			"tencentcloud_cvm_instance_vnc_url":                     dataSourceTencentCloudCvmInstanceVncUrl(),
+			"tencentcloud_cvm_disaster_recover_group_quota":         dataSourceTencentCloudCvmDisasterRecoverGroupQuota(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1616,6 +1631,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_user":                                 resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                  resourceTencentCloudCkafkaAcl(),
 			"tencentcloud_ckafka_topic":                                resourceTencentCloudCkafkaTopic(),
+			"tencentcloud_ckafka_datahub_topic":                        resourceTencentCloudCkafkaDatahubTopic(),
 			"tencentcloud_audit":                                       resourceTencentCloudAudit(),
 			"tencentcloud_audit_track":                                 resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                       resourceTencentCloudImage(),
@@ -1747,6 +1763,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dbbrain_sql_filter":                         resourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":     resourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                resourceTencentCloudDbbrainDbDiagReportTask(),
+			"tencentcloud_dbbrain_modify_diag_db_instance_operation":  resourceTencentCloudDbbrainModifyDiagDbInstanceOperation(),
 			"tencentcloud_rum_project":                                resourceTencentCloudRumProject(),
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
@@ -1841,6 +1858,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cvm_launch_template_default_version":        resourceTencentCloudCvmLaunchTemplateDefaultVersion(),
 			"tencentcloud_lighthouse_firewall_rule":                   resourceTencentCloudLighthouseFirewallRule(),
 			"tencentcloud_cvm_security_group_attachment":              resourceTencentCloudCvmSecurityGroupAttachment(),
+			"tencentcloud_cvm_reboot_instance":                        resourceTencentCloudCvmRebootInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

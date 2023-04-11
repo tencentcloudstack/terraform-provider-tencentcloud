@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_dbbrain_modify_diag_db_instance_operation
+```

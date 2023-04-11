@@ -153,6 +153,14 @@ variable "cvm_id" {
 }
 `
 
+// cvm-reboot
+const defaultRebootCvmId = "ins-f9jr4bd2"
+const defaultRebootCvmVariable = `
+variable "cvm_id" {
+  default = "` + defaultRebootCvmId + `"
+}
+`
+
 // AS
 const defaultAsVariable = `
 variable "availability_zone" {
@@ -961,6 +969,8 @@ variable "cbs_backup_disk_id" {
 // CRS
 const (
 	defaultCrsInstanceId = "crs-jf4ico4v"
+	defaultCrsVpcId      = "vpc-4owdpnwr"
+	defaultCrsSubnetId   = "subnet-4o0zd840"
 )
 
 // End of CRS
