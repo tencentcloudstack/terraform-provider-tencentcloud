@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -103,11 +104,10 @@ func resourceTencentCloudDbbrainDbDiagReportTaskCreate(d *schema.ResourceData, m
 	logId := getLogId(contextNil)
 
 	var (
-		request        = dbbrain.NewCreateDBDiagReportTaskRequest()
-		response       = dbbrain.NewCreateDBDiagReportTaskResponse()
-		asyncRequestId string
-		instanceId     string
-		product        string
+		request    = dbbrain.NewCreateDBDiagReportTaskRequest()
+		response   = dbbrain.NewCreateDBDiagReportTaskResponse()
+		instanceId string
+		product    string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
@@ -165,8 +165,16 @@ func resourceTencentCloudDbbrainDbDiagReportTaskCreate(d *schema.ResourceData, m
 		return fmt.Errorf("[CRITAL]%s The dbbrain dbDiagReportTask id not found after creation", logId)
 	}
 
-	asyncRequestId = helper.Int64ToStr(*response.Response.AsyncRequestId)
-	d.SetId(asyncRequestId + FILED_SP + instanceId + FILED_SP + product)
+	asyncRequestId := response.Response.AsyncRequestId
+	d.SetId(helper.Int64ToStr(*asyncRequestId) + FILED_SP + instanceId + FILED_SP + product)
+
+	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"100"}, 3*readRetryTimeout, time.Second, service.DbbrainDbDiagReportTaskStateRefreshFunc(asyncRequestId, instanceId, product, []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
 
 	return resourceTencentCloudDbbrainDbDiagReportTaskRead(d, meta)
 }

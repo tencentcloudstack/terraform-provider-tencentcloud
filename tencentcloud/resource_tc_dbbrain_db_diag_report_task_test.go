@@ -58,8 +58,8 @@ func testSweepDbbrainDbDiagReportTask(r string) error {
 func TestAccTencentCloudDbbrainDbDiagReportTaskResource_basic(t *testing.T) {
 	t.Parallel()
 	loc, _ := time.LoadLocation("Asia/Chongqing")
-	startTime := time.Now().AddDate(0, 0, -1).In(loc).Format("2006-01-02T15:04:05+08:00")
-	endTime := time.Now().In(loc).Format("2006-01-02T15:04:05+08:00")
+	startTime := time.Now().AddDate(0, 0, -1).In(loc).Format("2006-01-02 15:04:05")
+	endTime := time.Now().In(loc).Format("2006-01-02 15:04:05")
 
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {

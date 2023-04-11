@@ -914,7 +914,6 @@ TencentDB for DBbrain(dbbrain)
 	tencentcloud_dbbrain_sql_filter
 	tencentcloud_dbbrain_security_audit_log_export_task
 	tencentcloud_dbbrain_db_diag_report_task
-	tencentcloud_dbbrain_modify_diag_db_instance_operation
 
 Data Transmission Service(DTS)
   Data Source
@@ -1748,7 +1747,6 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dbbrain_sql_filter":                         resourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":     resourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                resourceTencentCloudDbbrainDbDiagReportTask(),
-			"tencentcloud_dbbrain_modify_diag_db_instance_operation":  resourceTencentCloudDbbrainModifyDiagDbInstanceOperation(),
 			"tencentcloud_rum_project":                                resourceTencentCloudRumProject(),
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
