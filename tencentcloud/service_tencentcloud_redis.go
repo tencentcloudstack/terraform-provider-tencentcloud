@@ -1285,11 +1285,11 @@ func (me *RedisService) DescribeRedisParamById(ctx context.Context, instanceId s
 	return
 }
 
-func (me *RedisService) DescribeRedisReplicateById(ctx context.Context, instanceId string) (replicate *redis.DescribeReplicationGroupResponseParams, errRet error) {
+func (me *RedisService) DescribeRedisReplicateById(ctx context.Context, instanceId string) (group *redis.Groups, errRet error) {
 	logId := getLogId(ctx)
 
 	request := redis.NewDescribeReplicationGroupRequest()
-	request.SearchKey = &instanceId
+	// request.SearchKey = &instanceId
 
 	defer func() {
 		if errRet != nil {
@@ -1305,8 +1305,10 @@ func (me *RedisService) DescribeRedisReplicateById(ctx context.Context, instance
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	replicate = response.Response
+	if len(response.Response.Groups) < 1 {
+		return
+	}
+	group = response.Response.Groups[0]
 	return
 }
 
@@ -1744,5 +1746,79 @@ func (me *RedisService) DeleteRedisSecurityGroupById(ctx context.Context, instan
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *RedisService) DescribeRedisReplicateInstanceById(ctx context.Context, instanceId string, groupId string) (replicateInstance *redis.Instances, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeReplicationGroupRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseRedisClient().DescribeReplicationGroup(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Groups) < 1 {
+			break
+		}
+		for _, v := range response.Response.Groups {
+			for _, instance := range v.Instances {
+				if *instance.InstanceId == instanceId {
+					replicateInstance = instance
+					return
+				}
+			}
+		}
+		if len(response.Response.Groups) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RedisService) DeleteRedisReplicateInstanceById(ctx context.Context, instanceId string, groupId string) (taskId int64, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDeleteReplicationInstanceRequest()
+	request.InstanceId = &instanceId
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DeleteReplicationInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	taskId = int64(*response.Response.TaskId)
 	return
 }

@@ -1524,6 +1524,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_redis_ssl":                                   resourceTencentCloudRedisSsl(),
 			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_redis_security_group":                        resourceTencentCloudRedisSecurityGroup(),
+			"tencentcloud_redis_replicate_instance":                    resourceTencentCloudRedisReplicateInstance(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                            resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                               resourceTencentCloudAsAttachment(),
