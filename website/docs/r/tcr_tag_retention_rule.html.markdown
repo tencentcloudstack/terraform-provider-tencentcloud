@@ -31,10 +31,10 @@ resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
   namespace_name = tencentcloud_tcr_namespace.my_ns.name
   retention_rule {
     key   = "nDaysSinceLastPush"
-    value = 1
+    value = 2
   }
-  cron_setting = "manual"
-  disabled     = false
+  cron_setting = "daily"
+  disabled     = true
 }
 ```
 

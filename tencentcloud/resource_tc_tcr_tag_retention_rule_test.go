@@ -28,9 +28,23 @@ func TestAccTencentCloudTCRTagRetentionRuleResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "namespace_name", "tf_test_ns_retention"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.#"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.0.key", "nDaysSinceLastPush"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.1.value", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "cron_setting", "manual"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.0.value", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "cron_setting", "daily"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "disabled", "false"),
+				),
+			},
+			{
+				Config: testAccTcrTagRetentionRule_update,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTCRTagRetentionRuleExists("tencentcloud_tcr_tag_retention_rule.my_rule"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "registry_id"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "namespace_name", "tf_test_ns_retention"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.#"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.0.key", "nDaysSinceLastPush"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.0.value", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "cron_setting", "daily"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "disabled", "true"),
 				),
 			},
 			{
@@ -127,8 +141,35 @@ resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
 		key = "nDaysSinceLastPush"
 		value = 1
   }
-  cron_setting = "manual"
+  cron_setting = "daily"
   disabled = false
+}
+
+`
+
+const testAccTcrTagRetentionRule_update = defaultTCRInstanceData + `
+
+resource "tencentcloud_tcr_namespace" "my_ns" {
+  instance_id 	 = local.tcr_id
+  name			 = "tf_test_ns_retention"
+  is_public		 = true
+  is_auto_scan	 = true
+  is_prevent_vul = true
+  severity		 = "medium"
+  cve_whitelist_items	{
+    cve_id = "cve-xxxxx"
+  }
+}
+
+resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
+  registry_id = local.tcr_id
+  namespace_name = tencentcloud_tcr_namespace.my_ns.name
+  retention_rule {
+		key = "nDaysSinceLastPush"
+		value = 2
+  }
+  cron_setting = "daily"
+  disabled = true
 }
 
 `

@@ -21,10 +21,10 @@ resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
   namespace_name = tencentcloud_tcr_namespace.my_ns.name
   retention_rule {
 		key = "nDaysSinceLastPush"
-		value = 1
+		value = 2
   }
-  cron_setting = "manual"
-  disabled = false
+  cron_setting = "daily"
+  disabled = true
 }
 ```
 
@@ -110,7 +110,6 @@ func resourceTencentCloudTcrTagRetentionRuleCreate(d *schema.ResourceData, meta 
 		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
 		request       = tcr.NewCreateTagRetentionRuleRequest()
 		registryId    string
-		namespaceId   string
 		namespaceName string
 		tcrService    = TCRService{client: meta.(*TencentCloudClient).apiV3Conn}
 	)
@@ -120,7 +119,6 @@ func resourceTencentCloudTcrTagRetentionRuleCreate(d *schema.ResourceData, meta 
 	}
 
 	if v, ok := d.GetOkExists("namespace_id"); ok {
-		namespaceId = helper.Int64ToStr(v.(int64))
 		request.NamespaceId = helper.IntInt64(v.(int))
 	}
 
@@ -176,7 +174,7 @@ func resourceTencentCloudTcrTagRetentionRuleCreate(d *schema.ResourceData, meta 
 
 	if TagRetentionRule != nil {
 		retentionId := helper.Int64ToStr(*TagRetentionRule.RetentionId)
-		d.SetId(strings.Join([]string{registryId, namespaceId, retentionId}, FILED_SP))
+		d.SetId(strings.Join([]string{registryId, namespaceName, retentionId}, FILED_SP))
 	} else {
 		log.Printf("[CRITAL]%s TagRetentionRule is nil! Set unique id as empty.", logId)
 		d.SetId("")
@@ -213,6 +211,8 @@ func resourceTencentCloudTcrTagRetentionRuleRead(d *schema.ResourceData, meta in
 		log.Printf("[WARN]%s resource `TcrTagRetentionRule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	_ = d.Set("registry_id", registryId)
 
 	if TagRetentionRule.NamespaceName != nil {
 		_ = d.Set("namespace_name", TagRetentionRule.NamespaceName)
@@ -273,6 +273,9 @@ func resourceTencentCloudTcrTagRetentionRuleUpdate(d *schema.ResourceData, meta 
 	request.RegistryId = &registryId
 	request.NamespaceId = namespace.NamespaceId
 	request.RetentionId = helper.StrToInt64Point(retentionId)
+	if v, ok := d.GetOkExists("cron_setting"); ok {
+		request.CronSetting = helper.String(v.(string))
+	}
 
 	immutableArgs := []string{"registry_id", "namespace_name", "cron_setting"}
 
