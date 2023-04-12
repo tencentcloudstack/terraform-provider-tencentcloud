@@ -309,6 +309,8 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_instances_modification
 	tencentcloud_cvm_instance_vnc_url
 	tencentcloud_cvm_disaster_recover_group_quota
+	tencentcloud_cvm_chc_hosts
+	tencentcloud_cvm_chc_denied_actions
 
   Resource
     tencentcloud_instance
@@ -325,6 +327,9 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_launch_template_default_version
 	tencentcloud_cvm_security_group_attachment
 	tencentcloud_cvm_reboot_instance
+	tencentcloud_cvm_chc_assist_vpc
+	tencentcloud_cvm_chc_deploy_vpc
+	tencentcloud_cvm_chc_attribute
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -1439,6 +1444,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lighthouse_firewall_rules_template":       dataSourceTencentCloudLighthouseFirewallRulesTemplate(),
 			"tencentcloud_cvm_instance_vnc_url":                     dataSourceTencentCloudCvmInstanceVncUrl(),
 			"tencentcloud_cvm_disaster_recover_group_quota":         dataSourceTencentCloudCvmDisasterRecoverGroupQuota(),
+			"tencentcloud_cvm_chc_hosts":                            dataSourceTencentCloudCvmChcHosts(),
+			"tencentcloud_cvm_chc_denied_actions":                   dataSourceTencentCloudCvmChcDeniedActions(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1895,6 +1902,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lighthouse_firewall_rule":                   resourceTencentCloudLighthouseFirewallRule(),
 			"tencentcloud_cvm_security_group_attachment":              resourceTencentCloudCvmSecurityGroupAttachment(),
 			"tencentcloud_cvm_reboot_instance":                        resourceTencentCloudCvmRebootInstance(),
+			"tencentcloud_cvm_chc_assist_vpc":                         resourceTencentCloudCvmChcAssistVpc(),
+			"tencentcloud_cvm_chc_deploy_vpc":                         resourceTencentCloudCvmChcDeployVpc(),
+			"tencentcloud_cvm_chc_attribute":                          resourceTencentCloudCvmChcAttribute(),
 		},
 
 		ConfigureFunc: providerConfigure,
