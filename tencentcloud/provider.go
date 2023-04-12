@@ -157,6 +157,7 @@ Cloud Kafka(ckafka)
     tencentcloud_ckafka_acl
     tencentcloud_ckafka_topic
 	tencentcloud_ckafka_datahub_topic
+	tencentcloud_ckafka_connect_resource
 
 Cloud Access Management(CAM)
   Data Source
@@ -888,9 +889,14 @@ TencentCloud Automation Tools(TAT)
   Data Source
 	tencentcloud_tat_command
 	tencentcloud_tat_invoker
+	tencentcloud_tat_invoker_records
+	tencentcloud_tat_agent
   Resource
 	tencentcloud_tat_command
 	tencentcloud_tat_invoker
+	tencentcloud_tat_invoker_config
+	tencentcloud_tat_invocation_invoke_attachment
+	tencentcloud_tat_invocation_command_attachment
 
 Tencent Cloud Organization (TCO)
   Resource
@@ -922,6 +928,7 @@ TencentDB for DBbrain(dbbrain)
   Resource
 	tencentcloud_dbbrain_sql_filter
 	tencentcloud_dbbrain_security_audit_log_export_task
+	tencentcloud_dbbrain_db_diag_report_task
 	tencentcloud_dbbrain_modify_diag_db_instance_operation
 
 Data Transmission Service(DTS)
@@ -1375,6 +1382,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_dnspod_records":                           dataSourceTencentCloudDnspodRecords(),
 			"tencentcloud_tat_command":                              dataSourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
+			"tencentcloud_tat_invoker_records":                      dataSourceTencentCloudTatInvokerRecords(),
+			"tencentcloud_tat_agent":                                dataSourceTencentCloudTatAgent(),
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dbbrain_diag_event":                       dataSourceTencentCloudDbbrainDiagEvent(),
@@ -1632,6 +1641,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ckafka_acl":                                  resourceTencentCloudCkafkaAcl(),
 			"tencentcloud_ckafka_topic":                                resourceTencentCloudCkafkaTopic(),
 			"tencentcloud_ckafka_datahub_topic":                        resourceTencentCloudCkafkaDatahubTopic(),
+			"tencentcloud_ckafka_connect_resource":                     resourceTencentCloudCkafkaConnectResource(),
 			"tencentcloud_audit":                                       resourceTencentCloudAudit(),
 			"tencentcloud_audit_track":                                 resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                       resourceTencentCloudImage(),
@@ -1758,11 +1768,15 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_pts_cron_job":                               resourceTencentCloudPtsCronJob(),
 			"tencentcloud_tat_command":                                resourceTencentCloudTatCommand(),
 			"tencentcloud_tat_invoker":                                resourceTencentCloudTatInvoker(),
+			"tencentcloud_tat_invoker_config":                         resourceTencentCloudTatInvokerConfig(),
+			"tencentcloud_tat_invocation_invoke_attachment":           resourceTencentCloudTatInvocationInvokeAttachment(),
+			"tencentcloud_tat_invocation_command_attachment":          resourceTencentCloudTatInvocationCommandAttachment(),
 			"tencentcloud_organization_org_node":                      resourceTencentCloudOrganizationOrgNode(),
 			"tencentcloud_organization_org_member":                    resourceTencentCloudOrganizationOrgMember(),
 			"tencentcloud_organization_policy_sub_account_attachment": resourceTencentCloudOrganizationPolicySubAccountAttachment(),
 			"tencentcloud_dbbrain_sql_filter":                         resourceTencentCloudDbbrainSqlFilter(),
 			"tencentcloud_dbbrain_security_audit_log_export_task":     resourceTencentCloudDbbrainSecurityAuditLogExportTask(),
+			"tencentcloud_dbbrain_db_diag_report_task":                resourceTencentCloudDbbrainDbDiagReportTask(),
 			"tencentcloud_dbbrain_modify_diag_db_instance_operation":  resourceTencentCloudDbbrainModifyDiagDbInstanceOperation(),
 			"tencentcloud_rum_project":                                resourceTencentCloudRumProject(),
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),

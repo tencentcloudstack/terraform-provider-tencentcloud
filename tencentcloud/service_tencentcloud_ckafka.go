@@ -873,3 +873,70 @@ func (me *CkafkaService) DeleteCkafkaDatahubTopicById(ctx context.Context, topic
 
 	return
 }
+
+func (me *CkafkaService) DescribeCkafkaConnectResourceById(ctx context.Context, resourceId string) (connectResource *ckafka.DescribeConnectResourceResp, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDescribeConnectResourceRequest()
+	request.ResourceId = &resourceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeConnectResource(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Result == nil {
+		return
+	}
+
+	connectResource = response.Response.Result
+	return
+}
+
+func (me *CkafkaService) DeleteCkafkaConnectResourceById(ctx context.Context, resourceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDeleteConnectResourceRequest()
+	request.ResourceId = &resourceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DeleteConnectResource(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CkafkaService) CkafkaConnectResourceStateRefreshFunc(resourceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeCkafkaConnectResourceById(ctx, resourceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.Int64ToStr(*object.Status), nil
+	}
+}

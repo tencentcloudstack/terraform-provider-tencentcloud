@@ -859,6 +859,7 @@ const (
 // TAT
 const (
 	defaultInstanceId = "ins-881b1c8w"
+	defaultCommandId  = "cmd-rxbs7f5z"
 )
 
 // End of TAT
