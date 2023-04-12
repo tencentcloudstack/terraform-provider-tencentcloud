@@ -1,0 +1,6 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: update document
+```
+```release-note:enhancement
+resource/tencentcloud_kubernetes_auth_attachment: change para issuer in tke auth attachment from required to optional
+```
