@@ -15,7 +15,7 @@ Use this data source to query detailed information of cvm chc_denied_actions
 
 ```hcl
 data "tencentcloud_cvm_chc_denied_actions" "chc_denied_actions" {
-  chc_ids =
+  chc_ids = ["chc-xxxxx"]
 }
 ```
 
