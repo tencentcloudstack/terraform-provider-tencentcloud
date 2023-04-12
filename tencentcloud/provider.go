@@ -614,6 +614,7 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_repository
 	tencentcloud_tcr_token
 	tencentcloud_tcr_vpc_attachment
+	tencentcloud_tcr_tag_retention_rule
 
 Video on Demand(VOD)
   Data Source
@@ -1671,6 +1672,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_repository":                              resourceTencentCloudTcrRepository(),
 			"tencentcloud_tcr_token":                                   resourceTencentCloudTcrToken(),
 			"tencentcloud_tcr_vpc_attachment":                          resourceTencentCloudTcrVpcAttachment(),
+			"tencentcloud_tcr_tag_retention_rule":                      resourceTencentCloudTcrTagRetentionRule(),
 			"tencentcloud_tdmq_instance":                               resourceTencentCloudTdmqInstance(),
 			"tencentcloud_tdmq_namespace":                              resourceTencentCloudTdmqNamespace(),
 			"tencentcloud_tdmq_topic":                                  resourceTencentCloudTdmqTopic(),

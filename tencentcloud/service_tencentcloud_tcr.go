@@ -1033,3 +1033,68 @@ func (me *TCRService) DescribeReplicationInstances(ctx context.Context, request 
 
 	return
 }
+
+func (me *TCRService) DescribeTcrTagRetentionRuleById(ctx context.Context, registryId, namespaceName string, retentionId *string) (TagRetentionRule *tcr.RetentionPolicy, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDescribeTagRetentionRulesRequest()
+	request.RegistryId = &registryId
+	request.NamespaceName = &namespaceName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DescribeTagRetentionRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RetentionPolicyList) < 1 {
+		return
+	}
+
+	if retentionId != nil {
+		for _, policy := range response.Response.RetentionPolicyList {
+			if *policy.RetentionId == helper.StrToInt64(*retentionId) {
+				TagRetentionRule = policy
+				return
+			}
+		}
+		return nil, fmt.Errorf("[ERROR]%sThe TagRetentionRules[%v] not found in the qurey results. \n", logId, *retentionId)
+	}
+
+	TagRetentionRule = response.Response.RetentionPolicyList[0]
+	return
+}
+
+func (me *TCRService) DeleteTcrTagRetentionRuleById(ctx context.Context, registryId string, retentionId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDeleteTagRetentionRuleRequest()
+	request.RegistryId = &registryId
+	request.RetentionId = helper.StrToInt64Point(retentionId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DeleteTagRetentionRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
