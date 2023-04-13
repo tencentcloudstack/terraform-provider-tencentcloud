@@ -132,7 +132,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 # if you want to use tke default issuer and jwks_uri, please set use_tke_default to true and set issuer to empty string.
 resource "tencentcloud_kubernetes_auth_attachment" "test_use_tke_default_auth_attach" {
   cluster_id                           = tencentcloud_kubernetes_cluster.managed_cluster.id
-  issuer                               = ""
   auto_create_discovery_anonymous_auth = true
   use_tke_default                      = true
 }
@@ -160,18 +159,18 @@ func resourceTencentCloudTKEAuthAttachment() *schema.Resource {
 			},
 			"issuer": {
 				Type:        schema.TypeString,
-				Required:    true,
-				Description: "Specify service-account-issuer. If use_tke_default is set to `true`, please set this parameter value to empty string.",
+				Optional:    true,
+				Description: "Specify service-account-issuer. If use_tke_default is set to `true`, please do not set this field.",
 			},
 			"use_tke_default": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please use empty string as value of issuer and jwks_uri.",
+				Description: "If set to `true`, the issuer and jwks_uri will be generated automatically by tke, please do not set issuer and jwks_uri.",
 			},
 			"jwks_uri": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please set this parameter value to empty string or just ignore it.",
+				Description: "Specify service-account-jwks-uri. If use_tke_default is set to `true`, please do not set this field.",
 			},
 			"auto_create_discovery_anonymous_auth": {
 				Type:        schema.TypeBool,
@@ -206,9 +205,7 @@ func resourceTencentCloudTKEAuthAttachmentCreate(d *schema.ResourceData, meta in
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 	request := tke.NewModifyClusterAuthenticationOptionsRequest()
 	request.ClusterId = &id
-	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{
-		Issuer: helper.String(d.Get("issuer").(string)),
-	}
+	request.ServiceAccounts = &tke.ServiceAccountAuthenticationOptions{}
 
 	if v, ok := d.GetOk("auto_create_discovery_anonymous_auth"); ok {
 		request.ServiceAccounts.AutoCreateDiscoveryAnonymousAuth = helper.Bool(v.(bool))
@@ -217,6 +214,9 @@ func resourceTencentCloudTKEAuthAttachmentCreate(d *schema.ResourceData, meta in
 	if v, ok := d.GetOk("use_tke_default"); ok && v.(bool) {
 		request.ServiceAccounts.UseTKEDefault = helper.Bool(true)
 	} else {
+		if v, ok := d.GetOk("issuer"); ok {
+			request.ServiceAccounts.Issuer = helper.String(v.(string))
+		}
 		if v, ok := d.GetOk("jwks_uri"); ok {
 			request.ServiceAccounts.JWKSURI = helper.String(v.(string))
 		}
