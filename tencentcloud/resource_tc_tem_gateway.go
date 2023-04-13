@@ -124,7 +124,7 @@ func resourceTencentCloudTemGateway() *schema.Resource {
 										Type:        schema.TypeString,
 										Optional:    true,
 										Computed:    true,
-										Description: "secret name, if using a certificate, fill in an empty string.",
+										Description: "secret name, if you use a certificate, you don't need to fill in this field.",
 									},
 									"certificate_id": {
 										Type:        schema.TypeString,
