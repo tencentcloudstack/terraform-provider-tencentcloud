@@ -92,7 +92,7 @@ The `tls` object supports the following:
 
 * `certificate_id` - (Required, String) certificate ID.
 * `hosts` - (Required, Set) host names.
-* `secret_name` - (Optional, String) secret name.
+* `secret_name` - (Optional, String) secret name, if you use a certificate, you don't need to fill in this field.
 
 ## Attributes Reference
 
