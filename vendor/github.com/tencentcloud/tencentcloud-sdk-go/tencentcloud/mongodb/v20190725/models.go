@@ -180,7 +180,7 @@ type ClientConnection struct {
 
 // Predefined struct for user
 type CreateAccountUserRequestParams struct {
-	// 实例 ID。
+	// 实例 ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 新账号名称。其格式要求如下：<ul><li>字符范围[1,32]。</li><li>可输入[A,Z]、[a,z]、[1,9]范围的字符以及下划线“_”与短划线“-”。</li></ul>
@@ -202,7 +202,7 @@ type CreateAccountUserRequestParams struct {
 type CreateAccountUserRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例 ID。
+	// 实例 ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 新账号名称。其格式要求如下：<ul><li>字符范围[1,32]。</li><li>可输入[A,Z]、[a,z]、[1,9]范围的字符以及下划线“_”与短划线“-”。</li></ul>
@@ -272,26 +272,30 @@ func (r *CreateAccountUserResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateBackupDBInstanceRequestParams struct {
-	// 实例id
+	// 实例 ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 0-逻辑备份，1-物理备份
+	// 设置备份方式。
+	// - 0：逻辑备份。
+	// - 1：物理备份。
 	BackupMethod *int64 `json:"BackupMethod,omitempty" name:"BackupMethod"`
 
-	// 备份备注
+	// 备份备注信息。
 	BackupRemark *string `json:"BackupRemark,omitempty" name:"BackupRemark"`
 }
 
 type CreateBackupDBInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例id
+	// 实例 ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 0-逻辑备份，1-物理备份
+	// 设置备份方式。
+	// - 0：逻辑备份。
+	// - 1：物理备份。
 	BackupMethod *int64 `json:"BackupMethod,omitempty" name:"BackupMethod"`
 
-	// 备份备注
+	// 备份备注信息。
 	BackupRemark *string `json:"BackupRemark,omitempty" name:"BackupRemark"`
 }
 
@@ -318,7 +322,7 @@ func (r *CreateBackupDBInstanceRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateBackupDBInstanceResponseParams struct {
-	// 查询备份流程的状态
+	// 查询备份流程的状态。
 	AsyncRequestId *string `json:"AsyncRequestId,omitempty" name:"AsyncRequestId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -1022,15 +1026,86 @@ type DBInstancePrice struct {
 }
 
 // Predefined struct for user
+type DeleteAccountUserRequestParams struct {
+	// 指定待删除账号的实例 ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 配置待删除的账号名。
+	UserName *string `json:"UserName,omitempty" name:"UserName"`
+
+	// 配置 mongouser 对应的密码。mongouser为系统默认账号，输入其对应的密码。
+	MongoUserPassword *string `json:"MongoUserPassword,omitempty" name:"MongoUserPassword"`
+}
+
+type DeleteAccountUserRequest struct {
+	*tchttp.BaseRequest
+	
+	// 指定待删除账号的实例 ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 配置待删除的账号名。
+	UserName *string `json:"UserName,omitempty" name:"UserName"`
+
+	// 配置 mongouser 对应的密码。mongouser为系统默认账号，输入其对应的密码。
+	MongoUserPassword *string `json:"MongoUserPassword,omitempty" name:"MongoUserPassword"`
+}
+
+func (r *DeleteAccountUserRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteAccountUserRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "UserName")
+	delete(f, "MongoUserPassword")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteAccountUserRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteAccountUserResponseParams struct {
+	// 账户删除任务ID。
+	FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteAccountUserResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteAccountUserResponseParams `json:"Response"`
+}
+
+func (r *DeleteAccountUserResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteAccountUserResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeAccountUsersRequestParams struct {
-	// 实例ID。
+	// 指定待获取账号的实例ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
 type DescribeAccountUsersRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID。
+	// 指定待获取账号的实例ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
@@ -1253,26 +1328,26 @@ func (r *DescribeBackupDownloadTaskResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClientConnectionsRequestParams struct {
-	// 实例ID，格式如：cmgo-p8vnipr5。与云数据库控制台页面中显示的实例ID相同
+	// 指定待查询的实例ID，例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 单次请求返回的数量，最小值为1，最大值为1000，默认值为1000。
+	// 单次请求返回的数量。最小值为1，最大值为1000，默认值为1000。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，默认值为0。
+	// 偏移量，默认值为0。Offset=Limit*(页码-1)。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 }
 
 type DescribeClientConnectionsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID，格式如：cmgo-p8vnipr5。与云数据库控制台页面中显示的实例ID相同
+	// 指定待查询的实例ID，例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 单次请求返回的数量，最小值为1，最大值为1000，默认值为1000。
+	// 单次请求返回的数量。最小值为1，最大值为1000，默认值为1000。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，默认值为0。
+	// 偏移量，默认值为0。Offset=Limit*(页码-1)。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 }
 
@@ -1299,7 +1374,7 @@ func (r *DescribeClientConnectionsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeClientConnectionsResponseParams struct {
-	// 客户端连接信息，包括客户端IP和对应IP的连接数量。
+	// 客户端连接信息，包括客户端 IP 和对应 IP 的连接数量。
 	Clients []*ClientConnection `json:"Clients,omitempty" name:"Clients"`
 
 	// 满足条件的记录总条数，可用于分页查询。
@@ -1706,93 +1781,105 @@ func (r *DescribeDBInstanceNodePropertyResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DescribeDBInstancesRequestParams struct {
-	// 实例ID列表，格式如：cmgo-p8vnipr5。与云数据库控制台页面中显示的实例ID相同
+	// 实例 ID 列表。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 
-	// 实例类型，取值范围：0-所有实例,1-正式实例，2-临时实例, 3-只读实例，-1-正式实例+只读+灾备实例
+	// 实例类型。取值范围如下：<ul><li>0：所有实例。</li><li>1：正式实例。</li><li>2：临时实例。</li><li>3：只读实例。</li><li>-1：正式实例、只读、灾备实例。</li></ul>
 	InstanceType *int64 `json:"InstanceType,omitempty" name:"InstanceType"`
 
-	// 集群类型，取值范围：0-副本集实例，1-分片实例，-1-所有实例
+	// 集群类型，取值范围如下：<ul><li>0：副本集实例。</li><li>1：分片实例。</li><li>-1：所有实例。</li></ul>
 	ClusterType *int64 `json:"ClusterType,omitempty" name:"ClusterType"`
 
-	// 实例状态，取值范围：0-待初始化，1-流程执行中，2-实例有效，-2-已隔离（包年包月实例），-3-已隔离（按量计费实例）
+	// 实例状态，取值范围如下所示：<ul><li>0：待初始化。</li><li>1：流程执行中。</li><li>2：实例有效。</li><li>-2：已隔离（包年包月实例）。</li><li>-3：已隔离（按量计费实例）。</li></ul>
 	Status []*int64 `json:"Status,omitempty" name:"Status"`
 
-	// 私有网络的ID，基础网络则不传该参数
+	// 私有网络的 ID。
+	// - 基础网络则无需配置该参数。
+	// - 请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表中，单击私有网络名称，在**私有网络**页面获取其 ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 私有网络的子网ID，基础网络则不传该参数。入参设置该参数的同时，必须设置相应的VpcId
+	// 私有网络的子网ID。
+	// - 基础网络则无需配置该参数。
+	// - 请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表中，单击私有网络名称，在**私有网络**页面获取其子网 ID。
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 付费类型，取值范围：0-按量计费，1-包年包月，-1-按量计费+包年包月
+	// 付费类型，取值范围如下：<ul><li>0：查询按量计费实例。</li><li>1：查询包年包月实例。</li><li>-1：查询按量计费与包年包月实例。</li></ul>
 	PayMode *int64 `json:"PayMode,omitempty" name:"PayMode"`
 
-	// 单次请求返回的数量，最小值为1，最大值为100，默认值为20
+	// 单次请求返回的数量。默认值为20，取值范围为[1,100]。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，默认值为0
+	// 偏移量，默认值为0。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 返回结果集排序的字段，目前支持："ProjectId", "InstanceName", "CreateTime"，默认为升序排序
+	// 配置返回结果排序依据的字段。目前支持依据"ProjectId"、"InstanceName"、"CreateTime"排序。
 	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
 
-	// 返回结果集排序方式，目前支持："ASC"或者"DESC"
+	// 配置返回结果的排序方式。
+	// - ASC：升序。
+	// - DESC：降序。
 	OrderByType *string `json:"OrderByType,omitempty" name:"OrderByType"`
 
-	// 项目 ID
+	// 项目 ID。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)，在右上角的账户信息下拉菜单中，选择项目管理查询项目。
 	ProjectIds []*uint64 `json:"ProjectIds,omitempty" name:"ProjectIds"`
 
-	// 搜索关键词，支持实例ID、实例名称、完整IP
+	// 配置查询搜索的关键词。支持配置为实例ID、实例名称或者内网 IP 地址。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 
-	// Tag信息
-	Tags *TagInfo `json:"Tags,omitempty" name:"Tags"`
+	// 标签信息，包含标签键与标签值。
+	Tags []*TagInfo `json:"Tags,omitempty" name:"Tags"`
 }
 
 type DescribeDBInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID列表，格式如：cmgo-p8vnipr5。与云数据库控制台页面中显示的实例ID相同
+	// 实例 ID 列表。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 
-	// 实例类型，取值范围：0-所有实例,1-正式实例，2-临时实例, 3-只读实例，-1-正式实例+只读+灾备实例
+	// 实例类型。取值范围如下：<ul><li>0：所有实例。</li><li>1：正式实例。</li><li>2：临时实例。</li><li>3：只读实例。</li><li>-1：正式实例、只读、灾备实例。</li></ul>
 	InstanceType *int64 `json:"InstanceType,omitempty" name:"InstanceType"`
 
-	// 集群类型，取值范围：0-副本集实例，1-分片实例，-1-所有实例
+	// 集群类型，取值范围如下：<ul><li>0：副本集实例。</li><li>1：分片实例。</li><li>-1：所有实例。</li></ul>
 	ClusterType *int64 `json:"ClusterType,omitempty" name:"ClusterType"`
 
-	// 实例状态，取值范围：0-待初始化，1-流程执行中，2-实例有效，-2-已隔离（包年包月实例），-3-已隔离（按量计费实例）
+	// 实例状态，取值范围如下所示：<ul><li>0：待初始化。</li><li>1：流程执行中。</li><li>2：实例有效。</li><li>-2：已隔离（包年包月实例）。</li><li>-3：已隔离（按量计费实例）。</li></ul>
 	Status []*int64 `json:"Status,omitempty" name:"Status"`
 
-	// 私有网络的ID，基础网络则不传该参数
+	// 私有网络的 ID。
+	// - 基础网络则无需配置该参数。
+	// - 请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表中，单击私有网络名称，在**私有网络**页面获取其 ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 私有网络的子网ID，基础网络则不传该参数。入参设置该参数的同时，必须设置相应的VpcId
+	// 私有网络的子网ID。
+	// - 基础网络则无需配置该参数。
+	// - 请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表中，单击私有网络名称，在**私有网络**页面获取其子网 ID。
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 付费类型，取值范围：0-按量计费，1-包年包月，-1-按量计费+包年包月
+	// 付费类型，取值范围如下：<ul><li>0：查询按量计费实例。</li><li>1：查询包年包月实例。</li><li>-1：查询按量计费与包年包月实例。</li></ul>
 	PayMode *int64 `json:"PayMode,omitempty" name:"PayMode"`
 
-	// 单次请求返回的数量，最小值为1，最大值为100，默认值为20
+	// 单次请求返回的数量。默认值为20，取值范围为[1,100]。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 偏移量，默认值为0
+	// 偏移量，默认值为0。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 返回结果集排序的字段，目前支持："ProjectId", "InstanceName", "CreateTime"，默认为升序排序
+	// 配置返回结果排序依据的字段。目前支持依据"ProjectId"、"InstanceName"、"CreateTime"排序。
 	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
 
-	// 返回结果集排序方式，目前支持："ASC"或者"DESC"
+	// 配置返回结果的排序方式。
+	// - ASC：升序。
+	// - DESC：降序。
 	OrderByType *string `json:"OrderByType,omitempty" name:"OrderByType"`
 
-	// 项目 ID
+	// 项目 ID。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)，在右上角的账户信息下拉菜单中，选择项目管理查询项目。
 	ProjectIds []*uint64 `json:"ProjectIds,omitempty" name:"ProjectIds"`
 
-	// 搜索关键词，支持实例ID、实例名称、完整IP
+	// 配置查询搜索的关键词。支持配置为实例ID、实例名称或者内网 IP 地址。
 	SearchKey *string `json:"SearchKey,omitempty" name:"SearchKey"`
 
-	// Tag信息
-	Tags *TagInfo `json:"Tags,omitempty" name:"Tags"`
+	// 标签信息，包含标签键与标签值。
+	Tags []*TagInfo `json:"Tags,omitempty" name:"Tags"`
 }
 
 func (r *DescribeDBInstancesRequest) ToJsonString() string {
@@ -1829,10 +1916,10 @@ func (r *DescribeDBInstancesRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBInstancesResponseParams struct {
-	// 符合查询条件的实例总数
+	// 符合查询条件的实例总数。
 	TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-	// 实例详细信息列表
+	// 实例详细信息列表。
 	InstanceDetails []*InstanceDetail `json:"InstanceDetails,omitempty" name:"InstanceDetails"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -1857,14 +1944,14 @@ func (r *DescribeDBInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceParamsRequestParams struct {
-	// 实例ID
+	// 指定待查询参数列表的实例ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
 type DescribeInstanceParamsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 指定待查询参数列表的实例ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
@@ -1889,16 +1976,16 @@ func (r *DescribeInstanceParamsRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeInstanceParamsResponseParams struct {
-	// 值为枚举类型参数集合
+	// 参数值为枚举类型参数集合。
 	InstanceEnumParam []*InstanceEnumParam `json:"InstanceEnumParam,omitempty" name:"InstanceEnumParam"`
 
-	// 值为integer类型参数集合
+	// 参数值为 Integer 类型参数集合。
 	InstanceIntegerParam []*InstanceIntegerParam `json:"InstanceIntegerParam,omitempty" name:"InstanceIntegerParam"`
 
-	// 值为text类型的参数集合
+	// 参数值为 Text 类型的参数集合。
 	InstanceTextParam []*InstanceTextParam `json:"InstanceTextParam,omitempty" name:"InstanceTextParam"`
 
-	// 值为混合类型的参数集合
+	// 参数值为混合类型的参数集合。
 	InstanceMultiParam []*InstanceMultiParam `json:"InstanceMultiParam,omitempty" name:"InstanceMultiParam"`
 
 	// 当前实例支持修改的参数个数统计 如0
@@ -1926,14 +2013,14 @@ func (r *DescribeInstanceParamsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSecurityGroupRequestParams struct {
-	// 实例ID，格式如：cmgo-p8vnipr5。
+	// 实例 ID。例如：cmgo-p8vn****。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
 type DescribeSecurityGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID，格式如：cmgo-p8vnipr5。
+	// 实例 ID。例如：cmgo-p8vn****。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
@@ -1958,7 +2045,7 @@ func (r *DescribeSecurityGroupRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeSecurityGroupResponseParams struct {
-	// 实例绑定的安全组
+	// 实例绑定的安全组信息。
 	Groups []*SecurityGroup `json:"Groups,omitempty" name:"Groups"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -2103,7 +2190,7 @@ type DescribeSlowLogsRequestParams struct {
 	// 分页大小，最小值为1，最大值为100，默认值为20。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 慢日志返回格式，可设置为json，不传默认返回原生慢日志格式。
+	// 慢日志返回格式。默认返回原生慢日志格式，4.4及以上版本可设置为json。
 	Format *string `json:"Format,omitempty" name:"Format"`
 }
 
@@ -2128,7 +2215,7 @@ type DescribeSlowLogsRequest struct {
 	// 分页大小，最小值为1，最大值为100，默认值为20。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 慢日志返回格式，可设置为json，不传默认返回原生慢日志格式。
+	// 慢日志返回格式。默认返回原生慢日志格式，4.4及以上版本可设置为json。
 	Format *string `json:"Format,omitempty" name:"Format"`
 }
 
@@ -2468,7 +2555,7 @@ func (r *InquirePriceCreateDBInstancesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type InquirePriceModifyDBInstanceSpecRequestParams struct {
-	// 实例ID，格式如：cmgo-p8vnipr5。与云数据库控制台页面中显示的实例ID相同。
+	// 实例 ID，格式如：cmgo-p8vn****。与云数据库控制台页面中显示的实例ID相同。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 变更配置后实例内存大小，单位：GB。
@@ -2477,17 +2564,17 @@ type InquirePriceModifyDBInstanceSpecRequestParams struct {
 	// 变更配置后实例磁盘大小，单位：GB。
 	Volume *int64 `json:"Volume,omitempty" name:"Volume"`
 
-	// 实例变更后的节点数，取值范围具体参照查询云数据库的售卖规格返回参数。默认为不变更节点数
+	// 实例节点数。默认为不变更节点数，暂不支持变更。
 	NodeNum *int64 `json:"NodeNum,omitempty" name:"NodeNum"`
 
-	// 实例变更后的分片数，取值范围具体参照查询云数据库的售卖规格返回参数。只能增加不能减少，默认为不变更分片数
+	// 实例分片数。默认为不变更分片数，暂不支持变更。
 	ReplicateSetNum *int64 `json:"ReplicateSetNum,omitempty" name:"ReplicateSetNum"`
 }
 
 type InquirePriceModifyDBInstanceSpecRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID，格式如：cmgo-p8vnipr5。与云数据库控制台页面中显示的实例ID相同。
+	// 实例 ID，格式如：cmgo-p8vn****。与云数据库控制台页面中显示的实例ID相同。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 变更配置后实例内存大小，单位：GB。
@@ -2496,10 +2583,10 @@ type InquirePriceModifyDBInstanceSpecRequest struct {
 	// 变更配置后实例磁盘大小，单位：GB。
 	Volume *int64 `json:"Volume,omitempty" name:"Volume"`
 
-	// 实例变更后的节点数，取值范围具体参照查询云数据库的售卖规格返回参数。默认为不变更节点数
+	// 实例节点数。默认为不变更节点数，暂不支持变更。
 	NodeNum *int64 `json:"NodeNum,omitempty" name:"NodeNum"`
 
-	// 实例变更后的分片数，取值范围具体参照查询云数据库的售卖规格返回参数。只能增加不能减少，默认为不变更分片数
+	// 实例分片数。默认为不变更分片数，暂不支持变更。
 	ReplicateSetNum *int64 `json:"ReplicateSetNum,omitempty" name:"ReplicateSetNum"`
 }
 
@@ -2779,112 +2866,126 @@ type InstanceDetail struct {
 }
 
 type InstanceEnumParam struct {
-	// 参数当前值
+	// 参数当前值。
 	CurrentValue *string `json:"CurrentValue,omitempty" name:"CurrentValue"`
 
-	// 默认值
+	// 参数默认值。
 	DefaultValue *string `json:"DefaultValue,omitempty" name:"DefaultValue"`
 
-	// 枚举值，所有支持的值
+	// 枚举值，所有支持的值。
 	EnumValue []*string `json:"EnumValue,omitempty" name:"EnumValue"`
 
-	// 是否需要重启生效 1:需要重启后生效；0：无需重启，设置成功即可生效；
+	// 参数修改之后是否需要重启生效。
+	// - 1：需要重启后生效。
+	// - 0：无需重启，设置成功即可生效。
 	NeedRestart *string `json:"NeedRestart,omitempty" name:"NeedRestart"`
 
-	// 参数名称
+	// 参数名称。
 	ParamName *string `json:"ParamName,omitempty" name:"ParamName"`
 
-	// 中英文说明
+	// 参数说明。
 	Tips []*string `json:"Tips,omitempty" name:"Tips"`
 
-	// 参数值类型说明
+	// 参数值类型说明。
 	ValueType *string `json:"ValueType,omitempty" name:"ValueType"`
 
-	// 是否为运行中参数值 1:运行中参数值；0：非运行中参数值；
+	// 是否为运行中参数值。
+	// - 1：运行中参数值。
+	// - 0：非运行中参数值。
 	Status *uint64 `json:"Status,omitempty" name:"Status"`
 }
 
 type InstanceIntegerParam struct {
-	// 当前值
+	// 参数当前值。
 	CurrentValue *string `json:"CurrentValue,omitempty" name:"CurrentValue"`
 
-	// 默认值
+	// 参数默认值。
 	DefaultValue *string `json:"DefaultValue,omitempty" name:"DefaultValue"`
 
-	// 最大值
+	// 参数最大值。
 	Max *string `json:"Max,omitempty" name:"Max"`
 
-	// 最小值
+	// 最小值。
 	Min *string `json:"Min,omitempty" name:"Min"`
 
-	// 是否需要重启生效 1:需要重启后生效；0：无需重启，设置成功即可生效；
+	// 参数修改之后是否需要重启生效。
+	// - 1:需要重启后生效。
+	// - 0：无需重启，设置成功即可生效。
 	NeedRestart *string `json:"NeedRestart,omitempty" name:"NeedRestart"`
 
-	// 参数名称
+	// 参数名称。
 	ParamName *string `json:"ParamName,omitempty" name:"ParamName"`
 
-	// 参数说明
+	// 参数说明。
 	Tips []*string `json:"Tips,omitempty" name:"Tips"`
 
-	// 参数类型
+	// 参数类型。
 	ValueType *string `json:"ValueType,omitempty" name:"ValueType"`
 
-	// 是否为运行中参数值 1:运行中参数值；0：非运行中参数值；
+	// 是否为运行中参数值。
+	// - 1：运行中参数值。
+	// - 0：非运行中参数值。
 	Status *uint64 `json:"Status,omitempty" name:"Status"`
 
-	// 冗余字段，可忽略
+	// 冗余字段，可忽略。
 	Unit *string `json:"Unit,omitempty" name:"Unit"`
 }
 
 type InstanceMultiParam struct {
-	// 当前值
+	// 参数当前值。
 	CurrentValue *string `json:"CurrentValue,omitempty" name:"CurrentValue"`
 
-	// 默认值
+	// 参数默认值。
 	DefaultValue *string `json:"DefaultValue,omitempty" name:"DefaultValue"`
 
-	// 指导值范围
+	// 参考值范围。
 	EnumValue []*string `json:"EnumValue,omitempty" name:"EnumValue"`
 
-	// 是否需要重启生效 1:需要重启后生效；0：无需重启，设置成功即可生效；
+	// 参数修改后是否需要重启才会生效。
+	// - 1：需要重启后生效。
+	// - 0：无需重启，设置成功即可生效。
 	NeedRestart *string `json:"NeedRestart,omitempty" name:"NeedRestart"`
 
-	// 参数名称
+	// 参数名称。
 	ParamName *string `json:"ParamName,omitempty" name:"ParamName"`
 
-	// 是否为运行中参数值 1:运行中参数值；0：非运行中参数值；
+	// 是否为运行中参数值。
+	// - 1：运行中参数值。
+	// - 0：非运行中参数值。
 	Status *uint64 `json:"Status,omitempty" name:"Status"`
 
-	// 参数说明
+	// 参数说明。
 	Tips []*string `json:"Tips,omitempty" name:"Tips"`
 
-	// 当前值的类型描述，默认为multi
+	// 当前值的类型描述，默认为multi。
 	ValueType *string `json:"ValueType,omitempty" name:"ValueType"`
 }
 
 type InstanceTextParam struct {
-	// 当前值
+	// 参数当前值。
 	CurrentValue *string `json:"CurrentValue,omitempty" name:"CurrentValue"`
 
-	// 默认值
+	// 参数默认值。
 	DefaultValue *string `json:"DefaultValue,omitempty" name:"DefaultValue"`
 
-	// 是否需要重启
+	// 修改参数值之后是否需要重启。
 	NeedRestart *string `json:"NeedRestart,omitempty" name:"NeedRestart"`
 
-	// 参数名称
+	// 参数名称。
 	ParamName *string `json:"ParamName,omitempty" name:"ParamName"`
 
-	// text类型值
+	// Text 类型参数对应的值。
 	TextValue *string `json:"TextValue,omitempty" name:"TextValue"`
 
-	// 参数说明
+	// 参数说明。
 	Tips []*string `json:"Tips,omitempty" name:"Tips"`
 
-	// 值类型说明
+	// 参数值类型说明。
 	ValueType *string `json:"ValueType,omitempty" name:"ValueType"`
 
-	// 是否为运行中参数值 1:运行中参数值；0：非运行中参数值；
+	// 是否为运行中的参数值。
+	// - 1：运行中参数值。
+	// - 0：非运行中参数值。
 	Status *string `json:"Status,omitempty" name:"Status"`
 }
 
@@ -3090,20 +3191,20 @@ func (r *ModifyDBInstanceNetworkAddressResponse) FromJsonString(s string) error 
 
 // Predefined struct for user
 type ModifyDBInstanceSecurityGroupRequestParams struct {
-	// 实例ID
+	// 实例 ID。例如：cmgo-7pje****。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 目标安全组id
+	// 目标安全组 ID。请通过接口[DescribeSecurityGroup](https://cloud.tencent.com/document/product/240/55675)查看具体的安全组 ID。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 }
 
 type ModifyDBInstanceSecurityGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID
+	// 实例 ID。例如：cmgo-7pje****。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 目标安全组id
+	// 目标安全组 ID。请通过接口[DescribeSecurityGroup](https://cloud.tencent.com/document/product/240/55675)查看具体的安全组 ID。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 }
 
@@ -3635,26 +3736,26 @@ type SecurityGroupBound struct {
 
 // Predefined struct for user
 type SetAccountUserPrivilegeRequestParams struct {
-	// 实例ID。
+	// 指定待设置账号的实例ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 账号名称。
+	// 设置账号名称。
 	UserName *string `json:"UserName,omitempty" name:"UserName"`
 
-	// 权限信息。
+	// 设置权限信息。
 	AuthRole []*Auth `json:"AuthRole,omitempty" name:"AuthRole"`
 }
 
 type SetAccountUserPrivilegeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例ID。
+	// 指定待设置账号的实例ID。例如：cmgo-p8vn****。请登录 [MongoDB 控制台](https://console.cloud.tencent.com/mongodb)在实例列表复制实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 账号名称。
+	// 设置账号名称。
 	UserName *string `json:"UserName,omitempty" name:"UserName"`
 
-	// 权限信息。
+	// 设置权限信息。
 	AuthRole []*Auth `json:"AuthRole,omitempty" name:"AuthRole"`
 }
 
@@ -3681,7 +3782,7 @@ func (r *SetAccountUserPrivilegeRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type SetAccountUserPrivilegeResponseParams struct {
-	// 设置任务ID,用于查询是否设置完成
+	// 任务ID。
 	FlowId *uint64 `json:"FlowId,omitempty" name:"FlowId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
