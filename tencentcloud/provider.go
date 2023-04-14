@@ -210,6 +210,9 @@ Cloud Connect Network(CCN)
   Data Source
     tencentcloud_ccn_bandwidth_limits
     tencentcloud_ccn_instances
+	tencentcloud_ccn_cross_border_compliance
+	tencentcloud_ccn_tenant_instances
+	tencentcloud_ccn_cross_border_flow_monitor
 
   Resource
     tencentcloud_ccn
@@ -1210,6 +1213,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ha_vip_eip_attachments":                   dataSourceTencentCloudHaVipEipAttachments(),
 			"tencentcloud_ccn_instances":                            dataSourceTencentCloudCcnInstances(),
 			"tencentcloud_ccn_bandwidth_limits":                     dataSourceTencentCloudCcnBandwidthLimits(),
+			"tencentcloud_ccn_cross_border_compliance":              dataSourceTencentCloudCcnCrossBorderCompliance(),
+			"tencentcloud_ccn_tenant_instances":                     dataSourceTencentCloudCcnTenantInstance(),
+			"tencentcloud_ccn_cross_border_flow_monitor":            dataSourceTencentCloudCcnCrossBorderFlowMonitor(),
 			"tencentcloud_dc_instances":                             dataSourceTencentCloudDcInstances(),
 			"tencentcloud_dcx_instances":                            dataSourceTencentCloudDcxInstances(),
 			"tencentcloud_dc_gateway_instances":                     dataSourceTencentCloudDcGatewayInstances(),

@@ -645,6 +645,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199 h1:6Yt74l4
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199/go.mod h1:Yw6OQ33z3s4k0HVYTNSffB12qOzEJ2Zf1Vj4+5S3sRs=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.569 h1:rrtTVqu44XEXf88RDE0G7dgT+MwR1XA/YfM11a/+F5g=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.569/go.mod h1:Xt85jPTJISGWwEq1NSpPvoMZ8h/lxhUXdoH7pFQ9PPU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.638 h1:0/btEL8LdbikGa1nVW/3TnHjArPsDGwSKuLi9GZQzPw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.638/go.mod h1:5XIJPKHA/448Rb9HTuKUn48YTN/mZFKFTmqQTk1/JQA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199 h1:hMBLtiJPnZ9GvA677cTB6ELBR6B68wCR2QY1sNoGQc4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199/go.mod h1:nnY91/H3j/Gu7V/oCA6Zeg8T5D3q36EUdBh4EjmHwqY=
 github.com/tencentyun/cos-go-sdk-v5 v0.7.40 h1:W6vDGKCHe4wBACI1d2UgE6+50sJFhRWU4O8IB2ozzxM=
