@@ -5819,3 +5819,236 @@ func (me *VpcService) DescribeVpcCcnRoutesById(ctx context.Context, ccnId string
 
 	return
 }
+
+func (me *VpcService) DescribeCcnCrossBorderComplianceByFilter(ctx context.Context, param map[string]interface{}) (crossBorderCompliance []*vpc.CrossBorderCompliance, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeCrossBorderComplianceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "service_provider" {
+			request.ServiceProvider = v.(*string)
+		}
+		if k == "compliance_id" {
+			if *v.(*uint64) != 0 {
+				request.ComplianceId = v.(*uint64)
+			}
+		}
+		if k == "company" {
+			request.Company = v.(*string)
+		}
+		if k == "uniform_social_credit_code" {
+			request.UniformSocialCreditCode = v.(*string)
+		}
+		if k == "legal_person" {
+			request.LegalPerson = v.(*string)
+		}
+		if k == "issuing_authority" {
+			request.IssuingAuthority = v.(*string)
+		}
+		if k == "business_address" {
+			request.BusinessAddress = v.(*string)
+		}
+		if k == "post_code" {
+			if *v.(*uint64) != 0 {
+				request.PostCode = v.(*uint64)
+			}
+		}
+		if k == "manager" {
+			request.Manager = v.(*string)
+		}
+		if k == "manager_id" {
+			request.ManagerId = v.(*string)
+		}
+		if k == "manager_address" {
+			request.ManagerAddress = v.(*string)
+		}
+		if k == "manager_telephone" {
+			request.ManagerTelephone = v.(*string)
+		}
+		if k == "email" {
+			request.Email = v.(*string)
+		}
+		if k == "service_start_date" {
+			request.ServiceStartDate = v.(*string)
+		}
+		if k == "service_end_date" {
+			request.ServiceEndDate = v.(*string)
+		}
+		if k == "state" {
+			request.State = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeCrossBorderCompliance(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CrossBorderComplianceSet) < 1 {
+			break
+		}
+		crossBorderCompliance = append(crossBorderCompliance, response.Response.CrossBorderComplianceSet...)
+		if len(response.Response.CrossBorderComplianceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeTenantCcnByFilter(ctx context.Context, param map[string]interface{}) (tenantCcn []*vpc.CcnInstanceInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeTenantCcnsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = make([]*vpc.Filter, 0, len(param))
+	for k, v := range param {
+		filter := &vpc.Filter{
+			Name:   helper.String(k),
+			Values: v.([]*string),
+		}
+		request.Filters = append(request.Filters, filter)
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeTenantCcns(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CcnSet) < 1 {
+			break
+		}
+		tenantCcn = append(tenantCcn, response.Response.CcnSet...)
+		if len(response.Response.CcnSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeCcnCrossBorderFlowMonitorByFilter(ctx context.Context, param map[string]interface{}) (crossBorderFlowMonitor []*vpc.CrossBorderFlowMonitorData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeCrossBorderFlowMonitorRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "source_region" {
+			request.SourceRegion = v.(*string)
+		}
+		if k == "destination_region" {
+			request.DestinationRegion = v.(*string)
+		}
+		if k == "ccn_id" {
+			request.CcnId = v.(*string)
+		}
+		if k == "ccn_uin" {
+			request.CcnUin = v.(*string)
+		}
+		if k == "period" {
+			if *v.(*int64) != 0 {
+				request.Period = v.(*int64)
+			}
+		}
+		if k == "start_time" {
+			request.StartTime = v.(*string)
+		}
+		if k == "end_time" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeCrossBorderFlowMonitor(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.CrossBorderFlowMonitorData) < 1 {
+		return
+	}
+
+	crossBorderFlowMonitor = response.Response.CrossBorderFlowMonitorData
+
+	return
+}
+
+func (me *VpcService) DescribeVpnCustomerGatewayVendors(ctx context.Context) (vpnCustomerGatewayVendors []*vpc.CustomerGatewayVendor, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeCustomerGatewayVendorsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeCustomerGatewayVendors(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.CustomerGatewayVendorSet) < 1 {
+		return
+	}
+
+	vpnCustomerGatewayVendors = response.Response.CustomerGatewayVendorSet
+	return
+}
