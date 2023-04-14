@@ -51,7 +51,11 @@ import (
 	"context"
 	"crypto/md5"
 	"fmt"
+	"log"
 	"strings"
+
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
@@ -61,6 +65,7 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudCcnAttachmentCreate,
 		Read:   resourceTencentCloudCcnAttachmentRead,
+		Update: resourceTencentCloudCcnAttachmentUpdate,
 		Delete: resourceTencentCloudCcnAttachmentDelete,
 
 		Schema: map[string]*schema.Schema{
@@ -88,6 +93,11 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "ID of instance is attached.",
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Remark of attachment.",
 			},
 			"ccn_uin": {
 				Type:        schema.TypeString,
@@ -132,11 +142,16 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 		instanceType   = d.Get("instance_type").(string)
 		instanceRegion = d.Get("instance_region").(string)
 		instanceId     = d.Get("instance_id").(string)
+		description    = ""
 		ccnUin         = ""
 	)
 
 	if len(ccnId) < 4 || len(instanceRegion) < 3 || len(instanceId) < 3 {
 		return fmt.Errorf("param ccn_id or instance_region or instance_id  error")
+	}
+
+	if v, ok := d.GetOk("description"); ok {
+		description = v.(string)
 	}
 
 	if v, ok := d.GetOk("ccn_uin"); ok {
@@ -154,7 +169,7 @@ func resourceTencentCloudCcnAttachmentCreate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if err := service.AttachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId, ccnUin); err != nil {
+	if err := service.AttachCcnInstances(ctx, ccnId, instanceRegion, instanceType, instanceId, ccnUin, description); err != nil {
 		return err
 	}
 
@@ -253,6 +268,7 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 			return nil
 		}
 
+		_ = d.Set("description", info.description)
 		_ = d.Set("state", strings.ToUpper(info.state))
 		_ = d.Set("attached_time", info.attachedTime)
 		_ = d.Set("cidr_block", info.cidrBlock)
@@ -262,6 +278,49 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 		return err
 	}
 	return nil
+}
+
+func resourceTencentCloudCcnAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ccn_attachment.create")()
+	logId := getLogId(contextNil)
+
+	if d.HasChange("description") {
+		var (
+			ccnId          = d.Get("ccn_id").(string)
+			instanceType   = d.Get("instance_type").(string)
+			instanceRegion = d.Get("instance_region").(string)
+			instanceId     = d.Get("instance_id").(string)
+			description    = d.Get("description").(string)
+		)
+
+		request := vpc.NewModifyCcnAttachedInstancesAttributeRequest()
+		request.CcnId = &ccnId
+
+		var ccnInstance vpc.CcnInstance
+		ccnInstance.InstanceId = &instanceId
+		ccnInstance.InstanceRegion = &instanceRegion
+		ccnInstance.InstanceType = &instanceType
+		ccnInstance.Description = &description
+
+		request.Instances = []*vpc.CcnInstance{&ccnInstance}
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			ratelimit.Check(request.GetAction())
+			response, err := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().ModifyCcnAttachedInstancesAttribute(request)
+			if err != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), err.Error())
+				return retryError(err)
+			}
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
+	return resourceTencentCloudCcnAttachmentRead(d, meta)
 }
 
 func resourceTencentCloudCcnAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
