@@ -443,6 +443,12 @@ TencentDB for MySQL(cdb)
     tencentcloud_mysql_parameter_list
     tencentcloud_mysql_default_params
     tencentcloud_mysql_zone_config
+	tencentcloud_mysql_backup_overview
+	tencentcloud_mysql_backup_summaries
+	tencentcloud_mysql_bin_log
+	tencentcloud_mysql_binlog_backup_overview
+	tencentcloud_mysql_clone_list
+	tencentcloud_mysql_data_backup_overview
 
   Resource
     tencentcloud_mysql_instance
@@ -1223,6 +1229,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mysql_parameter_list":                     dataSourceTencentCloudMysqlParameterList(),
 			"tencentcloud_mysql_default_params":                     datasourceTencentCloudMysqlDefaultParams(),
 			"tencentcloud_mysql_instance":                           dataSourceTencentCloudMysqlInstance(),
+			"tencentcloud_mysql_backup_overview":                    dataSourceTencentCloudMysqlBackupOverview(),
+			"tencentcloud_mysql_backup_summaries":                   dataSourceTencentCloudMysqlBackupSummaries(),
+			"tencentcloud_mysql_bin_log":                            dataSourceTencentCloudMysqlBinLog(),
+			"tencentcloud_mysql_binlog_backup_overview":             dataSourceTencentCloudMysqlBinlogBackupOverview(),
+			"tencentcloud_mysql_clone_list":                         dataSourceTencentCloudMysqlCloneList(),
+			"tencentcloud_mysql_data_backup_overview":               dataSourceTencentCloudMysqlDataBackupOverview(),
 			"tencentcloud_cos_bucket_object":                        dataSourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_buckets":                              dataSourceTencentCloudCosBuckets(),
 			"tencentcloud_cfs_file_systems":                         dataSourceTencentCloudCfsFileSystems(),
