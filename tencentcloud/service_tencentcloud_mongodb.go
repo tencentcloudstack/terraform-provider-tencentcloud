@@ -488,9 +488,8 @@ func (me *MongodbService) DeleteMongodbInstanceAccountById(ctx context.Context, 
 		errRet = err
 		return
 	}
-	flowId := *response.Response.FlowId
 	if response != nil && response.Response != nil {
-		if err = me.DescribeAsyncRequestInfo(ctx, helper.Int64ToStr(flowId)); err != nil {
+		if err = me.DescribeAsyncRequestInfo(ctx, helper.Int64ToStr(*response.Response.FlowId)); err != nil {
 			errRet = err
 			return
 		}
