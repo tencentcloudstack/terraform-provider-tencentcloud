@@ -6023,3 +6023,32 @@ func (me *VpcService) DescribeCcnCrossBorderFlowMonitorByFilter(ctx context.Cont
 
 	return
 }
+
+func (me *VpcService) DescribeVpnCustomerGatewayVendors(ctx context.Context) (vpnCustomerGatewayVendors []*vpc.CustomerGatewayVendor, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeCustomerGatewayVendorsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeCustomerGatewayVendors(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.CustomerGatewayVendorSet) < 1 {
+		return
+	}
+
+	vpnCustomerGatewayVendors = response.Response.CustomerGatewayVendorSet
+	return
+}

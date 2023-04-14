@@ -15,14 +15,14 @@ func TestAccTencentCloudNeedFixCcnCrossBorderFlowMonitorDataSource_basic(t *test
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccVpcCrossBorderFlowMonitorDataSource,
+				Config: testAccCcnCrossBorderFlowMonitorDataSource,
 				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ccn_cross_border_flow_monitor.cross_border_flow_monitor")),
 			},
 		},
 	})
 }
 
-const testAccVpcCrossBorderFlowMonitorDataSource = `
+const testAccCcnCrossBorderFlowMonitorDataSource = `
 
 data "tencentcloud_ccn_cross_border_flow_monitor" "cross_border_flow_monitor" {
   source_region = "ap-guangzhou"

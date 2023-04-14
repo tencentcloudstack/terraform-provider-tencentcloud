@@ -708,6 +708,7 @@ VPN Connections(VPN)
     tencentcloud_vpn_customer_gateways
     tencentcloud_vpn_gateways
     tencentcloud_vpn_gateway_routes
+	tencentcloud_vpn_customer_gateway_vendors
 
   Resource
     tencentcloud_vpn_customer_gateway
@@ -1209,6 +1210,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpn_gateways":                             dataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_gateway_routes":                       dataSourceTencentCloudVpnGatewayRoutes(),
 			"tencentcloud_vpn_connections":                          dataSourceTencentCloudVpnConnections(),
+			"tencentcloud_vpn_customer_gateway_vendors":             dataSourceTencentCloudVpnCustomerGatewayVendors(),
 			"tencentcloud_ha_vips":                                  dataSourceTencentCloudHaVips(),
 			"tencentcloud_ha_vip_eip_attachments":                   dataSourceTencentCloudHaVipEipAttachments(),
 			"tencentcloud_ccn_instances":                            dataSourceTencentCloudCcnInstances(),

@@ -15,14 +15,14 @@ func TestAccTencentCloudCcnCrossBorderComplianceDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccVpcCrossBorderComplianceDataSource,
+				Config: testAccCcnCrossBorderComplianceDataSource,
 				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ccn_cross_border_compliance.cross_border_compliance")),
 			},
 		},
 	})
 }
 
-const testAccVpcCrossBorderComplianceDataSource = `
+const testAccCcnCrossBorderComplianceDataSource = `
 
 data "tencentcloud_ccn_cross_border_compliance" "cross_border_compliance" {
   service_provider = "UNICOM"
