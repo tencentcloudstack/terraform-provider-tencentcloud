@@ -6052,3 +6052,37 @@ func (me *VpcService) DescribeVpnCustomerGatewayVendors(ctx context.Context) (vp
 	vpnCustomerGatewayVendors = response.Response.CustomerGatewayVendorSet
 	return
 }
+
+func (me *VpcService) DescribeVpcVpnGatewayCcnRoutesById(ctx context.Context, vpnGatewayId string, routeId string) (vpnGatewayCcnRoutes *vpc.VpngwCcnRoutes, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeVpnGatewayCcnRoutesRequest()
+	request.VpnGatewayId = &vpnGatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeVpnGatewayCcnRoutes(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RouteSet) < 1 {
+		return
+	}
+
+	for _, route := range response.Response.RouteSet {
+		if *route.RouteId == routeId {
+			vpnGatewayCcnRoutes = route
+			break
+		}
+	}
+	return
+}
