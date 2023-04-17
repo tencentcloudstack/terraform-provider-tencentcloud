@@ -163,7 +163,7 @@ func resourceTencentCloudMongodbInstanceAccountCreate(d *schema.ResourceData, me
 	service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	if response != nil && response.Response != nil {
-		if err = service.DescribeAsyncRequestInfo(ctx, helper.UInt64ToStr(*response.Response.FlowId)); err != nil {
+		if err = service.DescribeAsyncRequestInfo(ctx, helper.UInt64ToStr(*response.Response.FlowId), 3*readRetryTimeout); err != nil {
 			return err
 		}
 	}
@@ -293,7 +293,7 @@ func resourceTencentCloudMongodbInstanceAccountUpdate(d *schema.ResourceData, me
 		service := MongodbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 		if response != nil && response.Response != nil {
-			if err = service.DescribeAsyncRequestInfo(ctx, helper.UInt64ToStr(*response.Response.FlowId)); err != nil {
+			if err = service.DescribeAsyncRequestInfo(ctx, helper.UInt64ToStr(*response.Response.FlowId), 3*readRetryTimeout); err != nil {
 				return err
 			}
 		}
