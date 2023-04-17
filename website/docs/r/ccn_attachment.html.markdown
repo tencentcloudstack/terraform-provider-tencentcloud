@@ -64,6 +64,7 @@ The following arguments are supported:
 * `instance_region` - (Required, String, ForceNew) The region that the instance locates at.
 * `instance_type` - (Required, String, ForceNew) Type of attached instance network, and available values include `VPC`, `DIRECTCONNECT`, `BMVPC` and `VPNGW`. Note: `VPNGW` type is only for whitelist customer now.
 * `ccn_uin` - (Optional, String, ForceNew) Uin of the ccn attached. Default is ``, which means the uin of this account. This parameter is used with case when attaching ccn of other account to the instance of this account. For now only support instance type `VPC`.
+* `description` - (Optional, String) Remark of attachment.
 
 ## Attributes Reference
 

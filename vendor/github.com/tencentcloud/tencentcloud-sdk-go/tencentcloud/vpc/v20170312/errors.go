@@ -89,6 +89,9 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// ACL ID与ACL类型不匹配。
+	INVALIDPARAMETER_ACLTYPEMISMATCH = "InvalidParameter.AclTypeMismatch"
+
 	// 参数不支持同时指定。
 	INVALIDPARAMETER_COEXIST = "InvalidParameter.Coexist"
 
@@ -257,6 +260,18 @@ const (
 	// 入参格式不合法。
 	INVALIDPARAMETERVALUE_MALFORMED = "InvalidParameterValue.Malformed"
 
+	// 指定审批单号和资源不匹配。
+	INVALIDPARAMETERVALUE_MEMBERAPPROVALAPPLICATIONIDMISMATCH = "InvalidParameterValue.MemberApprovalApplicationIdMismatch"
+
+	// 流程服务审批单未审批。
+	INVALIDPARAMETERVALUE_MEMBERAPPROVALAPPLICATIONNOTAPPROVED = "InvalidParameterValue.MemberApprovalApplicationNotApproved"
+
+	// 流程服务审批单被拒绝。
+	INVALIDPARAMETERVALUE_MEMBERAPPROVALAPPLICATIONREJECTED = "InvalidParameterValue.MemberApprovalApplicationRejected"
+
+	// 该请求需要走BPAAS流程服务审批，当前发起审批中。
+	INVALIDPARAMETERVALUE_MEMBERAPPROVALAPPLICATIONSTARTED = "InvalidParameterValue.MemberApprovalApplicationStarted"
+
 	// 缺少绑定的实例。
 	INVALIDPARAMETERVALUE_MISSINGASSOCIATEENTITY = "InvalidParameterValue.MissingAssociateEntity"
 
@@ -271,6 +286,9 @@ const (
 
 	// DNAT转换规则的内网IP需为虚拟机上网卡所用的IP。
 	INVALIDPARAMETERVALUE_NATGATEWAYDNATRULEPIPNEEDVM = "InvalidParameterValue.NatGatewayDnatRulePipNeedVm"
+
+	// 新增NAT网关的DNAT转换规则已重复。
+	INVALIDPARAMETERVALUE_NATGATEWAYDNATRULEREPEATED = "InvalidParameterValue.NatGatewayDnatRuleRepeated"
 
 	// NAT网关的SNAT转换规则不存在。
 	INVALIDPARAMETERVALUE_NATGATEWAYSNATRULENOTEXISTS = "InvalidParameterValue.NatGatewaySnatRuleNotExists"
@@ -296,6 +314,9 @@ const (
 	// 该操作仅对主网卡支持。
 	INVALIDPARAMETERVALUE_ONLYSUPPORTEDFORMASTERNETWORKCARD = "InvalidParameterValue.OnlySupportedForMasterNetworkCard"
 
+	// 参数值格式不匹配。
+	INVALIDPARAMETERVALUE_PARAMETERMISMATCH = "InvalidParameterValue.ParameterMismatch"
+
 	// 参数值不在指定范围。
 	INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 
@@ -319,6 +340,9 @@ const (
 
 	// 该资源不支持此操作。
 	INVALIDPARAMETERVALUE_RESOURCENOTSUPPORT = "InvalidParameterValue.ResourceNotSupport"
+
+	// SSL-VPN-SERVER 云端网段和SSL-VPN-SERVER 客户端网段重叠。
+	INVALIDPARAMETERVALUE_SSLCCNVPNSERVERCIDRCONFLICT = "InvalidParameterValue.SslCcnVpnServerCidrConflict"
 
 	// 子网CIDR冲突。
 	INVALIDPARAMETERVALUE_SUBNETCONFLICT = "InvalidParameterValue.SubnetConflict"
@@ -494,6 +518,9 @@ const (
 	// 标签键的数目已达到上限。
 	LIMITEXCEEDED_TAGTAGSEXCEEDED = "LimitExceeded.TagTagsExceeded"
 
+	// 流量包配额超过限制。
+	LIMITEXCEEDED_TRAFFICPACKAGEQUOTA = "LimitExceeded.TrafficPackageQuota"
+
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
@@ -557,6 +584,9 @@ const (
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
+	// 不支持的账户。
+	UNSUPPORTEDOPERATION_ACCOUNTNOTSUPPORTED = "UnsupportedOperation.AccountNotSupported"
+
 	// 接口不存在。
 	UNSUPPORTEDOPERATION_ACTIONNOTFOUND = "UnsupportedOperation.ActionNotFound"
 
@@ -580,6 +610,9 @@ const (
 
 	// APPId不存在。
 	UNSUPPORTEDOPERATION_APPIDNOTFOUND = "UnsupportedOperation.AppIdNotFound"
+
+	// CCN关联的其他vpc已经存在nat的路由
+	UNSUPPORTEDOPERATION_ASSOCIATEDVPCOFCCNHADNATROUTE = "UnsupportedOperation.AssociatedVpcOfCcnHadNatRoute"
 
 	// 绑定关系已存在。
 	UNSUPPORTEDOPERATION_ATTACHMENTALREADYEXISTS = "UnsupportedOperation.AttachmentAlreadyExists"
@@ -623,6 +656,9 @@ const (
 	// 实例已经和VPC绑定。
 	UNSUPPORTEDOPERATION_CLASSICINSTANCEIDALREADYEXISTS = "UnsupportedOperation.ClassicInstanceIdAlreadyExists"
 
+	// 负载均衡的安全组规则已达到上限。
+	UNSUPPORTEDOPERATION_CLBPOLICYEXCEEDLIMIT = "UnsupportedOperation.ClbPolicyExceedLimit"
+
 	// 公网Clb不支持该规则。
 	UNSUPPORTEDOPERATION_CLBPOLICYLIMIT = "UnsupportedOperation.ClbPolicyLimit"
 
@@ -647,11 +683,17 @@ const (
 	// 禁止删除已关联子网的路由表。
 	UNSUPPORTEDOPERATION_DELROUTEWITHSUBNET = "UnsupportedOperation.DelRouteWithSubnet"
 
+	// VPN通道状态为更新中/销毁中/创建中，不支持此操作。
+	UNSUPPORTEDOPERATION_DELETEVPNCONNINVALIDSTATE = "UnsupportedOperation.DeleteVpnConnInvalidState"
+
 	// 专线网关正在更新BGP Community属性。
 	UNSUPPORTEDOPERATION_DIRECTCONNECTGATEWAYISUPDATINGCOMMUNITY = "UnsupportedOperation.DirectConnectGatewayIsUpdatingCommunity"
 
 	// 指定的路由策略已发布至云联网，请先撤销。
 	UNSUPPORTEDOPERATION_DISABLEDNOTIFYCCN = "UnsupportedOperation.DisabledNotifyCcn"
+
+	// 创建DPDK NAT流日志时，采集类型只支持全部。
+	UNSUPPORTEDOPERATION_DPDKNATFLOWLOGONLYSUPPORTALLTRAFFICTYPE = "UnsupportedOperation.DpdkNatFlowLogOnlySupportAllTrafficType"
 
 	// 安全组规则重复。
 	UNSUPPORTEDOPERATION_DUPLICATEPOLICY = "UnsupportedOperation.DuplicatePolicy"
@@ -725,6 +767,9 @@ const (
 	// 指定的CDC已存在本地网关。
 	UNSUPPORTEDOPERATION_LOCALGATEWAYALREADYEXISTS = "UnsupportedOperation.LocalGatewayAlreadyExists"
 
+	// 资源被锁定。
+	UNSUPPORTEDOPERATION_LOCKEDRESOURCES = "UnsupportedOperation.LockedResources"
+
 	// 账户不支持修改公网IP的该属性。
 	UNSUPPORTEDOPERATION_MODIFYADDRESSATTRIBUTE = "UnsupportedOperation.ModifyAddressAttribute"
 
@@ -752,6 +797,9 @@ const (
 	// 当前实例已被封禁，无法进行此操作。
 	UNSUPPORTEDOPERATION_NOTLOCKEDINSTANCEOPERATION = "UnsupportedOperation.NotLockedInstanceOperation"
 
+	// 目的端的服务在IP申请中使用的实例ID和这里传入的不匹配。
+	UNSUPPORTEDOPERATION_NOTMATCHTARGETSERVICE = "UnsupportedOperation.NotMatchTargetService"
+
 	// 当前云联网实例未处于申请中状态，无法进行操作。
 	UNSUPPORTEDOPERATION_NOTPENDINGCCNINSTANCE = "UnsupportedOperation.NotPendingCcnInstance"
 
@@ -766,6 +814,9 @@ const (
 
 	// 该地址类型不支持释放操作。
 	UNSUPPORTEDOPERATION_NOTSUPPORTEDADDRESSIPSCHARGETYPE = "UnsupportedOperation.NotSupportedAddressIpsChargeType"
+
+	// 此地域没有上线出口二资源，请到北京/广州/南京购买。
+	UNSUPPORTEDOPERATION_NOTSUPPORTEDPURCHASECENTEREGRESSRESOURCE = "UnsupportedOperation.NotSupportedPurchaseCenterEgressResource"
 
 	// 当前云联网不支持更新路由发布。
 	UNSUPPORTEDOPERATION_NOTSUPPORTEDUPDATECCNROUTEPUBLISH = "UnsupportedOperation.NotSupportedUpdateCcnRoutePublish"
@@ -814,6 +865,27 @@ const (
 
 	// 路由表绑定了子网。
 	UNSUPPORTEDOPERATION_ROUTETABLEHASSUBNETRULE = "UnsupportedOperation.RouteTableHasSubnetRule"
+
+	// 实例已关联快照策略。
+	UNSUPPORTEDOPERATION_SNAPSHOTATTACHED = "UnsupportedOperation.SnapshotAttached"
+
+	// 快照备份策略不支持修改。
+	UNSUPPORTEDOPERATION_SNAPSHOTBACKUPTYPEMODIFY = "UnsupportedOperation.SnapshotBackupTypeModify"
+
+	// 快照文件生成失败。
+	UNSUPPORTEDOPERATION_SNAPSHOTFILEFAILED = "UnsupportedOperation.SnapshotFileFailed"
+
+	// 快照文件已过期或删除。
+	UNSUPPORTEDOPERATION_SNAPSHOTFILENOEXIST = "UnsupportedOperation.SnapshotFileNoExist"
+
+	// 快照文件正在生成中，请稍后查看。
+	UNSUPPORTEDOPERATION_SNAPSHOTFILEPROCESSING = "UnsupportedOperation.SnapshotFileProcessing"
+
+	// 一次仅支持关联一个地域的实例。
+	UNSUPPORTEDOPERATION_SNAPSHOTINSTANCEREGIONDIFF = "UnsupportedOperation.SnapshotInstanceRegionDiff"
+
+	// 实例未关联快照策略。
+	UNSUPPORTEDOPERATION_SNAPSHOTNOTATTACHED = "UnsupportedOperation.SnapshotNotAttached"
 
 	// SNAT子网 不支持分配IP。
 	UNSUPPORTEDOPERATION_SNATSUBNET = "UnsupportedOperation.SnatSubnet"
@@ -877,6 +949,12 @@ const (
 
 	// 资源不属于同一个VPC。
 	UNSUPPORTEDOPERATION_VPCMISMATCH = "UnsupportedOperation.VpcMismatch"
+
+	// 当前通道为非可用状态，不支持该操作。
+	UNSUPPORTEDOPERATION_VPNCONNINVALIDSTATE = "UnsupportedOperation.VpnConnInvalidState"
+
+	// VPC类型VPN网关必须携带VpcId。
+	UNSUPPORTEDOPERATION_VPNGWVPCIDMUSTHAVE = "UnsupportedOperation.VpnGwVpcIdMustHave"
 
 	// 指定资源在不同的可用区。
 	UNSUPPORTEDOPERATION_ZONEMISMATCH = "UnsupportedOperation.ZoneMismatch"

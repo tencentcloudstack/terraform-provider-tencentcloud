@@ -210,6 +210,9 @@ Cloud Connect Network(CCN)
   Data Source
     tencentcloud_ccn_bandwidth_limits
     tencentcloud_ccn_instances
+	tencentcloud_ccn_cross_border_compliance
+	tencentcloud_ccn_tenant_instances
+	tencentcloud_ccn_cross_border_flow_monitor
 
   Resource
     tencentcloud_ccn
@@ -306,6 +309,8 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_instances_modification
 	tencentcloud_cvm_instance_vnc_url
 	tencentcloud_cvm_disaster_recover_group_quota
+	tencentcloud_cvm_chc_hosts
+	tencentcloud_cvm_chc_denied_actions
 
   Resource
     tencentcloud_instance
@@ -322,6 +327,7 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_launch_template_default_version
 	tencentcloud_cvm_security_group_attachment
 	tencentcloud_cvm_reboot_instance
+	tencentcloud_cvm_chc_config
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -435,6 +441,7 @@ TencentDB for MongoDB(mongodb)
     tencentcloud_mongodb_instance
     tencentcloud_mongodb_sharding_instance
     tencentcloud_mongodb_standby_instance
+	tencentcloud_mongodb_instance_account
 
 TencentDB for MySQL(cdb)
   Data Source
@@ -705,6 +712,7 @@ VPN Connections(VPN)
     tencentcloud_vpn_customer_gateways
     tencentcloud_vpn_gateways
     tencentcloud_vpn_gateway_routes
+	tencentcloud_vpn_customer_gateway_vendors
 
   Resource
     tencentcloud_vpn_customer_gateway
@@ -716,6 +724,7 @@ VPN Connections(VPN)
 	tencentcloud_vpn_connection_reset
 	tencentcloud_vpn_customer_gateway_configuration_download
 	tencentcloud_vpn_gateway_ssl_client_cert
+	tencentcloud_vpn_gateway_ccn_routes
 
 MapReduce(EMR)
   Data Source
@@ -1206,10 +1215,14 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpn_gateways":                             dataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_gateway_routes":                       dataSourceTencentCloudVpnGatewayRoutes(),
 			"tencentcloud_vpn_connections":                          dataSourceTencentCloudVpnConnections(),
+			"tencentcloud_vpn_customer_gateway_vendors":             dataSourceTencentCloudVpnCustomerGatewayVendors(),
 			"tencentcloud_ha_vips":                                  dataSourceTencentCloudHaVips(),
 			"tencentcloud_ha_vip_eip_attachments":                   dataSourceTencentCloudHaVipEipAttachments(),
 			"tencentcloud_ccn_instances":                            dataSourceTencentCloudCcnInstances(),
 			"tencentcloud_ccn_bandwidth_limits":                     dataSourceTencentCloudCcnBandwidthLimits(),
+			"tencentcloud_ccn_cross_border_compliance":              dataSourceTencentCloudCcnCrossBorderCompliance(),
+			"tencentcloud_ccn_tenant_instances":                     dataSourceTencentCloudCcnTenantInstance(),
+			"tencentcloud_ccn_cross_border_flow_monitor":            dataSourceTencentCloudCcnCrossBorderFlowMonitor(),
 			"tencentcloud_dc_instances":                             dataSourceTencentCloudDcInstances(),
 			"tencentcloud_dcx_instances":                            dataSourceTencentCloudDcxInstances(),
 			"tencentcloud_dc_gateway_instances":                     dataSourceTencentCloudDcGatewayInstances(),
@@ -1431,6 +1444,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lighthouse_firewall_rules_template":       dataSourceTencentCloudLighthouseFirewallRulesTemplate(),
 			"tencentcloud_cvm_instance_vnc_url":                     dataSourceTencentCloudCvmInstanceVncUrl(),
 			"tencentcloud_cvm_disaster_recover_group_quota":         dataSourceTencentCloudCvmDisasterRecoverGroupQuota(),
+			"tencentcloud_cvm_chc_hosts":                            dataSourceTencentCloudCvmChcHosts(),
+			"tencentcloud_cvm_chc_denied_actions":                   dataSourceTencentCloudCvmChcDeniedActions(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1481,6 +1496,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpn_connection_reset":                        resourceTencentCloudVpnConnectionReset(),
 			"tencentcloud_vpn_customer_gateway_configuration_download": resourceTencentCloudVpnCustomerGatewayConfigurationDownload(),
 			"tencentcloud_vpn_gateway_ssl_client_cert":                 resourceTencentCloudVpnGatewaySslClientCert(),
+			"tencentcloud_vpn_gateway_ccn_routes":                      resourceTencentCloudVpnGatewayCcnRoutes(),
 			"tencentcloud_ha_vip":                                      resourceTencentCloudHaVip(),
 			"tencentcloud_ha_vip_eip_attachment":                       resourceTencentCloudHaVipEipAttachment(),
 			"tencentcloud_security_group":                              resourceTencentCloudSecurityGroup(),
@@ -1559,6 +1575,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_as_stop_instances":                           resourceTencentCloudAsStopInstances(),
 			"tencentcloud_mongodb_instance":                            resourceTencentCloudMongodbInstance(),
 			"tencentcloud_mongodb_sharding_instance":                   resourceTencentCloudMongodbShardingInstance(),
+			"tencentcloud_mongodb_instance_account":                    resourceTencentCloudMongodbInstanceAccount(),
 			"tencentcloud_dayu_cc_http_policy":                         resourceTencentCloudDayuCCHttpPolicy(),
 			"tencentcloud_dayu_cc_https_policy":                        resourceTencentCloudDayuCCHttpsPolicy(),
 			"tencentcloud_dayu_ddos_policy":                            resourceTencentCloudDayuDdosPolicy(),
@@ -1887,6 +1904,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lighthouse_firewall_rule":                   resourceTencentCloudLighthouseFirewallRule(),
 			"tencentcloud_cvm_security_group_attachment":              resourceTencentCloudCvmSecurityGroupAttachment(),
 			"tencentcloud_cvm_reboot_instance":                        resourceTencentCloudCvmRebootInstance(),
+			"tencentcloud_cvm_chc_config":                             resourceTencentCloudCvmChcConfig(),
 		},
 
 		ConfigureFunc: providerConfigure,

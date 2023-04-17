@@ -32,6 +32,7 @@ type CcnAttachedInstanceInfo struct {
 	state          string
 	attachedTime   string
 	cidrBlock      []string
+	description    string
 }
 
 type CcnBandwidthLimit struct {
@@ -398,6 +399,7 @@ func (me *VpcService) DescribeCcnAttachedInstances(ctx context.Context, ccnId st
 		info.instanceRegion = *item.InstanceRegion
 		info.instanceType = *item.InstanceType
 		info.state = *item.State
+		info.description = *item.Description
 		infos = append(infos, info)
 	}
 	return
@@ -448,7 +450,7 @@ func (me *VpcService) DescribeCcnAttachmentsByInstance(ctx context.Context, inst
 	return
 }
 
-func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceRegion, instanceType, instanceId string, ccnUin string) (errRet error) {
+func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceRegion, instanceType, instanceId string, ccnUin string, description string) (errRet error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewAttachCcnInstancesRequest()
@@ -457,10 +459,14 @@ func (me *VpcService) AttachCcnInstances(ctx context.Context, ccnId, instanceReg
 	if ccnUin != "" {
 		request.CcnUin = &ccnUin
 	}
+
 	var ccnInstance vpc.CcnInstance
 	ccnInstance.InstanceId = &instanceId
 	ccnInstance.InstanceRegion = &instanceRegion
 	ccnInstance.InstanceType = &instanceType
+	if description != "" {
+		ccnInstance.Description = &description
+	}
 
 	request.Instances = []*vpc.CcnInstance{&ccnInstance}
 	ratelimit.Check(request.GetAction())
