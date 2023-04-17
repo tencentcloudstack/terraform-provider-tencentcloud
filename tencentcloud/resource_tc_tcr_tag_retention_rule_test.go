@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func TestAccTencentCloudTCRTagRetentionRuleResource_basic(t *testing.T) {
@@ -76,6 +77,11 @@ func testAccCheckTCRTagRetentionRuleDestroy(s *terraform.State) error {
 
 		rule, err := service.DescribeTcrTagRetentionRuleById(ctx, registryId, namespaceName, &retentionId)
 		if err != nil {
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Code == "ResourceNotFound" {
+					return nil
+				}
+			}
 			return err
 		}
 
@@ -110,6 +116,11 @@ func testAccCheckTCRTagRetentionRuleExists(re string) resource.TestCheckFunc {
 
 		rule, err := service.DescribeTcrTagRetentionRuleById(ctx, registryId, namespaceName, &retentionId)
 		if err != nil {
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Code == "ResourceNotFound" {
+					return fmt.Errorf("Tcr Tag Retention Rule not found[ResourceNotFound], Id: %v", rs.Primary.ID)
+				}
+			}
 			return err
 		}
 
@@ -120,10 +131,21 @@ func testAccCheckTCRTagRetentionRuleExists(re string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcrTagRetentionRule = defaultTCRInstanceData + `
+const testAccTCRInstance_retention = `
+resource "tencentcloud_tcr_instance" "mytcr_retention" {
+  name        = "tf-test-tcr-retention"
+  instance_type = "basic"
+  delete_bucket = true
+
+  tags ={
+	test = "test"
+  }
+}`
+
+const testAccTcrTagRetentionRule = testAccTCRInstance_retention + `
 
 resource "tencentcloud_tcr_namespace" "my_ns" {
-  instance_id 	 = local.tcr_id
+  instance_id 	 = tencentcloud_tcr_instance.mytcr_retention.id
   name			 = "tf_test_ns_retention"
   is_public		 = true
   is_auto_scan	 = true
@@ -135,7 +157,7 @@ resource "tencentcloud_tcr_namespace" "my_ns" {
 }
 
 resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
-  registry_id = local.tcr_id
+  registry_id = tencentcloud_tcr_instance.mytcr_retention.id
   namespace_name = tencentcloud_tcr_namespace.my_ns.name
   retention_rule {
 		key = "nDaysSinceLastPush"
@@ -147,10 +169,10 @@ resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
 
 `
 
-const testAccTcrTagRetentionRule_update = defaultTCRInstanceData + `
+const testAccTcrTagRetentionRule_update = testAccTCRInstance_retention + `
 
 resource "tencentcloud_tcr_namespace" "my_ns" {
-  instance_id 	 = local.tcr_id
+  instance_id 	 = tencentcloud_tcr_instance.mytcr_retention.id
   name			 = "tf_test_ns_retention"
   is_public		 = true
   is_auto_scan	 = true
@@ -162,7 +184,7 @@ resource "tencentcloud_tcr_namespace" "my_ns" {
 }
 
 resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
-  registry_id = local.tcr_id
+  registry_id = tencentcloud_tcr_instance.mytcr_retention.id
   namespace_name = tencentcloud_tcr_namespace.my_ns.name
   retention_rule {
 		key = "nDaysSinceLastPush"

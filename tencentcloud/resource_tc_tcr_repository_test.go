@@ -8,7 +8,66 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
+
+func init() {
+	resource.AddTestSweepers("tencentcloud_tcr_repository", &resource.Sweeper{
+		Name: "tencentcloud_tcr_repository",
+		F:    testSweepTCRRepository,
+	})
+}
+
+// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_repository
+func testSweepTCRRepository(r string) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	cli, _ := sharedClientForRegion(r)
+	tcrService := TCRService{client: cli.(*TencentCloudClient).apiV3Conn}
+
+	var filters []*tcr.Filter
+	filters = append(filters, &tcr.Filter{
+		Name:   helper.String("RegistryName"),
+		Values: []*string{helper.String(defaultTCRInstanceName)},
+	})
+
+	instances, err := tcrService.DescribeTCRInstances(ctx, "", filters)
+
+	if err != nil {
+		return err
+	}
+
+	if len(instances) == 0 {
+		return fmt.Errorf("instance %s not exist", defaultTCRInstanceName)
+	}
+
+	instanceId := *instances[0].RegistryId
+	// the non-keep namespace will be removed directly when run sweeper tencentcloud_tcr_namespace
+	// so... only need to care about the repos under the keep namespace
+	repos, err := tcrService.DescribeTCRRepositories(ctx, instanceId, "", "")
+
+	if err != nil {
+		return err
+	}
+
+	for i := range repos {
+		n := repos[i]
+		names := strings.Split(*n.Name, "/")
+		if len(names) != 2 {
+			continue
+		}
+		repoName := names[1]
+		if isResourcePersist(repoName, nil) {
+			continue
+		}
+		err = tcrService.DeleteTCRRepository(ctx, instanceId, *n.Namespace, repoName)
+		if err != nil {
+			continue
+		}
+	}
+	return nil
+}
 
 func TestAccTencentCloudTCRRepository_basic_and_update(t *testing.T) {
 	t.Parallel()
