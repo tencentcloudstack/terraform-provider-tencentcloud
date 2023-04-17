@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_cvm_chc_hosts
+```
+
+```release-note:new-data-source
+tencentcloud_cvm_chc_denied_actions
+```
+
+```release-note:new-resource
+tencentcloud_cvm_chc_config
+```
