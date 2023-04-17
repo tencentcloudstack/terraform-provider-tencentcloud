@@ -133,6 +133,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"replica_zone_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "ID of replica nodes available zone. This is not required for standalone and master slave versions. NOTE: Removing some of the same zone of replicas (e.g. removing 100001 of [100001, 100001, 100002]) will pick the first hit to remove.",
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 			},
