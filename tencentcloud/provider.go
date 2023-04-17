@@ -442,6 +442,7 @@ TencentDB for MongoDB(mongodb)
     tencentcloud_mongodb_sharding_instance
     tencentcloud_mongodb_standby_instance
 	tencentcloud_mongodb_instance_account
+	tencentcloud_mongodb_instance_backup
 
 TencentDB for MySQL(cdb)
   Data Source
@@ -1575,6 +1576,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mongodb_instance":                            resourceTencentCloudMongodbInstance(),
 			"tencentcloud_mongodb_sharding_instance":                   resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_mongodb_instance_account":                    resourceTencentCloudMongodbInstanceAccount(),
+			"tencentcloud_mongodb_instance_backup":                     resourceTencentCloudMongodbInstanceBackup(),
 			"tencentcloud_dayu_cc_http_policy":                         resourceTencentCloudDayuCCHttpPolicy(),
 			"tencentcloud_dayu_cc_https_policy":                        resourceTencentCloudDayuCCHttpsPolicy(),
 			"tencentcloud_dayu_ddos_policy":                            resourceTencentCloudDayuDdosPolicy(),

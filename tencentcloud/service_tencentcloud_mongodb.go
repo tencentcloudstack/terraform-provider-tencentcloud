@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -97,7 +98,7 @@ func (me *MongodbService) ResetInstancePassword(ctx context.Context, instanceId,
 	}
 
 	if response != nil && response.Response != nil {
-		if err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId); err != nil {
+		if err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId, 3*readRetryTimeout); err != nil {
 			return err
 		}
 	}
@@ -318,11 +319,11 @@ func (me *MongodbService) ModifyAutoRenewFlag(ctx context.Context, instanceId st
 	return
 }
 
-func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId string) (errRet error) {
+func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId string, timeout time.Duration) (errRet error) {
 	logId := getLogId(ctx)
 	request := mongodb.NewDescribeAsyncRequestInfoRequest()
 	request.AsyncRequestId = &asyncId
-	err := resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+	err := resource.Retry(timeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().DescribeAsyncRequestInfo(request)
 		if e != nil {
@@ -489,7 +490,7 @@ func (me *MongodbService) DeleteMongodbInstanceAccountById(ctx context.Context, 
 		return
 	}
 	if response != nil && response.Response != nil {
-		if err = me.DescribeAsyncRequestInfo(ctx, helper.Int64ToStr(*response.Response.FlowId)); err != nil {
+		if err = me.DescribeAsyncRequestInfo(ctx, helper.Int64ToStr(*response.Response.FlowId), 3*readRetryTimeout); err != nil {
 			errRet = err
 			return
 		}
