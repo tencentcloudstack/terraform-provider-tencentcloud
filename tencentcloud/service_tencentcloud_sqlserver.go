@@ -1599,3 +1599,32 @@ func (me *SqlserverService) DescribeSqlserverMigrationsByFilter(ctx context.Cont
 	}
 	return
 }
+
+func (me *SqlserverService) DescribeSqlserverConfigBackupStrategyById(ctx context.Context, instanceId string) (configBackupStrategy *sqlserver.DBInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBInstancesRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DBInstances) < 1 {
+		return
+	}
+
+	configBackupStrategy = response.Response.DBInstances[0]
+	return
+}

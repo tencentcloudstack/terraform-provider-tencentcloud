@@ -582,6 +582,7 @@ SQLServer
 	tencentcloud_sqlserver_publish_subscribe
 	tencentcloud_sqlserver_basic_instance
 	tencentcloud_sqlserver_migration
+	tencentcloud_sqlserver_config_backup_strategy
 
 SSL Certificates
   Data Source
@@ -1667,6 +1668,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_sqlserver_account_db_attachment":             resourceTencentCloudSqlserverAccountDBAttachment(),
 			"tencentcloud_sqlserver_readonly_instance":                 resourceTencentCloudSqlserverReadonlyInstance(),
 			"tencentcloud_sqlserver_migration":                         resourceTencentCloudSqlserverMigration(),
+			"tencentcloud_sqlserver_config_backup_strategy":            resourceTencentCloudSqlserverConfigBackupStrategy(),
 			"tencentcloud_ckafka_instance":                             resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                 resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                  resourceTencentCloudCkafkaAcl(),
