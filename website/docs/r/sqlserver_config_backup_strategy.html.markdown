@@ -13,6 +13,26 @@ Provides a resource to create a sqlserver config_backup_strategy
 
 ## Example Usage
 
+Daily backup
+
+```hcl
+resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
+  instance_id              = local.sqlserver_id
+  backup_type              = "daily"
+  backup_time              = 0
+  backup_day               = 1
+  backup_model             = "master_no_pkg"
+  backup_cycle             = [1]
+  backup_save_days         = 7
+  regular_backup_enable    = "disable"
+  regular_backup_save_days = 90
+  regular_backup_strategy  = "months"
+  regular_backup_counts    = 1
+}
+```
+
+Weekly backup
+
 ```hcl
 resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   instance_id              = local.sqlserver_id
@@ -20,12 +40,31 @@ resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   backup_time              = 0
   backup_day               = 1
   backup_model             = "master_no_pkg"
-  backup_cycle             = [1, 4]
+  backup_cycle             = [1, 3, 5]
   backup_save_days         = 7
   regular_backup_enable    = "disable"
-  regular_backup_save_days = 365
+  regular_backup_save_days = 90
   regular_backup_strategy  = "months"
   regular_backup_counts    = 1
+}
+```
+
+Regular backup
+
+```hcl
+resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
+  instance_id               = local.sqlserver_id
+  backup_type               = "weekly"
+  backup_time               = 0
+  backup_day                = 1
+  backup_model              = "master_no_pkg"
+  backup_cycle              = [1, 3]
+  backup_save_days          = 7
+  regular_backup_enable     = "enable"
+  regular_backup_save_days  = 120
+  regular_backup_strategy   = "months"
+  regular_backup_counts     = 1
+  regular_backup_start_time = "%s"
 }
 ```
 

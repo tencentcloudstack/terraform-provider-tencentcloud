@@ -3,6 +3,26 @@ Provides a resource to create a sqlserver config_backup_strategy
 
 Example Usage
 
+Daily backup
+
+```hcl
+resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
+  instance_id = local.sqlserver_id
+  backup_type = "daily"
+  backup_time = 0
+  backup_day = 1
+  backup_model = "master_no_pkg"
+  backup_cycle = [1]
+  backup_save_days = 7
+  regular_backup_enable = "disable"
+  regular_backup_save_days = 90
+  regular_backup_strategy = "months"
+  regular_backup_counts = 1
+}
+```
+
+Weekly backup
+
 ```hcl
 resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   instance_id = local.sqlserver_id
@@ -10,12 +30,31 @@ resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   backup_time = 0
   backup_day = 1
   backup_model = "master_no_pkg"
-  backup_cycle = [1,4]
+  backup_cycle = [1,3,5]
   backup_save_days = 7
   regular_backup_enable = "disable"
-  regular_backup_save_days = 365
+  regular_backup_save_days = 90
   regular_backup_strategy = "months"
   regular_backup_counts = 1
+}
+```
+
+Regular backup
+
+```hcl
+resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
+  instance_id = local.sqlserver_id
+  backup_type = "weekly"
+  backup_time = 0
+  backup_day = 1
+  backup_model = "master_no_pkg"
+  backup_cycle = [1,3]
+  backup_save_days = 7
+  regular_backup_enable = "enable"
+  regular_backup_save_days = 120
+  regular_backup_strategy = "months"
+  regular_backup_counts = 1
+  regular_backup_start_time = "%s"
 }
 ```
 
@@ -223,33 +262,37 @@ func resourceTencentCloudSqlserverConfigBackupStrategyUpdate(d *schema.ResourceD
 
 	request := sqlserver.NewModifyBackupStrategyRequest()
 
+	needChange := false
+
 	request.InstanceId = helper.String(d.Id())
 
-	if d.HasChange("backup_type") {
+	mutableArgs := []string{"backup_type", "backup_time", "backup_day", "backup_model", "backup_cycle", "backup_save_days", "regular_backup_enable", "regular_backup_save_days", "regular_backup_strategy", "regular_backup_counts", "regular_backup_start_time"}
+
+	for _, v := range mutableArgs {
+		if d.HasChange(v) {
+			needChange = true
+			break
+		}
+	}
+
+	if needChange {
+
 		if v, ok := d.GetOk("backup_type"); ok {
 			request.BackupType = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("backup_time") {
-		if v, ok := d.GetOkExists("backup_time"); ok {
-			request.BackupTime = helper.IntUint64(v.(int))
-		}
-	}
-
-	if d.HasChange("backup_day") {
-		if v, ok := d.GetOkExists("backup_day"); ok {
-			request.BackupDay = helper.IntUint64(v.(int))
-		}
-	}
-
-	if d.HasChange("backup_model") {
 		if v, ok := d.GetOk("backup_model"); ok {
 			request.BackupModel = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("backup_cycle") {
+		if v, ok := d.GetOkExists("backup_time"); ok {
+			request.BackupTime = helper.IntUint64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("backup_day"); ok {
+			request.BackupDay = helper.IntUint64(v.(int))
+		}
+
 		if v, ok := d.GetOk("backup_cycle"); ok {
 			backupCycleSet := v.(*schema.Set).List()
 			for i := range backupCycleSet {
@@ -257,56 +300,44 @@ func resourceTencentCloudSqlserverConfigBackupStrategyUpdate(d *schema.ResourceD
 				request.BackupCycle = append(request.BackupCycle, helper.IntUint64(backupCycle))
 			}
 		}
-	}
 
-	if d.HasChange("backup_save_days") {
 		if v, ok := d.GetOkExists("backup_save_days"); ok {
 			request.BackupSaveDays = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("regular_backup_enable") {
 		if v, ok := d.GetOk("regular_backup_enable"); ok {
 			request.RegularBackupEnable = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("regular_backup_save_days") {
 		if v, ok := d.GetOkExists("regular_backup_save_days"); ok {
 			request.RegularBackupSaveDays = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("regular_backup_strategy") {
 		if v, ok := d.GetOk("regular_backup_strategy"); ok {
 			request.RegularBackupStrategy = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("regular_backup_counts") {
 		if v, ok := d.GetOkExists("regular_backup_counts"); ok {
 			request.RegularBackupCounts = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("regular_backup_start_time") {
 		if v, ok := d.GetOk("regular_backup_start_time"); ok {
 			request.RegularBackupStartTime = helper.String(v.(string))
 		}
-	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().ModifyBackupStrategy(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().ModifyBackupStrategy(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update sqlserver configBackupStrategy failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update sqlserver configBackupStrategy failed, reason:%+v", logId, err)
-		return err
 	}
 
 	return resourceTencentCloudSqlserverConfigBackupStrategyRead(d, meta)
