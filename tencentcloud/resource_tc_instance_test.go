@@ -297,6 +297,7 @@ func TestAccTencentCloudInstanceResource_WithImageLogin(t *testing.T) {
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr(id, "keep_image_login", "true"),
+					resource.TestCheckResourceAttr(id, "disable_api_termination", "false"),
 				),
 			},
 		},
@@ -996,6 +997,7 @@ resource "tencentcloud_instance" "foo" {
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   keep_image_login 			 = true
   system_disk_type           = "CLOUD_PREMIUM"
+  disable_api_termination    = false
 }
 `
 
