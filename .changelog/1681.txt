@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cfs_snapshot: support create with tag
+```
+
+```release-note:enhancement
+resource/tencentcloud_cfs_file_system: support create with tag
+```

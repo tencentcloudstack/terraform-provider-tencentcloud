@@ -142,7 +142,16 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 		request.MountIP = helper.String(v.(string))
 	}
 	request.NetInterface = helper.String("VPC")
-	request.StorageType = helper.String(d.Get("storage_type").(string))
+
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := cfs.TagInfo{
+				TagKey:   helper.String(tagKey),
+				TagValue: helper.String(tagValue),
+			}
+			request.ResourceTags = append(request.ResourceTags, &tag)
+		}
+	}
 
 	fsId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

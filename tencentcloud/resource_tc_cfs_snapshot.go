@@ -86,6 +86,16 @@ func resourceTencentCloudCfsSnapshotCreate(d *schema.ResourceData, meta interfac
 		request.SnapshotName = helper.String(v.(string))
 	}
 
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := cfs.TagInfo{
+				TagKey:   helper.String(tagKey),
+				TagValue: helper.String(tagValue),
+			}
+			request.ResourceTags = append(request.ResourceTags, &tag)
+		}
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().CreateCfsSnapshot(request)
 		if e != nil {
