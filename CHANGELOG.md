@@ -1,3 +1,24 @@
+## 1.80.4 (April 14 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ccn_cross_border_compliance` ([#1675](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1675))
+* **New Data Source:** `tencentcloud_ccn_cross_border_flow_monitor` ([#1675](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1675))
+* **New Data Source:** `tencentcloud_ccn_tenant_instances` ([#1675](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1675))
+* **New Data Source:** `tencentcloud_cvm_chc_denied_actions` ([#1669](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1669))
+* **New Data Source:** `tencentcloud_cvm_chc_hosts` ([#1669](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1669))
+* **New Data Source:** `tencentcloud_vpn_customer_gateway_vendors` ([#1675](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1675))
+* **New Resource:** `tencentcloud_cvm_chc_config` ([#1669](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1669))
+* **New Resource:** `tencentcloud_mongodb_instance_backup` ([#1679](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1679))
+* **New Resource:** `tencentcloud_sqlserver_config_backup_strategy` ([#1678](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1678))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ccn_attachment: support set `description` ([#1674](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1674))
+* resource/tencentcloud_cfs_file_system: support create with tag ([#1681](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1681))
+* resource/tencentcloud_cfs_snapshot: support create with tag ([#1681](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1681))
+* resource/tencentcloud_instance: support set `disable_api_termination` ([#1682](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1682))
+
 ## 1.80.3 (April 14 2023)
 
 FEATURES:
