@@ -246,6 +246,25 @@ func (me *CvmService) ModifySecurityGroups(ctx context.Context, instanceId strin
 	return nil
 }
 
+func (me *CvmService) ModifyDisableApiTermination(ctx context.Context, instanceId string, disableApiTermination bool) error {
+	logId := getLogId(ctx)
+	request := cvm.NewModifyInstancesAttributeRequest()
+	request.InstanceIds = []*string{&instanceId}
+	request.DisableApiTermination = &disableApiTermination
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCvmClient().ModifyInstancesAttribute(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
 func (me *CvmService) ModifyProjectId(ctx context.Context, instanceId string, projectId int64) error {
 	logId := getLogId(ctx)
 	request := cvm.NewModifyInstancesProjectRequest()

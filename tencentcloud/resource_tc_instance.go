@@ -494,6 +494,12 @@ func resourceTencentCloudInstance() *schema.Resource {
 				Default:     false,
 				Description: "Indicate whether to force delete the instance. Default is `false`. If set true, the instance will be permanently deleted instead of being moved into the recycle bin. Note: only works for `PREPAID` instance.",
 			},
+			"disable_api_termination": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether the termination protection is enabled. Default is `false`. If set true, which means that this instance can not be deleted by an API action.",
+			},
 			// role
 			"cam_role_name": {
 				Type:        schema.TypeString,
@@ -739,6 +745,10 @@ func resourceTencentCloudInstanceCreate(d *schema.ResourceData, meta interface{}
 		request.UserData = &userData
 	}
 
+	if v, ok := d.GetOkExists("disable_api_termination"); ok {
+		request.DisableApiTermination = helper.Bool(v.(bool))
+	}
+
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
 		tags := make([]*cvm.Tag, 0)
 		for tagKey, tagValue := range v {
@@ -958,6 +968,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("create_time", instance.CreatedTime)
 	_ = d.Set("expired_time", instance.ExpiredTime)
 	_ = d.Set("cam_role_name", instance.CamRoleName)
+	_ = d.Set("disable_api_termination", instance.DisableApiTermination)
 
 	if *instance.InstanceChargeType == CVM_CHARGE_TYPE_CDHPAID {
 		_ = d.Set("cdh_instance_type", instance.InstanceType)
@@ -1160,6 +1171,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 		d.SetPartial("instance_name")
+	}
+
+	if d.HasChange("disable_api_termination") {
+		err := cvmService.ModifyDisableApiTermination(ctx, instanceId, d.Get("disable_api_termination").(bool))
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("security_groups") {
