@@ -40,6 +40,7 @@ func TestAccTencentCloudRedisParamResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.timeout", "31536000"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.zset-max-ziplist-entries", "128"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.zset-max-ziplist-value", "64"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.lazyfree-lazy-user-del", "yes"),
 				),
 			},
 			{
@@ -71,6 +72,7 @@ func TestAccTencentCloudRedisParamResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.timeout", "31536000"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.zset-max-ziplist-entries", "128"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.zset-max-ziplist-value", "64"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_param.param", "instance_params.lazyfree-lazy-user-del", "yes"),
 				),
 			},
 		},
@@ -130,6 +132,7 @@ resource "tencentcloud_redis_param" "param" {
         "timeout"                       = "31536000"
         "zset-max-ziplist-entries"      = "128"
         "zset-max-ziplist-value"        = "64"
+		"lazyfree-lazy-user-del"		= "yes"
     }
 }
 
@@ -158,6 +161,7 @@ resource "tencentcloud_redis_param" "param" {
         "timeout"                       = "31536000"
         "zset-max-ziplist-entries"      = "128"
         "zset-max-ziplist-value"        = "64"
+		"lazyfree-lazy-user-del"		= "yes"
     }
 }
 
