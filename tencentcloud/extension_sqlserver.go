@@ -103,6 +103,8 @@ const (
 const (
 	CLOUD_PREMIUM = "CLOUD_PREMIUM"
 	CLOUD_SSD     = "CLOUD_SSD"
+	CLOUD_BSSD    = "CLOUD_BSSD"
+	CLOUD_HSSD    = "CLOUD_HSSD"
 )
 
 const (
