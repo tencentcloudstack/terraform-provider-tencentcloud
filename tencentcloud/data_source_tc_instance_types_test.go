@@ -33,8 +33,8 @@ func TestAccTencentCloudInstanceTypesDataSource_sell(t *testing.T) {
 			{
 				Config: testAccTencentCloudInstanceTypesDataSourceConfigSell,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.cpu_core_count", "1"),
-					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.memory_size", "1"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.cpu_core_count", "2"),
+					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.memory_size", "2"),
 					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.availability_zone", "ap-guangzhou-3"),
 					resource.TestCheckResourceAttr("data.tencentcloud_instance_types.t4c8g", "instance_types.0.family", "SA2"),
 				),
@@ -53,8 +53,8 @@ data "tencentcloud_instance_types" "t4c8g" {
 
 const testAccTencentCloudInstanceTypesDataSourceConfigSell = `
 data "tencentcloud_instance_types" "t4c8g" {
-  cpu_core_count = 1
-  memory_size    = 1
+  cpu_core_count = 2
+  memory_size    = 2
   exclude_sold_out = true
 
   filter{
