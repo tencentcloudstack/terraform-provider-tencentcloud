@@ -1,3 +1,21 @@
+## 1.80.5 (April 21 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_lighthouse_apply_disk_backup` ([#1687](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1687))
+* **New Resource:** `tencentcloud_lighthouse_disk_attachment` ([#1687](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1687))
+* **New Resource:** `tencentcloud_lighthouse_disk_backup` ([#1687](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1687))
+* **New Resource:** `tencentcloud_lighthouse_key_pair` ([#1687](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1687))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_topic: support update `replica_num` ([#1686](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1686))
+* resource/tencentcloud_sqlserver_basic_instance: support set `CLOUD_BSSD` and `CLOUD_HSSD` ([#1685](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1685))
+
+BUG FIXES:
+
+* resource/tencentcloud_instance: fix key_ids update exception ([#1688](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1688))
+
 ## 1.80.4 (April 19 2023)
 
 FEATURES:
