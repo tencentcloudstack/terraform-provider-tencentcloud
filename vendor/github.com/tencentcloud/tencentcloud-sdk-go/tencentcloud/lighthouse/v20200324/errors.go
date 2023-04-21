@@ -26,11 +26,32 @@ const (
 	// 创建镜像失败。
 	FAILEDOPERATION_CREATEBLUEPRINTFAILED = "FailedOperation.CreateBlueprintFailed"
 
+	// 创建实例失败。
+	FAILEDOPERATION_CREATEINSTANCESFAILED = "FailedOperation.CreateInstancesFailed"
+
 	// 对密钥对的创建操作失败。
 	FAILEDOPERATION_CREATEKEYPAIRFAILED = "FailedOperation.CreateKeyPairFailed"
 
 	// 对密钥对的删除操作失败。
 	FAILEDOPERATION_DELETEKEYPAIRFAILED = "FailedOperation.DeleteKeyPairFailed"
+
+	// 查询镜像失败，请稍后再试。
+	FAILEDOPERATION_DESCRIBEBLUEPRINTSFAILED = "FailedOperation.DescribeBlueprintsFailed"
+
+	// 查询实例状态错误。
+	FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
+
+	// 查询实例变配套餐失败。
+	FAILEDOPERATION_DESCRIBEINSTANCESMODIFICATIONERROR = "FailedOperation.DescribeInstancesModificationError"
+
+	// 查询实例退还错误。
+	FAILEDOPERATION_DESCRIBEINSTANCESRETURNABLEERROR = "FailedOperation.DescribeInstancesReturnableError"
+
+	// 查询流量包失败。
+	FAILEDOPERATION_DESCRIBEINSTANCESTRAFFICPACKAGESFAILED = "FailedOperation.DescribeInstancesTrafficPackagesFailed"
+
+	// 销毁资源失败，请稍后重新操作。
+	FAILEDOPERATION_DESTROYRESOURCESFAILED = "FailedOperation.DestroyResourcesFailed"
 
 	// 对防火墙规则的操作失败。
 	FAILEDOPERATION_FIREWALLRULESOPERATIONFAILED = "FailedOperation.FirewallRulesOperationFailed"
@@ -44,8 +65,20 @@ const (
 	// 退还资源失败。
 	FAILEDOPERATION_ISOLATERESOURCESFAILED = "FailedOperation.IsolateResourcesFailed"
 
+	// 变更实例套餐失败。
+	FAILEDOPERATION_MODIFYINSTANCESBUNDLEFAILED = "FailedOperation.ModifyInstancesBundleFailed"
+
+	// 续费实例失败。
+	FAILEDOPERATION_RENEWINSTANCESFAILED = "FailedOperation.RenewInstancesFailed"
+
+	// 请求错误。
+	FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
+
 	// 快照操作失败。
 	FAILEDOPERATION_SNAPSHOTOPERATIONFAILED = "FailedOperation.SnapshotOperationFailed"
+
+	// 计费询价失败。
+	FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
 
 	// 操作失败，不能创建自定义镜像。
 	FAILEDOPERATION_UNABLETOCREATEBLUEPRINT = "FailedOperation.UnableToCreateBlueprint"
@@ -152,8 +185,14 @@ const (
 	// 参数值非法，镜像 ID 格式非法。
 	INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
 
+	// 套餐和镜像不匹配。
+	INVALIDPARAMETERVALUE_BUNDLEANDBLUEPRINTNOTMATCH = "InvalidParameterValue.BundleAndBlueprintNotMatch"
+
 	// 云联网实例ID格式非法。
 	INVALIDPARAMETERVALUE_CCNIDMALFORMED = "InvalidParameterValue.CcnIdMalformed"
+
+	// 参数值非法，云硬盘备份点 ID 格式非法。
+	INVALIDPARAMETERVALUE_DISKBACKUPIDMALFORMED = "InvalidParameterValue.DiskBackupIdMalformed"
 
 	// 磁盘名称长度超出限制。
 	INVALIDPARAMETERVALUE_DISKNAMETOOLONG = "InvalidParameterValue.DiskNameTooLong"
@@ -221,6 +260,9 @@ const (
 	// 不正确的配额资源名称。
 	INVALIDPARAMETERVALUE_INVALIDRESOURCEQUOTARESOURCENAME = "InvalidParameterValue.InvalidResourceQuotaResourceName"
 
+	// 使用场景Id不合法。
+	INVALIDPARAMETERVALUE_INVALIDSCENEIDMALFORMED = "InvalidParameterValue.InvalidSceneIdMalformed"
+
 	// 参数Zone的取值不合法。
 	INVALIDPARAMETERVALUE_INVALIDZONE = "InvalidParameterValue.InvalidZone"
 
@@ -245,6 +287,18 @@ const (
 	// 参数值非法，不在合法范围内。
 	INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
 
+	// 地域不存在。
+	INVALIDPARAMETERVALUE_REGIONNOTFOUND = "InvalidParameterValue.RegionNotFound"
+
+	// 地域不匹配。
+	INVALIDPARAMETERVALUE_REGIONNOTMATCH = "InvalidParameterValue.RegionNotMatch"
+
+	// 不支持的地域。
+	INVALIDPARAMETERVALUE_REGIONNOTSUPPORTED = "InvalidParameterValue.RegionNotSupported"
+
+	// 该地域不可用。
+	INVALIDPARAMETERVALUE_REGIONUNAVAILABLE = "InvalidParameterValue.RegionUnavailable"
+
 	// 参数值非法，快照 ID 格式非法。
 	INVALIDPARAMETERVALUE_SNAPSHOTIDMALFORMED = "InvalidParameterValue.SnapshotIdMalformed"
 
@@ -262,6 +316,9 @@ const (
 
 	// 实例挂载数据盘配额不足，无法挂载磁盘。
 	LIMITEXCEEDED_ATTACHDATADISKQUOTALIMITEXCEEDED = "LimitExceeded.AttachDataDiskQuotaLimitExceeded"
+
+	// 超过磁盘备份点配额限制。
+	LIMITEXCEEDED_DISKBACKUPQUOTALIMITEXCEEDED = "LimitExceeded.DiskBackupQuotaLimitExceeded"
 
 	// 超过防火墙规则配额。
 	LIMITEXCEEDED_FIREWALLRULESLIMITEXCEEDED = "LimitExceeded.FirewallRulesLimitExceeded"
@@ -284,6 +341,15 @@ const (
 	// 该实例不支持升级套餐操作。
 	OPERATIONDENIED_BUNDLENOTSUPPORTMODIFY = "OperationDenied.BundleNotSupportModify"
 
+	// 磁盘备份点忙，请稍后重新操作。
+	OPERATIONDENIED_DISKBACKUPBUSY = "OperationDenied.DiskBackupBusy"
+
+	// 磁盘备份点正在操作过程中，请稍后重试。
+	OPERATIONDENIED_DISKBACKUPOPERATIONINPROGRESS = "OperationDenied.DiskBackupOperationInProgress"
+
+	// 磁盘正在操作备份点过程中，请稍后重新操作。
+	OPERATIONDENIED_DISKBUSYFORBACKUPOPERATION = "OperationDenied.DiskBusyForBackupOperation"
+
 	// 磁盘处于创建过程中。
 	OPERATIONDENIED_DISKCREATING = "OperationDenied.DiskCreating"
 
@@ -302,6 +368,9 @@ const (
 	// 使用存储型套餐的实例不支持创建快照。
 	OPERATIONDENIED_OPERATIONDENIEDCREATESNAPSHOTFORSTORAGEBUNDLE = "OperationDenied.OperationDeniedCreateSnapshotForStorageBundle"
 
+	// 磁盘备份点正在使用中，不支持此操作。
+	RESOURCEINUSE_DISKBACKUPINUSE = "ResourceInUse.DiskBackupInUse"
+
 	// 密钥对正在使用中。
 	RESOURCEINUSE_KEYPAIRINUSE = "ResourceInUse.KeyPairInUse"
 
@@ -314,8 +383,23 @@ const (
 	// 指定的镜像不存在。请检查镜像的BlueprintId是否正确。
 	RESOURCENOTFOUND_BLUEPRINTNOTFOUND = "ResourceNotFound.BlueprintNotFound"
 
+	// 处于已挂载状态的磁盘关联实例不存在。
+	RESOURCENOTFOUND_DISKATTACHEDHASNOINSTANCEID = "ResourceNotFound.DiskAttachedHasNoInstanceId"
+
+	// 磁盘备份点ID不存在。
+	RESOURCENOTFOUND_DISKBACKUPIDNOTFOUND = "ResourceNotFound.DiskBackupIdNotFound"
+
+	// 磁盘备份点不存在。
+	RESOURCENOTFOUND_DISKBACKUPNOTEXISTS = "ResourceNotFound.DiskBackupNotExists"
+
+	// 用户指定磁盘备份点不存在。
+	RESOURCENOTFOUND_DISKBACKUPNOTFOUND = "ResourceNotFound.DiskBackupNotFound"
+
 	// 磁盘 ID 不存在。
 	RESOURCENOTFOUND_DISKIDNOTFOUND = "ResourceNotFound.DiskIdNotFound"
+
+	// 磁盘不存在。
+	RESOURCENOTFOUND_DISKNOTEXISTS = "ResourceNotFound.DiskNotExists"
 
 	// 磁盘不存在。
 	RESOURCENOTFOUND_DISKNOTFOUND = "ResourceNotFound.DiskNotFound"
@@ -337,6 +421,15 @@ const (
 
 	// 密钥对 ID 不存在。
 	RESOURCENOTFOUND_KEYIDNOTFOUND = "ResourceNotFound.KeyIdNotFound"
+
+	// 自定义镜像不存在。
+	RESOURCENOTFOUND_PRIVATEBLUEPRINTNOTFOUND = "ResourceNotFound.PrivateBlueprintNotFound"
+
+	// 服务角色不存在, 请为账号添加这个角色。
+	RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+
+	// 未查询到场景ID
+	RESOURCENOTFOUND_SCENEIDNOTFOUND = "ResourceNotFound.SceneIdNotFound"
 
 	// 快照 ID 不存在。
 	RESOURCENOTFOUND_SNAPSHOTIDNOTFOUND = "ResourceNotFound.SnapshotIdNotFound"
@@ -374,6 +467,9 @@ const (
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
+	// 将磁盘备份点回滚到其他盘，不支持该操作。
+	UNSUPPORTEDOPERATION_APPLYDISKBACKUPTOANOTHERDISK = "UnsupportedOperation.ApplyDiskBackupToAnotherDisk"
+
 	// 没有实例不支持关联到云联网。
 	UNSUPPORTEDOPERATION_ATTACHCCNCONDITIONUNSATISFIED = "UnsupportedOperation.AttachCcnConditionUnsatisfied"
 
@@ -398,6 +494,9 @@ const (
 	// 解关联云联网失败。请检查云联网状态并稍后再试。
 	UNSUPPORTEDOPERATION_DETACHCCNFAILED = "UnsupportedOperation.DetachCcnFailed"
 
+	// 磁盘备份点上一次操作未结束，不支持当前操作。
+	UNSUPPORTEDOPERATION_DISKBACKUPLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskBackupLatestOperationUnfinished"
+
 	// 磁盘忙。
 	UNSUPPORTEDOPERATION_DISKBUSY = "UnsupportedOperation.DiskBusy"
 
@@ -415,6 +514,9 @@ const (
 
 	// LinuxUnix实例在创建时不支持设置密码。
 	UNSUPPORTEDOPERATION_INSTANCELINUXUNIXCREATINGNOTSUPPORTPASSWORD = "UnsupportedOperation.InstanceLinuxUnixCreatingNotSupportPassword"
+
+	// 磁盘备份点状态不支持该操作。
+	UNSUPPORTEDOPERATION_INVALIDDISKBACKUPSTATE = "UnsupportedOperation.InvalidDiskBackupState"
 
 	// 磁盘状态不支持该操作。
 	UNSUPPORTEDOPERATION_INVALIDDISKSTATE = "UnsupportedOperation.InvalidDiskState"
@@ -457,4 +559,7 @@ const (
 
 	// Windows实例不支持绑定密钥对。
 	UNSUPPORTEDOPERATION_WINDOWSNOTALLOWTOASSOCIATEKEYPAIR = "UnsupportedOperation.WindowsNotAllowToAssociateKeyPair"
+
+	// windows类型实例不支持密钥对功能。
+	UNSUPPORTEDOPERATION_WINDOWSNOTSUPPORTKEYPAIR = "UnsupportedOperation.WindowsNotSupportKeyPair"
 )
