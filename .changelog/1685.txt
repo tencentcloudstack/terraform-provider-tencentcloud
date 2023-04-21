@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_sqlserver_basic_instance: support set `CLOUD_BSSD` and `CLOUD_HSSD`
+```
