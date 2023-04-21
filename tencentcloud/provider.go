@@ -766,6 +766,7 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_disk_backup
 	tencentcloud_lighthouse_apply_disk_backup
 	tencentcloud_lighthouse_disk_attachment
+	tencentcloud_lighthouse_key_pair
 
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
@@ -1914,6 +1915,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lighthouse_disk_backup":                     resourceTencentCloudLighthouseDiskBackup(),
 			"tencentcloud_lighthouse_apply_disk_backup":               resourceTencentCloudLighthouseApplyDiskBackup(),
 			"tencentcloud_lighthouse_disk_attachment":                 resourceTencentCloudLighthouseDiskAttachment(),
+			"tencentcloud_lighthouse_key_pair":                        resourceTencentCloudLighthouseKeyPair(),
 		},
 
 		ConfigureFunc: providerConfigure,

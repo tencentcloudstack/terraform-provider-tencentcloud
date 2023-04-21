@@ -397,3 +397,56 @@ func (me *LightHouseService) DeleteLighthouseDiskAttachmentById(ctx context.Cont
 
 	return
 }
+
+func (me *LightHouseService) DescribeLighthouseKeyPairById(ctx context.Context, keyId string) (keyPair *lighthouse.KeyPair, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeKeyPairsRequest()
+	request.KeyIds = []*string{&keyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeKeyPairs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.KeyPairSet) < 1 {
+		return
+	}
+
+	keyPair = response.Response.KeyPairSet[0]
+	return
+}
+
+func (me *LightHouseService) DeleteLighthouseKeyPairById(ctx context.Context, keyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDeleteKeyPairsRequest()
+	request.KeyIds = []*string{&keyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DeleteKeyPairs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
