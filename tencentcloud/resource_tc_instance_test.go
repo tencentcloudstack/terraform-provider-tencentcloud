@@ -216,6 +216,15 @@ func TestAccTencentCloudInstanceResource_WithKeyPairs(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithKeyPair_withoutKeyPair,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+				),
+			},
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
 				Config: testAccTencentCloudInstanceWithKeyPair(
 					"[tencentcloud_key_pair.key_pair_0.id, tencentcloud_key_pair.key_pair_1.id]",
 				),
@@ -935,6 +944,16 @@ resource "tencentcloud_instance" "foo" {
   vpc_id            = var.cvm_vpc_id
   subnet_id         = var.cvm_subnet_id
   private_ip        = "10.0.0.123"
+}
+`
+
+const testAccTencentCloudInstanceWithKeyPair_withoutKeyPair = defaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+	instance_name     = var.instance_name
+	availability_zone = var.availability_cvm_zone
+	image_id          = data.tencentcloud_images.default.images.0.image_id
+	instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+	system_disk_type  = "CLOUD_PREMIUM"
 }
 `
 
