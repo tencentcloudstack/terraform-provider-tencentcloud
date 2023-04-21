@@ -975,3 +975,28 @@ const (
 )
 
 // End of CRS
+
+const (
+	defaultLighthouseInstanceId   = "lhins-hwe21u91"
+	defaultLighthoustDiskId       = "lhdisk-do4p4hz6"
+	defaultLighthouseBackupDiskId = "lhdisk-cwodsc4q"
+	defaultLighthouseBackUpId     = "lhbak-bpum3ygx"
+)
+
+const DefaultLighthoustVariables = `
+variable "lighthouse_id" {
+  default = "` + defaultLighthouseInstanceId + `"
+}
+
+variable "lighthouse_disk_id" {
+  default = "` + defaultLighthoustDiskId + `"
+}
+
+variable "lighthouse_backup_disk_id" {
+  default = "` + defaultLighthouseBackupDiskId + `"
+}
+
+variable "lighthouse_backup_id" {
+  default = "` + defaultLighthouseBackUpId + `"
+}
+`

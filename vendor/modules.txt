@@ -570,7 +570,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.638
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.644
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http
@@ -604,7 +604,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.199
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.413
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.644
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.535
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live/v20180801
