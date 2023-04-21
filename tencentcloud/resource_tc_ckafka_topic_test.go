@@ -57,7 +57,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudCkafkaTopicResource(t *testing.T) {
+func TestAccTencentCloudCkafkaTopicResource_Basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -89,7 +89,8 @@ func TestAccTencentCloudCkafkaTopicResource(t *testing.T) {
 					testAccCheckKafkaTopicInstanceExists("tencentcloud_ckafka_topic.kafka_topic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_ckafka_topic.kafka_topic", "instance_id"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "note", "this is test topic_update"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "partition_num", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "replica_num", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "partition_num", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "enable_white_list", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "clean_up_policy", "compact"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_topic.kafka_topic", "sync_replica_min_num", "2"),
@@ -195,8 +196,8 @@ resource "tencentcloud_ckafka_topic" "kafka_topic" {
 	instance_id                         = var.instance_id
 	topic_name                          = "ckafka-topic-tf-test"
 	note                                = "this is test topic_update"
-	replica_num                         = 2
-	partition_num                       = 2
+	replica_num                         = 1
+	partition_num                       = 3
 	enable_white_list                   = true
 	ip_white_list                       = ["192.168.1.2"]
 	clean_up_policy                     = "compact"
