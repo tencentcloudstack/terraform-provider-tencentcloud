@@ -41,7 +41,7 @@ resource "tencentcloud_sqlserver_basic_instance" "foo" {
 The following arguments are supported:
 
 * `cpu` - (Required, Int) The CPU number of the SQL Server basic instance.
-* `machine_type` - (Required, String) The host type of the purchased instance, `CLOUD_PREMIUM` for virtual machine high-performance cloud disk, `CLOUD_SSD` for virtual machine SSD cloud disk.
+* `machine_type` - (Required, String) The host type of the purchased instance, `CLOUD_PREMIUM` for virtual machine high-performance cloud disk, `CLOUD_SSD` for virtual machine SSD cloud disk, `CLOUD_HSSD` for virtual machine enhanced cloud disk, `CLOUD_BSSD` for virtual machine general purpose SSD cloud disk.
 * `memory` - (Required, Int) Memory size (in GB). Allowed value must be larger than `memory` that data source `tencentcloud_sqlserver_specinfos` provides.
 * `name` - (Required, String) Name of the SQL Server basic instance.
 * `storage` - (Required, Int) Disk size (in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_sqlserver_specinfos` provides.

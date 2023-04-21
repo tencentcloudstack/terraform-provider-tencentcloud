@@ -80,8 +80,8 @@ func resourceTencentCloudSqlserverBasicInstance() *schema.Resource {
 			"machine_type": {
 				Type:         schema.TypeString,
 				Required:     true,
-				ValidateFunc: validateAllowedStringValue([]string{CLOUD_PREMIUM, CLOUD_SSD}),
-				Description:  "The host type of the purchased instance, `CLOUD_PREMIUM` for virtual machine high-performance cloud disk, `CLOUD_SSD` for virtual machine SSD cloud disk.",
+				ValidateFunc: validateAllowedStringValue([]string{CLOUD_PREMIUM, CLOUD_SSD, CLOUD_HSSD, CLOUD_BSSD}),
+				Description:  "The host type of the purchased instance, `CLOUD_PREMIUM` for virtual machine high-performance cloud disk, `CLOUD_SSD` for virtual machine SSD cloud disk, `CLOUD_HSSD` for virtual machine enhanced cloud disk, `CLOUD_BSSD` for virtual machine general purpose SSD cloud disk.",
 			},
 			"charge_type": {
 				Type:         schema.TypeString,
