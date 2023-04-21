@@ -1341,6 +1341,8 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 			adds := nv.Difference(ov)
 			removes := ov.Difference(nv)
+			adds.Remove("")
+			removes.Remove("")
 
 			if removes.Len() > 0 {
 				err := cvmService.UnbindKeyPair(ctx, helper.InterfacesStringsPoint(removes.List()), []*string{&instanceId})
