@@ -7,7 +7,7 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudRedisStartupInstanceOperationResource_basic -v
-func TestAccTencentCloudRedisStartupInstanceOperationResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixRedisStartupInstanceOperationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
