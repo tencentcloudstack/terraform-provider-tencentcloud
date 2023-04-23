@@ -51,7 +51,7 @@ resource "tencentcloud_redis_backup_download_restriction" "backup_download_restr
 	ip_comparison_symbol = "In"
 	limit_vpc {
 		  region = "ap-guangzhou"
-		  vpc_list = ["vpc-2hfyray3"]
+		  vpc_list = ["vpc-4owdpnwr"]
 	}
 	limit_ip = ["10.1.1.12", "10.1.1.13"]
 }
