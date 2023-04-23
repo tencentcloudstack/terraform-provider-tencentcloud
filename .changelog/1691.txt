@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_kubernetes_backup_storage_location
+```
