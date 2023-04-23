@@ -2126,3 +2126,77 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 	}
 	return nil
 }
+
+func (me *TkeService) createBackupStorageLocation(ctx context.Context, request *tke.CreateBackupStorageLocationRequest) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().CreateBackupStorageLocation(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) describeBackupStorageLocations(ctx context.Context, names []string) (locations []*tke.BackupStorageLocation, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDescribeBackupStorageLocationsRequest()
+	request.Names = common.StringPtrs(names)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeBackupStorageLocations(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && len(response.Response.BackupStorageLocationSet) > 0 {
+		for _, bl := range response.Response.BackupStorageLocationSet {
+			locations = append(locations, bl)
+		}
+	}
+	return
+
+}
+
+func (me *TkeService) deleteBackupStorageLocation(ctx context.Context, name string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDeleteBackupStorageLocationRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.Name = common.StringPtr(name)
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().DeleteBackupStorageLocation(request)
+	return err
+}
