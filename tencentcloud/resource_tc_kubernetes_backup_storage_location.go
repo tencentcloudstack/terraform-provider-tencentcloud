@@ -32,11 +32,6 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-const (
-	backupStorageLocationStateAvailable   = "Available"
-	backupStorageLocationStateUnavailable = "Unavailable"
-)
-
 func resourceTencentCloudTkeBackupStorageLocation() *schema.Resource {
 	return &schema.Resource{
 		Importer: &schema.ResourceImporter{

@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
 	"math/rand"
 	"testing"
@@ -10,7 +11,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 )
 
@@ -74,9 +74,9 @@ func testBackupStorageLocationSweep(region string) error {
 
 	// create backup storage location
 	request := tke.NewCreateBackupStorageLocationRequest()
-	request.Name = common.StringPtr(backupStorageLocationName)
-	request.StorageRegion = common.StringPtr(region)
-	request.Bucket = common.StringPtr(backupLocationBucket)
+	request.Name = helper.String(backupStorageLocationName)
+	request.StorageRegion = helper.String(region)
+	request.Bucket = helper.String(backupLocationBucket)
 	if err := service.createBackupStorageLocation(ctx, request); err != nil {
 		return fmt.Errorf("error creating backup storage location: %s", err)
 	}
