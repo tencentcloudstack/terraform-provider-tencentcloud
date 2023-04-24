@@ -12,7 +12,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func TestAccTencentCloudTCRWebhookTriggerResource_basic(t *testing.T) {
+func TestAccTencentCloudTcrWebhookTriggerResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -167,7 +167,7 @@ resource "tencentcloud_tcr_namespace" "my_ns" {
   }
 
 //   data "tencentcloud_tcr_namespaces" "id_test" {
-// 	instance_id = tencentcloud_tcr_namespace.my_ns.id
+// 	instance_id = tencentcloud_tcr_namespace.my_ns.instance_id
 //   }
 
 //   locals {
