@@ -1712,7 +1712,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_token":                                   resourceTencentCloudTcrToken(),
 			"tencentcloud_tcr_vpc_attachment":                          resourceTencentCloudTcrVpcAttachment(),
 			"tencentcloud_tcr_tag_retention_rule":                      resourceTencentCloudTcrTagRetentionRule(),
-			"tencentcloud_tcr_webhook_trigger":                        resourceTencentCloudTcrWebhookTrigger(),
+			"tencentcloud_tcr_webhook_trigger":                         resourceTencentCloudTcrWebhookTrigger(),
 			"tencentcloud_tdmq_instance":                               resourceTencentCloudTdmqInstance(),
 			"tencentcloud_tdmq_namespace":                              resourceTencentCloudTdmqNamespace(),
 			"tencentcloud_tdmq_topic":                                  resourceTencentCloudTdmqTopic(),
