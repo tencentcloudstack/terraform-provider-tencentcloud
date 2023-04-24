@@ -34,14 +34,14 @@ func TestAccTencentCloudLighthouseSnapshotResource_basic(t *testing.T) {
 
 const testAccLighthouseSnapshot = DefaultLighthoustVariables + `
 resource "tencentcloud_lighthouse_snapshot" "snapshot" {
-	instance_id = var.lighthouse_disk_id
+	instance_id = var.lighthouse_id
 	snapshot_name = "snapshot_test"
 }
 `
 
 const testAccLighthouseSnapshot_update = DefaultLighthoustVariables + `
 resource "tencentcloud_lighthouse_snapshot" "snapshot" {
-	instance_id = var.lighthouse_disk_id
+	instance_id = var.lighthouse_id
 	snapshot_name = "snapshot_test_update"
 }
 `
