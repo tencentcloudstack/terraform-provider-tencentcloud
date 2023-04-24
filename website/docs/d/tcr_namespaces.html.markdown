@@ -33,6 +33,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `namespace_list` - Information list of the dedicated TCR namespaces.
+  * `id` - ID of TCR namespace.
   * `is_public` - Indicate that the namespace is public or not.
   * `name` - Name of TCR namespace.
 
