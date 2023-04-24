@@ -981,6 +981,7 @@ const (
 	defaultLighthoustDiskId       = "lhdisk-do4p4hz6"
 	defaultLighthouseBackupDiskId = "lhdisk-cwodsc4q"
 	defaultLighthouseBackUpId     = "lhbak-bpum3ygx"
+	defaultLighthouseSnapshotId   = "lhsnap-9jaw9m17"
 )
 
 const DefaultLighthoustVariables = `
@@ -998,5 +999,9 @@ variable "lighthouse_backup_disk_id" {
 
 variable "lighthouse_backup_id" {
   default = "` + defaultLighthouseBackUpId + `"
+}
+
+variable "lighthouse_snapshot_id" {
+  default = "` + defaultLighthouseSnapshotId + `"
 }
 `
