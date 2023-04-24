@@ -45,7 +45,7 @@ In addition to all arguments above, the following attributes are exported:
     * `config_file_code` - Configuration file code. Note: This field may return null, indicating that no valid values can be obtained.
     * `config_file_name` - Configuration item file name. Note: This field may return null, indicating that no valid values can be obtained.
     * `config_file_path` - file config path. Note: This field may return null, indicating that no valid values can be obtained.
-    * `config_file_value_length` - config item content lenght.  Note: This field may return null, indicating that no valid values can be obtained.
+    * `config_file_value_length` - config item content length.  Note: This field may return null, indicating that no valid values can be obtained.
     * `config_file_value` - Configuration file content. Note: This field may return null, indicating that no valid values can be obtained.
     * `config_id` - Config ID. Note: This field may return null, indicating that no valid values can be obtained.
     * `config_name` - Configuration item name. Note: This field may return null, indicating that no valid values can be obtained.

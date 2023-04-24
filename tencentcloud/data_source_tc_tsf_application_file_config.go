@@ -156,7 +156,7 @@ func dataSourceTencentCloudTsfApplicationFileConfig() *schema.Resource {
 									"config_file_value_length": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "config item content lenght.  Note: This field may return null, indicating that no valid values can be obtained.",
+										Description: "config item content length.  Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 								},
 							},
