@@ -622,6 +622,7 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_repositories
 	tencentcloud_tcr_tokens
 	tencentcloud_tcr_vpc_attachments
+	tencentcloud_tcr_webhook_trigger_logs
 
   Resource
 	tencentcloud_tcr_instance
@@ -630,6 +631,7 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_token
 	tencentcloud_tcr_vpc_attachment
 	tencentcloud_tcr_tag_retention_rule
+	tencentcloud_tcr_webhook_trigger
 
 Video on Demand(VOD)
   Data Source
@@ -1378,6 +1380,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_tokens":                               dataSourceTencentCloudTCRTokens(),
 			"tencentcloud_tcr_vpc_attachments":                      dataSourceTencentCloudTCRVPCAttachments(),
 			"tencentcloud_tcr_repositories":                         dataSourceTencentCloudTCRRepositories(),
+			"tencentcloud_tcr_webhook_trigger_logs":                 dataSourceTencentCloudTcrWebhookTriggerLogs(),
 			"tencentcloud_address_templates":                        dataSourceTencentCloudAddressTemplates(),
 			"tencentcloud_address_template_groups":                  dataSourceTencentCloudAddressTemplateGroups(),
 			"tencentcloud_protocol_templates":                       dataSourceTencentCloudProtocolTemplates(),
@@ -1715,6 +1718,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_token":                                   resourceTencentCloudTcrToken(),
 			"tencentcloud_tcr_vpc_attachment":                          resourceTencentCloudTcrVpcAttachment(),
 			"tencentcloud_tcr_tag_retention_rule":                      resourceTencentCloudTcrTagRetentionRule(),
+			"tencentcloud_tcr_webhook_trigger":                         resourceTencentCloudTcrWebhookTrigger(),
 			"tencentcloud_tdmq_instance":                               resourceTencentCloudTdmqInstance(),
 			"tencentcloud_tdmq_namespace":                              resourceTencentCloudTdmqNamespace(),
 			"tencentcloud_tdmq_topic":                                  resourceTencentCloudTdmqTopic(),
