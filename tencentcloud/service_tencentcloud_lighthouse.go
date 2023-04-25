@@ -450,3 +450,84 @@ func (me *LightHouseService) DeleteLighthouseKeyPairById(ctx context.Context, ke
 
 	return
 }
+
+func (me *LightHouseService) DescribeLighthouseSnapshotById(ctx context.Context, snapshotId string) (snapshot *lighthouse.Snapshot, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeSnapshotsRequest()
+	request.SnapshotIds = []*string{&snapshotId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeSnapshots(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SnapshotSet) < 1 {
+		return
+	}
+
+	snapshot = response.Response.SnapshotSet[0]
+	return
+}
+
+func (me *LightHouseService) DeleteLighthouseSnapshotById(ctx context.Context, snapshotId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDeleteSnapshotsRequest()
+	request.SnapshotIds = []*string{&snapshotId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DeleteSnapshots(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *LightHouseService) LighthouseSnapshotStateRefreshFunc(snapshotId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeLighthouseSnapshotById(ctx, snapshotId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.SnapshotState), nil
+	}
+}
+
+func (me *LightHouseService) LighthouseApplySnapshotStateRefreshFunc(snapshotId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeLighthouseSnapshotById(ctx, snapshotId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.LatestOperationState), nil
+	}
+}
