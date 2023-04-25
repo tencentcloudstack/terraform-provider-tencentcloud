@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tcr_instance" "mytcr_webhooktrigger" {
-  name        = "tf-test-tcr-webhooktrigger"
+  name        = "tf-test-tcr-%s"
   instance_type = "basic"
   delete_bucket = true
 
@@ -16,7 +16,7 @@ resource "tencentcloud_tcr_instance" "mytcr_webhooktrigger" {
 
 resource "tencentcloud_tcr_namespace" "my_ns" {
 	instance_id 	 = tencentcloud_tcr_instance.mytcr_webhooktrigger.id
-	name			 = "tf_test_ns_webhooktrigger"
+	name			 = "tf_test_ns_%s"
 	is_public		 = true
 	is_auto_scan	 = true
 	is_prevent_vul = true
@@ -26,11 +26,19 @@ resource "tencentcloud_tcr_namespace" "my_ns" {
 	}
   }
 
+data "tencentcloud_tcr_namespaces" "id_test" {
+	instance_id = tencentcloud_tcr_namespace.my_ns.instance_id
+  }
+
+locals {
+    ns_id = data.tencentcloud_tcr_namespaces.id_test.namespace_list.0.id
+  }
+
 resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
   registry_id = tencentcloud_tcr_instance.mytcr_webhooktrigger.id
   namespace = tencentcloud_tcr_namespace.my_ns.name
   trigger {
-		name = "trigger"
+		name = "trigger-%s"
 		targets {
 			address = "http://example.org/post"
 			headers {
@@ -41,8 +49,8 @@ resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
 		event_types = ["pushImage"]
 		condition = ".*"
 		enabled = true
-		id = 1
 		description = "this is trigger description"
+		namespace_id = local.ns_id
 
   }
   tags = {
@@ -157,8 +165,8 @@ func resourceTencentCloudTcrWebhookTrigger() *schema.Resource {
 						},
 						"id": {
 							Type:        schema.TypeInt,
-							Optional:    true,
-							Description: "triggerId.",
+							Computed:    true,
+							Description: "trigger Id.",
 						},
 						"description": {
 							Type:        schema.TypeString,
@@ -252,9 +260,6 @@ func resourceTencentCloudTcrWebhookTriggerCreate(d *schema.ResourceData, meta in
 		}
 		if v, ok := dMap["enabled"]; ok {
 			webhookTrigger.Enabled = helper.Bool(v.(bool))
-		}
-		if v, ok := dMap["id"]; ok {
-			webhookTrigger.Id = helper.IntInt64(v.(int))
 		}
 		if v, ok := dMap["description"]; ok {
 			webhookTrigger.Description = helper.String(v.(string))
@@ -426,7 +431,7 @@ func resourceTencentCloudTcrWebhookTriggerUpdate(d *schema.ResourceData, meta in
 	}
 	registryId := idSplit[0]
 	namespaceName := idSplit[1]
-	triggerId := helper.StrToInt64Point(idSplit[2])
+	// triggerId := helper.StrToInt64Point(idSplit[2])
 
 	request.RegistryId = &registryId
 	request.Namespace = &namespaceName
@@ -487,9 +492,6 @@ func resourceTencentCloudTcrWebhookTriggerUpdate(d *schema.ResourceData, meta in
 			}
 			if v, ok := dMap["id"]; ok {
 				webhookTrigger.Id = helper.IntInt64(v.(int))
-				if *triggerId == *webhookTrigger.Id {
-					log.Printf("[WARN]%s triggerId has been changed, before:[%+v], after:[%+v]", logId, *triggerId, v.(int))
-				}
 			}
 			if v, ok := dMap["description"]; ok {
 				webhookTrigger.Description = helper.String(v.(string))

@@ -22,18 +22,16 @@ func TestAccTencentCloudTcrWebhookTriggerResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckTCRWebhookTriggerDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreventDiskCleanup: true,
-				Config:             testAccTCRWebhookTrigger,
+				Config: fmt.Sprintf(testAccTCRWebhookTrigger, "webhooktrigger", "webhooktrigger", "webhooktrigger"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTCRWebhookTriggerExists("tencentcloud_tcr_webhook_trigger.my_trigger"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_webhook_trigger.my_trigger", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_webhook_trigger.my_trigger", "registry_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_webhook_trigger.my_trigger", "namespace"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.name", "trigger"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.name", "trigger-webhooktrigger"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.event_types.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.condition", ".*"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.enabled", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.id", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.targets.0.address", "http://example.org/post"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.targets.0.headers.0.key", "X-Custom-Header"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.targets.0.headers.0.values.#", "1"),
@@ -42,17 +40,16 @@ func TestAccTencentCloudTcrWebhookTriggerResource_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTCRWebhookTrigger_update,
+				Config: fmt.Sprintf(testAccTCRWebhookTrigger_update, "webhooktrigger", "webhooktrigger", "webhooktrigger"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTCRWebhookTriggerExists("tencentcloud_tcr_webhook_trigger.my_trigger"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_webhook_trigger.my_trigger", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_webhook_trigger.my_trigger", "registry_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_webhook_trigger.my_trigger", "namespace"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.name", "trigger"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.name", "trigger-webhooktrigger"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.event_types.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.condition", ".*test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.enabled", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.id", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.targets.0.address", "http://example.org/post"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.targets.0.headers.0.key", "X-Custom-Header"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_webhook_trigger.my_trigger", "trigger.0.targets.0.headers.0.values.#", "1"),
@@ -145,7 +142,7 @@ func testAccCheckTCRWebhookTriggerExists(re string) resource.TestCheckFunc {
 
 const testAccTCRInstance_webhooktrigger = `
 resource "tencentcloud_tcr_instance" "mytcr_webhooktrigger" {
-  name        = "tf-test-tcr-webhooktrigger"
+  name        = "tf-test-tcr-%s"
   instance_type = "basic"
   delete_bucket = true
 
@@ -156,7 +153,7 @@ resource "tencentcloud_tcr_instance" "mytcr_webhooktrigger" {
 
 resource "tencentcloud_tcr_namespace" "my_ns" {
 	instance_id 	 = tencentcloud_tcr_instance.mytcr_webhooktrigger.id
-	name			 = "tf_test_ns_webhooktrigger"
+	name			 = "tf_test_ns_%s"
 	is_public		 = true
 	is_auto_scan	 = true
 	is_prevent_vul = true
@@ -182,7 +179,7 @@ resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
   registry_id = tencentcloud_tcr_instance.mytcr_webhooktrigger.id
   namespace = tencentcloud_tcr_namespace.my_ns.name
   trigger {
-		name = "trigger"
+		name = "trigger-%s"
 		targets {
 			address = "http://example.org/post"
 			headers {
@@ -193,7 +190,6 @@ resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
 		event_types = ["pushImage"]
 		condition = ".*"
 		enabled = true
-		id = 1
 		description = "this is trigger description"
 		namespace_id = local.ns_id
 
@@ -211,7 +207,7 @@ resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
   registry_id = tencentcloud_tcr_instance.mytcr_webhooktrigger.id
   namespace = tencentcloud_tcr_namespace.my_ns.name
   trigger {
-		name = "trigger"
+		name = "trigger-%s"
 		targets {
 			address = "http://example.org/post"
 			headers {
@@ -229,7 +225,6 @@ resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
 		event_types = ["deleteImage"]
 		condition = ".*test"
 		enabled = false
-		id = 1
 		description = "this is trigger description deleted"
 		namespace_id = local.ns_id
 

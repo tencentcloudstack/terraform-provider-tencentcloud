@@ -622,6 +622,7 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_repositories
 	tencentcloud_tcr_tokens
 	tencentcloud_tcr_vpc_attachments
+	tencentcloud_tcr_webhook_trigger_logs
 
   Resource
 	tencentcloud_tcr_instance
@@ -1376,6 +1377,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_tokens":                               dataSourceTencentCloudTCRTokens(),
 			"tencentcloud_tcr_vpc_attachments":                      dataSourceTencentCloudTCRVPCAttachments(),
 			"tencentcloud_tcr_repositories":                         dataSourceTencentCloudTCRRepositories(),
+			"tencentcloud_tcr_webhook_trigger_logs":                 dataSourceTencentCloudTcrWebhookTriggerLogs(),
 			"tencentcloud_address_templates":                        dataSourceTencentCloudAddressTemplates(),
 			"tencentcloud_address_template_groups":                  dataSourceTencentCloudAddressTemplateGroups(),
 			"tencentcloud_protocol_templates":                       dataSourceTencentCloudProtocolTemplates(),

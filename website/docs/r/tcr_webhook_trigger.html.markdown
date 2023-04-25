@@ -15,7 +15,7 @@ Provides a resource to create a tcr webhook_trigger
 
 ```hcl
 resource "tencentcloud_tcr_instance" "mytcr_webhooktrigger" {
-  name          = "tf-test-tcr-webhooktrigger"
+  name          = "tf-test-tcr-%s"
   instance_type = "basic"
   delete_bucket = true
 
@@ -26,7 +26,7 @@ resource "tencentcloud_tcr_instance" "mytcr_webhooktrigger" {
 
 resource "tencentcloud_tcr_namespace" "my_ns" {
   instance_id    = tencentcloud_tcr_instance.mytcr_webhooktrigger.id
-  name           = "tf_test_ns_webhooktrigger"
+  name           = "tf_test_ns_%s"
   is_public      = true
   is_auto_scan   = true
   is_prevent_vul = true
@@ -36,11 +36,19 @@ resource "tencentcloud_tcr_namespace" "my_ns" {
   }
 }
 
+data "tencentcloud_tcr_namespaces" "id_test" {
+  instance_id = tencentcloud_tcr_namespace.my_ns.instance_id
+}
+
+locals {
+  ns_id = data.tencentcloud_tcr_namespaces.id_test.namespace_list.0.id
+}
+
 resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
   registry_id = tencentcloud_tcr_instance.mytcr_webhooktrigger.id
   namespace   = tencentcloud_tcr_namespace.my_ns.name
   trigger {
-    name = "trigger"
+    name = "trigger-%s"
     targets {
       address = "http://example.org/post"
       headers {
@@ -48,11 +56,11 @@ resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
         values = ["a"]
       }
     }
-    event_types = ["pushImage"]
-    condition   = ".*"
-    enabled     = true
-    id          = 1
-    description = "this is trigger description"
+    event_types  = ["pushImage"]
+    condition    = ".*"
+    enabled      = true
+    description  = "this is trigger description"
+    namespace_id = local.ns_id
 
   }
   tags = {
@@ -88,7 +96,6 @@ The `trigger` object supports the following:
 * `name` - (Required, String) trigger name.
 * `targets` - (Required, List) trigger target.
 * `description` - (Optional, String) trigger description.
-* `id` - (Optional, Int) triggerId.
 * `namespace_id` - (Optional, Int) the namespace Id to which the trigger belongs.
 
 ## Attributes Reference
