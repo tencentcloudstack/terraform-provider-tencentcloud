@@ -166,13 +166,13 @@ resource "tencentcloud_tcr_namespace" "my_ns" {
 	}
   }
 
-//   data "tencentcloud_tcr_namespaces" "id_test" {
-// 	instance_id = tencentcloud_tcr_namespace.my_ns.instance_id
-//   }
+  data "tencentcloud_tcr_namespaces" "id_test" {
+	instance_id = tencentcloud_tcr_namespace.my_ns.instance_id
+  }
 
-//   locals {
-//     ns_id = tencentcloud_tcr_namespaces.id_test.namespace_list.0.id
-//   }
+  locals {
+    ns_id = data.tencentcloud_tcr_namespaces.id_test.namespace_list.0.id
+  }
 
 `
 
@@ -195,7 +195,7 @@ resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
 		enabled = true
 		id = 1
 		description = "this is trigger description"
-		// namespace_id = local.ns_id
+		namespace_id = local.ns_id
 
   }
   tags = {
@@ -231,7 +231,7 @@ resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
 		enabled = false
 		id = 1
 		description = "this is trigger description deleted"
-		// namespace_id = local.ns_id
+		namespace_id = local.ns_id
 
   }
   tags = {
