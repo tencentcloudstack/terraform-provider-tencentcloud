@@ -769,6 +769,8 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_apply_disk_backup
 	tencentcloud_lighthouse_disk_attachment
 	tencentcloud_lighthouse_key_pair
+	tencentcloud_lighthouse_snapshot
+	tencentcloud_lighthouse_apply_instance_snapshot
 
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
@@ -915,6 +917,7 @@ TencentCloud Automation Tools(TAT)
 	tencentcloud_tat_invoker
 	tencentcloud_tat_invoker_records
 	tencentcloud_tat_agent
+	tencentcloud_tat_invocation_task
   Resource
 	tencentcloud_tat_command
 	tencentcloud_tat_invoker
@@ -1419,6 +1422,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_records":                      dataSourceTencentCloudTatInvokerRecords(),
 			"tencentcloud_tat_agent":                                dataSourceTencentCloudTatAgent(),
+			"tencentcloud_tat_invocation_task":                      dataSourceTencentCloudTatInvocationTask(),
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dbbrain_diag_event":                       dataSourceTencentCloudDbbrainDiagEvent(),
@@ -1920,6 +1924,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lighthouse_apply_disk_backup":               resourceTencentCloudLighthouseApplyDiskBackup(),
 			"tencentcloud_lighthouse_disk_attachment":                 resourceTencentCloudLighthouseDiskAttachment(),
 			"tencentcloud_lighthouse_key_pair":                        resourceTencentCloudLighthouseKeyPair(),
+			"tencentcloud_lighthouse_snapshot":                        resourceTencentCloudLighthouseSnapshot(),
+			"tencentcloud_lighthouse_apply_instance_snapshot":         resourceTencentCloudLighthouseApplyInstanceSnapshot(),
 		},
 
 		ConfigureFunc: providerConfigure,
