@@ -913,6 +913,7 @@ TencentCloud Automation Tools(TAT)
 	tencentcloud_tat_invoker
 	tencentcloud_tat_invoker_records
 	tencentcloud_tat_agent
+	tencentcloud_tat_invocation_task
   Resource
 	tencentcloud_tat_command
 	tencentcloud_tat_invoker
@@ -1416,6 +1417,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_records":                      dataSourceTencentCloudTatInvokerRecords(),
 			"tencentcloud_tat_agent":                                dataSourceTencentCloudTatAgent(),
+			"tencentcloud_tat_invocation_task":                      dataSourceTencentCloudTatInvocationTask(),
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dbbrain_diag_event":                       dataSourceTencentCloudDbbrainDiagEvent(),
