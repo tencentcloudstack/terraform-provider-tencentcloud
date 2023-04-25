@@ -62,9 +62,9 @@ func resourceTencentCloudTsfInstancesAttachment() *schema.Resource {
 			},
 
 			"instance_id": {
-				Required: true,
-				ForceNew: true,
-				Type:     schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
 				Description: "Cloud server ID.",
 			},
 
@@ -169,8 +169,8 @@ func resourceTencentCloudTsfInstancesAttachmentCreate(d *schema.ResourceData, me
 	logId := getLogId(contextNil)
 
 	var (
-		request   = tsf.NewAddClusterInstancesRequest()
-		clusterId string
+		request    = tsf.NewAddClusterInstancesRequest()
+		clusterId  string
 		instanceId string
 	)
 	if v, ok := d.GetOk("cluster_id"); ok {
