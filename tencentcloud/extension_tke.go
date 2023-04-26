@@ -134,5 +134,5 @@ const (
 )
 
 const (
-	backupStorageLocationStateAvailable   = "Available"
+	backupStorageLocationStateAvailable = "Available"
 )
