@@ -714,7 +714,7 @@ func (me *TkeService) CheckOneOfClusterNodeReady(ctx context.Context, clusterId 
 }
 
 /*
-	if cluster is creating, return error:TencentCloudSDKError] Code=InternalError.ClusterState
+if cluster is creating, return error:TencentCloudSDKError] Code=InternalError.ClusterState
 */
 func (me *TkeService) DeleteClusterInstances(ctx context.Context, id string, instanceIds []string) (errRet error) {
 	logId := getLogId(ctx)
@@ -823,7 +823,7 @@ func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId s
 }
 
 /*
-  open internet access
+open internet access
 */
 func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool, domain string) (errRet error) {
 	logId := getLogId(ctx)
@@ -1430,7 +1430,7 @@ func (me *TkeService) DescribeNodePool(ctx context.Context, clusterId string, no
 	return
 }
 
-//node pool global config
+// node pool global config
 func (me *TkeService) ModifyClusterNodePoolGlobalConfig(ctx context.Context, request *tke.ModifyClusterAsGroupOptionAttributeRequest) (errRet error) {
 	logId := getLogId(ctx)
 	defer func() {
@@ -2176,9 +2176,7 @@ func (me *TkeService) describeBackupStorageLocations(ctx context.Context, names 
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	if response.Response != nil && len(response.Response.BackupStorageLocationSet) > 0 {
-		for _, bl := range response.Response.BackupStorageLocationSet {
-			locations = append(locations, bl)
-		}
+		locations = append(locations, response.Response.BackupStorageLocationSet...)
 	}
 	return
 

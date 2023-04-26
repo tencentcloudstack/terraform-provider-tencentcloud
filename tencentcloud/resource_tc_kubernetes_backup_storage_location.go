@@ -5,11 +5,13 @@ Provide a resource to create tke backup storage location.
 
 Example Usage
 ```
-resource "tencentcloud_kubernetes_backup_storage_location" "example_backup" {
-  name            = "example-backup-1"
-  storage_region  = "ap-guangzhou" # region of you pre-created COS bucket
-  bucket          = "tke-backup-example-1" # bucket name of your pre-created COS bucket
-}
+
+	resource "tencentcloud_kubernetes_backup_storage_location" "example_backup" {
+	  name            = "example-backup-1"
+	  storage_region  = "ap-guangzhou" # region of you pre-created COS bucket
+	  bucket          = "tke-backup-example-1" # bucket name of your pre-created COS bucket
+	}
+
 ```
 
 Import
@@ -130,10 +132,8 @@ func resourceTencentCloudTkeBackupStorageLocationRead(d *schema.ResourceData, me
 	if err != nil {
 		return err
 	}
-	has := false
 	for _, location := range locations {
 		if *location.Name == d.Id() {
-			has = true
 			_ = d.Set("name", location.Name)
 			_ = d.Set("storage_region", location.StorageRegion)
 			_ = d.Set("bucket", location.Bucket)
@@ -143,11 +143,8 @@ func resourceTencentCloudTkeBackupStorageLocationRead(d *schema.ResourceData, me
 			return nil
 		}
 	}
-	if !has {
-		d.SetId("")
-		return nil
-	}
 
+	d.SetId("")
 	return nil
 }
 
@@ -175,6 +172,9 @@ func resourceTencentCloudTkeBackupStorageLocationDelete(d *schema.ResourceData, 
 		}
 		return resource.RetryableError(fmt.Errorf("location %s is still not deleted", d.Id()))
 	})
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

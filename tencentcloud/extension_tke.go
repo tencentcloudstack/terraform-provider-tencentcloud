@@ -135,5 +135,4 @@ const (
 
 const (
 	backupStorageLocationStateAvailable   = "Available"
-	backupStorageLocationStateUnavailable = "Unavailable"
 )
