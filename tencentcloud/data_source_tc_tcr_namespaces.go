@@ -58,6 +58,11 @@ func dataSourceTencentCloudTCRNamespaces() *schema.Resource {
 							Computed:    true,
 							Description: "Indicate that the namespace is public or not.",
 						},
+						"id": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "ID of TCR namespace.",
+						},
 					},
 				},
 			},
@@ -99,6 +104,7 @@ func dataSourceTencentCloudTCRNamespacesRead(d *schema.ResourceData, meta interf
 		mapping := map[string]interface{}{
 			"name":      namespace.Name,
 			"is_public": namespace.Public,
+			"id":        namespace.NamespaceId,
 		}
 
 		namespaceList = append(namespaceList, mapping)

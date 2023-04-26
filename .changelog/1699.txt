@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_monitor_grafana_instance: Query results support `internet_url`, `internal_url`
+```
+
+```release-note:new-resource
+tencentcloud_monitor_tmp_grafana_config
+```

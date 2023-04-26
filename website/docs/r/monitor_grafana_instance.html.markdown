@@ -45,6 +45,8 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 * `instance_id` - Grafana instance id.
 * `instance_status` - Grafana instance status, 1: Creating, 2: Running, 6: Stopped.
+* `internal_url` - Grafana public address.
+* `internet_url` - Grafana intranet address.
 * `root_url` - Grafana external url which could be accessed by user.
 
 

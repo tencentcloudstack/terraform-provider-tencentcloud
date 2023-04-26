@@ -420,6 +420,7 @@ Tencent Kubernetes Engine(TKE)
     tencentcloud_kubernetes_cluster_attachment
 	tencentcloud_kubernetes_node_pool
 	tencentcloud_kubernetes_serverless_node_pool
+    tencentcloud_kubernetes_backup_storage_location
     tencentcloud_kubernetes_auth_attachment
     tencentcloud_kubernetes_addon_attachment
 	tencentcloud_kubernetes_cluster_endpoint
@@ -515,6 +516,7 @@ TencentCloud Managed Service for Grafana(TCMG)
 	tencentcloud_monitor_grafana_notification_channel
 	tencentcloud_monitor_grafana_plugin
 	tencentcloud_monitor_grafana_sso_account
+	tencentcloud_monitor_tmp_grafana_config
 
 TencentDB for PostgreSQL(PostgreSQL)
   Data Source
@@ -622,6 +624,7 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_repositories
 	tencentcloud_tcr_tokens
 	tencentcloud_tcr_vpc_attachments
+	tencentcloud_tcr_webhook_trigger_logs
 
   Resource
 	tencentcloud_tcr_instance
@@ -630,6 +633,8 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_token
 	tencentcloud_tcr_vpc_attachment
 	tencentcloud_tcr_tag_retention_rule
+	tencentcloud_tcr_webhook_trigger
+	tencentcloud_tcr_manage_replication_operation
 
 Video on Demand(VOD)
   Data Source
@@ -767,6 +772,8 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_apply_disk_backup
 	tencentcloud_lighthouse_disk_attachment
 	tencentcloud_lighthouse_key_pair
+	tencentcloud_lighthouse_snapshot
+	tencentcloud_lighthouse_apply_instance_snapshot
 
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
@@ -913,6 +920,7 @@ TencentCloud Automation Tools(TAT)
 	tencentcloud_tat_invoker
 	tencentcloud_tat_invoker_records
 	tencentcloud_tat_agent
+	tencentcloud_tat_invocation_task
   Resource
 	tencentcloud_tat_command
 	tencentcloud_tat_invoker
@@ -1380,6 +1388,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_tokens":                               dataSourceTencentCloudTCRTokens(),
 			"tencentcloud_tcr_vpc_attachments":                      dataSourceTencentCloudTCRVPCAttachments(),
 			"tencentcloud_tcr_repositories":                         dataSourceTencentCloudTCRRepositories(),
+			"tencentcloud_tcr_webhook_trigger_logs":                 dataSourceTencentCloudTcrWebhookTriggerLogs(),
 			"tencentcloud_address_templates":                        dataSourceTencentCloudAddressTemplates(),
 			"tencentcloud_address_template_groups":                  dataSourceTencentCloudAddressTemplateGroups(),
 			"tencentcloud_protocol_templates":                       dataSourceTencentCloudProtocolTemplates(),
@@ -1421,6 +1430,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tat_invoker":                              dataSourceTencentCloudTatInvoker(),
 			"tencentcloud_tat_invoker_records":                      dataSourceTencentCloudTatInvokerRecords(),
 			"tencentcloud_tat_agent":                                dataSourceTencentCloudTatAgent(),
+			"tencentcloud_tat_invocation_task":                      dataSourceTencentCloudTatInvocationTask(),
 			"tencentcloud_dbbrain_sql_filters":                      dataSourceTencentCloudDbbrainSqlFilters(),
 			"tencentcloud_dbbrain_security_audit_log_export_tasks":  dataSourceTencentCloudDbbrainSecurityAuditLogExportTasks(),
 			"tencentcloud_dbbrain_diag_event":                       dataSourceTencentCloudDbbrainDiagEvent(),
@@ -1542,6 +1552,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_kubernetes_cluster_attachment":               resourceTencentCloudTkeClusterAttachment(),
 			"tencentcloud_kubernetes_node_pool":                        resourceTencentCloudKubernetesNodePool(),
 			"tencentcloud_kubernetes_serverless_node_pool":             resourceTkeServerLessNodePool(),
+			"tencentcloud_kubernetes_backup_storage_location":          resourceTencentCloudTkeBackupStorageLocation(),
 			"tencentcloud_mysql_backup_policy":                         resourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                               resourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                     resourceTencentCloudMysqlAccountPrivilege(),
@@ -1665,6 +1676,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_grafana_notification_channel":        resourceTencentCloudMonitorGrafanaNotificationChannel(),
 			"tencentcloud_monitor_grafana_plugin":                      resourceTencentCloudMonitorGrafanaPlugin(),
 			"tencentcloud_monitor_grafana_sso_account":                 resourceTencentCloudMonitorGrafanaSsoAccount(),
+			"tencentcloud_monitor_tmp_grafana_config":                  resourceTencentCloudMonitorTmpGrafanaConfig(),
 			"tencentcloud_mongodb_standby_instance":                    resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                      resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":                         resourceTencentCloudPostgresqlInstance(),
@@ -1716,6 +1728,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tcr_token":                                   resourceTencentCloudTcrToken(),
 			"tencentcloud_tcr_vpc_attachment":                          resourceTencentCloudTcrVpcAttachment(),
 			"tencentcloud_tcr_tag_retention_rule":                      resourceTencentCloudTcrTagRetentionRule(),
+			"tencentcloud_tcr_webhook_trigger":                         resourceTencentCloudTcrWebhookTrigger(),
+			"tencentcloud_tcr_manage_replication_operation":            resourceTencentCloudTcrManageReplicationOperation(),
 			"tencentcloud_tdmq_instance":                               resourceTencentCloudTdmqInstance(),
 			"tencentcloud_tdmq_namespace":                              resourceTencentCloudTdmqNamespace(),
 			"tencentcloud_tdmq_topic":                                  resourceTencentCloudTdmqTopic(),
@@ -1926,6 +1940,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lighthouse_apply_disk_backup":               resourceTencentCloudLighthouseApplyDiskBackup(),
 			"tencentcloud_lighthouse_disk_attachment":                 resourceTencentCloudLighthouseDiskAttachment(),
 			"tencentcloud_lighthouse_key_pair":                        resourceTencentCloudLighthouseKeyPair(),
+			"tencentcloud_lighthouse_snapshot":                        resourceTencentCloudLighthouseSnapshot(),
+			"tencentcloud_lighthouse_apply_instance_snapshot":         resourceTencentCloudLighthouseApplyInstanceSnapshot(),
 		},
 
 		ConfigureFunc: providerConfigure,

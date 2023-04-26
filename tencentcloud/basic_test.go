@@ -788,7 +788,7 @@ const (
 	defaultZoneName    = "tf-teo-t.xyz"
 	defaultZoneId      = "zone-2a1u0y616jz6"
 	defaultPolicyId    = "11581"
-	applicationProxyId = "proxy-f2c15f4f-5b34-11ed-aa27-525400b35dd9"
+	applicationProxyId = "sid-2f8xqhmf32dt"
 )
 
 // End of TEO
@@ -983,6 +983,7 @@ const (
 	defaultLighthoustDiskId       = "lhdisk-do4p4hz6"
 	defaultLighthouseBackupDiskId = "lhdisk-cwodsc4q"
 	defaultLighthouseBackUpId     = "lhbak-bpum3ygx"
+	defaultLighthouseSnapshotId   = "lhsnap-9jaw9m17"
 )
 
 const DefaultLighthoustVariables = `
@@ -1000,5 +1001,9 @@ variable "lighthouse_backup_disk_id" {
 
 variable "lighthouse_backup_id" {
   default = "` + defaultLighthouseBackUpId + `"
+}
+
+variable "lighthouse_snapshot_id" {
+  default = "` + defaultLighthouseSnapshotId + `"
 }
 `

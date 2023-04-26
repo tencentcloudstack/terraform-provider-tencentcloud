@@ -11,7 +11,7 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-func TestAccTencentCloudTCRTagRetentionRuleResource_basic(t *testing.T) {
+func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
