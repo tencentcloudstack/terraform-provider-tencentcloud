@@ -46,6 +46,6 @@ In addition to all arguments above, the following attributes are exported:
 tke backup storage location can be imported, e.g.
 
 ```
-$ terraform import tencentcloud_kubernetes_backup_storage_location.test.xxx
+$ terraform import tencentcloud_kubernetes_backup_storage_location.test xxx
 ```
 
