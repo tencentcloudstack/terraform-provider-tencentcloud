@@ -1038,6 +1038,7 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_application_public_config_release
 	tencentcloud_tsf_application_public_config
 	tencentcloud_tsf_application_file_config_release
+	tencentcloud_tsf_instances_attachment
 
 Media Processing Service(MPS)
   Resource

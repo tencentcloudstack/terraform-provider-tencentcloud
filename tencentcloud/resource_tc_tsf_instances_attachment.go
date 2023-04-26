@@ -22,14 +22,6 @@ resource "tencentcloud_tsf_instances_attachment" "instances_attachment" {
   security_group_ids = [""]
 }
 ```
-
-Import
-
-tsf instances_attachment can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tsf_instances_attachment.instances_attachment instances_attachment_id
-```
 */
 package tencentcloud
 
@@ -50,9 +42,9 @@ func resourceTencentCloudTsfInstancesAttachment() *schema.Resource {
 		Create: resourceTencentCloudTsfInstancesAttachmentCreate,
 		Read:   resourceTencentCloudTsfInstancesAttachmentRead,
 		Delete: resourceTencentCloudTsfInstancesAttachmentDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
@@ -85,6 +77,7 @@ func resourceTencentCloudTsfInstancesAttachment() *schema.Resource {
 			"password": {
 				Optional:    true,
 				ForceNew:    true,
+				Sensitive:   true,
 				Type:        schema.TypeString,
 				Description: "Reset system password.",
 			},
@@ -107,7 +100,7 @@ func resourceTencentCloudTsfInstancesAttachment() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Cloud server import mode, required for virtual machine clusters, not required for container clusters. R : Reinstall TSF system image, M: Manual installation of agent.",
+				Description: "Cloud server import mode, required for virtual machine clusters, not required for container clusters. R: Reinstall TSF system image, M: Manual installation of agent.",
 			},
 
 			"os_customize_type": {
@@ -143,7 +136,7 @@ func resourceTencentCloudTsfInstancesAttachment() *schema.Resource {
 						"docker_graph_path": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: " dockerd --graph specifies the value, default is /var/lib/docker Note: This field may return null, indicating that no valid values can be obtained.",
+							Description: "Dockerd --graph specifies the value, default is /var/lib/docker Note: This field may return null, indicating that no valid values can be obtained.",
 						},
 					},
 				},
