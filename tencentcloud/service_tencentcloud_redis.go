@@ -1285,58 +1285,6 @@ func (me *RedisService) DescribeRedisParamById(ctx context.Context, instanceId s
 	return
 }
 
-func (me *RedisService) DescribeRedisReplicateById(ctx context.Context, instanceId string) (group *redis.Groups, errRet error) {
-	logId := getLogId(ctx)
-
-	request := redis.NewDescribeReplicationGroupRequest()
-	// request.SearchKey = &instanceId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseRedisClient().DescribeReplicationGroup(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if len(response.Response.Groups) < 1 {
-		return
-	}
-	group = response.Response.Groups[0]
-	return
-}
-
-func (me *RedisService) DeleteRedisReplicateById(ctx context.Context, instanceId string) (taskId int64, errRet error) {
-	logId := getLogId(ctx)
-
-	request := redis.NewDeleteReplicationInstanceRequest()
-	request.InstanceId = &instanceId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseRedisClient().DeleteReplicationInstance(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	taskId = int64(*response.Response.TaskId)
-
-	return
-}
-
 func (me *RedisService) DescribeRedisSslById(ctx context.Context, instanceId string) (ssl *redis.DescribeSSLStatusResponseParams, errRet error) {
 	logId := getLogId(ctx)
 

@@ -535,6 +535,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_ssl
 	tencentcloud_redis_maintenance_window
 	tencentcloud_redis_security_group
+	tencentcloud_redis_replica_readonly
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -1524,7 +1525,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_redis_ssl":                                   resourceTencentCloudRedisSsl(),
 			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_redis_security_group":                        resourceTencentCloudRedisSecurityGroup(),
-			"tencentcloud_redis_replicate_instance":                    resourceTencentCloudRedisReplicateInstance(),
+			"tencentcloud_redis_replica_readonly":                      resourceTencentCloudRedisReplicaReadonly(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                            resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                               resourceTencentCloudAsAttachment(),

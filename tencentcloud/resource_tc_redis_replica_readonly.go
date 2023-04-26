@@ -6,25 +6,22 @@ Example Usage
 ```hcl
 resource "tencentcloud_redis_replica_readonly" "replica_readonly" {
   instance_id = "crs-c1nl9rpv"
-  readonly_policy =
+  readonly_policy = ["master"]
+  operate = "enable"
 }
-```
-
-Import
-
-redis replica_readonly can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_redis_replica_readonly.replica_readonly replica_readonly_id
 ```
 */
 package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 )
 
 func resourceTencentCloudRedisReplicaReadonly() *schema.Resource {
@@ -33,9 +30,7 @@ func resourceTencentCloudRedisReplicaReadonly() *schema.Resource {
 		Read:   resourceTencentCloudRedisReplicaReadonlyRead,
 		Update: resourceTencentCloudRedisReplicaReadonlyUpdate,
 		Delete: resourceTencentCloudRedisReplicaReadonlyDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -50,6 +45,13 @@ func resourceTencentCloudRedisReplicaReadonly() *schema.Resource {
 					Type: schema.TypeString,
 				},
 				Description: "Routing policy: Enter `master` or `replication`, which indicates the master node or slave node.",
+			},
+
+			"operate": {
+				Required:     true,
+				Type:         schema.TypeString,
+				ValidateFunc: validateAllowedStringValue([]string{"enable", "disable"}),
+				Description:  "The replica is read-only, `enable` - enable read-write splitting, `disable`- disable read-write splitting.",
 			},
 		},
 	}
@@ -100,7 +102,9 @@ func resourceTencentCloudRedisReplicaReadonlyRead(d *schema.ResourceData, meta i
 
 	if instance.SlaveReadWeight != nil {
 		if *instance.SlaveReadWeight == 100 {
-			_ = d.Set("readonly_policy", []string{"master"})
+			_ = d.Set("operate", "enable")
+		} else {
+			_ = d.Set("operate", "disable")
 		}
 	}
 
@@ -111,56 +115,81 @@ func resourceTencentCloudRedisReplicaReadonlyUpdate(d *schema.ResourceData, meta
 	defer logElapsed("resource.tencentcloud_redis_replica_readonly.update")()
 	defer inconsistentCheck(d, meta)()
 
-	// logId := getLogId(contextNil)
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	// var (
-	// 	disableRequest  = redis.NewDisableReplicaReadonlyRequest()
-	// 	disableResponse = redis.NewDisableReplicaReadonlyResponse()
-	// 	enableRequest   = redis.NewEnableReplicaReadonlyRequest()
-	// 	enableResponse  = redis.NewEnableReplicaReadonlyResponse()
-	// )
+	var (
+		disableRequest  = redis.NewDisableReplicaReadonlyRequest()
+		disableResponse = redis.NewDisableReplicaReadonlyResponse()
+		enableRequest   = redis.NewEnableReplicaReadonlyRequest()
+		enableResponse  = redis.NewEnableReplicaReadonlyResponse()
+		taskId          int64
+	)
 
-	// replicaReadonlyId := d.Id()
+	instanceId := d.Id()
+	if v, ok := d.GetOk("operate"); ok {
+		operate := v.(string)
+		if operate == "enable" {
+			enableRequest.InstanceId = &instanceId
+			err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().EnableReplicaReadonly(enableRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, enableRequest.GetAction(), enableRequest.ToJsonString(), result.ToJsonString())
+				}
+				enableResponse = result
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update redis replicaReadonly failed, reason:%+v", logId, err)
+				return err
+			}
 
-	// request.InstanceId = &instanceId
+			taskId = *enableResponse.Response.TaskId
+		}
+		if operate == "disable" {
+			disableRequest.InstanceId = &instanceId
+			err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().DisableReplicaReadonly(disableRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, disableRequest.GetAction(), disableRequest.ToJsonString(), result.ToJsonString())
+				}
+				disableResponse = result
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s update redis replicaReadonly failed, reason:%+v", logId, err)
+				return err
+			}
 
-	// immutableArgs := []string{"instance_id", "readonly_policy"}
+			taskId = *disableResponse.Response.TaskId
+		}
+	}
 
-	// for _, v := range immutableArgs {
-	// 	if d.HasChange(v) {
-	// 		return fmt.Errorf("argument `%s` cannot be changed", v)
-	// 	}
-	// }
+	service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		ok, err := service.DescribeTaskInfo(ctx, instanceId, taskId)
+		if err != nil {
+			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if ok {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("change inputMode is processing"))
+		}
+	})
 
-	// err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-	// 	result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().DisableReplicaReadonly(request)
-	// 	if e != nil {
-	// 		return retryError(e)
-	// 	} else {
-	// 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-	// 	}
-	// 	return nil
-	// })
-	// if err != nil {
-	// 	log.Printf("[CRITAL]%s update redis replicaReadonly failed, reason:%+v", logId, err)
-	// 	return err
-	// }
-
-	// service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	// conf := BuildStateChangeConf([]string{}, []string{"succeed"}, 60*readRetryTimeout, time.Second, service.RedisReplicaReadonlyStateRefreshFunc(d.Id(), []string{}))
-
-	// if _, e := conf.WaitForState(); e != nil {
-	// 	return e
-	// }
-
-	// service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	// conf := BuildStateChangeConf([]string{}, []string{"succeed"}, 60*readRetryTimeout, time.Second, service.RedisReplicaReadonlyStateRefreshFunc(d.Id(), []string{}))
-
-	// if _, e := conf.WaitForState(); e != nil {
-	// 	return e
-	// }
+	if err != nil {
+		log.Printf("[CRITAL]%s redis change inputMode fail, reason:%s\n", logId, err.Error())
+		return err
+	}
 
 	return resourceTencentCloudRedisReplicaReadonlyRead(d, meta)
 }
