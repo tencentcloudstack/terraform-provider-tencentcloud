@@ -132,3 +132,7 @@ const (
 	TKE_CLUSTER_OPEN_ACCESS  = true
 	TKE_CLUSTER_CLOSE_ACCESS = false
 )
+
+const (
+	backupStorageLocationStateAvailable = "Available"
+)

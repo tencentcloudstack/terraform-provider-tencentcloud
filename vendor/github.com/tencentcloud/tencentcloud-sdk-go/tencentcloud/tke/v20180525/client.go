@@ -637,6 +637,62 @@ func (c *Client) CheckInstancesUpgradeAbleWithContext(ctx context.Context, reque
     return
 }
 
+func NewCreateBackupStorageLocationRequest() (request *CreateBackupStorageLocationRequest) {
+    request = &CreateBackupStorageLocationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "CreateBackupStorageLocation")
+    
+    
+    return
+}
+
+func NewCreateBackupStorageLocationResponse() (response *CreateBackupStorageLocationResponse) {
+    response = &CreateBackupStorageLocationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateBackupStorageLocation
+// 创建备份仓库，指定了存储仓库类型（如COS）、COS桶地区、名称等信息，当前最多允许创建100个仓库， 注意此接口当前是全局接口，多个地域的TKE集群如果要备份到相同的备份仓库中，不需要重复创建备份仓库
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) CreateBackupStorageLocation(request *CreateBackupStorageLocationRequest) (response *CreateBackupStorageLocationResponse, err error) {
+    return c.CreateBackupStorageLocationWithContext(context.Background(), request)
+}
+
+// CreateBackupStorageLocation
+// 创建备份仓库，指定了存储仓库类型（如COS）、COS桶地区、名称等信息，当前最多允许创建100个仓库， 注意此接口当前是全局接口，多个地域的TKE集群如果要备份到相同的备份仓库中，不需要重复创建备份仓库
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED = "LimitExceeded"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) CreateBackupStorageLocationWithContext(ctx context.Context, request *CreateBackupStorageLocationRequest) (response *CreateBackupStorageLocationResponse, err error) {
+    if request == nil {
+        request = NewCreateBackupStorageLocationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateBackupStorageLocation require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateBackupStorageLocationResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateClusterRequest() (request *CreateClusterRequest) {
     request = &CreateClusterRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1200,7 +1256,7 @@ func NewCreateClusterReleaseResponse() (response *CreateClusterReleaseResponse) 
 }
 
 // CreateClusterRelease
-// 在应用市场中给集群创建应用
+// 集群创建应用
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -1221,7 +1277,7 @@ func (c *Client) CreateClusterRelease(request *CreateClusterReleaseRequest) (res
 }
 
 // CreateClusterRelease
-// 在应用市场中给集群创建应用
+// 集群创建应用
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2507,6 +2563,60 @@ func (c *Client) CreateTKEEdgeClusterWithContext(ctx context.Context, request *C
     request.SetContext(ctx)
     
     response = NewCreateTKEEdgeClusterResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteBackupStorageLocationRequest() (request *DeleteBackupStorageLocationRequest) {
+    request = &DeleteBackupStorageLocationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DeleteBackupStorageLocation")
+    
+    
+    return
+}
+
+func NewDeleteBackupStorageLocationResponse() (response *DeleteBackupStorageLocationResponse) {
+    response = &DeleteBackupStorageLocationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteBackupStorageLocation
+// 删除备份仓库
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DeleteBackupStorageLocation(request *DeleteBackupStorageLocationRequest) (response *DeleteBackupStorageLocationResponse, err error) {
+    return c.DeleteBackupStorageLocationWithContext(context.Background(), request)
+}
+
+// DeleteBackupStorageLocation
+// 删除备份仓库
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DeleteBackupStorageLocationWithContext(ctx context.Context, request *DeleteBackupStorageLocationRequest) (response *DeleteBackupStorageLocationResponse, err error) {
+    if request == nil {
+        request = NewDeleteBackupStorageLocationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteBackupStorageLocation require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteBackupStorageLocationResponse()
     err = c.Send(request, response)
     return
 }
@@ -3933,6 +4043,7 @@ func NewDeletePrometheusTempResponse() (response *DeletePrometheusTempResponse) 
 // 删除一个云原生Prometheus配置模板
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -3947,6 +4058,7 @@ func (c *Client) DeletePrometheusTemp(request *DeletePrometheusTempRequest) (res
 // 删除一个云原生Prometheus配置模板
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -4349,6 +4461,60 @@ func (c *Client) DescribeAvailableTKEEdgeVersionWithContext(ctx context.Context,
     request.SetContext(ctx)
     
     response = NewDescribeAvailableTKEEdgeVersionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBackupStorageLocationsRequest() (request *DescribeBackupStorageLocationsRequest) {
+    request = &DescribeBackupStorageLocationsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "DescribeBackupStorageLocations")
+    
+    
+    return
+}
+
+func NewDescribeBackupStorageLocationsResponse() (response *DescribeBackupStorageLocationsResponse) {
+    response = &DescribeBackupStorageLocationsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBackupStorageLocations
+// 查询备份仓库信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeBackupStorageLocations(request *DescribeBackupStorageLocationsRequest) (response *DescribeBackupStorageLocationsResponse, err error) {
+    return c.DescribeBackupStorageLocationsWithContext(context.Background(), request)
+}
+
+// DescribeBackupStorageLocations
+// 查询备份仓库信息
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeBackupStorageLocationsWithContext(ctx context.Context, request *DescribeBackupStorageLocationsRequest) (response *DescribeBackupStorageLocationsResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupStorageLocationsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupStorageLocations require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupStorageLocationsResponse()
     err = c.Send(request, response)
     return
 }
@@ -9614,6 +9780,7 @@ func NewEnableEventPersistenceResponse() (response *EnableEventPersistenceRespon
 //  FAILEDOPERATION_CREATECLSLOGSET = "FailedOperation.CreateClsLogSet"
 //  FAILEDOPERATION_CREATECLSTOPIC = "FailedOperation.CreateClsTopic"
 //  FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
+//  FAILEDOPERATION_GETCLSINDEX = "FailedOperation.GetClsIndex"
 //  FAILEDOPERATION_GETCLSLOGSET = "FailedOperation.GetClsLogSet"
 //  FAILEDOPERATION_MODIFYCLSINDEX = "FailedOperation.ModifyClsIndex"
 //  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
@@ -9646,6 +9813,7 @@ func (c *Client) EnableEventPersistence(request *EnableEventPersistenceRequest) 
 //  FAILEDOPERATION_CREATECLSLOGSET = "FailedOperation.CreateClsLogSet"
 //  FAILEDOPERATION_CREATECLSTOPIC = "FailedOperation.CreateClsTopic"
 //  FAILEDOPERATION_GETCLSCONFIG = "FailedOperation.GetClsConfig"
+//  FAILEDOPERATION_GETCLSINDEX = "FailedOperation.GetClsIndex"
 //  FAILEDOPERATION_GETCLSLOGSET = "FailedOperation.GetClsLogSet"
 //  FAILEDOPERATION_MODIFYCLSINDEX = "FailedOperation.ModifyClsIndex"
 //  FAILEDOPERATION_RBACFORBIDDEN = "FailedOperation.RBACForbidden"
@@ -11065,6 +11233,7 @@ func NewModifyPrometheusConfigResponse() (response *ModifyPrometheusConfigRespon
 // 修改prometheus配置，如果配置项不存在，则会新增
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -11081,6 +11250,7 @@ func (c *Client) ModifyPrometheusConfig(request *ModifyPrometheusConfigRequest) 
 // 修改prometheus配置，如果配置项不存在，则会新增
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
@@ -11190,6 +11360,7 @@ func NewModifyPrometheusRecordRuleYamlResponse() (response *ModifyPrometheusReco
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
@@ -11206,6 +11377,7 @@ func (c *Client) ModifyPrometheusRecordRuleYaml(request *ModifyPrometheusRecordR
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_PARAM = "InternalError.Param"
+//  INTERNALERROR_UNEXPECTEDINTERNAL = "InternalError.UnexpectedInternal"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
 //  INVALIDPARAMETER_PROMINSTANCENOTFOUND = "InvalidParameter.PromInstanceNotFound"
@@ -11763,6 +11935,7 @@ func NewSyncPrometheusTempResponse() (response *SyncPrometheusTempResponse) {
 // 同步模板到实例或者集群，针对V2版本实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -11782,6 +11955,7 @@ func (c *Client) SyncPrometheusTemp(request *SyncPrometheusTempRequest) (respons
 // 同步模板到实例或者集群，针对V2版本实例
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_COMPONENTCLIENTCOMMON = "FailedOperation.ComponentClientCommon"
 //  FAILEDOPERATION_COMPONENTCLIENTHTTP = "FailedOperation.ComponentClientHttp"
 //  FAILEDOPERATION_COMPONENTCLIENTUNPACK = "FailedOperation.ComponentClientUnpack"
 //  FAILEDOPERATION_KUBECOMMON = "FailedOperation.KubeCommon"
@@ -12057,6 +12231,64 @@ func (c *Client) UninstallLogAgentWithContext(ctx context.Context, request *Unin
     request.SetContext(ctx)
     
     response = NewUninstallLogAgentResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateClusterKubeconfigRequest() (request *UpdateClusterKubeconfigRequest) {
+    request = &UpdateClusterKubeconfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tke", APIVersion, "UpdateClusterKubeconfig")
+    
+    
+    return
+}
+
+func NewUpdateClusterKubeconfigResponse() (response *UpdateClusterKubeconfigResponse) {
+    response = &UpdateClusterKubeconfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateClusterKubeconfig
+// 对集群的Kubeconfig信息进行更新
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_KUBERNETESPATCHOPERATIONERROR = "InternalError.KubernetesPatchOperationError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpdateClusterKubeconfig(request *UpdateClusterKubeconfigRequest) (response *UpdateClusterKubeconfigResponse, err error) {
+    return c.UpdateClusterKubeconfigWithContext(context.Background(), request)
+}
+
+// UpdateClusterKubeconfig
+// 对集群的Kubeconfig信息进行更新
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DB = "InternalError.Db"
+//  INTERNALERROR_KUBERNETESPATCHOPERATIONERROR = "InternalError.KubernetesPatchOperationError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PARAM = "InvalidParameter.Param"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+func (c *Client) UpdateClusterKubeconfigWithContext(ctx context.Context, request *UpdateClusterKubeconfigRequest) (response *UpdateClusterKubeconfigResponse, err error) {
+    if request == nil {
+        request = NewUpdateClusterKubeconfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateClusterKubeconfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateClusterKubeconfigResponse()
     err = c.Send(request, response)
     return
 }
