@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_tcr_webhook_trigger
+```
+
+```release-note:new-data-source
+tencentcloud_tcr_describe_webhook_trigger_logs
+```

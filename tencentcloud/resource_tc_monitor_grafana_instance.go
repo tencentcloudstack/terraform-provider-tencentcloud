@@ -102,6 +102,18 @@ func resourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 				Description: "Grafana instance status, 1: Creating, 2: Running, 6: Stopped.",
 			},
 
+			"internet_url": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Grafana intranet address.",
+			},
+
+			"internal_url": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Grafana public address.",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -143,6 +155,7 @@ func resourceTencentCloudMonitorGrafanaInstanceCreate(d *schema.ResourceData, me
 	}
 
 	if v, _ := d.GetOk("enable_internet"); v != nil {
+		// Internal account won't open
 		request.EnableInternet = helper.Bool(v.(bool))
 	}
 
@@ -247,6 +260,14 @@ func resourceTencentCloudMonitorGrafanaInstanceRead(d *schema.ResourceData, meta
 		_ = d.Set("enable_internet", true)
 	} else {
 		_ = d.Set("enable_internet", false)
+	}
+
+	if grafanaInstance.InternetUrl != nil {
+		_ = d.Set("internet_url", grafanaInstance.InternetUrl)
+	}
+
+	if grafanaInstance.InternalUrl != nil {
+		_ = d.Set("internal_url", grafanaInstance.InternalUrl)
 	}
 
 	if grafanaInstance.InstanceStatus != nil {
