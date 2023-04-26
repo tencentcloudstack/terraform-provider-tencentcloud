@@ -516,6 +516,7 @@ TencentCloud Managed Service for Grafana(TCMG)
 	tencentcloud_monitor_grafana_notification_channel
 	tencentcloud_monitor_grafana_plugin
 	tencentcloud_monitor_grafana_sso_account
+	tencentcloud_monitor_tmp_grafana_config
 
 TencentDB for PostgreSQL(PostgreSQL)
   Data Source
@@ -1669,6 +1670,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_monitor_grafana_notification_channel":        resourceTencentCloudMonitorGrafanaNotificationChannel(),
 			"tencentcloud_monitor_grafana_plugin":                      resourceTencentCloudMonitorGrafanaPlugin(),
 			"tencentcloud_monitor_grafana_sso_account":                 resourceTencentCloudMonitorGrafanaSsoAccount(),
+			"tencentcloud_monitor_tmp_grafana_config":                  resourceTencentCloudMonitorTmpGrafanaConfig(),
 			"tencentcloud_mongodb_standby_instance":                    resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                      resourceTencentCloudElasticsearchInstance(),
 			"tencentcloud_postgresql_instance":                         resourceTencentCloudPostgresqlInstance(),
