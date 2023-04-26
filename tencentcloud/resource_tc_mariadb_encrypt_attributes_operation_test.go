@@ -26,7 +26,7 @@ func TestAccTencentCloudMariadbEncryptAttributesOperationResource_basic(t *testi
 	})
 }
 
-const testAccMariadbEncryptAttributesOperation = testAccMariadbAccount + `
+const testAccMariadbEncryptAttributesOperation = testAccMariadbHourDbInstance + `
 
 resource "tencentcloud_mariadb_encrypt_attributes_operation" "encrypt_attributes_operation" {
   instance_id = tencentcloud_mariadb_hour_db_instance.basic.id

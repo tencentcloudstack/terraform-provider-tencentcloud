@@ -13,6 +13,8 @@ resource "tencentcloud_mariadb_encrypt_attributes_operation" "encrypt_attributes
 package tencentcloud
 
 import (
+	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -88,6 +90,30 @@ func resourceTencentCloudMariadbEncryptAttributesOperationCreate(d *schema.Resou
 func resourceTencentCloudMariadbEncryptAttributesOperationRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mariadb_encrypt_attributes_operation.read")()
 	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	instanceId := d.Id()
+
+	encryptAttributes, err := service.DescribeDBEncryptAttributes(ctx, instanceId)
+
+	if err != nil {
+		return err
+	}
+
+	if encryptAttributes == nil {
+		d.SetId("")
+		return fmt.Errorf("resource `encryptAttributes` %s does not exist", instanceId)
+	}
+
+	_ = d.Set("instance_id", instanceId)
+
+	if encryptAttributes.EncryptStatus != nil {
+		_ = d.Set("encrypt_enabled", encryptAttributes.EncryptStatus)
+	}
 
 	return nil
 }
