@@ -26,7 +26,7 @@ func TestAccTencentCloudMariadbDatabasesDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccMariadbDatabasesDataSource = testAccMariadbAccount + `
+const testAccMariadbDatabasesDataSource = testAccMariadbHourDbInstance + `
 
 data "tencentcloud_mariadb_databases" "databases" {
   instance_id = tencentcloud_mariadb_hour_db_instance.basic.id
