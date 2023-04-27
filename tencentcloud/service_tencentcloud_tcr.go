@@ -1098,3 +1098,119 @@ func (me *TCRService) DeleteTcrTagRetentionRuleById(ctx context.Context, registr
 
 	return
 }
+
+func (me *TCRService) DescribeTcrWebhookTriggerById(ctx context.Context, registryId string, triggerId int64, namespaceName string) (WebhookTrigger *tcr.WebhookTrigger, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDescribeWebhookTriggerRequest()
+	request.RegistryId = &registryId
+	request.Namespace = &namespaceName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DescribeWebhookTrigger(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Triggers) < 1 {
+		return
+	}
+
+	for _, trigger := range response.Response.Triggers {
+		if *trigger.Id == triggerId {
+			WebhookTrigger = trigger
+			return
+		}
+	}
+
+	return
+}
+
+func (me *TCRService) DeleteTcrWebhookTriggerById(ctx context.Context, registryId string, namespaceName string, triggerId int64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDeleteWebhookTriggerRequest()
+	request.RegistryId = &registryId
+	request.Id = &triggerId
+	request.Namespace = &namespaceName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DeleteWebhookTrigger(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TCRService) DescribeTcrWebhookTriggerLogByFilter(ctx context.Context, param map[string]interface{}) (DescribeWebhookTriggerLog []*tcr.WebhookTriggerLog, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcr.NewDescribeWebhookTriggerLogRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "registry_id" {
+			request.RegistryId = v.(*string)
+		}
+		if k == "namespace" {
+			request.Namespace = v.(*string)
+		}
+		if k == "trigger_id" {
+			request.Id = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTCRClient().DescribeWebhookTriggerLog(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Logs) < 1 {
+			break
+		}
+		DescribeWebhookTriggerLog = append(DescribeWebhookTriggerLog, response.Response.Logs...)
+		if len(response.Response.Logs) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
