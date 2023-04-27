@@ -6180,3 +6180,51 @@ func (me *VpcService) VpcIpv6AddressStateRefreshFunc(taskId string, failStates [
 		return object, helper.PString(object.Response.Result), nil
 	}
 }
+
+func (me *VpcService) DescribeVpcCcnRegionBandwidthLimitsByFilter(ctx context.Context, param map[string]interface{}) (CcnRegionBandwidthLimits []*vpc.CcnBandwidth, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeCrossBorderCcnRegionBandwidthLimitsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "filters" {
+			request.Filters = v.([]*vpc.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeCrossBorderCcnRegionBandwidthLimits(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CcnBandwidthSet) < 1 {
+			break
+		}
+		CcnRegionBandwidthLimits = append(CcnRegionBandwidthLimits, response.Response.CcnBandwidthSet...)
+		if len(response.Response.CcnBandwidthSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
