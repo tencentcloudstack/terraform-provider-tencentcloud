@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_eip: support update `internet_charge_type`
+```
+
+```release-note:new-resource
+tencentcloud_ipv6_address_bandwidth
+```
