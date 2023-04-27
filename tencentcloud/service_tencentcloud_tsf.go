@@ -1323,10 +1323,10 @@ func (me *TsfService) DescribeTsfMicroserviceByFilter(ctx context.Context, param
 	return
 }
 
-func (me *TsfService) DescribeTsfUnitRulesByFilter(ctx context.Context, param map[string]interface{}) (unitRules []*tsf.TsfPageUnitRule, errRet error) {
+func (me *TsfService) DescribeTsfUnitRulesByFilter(ctx context.Context, param map[string]interface{}) (unitRule *tsf.TsfPageUnitRuleV2, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = tsf.NewDescribeUnitRulesRequest()
+		request = tsf.NewDescribeUnitRulesV2Request()
 	)
 
 	defer func() {
@@ -1349,25 +1349,34 @@ func (me *TsfService) DescribeTsfUnitRulesByFilter(ctx context.Context, param ma
 	var (
 		offset int64 = 0
 		limit  int64 = 20
+		total  int64
+		rules  = make([]*tsf.UnitRule, 0)
 	)
 	for {
 		request.Offset = &offset
 		request.Limit = &limit
-		response, err := me.client.UseTsfClient().DescribeUnitRules(request)
+		response, err := me.client.UseTsfClient().DescribeUnitRulesV2(request)
 		if err != nil {
 			errRet = err
 			return
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.Result) < 1 {
+		if response == nil || len(response.Response.Result.Content) < 1 {
 			break
 		}
-		unitRules = append(unitRules, response.Response.Result...)
-		if len(response.Response.Result) < int(limit) {
+		total = *response.Response.Result.TotalCount
+		rules = append(rules, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
 			break
 		}
+
 		offset += limit
+	}
+
+	unitRule = &tsf.TsfPageUnitRuleV2{
+		TotalCount: &total,
+		Content:    rules,
 	}
 
 	return

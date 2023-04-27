@@ -212,152 +212,146 @@ func dataSourceTencentCloudTsfUnitRulesRead(d *schema.ResourceData, meta interfa
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var unitRules []*tsf.TsfPageUnitRule
+	var unitRule *tsf.TsfPageUnitRuleV2
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeTsfUnitRulesByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		unitRules = result
+		unitRule = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(unitRules))
-	tmpList := make([]map[string]interface{}, 0, len(unitRules))
-
-	if unitRules != nil {
-		for _, tsfPageUnitRule := range unitRules {
-			tsfPageUnitRuleMap := map[string]interface{}{}
-
-			if tsfPageUnitRule.TotalCount != nil {
-				tsfPageUnitRuleMap["total_count"] = tsfPageUnitRule.TotalCount
-			}
-
-			if tsfPageUnitRule.Content != nil {
-				contentList := []interface{}{}
-				for _, content := range tsfPageUnitRule.Content {
-					contentMap := map[string]interface{}{}
-
-					if content.Name != nil {
-						contentMap["name"] = content.Name
-					}
-
-					if content.Id != nil {
-						contentMap["id"] = content.Id
-					}
-
-					if content.GatewayInstanceId != nil {
-						contentMap["gateway_instance_id"] = content.GatewayInstanceId
-					}
-
-					if content.Description != nil {
-						contentMap["description"] = content.Description
-					}
-
-					if content.Status != nil {
-						contentMap["status"] = content.Status
-					}
-
-					if content.UnitRuleItemList != nil {
-						unitRuleItemListList := []interface{}{}
-						for _, unitRuleItemList := range content.UnitRuleItemList {
-							unitRuleItemListMap := map[string]interface{}{}
-
-							if unitRuleItemList.Relationship != nil {
-								unitRuleItemListMap["relationship"] = unitRuleItemList.Relationship
-							}
-
-							if unitRuleItemList.DestNamespaceId != nil {
-								unitRuleItemListMap["dest_namespace_id"] = unitRuleItemList.DestNamespaceId
-							}
-
-							if unitRuleItemList.DestNamespaceName != nil {
-								unitRuleItemListMap["dest_namespace_name"] = unitRuleItemList.DestNamespaceName
-							}
-
-							if unitRuleItemList.Name != nil {
-								unitRuleItemListMap["name"] = unitRuleItemList.Name
-							}
-
-							if unitRuleItemList.Id != nil {
-								unitRuleItemListMap["id"] = unitRuleItemList.Id
-							}
-
-							if unitRuleItemList.UnitRuleId != nil {
-								unitRuleItemListMap["unit_rule_id"] = unitRuleItemList.UnitRuleId
-							}
-
-							if unitRuleItemList.Priority != nil {
-								unitRuleItemListMap["priority"] = unitRuleItemList.Priority
-							}
-
-							if unitRuleItemList.Description != nil {
-								unitRuleItemListMap["description"] = unitRuleItemList.Description
-							}
-
-							if unitRuleItemList.UnitRuleTagList != nil {
-								unitRuleTagListList := []interface{}{}
-								for _, unitRuleTagList := range unitRuleItemList.UnitRuleTagList {
-									unitRuleTagListMap := map[string]interface{}{}
-
-									if unitRuleTagList.TagType != nil {
-										unitRuleTagListMap["tag_type"] = unitRuleTagList.TagType
-									}
-
-									if unitRuleTagList.TagField != nil {
-										unitRuleTagListMap["tag_field"] = unitRuleTagList.TagField
-									}
-
-									if unitRuleTagList.TagOperator != nil {
-										unitRuleTagListMap["tag_operator"] = unitRuleTagList.TagOperator
-									}
-
-									if unitRuleTagList.TagValue != nil {
-										unitRuleTagListMap["tag_value"] = unitRuleTagList.TagValue
-									}
-
-									if unitRuleTagList.UnitRuleItemId != nil {
-										unitRuleTagListMap["unit_rule_item_id"] = unitRuleTagList.UnitRuleItemId
-									}
-
-									if unitRuleTagList.Id != nil {
-										unitRuleTagListMap["id"] = unitRuleTagList.Id
-									}
-
-									unitRuleTagListList = append(unitRuleTagListList, unitRuleTagListMap)
-								}
-
-								unitRuleItemListMap["unit_rule_tag_list"] = unitRuleTagListList
-							}
-
-							unitRuleItemListList = append(unitRuleItemListList, unitRuleItemListMap)
-						}
-
-						contentMap["unit_rule_item_list"] = unitRuleItemListList
-					}
-
-					if content.CreatedTime != nil {
-						contentMap["created_time"] = content.CreatedTime
-					}
-
-					if content.UpdatedTime != nil {
-						contentMap["updated_time"] = content.UpdatedTime
-					}
-
-					contentList = append(contentList, contentMap)
-					ids = append(ids, *content.GatewayInstanceId)
-				}
-
-				tsfPageUnitRuleMap["content"] = contentList
-			}
-
-			tmpList = append(tmpList, tsfPageUnitRuleMap)
+	ids := make([]string, 0, len(unitRule.Content))
+	tmpList := make([]map[string]interface{}, 0, len(unitRule.Content))
+	if unitRule != nil {
+		tsfPageUnitRuleMap := map[string]interface{}{}
+		if unitRule.TotalCount != nil {
+			tsfPageUnitRuleMap["total_count"] = unitRule.TotalCount
 		}
 
-		_ = d.Set("result", tmpList)
+		if unitRule.Content != nil {
+			contentList := []interface{}{}
+			for _, content := range unitRule.Content {
+				contentMap := map[string]interface{}{}
+
+				if content.Name != nil {
+					contentMap["name"] = content.Name
+				}
+
+				if content.Id != nil {
+					contentMap["id"] = content.Id
+				}
+
+				if content.GatewayInstanceId != nil {
+					contentMap["gateway_instance_id"] = content.GatewayInstanceId
+				}
+
+				if content.Description != nil {
+					contentMap["description"] = content.Description
+				}
+
+				if content.Status != nil {
+					contentMap["status"] = content.Status
+				}
+
+				if content.UnitRuleItemList != nil {
+					unitRuleItemListList := []interface{}{}
+					for _, unitRuleItemList := range content.UnitRuleItemList {
+						unitRuleItemListMap := map[string]interface{}{}
+
+						if unitRuleItemList.Relationship != nil {
+							unitRuleItemListMap["relationship"] = unitRuleItemList.Relationship
+						}
+
+						if unitRuleItemList.DestNamespaceId != nil {
+							unitRuleItemListMap["dest_namespace_id"] = unitRuleItemList.DestNamespaceId
+						}
+
+						if unitRuleItemList.DestNamespaceName != nil {
+							unitRuleItemListMap["dest_namespace_name"] = unitRuleItemList.DestNamespaceName
+						}
+
+						if unitRuleItemList.Name != nil {
+							unitRuleItemListMap["name"] = unitRuleItemList.Name
+						}
+
+						if unitRuleItemList.Id != nil {
+							unitRuleItemListMap["id"] = unitRuleItemList.Id
+						}
+
+						if unitRuleItemList.UnitRuleId != nil {
+							unitRuleItemListMap["unit_rule_id"] = unitRuleItemList.UnitRuleId
+						}
+
+						if unitRuleItemList.Priority != nil {
+							unitRuleItemListMap["priority"] = unitRuleItemList.Priority
+						}
+
+						if unitRuleItemList.Description != nil {
+							unitRuleItemListMap["description"] = unitRuleItemList.Description
+						}
+
+						if unitRuleItemList.UnitRuleTagList != nil {
+							unitRuleTagListList := []interface{}{}
+							for _, unitRuleTagList := range unitRuleItemList.UnitRuleTagList {
+								unitRuleTagListMap := map[string]interface{}{}
+
+								if unitRuleTagList.TagType != nil {
+									unitRuleTagListMap["tag_type"] = unitRuleTagList.TagType
+								}
+
+								if unitRuleTagList.TagField != nil {
+									unitRuleTagListMap["tag_field"] = unitRuleTagList.TagField
+								}
+
+								if unitRuleTagList.TagOperator != nil {
+									unitRuleTagListMap["tag_operator"] = unitRuleTagList.TagOperator
+								}
+
+								if unitRuleTagList.TagValue != nil {
+									unitRuleTagListMap["tag_value"] = unitRuleTagList.TagValue
+								}
+
+								if unitRuleTagList.UnitRuleItemId != nil {
+									unitRuleTagListMap["unit_rule_item_id"] = unitRuleTagList.UnitRuleItemId
+								}
+
+								if unitRuleTagList.Id != nil {
+									unitRuleTagListMap["id"] = unitRuleTagList.Id
+								}
+
+								unitRuleTagListList = append(unitRuleTagListList, unitRuleTagListMap)
+							}
+
+							unitRuleItemListMap["unit_rule_tag_list"] = unitRuleTagListList
+						}
+
+						unitRuleItemListList = append(unitRuleItemListList, unitRuleItemListMap)
+					}
+
+					contentMap["unit_rule_item_list"] = unitRuleItemListList
+				}
+
+				if content.CreatedTime != nil {
+					contentMap["created_time"] = content.CreatedTime
+				}
+
+				if content.UpdatedTime != nil {
+					contentMap["updated_time"] = content.UpdatedTime
+				}
+
+				contentList = append(contentList, contentMap)
+				ids = append(ids, *content.GatewayInstanceId)
+			}
+
+			tsfPageUnitRuleMap["content"] = contentList
+		}
+
+		_ = d.Set("result", []interface{}{tsfPageUnitRuleMap})
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
