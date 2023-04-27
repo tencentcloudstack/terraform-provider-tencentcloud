@@ -701,6 +701,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_ha_vip_eip_attachment
 	tencentcloud_vpc_bandwidth_package
 	tencentcloud_vpc_bandwidth_package_attachment
+	tencentcloud_ipv6_address_bandwidth
 
 Private Link(PLS)
   Resource
@@ -1483,6 +1484,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc_acl_attachment":                          resourceTencentCloudVpcAclAttachment(),
 			"tencentcloud_vpc_bandwidth_package":                       resourceTencentCloudVpcBandwidthPackage(),
 			"tencentcloud_vpc_bandwidth_package_attachment":            resourceTencentCloudVpcBandwidthPackageAttachment(),
+			"tencentcloud_ipv6_address_bandwidth":                      resourceTencentCloudIpv6AddressBandwidth(),
 			"tencentcloud_subnet":                                      resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                 resourceTencentCloudRouteEntry(),
 			"tencentcloud_route_table_entry":                           resourceTencentCloudVpcRouteEntry(),

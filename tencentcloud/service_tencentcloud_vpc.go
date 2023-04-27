@@ -2325,6 +2325,33 @@ func (me *VpcService) ModifyEipBandwidthOut(ctx context.Context, eipId string, b
 	return nil
 }
 
+func (me *VpcService) ModifyEipInternetChargeType(ctx context.Context, eipId string, internetChargeType string, bandwidthOut, period, renewFlag int) error {
+	logId := getLogId(ctx)
+	request := vpc.NewModifyAddressInternetChargeTypeRequest()
+	request.AddressId = &eipId
+	request.InternetChargeType = &internetChargeType
+	request.InternetMaxBandwidthOut = helper.IntUint64(bandwidthOut)
+
+	if internetChargeType == "BANDWIDTH_PREPAID_BY_MONTH" {
+		addressChargePrepaid := vpc.AddressChargePrepaid{}
+		addressChargePrepaid.AutoRenewFlag = helper.IntInt64(renewFlag)
+		addressChargePrepaid.Period = helper.IntInt64(period)
+		request.AddressChargePrepaid = &addressChargePrepaid
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().ModifyAddressInternetChargeType(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return nil
+}
+
 func (me *VpcService) RenewAddress(ctx context.Context, eipId string, period int, renewFlag int) error {
 	logId := getLogId(ctx)
 	request := vpc.NewRenewAddressesRequest()
@@ -4815,7 +4842,7 @@ func (me *VpcService) DescribeVpcTaskResult(ctx context.Context, taskId *string)
 	return
 }
 
-func (me *VpcService) DescribeTaskResult(ctx context.Context, taskId *uint64) (err error) {
+func (me *VpcService) DescribeTaskResult(ctx context.Context, taskId *uint64) (result *vpc.DescribeTaskResultResponse, err error) {
 
 	logId := getLogId(ctx)
 	request := vpc.NewDescribeTaskResultRequest()
@@ -4831,13 +4858,11 @@ func (me *VpcService) DescribeTaskResult(ctx context.Context, taskId *uint64) (e
 		if err != nil {
 			return retryError(err)
 		}
-		if response.Response.Result != nil && *response.Response.Result == VPN_TASK_STATUS_RUNNING {
-			return resource.RetryableError(errors.New("VPN task is running"))
-		}
+		result = response
 		return nil
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 	return
 }
@@ -6085,4 +6110,73 @@ func (me *VpcService) DescribeVpcVpnGatewayCcnRoutesById(ctx context.Context, vp
 		}
 	}
 	return
+}
+
+func (me *VpcService) DescribeVpcIpv6AddressById(ctx context.Context, ip6AddressId string) (ipv6Address *vpc.Address, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeIp6AddressesRequest()
+	request.Ip6AddressIds = []*string{&ip6AddressId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeIp6Addresses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AddressSet) < 1 {
+		return
+	}
+
+	ipv6Address = response.Response.AddressSet[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcIpv6AddressById(ctx context.Context, ip6AddressId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewReleaseIp6AddressesBandwidthRequest()
+	request.Ip6AddressIds = []*string{&ip6AddressId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().ReleaseIp6AddressesBandwidth(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) VpcIpv6AddressStateRefreshFunc(taskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		taskId := helper.StrToUint64Point(taskId)
+
+		object, err := me.DescribeTaskResult(ctx, taskId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Response.Result), nil
+	}
 }
