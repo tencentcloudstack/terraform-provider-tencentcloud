@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"log"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -604,4 +605,57 @@ func waitScfFunctionReady(ctx context.Context, name, namespace string, client *s
 			return resource.NonRetryableError(errors.Errorf("function status is %s", *response.Response.Status))
 		}
 	})
+}
+
+func (me *ScfService) DescribeScfFunctionAliasById(ctx context.Context, namespace string, functionName string, name string) (functionAlias *scf.GetAliasResponse, errRet error) {
+	logId := getLogId(ctx)
+
+	request := scf.NewGetAliasRequest()
+	request.Namespace = &namespace
+	request.FunctionName = &functionName
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().GetAlias(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	functionAlias = response
+	return
+}
+
+func (me *ScfService) DeleteScfFunctionAliasById(ctx context.Context, namespace string, functionName string, name string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := scf.NewDeleteAliasRequest()
+	request.Namespace = &namespace
+	request.FunctionName = &functionName
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().DeleteAlias(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }
