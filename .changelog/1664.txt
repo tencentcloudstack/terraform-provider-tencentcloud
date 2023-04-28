@@ -1,7 +1,3 @@
 ```release-note:new-resource
-tencentcloud_redis_security_group
-```
-
-```release-note:new-resource
 tencentcloud_redis_replica_readonly
 ```
