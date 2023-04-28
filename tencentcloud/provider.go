@@ -1932,6 +1932,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lighthouse_key_pair":                        resourceTencentCloudLighthouseKeyPair(),
 			"tencentcloud_lighthouse_snapshot":                        resourceTencentCloudLighthouseSnapshot(),
 			"tencentcloud_lighthouse_apply_instance_snapshot":         resourceTencentCloudLighthouseApplyInstanceSnapshot(),
+			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 		},
 
 		ConfigureFunc: providerConfigure,
