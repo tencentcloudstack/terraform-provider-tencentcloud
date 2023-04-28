@@ -1226,3 +1226,458 @@ func (me *TsfService) DeleteTsfInstancesAttachmentById(ctx context.Context, clus
 
 	return
 }
+
+func (me *TsfService) DescribeTsfApplicationByFilter(ctx context.Context, param map[string]interface{}) (application *tsf.TsfPageApplication, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeApplicationsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ApplicationType" {
+			request.ApplicationType = v.(*string)
+		}
+		if k == "MicroserviceType" {
+			request.MicroserviceType = v.(*string)
+		}
+		if k == "ApplicationResourceTypeList" {
+			request.ApplicationResourceTypeList = v.([]*string)
+		}
+		if k == "ApplicationIdList" {
+			request.ApplicationIdList = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset  int64 = 0
+		limit   int64 = 20
+		total   int64
+		content = make([]*tsf.ApplicationForPage, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeApplications(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		content = append(content, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	application = &tsf.TsfPageApplication{
+		TotalCount: &total,
+		Content:    content,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfApplicationConfigByFilter(ctx context.Context, param map[string]interface{}) (applicationConfig *tsf.TsfPageConfig, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeConfigsRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ApplicationId" {
+			request.ApplicationId = v.(*string)
+		}
+		if k == "ConfigId" {
+			request.ConfigId = v.(*string)
+		}
+		if k == "ConfigIdList" {
+			request.ConfigIdList = v.([]*string)
+		}
+		if k == "ConfigName" {
+			request.ConfigName = v.(*string)
+		}
+		if k == "ConfigVersion" {
+			request.ConfigVersion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+		config = make([]*tsf.Config, 0)
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeConfigs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		config = append(config, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	applicationConfig = &tsf.TsfPageConfig{
+		TotalCount: &total,
+		Content:    config,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfApplicationFileConfigByFilter(ctx context.Context, param map[string]interface{}) (applicationFileConfig *tsf.TsfPageFileConfig, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeFileConfigsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ConfigId" {
+			request.ConfigId = v.(*string)
+		}
+		if k == "ConfigIdList" {
+			request.ConfigIdList = v.([]*string)
+		}
+		if k == "ConfigName" {
+			request.ConfigName = v.(*string)
+		}
+		if k == "ApplicationId" {
+			request.ApplicationId = v.(*string)
+		}
+		if k == "ConfigVersion" {
+			request.ConfigVersion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+		config = make([]*tsf.FileConfig, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeFileConfigs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		config = append(config, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	applicationFileConfig = &tsf.TsfPageFileConfig{
+		TotalCount: &total,
+		Content:    config,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfApplicationPublicConfigByFilter(ctx context.Context, param map[string]interface{}) (applicationPublicConfig *tsf.TsfPageConfig, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribePublicConfigsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ConfigId" {
+			request.ConfigId = v.(*string)
+		}
+		if k == "ConfigIdList" {
+			request.ConfigIdList = v.([]*string)
+		}
+		if k == "ConfigName" {
+			request.ConfigName = v.(*string)
+		}
+		if k == "ConfigVersion" {
+			request.ConfigVersion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+		config = make([]*tsf.Config, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribePublicConfigs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		config = append(config, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	applicationPublicConfig = &tsf.TsfPageConfig{
+		TotalCount: &total,
+		Content:    config,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfClusterByFilter(ctx context.Context, param map[string]interface{}) (cluster *tsf.TsfPageCluster, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeSimpleClustersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterIdList" {
+			request.ClusterIdList = v.([]*string)
+		}
+		if k == "ClusterType" {
+			request.ClusterType = v.(*string)
+		}
+		if k == "SearchWord" {
+			request.SearchWord = v.(*string)
+		}
+		if k == "DisableProgramAuthCheck" {
+			request.DisableProgramAuthCheck = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset   int64 = 0
+		limit    int64 = 20
+		total    int64
+		clusters = make([]*tsf.Cluster, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeSimpleClusters(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		clusters = append(clusters, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	cluster = &tsf.TsfPageCluster{
+		TotalCount: &total,
+		Content:    clusters,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfMicroserviceByFilter(ctx context.Context, param map[string]interface{}) (microservice *tsf.TsfPageMicroservice, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeMicroservicesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "NamespaceId" {
+			request.NamespaceId = v.(*string)
+		}
+		if k == "Status" {
+			request.Status = v.([]*string)
+		}
+		if k == "MicroserviceIdList" {
+			request.MicroserviceIdList = v.([]*string)
+		}
+		if k == "MicroserviceNameList" {
+			request.MicroserviceNameList = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+		micro  = make([]*tsf.Microservice, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeMicroservices(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		micro = append(micro, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	microservice = &tsf.TsfPageMicroservice{
+		TotalCount: &total,
+		Content:    micro,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfUnitRulesByFilter(ctx context.Context, param map[string]interface{}) (unitRule *tsf.TsfPageUnitRuleV2, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeUnitRulesV2Request()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayInstanceId" {
+			request.GatewayInstanceId = v.(*string)
+		}
+		if k == "Status" {
+			request.Status = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+		rules  = make([]*tsf.UnitRule, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeUnitRulesV2(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		rules = append(rules, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	unitRule = &tsf.TsfPageUnitRuleV2{
+		TotalCount: &total,
+		Content:    rules,
+	}
+
+	return
+}

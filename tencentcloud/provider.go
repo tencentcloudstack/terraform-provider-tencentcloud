@@ -1031,6 +1031,14 @@ TDMQ for CMQ
 	tencentcloud_tcmq_subscribe
 
 Tencent Service Framework(TSF)
+  Data Source
+	tencentcloud_tsf_application
+	tencentcloud_tsf_application_config
+	tencentcloud_tsf_application_file_config
+	tencentcloud_tsf_application_public_config
+	tencentcloud_tsf_cluster
+	tencentcloud_tsf_microservice
+	tencentcloud_tsf_unit_rules
   Resource
   	tencentcloud_tsf_cluster
 	tencentcloud_tsf_microservice
@@ -1472,6 +1480,13 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cvm_disaster_recover_group_quota":         dataSourceTencentCloudCvmDisasterRecoverGroupQuota(),
 			"tencentcloud_cvm_chc_hosts":                            dataSourceTencentCloudCvmChcHosts(),
 			"tencentcloud_cvm_chc_denied_actions":                   dataSourceTencentCloudCvmChcDeniedActions(),
+			"tencentcloud_tsf_application":                          dataSourceTencentCloudTsfApplication(),
+			"tencentcloud_tsf_application_config":                   dataSourceTencentCloudTsfApplicationConfig(),
+			"tencentcloud_tsf_application_file_config":              dataSourceTencentCloudTsfApplicationFileConfig(),
+			"tencentcloud_tsf_application_public_config":            dataSourceTencentCloudTsfApplicationPublicConfig(),
+			"tencentcloud_tsf_cluster":                              dataSourceTencentCloudTsfCluster(),
+			"tencentcloud_tsf_microservice":                         dataSourceTencentCloudTsfMicroservice(),
+			"tencentcloud_tsf_unit_rules":                           dataSourceTencentCloudTsfUnitRules(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
