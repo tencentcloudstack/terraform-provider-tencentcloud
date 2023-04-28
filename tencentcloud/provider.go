@@ -1807,7 +1807,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_parameters":                         resourceTencentCloudMariadbParameters(),
 			"tencentcloud_mariadb_log_file_retention_period":          resourceTencentCloudMariadbLogFileRetentionPeriod(),
 			"tencentcloud_mariadb_security_groups":                    resourceTencentCloudMariadbSecurityGroups(),
-			"tencentcloud_mariadb_encrypt_attributes_operation":       resourceTencentCloudMariadbEncryptAttributesOperation(),
+			"tencentcloud_mariadb_encrypt_attributes":                 resourceTencentCloudMariadbEncryptAttributes(),
 			"tencentcloud_tdcpg_cluster":                              resourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                             resourceTencentCloudTdcpgInstance(),
 			"tencentcloud_css_watermark":                              resourceTencentCloudCssWatermark(),
