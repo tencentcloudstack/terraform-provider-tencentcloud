@@ -1045,6 +1045,11 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_lane
 	tencentcloud_tsf_lane_rule
 	tencentcloud_tsf_group
+	tencentcloud_tsf_application
+	tencentcloud_tsf_application_public_config_release
+	tencentcloud_tsf_application_public_config
+	tencentcloud_tsf_application_file_config_release
+	tencentcloud_tsf_instances_attachment
 
 Media Processing Service(MPS)
   Resource
@@ -1903,6 +1908,11 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
 			"tencentcloud_tsf_group":                                  resourceTencentCloudTsfGroup(),
 			"tencentcloud_tsf_repository":                             resourceTencentCloudTsfRepository(),
+			"tencentcloud_tsf_application":                            resourceTencentCloudTsfApplication(),
+			"tencentcloud_tsf_application_public_config_release":      resourceTencentCloudTsfApplicationPublicConfigRelease(),
+			"tencentcloud_tsf_application_public_config":              resourceTencentCloudTsfApplicationPublicConfig(),
+			"tencentcloud_tsf_application_file_config_release":        resourceTencentCloudTsfApplicationFileConfigRelease(),
+			"tencentcloud_tsf_instances_attachment":                   resourceTencentCloudTsfInstancesAttachment(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                     resourceTencentCloudMpsWatermarkTemplate(),
