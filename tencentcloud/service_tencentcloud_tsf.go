@@ -850,11 +850,11 @@ func (me *TsfService) DescribeTsfApplicationReleaseConfigById(ctx context.Contex
 	return
 }
 
-func (me *TsfService) DeleteTsfApplicationReleaseConfigById(ctx context.Context, configId string) (errRet error) {
+func (me *TsfService) DeleteTsfApplicationReleaseConfigById(ctx context.Context, configReleaseId string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tsf.NewRevocationConfigRequest()
-	request.ConfigReleaseId = &configId
+	request.ConfigReleaseId = &configReleaseId
 
 	defer func() {
 		if errRet != nil {
@@ -918,6 +918,306 @@ func (me *TsfService) DeleteTsfGroupById(ctx context.Context, groupId string) (e
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseTsfClient().DeleteGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TsfService) DescribeTsfApplicationById(ctx context.Context, applicationId string) (application *tsf.ApplicationForPage, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeApplicationRequest()
+	request.ApplicationId = &applicationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeApplication(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.Result == nil {
+		return
+	}
+
+	application = response.Response.Result
+	return
+}
+
+func (me *TsfService) DeleteTsfApplicationById(ctx context.Context, applicationId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDeleteApplicationRequest()
+	request.ApplicationId = &applicationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DeleteApplication(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TsfService) DescribeTsfApplicationFileConfigReleaseById(ctx context.Context, configId string, groupId string) (applicationFileConfigRelease *tsf.FileConfigRelease, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeFileConfigReleasesRequest()
+	request.ConfigId = &configId
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeFileConfigReleases(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Result.Content) < 1 {
+		return
+	}
+
+	applicationFileConfigRelease = response.Response.Result.Content[0]
+	return
+}
+
+func (me *TsfService) DeleteTsfApplicationFileConfigReleaseById(ctx context.Context, configId string, groupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewRevokeFileConfigRequest()
+
+	applicationfileConfig, err := me.DescribeTsfApplicationFileConfigReleaseById(ctx, configId, groupId)
+	if err != nil {
+		log.Printf("[CRITAL]%s Describe tsf applicationFileConfigRelease failed, reason:%+v", logId, err)
+		return err
+	}
+
+	request.ConfigReleaseId = applicationfileConfig.ConfigReleaseId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().RevokeFileConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TsfService) DescribeTsfApplicationPublicConfigById(ctx context.Context, configId string) (applicationPublicConfig *tsf.Config, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribePublicConfigRequest()
+	request.ConfigId = &configId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribePublicConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.Result == nil {
+		return
+	}
+
+	applicationPublicConfig = response.Response.Result
+	return
+}
+
+func (me *TsfService) DeleteTsfApplicationPublicConfigById(ctx context.Context, configId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDeletePublicConfigRequest()
+	request.ConfigId = &configId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DeletePublicConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TsfService) DescribeTsfApplicationPublicConfigReleaseById(ctx context.Context, configId, namespaceId string) (applicationPublicConfigRelease *tsf.ConfigRelease, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribePublicConfigReleasesRequest()
+	request.ConfigId = &configId
+	request.NamespaceId = &namespaceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribePublicConfigReleases(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.Result == nil || len(response.Response.Result.Content) < 1 {
+		return
+	}
+
+	applicationPublicConfigRelease = response.Response.Result.Content[0]
+	return
+}
+
+func (me *TsfService) DeleteTsfApplicationPublicConfigReleaseById(ctx context.Context, configId, namespaceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewRevocationPublicConfigRequest()
+
+	applicationPublicConfig, err := me.DescribeTsfApplicationPublicConfigReleaseById(ctx, configId, namespaceId)
+	if err != nil {
+		log.Printf("[CRITAL]%s Describe tsf applicationfileConfigRelease failed, reason:%+v", logId, err)
+		return err
+	}
+
+	request.ConfigReleaseId = applicationPublicConfig.ConfigReleaseId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().RevocationPublicConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TsfService) DescribeTsfInstancesAttachmentById(ctx context.Context, clusterId string, instanceId string) (instance *tsf.Instance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeClusterInstancesRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeClusterInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		for _, v := range response.Response.Result.Content {
+			if *v.InstanceId == instanceId {
+				instance = v
+				return
+			}
+		}
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TsfService) DeleteTsfInstancesAttachmentById(ctx context.Context, clusterId string, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewRemoveInstancesRequest()
+	request.ClusterId = &clusterId
+	request.InstanceIdList = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().RemoveInstances(request)
 	if err != nil {
 		errRet = err
 		return

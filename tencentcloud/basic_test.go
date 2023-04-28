@@ -952,6 +952,8 @@ const (
 	defaultTsfConfigId        = "dcfg-y54wzk3a"
 	defaultTsfApiId           = "api-j03q029a"
 	defaultTsfGWGroupId       = "group-vzd97zpy"
+	defaultTsfFileConfigId    = "dcfg-f-ab6l9x5y"
+	defaultTsfImageId         = "img-7r9vq8wd"
 )
 
 // End of TSF

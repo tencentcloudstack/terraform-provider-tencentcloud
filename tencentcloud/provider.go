@@ -213,6 +213,7 @@ Cloud Connect Network(CCN)
 	tencentcloud_ccn_cross_border_compliance
 	tencentcloud_ccn_tenant_instances
 	tencentcloud_ccn_cross_border_flow_monitor
+	tencentcloud_ccn_cross_border_region_bandwidth_limits
 
   Resource
     tencentcloud_ccn
@@ -551,6 +552,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_read_only
 	tencentcloud_redis_ssl
 	tencentcloud_redis_maintenance_window
+	tencentcloud_redis_replica_readonly
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -562,6 +564,7 @@ Serverless Cloud Function(SCF)
     tencentcloud_scf_function
     tencentcloud_scf_namespace
 	tencentcloud_scf_layer
+	tencentcloud_scf_function_alias
 
 SQLServer
   Data Source
@@ -701,6 +704,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_ha_vip_eip_attachment
 	tencentcloud_vpc_bandwidth_package
 	tencentcloud_vpc_bandwidth_package_attachment
+	tencentcloud_ipv6_address_bandwidth
 
 Private Link(PLS)
   Resource
@@ -1050,6 +1054,11 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_lane
 	tencentcloud_tsf_lane_rule
 	tencentcloud_tsf_group
+	tencentcloud_tsf_application
+	tencentcloud_tsf_application_public_config_release
+	tencentcloud_tsf_application_public_config
+	tencentcloud_tsf_application_file_config_release
+	tencentcloud_tsf_instances_attachment
 
 Media Processing Service(MPS)
   Resource
@@ -1245,6 +1254,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ccn_cross_border_compliance":              dataSourceTencentCloudCcnCrossBorderCompliance(),
 			"tencentcloud_ccn_tenant_instances":                     dataSourceTencentCloudCcnTenantInstance(),
 			"tencentcloud_ccn_cross_border_flow_monitor":            dataSourceTencentCloudCcnCrossBorderFlowMonitor(),
+			"tencentcloud_ccn_cross_border_region_bandwidth_limits": dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits(),
 			"tencentcloud_dc_instances":                             dataSourceTencentCloudDcInstances(),
 			"tencentcloud_dcx_instances":                            dataSourceTencentCloudDcxInstances(),
 			"tencentcloud_dc_gateway_instances":                     dataSourceTencentCloudDcGatewayInstances(),
@@ -1498,6 +1508,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc_acl_attachment":                          resourceTencentCloudVpcAclAttachment(),
 			"tencentcloud_vpc_bandwidth_package":                       resourceTencentCloudVpcBandwidthPackage(),
 			"tencentcloud_vpc_bandwidth_package_attachment":            resourceTencentCloudVpcBandwidthPackageAttachment(),
+			"tencentcloud_ipv6_address_bandwidth":                      resourceTencentCloudIpv6AddressBandwidth(),
 			"tencentcloud_subnet":                                      resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                 resourceTencentCloudRouteEntry(),
 			"tencentcloud_route_table_entry":                           resourceTencentCloudVpcRouteEntry(),
@@ -1594,6 +1605,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_redis_read_only":                             resourceTencentCloudRedisReadOnly(),
 			"tencentcloud_redis_ssl":                                   resourceTencentCloudRedisSsl(),
 			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
+			"tencentcloud_redis_replica_readonly":                      resourceTencentCloudRedisReplicaReadonly(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                            resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                               resourceTencentCloudAsAttachment(),
@@ -1653,6 +1665,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_scf_function":                                resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_namespace":                               resourceTencentCloudScfNamespace(),
 			"tencentcloud_scf_layer":                                   resourceTencentCloudScfLayer(),
+			"tencentcloud_scf_function_alias":                          resourceTencentCloudScfFunctionAlias(),
 			"tencentcloud_tcaplus_cluster":                             resourceTencentCloudTcaplusCluster(),
 			"tencentcloud_tcaplus_tablegroup":                          resourceTencentCloudTcaplusTableGroup(),
 			"tencentcloud_tcaplus_idl":                                 resourceTencentCloudTcaplusIdl(),
@@ -1912,6 +1925,11 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
 			"tencentcloud_tsf_group":                                  resourceTencentCloudTsfGroup(),
 			"tencentcloud_tsf_repository":                             resourceTencentCloudTsfRepository(),
+			"tencentcloud_tsf_application":                            resourceTencentCloudTsfApplication(),
+			"tencentcloud_tsf_application_public_config_release":      resourceTencentCloudTsfApplicationPublicConfigRelease(),
+			"tencentcloud_tsf_application_public_config":              resourceTencentCloudTsfApplicationPublicConfig(),
+			"tencentcloud_tsf_application_file_config_release":        resourceTencentCloudTsfApplicationFileConfigRelease(),
+			"tencentcloud_tsf_instances_attachment":                   resourceTencentCloudTsfInstancesAttachment(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                     resourceTencentCloudMpsWatermarkTemplate(),
