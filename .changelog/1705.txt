@@ -1,0 +1,3 @@
+```release-note:bug
+tencentcloud_security_group_rule: fix the nil exception caused by the policy index changing
+```
