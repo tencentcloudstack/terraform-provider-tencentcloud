@@ -213,6 +213,7 @@ Cloud Connect Network(CCN)
 	tencentcloud_ccn_cross_border_compliance
 	tencentcloud_ccn_tenant_instances
 	tencentcloud_ccn_cross_border_flow_monitor
+	tencentcloud_ccn_cross_border_region_bandwidth_limits
 
   Resource
     tencentcloud_ccn
@@ -701,6 +702,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_ha_vip_eip_attachment
 	tencentcloud_vpc_bandwidth_package
 	tencentcloud_vpc_bandwidth_package_attachment
+	tencentcloud_ipv6_address_bandwidth
 
 Private Link(PLS)
   Resource
@@ -1242,6 +1244,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_ccn_cross_border_compliance":              dataSourceTencentCloudCcnCrossBorderCompliance(),
 			"tencentcloud_ccn_tenant_instances":                     dataSourceTencentCloudCcnTenantInstance(),
 			"tencentcloud_ccn_cross_border_flow_monitor":            dataSourceTencentCloudCcnCrossBorderFlowMonitor(),
+			"tencentcloud_ccn_cross_border_region_bandwidth_limits": dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits(),
 			"tencentcloud_dc_instances":                             dataSourceTencentCloudDcInstances(),
 			"tencentcloud_dcx_instances":                            dataSourceTencentCloudDcxInstances(),
 			"tencentcloud_dc_gateway_instances":                     dataSourceTencentCloudDcGatewayInstances(),
@@ -1488,6 +1491,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_vpc_acl_attachment":                          resourceTencentCloudVpcAclAttachment(),
 			"tencentcloud_vpc_bandwidth_package":                       resourceTencentCloudVpcBandwidthPackage(),
 			"tencentcloud_vpc_bandwidth_package_attachment":            resourceTencentCloudVpcBandwidthPackageAttachment(),
+			"tencentcloud_ipv6_address_bandwidth":                      resourceTencentCloudIpv6AddressBandwidth(),
 			"tencentcloud_subnet":                                      resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                 resourceTencentCloudRouteEntry(),
 			"tencentcloud_route_table_entry":                           resourceTencentCloudVpcRouteEntry(),
