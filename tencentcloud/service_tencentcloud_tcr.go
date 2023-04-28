@@ -1214,3 +1214,81 @@ func (me *TCRService) DescribeTcrWebhookTriggerLogByFilter(ctx context.Context, 
 
 	return
 }
+
+func (me *TCRService) DescribeTcrCustomizedDomainById(ctx context.Context, registryId string, domainName *string) (CustomizedDomain []*tcr.CustomizedDomainInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDescribeInstanceCustomizedDomainRequest()
+	request.RegistryId = &registryId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DescribeInstanceCustomizedDomain(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DomainInfoList) < 1 {
+		return
+	}
+
+	if domainName != nil {
+		for _, domain := range response.Response.DomainInfoList {
+			if *domain.DomainName == *domainName {
+				CustomizedDomain = []*tcr.CustomizedDomainInfo{domain}
+				return
+			}
+		}
+	} else {
+		CustomizedDomain = response.Response.DomainInfoList
+	}
+
+	return
+}
+
+func (me *TCRService) DeleteTcrCustomizedDomainById(ctx context.Context, registryId string, domainName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDeleteInstanceCustomizedDomainRequest()
+	request.RegistryId = &registryId
+	request.DomainName = &domainName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DeleteInstanceCustomizedDomain(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TCRService) TcrCustomizedDomainStateRefreshFunc(registryId, domainName string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeTcrCustomizedDomainById(ctx, registryId, &domainName)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object[0].Status), nil
+	}
+}
