@@ -874,6 +874,9 @@ TencentDB for MariaDB(MariaDB)
     tencentcloud_mariadb_db_instances
 	tencentcloud_mariadb_accounts
 	tencentcloud_mariadb_security_groups
+	tencentcloud_mariadb_database_objects
+	tencentcloud_mariadb_databases
+	tencentcloud_mariadb_database_table
   Resource
 	tencentcloud_mariadb_dedicatedcluster_db_instance
 	tencentcloud_mariadb_instance
@@ -1430,6 +1433,9 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_db_instances":                     dataSourceTencentCloudMariadbDbInstances(),
 			"tencentcloud_mariadb_accounts":                         dataSourceTencentCloudMariadbAccounts(),
 			"tencentcloud_mariadb_security_groups":                  dataSourceTencentCloudMariadbSecurityGroups(),
+			"tencentcloud_mariadb_database_objects":                 dataSourceTencentCloudMariadbDatabaseObjects(),
+			"tencentcloud_mariadb_databases":                        dataSourceTencentCloudMariadbDatabases(),
+			"tencentcloud_mariadb_database_table":                   dataSourceTencentCloudMariadbDatabaseTable(),
 			"tencentcloud_tdcpg_clusters":                           dataSourceTencentCloudTdcpgClusters(),
 			"tencentcloud_tdcpg_instances":                          dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                           dataSourceTencentCloudCatProbeData(),
@@ -1829,6 +1835,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_mariadb_parameters":                         resourceTencentCloudMariadbParameters(),
 			"tencentcloud_mariadb_log_file_retention_period":          resourceTencentCloudMariadbLogFileRetentionPeriod(),
 			"tencentcloud_mariadb_security_groups":                    resourceTencentCloudMariadbSecurityGroups(),
+			"tencentcloud_mariadb_encrypt_attributes":                 resourceTencentCloudMariadbEncryptAttributes(),
 			"tencentcloud_tdcpg_cluster":                              resourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                             resourceTencentCloudTdcpgInstance(),
 			"tencentcloud_css_watermark":                              resourceTencentCloudCssWatermark(),
