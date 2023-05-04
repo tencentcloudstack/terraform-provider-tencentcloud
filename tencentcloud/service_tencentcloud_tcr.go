@@ -1292,3 +1292,143 @@ func (me *TCRService) TcrCustomizedDomainStateRefreshFunc(registryId, domainName
 		return object, helper.PString(object[0].Status), nil
 	}
 }
+
+func (me *TCRService) DescribeTcrImmutableTagRuleById(ctx context.Context, registryId string, namespaceName, ruleId *string) (ImmutableTagRules []*tcr.ImmutableTagRule, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDescribeImmutableTagRulesRequest()
+	request.RegistryId = &registryId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DescribeImmutableTagRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Rules) < 1 {
+		return
+	}
+
+	// filter by ns and rule id
+	if ruleId != nil && namespaceName != nil {
+		targetId := helper.StrToInt64Point(*ruleId)
+
+		for _, rule := range response.Response.Rules {
+			if *targetId == *rule.RuleId && *namespaceName == *rule.NsName {
+				ImmutableTagRules = []*tcr.ImmutableTagRule{rule}
+			}
+		}
+		return
+	}
+
+	// only specify ns
+	if namespaceName != nil {
+		for _, rule := range response.Response.Rules {
+			if *namespaceName == *rule.NsName {
+				ImmutableTagRules = append(ImmutableTagRules, rule)
+			}
+		}
+		return
+	}
+
+	ImmutableTagRules = response.Response.Rules
+	return
+}
+
+func (me *TCRService) DeleteTcrImmutableTagRuleById(ctx context.Context, registryId string, namespaceName string, ruleId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDeleteImmutableTagRulesRequest()
+	request.RegistryId = &registryId
+	request.NamespaceName = &namespaceName
+	request.RuleId = helper.StrToInt64Point(ruleId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DeleteImmutableTagRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TCRService) DescribeTcrImagesByFilter(ctx context.Context, param map[string]interface{}) (Images []*tcr.TcrImageInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcr.NewDescribeImagesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "registry_id" {
+			request.RegistryId = helper.String(v.(string))
+		}
+		if k == "namespace_name" {
+			request.NamespaceName = helper.String(v.(string))
+		}
+		if k == "repository_name" {
+			request.RepositoryName = helper.String(v.(string))
+		}
+		if k == "image_version" {
+			request.ImageVersion = helper.String(v.(string))
+		}
+		if k == "digest" {
+			request.Digest = helper.String(v.(string))
+		}
+		if k == "exact_match" {
+			request.ExactMatch = helper.Bool(v.(bool))
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTCRClient().DescribeImages(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ImageInfoList) < 1 {
+			break
+		}
+		Images = append(Images, response.Response.ImageInfoList...)
+		if len(response.Response.ImageInfoList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
