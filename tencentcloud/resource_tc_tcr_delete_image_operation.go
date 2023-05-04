@@ -30,9 +30,6 @@ func resourceTencentCloudTcrDeleteImageOperation() *schema.Resource {
 		Create: resourceTencentCloudTcrDeleteImageOperationCreate,
 		Read:   resourceTencentCloudTcrDeleteImageOperationRead,
 		Delete: resourceTencentCloudTcrDeleteImageOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"registry_id": {
 				Required:    true,

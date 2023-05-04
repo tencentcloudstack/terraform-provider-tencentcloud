@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -15,13 +16,14 @@ func TestAccTencentCloudTcrDeleteImageOperationResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTcrDeleteImageOperation,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_tcr_delete_image_operation.delete_image_operation", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_tcr_delete_image_operation.delete_image_operation",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: fmt.Sprintf(testAccTcrDeleteImageOperation, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_delete_image_operation.delete_image_operation", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_delete_image_operation.delete_image_operation", "registry_id", defaultTCRInstanceId),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_delete_image_operation.delete_image_operation", "namespace_name", defaultTCRNamespace),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_delete_image_operation.delete_image_operation", "repository_name", defaultTCRRepoName),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_delete_image_operation.delete_image_operation", "image_version", "v2"),
+				),
 			},
 		},
 	})
@@ -30,10 +32,10 @@ func TestAccTencentCloudTcrDeleteImageOperationResource_basic(t *testing.T) {
 const testAccTcrDeleteImageOperation = `
 
 resource "tencentcloud_tcr_delete_image_operation" "delete_image_operation" {
-  registry_id = "tcr-xxx"
-  repository_name = "repo"
-  image_version = "v1"
-  namespace_name = "ns"
+  registry_id = "%s"
+  namespace_name = "%s" 
+  repository_name = "%s"
+  image_version = "v2"
 }
 
 `
