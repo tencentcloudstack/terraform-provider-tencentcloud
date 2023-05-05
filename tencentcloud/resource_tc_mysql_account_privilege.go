@@ -24,11 +24,11 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 type resourceTencentCloudMysqlAccountPrivilegeId struct {
@@ -75,7 +75,7 @@ func resourceTencentCloudMysqlAccountPrivilege() *schema.Resource {
 					ValidateFunc: validateAllowedStringValueIgnoreCase(MYSQL_DATABASE_PRIVILEGE),
 				},
 				Set: func(v interface{}) int {
-					return hashcode.String(strings.ToLower(v.(string)))
+					return helper.HashString(strings.ToLower(v.(string)))
 				},
 			},
 			"database_names": {
@@ -297,8 +297,7 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 			log.Printf("[CRITAL]%s modify account privilege fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
-		d.SetPartial("privileges")
-		d.SetPartial("db_names")
+
 		d.Partial(false)
 
 	}

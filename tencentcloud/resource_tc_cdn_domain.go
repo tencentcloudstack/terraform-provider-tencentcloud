@@ -4068,7 +4068,6 @@ func resourceTencentCloudCdnDomainUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

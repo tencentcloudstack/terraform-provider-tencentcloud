@@ -193,9 +193,6 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 			return err
 		}
 
-		for _, attr := range attrUpdate {
-			d.SetPartial(attr)
-		}
 	}
 
 	if d.HasChange("tags") {
@@ -207,7 +204,6 @@ func resourceTencentCloudSecurityGroupUpdate(d *schema.ResourceData, m interface
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

@@ -284,7 +284,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 			log.Printf("[CRITAL]%s modify KMS key description failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("description")
+
 	}
 
 	if d.HasChange("alias") {
@@ -300,7 +300,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 			log.Printf("[CRITAL]%s modify KMS key alias failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("alias")
+
 	}
 
 	if keyState := d.Get("key_state").(string); keyState == KMS_KEY_STATE_ENABLED || keyState == KMS_KEY_STATE_DISABLED || keyState == KMS_KEY_STATE_ARCHIVED {
@@ -310,7 +310,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("is_archived")
+
 		} else {
 			isEnabled := d.Get("is_enabled").(bool)
 			err := updateIsEnabled(ctx, kmsService, keyId, isEnabled)
@@ -318,7 +318,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 				log.Printf("[CRITAL]%s modify key state failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("is_enabled")
+
 		}
 	}
 
@@ -330,7 +330,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 				log.Printf("[CRITAL]%s modify KMS key rotation status failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("key_rotation_enabled")
+
 		}
 	}
 
@@ -348,7 +348,7 @@ func resourceTencentCloudKmsKeyUpdate(d *schema.ResourceData, meta interface{}) 
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	d.Partial(false)

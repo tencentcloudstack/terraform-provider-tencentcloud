@@ -257,7 +257,6 @@ func resourceTencentCloudTcrVpcAttachmentUpdate(d *schema.ResourceData, meta int
 				return err
 			}
 		}
-		d.SetPartial("enable_public_domain_dns")
 	}
 
 	if d.HasChange("enable_vpc_domain_dns") {
@@ -272,7 +271,6 @@ func resourceTencentCloudTcrVpcAttachmentUpdate(d *schema.ResourceData, meta int
 				return err
 			}
 		}
-		d.SetPartial("enable_vpc_domain_dns")
 	}
 	d.Partial(false)
 

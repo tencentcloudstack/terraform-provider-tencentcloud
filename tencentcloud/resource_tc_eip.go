@@ -80,7 +80,6 @@ func resourceTencentCloudEip() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "The charge type of eip. Valid values: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR`, `BANDWIDTH_PREPAID_BY_MONTH` and `TRAFFIC_POSTPAID_BY_HOUR`.",
 			},
 
@@ -334,8 +333,30 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return err
 		}
+	}
 
-		d.SetPartial("name")
+	if d.HasChange("internet_charge_type") {
+		var (
+			chargeType   string
+			bandWidthOut int
+		)
+
+		if v, ok := d.GetOk("internet_charge_type"); ok {
+			chargeType = v.(string)
+		}
+		if v, ok := d.GetOk("internet_max_bandwidth_out"); ok {
+			bandWidthOut = v.(int)
+		}
+
+		period := d.Get("prepaid_period").(int)
+		renewFlag := d.Get("auto_renew_flag").(int)
+
+		if chargeType != "" && bandWidthOut != 0 {
+			err := vpcService.ModifyEipInternetChargeType(ctx, eipId, chargeType, bandWidthOut, period, renewFlag)
+			if err != nil {
+				return err
+			}
+		}
 	}
 
 	if d.HasChange("internet_max_bandwidth_out") {
@@ -345,7 +366,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 			if err != nil {
 				return err
 			}
-			d.SetPartial("internet_max_bandwidth_out")
+
 		}
 	}
 
@@ -367,7 +388,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 			log.Printf("[CRITAL]%s update eip tags failed: %+v", logId, err)
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	d.Partial(false)

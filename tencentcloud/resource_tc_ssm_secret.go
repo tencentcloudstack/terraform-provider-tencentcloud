@@ -242,7 +242,7 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 			log.Printf("[CRITAL]%s modify SSM secret description failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("description")
+
 	}
 
 	if d.HasChange("is_enabled") {
@@ -252,7 +252,7 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 			log.Printf("[CRITAL]%s modify SSM secret status failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("is_enabled")
+
 	}
 
 	if d.HasChange("tags") {
@@ -269,7 +269,7 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	d.Partial(false)

@@ -607,7 +607,7 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 		}); err != nil {
 			return err
 		}
-		d.SetPartial("alias")
+
 	}
 	if d.HasChange("project_id") {
 		projectRequest := ssl.NewModifyCertificateProjectRequest()
@@ -631,7 +631,7 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 		}); err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 	d.Partial(false)
 

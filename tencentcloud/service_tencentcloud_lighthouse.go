@@ -531,3 +531,56 @@ func (me *LightHouseService) LighthouseApplySnapshotStateRefreshFunc(snapshotId 
 		return object, helper.PString(object.LatestOperationState), nil
 	}
 }
+
+func (me *LightHouseService) DescribeLighthouseBundleByFilter(ctx context.Context, param map[string]interface{}) (bundle []*lighthouse.Bundle, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeBundlesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var (
+		offset = 0
+		limit  = 20
+	)
+
+	for k, v := range param {
+		if k == "bundle_ids" {
+			request.BundleIds = helper.Strings(v.([]string))
+		}
+		if k == "offset" {
+			offset = v.(int)
+		}
+		if k == "limit" {
+			limit = v.(int)
+		}
+		if k == "zones" {
+			request.Zones = helper.Strings(v.([]string))
+		}
+		if k == "filters" {
+			request.Filters = v.([]*lighthouse.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	request.Offset = helper.IntInt64(offset)
+	request.Limit = helper.IntInt64(limit)
+	response, err := me.client.UseLighthouseClient().DescribeBundles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.BundleSet) < 1 {
+		return
+	}
+	bundle = append(bundle, response.Response.BundleSet...)
+
+	return
+}

@@ -206,9 +206,6 @@ func resourceTencentCloudDnspodDomainInstanceUpdate(d *schema.ResourceData, meta
 		}
 	}
 
-	d.SetPartial("status")
-	d.SetPartial("remark")
-
 	d.Partial(false)
 	return resourceTencentCloudDnspodDomainInstanceRead(d, meta)
 }

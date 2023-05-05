@@ -605,7 +605,6 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 				return err
 			}
 		}
-		d.SetPartial("security_policy")
 	}
 
 	if d.HasChange("replications") {
@@ -625,7 +624,6 @@ func resourceTencentCloudTcrInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("instance_type") {

@@ -585,3 +585,131 @@ func (me *MariadbService) DeleteMariadbInstanceById(ctx context.Context, instanc
 
 	return
 }
+
+func (me *MariadbService) DescribeMariadbDatabaseObjectsByFilter(ctx context.Context, instanceId, dbName string) (databaseObjects *mariadb.DescribeDatabaseObjectsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDatabaseObjectsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	request.DbName = &dbName
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMariadbClient().DescribeDatabaseObjects(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && response.Response != nil {
+		databaseObjects = response.Response
+	}
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbDatabasesByFilter(ctx context.Context, instanceId string) (databases []*mariadb.Database, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDatabasesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMariadbClient().DescribeDatabases(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Databases) < 1 {
+		return
+	}
+	databases = response.Response.Databases
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbDatabaseTableByFilter(ctx context.Context, param map[string]interface{}) (cols []*mariadb.TableColumn, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDatabaseTableRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "DbName" {
+			request.DbName = v.(*string)
+		}
+		if k == "Table" {
+			request.Table = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMariadbClient().DescribeDatabaseTable(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil || len(response.Response.Cols) > 0 {
+		cols = response.Response.Cols
+	}
+
+	return
+}
+
+func (me *MariadbService) DescribeDBEncryptAttributes(ctx context.Context, instanceId string) (encryptAttributes *mariadb.DescribeDBEncryptAttributesResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBEncryptAttributesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.InstanceId = &instanceId
+
+	response, err := me.client.UseMariadbClient().DescribeDBEncryptAttributes(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	encryptAttributes = response.Response
+
+	return
+}

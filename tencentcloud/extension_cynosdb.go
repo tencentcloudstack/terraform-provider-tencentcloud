@@ -1,8 +1,8 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 const (
@@ -78,7 +78,7 @@ func TencentCynosdbInstanceBaseInfo() map[string]*schema.Schema {
 			},
 			Elem: &schema.Schema{Type: schema.TypeString},
 			Set: func(v interface{}) int {
-				return hashcode.String(v.(string))
+				return helper.HashString(v.(string))
 			},
 			Description: "Weekdays for maintenance. `[\"Mon\", \"Tue\", \"Wed\", \"Thu\", \"Fri\", \"Sat\", \"Sun\"]` by default.",
 		},

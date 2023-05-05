@@ -238,8 +238,6 @@ func resourceTencentCloudSsmSecretVersionUpdate(d *schema.ResourceData, meta int
 				log.Printf("[CRITAL]%s modify SSM secret content failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("secret_binary")
-			d.SetPartial("secret_string")
 		}
 
 		d.Partial(false)

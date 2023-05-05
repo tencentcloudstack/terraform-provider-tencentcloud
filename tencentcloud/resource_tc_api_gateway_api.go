@@ -815,7 +815,7 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 				return err
 			}
 		}
-		d.SetPartial("pre_limit")
+
 	}
 
 	if d.HasChange("release_limit") {
@@ -828,7 +828,7 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 				return err
 			}
 		}
-		d.SetPartial("release_limit")
+
 	}
 
 	if d.HasChange("test_limit") {
@@ -841,7 +841,7 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 				return err
 			}
 		}
-		d.SetPartial("test_limit")
+
 	}
 	d.Partial(false)
 	return resourceTencentCloudAPIGatewayAPIRead(d, meta)

@@ -1,3 +1,23 @@
+## 1.80.6 (April 27 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_tat_invocation_task` ([#1692](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1692))
+* **New Data Source:** `tencentcloud_tcr_describe_webhook_trigger_logs` ([#1695](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1695))
+* **New Resource:** `tencentcloud_ipv6_address_bandwidth` ([#1702](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1702))
+* **New Resource:** `tencentcloud_kubernetes_backup_storage_location` ([#1691](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1691))
+* **New Resource:** `tencentcloud_lighthouse_apply_instance_snapshot` ([#1693](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1693))
+* **New Resource:** `tencentcloud_lighthouse_snapshot` ([#1693](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1693))
+* **New Resource:** `tencentcloud_monitor_tmp_grafana_config` ([#1699](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1699))
+* **New Resource:** `tencentcloud_tcr_manage_replication_operation` ([#1700](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1700))
+* **New Resource:** `tencentcloud_tcr_webhook_trigger` ([#1695](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1695))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_eip: support update `internet_charge_type` ([#1702](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1702))
+* resource/tencentcloud_elasticsearch_instance: affect `es_acl` when first apply ([#1697](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1697))
+* resource/tencentcloud_monitor_grafana_instance: Query results support `internet_url`, `internal_url` ([#1699](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1699))
+
 ## 1.80.5 (April 21 2023)
 
 FEATURES:

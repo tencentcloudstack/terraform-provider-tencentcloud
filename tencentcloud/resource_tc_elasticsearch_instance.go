@@ -614,7 +614,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
 	}
 	if d.HasChange("password") {
 		password := d.Get("password").(string)

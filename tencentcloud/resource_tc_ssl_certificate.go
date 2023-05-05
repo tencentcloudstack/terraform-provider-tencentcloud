@@ -343,7 +343,7 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 		}); outErr != nil {
 			return outErr
 		}
-		d.SetPartial("name")
+
 	}
 	if d.HasChange("project_id") {
 		projectRequest := ssl.NewModifyCertificateProjectRequest()
@@ -367,7 +367,7 @@ func resourceTencentCloudSslCertificateUpdate(d *schema.ResourceData, m interfac
 		}); outErr != nil {
 			return outErr
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("tags") {

@@ -66,7 +66,6 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
@@ -98,7 +97,7 @@ func resourceTencentCloudMysqlPrivilegeHash(v interface{}) int {
 	}
 	hashMap["privileges"] = slice
 	b, _ := json.Marshal(hashMap)
-	return hashcode.String(string(b))
+	return helper.HashString(string(b))
 }
 
 func resourceTencentCloudMysqlPrivilege() *schema.Resource {
@@ -142,7 +141,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 				Required: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 				Set: func(v interface{}) int {
-					return hashcode.String(v.(string))
+					return helper.HashString(v.(string))
 				},
 				Description: `Global privileges. available values for Privileges:` + strings.Join(MYSQL_GlOBAL_PRIVILEGE, ",") + ".",
 			},
@@ -163,7 +162,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 							Required: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 							Set: func(v interface{}) int {
-								return hashcode.String(v.(string))
+								return helper.HashString(v.(string))
 							},
 							Description: `Database privilege.available values for Privileges:` + strings.Join(MYSQL_DATABASE_PRIVILEGE, ",") + ".",
 						},
@@ -192,7 +191,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 							Required: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 							Set: func(v interface{}) int {
-								return hashcode.String(v.(string))
+								return helper.HashString(v.(string))
 							},
 							Description: `Table privilege.available values for Privileges:` + strings.Join(MYSQL_TABLE_PRIVILEGE, ",") + ".",
 						},
@@ -226,7 +225,7 @@ func resourceTencentCloudMysqlPrivilege() *schema.Resource {
 							Required: true,
 							Elem:     &schema.Schema{Type: schema.TypeString},
 							Set: func(v interface{}) int {
-								return hashcode.String(v.(string))
+								return helper.HashString(v.(string))
 							},
 							Description: `Column privilege.available values for Privileges:` + strings.Join(MYSQL_COLUMN_PRIVILEGE, ",") + ".",
 						},

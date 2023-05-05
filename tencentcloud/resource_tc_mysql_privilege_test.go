@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 var testAccTencentCloudMysqlPrivilegeType = "tencentcloud_mysql_privilege"
@@ -34,7 +34,7 @@ func TestAccTencentCloudMysqlPrivilegeResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global.#", "1"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "table.#", "1"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "column.#", "1"),
-					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global."+strconv.Itoa(hashcode.String("TRIGGER")), "TRIGGER"),
+					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global."+strconv.Itoa(helper.HashString("TRIGGER")), "TRIGGER"),
 				),
 			},
 			{
@@ -43,13 +43,13 @@ func TestAccTencentCloudMysqlPrivilegeResource(t *testing.T) {
 					testAccMysqlPrivilegeExists,
 					resource.TestCheckResourceAttrSet(testAccTencentCloudMysqlPrivilegeName, "mysql_id"),
 					resource.TestCheckResourceAttrSet(testAccTencentCloudMysqlPrivilegeName, "account_name"),
-					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global."+strconv.Itoa(hashcode.String("TRIGGER")), "TRIGGER"),
+					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global."+strconv.Itoa(helper.HashString("TRIGGER")), "TRIGGER"),
 
 					//diff
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global.#", "2"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "table.#", "2"),
 					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "column.#", "0"),
-					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global."+strconv.Itoa(hashcode.String("SELECT")), "SELECT"),
+					resource.TestCheckResourceAttr(testAccTencentCloudMysqlPrivilegeName, "global."+strconv.Itoa(helper.HashString("SELECT")), "SELECT"),
 				),
 			},
 		},

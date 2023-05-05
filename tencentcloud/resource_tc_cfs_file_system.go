@@ -298,7 +298,7 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("name")
+
 	}
 
 	if d.HasChange("access_group_id") {
@@ -312,7 +312,7 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("access_group_id")
+
 	}
 
 	if d.HasChange("tags") {
@@ -327,7 +327,7 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	d.Partial(false)

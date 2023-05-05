@@ -395,10 +395,6 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-
-		for _, key := range ruleKey {
-			d.SetPartial(key)
-		}
 	}
 
 	healthFlag := false
@@ -437,9 +433,6 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 
-		for _, key := range healthKey {
-			d.SetPartial(key)
-		}
 	}
 
 	if d.HasChange("session_switch") || d.HasChange("session_time") {
@@ -463,8 +456,7 @@ func resourceTencentCloudDayuL4RuleUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("session_switch")
-		d.SetPartial("session_time")
+
 	}
 
 	d.Partial(false)

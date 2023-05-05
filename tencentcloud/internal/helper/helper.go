@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/pkg/errors"
 )
@@ -25,7 +24,7 @@ func DataResourceIdsHash(ids []string) string {
 		buf.WriteString(fmt.Sprintf("%s-", id))
 	}
 
-	return fmt.Sprintf("%d", hashcode.String(buf.String()))
+	return fmt.Sprintf("%d", HashString(buf.String()))
 }
 
 // Generates a hash for the resource
@@ -46,6 +45,17 @@ func HashString(s string) int {
 	}
 	// v == MinInt
 	return 0
+}
+
+// Strings hashes a list of strings to a unique hashcode.
+func HashStrings(strings []string) string {
+	var buf bytes.Buffer
+
+	for _, s := range strings {
+		buf.WriteString(fmt.Sprintf("%s-", s))
+	}
+
+	return fmt.Sprintf("%d", String(buf.String()))
 }
 
 // Generates a hash for the set hash function used by the ID

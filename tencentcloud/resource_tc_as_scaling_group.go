@@ -622,9 +622,6 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	for _, attr := range updateAttrs {
-		d.SetPartial(attr)
-	}
 	updateAttrs = updateAttrs[:0]
 
 	balancerRequest := as.NewModifyLoadBalancersRequest()
@@ -685,10 +682,6 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		}); err != nil {
 			return err
 		}
-
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
-		}
 	}
 
 	if d.HasChange("tags") {
@@ -700,7 +693,6 @@ func resourceTencentCloudAsScalingGroupUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

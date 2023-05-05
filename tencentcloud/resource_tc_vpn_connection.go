@@ -873,46 +873,6 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 	time.Sleep(3 * time.Minute)
-	if d.HasChange("name") {
-		d.SetPartial("name")
-	}
-	if d.HasChange("pre_share_key") {
-		d.SetPartial("pre_share_key")
-	}
-	if d.HasChange("security_group_policy") {
-		d.SetPartial("security_group_policy")
-	}
-	if d.HasChange("enable_health_check") {
-		d.SetPartial("enable_health_check")
-	}
-	if d.HasChange("health_check_local_ip") {
-		d.SetPartial("health_check_local_ip")
-	}
-	if d.HasChange("health_check_remote_ip") {
-		d.SetPartial("health_check_remote_ip")
-	}
-
-	for key := range ikeChangeKeySet {
-		if ikeChangeKeySet[key] {
-			d.SetPartial(key)
-		}
-	}
-
-	for key := range ipsecChangeKeySet {
-		if ipsecChangeKeySet[key] {
-			d.SetPartial(key)
-		}
-	}
-
-	if d.HasChange("dpd_enable") {
-		d.SetPartial("dpd_enable")
-	}
-	if d.HasChange("dpd_timeout") {
-		d.SetPartial("dpd_timeout")
-	}
-	if d.HasChange("dpd_action") {
-		d.SetPartial("dpd_action")
-	}
 
 	//tag
 	if d.HasChange("tags") {
@@ -927,7 +887,6 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
 	d.Partial(false)
 

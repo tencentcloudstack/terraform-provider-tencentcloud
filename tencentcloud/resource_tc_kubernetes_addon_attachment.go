@@ -311,10 +311,6 @@ func resourceTencentCloudTkeAddonAttachmentUpdate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	d.SetPartial("version")
-	d.SetPartial("values")
-	d.SetPartial("request_body")
-
 	return resourceTencentCloudTkeAddonAttachmentRead(d, meta)
 }
 

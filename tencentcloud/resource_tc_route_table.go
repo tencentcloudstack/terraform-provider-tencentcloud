@@ -223,7 +223,7 @@ func resourceTencentCloudVpcRouteTableUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("name")
+
 	}
 
 	if d.HasChange("tags") {
@@ -239,7 +239,6 @@ func resourceTencentCloudVpcRouteTableUpdate(d *schema.ResourceData, meta interf
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

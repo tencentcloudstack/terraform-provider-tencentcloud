@@ -284,12 +284,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 	}
-	if d.HasChange("name") {
-		d.SetPartial("name")
-	}
-	if d.HasChange("bandwidth") {
-		d.SetPartial("bandwidth")
-	}
 	//max concurrent
 	if d.HasChange("max_concurrent") {
 		concurrentReq := vpc.NewResetNatGatewayConnectionRequest()
@@ -310,7 +304,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[CRITAL]%s modify NAT gateway concurrent failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("max_concurrent")
 	}
 
 	//eip
@@ -444,7 +437,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					return err
 				}
 			}
-			d.SetPartial("assigned_eip_set")
 		}
 
 	}
@@ -461,7 +453,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

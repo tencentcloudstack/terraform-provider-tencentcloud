@@ -1162,7 +1162,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		time.Sleep(readRetryTimeout)
-		d.SetPartial("instance_charge_type_prepaid_renew_flag")
+
 	}
 
 	if d.HasChange("instance_name") {
@@ -1170,7 +1170,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
+
 	}
 
 	if d.HasChange("disable_api_termination") {
@@ -1190,7 +1190,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("security_groups")
+
 	}
 
 	if d.HasChange("orderly_security_groups") {
@@ -1203,7 +1203,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("orderly_security_groups")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -1212,7 +1212,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	// Reset Instance
@@ -1223,24 +1223,19 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		d.HasChange("disable_monitor_service") ||
 		d.HasChange("keep_image_login") {
 
-		var updateAttr []string
-
 		request := cvm.NewResetInstanceRequest()
 		request.InstanceId = helper.String(d.Id())
 
 		if v, ok := d.GetOk("image_id"); ok {
-			updateAttr = append(updateAttr, "image_id")
 			request.ImageId = helper.String(v.(string))
 		}
 		if v, ok := d.GetOk("hostname"); ok {
-			updateAttr = append(updateAttr, "hostname")
 			request.HostName = helper.String(v.(string))
 		}
 
 		// enhanced service
 		request.EnhancedService = &cvm.EnhancedService{}
 		if d.HasChange("disable_security_service") {
-			updateAttr = append(updateAttr, "disable_security_service")
 			v := d.Get("disable_security_service")
 			securityService := v.(bool)
 			request.EnhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
@@ -1249,7 +1244,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		if d.HasChange("disable_monitor_service") {
-			updateAttr = append(updateAttr, "disable_monitor_service")
 			v := d.Get("disable_monitor_service")
 			monitorService := !(v.(bool))
 			request.EnhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
@@ -1261,20 +1255,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		request.LoginSettings = &cvm.LoginSettings{}
 
 		if v, ok := d.GetOk("password"); ok {
-			updateAttr = append(updateAttr, "password")
 			request.LoginSettings.Password = helper.String(v.(string))
 		}
 
 		if v, ok := d.GetOk("key_ids"); ok {
-			updateAttr = append(updateAttr, "key_ids")
 			request.LoginSettings.KeyIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
 		} else if v, ok := d.GetOk("key_name"); ok {
-			updateAttr = append(updateAttr, "key_name")
 			request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
-		}
-
-		if d.HasChange("keep_image_login") {
-			updateAttr = append(updateAttr, "keep_image_login")
 		}
 
 		if v := d.Get("keep_image_login").(bool); v {
@@ -1285,10 +1272,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 
 		if err := cvmService.ResetInstance(ctx, request); err != nil {
 			return err
-		}
-
-		for _, attr := range updateAttr {
-			d.SetPartial(attr)
 		}
 
 		// Modify Login Info Directly
@@ -1394,7 +1377,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			if err != nil {
 				return fmt.Errorf("an error occurred when modifying %s, reason: %s", sizeKey, err.Error())
 			}
-			d.SetPartial(sizeKey)
+
 		}
 	}
 
@@ -1404,7 +1387,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err := switchInstance(&cvmService, ctx, d, flag); err != nil {
 			return err
 		}
-		d.SetPartial("running_flag")
+
 	}
 
 	if d.HasChange("system_disk_size") || d.HasChange("system_disk_type") {
@@ -1451,9 +1434,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 			return err
 		}
 
-		d.SetPartial("system_disk_size")
-		d.SetPartial("system_disk_type")
-
 	}
 
 	if d.HasChange("instance_type") {
@@ -1461,7 +1441,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_type")
 
 		err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
@@ -1474,7 +1453,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("cdh_instance_type")
 
 		err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
@@ -1489,15 +1467,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		err := cvmService.ModifyVpc(ctx, instanceId, vpcId, subnetId, privateIp)
 		if err != nil {
 			return err
-		}
-		if d.HasChange("vpc_id") {
-			d.SetPartial("vpc_id")
-		}
-		if d.HasChange("subnet_id") {
-			d.SetPartial("subnet_id")
-		}
-		if d.HasChange("private_ip") {
-			d.SetPartial("private_ip")
 		}
 	}
 
@@ -1536,7 +1505,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 				}
 			}
 		}
-		d.SetPartial("tags")
+
 	}
 
 	if d.HasChange("internet_max_bandwidth_out") {
@@ -1550,7 +1519,7 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		if err != nil {
 			return err
 		}
-		d.SetPartial("internet_max_bandwidth_out")
+
 		err = waitForOperationFinished(d, meta, 2*readRetryTimeout, CVM_LATEST_OPERATION_STATE_OPERATING, false)
 		if err != nil {
 			return err

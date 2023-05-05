@@ -277,7 +277,7 @@ func resourceTencentCloudMariadbHourDbInstanceRead(d *schema.ResourceData, meta 
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "mariadb", "mariadb-hour-instance", tcClient.Region, d.Id())
+	tags, err := tagService.DescribeResourceTags(ctx, "mariadb", "mariadb-hour-instance", tcClient.Region, instanceId)
 	if err != nil {
 		return err
 	}
