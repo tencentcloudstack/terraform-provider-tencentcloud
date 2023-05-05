@@ -35,12 +35,7 @@ The following arguments are supported:
 * `environ_name` - (Required, String) The name of namespace to be created.
 * `msg_ttl` - (Required, Int) The expiration time of unconsumed message.
 * `remark` - (Optional, String) Description of the namespace.
-* `retention_policy` - (Optional, Map) The Policy of message to retain.
-
-The `retention_policy` object supports the following:
-
-* `size_in_mb` - (Optional, Int) the size of message to retain.
-* `time_in_minutes` - (Optional, Int) the time of message to retain.
+* `retention_policy` - (Optional, Map) The Policy of message to retain. Format like: `{time_in_minutes: Int, size_in_mb: Int}`. `time_in_minutes`: the time of message to retain; `size_in_mb`: the size of message to retain.
 
 ## Attributes Reference
 

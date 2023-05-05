@@ -103,8 +103,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -124,85 +124,25 @@ func TKEGpuArgsSetting() map[string]*schema.Schema {
 			Type:         schema.TypeMap,
 			Optional:     true,
 			ValidateFunc: validateTkeGpuDriverVersion,
-			Elem: &schema.Resource{
-				Schema: map[string]*schema.Schema{
-					"version": {
-						Type:        schema.TypeString,
-						Required:    true,
-						Description: "Version of GPU driver or CUDA.",
-					},
-					"name": {
-						Type:        schema.TypeString,
-						Required:    true,
-						Description: "Name of GPU driver or CUDA.",
-					},
-				},
-			},
-			Description: "GPU driver version.",
+			Description:  "GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
 		},
 		"cuda": {
 			Type:         schema.TypeMap,
 			Optional:     true,
 			ValidateFunc: validateTkeGpuDriverVersion,
-			Elem: &schema.Resource{
-				Schema: map[string]*schema.Schema{
-					"version": {
-						Type:        schema.TypeString,
-						Required:    true,
-						Description: "Version of GPU driver or CUDA.",
-					},
-					"name": {
-						Type:        schema.TypeString,
-						Required:    true,
-						Description: "Name of GPU driver or CUDA.",
-					},
-				},
-			},
-			Description: "CUDA version.",
+			Description:  "CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.",
 		},
 		"cudnn": {
 			Type:         schema.TypeMap,
 			Optional:     true,
 			ValidateFunc: validateTkeGpuDriverVersion,
-			Elem: &schema.Resource{
-				Schema: map[string]*schema.Schema{
-					"version": {
-						Type:        schema.TypeString,
-						Required:    true,
-						Description: "cuDNN version.",
-					},
-					"name": {
-						Type:        schema.TypeString,
-						Required:    true,
-						Description: "cuDNN name.",
-					},
-					"doc_name": {
-						Type:        schema.TypeString,
-						Optional:    true,
-						Description: "Doc name of cuDNN.",
-					},
-					"dev_name": {
-						Type:        schema.TypeString,
-						Optional:    true,
-						Description: "Dev name of cuDNN.",
-					},
-				},
-			},
-			Description: "cuDNN version.",
+			Description: "cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`." +
+				" `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.",
 		},
 		"custom_driver": {
-			Type:     schema.TypeMap,
-			Optional: true,
-			Elem: &schema.Resource{
-				Schema: map[string]*schema.Schema{
-					"address": {
-						Type:        schema.TypeString,
-						Optional:    true,
-						Description: "URL of custom GPU driver address.",
-					},
-				},
-			},
-			Description: "Custom GPU driver.",
+			Type:        schema.TypeMap,
+			Optional:    true,
+			Description: "Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.",
 		},
 	}
 }
