@@ -14,8 +14,8 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -328,7 +328,7 @@ func dataSourceTencentCloudTcmqTopicRead(d *schema.ResourceData, meta interface{
 		result = append(result, topicItem)
 	}
 	d.SetId(helper.DataResourceIdsHash(topicNames))
-	d.Set("topic_list", result)
+	_ = d.Set("topic_list", result)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

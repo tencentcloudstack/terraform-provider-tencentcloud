@@ -254,7 +254,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -985,7 +985,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err := resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx, cosService, d); err != nil {
 			return err
 		}
-		d.Set("acl_body", body)
+		_ = d.Set("acl_body", body)
 	}
 
 	if d.HasChange("cors_rules") {
@@ -1002,7 +1002,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-		d.Set("origin_pull_rules", rules)
+		_ = d.Set("origin_pull_rules", rules)
 	}
 
 	if d.HasChange("origin_domain_rules") {
@@ -1010,7 +1010,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err := resourceTencentCloudCosBucketOriginDomainUpdate(ctx, cosService, d); err != nil {
 			return err
 		}
-		d.Set("origin_domain_rules", rules)
+		_ = d.Set("origin_domain_rules", rules)
 	}
 
 	if d.HasChange("lifecycle_rules") {

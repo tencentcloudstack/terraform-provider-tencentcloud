@@ -87,7 +87,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	antiddos "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos/v20200309"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -720,8 +720,8 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 	}
 	ddosLevel := protectThresholdRelation.DDoSLevel
 	ddosThreshold := protectThresholdRelation.DDoSThreshold
-	d.Set("ddos_level", ddosLevel)
-	d.Set("ddos_threshold", ddosThreshold)
+	_ = d.Set("ddos_level", ddosLevel)
+	_ = d.Set("ddos_threshold", ddosThreshold)
 
 	blackWhiteIpRelationList, err := antiddosService.DescribeListBlackWhiteIpList(ctx, instanceId)
 	if err != nil {
@@ -733,7 +733,7 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		ipType := blackWhiteIpRelation.Type
 		blackWhiteIpInfos = append(blackWhiteIpInfos, map[string]string{"ip": *ip, "ip_type": *ipType})
 	}
-	d.Set("black_white_ips", blackWhiteIpInfos)
+	_ = d.Set("black_white_ips", blackWhiteIpInfos)
 
 	aclConfigRelationList, err := antiddosService.DescribeListPortAclList(ctx, instanceId)
 	if err != nil {
@@ -758,7 +758,7 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		acl["forward_protocol"] = forwardProtocol
 		acls = append(acls, acl)
 	}
-	d.Set("acls", acls)
+	_ = d.Set("acls", acls)
 
 	protocolBlockRelation, err := antiddosService.DescribeListProtocolBlockConfig(ctx, instanceId)
 	if err != nil {
@@ -774,7 +774,7 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		protocolBlockConfig["drop_tcp"] = dropTcp
 		protocolBlockConfig["drop_udp"] = dropUdp
 		protocolBlockConfig["drop_other"] = dropOther
-		d.Set("protocol_block_config", []map[string]interface{}{protocolBlockConfig})
+		_ = d.Set("protocol_block_config", []map[string]interface{}{protocolBlockConfig})
 	}
 
 	connectLimitRelation, err := antiddosService.DescribeDDoSConnectLimitList(ctx, instanceId)
@@ -791,13 +791,13 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 	ddosConnectLimit["syn_limit"] = connectLimitRelation.SynLimit
 	ddosConnectLimit["conn_timeout"] = connectLimitRelation.ConnTimeout
 	ddosConnectLimit["null_conn_enable"] = connectLimitRelation.NullConnEnable
-	d.Set("ddos_connect_limit", []map[string]interface{}{ddosConnectLimit})
+	_ = d.Set("ddos_connect_limit", []map[string]interface{}{ddosConnectLimit})
 
 	ddoSAIRelation, err := antiddosService.DescribeListDDoSAI(ctx, instanceId)
 	if err != nil {
 		return err
 	}
-	d.Set("ddos_ai", ddoSAIRelation.DDoSAI)
+	_ = d.Set("ddos_ai", ddoSAIRelation.DDoSAI)
 
 	ddosGeoIPBlockConfigRelations, err := antiddosService.DescribeListDDoSGeoIPBlockConfig(ctx, instanceId)
 	if err != nil {
@@ -814,7 +814,7 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		ddosGeoIPBlockConfigList = append(ddosGeoIPBlockConfigList, ddosGeoIPBlockConfig)
 	}
 
-	d.Set("ddos_geo_ip_block_config", ddosGeoIPBlockConfigList)
+	_ = d.Set("ddos_geo_ip_block_config", ddosGeoIPBlockConfigList)
 
 	ddosSpeedLimitConfigRelations, err := antiddosService.DescribeListDDoSSpeedLimitConfig(ctx, instanceId)
 	if err != nil {
@@ -838,7 +838,7 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		ddosSpeedLimitConfigs = append(ddosSpeedLimitConfigs, ddosSpeedLimitConfig)
 	}
 
-	d.Set("ddos_speed_limit_config", ddosSpeedLimitConfigs)
+	_ = d.Set("ddos_speed_limit_config", ddosSpeedLimitConfigs)
 
 	packetFilterRelationList, err := antiddosService.DescribeListPacketFilterConfig(ctx, instanceId)
 	if err != nil {
@@ -863,7 +863,7 @@ func resourceTencentCloudDayuDdosPolicyV2Read(d *schema.ResourceData, meta inter
 		tmpPacketFilter["match_begin2"] = packetFilterRelation.PacketFilterConfig.MatchBegin2
 		packetFilters = append(packetFilters, tmpPacketFilter)
 	}
-	d.Set("packet_filters", packetFilters)
+	_ = d.Set("packet_filters", packetFilters)
 
 	return nil
 }

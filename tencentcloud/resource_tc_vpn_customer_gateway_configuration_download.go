@@ -21,8 +21,8 @@ package tencentcloud
 import (
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -150,7 +150,7 @@ func resourceTencentCloudVpnCustomerGatewayConfigurationDownloadCreate(d *schema
 
 	d.SetId(vpnGatewayId + FILED_SP + vpnConnectionId)
 
-	d.Set("customer_gateway_configuration", response.Response.CustomerGatewayConfiguration)
+	_ = d.Set("customer_gateway_configuration", response.Response.CustomerGatewayConfiguration)
 
 	return resourceTencentCloudVpnCustomerGatewayConfigurationDownloadRead(d, meta)
 }

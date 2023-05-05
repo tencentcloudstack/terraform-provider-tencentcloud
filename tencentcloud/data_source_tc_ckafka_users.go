@@ -15,7 +15,7 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -99,7 +99,7 @@ func dataSourceTencentCloudCkafkaUsersRead(d *schema.ResourceData, meta interfac
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("user_list", userList)
+	_ = d.Set("user_list", userList)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
