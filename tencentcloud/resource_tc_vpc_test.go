@@ -8,9 +8,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func init() {
@@ -121,8 +121,8 @@ func TestAccTencentCloudVpcV3Update(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "create_time"),
 					resource.TestCheckResourceAttrSet("tencentcloud_vpc.foo", "dns_servers.#"),
 
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", fmt.Sprintf("%s.%d", "dns_servers", hashcode.String("119.29.29.29")), "119.29.29.29"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", fmt.Sprintf("%s.%d", "dns_servers", hashcode.String("182.254.116.116")), "182.254.116.116"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", fmt.Sprintf("%s.%d", "dns_servers", helper.HashString("119.29.29.29")), "119.29.29.29"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc.foo", fmt.Sprintf("%s.%d", "dns_servers", helper.HashString("182.254.116.116")), "182.254.116.116"),
 				),
 			},
 		},
