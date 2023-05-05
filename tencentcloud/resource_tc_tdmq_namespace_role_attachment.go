@@ -218,7 +218,6 @@ func resourceTencentCloudTdmqNamespaceRoleAttachmentUpdate(d *schema.ResourceDat
 	if err := service.ModifyTdmqNamespaceRoleAttachment(ctx, environId, roleName, permissions, clusterId); err != nil {
 		return err
 	}
-	d.SetPartial("permissions")
 
 	d.Partial(false)
 	return resourceTencentCloudTdmqNamespaceRoleAttachmentRead(d, meta)

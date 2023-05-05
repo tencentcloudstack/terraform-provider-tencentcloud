@@ -442,12 +442,6 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[CRITAL]%s modify VPN gateway name failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		if d.HasChange("name") {
-			d.SetPartial("name")
-		}
-		if d.HasChange("charge_type") {
-			d.SetPartial("charge_type")
-		}
 	}
 
 	//bandwidth
@@ -470,7 +464,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 			log.Printf("[CRITAL]%s modify VPN gateway bandwidth failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("bandwidth")
+
 	}
 
 	//tag
@@ -486,7 +480,7 @@ func resourceTencentCloudVpnGatewayUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	if d.HasChange("cdc_id") || d.HasChange("max_connection") {

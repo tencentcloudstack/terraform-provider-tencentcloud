@@ -474,8 +474,6 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 			return errUpdate
 		}
 
-		d.SetPartial("memory")
-		d.SetPartial("volume")
 	}
 
 	if d.HasChange("instance_name") {
@@ -484,7 +482,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -493,7 +491,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 		if err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("tags") {
@@ -505,7 +503,6 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	if d.HasChange("prepaid_period") {
@@ -519,7 +516,7 @@ func resourceTencentCloudMongodbStandbyInstanceUpdate(d *schema.ResourceData, me
 		if err != nil {
 			return err
 		}
-		d.SetPartial("auto_renew_flag")
+
 	}
 
 	d.Partial(false)

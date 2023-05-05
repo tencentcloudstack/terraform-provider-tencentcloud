@@ -297,8 +297,7 @@ func resourceTencentCloudMysqlAccountPrivilegeUpdate(d *schema.ResourceData, met
 			log.Printf("[CRITAL]%s modify account privilege fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
-		d.SetPartial("privileges")
-		d.SetPartial("db_names")
+
 		d.Partial(false)
 
 	}

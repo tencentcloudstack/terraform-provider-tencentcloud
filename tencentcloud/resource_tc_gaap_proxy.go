@@ -305,7 +305,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 		if err := gaapService.ModifyProxyName(ctx, id, name); err != nil {
 			return err
 		}
-		d.SetPartial("name")
+
 	}
 
 	if d.HasChange("project_id") {
@@ -313,7 +313,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 		if err := gaapService.ModifyProxyProjectId(ctx, id, projectId); err != nil {
 			return err
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("bandwidth") || d.HasChange("concurrent") {
@@ -331,10 +331,10 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 			return err
 		}
 		if d.HasChange("bandwidth") {
-			d.SetPartial("bandwidth")
+
 		}
 		if d.HasChange("concurrent") {
-			d.SetPartial("concurrent")
+
 		}
 		//deal with sync delay
 		time.Sleep(time.Duration(10) * time.Second)
@@ -351,7 +351,7 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 				return err
 			}
 		}
-		d.SetPartial("enable")
+
 	}
 
 	if d.HasChange("tags") {
@@ -367,7 +367,6 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

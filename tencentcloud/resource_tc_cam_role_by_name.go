@@ -336,7 +336,7 @@ func resourceTencentCloudCamRoleByNameUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s update CAM role description failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("description")
+
 	}
 	document := ""
 	if d.HasChange("document") {
@@ -369,7 +369,6 @@ func resourceTencentCloudCamRoleByNameUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s update CAM role document failed, reason:%s\n", logId, err.Error())
 			return err
 		}
-		d.SetPartial("document")
 
 	}
 
@@ -411,7 +410,7 @@ func resourceTencentCloudCamRoleByNameUpdate(d *schema.ResourceData, meta interf
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	return resourceTencentCloudCamRoleByNameRead(d, meta)

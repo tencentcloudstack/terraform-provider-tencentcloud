@@ -1076,11 +1076,6 @@ func resourceTencentcloudEKSContainerInstanceUpdate(d *schema.ResourceData, meta
 		updateAttrs = append(updateAttrs, "image_registry_credential")
 		request.ImageRegistryCredentials = getImageRegistryCredentials(d.Get("image_registry_credential").([]interface{}))
 	}
-
-	for _, attr := range updateAttrs {
-		d.SetPartial(attr)
-	}
-
 	if len(updateAttrs) > 0 {
 		err := service.UpdateEksContainerInstances(ctx, request)
 		if err != nil {

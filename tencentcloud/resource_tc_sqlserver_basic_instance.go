@@ -426,7 +426,7 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 		if outErr != nil {
 			return outErr
 		}
-		d.SetPartial("name")
+
 	}
 	//upgrade storage and memory size
 	if d.HasChange("memory") || d.HasChange("storage") ||
@@ -453,10 +453,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			return outErr
 		}
 
-		d.SetPartial("memory")
-		d.SetPartial("storage")
-		d.SetPartial("cpu")
-		d.SetPartial("auto_voucher")
 	}
 
 	if d.HasChange("security_groups") {
@@ -493,7 +489,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			}
 		}
 
-		d.SetPartial("security_groups")
 	}
 	//update project id
 	if d.HasChange("project_id") {
@@ -509,7 +504,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			return outErr
 		}
 
-		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("maintenance_week_set") || d.HasChange("maintenance_start_time") || d.HasChange("maintenance_time_span") {
@@ -533,9 +527,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			return outErr
 		}
 
-		d.SetPartial("maintenance_week_set")
-		d.SetPartial("maintenance_start_time")
-		d.SetPartial("maintenance_time_span")
 	}
 
 	if payType == COMMON_PAYTYPE_PREPAID {
@@ -554,7 +545,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 				return outErr
 			}
 
-			d.SetPartial("auto_renew")
 		}
 	}
 	if d.HasChange("tags") {
@@ -566,7 +556,6 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 	d.Partial(false)
 	return resourceTencentCloudSqlserverBasicInstanceRead(d, meta)

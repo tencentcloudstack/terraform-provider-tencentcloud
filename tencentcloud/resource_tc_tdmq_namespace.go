@@ -229,9 +229,6 @@ func resourceTencentCloudTdmqNamespaceUpdate(d *schema.ResourceData, meta interf
 	if err := service.ModifyTdmqNamespaceAttribute(ctx, environId, msgTtl, remark, clusterId, retentPolicy); err != nil {
 		return err
 	}
-	d.SetPartial("msg_ttl")
-	d.SetPartial("remark")
-	d.SetPartial("retention_policy")
 
 	d.Partial(false)
 	return resourceTencentCloudTdmqNamespaceRead(d, meta)

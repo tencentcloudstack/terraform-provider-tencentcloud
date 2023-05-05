@@ -800,7 +800,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			log.Printf("[CRITAL]%s update CLB instance security_group failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("security_groups")
+
 	}
 
 	if d.HasChange("log_set_id") || d.HasChange("log_topic_id") {
@@ -844,7 +844,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 	d.Partial(false)
 

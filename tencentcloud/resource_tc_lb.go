@@ -240,7 +240,6 @@ func resourceTencentCloudLBUpdate(d *schema.ResourceData, meta interface{}) erro
 		return err
 	}
 
-	d.SetPartial("name")
 	d.Partial(false)
 
 	return resourceTencentCloudLBRead(d, meta)

@@ -427,7 +427,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		if checkErr != nil {
 			return checkErr
 		}
-		d.SetPartial("name")
+
 	}
 
 	// upgrade storage and memory size
@@ -449,8 +449,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		if checkErr != nil {
 			return checkErr
 		}
-		d.SetPartial("memory")
-		d.SetPartial("storage")
+
 	}
 
 	// update project id
@@ -472,7 +471,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		if checkErr != nil {
 			return checkErr
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	if d.HasChange("security_groups_ids") {
@@ -488,7 +487,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		if err != nil {
 			return err
 		}
-		d.SetPartial("security_groups_ids")
+
 	}
 
 	//if d.HasChange("tags") {
@@ -503,7 +502,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 	//	if err != nil {
 	//		return err
 	//	}
-	//	d.SetPartial("tags")
+	//
 	//}
 
 	d.Partial(false)

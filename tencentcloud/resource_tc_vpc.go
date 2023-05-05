@@ -337,10 +337,6 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	for _, attr := range updateAttr {
-		d.SetPartial(attr)
-	}
-
 	if d.HasChange("assistant_cidrs") {
 		old, now := d.GetChange("assistant_cidrs")
 		request := vpc.NewModifyAssistantCidrRequest()
@@ -350,7 +346,6 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err := vpcService.ModifyAssistantCidr(ctx, request); err != nil {
 			return err
 		}
-		d.SetPartial("assistant_cidrs")
 	}
 
 	if d.HasChange("tags") {
@@ -366,7 +361,6 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

@@ -244,7 +244,7 @@ func resourceTencentCloudCynosdbSecurityGroupUpdate(d *schema.ResourceData, meta
 			return err
 		}
 	}
-	d.SetPartial("security_group_ids")
+
 	d.Partial(false)
 	return resourceTencentCloudCynosdbSecurityGroupRead(d, meta)
 }

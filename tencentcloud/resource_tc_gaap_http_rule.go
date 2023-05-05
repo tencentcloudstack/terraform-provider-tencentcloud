@@ -489,17 +489,12 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 		return err
 	}
 
-	for _, attr := range updateAttr {
-		d.SetPartial(attr)
-	}
-
 	if d.HasChange("forward_host") {
 		forwardHost := d.Get("forward_host").(string)
 		if err := service.ModifyHTTPRuleForwardHost(ctx, listenerId, id, forwardHost); err != nil {
 			return err
 		}
 
-		d.SetPartial("forward_host")
 	}
 
 	if realserverUpdate {
@@ -507,7 +502,6 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 			return err
 		}
 
-		d.SetPartial("realservers")
 	}
 
 	d.Partial(false)

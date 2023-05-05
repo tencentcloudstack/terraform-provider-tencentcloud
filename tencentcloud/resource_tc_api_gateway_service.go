@@ -487,10 +487,6 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 	if err != nil {
 		return err
 	}
-	d.SetPartial("service_name")
-	d.SetPartial("protocol")
-	d.SetPartial("service_desc")
-	d.SetPartial("net_type")
 
 	if d.HasChange("pre_limit") {
 		if v, ok := d.GetOk("pre_limit"); ok {
@@ -502,7 +498,7 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 				return err
 			}
 		}
-		d.SetPartial("pre_limit")
+
 	}
 
 	if d.HasChange("release_limit") {
@@ -515,7 +511,7 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 				return err
 			}
 		}
-		d.SetPartial("release_limit")
+
 	}
 
 	if d.HasChange("test_limit") {
@@ -528,7 +524,7 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 				return err
 			}
 		}
-		d.SetPartial("test_limit")
+
 	}
 
 	d.Partial(false)

@@ -471,16 +471,6 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 		); err != nil {
 			return err
 		}
-
-		if d.HasChange("certificate_id") {
-			d.SetPartial("certificate_id")
-		}
-		if d.HasChange("client_certificate_id") {
-			d.SetPartial("client_certificate_id")
-		}
-		if d.HasChange("client_certificate_ids") {
-			d.SetPartial("client_certificate_ids")
-		}
 	}
 
 	if forwardProtocol == "HTTP" {
@@ -591,10 +581,6 @@ func resourceTencentCloudGaapHttpDomainUpdate(d *schema.ResourceData, m interfac
 			realserverCertificateIds, realserverCertificateDomain, basicAuthId, gaapCertificateId,
 		); err != nil {
 			return err
-		}
-
-		for _, attr := range updateAdvancedAttr {
-			d.SetPartial(attr)
 		}
 	}
 
