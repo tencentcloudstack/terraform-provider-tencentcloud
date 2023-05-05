@@ -781,6 +781,7 @@ TencentCloud Lighthouse(Lighthouse)
 
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
+	tencentcloud_lighthouse_bundle
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -1493,6 +1494,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_tsf_cluster":                              dataSourceTencentCloudTsfCluster(),
 			"tencentcloud_tsf_microservice":                         dataSourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_unit_rules":                           dataSourceTencentCloudTsfUnitRules(),
+			"tencentcloud_lighthouse_bundle":                        dataSourceTencentCloudLighthouseBundle(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
