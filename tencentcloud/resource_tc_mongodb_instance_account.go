@@ -25,8 +25,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -308,7 +308,6 @@ func resourceTencentCloudMongodbInstanceAccountUpdate(d *schema.ResourceData, me
 			return err
 		}
 
-		d.SetPartial("password")
 	}
 
 	return resourceTencentCloudMongodbInstanceAccountRead(d, meta)

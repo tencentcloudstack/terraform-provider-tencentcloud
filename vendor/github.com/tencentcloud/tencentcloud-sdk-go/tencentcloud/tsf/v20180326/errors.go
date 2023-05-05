@@ -680,6 +680,9 @@ const (
 	// 服务端口值非法。
 	INVALIDPARAMETERVALUE_CONTAINERGROUPPORTINVALID = "InvalidParameterValue.ContainergroupPortInvalid"
 
+	// 服务端口不能为空。
+	INVALIDPARAMETERVALUE_CONTAINERGROUPPORTNULL = "InvalidParameterValue.ContainergroupPortNull"
+
 	// 服务端口不允许重复映射。
 	INVALIDPARAMETERVALUE_CONTAINERGROUPPORTSREPEAT = "InvalidParameterValue.ContainergroupPortsRepeat"
 
@@ -763,6 +766,9 @@ const (
 
 	// 文件配置项版本描述不合规。
 	INVALIDPARAMETERVALUE_FILECONFIGVERSIONDESCINVALID = "InvalidParameterValue.FileConfigVersionDescInvalid"
+
+	// 文件配置项版本不合规。
+	INVALIDPARAMETERVALUE_FILECONFIGVERSIONINVALID = "InvalidParameterValue.FileConfigVersionInvalid"
 
 	// 请求参数异常:%s。
 	INVALIDPARAMETERVALUE_GATEWAYPARAMETERERROR = "InvalidParameterValue.GatewayParameterError"

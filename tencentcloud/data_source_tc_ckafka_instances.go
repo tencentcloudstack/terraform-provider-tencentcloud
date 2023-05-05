@@ -12,7 +12,7 @@ data "tencentcloud_ckafka_instances" "foo" {
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -382,7 +382,7 @@ func dataSourceTencentCloudCkafkaInstancesRead(d *schema.ResourceData, meta inte
 		result = append(result, kafkaInstanceDetailMap)
 	}
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("instance_list", result)
+	_ = d.Set("instance_list", result)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

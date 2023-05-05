@@ -38,7 +38,7 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 )
 
@@ -88,21 +88,7 @@ func datasourceTencentCloudEksClusterCredential() *schema.Resource {
 			"credential": {
 				Type:        schema.TypeMap,
 				Computed:    true,
-				Description: "Credential info.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"ca_cert": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "CA root certification.",
-						},
-						"token": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Certification token.",
-						},
-					},
-				},
+				Description: "Credential info. Format `{ ca_cert: String, token: String }`.",
 			},
 			"public_lb": {
 				Type:        schema.TypeList,

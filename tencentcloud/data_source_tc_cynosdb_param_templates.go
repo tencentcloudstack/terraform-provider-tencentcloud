@@ -14,8 +14,8 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -332,7 +332,7 @@ func dataSourceTencentCloudCynosdbParamTemplatesRead(d *schema.ResourceData, met
 		tmpList = append(tmpList, itemMap)
 	}
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("items", tmpList)
+	_ = d.Set("items", tmpList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

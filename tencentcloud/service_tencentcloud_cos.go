@@ -9,15 +9,14 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -1178,7 +1177,7 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 
 				if len(rule.OriginParameter.HttpHeader.FollowHttpHeaders) != 0 {
 					headers := schema.NewSet(func(i interface{}) int {
-						return hashcode.String(i.(string))
+						return helper.HashString(i.(string))
 					}, nil)
 					for _, header := range rule.OriginParameter.HttpHeader.FollowHttpHeaders {
 						headers.Add(header.Key)
