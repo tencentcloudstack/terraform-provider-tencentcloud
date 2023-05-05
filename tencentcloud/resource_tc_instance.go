@@ -1223,24 +1223,19 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		d.HasChange("disable_monitor_service") ||
 		d.HasChange("keep_image_login") {
 
-		var updateAttr []string
-
 		request := cvm.NewResetInstanceRequest()
 		request.InstanceId = helper.String(d.Id())
 
 		if v, ok := d.GetOk("image_id"); ok {
-			updateAttr = append(updateAttr, "image_id")
 			request.ImageId = helper.String(v.(string))
 		}
 		if v, ok := d.GetOk("hostname"); ok {
-			updateAttr = append(updateAttr, "hostname")
 			request.HostName = helper.String(v.(string))
 		}
 
 		// enhanced service
 		request.EnhancedService = &cvm.EnhancedService{}
 		if d.HasChange("disable_security_service") {
-			updateAttr = append(updateAttr, "disable_security_service")
 			v := d.Get("disable_security_service")
 			securityService := v.(bool)
 			request.EnhancedService.SecurityService = &cvm.RunSecurityServiceEnabled{
@@ -1249,7 +1244,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		}
 
 		if d.HasChange("disable_monitor_service") {
-			updateAttr = append(updateAttr, "disable_monitor_service")
 			v := d.Get("disable_monitor_service")
 			monitorService := !(v.(bool))
 			request.EnhancedService.MonitorService = &cvm.RunMonitorServiceEnabled{
@@ -1261,20 +1255,13 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		request.LoginSettings = &cvm.LoginSettings{}
 
 		if v, ok := d.GetOk("password"); ok {
-			updateAttr = append(updateAttr, "password")
 			request.LoginSettings.Password = helper.String(v.(string))
 		}
 
 		if v, ok := d.GetOk("key_ids"); ok {
-			updateAttr = append(updateAttr, "key_ids")
 			request.LoginSettings.KeyIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
 		} else if v, ok := d.GetOk("key_name"); ok {
-			updateAttr = append(updateAttr, "key_name")
 			request.LoginSettings.KeyIds = []*string{helper.String(v.(string))}
-		}
-
-		if d.HasChange("keep_image_login") {
-			updateAttr = append(updateAttr, "keep_image_login")
 		}
 
 		if v := d.Get("keep_image_login").(bool); v {
@@ -1480,15 +1467,6 @@ func resourceTencentCloudInstanceUpdate(d *schema.ResourceData, meta interface{}
 		err := cvmService.ModifyVpc(ctx, instanceId, vpcId, subnetId, privateIp)
 		if err != nil {
 			return err
-		}
-		if d.HasChange("vpc_id") {
-
-		}
-		if d.HasChange("subnet_id") {
-
-		}
-		if d.HasChange("private_ip") {
-
 		}
 	}
 

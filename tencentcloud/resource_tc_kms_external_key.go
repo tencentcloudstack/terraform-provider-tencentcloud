@@ -266,12 +266,6 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 			log.Printf("[CRITAL]%s import KMS external key material key failed, reason:%+v", logId, err)
 			return err
 		}
-		if d.HasChange("key_material_base64") {
-
-		}
-		if d.HasChange("valid_to") {
-
-		}
 	}
 
 	var key *kms.KeyMetadata

@@ -330,12 +330,6 @@ func resourceTencentCloudGaapProxyUpdate(d *schema.ResourceData, m interface{}) 
 		if err := gaapService.ModifyProxyConfiguration(ctx, id, bandwidth, concurrent); err != nil {
 			return err
 		}
-		if d.HasChange("bandwidth") {
-
-		}
-		if d.HasChange("concurrent") {
-
-		}
 		//deal with sync delay
 		time.Sleep(time.Duration(10) * time.Second)
 	}

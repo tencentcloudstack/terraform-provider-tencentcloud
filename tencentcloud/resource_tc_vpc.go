@@ -291,13 +291,10 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 		dnsServers  = make([]string, 0, 4)
 		slice       []interface{}
 		isMulticast bool
-		updateAttr  []string
 	)
 
 	old, now := d.GetChange("name")
 	if d.HasChange("name") {
-		updateAttr = append(updateAttr, "name")
-
 		name = now.(string)
 	} else {
 		name = old.(string)
@@ -305,8 +302,6 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	old, now = d.GetChange("dns_servers")
 	if d.HasChange("dns_servers") {
-		updateAttr = append(updateAttr, "dns_servers")
-
 		slice = now.(*schema.Set).List()
 		if len(slice) < 1 {
 			return fmt.Errorf("If dns_servers is set, then len(dns_servers) should be [1:4]")
@@ -326,8 +321,6 @@ func resourceTencentCloudVpcInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	old, now = d.GetChange("is_multicast")
 	if d.HasChange("is_multicast") {
-		updateAttr = append(updateAttr, "is_multicast")
-
 		isMulticast = now.(bool)
 	} else {
 		isMulticast = old.(bool)

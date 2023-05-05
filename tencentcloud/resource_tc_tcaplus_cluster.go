@@ -283,11 +283,8 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-
 	}
-	if d.HasChange("old_password_expire_last") {
 
-	}
 	d.Partial(false)
 
 	return resourceTencentCloudTcaplusClusterRead(d, meta)

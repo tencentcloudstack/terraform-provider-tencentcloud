@@ -229,11 +229,9 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		name        = ""
 		description = ""
 		change      = false
-		changeList  = []string{}
 	)
 	if d.HasChange("name") {
 		name = d.Get("name").(string)
-		changeList = append(changeList, "name")
 		change = true
 	}
 
@@ -244,7 +242,6 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		if description == "" {
 			return fmt.Errorf("can not set description='' ")
 		}
-		changeList = append(changeList, "description")
 		change = true
 	}
 

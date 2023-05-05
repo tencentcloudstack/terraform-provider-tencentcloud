@@ -1001,15 +1001,6 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err := mysqlService.ModifyDBInstanceVipVport(ctx, d.Id(), vpcId, subnetId, intranetPort); err != nil {
 			return err
 		}
-		if d.HasChange("intranet_port") {
-
-		}
-		if d.HasChange("vpc_id") {
-
-		}
-		if d.HasChange("subnet_id") {
-
-		}
 	}
 
 	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") {
@@ -1058,15 +1049,6 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		if err != nil {
 			log.Printf("[CRITAL]%s update mysql  mem_size/volume_size  fail, reason:%s\n ", logId, err.Error())
 			return err
-		}
-		if d.HasChange("mem_size") {
-
-		}
-		if d.HasChange("cpu") {
-
-		}
-		if d.HasChange("volume_size") {
-
 		}
 	}
 

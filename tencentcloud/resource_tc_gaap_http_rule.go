@@ -388,59 +388,32 @@ func resourceTencentCloudGaapHttpRuleUpdate(d *schema.ResourceData, m interface{
 	listenerId := d.Get("listener_id").(string)
 
 	var (
-		path       *string
-		scheduler  *string
-		updateAttr []string
+		path      *string
+		scheduler *string
 	)
-	if d.HasChange("sni_switch") {
-		updateAttr = append(updateAttr, "sni_switch")
-	}
 	sniSwitch := d.Get("sni_switch").(string)
-	if d.HasChange("sni") {
-		updateAttr = append(updateAttr, "sni")
-	}
 	sni := d.Get("sni").(string)
 	if sniSwitch == GAAP_SERVER_NAME_INDICATION_SWITCH_ON && sni == "" {
 		return fmt.Errorf("ServerNameIndication (SNI) is required when the SNI switch is turned on.")
 	}
 	if d.HasChange("path") {
-		updateAttr = append(updateAttr, "path")
 		path = helper.String(d.Get("path").(string))
 	}
 
 	if d.HasChange("scheduler") {
-		updateAttr = append(updateAttr, "scheduler")
 		scheduler = helper.String(d.Get("scheduler").(string))
 	}
 
-	if d.HasChange("health_check") {
-		updateAttr = append(updateAttr, "health_check")
-	}
 	healthCheck := d.Get("health_check").(bool)
 
-	if d.HasChange("interval") {
-		updateAttr = append(updateAttr, "interval")
-	}
 	interval := d.Get("interval").(int)
 
-	if d.HasChange("connect_timeout") {
-		updateAttr = append(updateAttr, "connect_timeout")
-	}
 	connectTimeout := d.Get("connect_timeout").(int)
 
-	if d.HasChange("health_check_path") {
-		updateAttr = append(updateAttr, "health_check_path")
-	}
 	healthCheckPath := d.Get("health_check_path").(string)
 
-	if d.HasChange("health_check_method") {
-		updateAttr = append(updateAttr, "health_check_method")
-	}
 	healthCheckMethod := d.Get("health_check_method").(string)
 
-	if d.HasChange("health_check_status_codes") {
-		updateAttr = append(updateAttr, "health_check_status_codes")
-	}
 	var healthCheckStatusCodes []int
 	if raw, ok := d.GetOk("health_check_status_codes"); ok {
 		statusCodeSet := raw.(*schema.Set)
