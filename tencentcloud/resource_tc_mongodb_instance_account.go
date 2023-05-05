@@ -308,7 +308,6 @@ func resourceTencentCloudMongodbInstanceAccountUpdate(d *schema.ResourceData, me
 			return err
 		}
 
-		d.SetPartial("password")
 	}
 
 	return resourceTencentCloudMongodbInstanceAccountRead(d, meta)

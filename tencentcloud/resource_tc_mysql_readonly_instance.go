@@ -329,7 +329,7 @@ func resourceTencentCloudMysqlReadonlyInstanceUpdate(d *schema.ResourceData, met
 			if err := mysqlService.ModifyAutoRenewFlag(ctx, d.Id(), renewFlag); err != nil {
 				return err
 			}
-			d.SetPartial("auto_renew_flag")
+
 		}
 	}
 	err := mysqlAllInstanceRoleUpdate(ctx, d, meta)

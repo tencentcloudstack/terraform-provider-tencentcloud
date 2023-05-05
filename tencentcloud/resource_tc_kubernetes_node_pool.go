@@ -1394,7 +1394,6 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 			return err
 		}
 
-		d.SetPartial("auto_scaling_config")
 	}
 
 	var capacityHasChanged = false
@@ -1510,11 +1509,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		if err != nil {
 			return err
 		}
-		d.SetPartial("scaling_group_name")
-		d.SetPartial("zones")
-		d.SetPartial("scaling_group_project_id")
-		d.SetPartial("default_cooldown")
-		d.SetPartial("termination_policies")
+
 	}
 
 	if d.HasChange("desired_capacity") && !capacityHasChanged {

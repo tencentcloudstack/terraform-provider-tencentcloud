@@ -217,9 +217,6 @@ func resourceTencentCloudTdmqTopicUpdate(d *schema.ResourceData, meta interface{
 		partitions, remark, clusterId); err != nil {
 		return err
 	}
-	d.SetPartial("partitions")
-	d.SetPartial("remark")
-
 	d.Partial(false)
 	return resourceTencentCloudTdmqTopicRead(d, meta)
 }

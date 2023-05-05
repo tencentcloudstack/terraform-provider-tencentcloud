@@ -228,8 +228,6 @@ func resourceTencentCloudCynosdbReadonlyInstanceUpdate(d *schema.ResourceData, m
 			return errUpdate
 		}
 
-		d.SetPartial("instance_cpu_core")
-		d.SetPartial("instance_memory_size")
 	}
 
 	if d.HasChange("instance_maintain_weekdays") || d.HasChange("instance_maintain_start_time") || d.HasChange("instance_maintain_duration") {
@@ -245,9 +243,6 @@ func resourceTencentCloudCynosdbReadonlyInstanceUpdate(d *schema.ResourceData, m
 			return err
 		}
 
-		d.SetPartial("instance_maintain_weekdays")
-		d.SetPartial("instance_maintain_start_time")
-		d.SetPartial("instance_maintain_duration")
 	}
 
 	d.Partial(false)

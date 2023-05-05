@@ -229,11 +229,9 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		name        = ""
 		description = ""
 		change      = false
-		changeList  = []string{}
 	)
 	if d.HasChange("name") {
 		name = d.Get("name").(string)
-		changeList = append(changeList, "name")
 		change = true
 	}
 
@@ -244,7 +242,6 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		if description == "" {
 			return fmt.Errorf("can not set description='' ")
 		}
-		changeList = append(changeList, "description")
 		change = true
 	}
 
@@ -252,9 +249,6 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 	if change {
 		if err := service.ModifyCcnAttribute(ctx, d.Id(), name, description); err != nil {
 			return err
-		}
-		for _, val := range changeList {
-			d.SetPartial(val)
 		}
 	}
 	// modify band width limit type
@@ -268,7 +262,6 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		}); err != nil {
 			return err
 		}
-		d.SetPartial("bandwidth_limit_type")
 	}
 
 	if d.HasChange("tags") {
@@ -283,7 +276,7 @@ func resourceTencentCloudCcnUpdate(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 	d.Partial(false)
 	return resourceTencentCloudCcnRead(d, meta)

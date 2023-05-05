@@ -162,7 +162,6 @@ func resourceTencentCloudSqlserverAccountUpdate(d *schema.ResourceData, meta int
 			return outErr
 		}
 
-		d.SetPartial("password")
 	}
 
 	//update remark
@@ -179,7 +178,6 @@ func resourceTencentCloudSqlserverAccountUpdate(d *schema.ResourceData, meta int
 			return outErr
 		}
 
-		d.SetPartial("remark")
 	}
 
 	d.Partial(false)

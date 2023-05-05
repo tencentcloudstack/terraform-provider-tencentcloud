@@ -595,7 +595,7 @@ func resourceTencentCloudDayuDdosPolicyUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("name")
+
 	}
 
 	if d.HasChange("watermark_filters") || d.HasChange("white_ips") || d.HasChange("black_ips") || d.HasChange("packet_filters") || d.HasChange("port_filters") || d.HasChange("drop_options") {
@@ -641,12 +641,7 @@ func resourceTencentCloudDayuDdosPolicyUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("watermark_filters")
-		d.SetPartial("white_ips")
-		d.SetPartial("black_ips")
-		d.SetPartial("drop_options")
-		d.SetPartial("port_filters")
-		d.SetPartial("packet_filters")
+
 	}
 
 	d.Partial(false)

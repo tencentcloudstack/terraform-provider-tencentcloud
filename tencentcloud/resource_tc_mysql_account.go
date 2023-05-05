@@ -242,7 +242,6 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 			return err
 		}
 
-		d.SetPartial("description")
 	}
 
 	if d.HasChange("password") {
@@ -272,7 +271,7 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 			log.Printf("[CRITAL]%s modify mysql account password fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
-		d.SetPartial("password")
+
 	}
 
 	d.Partial(false)

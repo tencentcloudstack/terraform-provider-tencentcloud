@@ -333,8 +333,6 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("name")
 	}
 
 	if d.HasChange("internet_charge_type") {
@@ -368,7 +366,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 			if err != nil {
 				return err
 			}
-			d.SetPartial("internet_max_bandwidth_out")
+
 		}
 	}
 
@@ -390,7 +388,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 			log.Printf("[CRITAL]%s update eip tags failed: %+v", logId, err)
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	d.Partial(false)

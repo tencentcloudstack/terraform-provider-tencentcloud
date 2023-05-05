@@ -482,10 +482,6 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 				return err
 			}
 		}
-
-		for _, attr := range attrChange {
-			d.SetPartial(attr)
-		}
 	}
 
 	if d.HasChange("realserver_bind_set") {
@@ -504,7 +500,7 @@ func resourceTencentCloudGaapLayer4ListenerUpdate(d *schema.ResourceData, m inte
 		if err := service.BindLayer4ListenerRealservers(ctx, id, protocol, proxyId, realservers); err != nil {
 			return err
 		}
-		d.SetPartial("realserver_bind_set")
+
 	}
 
 	d.Partial(false)
