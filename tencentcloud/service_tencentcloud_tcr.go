@@ -1384,22 +1384,22 @@ func (me *TCRService) DescribeTcrImagesByFilter(ctx context.Context, param map[s
 
 	for k, v := range param {
 		if k == "registry_id" {
-			request.RegistryId = helper.String(v.(string))
+			request.RegistryId = v.(*string)
 		}
 		if k == "namespace_name" {
-			request.NamespaceName = helper.String(v.(string))
+			request.NamespaceName = v.(*string)
 		}
 		if k == "repository_name" {
-			request.RepositoryName = helper.String(v.(string))
+			request.RepositoryName = v.(*string)
 		}
 		if k == "image_version" {
-			request.ImageVersion = helper.String(v.(string))
+			request.ImageVersion = v.(*string)
 		}
 		if k == "digest" {
-			request.Digest = helper.String(v.(string))
+			request.Digest = v.(*string)
 		}
 		if k == "exact_match" {
-			request.ExactMatch = helper.Bool(v.(bool))
+			request.ExactMatch = v.(*bool)
 		}
 	}
 

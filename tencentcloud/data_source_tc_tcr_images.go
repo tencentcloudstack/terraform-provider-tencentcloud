@@ -129,30 +129,30 @@ func dataSourceTencentCloudTcrImagesRead(d *schema.ResourceData, meta interface{
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("registry_id"); ok {
-		paramMap["RegistryId"] = helper.String(v.(string))
+		paramMap["registry_id"] = helper.String(v.(string))
 		registryId = v.(string)
 	}
 
 	if v, ok := d.GetOk("namespace_name"); ok {
-		paramMap["NamespaceName"] = helper.String(v.(string))
+		paramMap["namespace_name"] = helper.String(v.(string))
 		namespaceName = v.(string)
 	}
 
 	if v, ok := d.GetOk("repository_name"); ok {
-		paramMap["RepositoryName"] = helper.String(v.(string))
+		paramMap["repository_name"] = helper.String(v.(string))
 		repoName = v.(string)
 	}
 
 	if v, ok := d.GetOk("image_version"); ok {
-		paramMap["ImageVersion"] = helper.String(v.(string))
+		paramMap["image_version"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("digest"); ok {
-		paramMap["Digest"] = helper.String(v.(string))
+		paramMap["digest"] = helper.String(v.(string))
 	}
 
 	if v, _ := d.GetOk("exact_match"); v != nil {
-		paramMap["ExactMatch"] = helper.Bool(v.(bool))
+		paramMap["exact_match"] = helper.Bool(v.(bool))
 	}
 
 	service := TCRService{client: meta.(*TencentCloudClient).apiV3Conn}

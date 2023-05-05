@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -15,13 +16,14 @@ func TestAccTencentCloudTcrImageSignatureOperationResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTcrImageSignatureOperation,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_tcr_create_image_signature_operation.image_signature_operation", "id")),
-			},
-			{
-				ResourceName:      "tencentcloud_tcr_create_image_signature_operation.image_signature_operation",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: fmt.Sprintf(testAccTcrImageSignatureOperation, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_create_image_signature_operation.sign_operation", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_create_image_signature_operation.sign_operation", "registry_id", defaultTCRInstanceId),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_create_image_signature_operation.sign_operation", "namespace_name", defaultTCRNamespace),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_create_image_signature_operation.sign_operation", "repository_name", defaultTCRRepoName),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_create_image_signature_operation.sign_operation", "image_version", "v1"),
+				),
 			},
 		},
 	})
@@ -29,10 +31,10 @@ func TestAccTencentCloudTcrImageSignatureOperationResource_basic(t *testing.T) {
 
 const testAccTcrImageSignatureOperation = `
 
-resource "tencentcloud_tcr_create_image_signature_operation" "image_signature_operation" {
-  registry_id = "tcr-xxx"
-  namespace_name = "ns"
-  repository_name = "repo"
+resource "tencentcloud_tcr_create_image_signature_operation" "sign_operation" {
+  registry_id = "%s"
+  namespace_name = "%s" 
+  repository_name = "%s"
   image_version = "v1"
 }
 
