@@ -1462,6 +1462,8 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_cvm_disaster_recover_group_quota":         dataSourceTencentCloudCvmDisasterRecoverGroupQuota(),
 			"tencentcloud_cvm_chc_hosts":                            dataSourceTencentCloudCvmChcHosts(),
 			"tencentcloud_cvm_chc_denied_actions":                   dataSourceTencentCloudCvmChcDeniedActions(),
+			"tencentcloud_api_gateway_api_docs":                     dataSourceTencentCloudAPIGatewayAPIDocs(),
+			"tencentcloud_api_gateway_api_apps":                     dataSourceTencentCloudAPIGatewayAPIApps(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1933,6 +1935,7 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_lighthouse_snapshot":                        resourceTencentCloudLighthouseSnapshot(),
 			"tencentcloud_lighthouse_apply_instance_snapshot":         resourceTencentCloudLighthouseApplyInstanceSnapshot(),
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
+			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 		},
 
 		ConfigureFunc: providerConfigure,

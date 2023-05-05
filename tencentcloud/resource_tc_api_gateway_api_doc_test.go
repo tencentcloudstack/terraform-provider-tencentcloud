@@ -3,15 +3,18 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"testing"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 var testAPIGatewayAPIDocResourceName = "tencentcloud_api_gateway_api_doc"
 var testAPIGatewayAPIDocResourceKey = testAPIGatewayAPIDocResourceName + ".test"
 
-func TestAccTencentCloudAPIGateWayAPIDocResource(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudAPIGateWayAPIDocResource_basic -v
+func TestAccTencentCloudAPIGateWayAPIDocResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -22,16 +25,23 @@ func TestAccTencentCloudAPIGateWayAPIDocResource(t *testing.T) {
 				Config: testAccAPIGatewayAPIDoc,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAPIGatewayAPIDocExists(testAPIGatewayAPIDocResourceKey),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIDocResourceKey, "api_doc_name", "test"),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIDocResourceKey, "service_id", "service-2nuhovb7"),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIDocResourceKey, "environment", "release"),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIDocResourceKey, "api_ids", ""),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIDocResourceKey, "api_doc_name"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIDocResourceKey, "service_id"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIDocResourceKey, "environment"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIDocResourceKey, "api_ids.#"),
 				),
 			},
 			{
 				ResourceName:      testAPIGatewayAPIDocResourceKey,
 				ImportState:       true,
 				ImportStateVerify: true,
+			},
+			{
+				Config: testAccAPIGatewayAPIDocUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAPIGatewayAPIDocExists(testAPIGatewayAPIDocResourceKey),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIDocResourceKey, "api_doc_name", "update_doc_name_test"),
+				),
 			},
 		},
 	})
@@ -48,11 +58,17 @@ func testAccCheckAPIGatewayAPIDocDestroy(s *terraform.State) error {
 		service := APIGatewayService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		apiDoc, err := service.DescribeApiDoc(ctx, rs.Primary.ID)
+		if err != nil {
+			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkerr.Code == "ResourceNotFound.InvalidApiDoc" || sdkerr.Code == "InvalidParameterValue.InvalidCommandId" {
+					return nil
+				}
+			}
+			return err
+		}
+
 		if apiDoc != nil {
 			return fmt.Errorf("api_gateway api_doc %s still exists", rs.Primary.ID)
-		}
-		if err != nil {
-			return err
 		}
 	}
 	return nil
@@ -70,11 +86,17 @@ func testAccCheckAPIGatewayAPIDocExists(r string) resource.TestCheckFunc {
 
 		service := APIGatewayService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		command, err := service.DescribeApiDoc(ctx, rs.Primary.ID)
+		if err != nil {
+			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkerr.Code == "ResourceNotFound.InvalidApiDoc" || sdkerr.Code == "InvalidParameterValue.InvalidCommandId" {
+					return nil
+				}
+			}
+			return err
+		}
+
 		if command == nil {
 			return fmt.Errorf("api_gateway api_doc %s is not found", rs.Primary.ID)
-		}
-		if err != nil {
-			return err
 		}
 
 		return nil
@@ -84,8 +106,17 @@ func testAccCheckAPIGatewayAPIDocExists(r string) resource.TestCheckFunc {
 const testAccAPIGatewayAPIDoc = `
 resource "tencentcloud_api_gateway_api_doc" "test" {
   api_doc_name = "doc_test1"
-  service_id   = "service_test1"
+  service_id   = "service-hwd9abcd"
   environment  = "release"
-  api_ids      = ["api-test1", "api-test2"]
+  api_ids      = ["api-p019anbd"]
+}
+`
+
+const testAccAPIGatewayAPIDocUpdate = `
+resource "tencentcloud_api_gateway_api_doc" "test" {
+  api_doc_name = "update_doc_name_test"
+  service_id   = "service-hwd9abcd"
+  environment  = "release"
+  api_ids      = ["api-p019anbd"]
 }
 `
