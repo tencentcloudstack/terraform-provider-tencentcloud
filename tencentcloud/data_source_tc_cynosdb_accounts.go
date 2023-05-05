@@ -153,7 +153,7 @@ func dataSourceTencentCloudCynosdbAccountsRead(d *schema.ResourceData, meta inte
 		tmpList = append(tmpList, account)
 	}
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("account_set", tmpList)
+	_ = d.Set("account_set", tmpList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

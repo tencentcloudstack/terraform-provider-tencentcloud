@@ -281,7 +281,7 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 	d.SetId(instanceId)
-	d.Set("instance_id", instanceId)
+	_ = d.Set("instance_id", instanceId)
 	var displayStrategy string
 	if v, ok := d.GetOk("display_strategy"); ok {
 		displayStrategy = v.(string)

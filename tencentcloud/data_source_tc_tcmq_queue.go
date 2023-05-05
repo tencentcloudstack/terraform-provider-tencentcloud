@@ -512,7 +512,7 @@ func dataSourceTencentCloudTcmqQueueRead(d *schema.ResourceData, meta interface{
 		result = append(result, queueItem)
 	}
 	d.SetId(helper.DataResourceIdsHash(queueNames))
-	d.Set("queue_list", result)
+	_ = d.Set("queue_list", result)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

@@ -72,7 +72,7 @@ func dataSourceTencentCloudCvmInstanceVncUrlRead(d *schema.ResourceData, meta in
 
 	}
 	d.SetId(instanceId)
-	d.Set("instance_vnc_url", *response.Response.InstanceVncUrl)
+	_ = d.Set("instance_vnc_url", *response.Response.InstanceVncUrl)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

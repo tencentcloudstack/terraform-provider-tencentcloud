@@ -191,7 +191,7 @@ func dataSourceTencentCloudCynosdbClusterParamsRead(d *schema.ResourceData, meta
 		tmpList = append(tmpList, itemMap)
 	}
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("items", tmpList)
+	_ = d.Set("items", tmpList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

@@ -508,7 +508,7 @@ func resourceTencentCloudDayuCCPolicyV2Read(d *schema.ResourceData, meta interfa
 		tmpThreshold["domain"] = threshold.Domain
 		resultThresholds = append(resultThresholds, tmpThreshold)
 	}
-	d.Set("thresholds", resultThresholds)
+	_ = d.Set("thresholds", resultThresholds)
 
 	ccGeoIpPolicys, err := antiddosService.DescribeCcGeoIPBlockConfigList(ctx, business, instanceId)
 	if err != nil {
@@ -526,7 +526,7 @@ func resourceTencentCloudDayuCCPolicyV2Read(d *schema.ResourceData, meta interfa
 		tmpResultCCGeoIpPolicy["region_type"] = *ccGeoIpPolicy.RegionType
 		resultCCGeoIpPolicys = append(resultCCGeoIpPolicys, tmpResultCCGeoIpPolicy)
 	}
-	d.Set("cc_geo_ip_policys", resultCCGeoIpPolicys)
+	_ = d.Set("cc_geo_ip_policys", resultCCGeoIpPolicys)
 
 	ccBlackWhiteIpList, err := antiddosService.DescribeCcBlackWhiteIpList(ctx, business, instanceId)
 	if err != nil {
@@ -543,7 +543,7 @@ func resourceTencentCloudDayuCCPolicyV2Read(d *schema.ResourceData, meta interfa
 		tmpResultCCBlackWhiteIp["type"] = *ccBlackWhiteIp.Type
 		resultCCBlackWhiteIpList = append(resultCCBlackWhiteIpList, tmpResultCCBlackWhiteIp)
 	}
-	d.Set("cc_black_white_ips", resultCCBlackWhiteIpList)
+	_ = d.Set("cc_black_white_ips", resultCCBlackWhiteIpList)
 
 	ccPrecisionPlyList, err := antiddosService.DescribeCCPrecisionPlyList(ctx, business, instanceId)
 	if err != nil {
@@ -569,7 +569,7 @@ func resourceTencentCloudDayuCCPolicyV2Read(d *schema.ResourceData, meta interfa
 		tmpResultCCPrecisionPly["policys"] = policys
 		resultCCPrecisionPlyList = append(resultCCPrecisionPlyList, tmpResultCCPrecisionPly)
 	}
-	d.Set("cc_precision_policys", resultCCPrecisionPlyList)
+	_ = d.Set("cc_precision_policys", resultCCPrecisionPlyList)
 
 	ccLevelList, err := antiddosService.DescribeCCLevelList(ctx, business, instanceId)
 	if err != nil {
@@ -613,7 +613,7 @@ func resourceTencentCloudDayuCCPolicyV2Read(d *schema.ResourceData, meta interfa
 		resultCCReqLimitList = append(resultCCReqLimitList, tmpResultCCReqLimitList)
 	}
 
-	d.Set("cc_precision_req_limits", resultCCReqLimitList)
+	_ = d.Set("cc_precision_req_limits", resultCCReqLimitList)
 	return nil
 }
 

@@ -536,7 +536,7 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroupsRead(d *schema.ResourceDa
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("instance_grp_info_list", tmpList)
+	_ = d.Set("instance_grp_info_list", tmpList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

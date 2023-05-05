@@ -108,7 +108,7 @@ func resourceTencentCloudCbsDiskBackupRollbackOperationRead(d *schema.ResourceDa
 	if err != nil {
 		return err
 	}
-	d.Set("is_rollback_completed", !*disk.Rollbacking)
+	_ = d.Set("is_rollback_completed", !*disk.Rollbacking)
 	return nil
 }
 

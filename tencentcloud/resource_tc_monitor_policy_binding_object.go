@@ -191,7 +191,7 @@ func resourceTencentMonitorPolicyBindingObjectRead(d *schema.ResourceData, meta 
 		policyId       = d.Id()
 	)
 
-	d.Set("policy_id", policyId)
+	_ = d.Set("policy_id", policyId)
 
 	info, err := monitorService.DescribeAlarmPolicyById(ctx, policyId)
 	if err != nil {

@@ -328,7 +328,7 @@ func dataSourceTencentCloudTcmqTopicRead(d *schema.ResourceData, meta interface{
 		result = append(result, topicItem)
 	}
 	d.SetId(helper.DataResourceIdsHash(topicNames))
-	d.Set("topic_list", result)
+	_ = d.Set("topic_list", result)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

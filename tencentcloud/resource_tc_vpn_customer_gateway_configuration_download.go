@@ -150,7 +150,7 @@ func resourceTencentCloudVpnCustomerGatewayConfigurationDownloadCreate(d *schema
 
 	d.SetId(vpnGatewayId + FILED_SP + vpnConnectionId)
 
-	d.Set("customer_gateway_configuration", response.Response.CustomerGatewayConfiguration)
+	_ = d.Set("customer_gateway_configuration", response.Response.CustomerGatewayConfiguration)
 
 	return resourceTencentCloudVpnCustomerGatewayConfigurationDownloadRead(d, meta)
 }

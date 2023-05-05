@@ -99,7 +99,7 @@ func dataSourceTencentCloudCkafkaUsersRead(d *schema.ResourceData, meta interfac
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("user_list", userList)
+	_ = d.Set("user_list", userList)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

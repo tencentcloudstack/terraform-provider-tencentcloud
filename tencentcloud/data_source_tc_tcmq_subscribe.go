@@ -228,7 +228,7 @@ func dataSourceTencentCloudTcmqSubscribeRead(d *schema.ResourceData, meta interf
 	}
 
 	d.SetId(helper.DataResourceIdsHash(subscriptionNames))
-	d.Set("subscription_list", result)
+	_ = d.Set("subscription_list", result)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), result); e != nil {

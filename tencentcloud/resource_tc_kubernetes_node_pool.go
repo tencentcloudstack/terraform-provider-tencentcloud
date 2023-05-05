@@ -1258,7 +1258,7 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		}
 		taints[i] = taint
 	}
-	d.Set("taints", taints)
+	_ = d.Set("taints", taints)
 
 	return nil
 }
@@ -1538,7 +1538,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		if err != nil {
 			return err
 		}
-		d.Set("auto_scaling_config.0.backup_instance_types", instanceTypes)
+		_ = d.Set("auto_scaling_config.0.backup_instance_types", instanceTypes)
 	}
 	d.Partial(false)
 

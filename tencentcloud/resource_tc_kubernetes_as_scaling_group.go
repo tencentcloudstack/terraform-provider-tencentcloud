@@ -732,7 +732,7 @@ func resourceKubernetesAsScalingGroupRead(d *schema.ResourceData, meta interface
 		for _, v := range labels {
 			labelsMap[*v.Name] = *v.Value
 		}
-		d.Set("labels", labelsMap)
+		_ = d.Set("labels", labelsMap)
 		return nil
 	})
 

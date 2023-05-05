@@ -382,7 +382,7 @@ func dataSourceTencentCloudCkafkaInstancesRead(d *schema.ResourceData, meta inte
 		result = append(result, kafkaInstanceDetailMap)
 	}
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("instance_list", result)
+	_ = d.Set("instance_list", result)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

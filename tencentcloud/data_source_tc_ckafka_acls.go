@@ -135,7 +135,7 @@ func dataSourceTencentCloudCkafkaAclsRead(d *schema.ResourceData, meta interface
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("acl_list", aclList)
+	_ = d.Set("acl_list", aclList)
 
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {

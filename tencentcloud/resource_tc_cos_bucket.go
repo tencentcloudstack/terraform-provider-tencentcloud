@@ -985,7 +985,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err := resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx, cosService, d); err != nil {
 			return err
 		}
-		d.Set("acl_body", body)
+		_ = d.Set("acl_body", body)
 	}
 
 	if d.HasChange("cors_rules") {
@@ -1002,7 +1002,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
-		d.Set("origin_pull_rules", rules)
+		_ = d.Set("origin_pull_rules", rules)
 	}
 
 	if d.HasChange("origin_domain_rules") {
@@ -1010,7 +1010,7 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 		if err := resourceTencentCloudCosBucketOriginDomainUpdate(ctx, cosService, d); err != nil {
 			return err
 		}
-		d.Set("origin_domain_rules", rules)
+		_ = d.Set("origin_domain_rules", rules)
 	}
 
 	if d.HasChange("lifecycle_rules") {
