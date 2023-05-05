@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -1178,7 +1177,7 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 
 				if len(rule.OriginParameter.HttpHeader.FollowHttpHeaders) != 0 {
 					headers := schema.NewSet(func(i interface{}) int {
-						return hashcode.String(i.(string))
+						return helper.HashString(i.(string))
 					}, nil)
 					for _, header := range rule.OriginParameter.HttpHeader.FollowHttpHeaders {
 						headers.Add(header.Key)

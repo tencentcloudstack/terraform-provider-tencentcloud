@@ -42,7 +42,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
@@ -75,7 +74,7 @@ func resourceTencentCloudMonitorBindingObject() *schema.Resource {
 						hashMap["dimensions_json"] = vmap["dimensions_json"]
 					}
 					b, _ := json.Marshal(hashMap)
-					return hashcode.String(string(b))
+					return helper.HashString(string(b))
 				},
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
