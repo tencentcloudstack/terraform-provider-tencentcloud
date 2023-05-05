@@ -233,6 +233,40 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Description: "PostgreSQL kernel version number. " +
 					"If it is specified, an instance running kernel DBKernelVersion will be created.",
 			},
+			"db_kernel_version_upgrade_config": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"switch_tag": {
+							Required:    true,
+							Type:        schema.TypeInt,
+							Description: "Specify the switching time after the instance upgrades the kernel version number. Optional value, 0: switch immediately (default value). 1: switch at a specified time. 2: switch within the maintenance time window.",
+						},
+
+						"switch_start_time": {
+							Optional:    true,
+							Type:        schema.TypeString,
+							Description: "Switching start time, time format: HH:MM:SS, for example: 01:00:00. When SwitchTag is 0 or 2, this parameter is invalid.",
+						},
+
+						"switch_end_time": {
+							Optional:    true,
+							Type:        schema.TypeString,
+							Description: "Switch cut-off time, time format: HH:MM:SS, for example: 01:30:00. When SwitchTag is 0 or 2, this parameter is invalid. The time window of SwitchStartTime and SwitchEndTime cannot be less than 30 minutes.",
+						},
+
+						"dry_run": {
+							Optional:    true,
+							Type:        schema.TypeBool,
+							Description: "Whether to perform a pre-check on the operation of upgrading the kernel version number of this instance. Optional value, true: perform a pre-check operation without upgrading the kernel version number, then check items include request parameters, kernel version number compatibility, instance parameters, etc. false: Send a normal request (default value), and upgrade the kernel version number directly after passing the check.",
+						},
+					},
+				},
+				Description: "Configuration when upgrading the db kernel version.",
+			},
 
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -992,6 +1026,51 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		d.SetPartial("zone")
 	}
 
+	if d.HasChange("db_kernel_version") {
+		upgradeVersion := d.Get("db_kernel_version").(string)
+		if dMap, ok := helper.InterfacesHeadMap(d, "db_kernel_version_upgrade_config"); ok {
+			upgradeRequest := postgresql.NewUpgradeDBInstanceKernelVersionRequest()
+			// upgradeResponse:= postgresql.NewUpgradeDBInstanceKernelVersionResponse()
+			upgradeRequest.DBInstanceId = &instanceId
+			upgradeRequest.TargetDBKernelVersion = &upgradeVersion
+
+			if switchTag, ok := dMap["switch_tag"].(int); ok {
+
+				if switchTag == 1 {
+					startTime := dMap["switch_start_time"].(string)
+					endTime := dMap["switch_end_time"].(string)
+					if startTime == "" || endTime == "" {
+						return fmt.Errorf("Need to set the `switch_start_time` and `switch_end_time` when `switch_tag` is set to 1.")
+					}
+					upgradeRequest.SwitchStartTime = &startTime
+					upgradeRequest.SwitchEndTime = &endTime
+				}
+				upgradeRequest.SwitchTag = helper.IntUint64(switchTag)
+			}
+
+			if dryRun, ok := dMap["dry_run"].(bool); ok {
+				upgradeRequest.DryRun = &dryRun
+			}
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().UpgradeDBInstanceKernelVersion(upgradeRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, upgradeRequest.GetAction(), upgradeRequest.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s create dcdb dbInstance failed, reason:%+v", logId, err)
+				return err
+			}
+
+		} else {
+			return fmt.Errorf("Need to set the `db_kernel_version_upgrade_config` when `db_kernel_version` changed.")
+		}
+	}
+
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
@@ -1017,7 +1096,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			paramEntrys["max_standby_streaming_delay"] = strconv.Itoa(v.(int))
 		}
 	}
-	if d.HasChange("db_major_vesion") || d.HasChange("db_major_version") || d.HasChange("db_kernel_version") {
+	if d.HasChange("db_major_vesion") || d.HasChange("db_major_version") {
 		return fmt.Errorf("Not support change db major version or kernel version.")
 	}
 
