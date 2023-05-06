@@ -40,6 +40,16 @@ func UInt64Int64(i uint64) *int64 {
 	return &u
 }
 
+func UInt64Int(i uint64) *int {
+	u := int(i)
+	return &u
+}
+
+func Int64Int(i uint64) *int {
+	u := int(i)
+	return &u
+}
+
 func Strings(strs []string) []*string {
 	if len(strs) == 0 {
 		return nil
