@@ -1817,7 +1817,7 @@ func (me *APIGatewayService) DescribeApiApp(ctx context.Context, apiAppId string
 	}()
 
 	request.Filters = []*apigateway.Filter{
-		&apigateway.Filter{
+		{
 			Name:   helper.String("ApiAppId"),
 			Values: helper.Strings([]string{apiAppId}),
 		},
