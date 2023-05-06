@@ -28,8 +28,8 @@ func TestAccTencentCloudGaapDomainErrorPage_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapDomainErrorPageExists("tencentcloud_gaap_domain_error_page.foo", listenerId, domain, id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_domain_error_page.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(404)), "404"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(503)), "503"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes.*", "404"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes.*", "503"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "body", "bad request"),
 				),
 			},
@@ -53,7 +53,7 @@ func TestAccTencentCloudGaapDomainErrorPage_singleErrorCode(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapDomainErrorPageExists("tencentcloud_gaap_domain_error_page.foo", listenerId, domain, id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_domain_error_page.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(400)), "400"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes.*", "400"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "body", "bad request"),
 				),
 			},
@@ -77,7 +77,7 @@ func TestAccTencentCloudGaapDomainErrorPage_newErrorCode(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapDomainErrorPageExists("tencentcloud_gaap_domain_error_page.foo", listenerId, domain, id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_domain_error_page.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(402)), "402"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes.*", "402"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "body", "bad request"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "new_error_code", "501"),
 				),
@@ -102,10 +102,10 @@ func TestAccTencentCloudGaapDomainErrorPage_clearHeaders(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapDomainErrorPageExists("tencentcloud_gaap_domain_error_page.foo", listenerId, domain, id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_domain_error_page.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(403)), "403"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes.*", "403"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "body", "bad request"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(schema.HashString("Content-Length")), "Content-Length"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(schema.HashString("X-TEST")), "X-TEST"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers.*", "Content-Length"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers.*", "X-TEST"),
 				),
 			},
 		},
@@ -128,7 +128,7 @@ func TestAccTencentCloudGaapDomainErrorPage_setHeaders(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapDomainErrorPageExists("tencentcloud_gaap_domain_error_page.foo", listenerId, domain, id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_domain_error_page.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(405)), "405"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes.*", "405"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "body", "bad request"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "set_headers.X-TEST", "test"),
 				),
@@ -153,8 +153,8 @@ func TestAccTencentCloudGaapDomainErrorPage_full(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckGaapDomainErrorPageExists("tencentcloud_gaap_domain_error_page.foo", listenerId, domain, id),
 					resource.TestCheckResourceAttrSet("tencentcloud_gaap_domain_error_page.foo", "listener_id"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(406)), "406"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes."+strconv.Itoa(schema.HashInt(504)), "504"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes.*", "406"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes.*", "504"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "body", "bad request"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(schema.HashString("Content-Length")), "Content-Length"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(schema.HashString("X-TEST")), "X-TEST"),
