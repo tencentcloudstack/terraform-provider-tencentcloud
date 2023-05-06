@@ -1,6 +1,8 @@
 package result
 
 import (
+	"crypto/md5" //nolint:gosec
+	"fmt"
 	"go/token"
 
 	"golang.org/x/tools/go/packages"
@@ -12,7 +14,7 @@ type Range struct {
 
 type Replacement struct {
 	NeedOnlyDelete bool     // need to delete all lines of the issue without replacement with new lines
-	NewLines       []string // is NeedDelete is false it's the replacement lines
+	NewLines       []string // if NeedDelete is false it's the replacement lines
 	Inline         *InlineFix
 }
 
@@ -25,6 +27,8 @@ type InlineFix struct {
 type Issue struct {
 	FromLinter string
 	Text       string
+
+	Severity string
 
 	// Source lines of a code with the issue to show
 	SourceLines []string
@@ -75,4 +79,20 @@ func (i *Issue) GetLineRange() Range {
 	}
 
 	return *i.LineRange
+}
+
+func (i *Issue) Description() string {
+	return fmt.Sprintf("%s: %s", i.FromLinter, i.Text)
+}
+
+func (i *Issue) Fingerprint() string {
+	firstLine := ""
+	if len(i.SourceLines) > 0 {
+		firstLine = i.SourceLines[0]
+	}
+
+	hash := md5.New() //nolint:gosec
+	_, _ = fmt.Fprintf(hash, "%s%s%s", i.Pos.Filename, i.Text, firstLine)
+
+	return fmt.Sprintf("%X", hash.Sum(nil))
 }

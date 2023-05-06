@@ -40,11 +40,10 @@ func (r *badDefer) Match(n ast.Node, c *gosec.Context) (*gosec.Issue, error) {
 		for _, deferTyp := range r.types {
 			if typ, method, err := gosec.GetCallInfo(deferStmt.Call, c); err == nil {
 				if normalize(typ) == deferTyp.typ && contains(deferTyp.methods, method) {
-					return gosec.NewIssue(c, n, r.ID(), fmt.Sprintf(r.What, typ, method), r.Severity, r.Confidence), nil
+					return gosec.NewIssue(c, n, r.ID(), fmt.Sprintf(r.What, method, typ), r.Severity, r.Confidence), nil
 				}
 			}
 		}
-
 	}
 
 	return nil, nil
@@ -56,6 +55,34 @@ func NewDeferredClosing(id string, conf gosec.Config) (gosec.Rule, []ast.Node) {
 		types: []deferType{
 			{
 				typ:     "os.File",
+				methods: []string{"Close"},
+			},
+			{
+				typ:     "io.ReadCloser",
+				methods: []string{"Close"},
+			},
+			{
+				typ:     "io.WriteCloser",
+				methods: []string{"Close"},
+			},
+			{
+				typ:     "io.ReadWriteCloser",
+				methods: []string{"Close"},
+			},
+			{
+				typ:     "io.ReadSeekCloser",
+				methods: []string{"Close"},
+			},
+			{
+				typ:     "io.Closer",
+				methods: []string{"Close"},
+			},
+			{
+				typ:     "net.Conn",
+				methods: []string{"Close"},
+			},
+			{
+				typ:     "net.Listener",
 				methods: []string{"Close"},
 			},
 		},

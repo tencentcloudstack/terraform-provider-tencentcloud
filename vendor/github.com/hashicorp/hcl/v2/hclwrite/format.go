@@ -119,7 +119,7 @@ func formatSpaces(lines []formatLine) {
 			if i < (len(line.lead) - 1) {
 				after = line.lead[i+1]
 			} else {
-				after = nilToken
+				continue
 			}
 			if spaceAfterToken(token, before, after) {
 				after.SpacesBefore = 1
@@ -143,7 +143,7 @@ func formatSpaces(lines []formatLine) {
 			if i < (len(line.assign) - 1) {
 				after = line.assign[i+1]
 			} else {
-				after = nilToken
+				continue
 			}
 			if spaceAfterToken(token, before, after) {
 				after.SpacesBefore = 1
@@ -261,6 +261,10 @@ func spaceAfterToken(subject, before, after *Token) bool {
 		return true
 
 	case after.Type == hclsyntax.TokenOBrack && (subject.Type == hclsyntax.TokenIdent || subject.Type == hclsyntax.TokenNumberLit || tokenBracketChange(subject) < 0):
+		return false
+
+	case subject.Type == hclsyntax.TokenBang:
+		// No space after a bang
 		return false
 
 	case subject.Type == hclsyntax.TokenMinus:

@@ -2,46 +2,65 @@ GIT_TAG?= $(shell git describe --always --tags)
 BIN = gosec
 FMT_CMD = $(gofmt -s -l -w $(find . -type f -name '*.go' -not -path './vendor/*') | tee /dev/stderr)
 IMAGE_REPO = securego
-BUILDFLAGS := '-w -s'
+DATE_FMT=+%Y-%m-%d
+ifdef SOURCE_DATE_EPOCH
+    BUILD_DATE ?= $(shell date -u -d "@$(SOURCE_DATE_EPOCH)" "$(DATE_FMT)" 2>/dev/null || date -u -r "$(SOURCE_DATE_EPOCH)" "$(DATE_FMT)" 2>/dev/null || date -u "$(DATE_FMT)")
+else
+    BUILD_DATE ?= $(shell date "$(DATE_FMT)")
+endif
+BUILDFLAGS := "-w -s -X 'main.Version=$(GIT_TAG)' -X 'main.GitTag=$(GIT_TAG)' -X 'main.BuildDate=$(BUILD_DATE)'"
 CGO_ENABLED = 0
 GO := GO111MODULE=on go
 GO_NOMOD :=GO111MODULE=off go
 GOPATH ?= $(shell $(GO) env GOPATH)
 GOBIN ?= $(GOPATH)/bin
-GOLINT ?= $(GOBIN)/golint
 GOSEC ?= $(GOBIN)/gosec
 GINKGO ?= $(GOBIN)/ginkgo
-GO_VERSION = 1.14
+GO_MINOR_VERSION = $(shell $(GO) version | cut -c 14- | cut -d' ' -f1 | cut -d'.' -f2)
+GOVULN_MIN_VERSION = 17
+GO_VERSION = 1.20
 
 default:
 	$(MAKE) build
 
 install-test-deps:
-	$(GO_NOMOD) get -u github.com/onsi/ginkgo/ginkgo
+	go install github.com/onsi/ginkgo/v2/ginkgo@latest
 	$(GO_NOMOD) get -u golang.org/x/crypto/ssh
 	$(GO_NOMOD) get -u github.com/lib/pq
 
-test: install-test-deps build fmt lint sec
-	$(GINKGO) -r -v
+install-govulncheck:
+	@if [ $(GO_MINOR_VERSION) -gt $(GOVULN_MIN_VERSION) ]; then \
+		go install golang.org/x/vuln/cmd/govulncheck@latest; \
+	fi
+
+test: install-test-deps build fmt vet sec govulncheck
+	$(GINKGO) -v --fail-fast
 
 fmt:
 	@echo "FORMATTING"
 	@FORMATTED=`$(GO) fmt ./...`
-	@([[ ! -z "$(FORMATTED)" ]] && printf "Fixed unformatted files:\n$(FORMATTED)") || true
+	@([ ! -z "$(FORMATTED)" ] && printf "Fixed unformatted files:\n$(FORMATTED)") || true
 
-lint:
-	@echo "LINTING"
-	$(GO_NOMOD) get -u golang.org/x/lint/golint
-	$(GOLINT) -set_exit_status ./...
+vet:
 	@echo "VETTING"
 	$(GO) vet ./...
+
+golangci:
+	@echo "LINTING: golangci-lint"
+	golangci-lint run
 
 sec:
 	@echo "SECURITY SCANNING"
 	./$(BIN) ./...
 
+govulncheck: install-govulncheck
+	@echo "CHECKING VULNERABILITIES"
+	@if [ $(GO_MINOR_VERSION) -gt $(GOVULN_MIN_VERSION) ]; then \
+		govulncheck ./...; \
+	fi
+
 test-coverage: install-test-deps
-	go test -race -coverprofile=coverage.txt -covermode=atomic
+	go test -race -v -count=1 -coverprofile=coverage.out ./...
 
 build:
 	go build -o $(BIN) ./cmd/gosec/
@@ -55,7 +74,7 @@ release:
 	goreleaser release
 
 build-linux:
-	CGO_ENABLED=$(CGO_ENABLED) GOOS=linux GOARCH=amd64 go build -ldflags $(BUILDFLAGS) -o $(BIN) ./cmd/gosec/
+	CGO_ENABLED=$(CGO_ENABLED) GOOS=linux GOARCH=amd64 go build -ldflags=$(BUILDFLAGS) -o $(BIN) ./cmd/gosec/
 
 image:
 	@echo "Building the Docker image..."
