@@ -90,8 +90,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -1076,11 +1076,6 @@ func resourceTencentcloudEKSContainerInstanceUpdate(d *schema.ResourceData, meta
 		updateAttrs = append(updateAttrs, "image_registry_credential")
 		request.ImageRegistryCredentials = getImageRegistryCredentials(d.Get("image_registry_credential").([]interface{}))
 	}
-
-	for _, attr := range updateAttrs {
-		d.SetPartial(attr)
-	}
-
 	if len(updateAttrs) > 0 {
 		err := service.UpdateEksContainerInstances(ctx, request)
 		if err != nil {

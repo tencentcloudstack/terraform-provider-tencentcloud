@@ -54,8 +54,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -815,7 +815,7 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 				return err
 			}
 		}
-		d.SetPartial("pre_limit")
+
 	}
 
 	if d.HasChange("release_limit") {
@@ -828,7 +828,7 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 				return err
 			}
 		}
-		d.SetPartial("release_limit")
+
 	}
 
 	if d.HasChange("test_limit") {
@@ -841,7 +841,7 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 				return err
 			}
 		}
-		d.SetPartial("test_limit")
+
 	}
 	d.Partial(false)
 	return resourceTencentCloudAPIGatewayAPIRead(d, meta)

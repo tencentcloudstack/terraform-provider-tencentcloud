@@ -450,8 +450,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -2622,7 +2622,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err := service.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	var (
@@ -2656,7 +2656,6 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 			return err
 		}
 
-		d.SetPartial("cluster_intranet")
 	}
 
 	if d.HasChange("cluster_internet") {
@@ -2789,7 +2788,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("node_pool_global_config")
+
 	}
 
 	if d.HasChange("auth_options") {
@@ -2804,7 +2803,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err != nil {
 			return err
 		}
-		d.SetPartial("auth_options")
+
 	}
 
 	if d.HasChange("deletion_protection") {
@@ -2812,7 +2811,7 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 		if err := tkeService.ModifyDeletionProtection(ctx, id, enable); err != nil {
 			return err
 		}
-		d.SetPartial("deletion_protection")
+
 	}
 
 	if d.HasChange("acquire_cluster_admin_role") {

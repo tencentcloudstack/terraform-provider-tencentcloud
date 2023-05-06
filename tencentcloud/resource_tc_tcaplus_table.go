@@ -75,8 +75,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceTencentCloudTcaplusTable() *schema.Resource {
@@ -276,7 +276,6 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 		if err != nil {
 			return err
 		}
-		d.SetPartial("description")
 	}
 
 	//idl_id
@@ -320,12 +319,6 @@ func resourceTencentCloudTcaplusTableUpdate(d *schema.ResourceData, meta interfa
 
 		if err != nil {
 			return err
-		}
-
-		for _, key := range []string{"idl_id", "table_name", "table_idl_type"} {
-			if d.HasChange(key) {
-				d.SetPartial(key)
-			}
 		}
 	}
 

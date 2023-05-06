@@ -15,7 +15,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func dataSourceTencentCynosdbZoneConfig() *schema.Resource {
@@ -129,7 +129,7 @@ func dataSourceTencentCynosdbZoneConfigRead(d *schema.ResourceData, meta interfa
 
 	id := "cynosdb_zoneconfig_" + region
 	d.SetId(id)
-	d.Set("list", result)
+	_ = d.Set("list", result)
 
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 

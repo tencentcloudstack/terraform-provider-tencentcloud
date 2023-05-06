@@ -33,8 +33,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -238,8 +238,6 @@ func resourceTencentCloudSsmSecretVersionUpdate(d *schema.ResourceData, meta int
 				log.Printf("[CRITAL]%s modify SSM secret content failed, reason:%+v", logId, err)
 				return err
 			}
-			d.SetPartial("secret_binary")
-			d.SetPartial("secret_string")
 		}
 
 		d.Partial(false)

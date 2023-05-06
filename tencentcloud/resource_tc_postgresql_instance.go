@@ -152,8 +152,8 @@ import (
 
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -827,7 +827,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if checkErr != nil {
 			return checkErr
 		}
-		d.SetPartial("name")
+
 	}
 
 	// upgrade storage and memory size
@@ -861,8 +861,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if checkErr != nil {
 			return checkErr
 		}
-		d.SetPartial("memory")
-		d.SetPartial("storage")
+
 	}
 
 	// update project id
@@ -884,7 +883,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if checkErr != nil {
 			return checkErr
 		}
-		d.SetPartial("project_id")
+
 	}
 
 	// update public access
@@ -908,7 +907,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if checkErr != nil {
 			return checkErr
 		}
-		d.SetPartial("public_access_switch")
+
 	}
 
 	// update root password
@@ -929,7 +928,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if checkErr != nil {
 			return checkErr
 		}
-		d.SetPartial("root_password")
+
 	}
 
 	if d.HasChange("security_groups") {
@@ -945,7 +944,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if err != nil {
 			return err
 		}
-		d.SetPartial("security_groups")
+
 	}
 
 	if d.HasChange("backup_plan") {
@@ -1023,7 +1022,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 	if d.HasChange("zone") {
 		log.Printf("[WARN] argument `zone` modified, skip process")
-		d.SetPartial("zone")
+
 	}
 
 	if d.HasChange("db_kernel_version") {
@@ -1083,7 +1082,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 	paramEntrys := make(map[string]string)
 	if d.HasChange("max_standby_archive_delay") {
@@ -1113,9 +1112,6 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		})
 		if outErr != nil {
 			return outErr
-		}
-		for key := range paramEntrys {
-			d.SetPartial(key)
 		}
 		// 10s is required to synchronize the data(`DescribeParamsEvent`).
 		time.Sleep(10 * time.Second)

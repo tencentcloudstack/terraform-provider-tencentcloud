@@ -15,8 +15,8 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -228,7 +228,7 @@ func dataSourceTencentCloudTcmqSubscribeRead(d *schema.ResourceData, meta interf
 	}
 
 	d.SetId(helper.DataResourceIdsHash(subscriptionNames))
-	d.Set("subscription_list", result)
+	_ = d.Set("subscription_list", result)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), result); e != nil {

@@ -27,8 +27,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -333,8 +333,6 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 		if err != nil {
 			return err
 		}
-
-		d.SetPartial("name")
 	}
 
 	if d.HasChange("internet_charge_type") {
@@ -368,7 +366,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 			if err != nil {
 				return err
 			}
-			d.SetPartial("internet_max_bandwidth_out")
+
 		}
 	}
 
@@ -390,7 +388,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 			log.Printf("[CRITAL]%s update eip tags failed: %+v", logId, err)
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 
 	d.Partial(false)

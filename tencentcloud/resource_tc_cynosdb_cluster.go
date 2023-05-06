@@ -67,8 +67,8 @@ import (
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -580,8 +580,6 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return errUpdate
 		}
 
-		d.SetPartial("instance_cpu_core")
-		d.SetPartial("instance_memory_size")
 	}
 
 	if d.HasChange("instance_maintain_weekdays") || d.HasChange("instance_maintain_start_time") || d.HasChange("instance_maintain_duration") {
@@ -597,9 +595,6 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return err
 		}
 
-		d.SetPartial("instance_maintain_weekdays")
-		d.SetPartial("instance_maintain_start_time")
-		d.SetPartial("instance_maintain_duration")
 	}
 
 	// update param
@@ -667,7 +662,6 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return resource.NonRetryableError(err)
 		})
 
-		d.SetPartial("param_items")
 	}
 
 	if d.HasChange("prarm_template_id") {
@@ -684,7 +678,6 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	// update sg

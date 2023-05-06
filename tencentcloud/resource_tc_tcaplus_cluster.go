@@ -33,8 +33,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
@@ -259,7 +259,6 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("cluster_name")
 	}
 
 	if d.HasChange("password") {
@@ -284,11 +283,8 @@ func resourceTencentCloudTcaplusClusterUpdate(d *schema.ResourceData, meta inter
 		if err != nil {
 			return err
 		}
-		d.SetPartial("password")
 	}
-	if d.HasChange("old_password_expire_last") {
-		d.SetPartial("old_password_expire_last")
-	}
+
 	d.Partial(false)
 
 	return resourceTencentCloudTcaplusClusterRead(d, meta)
