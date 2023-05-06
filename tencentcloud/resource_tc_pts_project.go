@@ -27,6 +27,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -242,7 +243,7 @@ func resourceTencentCloudPtsProjectRead(d *schema.ResourceData, meta interface{}
 	}
 
 	if project.Status != nil {
-		_ = d.Set("status", project.Status)
+		_ = d.Set("status", strconv.FormatInt(*project.Status, 10))
 	}
 
 	return nil
