@@ -320,7 +320,7 @@ func resourceTencentCloudKmsExternalKeyUpdate(d *schema.ResourceData, meta inter
 
 	d.Partial(false)
 
-	return resourceTencentCloudKmsKeyRead(d, meta)
+	return resourceTencentCloudKmsExternalKeyRead(d, meta)
 }
 
 func resourceTencentCloudKmsExternalKeyDelete(d *schema.ResourceData, meta interface{}) error {
