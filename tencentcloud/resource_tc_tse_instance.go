@@ -143,7 +143,7 @@ func resourceTencentCloudTseInstance() *schema.Resource {
 			"engine_product_version": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "engine product version. Reference value:- `STANDARD`: Standard editionEngine versions and optional specifications and number of nodes::apollo - STANDARD versionspec list:1C2G, 2C4G, 4C8G, 8C16G, 16C32Gnode num:1, 2, 3, 4, 5; eureka - STANDARD versionspec list:1C2G, 2C4G, 4C8G, 8C16G, 16C32Gnode num:3, 4, 5; polarismesh - STANDARD versionspec list:NUM50, NUM100, NUM200, NUM500, NUM1000, NUM5000, NUM10000, NUM50000.",
+				Description: "Engine product version. Reference value: `Nacos`: `TRIAL`: Development version, optional node num: `1`, optional spec list: `1C1G`; `STANDARD`: Standard versions, optional node num: `3`, `5`, `7`, optional spec list: `1C2G`, `2C4G`, `4C8G`, `8C16G`, `16C32G`. `Zookeeper`: `TRIAL`: Development version, optional node num: `1`, optional spec list: `1C1G`; `STANDARD`: Standard versions, optional node num: `3`, `5`, `7`, optional spec list: `1C2G`, `2C4G`, `4C8G`, `8C16G`, `16C32G`; `PROFESSIONAL`: professional versions, optional node num: `3`, `5`, `7`, optional spec list: `1C2G`, `2C4G`, `4C8G`, `8C16G`, `16C32G`. `Polarismesh`: `BASE`: Base version, optional node num: `1`, optional spec list: `NUM50`; `PROFESSIONAL`: Enterprise versions, optional node num: `2`, `3`, optional spec list: `NUM50`, `NUM100`, `NUM200`, `NUM500`, `NUM1000`, `NUM5000`, `NUM10000`, `NUM50000`.",
 			},
 
 			"engine_region": {
