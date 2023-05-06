@@ -1175,7 +1175,6 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	}
 	// computed
 	_ = d.Set("create_time", instance.CreateTime)
-	_ = d.Set("status", instance.DBInstanceStatus)
 	_ = d.Set("memory", instance.DBInstanceMemory)
 	_ = d.Set("storage", instance.DBInstanceStorage)
 
