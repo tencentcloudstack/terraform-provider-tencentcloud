@@ -549,7 +549,7 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 	_ = d.Set("vpc_id", instance.UniqVpcId)
 	_ = d.Set("subnet_id", instance.UniqSubnetId)
 	_ = d.Set("name", instance.Name)
-	_ = d.Set("charge_type", instance.PayMode)
+	_ = d.Set("charge_type", helper.Int64ToStr(*instance.PayMode))
 
 	if int(*instance.PayMode) == 1 {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)
