@@ -93,6 +93,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
@@ -201,7 +203,7 @@ func resourceTencentCloudClbTGAttachmentInstanceRead(d *schema.ResourceData, met
 		if *tgInstance.Port == port {
 			_ = d.Set("target_group_id", idSplit[0])
 			_ = d.Set("bind_ip", idSplit[1])
-			_ = d.Set("port", idSplit[2])
+			_ = d.Set("port", helper.StrToInt64(idSplit[2]))
 			return nil
 		}
 	}

@@ -649,9 +649,9 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	}
 
 	_ = d.Set("load_balancer_pass_to_target", instance.LoadBalancerPassToTarget)
-	_ = d.Set("master_zone_id", instance.MasterZone)
-	_ = d.Set("zone_id", instance.MasterZone)
-	_ = d.Set("slave_zone_id", instance.MasterZone)
+	//_ = d.Set("master_zone_id", instance.MasterZone.ZoneId)
+	//_ = d.Set("zone_id", instance.Zones)
+	//_ = d.Set("slave_zone_id", instance.MasterZone)
 	_ = d.Set("log_set_id", instance.LogSetId)
 	_ = d.Set("log_topic_id", instance.LogTopicId)
 
