@@ -512,7 +512,7 @@ func getContainerDataInterface(resContainers []*tke.Container, isInit bool) []in
 					probe["http_get_path"] = item.ReadinessProbe.HttpGet.Path
 				}
 				if item.ReadinessProbe.TcpSocket != nil {
-					probe["tcp_socket_port"] = item.ReadinessProbe.TcpSocket
+					probe["tcp_socket_port"] = item.ReadinessProbe.TcpSocket.Port
 				}
 				probeRaw = append(probeRaw, probe)
 				container["readiness_probe"] = probeRaw
