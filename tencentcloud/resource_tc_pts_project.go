@@ -243,7 +243,7 @@ func resourceTencentCloudPtsProjectRead(d *schema.ResourceData, meta interface{}
 	}
 
 	if project.Status != nil {
-		_ = d.Set("status", strconv.FormatInt(*project.Status,10))
+		_ = d.Set("status", strconv.FormatInt(*project.Status, 10))
 	}
 
 	return nil
