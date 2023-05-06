@@ -429,10 +429,7 @@ func resourceTencentCloudLighthouseInstanceRead(d *schema.ResourceData, meta int
 	}
 
 	if instance.InstanceChargeType != nil {
-		instanceChargePrepaidMap := map[string]interface{}{
-			"renew_flag": instance.RenewFlag,
-		}
-		_ = d.Set("instance_charge_prepaid", []interface{}{instanceChargePrepaidMap})
+		_ = d.Set("renew_flag", instance.RenewFlag)
 	}
 
 	if instance.InstanceName != nil {
