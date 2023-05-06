@@ -65,6 +65,19 @@ func decodeBodyToStruct(body hcl.Body, ctx *hcl.EvalContext, val reflect.Value) 
 
 	tags := getFieldTags(val.Type())
 
+	if tags.Body != nil {
+		fieldIdx := *tags.Body
+		field := val.Type().Field(fieldIdx)
+		fieldV := val.Field(fieldIdx)
+		switch {
+		case bodyType.AssignableTo(field.Type):
+			fieldV.Set(reflect.ValueOf(body))
+
+		default:
+			diags = append(diags, decodeBodyToValue(body, ctx, fieldV)...)
+		}
+	}
+
 	if tags.Remain != nil {
 		fieldIdx := *tags.Remain
 		field := val.Type().Field(fieldIdx)
@@ -185,6 +198,9 @@ func decodeBodyToStruct(body hcl.Body, ctx *hcl.EvalContext, val reflect.Value) 
 					diags = append(diags, decodeBlockToValue(block, ctx, v.Elem())...)
 					sli.Index(i).Set(v)
 				} else {
+					if i >= sli.Len() {
+						sli = reflect.Append(sli, reflect.Indirect(reflect.New(ty)))
+					}
 					diags = append(diags, decodeBlockToValue(block, ctx, sli.Index(i))...)
 				}
 			}
@@ -242,32 +258,14 @@ func decodeBodyToMap(body hcl.Body, ctx *hcl.EvalContext, v reflect.Value) hcl.D
 }
 
 func decodeBlockToValue(block *hcl.Block, ctx *hcl.EvalContext, v reflect.Value) hcl.Diagnostics {
-	var diags hcl.Diagnostics
+	diags := decodeBodyToValue(block.Body, ctx, v)
 
-	ty := v.Type()
-
-	switch {
-	case blockType.AssignableTo(ty):
-		v.Elem().Set(reflect.ValueOf(block))
-	case bodyType.AssignableTo(ty):
-		v.Elem().Set(reflect.ValueOf(block.Body))
-	case attrsType.AssignableTo(ty):
-		attrs, attrsDiags := block.Body.JustAttributes()
-		if len(attrsDiags) > 0 {
-			diags = append(diags, attrsDiags...)
+	if len(block.Labels) > 0 {
+		blockTags := getFieldTags(v.Type())
+		for li, lv := range block.Labels {
+			lfieldIdx := blockTags.Labels[li].FieldIndex
+			v.Field(lfieldIdx).Set(reflect.ValueOf(lv))
 		}
-		v.Elem().Set(reflect.ValueOf(attrs))
-	default:
-		diags = append(diags, decodeBodyToValue(block.Body, ctx, v)...)
-
-		if len(block.Labels) > 0 {
-			blockTags := getFieldTags(ty)
-			for li, lv := range block.Labels {
-				lfieldIdx := blockTags.Labels[li].FieldIndex
-				v.Field(lfieldIdx).Set(reflect.ValueOf(lv))
-			}
-		}
-
 	}
 
 	return diags

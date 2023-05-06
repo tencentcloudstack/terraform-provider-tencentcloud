@@ -21,18 +21,7 @@ func inspectComparision(pass *analysis.Pass, n ast.Node) bool { // nolint: unpar
 		return true
 	}
 
-	// check that both left and right hand side are not nil
-	if pass.TypesInfo.Types[be.X].IsNil() || pass.TypesInfo.Types[be.Y].IsNil() {
-		return true
-	}
-
-	// check that both left and right hand side are not io.EOF
-	if isEOF(be.X, pass.TypesInfo) || isEOF(be.Y, pass.TypesInfo) {
-		return true
-	}
-
-	// check that both left and right hand side are errors
-	if !isError(be.X, pass.TypesInfo) && !isError(be.Y, pass.TypesInfo) {
+	if !areBothErrors(be.X, be.Y, pass.TypesInfo) {
 		return true
 	}
 
@@ -43,12 +32,12 @@ func inspectComparision(pass *analysis.Pass, n ast.Node) bool { // nolint: unpar
 		negate = "!"
 	}
 
-	newExpr := fmt.Sprintf("%s%s.Is(%s, %s)", negate, "errors", be.X, be.Y)
+	newExpr := fmt.Sprintf("%s%s.Is(%s, %s)", negate, "errors", rawString(be.X), rawString(be.Y))
 
 	pass.Report(
 		analysis.Diagnostic{
 			Pos:     be.Pos(),
-			Message: fmt.Sprintf("do not compare errors directly, use errors.Is() instead: %q", oldExpr),
+			Message: fmt.Sprintf("do not compare errors directly %q, use %q instead", oldExpr, newExpr),
 			SuggestedFixes: []analysis.SuggestedFix{
 				{
 					Message: fmt.Sprintf("should replace %q with %q", oldExpr, newExpr),
@@ -99,5 +88,36 @@ func asImportedName(ex ast.Expr, info *types.Info) (string, bool) {
 		return "", false
 	}
 
-	return ep.Imported().Name(), true
+	return ep.Imported().Path(), true
+}
+
+func areBothErrors(x, y ast.Expr, typesInfo *types.Info) bool {
+	// check that both left and right hand side are not nil
+	if typesInfo.Types[x].IsNil() || typesInfo.Types[y].IsNil() {
+		return false
+	}
+
+	// check that both left and right hand side are not io.EOF
+	if isEOF(x, typesInfo) || isEOF(y, typesInfo) {
+		return false
+	}
+
+	// check that both left and right hand side are errors
+	if !isError(x, typesInfo) && !isError(y, typesInfo) {
+		return false
+	}
+
+	return true
+}
+
+func rawString(x ast.Expr) string {
+	switch t := x.(type) {
+	case *ast.Ident:
+		return t.Name
+	case *ast.SelectorExpr:
+		return fmt.Sprintf("%s.%s", rawString(t.X), t.Sel.Name)
+	case *ast.CallExpr:
+		return fmt.Sprintf("%s()", rawString(t.Fun))
+	}
+	return fmt.Sprintf("%s", x)
 }
