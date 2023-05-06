@@ -1005,3 +1005,12 @@ variable "lighthouse_snapshot_id" {
   default = "` + defaultLighthouseSnapshotId + `"
 }
 `
+
+// TSE
+const (
+	defaultEngineResourceSpec = "spec-qvj6k7t4q"
+	defaultTseVpcId           = "vpc-4owdpnwr"
+	defaultTseSubnetId        = "subnet-dwj7ipnc"
+)
+
+// End of TSE
