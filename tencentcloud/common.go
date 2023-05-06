@@ -127,6 +127,29 @@ func parseTimeFromCommonLayout(t *string) time.Time {
 	return result
 }
 
+func monthBetweenTwoDates(start, end string) int {
+	startTime, err := time.Parse(time.RFC3339, start)
+	if err != nil {
+		panic(err)
+	}
+	endTime, err := time.Parse(time.RFC3339, end)
+	if err != nil {
+		panic(err)
+	}
+	m := 0
+	month := startTime.Month()
+	for startTime.Before(endTime) {
+		startTime = startTime.Add(time.Hour * 24)
+		nextMonth := startTime.Month()
+		if nextMonth != month {
+			m++
+		}
+		month = nextMonth
+	}
+
+	return m
+}
+
 // getLogId get logId for trace, return a new logId if ctx is nil
 func getLogId(ctx context.Context) string {
 	if ctx != nil {

@@ -328,8 +328,8 @@ func resourceTencentCloudTdcpgClusterRead(d *schema.ResourceData, meta interface
 		_ = d.Set("zone", cluster.Zone)
 	}
 
-	if cluster.PayPeriodEndTime != nil {
-		_ = d.Set("period", cluster.PayPeriodEndTime)
+	if cluster.PayPeriodEndTime != nil && cluster.CreateTime != nil && *cluster.PayMode == "PREPAID" {
+		_ = d.Set("period", monthBetweenTwoDates(*cluster.CreateTime, *cluster.PayPeriodEndTime))
 	}
 
 	if cluster.StorageLimit != nil {

@@ -350,7 +350,7 @@ func resourceTencentCloudTsfApplicationRead(d *schema.ResourceData, meta interfa
 					portsList = append(portsList, portsMap)
 				}
 
-				serviceConfigListMap["ports"] = []interface{}{portsList}
+				serviceConfigListMap["ports"] = portsList
 			}
 
 			if serviceConfigList.HealthCheck != nil {
