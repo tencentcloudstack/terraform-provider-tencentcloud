@@ -29,10 +29,10 @@ func TestAccTencentCloudMysqlAccountPrivilegeResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "database_names.#", "1"),
 
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.#", "4"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.1274211008", "SELECT"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.2552575352", "UPDATE"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.3318521589", "INSERT"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.974290055", "DELETE"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.*", "SELECT"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.*", "UPDATE"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.*", "INSERT"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.*", "DELETE"),
 				),
 			},
 			{
@@ -44,7 +44,7 @@ func TestAccTencentCloudMysqlAccountPrivilegeResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "database_names.#", "1"),
 
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.443223901", "TRIGGER"),
+					resource.TestCheckTypeSetElemAttr("tencentcloud_mysql_account_privilege.mysql_account_privilege", "privileges.*", "TRIGGER"),
 				),
 			},
 		},
