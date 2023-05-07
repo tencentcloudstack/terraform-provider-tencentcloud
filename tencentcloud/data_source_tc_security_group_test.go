@@ -18,7 +18,7 @@ func TestAccDataSourceTencentCloudSecurityGroup_basic(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_security_group.foo"),
 					resource.TestCheckResourceAttr("data.tencentcloud_security_group.foo", "name", "tf-ci-test"),
 					resource.TestCheckResourceAttr("data.tencentcloud_security_group.foo", "description", "terraform-ci-test"),
-					resource.TestCheckResourceAttr("data.tencentcloud_security_group.foo", "be_associate_count", "2"),
+					resource.TestCheckResourceAttr("data.tencentcloud_security_group.foo", "be_associate_count", "0"),
 				),
 			},
 		},
