@@ -89,6 +89,8 @@ API GateWay
 	tencentcloud_api_gateway_customer_domains
 	tencentcloud_api_gateway_usage_plan_environments
 	tencentcloud_api_gateway_api_keys
+	tencentcloud_api_gateway_api_docs
+	tencentcloud_api_gateway_api_apps
 
   Resource
   	tencentcloud_api_gateway_api
@@ -103,6 +105,8 @@ API GateWay
     tencentcloud_api_gateway_service_release
 	tencentcloud_api_gateway_plugin
 	tencentcloud_api_gateway_plugin_attachment
+	tencentcloud_api_gateway_api_doc
+	tencentcloud_api_gateway_api_app
 
 Cloud Audit(Audit)
   Data Source

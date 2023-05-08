@@ -6,7 +6,6 @@ data "tencentcloud_api_gateway_api_docs" "my_api_doc" {
 }
 ```
 */
-
 package tencentcloud
 
 import (

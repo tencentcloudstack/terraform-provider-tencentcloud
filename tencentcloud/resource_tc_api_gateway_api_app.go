@@ -10,7 +10,6 @@ resource "tencentcloud_api_gateway_api_app" "my_api_app" {
 }
 ```
 */
-
 package tencentcloud
 
 import (

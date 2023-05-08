@@ -180,6 +180,7 @@ func resourceTencentCloudAPIGatewayCustomDomainRead(d *schema.ResourceData, meta
 	_ = d.Set("protocol", resultInfo.Protocol)
 	_ = d.Set("net_type", resultInfo.NetType)
 	_ = d.Set("service_id", serviceId)
+	_ = d.Set("is_forced_https", resultInfo.IsForcedHttps)
 
 	return nil
 }

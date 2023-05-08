@@ -10,7 +10,6 @@ data "tencentcloud_api_gateway_api_apps" "test" {
 }
 ```
 */
-
 package tencentcloud
 
 import (

@@ -12,7 +12,6 @@ resource "tencentcloud_api_gateway_api_doc" "my_api_doc" {
 }
 ```
 */
-
 package tencentcloud
 
 import (
