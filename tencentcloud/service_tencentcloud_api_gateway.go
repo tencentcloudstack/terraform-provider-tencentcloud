@@ -1114,7 +1114,7 @@ func (me *APIGatewayService) ModifyServiceEnvironmentStrategy(ctx context.Contex
 }
 
 func (me *APIGatewayService) BindSubDomainService(ctx context.Context,
-	serviceId, subDomain, protocol, netType, defaultDomain string, isDefaultMapping bool, certificateId string, pathMappings []string) (errRet error) {
+	serviceId, subDomain, protocol, netType, defaultDomain string, isDefaultMapping bool, certificateId string, pathMappings []string, isForcedHttps bool) (errRet error) {
 	var (
 		request = apigateway.NewBindSubDomainRequest()
 		err     error
@@ -1126,6 +1126,7 @@ func (me *APIGatewayService) BindSubDomainService(ctx context.Context,
 	request.NetType = &netType
 	request.NetSubDomain = &defaultDomain
 	request.IsDefaultMapping = &isDefaultMapping
+	request.IsForcedHttps = &isForcedHttps
 	if certificateId != "" {
 		request.CertificateId = &certificateId
 	}
@@ -1231,7 +1232,7 @@ func (me *APIGatewayService) DescribeServiceSubDomainMappings(ctx context.Contex
 }
 
 func (me *APIGatewayService) ModifySubDomainService(ctx context.Context,
-	serviceId, subDomain string, isDefaultMapping bool, certificateId, protocol, netType string, pathMappings []string) (errRet error) {
+	serviceId, subDomain string, isDefaultMapping bool, certificateId, protocol, netType string, pathMappings []string, isForcedHttps bool) (errRet error) {
 	var (
 		request  = apigateway.NewModifySubDomainRequest()
 		response *apigateway.ModifySubDomainResponse
@@ -1241,6 +1242,7 @@ func (me *APIGatewayService) ModifySubDomainService(ctx context.Context,
 	request.ServiceId = &serviceId
 	request.SubDomain = &subDomain
 	request.IsDefaultMapping = &isDefaultMapping
+	request.IsForcedHttps = &isForcedHttps
 	if certificateId != "" {
 		request.CertificateId = &certificateId
 	}
