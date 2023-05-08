@@ -1,8 +1,6 @@
 /*
 Provides a resource to create a mariadb security_groups
 
-~> **NOTE:** If you use this resource, please do not use security_group_ids in tencentcloud_mariadb_instance resource
-
 Example Usage
 
 ```hcl
