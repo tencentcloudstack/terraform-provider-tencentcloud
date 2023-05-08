@@ -83,6 +83,12 @@ func resourceTencentCloudAPIGatewayCustomDomain() *schema.Resource {
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "Custom domain name path mapping. The data format is: `path#environment`. Optional values for the environment are `test`, `prepub`, and `release`.",
 			},
+			"is_forced_https": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether to force HTTP requests to jump to HTTPS, default to false. When the parameter is true, the API gateway will redirect all HTTP protocol requests using the custom domain name to the HTTPS protocol for forwarding.",
+			},
 			//compute
 			"status": {
 				Type:        schema.TypeInt,
@@ -106,6 +112,7 @@ func resourceTencentCloudAPIGatewayCustomDomainCreate(d *schema.ResourceData, me
 		netType           = d.Get("net_type").(string)
 		defaultDomain     = d.Get("default_domain").(string)
 		isDefaultMapping  = d.Get("is_default_mapping").(bool)
+		isForcedHttps     = d.Get("is_forced_https").(bool)
 		certificateId     string
 		pathMappings      []string
 		err               error
@@ -118,7 +125,7 @@ func resourceTencentCloudAPIGatewayCustomDomainCreate(d *schema.ResourceData, me
 		pathMappings = helper.InterfacesStrings(v.(*schema.Set).List())
 	}
 
-	err = apiGatewayService.BindSubDomainService(ctx, serviceId, subDomain, protocol, netType, defaultDomain, isDefaultMapping, certificateId, pathMappings)
+	err = apiGatewayService.BindSubDomainService(ctx, serviceId, subDomain, protocol, netType, defaultDomain, isDefaultMapping, certificateId, pathMappings, isForcedHttps)
 	if err != nil {
 		return err
 	}
@@ -173,6 +180,7 @@ func resourceTencentCloudAPIGatewayCustomDomainRead(d *schema.ResourceData, meta
 	_ = d.Set("protocol", resultInfo.Protocol)
 	_ = d.Set("net_type", resultInfo.NetType)
 	_ = d.Set("service_id", serviceId)
+	_ = d.Set("is_forced_https", resultInfo.IsForcedHttps)
 
 	return nil
 }
@@ -191,6 +199,7 @@ func resourceTencentCloudAPIGatewayCustomDomainUpdate(d *schema.ResourceData, me
 		protocol          string
 		netType           string
 		pathMappings      []string
+		isForcedHttps     bool
 		hasChange         bool
 	)
 
@@ -230,12 +239,18 @@ func resourceTencentCloudAPIGatewayCustomDomainUpdate(d *schema.ResourceData, me
 	if v, ok := d.GetOk("path_mappings"); ok {
 		pathMappings = helper.InterfacesStrings(v.(*schema.Set).List())
 	}
+
 	if d.HasChange("path_mappings") {
 		hasChange = true
 	}
 
+	isForcedHttps = d.Get("is_forced_https").(bool)
+	if d.HasChange("is_forced_https") {
+		hasChange = true
+	}
+
 	if hasChange {
-		err := apiGatewayService.ModifySubDomainService(ctx, serviceId, subDomain, isDefaultMapping, certificateId, protocol, netType, pathMappings)
+		err := apiGatewayService.ModifySubDomainService(ctx, serviceId, subDomain, isDefaultMapping, certificateId, protocol, netType, pathMappings, isForcedHttps)
 		if err != nil {
 			return err
 		}

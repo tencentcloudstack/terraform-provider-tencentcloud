@@ -1,10 +1,48 @@
 package tencentcloud
 
 import (
+	"context"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 )
+
+func init() {
+	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_lighthouse_instance
+	resource.AddTestSweepers("tencentcloud_lighthouse_instance", &resource.Sweeper{
+		Name: "tencentcloud_lighthouse_instance",
+		F: func(r string) error {
+			logId := getLogId(contextNil)
+			ctx := context.WithValue(context.TODO(), logIdKey, logId)
+			cli, _ := sharedClientForRegion(r)
+
+			request := lighthouse.NewDescribeInstancesRequest()
+			response, err := cli.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().DescribeInstances(request)
+			if err != nil {
+				return err
+			}
+			instances := response.Response.InstanceSet
+			service := LightHouseService{client: cli.(*TencentCloudClient).apiV3Conn}
+
+			for _, instance := range instances {
+				name := *instance.InstanceName
+				created, err := time.Parse("2006-01-02 15:04:05", *instance.CreatedTime)
+				if err != nil {
+					continue
+				}
+				if isResourcePersist(name, &created) {
+					continue
+				}
+				if innerErr := service.DeleteLighthouseInstanceById(ctx, *instance.InstanceId); innerErr != nil {
+					continue
+				}
+			}
+			return nil
+		},
+	})
+}
 
 func TestAccTencentCloudLighthouseInstance_basic(t *testing.T) {
 	t.Parallel()

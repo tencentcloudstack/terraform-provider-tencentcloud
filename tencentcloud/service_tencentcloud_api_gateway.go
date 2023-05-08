@@ -1114,7 +1114,7 @@ func (me *APIGatewayService) ModifyServiceEnvironmentStrategy(ctx context.Contex
 }
 
 func (me *APIGatewayService) BindSubDomainService(ctx context.Context,
-	serviceId, subDomain, protocol, netType, defaultDomain string, isDefaultMapping bool, certificateId string, pathMappings []string) (errRet error) {
+	serviceId, subDomain, protocol, netType, defaultDomain string, isDefaultMapping bool, certificateId string, pathMappings []string, isForcedHttps bool) (errRet error) {
 	var (
 		request = apigateway.NewBindSubDomainRequest()
 		err     error
@@ -1126,6 +1126,7 @@ func (me *APIGatewayService) BindSubDomainService(ctx context.Context,
 	request.NetType = &netType
 	request.NetSubDomain = &defaultDomain
 	request.IsDefaultMapping = &isDefaultMapping
+	request.IsForcedHttps = &isForcedHttps
 	if certificateId != "" {
 		request.CertificateId = &certificateId
 	}
@@ -1231,7 +1232,7 @@ func (me *APIGatewayService) DescribeServiceSubDomainMappings(ctx context.Contex
 }
 
 func (me *APIGatewayService) ModifySubDomainService(ctx context.Context,
-	serviceId, subDomain string, isDefaultMapping bool, certificateId, protocol, netType string, pathMappings []string) (errRet error) {
+	serviceId, subDomain string, isDefaultMapping bool, certificateId, protocol, netType string, pathMappings []string, isForcedHttps bool) (errRet error) {
 	var (
 		request  = apigateway.NewModifySubDomainRequest()
 		response *apigateway.ModifySubDomainResponse
@@ -1241,6 +1242,7 @@ func (me *APIGatewayService) ModifySubDomainService(ctx context.Context,
 	request.ServiceId = &serviceId
 	request.SubDomain = &subDomain
 	request.IsDefaultMapping = &isDefaultMapping
+	request.IsForcedHttps = &isForcedHttps
 	if certificateId != "" {
 		request.CertificateId = &certificateId
 	}
@@ -1698,5 +1700,229 @@ func (me *APIGatewayService) DeleteApiGatewayPluginAttachmentById(ctx context.Co
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	return
+}
+
+func (me *APIGatewayService) DescribeApiDoc(ctx context.Context, apiDocId string) (apiDoc *apigateway.APIDocInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeAPIDocDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ApiDocId = &apiDocId
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseAPIGatewayClient().DescribeAPIDocDetail(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil {
+		return
+	}
+
+	apiDoc = response.Response.Result
+	return
+}
+
+func (me *APIGatewayService) DescribeApiDocList(ctx context.Context) (apiDoc []*apigateway.APIDoc, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeAPIDocsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseAPIGatewayClient().DescribeAPIDocs(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || *response.Response.Result.TotalCount == 0 {
+			break
+		}
+
+		apiDoc = append(apiDoc, response.Response.Result.APIDocSet...)
+		if *response.Response.Result.TotalCount < pageSize {
+			break
+		}
+
+		offset += pageSize
+	}
+	return
+}
+
+func (me *APIGatewayService) DeleteAPIGatewayAPIDocById(ctx context.Context, apiDocId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := apigateway.NewDeleteAPIDocRequest()
+	request.ApiDocId = &apiDocId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseAPIGatewayClient().DeleteAPIDoc(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *APIGatewayService) DescribeApiApp(ctx context.Context, apiAppId string) (apiDoc *apigateway.ApiAppInfos, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeApiAppsStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = []*apigateway.Filter{
+		{
+			Name:   helper.String("ApiAppId"),
+			Values: helper.Strings([]string{apiAppId}),
+		},
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseAPIGatewayClient().DescribeApiAppsStatus(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || *response.Response.Result.TotalCount == 0 {
+		return
+	}
+
+	apiDoc = response.Response.Result
+	return
+}
+
+func (me *APIGatewayService) DescribeApiAppList(ctx context.Context, apiAppId, apiAppName string) (apiApp []*apigateway.ApiAppInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeApiAppsStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.Filters = []*apigateway.Filter{}
+	if apiAppId != "" {
+		request.Filters = append(request.Filters,
+			&apigateway.Filter{
+				Name:   helper.String("ApiAppId"),
+				Values: helper.Strings([]string{apiAppId}),
+			})
+	}
+
+	if apiAppName != "" {
+		request.Filters = append(request.Filters,
+			&apigateway.Filter{
+				Name:   helper.String("ApiAppName"),
+				Values: helper.Strings([]string{apiAppName}),
+			})
+	}
+
+	var offset int64 = 0
+	var pageSize int64 = 100
+
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseAPIGatewayClient().DescribeApiAppsStatus(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || *response.Response.Result.TotalCount == 0 {
+			break
+		}
+		apiApp = append(apiApp, response.Response.Result.ApiAppSet...)
+		if *response.Response.Result.TotalCount < pageSize {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
+func (me *APIGatewayService) DeleteAPIGatewayAPIAppById(ctx context.Context, apiAppId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := apigateway.NewDeleteApiAppRequest()
+	request.ApiAppId = &apiAppId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseAPIGatewayClient().DeleteApiApp(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return
 }

@@ -39,7 +39,6 @@ func TestAccTencentCloudSqlserverConfigBackupStrategyResource_basic(t *testing.T
 					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_config_backup_strategy.config", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_type", "weekly"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_time", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_day", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_model", "master_no_pkg"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_cycle.#", "3"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_save_days", "7"),
@@ -54,7 +53,6 @@ func TestAccTencentCloudSqlserverConfigBackupStrategyResource_basic(t *testing.T
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_config_backup_strategy.config", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_time", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_day", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_model", "master_no_pkg"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_cycle.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_save_days", "7"),
@@ -69,7 +67,6 @@ func TestAccTencentCloudSqlserverConfigBackupStrategyResource_basic(t *testing.T
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_config_backup_strategy.config", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_time", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_day", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_model", "master_no_pkg"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_cycle.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_sqlserver_config_backup_strategy.config", "backup_save_days", "7"),
@@ -111,7 +108,6 @@ resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   instance_id = local.sqlserver_id
   backup_type = "weekly"
   backup_time = 0
-  backup_day = 1
   backup_model = "master_no_pkg"
   backup_cycle = [1,3,5]
   backup_save_days = 7
@@ -129,7 +125,6 @@ resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   instance_id = local.sqlserver_id
   backup_type = "weekly"
   backup_time = 0
-  backup_day = 1
   backup_model = "master_no_pkg"
   backup_cycle = [1,3]
   backup_save_days = 7
@@ -148,7 +143,6 @@ resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   instance_id = local.sqlserver_id
   backup_type = "weekly"
   backup_time = 0
-  backup_day = 1
   backup_model = "master_no_pkg"
   backup_cycle = [1,3]
   backup_save_days = 7

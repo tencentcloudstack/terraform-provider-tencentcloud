@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudCatProbeDataDataSource -v
 func TestAccTencentCloudCatProbeDataDataSource(t *testing.T) {
 	t.Parallel()
 
@@ -15,8 +16,8 @@ func TestAccTencentCloudCatProbeDataDataSource(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceCatProbeData,
-				Check:  resource.ComposeTestCheckFunc(
-				//testAccCheckTencentCloudDataSourceID("data.tencentcloud_cat_probe_data.probe_data"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cat_probe_data.probe_data"),
 				),
 			},
 		},
