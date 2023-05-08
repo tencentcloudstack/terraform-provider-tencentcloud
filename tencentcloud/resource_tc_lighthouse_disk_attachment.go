@@ -134,10 +134,6 @@ func resourceTencentCloudLighthouseDiskAttachmentRead(d *schema.ResourceData, me
 		_ = d.Set("instance_id", diskAttachment.InstanceId)
 	}
 
-	if diskAttachment.RenewFlag != nil {
-		_ = d.Set("renew_flag", diskAttachment.RenewFlag)
-	}
-
 	return nil
 }
 

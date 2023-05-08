@@ -28,7 +28,6 @@ resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   instance_id = local.sqlserver_id
   backup_type = "weekly"
   backup_time = 0
-  backup_day = 1
   backup_model = "master_no_pkg"
   backup_cycle = [1,3,5]
   backup_save_days = 7
@@ -44,9 +43,7 @@ Regular backup
 ```hcl
 resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   instance_id = local.sqlserver_id
-  backup_type = "weekly"
   backup_time = 0
-  backup_day = 1
   backup_model = "master_no_pkg"
   backup_cycle = [1,3]
   backup_save_days = 7
@@ -109,7 +106,7 @@ func resourceTencentCloudSqlserverConfigBackupStrategy() *schema.Resource {
 			"backup_day": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Backup interval in days when the BackupType is daily. Valid value: 1.",
+				Description: "Backup interval in days when the BackupType is daily. The current value can only be 1.",
 			},
 
 			"backup_model": {
@@ -209,14 +206,14 @@ func resourceTencentCloudSqlserverConfigBackupStrategyRead(d *schema.ResourceDat
 
 	if configBackupStrategy.BackupCycleType != nil {
 		_ = d.Set("backup_type", configBackupStrategy.BackupCycleType)
+		if configBackupStrategy.BackupCycleType == helper.String(SQLSERVER_BACKUP_CYCLETYPE_DAILY) {
+			//Backup interval in days. When the BackupType is daily, valid value is 1.
+			_ = d.Set("backup_day", 1)
+		}
 	}
 
 	if configBackupStrategy.BackupTime != nil {
-		_ = d.Set("backup_time", configBackupStrategy.BackupTime)
-	}
-
-	if configBackupStrategy.BackupTime != nil {
-		_ = d.Set("backup_day", configBackupStrategy.BackupTime)
+		_ = d.Set("backup_time", helper.StrToInt(*configBackupStrategy.BackupTime))
 	}
 
 	if configBackupStrategy.BackupModel != nil {

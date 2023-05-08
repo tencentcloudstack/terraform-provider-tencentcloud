@@ -635,7 +635,7 @@ func resourceTencentCloudVpnConnectionRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("ike_proto_authen_algorithm", *connection.IKEOptionsSpecification.PropoAuthenAlgorithm)
 	_ = d.Set("ike_exchange_mode", *connection.IKEOptionsSpecification.ExchangeMode)
 	_ = d.Set("ike_local_identity", *connection.IKEOptionsSpecification.LocalIdentity)
-	_ = d.Set("ike_remote_idetity", *connection.IKEOptionsSpecification.RemoteIdentity)
+	_ = d.Set("ike_remote_identity", *connection.IKEOptionsSpecification.RemoteIdentity)
 	//optional
 	if connection.IKEOptionsSpecification.LocalAddress != nil {
 		_ = d.Set("ike_local_address", *connection.IKEOptionsSpecification.LocalAddress)

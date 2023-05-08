@@ -8,7 +8,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudTsfApplicationPublicConfigReleaseResource_basic -v
 func TestAccTencentCloudTsfApplicationPublicConfigReleaseResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
