@@ -597,7 +597,6 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("tag_set", tags)
 
 	_ = d.Set("disk_type", info.DiskType)
-	_ = d.Set("rebalance_time", info.RebalanceTime)
 
 	// query msg_retention_time
 	var (
