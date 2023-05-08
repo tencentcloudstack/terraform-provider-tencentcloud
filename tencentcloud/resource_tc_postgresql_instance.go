@@ -1055,6 +1055,12 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().UpgradeDBInstanceKernelVersion(upgradeRequest)
 				if e != nil {
+					tcErr := e.(*sdkErrors.TencentCloudSDKError)
+
+					if tcErr.Code == "FailedOperation.FailedOperationError" {
+						// upgrade version invalid.
+						return resource.NonRetryableError(fmt.Errorf("Upgrade kernel version failed: %v", e.Error()))
+					}
 					return retryError(e)
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, upgradeRequest.GetAction(), upgradeRequest.ToJsonString(), result.ToJsonString())
@@ -1178,7 +1184,11 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("engine_version", instance.DBVersion)
 	_ = d.Set("db_major_vesion", instance.DBMajorVersion)
 	_ = d.Set("db_major_version", instance.DBMajorVersion)
-	_ = d.Set("db_kernel_version", instance.DBKernelVersion)
+	//skip set the kernel version when kernel upgrade enabled
+	if v, ok := d.GetOk("db_kernel_version_upgrade_config"); !ok || v == "" {
+		_ = d.Set("db_kernel_version", instance.DBKernelVersion)
+	}
+
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("charset", instance.DBCharset)
 	if rootUser != "" {
