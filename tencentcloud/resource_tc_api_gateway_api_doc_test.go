@@ -115,8 +115,8 @@ resource "tencentcloud_api_gateway_api_doc" "test" {
 const testAccAPIGatewayAPIDocUpdate = `
 resource "tencentcloud_api_gateway_api_doc" "test" {
   api_doc_name = "update_doc_name_test"
-  service_id   = "service-hwd9bmdk"
+  service_id   = "service-7lybgojo"
   environment  = "release"
-  api_ids      = ["api-p019gpxq"]
+  api_ids      = ["api-2bntitvw"]
 }
 `
