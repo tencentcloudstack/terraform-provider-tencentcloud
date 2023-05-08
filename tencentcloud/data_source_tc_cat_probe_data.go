@@ -364,10 +364,11 @@ func dataSourceTencentCloudCatProbedataRead(d *schema.ResourceData, meta interfa
 			ids = append(ids, helper.UInt64ToStr(*dataSet.ProbeTime))
 			dataSetList = append(dataSetList, dataSetMap)
 		}
-		d.SetId(helper.DataResourceIdsHash(ids))
+
 		_ = d.Set("detailed_single_data_define", dataSetList)
 	}
 
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), dataSetList); e != nil {
