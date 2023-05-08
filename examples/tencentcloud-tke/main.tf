@@ -71,7 +71,7 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
   }
 
   extension_addon {
-    name  = "CBS",
+    name  = "CBS"
     param = jsonencode({
       "kind" : "App", "spec" : {
         "chart" : { "chartName" : "cbs", "chartVersion" : "1.0.7" },
@@ -80,19 +80,19 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     })
   }
   extension_addon {
-    name  = "SecurityGroupPolicy",
+    name  = "SecurityGroupPolicy"
     param = jsonencode({
       "kind" : "App", "spec" : { "chart" : { "chartName" : "securitygrouppolicy", "chartVersion" : "0.1.0" } }
     })
   }
   extension_addon {
-    name  = "OOMGuard",
+    name  = "OOMGuard"
     param = jsonencode({
       "kind" : "App", "spec" : { "chart" : { "chartName" : "oomguard", "chartVersion" : "1.0.1" } }
     })
   }
   extension_addon {
-    name  = "OLM",
+    name  = "OLM"
     param = jsonencode({
       "kind" : "App", "spec" : { "chart" : { "chartName" : "olm", "chartVersion" : "1.0.0" } }
     })
