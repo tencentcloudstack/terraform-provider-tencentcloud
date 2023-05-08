@@ -14,8 +14,8 @@ package tencentcloud
 import (
 	"context"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -536,7 +536,7 @@ func dataSourceTencentCloudCynosdbClusterInstanceGroupsRead(d *schema.ResourceDa
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("instance_grp_info_list", tmpList)
+	_ = d.Set("instance_grp_info_list", tmpList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

@@ -1,6 +1,8 @@
 /*
 Provides a resource to create a mariadb security_groups
 
+~> **NOTE:** If you use this resource, please do not use security_group_ids in tencentcloud_mariadb_instance resource
+
 Example Usage
 
 ```hcl
@@ -26,8 +28,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )

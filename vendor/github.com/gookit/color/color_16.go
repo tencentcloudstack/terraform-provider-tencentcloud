@@ -2,16 +2,55 @@ package color
 
 import (
 	"fmt"
-	"strings"
+	"strconv"
 )
 
 // Color Color16, 16 color value type
 // 3(2^3=8) OR 4(2^4=16) bite color.
 type Color uint8
+type Basic = Color // alias of Color
+
+// Opts basic color options. code: 0 - 9
+type Opts []Color
+
+// Add option value
+func (o *Opts) Add(ops ...Color) {
+	for _, op := range ops {
+		if uint8(op) < 10 {
+			*o = append(*o, op)
+		}
+	}
+}
+
+// IsValid options
+func (o Opts) IsValid() bool {
+	return len(o) > 0
+}
+
+// IsEmpty options
+func (o Opts) IsEmpty() bool {
+	return len(o) == 0
+}
+
+// String options to string. eg: "1;3"
+func (o Opts) String() string {
+	return Colors2code(o...)
+}
 
 /*************************************************************
  * Basic 16 color definition
  *************************************************************/
+
+// Base value for foreground/background color
+// base: fg 30~37, bg 40~47
+// light: fg 90~97, bg 100~107
+const (
+	FgBase uint8 = 30
+	BgBase uint8 = 40
+
+	HiFgBase uint8 = 90
+	HiBgBase uint8 = 100
+)
 
 // Foreground colors. basic foreground colors 30 - 37
 const (
@@ -57,7 +96,7 @@ const (
 
 // Extra background color 100 - 107(非标准)
 const (
-	BgDarkGray Color = iota + 99
+	BgDarkGray Color = iota + 100
 	BgLightRed
 	BgLightGreen
 	BgLightYellow
@@ -77,7 +116,7 @@ const (
 	OpItalic                     // 3 斜体(不是所有的终端仿真器都支持)
 	OpUnderscore                 // 4 下划线
 	OpBlink                      // 5 闪烁
-	OpFastBlink                  // 5 快速闪烁(未广泛支持)
+	OpFastBlink                  // 6 快速闪烁(未广泛支持)
 	OpReverse                    // 7 颠倒的 交换背景色与前景色
 	OpConcealed                  // 8 隐匿的
 	OpStrikethrough              // 9 删除的，删除线(未广泛支持)
@@ -109,40 +148,63 @@ const (
 	LightWhite   = FgLightWhite
 	LightYellow  = FgLightYellow
 	LightMagenta = FgLightMagenta
+
+	HiRed     = FgLightRed
+	HiCyan    = FgLightCyan
+	HiBlue    = FgLightBlue
+	HiGreen   = FgLightGreen
+	HiWhite   = FgLightWhite
+	HiYellow  = FgLightYellow
+	HiMagenta = FgLightMagenta
+
+	BgHiRed     = BgLightRed
+	BgHiCyan    = BgLightCyan
+	BgHiBlue    = BgLightBlue
+	BgHiGreen   = BgLightGreen
+	BgHiWhite   = BgLightWhite
+	BgHiYellow  = BgLightYellow
+	BgHiMagenta = BgLightMagenta
 )
+
+// Bit4 a method for create Color
+func Bit4(code uint8) Color { return Color(code) }
 
 /*************************************************************
  * Color render methods
  *************************************************************/
 
-// Text render a text message
-func (c Color) Text(message string) string {
-	return RenderString(c.String(), message)
+// Name get color code name.
+func (c Color) Name() string {
+	name, ok := basic2nameMap[uint8(c)]
+	if ok {
+		return name
+	}
+	return "unknown"
 }
 
+// Text render a text message
+func (c Color) Text(message string) string { return RenderString(c.String(), message) }
+
 // Render messages by color setting
+//
 // Usage:
 // 		green := color.FgGreen.Render
 // 		fmt.Println(green("message"))
-func (c Color) Render(a ...interface{}) string {
-	return RenderCode(c.String(), a...)
-}
+func (c Color) Render(a ...interface{}) string { return RenderCode(c.String(), a...) }
 
 // Renderln messages by color setting.
 // like Println, will add spaces for each argument
+//
 // Usage:
 // 		green := color.FgGreen.Renderln
 // 		fmt.Println(green("message"))
-func (c Color) Renderln(a ...interface{}) string {
-	return RenderWithSpaces(c.String(), a...)
-}
+func (c Color) Renderln(a ...interface{}) string { return RenderWithSpaces(c.String(), a...) }
 
 // Sprint render messages by color setting. is alias of the Render()
-func (c Color) Sprint(a ...interface{}) string {
-	return RenderCode(c.String(), a...)
-}
+func (c Color) Sprint(a ...interface{}) string { return RenderCode(c.String(), a...) }
 
 // Sprintf format and render message.
+//
 // Usage:
 // 	green := color.Green.Sprintf
 //  colored := green("message")
@@ -151,28 +213,29 @@ func (c Color) Sprintf(format string, args ...interface{}) string {
 }
 
 // Print messages.
+//
 // Usage:
 // 		color.Green.Print("message")
 // OR:
 // 		green := color.FgGreen.Print
 // 		green("message")
 func (c Color) Print(args ...interface{}) {
-	doPrint(c.Code(), []Color{c}, fmt.Sprint(args...))
+	doPrintV2(c.Code(), fmt.Sprint(args...))
 }
 
 // Printf format and print messages.
+//
 // Usage:
 // 		color.Cyan.Printf("string %s", "arg0")
 func (c Color) Printf(format string, a ...interface{}) {
-	doPrint(c.Code(), []Color{c}, fmt.Sprintf(format, a...))
+	doPrintV2(c.Code(), fmt.Sprintf(format, a...))
 }
 
 // Println messages with new line
-func (c Color) Println(a ...interface{}) {
-	doPrintln(c.String(), []Color{c}, a)
-}
+func (c Color) Println(a ...interface{}) { doPrintlnV2(c.String(), a) }
 
 // Light current color. eg: 36(FgCyan) -> 96(FgLightCyan).
+//
 // Usage:
 // 	lightCyan := Cyan.Light()
 // 	lightCyan.Print("message")
@@ -187,6 +250,7 @@ func (c Color) Light() Color {
 }
 
 // Darken current color. eg. 96(FgLightCyan) -> 36(FgCyan)
+//
 // Usage:
 // 	cyan := LightCyan.Darken()
 // 	cyan.Print("message")
@@ -200,20 +264,72 @@ func (c Color) Darken() Color {
 	return c
 }
 
+// C256 convert 16 color to 256-color code.
+func (c Color) C256() Color256 {
+	val := uint8(c)
+	if val < 10 { // is option code
+		return emptyC256 // empty
+	}
+
+	var isBg uint8
+	if val >= BgBase && val <= 47 { // is bg
+		isBg = AsBg
+		val = val - 10 // to fg code
+	} else if val >= HiBgBase && val <= 107 { // is hi bg
+		isBg = AsBg
+		val = val - 10 // to fg code
+	}
+
+	if c256, ok := basicTo256Map[val]; ok {
+		return Color256{c256, isBg}
+	}
+
+	// use raw value direct convert
+	return Color256{val}
+}
+
+// ToFg always convert fg
+func (c Color) ToFg() Color {
+	val := uint8(c)
+	// option code, don't change
+	if val < 10 {
+		return c
+	}
+	return Color(Bg2Fg(val))
+}
+
+// ToBg always convert bg
+func (c Color) ToBg() Color {
+	val := uint8(c)
+	// option code, don't change
+	if val < 10 {
+		return c
+	}
+	return Color(Fg2Bg(val))
+}
+
+// RGB convert 16 color to 256-color code.
+func (c Color) RGB() RGBColor {
+	val := uint8(c)
+	if val < 10 { // is option code
+		return emptyRGBColor
+	}
+
+	return HEX(Basic2hex(val))
+}
+
 // Code convert to code string. eg "35"
 func (c Color) Code() string {
-	return fmt.Sprintf("%d", c)
+	return strconv.FormatInt(int64(c), 10)
 }
 
 // String convert to code string. eg "35"
 func (c Color) String() string {
-	return fmt.Sprintf("%d", c)
+	return strconv.FormatInt(int64(c), 10)
 }
 
 // IsValid color value
-func (c Color) IsValid() bool {
-	return c < 107
-}
+func (c Color) IsValid() bool { return c < 107 }
 
 /*************************************************************
  * basic color maps
@@ -270,7 +386,12 @@ var ExBgColors = map[string]Color{
 }
 
 // Options color options map
-var Options = map[string]Color{
+//
+// Deprecated: please use AllOptions instead.
+var Options = AllOptions
+
+// AllOptions color options map
+var AllOptions = map[string]Color{
 	"reset":      OpReset,
 	"bold":       OpBold,
 	"fuzzy":      OpFuzzy,
@@ -281,20 +402,76 @@ var Options = map[string]Color{
 	"concealed":  OpConcealed,
 }
 
-/*************************************************************
- * helper methods
- *************************************************************/
+var (
+	// TODO basic name alias
+	// basicNameAlias = map[string]string{}
+	// optionWithAlias = buildOpWithAlias()
+	// basic color name to code
+	// name2basicMap = initName2basicMap()
 
-// convert colors to code. return like "32;45;3"
-func colors2code(colors ...Color) string {
-	if len(colors) == 0 {
-		return ""
+	// basic2nameMap basic color code to name
+	basic2nameMap = map[uint8]string{
+		30: "black",
+		31: "red",
+		32: "green",
+		33: "yellow",
+		34: "blue",
+		35: "magenta",
+		36: "cyan",
+		37: "white",
+		// hi color code
+		90: "lightBlack",
+		91: "lightRed",
+		92: "lightGreen",
+		93: "lightYellow",
+		94: "lightBlue",
+		95: "lightMagenta",
+		96: "lightCyan",
+		97: "lightWhite",
+		// options
+		0: "reset",
+		1: "bold",
+		2: "fuzzy",
+		3: "italic",
+		4: "underscore",
+		5: "blink",
+		7: "reverse",
+		8: "concealed",
 	}
+)
 
-	var codes []string
-	for _, color := range colors {
-		codes = append(codes, color.String())
+// Bg2Fg bg color value to fg value
+func Bg2Fg(val uint8) uint8 {
+	if val >= BgBase && val <= 47 { // is bg
+		val = val - 10
+	} else if val >= HiBgBase && val <= 107 { // is hi bg
+		val = val - 10
 	}
-
-	return strings.Join(codes, ";")
+	return val
 }
+
+// Fg2Bg fg color value to bg value
+func Fg2Bg(val uint8) uint8 {
+	if val >= FgBase && val <= 37 { // is fg
+		val = val + 10
+	} else if val >= HiFgBase && val <= 97 { // is hi fg
+		val = val + 10
+	}
+	return val
+}
+
+// Basic2nameMap data
+func Basic2nameMap() map[uint8]string {
+	return basic2nameMap
+}
+
+// func initName2basicMap() map[string]uint8 {
+// 	n2b := make(map[string]uint8, len(basic2nameMap))
+// 	for u, s := range basic2nameMap {
+// 		n2b[s] = u
+// 	}
+// 	return n2b
+// }
+
+// func buildOpWithAlias() map[string]uint8 {
+// }

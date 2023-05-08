@@ -1,10 +1,11 @@
 package processors
 
 import (
-	"fmt"
+	"errors"
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -15,13 +16,15 @@ import (
 	"github.com/golangci/golangci-lint/pkg/result"
 )
 
-var nolintDebugf = logutils.Debug("nolint")
+var nolintDebugf = logutils.Debug(logutils.DebugKeyNolint)
+var nolintRe = regexp.MustCompile(`^nolint( |:|$)`)
 
 type ignoredRange struct {
 	linters                []string
 	matchedIssueFromLinter map[string]bool
 	result.Range
-	col int
+	col           int
+	originalRange *ignoredRange // pre-expanded range (used to match nolintlint issues)
 }
 
 func (i *ignoredRange) doesMatch(issue *result.Issue) bool {
@@ -29,23 +32,27 @@ func (i *ignoredRange) doesMatch(issue *result.Issue) bool {
 		return false
 	}
 
+	// only allow selective nolinting of nolintlint
+	nolintFoundForLinter := len(i.linters) == 0 && issue.FromLinter != golinters.NoLintLintName
+
+	for _, linterName := range i.linters {
+		if linterName == issue.FromLinter {
+			nolintFoundForLinter = true
+			break
+		}
+	}
+
+	if nolintFoundForLinter {
+		return true
+	}
+
 	// handle possible unused nolint directives
-	// nolintlint generates potential issues for every nolint directive and they are filtered out here
-	if issue.ExpectNoLint {
+	// nolintlint generates potential issues for every nolint directive, and they are filtered out here
+	if issue.FromLinter == golinters.NoLintLintName && issue.ExpectNoLint {
 		if issue.ExpectedNoLintLinter != "" {
 			return i.matchedIssueFromLinter[issue.ExpectedNoLintLinter]
 		}
 		return len(i.matchedIssueFromLinter) > 0
-	}
-
-	if len(i.linters) == 0 {
-		return true
-	}
-
-	for _, linterName := range i.linters {
-		if linterName == issue.FromLinter {
-			return true
-		}
 	}
 
 	return false
@@ -78,7 +85,7 @@ func NewNolint(log logutils.Log, dbManager *lintersdb.Manager, enabledLinters ma
 
 var _ Processor = &Nolint{}
 
-func (p Nolint) Name() string {
+func (p *Nolint) Name() string {
 	return "nolint"
 }
 
@@ -98,7 +105,7 @@ func (p *Nolint) getOrCreateFileData(i *result.Issue) (*fileData, error) {
 	p.cache[i.FilePath()] = fd
 
 	if i.FilePath() == "" {
-		return nil, fmt.Errorf("no file path for issue")
+		return nil, errors.New("no file path for issue")
 	}
 
 	// TODO: migrate this parsing to go/analysis facts
@@ -141,19 +148,13 @@ func (p *Nolint) buildIgnoredRangesForFile(f *ast.File, fset *token.FileSet, fil
 
 func (p *Nolint) shouldPassIssue(i *result.Issue) (bool, error) {
 	nolintDebugf("got issue: %v", *i)
-	if i.FromLinter == golinters.NolintlintName {
-		// always pass nolintlint issues except ones trying find unused nolint directives
-		if !i.ExpectNoLint {
-			return true, nil
+	if i.FromLinter == golinters.NoLintLintName && i.ExpectNoLint && i.ExpectedNoLintLinter != "" {
+		// don't expect disabled linters to cover their nolint statements
+		nolintDebugf("enabled linters: %v", p.enabledLinters)
+		if p.enabledLinters[i.ExpectedNoLintLinter] == nil {
+			return false, nil
 		}
-		if i.ExpectedNoLintLinter != "" {
-			// don't expect disabled linters to cover their nolint statements
-			nolintDebugf("enabled linters: %v", p.enabledLinters)
-			if p.enabledLinters[i.ExpectedNoLintLinter] == nil {
-				return false, nil
-			}
-			nolintDebugf("checking that lint issue was used for %s: %v", i.ExpectedNoLintLinter, i)
-		}
+		nolintDebugf("checking that lint issue was used for %s: %v", i.ExpectedNoLintLinter, i)
 	}
 
 	fd, err := p.getOrCreateFileData(i)
@@ -163,7 +164,11 @@ func (p *Nolint) shouldPassIssue(i *result.Issue) (bool, error) {
 
 	for _, ir := range fd.ignoredRanges {
 		if ir.doesMatch(i) {
+			nolintDebugf("found ignored range for issue %v: %v", i, ir)
 			ir.matchedIssueFromLinter[i.FromLinter] = true
+			if ir.originalRange != nil {
+				ir.originalRange.matchedIssueFromLinter[i.FromLinter] = true
+			}
 			return false, nil
 		}
 	}
@@ -199,9 +204,14 @@ func (e *rangeExpander) Visit(node ast.Node) ast.Visitor {
 	}
 
 	expandedRange := *foundRange
+	// store the original unexpanded range for matching nolintlint issues
+	if expandedRange.originalRange == nil {
+		expandedRange.originalRange = foundRange
+	}
 	if expandedRange.To < nodeEndLine {
 		expandedRange.To = nodeEndLine
 	}
+
 	nolintDebugf("found range is %v for node %#v [%d;%d], expanded range is %v",
 		*foundRange, node, nodeStartLine, nodeEndLine, expandedRange)
 	e.expandedRanges = append(e.expandedRanges, expandedRange)
@@ -225,7 +235,7 @@ func (p *Nolint) extractFileCommentsInlineRanges(fset *token.FileSet, comments .
 
 func (p *Nolint) extractInlineRangeFromComment(text string, g ast.Node, fset *token.FileSet) *ignoredRange {
 	text = strings.TrimLeft(text, "/ ")
-	if !strings.HasPrefix(text, "nolint") {
+	if !nolintRe.MatchString(text) {
 		return nil
 	}
 
@@ -242,7 +252,7 @@ func (p *Nolint) extractInlineRangeFromComment(text string, g ast.Node, fset *to
 		}
 	}
 
-	if !strings.HasPrefix(text, "nolint:") {
+	if strings.HasPrefix(text, "nolint:all") || !strings.HasPrefix(text, "nolint:") {
 		return buildRange(nil) // ignore all linters
 	}
 
@@ -250,14 +260,18 @@ func (p *Nolint) extractInlineRangeFromComment(text string, g ast.Node, fset *to
 	var linters []string
 	text = strings.Split(text, "//")[0] // allow another comment after this comment
 	linterItems := strings.Split(strings.TrimPrefix(text, "nolint:"), ",")
-	var gotUnknownLinters bool
-	for _, linter := range linterItems {
-		linterName := strings.ToLower(strings.TrimSpace(linter))
+	for _, item := range linterItems {
+		linterName := strings.ToLower(strings.TrimSpace(item))
+		if linterName == "all" {
+			p.unknownLintersSet = map[string]bool{}
+			return buildRange(nil)
+		}
 
 		lcs := p.dbManager.GetLinterConfigs(linterName)
 		if lcs == nil {
 			p.unknownLintersSet[linterName] = true
-			gotUnknownLinters = true
+			linters = append(linters, linterName)
+			nolintDebugf("unknown linter %s on line %d", linterName, fset.Position(g.Pos()).Line)
 			continue
 		}
 
@@ -266,20 +280,16 @@ func (p *Nolint) extractInlineRangeFromComment(text string, g ast.Node, fset *to
 		}
 	}
 
-	if gotUnknownLinters {
-		return buildRange(nil) // ignore all linters to not annoy user
-	}
-
 	nolintDebugf("%d: linters are %s", fset.Position(g.Pos()).Line, linters)
 	return buildRange(linters)
 }
 
-func (p Nolint) Finish() {
+func (p *Nolint) Finish() {
 	if len(p.unknownLintersSet) == 0 {
 		return
 	}
 
-	unknownLinters := []string{}
+	unknownLinters := make([]string, 0, len(p.unknownLintersSet))
 	for name := range p.unknownLintersSet {
 		unknownLinters = append(unknownLinters, name)
 	}
@@ -296,7 +306,7 @@ func (issues sortWithNolintlintLast) Len() int {
 }
 
 func (issues sortWithNolintlintLast) Less(i, j int) bool {
-	return issues[i].FromLinter != golinters.NolintlintName && issues[j].FromLinter == golinters.NolintlintName
+	return issues[i].FromLinter != golinters.NoLintLintName && issues[j].FromLinter == golinters.NoLintLintName
 }
 
 func (issues sortWithNolintlintLast) Swap(i, j int) {

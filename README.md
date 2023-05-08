@@ -101,7 +101,7 @@ go test -i; go test -test.run TestAccTencentCloudNatGateway_basic -v
 
 To write test cases, check the `xxx_test.go` files for more reference.
 
-### Avoid ``terrafrom init``
+### Avoid ``terraform init``
 
 ```
 export TF_SKIP_PROVIDER_VERIFY=1

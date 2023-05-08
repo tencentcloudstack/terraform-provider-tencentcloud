@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -167,7 +167,6 @@ func resourceTencentCloudAPIGatewayCustomDomainRead(d *schema.ResourceData, meta
 	}
 
 	_ = d.Set("path_mappings", pathMap)
-	_ = d.Set("domain_name", resultInfo.DomainName)
 	_ = d.Set("status", resultInfo.Status)
 	_ = d.Set("certificate_id", resultInfo.CertificateId)
 	_ = d.Set("is_default_mapping", resultInfo.IsDefaultMapping)

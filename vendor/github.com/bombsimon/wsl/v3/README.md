@@ -3,7 +3,7 @@
 [![forthebadge](https://forthebadge.com/images/badges/made-with-go.svg)](https://forthebadge.com)
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 
-[![Build Status](https://travis-ci.org/bombsimon/wsl.svg?branch=master)](https://travis-ci.org/bombsimon/wsl)
+[![GitHub Actions](https://github.com/bombsimon/wsl/actions/workflows/go.yml/badge.svg)](https://github.com/bombsimon/wsl/actions/workflows/go.yml)
 [![Coverage Status](https://coveralls.io/repos/github/bombsimon/wsl/badge.svg?branch=master)](https://coveralls.io/github/bombsimon/wsl?branch=master)
 
 WSL is a linter that enforces a very **non scientific** vision of how to make
@@ -28,7 +28,7 @@ make something configurable!
 You can do that by using:
 
 ```sh
-go get -u github.com/bombsimon/wsl/cmd/...
+go get -u github.com/bombsimon/wsl/v3/cmd/...
 ```
 
 ### By golangci-lint (CI automation)
@@ -121,5 +121,6 @@ feel free to raise an [issue](https://github.com/bombsimon/wsl/issues/new).
 * [Only one cuddle assignment allowed before type switch statement](doc/rules.md#only-one-cuddle-assignment-allowed-before-type-switch-statement)
 * [Ranges should only be cuddled with assignments used in the iteration](doc/rules.md#ranges-should-only-be-cuddled-with-assignments-used-in-the-iteration)
 * [Return statements should not be cuddled if block has more than two lines](doc/rules.md#return-statements-should-not-be-cuddled-if-block-has-more-than-two-lines)
+* [Short declarations should cuddle only with other short declarations](doc/rules.md#short-declaration-should-cuddle-only-with-other-short-declarations)
 * [Switch statements should only be cuddled with variables switched](doc/rules.md#switch-statements-should-only-be-cuddled-with-variables-switched)
 * [Type switch statements should only be cuddled with variables switched](doc/rules.md#type-switch-statements-should-only-be-cuddled-with-variables-switched)

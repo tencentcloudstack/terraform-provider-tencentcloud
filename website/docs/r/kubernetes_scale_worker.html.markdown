@@ -125,22 +125,6 @@ The following arguments are supported:
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 
-The `cuda` object supports the following:
-
-* `name` - (Required, String) Name of GPU driver or CUDA.
-* `version` - (Required, String) Version of GPU driver or CUDA.
-
-The `cudnn` object supports the following:
-
-* `name` - (Required, String) cuDNN name.
-* `version` - (Required, String) cuDNN version.
-* `dev_name` - (Optional, String) Dev name of cuDNN.
-* `doc_name` - (Optional, String) Doc name of cuDNN.
-
-The `custom_driver` object supports the following:
-
-* `address` - (Optional, String) URL of custom GPU driver address.
-
 The `data_disk` object supports the following:
 
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
@@ -161,17 +145,12 @@ The `data_disk` object supports the following:
 * `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
 * `mount_target` - (Optional, String, ForceNew) Mount target.
 
-The `driver` object supports the following:
-
-* `name` - (Required, String) Name of GPU driver or CUDA.
-* `version` - (Required, String) Version of GPU driver or CUDA.
-
 The `gpu_args` object supports the following:
 
-* `cuda` - (Optional, Map) CUDA version.
-* `cudnn` - (Optional, Map) cuDNN version.
-* `custom_driver` - (Optional, Map) Custom GPU driver.
-* `driver` - (Optional, Map) GPU driver version.
+* `cuda` - (Optional, Map) CUDA  version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
+* `cudnn` - (Optional, Map) cuDNN version. Format like: `{ version: String, name: String, doc_name: String, dev_name: String }`. `version`: cuDNN version; `name`: cuDNN name; `doc_name`: Doc name of cuDNN; `dev_name`: Dev name of cuDNN.
+* `custom_driver` - (Optional, Map) Custom GPU driver. Format like: `{address: String}`. `address`: URL of custom GPU driver address.
+* `driver` - (Optional, Map) GPU driver version. Format like: `{ version: String, name: String }`. `version`: Version of GPU driver or CUDA; `name`: Name of GPU driver or CUDA.
 * `mig_enable` - (Optional, Bool) Whether to enable MIG.
 
 The `worker_config` object supports the following:

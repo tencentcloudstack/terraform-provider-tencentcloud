@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_mariadb_database_objects
+```
+
+```release-note:new-data-source
+tencentcloud_mariadb_databases
+```
+
+```release-note:new-data-source
+tencentcloud_mariadb_database_table
+```
+
+```release-note:new-resource
+tencentcloud_mariadb_encrypt_attributes_operation
+```

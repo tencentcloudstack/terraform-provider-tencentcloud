@@ -15,11 +15,16 @@
 package gosec
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"go/ast"
+	"go/token"
 	"os"
 	"strconv"
+
+	"github.com/securego/gosec/v2/cwe"
 )
 
 // Score type used by severity and confidence values
@@ -34,58 +39,70 @@ const (
 	High
 )
 
-// Cwe id and url
-type Cwe struct {
-	ID  string
-	URL string
+// SnippetOffset defines the number of lines captured before
+// the beginning and after the end of a code snippet
+const SnippetOffset = 1
+
+// GetCweByRule retrieves a cwe weakness for a given RuleID
+func GetCweByRule(id string) *cwe.Weakness {
+	cweID, ok := ruleToCWE[id]
+	if ok && cweID != "" {
+		return cwe.Get(cweID)
+	}
+	return nil
 }
 
-// GetCwe creates a cwe object for a given RuleID
-func GetCwe(id string) Cwe {
-	return Cwe{ID: id, URL: fmt.Sprintf("https://cwe.mitre.org/data/definitions/%s.html", id)}
-}
-
-// IssueToCWE maps gosec rules to CWEs
-var IssueToCWE = map[string]Cwe{
-	"G101": GetCwe("798"),
-	"G102": GetCwe("200"),
-	"G103": GetCwe("242"),
-	"G104": GetCwe("703"),
-	"G106": GetCwe("322"),
-	"G107": GetCwe("88"),
-	"G109": GetCwe("190"),
-	"G110": GetCwe("409"),
-	"G201": GetCwe("89"),
-	"G202": GetCwe("89"),
-	"G203": GetCwe("79"),
-	"G204": GetCwe("78"),
-	"G301": GetCwe("276"),
-	"G302": GetCwe("276"),
-	"G303": GetCwe("377"),
-	"G304": GetCwe("22"),
-	"G305": GetCwe("22"),
-	"G401": GetCwe("326"),
-	"G402": GetCwe("295"),
-	"G403": GetCwe("310"),
-	"G404": GetCwe("338"),
-	"G501": GetCwe("327"),
-	"G502": GetCwe("327"),
-	"G503": GetCwe("327"),
-	"G504": GetCwe("327"),
-	"G505": GetCwe("327"),
+// ruleToCWE maps gosec rules to CWEs
+var ruleToCWE = map[string]string{
+	"G101": "798",
+	"G102": "200",
+	"G103": "242",
+	"G104": "703",
+	"G106": "322",
+	"G107": "88",
+	"G108": "200",
+	"G109": "190",
+	"G110": "409",
+	"G111": "22",
+	"G112": "400",
+	"G113": "190",
+	"G114": "676",
+	"G201": "89",
+	"G202": "89",
+	"G203": "79",
+	"G204": "78",
+	"G301": "276",
+	"G302": "276",
+	"G303": "377",
+	"G304": "22",
+	"G305": "22",
+	"G306": "276",
+	"G307": "703",
+	"G401": "326",
+	"G402": "295",
+	"G403": "310",
+	"G404": "338",
+	"G501": "327",
+	"G502": "327",
+	"G503": "327",
+	"G504": "327",
+	"G505": "327",
+	"G601": "118",
 }
 
 // Issue is returned by a gosec rule if it discovers an issue with the scanned code.
 type Issue struct {
-	Severity   Score  `json:"severity"`   // issue severity (how problematic it is)
-	Confidence Score  `json:"confidence"` // issue confidence (how sure we are we found it)
-	Cwe        Cwe    `json:"cwe"`        // Cwe associated with RuleID
-	RuleID     string `json:"rule_id"`    // Human readable explanation
-	What       string `json:"details"`    // Human readable explanation
-	File       string `json:"file"`       // File name we found it in
-	Code       string `json:"code"`       // Impacted code line
-	Line       string `json:"line"`       // Line number in file
-	Col        string `json:"column"`     // Column number in line
+	Severity     Score             `json:"severity"`     // issue severity (how problematic it is)
+	Confidence   Score             `json:"confidence"`   // issue confidence (how sure we are we found it)
+	Cwe          *cwe.Weakness     `json:"cwe"`          // Cwe associated with RuleID
+	RuleID       string            `json:"rule_id"`      // Human readable explanation
+	What         string            `json:"details"`      // Human readable explanation
+	File         string            `json:"file"`         // File name we found it in
+	Code         string            `json:"code"`         // Impacted code line
+	Line         string            `json:"line"`         // Line number in file
+	Col          string            `json:"column"`       // Column number in line
+	NoSec        bool              `json:"nosec"`        // true if the issue is nosec
+	Suppressions []SuppressionInfo `json:"suppressions"` // Suppression info of the issue
 }
 
 // FileLocation point out the file path and line number in file
@@ -120,43 +137,56 @@ func (c Score) String() string {
 	return "UNDEFINED"
 }
 
+// codeSnippet extracts a code snippet based on the ast reference
 func codeSnippet(file *os.File, start int64, end int64, n ast.Node) (string, error) {
 	if n == nil {
-		return "", fmt.Errorf("Invalid AST node provided")
+		return "", fmt.Errorf("invalid AST node provided")
 	}
+	var pos int64
+	var buf bytes.Buffer
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		pos++
+		if pos > end {
+			break
+		} else if pos >= start && pos <= end {
+			code := fmt.Sprintf("%d: %s\n", pos, scanner.Text())
+			buf.WriteString(code)
+		}
+	}
+	return buf.String(), nil
+}
 
-	size := (int)(end - start)    // Go bug, os.File.Read should return int64 ...
-	_, err := file.Seek(start, 0) // #nosec
-	if err != nil {
-		return "", fmt.Errorf("move to the beginning of file: %v", err)
+func codeSnippetStartLine(node ast.Node, fobj *token.File) int64 {
+	s := (int64)(fobj.Line(node.Pos()))
+	if s-SnippetOffset > 0 {
+		return s - SnippetOffset
 	}
+	return s
+}
 
-	buf := make([]byte, size)
-	if nread, err := file.Read(buf); err != nil || nread != size {
-		return "", fmt.Errorf("Unable to read code")
-	}
-	return string(buf), nil
+func codeSnippetEndLine(node ast.Node, fobj *token.File) int64 {
+	e := (int64)(fobj.Line(node.End()))
+	return e + SnippetOffset
 }
 
 // NewIssue creates a new Issue
 func NewIssue(ctx *Context, node ast.Node, ruleID, desc string, severity Score, confidence Score) *Issue {
-	var code string
 	fobj := ctx.FileSet.File(node.Pos())
 	name := fobj.Name()
-
 	start, end := fobj.Line(node.Pos()), fobj.Line(node.End())
 	line := strconv.Itoa(start)
 	if start != end {
 		line = fmt.Sprintf("%d-%d", start, end)
 	}
-
 	col := strconv.Itoa(fobj.Position(node.Pos()).Column)
 
-	// #nosec
+	var code string
 	if file, err := os.Open(fobj.Name()); err == nil {
-		defer file.Close()
-		s := (int64)(fobj.Position(node.Pos()).Offset) // Go bug, should be int64
-		e := (int64)(fobj.Position(node.End()).Offset) // Go bug, should be int64
+		defer file.Close() // #nosec
+		s := codeSnippetStartLine(node, fobj)
+		e := codeSnippetEndLine(node, fobj)
 		code, err = codeSnippet(file, s, e, node)
 		if err != nil {
 			code = err.Error()
@@ -172,6 +202,12 @@ func NewIssue(ctx *Context, node ast.Node, ruleID, desc string, severity Score, 
 		Confidence: confidence,
 		Severity:   severity,
 		Code:       code,
-		Cwe:        IssueToCWE[ruleID],
+		Cwe:        GetCweByRule(ruleID),
 	}
+}
+
+// WithSuppressions set the suppressions of the issue
+func (i *Issue) WithSuppressions(suppressions []SuppressionInfo) *Issue {
+	i.Suppressions = suppressions
+	return i
 }

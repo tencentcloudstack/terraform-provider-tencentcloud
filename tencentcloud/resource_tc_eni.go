@@ -42,7 +42,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -453,9 +453,6 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 			return err
 		}
 
-		for _, attr := range updateAttrs {
-			d.SetPartial(attr)
-		}
 	}
 
 	// if ipv4 set manually
@@ -568,7 +565,6 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 			}
 		}
 
-		d.SetPartial("ipv4s")
 	}
 
 	if _, ok := d.GetOk("ipv4_count"); ok {
@@ -626,7 +622,6 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 					}
 				}
 
-				d.SetPartial("ipv4_count")
 			}
 		}
 	}
@@ -641,7 +636,6 @@ func resourceTencentCloudEniUpdate(d *schema.ResourceData, m interface{}) error 
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

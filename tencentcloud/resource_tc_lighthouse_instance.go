@@ -81,8 +81,8 @@ import (
 
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -429,10 +429,7 @@ func resourceTencentCloudLighthouseInstanceRead(d *schema.ResourceData, meta int
 	}
 
 	if instance.InstanceChargeType != nil {
-		instanceChargePrepaidMap := map[string]interface{}{
-			"renew_flag": instance.RenewFlag,
-		}
-		_ = d.Set("instance_charge_prepaid", []interface{}{instanceChargePrepaidMap})
+		_ = d.Set("renew_flag", instance.RenewFlag)
 	}
 
 	if instance.InstanceName != nil {

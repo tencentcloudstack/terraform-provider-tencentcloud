@@ -25,8 +25,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -132,10 +132,6 @@ func resourceTencentCloudLighthouseDiskAttachmentRead(d *schema.ResourceData, me
 
 	if diskAttachment.InstanceId != nil {
 		_ = d.Set("instance_id", diskAttachment.InstanceId)
-	}
-
-	if diskAttachment.RenewFlag != nil {
-		_ = d.Set("renew_flag", diskAttachment.RenewFlag)
 	}
 
 	return nil

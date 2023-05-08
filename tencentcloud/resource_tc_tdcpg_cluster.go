@@ -36,8 +36,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tdcpg "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -328,8 +328,8 @@ func resourceTencentCloudTdcpgClusterRead(d *schema.ResourceData, meta interface
 		_ = d.Set("zone", cluster.Zone)
 	}
 
-	if cluster.PayPeriodEndTime != nil {
-		_ = d.Set("period", cluster.PayPeriodEndTime)
+	if cluster.PayPeriodEndTime != nil && cluster.CreateTime != nil && *cluster.PayMode == "PREPAID" {
+		_ = d.Set("period", monthBetweenTwoDates(*cluster.CreateTime, *cluster.PayPeriodEndTime))
 	}
 
 	if cluster.StorageLimit != nil {

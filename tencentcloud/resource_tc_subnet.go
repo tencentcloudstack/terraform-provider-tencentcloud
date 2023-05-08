@@ -37,8 +37,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -304,8 +304,6 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 	if err := service.ModifySubnetAttribute(ctx, id, name, isMulticast); err != nil {
 		return err
 	}
-	d.SetPartial("name")
-	d.SetPartial("is_multicast")
 
 	if d.HasChange("route_table_id") {
 		routeTableId := d.Get("route_table_id").(string)
@@ -326,7 +324,6 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 		if err := service.ReplaceRouteTableAssociation(ctx, id, routeTableId); err != nil {
 			return err
 		}
-		d.SetPartial("route_table_id")
 	}
 
 	if d.HasChange("tags") {
@@ -342,7 +339,6 @@ func resourceTencentCloudVpcSubnetUpdate(d *schema.ResourceData, meta interface{
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)

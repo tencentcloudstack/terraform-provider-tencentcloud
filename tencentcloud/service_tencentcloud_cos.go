@@ -9,15 +9,14 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -164,7 +163,8 @@ func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, op
 		return
 	}
 
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], baseUrl %s\n",
 		logId, "put bucket", req, resp, client.BaseURL.BucketURL)
@@ -214,7 +214,8 @@ func (me *CosService) TencentCosPutBucketACL(
 		return
 	}
 
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, "PutBucketACL", req, resp)
@@ -1178,7 +1179,7 @@ func (me *CosService) GetBucketPullOrigin(ctx context.Context, bucket string) (r
 
 				if len(rule.OriginParameter.HttpHeader.FollowHttpHeaders) != 0 {
 					headers := schema.NewSet(func(i interface{}) int {
-						return hashcode.String(i.(string))
+						return helper.HashString(i.(string))
 					}, nil)
 					for _, header := range rule.OriginParameter.HttpHeader.FollowHttpHeaders {
 						headers.Add(header.Key)
@@ -1213,7 +1214,8 @@ func (me *CosService) PutBucketPullOrigin(ctx context.Context, bucket string, ru
 	ratelimit.Check("PutBucketPullOrigin")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutOrigin(ctx, opt)
 	req, _ := json.Marshal(opt)
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	defer func() {
 		if errRet != nil {
@@ -1245,7 +1247,8 @@ func (me *CosService) DeleteBucketPullOrigin(ctx context.Context, bucket string)
 
 	ratelimit.Check("DeleteBucketPullOrigin")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteOrigin(ctx)
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	if err != nil {
 		errRet = fmt.Errorf("[DeleteBucketPullOrigin] error: %s, bucket: %s", err.Error(), bucket)
@@ -1291,7 +1294,8 @@ func (me *CosService) GetBucketOriginDomain(ctx context.Context, bucket string) 
 		rules = append(rules, item)
 	}
 
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body response body [%s]\n",
 		logId, "GetBucketOriginDomain", resp)
@@ -1308,7 +1312,8 @@ func (me *CosService) PutBucketOriginDomain(ctx context.Context, bucket string, 
 	ratelimit.Check("PutBucketOriginDomain")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutDomain(ctx, opt)
 	req, _ := json.Marshal(opt)
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	defer func() {
 		if errRet != nil {
@@ -1340,7 +1345,8 @@ func (me *CosService) DeleteBucketOriginDomain(ctx context.Context, bucket strin
 
 	ratelimit.Check("DeleteBucketOriginDomain")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteDomain(ctx)
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	if err != nil {
 		errRet = fmt.Errorf("[DeleteBucketOriginDomain] error: %s, bucket: %s", err.Error(), bucket)
@@ -1370,7 +1376,8 @@ func (me *CosService) GetBucketReplication(ctx context.Context, bucket string) (
 		return
 	}
 
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	if err != nil {
 		errRet = err
@@ -1403,7 +1410,8 @@ func (me *CosService) PutBucketReplication(ctx context.Context, bucket string, r
 	ratelimit.Check("PutBucketReplication")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutBucketReplication(ctx, option)
 
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	if err != nil {
 		errRet = err
@@ -1428,7 +1436,8 @@ func (me *CosService) DeleteBucketReplication(ctx context.Context, bucket string
 	ratelimit.Check("DeleteBucketReplication")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteBucketReplication(ctx)
 
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	if err != nil {
 		errRet = err
@@ -1465,7 +1474,8 @@ func (me *CosService) DescribeCosBucketDomainCertificate(ctx context.Context, ce
 	}()
 
 	result, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetDomainCertificate(ctx, option)
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 	if response.StatusCode == 404 {
 		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)
 		return
@@ -1507,7 +1517,8 @@ func (me *CosService) DeleteCosBucketDomainCertificate(ctx context.Context, cert
 	ratelimit.Check("DeleteDomainCertificate")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.DeleteDomainCertificate(ctx, option)
 
-	resp, _ := json.Marshal(response)
+	body, _ := response.Response.Request.GetBody()
+	resp, _ := json.Marshal(body)
 
 	if err != nil {
 		errRet = err

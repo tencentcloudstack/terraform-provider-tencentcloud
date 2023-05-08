@@ -306,6 +306,10 @@ data "tencentcloud_instance_types" "default" {
     name   = "zone"
     values = [var.availability_cvm_zone]
   }
+  filter {
+    name   = "instance-family"
+    values = ["S1", "S2", "S3", "S4", "S5", "SR1", "SA1", "SA2"]
+  }
   cpu_core_count = 2
   exclude_sold_out = true
 }
@@ -546,8 +550,10 @@ variable "cam_user_basic" {
 
 // TCR Service
 const defaultTCRInstanceName = "keep-tcr-instance"
+const defaultTCRInstanceId = "tcr-e79o580i"
 const defaultTCRNamespace = "keep-tcr-namespace"
 const defaultTCRRepoName = "keep-tcr-repo"
+const defaultTCRSSL = "0a5zD3cN"
 
 const defaultTCRInstanceVar = `
 variable "tcr_name" {
@@ -952,6 +958,8 @@ const (
 	defaultTsfConfigId        = "dcfg-y54wzk3a"
 	defaultTsfApiId           = "api-j03q029a"
 	defaultTsfGWGroupId       = "group-vzd97zpy"
+	defaultTsfFileConfigId    = "dcfg-f-ab6l9x5y"
+	defaultTsfImageId         = "img-7r9vq8wd"
 )
 
 // End of TSF
