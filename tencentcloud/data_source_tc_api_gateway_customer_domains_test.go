@@ -8,7 +8,8 @@ import (
 
 var testAPIGatewayDomainSourceName = "data.tencentcloud_api_gateway_customer_domains"
 
-func TestAccTencentAPIGatewayCustomerDomain(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentAPIGatewayCustomerDomain_basic -v
+func TestAccTencentAPIGatewayCustomerDomain_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -34,7 +35,7 @@ func TestAccTencentAPIGatewayCustomerDomain(t *testing.T) {
 func testAccTestAccTencentAPIGatewayDomain() string {
 	return `
 resource "tencentcloud_api_gateway_custom_domain" "foo" {
-	service_id         = "service-ohxqslqe"
+	service_id         = "service-7lybgojo"
 	sub_domain         = "tic-test.dnsv1.com"
 	protocol           = "http"
 	net_type           = "OUTER"
