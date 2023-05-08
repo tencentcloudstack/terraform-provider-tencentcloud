@@ -4,11 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"strconv"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
@@ -156,8 +154,8 @@ func TestAccTencentCloudGaapDomainErrorPage_full(t *testing.T) {
 					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes.*", "406"),
 					resource.TestCheckTypeSetElemAttr("tencentcloud_gaap_domain_error_page.foo", "error_codes.*", "504"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "body", "bad request"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(schema.HashString("Content-Length")), "Content-Length"),
-					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers."+strconv.Itoa(schema.HashString("X-TEST")), "X-TEST"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers.*", "Content-Length"),
+					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "clear_headers.*", "X-TEST"),
 					resource.TestCheckResourceAttr("tencentcloud_gaap_domain_error_page.foo", "set_headers.X-TEST", "test"),
 				),
 			},
