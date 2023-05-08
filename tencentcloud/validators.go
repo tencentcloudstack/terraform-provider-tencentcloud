@@ -239,7 +239,7 @@ func validateAllowedIntValue(ints []int) schema.SchemaValidateFunc {
 // specification: https://cloud.tencent.com/document/product/436/13312
 func validateCosBucketName(v interface{}, k string) (ws []string, errors []error) {
 	value := v.(string)
-	if len(value) > 60 || len(value) < 0 {
+	if len(value) > 60 || len(value) < 1 {
 		errors = append(errors, fmt.Errorf("the length of %s must be 1-60: %s", k, value))
 	}
 

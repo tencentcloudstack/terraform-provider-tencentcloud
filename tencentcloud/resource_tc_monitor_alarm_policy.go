@@ -366,7 +366,7 @@ func resourceTencentCloudMonitorAlarmPolicy() *schema.Resource {
 				Default:     -1,
 				Description: "Project ID. For products with different projects, a value other than -1 must be passed in.",
 			},
-			//nolint:all
+			//nolint:misspell
 			"conditon_template_id": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -498,7 +498,7 @@ func resourceTencentMonitorAlarmPolicyCreate(d *schema.ResourceData, meta interf
 		request.ProjectId = helper.IntInt64(projectId)
 	}
 
-	//nolint:all
+	//nolint:misspell
 	if v, ok := d.GetOk("conditon_template_id"); ok {
 		request.ConditionTemplateId = helper.IntInt64(v.(int))
 	}
@@ -743,7 +743,7 @@ func resourceTencentMonitorAlarmPolicyRead(d *schema.ResourceData, meta interfac
 		d.Set("project_id", policy.ProjectId),
 	)
 
-	//nolint:all
+	//nolint:misspell
 	if policy.ConditionTemplateId != nil && *policy.ConditionTemplateId != "" {
 		id, err := strconv.ParseInt(*policy.ConditionTemplateId, 10, 64)
 		if id != 0 && err == nil {
