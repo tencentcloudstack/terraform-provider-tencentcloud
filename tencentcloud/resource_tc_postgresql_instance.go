@@ -144,6 +144,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -1253,15 +1254,15 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 				planMap["base_backup_retention_period"] = backupPlan.BaseBackupRetentionPeriod
 			}
 
-			// set period list from plan array
-			periodList := []interface{}{}
-			for _, plan := range response {
-				if plan.BackupPeriod != nil {
-					periodList = append(periodList, plan.BackupPeriod)
+			if backupPlan.BackupPeriod != nil {
+				strSlice := []string{}
+				// set period list from BackupPeriods string, eg:"BackupPeriod": "[\"tuesday\",\"wednesday\"]",
+				err := json.Unmarshal([]byte(*backupPlan.BackupPeriod), &strSlice)
+				if err != nil {
+					return fmt.Errorf("BackupPeriod:[%s] has invalid format,Unmarshal failed! error: %v", *backupPlan.BackupPeriod, err.Error())
 				}
+				planMap["backup_period"] = strSlice
 			}
-			planMap["backup_period"] = periodList
-
 			_ = d.Set("backup_plan", []interface{}{planMap})
 		}
 
