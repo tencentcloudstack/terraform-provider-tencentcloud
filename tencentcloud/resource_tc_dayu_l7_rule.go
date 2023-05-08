@@ -445,8 +445,10 @@ func resourceTencentCloudDayuL7RuleUpdate(d *schema.ResourceData, meta interface
 		if d.HasChange("protocol") {
 			//set old protocol para close first
 			oldInterface, newInterface := d.GetChange("protocol")
+			//nolint:staticcheck
 			oldProtocol := oldInterface.(string)
 			newProtocol := newInterface.(string)
+			//nolint:staticcheck
 			protocol = oldProtocol
 			//open new only
 			if switchFlag {

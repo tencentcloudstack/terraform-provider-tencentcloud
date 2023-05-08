@@ -235,7 +235,6 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 		err               error
 		response          string
 		addonResponseData = &AddonResponseData{}
-		status            = make(map[string]*string)
 	)
 
 	_, has, err = service.PollingAddonsPhase(ctx, clusterId, addonName, addonResponseData)
@@ -255,6 +254,8 @@ func resourceTencentCloudTkeAddonAttachmentRead(d *schema.ResourceData, meta int
 	_ = d.Set("response_body", response)
 
 	spec := addonResponseData.Spec
+	// finish this uncompleted code...
+	status := addonResponseData.Status
 
 	if spec != nil {
 		_ = d.Set("cluster_id", clusterId)
