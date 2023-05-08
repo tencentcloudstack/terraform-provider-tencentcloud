@@ -89,6 +89,8 @@ API GateWay
 	tencentcloud_api_gateway_customer_domains
 	tencentcloud_api_gateway_usage_plan_environments
 	tencentcloud_api_gateway_api_keys
+	tencentcloud_api_gateway_api_docs
+	tencentcloud_api_gateway_api_apps
 
   Resource
   	tencentcloud_api_gateway_api
@@ -103,6 +105,8 @@ API GateWay
     tencentcloud_api_gateway_service_release
 	tencentcloud_api_gateway_plugin
 	tencentcloud_api_gateway_plugin_attachment
+	tencentcloud_api_gateway_api_doc
+	tencentcloud_api_gateway_api_app
 
 Cloud Audit(Audit)
   Data Source
@@ -1500,6 +1504,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_microservice":                         dataSourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_unit_rules":                           dataSourceTencentCloudTsfUnitRules(),
 			"tencentcloud_lighthouse_bundle":                        dataSourceTencentCloudLighthouseBundle(),
+			"tencentcloud_api_gateway_api_docs":                     dataSourceTencentCloudAPIGatewayAPIDocs(),
+			"tencentcloud_api_gateway_api_apps":                     dataSourceTencentCloudAPIGatewayAPIApps(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1983,6 +1989,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_key_pair":                        resourceTencentCloudLighthouseKeyPair(),
 			"tencentcloud_lighthouse_snapshot":                        resourceTencentCloudLighthouseSnapshot(),
 			"tencentcloud_lighthouse_apply_instance_snapshot":         resourceTencentCloudLighthouseApplyInstanceSnapshot(),
+			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
+			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 		},
 
 		ConfigureFunc: providerConfigure,
