@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	monitor "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/monitor/v20180724"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -1701,4 +1701,29 @@ func (r *PrometheusConfig) SetRegex(configs []interface{}) (*[]interface{}, erro
 		}
 	}
 	return &configs, nil
+}
+
+func (me *MonitorService) DescribeMonitorTmpGrafanaConfigById(ctx context.Context, instanceId string) (tmpGrafanaConfig *monitor.DescribeGrafanaConfigResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewDescribeGrafanaConfigRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMonitorClient().DescribeGrafanaConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	tmpGrafanaConfig = response.Response
+	return
 }

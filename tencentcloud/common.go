@@ -15,8 +15,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -125,6 +125,29 @@ func parseTimeFromCommonLayout(t *string) time.Time {
 		return time.Time{}
 	}
 	return result
+}
+
+func monthBetweenTwoDates(start, end string) int {
+	startTime, err := time.Parse(time.RFC3339, start)
+	if err != nil {
+		panic(err)
+	}
+	endTime, err := time.Parse(time.RFC3339, end)
+	if err != nil {
+		panic(err)
+	}
+	m := 0
+	month := startTime.Month()
+	for startTime.Before(endTime) {
+		startTime = startTime.Add(time.Hour * 24)
+		nextMonth := startTime.Month()
+		if nextMonth != month {
+			m++
+		}
+		month = nextMonth
+	}
+
+	return m
 }
 
 // getLogId get logId for trace, return a new logId if ctx is nil

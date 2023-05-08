@@ -1,0 +1,3 @@
+```release-note:new-data-source
+tencentcloud_ccn_cross_border_region_bandwidth_limits
+```

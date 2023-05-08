@@ -56,8 +56,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -445,6 +445,34 @@ func resourceTencentCloudElasticsearchInstanceCreate(d *schema.ResourceData, met
 		return err
 	}
 
+	// es acl
+	esAcl := es.EsAcl{}
+	if aclMap, ok := helper.InterfacesHeadMap(d, "es_acl"); ok {
+		if v, ok := aclMap["black_list"]; ok {
+			bList := v.(*schema.Set).List()
+			for _, d := range bList {
+				esAcl.BlackIpList = append(esAcl.BlackIpList, helper.String(d.(string)))
+			}
+		}
+		if v, ok := aclMap["white_list"]; ok {
+			wList := v.(*schema.Set).List()
+			for _, d := range wList {
+				esAcl.WhiteIpList = append(esAcl.WhiteIpList, helper.String(d.(string)))
+			}
+		}
+	}
+
+	err = resource.Retry(writeRetryTimeout*2, func() *resource.RetryError {
+		errRet := elasticsearchService.UpdateInstance(ctx, instanceId, "", "", 0, nil, nil, &esAcl)
+		if errRet != nil {
+			return retryError(errRet)
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
 	// tags
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		client := meta.(*TencentCloudClient).apiV3Conn
@@ -586,7 +614,6 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		if err != nil {
 			return err
 		}
-		d.SetPartial("instance_name")
 	}
 	if d.HasChange("password") {
 		password := d.Get("password").(string)
@@ -746,14 +773,14 @@ func resourceTencentCloudElasticsearchInstanceUpdate(d *schema.ResourceData, met
 		esAcl := es.EsAcl{}
 		if aclMap, ok := helper.InterfacesHeadMap(d, "es_acl"); ok {
 			if v, ok := aclMap["black_list"]; ok {
-				blist := v.(*schema.Set).List()
-				for _, d := range blist {
+				bList := v.(*schema.Set).List()
+				for _, d := range bList {
 					esAcl.BlackIpList = append(esAcl.BlackIpList, helper.String(d.(string)))
 				}
 			}
 			if v, ok := aclMap["white_list"]; ok {
-				wlist := v.(*schema.Set).List()
-				for _, d := range wlist {
+				wList := v.(*schema.Set).List()
+				for _, d := range wList {
 					esAcl.WhiteIpList = append(esAcl.WhiteIpList, helper.String(d.(string)))
 				}
 			}

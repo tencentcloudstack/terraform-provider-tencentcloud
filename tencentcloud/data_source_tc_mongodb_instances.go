@@ -19,7 +19,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -286,7 +286,7 @@ instancesLoop:
 			"charge_type":    MONGODB_CHARGE_TYPE[*mongo.PayMode],
 		}
 		if MONGODB_CHARGE_TYPE[*mongo.PayMode] == MONGODB_CHARGE_TYPE_PREPAID {
-			_ = d.Set("auto_renew_flag", *mongo.AutoRenewFlag)
+			instance["auto_renew_flag"] = *mongo.AutoRenewFlag
 		}
 		instanceList = append(instanceList, instance)
 		ids = append(ids, *mongo.InstanceId)

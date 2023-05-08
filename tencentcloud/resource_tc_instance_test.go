@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
@@ -216,6 +216,15 @@ func TestAccTencentCloudInstanceResource_WithKeyPairs(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithKeyPair_withoutKeyPair,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
+				),
+			},
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
 				Config: testAccTencentCloudInstanceWithKeyPair(
 					"[tencentcloud_key_pair.key_pair_0.id, tencentcloud_key_pair.key_pair_1.id]",
 				),
@@ -297,6 +306,7 @@ func TestAccTencentCloudInstanceResource_WithImageLogin(t *testing.T) {
 					testAccCheckTencentCloudInstanceExists(id),
 					resource.TestCheckResourceAttr(id, "instance_status", "RUNNING"),
 					resource.TestCheckResourceAttr(id, "keep_image_login", "true"),
+					resource.TestCheckResourceAttr(id, "disable_api_termination", "false"),
 				),
 			},
 		},
@@ -937,6 +947,16 @@ resource "tencentcloud_instance" "foo" {
 }
 `
 
+const testAccTencentCloudInstanceWithKeyPair_withoutKeyPair = defaultInstanceVariable + `
+resource "tencentcloud_instance" "foo" {
+	instance_name     = var.instance_name
+	availability_zone = var.availability_cvm_zone
+	image_id          = data.tencentcloud_images.default.images.0.image_id
+	instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+	system_disk_type  = "CLOUD_PREMIUM"
+}
+`
+
 func testAccTencentCloudInstanceWithKeyPair(keyIds string) string {
 
 	return fmt.Sprintf(
@@ -996,6 +1016,7 @@ resource "tencentcloud_instance" "foo" {
   instance_type              = data.tencentcloud_instance_types.default.instance_types.0.instance_type
   keep_image_login 			 = true
   system_disk_type           = "CLOUD_PREMIUM"
+  disable_api_termination    = false
 }
 `
 

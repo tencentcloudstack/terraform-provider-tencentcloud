@@ -26,8 +26,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
@@ -171,7 +171,7 @@ func resourceTencentCloudHaVipRead(d *schema.ResourceData, meta interface{}) err
 	_ = d.Set("vip", *haVip.Vip)
 	_ = d.Set("vpc_id", *haVip.VpcId)
 	_ = d.Set("subnet_id", *haVip.SubnetId)
-	_ = d.Set("address_id", *haVip.AddressIp)
+	_ = d.Set("address_ip", *haVip.AddressIp)
 	_ = d.Set("state", *haVip.State)
 	_ = d.Set("network_interface_id", *haVip.NetworkInterfaceId)
 	_ = d.Set("instance_id", *haVip.InstanceId)

@@ -30,8 +30,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	rum "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -264,19 +264,16 @@ func resourceTencentCloudRumTawInstanceRead(d *schema.ResourceData, meta interfa
 	}
 
 	if tawInstance.Tags != nil {
-		tagsList := []interface{}{}
+		tagsMap := map[string]interface{}{}
 		for _, tags := range tawInstance.Tags {
-			tagsMap := map[string]interface{}{}
 			if tags.Key != nil {
 				tagsMap["key"] = tags.Key
 			}
 			if tags.Value != nil {
 				tagsMap["value"] = tags.Value
 			}
-
-			tagsList = append(tagsList, tagsMap)
 		}
-		_ = d.Set("tags", tagsList)
+		_ = d.Set("tags", tagsMap)
 	}
 
 	if tawInstance.InstanceDesc != nil {

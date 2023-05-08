@@ -6,8 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccTencentCloudAPIGateWayStrategyAttachment_basic(t *testing.T) {
@@ -55,6 +57,11 @@ func testApiStrategyAttachmentDestroy(s *terraform.State) error {
 
 		has, err := service.DescribeStrategyAttachment(ctx, serviceId, strategyId, bindApiId)
 		if err != nil {
+			if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkErr.Code == "ResourceNotFound.InvalidIPStrategy" {
+					return nil
+				}
+			}
 			return err
 		}
 

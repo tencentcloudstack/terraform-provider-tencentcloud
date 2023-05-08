@@ -10,9 +10,9 @@ import (
 	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
 	tat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tat/v20201028"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -714,7 +714,7 @@ func (me *TkeService) CheckOneOfClusterNodeReady(ctx context.Context, clusterId 
 }
 
 /*
-	if cluster is creating, return error:TencentCloudSDKError] Code=InternalError.ClusterState
+if cluster is creating, return error:TencentCloudSDKError] Code=InternalError.ClusterState
 */
 func (me *TkeService) DeleteClusterInstances(ctx context.Context, id string, instanceIds []string) (errRet error) {
 	logId := getLogId(ctx)
@@ -823,7 +823,7 @@ func (me *TkeService) DeleteClusterAsGroups(ctx context.Context, id, asGroupId s
 }
 
 /*
-  open internet access
+open internet access
 */
 func (me *TkeService) CreateClusterEndpoint(ctx context.Context, id string, subnetId, securityGroupId string, internet bool, domain string) (errRet error) {
 	logId := getLogId(ctx)
@@ -1430,7 +1430,7 @@ func (me *TkeService) DescribeNodePool(ctx context.Context, clusterId string, no
 	return
 }
 
-//node pool global config
+// node pool global config
 func (me *TkeService) ModifyClusterNodePoolGlobalConfig(ctx context.Context, request *tke.ModifyClusterAsGroupOptionAttributeRequest) (errRet error) {
 	logId := getLogId(ctx)
 	defer func() {
@@ -2125,4 +2125,76 @@ func ModifyClusterInternetOrIntranetAccess(ctx context.Context, d *schema.Resour
 		}
 	}
 	return nil
+}
+
+func (me *TkeService) createBackupStorageLocation(ctx context.Context, request *tke.CreateBackupStorageLocationRequest) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().CreateBackupStorageLocation(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) describeBackupStorageLocations(ctx context.Context, names []string) (locations []*tke.BackupStorageLocation, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDescribeBackupStorageLocationsRequest()
+	request.Names = common.StringPtrs(names)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeBackupStorageLocations(request)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil && len(response.Response.BackupStorageLocationSet) > 0 {
+		locations = append(locations, response.Response.BackupStorageLocationSet...)
+	}
+	return
+
+}
+
+func (me *TkeService) deleteBackupStorageLocation(ctx context.Context, name string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDeleteBackupStorageLocationRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.Name = common.StringPtr(name)
+
+	ratelimit.Check(request.GetAction())
+	_, err := me.client.UseTkeClient().DeleteBackupStorageLocation(request)
+	return err
 }

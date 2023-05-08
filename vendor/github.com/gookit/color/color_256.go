@@ -2,6 +2,7 @@ package color
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -31,26 +32,32 @@ from wikipedia, 256 color:
 const (
 	TplFg256 = "38;5;%d"
 	TplBg256 = "48;5;%d"
+	Fg256Pfx = "38;5;"
+	Bg256Pfx = "48;5;"
 )
 
 /*************************************************************
  * 8bit(256) Color: Bit8Color Color256
  *************************************************************/
 
-// Color256 256 (8 bit) color, uint8 range at 0 - 255
+// Color256 256 color (8 bit), uint8 range at 0 - 255
 //
 // 颜色值使用10进制和16进制都可 0x98 = 152
 //
-// 颜色有两位uint8组成:
+// The color consists of two uint8:
 // 	0: color value
-// 	1: color type, Fg=0 Bg=1
-// 	>1: unset value
+// 	1: color type; Fg=0, Bg=1, >1: unset value
+//
 // example:
 // 	fg color: [152, 0]
 //  bg color: [152, 1]
 //
 // NOTICE: now support 256 color on windows CMD, PowerShell
+// lint warn - Name starts with package name
 type Color256 [2]uint8
+type Bit8Color = Color256 // alias
+
+var emptyC256 = Color256{1: 99}
 
 // Bit8 create a color256
 func Bit8(val uint8, isBg ...bool) Color256 {
@@ -67,6 +74,16 @@ func C256(val uint8, isBg ...bool) Color256 {
 	}
 
 	return bc
+}
+
+// Set terminal by 256 color code
+func (c Color256) Set() error {
+	return SetTerminal(c.String())
+}
+
+// Reset terminal. alias of the ResetTerminal()
+func (c Color256) Reset() error {
+	return ResetTerminal()
 }
 
 // Print print message
@@ -94,23 +111,73 @@ func (c Color256) Sprintf(format string, a ...interface{}) string {
 	return RenderString(c.String(), fmt.Sprintf(format, a...))
 }
 
+// C16 convert color-256 to 16 color.
+func (c Color256) C16() Color {
+	return c.Basic()
+}
+
+// Basic convert color-256 to basic 16 color.
+func (c Color256) Basic() Color {
+	return Color(c[0]) // TODO
+}
+
+// RGB convert color-256 to RGB color.
+func (c Color256) RGB() RGBColor {
+	return RGBFromSlice(C256ToRgb(c[0]), c[1] == AsBg)
+}
+
+// RGBColor convert color-256 to RGB color.
+func (c Color256) RGBColor() RGBColor {
+	return c.RGB()
+}
+
 // Value return color value
 func (c Color256) Value() uint8 {
 	return c[0]
 }
 
-// String convert to color code string.
+// Code convert to color code string. eg: "12"
+func (c Color256) Code() string {
+	return strconv.Itoa(int(c[0]))
+}
+
+// FullCode convert to color code string with prefix. eg: "38;5;12"
+func (c Color256) FullCode() string {
+	return c.String()
+}
+
+// String convert to color code string with prefix. eg: "38;5;12"
 func (c Color256) String() string {
 	if c[1] == AsFg { // 0 is Fg
-		return fmt.Sprintf(TplFg256, c[0])
+		return Fg256Pfx + strconv.Itoa(int(c[0]))
 	}
 
 	if c[1] == AsBg { // 1 is Bg
-		return fmt.Sprintf(TplBg256, c[0])
+		return Bg256Pfx + strconv.Itoa(int(c[0]))
 	}
+	return "" // empty
+}
 
-	// empty
-	return ""
+// IsFg color
+func (c Color256) IsFg() bool {
+	return c[1] == AsFg
+}
+
+// ToFg 256 color
+func (c Color256) ToFg() Color256 {
+	c[1] = AsFg
+	return c
+}
+
+// IsBg color
+func (c Color256) IsBg() bool {
+	return c[1] == AsBg
+}
+
+// ToBg 256 color
+func (c Color256) ToBg() Color256 {
+	c[1] = AsBg
+	return c
 }
 
 // IsEmpty value
@@ -126,16 +193,18 @@ func (c Color256) IsEmpty() bool {
 //
 // 前/背景色
 // 都是由两位uint8组成, 第一位是色彩值；
-// 第二位与Bit8Color不一样的是，在这里表示是否设置了值 0 未设置 ^0 已设置
+// 第二位与 Bit8Color 不一样的是，在这里表示是否设置了值 0 未设置 !=0 已设置
 type Style256 struct {
-	p *Printer
 	// Name of the style
 	Name string
+	// color options of the style
+	opts Opts
 	// fg and bg color
 	fg, bg Color256
 }
 
 // S256 create a color256 style
+//
 // Usage:
 // 	s := color.S256()
 // 	s := color.S256(132) // fg
@@ -154,10 +223,11 @@ func S256(fgAndBg ...uint8) *Style256 {
 	return s
 }
 
-// Set fg and bg color value
-func (s *Style256) Set(fgVal, bgVal uint8) *Style256 {
+// Set fg and bg color value, can also with color options
+func (s *Style256) Set(fgVal, bgVal uint8, opts ...Color) *Style256 {
 	s.fg = Color256{fgVal, 1}
 	s.bg = Color256{bgVal, 1}
+	s.opts.Add(opts...)
 	return s
 }
 
@@ -173,7 +243,19 @@ func (s *Style256) SetFg(fgVal uint8) *Style256 {
 	return s
 }
 
-// Print print message
+// SetOpts set options
+func (s *Style256) SetOpts(opts Opts) *Style256 {
+	s.opts = opts
+	return s
+}
+
+// AddOpts add options
+func (s *Style256) AddOpts(opts ...Color) *Style256 {
+	s.opts.Add(opts...)
+	return s
+}
+
+// Print message
 func (s *Style256) Print(a ...interface{}) {
 	doPrintV2(s.String(), fmt.Sprint(a...))
 }
@@ -207,12 +289,15 @@ func (s *Style256) Code() string {
 func (s *Style256) String() string {
 	var ss []string
 	if s.fg[1] > 0 {
-		ss = append(ss, fmt.Sprintf(TplFg256, s.fg[0]))
+		ss = append(ss, Fg256Pfx+strconv.FormatInt(int64(s.fg[0]), 10))
 	}
 
 	if s.bg[1] > 0 {
-		ss = append(ss, fmt.Sprintf(TplBg256, s.bg[0]))
+		ss = append(ss, Bg256Pfx+strconv.FormatInt(int64(s.bg[0]), 10))
 	}
 
+	if s.opts.IsValid() {
+		ss = append(ss, s.opts.String())
+	}
 	return strings.Join(ss, ";")
 }

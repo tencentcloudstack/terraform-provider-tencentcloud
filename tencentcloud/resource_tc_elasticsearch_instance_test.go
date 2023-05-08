@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func init() {
@@ -214,7 +214,7 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 
 	es_acl {
 	  white_list = [
-		"0.0.0.0"
+		"127.0.0.1"
 	  ]
 	  black_list = [
 		"1.1.1.1"

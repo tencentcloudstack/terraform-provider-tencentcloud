@@ -30,8 +30,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -476,7 +476,6 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 			return outErr
 		}
 
-		d.SetPartial("project_id")
 	}
 
 	if d.HasChange("maintenance_week_set") || d.HasChange("maintenance_start_time") || d.HasChange("maintenance_time_span") {
@@ -501,9 +500,6 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 			return outErr
 		}
 
-		d.SetPartial("maintenance_week_set")
-		d.SetPartial("maintenance_start_time")
-		d.SetPartial("maintenance_time_span")
 	}
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
@@ -514,7 +510,6 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 			return err
 		}
 
-		d.SetPartial("tags")
 	}
 
 	d.Partial(false)
@@ -554,7 +549,7 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 	_ = d.Set("vpc_id", instance.UniqVpcId)
 	_ = d.Set("subnet_id", instance.UniqSubnetId)
 	_ = d.Set("name", instance.Name)
-	_ = d.Set("charge_type", instance.PayMode)
+	_ = d.Set("charge_type", helper.Int64ToStr(*instance.PayMode))
 
 	if int(*instance.PayMode) == 1 {
 		_ = d.Set("charge_type", COMMON_PAYTYPE_PREPAID)

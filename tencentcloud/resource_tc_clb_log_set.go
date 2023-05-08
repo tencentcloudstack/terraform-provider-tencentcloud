@@ -24,7 +24,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceTencentCloudClbLogSet() *schema.Resource {
@@ -85,7 +87,7 @@ func resourceTencentCloudClbLogSetRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("name", info.LogsetName)
 
 	_ = d.Set("create_time", info.CreateTime)
-	_ = d.Set("topic_count", info.TopicCount)
+	_ = d.Set("topic_count", helper.Int64ToStr(*info.TopicCount))
 
 	return nil
 }

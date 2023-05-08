@@ -152,8 +152,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	as "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
@@ -1258,7 +1258,7 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		}
 		taints[i] = taint
 	}
-	d.Set("taints", taints)
+	_ = d.Set("taints", taints)
 
 	return nil
 }
@@ -1394,7 +1394,6 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 			return err
 		}
 
-		d.SetPartial("auto_scaling_config")
 	}
 
 	var capacityHasChanged = false
@@ -1510,11 +1509,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		if err != nil {
 			return err
 		}
-		d.SetPartial("scaling_group_name")
-		d.SetPartial("zones")
-		d.SetPartial("scaling_group_project_id")
-		d.SetPartial("default_cooldown")
-		d.SetPartial("termination_policies")
+
 	}
 
 	if d.HasChange("desired_capacity") && !capacityHasChanged {
@@ -1543,7 +1538,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		if err != nil {
 			return err
 		}
-		d.Set("auto_scaling_config.0.backup_instance_types", instanceTypes)
+		_ = d.Set("auto_scaling_config.0.backup_instance_types", instanceTypes)
 	}
 	d.Partial(false)
 

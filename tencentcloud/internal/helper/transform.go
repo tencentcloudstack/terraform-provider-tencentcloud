@@ -190,6 +190,11 @@ func StrToInt64(s string) (i int64) {
 	return
 }
 
+func StrToInt(s string) (i int) {
+	i, _ = strconv.Atoi(s)
+	return
+}
+
 func StrToInt64Point(s string) *int64 {
 	i := StrToInt64(s)
 	return &i

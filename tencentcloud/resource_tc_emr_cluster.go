@@ -54,8 +54,8 @@ import (
 	innerErr "errors"
 	"fmt"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
@@ -281,7 +281,7 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 	d.SetId(instanceId)
-	d.Set("instance_id", instanceId)
+	_ = d.Set("instance_id", instanceId)
 	var displayStrategy string
 	if v, ok := d.GetOk("display_strategy"); ok {
 		displayStrategy = v.(string)

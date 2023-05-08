@@ -29,8 +29,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -84,6 +84,16 @@ func resourceTencentCloudCfsSnapshotCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("snapshot_name"); ok {
 		request.SnapshotName = helper.String(v.(string))
+	}
+
+	if v := helper.GetTags(d, "tags"); len(v) > 0 {
+		for tagKey, tagValue := range v {
+			tag := cfs.TagInfo{
+				TagKey:   helper.String(tagKey),
+				TagValue: helper.String(tagValue),
+			}
+			request.ResourceTags = append(request.ResourceTags, &tag)
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

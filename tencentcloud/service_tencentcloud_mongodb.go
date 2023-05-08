@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	mongodb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb/v20190725"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -97,7 +98,7 @@ func (me *MongodbService) ResetInstancePassword(ctx context.Context, instanceId,
 	}
 
 	if response != nil && response.Response != nil {
-		if err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId); err != nil {
+		if err = me.DescribeAsyncRequestInfo(ctx, *response.Response.AsyncRequestId, 3*readRetryTimeout); err != nil {
 			return err
 		}
 	}
@@ -318,11 +319,11 @@ func (me *MongodbService) ModifyAutoRenewFlag(ctx context.Context, instanceId st
 	return
 }
 
-func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId string) (errRet error) {
+func (me *MongodbService) DescribeAsyncRequestInfo(ctx context.Context, asyncId string, timeout time.Duration) (errRet error) {
 	logId := getLogId(ctx)
 	request := mongodb.NewDescribeAsyncRequestInfoRequest()
 	request.AsyncRequestId = &asyncId
-	err := resource.Retry(readRetryTimeout*3, func() *resource.RetryError {
+	err := resource.Retry(timeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		result, e := me.client.UseMongodbClient().DescribeAsyncRequestInfo(request)
 		if e != nil {
@@ -430,5 +431,70 @@ func (me *MongodbService) DescribeDBInstanceNodeProperty(ctx context.Context, in
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	replicateSets = response.Response.ReplicateSets
+	return
+}
+
+func (me *MongodbService) DescribeMongodbInstanceAccountById(ctx context.Context, instanceId string, userName string) (instanceAccount *mongodb.UserInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mongodb.NewDescribeAccountUsersRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().DescribeAccountUsers(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Users) < 1 {
+		return
+	}
+
+	for _, user := range response.Response.Users {
+		if *user.UserName == userName {
+			instanceAccount = user
+			return
+		}
+	}
+	return
+}
+
+func (me *MongodbService) DeleteMongodbInstanceAccountById(ctx context.Context, instanceId string, userName string, mongoUserPassword string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := mongodb.NewDeleteAccountUserRequest()
+	request.InstanceId = &instanceId
+	request.UserName = &userName
+	request.MongoUserPassword = &mongoUserPassword
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().DeleteAccountUser(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if response != nil && response.Response != nil {
+		if err = me.DescribeAsyncRequestInfo(ctx, helper.Int64ToStr(*response.Response.FlowId), 3*readRetryTimeout); err != nil {
+			errRet = err
+			return
+		}
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 	return
 }

@@ -562,3 +562,57 @@ func (me *TatService) DeleteTatInvocationById(ctx context.Context, invocationId,
 
 	return
 }
+
+func (me *TatService) DescribeTatInvocationTaskByFilter(ctx context.Context, param map[string]interface{}) (invocationTaskDatasource []*tat.InvocationTask, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tat.NewDescribeInvocationTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InvocationTaskIds" {
+			request.InvocationTaskIds = v.([]*string)
+		}
+		if k == "filters" {
+			request.Filters = v.([]*tat.Filter)
+		}
+		if k == "HideOutput" {
+			request.HideOutput = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTatClient().DescribeInvocationTasks(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.InvocationTaskSet) < 1 {
+			break
+		}
+		invocationTaskDatasource = append(invocationTaskDatasource, response.Response.InvocationTaskSet...)
+		if len(response.Response.InvocationTaskSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

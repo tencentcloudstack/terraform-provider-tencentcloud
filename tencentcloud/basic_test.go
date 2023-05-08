@@ -306,6 +306,10 @@ data "tencentcloud_instance_types" "default" {
     name   = "zone"
     values = [var.availability_cvm_zone]
   }
+  filter {
+    name   = "instance-family"
+    values = ["S1", "S2", "S3", "S4", "S5", "SR1", "SA1", "SA2"]
+  }
   cpu_core_count = 2
   exclude_sold_out = true
 }
@@ -546,8 +550,10 @@ variable "cam_user_basic" {
 
 // TCR Service
 const defaultTCRInstanceName = "keep-tcr-instance"
+const defaultTCRInstanceId = "tcr-e79o580i"
 const defaultTCRNamespace = "keep-tcr-namespace"
 const defaultTCRRepoName = "keep-tcr-repo"
+const defaultTCRSSL = "0a5zD3cN"
 
 const defaultTCRInstanceVar = `
 variable "tcr_name" {
@@ -788,7 +794,7 @@ const (
 	defaultZoneName    = "tf-teo-t.xyz"
 	defaultZoneId      = "zone-2a1u0y616jz6"
 	defaultPolicyId    = "11581"
-	applicationProxyId = "proxy-f2c15f4f-5b34-11ed-aa27-525400b35dd9"
+	applicationProxyId = "sid-2f8xqhmf32dt"
 )
 
 // End of TEO
@@ -952,6 +958,8 @@ const (
 	defaultTsfConfigId        = "dcfg-y54wzk3a"
 	defaultTsfApiId           = "api-j03q029a"
 	defaultTsfGWGroupId       = "group-vzd97zpy"
+	defaultTsfFileConfigId    = "dcfg-f-ab6l9x5y"
+	defaultTsfImageId         = "img-7r9vq8wd"
 )
 
 // End of TSF
@@ -975,3 +983,33 @@ const (
 )
 
 // End of CRS
+
+const (
+	defaultLighthouseInstanceId   = "lhins-hwe21u91"
+	defaultLighthoustDiskId       = "lhdisk-do4p4hz6"
+	defaultLighthouseBackupDiskId = "lhdisk-cwodsc4q"
+	defaultLighthouseBackUpId     = "lhbak-bpum3ygx"
+	defaultLighthouseSnapshotId   = "lhsnap-9jaw9m17"
+)
+
+const DefaultLighthoustVariables = `
+variable "lighthouse_id" {
+  default = "` + defaultLighthouseInstanceId + `"
+}
+
+variable "lighthouse_disk_id" {
+  default = "` + defaultLighthoustDiskId + `"
+}
+
+variable "lighthouse_backup_disk_id" {
+  default = "` + defaultLighthouseBackupDiskId + `"
+}
+
+variable "lighthouse_backup_id" {
+  default = "` + defaultLighthouseBackUpId + `"
+}
+
+variable "lighthouse_snapshot_id" {
+  default = "` + defaultLighthouseSnapshotId + `"
+}
+`

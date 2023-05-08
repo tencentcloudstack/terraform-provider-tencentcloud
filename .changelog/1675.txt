@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_ccn_cross_border_compliance
+```
+
+```release-note:new-data-source
+tencentcloud_ccn_tenant_instances
+```
+
+```release-note:new-data-source
+tencentcloud_ccn_cross_border_flow_monitor
+```
+
+```release-note:new-data-source
+tencentcloud_vpn_customer_gateway_vendors
+```

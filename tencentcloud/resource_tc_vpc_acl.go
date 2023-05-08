@@ -37,7 +37,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -250,8 +250,6 @@ func resourceTencentCloudVpcACLUpdate(d *schema.ResourceData, meta interface{}) 
 		if err != nil {
 			return nil
 		}
-
-		d.SetPartial("name")
 	}
 
 	if d.HasChange("ingress") {
@@ -304,8 +302,6 @@ func resourceTencentCloudVpcACLUpdate(d *schema.ResourceData, meta interface{}) 
 		if err := service.ModifyNetWorkAclRules(ctx, id, ingress, egress); err != nil {
 			return err
 		}
-		d.SetPartial("ingress")
-		d.SetPartial("egress")
 	}
 
 	if d.HasChange("tags") {

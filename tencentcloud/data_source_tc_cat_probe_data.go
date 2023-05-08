@@ -23,8 +23,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -364,10 +364,11 @@ func dataSourceTencentCloudCatProbedataRead(d *schema.ResourceData, meta interfa
 			ids = append(ids, helper.UInt64ToStr(*dataSet.ProbeTime))
 			dataSetList = append(dataSetList, dataSetMap)
 		}
-		d.SetId(helper.DataResourceIdsHash(ids))
+
 		_ = d.Set("detailed_single_data_define", dataSetList)
 	}
 
+	d.SetId(helper.DataResourceIdsHash(ids))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), dataSetList); e != nil {

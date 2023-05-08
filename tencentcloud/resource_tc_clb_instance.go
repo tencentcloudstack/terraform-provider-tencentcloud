@@ -152,8 +152,8 @@ import (
 	"log"
 	"sync"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	clb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb/v20180317"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -649,9 +649,9 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	}
 
 	_ = d.Set("load_balancer_pass_to_target", instance.LoadBalancerPassToTarget)
-	_ = d.Set("master_zone_id", instance.MasterZone)
-	_ = d.Set("zone_id", instance.MasterZone)
-	_ = d.Set("slave_zone_id", instance.MasterZone)
+	//_ = d.Set("master_zone_id", instance.MasterZone.ZoneId)
+	//_ = d.Set("zone_id", instance.Zones)
+	//_ = d.Set("slave_zone_id", instance.MasterZone)
 	_ = d.Set("log_set_id", instance.LogSetId)
 	_ = d.Set("log_topic_id", instance.LogTopicId)
 
@@ -800,7 +800,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 			log.Printf("[CRITAL]%s update CLB instance security_group failed, reason:%+v", logId, err)
 			return err
 		}
-		d.SetPartial("security_groups")
+
 	}
 
 	if d.HasChange("log_set_id") || d.HasChange("log_topic_id") {
@@ -844,7 +844,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		if err != nil {
 			return err
 		}
-		d.SetPartial("tags")
+
 	}
 	d.Partial(false)
 

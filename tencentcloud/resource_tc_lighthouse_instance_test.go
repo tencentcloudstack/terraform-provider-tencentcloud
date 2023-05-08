@@ -3,7 +3,7 @@ package tencentcloud
 import (
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudLighthouseInstance_basic(t *testing.T) {
@@ -24,8 +24,11 @@ func TestAccTencentCloudLighthouseInstance_basic(t *testing.T) {
 }
 
 const testAccLighthouseInstance = `
+data "tencentcloud_lighthouse_bundle" "bundle" {
+}
+
 resource "tencentcloud_lighthouse_instance" "instance" {
-  bundle_id    = "bundle2022_gen_01"
+  bundle_id    = data.tencentcloud_lighthouse_bundle.bundle.bundle_set.0.bundle_id
   blueprint_id = "lhbp-f1lkcd41"
 
   period     = 1

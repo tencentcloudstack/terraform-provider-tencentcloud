@@ -5,12 +5,12 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
-	"io/ioutil"
+	"os"
 	"reflect"
 	"strings"
 )
 
-// Error reason strings
+// Error reason strings.
 const (
 	reasonMustCuddleErrCheck             = "if statements that check an error must be cuddled with the statement that assigned the error"
 	reasonOnlyCuddleIfWithAssign         = "if statements should only be cuddled with assignments"
@@ -41,9 +41,10 @@ const (
 	reasonBlockStartsWithWS              = "block should not start with a whitespace"
 	reasonBlockEndsWithWS                = "block should not end with a whitespace (or comment)"
 	reasonCaseBlockTooCuddly             = "case block should end with newline at this size"
+	reasonShortDeclNotExclusive          = "short declaration should cuddle only with other short declarations"
 )
 
-// Warning strings
+// Warning strings.
 const (
 	warnTypeNotImplement           = "type not implemented"
 	warnStmtNotImplemented         = "stmt type not implemented"
@@ -80,6 +81,16 @@ type Configuration struct {
 	//  x.AnotherCall()
 	//  x = AnotherAssign()
 	AllowAssignAndCallCuddle bool
+
+	// AllowAssignAndCallCuddle allows assignments to be cuddled with anything.
+	// Example supported with this set to true:
+	//  if x == 1 {
+	//  	x = 0
+	//  }
+	//  z := x + 2
+	// 	fmt.Println("x")
+	//  y := "x"
+	AllowAssignAndAnythingCuddle bool
 
 	// AllowMultiLineAssignCuddle allows cuddling to assignments even if they
 	// span over multiple lines. This defaults to true which allows the
@@ -149,17 +160,33 @@ type Configuration struct {
 	// used for error variables to check for in the conditional.
 	// Defaults to just "err"
 	ErrorVariableNames []string
+
+	// ForceExclusiveShortDeclarations will cause an error if a short declaration
+	// (:=) cuddles with anything other than another short declaration. For example
+	//
+	// a := 2
+	// b := 3
+	//
+	// is allowed, but
+	//
+	// a := 2
+	// b = 3
+	//
+	// is not allowed. This logic overrides ForceCuddleErrCheckAndAssign among others.
+	ForceExclusiveShortDeclarations bool
 }
 
-// DefaultConfig returns default configuration
+// DefaultConfig returns default configuration.
 func DefaultConfig() Configuration {
 	return Configuration{
 		StrictAppend:                     true,
 		AllowAssignAndCallCuddle:         true,
+		AllowAssignAndAnythingCuddle:     false,
 		AllowMultiLineAssignCuddle:       true,
 		AllowTrailingComment:             false,
 		AllowSeparatedLeadingComment:     false,
 		ForceCuddleErrCheckAndAssign:     false,
+		ForceExclusiveShortDeclarations:  false,
 		ForceCaseTrailingWhitespaceLimit: 0,
 		AllowCuddleWithCalls:             []string{"Lock", "RLock"},
 		AllowCuddleWithRHS:               []string{"Unlock", "RUnlock"},
@@ -189,6 +216,8 @@ type Processor struct {
 }
 
 // NewProcessor will create a Processor.
+//
+//nolint:gocritic // It's fine to copy config struct
 func NewProcessorWithConfig(cfg Configuration) *Processor {
 	return &Processor{
 		result: []Result{},
@@ -203,10 +232,11 @@ func NewProcessor() *Processor {
 
 // ProcessFiles takes a string slice with file names (full paths) and lints
 // them.
-// nolint: gocritic
+//
+//nolint:gocritic // Don't want named returns
 func (p *Processor) ProcessFiles(filenames []string) ([]Result, []string) {
 	for _, filename := range filenames {
-		data, err := ioutil.ReadFile(filename)
+		data, err := os.ReadFile(filename)
 		if err != nil {
 			panic(err)
 		}
@@ -220,7 +250,6 @@ func (p *Processor) ProcessFiles(filenames []string) ([]Result, []string) {
 func (p *Processor) process(filename string, data []byte) {
 	fileSet := token.NewFileSet()
 	file, err := parser.ParseFile(fileSet, filename, data, parser.ParseComments)
-
 	// If the file is not parsable let's add a syntax error and move on.
 	if err != nil {
 		p.result = append(p.result, Result{
@@ -265,7 +294,6 @@ func (p *Processor) parseBlockBody(ident *ast.Ident, block *ast.BlockStmt) {
 
 // parseBlockStatements will parse all the statements found in the body of a
 // node. A list of Result is returned.
-// nolint: gocognit
 func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 	for i, stmt := range statements {
 		// Start by checking if this statement is another block (other than if,
@@ -284,11 +312,17 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 		}
 
 		previousStatement := statements[i-1]
+		previousStatementIsMultiline := p.nodeStart(previousStatement) != p.nodeEnd(previousStatement)
 		cuddledWithLastStmt := p.nodeEnd(previousStatement) == p.nodeStart(stmt)-1
 
 		// If we're not cuddled and we don't need to enforce err-check cuddling
 		// then we can bail out here
 		if !cuddledWithLastStmt && !p.config.ForceCuddleErrCheckAndAssign {
+			continue
+		}
+
+		// We don't force error cuddling for multilines. (#86)
+		if p.config.ForceCuddleErrCheckAndAssign && previousStatementIsMultiline && !cuddledWithLastStmt {
 			continue
 		}
 
@@ -302,7 +336,7 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 		var calledOnLineAbove []string
 
 		// Check if the previous statement spans over multiple lines.
-		var cuddledWithMultiLineAssignment = cuddledWithLastStmt && p.nodeStart(previousStatement) != p.nodeStart(stmt)-1
+		cuddledWithMultiLineAssignment := cuddledWithLastStmt && p.nodeStart(previousStatement) != p.nodeStart(stmt)-1
 
 		// Ensure previous line is not a multi line assignment and if not get
 		// rightAndLeftHandSide assigned variables.
@@ -321,10 +355,10 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 
 		// We could potentially have a block which require us to check the first
 		// argument before ruling out an allowed cuddle.
-		var assignedFirstInBlock []string
+		var calledOrAssignedFirstInBlock []string
 
 		if firstBodyStatement != nil {
-			assignedFirstInBlock = p.findLHS(firstBodyStatement)
+			calledOrAssignedFirstInBlock = append(p.findLHS(firstBodyStatement), p.findRHS(firstBodyStatement)...)
 		}
 
 		var (
@@ -364,14 +398,25 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 			//     t.X = true
 			//     return t
 			// }
-			// nolint: gocritic
-			if i == len(statements)-1 && i == 1 {
+			if len(statements) == 2 && i == 1 {
 				if p.nodeEnd(stmt)-p.nodeStart(previousStatement) <= 2 {
 					return true
 				}
 			}
 
 			return false
+		}
+
+		// If it's a short declaration we should not cuddle with anything else
+		// if ForceExclusiveShortDeclarations is set on; either this or the
+		// previous statement could be the short decl, so we'll find out which
+		// it was and use *that* statement's position
+		if p.config.ForceExclusiveShortDeclarations && cuddledWithLastStmt {
+			if p.isShortDecl(stmt) && !p.isShortDecl(previousStatement) {
+				p.addError(stmt.Pos(), reasonShortDeclNotExclusive)
+			} else if p.isShortDecl(previousStatement) && !p.isShortDecl(stmt) {
+				p.addError(previousStatement.Pos(), reasonShortDeclNotExclusive)
+			}
 		}
 
 		// If it's not an if statement and we're not cuddled move on. The only
@@ -398,6 +443,18 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 			if !cuddledWithLastStmt {
 				checkingErr := atLeastOneInListsMatch(rightAndLeftHandSide, p.config.ErrorVariableNames)
 				if checkingErr {
+					// We only want to enforce cuddling error checks if the
+					// error was assigned on the line above. See
+					// https://github.com/bombsimon/wsl/issues/78.
+					// This is needed since `assignedOnLineAbove` is not
+					// actually just assignments but everything from LHS in the
+					// previous statement. This means that if previous line was
+					// `if err ...`, `err` will now be in the list
+					// `assignedOnLineAbove`.
+					if _, ok := previousStatement.(*ast.AssignStmt); !ok {
+						continue
+					}
+
 					if checkingErrInitializedInline() {
 						continue
 					}
@@ -424,7 +481,7 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 				continue
 			}
 
-			if atLeastOneInListsMatch(assignedOnLineAbove, assignedFirstInBlock) {
+			if atLeastOneInListsMatch(assignedOnLineAbove, calledOrAssignedFirstInBlock) {
 				continue
 			}
 
@@ -458,6 +515,14 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 				continue
 			}
 
+			if p.config.AllowAssignAndAnythingCuddle {
+				continue
+			}
+
+			if _, ok := previousStatement.(*ast.DeclStmt); ok && p.config.AllowCuddleDeclaration {
+				continue
+			}
+
 			// If the assignment is from a type or variable called on the line
 			// above we can allow it by setting AllowAssignAndCallCuddle to
 			// true.
@@ -478,6 +543,10 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 		case *ast.ExprStmt:
 			switch previousStatement.(type) {
 			case *ast.DeclStmt, *ast.ReturnStmt:
+				if p.config.AllowAssignAndCallCuddle && p.config.AllowCuddleDeclaration {
+					continue
+				}
+
 				p.addError(t.Pos(), reasonExpressionCuddledWithDeclOrRet)
 			case *ast.IfStmt, *ast.RangeStmt, *ast.SwitchStmt:
 				p.addError(t.Pos(), reasonExpressionCuddledWithBlock)
@@ -507,7 +576,7 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 			}
 
 			if !atLeastOneInListsMatch(rightAndLeftHandSide, assignedOnLineAbove) {
-				if !atLeastOneInListsMatch(assignedOnLineAbove, assignedFirstInBlock) {
+				if !atLeastOneInListsMatch(assignedOnLineAbove, calledOrAssignedFirstInBlock) {
 					p.addError(t.Pos(), reasonRangeCuddledWithoutUse)
 				}
 			}
@@ -550,6 +619,24 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 				continue
 			}
 
+			// Allow use to cuddled defer func literals with usages on line
+			// abouve. Example:
+			// b := getB()
+			// defer func() {
+			//     makesSenseToUse(b)
+			// }()
+			if c, ok := t.Call.Fun.(*ast.FuncLit); ok {
+				funcLitFirstStmt := append(p.findLHS(c.Body), p.findRHS(c.Body)...)
+
+				if atLeastOneInListsMatch(assignedOnLineAbove, funcLitFirstStmt) {
+					continue
+				}
+			}
+
+			if atLeastOneInListsMatch(assignedOnLineAbove, calledOrAssignedFirstInBlock) {
+				continue
+			}
+
 			if !atLeastOneInListsMatch(rightAndLeftHandSide, assignedOnLineAbove) {
 				p.addError(t.Pos(), reasonDeferCuddledWithOtherVar)
 			}
@@ -570,7 +657,7 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 			// comments regarding variable usages on the line before or as the
 			// first line in the block for details.
 			if !atLeastOneInListsMatch(rightAndLeftHandSide, assignedOnLineAbove) {
-				if !atLeastOneInListsMatch(assignedOnLineAbove, assignedFirstInBlock) {
+				if !atLeastOneInListsMatch(assignedOnLineAbove, calledOrAssignedFirstInBlock) {
 					p.addError(t.Pos(), reasonForCuddledAssignWithoutUse)
 				}
 			}
@@ -583,6 +670,22 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 				p.addError(t.Pos(), reasonOneCuddleBeforeGo)
 
 				continue
+			}
+
+			if c, ok := t.Call.Fun.(*ast.SelectorExpr); ok {
+				goCallArgs := append(p.findLHS(c.X), p.findRHS(c.X)...)
+
+				if atLeastOneInListsMatch(calledOnLineAbove, goCallArgs) {
+					continue
+				}
+			}
+
+			if c, ok := t.Call.Fun.(*ast.FuncLit); ok {
+				goCallArgs := append(p.findLHS(c.Body), p.findRHS(c.Body)...)
+
+				if atLeastOneInListsMatch(assignedOnLineAbove, goCallArgs) {
+					continue
+				}
 			}
 
 			if !atLeastOneInListsMatch(rightAndLeftHandSide, assignedOnLineAbove) {
@@ -613,7 +716,7 @@ func (p *Processor) parseBlockStatements(statements []ast.Stmt) {
 			if !atLeastOneInListsMatch(rightHandSide, assignedOnLineAbove) {
 				// Allow type assertion on variables used in the first case
 				// immediately.
-				if !atLeastOneInListsMatch(assignedOnLineAbove, assignedFirstInBlock) {
+				if !atLeastOneInListsMatch(assignedOnLineAbove, calledOrAssignedFirstInBlock) {
 					p.addError(t.Pos(), reasonTypeSwitchCuddledWithoutUse)
 				}
 			}
@@ -758,8 +861,7 @@ func (p *Processor) findRHS(node ast.Node) []string {
 	case *ast.BasicLit, *ast.SelectStmt, *ast.ChanType,
 		*ast.LabeledStmt, *ast.DeclStmt, *ast.BranchStmt,
 		*ast.TypeSpec, *ast.ArrayType, *ast.CaseClause,
-		*ast.CommClause, *ast.KeyValueExpr, *ast.MapType,
-		*ast.FuncLit:
+		*ast.CommClause, *ast.MapType, *ast.FuncLit:
 	// Nothing to add to RHS
 	case *ast.Ident:
 		return []string{t.Name}
@@ -818,6 +920,9 @@ func (p *Processor) findRHS(node ast.Node) []string {
 		rhs = append(rhs, p.findRHS(t.X)...)
 		rhs = append(rhs, p.findRHS(t.Low)...)
 		rhs = append(rhs, p.findRHS(t.High)...)
+	case *ast.KeyValueExpr:
+		rhs = p.findRHS(t.Key)
+		rhs = append(rhs, p.findRHS(t.Value)...)
 	default:
 		if x, ok := maybeX(t); ok {
 			return p.findRHS(x)
@@ -827,6 +932,14 @@ func (p *Processor) findRHS(node ast.Node) []string {
 	}
 
 	return rhs
+}
+
+func (p *Processor) isShortDecl(node ast.Node) bool {
+	if t, ok := node.(*ast.AssignStmt); ok {
+		return t.Tok == token.DEFINE
+	}
+
+	return false
 }
 
 func (p *Processor) findBlockStmt(node ast.Node) []*ast.BlockStmt {
@@ -907,7 +1020,6 @@ func atLeastOneInListsMatch(listOne, listTwo []string) bool {
 // findLeadingAndTrailingWhitespaces will find leading and trailing whitespaces
 // in a node. The method takes comments in consideration which will make the
 // parser more gentle.
-// nolint: gocognit
 func (p *Processor) findLeadingAndTrailingWhitespaces(ident *ast.Ident, stmt, nextStatement ast.Node) {
 	var (
 		allowedLinesBeforeFirstStatement = 1
@@ -975,8 +1087,17 @@ func (p *Processor) findLeadingAndTrailingWhitespaces(ident *ast.Ident, stmt, ne
 			}
 
 			// We store number of seen comment groups because we allow multiple
-			// groups with a newline between them.
-			seenCommentGroups++
+			// groups with a newline between them; but if the first one has WS
+			// before it, we're not going to count it to force an error.
+			if p.config.AllowSeparatedLeadingComment {
+				cg := p.fileSet.Position(commentGroup.Pos()).Line
+
+				if seenCommentGroups > 0 || cg == blockStartLine+1 {
+					seenCommentGroups++
+				}
+			} else {
+				seenCommentGroups++
+			}
 
 			// Support both /* multiline */ and //single line comments
 			for _, c := range commentGroup.List {
@@ -985,14 +1106,18 @@ func (p *Processor) findLeadingAndTrailingWhitespaces(ident *ast.Ident, stmt, ne
 		}
 	}
 
-	// If we have multiple groups, add support for newline between each group.
+	// If we allow separated comments, allow for a space after each group
 	if p.config.AllowSeparatedLeadingComment {
 		if seenCommentGroups > 1 {
 			allowedLinesBeforeFirstStatement += seenCommentGroups - 1
+		} else if seenCommentGroups == 1 {
+			allowedLinesBeforeFirstStatement++
 		}
 	}
 
-	if p.nodeStart(firstStatement) != blockStartLine+allowedLinesBeforeFirstStatement {
+	// And now if the first statement is passed the number of allowed lines,
+	// then we had extra WS, possibly before the first comment group.
+	if p.nodeStart(firstStatement) > blockStartLine+allowedLinesBeforeFirstStatement {
 		p.addError(
 			blockStartPos,
 			reasonBlockStartsWithWS,
@@ -1097,7 +1222,24 @@ func (p *Processor) nodeStart(node ast.Node) int {
 }
 
 func (p *Processor) nodeEnd(node ast.Node) int {
-	return p.fileSet.Position(node.End()).Line
+	line := p.fileSet.Position(node.End()).Line
+
+	if isEmptyLabeledStmt(node) {
+		return p.fileSet.Position(node.Pos()).Line
+	}
+
+	return line
+}
+
+func isEmptyLabeledStmt(node ast.Node) bool {
+	v, ok := node.(*ast.LabeledStmt)
+	if !ok {
+		return false
+	}
+
+	_, empty := v.Stmt.(*ast.EmptyStmt)
+
+	return empty
 }
 
 // Add an error for the file and line number for the current token.Pos with the
