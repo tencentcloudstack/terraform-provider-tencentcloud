@@ -5,6 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_key_pair" "foo" {
+	key_name   = "terraform_test"
+}
+
+resource "tencentcloud_key_pair" "foo1" {
   key_name   = "terraform_test"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
 }
@@ -22,6 +26,8 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
+	"log"
 	"strings"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -51,7 +57,8 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 			},
 			"public_key": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
+				Computed: true,
 				ForceNew: true,
 				StateFunc: func(v interface{}) string {
 					switch value := v.(type) {
@@ -84,33 +91,84 @@ func resourceTencentCloudKeyPair() *schema.Resource {
 	}
 }
 
+func cvmCreateKeyPair(ctx context.Context, d *schema.ResourceData, meta interface{}) (keyId string, err error) {
+	logId := getLogId(ctx)
+	request := cvm.NewCreateKeyPairRequest()
+	response := cvm.NewCreateKeyPairResponse()
+	request.KeyName = helper.String(d.Get("key_name").(string))
+	request.ProjectId = helper.IntInt64(d.Get("project_id").(int))
+
+	innerErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().CreateKeyPair(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if innerErr != nil {
+		log.Printf("[CRITAL]%s create cvm keyPair by import failed, reason:%+v", logId, err)
+		err = innerErr
+		return
+	}
+	if response == nil || response.Response == nil || response.Response.KeyPair == nil {
+		err = fmt.Errorf("Response is nil")
+		return
+	}
+
+	keyId = *response.Response.KeyPair.KeyId
+	return
+}
+
+func cvmCreateKeyPairByImportPublicKey(ctx context.Context, d *schema.ResourceData, meta interface{}) (keyId string, err error) {
+	logId := getLogId(ctx)
+	request := cvm.NewImportKeyPairRequest()
+	response := cvm.NewImportKeyPairResponse()
+	request.KeyName = helper.String(d.Get("key_name").(string))
+	request.ProjectId = helper.IntInt64(d.Get("project_id").(int))
+	request.PublicKey = helper.String(d.Get("public_key").(string))
+
+	innerErr := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCvmClient().ImportKeyPair(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if innerErr != nil {
+		log.Printf("[CRITAL]%s create cvm keyPair by import failed, reason:%+v", logId, err)
+		err = innerErr
+		return
+	}
+	if response == nil || response.Response == nil {
+		err = fmt.Errorf("Response is nil")
+		return
+	}
+
+	keyId = *response.Response.KeyId
+	return
+}
+
 func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_key_pair.create")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	cvmService := CvmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+	var (
+		keyId string
+		err   error
+	)
+
+	if _, ok := d.GetOk("public_key"); ok {
+		keyId, err = cvmCreateKeyPairByImportPublicKey(ctx, d, meta)
+	} else {
+		keyId, err = cvmCreateKeyPair(ctx, d, meta)
 	}
-
-	keyName := d.Get("key_name").(string)
-	publicKey := d.Get("public_key").(string)
-	projectId := d.Get("project_id").(int)
-
-	var tags map[string]string
-	if temp := helper.GetTags(d, "tags"); len(temp) > 0 {
-		tags = temp
-	}
-
-	keyId := ""
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		id, err := cvmService.CreateKeyPair(ctx, keyName, publicKey, int64(projectId), tags)
-		if err != nil {
-			return retryError(err)
-		}
-		keyId = id
-		return nil
-	})
 	if err != nil {
 		return err
 	}
@@ -121,7 +179,6 @@ func resourceTencentCloudKeyPairCreate(d *schema.ResourceData, meta interface{})
 		tagService := &TagService{client: tcClient}
 		resourceName := BuildTagResourceName("cvm", "keypair", tcClient.Region, keyId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			// If tags attachment failed, the user will be notified, then plan/apply/update with terraform.
 			return err
 		}
 	}

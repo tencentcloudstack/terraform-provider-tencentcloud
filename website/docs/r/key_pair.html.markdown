@@ -15,6 +15,10 @@ Provides a key pair resource.
 
 ```hcl
 resource "tencentcloud_key_pair" "foo" {
+  key_name = "terraform_test"
+}
+
+resource "tencentcloud_key_pair" "foo1" {
   key_name   = "terraform_test"
   public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
 }
@@ -25,8 +29,8 @@ resource "tencentcloud_key_pair" "foo" {
 The following arguments are supported:
 
 * `key_name` - (Required, String) The key pair's name. It is the only in one TencentCloud account.
-* `public_key` - (Required, String, ForceNew) You can import an existing public key and using TencentCloud key pair to manage it.
 * `project_id` - (Optional, Int, ForceNew) Specifys to which project the key pair belongs.
+* `public_key` - (Optional, String, ForceNew) You can import an existing public key and using TencentCloud key pair to manage it.
 * `tags` - (Optional, Map) Tags of the key pair.
 
 ## Attributes Reference
