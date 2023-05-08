@@ -144,6 +144,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -1240,18 +1241,29 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 		}
 
 		if backupPlan != nil {
-			if _, ok := d.GetOk("backup_plan.0.min_backup_start_time"); ok {
-				_ = d.Set("backup_plan.0.min_backup_start_time", backupPlan.MinBackupStartTime)
+			planMap := map[string]interface{}{}
+			if backupPlan.MinBackupStartTime != nil {
+				planMap["min_backup_start_time"] = backupPlan.MinBackupStartTime
 			}
-			if _, ok := d.GetOk("backup_plan.0.max_backup_start_time"); ok {
-				_ = d.Set("backup_plan.0.max_backup_start_time", backupPlan.MaxBackupStartTime)
+
+			if backupPlan.MaxBackupStartTime != nil {
+				planMap["max_backup_start_time"] = backupPlan.MaxBackupStartTime
 			}
-			if _, ok := d.GetOk("backup_plan.0.base_backup_retention_period"); ok {
-				_ = d.Set("backup_plan.0.base_backup_retention_period", backupPlan.BaseBackupRetentionPeriod)
+
+			if backupPlan.BaseBackupRetentionPeriod != nil {
+				planMap["base_backup_retention_period"] = backupPlan.BaseBackupRetentionPeriod
 			}
-			if _, ok := d.GetOk("backup_plan.0.backup_period"); ok {
-				_ = d.Set("backup_plan.0.backup_period", backupPlan.BackupPeriod)
+
+			if backupPlan.BackupPeriod != nil {
+				strSlice := []string{}
+				// set period list from BackupPeriods string, eg:"BackupPeriod": "[\"tuesday\",\"wednesday\"]",
+				err := json.Unmarshal([]byte(*backupPlan.BackupPeriod), &strSlice)
+				if err != nil {
+					return fmt.Errorf("BackupPeriod:[%s] has invalid format,Unmarshal failed! error: %v", *backupPlan.BackupPeriod, err.Error())
+				}
+				planMap["backup_period"] = strSlice
 			}
+			_ = d.Set("backup_plan", []interface{}{planMap})
 		}
 
 	}
