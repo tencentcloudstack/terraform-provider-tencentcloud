@@ -38,7 +38,6 @@ resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   instance_id              = local.sqlserver_id
   backup_type              = "weekly"
   backup_time              = 0
-  backup_day               = 1
   backup_model             = "master_no_pkg"
   backup_cycle             = [1, 3, 5]
   backup_save_days         = 7
@@ -54,9 +53,7 @@ Regular backup
 ```hcl
 resource "tencentcloud_sqlserver_config_backup_strategy" "config" {
   instance_id               = local.sqlserver_id
-  backup_type               = "weekly"
   backup_time               = 0
-  backup_day                = 1
   backup_model              = "master_no_pkg"
   backup_cycle              = [1, 3]
   backup_save_days          = 7
@@ -74,7 +71,7 @@ The following arguments are supported:
 
 * `instance_id` - (Required, String) Instance ID.
 * `backup_cycle` - (Optional, Set: [`Int`]) The days of the week on which backup will be performed when `BackupType` is weekly. If data backup retention period is less than 7 days, the values will be 1-7, indicating that backup will be performed everyday by default; if data backup retention period is greater than or equal to 7 days, the values will be at least any two days, indicating that backup will be performed at least twice in a week by default.
-* `backup_day` - (Optional, Int) Backup interval in days when the BackupType is daily. Valid value: 1.
+* `backup_day` - (Optional, Int) Backup interval in days when the BackupType is daily. The current value can only be 1.
 * `backup_model` - (Optional, String) Backup mode. Valid values: master_pkg (archive the backup files of the primary node), master_no_pkg (do not archive the backup files of the primary node), slave_pkg (archive the backup files of the replica node), slave_no_pkg (do not archive the backup files of the replica node). Backup files of the replica node are supported only when Always On disaster recovery is enabled.
 * `backup_save_days` - (Optional, Int) Data (log) backup retention period. Value range: 3-1830 days, default value: 7 days.
 * `backup_time` - (Optional, Int) Backup time. Value range: an integer from 0 to 23.

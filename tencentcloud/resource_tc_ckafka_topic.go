@@ -287,7 +287,7 @@ func resourceTencentCloudCkafkaTopicRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("ip_white_list", topicinfo.IpWhiteList)
 	_ = d.Set("enable_white_list", *topicinfo.EnableWhiteList == 1)
 	_ = d.Set("replica_num", topicListInfo.ReplicaNum)
-	_ = d.Set("create_time", topicinfo.CreateTime)
+	_ = d.Set("create_time", helper.FormatUnixTime(uint64(*topicinfo.CreateTime)))
 	_ = d.Set("partition_num", topicinfo.PartitionNum)
 	_ = d.Set("topic_name", topicListInfo.TopicName)
 	_ = d.Set("forward_interval", topicListInfo.ForwardInterval)
