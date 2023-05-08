@@ -71,8 +71,8 @@ import (
 	"fmt"
 	"log"
 	"sort"
-	"strings"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/hashcode"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
@@ -854,7 +854,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s operate redis upgradeVersionOperation failed, reason:%+v", logId, err)
 			return err
 		}
-		
+
 		service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
 		_, _, _, err = service.CheckRedisOnlineOk(ctx, id, 20*readRetryTimeout)
 		if err != nil {
