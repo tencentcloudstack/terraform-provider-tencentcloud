@@ -160,7 +160,7 @@ func resourceTencentCloudVpcEndPointServiceWhiteListRead(d *schema.ResourceData,
 	}
 
 	if endPointServiceWhiteList.Owner != nil {
-		_ = d.Set("owner", endPointServiceWhiteList.Owner)
+		_ = d.Set("owner", helper.UInt64ToStr(*endPointServiceWhiteList.Owner))
 	}
 
 	if endPointServiceWhiteList.CreateTime != nil {
