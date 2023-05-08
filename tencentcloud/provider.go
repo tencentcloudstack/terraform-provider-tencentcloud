@@ -535,14 +535,12 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_read_only
 	tencentcloud_redis_ssl
 	tencentcloud_redis_backup_download_restriction
-	tencentcloud_redis_modfiy_instance_password
 	tencentcloud_redis_clear_instance_operation
 	tencentcloud_redis_renew_instance_operation
 	tencentcloud_redis_startup_instance_operation
 	tencentcloud_redis_upgrade_cache_version_operation
 	tencentcloud_redis_upgrade_multi_zone_operation
 	tencentcloud_redis_upgrade_proxy_version_operation
-	tencentcloud_redis_upgrade_version_operation
 	tencentcloud_redis_maintenance_window
 
 Serverless Cloud Function(SCF)
@@ -1542,14 +1540,12 @@ func Provider() terraform.ResourceProvider {
 			"tencentcloud_redis_read_only":                             resourceTencentCloudRedisReadOnly(),
 			"tencentcloud_redis_ssl":                                   resourceTencentCloudRedisSsl(),
 			"tencentcloud_redis_backup_download_restriction":           resourceTencentCloudRedisBackupDownloadRestriction(),
-			"tencentcloud_redis_modfiy_instance_password":              resourceTencentCloudRedisModfiyInstancePassword(),
 			"tencentcloud_redis_clear_instance_operation":              resourceTencentCloudRedisClearInstanceOperation(),
 			"tencentcloud_redis_renew_instance_operation":              resourceTencentCloudRedisRenewInstanceOperation(),
 			"tencentcloud_redis_startup_instance_operation":            resourceTencentCloudRedisStartupInstanceOperation(),
 			"tencentcloud_redis_upgrade_cache_version_operation":       resourceTencentCloudRedisUpgradeCacheVersionOperation(),
 			"tencentcloud_redis_upgrade_multi_zone_operation":          resourceTencentCloudRedisUpgradeMultiZoneOperation(),
 			"tencentcloud_redis_upgrade_proxy_version_operation":       resourceTencentCloudRedisUpgradeProxyVersionOperation(),
-			"tencentcloud_redis_upgrade_version_operation":             resourceTencentCloudRedisUpgradeVersionOperation(),
 			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                            resourceTencentCloudAsScalingGroup(),
