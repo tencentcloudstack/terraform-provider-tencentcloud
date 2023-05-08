@@ -80,8 +80,7 @@ func TestAccTencentCloudKeyPairResource_basic(t *testing.T) {
 		},
 	})
 }
-
-func TestAccTencentCloudKeyPairResource_import(t *testing.T) {
+func TestAccTencentCloudKeyPairResource_publicKey(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
