@@ -106,9 +106,9 @@ func testAccCheckAPIGatewayAPIDocExists(r string) resource.TestCheckFunc {
 const testAccAPIGatewayAPIDoc = `
 resource "tencentcloud_api_gateway_api_doc" "test" {
   api_doc_name = "doc_test1"
-  service_id   = "service-hwd9bmdk"
+  service_id   = "service-7lybgojo"
   environment  = "release"
-  api_ids      = ["api-p019gpxq"]
+  api_ids      = ["api-2bntitvw"]
 }
 `
 
