@@ -8,7 +8,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudTsfUnitRulesDataSource_basic -v
 func TestAccTencentCloudTsfUnitRulesDataSource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
 		Providers: testAccProviders,
@@ -48,17 +48,13 @@ func TestAccTencentCloudTsfUnitRulesDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccTsfUnitRulesDataSourceVar = `
-variable "gateway_instance_id" {
-	default = "` + defaultTsfGateway + `"
-}
-`
-
-const testAccTsfUnitRulesDataSource = testAccTsfUnitRulesDataSourceVar + `
+const testAccTsfUnitRulesDataSource = testAccTsfUnitRule + `
 
 data "tencentcloud_tsf_unit_rules" "unit_rules" {
 	gateway_instance_id = var.gateway_instance_id
 	status = "disabled"
+
+	depends_on = [ tencentcloud_tsf_unit_rule.unit_rule ]
 }
 
 `
