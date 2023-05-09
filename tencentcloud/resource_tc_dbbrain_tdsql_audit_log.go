@@ -4,20 +4,15 @@ Provides a resource to create a dbbrain tdsql_audit_log
 Example Usage
 
 ```hcl
-resource "tencentcloud_dbbrain_tdsql_audit_log" "tdsql_audit_log" {
-  product = ""
-  node_request_type = ""
-  instance_id = ""
-  start_time = ""
-  end_time = ""
+resource "tencentcloud_dbbrain_tdsql_audit_log" "my_log" {
+  product = "dcdb"
+  node_request_type = "dcdb"
+  instance_id = "%s"
+  start_time = "%s"
+  end_time = "%s"
   filter {
-		host =
-		db_name =
-		user =
-		sent_rows =
-		affect_rows =
-		exec_time =
-
+		host = ["%%", "127.0.0.1"]
+		user = ["tf_test", "mysql"]
   }
 }
 ```
@@ -51,97 +46,97 @@ func resourceTencentCloudDbbrainTdsqlAuditLog() *schema.Resource {
 		Delete: resourceTencentCloudDbbrainTdsqlAuditLogDelete,
 		Schema: map[string]*schema.Schema{
 			"product": {
-			Required: true,
-			ForceNew: true,
-			Type: schema. TypeString,
-			Description: "Service product type, supported values include: dcdb - cloud database Tdsql, mariadb - cloud database MariaDB for MariaDB..",
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "Service product type, supported values include: dcdb - cloud database Tdsql, mariadb - cloud database MariaDB for MariaDB..",
 			},
-			
+
 			"node_request_type": {
-			Required: true,
-			ForceNew: true,
-			Type: schema. TypeString,
-			Description: "Consistent with Product. For example: dcdb , mariadb.",
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "Consistent with Product. For example: dcdb, mariadb.",
 			},
-			
+
 			"instance_id": {
-			Required: true,
-			ForceNew: true,
-			Type: schema. TypeString,
-			Description: "Instance ID .",
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "Instance ID.",
 			},
-			
+
 			"start_time": {
-			Required: true,
-			ForceNew: true,
-			Type: schema. TypeString,
-			Description: "Start time, such as `2019-09-10 12:13:14`.",
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "Start time, such as `2019-09-10 12:13:14`.",
 			},
-			
+
 			"end_time": {
-			Required: true,
-			ForceNew: true,
-			Type: schema. TypeString,
-			Description: "Deadline time, such as `2019-09-11 10:13:14`.",
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "Deadline time, such as `2019-09-11 10:13:14`.",
 			},
-			
+
 			"filter": {
-			Optional: true,
-			ForceNew: true,
-			Type: schema. TypeList,
-			MaxItems: 1,
-			Description: "Filter conditions. Logs can be filtered according to the filter conditions set.",
-			Elem: &schema. Resource{
-			Schema: map[string]*schema.Schema{
-			"host": {
-			Type: schema. TypeSet,
-			Elem: &schema.Schema{
-			Type: schema. TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Filter conditions. Logs can be filtered according to the filter conditions set.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"host": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Client Address.",
+						},
+						"db_name": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Database name.",
+						},
+						"user": {
+							Type: schema.TypeSet,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Username.",
+						},
+						"sent_rows": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Return the number of rows. It means to filter the audit log with the number of returned rows greater than this value.",
+						},
+						"affect_rows": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Number of affected rows. Indicates filtering audit logs whose affected rows are greater than this value.",
+						},
+						"exec_time": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							ForceNew:    true,
+							Description: "Execution time. The unit is: us. It means to filter the audit logs whose execution time is greater than this value.",
+						},
+					},
+				},
 			},
-			Optional: true,
-			ForceNew: true,
-			Description: "Client Address.",
-			},
-			"db_name": {
-			Type: schema. TypeSet,
-			Elem: &schema.Schema{
-			Type: schema. TypeString,
-			},
-			Optional: true,
-			ForceNew: true,
-			Description: "Database name.",
-			},
-			"user": {
-			Type: schema. TypeSet,
-			Elem: &schema.Schema{
-			Type: schema. TypeString,
-			},
-			Optional: true,
-			ForceNew: true,
-			Description: "Username.",
-			},
-			"sent_rows": {
-			Type: schema. TypeInt,
-			Optional: true,
-			ForceNew: true,
-			Description: "Return the number of rows. It means to filter the audit log with the number of returned rows greater than this value..",
-			},
-			"affect_rows": {
-			Type: schema. TypeInt,
-			Optional: true,
-			ForceNew: true,
-			Description: "Number of affected rows. Indicates filtering audit logs whose affected rows are greater than this value.",
-			},
-			"exec_time": {
-			Type: schema. TypeInt,
-			Optional: true,
-			ForceNew: true,
-			Description: "Execution time. The unit is: µs. It means to filter the audit logs whose execution time is greater than this value..",
-			},
-			},
-			},
-			},
-			},
+		},
 	}
 }
 
@@ -160,7 +155,7 @@ func resourceTencentCloudDbbrainTdsqlAuditLogCreate(d *schema.ResourceData, meta
 	)
 	if v, ok := d.GetOk("product"); ok {
 		request.Product = helper.String(v.(string))
-		product=v.(string)
+		product = v.(string)
 	}
 
 	if v, ok := d.GetOk("node_request_type"); ok {
@@ -169,7 +164,7 @@ func resourceTencentCloudDbbrainTdsqlAuditLogCreate(d *schema.ResourceData, meta
 
 	if v, ok := d.GetOk("instance_id"); ok {
 		request.InstanceId = helper.String(v.(string))
-		instanceId= v.(string)
+		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("start_time"); ok {
@@ -231,7 +226,7 @@ func resourceTencentCloudDbbrainTdsqlAuditLogCreate(d *schema.ResourceData, meta
 	}
 
 	asyncRequestId = helper.Int64ToStr(*response.Response.AsyncRequestId)
-	d.SetId(strings.Join([]string{asyncRequestId,instanceId, product},FILED_SP))
+	d.SetId(strings.Join([]string{asyncRequestId, instanceId, product}, FILED_SP))
 
 	return resourceTencentCloudDbbrainTdsqlAuditLogRead(d, meta)
 }
@@ -259,14 +254,13 @@ func resourceTencentCloudDbbrainTdsqlAuditLogRead(d *schema.ResourceData, meta i
 		return err
 	}
 
-	if len(tdsqlAuditLogs) <1 {
+	if len(tdsqlAuditLogs) < 1 {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `DbbrainTdsqlAuditLog` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	tdsqlAuditLog:= tdsqlAuditLogs[0]
-
+	tdsqlAuditLog := tdsqlAuditLogs[0]
 
 	if tdsqlAuditLog.CreateTime != nil {
 		_ = d.Set("start_time", tdsqlAuditLog.CreateTime)
@@ -275,7 +269,6 @@ func resourceTencentCloudDbbrainTdsqlAuditLogRead(d *schema.ResourceData, meta i
 	if tdsqlAuditLog.FinishTime != nil {
 		_ = d.Set("end_time", tdsqlAuditLog.FinishTime)
 	}
-
 
 	return nil
 }
