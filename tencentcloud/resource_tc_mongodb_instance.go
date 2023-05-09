@@ -484,6 +484,28 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 
 	}
 
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		vpcId := d.Get("vpc_id").(string)
+		subnetId := d.Get("subnet_id").(string)
+
+		err := mongodbService.ModifyNetworkAddress(ctx, instanceId, vpcId, subnetId)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("security_groups") {
+		securityGroups := d.Get("security_groups").(*schema.Set).List()
+		securityGroupIds := make([]*string, 0, len(securityGroups))
+		for _, securityGroup := range securityGroups {
+			securityGroupIds = append(securityGroupIds, helper.String(securityGroup.(string)))
+		}
+		err := mongodbService.ModifySecurityGroups(ctx, instanceId, securityGroupIds)
+		if err != nil {
+			return err
+		}
+	}
+
 	d.Partial(false)
 
 	return resourceTencentCloudMongodbInstanceRead(d, meta)
