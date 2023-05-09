@@ -724,3 +724,60 @@ func (me *DbbrainService) DbbrainDbDiagReportTaskStateRefreshFunc(asyncRequestId
 		return object, helper.Int64ToStr(*object.Progress), nil
 	}
 }
+
+func (me *DbbrainService) DescribeDbbrainTdsqlAuditLogById(ctx context.Context, asyncRequestId string, instanceId string, product string) (tdsqlAuditLog *dbbrain.AuditLogFile, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dbbrain.NewDescribeAuditLogFilesRequest()
+	request.AsyncRequestId = &asyncRequestId
+	request.InstanceId = &instanceId
+	request.Product = &product
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDbbrainClient().DescribeAuditLogFiles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AuditLogFile) < 1 {
+		return
+	}
+
+	tdsqlAuditLog = response.Response.AuditLogFile[0]
+	return
+}
+
+func (me *DbbrainService) DeleteDbbrainTdsqlAuditLogById(ctx context.Context, asyncRequestId string, instanceId string, product string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dbbrain.NewDeleteAuditLogFileRequest()
+	request.AsyncRequestId = &asyncRequestId
+	request.InstanceId = &instanceId
+	request.Product = &product
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDbbrainClient().DeleteAuditLogFile(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
