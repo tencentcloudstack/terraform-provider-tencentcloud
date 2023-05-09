@@ -41,6 +41,7 @@ func resourceTencentCloudTcrCustomizedDomain() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTcrCustomizedDomainCreate,
 		Read:   resourceTencentCloudTcrCustomizedDomainRead,
+		Update: resourceTencentCloudTcrCustomizedDomainUpdate,
 		Delete: resourceTencentCloudTcrCustomizedDomainDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -69,7 +70,6 @@ func resourceTencentCloudTcrCustomizedDomain() *schema.Resource {
 
 			"tags": {
 				Optional:    true,
-				ForceNew:    true,
 				Type:        schema.TypeMap,
 				Description: "Tag description list.",
 			},
@@ -190,6 +190,34 @@ func resourceTencentCloudTcrCustomizedDomainRead(d *schema.ResourceData, meta in
 	_ = d.Set("tags", tags)
 
 	return nil
+}
+
+func resourceTencentCloudTcrCustomizedDomainUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcr_customized_domain.update")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	immutableArgs := []string{"registry_id", "domain_name", "certificate_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+	if d.HasChange("tags") {
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("tcr", "instance", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
+	return resourceTencentCloudTcrCustomizedDomainRead(d, meta)
 }
 
 func resourceTencentCloudTcrCustomizedDomainDelete(d *schema.ResourceData, meta interface{}) error {
