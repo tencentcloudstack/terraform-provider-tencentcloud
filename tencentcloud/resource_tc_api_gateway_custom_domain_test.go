@@ -10,7 +10,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudAPIGateWayCustomDomain(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudAPIGateWayCustomDomain_basic -v
+func TestAccTencentCloudAPIGateWayCustomDomain_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

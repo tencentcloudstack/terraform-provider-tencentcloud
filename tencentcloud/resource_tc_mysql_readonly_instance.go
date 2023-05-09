@@ -219,10 +219,10 @@ func resourceTencentCloudMysqlReadonlyInstanceCreate(d *schema.ResourceData, met
 		if len(backups) < 1 {
 			return resource.RetryableError(fmt.Errorf("waiting backup creating"))
 		}
-		return resource.NonRetryableError(err)
+		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create mysql  task fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s create mysql task fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 

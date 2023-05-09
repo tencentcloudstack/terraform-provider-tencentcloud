@@ -159,14 +159,9 @@ func resourceTencentCloudSqlserverPublishSubscribeRead(d *schema.ResourceData, m
 		d.SetId("")
 		return nil
 	}
-	_ = d.Set("publish_subscribe_id", publishSubscribe.Id)
 	_ = d.Set("publish_subscribe_name", publishSubscribe.Name)
 	_ = d.Set("publish_instance_id", publishSubscribe.PublishInstanceId)
-	_ = d.Set("publish_instance_name", publishSubscribe.PublishInstanceName)
-	_ = d.Set("publish_instance_ip", publishSubscribe.PublishInstanceIp)
 	_ = d.Set("subscribe_instance_id", publishSubscribe.SubscribeInstanceId)
-	_ = d.Set("subscribe_instance_name", publishSubscribe.SubscribeInstanceName)
-	_ = d.Set("subscribe_instance_ip", publishSubscribe.SubscribeInstanceIp)
 	var databaseTupleSet []map[string]interface{}
 	for _, inst_ := range publishSubscribe.DatabaseTupleSet {
 		databaseTuple := map[string]interface{}{

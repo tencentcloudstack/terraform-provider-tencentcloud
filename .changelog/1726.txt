@@ -1,0 +1,19 @@
+```release-note:new-data-source
+tencentcloud_api_gateway_api_docs
+```
+
+```release-note:new-resource
+tencentcloud_api_gateway_api_doc
+```
+
+```release-note:new-data-source
+tencentcloud_api_gateway_api_apps
+```
+
+```release-note:new-resource
+tencentcloud_api_gateway_api_app
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_custom_domain: support add `is_forced_https` params
+```

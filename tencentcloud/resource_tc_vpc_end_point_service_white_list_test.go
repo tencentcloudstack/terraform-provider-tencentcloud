@@ -31,7 +31,7 @@ const testAccVpcEndPointServiceWhiteList = `
 
 resource "tencentcloud_vpc_end_point_service_white_list" "end_point_service_white_list" {
   user_uin = "100020512675"
-  end_point_service_id = "vpcsvc-69y13tdb"
+  end_point_service_id = "vpcsvc-exphd2fd"
   description = "terraform for test"
 }
 

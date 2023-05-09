@@ -36,6 +36,7 @@ The following arguments are supported:
 * `sub_domain` - (Required, String) Custom domain name to be bound.
 * `certificate_id` - (Optional, String) Unique certificate ID of the custom domain name to be bound. You can choose to upload for the `protocol` attribute value `https` or `http&https`.
 * `is_default_mapping` - (Optional, Bool) Whether the default path mapping is used. The default value is `true`. When it is `false`, it means custom path mapping. In this case, the `path_mappings` attribute is required.
+* `is_forced_https` - (Optional, Bool) Whether to force HTTP requests to jump to HTTPS, default to false. When the parameter is true, the API gateway will redirect all HTTP protocol requests using the custom domain name to the HTTPS protocol for forwarding.
 * `path_mappings` - (Optional, Set: [`String`]) Custom domain name path mapping. The data format is: `path#environment`. Optional values for the environment are `test`, `prepub`, and `release`.
 
 ## Attributes Reference
