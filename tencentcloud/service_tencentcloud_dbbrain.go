@@ -725,13 +725,13 @@ func (me *DbbrainService) DbbrainDbDiagReportTaskStateRefreshFunc(asyncRequestId
 	}
 }
 
-func (me *DbbrainService) DescribeDbbrainTdsqlAuditLogById(ctx context.Context, asyncRequestId string, instanceId string, product string) (tdsqlAuditLog *dbbrain.AuditLogFile, errRet error) {
+func (me *DbbrainService) DescribeDbbrainTdsqlAuditLogById(ctx context.Context, asyncRequestId *string, instanceId string, product string) (tdsqlAuditLog []*dbbrain.AuditLogFile, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dbbrain.NewDescribeAuditLogFilesRequest()
-	request.AsyncRequestId = &asyncRequestId
 	request.InstanceId = &instanceId
 	request.Product = &product
+	request.NodeRequestType= &product
 
 	defer func() {
 		if errRet != nil {
@@ -748,11 +748,20 @@ func (me *DbbrainService) DescribeDbbrainTdsqlAuditLogById(ctx context.Context, 
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.AuditLogFile) < 1 {
+	if len(response.Response.Items) < 1 {
 		return
 	}
 
-	tdsqlAuditLog = response.Response.AuditLogFile[0]
+	if asyncRequestId!=nil{
+		for _, item := range response.Response.Items{
+			if *item.AsyncRequestId == helper.StrToInt64(*asyncRequestId) {
+				tdsqlAuditLog = []*dbbrain.AuditLogFile{item}
+				return
+			}
+		}
+	}
+
+	tdsqlAuditLog = response.Response.Items
 	return
 }
 
@@ -760,9 +769,10 @@ func (me *DbbrainService) DeleteDbbrainTdsqlAuditLogById(ctx context.Context, as
 	logId := getLogId(ctx)
 
 	request := dbbrain.NewDeleteAuditLogFileRequest()
-	request.AsyncRequestId = &asyncRequestId
+	request.AsyncRequestId = helper.StrToInt64Point(asyncRequestId)
 	request.InstanceId = &instanceId
 	request.Product = &product
+	request.NodeRequestType= &product
 
 	defer func() {
 		if errRet != nil {
