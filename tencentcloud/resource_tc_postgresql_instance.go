@@ -132,6 +132,42 @@ resource "tencentcloud_postgresql_instance" "pg" {
 }
 ```
 
+upgrade kernel version
+```
+resource "tencentcloud_postgresql_instance" "test" {
+  name = "tf_postsql_instance_update"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
+  charge_type	    = "POSTPAID_BY_HOUR"
+  vpc_id  	  		= local.vpc_id
+  subnet_id 		= local.subnet_id
+  engine_version	= "13.3"
+  root_password	    = "*"
+  charset 			= "LATIN1"
+  project_id 		= 0
+  public_access_switch = false
+  security_groups   = [local.sg_id]
+  memory 			= 4
+  storage 			= 250
+  backup_plan {
+	min_backup_start_time 		 = "01:10:11"
+	max_backup_start_time		 = "02:10:11"
+	base_backup_retention_period = 5
+	backup_period 			     = ["monday", "thursday", "sunday"]
+  }
+
+  db_kernel_version = "v13.3_r1.4" # eg:from v13.3_r1.1 to v13.3_r1.4
+
+  db_kernel_version_upgrade_config {
+	switch_tag = 0
+	dry_run = false
+  }
+
+  tags = {
+	tf = "teest"
+  }
+}
+```
+
 Import
 
 postgresql instance can be imported using the id, e.g.
@@ -1034,9 +1070,11 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			upgradeRequest.DBInstanceId = &instanceId
 			upgradeRequest.TargetDBKernelVersion = &upgradeVersion
 
-			if switchTag, ok := dMap["switch_tag"].(int); ok {
+			var switchTag *int
+			if v, ok := dMap["switch_tag"].(int); ok {
+				switchTag = &v
 
-				if switchTag == 1 {
+				if *switchTag == POSTGRESQL_KERNEL_UPGRADE_SPECIFIED_TIME {
 					startTime := dMap["switch_start_time"].(string)
 					endTime := dMap["switch_end_time"].(string)
 					if startTime == "" || endTime == "" {
@@ -1045,7 +1083,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 					upgradeRequest.SwitchStartTime = &startTime
 					upgradeRequest.SwitchEndTime = &endTime
 				}
-				upgradeRequest.SwitchTag = helper.IntUint64(switchTag)
+				upgradeRequest.SwitchTag = helper.IntUint64(*switchTag)
 			}
 
 			if dryRun, ok := dMap["dry_run"].(bool); ok {
@@ -1065,11 +1103,21 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 				} else {
 					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, upgradeRequest.GetAction(), upgradeRequest.ToJsonString(), result.ToJsonString())
 				}
+
 				return nil
 			})
 			if err != nil {
 				log.Printf("[CRITAL]%s create dcdb dbInstance failed, reason:%+v", logId, err)
 				return err
+			}
+
+			// only wait for immediately upgrade mode
+			if switchTag != nil && *switchTag == POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY {
+				conf := BuildStateChangeConf([]string{}, []string{"running", "isolated", "offline"}, 10*readRetryTimeout, time.Second, postgresqlService.PostgresqlUpgradeKernelVersionRefreshFunc(d.Id(), []string{}))
+
+				if _, e := conf.WaitForState(); e != nil {
+					return e
+				}
 			}
 
 		} else {
@@ -1184,9 +1232,18 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("engine_version", instance.DBVersion)
 	_ = d.Set("db_major_vesion", instance.DBMajorVersion)
 	_ = d.Set("db_major_version", instance.DBMajorVersion)
-	//skip set the kernel version when kernel upgrade enabled
-	if v, ok := d.GetOk("db_kernel_version_upgrade_config"); !ok || v == "" {
-		_ = d.Set("db_kernel_version", instance.DBKernelVersion)
+
+	config, ok := d.GetOk("db_kernel_version_upgrade_config")
+	version, _ := d.GetOk("db_kernel_version")
+
+	log.Printf("[DEBUG]%s get the db_kernel_version_upgrade_config: %v, ok: %v\n, version: %s", logId, config, ok, version.(string))
+
+	//skip set the kernel version when kernel upgrade config enabled
+	configList := config.([]interface{})
+	if len(configList) == 0 || !ok {
+		if instance.DBKernelVersion != nil {
+			_ = d.Set("db_kernel_version", instance.DBKernelVersion)
+		}
 	}
 
 	_ = d.Set("name", instance.DBInstanceName)
