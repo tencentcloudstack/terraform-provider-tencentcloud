@@ -442,6 +442,11 @@ TencentDB for MongoDB(mongodb)
   Data Source
     tencentcloud_mongodb_instances
     tencentcloud_mongodb_zone_config
+	tencentcloud_mongodb_instance_backups
+	tencentcloud_mongodb_instance_connections
+	tencentcloud_mongodb_instance_current_op
+	tencentcloud_mongodb_instance_params
+	tencentcloud_mongodb_instance_slow_log
 
   Resource
     tencentcloud_mongodb_instance
@@ -1324,6 +1329,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_target_groups":                        dataSourceTencentCloudClbTargetGroups(),
 			"tencentcloud_mongodb_zone_config":                      dataSourceTencentCloudMongodbZoneConfig(),
 			"tencentcloud_mongodb_instances":                        dataSourceTencentCloudMongodbInstances(),
+			"tencentcloud_mongodb_instance_backups":                 dataSourceTencentCloudMongodbInstanceBackups(),
+			"tencentcloud_mongodb_instance_connections":             dataSourceTencentCloudMongodbInstanceConnections(),
+			"tencentcloud_mongodb_instance_current_op":              dataSourceTencentCloudMongodbInstanceCurrentOp(),
+			"tencentcloud_mongodb_instance_params":                  dataSourceTencentCloudMongodbInstanceParams(),
+			"tencentcloud_mongodb_instance_slow_log":                dataSourceTencentCloudMongodbInstanceSlowLog(),
 			"tencentcloud_dayu_cc_https_policies":                   dataSourceTencentCloudDayuCCHttpsPolicies(),
 			"tencentcloud_dayu_cc_http_policies":                    dataSourceTencentCloudDayuCCHttpPolicies(),
 			"tencentcloud_dayu_ddos_policies":                       dataSourceTencentCloudDayuDdosPolicies(),
@@ -1640,6 +1650,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_sharding_instance":                   resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_mongodb_instance_account":                    resourceTencentCloudMongodbInstanceAccount(),
 			"tencentcloud_mongodb_instance_backup":                     resourceTencentCloudMongodbInstanceBackup(),
+			"tencentcloud_mongodb_instance_backup_download_task":       resourceTencentCloudMongodbInstanceBackupDownloadTask(),
 			"tencentcloud_dayu_cc_http_policy":                         resourceTencentCloudDayuCCHttpPolicy(),
 			"tencentcloud_dayu_cc_https_policy":                        resourceTencentCloudDayuCCHttpsPolicy(),
 			"tencentcloud_dayu_ddos_policy":                            resourceTencentCloudDayuDdosPolicy(),

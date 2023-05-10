@@ -184,6 +184,15 @@ resource "tencentcloud_elasticsearch_instance" "foo" {
 	  node_num          = 2
 	  node_type         = "ES.S1.MEDIUM4"
 	}
+
+	es_acl {
+	  white_list = [
+		"127.0.0.2"
+	  ]
+	  black_list = [
+		"1.1.1.1"
+	  ]
+	}
   
 	tags = {
 	  test = "terraform"
