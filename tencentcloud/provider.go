@@ -1115,6 +1115,16 @@ Application Performance Management(APM)
   Resource
 	tencentcloud_apm_instance
 
+Tencent Cloud Service Engine(TSE)
+  Data Source
+	tencentcloud_tse_access_address
+	tencentcloud_tse_nacos_replicas
+	tencentcloud_tse_zookeeper_replicas
+	tencentcloud_tse_zookeeper_server_interfaces
+
+  Resource
+	tencentcloud_tse_instance
+
 */
 package tencentcloud
 
@@ -1519,6 +1529,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_bundle":                        dataSourceTencentCloudLighthouseBundle(),
 			"tencentcloud_api_gateway_api_docs":                     dataSourceTencentCloudAPIGatewayAPIDocs(),
 			"tencentcloud_api_gateway_api_apps":                     dataSourceTencentCloudAPIGatewayAPIApps(),
+			"tencentcloud_tse_access_address":                       dataSourceTencentCloudTseAccessAddress(),
+			"tencentcloud_tse_nacos_replicas":                       dataSourceTencentCloudTseNacosReplicas(),
+			"tencentcloud_tse_zookeeper_replicas":                   dataSourceTencentCloudTseZookeeperReplicas(),
+			"tencentcloud_tse_zookeeper_server_interfaces":          dataSourceTencentCloudTseZookeeperServerInterfaces(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2006,6 +2020,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_apply_instance_snapshot":         resourceTencentCloudLighthouseApplyInstanceSnapshot(),
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
+			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
