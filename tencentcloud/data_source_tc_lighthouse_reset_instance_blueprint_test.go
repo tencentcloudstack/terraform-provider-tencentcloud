@@ -27,5 +27,4 @@ data "tencentcloud_lighthouse_reset_instance_blueprint" "reset_instance_blueprin
   offset = 0
   limit = 20
 }
-
 `
