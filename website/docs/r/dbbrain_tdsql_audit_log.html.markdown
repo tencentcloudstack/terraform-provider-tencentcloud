@@ -55,11 +55,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-dbbrain tdsql_audit_log can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dbbrain_tdsql_audit_log.tdsql_audit_log tdsql_audit_log_id
-```
-

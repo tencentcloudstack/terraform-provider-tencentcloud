@@ -17,13 +17,6 @@ resource "tencentcloud_dbbrain_tdsql_audit_log" "my_log" {
 }
 ```
 
-Import
-
-dbbrain tdsql_audit_log can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dbbrain_tdsql_audit_log.tdsql_audit_log tdsql_audit_log_id
-```
 */
 package tencentcloud
 
