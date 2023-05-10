@@ -15,7 +15,7 @@ Use this data source to get information about a MySQL instance.
 
 ```hcl
 data "tencentcloud_mysql_instance" "database" {
-  mysql_id           = "my-test-database"
+  mysql_id           = "terraform-test-local-database"
   result_output_file = "mytestpath"
 }
 ```
