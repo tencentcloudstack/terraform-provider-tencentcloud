@@ -336,7 +336,7 @@ func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, met
 			enumTmpList = append(enumTmpList, instanceEnumParamMap)
 		}
 
-		paramList = append(enumTmpList)
+		paramList = append(paramList, enumTmpList...)
 		_ = d.Set("instance_enum_param", enumTmpList)
 	}
 
@@ -385,7 +385,7 @@ func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, met
 			integerTmpList = append(integerTmpList, instanceIntegerParamMap)
 		}
 
-		paramList = append(integerTmpList)
+		paramList = append(paramList, integerTmpList...)
 
 		_ = d.Set("instance_integer_param", integerTmpList)
 	}
@@ -431,7 +431,7 @@ func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, met
 			enumTextList = append(enumTextList, instanceTextParamMap)
 		}
 
-		paramList = append(enumTextList)
+		paramList = append(paramList, enumTextList...)
 		_ = d.Set("instance_text_param", enumTextList)
 	}
 
@@ -475,7 +475,7 @@ func dataSourceTencentCloudMongodbInstanceParamsRead(d *schema.ResourceData, met
 			ids = append(ids, *instanceMultiParam.ParamName)
 			enumMultiList = append(enumMultiList, instanceMultiParamMap)
 		}
-		paramList = append(enumMultiList)
+		paramList = append(paramList, enumMultiList...)
 		_ = d.Set("instance_multi_param", enumMultiList)
 	}
 

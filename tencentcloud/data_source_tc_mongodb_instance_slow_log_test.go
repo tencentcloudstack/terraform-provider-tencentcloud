@@ -26,8 +26,8 @@ const testAccMongodbInstanceSlowLogDataSource = `
 
 data "tencentcloud_mongodb_instance_slow_log" "instance_slow_log" {
   instance_id = "cmgo-gwqk8669"
-  start_time = "2013-05-10 10:00:00"
-  end_time = "2013-05-10 12:47:00"
+  start_time = "2023-05-10 10:00:00"
+  end_time = "2023-05-10 12:47:00"
   slow_ms = 100
   format = "json"
 }
