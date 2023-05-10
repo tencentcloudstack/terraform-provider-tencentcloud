@@ -49,6 +49,7 @@ func resourceTencentCloudSqlserverGeneralBackup() *schema.Resource {
 			"strategy": {
 				Type:         schema.TypeInt,
 				Optional:     true,
+				Computed:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 				Description:  "Backup policy (0: instance backup, 1: multi-database backup).",
 			},
@@ -65,6 +66,7 @@ func resourceTencentCloudSqlserverGeneralBackup() *schema.Resource {
 			},
 			"backup_name": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Backup name. If this parameter is left empty, a backup name in the format of [Instance ID]_[Backup start timestamp] will be automatically generated.",
 			},
