@@ -442,6 +442,11 @@ TencentDB for MongoDB(mongodb)
   Data Source
     tencentcloud_mongodb_instances
     tencentcloud_mongodb_zone_config
+	tencentcloud_mongodb_instance_backups
+	tencentcloud_mongodb_instance_connections
+	tencentcloud_mongodb_instance_current_op
+	tencentcloud_mongodb_instance_params
+	tencentcloud_mongodb_instance_slow_log
 
   Resource
     tencentcloud_mongodb_instance
@@ -971,12 +976,14 @@ TencentDB for DBbrain(dbbrain)
 	tencentcloud_dbbrain_slow_log_top_sqls
 	tencentcloud_dbbrain_slow_log_user_host_stats
 	tencentcloud_dbbrain_slow_log_user_sql_advice
+	tencentcloud_dbbrain_health_scores
 
   Resource
 	tencentcloud_dbbrain_sql_filter
 	tencentcloud_dbbrain_security_audit_log_export_task
 	tencentcloud_dbbrain_db_diag_report_task
 	tencentcloud_dbbrain_modify_diag_db_instance_operation
+	tencentcloud_dbbrain_tdsql_audit_log
 
 Data Transmission Service(DTS)
   Data Source
@@ -1334,6 +1341,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_target_groups":                        dataSourceTencentCloudClbTargetGroups(),
 			"tencentcloud_mongodb_zone_config":                      dataSourceTencentCloudMongodbZoneConfig(),
 			"tencentcloud_mongodb_instances":                        dataSourceTencentCloudMongodbInstances(),
+			"tencentcloud_mongodb_instance_backups":                 dataSourceTencentCloudMongodbInstanceBackups(),
+			"tencentcloud_mongodb_instance_connections":             dataSourceTencentCloudMongodbInstanceConnections(),
+			"tencentcloud_mongodb_instance_current_op":              dataSourceTencentCloudMongodbInstanceCurrentOp(),
+			"tencentcloud_mongodb_instance_params":                  dataSourceTencentCloudMongodbInstanceParams(),
+			"tencentcloud_mongodb_instance_slow_log":                dataSourceTencentCloudMongodbInstanceSlowLog(),
 			"tencentcloud_dayu_cc_https_policies":                   dataSourceTencentCloudDayuCCHttpsPolicies(),
 			"tencentcloud_dayu_cc_http_policies":                    dataSourceTencentCloudDayuCCHttpPolicies(),
 			"tencentcloud_dayu_ddos_policies":                       dataSourceTencentCloudDayuDdosPolicies(),
@@ -1480,6 +1492,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_slow_log_top_sqls":                dataSourceTencentCloudDbbrainSlowLogTopSqls(),
 			"tencentcloud_dbbrain_slow_log_user_host_stats":         dataSourceTencentCloudDbbrainSlowLogUserHostStats(),
 			"tencentcloud_dbbrain_slow_log_user_sql_advice":         dataSourceTencentCloudDbbrainSlowLogUserSqlAdvice(),
+			"tencentcloud_dbbrain_health_scores":                    dataSourceTencentCloudDbbrainHealthScores(),
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                        dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                         dataSourceTencentCloudDtsMigrateJobs(),
@@ -1654,6 +1667,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_sharding_instance":                   resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_mongodb_instance_account":                    resourceTencentCloudMongodbInstanceAccount(),
 			"tencentcloud_mongodb_instance_backup":                     resourceTencentCloudMongodbInstanceBackup(),
+			"tencentcloud_mongodb_instance_backup_download_task":       resourceTencentCloudMongodbInstanceBackupDownloadTask(),
 			"tencentcloud_dayu_cc_http_policy":                         resourceTencentCloudDayuCCHttpPolicy(),
 			"tencentcloud_dayu_cc_https_policy":                        resourceTencentCloudDayuCCHttpsPolicy(),
 			"tencentcloud_dayu_ddos_policy":                            resourceTencentCloudDayuDdosPolicy(),
@@ -1896,6 +1910,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_security_audit_log_export_task":     resourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                resourceTencentCloudDbbrainDbDiagReportTask(),
 			"tencentcloud_dbbrain_modify_diag_db_instance_operation":  resourceTencentCloudDbbrainModifyDiagDbInstanceOperation(),
+			"tencentcloud_dbbrain_tdsql_audit_log":                    resourceTencentCloudDbbrainTdsqlAuditLog(),
 			"tencentcloud_rum_project":                                resourceTencentCloudRumProject(),
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),

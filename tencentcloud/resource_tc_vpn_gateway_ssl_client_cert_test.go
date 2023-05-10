@@ -36,8 +36,27 @@ func TestAccTencentCloudVpnGatewaySslClientCertResource_basic(t *testing.T) {
 
 const testAccVpnGatewaySslClientCert = `
 
+resource "tencentcloud_vpn_ssl_server" "server" {
+  local_address       = [
+    "172.16.0.0/17",
+  ]
+  remote_address      = "173.16.1.0/24"
+  ssl_vpn_server_name = "tf-vpn-ssl-server"
+  vpn_gateway_id      = "vpngw-mll9np1x"
+  ssl_vpn_protocol = "UDP"
+  ssl_vpn_port = 1194
+  integrity_algorithm = "MD5"
+  encrypt_algorithm = "AES-128-CBC"
+  compress = false
+}
+
+resource "tencentcloud_vpn_ssl_client" "client" {
+  ssl_vpn_server_id = tencentcloud_vpn_ssl_server.server.id
+  ssl_vpn_client_name = "tf-vpn-ssl-client"
+}
+
 resource "tencentcloud_vpn_gateway_ssl_client_cert" "vpn_gateway_ssl_client_cert" {
-  ssl_vpn_client_id = "vpnc-52f5lnd5"
+  ssl_vpn_client_id = tencentcloud_vpn_ssl_client.client.id
   switch = "off"
 }
 
@@ -45,8 +64,27 @@ resource "tencentcloud_vpn_gateway_ssl_client_cert" "vpn_gateway_ssl_client_cert
 
 const testAccVpnGatewaySslClientCertUpdate = `
 
+resource "tencentcloud_vpn_ssl_server" "server" {
+  local_address       = [
+    "172.16.0.0/17",
+  ]
+  remote_address      = "173.16.1.0/24"
+  ssl_vpn_server_name = "tf-vpn-ssl-server"
+  vpn_gateway_id      = "vpngw-mll9np1x"
+  ssl_vpn_protocol = "UDP"
+  ssl_vpn_port = 1194
+  integrity_algorithm = "MD5"
+  encrypt_algorithm = "AES-128-CBC"
+  compress = false
+}
+
+resource "tencentcloud_vpn_ssl_client" "client" {
+  ssl_vpn_server_id = tencentcloud_vpn_ssl_server.server.id
+  ssl_vpn_client_name = "tf-vpn-ssl-client"
+}
+
 resource "tencentcloud_vpn_gateway_ssl_client_cert" "vpn_gateway_ssl_client_cert" {
-  ssl_vpn_client_id = "vpnc-52f5lnd5"
+  ssl_vpn_client_id = tencentcloud_vpn_ssl_client.client.id
   switch = "on"
 }
 

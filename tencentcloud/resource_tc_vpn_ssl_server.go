@@ -226,7 +226,11 @@ func resourceTencentCloudVpnSslServerRead(d *schema.ResourceData, meta interface
 			_ = d.Set("encrypt_algorithm", info.EncryptAlgorithm)
 		}
 		if _, ok := d.GetOk("compress"); ok {
-			_ = d.Set("compress", info.Compress)
+			compress := *info.Compress
+			_ = d.Set("compress", false)
+			if compress != 0 {
+				_ = d.Set("compress", true)
+			}
 		}
 		return nil
 	})

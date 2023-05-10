@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_dbbrain_tdsql_audit_log
+```
+
+```release-note:new-data-source
+tencentcloud_dbbrain_health_scores
+```

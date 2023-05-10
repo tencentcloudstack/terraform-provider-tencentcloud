@@ -31,7 +31,7 @@ The following arguments are supported:
 * `certificate_id` - (Required, String, ForceNew) certificate id.
 * `domain_name` - (Required, String, ForceNew) custom domain name.
 * `registry_id` - (Required, String, ForceNew) instance id.
-* `tags` - (Optional, Map, ForceNew) Tag description list.
+* `tags` - (Optional, Map) Tag description list.
 
 ## Attributes Reference
 

@@ -97,20 +97,34 @@ func testAccCheckSqlserverBasicInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverBasicInstanceBasic = defaultVpcSubnets + defaultSecurityGroupData
+const testAccSqlserverBasicInstanceBasic = defaultSecurityGroupData
 
 const testAccSqlserverBasicInstancePostpaid string = testAccSqlserverBasicInstanceBasic + `
+variable "az" {
+	default = "ap-guangzhou-7"
+}
+
+data "tencentcloud_vpc_subnets" "gz" {
+	availability_zone = var.az
+	is_default = true
+  }
+
+  locals {
+	vpc_id = data.tencentcloud_vpc_subnets.gz.instance_list.0.vpc_id
+	subnet_id = data.tencentcloud_vpc_subnets.gz.instance_list.0.subnet_id
+  }
+
 resource "tencentcloud_sqlserver_basic_instance" "test" {
 	name                    = "tf_sqlserver_basic_instance"
-	availability_zone       = var.default_az
+	availability_zone       = var.az
 	charge_type             = "POSTPAID_BY_HOUR"
 	vpc_id                  = local.vpc_id
 	subnet_id               = local.subnet_id
 	security_groups         = [local.sg_id]
 	project_id              = 0
-	memory                  = 8
+	memory                  = 4
 	storage                 = 20
-	cpu                     = 1
+	cpu                     = 2
 	machine_type            = "CLOUD_PREMIUM"
 	maintenance_week_set    = [1,2,3]
 	maintenance_start_time  = "09:00"

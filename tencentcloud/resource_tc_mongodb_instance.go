@@ -365,9 +365,19 @@ func resourceTencentCloudMongodbInstanceRead(d *schema.ResourceData, meta interf
 	// standby instance list
 	var standbyInsList []map[string]string
 	for _, v := range instance.StandbyInstances {
-		standbyInsList = append(standbyInsList, map[string]string{"standby_instance_id": *v.InstanceId, "standby_instance_region": *v.Region})
+		standbyInsList = append(
+			standbyInsList,
+			map[string]string{
+				"standby_instance_id":     *v.InstanceId,
+				"standby_instance_region": *v.Region,
+			},
+		)
 	}
-	_ = d.Set("standby_instance_list", standbyInsList)
+
+	// if not standby instance, need set `standby_instance_list`
+	if _, ok := d.GetOk("father_instance_id"); !ok {
+		_ = d.Set("standby_instance_list", standbyInsList)
+	}
 
 	tags, _ := tagService.DescribeResourceTags(ctx, "mongodb", "instance", client.Region, instanceId)
 
@@ -472,6 +482,28 @@ func resourceTencentCloudMongodbInstanceUpdate(d *schema.ResourceData, meta inte
 			return err
 		}
 
+	}
+
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		vpcId := d.Get("vpc_id").(string)
+		subnetId := d.Get("subnet_id").(string)
+
+		err := mongodbService.ModifyNetworkAddress(ctx, instanceId, vpcId, subnetId)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("security_groups") {
+		securityGroups := d.Get("security_groups").(*schema.Set).List()
+		securityGroupIds := make([]*string, 0, len(securityGroups))
+		for _, securityGroup := range securityGroups {
+			securityGroupIds = append(securityGroupIds, helper.String(securityGroup.(string)))
+		}
+		err := mongodbService.ModifySecurityGroups(ctx, instanceId, securityGroupIds)
+		if err != nil {
+			return err
+		}
 	}
 
 	d.Partial(false)
