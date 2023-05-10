@@ -1628,3 +1628,123 @@ func (me *SqlserverService) DescribeSqlserverConfigBackupStrategyById(ctx contex
 	configBackupStrategy = response.Response.DBInstances[0]
 	return
 }
+
+func (me *SqlserverService) DescribeSqlserverBackupByBackupId(ctx context.Context, instanceId string, startTime string, endTime string, backupId uint64) (backupList []*sqlserver.Backup, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeBackupsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+	request.StartTime = &startTime
+	request.EndTime = &endTime
+	request.BackupId = &backupId
+
+	var offset, limit int64 = 0, 20
+
+	request.Offset = &offset
+	request.Limit = &limit
+
+	for {
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseSqlserverClient().DescribeBackups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response == nil || response.Response == nil {
+			errRet = fmt.Errorf("TencentCloud SDK return nil response, %s", request.GetAction())
+			return
+		}
+		backupList = append(backupList, response.Response.Backups...)
+		if len(response.Response.Backups) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
+func (me *SqlserverService) DescribeBackupByFlowId(ctx context.Context, instanceId, flowId string) (BackupInfo *sqlserver.DescribeBackupByFlowIdResponse, errRet error) {
+
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeBackupByFlowIdRequest()
+	)
+
+	request.InstanceId = &instanceId
+	request.FlowId = &flowId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeBackupByFlowId(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	BackupInfo = response
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverBackupsById(ctx context.Context, instanceId, groupId string) (generalBackups *sqlserver.BackupFile, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeBackupFilesRequest()
+	request.InstanceId = &instanceId
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeBackupFiles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	generalBackups = response.Response.BackupFiles[0]
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverGeneralBackupsById(ctx context.Context, instanceId, backupName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewRemoveBackupsRequest()
+	request.InstanceId = &instanceId
+	request.BackupNames = []*string{&backupName}
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().RemoveBackups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

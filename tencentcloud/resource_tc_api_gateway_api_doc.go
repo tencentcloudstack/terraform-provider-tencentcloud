@@ -179,7 +179,7 @@ func resourceTencentCloudAPIGatewayAPIDocCreate(d *schema.ResourceData, meta int
 			return nil
 		}
 		if *apiDocInfo.ApiDocStatus == API_GATEWAY_API_DOC_STATUS_FAIL {
-			return resource.NonRetryableError(fmt.Errorf("create api_doc task status is %s", API_GATEWAY_API_DOC_STATUS_PROCESSING))
+			return resource.NonRetryableError(fmt.Errorf("create api_doc task status is %s", API_GATEWAY_API_DOC_STATUS_FAIL))
 		}
 		err = fmt.Errorf("create api_doc task status is %v, we won't wait for it finish", *apiDocInfo.ApiDocStatus)
 		return resource.NonRetryableError(err)
