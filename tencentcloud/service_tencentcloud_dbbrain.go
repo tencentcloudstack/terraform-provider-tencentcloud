@@ -805,13 +805,13 @@ func (me *DbbrainService) DescribeDbbrainHealthScoresByFilter(ctx context.Contex
 
 	for k, v := range param {
 		if k == "instance_id" {
-			request.InstanceId = helper.String(v.(string))
+			request.InstanceId = v.(*string)
 		}
 		if k == "time" {
-			request.Time = helper.String(v.(string))
+			request.Time = v.(*string)
 		}
 		if k == "product" {
-			request.Product = helper.String(v.(string))
+			request.Product = v.(*string)
 		}
 	}
 

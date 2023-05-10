@@ -161,16 +161,16 @@ func dataSourceTencentCloudDbbrainHealthScoresRead(d *schema.ResourceData, meta 
 
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("instance_id"); ok {
-		paramMap["InstanceId"] = helper.String(v.(string))
+		paramMap["instance_id"] = helper.String(v.(string))
 		instanceId = v.(string)
 	}
 
 	if v, ok := d.GetOk("time"); ok {
-		paramMap["Time"] = helper.String(v.(string))
+		paramMap["time"] = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("product"); ok {
-		paramMap["Product"] = helper.String(v.(string))
+		paramMap["product"] = helper.String(v.(string))
 	}
 
 	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}
@@ -244,7 +244,7 @@ func dataSourceTencentCloudDbbrainHealthScoresRead(d *schema.ResourceData, meta 
 						eventsList = append(eventsList, eventsMap)
 					}
 
-					issueTypesMap["events"] = []interface{}{eventsList}
+					issueTypesMap["events"] = eventsList
 				}
 
 				if issueTypes.TotalCount != nil {
@@ -254,7 +254,7 @@ func dataSourceTencentCloudDbbrainHealthScoresRead(d *schema.ResourceData, meta 
 				issueTypesList = append(issueTypesList, issueTypesMap)
 			}
 
-			healthScoreInfoMap["issue_types"] = []interface{}{issueTypesList}
+			healthScoreInfoMap["issue_types"] = issueTypesList
 		}
 
 		if data.EventsTotalCount != nil {
@@ -269,7 +269,7 @@ func dataSourceTencentCloudDbbrainHealthScoresRead(d *schema.ResourceData, meta 
 			healthScoreInfoMap["health_level"] = data.HealthLevel
 		}
 
-		_ = d.Set("data", healthScoreInfoMap)
+		_ = d.Set("data", []interface{}{healthScoreInfoMap})
 	}
 
 	d.SetId(instanceId)
