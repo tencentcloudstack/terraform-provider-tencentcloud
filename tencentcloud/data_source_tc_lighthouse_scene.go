@@ -97,7 +97,7 @@ func dataSourceTencentCloudLighthouseSceneRead(d *schema.ResourceData, meta inte
 		for _, sceneId := range sceneIdsSet {
 			sceneIds = append(sceneIds, sceneId.(string))
 		}
-		paramMap["scene_ids"] = helper.InterfacesStringsPoint(sceneIdsSet)
+		paramMap["scene_ids"] = sceneIds
 	}
 
 	if v, _ := d.GetOk("offset"); v != nil {
