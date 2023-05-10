@@ -586,6 +586,7 @@ SQLServer
   	tencentcloud_sqlserver_readonly_groups
 	tencentcloud_sqlserver_publish_subscribes
 	tencentcloud_sqlserver_basic_instances
+	tencentcloud_sqlserver_backup_commands
 
   Resource
 	tencentcloud_sqlserver_instance
@@ -1395,6 +1396,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_accounts":                       dataSourceTencentCloudSqlserverAccounts(),
 			"tencentcloud_sqlserver_account_db_attachments":         dataSourceTencentCloudSqlserverAccountDBAttachments(),
 			"tencentcloud_sqlserver_readonly_groups":                dataSourceTencentCloudSqlserverReadonlyGroups(),
+			"tencentcloud_sqlserver_backup_commands":                dataSourceTencentCloudSqlserverBackupCommands(),
 			"tencentcloud_ckafka_users":                             dataSourceTencentCloudCkafkaUsers(),
 			"tencentcloud_ckafka_acls":                              dataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_ckafka_topics":                            dataSourceTencentCloudCkafkaTopics(),

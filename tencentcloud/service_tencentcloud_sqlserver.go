@@ -1748,3 +1748,44 @@ func (me *SqlserverService) DeleteSqlserverGeneralBackupsById(ctx context.Contex
 
 	return
 }
+
+func (me *SqlserverService) DescribeSqlserverBackupCommand(ctx context.Context, param map[string]interface{}) (datasourceBackupCommand []*sqlserver.DescribeBackupCommandResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeBackupCommandRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "BackupFileType" {
+			request.BackupFileType = v.(*string)
+		}
+		if k == "DataBaseName" {
+			request.DataBaseName = v.(*string)
+		}
+		if k == "IsRecovery" {
+			request.IsRecovery = v.(*string)
+		}
+		if k == "LocalPath" {
+			request.LocalPath = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeBackupCommand(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	datasourceBackupCommand = append(datasourceBackupCommand, response.Response)
+	return
+}
