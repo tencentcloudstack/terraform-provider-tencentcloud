@@ -25,15 +25,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
-	"strconv"
-	"strings"
-	"time"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"log"
+	"strconv"
+	"strings"
 )
 
 func resourceTencentCloudSqlserverGeneralBackup() *schema.Resource {
@@ -188,6 +186,8 @@ func resourceTencentCloudSqlserverGeneralBackupCreate(d *schema.ResourceData, me
 		instanceId string
 		flowId     string
 		backupId   uint64
+		startStr   string
+		endStr     string
 		err        error
 	)
 
@@ -251,6 +251,8 @@ func resourceTencentCloudSqlserverGeneralBackupCreate(d *schema.ResourceData, me
 
 		if *result.Response.Status == SQLSERVER_BACKUP_SUCCESS {
 			backupId = *result.Response.Id
+			startStr = *result.Response.StartTime
+			endStr = *result.Response.EndTime
 			return nil
 		}
 
@@ -267,7 +269,7 @@ func resourceTencentCloudSqlserverGeneralBackupCreate(d *schema.ResourceData, me
 		return err
 	}
 
-	d.SetId(strings.Join([]string{instanceId, strconv.Itoa(int(backupId))}, FILED_SP))
+	d.SetId(strings.Join([]string{instanceId, strconv.Itoa(int(backupId)), flowId, startStr, endStr}, FILED_SP))
 	return resourceTencentCloudSqlserverGeneralBackupRead(d, meta)
 }
 
@@ -286,19 +288,16 @@ func resourceTencentCloudSqlserverGeneralBackupRead(d *schema.ResourceData, meta
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 5 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 
 	instanceId = idSplit[0]
 	tempD, _ := strconv.Atoi(idSplit[1])
 	backupId = uint64(tempD)
+	startStr = idSplit[3]
+	endStr = idSplit[4]
 
-	now := time.Now()
-	start := now.Add(-24 * time.Hour)
-	end := now
-	startStr = start.Format("2006-01-02 15:04:05")
-	endStr = end.Format("2006-01-02 15:04:05")
 	backupList, err := service.DescribeSqlserverBackupByBackupId(ctx, instanceId, startStr, endStr, backupId)
 	if err != nil {
 		return err
@@ -351,7 +350,7 @@ func resourceTencentCloudSqlserverGeneralBackupUpdate(d *schema.ResourceData, me
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 5 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 
@@ -403,7 +402,7 @@ func resourceTencentCloudSqlserverGeneralBackupDelete(d *schema.ResourceData, me
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 5 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 

@@ -46,15 +46,14 @@ func testAccCheckSqlserverGeneralBackupDestroy(s *terraform.State) error {
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 		service := SqlserverService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		flowId := rs.Primary.Attributes["flow_id"]
 
 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
+		if len(idSplit) != 5 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 
 		instanceId := idSplit[0]
-
+		flowId := idSplit[2]
 		result, err := service.DescribeBackupByFlowId(ctx, instanceId, flowId)
 		if err != nil {
 			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
