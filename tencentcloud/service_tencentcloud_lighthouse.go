@@ -838,7 +838,7 @@ func (me *LightHouseService) DescribeLighthouseInstanceTrafficPackageByFilter(ct
 			break
 		}
 		instanceTrafficPackage = append(instanceTrafficPackage, response.Response.InstanceTrafficPackageSet...)
-		if len(response.Response.InstanceTrafficPackageSet) < int(limit) {
+		if len(response.Response.InstanceTrafficPackageSet) < limit {
 			break
 		}
 
