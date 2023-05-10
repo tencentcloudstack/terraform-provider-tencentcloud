@@ -976,12 +976,14 @@ TencentDB for DBbrain(dbbrain)
 	tencentcloud_dbbrain_slow_log_top_sqls
 	tencentcloud_dbbrain_slow_log_user_host_stats
 	tencentcloud_dbbrain_slow_log_user_sql_advice
+	tencentcloud_dbbrain_health_scores
 
   Resource
 	tencentcloud_dbbrain_sql_filter
 	tencentcloud_dbbrain_security_audit_log_export_task
 	tencentcloud_dbbrain_db_diag_report_task
 	tencentcloud_dbbrain_modify_diag_db_instance_operation
+	tencentcloud_dbbrain_tdsql_audit_log
 
 Data Transmission Service(DTS)
   Data Source
@@ -1480,6 +1482,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_slow_log_top_sqls":                dataSourceTencentCloudDbbrainSlowLogTopSqls(),
 			"tencentcloud_dbbrain_slow_log_user_host_stats":         dataSourceTencentCloudDbbrainSlowLogUserHostStats(),
 			"tencentcloud_dbbrain_slow_log_user_sql_advice":         dataSourceTencentCloudDbbrainSlowLogUserSqlAdvice(),
+			"tencentcloud_dbbrain_health_scores":                    dataSourceTencentCloudDbbrainHealthScores(),
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                        dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                         dataSourceTencentCloudDtsMigrateJobs(),
@@ -1893,6 +1896,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_security_audit_log_export_task":     resourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                resourceTencentCloudDbbrainDbDiagReportTask(),
 			"tencentcloud_dbbrain_modify_diag_db_instance_operation":  resourceTencentCloudDbbrainModifyDiagDbInstanceOperation(),
+			"tencentcloud_dbbrain_tdsql_audit_log":                    resourceTencentCloudDbbrainTdsqlAuditLog(),
 			"tencentcloud_rum_project":                                resourceTencentCloudRumProject(),
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
