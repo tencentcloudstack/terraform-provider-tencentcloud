@@ -361,6 +361,12 @@ func resourceTencentCloudSqlserverGeneralBackupUpdate(d *schema.ResourceData, me
 	backupInfo := backupList[0].(map[string]interface{})
 	groupID := backupInfo["group_id"].(string)
 
+	if d.HasChange("backup_name") {
+		if v, ok := d.GetOk("backup_name"); ok {
+			request.BackupName = helper.String(v.(string))
+		}
+	}
+
 	request.InstanceId = &instanceId
 	request.BackupId = &backupId
 	request.GroupId = &groupID
