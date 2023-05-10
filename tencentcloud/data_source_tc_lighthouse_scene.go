@@ -136,7 +136,7 @@ func dataSourceTencentCloudLighthouseSceneRead(d *schema.ResourceData, meta inte
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("scene_set", tmpList)
+	_ = d.Set("scene_set", tmpList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {

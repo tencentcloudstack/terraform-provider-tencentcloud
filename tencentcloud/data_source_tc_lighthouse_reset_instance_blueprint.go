@@ -345,7 +345,7 @@ func dataSourceTencentCloudLighthouseResetInstanceBlueprintRead(d *schema.Resour
 	}
 
 	d.SetId(instanceId)
-	d.Set("reset_instance_blueprint_set", tmpList)
+	_ = d.Set("reset_instance_blueprint_set", tmpList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), tmpList); e != nil {
