@@ -25,7 +25,7 @@ func TestAccTencentCloudMongodbInstanceConnectionsDataSource_basic(t *testing.T)
 const testAccMongodbInstanceConnectionsDataSource = `
 
 data "tencentcloud_mongodb_instance_connections" "instance_connections" {
-  instance_id = "cmgo-b43i3wkj"
+  instance_id = "cmgo-gwqk8669"
 }
 
 `

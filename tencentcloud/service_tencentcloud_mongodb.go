@@ -732,3 +732,95 @@ func (me *MongodbService) DescribeMongodbInstanceCurrentOpByFilter(ctx context.C
 
 	return
 }
+
+func (me *MongodbService) DescribeMongodbInstanceParams(ctx context.Context, param map[string]interface{}) (instanceParams *mongodb.DescribeInstanceParamsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mongodb.NewDescribeInstanceParamsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMongodbClient().DescribeInstanceParams(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instanceParams = response.Response
+
+	return
+}
+
+func (me *MongodbService) DescribeMongodbInstanceSlowLogByFilter(ctx context.Context, param map[string]interface{}) (instanceSlowLog []*string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mongodb.NewDescribeSlowLogsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "start_time" {
+			request.StartTime = v.(*string)
+		}
+		if k == "end_time" {
+			request.EndTime = v.(*string)
+		}
+		if k == "slow_ms" {
+			request.SlowMS = v.(*uint64)
+		}
+		if k == "format" {
+			request.Format = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMongodbClient().DescribeSlowLogs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SlowLogs) < 1 {
+			break
+		}
+		instanceSlowLog = append(instanceSlowLog, response.Response.SlowLogs...)
+		if len(response.Response.SlowLogs) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

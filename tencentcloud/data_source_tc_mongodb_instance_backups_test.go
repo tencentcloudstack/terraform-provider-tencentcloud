@@ -25,7 +25,7 @@ func TestAccTencentCloudMongodbInstanceBackupsDataSource_basic(t *testing.T) {
 const testAccMongodbInstanceBackupsDataSource = `
 
 data "tencentcloud_mongodb_instance_backups" "instance_backups" {
-  instance_id = "cmgo-9d0p6umb"
+  instance_id = "cmgo-gwqk8669"
   backup_method = 0
 }
 

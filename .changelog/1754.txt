@@ -9,3 +9,11 @@ tencentcloud_mongodb_instance_connections
 ```release-note:new-data-source
 tencentcloud_mongodb_instance_current_op
 ```
+
+```release-note:new-data-source
+tencentcloud_mongodb_instance_params
+```
+
+```release-note:new-data-source
+tencentcloud_mongodb_instance_slow_log
+```

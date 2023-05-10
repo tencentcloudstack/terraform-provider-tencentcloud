@@ -25,7 +25,7 @@ func TestAccTencentCloudMongodbInstanceCurrentOpDataSource_basic(t *testing.T) {
 const testAccMongodbInstanceCurrentOpDataSource = `
 
 data "tencentcloud_mongodb_instance_current_op" "instance_current_op" {
-  instance_id = "cmgo-b43i3wkj"
+  instance_id = "cmgo-gwqk8669"
   op = "command"
   order_by_type = "desc"
 }

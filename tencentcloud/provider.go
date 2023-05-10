@@ -445,6 +445,8 @@ TencentDB for MongoDB(mongodb)
 	tencentcloud_mongodb_instance_backups
 	tencentcloud_mongodb_instance_connections
 	tencentcloud_mongodb_instance_current_op
+	tencentcloud_mongodb_instance_params
+	tencentcloud_mongodb_instance_slow_log
 
   Resource
     tencentcloud_mongodb_instance
@@ -1330,6 +1332,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mongodb_instance_backups":                 dataSourceTencentCloudMongodbInstanceBackups(),
 			"tencentcloud_mongodb_instance_connections":             dataSourceTencentCloudMongodbInstanceConnections(),
 			"tencentcloud_mongodb_instance_current_op":              dataSourceTencentCloudMongodbInstanceCurrentOp(),
+			"tencentcloud_mongodb_instance_params":                  dataSourceTencentCloudMongodbInstanceParams(),
+			"tencentcloud_mongodb_instance_slow_log":                dataSourceTencentCloudMongodbInstanceSlowLog(),
 			"tencentcloud_dayu_cc_https_policies":                   dataSourceTencentCloudDayuCCHttpsPolicies(),
 			"tencentcloud_dayu_cc_http_policies":                    dataSourceTencentCloudDayuCCHttpPolicies(),
 			"tencentcloud_dayu_ddos_policies":                       dataSourceTencentCloudDayuDdosPolicies(),
