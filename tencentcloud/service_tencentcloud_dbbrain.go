@@ -716,11 +716,118 @@ func (me *DbbrainService) DbbrainDbDiagReportTaskStateRefreshFunc(asyncRequestId
 		ctx := contextNil
 
 		object, err := me.DescribeDbbrainDbDiagReportTaskById(ctx, asyncRequestId, instanceId, product)
-
 		if err != nil {
 			return nil, "", err
 		}
 
 		return object, helper.Int64ToStr(*object.Progress), nil
 	}
+}
+
+func (me *DbbrainService) DescribeDbbrainTdsqlAuditLogById(ctx context.Context, asyncRequestId *string, instanceId string, product string) (tdsqlAuditLog []*dbbrain.AuditLogFile, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dbbrain.NewDescribeAuditLogFilesRequest()
+	request.InstanceId = &instanceId
+	request.Product = &product
+	request.NodeRequestType = &product
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDbbrainClient().DescribeAuditLogFiles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) < 1 {
+		return
+	}
+
+	if asyncRequestId != nil {
+		for _, item := range response.Response.Items {
+			if *item.AsyncRequestId == helper.StrToInt64(*asyncRequestId) {
+				tdsqlAuditLog = []*dbbrain.AuditLogFile{item}
+				return
+			}
+		}
+	}
+
+	tdsqlAuditLog = response.Response.Items
+	return
+}
+
+func (me *DbbrainService) DeleteDbbrainTdsqlAuditLogById(ctx context.Context, asyncRequestId string, instanceId string, product string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dbbrain.NewDeleteAuditLogFileRequest()
+	request.AsyncRequestId = helper.StrToInt64Point(asyncRequestId)
+	request.InstanceId = &instanceId
+	request.Product = &product
+	request.NodeRequestType = &product
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDbbrainClient().DeleteAuditLogFile(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainHealthScoresByFilter(ctx context.Context, param map[string]interface{}) (healthScores *dbbrain.HealthScoreInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeHealthScoreRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "time" {
+			request.Time = v.(*string)
+		}
+		if k == "product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDbbrainClient().DescribeHealthScore(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.Data == nil {
+		return
+	}
+	healthScores = response.Response.Data
+
+	return
 }
