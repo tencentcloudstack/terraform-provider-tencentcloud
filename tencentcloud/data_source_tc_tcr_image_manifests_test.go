@@ -19,7 +19,7 @@ func TestAccTencentCloudTcrImageManifestsDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(testAccTcrImageManifestsDataSource, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(testTcrImageManifestsObjectName),
 					resource.TestCheckResourceAttrSet(testTcrImageManifestsObjectName, "id"),
 					resource.TestCheckResourceAttr(testTcrImageManifestsObjectName, "registry_id", defaultTCRInstanceId),
@@ -41,4 +41,3 @@ data "tencentcloud_tcr_image_manifests" "image_manifests" {
 }
 
 `
-

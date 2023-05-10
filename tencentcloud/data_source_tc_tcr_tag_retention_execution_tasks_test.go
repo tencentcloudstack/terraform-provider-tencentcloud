@@ -18,8 +18,8 @@ func TestAccTencentCloudTcrTagRetentionExecutionTasksDataSource_basic(t *testing
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrTagRetentionExecutionTasksDataSource,defaultTCRInstanceId),
-				Check:  resource.ComposeTestCheckFunc(
+				Config: fmt.Sprintf(testAccTcrTagRetentionExecutionTasksDataSource, defaultTCRInstanceId),
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(testExecutionTasksObjectName),
 					resource.TestCheckResourceAttrSet(testExecutionTasksObjectName, "id"),
 					resource.TestCheckResourceAttr(testExecutionTasksObjectName, "registry_id", defaultTCRInstanceId),
