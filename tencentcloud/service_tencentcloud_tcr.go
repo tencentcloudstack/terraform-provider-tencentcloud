@@ -1432,3 +1432,101 @@ func (me *TCRService) DescribeTcrImagesByFilter(ctx context.Context, param map[s
 
 	return
 }
+
+func (me *TCRService) DescribeTcrImageManifestsByFilter(ctx context.Context, param map[string]interface{}) (ImageManifests *tcr.DescribeImageManifestsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcr.NewDescribeImageManifestsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "registry_id" {
+			request.RegistryId = v.(*string)
+		}
+		if k == "namespace_name" {
+			request.NamespaceName = v.(*string)
+		}
+		if k == "repository_name" {
+			request.RepositoryName = v.(*string)
+		}
+		if k == "image_version" {
+			request.ImageVersion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+		response, err := me.client.UseTCRClient().DescribeImageManifests(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil {
+			return
+		}
+		ImageManifests = response.Response
+
+	return
+}
+
+func (me *TCRService) DescribeTcrTagRetentionExecutionTasksByFilter(ctx context.Context, param map[string]interface{}) (TagRetentionExecutionTasks []*tcr.RetentionTask, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcr.NewDescribeTagRetentionExecutionTaskRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "registry_id" {
+			request.RegistryId = v.(*string)
+		}
+		if k == "retention_id" {
+			request.RetentionId = v.(*int64)
+		}
+		if k == "execution_id" {
+			request.ExecutionId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTCRClient().DescribeTagRetentionExecutionTask(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.RetentionTaskList) < 1 {
+			break
+		}
+		TagRetentionExecutionTasks = append(TagRetentionExecutionTasks, response.Response.RetentionTaskList...)
+		if len(response.Response.RetentionTaskList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
