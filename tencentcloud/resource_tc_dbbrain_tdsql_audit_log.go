@@ -260,15 +260,15 @@ func resourceTencentCloudDbbrainTdsqlAuditLogRead(d *schema.ResourceData, meta i
 		return nil
 	}
 
-	tdsqlAuditLog := tdsqlAuditLogs[0]
+	// tdsqlAuditLog := tdsqlAuditLogs[0]
 
-	if tdsqlAuditLog.CreateTime != nil {
-		_ = d.Set("start_time", tdsqlAuditLog.CreateTime)
-	}
+	// if tdsqlAuditLog.CreateTime != nil {
+	// 	_ = d.Set("start_time", tdsqlAuditLog.CreateTime)
+	// }
 
-	if tdsqlAuditLog.FinishTime != nil {
-		_ = d.Set("end_time", tdsqlAuditLog.FinishTime)
-	}
+	// if tdsqlAuditLog.FinishTime != nil {
+	// 	_ = d.Set("end_time", tdsqlAuditLog.FinishTime)
+	// }
 
 	return nil
 }

@@ -971,6 +971,7 @@ TencentDB for DBbrain(dbbrain)
 	tencentcloud_dbbrain_slow_log_top_sqls
 	tencentcloud_dbbrain_slow_log_user_host_stats
 	tencentcloud_dbbrain_slow_log_user_sql_advice
+	tencentcloud_dbbrain_health_scores
 
   Resource
 	tencentcloud_dbbrain_sql_filter
@@ -1471,6 +1472,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_slow_log_top_sqls":                dataSourceTencentCloudDbbrainSlowLogTopSqls(),
 			"tencentcloud_dbbrain_slow_log_user_host_stats":         dataSourceTencentCloudDbbrainSlowLogUserHostStats(),
 			"tencentcloud_dbbrain_slow_log_user_sql_advice":         dataSourceTencentCloudDbbrainSlowLogUserSqlAdvice(),
+			"tencentcloud_dbbrain_health_scores":                    dataSourceTencentCloudDbbrainHealthScores(),
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                        dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                         dataSourceTencentCloudDtsMigrateJobs(),
