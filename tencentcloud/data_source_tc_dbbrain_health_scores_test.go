@@ -21,7 +21,7 @@ func TestAccTencentCloudDbbrainHealthScoresDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(testAccDbbrainHealthScoresDataSource, reportTime),
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dbbrain_health_scores.health_scores"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_dbbrain_health_scores.health_scores", "instance_id"),
 					resource.TestCheckResourceAttr("data.tencentcloud_dbbrain_health_scores.health_scores", "time", reportTime),
@@ -40,7 +40,7 @@ func TestAccTencentCloudDbbrainHealthScoresDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccDbbrainHealthScoresDataSource = CommonPresetMysql+`
+const testAccDbbrainHealthScoresDataSource = CommonPresetMysql + `
 
 data "tencentcloud_dbbrain_health_scores" "health_scores" {
   instance_id = local.mysql_id
