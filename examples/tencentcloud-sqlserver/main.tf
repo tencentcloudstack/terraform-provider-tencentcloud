@@ -110,6 +110,11 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
 	}
 }
 
+resource "tencentcloud_sqlserver_general_backup" "test_sqlserver_backup" {
+  instance_id = "mssql-qelbzgwf"
+  backup_name = "create_backup"
+}
+
 
 data "tencentcloud_sqlserver_instances" "id_example" {
   id = tencentcloud_sqlserver_instance.example.id
