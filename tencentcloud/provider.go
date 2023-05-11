@@ -976,12 +976,14 @@ TencentDB for DBbrain(dbbrain)
 	tencentcloud_dbbrain_slow_log_top_sqls
 	tencentcloud_dbbrain_slow_log_user_host_stats
 	tencentcloud_dbbrain_slow_log_user_sql_advice
+	tencentcloud_dbbrain_health_scores
 
   Resource
 	tencentcloud_dbbrain_sql_filter
 	tencentcloud_dbbrain_security_audit_log_export_task
 	tencentcloud_dbbrain_db_diag_report_task
 	tencentcloud_dbbrain_modify_diag_db_instance_operation
+	tencentcloud_dbbrain_tdsql_audit_log
 
 Data Transmission Service(DTS)
   Data Source
@@ -1057,6 +1059,10 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_cluster
 	tencentcloud_tsf_microservice
 	tencentcloud_tsf_unit_rules
+	tencentcloud_tsf_config_summary
+	tencentcloud_tsf_delivery_config_by_group_id
+	tencentcloud_tsf_delivery_configs
+	tencentcloud_tsf_public_config_summary
 	tencentcloud_tsf_api_group
 	tencentcloud_tsf_application_attribute
 	tencentcloud_tsf_business_log_configs
@@ -1119,6 +1125,16 @@ StreamLive(MDL)
 Application Performance Management(APM)
   Resource
 	tencentcloud_apm_instance
+
+Tencent Cloud Service Engine(TSE)
+  Data Source
+	tencentcloud_tse_access_address
+	tencentcloud_tse_nacos_replicas
+	tencentcloud_tse_zookeeper_replicas
+	tencentcloud_tse_zookeeper_server_interfaces
+
+  Resource
+	tencentcloud_tse_instance
 
 */
 package tencentcloud
@@ -1487,6 +1503,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_slow_log_top_sqls":                dataSourceTencentCloudDbbrainSlowLogTopSqls(),
 			"tencentcloud_dbbrain_slow_log_user_host_stats":         dataSourceTencentCloudDbbrainSlowLogUserHostStats(),
 			"tencentcloud_dbbrain_slow_log_user_sql_advice":         dataSourceTencentCloudDbbrainSlowLogUserSqlAdvice(),
+			"tencentcloud_dbbrain_health_scores":                    dataSourceTencentCloudDbbrainHealthScores(),
 			"tencentcloud_dts_sync_jobs":                            dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                        dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                         dataSourceTencentCloudDtsMigrateJobs(),
@@ -1520,6 +1537,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_cluster":                              dataSourceTencentCloudTsfCluster(),
 			"tencentcloud_tsf_microservice":                         dataSourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_unit_rules":                           dataSourceTencentCloudTsfUnitRules(),
+			"tencentcloud_tsf_config_summary":                       dataSourceTencentCloudTsfConfigSummary(),
+			"tencentcloud_tsf_delivery_config_by_group_id":          dataSourceTencentCloudTsfDeliveryConfigByGroupId(),
+			"tencentcloud_tsf_delivery_configs":                     dataSourceTencentCloudTsfDeliveryConfigs(),
+			"tencentcloud_tsf_public_config_summary":                dataSourceTencentCloudTsfPublicConfigSummary(),
 			"tencentcloud_tsf_api_group":                            dataSourceTencentCloudTsfApiGroup(),
 			"tencentcloud_tsf_application_attribute":                dataSourceTencentCloudTsfApplicationAttribute(),
 			"tencentcloud_tsf_business_log_configs":                 dataSourceTencentCloudTsfBusinessLogConfigs(),
@@ -1528,6 +1549,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_bundle":                        dataSourceTencentCloudLighthouseBundle(),
 			"tencentcloud_api_gateway_api_docs":                     dataSourceTencentCloudAPIGatewayAPIDocs(),
 			"tencentcloud_api_gateway_api_apps":                     dataSourceTencentCloudAPIGatewayAPIApps(),
+			"tencentcloud_tse_access_address":                       dataSourceTencentCloudTseAccessAddress(),
+			"tencentcloud_tse_nacos_replicas":                       dataSourceTencentCloudTseNacosReplicas(),
+			"tencentcloud_tse_zookeeper_replicas":                   dataSourceTencentCloudTseZookeeperReplicas(),
+			"tencentcloud_tse_zookeeper_server_interfaces":          dataSourceTencentCloudTseZookeeperServerInterfaces(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1905,6 +1930,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_security_audit_log_export_task":     resourceTencentCloudDbbrainSecurityAuditLogExportTask(),
 			"tencentcloud_dbbrain_db_diag_report_task":                resourceTencentCloudDbbrainDbDiagReportTask(),
 			"tencentcloud_dbbrain_modify_diag_db_instance_operation":  resourceTencentCloudDbbrainModifyDiagDbInstanceOperation(),
+			"tencentcloud_dbbrain_tdsql_audit_log":                    resourceTencentCloudDbbrainTdsqlAuditLog(),
 			"tencentcloud_rum_project":                                resourceTencentCloudRumProject(),
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
@@ -2015,6 +2041,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_apply_instance_snapshot":         resourceTencentCloudLighthouseApplyInstanceSnapshot(),
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
+			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
