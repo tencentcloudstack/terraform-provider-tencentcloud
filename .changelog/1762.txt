@@ -1,0 +1,6 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster: update func
+```
+```release-note:enhancement
+resource/tencentcloud_kubernetes_cluster_endpoint: add parameter extensive_parameters
+```
