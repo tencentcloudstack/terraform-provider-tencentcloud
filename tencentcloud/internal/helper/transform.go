@@ -85,7 +85,9 @@ func PInt64(pointer *int64) int64 {
 func InterfacesStrings(configured []interface{}) []string {
 	vs := make([]string, 0, len(configured))
 	for _, v := range configured {
-		vs = append(vs, v.(string))
+		if v != nil {
+			vs = append(vs, v.(string))
+		}
 	}
 	return vs
 }
@@ -93,7 +95,9 @@ func InterfacesStrings(configured []interface{}) []string {
 func InterfacesStringsPoint(configured []interface{}) []*string {
 	vs := make([]*string, 0, len(configured))
 	for _, v := range configured {
-		vs = append(vs, String(v.(string)))
+		if v != nil {
+			vs = append(vs, String(v.(string)))
+		}
 	}
 	return vs
 }
