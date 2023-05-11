@@ -1059,6 +1059,10 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_cluster
 	tencentcloud_tsf_microservice
 	tencentcloud_tsf_unit_rules
+	tencentcloud_tsf_config_summary
+	tencentcloud_tsf_delivery_config_by_group_id
+	tencentcloud_tsf_delivery_configs
+	tencentcloud_tsf_public_config_summary
   Resource
   	tencentcloud_tsf_cluster
 	tencentcloud_tsf_microservice
@@ -1526,6 +1530,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_cluster":                              dataSourceTencentCloudTsfCluster(),
 			"tencentcloud_tsf_microservice":                         dataSourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_unit_rules":                           dataSourceTencentCloudTsfUnitRules(),
+			"tencentcloud_tsf_config_summary":                       dataSourceTencentCloudTsfConfigSummary(),
+			"tencentcloud_tsf_delivery_config_by_group_id":          dataSourceTencentCloudTsfDeliveryConfigByGroupId(),
+			"tencentcloud_tsf_delivery_configs":                     dataSourceTencentCloudTsfDeliveryConfigs(),
+			"tencentcloud_tsf_public_config_summary":                dataSourceTencentCloudTsfPublicConfigSummary(),
 			"tencentcloud_lighthouse_bundle":                        dataSourceTencentCloudLighthouseBundle(),
 			"tencentcloud_api_gateway_api_docs":                     dataSourceTencentCloudAPIGatewayAPIDocs(),
 			"tencentcloud_api_gateway_api_apps":                     dataSourceTencentCloudAPIGatewayAPIApps(),

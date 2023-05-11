@@ -1681,3 +1681,240 @@ func (me *TsfService) DescribeTsfUnitRulesByFilter(ctx context.Context, param ma
 
 	return
 }
+
+func (me *TsfService) DescribeTsfConfigSummaryByFilter(ctx context.Context, param map[string]interface{}) (configSummary *tsf.TsfPageConfig, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeConfigSummaryRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ApplicationId" {
+			request.ApplicationId = v.(*string)
+		}
+		if k == "SearchWord" {
+			request.SearchWord = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderType" {
+			request.OrderType = v.(*int64)
+		}
+		if k == "ConfigTagList" {
+			request.ConfigTagList = v.([]*string)
+		}
+		if k == "DisableProgramAuthCheck" {
+			request.DisableProgramAuthCheck = v.(*bool)
+		}
+		if k == "ConfigIdList" {
+			request.ConfigIdList = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+		config = make([]*tsf.Config, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeConfigSummary(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response.Result == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		config = append(config, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	configSummary = &tsf.TsfPageConfig{
+		TotalCount: &total,
+		Content:    config,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfDeliveryConfigByGroupIdByFilter(ctx context.Context, param map[string]interface{}) (deliveryConfigByGroupID *tsf.SimpleKafkaDeliveryConfig, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeDeliveryConfigByGroupIdRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTsfClient().DescribeDeliveryConfigByGroupId(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.Result == nil {
+		return
+	}
+
+	deliveryConfigByGroupID = response.Response.Result
+
+	return
+}
+
+func (me *TsfService) DescribeTsfDeliveryConfigsByFilter(ctx context.Context, param map[string]interface{}) (deliveryConfigs *tsf.DeliveryConfigBindGroups, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeDeliveryConfigsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SearchWord" {
+			request.SearchWord = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset    int64 = 0
+		limit     int64 = 20
+		total     int64
+		bindGroup = make([]*tsf.DeliveryConfigBindGroup, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeDeliveryConfigs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+
+		total = *response.Response.Result.TotalCount
+		bindGroup = append(bindGroup, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	deliveryConfigs = &tsf.DeliveryConfigBindGroups{
+		TotalCount: &total,
+		Content:    bindGroup,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfPublicConfigSummaryByFilter(ctx context.Context, param map[string]interface{}) (publicConfigSummary *tsf.TsfPageConfig, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribePublicConfigSummaryRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SearchWord" {
+			request.SearchWord = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderType" {
+			request.OrderType = v.(*int64)
+		}
+		if k == "ConfigTagList" {
+			request.ConfigTagList = v.([]*string)
+		}
+		if k == "DisableProgramAuthCheck" {
+			request.DisableProgramAuthCheck = v.(*bool)
+		}
+		if k == "ConfigIdList" {
+			request.ConfigIdList = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset        int64 = 0
+		limit         int64 = 20
+		total         int64
+		configSummary = make([]*tsf.Config, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribePublicConfigSummary(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		configSummary = append(configSummary, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	publicConfigSummary = &tsf.TsfPageConfig{
+		TotalCount: &total,
+		Content:    configSummary,
+	}
+
+	return
+}
