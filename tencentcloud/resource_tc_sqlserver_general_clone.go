@@ -195,20 +195,20 @@ func resourceTencentCloudSqlserverGeneralCloneCreate(d *schema.ResourceData, met
 	request.RenameRestore = append(request.RenameRestore, &renameRestore)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, err := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().CloneDB(request)
-		if err != nil {
-			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().CloneDB(request)
+		if e != nil {
+			if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				if sdkerr.Code == "FailedOperation.DBError" {
-					err = fmt.Errorf("%s", sdkerr.Message)
-					return resource.NonRetryableError(err)
+					e = fmt.Errorf("%s", sdkerr.Message)
+					return resource.NonRetryableError(e)
 				}
 			}
-			return retryError(err)
+			return retryError(e)
 		}
 
 		if result == nil {
-			err = fmt.Errorf("sqlserver clone %s not exists", instanceId)
-			return resource.NonRetryableError(err)
+			e = fmt.Errorf("sqlserver clone %s not exists", instanceId)
+			return resource.NonRetryableError(e)
 		}
 
 		response = result
@@ -223,14 +223,14 @@ func resourceTencentCloudSqlserverGeneralCloneCreate(d *schema.ResourceData, met
 
 	// wait for sqlserver clone done.
 	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
-		result, err := service.DescribeCloneStatusByFlowId(ctx, flowId)
-		if err != nil {
-			return retryError(err)
+		result, e := service.DescribeCloneStatusByFlowId(ctx, flowId)
+		if e != nil {
+			return retryError(e)
 		}
 
 		if result == nil {
-			err = fmt.Errorf("sqlserver clone instanceId %s flowId %d not exists", instanceId, flowId)
-			return resource.NonRetryableError(err)
+			e = fmt.Errorf("sqlserver clone instanceId %s flowId %d not exists", instanceId, flowId)
+			return resource.NonRetryableError(e)
 		}
 
 		if *result.Status == SQLSERVER_CLONE_RUNNING {
@@ -245,8 +245,8 @@ func resourceTencentCloudSqlserverGeneralCloneCreate(d *schema.ResourceData, met
 			return resource.NonRetryableError(fmt.Errorf("create sqlserver clone task status is failed"))
 		}
 
-		err = fmt.Errorf("create sqlserver clone task status is %v, we won't wait for it finish", *result.Status)
-		return resource.NonRetryableError(err)
+		e = fmt.Errorf("create sqlserver clone task status is %v, we won't wait for it finish", *result.Status)
+		return resource.NonRetryableError(e)
 	})
 
 	if err != nil {
@@ -285,25 +285,60 @@ func resourceTencentCloudSqlserverGeneralCloneRead(d *schema.ResourceData, meta 
 	list := make([]map[string]interface{}, 0)
 	for _, v := range generalClone {
 		if *v.Name == dbName {
-			var infoMap = map[string]interface{}{
-				"collation_name":                v.CollationName,
-				"is_auto_cleanup_on":            v.IsAutoCleanupOn,
-				"is_broker_enabled":             v.IsBrokerEnabled,
-				"is_cdc_enabled":                v.IsCdcEnabled,
-				"is_db_chaining_on":             v.IsDbChainingOn,
-				"is_encrypted":                  v.IsEncrypted,
-				"is_fulltext_enabled":           v.IsFulltextEnabled,
-				"is_mirroring":                  v.IsMirroring,
-				"is_published":                  v.IsPublished,
-				"is_read_committed_snapshot_on": v.IsReadCommittedSnapshotOn,
-				"is_subscribed":                 v.IsSubscribed,
-				"is_trust_worthy_on":            v.IsTrustworthyOn,
-				"mirroring_state":               v.MirroringState,
-				"name":                          v.Name,
-				"recovery_model_desc":           v.RecoveryModelDesc,
-				"retention_period":              v.RetentionPeriod,
-				"state_desc":                    v.StateDesc,
-				"user_access_desc":              v.UserAccessDesc,
+			var infoMap = map[string]interface{}{}
+			if v.CollationName != nil {
+				infoMap["collation_name"] = v.CollationName
+			}
+			if v.IsAutoCleanupOn != nil {
+				infoMap["is_auto_cleanup_on"] = v.IsAutoCleanupOn
+			}
+			if v.IsBrokerEnabled != nil {
+				infoMap["is_broker_enabled"] = v.IsBrokerEnabled
+			}
+			if v.IsCdcEnabled != nil {
+				infoMap["is_cdc_enabled"] = v.IsCdcEnabled
+			}
+			if v.IsDbChainingOn != nil {
+				infoMap["is_db_chaining_on"] = v.IsDbChainingOn
+			}
+			if v.IsEncrypted != nil {
+				infoMap["is_encrypted"] = v.IsEncrypted
+			}
+			if v.IsFulltextEnabled != nil {
+				infoMap["is_fulltext_enabled"] = v.IsFulltextEnabled
+			}
+			if v.IsMirroring != nil {
+				infoMap["is_mirroring"] = v.IsMirroring
+			}
+			if v.IsPublished != nil {
+				infoMap["is_published"] = v.IsPublished
+			}
+			if v.IsReadCommittedSnapshotOn != nil {
+				infoMap["is_read_committed_snapshot_on"] = v.IsReadCommittedSnapshotOn
+			}
+			if v.IsSubscribed != nil {
+				infoMap["is_subscribed"] = v.IsSubscribed
+			}
+			if v.IsTrustworthyOn != nil {
+				infoMap["is_trust_worthy_on"] = v.IsTrustworthyOn
+			}
+			if v.MirroringState != nil {
+				infoMap["mirroring_state"] = v.MirroringState
+			}
+			if v.Name != nil {
+				infoMap["name"] = v.Name
+			}
+			if v.RecoveryModelDesc != nil {
+				infoMap["recovery_model_desc"] = v.RecoveryModelDesc
+			}
+			if v.RetentionPeriod != nil {
+				infoMap["retention_period"] = v.RetentionPeriod
+			}
+			if v.StateDesc != nil {
+				infoMap["state_desc"] = v.StateDesc
+			}
+			if v.UserAccessDesc != nil {
+				infoMap["user_access_desc"] = v.UserAccessDesc
 			}
 			list = append(list, infoMap)
 			break
@@ -337,7 +372,7 @@ func resourceTencentCloudSqlserverGeneralCloneUpdate(d *schema.ResourceData, met
 	dbName = idSplit[1]
 
 	request.InstanceId = &instanceId
-	request.OldDBName = helper.String(dbName)
+	request.OldDBName = &dbName
 
 	if d.HasChange("new_name") {
 		if v, ok := d.GetOk("new_name"); ok {
@@ -347,17 +382,17 @@ func resourceTencentCloudSqlserverGeneralCloneUpdate(d *schema.ResourceData, met
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, err := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().ModifyDBName(request)
-		if err != nil {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().ModifyDBName(request)
+		if e != nil {
 
-			return retryError(err)
+			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 
 		if result == nil {
-			err = fmt.Errorf("sqlserver clone %s not exists", instanceId)
-			return resource.NonRetryableError(err)
+			e = fmt.Errorf("sqlserver clone %s not exists", instanceId)
+			return resource.NonRetryableError(e)
 		}
 
 		flowId = *result.Response.FlowId
@@ -371,14 +406,14 @@ func resourceTencentCloudSqlserverGeneralCloneUpdate(d *schema.ResourceData, met
 
 	// wait for sqlserver clone update done.
 	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
-		result, err := service.DescribeCloneStatusByFlowId(ctx, flowId)
-		if err != nil {
-			return retryError(err)
+		result, e := service.DescribeCloneStatusByFlowId(ctx, flowId)
+		if e != nil {
+			return retryError(e)
 		}
 
 		if result == nil {
-			err = fmt.Errorf("sqlserver clone instanceId %s flowId %d not exists", instanceId, flowId)
-			return resource.NonRetryableError(err)
+			e = fmt.Errorf("sqlserver clone instanceId %s flowId %d not exists", instanceId, flowId)
+			return resource.NonRetryableError(e)
 		}
 
 		if *result.Status == SQLSERVER_CLONE_RUNNING {
@@ -393,8 +428,8 @@ func resourceTencentCloudSqlserverGeneralCloneUpdate(d *schema.ResourceData, met
 			return resource.NonRetryableError(fmt.Errorf("update sqlserver clone task status is failed"))
 		}
 
-		err = fmt.Errorf("update sqlserver clone task status is %v, we won't wait for it finish", *result.Status)
-		return resource.NonRetryableError(err)
+		e = fmt.Errorf("update sqlserver clone task status is %v, we won't wait for it finish", *result.Status)
+		return resource.NonRetryableError(e)
 	})
 
 	if err != nil {
@@ -438,30 +473,30 @@ func resourceTencentCloudSqlserverGeneralCloneDelete(d *schema.ResourceData, met
 	flowId = *result.Response.FlowId
 	// wait for sqlserver clone delete done.
 	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
-		result, err := service.DescribeCloneStatusByFlowId(ctx, flowId)
-		if err != nil {
-			return retryError(err)
+		cloneStatus, e := service.DescribeCloneStatusByFlowId(ctx, flowId)
+		if e != nil {
+			return retryError(e)
 		}
 
-		if result == nil {
-			err = fmt.Errorf("sqlserver clone instanceId %s flowId %d not exists", instanceId, flowId)
-			return resource.NonRetryableError(err)
+		if cloneStatus == nil {
+			e = fmt.Errorf("sqlserver clone instanceId %s flowId %d not exists", instanceId, flowId)
+			return resource.NonRetryableError(e)
 		}
 
-		if *result.Status == SQLSERVER_CLONE_RUNNING {
+		if *cloneStatus.Status == SQLSERVER_CLONE_RUNNING {
 			return resource.RetryableError(fmt.Errorf("delete sqlserver clone task status is running"))
 		}
 
-		if *result.Status == SQLSERVER_CLONE_SUCCESS {
+		if *cloneStatus.Status == SQLSERVER_CLONE_SUCCESS {
 			return nil
 		}
 
-		if *result.Status == SQLSERVER_CLONE_FAIL {
+		if *cloneStatus.Status == SQLSERVER_CLONE_FAIL {
 			return resource.NonRetryableError(fmt.Errorf("delete sqlserver clone task status is failed"))
 		}
 
-		err = fmt.Errorf("delete sqlserver clone task status is %v, we won't wait for it finish", *result.Status)
-		return resource.NonRetryableError(err)
+		e = fmt.Errorf("delete sqlserver clone task status is %v, we won't wait for it finish", *cloneStatus.Status)
+		return resource.NonRetryableError(e)
 	})
 
 	return nil
