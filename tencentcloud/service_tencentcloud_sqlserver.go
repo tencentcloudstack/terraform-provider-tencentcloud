@@ -1789,3 +1789,82 @@ func (me *SqlserverService) DescribeSqlserverBackupCommand(ctx context.Context, 
 	datasourceBackupCommand = append(datasourceBackupCommand, response.Response)
 	return
 }
+
+func (me *SqlserverService) DescribeCloneStatusByFlowId(ctx context.Context, flowId int64) (cloneStatus *sqlserver.DescribeFlowStatusResponseParams, errRet error) {
+
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeFlowStatusRequest()
+	)
+
+	request.FlowId = &flowId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeFlowStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	cloneStatus = response.Response
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverGeneralCloneById(ctx context.Context, instanceId string) (generalCommunication []*sqlserver.DbNormalDetail, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeDBsNormalRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBsNormal(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	generalCommunication = response.Response.DBList
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverGeneralCloneDB(ctx context.Context, instanceId, dbName string) (deleteResp *sqlserver.DeleteDBResponse, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDeleteDBRequest()
+	request.InstanceId = &instanceId
+	request.Names = []*string{&dbName}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DeleteDB(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	deleteResp = response
+	return
+}
