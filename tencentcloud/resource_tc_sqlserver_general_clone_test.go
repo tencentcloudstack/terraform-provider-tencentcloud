@@ -66,11 +66,9 @@ func testAccCheckSqlserverGeneralCloneDestroy(s *terraform.State) error {
 			return err
 		}
 
-		if result != nil {
-			for _, v := range result {
-				if *v.Name == dbName {
-					return fmt.Errorf("sqlserver general_clone %s still exists", rs.Primary.ID)
-				}
+		for _, v := range result {
+			if *v.Name == dbName {
+				return fmt.Errorf("sqlserver general_clone %s still exists", rs.Primary.ID)
 			}
 		}
 	}
