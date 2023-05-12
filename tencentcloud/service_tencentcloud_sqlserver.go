@@ -1868,3 +1868,57 @@ func (me *SqlserverService) DeleteSqlserverGeneralCloneDB(ctx context.Context, i
 	deleteResp = response
 	return
 }
+
+func (me *SqlserverService) DescribeSqlserverFullBackupMigrationById(ctx context.Context, instanceId, backupMigrationId string) (fullBackupMigration *sqlserver.Migration, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeBackupMigrationRequest()
+	request.InstanceId = &instanceId
+	request.BackupMigrationId = &backupMigrationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeBackupMigration(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	fullBackupMigration = response.Response.BackupMigrationSet[0]
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverFullBackupMigrationById(ctx context.Context, instanceId, backupMigrationId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDeleteBackupMigrationRequest()
+	request.InstanceId = &instanceId
+	request.BackupMigrationId = &backupMigrationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DeleteBackupMigration(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
