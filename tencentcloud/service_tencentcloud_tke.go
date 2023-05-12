@@ -1494,7 +1494,7 @@ func (me *TkeService) DescribeClusterNodePoolGlobalConfig(ctx context.Context, c
 
 func (me *TkeService) WaitForAuthenticationOptionsUpdateSuccess(ctx context.Context, id string) (info *tke.ServiceAccountAuthenticationOptions, errRet error) {
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		options, state, err := me.DescribeClusterAuthenticationOptions(ctx, id)
+		options, state, _, err := me.DescribeClusterAuthenticationOptions(ctx, id)
 		info = options
 
 		if err != nil {
@@ -1521,7 +1521,7 @@ func (me *TkeService) WaitForAuthenticationOptionsUpdateSuccess(ctx context.Cont
 
 // DescribeClusterAuthenticationOptions
 // Field `ServiceAccounts.AutoCreateDiscoveryAnonymousAuth` will always return null by design
-func (me *TkeService) DescribeClusterAuthenticationOptions(ctx context.Context, id string) (options *tke.ServiceAccountAuthenticationOptions, state string, errRet error) {
+func (me *TkeService) DescribeClusterAuthenticationOptions(ctx context.Context, id string) (options *tke.ServiceAccountAuthenticationOptions, state string, oidcConfig *tke.OIDCConfigAuthenticationOptions, errRet error) {
 	logId := getLogId(ctx)
 	request := tke.NewDescribeClusterAuthenticationOptionsRequest()
 	request.ClusterId = helper.String(id)
@@ -1540,6 +1540,7 @@ func (me *TkeService) DescribeClusterAuthenticationOptions(ctx context.Context, 
 	if res.Response != nil {
 		state = *res.Response.LatestOperationState
 		options = res.Response.ServiceAccounts
+		oidcConfig = res.Response.OIDCConfig
 	}
 
 	return
