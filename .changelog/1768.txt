@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_sqlserver_full_backup_migration
+```

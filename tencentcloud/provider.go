@@ -601,6 +601,7 @@ SQLServer
 	tencentcloud_sqlserver_config_backup_strategy
 	tencentcloud_sqlserver_general_backup
 	tencentcloud_sqlserver_general_clone
+    tencentcloud_sqlserver_full_backup_migration
 
 SSL Certificates
   Data Source
@@ -1811,6 +1812,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_config_backup_strategy":            resourceTencentCloudSqlserverConfigBackupStrategy(),
 			"tencentcloud_sqlserver_general_backup":                    resourceTencentCloudSqlserverGeneralBackup(),
 			"tencentcloud_sqlserver_general_clone":                     resourceTencentCloudSqlserverGeneralClone(),
+			"tencentcloud_sqlserver_full_backup_migration":             resourceTencentCloudSqlserverFullBackupMigration(),
 			"tencentcloud_ckafka_instance":                             resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                 resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                  resourceTencentCloudCkafkaAcl(),
