@@ -322,6 +322,7 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_instance_set
     tencentcloud_eip
     tencentcloud_eip_association
+	tencentcloud_eip_address_transform
     tencentcloud_key_pair
     tencentcloud_placement_group
     tencentcloud_reserved_instance
@@ -1613,6 +1614,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_nat_gateway_snat":                            resourceTencentCloudNatGatewaySnat(),
 			"tencentcloud_eip":                                         resourceTencentCloudEip(),
 			"tencentcloud_eip_association":                             resourceTencentCloudEipAssociation(),
+			"tencentcloud_eip_address_transform":                       resourceTencentCloudEipAddressTransform(),
 			"tencentcloud_eni":                                         resourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":                              resourceTencentCloudEniAttachment(),
 			"tencentcloud_ccn":                                         resourceTencentCloudCcn(),
