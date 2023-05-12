@@ -641,6 +641,8 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_vpc_attachments
 	tencentcloud_tcr_webhook_trigger_logs
 	tencentcloud_tcr_images
+	tencentcloud_tcr_image_manifests
+	tencentcloud_tcr_tag_retention_execution_tasks
 
   Resource
 	tencentcloud_tcr_instance
@@ -1461,6 +1463,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_tcr_repositories":                         dataSourceTencentCloudTCRRepositories(),
 			"tencentcloud_tcr_webhook_trigger_logs":                 dataSourceTencentCloudTcrWebhookTriggerLogs(),
 			"tencentcloud_tcr_images":                               dataSourceTencentCloudTcrImages(),
+			"tencentcloud_tcr_image_manifests":                      dataSourceTencentCloudTcrImageManifests(),
+			"tencentcloud_tcr_tag_retention_execution_tasks":        dataSourceTencentCloudTcrTagRetentionExecutionTasks(),
 			"tencentcloud_address_templates":                        dataSourceTencentCloudAddressTemplates(),
 			"tencentcloud_address_template_groups":                  dataSourceTencentCloudAddressTemplateGroups(),
 			"tencentcloud_protocol_templates":                       dataSourceTencentCloudProtocolTemplates(),

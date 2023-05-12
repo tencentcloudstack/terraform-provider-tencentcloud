@@ -144,7 +144,6 @@ func (me *TCRService) DescribeSecurityPolicies(ctx context.Context, request *tcr
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().DescribeSecurityPolicies(request)
-
 	if err != nil {
 		errRet = err
 		return
@@ -251,9 +250,9 @@ func (me *TCRService) DeleteTCRInstance(ctx context.Context, instanceId string, 
 	return err
 }
 
-//long term token
+// long term token
 
-//name space
+// name space
 func (me *TCRService) CreateTCRNameSpace(ctx context.Context, instanceId string, name string, isPublic, isAutoScan, isPreventVUL bool, severity string, whitelistItems []interface{}) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewCreateNamespaceRequest()
@@ -308,8 +307,8 @@ func (me *TCRService) ModifyInstance(ctx context.Context, registryId, registryTy
 	ratelimit.Check(request.GetAction())
 	_, err := me.client.UseTCRClient().ModifyInstance(request)
 	return err
-
 }
+
 func (me *TCRService) ModifyTCRNameSpace(ctx context.Context, instanceId string, name string, isPublic, isAutoScan, isPreventVUL bool, severity string, whitelistItems []interface{}) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewModifyNamespaceRequest()
@@ -422,7 +421,7 @@ func (me *TCRService) DescribeTCRNameSpaceById(ctx context.Context, instanceId s
 	return
 }
 
-//repository
+// repository
 func (me *TCRService) CreateTCRRepository(ctx context.Context, instanceId string, namespace string, repositoryName string, briefDesc string, description string) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewCreateRepositoryRequest()
@@ -563,7 +562,7 @@ func (me *TCRService) DescribeTCRRepositoryById(ctx context.Context, instanceId 
 	return
 }
 
-//longterm token
+// longterm token
 func (me *TCRService) CreateTCRLongTermToken(ctx context.Context, instanceId string, description string) (tokenId string, token string, userName string, errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewCreateInstanceTokenRequest()
@@ -682,9 +681,10 @@ func (me *TCRService) DescribeTCRLongTermTokenById(ctx context.Context, instance
 	return
 }
 
-//VPC attachment
+// VPC attachment
 func (me *TCRService) CreateTCRVPCAttachment(ctx context.Context, instanceId string, vpcId string,
-	subnetId string, regionId int64, regionName string) (errRet error) {
+	subnetId string, regionId int64, regionName string,
+) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewManageInternalEndpointRequest()
 	defer func() {
@@ -712,7 +712,8 @@ func (me *TCRService) CreateTCRVPCAttachment(ctx context.Context, instanceId str
 }
 
 func (me *TCRService) DeleteTCRVPCAttachment(ctx context.Context, instanceId string, vpcId string,
-	subnetId string, regionId int, regionName string) (errRet error) {
+	subnetId string, regionId int, regionName string,
+) (errRet error) {
 	logId := getLogId(ctx)
 	request := tcr.NewManageInternalEndpointRequest()
 	defer func() {
@@ -741,9 +742,9 @@ func (me *TCRService) DeleteTCRVPCAttachment(ctx context.Context, instanceId str
 
 func (me *TCRService) DescribeTCRVPCAttachments(ctx context.Context, instanceId string, vpcId string, subnetId string) (vpcList []*tcr.AccessVpc, errRet error) {
 	logId := getLogId(ctx)
-	//sdk has internal error as invalid instance id para result
-	//to avoid error code check
-	//check instance exist first
+	// sdk has internal error as invalid instance id para result
+	// to avoid error code check
+	// check instance exist first
 	_, insHas, err := me.DescribeTCRInstanceById(ctx, instanceId)
 	if err != nil {
 		errRet = err
@@ -901,7 +902,6 @@ func (me *TCRService) CreateReplicationInstance(ctx context.Context, request *tc
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().CreateReplicationInstance(request)
-
 	if err != nil {
 		errRet = err
 		return
@@ -961,7 +961,6 @@ func (me *TCRService) DeleteReplicationInstance(ctx context.Context, request *tc
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().DeleteReplicationInstance(request)
-
 	if err != nil {
 		errRet = err
 		return
@@ -1020,7 +1019,6 @@ func (me *TCRService) DescribeReplicationInstances(ctx context.Context, request 
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseTCRClient().DescribeReplicationInstances(request)
-
 	if err != nil {
 		errRet = err
 		return
@@ -1284,7 +1282,6 @@ func (me *TCRService) TcrCustomizedDomainStateRefreshFunc(registryId, domainName
 		ctx := contextNil
 
 		object, err := me.DescribeTcrCustomizedDomainById(ctx, registryId, &domainName)
-
 		if err != nil {
 			return nil, "", err
 		}
@@ -1424,6 +1421,104 @@ func (me *TCRService) DescribeTcrImagesByFilter(ctx context.Context, param map[s
 		}
 		Images = append(Images, response.Response.ImageInfoList...)
 		if len(response.Response.ImageInfoList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TCRService) DescribeTcrImageManifestsByFilter(ctx context.Context, param map[string]interface{}) (ImageManifests *tcr.DescribeImageManifestsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcr.NewDescribeImageManifestsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "registry_id" {
+			request.RegistryId = v.(*string)
+		}
+		if k == "namespace_name" {
+			request.NamespaceName = v.(*string)
+		}
+		if k == "repository_name" {
+			request.RepositoryName = v.(*string)
+		}
+		if k == "image_version" {
+			request.ImageVersion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DescribeImageManifests(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+	ImageManifests = response.Response
+
+	return
+}
+
+func (me *TCRService) DescribeTcrTagRetentionExecutionTasksByFilter(ctx context.Context, param map[string]interface{}) (TagRetentionExecutionTasks []*tcr.RetentionTask, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcr.NewDescribeTagRetentionExecutionTaskRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "registry_id" {
+			request.RegistryId = v.(*string)
+		}
+		if k == "retention_id" {
+			request.RetentionId = v.(*int64)
+		}
+		if k == "execution_id" {
+			request.ExecutionId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTCRClient().DescribeTagRetentionExecutionTask(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.RetentionTaskList) < 1 {
+			break
+		}
+		TagRetentionExecutionTasks = append(TagRetentionExecutionTasks, response.Response.RetentionTaskList...)
+		if len(response.Response.RetentionTaskList) < int(limit) {
 			break
 		}
 
