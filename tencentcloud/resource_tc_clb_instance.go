@@ -506,8 +506,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 		securityGroups := v.([]interface{})
 		sgRequest.SecurityGroups = make([]*string, 0, len(securityGroups))
 		for i := range securityGroups {
-			securityGroup := securityGroups[i].(string)
-			sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+			if securityGroups[i] != nil {
+				securityGroup := securityGroups[i].(string)
+				sgRequest.SecurityGroups = append(sgRequest.SecurityGroups, &securityGroup)
+			}
 		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			sgResponse, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().SetLoadBalancerSecurityGroups(sgRequest)
