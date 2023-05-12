@@ -799,6 +799,15 @@ TencentCloud Lighthouse(Lighthouse)
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
 	tencentcloud_lighthouse_bundle
+	tencentcloud_lighthouse_zone
+	tencentcloud_lighthouse_scene
+	tencentcloud_lighthouse_reset_instance_blueprint
+	tencentcloud_lighthouse_region
+	tencentcloud_lighthouse_instance_vnc_url
+	tencentcloud_lighthouse_instance_traffic_package
+	tencentcloud_lighthouse_instance_disk_num
+	tencentcloud_lighthouse_instance_blueprint
+	tencentcloud_lighthouse_disk_config
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -1066,6 +1075,12 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_delivery_config_by_group_id
 	tencentcloud_tsf_delivery_configs
 	tencentcloud_tsf_public_config_summary
+	tencentcloud_tsf_api_group
+	tencentcloud_tsf_application_attribute
+	tencentcloud_tsf_business_log_configs
+	tencentcloud_tsf_api_detail
+	tencentcloud_tsf_microservice_api_version
+
   Resource
   	tencentcloud_tsf_cluster
 	tencentcloud_tsf_microservice
@@ -1086,6 +1101,7 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_application_public_config
 	tencentcloud_tsf_application_file_config_release
 	tencentcloud_tsf_instances_attachment
+	tencentcloud_tsf_bind_api_group
 
 Media Processing Service(MPS)
   Resource
@@ -1538,6 +1554,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_delivery_config_by_group_id":          dataSourceTencentCloudTsfDeliveryConfigByGroupId(),
 			"tencentcloud_tsf_delivery_configs":                     dataSourceTencentCloudTsfDeliveryConfigs(),
 			"tencentcloud_tsf_public_config_summary":                dataSourceTencentCloudTsfPublicConfigSummary(),
+			"tencentcloud_tsf_api_group":                            dataSourceTencentCloudTsfApiGroup(),
+			"tencentcloud_tsf_application_attribute":                dataSourceTencentCloudTsfApplicationAttribute(),
+			"tencentcloud_tsf_business_log_configs":                 dataSourceTencentCloudTsfBusinessLogConfigs(),
+			"tencentcloud_tsf_api_detail":                           dataSourceTencentCloudTsfApiDetail(),
+			"tencentcloud_tsf_microservice_api_version":             dataSourceTencentCloudTsfMicroserviceApiVersion(),
 			"tencentcloud_lighthouse_bundle":                        dataSourceTencentCloudLighthouseBundle(),
 			"tencentcloud_api_gateway_api_docs":                     dataSourceTencentCloudAPIGatewayAPIDocs(),
 			"tencentcloud_api_gateway_api_apps":                     dataSourceTencentCloudAPIGatewayAPIApps(),
@@ -1545,6 +1566,15 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_nacos_replicas":                       dataSourceTencentCloudTseNacosReplicas(),
 			"tencentcloud_tse_zookeeper_replicas":                   dataSourceTencentCloudTseZookeeperReplicas(),
 			"tencentcloud_tse_zookeeper_server_interfaces":          dataSourceTencentCloudTseZookeeperServerInterfaces(),
+			"tencentcloud_lighthouse_zone":                          dataSourceTencentCloudLighthouseZone(),
+			"tencentcloud_lighthouse_scene":                         dataSourceTencentCloudLighthouseScene(),
+			"tencentcloud_lighthouse_reset_instance_blueprint":      dataSourceTencentCloudLighthouseResetInstanceBlueprint(),
+			"tencentcloud_lighthouse_region":                        dataSourceTencentCloudLighthouseRegion(),
+			"tencentcloud_lighthouse_instance_vnc_url":              dataSourceTencentCloudLighthouseInstanceVncUrl(),
+			"tencentcloud_lighthouse_instance_traffic_package":      dataSourceTencentCloudLighthouseInstanceTrafficPackage(),
+			"tencentcloud_lighthouse_instance_disk_num":             dataSourceTencentCloudLighthouseInstanceDiskNum(),
+			"tencentcloud_lighthouse_instance_blueprint":            dataSourceTencentCloudLighthouseInstanceBlueprint(),
+			"tencentcloud_lighthouse_disk_config":                   dataSourceTencentCloudLighthouseDiskConfig(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1997,6 +2027,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_application_public_config":              resourceTencentCloudTsfApplicationPublicConfig(),
 			"tencentcloud_tsf_application_file_config_release":        resourceTencentCloudTsfApplicationFileConfigRelease(),
 			"tencentcloud_tsf_instances_attachment":                   resourceTencentCloudTsfInstancesAttachment(),
+			"tencentcloud_tsf_bind_api_group":                         resourceTencentCloudTsfBindApiGroup(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                     resourceTencentCloudMpsWatermarkTemplate(),
