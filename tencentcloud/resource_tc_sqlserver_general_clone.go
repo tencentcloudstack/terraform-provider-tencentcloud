@@ -499,5 +499,10 @@ func resourceTencentCloudSqlserverGeneralCloneDelete(d *schema.ResourceData, met
 		return resource.NonRetryableError(e)
 	})
 
+	if err != nil {
+		log.Printf("[CRITAL]%s delete sqlserver clone task fail, reason:%s\n ", logId, err.Error())
+		return err
+	}
+
 	return nil
 }
