@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_sqlserver_backup_commands
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_general_backup
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_general_clone
+```

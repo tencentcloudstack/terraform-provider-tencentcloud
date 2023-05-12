@@ -15,7 +15,7 @@ Provides a MySQL account resource for database management. A MySQL instance supp
 
 ```hcl
 resource "tencentcloud_mysql_account" "default" {
-  mysql_id    = "my-test-database"
+  mysql_id    = "terraform-test-local-database"
   name        = "tf_account"
   password    = "********"
   description = "My test account"
