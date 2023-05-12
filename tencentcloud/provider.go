@@ -796,6 +796,15 @@ TencentCloud Lighthouse(Lighthouse)
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
 	tencentcloud_lighthouse_bundle
+	tencentcloud_lighthouse_zone
+	tencentcloud_lighthouse_scene
+	tencentcloud_lighthouse_reset_instance_blueprint
+	tencentcloud_lighthouse_region
+	tencentcloud_lighthouse_instance_vnc_url
+	tencentcloud_lighthouse_instance_traffic_package
+	tencentcloud_lighthouse_instance_disk_num
+	tencentcloud_lighthouse_instance_blueprint
+	tencentcloud_lighthouse_disk_config
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -1553,6 +1562,15 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_nacos_replicas":                       dataSourceTencentCloudTseNacosReplicas(),
 			"tencentcloud_tse_zookeeper_replicas":                   dataSourceTencentCloudTseZookeeperReplicas(),
 			"tencentcloud_tse_zookeeper_server_interfaces":          dataSourceTencentCloudTseZookeeperServerInterfaces(),
+			"tencentcloud_lighthouse_zone":                          dataSourceTencentCloudLighthouseZone(),
+			"tencentcloud_lighthouse_scene":                         dataSourceTencentCloudLighthouseScene(),
+			"tencentcloud_lighthouse_reset_instance_blueprint":      dataSourceTencentCloudLighthouseResetInstanceBlueprint(),
+			"tencentcloud_lighthouse_region":                        dataSourceTencentCloudLighthouseRegion(),
+			"tencentcloud_lighthouse_instance_vnc_url":              dataSourceTencentCloudLighthouseInstanceVncUrl(),
+			"tencentcloud_lighthouse_instance_traffic_package":      dataSourceTencentCloudLighthouseInstanceTrafficPackage(),
+			"tencentcloud_lighthouse_instance_disk_num":             dataSourceTencentCloudLighthouseInstanceDiskNum(),
+			"tencentcloud_lighthouse_instance_blueprint":            dataSourceTencentCloudLighthouseInstanceBlueprint(),
+			"tencentcloud_lighthouse_disk_config":                   dataSourceTencentCloudLighthouseDiskConfig(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
