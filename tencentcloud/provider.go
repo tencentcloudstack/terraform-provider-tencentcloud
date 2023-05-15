@@ -707,6 +707,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_nat_gateways
     tencentcloud_nat_gateway_snats
     tencentcloud_nats
+	tencentcloud_nat_dc_route
 
   Resource
     tencentcloud_eni
@@ -729,6 +730,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_dnat
     tencentcloud_nat_gateway
     tencentcloud_nat_gateway_snat
+	tencentcloud_nat_refresh_nat_dc_route
     tencentcloud_ha_vip
     tencentcloud_ha_vip_eip_attachment
 	tencentcloud_vpc_bandwidth_package
@@ -1306,6 +1308,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnats":                                     dataSourceTencentCloudDnats(),
 			"tencentcloud_nat_gateways":                              dataSourceTencentCloudNatGateways(),
 			"tencentcloud_nat_gateway_snats":                         dataSourceTencentCloudNatGatewaySnats(),
+			"tencentcloud_nat_dc_route":                              dataSourceTencentCloudNatDcRoute(),
 			"tencentcloud_vpn_customer_gateways":                     dataSourceTencentCloudVpnCustomerGateways(),
 			"tencentcloud_vpn_gateways":                              dataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_gateway_routes":                        dataSourceTencentCloudVpnGatewayRoutes(),
@@ -1619,6 +1622,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnat":                                        resourceTencentCloudDnat(),
 			"tencentcloud_nat_gateway":                                 resourceTencentCloudNatGateway(),
 			"tencentcloud_nat_gateway_snat":                            resourceTencentCloudNatGatewaySnat(),
+			"tencentcloud_nat_refresh_nat_dc_route":                    resourceTencentCloudNatRefreshNatDcRoute(),
 			"tencentcloud_eip":                                         resourceTencentCloudEip(),
 			"tencentcloud_eip_association":                             resourceTencentCloudEipAssociation(),
 			"tencentcloud_eip_address_transform":                       resourceTencentCloudEipAddressTransform(),

@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_nat_refresh_nat_dc_route
+```
+
+```release-note:new-data-source
+tencentcloud_nat_dc_route
+```
