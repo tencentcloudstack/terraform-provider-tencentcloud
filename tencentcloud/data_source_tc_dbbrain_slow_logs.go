@@ -234,7 +234,7 @@ func dataSourceTencentCloudDbbrainSlowLogsRead(d *schema.ResourceData, meta inte
 				tmpList = append(tmpList, helper.IntInt64(time))
 			}
 		}
-		paramMap["time"] = tmpList
+		paramMap["Time"] = tmpList
 	}
 
 	service := DbbrainService{client: meta.(*TencentCloudClient).apiV3Conn}

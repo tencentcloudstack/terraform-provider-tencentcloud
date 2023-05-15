@@ -873,6 +873,7 @@ func (me *DbbrainService) DescribeDbbrainSlowLogsByFilter(ctx context.Context, p
 			request.Ip = v.([]*string)
 		}
 		if k == "Time" {
+			request.Time = v.([]*int64)
 		}
 	}
 
