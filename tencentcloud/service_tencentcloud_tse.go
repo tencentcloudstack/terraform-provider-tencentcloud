@@ -319,3 +319,47 @@ func (me *TseService) DescribeTseZookeeperServerInterfacesByFilter(ctx context.C
 
 	return
 }
+
+func (me *TseService) DescribeTseNacosServerInterfacesByFilter(ctx context.Context, instanceId string) (nacosServerInterfaces []*tse.NacosServerInterface, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeNacosServerInterfacesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeNacosServerInterfaces(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Content) < 1 {
+			break
+		}
+		nacosServerInterfaces = append(nacosServerInterfaces, response.Response.Content...)
+		if len(response.Response.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

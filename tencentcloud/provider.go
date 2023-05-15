@@ -1158,6 +1158,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_nacos_replicas
 	tencentcloud_tse_zookeeper_replicas
 	tencentcloud_tse_zookeeper_server_interfaces
+	tencentcloud_tse_nacos_server_interfaces
 
   Resource
 	tencentcloud_tse_instance
@@ -1582,6 +1583,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_apps":                      dataSourceTencentCloudAPIGatewayAPIApps(),
 			"tencentcloud_tse_access_address":                        dataSourceTencentCloudTseAccessAddress(),
 			"tencentcloud_tse_nacos_replicas":                        dataSourceTencentCloudTseNacosReplicas(),
+			"tencentcloud_tse_nacos_server_interfaces":               dataSourceTencentCloudTseNacosServerInterfaces(),
 			"tencentcloud_tse_zookeeper_replicas":                    dataSourceTencentCloudTseZookeeperReplicas(),
 			"tencentcloud_tse_zookeeper_server_interfaces":           dataSourceTencentCloudTseZookeeperServerInterfaces(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
