@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_dbbrain_slow_logs
+```
+
+```release-note:new-data-source
+tencentcloud_dbbrain_sql_templates
+```
+
+```release-note:new-data-source
+tencentcloud_dbbrain_db_space_status
+```
