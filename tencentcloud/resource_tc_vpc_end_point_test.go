@@ -33,7 +33,7 @@ resource "tencentcloud_vpc_end_point" "end_point" {
   vpc_id = "vpc-391sv4w3"
   subnet_id = "subnet-ljyn7h30"
   end_point_name = "terraform-test"
-  end_point_service_id = "vpcsvc-exphd2fd"
+  end_point_service_id = "vpcsvc-98jddhcz"
   end_point_vip = "10.0.2.2"
 }
 
