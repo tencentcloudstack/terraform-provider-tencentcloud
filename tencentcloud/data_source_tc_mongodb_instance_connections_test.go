@@ -15,8 +15,9 @@ func TestAccTencentCloudMongodbInstanceConnectionsDataSource_basic(t *testing.T)
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbInstanceConnectionsDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_connections.instance_connections")),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbInstanceConnectionsDataSource,
+				Check:     resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_connections.instance_connections")),
 			},
 		},
 	})
