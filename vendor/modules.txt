@@ -970,6 +970,8 @@ github.com/sivchari/nosnakecase
 # github.com/sivchari/tenv v1.7.1
 ## explicit; go 1.18
 github.com/sivchari/tenv
+# github.com/smartystreets/goconvey v1.8.0
+## explicit; go 1.18
 # github.com/sonatard/noctx v0.0.2
 ## explicit; go 1.20
 github.com/sonatard/noctx

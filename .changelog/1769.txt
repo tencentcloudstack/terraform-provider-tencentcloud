@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_eip_address_transform
+```
