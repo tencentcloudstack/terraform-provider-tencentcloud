@@ -32,7 +32,7 @@ Install tcr addon by passing values
 
 ```hcl
 resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
-  cluster_id = "cls-gomql7rs"
+  cluster_id = "cls-xxxxxxxx" #specify your tke cluster id
   name       = "tcr"
   version    = "1.0.0"
   values = [
