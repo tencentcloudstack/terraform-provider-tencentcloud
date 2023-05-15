@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudKubernetesClusterEndpoint(t *testing.T) {
+func TestAccTencentCloudKubernetesClusterEndpointResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -47,6 +47,7 @@ func TestAccTencentCloudKubernetesClusterEndpoint(t *testing.T) {
 					testAccCheckTkeExists("tencentcloud_kubernetes_cluster.managed_cluster"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_id"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_cluster_endpoint.foo", "cluster_internet", "true"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_cluster_endpoint.foo", "extensive_parameters"),
 				),
 			},
 			{
@@ -174,6 +175,12 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
   cluster_intranet = true
   cluster_internet_security_group = local.new_sg
   cluster_intranet_subnet_id = data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
+  extensive_parameters = jsonencode({
+    InternetAccessible = {
+      InternetChargeType = "BANDWIDTH_POSTPAID_BY_HOUR"
+      InternetMaxBandwidthOut = 10
+    }
+  })
   depends_on = [
 	tencentcloud_kubernetes_node_pool.np_test
   ]
