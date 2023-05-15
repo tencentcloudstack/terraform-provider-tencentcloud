@@ -562,6 +562,13 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_account
 	tencentcloud_redis_read_only
 	tencentcloud_redis_ssl
+	tencentcloud_redis_backup_download_restriction
+	tencentcloud_redis_clear_instance_operation
+	tencentcloud_redis_renew_instance_operation
+	tencentcloud_redis_startup_instance_operation
+	tencentcloud_redis_upgrade_cache_version_operation
+	tencentcloud_redis_upgrade_multi_zone_operation
+	tencentcloud_redis_upgrade_proxy_version_operation
 	tencentcloud_redis_maintenance_window
 	tencentcloud_redis_replica_readonly
 
@@ -1701,6 +1708,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_param":                                 resourceTencentCloudRedisParam(),
 			"tencentcloud_redis_read_only":                             resourceTencentCloudRedisReadOnly(),
 			"tencentcloud_redis_ssl":                                   resourceTencentCloudRedisSsl(),
+			"tencentcloud_redis_backup_download_restriction":           resourceTencentCloudRedisBackupDownloadRestriction(),
+			"tencentcloud_redis_clear_instance_operation":              resourceTencentCloudRedisClearInstanceOperation(),
+			"tencentcloud_redis_renew_instance_operation":              resourceTencentCloudRedisRenewInstanceOperation(),
+			"tencentcloud_redis_startup_instance_operation":            resourceTencentCloudRedisStartupInstanceOperation(),
+			"tencentcloud_redis_upgrade_cache_version_operation":       resourceTencentCloudRedisUpgradeCacheVersionOperation(),
+			"tencentcloud_redis_upgrade_multi_zone_operation":          resourceTencentCloudRedisUpgradeMultiZoneOperation(),
+			"tencentcloud_redis_upgrade_proxy_version_operation":       resourceTencentCloudRedisUpgradeProxyVersionOperation(),
 			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_redis_replica_readonly":                      resourceTencentCloudRedisReplicaReadonly(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),
