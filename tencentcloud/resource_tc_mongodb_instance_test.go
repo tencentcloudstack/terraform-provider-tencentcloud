@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"testing"
 	"time"
 
@@ -33,6 +34,11 @@ func init() {
 				ins := instances[i]
 				id := *ins.InstanceId
 				name := *ins.InstanceName
+
+				if strings.HasPrefix(name, keepResource) || strings.HasPrefix(name, defaultResource) {
+					continue
+				}
+
 				created, err := time.Parse("2006-01-02 15:04:05", *ins.CreateTime)
 				if err != nil {
 					created = time.Time{}
@@ -69,7 +75,8 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 		CheckDestroy: testAccCheckMongodbInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbInstance,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-test"),
@@ -99,7 +106,8 @@ func TestAccTencentCloudMongodbInstanceResourcePostPaid(t *testing.T) {
 					log.Printf("[WARN] MongoDB Update Need DealID query available, skip checking.")
 					return true, nil
 				},
-				Config: testAccMongodbInstance_update,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbInstance_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "instance_name", "tf-mongodb-update"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb", "memory", "8"),
@@ -119,7 +127,8 @@ func TestAccTencentCloudNeedFixMongodbInstanceResourcePrepaid(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbInstancePrepaid,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccMongodbInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_instance.mongodb_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "instance_name", "tf-mongodb-test-prepaid"),
@@ -140,7 +149,8 @@ func TestAccTencentCloudNeedFixMongodbInstanceResourcePrepaid(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMongodbInstancePrepaid_update,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccMongodbInstancePrepaid_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "instance_name", "tf-mongodb-test-prepaid-update"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_instance.mongodb_prepaid", "memory", "4"),

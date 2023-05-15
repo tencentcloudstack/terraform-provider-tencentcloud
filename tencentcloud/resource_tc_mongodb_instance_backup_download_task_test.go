@@ -15,8 +15,9 @@ func TestAccTencentCloudMongodbInstanceBackupDownloadTaskResource_basic(t *testi
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbInstanceBackupDownloadTask,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance_backup_download_task.instance_backup_download_task", "id")),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbInstanceBackupDownloadTask,
+				Check:     resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mongodb_instance_backup_download_task.instance_backup_download_task", "id")),
 			},
 			{
 				ResourceName:      "tencentcloud_mongodb_instance_backup_download_task.instance_backup_download_task",
