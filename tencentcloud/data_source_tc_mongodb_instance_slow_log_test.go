@@ -15,8 +15,9 @@ func TestAccTencentCloudMongodbInstanceSlowLogDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbInstanceSlowLogDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_slow_log.instance_slow_log")),
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbInstanceSlowLogDataSource,
+				Check:     resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_mongodb_instance_slow_log.instance_slow_log")),
 			},
 		},
 	})

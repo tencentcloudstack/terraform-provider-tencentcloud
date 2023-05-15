@@ -17,7 +17,8 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 		CheckDestroy: testAccCheckMongodbShardingInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbShardingInstance,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbShardingInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "instance_name", "tf-mongodb-sharding"),
@@ -42,7 +43,8 @@ func TestAccTencentCloudMongodbShardingInstanceResource_postpaid(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMongodbShardingInstanceUpdate,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbShardingInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb", "instance_name", "tf-mongodb-sharding-update"),
@@ -68,7 +70,8 @@ func TestAccTencentCloudMongodbShardingInstanceResource_prepaid(t *testing.T) {
 		CheckDestroy: testAccCheckMongodbShardingInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbShardingInstancePrepaid,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccMongodbShardingInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "instance_name", "tf-mongodb-sharding-prepaid"),
@@ -89,7 +92,8 @@ func TestAccTencentCloudMongodbShardingInstanceResource_prepaid(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMongodbShardingInstancePrepaid_update,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccMongodbShardingInstancePrepaid_update,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_sharding_instance.mongodb_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_sharding_instance.mongodb_prepaid", "instance_name", "tf-mongodb-sharding-prepaid-update"),

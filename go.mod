@@ -14,7 +14,7 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/hcl/v2 v2.13.0
-	github.com/hashicorp/terraform-plugin-sdk v1.7.0
+	github.com/hashicorp/terraform-plugin-sdk v1.7.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.20.0
 	github.com/katbyte/terrafmt v0.2.0
 	github.com/mitchellh/go-homedir v1.1.0
@@ -262,6 +262,7 @@ require (
 	github.com/sivchari/containedctx v1.0.2 // indirect
 	github.com/sivchari/nosnakecase v1.7.0 // indirect
 	github.com/sivchari/tenv v1.7.1 // indirect
+	github.com/smartystreets/goconvey v1.8.0 // indirect
 	github.com/sonatard/noctx v0.0.2 // indirect
 	github.com/sourcegraph/go-diff v0.7.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect

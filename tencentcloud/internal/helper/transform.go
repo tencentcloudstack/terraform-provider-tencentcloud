@@ -179,6 +179,11 @@ func BoolToInt64Ptr(s bool) (i *int64) {
 	return
 }
 
+func IntToStr(s int) (i string) {
+	i = strconv.Itoa(s)
+	return
+}
+
 func Int64ToStr(s int64) (i string) {
 	i = strconv.FormatInt(s, 10)
 	return

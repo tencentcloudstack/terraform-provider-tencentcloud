@@ -7,7 +7,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_account_privilege" "default" {
-  mysql_id       = "my-test-database"
+  mysql_id       = "terraform-test-local-database"
   account_name   = "tf_account"
   privileges     = ["SELECT"]
   database_names = ["instance.name"]

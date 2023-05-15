@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_tcr_image_manifests
+```
+
+```release-note:new-data-source
+tencentcloud_tcr_tag_retention_execution_tasks
+```
