@@ -132,6 +132,37 @@ resource "tencentcloud_postgresql_instance" "pg" {
 }
 ```
 
+upgrade kernel version
+```
+resource "tencentcloud_postgresql_instance" "test" {
+  name = "tf_postsql_instance_update"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
+  charge_type	    = "POSTPAID_BY_HOUR"
+  vpc_id  	  		= local.vpc_id
+  subnet_id 		= local.subnet_id
+  engine_version	= "13.3"
+  root_password	    = "*"
+  charset 			= "LATIN1"
+  project_id 		= 0
+  public_access_switch = false
+  security_groups   = [local.sg_id]
+  memory 			= 4
+  storage 			= 250
+  backup_plan {
+	min_backup_start_time 		 = "01:10:11"
+	max_backup_start_time		 = "02:10:11"
+	base_backup_retention_period = 5
+	backup_period 			     = ["monday", "thursday", "sunday"]
+  }
+
+  db_kernel_version = "v13.3_r1.4" # eg:from v13.3_r1.1 to v13.3_r1.4
+
+  tags = {
+	tf = "teest"
+  }
+}
+```
+
 Import
 
 postgresql instance can be imported using the id, e.g.
@@ -232,7 +263,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Optional: true,
 				Computed: true,
 				Description: "PostgreSQL kernel version number. " +
-					"If it is specified, an instance running kernel DBKernelVersion will be created.",
+					"If it is specified, an instance running kernel DBKernelVersion will be created. It supports updating the minor kernel version immediately.",
 			},
 
 			"vpc_id": {
@@ -992,6 +1023,49 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 	}
 
+	if d.HasChange("db_kernel_version") {
+		upgradeVersion := d.Get("db_kernel_version").(string)
+
+		upgradeRequest := postgresql.NewUpgradeDBInstanceKernelVersionRequest()
+		// upgradeResponse:= postgresql.NewUpgradeDBInstanceKernelVersionResponse()
+		upgradeRequest.DBInstanceId = &instanceId
+		upgradeRequest.TargetDBKernelVersion = &upgradeVersion
+
+		// only support for the immediate upgrade policy
+		switchTag := POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY
+		upgradeRequest.SwitchTag = helper.IntUint64(switchTag)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().UpgradeDBInstanceKernelVersion(upgradeRequest)
+			if e != nil {
+				tcErr := e.(*sdkErrors.TencentCloudSDKError)
+
+				if tcErr.Code == "FailedOperation.FailedOperationError" {
+					// upgrade version invalid.
+					return resource.NonRetryableError(fmt.Errorf("Upgrade kernel version failed: %v", e.Error()))
+				}
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, upgradeRequest.GetAction(), upgradeRequest.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s create dcdb dbInstance failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// only wait for immediately upgrade mode
+
+		conf := BuildStateChangeConf([]string{}, []string{"running", "isolated", "offline"}, 10*readRetryTimeout, time.Second, postgresqlService.PostgresqlUpgradeKernelVersionRefreshFunc(d.Id(), []string{}))
+
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+	}
+
 	if d.HasChange("tags") {
 
 		oldValue, newValue := d.GetChange("tags")
@@ -1017,8 +1091,8 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 			paramEntrys["max_standby_streaming_delay"] = strconv.Itoa(v.(int))
 		}
 	}
-	if d.HasChange("db_major_vesion") || d.HasChange("db_major_version") || d.HasChange("db_kernel_version") {
-		return fmt.Errorf("Not support change db major version or kernel version.")
+	if d.HasChange("db_major_vesion") || d.HasChange("db_major_version") {
+		return fmt.Errorf("Not support change db major version.")
 	}
 
 	if d.HasChange("need_support_tde") || d.HasChange("kms_key_id") || d.HasChange("kms_region") {
@@ -1097,9 +1171,9 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("vpc_id", instance.VpcId)
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("engine_version", instance.DBVersion)
+	_ = d.Set("db_kernel_version", instance.DBKernelVersion)
 	_ = d.Set("db_major_vesion", instance.DBMajorVersion)
 	_ = d.Set("db_major_version", instance.DBMajorVersion)
-	_ = d.Set("db_kernel_version", instance.DBKernelVersion)
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("charset", instance.DBCharset)
 	if rootUser != "" {

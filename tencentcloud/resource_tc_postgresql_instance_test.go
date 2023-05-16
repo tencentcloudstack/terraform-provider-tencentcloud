@@ -87,7 +87,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
+func TestAccTencentCloudPostgresqlInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -120,6 +120,7 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.max_backup_start_time", "01:10:11"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.backup_period.#", "2"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.base_backup_retention_period", "7"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_kernel_version", "v13.3_r1.1"),
 					//resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "test"),
 				),
 			},
@@ -164,6 +165,30 @@ func TestAccTencentCloudPostgresqlInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.max_backup_start_time", "02:10:11"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.backup_period.#", "3"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.base_backup_retention_period", "5"),
+					//resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "teest"),
+				),
+			},
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccPostgresqlInstanceUpgradeKernelVersion,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "name", "tf_postsql_instance_update"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "vpc_id"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "subnet_id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "memory", "4"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "storage", "250"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "create_time"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "project_id", "0"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "public_access_switch", "false"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "root_password", "t1qaA2k1wgvfa3?ZZZ"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "availability_zone"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.min_backup_start_time", "01:10:11"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.max_backup_start_time", "02:10:11"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.backup_period.#", "3"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_kernel_version", "v13.3_r1.4"),
 					//resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "teest"),
 				),
 			},
@@ -310,7 +335,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type 		= "POSTPAID_BY_HOUR"
   vpc_id  	  		= local.vpc_id
   subnet_id 		= local.subnet_id
-  engine_version	= "10.4"
+  engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
   security_groups   = [local.sg_id]
   charset			= "LATIN1"
@@ -324,6 +349,8 @@ resource "tencentcloud_postgresql_instance" "test" {
 	base_backup_retention_period = 7
 	backup_period = ["tuesday", "wednesday"]
   }
+
+  db_kernel_version = "v13.3_r1.1"
 
   tags = {
 	tf = "test"
@@ -350,7 +377,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type 		= "PREPAID"
   vpc_id  	  		= local.vpc_id
   subnet_id 		= local.subnet_id
-  engine_version	= "10.4"
+  engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
   security_groups   = [local.sg_id]
   charset			= "LATIN1"
@@ -366,7 +393,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type	    = "POSTPAID_BY_HOUR"
   vpc_id  	  		= local.vpc_id
   subnet_id 		= local.subnet_id
-  engine_version	= "10.4"
+  engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
   charset 			= "LATIN1"
   project_id 		= 0
@@ -381,6 +408,8 @@ resource "tencentcloud_postgresql_instance" "test" {
 	backup_period 			     = ["monday", "thursday", "sunday"]
   }
 
+  db_kernel_version = "v13.3_r1.1"
+
   tags = {
 	tf = "teest"
   }
@@ -394,7 +423,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type	    = "POSTPAID_BY_HOUR"
   vpc_id  	  		= local.vpc_id
   subnet_id 		= local.subnet_id
-  engine_version	= "10.4"
+  engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
   charset 			= "LATIN1"
   project_id 		= 0
@@ -408,6 +437,38 @@ resource "tencentcloud_postgresql_instance" "test" {
 	base_backup_retention_period = 5
 	backup_period 			     = ["monday", "thursday", "sunday"]
   }
+
+  db_kernel_version = "v13.3_r1.1"
+
+  tags = {
+	tf = "teest"
+  }
+}
+`
+
+const testAccPostgresqlInstanceUpgradeKernelVersion string = testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
+resource "tencentcloud_postgresql_instance" "test" {
+  name = "tf_postsql_instance_update"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
+  charge_type	    = "POSTPAID_BY_HOUR"
+  vpc_id  	  		= local.vpc_id
+  subnet_id 		= local.subnet_id
+  engine_version	= "13.3"
+  root_password	    = "t1qaA2k1wgvfa3?ZZZ"
+  charset 			= "LATIN1"
+  project_id 		= 0
+  public_access_switch = false
+  security_groups   = [local.sg_id]
+  memory 			= 4
+  storage 			= 250
+  backup_plan {
+	min_backup_start_time 		 = "01:10:11"
+	max_backup_start_time		 = "02:10:11"
+	base_backup_retention_period = 5
+	backup_period 			     = ["monday", "thursday", "sunday"]
+  }
+
+  db_kernel_version = "v13.3_r1.4"
 
   tags = {
 	tf = "teest"
@@ -434,7 +495,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version		= "10.4"
+  engine_version		= "13.3"
   root_password                 = "t1qaA2k1wgvfa3?ZZZ"
   charset = "LATIN1"
   memory = 4
@@ -468,7 +529,7 @@ resource "tencentcloud_postgresql_instance" "test" {
   charge_type = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
-  engine_version		= "10.4"
+  engine_version		= "13.3"
   root_password                 = "t1qaA2k1wgvfa3?ZZZ"
   charset = "LATIN1"
   memory = 4
