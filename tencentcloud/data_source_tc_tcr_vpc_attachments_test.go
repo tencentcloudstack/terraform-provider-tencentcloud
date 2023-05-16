@@ -8,7 +8,7 @@ import (
 
 var testDataTCRVPCAttachmentsNameAll = "data.tencentcloud_tcr_vpc_attachments.id_test"
 
-func TestAccTencentCloudTCRVPCAttachmentsData(t *testing.T) {
+func TestAccTencentCloudTcrVPCAttachmentsData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -16,7 +16,8 @@ func TestAccTencentCloudTCRVPCAttachmentsData(t *testing.T) {
 		CheckDestroy: testAccCheckTCRNamespaceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudDataTCRVPCAttachmentsBasic,
+				Config:    testAccTencentCloudDataTCRVPCAttachmentsBasic,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRVPCAttachmentExists("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment"),
 					resource.TestCheckResourceAttr(testDataTCRVPCAttachmentsNameAll, "vpc_attachment_list.#", "1"),

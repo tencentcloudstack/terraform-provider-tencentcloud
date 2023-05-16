@@ -17,7 +17,8 @@ func TestAccTencentCloudTcrManageReplicationOperationResource_basic(t *testing.T
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrManageReplicationOperation, "sync", time.Now().Nanosecond()),
+				Config:    fmt.Sprintf(testAccTcrManageReplicationOperation, "sync", time.Now().Nanosecond()),
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_manage_replication_operation.my_replica", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_manage_replication_operation.my_replica", "source_registry_id"),

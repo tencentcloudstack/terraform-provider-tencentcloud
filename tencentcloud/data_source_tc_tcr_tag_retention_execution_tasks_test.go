@@ -18,7 +18,8 @@ func TestAccTencentCloudTcrTagRetentionExecutionTasksDataSource_basic(t *testing
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrTagRetentionExecutionTasksDataSource, defaultTCRInstanceId),
+				Config:    fmt.Sprintf(testAccTcrTagRetentionExecutionTasksDataSource, defaultTCRInstanceId),
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(testExecutionTasksObjectName),
 					resource.TestCheckResourceAttrSet(testExecutionTasksObjectName, "id"),
