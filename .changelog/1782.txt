@@ -1,0 +1,23 @@
+```release-note:new-resource
+tencentcloud_lighthouse_start_instance
+```
+
+```release-note:new-resource
+tencentcloud_lighthouse_stop_instance
+```
+
+```release-note:new-resource
+tencentcloud_lighthouse_reboot_instance
+```
+
+```release-note:new-resource
+tencentcloud_lighthouse_key_pair_attachment
+```
+
+```release-note:new-resource
+tencentcloud_lighthouse_disk
+```
+
+```release-note:enhancement
+resource/tencentcloud_lighthouse_instance: support update `bundle_id`, `blueprint_id`, `renew_flag`, `password`, support params `permit_default_key_pair_login`, `is_update_bundle_id_auto_voucher`
+```
