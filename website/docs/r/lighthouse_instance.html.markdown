@@ -93,7 +93,9 @@ The following arguments are supported:
 * `client_token` - (Optional, String) A unique string supplied by the client to ensure that the request is idempotent. Its maximum length is 64 ASCII characters. If this parameter is not specified, the idem-potency of the request cannot be guaranteed.
 * `containers` - (Optional, List) Configuration of the containers to create.
 * `dry_run` - (Optional, Bool) Whether the request is a dry run only.true: dry run only. The request will not create instance(s). A dry run can check whether all the required parameters are specified, whether the request format is right, whether the request exceeds service limits, and whether the specified CVMs are available. If the dry run fails, the corresponding error code will be returned.If the dry run succeeds, the RequestId will be returned.false (default value): send a normal request and create instance(s) if all the requirements are met.
+* `is_update_bundle_id_auto_voucher` - (Optional, Bool) Whether the voucher is deducted automatically when update bundle id. Value range: `true`: indicates automatic deduction of vouchers, `false`: does not automatically deduct vouchers. Default value: `false`.
 * `login_configuration` - (Optional, List) Login password of the instance. It is only available for Windows instances. If it is not specified, it means that the user choose to set the login password after the instance creation.
+* `permit_default_key_pair_login` - (Optional, String) Whether to allow login using the default key pair. `YES`: allow login; `NO`: disable login. Default: `YES`.
 * `zone` - (Optional, String) List of availability zones. A random AZ is selected by default.
 
 The `containers` object supports the following:

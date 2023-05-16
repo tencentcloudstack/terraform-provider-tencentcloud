@@ -815,6 +815,11 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_key_pair
 	tencentcloud_lighthouse_snapshot
 	tencentcloud_lighthouse_apply_instance_snapshot
+	tencentcloud_lighthouse_start_instance
+	tencentcloud_lighthouse_stop_instance
+	tencentcloud_lighthouse_reboot_instance
+	tencentcloud_lighthouse_key_pair_attachment
+	tencentcloud_lighthouse_disk
 
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
@@ -2111,6 +2116,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_key_pair":                        resourceTencentCloudLighthouseKeyPair(),
 			"tencentcloud_lighthouse_snapshot":                        resourceTencentCloudLighthouseSnapshot(),
 			"tencentcloud_lighthouse_apply_instance_snapshot":         resourceTencentCloudLighthouseApplyInstanceSnapshot(),
+			"tencentcloud_lighthouse_start_instance":                  resourceTencentCloudLighthouseStartInstance(),
+			"tencentcloud_lighthouse_stop_instance":                   resourceTencentCloudLighthouseStopInstance(),
+			"tencentcloud_lighthouse_reboot_instance":                 resourceTencentCloudLighthouseRebootInstance(),
+			"tencentcloud_lighthouse_key_pair_attachment":             resourceTencentCloudLighthouseKeyPairAttachment(),
+			"tencentcloud_lighthouse_disk":                            resourceTencentCloudLighthouseDisk(),
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
