@@ -263,7 +263,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Optional: true,
 				Computed: true,
 				Description: "PostgreSQL kernel version number. " +
-					"If it is specified, an instance running kernel DBKernelVersion will be created.",
+					"If it is specified, an instance running kernel DBKernelVersion will be created. It supports updating the minor kernel version immediately.",
 			},
 
 			"vpc_id": {
