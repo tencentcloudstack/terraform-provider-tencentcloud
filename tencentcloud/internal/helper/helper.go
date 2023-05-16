@@ -189,6 +189,17 @@ func ConvertInterfacesHeadToMap(v interface{}) (result map[string]interface{}, o
 	return
 }
 
+// CovertInterfaceMapToStrPtr returns [string:string] map from a [string:interface] map
+func CovertInterfaceMapToStrPtr(m map[string]interface{}) map[string]*string {
+	result := make(map[string]*string)
+	for k, v := range m {
+		if s, ok := v.(string); ok {
+			result[k] = &s
+		}
+	}
+	return result
+}
+
 func SetMapInterfaces(d *schema.ResourceData, key string, values ...map[string]interface{}) error {
 	val := make([]interface{}, 0, len(values))
 	for i := range values {

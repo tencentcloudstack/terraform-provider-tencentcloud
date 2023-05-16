@@ -308,6 +308,8 @@ Cloud Virtual Machine(CVM)
     tencentcloud_key_pairs
     tencentcloud_eip
     tencentcloud_eips
+	tencentcloud_eip_address_quota
+	tencentcloud_eip_network_account_type
     tencentcloud_placement_groups
     tencentcloud_reserved_instance_configs
     tencentcloud_reserved_instances
@@ -323,6 +325,8 @@ Cloud Virtual Machine(CVM)
     tencentcloud_eip
     tencentcloud_eip_association
 	tencentcloud_eip_address_transform
+	tencentcloud_eip_public_address_adjust
+	tencentcloud_eip_normal_address_return
     tencentcloud_key_pair
     tencentcloud_placement_group
     tencentcloud_reserved_instance
@@ -562,6 +566,13 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_account
 	tencentcloud_redis_read_only
 	tencentcloud_redis_ssl
+	tencentcloud_redis_backup_download_restriction
+	tencentcloud_redis_clear_instance_operation
+	tencentcloud_redis_renew_instance_operation
+	tencentcloud_redis_startup_instance_operation
+	tencentcloud_redis_upgrade_cache_version_operation
+	tencentcloud_redis_upgrade_multi_zone_operation
+	tencentcloud_redis_upgrade_proxy_version_operation
 	tencentcloud_redis_maintenance_window
 	tencentcloud_redis_replica_readonly
 
@@ -703,6 +714,9 @@ Virtual Private Cloud(VPC)
     tencentcloud_nat_gateways
     tencentcloud_nat_gateway_snats
     tencentcloud_nats
+	tencentcloud_nat_dc_route
+	tencentcloud_vpc_bandwidth_package_quota
+	tencentcloud_vpc_bandwidth_package_bill_usage
 
   Resource
     tencentcloud_eni
@@ -725,6 +739,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_dnat
     tencentcloud_nat_gateway
     tencentcloud_nat_gateway_snat
+	tencentcloud_nat_refresh_nat_dc_route
     tencentcloud_ha_vip
     tencentcloud_ha_vip_eip_attachment
 	tencentcloud_vpc_bandwidth_package
@@ -996,7 +1011,10 @@ TencentDB for DBbrain(dbbrain)
 	tencentcloud_dbbrain_slow_log_top_sqls
 	tencentcloud_dbbrain_slow_log_user_host_stats
 	tencentcloud_dbbrain_slow_log_user_sql_advice
+	tencentcloud_dbbrain_slow_logs
 	tencentcloud_dbbrain_health_scores
+	tencentcloud_dbbrain_sql_templates
+	tencentcloud_dbbrain_db_space_status
 
   Resource
 	tencentcloud_dbbrain_sql_filter
@@ -1152,6 +1170,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_nacos_replicas
 	tencentcloud_tse_zookeeper_replicas
 	tencentcloud_tse_zookeeper_server_interfaces
+	tencentcloud_tse_nacos_server_interfaces
 
   Resource
 	tencentcloud_tse_instance
@@ -1292,16 +1311,21 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_route_tables":                          dataSourceTencentCloudVpcRouteTables(),
 			"tencentcloud_vpc":                                       dataSourceTencentCloudVpc(),
 			"tencentcloud_vpc_acls":                                  dataSourceTencentCloudVpcAcls(),
+			"tencentcloud_vpc_bandwidth_package_quota":               dataSourceTencentCloudVpcBandwidthPackageQuota(),
+			"tencentcloud_vpc_bandwidth_package_bill_usage":          dataSourceTencentCloudVpcBandwidthPackageBillUsage(),
 			"tencentcloud_subnet":                                    dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                               dataSourceTencentCloudRouteTable(),
 			"tencentcloud_domains":                                   dataSourceTencentCloudDomains(),
 			"tencentcloud_eip":                                       dataSourceTencentCloudEip(),
 			"tencentcloud_eips":                                      dataSourceTencentCloudEips(),
+			"tencentcloud_eip_address_quota":                         dataSourceTencentCloudEipAddressQuota(),
+			"tencentcloud_eip_network_account_type":                  dataSourceTencentCloudEipNetworkAccountType(),
 			"tencentcloud_enis":                                      dataSourceTencentCloudEnis(),
 			"tencentcloud_nats":                                      dataSourceTencentCloudNats(),
 			"tencentcloud_dnats":                                     dataSourceTencentCloudDnats(),
 			"tencentcloud_nat_gateways":                              dataSourceTencentCloudNatGateways(),
 			"tencentcloud_nat_gateway_snats":                         dataSourceTencentCloudNatGatewaySnats(),
+			"tencentcloud_nat_dc_route":                              dataSourceTencentCloudNatDcRoute(),
 			"tencentcloud_vpn_customer_gateways":                     dataSourceTencentCloudVpnCustomerGateways(),
 			"tencentcloud_vpn_gateways":                              dataSourceTencentCloudVpnGateways(),
 			"tencentcloud_vpn_gateway_routes":                        dataSourceTencentCloudVpnGatewayRoutes(),
@@ -1527,7 +1551,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_slow_log_top_sqls":                 dataSourceTencentCloudDbbrainSlowLogTopSqls(),
 			"tencentcloud_dbbrain_slow_log_user_host_stats":          dataSourceTencentCloudDbbrainSlowLogUserHostStats(),
 			"tencentcloud_dbbrain_slow_log_user_sql_advice":          dataSourceTencentCloudDbbrainSlowLogUserSqlAdvice(),
+			"tencentcloud_dbbrain_slow_logs":                         dataSourceTencentCloudDbbrainSlowLogs(),
 			"tencentcloud_dbbrain_health_scores":                     dataSourceTencentCloudDbbrainHealthScores(),
+			"tencentcloud_dbbrain_sql_templates":                     dataSourceTencentCloudDbbrainSqlTemplates(),
+			"tencentcloud_dbbrain_db_space_status":                   dataSourceTencentCloudDbbrainDbSpaceStatus(),
 			"tencentcloud_dts_sync_jobs":                             dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                         dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                          dataSourceTencentCloudDtsMigrateJobs(),
@@ -1575,6 +1602,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_apps":                      dataSourceTencentCloudAPIGatewayAPIApps(),
 			"tencentcloud_tse_access_address":                        dataSourceTencentCloudTseAccessAddress(),
 			"tencentcloud_tse_nacos_replicas":                        dataSourceTencentCloudTseNacosReplicas(),
+			"tencentcloud_tse_nacos_server_interfaces":               dataSourceTencentCloudTseNacosServerInterfaces(),
 			"tencentcloud_tse_zookeeper_replicas":                    dataSourceTencentCloudTseZookeeperReplicas(),
 			"tencentcloud_tse_zookeeper_server_interfaces":           dataSourceTencentCloudTseZookeeperServerInterfaces(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
@@ -1615,9 +1643,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnat":                                        resourceTencentCloudDnat(),
 			"tencentcloud_nat_gateway":                                 resourceTencentCloudNatGateway(),
 			"tencentcloud_nat_gateway_snat":                            resourceTencentCloudNatGatewaySnat(),
+			"tencentcloud_nat_refresh_nat_dc_route":                    resourceTencentCloudNatRefreshNatDcRoute(),
 			"tencentcloud_eip":                                         resourceTencentCloudEip(),
 			"tencentcloud_eip_association":                             resourceTencentCloudEipAssociation(),
 			"tencentcloud_eip_address_transform":                       resourceTencentCloudEipAddressTransform(),
+			"tencentcloud_eip_public_address_adjust":                   resourceTencentCloudEipPublicAddressAdjust(),
+			"tencentcloud_eip_normal_address_return":                   resourceTencentCloudEipNormalAddressReturn(),
 			"tencentcloud_eni":                                         resourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":                              resourceTencentCloudEniAttachment(),
 			"tencentcloud_ccn":                                         resourceTencentCloudCcn(),
@@ -1704,6 +1735,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_param":                                 resourceTencentCloudRedisParam(),
 			"tencentcloud_redis_read_only":                             resourceTencentCloudRedisReadOnly(),
 			"tencentcloud_redis_ssl":                                   resourceTencentCloudRedisSsl(),
+			"tencentcloud_redis_backup_download_restriction":           resourceTencentCloudRedisBackupDownloadRestriction(),
+			"tencentcloud_redis_clear_instance_operation":              resourceTencentCloudRedisClearInstanceOperation(),
+			"tencentcloud_redis_renew_instance_operation":              resourceTencentCloudRedisRenewInstanceOperation(),
+			"tencentcloud_redis_startup_instance_operation":            resourceTencentCloudRedisStartupInstanceOperation(),
+			"tencentcloud_redis_upgrade_cache_version_operation":       resourceTencentCloudRedisUpgradeCacheVersionOperation(),
+			"tencentcloud_redis_upgrade_multi_zone_operation":          resourceTencentCloudRedisUpgradeMultiZoneOperation(),
+			"tencentcloud_redis_upgrade_proxy_version_operation":       resourceTencentCloudRedisUpgradeProxyVersionOperation(),
 			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_redis_replica_readonly":                      resourceTencentCloudRedisReplicaReadonly(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),

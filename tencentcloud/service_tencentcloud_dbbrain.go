@@ -831,3 +831,161 @@ func (me *DbbrainService) DescribeDbbrainHealthScoresByFilter(ctx context.Contex
 
 	return
 }
+
+func (me *DbbrainService) DescribeDbbrainSlowLogsByFilter(ctx context.Context, param map[string]interface{}) (SlowLogs []*dbbrain.SlowLogInfoItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeSlowLogsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Md5" {
+			request.Md5 = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "Db" {
+			request.DB = v.([]*string)
+		}
+		if k == "Key" {
+			request.Key = v.([]*string)
+		}
+		if k == "User" {
+			request.User = v.([]*string)
+		}
+		if k == "Ip" {
+			request.Ip = v.([]*string)
+		}
+		if k == "Time" {
+			request.Time = v.([]*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDbbrainClient().DescribeSlowLogs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Rows) < 1 {
+			break
+		}
+		SlowLogs = append(SlowLogs, response.Response.Rows...)
+		if len(response.Response.Rows) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainDbSpaceStatusByFilter(ctx context.Context, param map[string]interface{}) (DbSpaceStatus *dbbrain.DescribeDBSpaceStatusResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeDBSpaceStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "RangeDays" {
+			request.RangeDays = v.(*int64)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDbbrainClient().DescribeDBSpaceStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	return response.Response, nil
+}
+
+func (me *DbbrainService) DescribeDbbrainSqlTemplatesByFilter(ctx context.Context, param map[string]interface{}) (SqlTemplate *dbbrain.DescribeSqlTemplateResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeSqlTemplateRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Schema" {
+			request.Schema = v.(*string)
+		}
+		if k == "SqlText" {
+			request.SqlText = v.(*string)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDbbrainClient().DescribeSqlTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	return response.Response, nil
+}

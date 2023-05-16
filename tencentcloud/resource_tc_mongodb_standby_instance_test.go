@@ -17,7 +17,8 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 		CheckDestroy: testAccCheckMongodbStandbyInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbStandbyInstance,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbStandbyInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_standby_instance.mongodb"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "instance_name", "tf-mongodb-standby-test"),
@@ -39,7 +40,8 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMongodbStandbyInstance_update,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbStandbyInstance_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "instance_name", "tf-mongodb-standby-test-update"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb", "memory", "8"),
@@ -55,7 +57,8 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"security_groups", "auto_renew_flag", "password"},
 			},
 			{
-				Config: testAccMongodbStandbyInstancePrepaid,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccMongodbStandbyInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMongodbInstanceExists("tencentcloud_mongodb_standby_instance.mongodb_prepaid"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "instance_name", "tf-mongodb-standby-test-prepaid"),
@@ -78,7 +81,8 @@ func TestAccTencentCloudNeedFixMongodbStandbyInstanceResource(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccMongodbStandbyInstancePrepaid_update,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccMongodbStandbyInstancePrepaid_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "instance_name", "tf-mongodb-standby-prepaid-update"),
 					resource.TestCheckResourceAttr("tencentcloud_mongodb_standby_instance.mongodb_prepaid", "memory", "4"),

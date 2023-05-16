@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_kubernetes_addon_attachment: adjust the example for installing tcr addon
+```

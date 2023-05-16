@@ -13,7 +13,8 @@ func TestAccTencentCloudMongodbZoneConfigDataSource(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMongodbZoneConfigDataSource,
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccMongodbZoneConfigDataSource,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mongodb_zone_config.zone_config", "list.#"),
 					resource.TestCheckResourceAttr("data.tencentcloud_mongodb_zone_config.zone_config", "list.0.available_zone", defaultAZone),

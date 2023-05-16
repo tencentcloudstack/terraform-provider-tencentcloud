@@ -71,6 +71,7 @@ import (
 	"fmt"
 	"log"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -115,7 +116,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Optional:     true,
 				ForceNew:     true,
 				ValidateFunc: validateIntegerMin(2),
-				Description:  "Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069).",
+				Description:  "Instance type. Available values reference data source `tencentcloud_redis_zone_config` or [document](https://intl.cloud.tencent.com/document/product/239/32069), toggle immediately when modified.",
 			},
 			"redis_shard_num": {
 				Type:        schema.TypeInt,
@@ -132,6 +133,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"replica_zone_ids": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				Description: "ID of replica nodes available zone. This is not required for standalone and master slave versions. NOTE: Removing some of the same zone of replicas (e.g. removing 100001 of [100001, 100001, 100002]) will pick the first hit to remove.",
 				Elem:        &schema.Schema{Type: schema.TypeInt},
 			},
@@ -828,6 +830,34 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 		err := redisService.ModifyDBInstanceSecurityGroups(ctx, "redis", d.Id(), sgIds)
 		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChanges("type_id") {
+		request := redis.NewUpgradeInstanceVersionRequest()
+		typeId := d.Get("type_id").(int)
+		request.InstanceId = &id
+		request.TargetInstanceType = helper.String(strconv.Itoa(typeId))
+		request.SwitchOption = helper.IntInt64(2)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().UpgradeInstanceVersion(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate redis upgradeVersionOperation failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+		_, _, _, err = service.CheckRedisOnlineOk(ctx, id, 20*readRetryTimeout)
+		if err != nil {
+			log.Printf("[CRITAL]%s redis upgradeVersionOperation fail, reason:%s\n", logId, err.Error())
 			return err
 		}
 	}
