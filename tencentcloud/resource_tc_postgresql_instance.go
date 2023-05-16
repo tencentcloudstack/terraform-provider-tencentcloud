@@ -1092,7 +1092,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		}
 	}
 	if d.HasChange("db_major_vesion") || d.HasChange("db_major_version") {
-		return fmt.Errorf("Not support change db major version or kernel version.")
+		return fmt.Errorf("Not support change db major version.")
 	}
 
 	if d.HasChange("need_support_tde") || d.HasChange("kms_key_id") || d.HasChange("kms_region") {
