@@ -28,7 +28,18 @@ func TestAccTencentCloudTcrVPCAttachmentsData(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataTCRVPCAttachmentsBasic = defaultVpcSubnets + `
+const defaultTcrVpcSubnets = `
+
+data "tencentcloud_vpc_subnets" "sh" {
+  availability_zone = "ap-shanghai-1"
+}
+
+locals {
+  vpc_id = data.tencentcloud_vpc_subnets.sh.instance_list.0.vpc_id
+  subnet_id = data.tencentcloud_vpc_subnets.sh.instance_list.0.subnet_id
+}`
+
+const testAccTencentCloudDataTCRVPCAttachmentsBasic = defaultTcrVpcSubnets + `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
   name        = "test-tcr-attach"
   instance_type = "basic"

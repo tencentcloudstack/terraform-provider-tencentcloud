@@ -99,7 +99,7 @@ func testAccCheckTCRVPCAttachmentExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTCRVPCAttachment_basic = defaultVpcSubnets + `
+const testAccTCRVPCAttachment_basic = defaultTcrVpcSubnets + `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
   name        = "test-resource-attach"
   instance_type = "basic"

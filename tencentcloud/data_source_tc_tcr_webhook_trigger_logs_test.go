@@ -43,7 +43,7 @@ const testAccTcrDescribeWebhookTriggerLogsDataSource = defaultTCRInstanceData + 
 data "tencentcloud_tcr_webhook_trigger_logs" "my_logs" {
   registry_id = local.tcr_id
   namespace = var.tcr_namespace
-  trigger_id = 2
+  trigger_id = 1
     tags = {
     "createdBy" = "terraform"
   }
