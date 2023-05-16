@@ -189,8 +189,6 @@ func TestAccTencentCloudPostgresqlInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.max_backup_start_time", "02:10:11"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "backup_plan.0.backup_period.#", "3"),
 					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_kernel_version", "v13.3_r1.4"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_kernel_version_upgrade_config.0.switch_tag", "0"),
-					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "db_kernel_version_upgrade_config.0.dry_run", "false"),
 					//resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "tags.tf", "teest"),
 				),
 			},
@@ -471,11 +469,6 @@ resource "tencentcloud_postgresql_instance" "test" {
   }
 
   db_kernel_version = "v13.3_r1.4"
-
-  db_kernel_version_upgrade_config {
-	switch_tag = 0
-	dry_run = false
-  }
 
   tags = {
 	tf = "teest"

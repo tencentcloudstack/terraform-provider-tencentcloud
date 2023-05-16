@@ -157,11 +157,6 @@ resource "tencentcloud_postgresql_instance" "test" {
 
   db_kernel_version = "v13.3_r1.4" # eg:from v13.3_r1.1 to v13.3_r1.4
 
-  db_kernel_version_upgrade_config {
-	switch_tag = 0
-	dry_run = false
-  }
-
   tags = {
 	tf = "teest"
   }
@@ -269,40 +264,6 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Computed: true,
 				Description: "PostgreSQL kernel version number. " +
 					"If it is specified, an instance running kernel DBKernelVersion will be created.",
-			},
-			"db_kernel_version_upgrade_config": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"switch_tag": {
-							Required:    true,
-							Type:        schema.TypeInt,
-							Description: "Specify the switching time after the instance upgrades the kernel version number. Optional value, 0: switch immediately (default value). 1: switch at a specified time. 2: switch within the maintenance time window.",
-						},
-
-						"switch_start_time": {
-							Optional:    true,
-							Type:        schema.TypeString,
-							Description: "Switching start time, time format: HH:MM:SS, for example: 01:00:00. When SwitchTag is 0 or 2, this parameter is invalid.",
-						},
-
-						"switch_end_time": {
-							Optional:    true,
-							Type:        schema.TypeString,
-							Description: "Switch cut-off time, time format: HH:MM:SS, for example: 01:30:00. When SwitchTag is 0 or 2, this parameter is invalid. The time window of SwitchStartTime and SwitchEndTime cannot be less than 30 minutes.",
-						},
-
-						"dry_run": {
-							Optional:    true,
-							Type:        schema.TypeBool,
-							Description: "Whether to perform a pre-check on the operation of upgrading the kernel version number of this instance. Optional value, true: perform a pre-check operation without upgrading the kernel version number, then check items include request parameters, kernel version number compatibility, instance parameters, etc. false: Send a normal request (default value), and upgrade the kernel version number directly after passing the check.",
-						},
-					},
-				},
-				Description: "Configuration when upgrading the db kernel version.",
 			},
 
 			"vpc_id": {
@@ -1064,65 +1025,45 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 	if d.HasChange("db_kernel_version") {
 		upgradeVersion := d.Get("db_kernel_version").(string)
-		if dMap, ok := helper.InterfacesHeadMap(d, "db_kernel_version_upgrade_config"); ok {
-			upgradeRequest := postgresql.NewUpgradeDBInstanceKernelVersionRequest()
-			// upgradeResponse:= postgresql.NewUpgradeDBInstanceKernelVersionResponse()
-			upgradeRequest.DBInstanceId = &instanceId
-			upgradeRequest.TargetDBKernelVersion = &upgradeVersion
 
-			var switchTag *int
-			if v, ok := dMap["switch_tag"].(int); ok {
-				switchTag = &v
+		upgradeRequest := postgresql.NewUpgradeDBInstanceKernelVersionRequest()
+		// upgradeResponse:= postgresql.NewUpgradeDBInstanceKernelVersionResponse()
+		upgradeRequest.DBInstanceId = &instanceId
+		upgradeRequest.TargetDBKernelVersion = &upgradeVersion
 
-				if *switchTag == POSTGRESQL_KERNEL_UPGRADE_SPECIFIED_TIME {
-					startTime := dMap["switch_start_time"].(string)
-					endTime := dMap["switch_end_time"].(string)
-					if startTime == "" || endTime == "" {
-						return fmt.Errorf("Need to set the `switch_start_time` and `switch_end_time` when `switch_tag` is set to 1.")
-					}
-					upgradeRequest.SwitchStartTime = &startTime
-					upgradeRequest.SwitchEndTime = &endTime
+		// only support for the immediate upgrade policy
+		switchTag := POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY
+		upgradeRequest.SwitchTag = helper.IntUint64(switchTag)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().UpgradeDBInstanceKernelVersion(upgradeRequest)
+			if e != nil {
+				tcErr := e.(*sdkErrors.TencentCloudSDKError)
+
+				if tcErr.Code == "FailedOperation.FailedOperationError" {
+					// upgrade version invalid.
+					return resource.NonRetryableError(fmt.Errorf("Upgrade kernel version failed: %v", e.Error()))
 				}
-				upgradeRequest.SwitchTag = helper.IntUint64(*switchTag)
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, upgradeRequest.GetAction(), upgradeRequest.ToJsonString(), result.ToJsonString())
 			}
 
-			if dryRun, ok := dMap["dry_run"].(bool); ok {
-				upgradeRequest.DryRun = &dryRun
-			}
-
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().UpgradeDBInstanceKernelVersion(upgradeRequest)
-				if e != nil {
-					tcErr := e.(*sdkErrors.TencentCloudSDKError)
-
-					if tcErr.Code == "FailedOperation.FailedOperationError" {
-						// upgrade version invalid.
-						return resource.NonRetryableError(fmt.Errorf("Upgrade kernel version failed: %v", e.Error()))
-					}
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, upgradeRequest.GetAction(), upgradeRequest.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-			if err != nil {
-				log.Printf("[CRITAL]%s create dcdb dbInstance failed, reason:%+v", logId, err)
-				return err
-			}
-
-			// only wait for immediately upgrade mode
-			if switchTag != nil && *switchTag == POSTGRESQL_KERNEL_UPGRADE_IMMEDIATELY {
-				conf := BuildStateChangeConf([]string{}, []string{"running", "isolated", "offline"}, 10*readRetryTimeout, time.Second, postgresqlService.PostgresqlUpgradeKernelVersionRefreshFunc(d.Id(), []string{}))
-
-				if _, e := conf.WaitForState(); e != nil {
-					return e
-				}
-			}
-
-		} else {
-			return fmt.Errorf("Need to set the `db_kernel_version_upgrade_config` when `db_kernel_version` changed.")
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s create dcdb dbInstance failed, reason:%+v", logId, err)
+			return err
 		}
+
+		// only wait for immediately upgrade mode
+
+		conf := BuildStateChangeConf([]string{}, []string{"running", "isolated", "offline"}, 10*readRetryTimeout, time.Second, postgresqlService.PostgresqlUpgradeKernelVersionRefreshFunc(d.Id(), []string{}))
+
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
 	}
 
 	if d.HasChange("tags") {
@@ -1230,22 +1171,9 @@ func resourceTencentCloudPostgresqlInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("vpc_id", instance.VpcId)
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("engine_version", instance.DBVersion)
+	_ = d.Set("db_kernel_version", instance.DBKernelVersion)
 	_ = d.Set("db_major_vesion", instance.DBMajorVersion)
 	_ = d.Set("db_major_version", instance.DBMajorVersion)
-
-	config, ok := d.GetOk("db_kernel_version_upgrade_config")
-	version, _ := d.GetOk("db_kernel_version")
-
-	log.Printf("[DEBUG]%s get the db_kernel_version_upgrade_config: %v, ok: %v\n, version: %s", logId, config, ok, version.(string))
-
-	//skip set the kernel version when kernel upgrade config enabled
-	configList := config.([]interface{})
-	if len(configList) == 0 || !ok {
-		if instance.DBKernelVersion != nil {
-			_ = d.Set("db_kernel_version", instance.DBKernelVersion)
-		}
-	}
-
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("charset", instance.DBCharset)
 	if rootUser != "" {

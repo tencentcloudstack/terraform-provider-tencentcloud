@@ -169,11 +169,6 @@ resource "tencentcloud_postgresql_instance" "test" {
 
   db_kernel_version = "v13.3_r1.4" # eg:from v13.3_r1.1 to v13.3_r1.4
 
-  db_kernel_version_upgrade_config {
-    switch_tag = 0
-    dry_run    = false
-  }
-
   tags = {
     tf = "teest"
   }
@@ -194,7 +189,6 @@ The following arguments are supported:
 * `backup_plan` - (Optional, List) Specify DB backup plan.
 * `charge_type` - (Optional, String, ForceNew) Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`.
 * `charset` - (Optional, String, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
-* `db_kernel_version_upgrade_config` - (Optional, List) Configuration when upgrading the db kernel version.
 * `db_kernel_version` - (Optional, String) PostgreSQL kernel version number. If it is specified, an instance running kernel DBKernelVersion will be created.
 * `db_major_version` - (Optional, String) PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
 * `db_major_vesion` - (Optional, String, **Deprecated**) `db_major_vesion` will be deprecated, use `db_major_version` instead. PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
@@ -221,13 +215,6 @@ The `backup_plan` object supports the following:
 * `base_backup_retention_period` - (Optional, Int) Specify days of the retention.
 * `max_backup_start_time` - (Optional, String) Specify latest backup start time, format `hh:mm:ss`.
 * `min_backup_start_time` - (Optional, String) Specify earliest backup start time, format `hh:mm:ss`.
-
-The `db_kernel_version_upgrade_config` object supports the following:
-
-* `switch_tag` - (Required, Int) Specify the switching time after the instance upgrades the kernel version number. Optional value, 0: switch immediately (default value). 1: switch at a specified time. 2: switch within the maintenance time window.
-* `dry_run` - (Optional, Bool) Whether to perform a pre-check on the operation of upgrading the kernel version number of this instance. Optional value, true: perform a pre-check operation without upgrading the kernel version number, then check items include request parameters, kernel version number compatibility, instance parameters, etc. false: Send a normal request (default value), and upgrade the kernel version number directly after passing the check.
-* `switch_end_time` - (Optional, String) Switch cut-off time, time format: HH:MM:SS, for example: 01:30:00. When SwitchTag is 0 or 2, this parameter is invalid. The time window of SwitchStartTime and SwitchEndTime cannot be less than 30 minutes.
-* `switch_start_time` - (Optional, String) Switching start time, time format: HH:MM:SS, for example: 01:00:00. When SwitchTag is 0 or 2, this parameter is invalid.
 
 The `db_node_set` object supports the following:
 
