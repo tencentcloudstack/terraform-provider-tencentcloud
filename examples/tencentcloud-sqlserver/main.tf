@@ -121,6 +121,13 @@ resource "tencentcloud_sqlserver_general_clone" "general_clone" {
   new_name    = "keep_pubsub_db_new_name"
 }
 
+resource "tencentcloud_sqlserver_incre_backup_migration" "incre_backup_migration" {
+  instance_id = "mssql-qelbzgwf"
+  backup_migration_id = "mssql-backup-migration-bgvpf971"
+  backup_files = []
+  is_recovery = "NO"
+}
+
 data "tencentcloud_sqlserver_instances" "id_example" {
   id = tencentcloud_sqlserver_instance.example.id
 }

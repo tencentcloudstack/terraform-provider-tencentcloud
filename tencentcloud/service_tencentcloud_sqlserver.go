@@ -1922,3 +1922,219 @@ func (me *SqlserverService) DeleteSqlserverFullBackupMigrationById(ctx context.C
 
 	return
 }
+
+func (me *SqlserverService) DescribeSqlserverIncreBackupMigrationById(ctx context.Context, instanceId, backupMigrationId, incrementalMigrationId string) (increBackupMigration *sqlserver.Migration, errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDescribeIncrementalMigrationRequest()
+	request.InstanceId = &instanceId
+	request.BackupMigrationId = &backupMigrationId
+	request.IncrementalMigrationId = &incrementalMigrationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeIncrementalMigration(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	increBackupMigration = response.Response.IncrementalMigrationSet[0]
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverIncreBackupMigrationById(ctx context.Context, instanceId, backupMigrationId, incrementalMigrationId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDeleteIncrementalMigrationRequest()
+	request.InstanceId = &instanceId
+	request.BackupMigrationId = &backupMigrationId
+	request.IncrementalMigrationId = &incrementalMigrationId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DeleteIncrementalMigration(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverBusinessIntelligenceFileById(ctx context.Context, instanceId, fileName string) (businessIntelligenceFile *sqlserver.BusinessIntelligenceFile, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeBusinessIntelligenceFileRequest()
+	request.InstanceId = &instanceId
+	request.FileName = &fileName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeBusinessIntelligenceFile(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	businessIntelligenceFile = response.Response.BackupMigrationSet[0]
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverBusinessIntelligenceFileById(ctx context.Context, instanceId, fileName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDeleteBusinessIntelligenceFileRequest()
+	request.InstanceId = &instanceId
+	request.FileNameSet = []*string{&fileName}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DeleteBusinessIntelligenceFile(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverBusinessIntelligenceInstanceById(ctx context.Context, instanceId string) (businessIntelligenceInstance *sqlserver.DBInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBInstancesRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	businessIntelligenceInstance = response.Response.DBInstances[0]
+	return
+}
+
+func (me *SqlserverService) DescribeMaintenanceSpanById(ctx context.Context, instanceId string) (maintenanceSpan *sqlserver.DescribeMaintenanceSpanResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeMaintenanceSpanRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeMaintenanceSpan(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	maintenanceSpan = response.Response
+
+	return
+}
+
+func (me *SqlserverService) TerminateSqlserverInstanceById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewTerminateDBInstanceRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().TerminateDBInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverInstanceById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := sqlserver.NewDeleteDBInstanceRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DeleteDBInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

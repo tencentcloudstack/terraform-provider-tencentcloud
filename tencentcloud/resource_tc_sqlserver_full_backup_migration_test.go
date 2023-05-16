@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -28,6 +29,11 @@ func TestAccTencentCloudSqlserverFullBackupMigrationResource_basic(t *testing.T)
 				),
 			},
 			{
+				ResourceName:      "tencentcloud_sqlserver_full_backup_migration.my_migration",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				Config: testAccSqlserverFullBackupMigrationUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverFullBackupMigrationExists("tencentcloud_sqlserver_full_backup_migration.my_migration"),
@@ -47,8 +53,13 @@ func testAccCheckSqlserverFullBackupMigrationDestroy(s *terraform.State) error {
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 		service := SqlserverService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		instanceId := rs.Primary.ID
-		backupMigrationId := rs.Primary.Attributes["backup_migration_id"]
+		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		if len(idSplit) != 2 {
+			return fmt.Errorf("id is broken, id is %s", rs.Primary.ID)
+		}
+
+		instanceId := idSplit[0]
+		backupMigrationId := idSplit[1]
 
 		result, err := service.DescribeSqlserverFullBackupMigrationById(ctx, instanceId, backupMigrationId)
 		if err != nil {
@@ -79,8 +90,13 @@ func testAccCheckSqlserverFullBackupMigrationExists(n string) resource.TestCheck
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 		service := SqlserverService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		instanceId := rs.Primary.ID
-		backupMigrationId := rs.Primary.Attributes["backup_migration_id"]
+		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		if len(idSplit) != 2 {
+			return fmt.Errorf("id is broken, id is %s", rs.Primary.ID)
+		}
+
+		instanceId := idSplit[0]
+		backupMigrationId := idSplit[1]
 
 		result, err := service.DescribeSqlserverFullBackupMigrationById(ctx, instanceId, backupMigrationId)
 		if err != nil {
