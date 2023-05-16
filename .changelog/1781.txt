@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_sqlserver_incre_backup_migration
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_business_intelligence_file
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_business_intelligence_instance
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_full_backup_migration: update code
+```
