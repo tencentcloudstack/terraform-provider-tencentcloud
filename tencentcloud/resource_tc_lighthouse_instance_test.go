@@ -44,7 +44,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudLighthouseInstance_basic(t *testing.T) {
+func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
