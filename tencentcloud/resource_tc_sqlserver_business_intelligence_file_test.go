@@ -99,7 +99,7 @@ func testAccCheckSqlserverBusinessIntelligenceFileExists(n string) resource.Test
 
 const testAccSqlserverBusinessIntelligenceFile = testAccSqlserverBusinessIntelligenceInstance + `
 resource "tencentcloud_sqlserver_business_intelligence_file" "business_intelligence_file" {
-  instance_id = testAccSqlserverBusinessIntelligenceInstance.business_intelligence_instance.id
+  instance_id = tencentcloud_sqlserver_business_intelligence_instance.business_intelligence_instance.id
   file_url = "https://keep-sqlserver-1308919341.cos.ap-guangzhou.myqcloud.com/test.xlsx"
   file_type = "FLAT"
   remark = "test case."
