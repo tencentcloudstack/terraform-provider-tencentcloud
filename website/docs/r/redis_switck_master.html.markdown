@@ -1,20 +1,20 @@
 ---
 subcategory: "TencentDB for Redis(crs)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_redis_switck_master"
-sidebar_current: "docs-tencentcloud-resource-redis_switck_master"
+page_title: "TencentCloud: tencentcloud_redis_switch_master"
+sidebar_current: "docs-tencentcloud-resource-redis_switch_master"
 description: |-
-  Provides a resource to create a redis switck_master
+  Provides a resource to create a redis switch_master
 ---
 
-# tencentcloud_redis_switck_master
+# tencentcloud_redis_switch_master
 
-Provides a resource to create a redis switck_master
+Provides a resource to create a redis switch_master
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_redis_switck_master" "switck_master" {
+resource "tencentcloud_redis_switch_master" "switch_master" {
   instance_id = "crs-kfdkirid"
   group_id    = 29369
 }

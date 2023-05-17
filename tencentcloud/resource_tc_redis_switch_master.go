@@ -1,10 +1,10 @@
 /*
-Provides a resource to create a redis switck_master
+Provides a resource to create a redis switch_master
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_redis_switck_master" "switck_master" {
+resource "tencentcloud_redis_switch_master" "switch_master" {
   instance_id = "crs-kfdkirid"
   group_id = 29369
 }
@@ -49,7 +49,7 @@ func resourceTencentCloudRedisSwitckMaster() *schema.Resource {
 }
 
 func resourceTencentCloudRedisSwitckMasterCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_redis_switck_master.create")()
+	defer logElapsed("resource.tencentcloud_redis_switch_master.create")()
 	defer inconsistentCheck(d, meta)()
 
 	var (
@@ -65,7 +65,7 @@ func resourceTencentCloudRedisSwitckMasterCreate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudRedisSwitckMasterRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_redis_switck_master.read")()
+	defer logElapsed("resource.tencentcloud_redis_switch_master.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -77,12 +77,12 @@ func resourceTencentCloudRedisSwitckMasterRead(d *schema.ResourceData, meta inte
 	paramMap := make(map[string]interface{})
 	paramMap["InstanceId"] = &instanceId
 
-	switckMaster, err := service.DescribeRedisInstanceZoneInfoByFilter(ctx, paramMap)
+	switchMaster, err := service.DescribeRedisInstanceZoneInfoByFilter(ctx, paramMap)
 	if err != nil {
 		return err
 	}
 
-	if switckMaster == nil {
+	if switchMaster == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `RedisSwitckMaster` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
@@ -90,8 +90,8 @@ func resourceTencentCloudRedisSwitckMasterRead(d *schema.ResourceData, meta inte
 
 	_ = d.Set("instance_id", instanceId)
 
-	if len(switckMaster) > 1 {
-		for _, v := range switckMaster {
+	if len(switchMaster) > 1 {
+		for _, v := range switchMaster {
 			if *v.Role == "master" {
 				_ = d.Set("group_id", v.GroupId)
 				break
@@ -103,7 +103,7 @@ func resourceTencentCloudRedisSwitckMasterRead(d *schema.ResourceData, meta inte
 }
 
 func resourceTencentCloudRedisSwitckMasterUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_redis_switck_master.update")()
+	defer logElapsed("resource.tencentcloud_redis_switch_master.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -134,7 +134,7 @@ func resourceTencentCloudRedisSwitckMasterUpdate(d *schema.ResourceData, meta in
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s update redis switckMaster failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update redis switchMaster failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -152,12 +152,12 @@ func resourceTencentCloudRedisSwitckMasterUpdate(d *schema.ResourceData, meta in
 		if ok {
 			return nil
 		} else {
-			return resource.RetryableError(fmt.Errorf("update redis switckMaster is processing"))
+			return resource.RetryableError(fmt.Errorf("update redis switchMaster is processing"))
 		}
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s update redis switckMaster fail, reason:%s\n", logId, err.Error())
+		log.Printf("[CRITAL]%s update redis switchMaster fail, reason:%s\n", logId, err.Error())
 		return err
 	}
 
@@ -165,7 +165,7 @@ func resourceTencentCloudRedisSwitckMasterUpdate(d *schema.ResourceData, meta in
 }
 
 func resourceTencentCloudRedisSwitckMasterDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_redis_switck_master.delete")()
+	defer logElapsed("resource.tencentcloud_redis_switch_master.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
