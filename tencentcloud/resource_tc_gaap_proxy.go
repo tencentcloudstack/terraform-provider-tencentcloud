@@ -102,6 +102,7 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Computed:     true,
+				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(PROXY_NETWORK_TYPE),
 				Description:  "Network type. `normal`: regular BGP, `cn2`: boutique BGP, `triple`: triple play.",
 			},
