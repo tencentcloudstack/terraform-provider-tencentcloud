@@ -154,8 +154,7 @@ func resourceTencentCloudSqlserverBusinessIntelligenceInstance() *schema.Resourc
 				Description: "The host type of purchased instance. Valid values: CLOUD_PREMIUM (virtual machine with premium cloud disk), CLOUD_SSD (virtual machine with SSD).",
 			},
 			"instance_name": {
-				Optional:    true,
-				Computed:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Instance Name.",
 			},
@@ -171,8 +170,10 @@ func resourceTencentCloudSqlserverBusinessIntelligenceInstanceCreate(d *schema.R
 		logId            = getLogId(contextNil)
 		CreateDBIRequest = sqlserver.NewCreateBusinessDBInstancesRequest()
 		DescRequest      = sqlserver.NewDescribeDBInstancesRequest()
+		ModifyRequest    = sqlserver.NewModifyDBInstanceNameRequest()
 		DescResponse     = sqlserver.DBInstance{}
 		instanceId       string
+		instanceName     string
 	)
 
 	if v, ok := d.GetOk("zone"); ok {
@@ -220,15 +221,15 @@ func resourceTencentCloudSqlserverBusinessIntelligenceInstanceCreate(d *schema.R
 		CreateDBIRequest.Span = helper.IntInt64(v.(int))
 	}
 
-	if v, _ := d.GetOk("resource_tags"); v != nil {
+	if v, ok := d.GetOk("resource_tags"); ok {
 		for _, item := range v.([]interface{}) {
 			if item != nil {
 				dMap := item.(map[string]interface{})
 				resourceTag := sqlserver.ResourceTag{}
-				if t, ok := dMap["tag_key"]; ok {
+				if t, h := dMap["tag_key"]; h && t != "" {
 					resourceTag.TagKey = helper.String(t.(string))
 				}
-				if t, ok := dMap["tag_value"]; ok {
+				if t, h := dMap["tag_value"]; h && t != "" {
 					resourceTag.TagValue = helper.String(t.(string))
 				}
 				CreateDBIRequest.ResourceTags = append(CreateDBIRequest.ResourceTags, &resourceTag)
@@ -242,6 +243,10 @@ func resourceTencentCloudSqlserverBusinessIntelligenceInstanceCreate(d *schema.R
 
 	if v, ok := d.GetOk("machine_type"); ok {
 		CreateDBIRequest.MachineType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("instance_name"); ok {
+		instanceName = v.(string)
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -301,6 +306,25 @@ func resourceTencentCloudSqlserverBusinessIntelligenceInstanceCreate(d *schema.R
 	}
 
 	instanceId = *DescResponse.InstanceId
+
+	ModifyRequest.InstanceId = &instanceId
+	ModifyRequest.InstanceName = &instanceName
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().ModifyDBInstanceName(ModifyRequest)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]  ", logId, ModifyRequest.GetAction(), ModifyRequest.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s update sqlserver businessIntelligenceInstance failed, reason:%+v", logId, err)
+		return err
+	}
+
 	d.SetId(instanceId)
 
 	return resourceTencentCloudSqlserverBusinessIntelligenceInstanceRead(d, meta)
