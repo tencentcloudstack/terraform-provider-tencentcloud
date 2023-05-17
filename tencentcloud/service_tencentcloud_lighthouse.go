@@ -332,7 +332,7 @@ func (me *LightHouseService) LighthouseApplyDiskBackupStateRefreshFunc(diskBacku
 	}
 }
 
-func (me *LightHouseService) DescribeLighthouseDiskAttachmentById(ctx context.Context, diskId string) (diskAttachment *lighthouse.Disk, errRet error) {
+func (me *LightHouseService) DescribeLighthouseDiskById(ctx context.Context, diskId string) (diskAttachment *lighthouse.Disk, errRet error) {
 	logId := getLogId(ctx)
 
 	request := lighthouse.NewDescribeDisksRequest()
@@ -361,17 +361,46 @@ func (me *LightHouseService) DescribeLighthouseDiskAttachmentById(ctx context.Co
 	return
 }
 
-func (me *LightHouseService) LighthouseDiskAttachmentStateRefreshFunc(diskId string, failStates []string) resource.StateRefreshFunc {
+func (me *LightHouseService) LighthouseDiskStateRefreshFunc(diskId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil
 
-		object, err := me.DescribeLighthouseDiskAttachmentById(ctx, diskId)
+		object, err := me.DescribeLighthouseDiskById(ctx, diskId)
 
 		if err != nil {
 			return nil, "", err
 		}
 
 		return object, helper.PString(object.DiskState), nil
+	}
+}
+
+func (me *LightHouseService) LighthouseDiskLatestOperationRefreshFunc(diskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeLighthouseDiskById(ctx, diskId)
+
+		if err != nil {
+			return nil, "", err
+		}
+		return object, helper.PString(object.LatestOperationState), nil
+	}
+}
+
+func (me *LightHouseService) LighthouseDiskTerminateRefreshFunc(diskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeLighthouseDiskById(ctx, diskId)
+
+		if err != nil {
+			return nil, "", err
+		}
+		if object == nil {
+			return nil, "SUCCESS", nil
+		}
+		return nil, "", nil
 	}
 }
 
@@ -944,6 +973,243 @@ func (me *LightHouseService) DescribeLighthouseDiskConfigByFilter(ctx context.Co
 		return
 	}
 	diskConfig = append(diskConfig, response.Response.DiskConfigSet...)
+
+	return
+}
+
+func (me *LightHouseService) LighthouseInstanceStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeLighthouseInstanceById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.LatestOperationState), nil
+	}
+}
+
+func (me *LightHouseService) DescribeLighthouseKeyPairAttachmentById(ctx context.Context, keyId string) (keyPairAttachment *lighthouse.KeyPair, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeKeyPairsRequest()
+	request.KeyIds = []*string{&keyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeKeyPairs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.KeyPairSet) < 1 {
+		return
+	}
+
+	keyPairAttachment = response.Response.KeyPairSet[0]
+	return
+}
+
+func (me *LightHouseService) DeleteLighthouseKeyPairAttachmentById(ctx context.Context, keyId string, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDisassociateInstancesKeyPairsRequest()
+	request.KeyIds = []*string{&keyId}
+	request.InstanceIds = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DisassociateInstancesKeyPairs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *LightHouseService) DescribeLighthouseInstanceLoginKeyPairById(ctx context.Context, instanceId string) (instanceLoginKeyPair *lighthouse.DescribeInstanceLoginKeyPairAttributeResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeInstanceLoginKeyPairAttributeRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeInstanceLoginKeyPairAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instanceLoginKeyPair = response.Response
+	return
+}
+
+func (me *LightHouseService) ModifyInstancesLoginKeyPairAttribute(ctx context.Context, instanceId string, permitLogin string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewModifyInstancesLoginKeyPairAttributeRequest()
+	request.InstanceIds = []*string{&instanceId}
+	request.PermitLogin = helper.String(permitLogin)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().ModifyInstancesLoginKeyPairAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *LightHouseService) DescribeLighthouseCcnAttachmentById(ctx context.Context, ccnId string) (ccnAttachment *lighthouse.CcnAttachedInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeCcnAttachedInstancesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeCcnAttachedInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Response is null")
+		return
+	}
+	for _, ccnAttachedInstance := range response.Response.CcnAttachedInstanceSet {
+		if *ccnAttachedInstance.CcnId == ccnId {
+			ccnAttachment = ccnAttachedInstance
+			break
+		}
+	}
+	return
+}
+
+func (me *LightHouseService) DeleteLighthouseCcnAttachmentById(ctx context.Context, ccnId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDetachCcnRequest()
+	request.CcnId = &ccnId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DetachCcn(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *LightHouseService) LighthouseCcnAttachmentStateRefreshFunc(ccnId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeLighthouseCcnAttachmentById(ctx, ccnId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.State), nil
+	}
+}
+
+func (me *LightHouseService) IsolateLighthouseDiskById(ctx context.Context, diskId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewIsolateDisksRequest()
+	request.DiskIds = []*string{&diskId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().IsolateDisks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *LightHouseService) TerminateLighthouseDiskById(ctx context.Context, diskId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewTerminateDisksRequest()
+	request.DiskIds = []*string{&diskId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().TerminateDisks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

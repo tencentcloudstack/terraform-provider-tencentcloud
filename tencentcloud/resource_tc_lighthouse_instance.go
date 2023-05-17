@@ -78,6 +78,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	lighthouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324"
 
@@ -97,6 +98,12 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "ID of the Lighthouse package.",
+			},
+			"is_update_bundle_id_auto_voucher": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				Description: "Whether the voucher is deducted automatically when update bundle id. Value range: `true`: indicates automatic deduction of vouchers, `false`: does not automatically deduct vouchers. Default value: `false`.",
 			},
 			"blueprint_id": {
 				Type:        schema.TypeString,
@@ -155,6 +162,13 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 						},
 					},
 				},
+			},
+			"permit_default_key_pair_login": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateAllowedStringValue([]string{"YES", "NO"}),
+				Description:  "Whether to allow login using the default key pair. `YES`: allow login; `NO`: disable login. Default: `YES`.",
 			},
 			"containers": {
 				Type:        schema.TypeList,
@@ -394,6 +408,23 @@ func resourceTencentCloudLighthouseInstanceCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
+	if v, ok := d.GetOk("permit_default_key_pair_login"); ok {
+		permitLogin := v.(string)
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := lighthouseService.ModifyInstancesLoginKeyPairAttribute(ctx, instanceId, permitLogin)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update lighthouse instanceLoginKeyPair failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+
 	d.SetId(instanceId)
 
 	return resourceTencentCloudLighthouseInstanceRead(d, meta)
@@ -440,6 +471,14 @@ func resourceTencentCloudLighthouseInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("zone", instance.Zone)
 	}
 
+	instanceLoginKeyPair, err := lighthouseService.DescribeLighthouseInstanceLoginKeyPairById(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	if instanceLoginKeyPair != nil && instanceLoginKeyPair.PermitLogin != nil {
+		_ = d.Set("permit_default_key_pair_login", instanceLoginKeyPair.PermitLogin)
+	}
 	return nil
 }
 
@@ -500,15 +539,62 @@ func resourceTencentCloudLighthouseInstanceUpdate(d *schema.ResourceData, meta i
 	}
 
 	if d.HasChange("bundle_id") {
-		old, _ := d.GetChange("bundle_id")
-		_ = d.Set("bundle_id", old)
-		return fmt.Errorf("`bundle_id` do not support change now.")
+		_, new := d.GetChange("bundle_id")
+		request := lighthouse.NewModifyInstancesBundleRequest()
+		request.InstanceIds = helper.StringsStringsPoint([]string{id})
+		request.BundleId = helper.String(new.(string))
+		autoVoucher := d.Get("is_update_bundle_id_auto_voucher").(bool)
+		request.AutoVoucher = &autoVoucher
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().ModifyInstancesBundle(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update lighthouse instanceModifyBundle failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseInstanceStateRefreshFunc(id, []string{}))
+
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
 	}
 
 	if d.HasChange("blueprint_id") {
-		old, _ := d.GetChange("blueprint_id")
-		_ = d.Set("blueprint_id", old)
-		return fmt.Errorf("`blueprint_id` do not support change now.")
+		_, new := d.GetChange("blueprint_id")
+		request := lighthouse.NewResetInstanceRequest()
+		request.InstanceId = helper.String(id)
+		request.BlueprintId = helper.String(new.(string))
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().ResetInstance(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate lighthouse resetInstance failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseInstanceStateRefreshFunc(id, []string{}))
+
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
 	}
 
 	if d.HasChange("period") {
@@ -518,9 +604,30 @@ func resourceTencentCloudLighthouseInstanceUpdate(d *schema.ResourceData, meta i
 	}
 
 	if d.HasChange("renew_flag") {
-		old, _ := d.GetChange("renew_flag")
-		_ = d.Set("renew_flag", old)
-		return fmt.Errorf("`renew_flag` do not support change now.")
+		_, new := d.GetChange("renew_flag")
+		request := lighthouse.NewModifyInstancesRenewFlagRequest()
+		request.InstanceIds = helper.StringsStringsPoint([]string{id})
+		request.RenewFlag = helper.String(new.(string))
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().ModifyInstancesRenewFlag(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate lighthouse modifyInstanceRenewFlag failed, reason:%+v", logId, err)
+			return err
+		}
+		service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseInstanceStateRefreshFunc(id, []string{}))
+
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
 	}
 
 	if d.HasChange("zone") {
@@ -541,16 +648,66 @@ func resourceTencentCloudLighthouseInstanceUpdate(d *schema.ResourceData, meta i
 		return fmt.Errorf("`client_token` do not support change now.")
 	}
 
-	if d.HasChange("login_configuration") {
+	if d.HasChange("login_configuration.0.auto_generate_password") {
 		old, _ := d.GetChange("login_configuration")
 		_ = d.Set("login_configuration", old)
-		return fmt.Errorf("`login_configuration` do not support change now.")
+		return fmt.Errorf("`auto_generate_password` do not support change now.")
+	}
+	if d.HasChange("login_configuration.0.password") {
+		_, new := d.GetChange("login_configuration")
+		var newLoginConfiguration map[string]interface{}
+		if len(new.([]interface{})) > 0 {
+			newLoginConfiguration = new.([]interface{})[0].(map[string]interface{})
+		}
+		newPassword := newLoginConfiguration["password"].(string)
+		request := lighthouse.NewResetInstancesPasswordRequest()
+		request.InstanceIds = helper.StringsStringsPoint([]string{id})
+		request.Password = helper.String(newPassword)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().ResetInstancesPassword(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate lighthouse resetInstancesPassword failed, reason:%+v", logId, err)
+			return err
+		}
+		service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+		conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 20*readRetryTimeout, time.Second, service.LighthouseInstanceStateRefreshFunc(id, []string{}))
+
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		_ = d.Set("login_configuration", new)
 	}
 
 	if d.HasChange("containers") {
 		old, _ := d.GetChange("containers")
 		_ = d.Set("containers", old)
 		return fmt.Errorf("`containers` do not support change now.")
+	}
+
+	if d.HasChange("permit_default_key_pair_login") {
+		_, new := d.GetChange("permit_default_key_pair_login")
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+		service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			e := service.ModifyInstancesLoginKeyPairAttribute(ctx, id, new.(string))
+			if e != nil {
+				return retryError(e)
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update lighthouse instanceLoginKeyPair failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
 	return resourceTencentCloudLighthouseInstanceRead(d, meta)
