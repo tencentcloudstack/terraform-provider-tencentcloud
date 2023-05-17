@@ -96,7 +96,7 @@ func resourceTencentCloudLighthouseDiskAttachmentCreate(d *schema.ResourceData, 
 
 	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"ATTACHED"}, 20*readRetryTimeout, time.Second, service.LighthouseDiskAttachmentStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"ATTACHED"}, 20*readRetryTimeout, time.Second, service.LighthouseDiskStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -115,7 +115,7 @@ func resourceTencentCloudLighthouseDiskAttachmentRead(d *schema.ResourceData, me
 
 	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	diskAttachment, err := service.DescribeLighthouseDiskAttachmentById(ctx, d.Id())
+	diskAttachment, err := service.DescribeLighthouseDiskById(ctx, d.Id())
 	if err != nil {
 		return err
 	}
@@ -150,7 +150,7 @@ func resourceTencentCloudLighthouseDiskAttachmentDelete(d *schema.ResourceData, 
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"UNATTACHED"}, 20*readRetryTimeout, time.Second, service.LighthouseDiskAttachmentStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"UNATTACHED"}, 20*readRetryTimeout, time.Second, service.LighthouseDiskStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

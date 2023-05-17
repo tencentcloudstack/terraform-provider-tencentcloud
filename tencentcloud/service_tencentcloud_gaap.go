@@ -313,6 +313,7 @@ func (me *GaapService) CreateProxy(
 	name, accessRegion, realserverRegion string,
 	bandwidth, concurrent, projectId int,
 	tags map[string]string,
+	params map[string]interface{},
 ) (id string, err error) {
 	logId := getLogId(ctx)
 	client := me.client.UseGaapClient()
@@ -329,6 +330,9 @@ func (me *GaapService) CreateProxy(
 			TagKey:   helper.String(k),
 			TagValue: helper.String(v),
 		})
+	}
+	if v, ok := params["network_type"]; ok {
+		createRequest.NetworkType = helper.String(v.(string))
 	}
 
 	if err := resource.Retry(2*writeRetryTimeout, func() *resource.RetryError {

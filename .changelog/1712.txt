@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_instance: support to update minor kernel versions by field `db_kernel_version`
+```

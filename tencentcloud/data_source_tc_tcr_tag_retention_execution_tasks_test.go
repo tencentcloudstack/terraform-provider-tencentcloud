@@ -18,12 +18,13 @@ func TestAccTencentCloudTcrTagRetentionExecutionTasksDataSource_basic(t *testing
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrTagRetentionExecutionTasksDataSource, defaultTCRInstanceId),
+				Config:    fmt.Sprintf(testAccTcrTagRetentionExecutionTasksDataSource, defaultTCRInstanceId),
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(testExecutionTasksObjectName),
 					resource.TestCheckResourceAttrSet(testExecutionTasksObjectName, "id"),
 					resource.TestCheckResourceAttr(testExecutionTasksObjectName, "registry_id", defaultTCRInstanceId),
-					resource.TestCheckResourceAttr(testExecutionTasksObjectName, "retention_id", "17"),
+					resource.TestCheckResourceAttr(testExecutionTasksObjectName, "retention_id", "1"),
 					resource.TestCheckResourceAttr(testExecutionTasksObjectName, "execution_id", "1"),
 					resource.TestCheckResourceAttrSet(testExecutionTasksObjectName, "retention_task_list.#"),
 					resource.TestCheckResourceAttrSet(testExecutionTasksObjectName, "retention_task_list.0.task_id"),
@@ -38,7 +39,7 @@ const testAccTcrTagRetentionExecutionTasksDataSource = `
 
 data "tencentcloud_tcr_tag_retention_execution_tasks" "tasks" {
   registry_id = "%s"
-  retention_id = "17"
+  retention_id = "1"
   execution_id = "1"
   }
 

@@ -15,7 +15,8 @@ func TestAccTencentCloudTcrDescribeWebhookTriggerLogsDataSource_basic(t *testing
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTcrDescribeWebhookTriggerLogsDataSource,
+				Config:    testAccTcrDescribeWebhookTriggerLogsDataSource,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tcr_webhook_trigger_logs.my_logs"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tcr_webhook_trigger_logs.my_logs", "logs.#"),
@@ -42,7 +43,7 @@ const testAccTcrDescribeWebhookTriggerLogsDataSource = defaultTCRInstanceData + 
 data "tencentcloud_tcr_webhook_trigger_logs" "my_logs" {
   registry_id = local.tcr_id
   namespace = var.tcr_namespace
-  trigger_id = 2
+  trigger_id = 1
     tags = {
     "createdBy" = "terraform"
   }

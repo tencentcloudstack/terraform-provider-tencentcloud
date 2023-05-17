@@ -993,3 +993,17 @@ func (me *PostgresqlService) DeletePostgresqlParameterTemplateById(ctx context.C
 
 	return
 }
+
+func (me *PostgresqlService) PostgresqlUpgradeKernelVersionRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		instance, _, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return instance, *instance.DBInstanceStatus, nil
+	}
+}

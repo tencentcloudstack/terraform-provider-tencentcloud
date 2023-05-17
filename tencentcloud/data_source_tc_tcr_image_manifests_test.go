@@ -18,7 +18,8 @@ func TestAccTencentCloudTcrImageManifestsDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrImageManifestsDataSource, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				Config:    fmt.Sprintf(testAccTcrImageManifestsDataSource, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(testTcrImageManifestsObjectName),
 					resource.TestCheckResourceAttrSet(testTcrImageManifestsObjectName, "id"),

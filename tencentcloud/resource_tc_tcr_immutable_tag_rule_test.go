@@ -28,7 +28,6 @@ func testSweepTcrImmutableTagRule(r string) error {
 	// the non-keep namespace will be removed directly when run sweeper tencentcloud_tcr_namespace
 	// so... only need to care about the rules under the keep namespace
 	rules, err := tcrService.DescribeTcrImmutableTagRuleById(ctx, defaultTCRInstanceId, helper.String(defaultTCRNamespace), nil)
-
 	if err != nil {
 		return err
 	}
@@ -54,7 +53,8 @@ func TestAccTencentCloudTcrImmutableTagRuleResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckTcrImmutableTagRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrImmutableTagRule_basic, defaultTCRInstanceId, defaultTCRNamespace),
+				Config:    fmt.Sprintf(testAccTcrImmutableTagRule_basic, defaultTCRInstanceId, defaultTCRNamespace),
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTcrImmutableTagRuleExists("tencentcloud_tcr_immutable_tag_rule.my_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_immutable_tag_rule.my_rule", "id"),

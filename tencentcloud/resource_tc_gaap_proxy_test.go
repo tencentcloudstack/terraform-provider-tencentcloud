@@ -182,6 +182,7 @@ resource tencentcloud_gaap_proxy "foo" {
   concurrent        = 2
   access_region     = "Guangzhou"
   realserver_region = "Beijing"
+  network_type = "normal"
 }
 `
 

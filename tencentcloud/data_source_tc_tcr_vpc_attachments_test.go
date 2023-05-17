@@ -8,7 +8,7 @@ import (
 
 var testDataTCRVPCAttachmentsNameAll = "data.tencentcloud_tcr_vpc_attachments.id_test"
 
-func TestAccTencentCloudTCRVPCAttachmentsData(t *testing.T) {
+func TestAccTencentCloudTcrVPCAttachmentsData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -16,7 +16,8 @@ func TestAccTencentCloudTCRVPCAttachmentsData(t *testing.T) {
 		CheckDestroy: testAccCheckTCRNamespaceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudDataTCRVPCAttachmentsBasic,
+				Config:    testAccTencentCloudDataTCRVPCAttachmentsBasic,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRVPCAttachmentExists("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment"),
 					resource.TestCheckResourceAttr(testDataTCRVPCAttachmentsNameAll, "vpc_attachment_list.#", "1"),
@@ -27,7 +28,18 @@ func TestAccTencentCloudTCRVPCAttachmentsData(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataTCRVPCAttachmentsBasic = defaultVpcSubnets + `
+const defaultTcrVpcSubnets = `
+
+data "tencentcloud_vpc_subnets" "sh" {
+  availability_zone = "ap-shanghai-1"
+}
+
+locals {
+  vpc_id = data.tencentcloud_vpc_subnets.sh.instance_list.0.vpc_id
+  subnet_id = data.tencentcloud_vpc_subnets.sh.instance_list.0.subnet_id
+}`
+
+const testAccTencentCloudDataTCRVPCAttachmentsBasic = defaultTcrVpcSubnets + `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
   name        = "test-tcr-attach"
   instance_type = "basic"

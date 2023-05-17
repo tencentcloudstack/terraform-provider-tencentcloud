@@ -308,6 +308,8 @@ Cloud Virtual Machine(CVM)
     tencentcloud_key_pairs
     tencentcloud_eip
     tencentcloud_eips
+	tencentcloud_eip_address_quota
+	tencentcloud_eip_network_account_type
     tencentcloud_placement_groups
     tencentcloud_reserved_instance_configs
     tencentcloud_reserved_instances
@@ -323,6 +325,8 @@ Cloud Virtual Machine(CVM)
     tencentcloud_eip
     tencentcloud_eip_association
 	tencentcloud_eip_address_transform
+	tencentcloud_eip_public_address_adjust
+	tencentcloud_eip_normal_address_return
     tencentcloud_key_pair
     tencentcloud_placement_group
     tencentcloud_reserved_instance
@@ -709,6 +713,8 @@ Virtual Private Cloud(VPC)
     tencentcloud_nat_gateway_snats
     tencentcloud_nats
 	tencentcloud_nat_dc_route
+	tencentcloud_vpc_bandwidth_package_quota
+	tencentcloud_vpc_bandwidth_package_bill_usage
 
   Resource
     tencentcloud_eni
@@ -810,6 +816,11 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_key_pair
 	tencentcloud_lighthouse_snapshot
 	tencentcloud_lighthouse_apply_instance_snapshot
+	tencentcloud_lighthouse_start_instance
+	tencentcloud_lighthouse_stop_instance
+	tencentcloud_lighthouse_reboot_instance
+	tencentcloud_lighthouse_key_pair_attachment
+	tencentcloud_lighthouse_disk
 
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
@@ -1303,11 +1314,15 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_route_tables":                          dataSourceTencentCloudVpcRouteTables(),
 			"tencentcloud_vpc":                                       dataSourceTencentCloudVpc(),
 			"tencentcloud_vpc_acls":                                  dataSourceTencentCloudVpcAcls(),
+			"tencentcloud_vpc_bandwidth_package_quota":               dataSourceTencentCloudVpcBandwidthPackageQuota(),
+			"tencentcloud_vpc_bandwidth_package_bill_usage":          dataSourceTencentCloudVpcBandwidthPackageBillUsage(),
 			"tencentcloud_subnet":                                    dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                               dataSourceTencentCloudRouteTable(),
 			"tencentcloud_domains":                                   dataSourceTencentCloudDomains(),
 			"tencentcloud_eip":                                       dataSourceTencentCloudEip(),
 			"tencentcloud_eips":                                      dataSourceTencentCloudEips(),
+			"tencentcloud_eip_address_quota":                         dataSourceTencentCloudEipAddressQuota(),
+			"tencentcloud_eip_network_account_type":                  dataSourceTencentCloudEipNetworkAccountType(),
 			"tencentcloud_enis":                                      dataSourceTencentCloudEnis(),
 			"tencentcloud_nats":                                      dataSourceTencentCloudNats(),
 			"tencentcloud_dnats":                                     dataSourceTencentCloudDnats(),
@@ -1636,6 +1651,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_eip":                                         resourceTencentCloudEip(),
 			"tencentcloud_eip_association":                             resourceTencentCloudEipAssociation(),
 			"tencentcloud_eip_address_transform":                       resourceTencentCloudEipAddressTransform(),
+			"tencentcloud_eip_public_address_adjust":                   resourceTencentCloudEipPublicAddressAdjust(),
+			"tencentcloud_eip_normal_address_return":                   resourceTencentCloudEipNormalAddressReturn(),
 			"tencentcloud_eni":                                         resourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":                              resourceTencentCloudEniAttachment(),
 			"tencentcloud_ccn":                                         resourceTencentCloudCcn(),
@@ -2101,6 +2118,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_key_pair":                        resourceTencentCloudLighthouseKeyPair(),
 			"tencentcloud_lighthouse_snapshot":                        resourceTencentCloudLighthouseSnapshot(),
 			"tencentcloud_lighthouse_apply_instance_snapshot":         resourceTencentCloudLighthouseApplyInstanceSnapshot(),
+			"tencentcloud_lighthouse_start_instance":                  resourceTencentCloudLighthouseStartInstance(),
+			"tencentcloud_lighthouse_stop_instance":                   resourceTencentCloudLighthouseStopInstance(),
+			"tencentcloud_lighthouse_reboot_instance":                 resourceTencentCloudLighthouseRebootInstance(),
+			"tencentcloud_lighthouse_key_pair_attachment":             resourceTencentCloudLighthouseKeyPairAttachment(),
+			"tencentcloud_lighthouse_disk":                            resourceTencentCloudLighthouseDisk(),
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),

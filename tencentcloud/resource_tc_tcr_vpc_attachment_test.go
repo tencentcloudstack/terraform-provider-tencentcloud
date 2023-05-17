@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudTCRVPCAttachment_basic(t *testing.T) {
+func TestAccTencentCloudTcrVPCAttachment_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -18,12 +18,13 @@ func TestAccTencentCloudTCRVPCAttachment_basic(t *testing.T) {
 		CheckDestroy: testAccCheckTCRVPCAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTCRVPCAttachment_basic,
+				Config:    testAccTCRVPCAttachment_basic,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRVPCAttachmentExists("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource", "status"),
-					//this access ip will solve out with very long time
-					//resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource", "access_ip"),
+					// this access ip will solve out with very long time
+					// resource.TestCheckResourceAttrSet("tencentcloud_tcr_vpc_attachment.mytcr_vpc_attachment_resource", "access_ip"),
 				),
 				// Destroy: false,
 			},
@@ -98,7 +99,7 @@ func testAccCheckTCRVPCAttachmentExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTCRVPCAttachment_basic = defaultVpcSubnets + `
+const testAccTCRVPCAttachment_basic = defaultTcrVpcSubnets + `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
   name        = "test-resource-attach"
   instance_type = "basic"
