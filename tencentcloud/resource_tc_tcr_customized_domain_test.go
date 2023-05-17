@@ -59,7 +59,8 @@ func TestAccTencentCloudTcrCustomizedDomainResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrCustomizedDomain, defaultTCRSSL),
+				Config:    fmt.Sprintf(testAccTcrCustomizedDomain, defaultTCRSSL),
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_customized_domain.my_domain", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_customized_domain.my_domain", "registry_id"),

@@ -16,7 +16,8 @@ func TestAccTencentCloudTcrDeleteImageOperationResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrDeleteImageOperation, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				Config:    fmt.Sprintf(testAccTcrDeleteImageOperation, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_delete_image_operation.delete_image_operation", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_delete_image_operation.delete_image_operation", "registry_id", defaultTCRInstanceId),

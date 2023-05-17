@@ -22,7 +22,8 @@ func TestAccTencentCloudTcrWebhookTriggerResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckTCRWebhookTriggerDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTCRWebhookTrigger, "webhooktrigger", "webhooktrigger", "webhooktrigger"),
+				Config:    fmt.Sprintf(testAccTCRWebhookTrigger, "webhooktrigger", "webhooktrigger", "webhooktrigger"),
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTCRWebhookTriggerExists("tencentcloud_tcr_webhook_trigger.my_trigger"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_webhook_trigger.my_trigger", "id"),

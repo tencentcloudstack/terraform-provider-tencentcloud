@@ -33,7 +33,6 @@ func testSweepTCRRepository(r string) error {
 	})
 
 	instances, err := tcrService.DescribeTCRInstances(ctx, "", filters)
-
 	if err != nil {
 		return err
 	}
@@ -46,7 +45,6 @@ func testSweepTCRRepository(r string) error {
 	// the non-keep namespace will be removed directly when run sweeper tencentcloud_tcr_namespace
 	// so... only need to care about the repos under the keep namespace
 	repos, err := tcrService.DescribeTCRRepositories(ctx, instanceId, "", "")
-
 	if err != nil {
 		return err
 	}
@@ -69,7 +67,7 @@ func testSweepTCRRepository(r string) error {
 	return nil
 }
 
-func TestAccTencentCloudTCRRepository_basic_and_update(t *testing.T) {
+func TestAccTencentCloudTcrRepository_basic_and_update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -77,7 +75,8 @@ func TestAccTencentCloudTCRRepository_basic_and_update(t *testing.T) {
 		CheckDestroy: testAccCheckTCRRepositoryDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTCRRepository_basic,
+				Config:    testAccTCRRepository_basic,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_repository.mytcr_repository", "name", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_repository.mytcr_repository", "brief_desc", "111"),

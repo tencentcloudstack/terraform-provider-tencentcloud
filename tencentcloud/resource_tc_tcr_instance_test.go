@@ -27,7 +27,6 @@ func init() {
 			service := TCRService{client}
 
 			instances, err := service.DescribeTCRInstances(ctx, "", nil)
-
 			if err != nil {
 				return err
 			}
@@ -91,7 +90,8 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 		CheckDestroy: testAccCheckTCRInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTCRInstance_basic,
+				Config:    testAccTCRInstance_basic,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "testacctcrinstance1"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "instance_type", "basic"),
@@ -116,8 +116,8 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "delete_bucket", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "open_public_operation", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.#", "2"),
-					//resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.0.cidr_block", "192.168.1.1/24"),
-					//resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.1.cidr_block", "10.0.0.1/16"),
+					// resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.0.cidr_block", "192.168.1.1/24"),
+					// resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.1.cidr_block", "10.0.0.1/16"),
 				),
 			},
 			{
@@ -126,7 +126,7 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 					testAccCheckTCRInstanceExists("tencentcloud_tcr_instance.mytcr_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "open_public_operation", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.#", "1"),
-					//resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.0.cidr_block", "192.168.1.1/24"),
+					// resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "security_policy.0.cidr_block", "192.168.1.1/24"),
 				),
 			},
 			{
@@ -148,7 +148,8 @@ func TestAccTencentCloudTcrInstanceResource_paypaid(t *testing.T) {
 		CheckDestroy: testAccCheckTCRInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTCRInstance_paypaid,
+				Config:    testAccTCRInstance_paypaid,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "name", "paypaidtcrinstance"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_type", "basic"),
@@ -176,7 +177,8 @@ func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 		CheckDestroy: testAccCheckTCRInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTCRInstance_replica,
+				Config:    testAccTCRInstance_replica,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "tfreplicas"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "replications.#", "2"),
@@ -200,7 +202,6 @@ func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 }
 
 func TestAccTencentCloudTcrInstanceResource_replica_set(t *testing.T) {
-
 	inputs := []interface{}{
 		map[string]interface{}{
 			"region_id": 1,
@@ -253,7 +254,7 @@ func TestAccTencentCloudTcrInstanceResource_replica_set(t *testing.T) {
 	assert.Equalf(t, expected1, result1, "%s case 1 not equal, expected:\n%v\ngot: \n%v", t.Name(), expected1, result1)
 
 	var registries2 []*tcr.ReplicationRegistry
-	var registries2Incr = []*tcr.ReplicationRegistry{
+	registries2Incr := []*tcr.ReplicationRegistry{
 		{
 			ReplicationRegistryId: helper.String("d"),
 			RegistryId:            helper.String("x"),
