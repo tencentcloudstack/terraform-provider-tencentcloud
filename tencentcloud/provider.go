@@ -575,6 +575,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_upgrade_proxy_version_operation
 	tencentcloud_redis_maintenance_window
 	tencentcloud_redis_replica_readonly
+	tencentcloud_redis_switck_master
 
 Serverless Cloud Function(SCF)
   Data Source
