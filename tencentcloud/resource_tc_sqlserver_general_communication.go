@@ -146,6 +146,17 @@ func resourceTencentCloudSqlserverGeneralCommunicationRead(d *schema.ResourceDat
 }
 
 func resourceTencentCloudSqlserverGeneralCommunicationUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_sqlserver_general_communication.update")()
+	defer inconsistentCheck(d, meta)()
+
+	immutableArgs := []string{"instance_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	return resourceTencentCloudSqlserverGeneralCommunicationRead(d, meta)
 }
 

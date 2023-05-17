@@ -172,6 +172,17 @@ func resourceTencentCloudSqlserverBusinessIntelligenceFileRead(d *schema.Resourc
 }
 
 func resourceTencentCloudSqlserverBusinessIntelligenceFileUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_sqlserver_business_intelligence_file.update")()
+	defer inconsistentCheck(d, meta)()
+
+	immutableArgs := []string{"instance_id", "file_url", "file_type", "remark"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	return resourceTencentCloudSqlserverIncreBackupMigrationRead(d, meta)
 }
 
