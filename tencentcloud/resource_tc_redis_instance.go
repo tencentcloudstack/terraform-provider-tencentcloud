@@ -881,14 +881,16 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if _, ok := d.GetOk("operation_network"); ok && (d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("port") || d.HasChange("recycle") || d.HasChange("ip")) {
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("port") || d.HasChange("recycle") || d.HasChange("ip") {
+		if _, ok := d.GetOk("operation_network"); !ok {
+			return fmt.Errorf("When modifying `vpc_id`, `subnet_id`, `port`, `recycle`, `ip`, the `operation_network` parameter is required")
+		}
+
 		request := redis.NewModifyNetworkConfigRequest()
 		request.InstanceId = &id
 		var operation string
-		if v, ok := d.GetOk("operation_network"); ok {
-			operation = v.(string)
-			request.Operation = helper.String(v.(string))
-		}
+		operation = d.Get("operation_network").(string)
+		request.Operation = &operation
 
 		switch operation {
 		case REDIS_MODIFY_NETWORK_CONFIG[0]:
