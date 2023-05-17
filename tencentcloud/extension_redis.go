@@ -89,3 +89,7 @@ var REDIS_CHARGE_TYPE_NAME = map[int64]string{
 }
 
 var REDIS_PREPAID_PERIOD = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}
+
+var REDIS_MODIFY_NETWORK_CONFIG = []string{"changeVip", "changeVpc", "changeBaseToVpc", "changeVPort"}
+
+var REDIS_RECYCLE_TIME = []int{0, 1, 2, 3, 7, 15}

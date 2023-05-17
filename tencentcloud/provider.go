@@ -558,6 +558,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_instance_shards
 	tencentcloud_redis_instance_zone_info
 	tencentcloud_redis_instance_task_list
+	tencentcloud_redis_instance_node_info
 
   Resource
     tencentcloud_redis_instance
@@ -1384,6 +1385,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_instance_shards":                     dataSourceTencentCloudRedisInstanceShards(),
 			"tencentcloud_redis_instance_zone_info":                  dataSourceTencentCloudRedisInstanceZoneInfo(),
 			"tencentcloud_redis_instance_task_list":                  dataSourceTencentCloudRedisInstanceTaskList(),
+			"tencentcloud_redis_instance_node_info":                  dataSourceTencentCloudRedisInstanceNodeInfo(),
 			"tencentcloud_as_scaling_configs":                        dataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                         dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                       dataSourceTencentCloudAsScalingPolicies(),

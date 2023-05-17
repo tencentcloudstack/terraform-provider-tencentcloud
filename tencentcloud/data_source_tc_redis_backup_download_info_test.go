@@ -31,17 +31,11 @@ func TestAccTencentCloudRedisBackupDownloadInfoDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccRedisBackupDownloadInfoDataSourceVar = `
-variable "instance_id" {
-	default = "` + defaultCrsInstanceId + `"
-}
-`
-
-const testAccRedisBackupDownloadInfoDataSource = testAccRedisBackupDownloadInfoDataSourceVar + `
+const testAccRedisBackupDownloadInfoDataSource = testAccRedisBackupDataSource + `
 
 data "tencentcloud_redis_backup_download_info" "backup_download_info" {
 	instance_id = var.instance_id
-	backup_id = "641555133-6494882-1224158916"
+	backup_id = data.tencentcloud_redis_backup.backup.backup_set.0.backup_id
 	# limit_type = "NoLimit"
 	# vpc_comparison_symbol = "In"
 	# ip_comparison_symbol = "In"

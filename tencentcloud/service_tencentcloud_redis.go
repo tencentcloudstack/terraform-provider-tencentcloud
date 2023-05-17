@@ -1738,3 +1738,58 @@ func (me *RedisService) DescribeRedisBackupDownloadRestrictionById(ctx context.C
 	backupDownloadRestriction = response.Response
 	return
 }
+
+func (me *RedisService) DescribeRedisInstanceNodeInfoByFilter(ctx context.Context, param map[string]interface{}) (instanceNodeInfo *redis.DescribeInstanceNodeInfoResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = redis.NewDescribeInstanceNodeInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRedisClient().DescribeInstanceNodeInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instanceNodeInfo = response.Response
+	return
+}
+
+func (me *RedisService) DescribeBandwidthRangeById(ctx context.Context, instanceId string) (connectionConfig *redis.DescribeBandwidthRangeResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeBandwidthRangeRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DescribeBandwidthRange(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	connectionConfig = response.Response
+	return
+}

@@ -180,18 +180,16 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"vpc_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(1, 100),
-				Description:  "ID of the vpc with which the instance is to be associated.",
+				Description:  "ID of the vpc with which the instance is to be associated. When the `operation_network` is `changeVpc` or `changeBaseToVpc`, this parameter needs to be configured.",
 			},
 			"subnet_id": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ForceNew:     true,
 				Computed:     true,
 				ValidateFunc: validateStringLengthInRange(1, 100),
-				Description:  "Specifies which subnet the instance should belong to.",
+				Description:  "Specifies which subnet the instance should belong to. When the `operation_network` is `changeVpc` or `changeBaseToVpc`, this parameter needs to be configured.",
 			},
 			"security_groups": {
 				Type:     schema.TypeSet,
@@ -211,15 +209,36 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			"port": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Default:     6379,
-				Description: "The port used to access a redis instance. The default value is 6379. And this value can't be changed after creation, or the Redis instance will be recreated.",
+				Description: "The port used to access a redis instance. The default value is 6379. When the `operation_network` is `changeVPort` or `changeVip`, this parameter needs to be configured.",
 			},
 			"params_template_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Specify params template id. If not set, will use default template.",
 			},
+
+			"operation_network": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ValidateFunc: validateAllowedStringValue(REDIS_MODIFY_NETWORK_CONFIG),
+				Description:  "Refers to the category of the pre-modified network, including: `changeVip`: refers to switching the private network, including its intranet IPv4 address and port; `changeVpc`: refers to switching the subnet to which the private network belongs; `changeBaseToVpc`: refers to switching the basic network to a private network; `changeVPort`: refers to only modifying the instance network port.",
+			},
+
+			"recycle": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				ValidateFunc: validateAllowedIntValue(REDIS_RECYCLE_TIME),
+				Description:  "Original intranet IPv4 address retention time: unit: day, value range: `0`, `1`, `2`, `3`, `7`, `15`.",
+			},
+
+			"ip": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "IP address of an instance. When the `operation_network` is `changeVip`, this parameter needs to be configured.",
+			},
+
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -227,11 +246,6 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 			},
 
 			// Computed values
-			"ip": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "IP address of an instance.",
-			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -313,7 +327,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	redisName := d.Get("name").(string)
 	redisType := d.Get("type").(string)
 	typeId := int64(d.Get("type_id").(int))
-	var redisShardNum int = 1
+	redisShardNum := 1
 	if v, ok := d.GetOk("redis_shard_num"); ok {
 		redisShardNum = v.(int)
 	}
@@ -329,6 +343,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	chargeType := d.Get("charge_type").(string)
 	autoRenewFlag := d.Get("auto_renew_flag").(int)
 	paramsTemplateId := d.Get("params_template_id").(string)
+	operation := d.Get("operation_network").(string)
 	chargeTypeID := REDIS_CHARGE_TYPE_ID[chargeType]
 	var replicasReadonly bool
 	if v, ok := d.GetOk("replicas_read_only"); ok {
@@ -418,6 +433,10 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 
 	if len(numErrors) > 0 {
 		return fmt.Errorf("redis type_id `%d` only supports %s", typeId, strings.Join(numErrors, ","))
+	}
+
+	if operation != "" {
+		return fmt.Errorf("This parameter `operation_network` is not required when redis is created")
 	}
 
 	requestSecurityGroup := make([]string, 0, len(securityGroups))
@@ -860,6 +879,78 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 			log.Printf("[CRITAL]%s redis upgradeVersionOperation fail, reason:%s\n", logId, err.Error())
 			return err
 		}
+	}
+
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("port") || d.HasChange("recycle") || d.HasChange("ip") {
+		if _, ok := d.GetOk("operation_network"); !ok {
+			return fmt.Errorf("When modifying `vpc_id`, `subnet_id`, `port`, `recycle`, `ip`, the `operation_network` parameter is required")
+		}
+
+		request := redis.NewModifyNetworkConfigRequest()
+		request.InstanceId = &id
+
+		operation := d.Get("operation_network").(string)
+		request.Operation = &operation
+
+		switch operation {
+		case REDIS_MODIFY_NETWORK_CONFIG[0]:
+			if v, ok := d.GetOk("ip"); ok {
+				request.Vip = helper.String(v.(string))
+			} else {
+				return fmt.Errorf("When `operation_network` is %v, this parameter must be filled in", operation)
+			}
+
+			if v, ok := d.GetOk("port"); ok {
+				request.VPort = helper.IntInt64(v.(int))
+			} else {
+				return fmt.Errorf("When `operation_network` is %v, this parameter must be filled in", operation)
+			}
+		case REDIS_MODIFY_NETWORK_CONFIG[1], REDIS_MODIFY_NETWORK_CONFIG[2]:
+			if v, ok := d.GetOk("vpc_id"); ok {
+				request.VpcId = helper.String(v.(string))
+			} else {
+				return fmt.Errorf("When `operation_network` is %v, this parameter must be filled in", operation)
+			}
+
+			if v, ok := d.GetOk("subnet_id"); ok {
+				request.SubnetId = helper.String(v.(string))
+			} else {
+				return fmt.Errorf("When `operation_network` is %v, this parameter must be filled in", operation)
+			}
+		case REDIS_MODIFY_NETWORK_CONFIG[3]:
+			if v, ok := d.GetOk("port"); ok {
+				request.VPort = helper.IntInt64(v.(int))
+			} else {
+				return fmt.Errorf("When `operation_network` is %v, this parameter must be filled in", operation)
+			}
+		}
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseRedisClient().ModifyNetworkConfig(request)
+			if e != nil {
+				if _, ok := e.(*sdkErrors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(e)
+				} else {
+					return resource.NonRetryableError(e)
+				}
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate redis networkConfig failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := RedisService{client: meta.(*TencentCloudClient).apiV3Conn}
+		_, _, _, err = service.CheckRedisOnlineOk(ctx, id, 20*readRetryTimeout)
+		if err != nil {
+			log.Printf("[CRITAL]%s redis networkConfig fail, reason:%s\n", logId, err.Error())
+			return err
+		}
+
+		_ = d.Set("operation_network", operation)
 	}
 
 	if d.HasChange("tags") {
