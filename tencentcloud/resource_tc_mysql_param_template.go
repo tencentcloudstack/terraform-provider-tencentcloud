@@ -211,6 +211,16 @@ func resourceTencentCloudMysqlParamTemplateRead(d *schema.ResourceData, meta int
 		return fmt.Errorf("resource `MysqlParamTemplate` %s does not exist", d.Id())
 	}
 
+	paramTemplateInfo, err := service.DescribeMysqlParamTemplateInfoById(ctx, templateId)
+	if err != nil {
+		return err
+	}
+
+	if paramTemplateInfo == nil {
+		d.SetId("")
+		return fmt.Errorf("resource `MysqlParamTemplateInfo` %s does not exist", d.Id())
+	}
+
 	if paramTemplate.Name != nil {
 		_ = d.Set("name", paramTemplate.Name)
 	}
@@ -221,6 +231,10 @@ func resourceTencentCloudMysqlParamTemplateRead(d *schema.ResourceData, meta int
 
 	if paramTemplate.EngineVersion != nil {
 		_ = d.Set("engine_version", paramTemplate.EngineVersion)
+	}
+
+	if paramTemplateInfo.EngineType != nil {
+		_ = d.Set("engine_type", paramTemplateInfo.EngineType)
 	}
 
 	params := make([]string, 0)
