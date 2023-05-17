@@ -16,7 +16,7 @@ func TestAccTencentCloudRedisSwitchMasterResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRedisSwitckMaster,
+				Config: testAccRedisSwitchMaster,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_switch_master.switch_master", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_switch_master.switch_master", "instance_id", "crs-2yypjrnv"),
@@ -24,7 +24,7 @@ func TestAccTencentCloudRedisSwitchMasterResource_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccRedisSwitckMasterUp,
+				Config: testAccRedisSwitchMasterUp,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_switch_master.switch_master", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_switch_master.switch_master", "instance_id", "crs-2yypjrnv"),
@@ -35,7 +35,7 @@ func TestAccTencentCloudRedisSwitchMasterResource_basic(t *testing.T) {
 	})
 }
 
-const testAccRedisSwitckMaster = `
+const testAccRedisSwitchMaster = `
 
 resource "tencentcloud_redis_switch_master" "switch_master" {
   instance_id = "crs-2yypjrnv"
@@ -44,7 +44,7 @@ resource "tencentcloud_redis_switch_master" "switch_master" {
 
 `
 
-const testAccRedisSwitckMasterUp = `
+const testAccRedisSwitchMasterUp = `
 
 resource "tencentcloud_redis_switch_master" "switch_master" {
   instance_id = "crs-2yypjrnv"

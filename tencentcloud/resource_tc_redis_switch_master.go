@@ -25,12 +25,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudRedisSwitckMaster() *schema.Resource {
+func resourceTencentCloudRedisSwitchMaster() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudRedisSwitckMasterCreate,
-		Read:   resourceTencentCloudRedisSwitckMasterRead,
-		Update: resourceTencentCloudRedisSwitckMasterUpdate,
-		Delete: resourceTencentCloudRedisSwitckMasterDelete,
+		Create: resourceTencentCloudRedisSwitchMasterCreate,
+		Read:   resourceTencentCloudRedisSwitchMasterRead,
+		Update: resourceTencentCloudRedisSwitchMasterUpdate,
+		Delete: resourceTencentCloudRedisSwitchMasterDelete,
 
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
@@ -48,7 +48,7 @@ func resourceTencentCloudRedisSwitckMaster() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudRedisSwitckMasterCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudRedisSwitchMasterCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_switch_master.create")()
 	defer inconsistentCheck(d, meta)()
 
@@ -61,10 +61,10 @@ func resourceTencentCloudRedisSwitckMasterCreate(d *schema.ResourceData, meta in
 
 	d.SetId(instanceId)
 
-	return resourceTencentCloudRedisSwitckMasterUpdate(d, meta)
+	return resourceTencentCloudRedisSwitchMasterUpdate(d, meta)
 }
 
-func resourceTencentCloudRedisSwitckMasterRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudRedisSwitchMasterRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_switch_master.read")()
 	defer inconsistentCheck(d, meta)()
 
@@ -84,7 +84,7 @@ func resourceTencentCloudRedisSwitckMasterRead(d *schema.ResourceData, meta inte
 
 	if switchMaster == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `RedisSwitckMaster` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `RedisSwitchMaster` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -102,7 +102,7 @@ func resourceTencentCloudRedisSwitckMasterRead(d *schema.ResourceData, meta inte
 	return nil
 }
 
-func resourceTencentCloudRedisSwitckMasterUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudRedisSwitchMasterUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_switch_master.update")()
 	defer inconsistentCheck(d, meta)()
 
@@ -161,10 +161,10 @@ func resourceTencentCloudRedisSwitckMasterUpdate(d *schema.ResourceData, meta in
 		return err
 	}
 
-	return resourceTencentCloudRedisSwitckMasterRead(d, meta)
+	return resourceTencentCloudRedisSwitchMasterRead(d, meta)
 }
 
-func resourceTencentCloudRedisSwitckMasterDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudRedisSwitchMasterDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_redis_switch_master.delete")()
 	defer inconsistentCheck(d, meta)()
 
