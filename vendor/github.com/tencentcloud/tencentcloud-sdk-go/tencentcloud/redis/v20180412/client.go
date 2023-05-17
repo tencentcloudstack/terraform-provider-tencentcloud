@@ -144,6 +144,7 @@ func NewAllocateWanAddressResponse() (response *AllocateWanAddressResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
 //  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
 //  INVALIDPARAMETER_ISNOTVPCINSTANCE = "InvalidParameter.IsNotVpcInstance"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
@@ -157,6 +158,7 @@ func (c *Client) AllocateWanAddress(request *AllocateWanAddressRequest) (respons
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
 //  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
 //  INVALIDPARAMETER_ISNOTVPCINSTANCE = "InvalidParameter.IsNotVpcInstance"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
@@ -462,7 +464,7 @@ func NewChangeReplicaToMasterResponse() (response *ChangeReplicaToMasterResponse
 }
 
 // ChangeReplicaToMaster
-// 该接口仅支持多AZ实例副本组提主和单AZ副本提主
+// 本接口（ChangeReplicaToMaster）适用于实例副本组提主或副本提主。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -480,7 +482,7 @@ func (c *Client) ChangeReplicaToMaster(request *ChangeReplicaToMasterRequest) (r
 }
 
 // ChangeReplicaToMaster
-// 该接口仅支持多AZ实例副本组提主和单AZ副本提主
+// 本接口（ChangeReplicaToMaster）适用于实例副本组提主或副本提主。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -642,7 +644,7 @@ func NewCloneInstancesResponse() (response *CloneInstancesResponse) {
 }
 
 // CloneInstances
-// 本接口（CloneInstances）可基于当前实例的备份文件克隆一个完整的新实例。
+// 本接口（CloneInstances）用于基于当前实例的备份文件克隆一个完整的新实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
@@ -653,6 +655,7 @@ func NewCloneInstancesResponse() (response *CloneInstancesResponse) {
 //  INVALIDPARAMETER_ONLYVPCONSPECZONEID = "InvalidParameter.OnlyVPCOnSpecZoneId"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_BASENETWORKACCESSDENY = "InvalidParameterValue.BaseNetWorkAccessDeny"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEID = "InvalidParameterValue.InvalidInstanceTypeId"
 //  INVALIDPARAMETERVALUE_INVALIDSUBNETID = "InvalidParameterValue.InvalidSubnetId"
 //  INVALIDPARAMETERVALUE_PASSWORDEMPTY = "InvalidParameterValue.PasswordEmpty"
@@ -681,7 +684,7 @@ func (c *Client) CloneInstances(request *CloneInstancesRequest) (response *Clone
 }
 
 // CloneInstances
-// 本接口（CloneInstances）可基于当前实例的备份文件克隆一个完整的新实例。
+// 本接口（CloneInstances）用于基于当前实例的备份文件克隆一个完整的新实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
@@ -692,6 +695,7 @@ func (c *Client) CloneInstances(request *CloneInstancesRequest) (response *Clone
 //  INVALIDPARAMETER_ONLYVPCONSPECZONEID = "InvalidParameter.OnlyVPCOnSpecZoneId"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_BASENETWORKACCESSDENY = "InvalidParameterValue.BaseNetWorkAccessDeny"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPEID = "InvalidParameterValue.InvalidInstanceTypeId"
 //  INVALIDPARAMETERVALUE_INVALIDSUBNETID = "InvalidParameterValue.InvalidSubnetId"
 //  INVALIDPARAMETERVALUE_PASSWORDEMPTY = "InvalidParameterValue.PasswordEmpty"
@@ -756,6 +760,7 @@ func NewCloseSSLResponse() (response *CloseSSLResponse) {
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
@@ -772,6 +777,7 @@ func (c *Client) CloseSSL(request *CloseSSLRequest) (response *CloseSSLResponse,
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
@@ -870,7 +876,7 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
 }
 
 // CreateInstances
-// 本接口(CreateInstances)用于创建redis实例。
+// 本接口（CreateInstances）用于创建 Redis 实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
@@ -909,7 +915,7 @@ func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *Cre
 }
 
 // CreateInstances
-// 本接口(CreateInstances)用于创建redis实例。
+// 本接口（CreateInstances）用于创建 Redis 实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
@@ -1449,6 +1455,70 @@ func (c *Client) DescribeBackupUrlWithContext(ctx context.Context, request *Desc
     return
 }
 
+func NewDescribeBandwidthRangeRequest() (request *DescribeBandwidthRangeRequest) {
+    request = &DescribeBandwidthRangeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "DescribeBandwidthRange")
+    
+    
+    return
+}
+
+func NewDescribeBandwidthRangeResponse() (response *DescribeBandwidthRangeResponse) {
+    response = &DescribeBandwidthRangeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBandwidthRange
+// 本接口（DescribeBandwidthRange）用于查询实例带宽信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_INVALIDAUTHORIZATION = "AuthFailure.InvalidAuthorization"
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ILLEGALPARAMETERERROR = "InvalidParameter.IllegalParameterError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeBandwidthRange(request *DescribeBandwidthRangeRequest) (response *DescribeBandwidthRangeResponse, err error) {
+    return c.DescribeBandwidthRangeWithContext(context.Background(), request)
+}
+
+// DescribeBandwidthRange
+// 本接口（DescribeBandwidthRange）用于查询实例带宽信息。
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  AUTHFAILURE_INVALIDAUTHORIZATION = "AuthFailure.InvalidAuthorization"
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER_ILLEGALPARAMETERERROR = "InvalidParameter.IllegalParameterError"
+//  INVALIDPARAMETER_INVALIDPARAMETER = "InvalidParameter.InvalidParameter"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+func (c *Client) DescribeBandwidthRangeWithContext(ctx context.Context, request *DescribeBandwidthRangeRequest) (response *DescribeBandwidthRangeResponse, err error) {
+    if request == nil {
+        request = NewDescribeBandwidthRangeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBandwidthRange require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBandwidthRangeResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeCommonDBInstancesRequest() (request *DescribeCommonDBInstancesRequest) {
     request = &DescribeCommonDBInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1528,7 +1598,7 @@ func NewDescribeDBSecurityGroupsResponse() (response *DescribeDBSecurityGroupsRe
 }
 
 // DescribeDBSecurityGroups
-// 本接口(DescribeDBSecurityGroups)用于查询实例的安全组详情。
+// 本接口（DescribeDBSecurityGroups）用于查询实例的安全组详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
@@ -1549,7 +1619,7 @@ func (c *Client) DescribeDBSecurityGroups(request *DescribeDBSecurityGroupsReque
 }
 
 // DescribeDBSecurityGroups
-// 本接口(DescribeDBSecurityGroups)用于查询实例的安全组详情。
+// 本接口（DescribeDBSecurityGroups）用于查询实例的安全组详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ADDINSTANCEINFOFAILED = "FailedOperation.AddInstanceInfoFailed"
@@ -1600,7 +1670,7 @@ func NewDescribeInstanceAccountResponse() (response *DescribeInstanceAccountResp
 }
 
 // DescribeInstanceAccount
-// 查看实例子账号信息
+// 本接口（DescribeInstanceAccount）用于查看实例子账号信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -1613,7 +1683,7 @@ func (c *Client) DescribeInstanceAccount(request *DescribeInstanceAccountRequest
 }
 
 // DescribeInstanceAccount
-// 查看实例子账号信息
+// 本接口（DescribeInstanceAccount）用于查看实例子账号信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2206,7 +2276,7 @@ func NewDescribeInstanceNodeInfoResponse() (response *DescribeInstanceNodeInfoRe
 }
 
 // DescribeInstanceNodeInfo
-// 查询实例节点信息
+// 本接口（DescribeInstanceNodeInfo）用于查询实例节点信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2218,7 +2288,7 @@ func (c *Client) DescribeInstanceNodeInfo(request *DescribeInstanceNodeInfoReque
 }
 
 // DescribeInstanceNodeInfo
-// 查询实例节点信息
+// 本接口（DescribeInstanceNodeInfo）用于查询实例节点信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2268,6 +2338,7 @@ func NewDescribeInstanceParamRecordsResponse() (response *DescribeInstanceParamR
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
 //  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
 //  UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
 //  UNSUPPORTEDOPERATION_CLUSTERINSTANCEACCESSEDDENY = "UnsupportedOperation.ClusterInstanceAccessedDeny"
@@ -2284,6 +2355,7 @@ func (c *Client) DescribeInstanceParamRecords(request *DescribeInstanceParamReco
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
 //  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
 //  UNAUTHORIZEDOPERATION_USERNOTINWHITELIST = "UnauthorizedOperation.UserNotInWhiteList"
 //  UNSUPPORTEDOPERATION_CLUSTERINSTANCEACCESSEDDENY = "UnsupportedOperation.ClusterInstanceAccessedDeny"
@@ -2322,7 +2394,7 @@ func NewDescribeInstanceParamsResponse() (response *DescribeInstanceParamsRespon
 }
 
 // DescribeInstanceParams
-// 查询实例参数列表
+// 本接口（DescribeInstanceParams）用于查询实例参数列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2342,7 +2414,7 @@ func (c *Client) DescribeInstanceParams(request *DescribeInstanceParamsRequest) 
 }
 
 // DescribeInstanceParams
-// 查询实例参数列表
+// 本接口（DescribeInstanceParams）用于查询实例参数列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2392,7 +2464,7 @@ func NewDescribeInstanceSecurityGroupResponse() (response *DescribeInstanceSecur
 }
 
 // DescribeInstanceSecurityGroup
-// 查询实例安全组信息
+// 本接口（DescribeInstanceSecurityGroup）用于查询实例安全组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2409,7 +2481,7 @@ func (c *Client) DescribeInstanceSecurityGroup(request *DescribeInstanceSecurity
 }
 
 // DescribeInstanceSecurityGroup
-// 查询实例安全组信息
+// 本接口（DescribeInstanceSecurityGroup）用于查询实例安全组信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2456,7 +2528,7 @@ func NewDescribeInstanceShardsResponse() (response *DescribeInstanceShardsRespon
 }
 
 // DescribeInstanceShards
-// 获取集群版实例分片信息
+// 本接口（DescribeInstanceShards）用于获取集群架构实例的分片信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2467,7 +2539,7 @@ func (c *Client) DescribeInstanceShards(request *DescribeInstanceShardsRequest) 
 }
 
 // DescribeInstanceShards
-// 获取集群版实例分片信息
+// 本接口（DescribeInstanceShards）用于获取集群架构实例的分片信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2508,7 +2580,7 @@ func NewDescribeInstanceZoneInfoResponse() (response *DescribeInstanceZoneInfoRe
 }
 
 // DescribeInstanceZoneInfo
-// 查询Redis节点详细信息
+// 本接口（DescribeInstanceZoneInfo）用于查询 Redis 节点详细信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2525,7 +2597,7 @@ func (c *Client) DescribeInstanceZoneInfo(request *DescribeInstanceZoneInfoReque
 }
 
 // DescribeInstanceZoneInfo
-// 查询Redis节点详细信息
+// 本接口（DescribeInstanceZoneInfo）用于查询 Redis 节点详细信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2572,7 +2644,7 @@ func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
 }
 
 // DescribeInstances
-// 查询Redis实例列表
+// 本接口（DescribeInstances）用于查询Redis实例列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2589,7 +2661,7 @@ func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response 
 }
 
 // DescribeInstances
-// 查询Redis实例列表
+// 本接口（DescribeInstances）用于查询Redis实例列表。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2690,7 +2762,7 @@ func NewDescribeParamTemplateInfoResponse() (response *DescribeParamTemplateInfo
 }
 
 // DescribeParamTemplateInfo
-// 查询参数模板详情。
+// 本接口（DescribeParamTemplateInfo）用于查询参数模板详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -2705,7 +2777,7 @@ func (c *Client) DescribeParamTemplateInfo(request *DescribeParamTemplateInfoReq
 }
 
 // DescribeParamTemplateInfo
-// 查询参数模板详情。
+// 本接口（DescribeParamTemplateInfo）用于查询参数模板详情。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3111,6 +3183,7 @@ func NewDescribeSSLStatusResponse() (response *DescribeSSLStatusResponse) {
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
@@ -3126,6 +3199,7 @@ func (c *Client) DescribeSSLStatus(request *DescribeSSLStatusRequest) (response 
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
@@ -3276,7 +3350,7 @@ func NewDescribeTaskListResponse() (response *DescribeTaskListResponse) {
 }
 
 // DescribeTaskList
-// 查询任务列表信息
+// 本接口（DescribeTaskList）用于查询指定实例的任务列表信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3288,7 +3362,7 @@ func (c *Client) DescribeTaskList(request *DescribeTaskListRequest) (response *D
 }
 
 // DescribeTaskList
-// 查询任务列表信息
+// 本接口（DescribeTaskList）用于查询指定实例的任务列表信息。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
@@ -3890,7 +3964,7 @@ func NewKillMasterGroupResponse() (response *KillMasterGroupResponse) {
 }
 
 // KillMasterGroup
-// 模拟故障
+// 本接口（KillMasterGroup）模拟故障。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3912,7 +3986,7 @@ func (c *Client) KillMasterGroup(request *KillMasterGroupRequest) (response *Kil
 }
 
 // KillMasterGroup
-// 模拟故障
+// 本接口（KillMasterGroup）模拟故障。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3964,7 +4038,7 @@ func NewManualBackupInstanceResponse() (response *ManualBackupInstanceResponse) 
 }
 
 // ManualBackupInstance
-// 手动备份Redis实例
+// 本接口（ManualBackupInstance）用于手动备份Redis实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMMITFLOWERROR = "FailedOperation.CommitFlowError"
@@ -3982,7 +4056,7 @@ func (c *Client) ManualBackupInstance(request *ManualBackupInstanceRequest) (res
 }
 
 // ManualBackupInstance
-// 手动备份Redis实例
+// 本接口（ManualBackupInstance）用于手动备份Redis实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_COMMITFLOWERROR = "FailedOperation.CommitFlowError"
@@ -4096,7 +4170,7 @@ func NewModifyAutoBackupConfigResponse() (response *ModifyAutoBackupConfigRespon
 }
 
 // ModifyAutoBackupConfig
-// 设置自动备份配置
+// 本接口（ModifyAutoBackupConfig）用于设置自动备份的配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
@@ -4113,7 +4187,7 @@ func (c *Client) ModifyAutoBackupConfig(request *ModifyAutoBackupConfigRequest) 
 }
 
 // ModifyAutoBackupConfig
-// 设置自动备份配置
+// 本接口（ModifyAutoBackupConfig）用于设置自动备份的配置。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
@@ -4783,6 +4857,7 @@ func NewOpenSSLResponse() (response *OpenSSLResponse) {
 //  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
@@ -4800,6 +4875,7 @@ func (c *Client) OpenSSL(request *OpenSSLRequest) (response *OpenSSLResponse, er
 //  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 //  INVALIDPARAMETERVALUE_UNSUPPORTEDTYPE = "InvalidParameterValue.UnSupportedType"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
@@ -4873,6 +4949,70 @@ func (c *Client) ReleaseWanAddressWithContext(ctx context.Context, request *Rele
     return
 }
 
+func NewRemoveReplicationInstanceRequest() (request *RemoveReplicationInstanceRequest) {
+    request = &RemoveReplicationInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("redis", APIVersion, "RemoveReplicationInstance")
+    
+    
+    return
+}
+
+func NewRemoveReplicationInstanceResponse() (response *RemoveReplicationInstanceResponse) {
+    response = &RemoveReplicationInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// RemoveReplicationInstance
+// 移除复制组成员
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+//  INVALIDPARAMETERVALUE_REPLICATIONGROUPNOTEXISTS = "InvalidParameterValue.ReplicationGroupNotExists"
+//  LIMITEXCEEDED_REPLICATIONGROUPLOCKED = "LimitExceeded.ReplicationGroupLocked"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  UNSUPPORTEDOPERATION_INSPECTION = "UnsupportedOperation.Inspection"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) RemoveReplicationInstance(request *RemoveReplicationInstanceRequest) (response *RemoveReplicationInstanceResponse, err error) {
+    return c.RemoveReplicationInstanceWithContext(context.Background(), request)
+}
+
+// RemoveReplicationInstance
+// 移除复制组成员
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETERVALUE_CHECKNOTPASS = "InvalidParameterValue.CheckNotPass"
+//  INVALIDPARAMETERVALUE_REPLICATIONGROUPNOTEXISTS = "InvalidParameterValue.ReplicationGroupNotExists"
+//  LIMITEXCEEDED_REPLICATIONGROUPLOCKED = "LimitExceeded.ReplicationGroupLocked"
+//  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  UNSUPPORTEDOPERATION_INSPECTION = "UnsupportedOperation.Inspection"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
+func (c *Client) RemoveReplicationInstanceWithContext(ctx context.Context, request *RemoveReplicationInstanceRequest) (response *RemoveReplicationInstanceResponse, err error) {
+    if request == nil {
+        request = NewRemoveReplicationInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RemoveReplicationInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRemoveReplicationInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewRenewInstanceRequest() (request *RenewInstanceRequest) {
     request = &RenewInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4895,6 +5035,7 @@ func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
 // 本接口（RenewInstance）可用于为实例续费。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
@@ -4912,6 +5053,7 @@ func (c *Client) RenewInstance(request *RenewInstanceRequest) (response *RenewIn
 // 本接口（RenewInstance）可用于为实例续费。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
@@ -5097,8 +5239,10 @@ func NewStartupInstanceResponse() (response *StartupInstanceResponse) {
 // 实例解隔离
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
@@ -5113,8 +5257,10 @@ func (c *Client) StartupInstance(request *StartupInstanceRequest) (response *Sta
 // 实例解隔离
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
 //  FAILEDOPERATION_UNSUPPORTERROR = "FailedOperation.UnSupportError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
 //  INTERNALERROR_INTERNALERROR = "InternalError.InternalError"
 //  INVALIDPARAMETER_EMPTYPARAM = "InvalidParameter.EmptyParam"
 //  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
@@ -5287,12 +5433,14 @@ func NewUpgradeInstanceResponse() (response *UpgradeInstanceResponse) {
 //  INVALIDPARAMETERVALUE_MEMSIZENOTINRANGE = "InvalidParameterValue.MemSizeNotInRange"
 //  INVALIDPARAMETERVALUE_REDUCECAPACITYNOTALLOWED = "InvalidParameterValue.ReduceCapacityNotAllowed"
 //  INVALIDPARAMETERVALUE_SPECNOTEXIST = "InvalidParameterValue.SpecNotExist"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_INVALIDMEMSIZE = "LimitExceeded.InvalidMemSize"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_ACCOUNTBALANCENOTENOUGH = "ResourceUnavailable.AccountBalanceNotEnough"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  RESOURCEUNAVAILABLE_SALEOUT = "ResourceUnavailable.SaleOut"
 //  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
 func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *UpgradeInstanceResponse, err error) {
     return c.UpgradeInstanceWithContext(context.Background(), request)
@@ -5310,12 +5458,14 @@ func (c *Client) UpgradeInstance(request *UpgradeInstanceRequest) (response *Upg
 //  INVALIDPARAMETERVALUE_MEMSIZENOTINRANGE = "InvalidParameterValue.MemSizeNotInRange"
 //  INVALIDPARAMETERVALUE_REDUCECAPACITYNOTALLOWED = "InvalidParameterValue.ReduceCapacityNotAllowed"
 //  INVALIDPARAMETERVALUE_SPECNOTEXIST = "InvalidParameterValue.SpecNotExist"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_INVALIDMEMSIZE = "LimitExceeded.InvalidMemSize"
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND_INSTANCENOTEXISTS = "ResourceNotFound.InstanceNotExists"
 //  RESOURCEUNAVAILABLE_ACCOUNTBALANCENOTENOUGH = "ResourceUnavailable.AccountBalanceNotEnough"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSERROR = "ResourceUnavailable.InstanceStatusError"
+//  RESOURCEUNAVAILABLE_SALEOUT = "ResourceUnavailable.SaleOut"
 //  UNAUTHORIZEDOPERATION_NOCAMAUTHED = "UnauthorizedOperation.NoCAMAuthed"
 func (c *Client) UpgradeInstanceWithContext(ctx context.Context, request *UpgradeInstanceRequest) (response *UpgradeInstanceResponse, err error) {
     if request == nil {
@@ -5412,6 +5562,7 @@ func NewUpgradeProxyVersionResponse() (response *UpgradeProxyVersionResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 func (c *Client) UpgradeProxyVersion(request *UpgradeProxyVersionRequest) (response *UpgradeProxyVersionResponse, err error) {
     return c.UpgradeProxyVersionWithContext(context.Background(), request)
 }
@@ -5421,6 +5572,7 @@ func (c *Client) UpgradeProxyVersion(request *UpgradeProxyVersionRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
 func (c *Client) UpgradeProxyVersionWithContext(ctx context.Context, request *UpgradeProxyVersionRequest) (response *UpgradeProxyVersionResponse, err error) {
     if request == nil {
         request = NewUpgradeProxyVersionRequest()
@@ -5460,6 +5612,9 @@ func NewUpgradeSmallVersionResponse() (response *UpgradeSmallVersionResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
 func (c *Client) UpgradeSmallVersion(request *UpgradeSmallVersionRequest) (response *UpgradeSmallVersionResponse, err error) {
     return c.UpgradeSmallVersionWithContext(context.Background(), request)
 }
@@ -5469,6 +5624,9 @@ func (c *Client) UpgradeSmallVersion(request *UpgradeSmallVersionRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SYSTEMERROR = "FailedOperation.SystemError"
+//  FAILEDOPERATION_UNKNOWN = "FailedOperation.Unknown"
+//  INVALIDPARAMETER_PERMISSIONDENIED = "InvalidParameter.PermissionDenied"
+//  UNSUPPORTEDOPERATION_INSTANCENOTOPERATION = "UnsupportedOperation.InstanceNotOperation"
 func (c *Client) UpgradeSmallVersionWithContext(ctx context.Context, request *UpgradeSmallVersionRequest) (response *UpgradeSmallVersionResponse, err error) {
     if request == nil {
         request = NewUpgradeSmallVersionRequest()
