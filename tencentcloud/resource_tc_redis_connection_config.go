@@ -151,6 +151,10 @@ func resourceTencentCloudRedisConnectionConfigRead(d *schema.ResourceData, meta 
 	}
 
 	bandwidthRange, err := service.DescribeBandwidthRangeById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
 	if connectionConfig == nil {
 		log.Printf("[WARN]%s resource `DescribeBandwidthRangeById` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
