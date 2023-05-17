@@ -226,10 +226,10 @@ func resourceTencentCloudSqlserverBusinessIntelligenceInstanceCreate(d *schema.R
 			if item != nil {
 				dMap := item.(map[string]interface{})
 				resourceTag := sqlserver.ResourceTag{}
-				if t, h := dMap["tag_key"]; h && t != "" {
+				if t, h := dMap["tag_key"]; h {
 					resourceTag.TagKey = helper.String(t.(string))
 				}
-				if t, h := dMap["tag_value"]; h && t != "" {
+				if t, h := dMap["tag_value"]; h {
 					resourceTag.TagValue = helper.String(t.(string))
 				}
 				CreateDBIRequest.ResourceTags = append(CreateDBIRequest.ResourceTags, &resourceTag)

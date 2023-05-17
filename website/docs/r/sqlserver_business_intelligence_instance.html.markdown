@@ -42,12 +42,12 @@ resource "tencentcloud_sqlserver_business_intelligence_instance" "business_intel
 The following arguments are supported:
 
 * `cpu` - (Required, Int) The number of CPU cores of the instance you want to purchase.
+* `instance_name` - (Required, String) Instance Name.
 * `machine_type` - (Required, String) The host type of purchased instance. Valid values: CLOUD_PREMIUM (virtual machine with premium cloud disk), CLOUD_SSD (virtual machine with SSD).
 * `memory` - (Required, Int) Instance memory size in GB.
 * `storage` - (Required, Int) Instance disk size in GB.
 * `zone` - (Required, String) Instance AZ, such as ap-guangzhou-1 (Guangzhou Zone 1). Purchasable AZs for an instance can be obtained through theDescribeZones API.
 * `db_version` - (Optional, String) Supported versions of business intelligence server. Valid values: 201603 (SQL Server 2016 Integration Services), 201703 (SQL Server 2017 Integration Services), 201903 (SQL Server 2019 Integration Services). Default value: 201903. As the purchasable versions are region-specific, you can use the DescribeProductConfig API to query the information of purchasable versions in each region.
-* `instance_name` - (Optional, String) Instance Name.
 * `project_id` - (Optional, Int) Project ID.
 * `resource_tags` - (Optional, List) Tags associated with the instances to be created.
 * `security_group_list` - (Optional, List: [`String`]) Security group list, which contains security group IDs in the format of sg-xxx.

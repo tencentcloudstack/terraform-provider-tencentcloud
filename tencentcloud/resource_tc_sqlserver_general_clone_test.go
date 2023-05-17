@@ -49,11 +49,11 @@ func testAccCheckSqlserverGeneralCloneDestroy(s *terraform.State) error {
 		service := SqlserverService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
+		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 		instanceId := idSplit[0]
-		dbName := idSplit[1]
+		dbName := idSplit[2]
 
 		result, err := service.DescribeSqlserverGeneralCloneById(ctx, instanceId)
 		if err != nil {
@@ -87,11 +87,11 @@ func testAccCheckSqlserverCloneExists(n string) resource.TestCheckFunc {
 		service := SqlserverService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 2 {
+		if len(idSplit) != 3 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 		instanceId := idSplit[0]
-		dbName := idSplit[1]
+		dbName := idSplit[2]
 
 		result, err := service.DescribeSqlserverGeneralCloneById(ctx, instanceId)
 		if err != nil {

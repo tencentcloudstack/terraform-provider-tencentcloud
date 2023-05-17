@@ -104,10 +104,7 @@ resource "tencentcloud_sqlserver_business_intelligence_instance" "business_intel
   weekly = [1, 2, 3, 4, 5, 6, 7]
   start_time = "00:00"
   span = 6
-  resource_tags {
-	tag_key = ""
-	tag_value = ""
-  }
+  instance_name = "create_db_name"
 }
 `
 
@@ -126,10 +123,6 @@ resource "tencentcloud_sqlserver_business_intelligence_instance" "business_intel
   weekly = [1, 2, 3, 4, 5, 6, 7]
   start_time = "00:00"
   span = 6
-  resource_tags {
-	tag_key = ""
-	tag_value = ""
-  }
   instance_name = "update_db_name"
 }
 `

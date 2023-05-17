@@ -34,8 +34,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `db_detail` - Sqlserver db Clone detail.
-  * `is_fulltext_enabled` - Whether to enable full text 0: No 1: Yes.
+
 
 
 ## Import

@@ -2138,3 +2138,175 @@ func (me *SqlserverService) DeleteSqlserverInstanceById(ctx context.Context, ins
 
 	return
 }
+
+func (me *SqlserverService) DescribeSqlserverGeneralCommunicationById(ctx context.Context, instanceId string) (generalCommunication *sqlserver.InterInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBInstanceInterRequest()
+	request.InstanceId = &instanceId
+	limit := int64(1)
+	request.Limit = &limit
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstanceInter(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	generalCommunication = response.Response.InterInstanceSet[0]
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverGeneralCommunicationById(ctx context.Context, instanceId string) (flowId int64, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewCloseInterCommunicationRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().CloseInterCommunication(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	flowId = *response.Response.InterInstanceFlowSet[0].FlowId
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverBackupUploadSizeByFilter(ctx context.Context, param map[string]interface{}) (datasourceBackupUploadSize []*sqlserver.CosUploadBackupFile, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeBackupUploadSizeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+
+		if k == "BackupMigrationId" {
+			request.BackupMigrationId = v.(*string)
+		}
+
+		if k == "IncrementalMigrationId" {
+			request.IncrementalMigrationId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeBackupUploadSize(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.CosUploadBackupFileSet) < 1 {
+		return
+	}
+
+	datasourceBackupUploadSize = append(datasourceBackupUploadSize, response.Response.CosUploadBackupFileSet...)
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverCrossRegionZoneByFilter(ctx context.Context, param map[string]interface{}) (datasourceCrossRegionZone *sqlserver.DescribeCrossRegionZoneResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeCrossRegionZoneRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeCrossRegionZone(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	datasourceCrossRegionZone = response.Response
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverDatasourceDBCharsetsByFilter(ctx context.Context, param map[string]interface{}) (databaseCharsets []*string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeDBCharsetsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseSqlserverClient().DescribeDBCharsets(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	databaseCharsets = response.Response.DatabaseCharsets
+	return
+}

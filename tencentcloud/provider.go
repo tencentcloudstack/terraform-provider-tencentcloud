@@ -600,6 +600,10 @@ SQLServer
 	tencentcloud_sqlserver_publish_subscribes
 	tencentcloud_sqlserver_basic_instances
 	tencentcloud_sqlserver_backup_commands
+	tencentcloud_sqlserver_backup_by_flow_id
+	tencentcloud_sqlserver_backup_upload_size
+	tencentcloud_sqlserver_cross_region_zone
+	tencentcloud_sqlserver_db_charsets
 
   Resource
 	tencentcloud_sqlserver_instance
@@ -617,6 +621,7 @@ SQLServer
 	tencentcloud_sqlserver_incre_backup_migration
     tencentcloud_sqlserver_business_intelligence_file
 	tencentcloud_sqlserver_business_intelligence_instance
+	tencentcloud_sqlserver_general_communication
 
 SSL Certificates
   Data Source
@@ -1461,6 +1466,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_account_db_attachments":          dataSourceTencentCloudSqlserverAccountDBAttachments(),
 			"tencentcloud_sqlserver_readonly_groups":                 dataSourceTencentCloudSqlserverReadonlyGroups(),
 			"tencentcloud_sqlserver_backup_commands":                 dataSourceTencentCloudSqlserverBackupCommands(),
+			"tencentcloud_sqlserver_backup_by_flow_id":               dataSourceTencentCloudSqlserverBackupByFlowId(),
+			"tencentcloud_sqlserver_backup_upload_size":              dataSourceTencentCloudSqlserverBackupUploadSize(),
+			"tencentcloud_sqlserver_cross_region_zone":               dataSourceTencentCloudSqlserverCrossRegionZone(),
+			"tencentcloud_sqlserver_db_charsets":                     dataSourceTencentCloudSqlserverDBCharsets(),
 			"tencentcloud_ckafka_users":                              dataSourceTencentCloudCkafkaUsers(),
 			"tencentcloud_ckafka_acls":                               dataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_ckafka_topics":                             dataSourceTencentCloudCkafkaTopics(),
@@ -1859,6 +1868,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_incre_backup_migration":            resourceTencentCloudSqlserverIncreBackupMigration(),
 			"tencentcloud_sqlserver_business_intelligence_file":        resourceTencentCloudSqlserverBusinessIntelligenceFile(),
 			"tencentcloud_sqlserver_business_intelligence_instance":    resourceTencentCloudSqlserverBusinessIntelligenceInstance(),
+			"tencentcloud_sqlserver_general_communication":             resourceTencentCloudSqlserverGeneralCommunication(),
 			"tencentcloud_ckafka_instance":                             resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                 resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                  resourceTencentCloudCkafkaAcl(),
