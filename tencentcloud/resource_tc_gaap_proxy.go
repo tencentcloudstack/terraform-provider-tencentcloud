@@ -98,6 +98,14 @@ func resourceTencentCloudGaapProxy() *schema.Resource {
 				Optional:    true,
 				Description: "Tags of the GAAP proxy. Tags that do not exist are not created automatically.",
 			},
+			"network_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ForceNew:     true,
+				ValidateFunc: validateAllowedStringValue(PROXY_NETWORK_TYPE),
+				Description:  "Network type. `normal`: regular BGP, `cn2`: boutique BGP, `triple`: triple play.",
+			},
 
 			// computed
 			"create_time": {
@@ -148,6 +156,7 @@ func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	params := make(map[string]interface{})
 	name := d.Get("name").(string)
 	projectId := d.Get("project_id").(int)
 	bandwidth := d.Get("bandwidth").(int)
@@ -157,9 +166,13 @@ func resourceTencentCloudGaapProxyCreate(d *schema.ResourceData, m interface{}) 
 	enable := d.Get("enable").(bool)
 	tags := helper.GetTags(d, "tags")
 
+	if v, ok := d.GetOk("network_type"); ok {
+		params["network_type"] = v.(string)
+	}
+
 	service := GaapService{client: m.(*TencentCloudClient).apiV3Conn}
 
-	id, err := service.CreateProxy(ctx, name, accessRegion, realserverRegion, bandwidth, concurrent, projectId, tags)
+	id, err := service.CreateProxy(ctx, name, accessRegion, realserverRegion, bandwidth, concurrent, projectId, tags, params)
 	if err != nil {
 		return err
 	}
@@ -285,6 +298,9 @@ func resourceTencentCloudGaapProxyRead(d *schema.ResourceData, m interface{}) er
 	}
 	_ = d.Set("forward_ip", proxy.ForwardIP)
 
+	if proxy.NetworkType != nil {
+		_ = d.Set("network_type", proxy.NetworkType)
+	}
 	return nil
 }
 
