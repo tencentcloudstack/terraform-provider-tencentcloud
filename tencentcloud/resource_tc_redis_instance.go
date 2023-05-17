@@ -436,7 +436,7 @@ func resourceTencentCloudRedisInstanceCreate(d *schema.ResourceData, meta interf
 	}
 
 	if operation != "" {
-		return fmt.Errorf("This parameter is not required when redis is created")
+		return fmt.Errorf("This parameter `operation_network` is not required when redis is created")
 	}
 
 	requestSecurityGroup := make([]string, 0, len(securityGroups))
@@ -881,7 +881,7 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if d.HasChange("operation_network") {
+	if _, ok := d.GetOk("operation_network"); ok && (d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("port") || d.HasChange("recycle") || d.HasChange("ip")) {
 		request := redis.NewModifyNetworkConfigRequest()
 		request.InstanceId = &id
 		var operation string
