@@ -576,6 +576,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_upgrade_proxy_version_operation
 	tencentcloud_redis_maintenance_window
 	tencentcloud_redis_replica_readonly
+	tencentcloud_redis_switch_master
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -1748,6 +1749,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_upgrade_proxy_version_operation":       resourceTencentCloudRedisUpgradeProxyVersionOperation(),
 			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_redis_replica_readonly":                      resourceTencentCloudRedisReplicaReadonly(),
+			"tencentcloud_redis_switch_master":                         resourceTencentCloudRedisSwitchMaster(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                            resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                               resourceTencentCloudAsAttachment(),
