@@ -17,7 +17,8 @@ func TestAccTencentCloudTcrManageReplicationOperationResource_basic(t *testing.T
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrManageReplicationOperation, "sync", time.Now().Nanosecond()),
+				Config:    fmt.Sprintf(testAccTcrManageReplicationOperation, "sync", time.Now().Nanosecond()),
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_manage_replication_operation.my_replica", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_manage_replication_operation.my_replica", "source_registry_id"),
@@ -30,7 +31,7 @@ func TestAccTencentCloudTcrManageReplicationOperationResource_basic(t *testing.T
 					resource.TestCheckResourceAttr("tencentcloud_tcr_manage_replication_operation.my_replica", "rule.0.filters.1.type", "tag"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_manage_replication_operation.my_replica", "rule.0.filters.2.type", "resource"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_manage_replication_operation.my_replica", "description", "this is the tcr sync operation"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_manage_replication_operation.my_replica", "destination_region_id", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_manage_replication_operation.my_replica", "destination_region_id", "4"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_manage_replication_operation.my_replica", "peer_replication_option.#"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_manage_replication_operation.my_replica", "peer_replication_option.0.enable_peer_replication", "false"),
 				),
@@ -80,7 +81,7 @@ resource "tencentcloud_tcr_manage_replication_operation" "my_replica" {
 		}
   }
   description = "this is the tcr sync operation"
-  destination_region_id = 1 // "ap-guangzhou"
+  destination_region_id = 4 // "ap-shanghai"
   peer_replication_option {
 		peer_registry_uin = ""
 		peer_registry_token = ""

@@ -34,7 +34,6 @@ func init() {
 			})
 
 			instances, err := service.DescribeTCRInstances(ctx, "", filters)
-
 			if err != nil {
 				return err
 			}
@@ -46,7 +45,6 @@ func init() {
 			instanceId := *instances[0].RegistryId
 
 			tokens, err := service.DescribeTCRTokens(ctx, instanceId, "")
-
 			if err != nil {
 				return err
 			}
@@ -73,7 +71,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTCRToken_basic_and_update(t *testing.T) {
+func TestAccTencentCloudTcrToken_basic_and_update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -81,7 +79,8 @@ func TestAccTencentCloudTCRToken_basic_and_update(t *testing.T) {
 		CheckDestroy: testAccCheckTCRTokenDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTCRToken_basic,
+				Config:    testAccTCRToken_basic,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_token.mytcr_token", "description", "test token"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_token.mytcr_token", "enable", "true"),

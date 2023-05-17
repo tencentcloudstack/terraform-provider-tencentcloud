@@ -8,7 +8,7 @@ import (
 
 var testDataTCRTokensNameAll = "data.tencentcloud_tcr_tokens.id_test"
 
-func TestAccTencentCloudTCRTokensData(t *testing.T) {
+func TestAccTencentCloudTcrTokensData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -16,7 +16,8 @@ func TestAccTencentCloudTCRTokensData(t *testing.T) {
 		CheckDestroy: testAccCheckTCRTokenDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudDataTCRTokensBasic,
+				Config:    testAccTencentCloudDataTCRTokensBasic,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testDataTCRTokensNameAll, "token_list.0.token_id"),
 					resource.TestCheckResourceAttrSet(testDataTCRTokensNameAll, "token_list.0.create_time"),

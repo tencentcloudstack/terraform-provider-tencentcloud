@@ -16,7 +16,8 @@ func TestAccTencentCloudTcrImageSignatureOperationResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrImageSignatureOperation, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				Config:    fmt.Sprintf(testAccTcrImageSignatureOperation, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_create_image_signature_operation.sign_operation", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_create_image_signature_operation.sign_operation", "registry_id", defaultTCRInstanceId),

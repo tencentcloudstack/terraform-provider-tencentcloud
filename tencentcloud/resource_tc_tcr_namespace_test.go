@@ -32,7 +32,6 @@ func init() {
 			})
 
 			instances, err := service.DescribeTCRInstances(ctx, "", filters)
-
 			if err != nil {
 				return err
 			}
@@ -44,7 +43,6 @@ func init() {
 			instanceId := *instances[0].RegistryId
 
 			namespaces, err := service.DescribeTCRNameSpaces(ctx, instanceId, "test")
-
 			if err != nil {
 				return err
 			}
@@ -65,7 +63,7 @@ func init() {
 	})
 }
 
-func TestAccTencentCloudTCRNamespace_basic_and_update(t *testing.T) {
+func TestAccTencentCloudTcrNamespace_basic_and_update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -73,7 +71,8 @@ func TestAccTencentCloudTCRNamespace_basic_and_update(t *testing.T) {
 		CheckDestroy: testAccCheckTCRNamespaceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTCRNamespace_basic,
+				Config:    testAccTCRNamespace_basic,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_public", "true"),

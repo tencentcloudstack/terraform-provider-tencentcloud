@@ -21,7 +21,8 @@ func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckTCRTagRetentionRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTcrTagRetentionRule,
+				Config:    testAccTcrTagRetentionRule,
+				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTCRTagRetentionRuleExists("tencentcloud_tcr_tag_retention_rule.my_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "id"),
