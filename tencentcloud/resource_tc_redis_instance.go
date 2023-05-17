@@ -888,8 +888,8 @@ func resourceTencentCloudRedisInstanceUpdate(d *schema.ResourceData, meta interf
 
 		request := redis.NewModifyNetworkConfigRequest()
 		request.InstanceId = &id
-		var operation string
-		operation = d.Get("operation_network").(string)
+
+		operation := d.Get("operation_network").(string)
 		request.Operation = &operation
 
 		switch operation {
