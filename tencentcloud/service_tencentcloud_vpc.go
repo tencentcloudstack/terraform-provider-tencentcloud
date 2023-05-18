@@ -6389,3 +6389,56 @@ func (me *VpcService) DescribeVpcBandwidthPackageBillUsageByFilter(ctx context.C
 
 	return
 }
+
+func (me *VpcService) DescribeVpcTrafficPackageById(ctx context.Context, trafficPackageId string) (TrafficPackage *vpc.TrafficPackage, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeTrafficPackagesRequest()
+	request.TrafficPackageIds = []*string{&trafficPackageId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeTrafficPackages(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.TrafficPackageSet) < 1 {
+		return
+	}
+
+	TrafficPackage = response.Response.TrafficPackageSet[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcTrafficPackageById(ctx context.Context, trafficPackageId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteTrafficPackagesRequest()
+	request.TrafficPackageIds = []*string{&trafficPackageId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DeleteTrafficPackages(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

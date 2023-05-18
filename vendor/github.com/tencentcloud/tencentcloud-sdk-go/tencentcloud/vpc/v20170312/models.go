@@ -1003,6 +1003,9 @@ type AssignPrivateIpAddressesRequestParams struct {
 
 	// 新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
+
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 }
 
 type AssignPrivateIpAddressesRequest struct {
@@ -1016,6 +1019,9 @@ type AssignPrivateIpAddressesRequest struct {
 
 	// 新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
+
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 }
 
 func (r *AssignPrivateIpAddressesRequest) ToJsonString() string {
@@ -1033,6 +1039,7 @@ func (r *AssignPrivateIpAddressesRequest) FromJsonString(s string) error {
 	delete(f, "NetworkInterfaceId")
 	delete(f, "PrivateIpAddresses")
 	delete(f, "SecondaryPrivateIpAddressCount")
+	delete(f, "QosLevel")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AssignPrivateIpAddressesRequest has unknown keys!", "")
 	}
@@ -2727,6 +2734,9 @@ type CreateAndAttachNetworkInterfaceRequestParams struct {
 	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
+
 	// 指定绑定的安全组，例如：['sg-1dd51d']。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 
@@ -2761,6 +2771,9 @@ type CreateAndAttachNetworkInterfaceRequest struct {
 	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
+
 	// 指定绑定的安全组，例如：['sg-1dd51d']。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 
@@ -2792,6 +2805,7 @@ func (r *CreateAndAttachNetworkInterfaceRequest) FromJsonString(s string) error 
 	delete(f, "InstanceId")
 	delete(f, "PrivateIpAddresses")
 	delete(f, "SecondaryPrivateIpAddressCount")
+	delete(f, "QosLevel")
 	delete(f, "SecurityGroupIds")
 	delete(f, "NetworkInterfaceDescription")
 	delete(f, "Tags")
@@ -4439,6 +4453,9 @@ type CreateNetworkInterfaceRequestParams struct {
 	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
+
 	// 指定绑定的安全组，例如：['sg-1dd51d']。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 
@@ -4470,6 +4487,9 @@ type CreateNetworkInterfaceRequest struct {
 	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
+
 	// 指定绑定的安全组，例如：['sg-1dd51d']。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 
@@ -4500,6 +4520,7 @@ func (r *CreateNetworkInterfaceRequest) FromJsonString(s string) error {
 	delete(f, "SubnetId")
 	delete(f, "NetworkInterfaceDescription")
 	delete(f, "SecondaryPrivateIpAddressCount")
+	delete(f, "QosLevel")
 	delete(f, "SecurityGroupIds")
 	delete(f, "PrivateIpAddresses")
 	delete(f, "Tags")
@@ -6911,7 +6932,7 @@ func (r *DeleteDirectConnectGatewayResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteFlowLogRequestParams struct {
-	// 流日志唯一ID
+	// 流日志唯一ID。
 	FlowLogId *string `json:"FlowLogId,omitempty" name:"FlowLogId"`
 
 	// 私用网络ID或者统一ID，建议使用统一ID，删除云联网流日志时，可不填，其他流日志类型必填。
@@ -6921,7 +6942,7 @@ type DeleteFlowLogRequestParams struct {
 type DeleteFlowLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 流日志唯一ID
+	// 流日志唯一ID。
 	FlowLogId *string `json:"FlowLogId,omitempty" name:"FlowLogId"`
 
 	// 私用网络ID或者统一ID，建议使用统一ID，删除云联网流日志时，可不填，其他流日志类型必填。
@@ -8052,6 +8073,60 @@ func (r *DeleteTemplateMemberResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteTemplateMemberResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteTrafficPackagesRequestParams struct {
+	// 待删除的流量包唯一ID数组
+	TrafficPackageIds []*string `json:"TrafficPackageIds,omitempty" name:"TrafficPackageIds"`
+}
+
+type DeleteTrafficPackagesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 待删除的流量包唯一ID数组
+	TrafficPackageIds []*string `json:"TrafficPackageIds,omitempty" name:"TrafficPackageIds"`
+}
+
+func (r *DeleteTrafficPackagesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteTrafficPackagesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TrafficPackageIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteTrafficPackagesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteTrafficPackagesResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteTrafficPackagesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteTrafficPackagesResponseParams `json:"Response"`
+}
+
+func (r *DeleteTrafficPackagesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteTrafficPackagesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10538,20 +10613,20 @@ func (r *DescribeDirectConnectGatewaysResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeFlowLogRequestParams struct {
-	// 私用网络ID或者统一ID，建议使用统一ID
+	// 私用网络ID或者统一ID，建议使用统一ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 流日志唯一ID
+	// 流日志唯一ID。
 	FlowLogId *string `json:"FlowLogId,omitempty" name:"FlowLogId"`
 }
 
 type DescribeFlowLogRequest struct {
 	*tchttp.BaseRequest
 	
-	// 私用网络ID或者统一ID，建议使用统一ID
+	// 私用网络ID或者统一ID，建议使用统一ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 流日志唯一ID
+	// 流日志唯一ID。
 	FlowLogId *string `json:"FlowLogId,omitempty" name:"FlowLogId"`
 }
 
@@ -10577,7 +10652,7 @@ func (r *DescribeFlowLogRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeFlowLogResponseParams struct {
-	// 流日志信息
+	// 流日志信息。
 	FlowLog []*FlowLog `json:"FlowLog,omitempty" name:"FlowLog"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -13542,6 +13617,63 @@ func (r *DescribeSnapshotPoliciesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeSubnetResourceDashboardRequestParams struct {
+	// Subnet实例ID，例如：subnet-f1xjkw1b。
+	SubnetIds []*string `json:"SubnetIds,omitempty" name:"SubnetIds"`
+}
+
+type DescribeSubnetResourceDashboardRequest struct {
+	*tchttp.BaseRequest
+	
+	// Subnet实例ID，例如：subnet-f1xjkw1b。
+	SubnetIds []*string `json:"SubnetIds,omitempty" name:"SubnetIds"`
+}
+
+func (r *DescribeSubnetResourceDashboardRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSubnetResourceDashboardRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "SubnetIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSubnetResourceDashboardRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSubnetResourceDashboardResponseParams struct {
+	// 资源统计结果。
+	ResourceStatisticsSet []*ResourceStatistics `json:"ResourceStatisticsSet,omitempty" name:"ResourceStatisticsSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeSubnetResourceDashboardResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSubnetResourceDashboardResponseParams `json:"Response"`
+}
+
+func (r *DescribeSubnetResourceDashboardResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSubnetResourceDashboardResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeSubnetsRequestParams struct {
 	// 子网实例ID查询。形如：subnet-pxir56ns。每次请求的实例的上限为100。参数不支持同时指定SubnetIds和Filters。
 	SubnetIds []*string `json:"SubnetIds,omitempty" name:"SubnetIds"`
@@ -13932,6 +14064,96 @@ func (r *DescribeTrafficPackagesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTrafficPackagesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeUsedIpAddressRequestParams struct {
+	// VPC实例ID。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网实例ID。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 查询是否占用的ip列表
+	IpAddresses []*string `json:"IpAddresses,omitempty" name:"IpAddresses"`
+
+	// 偏移量。
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 请求对象个数。
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+type DescribeUsedIpAddressRequest struct {
+	*tchttp.BaseRequest
+	
+	// VPC实例ID。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网实例ID。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 查询是否占用的ip列表
+	IpAddresses []*string `json:"IpAddresses,omitempty" name:"IpAddresses"`
+
+	// 偏移量。
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 请求对象个数。
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeUsedIpAddressRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUsedIpAddressRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "VpcId")
+	delete(f, "SubnetId")
+	delete(f, "IpAddresses")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeUsedIpAddressRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeUsedIpAddressResponseParams struct {
+	// 占用ip地址的资源信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IpAddressStates []*IpAddressStates `json:"IpAddressStates,omitempty" name:"IpAddressStates"`
+
+	// 返回占用资源的个数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeUsedIpAddressResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeUsedIpAddressResponseParams `json:"Response"`
+}
+
+func (r *DescribeUsedIpAddressResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeUsedIpAddressResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -17103,7 +17325,7 @@ type Filter struct {
 	// 属性名称, 若存在多个Filter时，Filter间的关系为逻辑与（AND）关系。
 	Name *string `json:"Name,omitempty" name:"Name"`
 
-	// 属性值, 若同一个Filter存在多个Values，同一Filter下Values间的关系为逻辑或（OR）关系。
+	// 属性值, 若同一个Filter存在多个Values，同一Filter下Values间的关系为逻辑或（OR）关系。当值类型为布尔类型时，可直接取值为字符串"TRUE"或 "FALSE"。
 	Values []*string `json:"Values,omitempty" name:"Values"`
 }
 
@@ -17928,6 +18150,23 @@ type Ip6Translator struct {
 
 	// IPV6转换规则信息
 	IP6RuleSet []*Ip6Rule `json:"IP6RuleSet,omitempty" name:"IP6RuleSet"`
+}
+
+type IpAddressStates struct {
+	// VPC实例ID。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网实例ID。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// IP地址。
+	IpAddress *string `json:"IpAddress,omitempty" name:"IpAddress"`
+
+	// 资源类型
+	ResourceType *string `json:"ResourceType,omitempty" name:"ResourceType"`
+
+	// 资源ID
+	ResourceId *string `json:"ResourceId,omitempty" name:"ResourceId"`
 }
 
 type IpField struct {
@@ -19211,32 +19450,32 @@ func (r *ModifyDirectConnectGatewayAttributeResponse) FromJsonString(s string) e
 
 // Predefined struct for user
 type ModifyFlowLogAttributeRequestParams struct {
-	// 流日志唯一ID
+	// 流日志唯一ID。
 	FlowLogId *string `json:"FlowLogId,omitempty" name:"FlowLogId"`
 
 	// 私用网络ID或者统一ID，建议使用统一ID，修改云联网流日志属性时可不填，其他流日志类型必填。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 流日志实例名字
+	// 流日志实例名字。
 	FlowLogName *string `json:"FlowLogName,omitempty" name:"FlowLogName"`
 
-	// 流日志实例描述
+	// 流日志实例描述。
 	FlowLogDescription *string `json:"FlowLogDescription,omitempty" name:"FlowLogDescription"`
 }
 
 type ModifyFlowLogAttributeRequest struct {
 	*tchttp.BaseRequest
 	
-	// 流日志唯一ID
+	// 流日志唯一ID。
 	FlowLogId *string `json:"FlowLogId,omitempty" name:"FlowLogId"`
 
 	// 私用网络ID或者统一ID，建议使用统一ID，修改云联网流日志属性时可不填，其他流日志类型必填。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// 流日志实例名字
+	// 流日志实例名字。
 	FlowLogName *string `json:"FlowLogName,omitempty" name:"FlowLogName"`
 
-	// 流日志实例描述
+	// 流日志实例描述。
 	FlowLogDescription *string `json:"FlowLogDescription,omitempty" name:"FlowLogDescription"`
 }
 
@@ -22143,7 +22382,7 @@ type Price struct {
 	// 实例价格。
 	InstancePrice *ItemPrice `json:"InstancePrice,omitempty" name:"InstancePrice"`
 
-	// 网络价格。
+	// 带宽价格。
 	BandwidthPrice *ItemPrice `json:"BandwidthPrice,omitempty" name:"BandwidthPrice"`
 }
 
@@ -22172,6 +22411,9 @@ type PrivateIpAddressSpecification struct {
 	// DELETING：删除中
 	// AVAILABLE：可用的
 	State *string `json:"State,omitempty" name:"State"`
+
+	// IP服务质量等级，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 }
 
 type ProductQuota struct {
@@ -23302,7 +23544,7 @@ type ResetVpnGatewayInternetMaxBandwidthRequestParams struct {
 	// VPN网关实例ID。
 	VpnGatewayId *string `json:"VpnGatewayId,omitempty" name:"VpnGatewayId"`
 
-	// 公网带宽设置。可选带宽规格：5, 10, 20, 50, 100；单位：Mbps。
+	// 新规格公网带宽设置。可选带宽规格：5, 10, 20, 50, 100, 200, 500, 1000；单位：Mbps。VPN网关带宽目前仅支持部分带宽范围内升降配，如【5,100】Mbps和【200,1000】Mbps，在各自带宽范围内可提升配额，跨范围提升配额和降配暂不支持。
 	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitempty" name:"InternetMaxBandwidthOut"`
 }
 
@@ -23312,7 +23554,7 @@ type ResetVpnGatewayInternetMaxBandwidthRequest struct {
 	// VPN网关实例ID。
 	VpnGatewayId *string `json:"VpnGatewayId,omitempty" name:"VpnGatewayId"`
 
-	// 公网带宽设置。可选带宽规格：5, 10, 20, 50, 100；单位：Mbps。
+	// 新规格公网带宽设置。可选带宽规格：5, 10, 20, 50, 100, 200, 500, 1000；单位：Mbps。VPN网关带宽目前仅支持部分带宽范围内升降配，如【5,100】Mbps和【200,1000】Mbps，在各自带宽范围内可提升配额，跨范围提升配额和降配暂不支持。
 	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitempty" name:"InternetMaxBandwidthOut"`
 }
 
@@ -23497,6 +23739,31 @@ type ResourceDashboard struct {
 	RouteTable *uint64 `json:"RouteTable,omitempty" name:"RouteTable"`
 }
 
+type ResourceStatistics struct {
+	// Vpc实例ID，例如：vpc-f1xjkw1b。
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网实例ID，例如：subnet-bthucmmy。
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 当前已使用的IP总数。
+	Ip *uint64 `json:"Ip,omitempty" name:"Ip"`
+
+	// 资源统计信息。
+	ResourceStatisticsItemSet []*ResourceStatisticsItem `json:"ResourceStatisticsItemSet,omitempty" name:"ResourceStatisticsItemSet"`
+}
+
+type ResourceStatisticsItem struct {
+	// 资源类型。比如，CVM，ENI等。
+	ResourceType *string `json:"ResourceType,omitempty" name:"ResourceType"`
+
+	// 资源名称。
+	ResourceName *string `json:"ResourceName,omitempty" name:"ResourceName"`
+
+	// 资源个数。
+	ResourceCount *uint64 `json:"ResourceCount,omitempty" name:"ResourceCount"`
+}
+
 // Predefined struct for user
 type ResumeSnapshotInstanceRequestParams struct {
 	// 快照策略Id。
@@ -23636,6 +23903,7 @@ type Route struct {
 	GatewayType *string `json:"GatewayType,omitempty" name:"GatewayType"`
 
 	// 下一跳地址，这里只需要指定不同下一跳类型的网关ID，系统会自动匹配到下一跳地址。
+	// 特殊说明：GatewayType为NORMAL_CVM时，GatewayId填写实例的内网IP。
 	GatewayId *string `json:"GatewayId,omitempty" name:"GatewayId"`
 
 	// 路由策略ID。IPv4路由策略ID是有意义的值，IPv6路由策略是无意义的值0。后续建议完全使用字符串唯一ID `RouteItemId`操作路由策略。
@@ -23789,6 +24057,15 @@ type SecurityGroupLimitSet struct {
 
 	// 实例关联安全组数
 	InstanceSecurityGroupLimit *uint64 `json:"InstanceSecurityGroupLimit,omitempty" name:"InstanceSecurityGroupLimit"`
+
+	// 安全组展开后的规则数限制
+	SecurityGroupExtendedPolicyLimit *uint64 `json:"SecurityGroupExtendedPolicyLimit,omitempty" name:"SecurityGroupExtendedPolicyLimit"`
+
+	// 被引用的安全组关联CVM、ENI的实例配额
+	SecurityGroupReferedCvmAndEniLimit *uint64 `json:"SecurityGroupReferedCvmAndEniLimit,omitempty" name:"SecurityGroupReferedCvmAndEniLimit"`
+
+	// 被引用的安全组关联数据库、LB等服务实例配额
+	SecurityGroupReferedSvcLimit *uint64 `json:"SecurityGroupReferedSvcLimit,omitempty" name:"SecurityGroupReferedSvcLimit"`
 }
 
 type SecurityGroupPolicy struct {
@@ -23805,7 +24082,7 @@ type SecurityGroupPolicy struct {
 	// 协议端口ID或者协议端口组ID。ServiceTemplate和Protocol+Port互斥。
 	ServiceTemplate *ServiceTemplateSpecification `json:"ServiceTemplate,omitempty" name:"ServiceTemplate"`
 
-	// 网段或IP(互斥)。
+	// 网段或IP(互斥)，特殊说明：0.0.0.0/n 都会映射为0.0.0.0/0。
 	CidrBlock *string `json:"CidrBlock,omitempty" name:"CidrBlock"`
 
 	// 网段或IPv6(互斥)。
@@ -23829,12 +24106,15 @@ type SecurityGroupPolicy struct {
 
 type SecurityGroupPolicySet struct {
 	// 安全组规则当前版本。用户每次更新安全规则版本会自动加1，防止更新的路由规则已过期，不填不考虑冲突。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Version *string `json:"Version,omitempty" name:"Version"`
 
 	// 出站规则。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Egress []*SecurityGroupPolicy `json:"Egress,omitempty" name:"Egress"`
 
 	// 入站规则。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Ingress []*SecurityGroupPolicy `json:"Ingress,omitempty" name:"Ingress"`
 }
 

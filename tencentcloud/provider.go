@@ -726,6 +726,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_vpc
 	tencentcloud_vpc_acl
 	tencentcloud_vpc_acl_attachment
+	tencentcloud_vpc_traffic_package
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule
@@ -1643,6 +1644,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_acl_attachment":                          resourceTencentCloudVpcAclAttachment(),
 			"tencentcloud_vpc_bandwidth_package":                       resourceTencentCloudVpcBandwidthPackage(),
 			"tencentcloud_vpc_bandwidth_package_attachment":            resourceTencentCloudVpcBandwidthPackageAttachment(),
+			"tencentcloud_vpc_traffic_package":                         resourceTencentCloudVpcTrafficPackage(),
 			"tencentcloud_ipv6_address_bandwidth":                      resourceTencentCloudIpv6AddressBandwidth(),
 			"tencentcloud_subnet":                                      resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                 resourceTencentCloudRouteEntry(),
