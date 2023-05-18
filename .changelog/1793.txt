@@ -43,5 +43,6 @@ tencentcloud_mysql_switch_record
 ```
 
 ```release-note:new-data-source
-```tencentcloud_mysql_user_task
+tencentcloud_mysql_user_task
+```
 
