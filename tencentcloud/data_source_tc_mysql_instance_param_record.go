@@ -56,7 +56,7 @@ func dataSourceTencentCloudMysqlInstanceParamRecord() *schema.Resource {
 							Computed:    true,
 							Description: "The modified value of the parameter.",
 						},
-						"is_sucess": {
+						"is_success": {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "Whether the parameter is modified successfully.",
@@ -129,7 +129,7 @@ func dataSourceTencentCloudMysqlInstanceParamRecordRead(d *schema.ResourceData, 
 			}
 
 			if paramRecord.IsSucess != nil {
-				paramRecordMap["is_sucess"] = paramRecord.IsSucess
+				paramRecordMap["is_success"] = paramRecord.IsSucess
 			}
 
 			if paramRecord.ModifyTime != nil {

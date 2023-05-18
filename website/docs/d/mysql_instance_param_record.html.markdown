@@ -32,7 +32,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `items` - Parameter modification record.
   * `instance_id` - instance id.
-  * `is_sucess` - Whether the parameter is modified successfully.
+  * `is_success` - Whether the parameter is modified successfully.
   * `modify_time` - Change the time.
   * `new_value` - The modified value of the parameter.
   * `old_value` - The value of the parameter before modification.

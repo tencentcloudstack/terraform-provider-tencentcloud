@@ -21,7 +21,7 @@ func TestAccTencentCloudMysqlInstanceParamRecordDataSource_basic(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_mysql_instance_param_record.instance_param_record"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_instance_param_record.instance_param_record", "id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_instance_param_record.instance_param_record", "items.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_instance_param_record.instance_param_record", "items.0.is_sucess"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_instance_param_record.instance_param_record", "items.0.is_success"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_instance_param_record.instance_param_record", "items.0.modify_time"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_instance_param_record.instance_param_record", "items.0.new_value"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_mysql_instance_param_record.instance_param_record", "items.0.old_value"),
