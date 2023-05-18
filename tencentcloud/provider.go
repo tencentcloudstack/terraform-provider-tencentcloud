@@ -604,6 +604,13 @@ SQLServer
 	tencentcloud_sqlserver_backup_upload_size
 	tencentcloud_sqlserver_cross_region_zone
 	tencentcloud_sqlserver_db_charsets
+	tencentcloud_sqlserver_instance_param_records
+	tencentcloud_sqlserver_project_security_groups
+	tencentcloud_sqlserver_regions
+	tencentcloud_sqlserver_rollback_time
+	tencentcloud_sqlserver_slowlogs
+	tencentcloud_sqlserver_upload_backup_info
+	tencentcloud_sqlserver_upload_incremental_info
 
   Resource
 	tencentcloud_sqlserver_instance
@@ -1491,6 +1498,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_vod_snapshot_by_time_offset_templates":     dataSourceTencentCloudVodSnapshotByTimeOffsetTemplates(),
 			"tencentcloud_vod_super_player_configs":                  dataSourceTencentCloudVodSuperPlayerConfigs(),
 			"tencentcloud_sqlserver_publish_subscribes":              dataSourceTencentSqlserverPublishSubscribes(),
+			"tencentcloud_sqlserver_instance_param_records":          dataSourceTencentCloudSqlserverInstanceParamRecords(),
+			"tencentcloud_sqlserver_project_security_groups":         dataSourceTencentCloudSqlserverProjectSecurityGroups(),
+			"tencentcloud_sqlserver_regions":                         dataSourceTencentCloudSqlserverRegions(),
+			"tencentcloud_sqlserver_rollback_time":                   dataSourceTencentCloudSqlserverRollbackTime(),
+			"tencentcloud_sqlserver_slowlogs":                        dataSourceTencentCloudSqlserverSlowlogs(),
+			"tencentcloud_sqlserver_upload_backup_info":              dataSourceTencentCloudSqlserverUploadBackupInfo(),
+			"tencentcloud_sqlserver_upload_incremental_info":         dataSourceTencentCloudSqlserverUploadIncrementalInfo(),
 			"tencentcloud_api_gateway_usage_plans":                   dataSourceTencentCloudAPIGatewayUsagePlans(),
 			"tencentcloud_api_gateway_ip_strategies":                 dataSourceTencentCloudAPIGatewayIpStrategy(),
 			"tencentcloud_api_gateway_customer_domains":              dataSourceTencentCloudAPIGatewayCustomerDomains(),

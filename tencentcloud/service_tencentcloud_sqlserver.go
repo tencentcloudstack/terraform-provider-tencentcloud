@@ -2310,3 +2310,302 @@ func (me *SqlserverService) DescribeSqlserverDatasourceDBCharsetsByFilter(ctx co
 	databaseCharsets = response.Response.DatabaseCharsets
 	return
 }
+
+func (me *SqlserverService) DescribeSqlserverInstanceParamRecordsByFilter(ctx context.Context, param map[string]interface{}) (instanceParamRecords []*sqlserver.ParamRecord, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeInstanceParamRecordsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSqlserverClient().DescribeInstanceParamRecords(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+
+		instanceParamRecords = append(instanceParamRecords, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverProjectSecurityGroupsByFilter(ctx context.Context, param map[string]interface{}) (projectSecurityGroups []*sqlserver.SecurityGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeProjectSecurityGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ProjectId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeProjectSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.SecurityGroupSet) < 1 {
+		return
+	}
+
+	projectSecurityGroups = append(projectSecurityGroups, response.Response.SecurityGroupSet...)
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverDatasourceRegionsByFilter(ctx context.Context) (datasourceRegions []*sqlserver.RegionInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeRegionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeRegions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || *response.Response.TotalCount == 0 {
+		return
+	}
+
+	datasourceRegions = response.Response.RegionSet
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverRollbackTimeByFilter(ctx context.Context, param map[string]interface{}) (rollbackTime []*sqlserver.DbRollbackTimeInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeRollbackTimeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "DBs" {
+			request.DBs = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeRollbackTime(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Details) < 1 {
+		return
+	}
+
+	rollbackTime = response.Response.Details
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverSlowlogsByFilter(ctx context.Context, param map[string]interface{}) (slowlogs []*sqlserver.SlowlogInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeSlowlogsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		limit  int64  = 100
+		offset uint64 = 0
+	)
+
+	for {
+		request.Limit = &limit
+		request.Offset = &offset
+		response, err := me.client.UseSqlserverClient().DescribeSlowlogs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || *response.Response.TotalCount == 0 {
+			break
+		}
+
+		slowlogs = append(slowlogs, response.Response.Slowlogs...)
+		if len(response.Response.Slowlogs) < int(limit) {
+			break
+		}
+
+		offset += uint64(limit)
+	}
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverUploadBackupInfoByFilter(ctx context.Context, param map[string]interface{}) (uploadBackupInfo *sqlserver.DescribeUploadBackupInfoResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeUploadBackupInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "BackupMigrationId" {
+			request.BackupMigrationId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeUploadBackupInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	uploadBackupInfo = response.Response
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverUploadIncrementalInfoByFilter(ctx context.Context, param map[string]interface{}) (uploadIncrementalInfo *sqlserver.DescribeUploadIncrementalInfoResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeUploadIncrementalInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "BackupMigrationId" {
+			request.BackupMigrationId = v.(*string)
+		}
+		if k == "IncrementalMigrationId" {
+			request.IncrementalMigrationId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeUploadIncrementalInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	uploadIncrementalInfo = response.Response
+
+	return
+}

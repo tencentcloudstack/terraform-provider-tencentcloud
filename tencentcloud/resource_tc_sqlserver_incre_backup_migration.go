@@ -66,6 +66,11 @@ func resourceTencentCloudSqlserverIncreBackupMigration() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Whether restoration is required. No: not required. Yes: required. Not required by default.",
 			},
+			"incremental_migration_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Incremental import task ID.",
+			},
 		},
 	}
 }
@@ -170,6 +175,8 @@ func resourceTencentCloudSqlserverIncreBackupMigrationRead(d *schema.ResourceDat
 	}
 
 	_ = d.Set("backup_migration_id", backupMigrationId)
+
+	_ = d.Set("incremental_migration_id", incrementalMigrationId)
 
 	return nil
 }

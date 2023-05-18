@@ -36,7 +36,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `incremental_migration_id` - Incremental import task ID.
 
 
 ## Import
