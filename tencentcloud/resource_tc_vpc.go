@@ -19,10 +19,10 @@ resource "tencentcloud_vpc" "foo" {
 Using Assistant CIDR
 ```hcl
 resource "tencentcloud_vpc" "foo" {
-  name         = "ci-temp-test-updated"
-  cidr_block   = "10.0.0.0/16"
-  is_multicast = false
-  assistant_cidr = ["172.16.0.0/24"]
+  name            = "ci-temp-test-updated"
+  cidr_block      = "10.0.0.0/16"
+  is_multicast    = false
+  assistant_cidrs = ["172.16.0.0/24"]
 
   tags = {
     "test" = "test"
