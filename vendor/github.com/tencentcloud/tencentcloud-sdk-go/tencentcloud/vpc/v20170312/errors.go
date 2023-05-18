@@ -251,6 +251,9 @@ const (
 	// 该Tag不合法。
 	INVALIDPARAMETERVALUE_INVALIDTAG = "InvalidParameterValue.InvalidTag"
 
+	// 未查询到该IPv6翻译器。
+	INVALIDPARAMETERVALUE_IP6TRANSLATORNOTFOUND = "InvalidParameterValue.Ip6TranslatorNotFound"
+
 	// 负载均衡实例已经绑定了EIP。
 	INVALIDPARAMETERVALUE_LBALREADYBINDEIP = "InvalidParameterValue.LBAlreadyBindEip"
 
@@ -398,6 +401,12 @@ const (
 	// 该流量包ID不合法。
 	INVALIDPARAMETERVALUE_TRAFFICPACKAGEIDMALFORMED = "InvalidParameterValue.TrafficPackageIdMalformed"
 
+	// 未查询到此流量包。
+	INVALIDPARAMETERVALUE_TRAFFICPACKAGENOTFOUND = "InvalidParameterValue.TrafficPackageNotFound"
+
+	// 指定的流量包不支持此操作
+	INVALIDPARAMETERVALUE_TRAFFICPACKAGENOTSUPPORTED = "InvalidParameterValue.TrafficPackageNotSupported"
+
 	// 该可用区不可用。
 	INVALIDPARAMETERVALUE_UNAVAILABLEZONE = "InvalidParameterValue.UnavailableZone"
 
@@ -461,6 +470,9 @@ const (
 	// 租户申请的弹性IP超过上限。
 	LIMITEXCEEDED_ADDRESSQUOTALIMITEXCEEDED = "LimitExceeded.AddressQuotaLimitExceeded"
 
+	// 实例关联快照策略数量达到上限。
+	LIMITEXCEEDED_ATTACHEDSNAPSHOTPOLICYEXCEEDED = "LimitExceeded.AttachedSnapshotPolicyExceeded"
+
 	// 带宽包配额超过限制。
 	LIMITEXCEEDED_BANDWIDTHPACKAGEQUOTA = "LimitExceeded.BandwidthPackageQuota"
 
@@ -469,6 +481,9 @@ const (
 
 	// VPC分配网段数量达到上限。
 	LIMITEXCEEDED_CIDRBLOCK = "LimitExceeded.CidrBlock"
+
+	// 当前实例关联的云联网数量达到上限。
+	LIMITEXCEEDED_CURRENTINSTANCEATTACHEDCCNINSTANCES = "LimitExceeded.CurrentInstanceAttachedCcnInstances"
 
 	// 租户每天申请的弹性IP超过上限。
 	LIMITEXCEEDED_DAILYALLOCATEADDRESSQUOTALIMITEXCEEDED = "LimitExceeded.DailyAllocateAddressQuotaLimitExceeded"
@@ -638,6 +653,9 @@ const (
 	// 实例已关联CCN。
 	UNSUPPORTEDOPERATION_CCNATTACHED = "UnsupportedOperation.CcnAttached"
 
+	// 云联网实例不支持跨账号关联。
+	UNSUPPORTEDOPERATION_CCNCROSSACCOUNT = "UnsupportedOperation.CcnCrossAccount"
+
 	// 当前云联网有流日志，不支持删除。
 	UNSUPPORTEDOPERATION_CCNHASFLOWLOG = "UnsupportedOperation.CcnHasFlowLog"
 
@@ -785,11 +803,17 @@ const (
 	// NAT网关的公网IP不存在。
 	UNSUPPORTEDOPERATION_NATGATEWAYEIPNOTEXISTS = "UnsupportedOperation.NatGatewayEipNotExists"
 
+	// NAT网关存在未解绑的IP。
+	UNSUPPORTEDOPERATION_NATGATEWAYHADEIPUNASSOCIATE = "UnsupportedOperation.NatGatewayHadEipUnassociate"
+
 	// SNAT/DNAT转换规则所指定的内网IP已绑定了其他的规则，无法重复绑定。
 	UNSUPPORTEDOPERATION_NATGATEWAYRULEPIPEXISTS = "UnsupportedOperation.NatGatewayRulePipExists"
 
 	// SNAT转换规则的内网IP需为虚拟机上网卡所用的IP。
 	UNSUPPORTEDOPERATION_NATGATEWAYSNATPIPNEEDVM = "UnsupportedOperation.NatGatewaySnatPipNeedVm"
+
+	// NAT网关的SNAT转换规则不存在。
+	UNSUPPORTEDOPERATION_NATGATEWAYSNATRULENOTEXISTS = "UnsupportedOperation.NatGatewaySnatRuleNotExists"
 
 	// NAT网关类型不支持SNAT规则。
 	UNSUPPORTEDOPERATION_NATGATEWAYTYPENOTSUPPORTSNAT = "UnsupportedOperation.NatGatewayTypeNotSupportSNAT"
