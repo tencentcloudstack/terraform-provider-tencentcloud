@@ -1395,6 +1395,77 @@ func (me *ClbService) ModifyTargetGroupInstancesWeight(ctx context.Context, targ
 	return nil
 }
 
+func (me *ClbService) ModifyTargetGroupInstancesPort(ctx context.Context, targetGroupId, bindIp string, port, weight uint64) (errRet error) {
+	var instance = clb.TargetGroupInstance{
+		BindIP: &bindIp,
+		Port:   &port,
+		Weight: &weight,
+	}
+	request := clb.NewModifyTargetGroupInstancesPortRequest()
+	request.TargetGroupId = &targetGroupId
+	request.TargetGroupInstances = []*clb.TargetGroupInstance{&instance}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseClbClient().ModifyTargetGroupInstancesPort(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// not use
+func (me *ClbService) ModifyTargetPort(ctx context.Context, loadBalancerId, listenerId string, target clb.Target, newPort int64) (errRet error) {
+	request := clb.NewModifyTargetPortRequest()
+	request.LoadBalancerId = &loadBalancerId
+	request.ListenerId = &listenerId
+	request.Targets = []*clb.Target{&target}
+	request.NewPort = &newPort
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseClbClient().ModifyTargetPort(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// not use
+func (me *ClbService) ModifyTargetWeight(ctx context.Context, loadBalancerId, listenerId string, target clb.Target, weight int64) (errRet error) {
+	request := clb.NewModifyTargetWeightRequest()
+	request.LoadBalancerId = &loadBalancerId
+	request.ListenerId = &listenerId
+	request.Targets = []*clb.Target{&target}
+	request.Weight = &weight
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, err := me.client.UseClbClient().ModifyTargetWeight(request)
+		if err != nil {
+			return retryError(err, InternalError)
+		}
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (me *ClbService) DescribeClbLogSet(ctx context.Context) (logSetId string, healthId string, errRet error) {
 	logId := getLogId(ctx)
 	request := clb.NewDescribeClsLogSetRequest()
