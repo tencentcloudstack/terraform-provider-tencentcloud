@@ -16,7 +16,7 @@ import (
 )
 
 func init() {
-	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_token
+	// go test -v ./tencentcloud -sweep=ap-shanghai -sweep-run=tencentcloud_tcr_token
 	resource.AddTestSweepers("tencentcloud_tcr_token", &resource.Sweeper{
 		Name: "tencentcloud_tcr_token",
 		F: func(r string) error {

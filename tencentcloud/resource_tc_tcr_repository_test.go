@@ -19,7 +19,7 @@ func init() {
 	})
 }
 
-// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_repository
+// go test -v ./tencentcloud -sweep=ap-shanghai -sweep-run=tencentcloud_tcr_repository
 func testSweepTCRRepository(r string) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)

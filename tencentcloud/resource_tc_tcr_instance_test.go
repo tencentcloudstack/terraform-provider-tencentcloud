@@ -16,7 +16,7 @@ import (
 )
 
 func init() {
-	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_instance
+	// go test -v ./tencentcloud -sweep=ap-shanghai -sweep-run=tencentcloud_tcr_instance
 	resource.AddTestSweepers("tencentcloud_tcr_instance", &resource.Sweeper{
 		Name: "tencentcloud_tcr_instance",
 		F: func(r string) error {
@@ -373,7 +373,7 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
   delete_bucket = true
 
   replications {
-    region_id = 4 # ap-shanghai
+    region_id = 1 # ap-guangzhou
   }
   replications {
     region_id = 5 # ap-hongkong
