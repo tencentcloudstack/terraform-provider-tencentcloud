@@ -12,7 +12,9 @@ description: |-
 Provide a resource to create a kubernetes cluster.
 
 ~> **NOTE:** To use the custom Kubernetes component startup parameter function (parameter `extra_args`), you need to submit a ticket for application.
-~> **NOTE:**  We recommend the usage of one cluster without worker config + node pool to manage cluster and nodes. It's a more flexible way than manage worker config with tencentcloud_kubernetes_cluster, tencentcloud_kubernetes_scale_worker or exist node management of `tencentcloud_kubernetes_attachment`. Cause some unchangeable parameters of `worker_config` may cause the whole cluster resource `force new`.
+
+~> **NOTE:** We recommend this usage that uses the `tencentcloud_kubernetes_cluster` resource to create a cluster without any `worker_config`, then adds nodes by the `tencentcloud_kubernetes_node_pool` resource.
+It's more flexible than managing worker config directly with `tencentcloud_kubernetes_cluster`, `tencentcloud_kubernetes_scale_worker`, or existing node management of `tencentcloud_kubernetes_attachment`. The reason is that `worker_config` is unchangeable and may cause the whole cluster resource to `ForceNew`.
 
 ## Example Usage
 
@@ -75,7 +77,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id = "skey-11112222"
+    key_ids = "skey-11112222"
   }
 
   worker_config {
@@ -98,7 +100,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id       = "skey-11112222"
+    key_ids       = "skey-11112222"
     cam_role_name = "CVM_QcsRole"
   }
 
@@ -169,7 +171,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id = "skey-11112222"
+    key_ids = "skey-11112222"
   }
 
   worker_config {
@@ -193,7 +195,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
     cam_role_name = "CVM_QcsRole"
-    keys_id       = "skey-11112222"
+    key_ids       = "skey-11112222"
   }
 
   labels = {
@@ -262,7 +264,7 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     enhanced_monitor_service   = false
     user_data                  = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id = "skey-11112222"
+    key_ids = "skey-11112222"
   }
 
   extension_addon {
@@ -345,7 +347,7 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id = "skey-11112222"
+    key_ids = "skey-11112222"
   }
 
   node_pool_global_config {
@@ -415,7 +417,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id = "skey-11112222"
+    key_ids = "skey-11112222"
   }
 
   labels = {

@@ -184,6 +184,330 @@ type Address struct {
 }
 
 // Predefined struct for user
+type AdjustCdbProxyAddressRequestParams struct {
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 权重分配模式，
+	// 系统自动分配："system"， 自定义："custom"
+	WeightMode *string `json:"WeightMode,omitempty" name:"WeightMode"`
+
+	// 是否开启延迟剔除，取值："true" | "false"
+	IsKickOut *bool `json:"IsKickOut,omitempty" name:"IsKickOut"`
+
+	// 最小保留数量，最小取值：0
+	MinCount *uint64 `json:"MinCount,omitempty" name:"MinCount"`
+
+	// 延迟剔除阈值，最小取值：0
+	MaxDelay *uint64 `json:"MaxDelay,omitempty" name:"MaxDelay"`
+
+	// 是否开启故障转移，取值："true" | "false"
+	FailOver *bool `json:"FailOver,omitempty" name:"FailOver"`
+
+	// 是否自动添加RO，取值："true" | "false"
+	AutoAddRo *bool `json:"AutoAddRo,omitempty" name:"AutoAddRo"`
+
+	// 是否是只读，取值："true" | "false"
+	ReadOnly *bool `json:"ReadOnly,omitempty" name:"ReadOnly"`
+
+	// 代理组地址ID
+	ProxyAddressId *string `json:"ProxyAddressId,omitempty" name:"ProxyAddressId"`
+
+	// 是否开启事务分离，取值："true" | "false"
+	TransSplit *bool `json:"TransSplit,omitempty" name:"TransSplit"`
+
+	// 是否开启连接池
+	ConnectionPool *bool `json:"ConnectionPool,omitempty" name:"ConnectionPool"`
+
+	// 读写权重分配。如果 WeightMode 传的是 system ，则传入的权重不生效，由系统分配默认权重。
+	ProxyAllocation []*ProxyAllocation `json:"ProxyAllocation,omitempty" name:"ProxyAllocation"`
+}
+
+type AdjustCdbProxyAddressRequest struct {
+	*tchttp.BaseRequest
+	
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 权重分配模式，
+	// 系统自动分配："system"， 自定义："custom"
+	WeightMode *string `json:"WeightMode,omitempty" name:"WeightMode"`
+
+	// 是否开启延迟剔除，取值："true" | "false"
+	IsKickOut *bool `json:"IsKickOut,omitempty" name:"IsKickOut"`
+
+	// 最小保留数量，最小取值：0
+	MinCount *uint64 `json:"MinCount,omitempty" name:"MinCount"`
+
+	// 延迟剔除阈值，最小取值：0
+	MaxDelay *uint64 `json:"MaxDelay,omitempty" name:"MaxDelay"`
+
+	// 是否开启故障转移，取值："true" | "false"
+	FailOver *bool `json:"FailOver,omitempty" name:"FailOver"`
+
+	// 是否自动添加RO，取值："true" | "false"
+	AutoAddRo *bool `json:"AutoAddRo,omitempty" name:"AutoAddRo"`
+
+	// 是否是只读，取值："true" | "false"
+	ReadOnly *bool `json:"ReadOnly,omitempty" name:"ReadOnly"`
+
+	// 代理组地址ID
+	ProxyAddressId *string `json:"ProxyAddressId,omitempty" name:"ProxyAddressId"`
+
+	// 是否开启事务分离，取值："true" | "false"
+	TransSplit *bool `json:"TransSplit,omitempty" name:"TransSplit"`
+
+	// 是否开启连接池
+	ConnectionPool *bool `json:"ConnectionPool,omitempty" name:"ConnectionPool"`
+
+	// 读写权重分配。如果 WeightMode 传的是 system ，则传入的权重不生效，由系统分配默认权重。
+	ProxyAllocation []*ProxyAllocation `json:"ProxyAllocation,omitempty" name:"ProxyAllocation"`
+}
+
+func (r *AdjustCdbProxyAddressRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AdjustCdbProxyAddressRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ProxyGroupId")
+	delete(f, "WeightMode")
+	delete(f, "IsKickOut")
+	delete(f, "MinCount")
+	delete(f, "MaxDelay")
+	delete(f, "FailOver")
+	delete(f, "AutoAddRo")
+	delete(f, "ReadOnly")
+	delete(f, "ProxyAddressId")
+	delete(f, "TransSplit")
+	delete(f, "ConnectionPool")
+	delete(f, "ProxyAllocation")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AdjustCdbProxyAddressRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AdjustCdbProxyAddressResponseParams struct {
+	// 异步任务ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AsyncRequestId *string `json:"AsyncRequestId,omitempty" name:"AsyncRequestId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type AdjustCdbProxyAddressResponse struct {
+	*tchttp.BaseResponse
+	Response *AdjustCdbProxyAddressResponseParams `json:"Response"`
+}
+
+func (r *AdjustCdbProxyAddressResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AdjustCdbProxyAddressResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AdjustCdbProxyRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 节点规格配置
+	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitempty" name:"ProxyNodeCustom"`
+
+	// 重新负载均衡：auto(自动),manual(手动)
+	ReloadBalance *string `json:"ReloadBalance,omitempty" name:"ReloadBalance"`
+
+	// 升级切换时间：nowTime(升级完成时),timeWindow(维护时间内)
+	UpgradeTime *string `json:"UpgradeTime,omitempty" name:"UpgradeTime"`
+}
+
+type AdjustCdbProxyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 节点规格配置
+	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitempty" name:"ProxyNodeCustom"`
+
+	// 重新负载均衡：auto(自动),manual(手动)
+	ReloadBalance *string `json:"ReloadBalance,omitempty" name:"ReloadBalance"`
+
+	// 升级切换时间：nowTime(升级完成时),timeWindow(维护时间内)
+	UpgradeTime *string `json:"UpgradeTime,omitempty" name:"UpgradeTime"`
+}
+
+func (r *AdjustCdbProxyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AdjustCdbProxyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ProxyGroupId")
+	delete(f, "ProxyNodeCustom")
+	delete(f, "ReloadBalance")
+	delete(f, "UpgradeTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AdjustCdbProxyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AdjustCdbProxyResponseParams struct {
+	// 异步任务ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AsyncRequestId *string `json:"AsyncRequestId,omitempty" name:"AsyncRequestId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type AdjustCdbProxyResponse struct {
+	*tchttp.BaseResponse
+	Response *AdjustCdbProxyResponseParams `json:"Response"`
+}
+
+func (r *AdjustCdbProxyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AdjustCdbProxyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+type AggregationCondition struct {
+	// 聚合字段。目前仅支持host-源IP、user-用户名、dbName-数据库名、sqlType-sql类型。
+	AggregationField *string `json:"AggregationField,omitempty" name:"AggregationField"`
+
+	// 偏移量。
+	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 该聚合字段下要返回聚合桶的数量，最大100。
+	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+// Predefined struct for user
+type AnalyzeAuditLogsRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 要分析的日志开始时间，格式为："2023-02-16 00:00:20"。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 要分析的日志结束时间，格式为："2023-02-16 00:10:20"。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 聚合维度的排序条件。
+	AggregationConditions []*AggregationCondition `json:"AggregationConditions,omitempty" name:"AggregationConditions"`
+
+	// 该过滤条件下的审计日志结果集作为分析日志。
+	AuditLogFilter *AuditLogFilter `json:"AuditLogFilter,omitempty" name:"AuditLogFilter"`
+}
+
+type AnalyzeAuditLogsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 要分析的日志开始时间，格式为："2023-02-16 00:00:20"。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 要分析的日志结束时间，格式为："2023-02-16 00:10:20"。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 聚合维度的排序条件。
+	AggregationConditions []*AggregationCondition `json:"AggregationConditions,omitempty" name:"AggregationConditions"`
+
+	// 该过滤条件下的审计日志结果集作为分析日志。
+	AuditLogFilter *AuditLogFilter `json:"AuditLogFilter,omitempty" name:"AuditLogFilter"`
+}
+
+func (r *AnalyzeAuditLogsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AnalyzeAuditLogsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "AggregationConditions")
+	delete(f, "AuditLogFilter")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AnalyzeAuditLogsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type AnalyzeAuditLogsResponseParams struct {
+	// 返回的聚合桶信息集
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Items []*AuditLogAggregationResult `json:"Items,omitempty" name:"Items"`
+
+	// 扫描的日志条数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type AnalyzeAuditLogsResponse struct {
+	*tchttp.BaseResponse
+	Response *AnalyzeAuditLogsResponseParams `json:"Response"`
+}
+
+func (r *AnalyzeAuditLogsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *AnalyzeAuditLogsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type AssociateSecurityGroupsRequestParams struct {
 	// 安全组 ID。
 	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
@@ -269,6 +593,16 @@ type AuditFilter struct {
 	Value *string `json:"Value,omitempty" name:"Value"`
 }
 
+type AuditLogAggregationResult struct {
+	// 聚合维度
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AggregationField *string `json:"AggregationField,omitempty" name:"AggregationField"`
+
+	// 聚合桶的结果集
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Buckets []*Bucket `json:"Buckets,omitempty" name:"Buckets"`
+}
+
 type AuditLogFile struct {
 	// 审计日志文件名称
 	FileName *string `json:"FileName,omitempty" name:"FileName"`
@@ -328,6 +662,33 @@ type AuditLogFilter struct {
 
 	// SQL 语句。支持传递多个sql语句。
 	Sqls []*string `json:"Sqls,omitempty" name:"Sqls"`
+
+	// 影响行数，格式为M-N，例如：10-200
+	AffectRowsSection *string `json:"AffectRowsSection,omitempty" name:"AffectRowsSection"`
+
+	// 返回行数，格式为M-N，例如：10-200
+	SentRowsSection *string `json:"SentRowsSection,omitempty" name:"SentRowsSection"`
+
+	// 执行时间，格式为M-N，例如：10-200
+	ExecTimeSection *string `json:"ExecTimeSection,omitempty" name:"ExecTimeSection"`
+
+	// 锁等待时间，格式为M-N，例如：10-200
+	LockWaitTimeSection *string `json:"LockWaitTimeSection,omitempty" name:"LockWaitTimeSection"`
+
+	// IO等待时间，格式为M-N，例如：10-200
+	IoWaitTimeSection *string `json:"IoWaitTimeSection,omitempty" name:"IoWaitTimeSection"`
+
+	// 事务持续时间，格式为M-N，例如：10-200
+	TransactionLivingTimeSection *string `json:"TransactionLivingTimeSection,omitempty" name:"TransactionLivingTimeSection"`
+
+	// 线程ID
+	ThreadId []*string `json:"ThreadId,omitempty" name:"ThreadId"`
+
+	// 返回行数。表示筛选返回行数大于该值的审计日志。
+	SentRows *int64 `json:"SentRows,omitempty" name:"SentRows"`
+
+	// mysql错误码
+	ErrCode []*int64 `json:"ErrCode,omitempty" name:"ErrCode"`
 }
 
 type AuditPolicy struct {
@@ -389,6 +750,12 @@ type AuditRule struct {
 
 	// 是否开启全审计。
 	AuditAll *bool `json:"AuditAll,omitempty" name:"AuditAll"`
+}
+
+type AuditRuleFilters struct {
+	// 单条审计规则。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RuleFilters []*RuleFilters `json:"RuleFilters,omitempty" name:"RuleFilters"`
 }
 
 type BackupConfig struct {
@@ -645,6 +1012,15 @@ type BinlogInfo struct {
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 }
 
+type Bucket struct {
+	// 无
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// key值出现的次数。
+	Count *uint64 `json:"Count,omitempty" name:"Count"`
+}
+
 type CdbRegionSellConf struct {
 	// 地域中文名称
 	RegionName *string `json:"RegionName,omitempty" name:"RegionName"`
@@ -809,6 +1185,12 @@ type CloneItem struct {
 
 	// 任务状态，包括以下状态：initial,running,wait_complete,success,failed
 	TaskStatus *string `json:"TaskStatus,omitempty" name:"TaskStatus"`
+
+	// 克隆实例所在地域Id
+	NewRegionId *int64 `json:"NewRegionId,omitempty" name:"NewRegionId"`
+
+	// 源实例所在地域Id
+	SrcRegionId *int64 `json:"SrcRegionId,omitempty" name:"SrcRegionId"`
 }
 
 // Predefined struct for user
@@ -876,6 +1258,67 @@ func (r *CloseCDBProxyResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CloseCDBProxyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CloseCdbProxyAddressRequestParams struct {
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 代理组地址ID
+	ProxyAddressId *string `json:"ProxyAddressId,omitempty" name:"ProxyAddressId"`
+}
+
+type CloseCdbProxyAddressRequest struct {
+	*tchttp.BaseRequest
+	
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 代理组地址ID
+	ProxyAddressId *string `json:"ProxyAddressId,omitempty" name:"ProxyAddressId"`
+}
+
+func (r *CloseCdbProxyAddressRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloseCdbProxyAddressRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ProxyGroupId")
+	delete(f, "ProxyAddressId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CloseCdbProxyAddressRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CloseCdbProxyAddressResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CloseCdbProxyAddressResponse struct {
+	*tchttp.BaseResponse
+	Response *CloseCdbProxyAddressResponseParams `json:"Response"`
+}
+
+func (r *CloseCdbProxyAddressResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CloseCdbProxyAddressResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -971,6 +1414,15 @@ type CommonTimeWindow struct {
 
 	// 周日的时间窗，格式如： 02:00-06:00
 	Sunday *string `json:"Sunday,omitempty" name:"Sunday"`
+
+	// 常规备份保留策略，weekly-按周备份，monthly-按月备份，默认为weekly
+	BackupPeriodStrategy *string `json:"BackupPeriodStrategy,omitempty" name:"BackupPeriodStrategy"`
+
+	// 如果设置为按月备份，需填入每月具体备份日期，相邻备份天数不得超过两天。例[1,4,7,9,11,14,17,19,22,25,28,30,31]
+	Days []*int64 `json:"Days,omitempty" name:"Days"`
+
+	// 月度备份时间窗，BackupPeriodStrategy为monthly时必填。格式如： 02:00-06:00
+	BackupPeriodTime *string `json:"BackupPeriodTime,omitempty" name:"BackupPeriodTime"`
 }
 
 type ConnectionPoolInfo struct {
@@ -1345,7 +1797,7 @@ type CreateBackupRequestParams struct {
 	// 实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 目标备份方法，可选的值：logical - 逻辑冷备，physical - 物理冷备。
+	// 目标备份方法，可选的值：logical - 逻辑冷备，physical - 物理冷备，snapshot - 快照备份。基础版实例仅支持快照备份。
 	BackupMethod *string `json:"BackupMethod,omitempty" name:"BackupMethod"`
 
 	// 需要备份的库表信息，如果不设置该参数，则默认整实例备份。在 BackupMethod=logical 逻辑备份中才可设置该参数。指定的库表必须存在，否则可能导致备份失败。
@@ -1362,7 +1814,7 @@ type CreateBackupRequest struct {
 	// 实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 目标备份方法，可选的值：logical - 逻辑冷备，physical - 物理冷备。
+	// 目标备份方法，可选的值：logical - 逻辑冷备，physical - 物理冷备，snapshot - 快照备份。基础版实例仅支持快照备份。
 	BackupMethod *string `json:"BackupMethod,omitempty" name:"BackupMethod"`
 
 	// 需要备份的库表信息，如果不设置该参数，则默认整实例备份。在 BackupMethod=logical 逻辑备份中才可设置该参数。指定的库表必须存在，否则可能导致备份失败。
@@ -1417,6 +1869,278 @@ func (r *CreateBackupResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateBackupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCdbProxyAddressRequestParams struct {
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 权重分配模式，
+	// 系统自动分配："system"， 自定义："custom"
+	WeightMode *string `json:"WeightMode,omitempty" name:"WeightMode"`
+
+	// 是否开启延迟剔除，取值："true" | "false"
+	IsKickOut *bool `json:"IsKickOut,omitempty" name:"IsKickOut"`
+
+	// 最小保留数量，最小取值：0
+	MinCount *uint64 `json:"MinCount,omitempty" name:"MinCount"`
+
+	// 延迟剔除阈值，最小取值：0
+	MaxDelay *uint64 `json:"MaxDelay,omitempty" name:"MaxDelay"`
+
+	// 是否开启故障转移，取值："true" | "false"
+	FailOver *bool `json:"FailOver,omitempty" name:"FailOver"`
+
+	// 是否自动添加RO，取值："true" | "false"
+	AutoAddRo *bool `json:"AutoAddRo,omitempty" name:"AutoAddRo"`
+
+	// 是否是只读，取值："true" | "false"
+	ReadOnly *bool `json:"ReadOnly,omitempty" name:"ReadOnly"`
+
+	// 是否开启事务分离，取值："true" | "false"
+	TransSplit *bool `json:"TransSplit,omitempty" name:"TransSplit"`
+
+	// 读写权重分配
+	ProxyAllocation []*ProxyAllocation `json:"ProxyAllocation,omitempty" name:"ProxyAllocation"`
+
+	// 私有网络ID
+	UniqVpcId *string `json:"UniqVpcId,omitempty" name:"UniqVpcId"`
+
+	// 私有子网ID
+	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
+
+	// 是否开启连接池
+	ConnectionPool *bool `json:"ConnectionPool,omitempty" name:"ConnectionPool"`
+
+	// 描述
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+
+	// IP地址
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// 端口
+	VPort *uint64 `json:"VPort,omitempty" name:"VPort"`
+
+	// 安全组
+	SecurityGroup []*string `json:"SecurityGroup,omitempty" name:"SecurityGroup"`
+}
+
+type CreateCdbProxyAddressRequest struct {
+	*tchttp.BaseRequest
+	
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 权重分配模式，
+	// 系统自动分配："system"， 自定义："custom"
+	WeightMode *string `json:"WeightMode,omitempty" name:"WeightMode"`
+
+	// 是否开启延迟剔除，取值："true" | "false"
+	IsKickOut *bool `json:"IsKickOut,omitempty" name:"IsKickOut"`
+
+	// 最小保留数量，最小取值：0
+	MinCount *uint64 `json:"MinCount,omitempty" name:"MinCount"`
+
+	// 延迟剔除阈值，最小取值：0
+	MaxDelay *uint64 `json:"MaxDelay,omitempty" name:"MaxDelay"`
+
+	// 是否开启故障转移，取值："true" | "false"
+	FailOver *bool `json:"FailOver,omitempty" name:"FailOver"`
+
+	// 是否自动添加RO，取值："true" | "false"
+	AutoAddRo *bool `json:"AutoAddRo,omitempty" name:"AutoAddRo"`
+
+	// 是否是只读，取值："true" | "false"
+	ReadOnly *bool `json:"ReadOnly,omitempty" name:"ReadOnly"`
+
+	// 是否开启事务分离，取值："true" | "false"
+	TransSplit *bool `json:"TransSplit,omitempty" name:"TransSplit"`
+
+	// 读写权重分配
+	ProxyAllocation []*ProxyAllocation `json:"ProxyAllocation,omitempty" name:"ProxyAllocation"`
+
+	// 私有网络ID
+	UniqVpcId *string `json:"UniqVpcId,omitempty" name:"UniqVpcId"`
+
+	// 私有子网ID
+	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
+
+	// 是否开启连接池
+	ConnectionPool *bool `json:"ConnectionPool,omitempty" name:"ConnectionPool"`
+
+	// 描述
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+
+	// IP地址
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// 端口
+	VPort *uint64 `json:"VPort,omitempty" name:"VPort"`
+
+	// 安全组
+	SecurityGroup []*string `json:"SecurityGroup,omitempty" name:"SecurityGroup"`
+}
+
+func (r *CreateCdbProxyAddressRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCdbProxyAddressRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ProxyGroupId")
+	delete(f, "WeightMode")
+	delete(f, "IsKickOut")
+	delete(f, "MinCount")
+	delete(f, "MaxDelay")
+	delete(f, "FailOver")
+	delete(f, "AutoAddRo")
+	delete(f, "ReadOnly")
+	delete(f, "TransSplit")
+	delete(f, "ProxyAllocation")
+	delete(f, "UniqVpcId")
+	delete(f, "UniqSubnetId")
+	delete(f, "ConnectionPool")
+	delete(f, "Desc")
+	delete(f, "Vip")
+	delete(f, "VPort")
+	delete(f, "SecurityGroup")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCdbProxyAddressRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCdbProxyAddressResponseParams struct {
+	// 异步任务ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AsyncRequestId *string `json:"AsyncRequestId,omitempty" name:"AsyncRequestId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateCdbProxyAddressResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCdbProxyAddressResponseParams `json:"Response"`
+}
+
+func (r *CreateCdbProxyAddressResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCdbProxyAddressResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCdbProxyRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 私有网络ID
+	UniqVpcId *string `json:"UniqVpcId,omitempty" name:"UniqVpcId"`
+
+	// 私有子网ID
+	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
+
+	// 节点规格配置
+	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitempty" name:"ProxyNodeCustom"`
+
+	// 安全组
+	SecurityGroup []*string `json:"SecurityGroup,omitempty" name:"SecurityGroup"`
+
+	// 描述
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+
+	// 连接池阈值
+	ConnectionPoolLimit *uint64 `json:"ConnectionPoolLimit,omitempty" name:"ConnectionPoolLimit"`
+}
+
+type CreateCdbProxyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 私有网络ID
+	UniqVpcId *string `json:"UniqVpcId,omitempty" name:"UniqVpcId"`
+
+	// 私有子网ID
+	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
+
+	// 节点规格配置
+	ProxyNodeCustom []*ProxyNodeCustom `json:"ProxyNodeCustom,omitempty" name:"ProxyNodeCustom"`
+
+	// 安全组
+	SecurityGroup []*string `json:"SecurityGroup,omitempty" name:"SecurityGroup"`
+
+	// 描述
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+
+	// 连接池阈值
+	ConnectionPoolLimit *uint64 `json:"ConnectionPoolLimit,omitempty" name:"ConnectionPoolLimit"`
+}
+
+func (r *CreateCdbProxyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCdbProxyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "UniqVpcId")
+	delete(f, "UniqSubnetId")
+	delete(f, "ProxyNodeCustom")
+	delete(f, "SecurityGroup")
+	delete(f, "Desc")
+	delete(f, "ConnectionPoolLimit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCdbProxyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCdbProxyResponseParams struct {
+	// 异步任务ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AsyncRequestId *string `json:"AsyncRequestId,omitempty" name:"AsyncRequestId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateCdbProxyResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCdbProxyResponseParams `json:"Response"`
+}
+
+func (r *CreateCdbProxyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCdbProxyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1729,7 +2453,7 @@ type CreateDBInstanceHourRequestParams struct {
 	// 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用[查询子网列表](/document/api/215/15784)。
 	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
 
-	// 项目 ID，不填为默认项目。请使用 [查询项目列表](https://cloud.tencent.com/document/product/378/4400) 接口获取项目 ID。
+	// 项目 ID，不填为默认项目。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 可用区信息，该参数缺省时，系统会自动选择一个可用区，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的可用区。
@@ -1741,7 +2465,7 @@ type CreateDBInstanceHourRequestParams struct {
 	// 实例类型，默认为 master，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。
 	InstanceRole *string `json:"InstanceRole,omitempty" name:"InstanceRole"`
 
-	// 主实例的可用区信息，购买灾备、RO实例时必填。
+	// 主实例地域信息，购买灾备、RO实例时，该字段必填。
 	MasterRegion *string `json:"MasterRegion,omitempty" name:"MasterRegion"`
 
 	// 自定义端口，端口支持范围：[ 1024-65535 ] 。
@@ -1844,7 +2568,7 @@ type CreateDBInstanceHourRequest struct {
 	// 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用[查询子网列表](/document/api/215/15784)。
 	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
 
-	// 项目 ID，不填为默认项目。请使用 [查询项目列表](https://cloud.tencent.com/document/product/378/4400) 接口获取项目 ID。
+	// 项目 ID，不填为默认项目。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 可用区信息，该参数缺省时，系统会自动选择一个可用区，请使用 [获取云数据库可售卖规格](https://cloud.tencent.com/document/api/236/17229) 接口获取可创建的可用区。
@@ -1856,7 +2580,7 @@ type CreateDBInstanceHourRequest struct {
 	// 实例类型，默认为 master，支持值包括：master - 表示主实例，dr - 表示灾备实例，ro - 表示只读实例。
 	InstanceRole *string `json:"InstanceRole,omitempty" name:"InstanceRole"`
 
-	// 主实例的可用区信息，购买灾备、RO实例时必填。
+	// 主实例地域信息，购买灾备、RO实例时，该字段必填。
 	MasterRegion *string `json:"MasterRegion,omitempty" name:"MasterRegion"`
 
 	// 自定义端口，端口支持范围：[ 1024-65535 ] 。
@@ -2044,7 +2768,7 @@ type CreateDBInstanceRequestParams struct {
 	// 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 [查询子网列表](/document/api/215/15784)。
 	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
 
-	// 项目 ID，不填为默认项目。请使用 [查询项目列表](https://cloud.tencent.com/document/product/378/4400) 接口获取项目 ID。购买只读实例和灾备实例时，项目 ID 默认和主实例保持一致。
+	// 项目 ID，不填为默认项目。购买只读实例和灾备实例时，项目 ID 默认和主实例保持一致。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 自定义端口，端口支持范围：[ 1024-65535 ]。
@@ -2162,7 +2886,7 @@ type CreateDBInstanceRequest struct {
 	// 私有网络下的子网 ID，如果设置了 UniqVpcId，则 UniqSubnetId 必填，请使用 [查询子网列表](/document/api/215/15784)。
 	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
 
-	// 项目 ID，不填为默认项目。请使用 [查询项目列表](https://cloud.tencent.com/document/product/378/4400) 接口获取项目 ID。购买只读实例和灾备实例时，项目 ID 默认和主实例保持一致。
+	// 项目 ID，不填为默认项目。购买只读实例和灾备实例时，项目 ID 默认和主实例保持一致。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 自定义端口，端口支持范围：[ 1024-65535 ]。
@@ -3909,6 +4633,70 @@ func (r *DescribeBackupDatabasesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeBackupDecryptionKeyRequestParams struct {
+	// 实例ID，格式如：cdb-XXXX。与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例的备份ID，可通过DescribeBackups接口查询备份的ID。
+	BackupId *int64 `json:"BackupId,omitempty" name:"BackupId"`
+}
+
+type DescribeBackupDecryptionKeyRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID，格式如：cdb-XXXX。与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例的备份ID，可通过DescribeBackups接口查询备份的ID。
+	BackupId *int64 `json:"BackupId,omitempty" name:"BackupId"`
+}
+
+func (r *DescribeBackupDecryptionKeyRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupDecryptionKeyRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "BackupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBackupDecryptionKeyRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBackupDecryptionKeyResponseParams struct {
+	// 备份文件解密密钥。
+	DecryptionKey *string `json:"DecryptionKey,omitempty" name:"DecryptionKey"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeBackupDecryptionKeyResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBackupDecryptionKeyResponseParams `json:"Response"`
+}
+
+func (r *DescribeBackupDecryptionKeyResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupDecryptionKeyResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeBackupDownloadRestrictionRequestParams struct {
 
 }
@@ -3971,6 +4759,63 @@ func (r *DescribeBackupDownloadRestrictionResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeBackupDownloadRestrictionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBackupEncryptionStatusRequestParams struct {
+	// 实例ID，格式如：cdb-XXXX。与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type DescribeBackupEncryptionStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID，格式如：cdb-XXXX。与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeBackupEncryptionStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupEncryptionStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBackupEncryptionStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBackupEncryptionStatusResponseParams struct {
+	// 实例是否开启了物理备份加密。可能的值有 on, off 。
+	EncryptionStatus *string `json:"EncryptionStatus,omitempty" name:"EncryptionStatus"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeBackupEncryptionStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBackupEncryptionStatusResponseParams `json:"Response"`
+}
+
+func (r *DescribeBackupEncryptionStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupEncryptionStatusResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4551,6 +5396,75 @@ func (r *DescribeCDBProxyResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeCdbProxyInfoRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+}
+
+type DescribeCdbProxyInfoRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+}
+
+func (r *DescribeCdbProxyInfoRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCdbProxyInfoRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ProxyGroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCdbProxyInfoRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCdbProxyInfoResponseParams struct {
+	// 代理组数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Count *uint64 `json:"Count,omitempty" name:"Count"`
+
+	// 代理组信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProxyInfos []*ProxyGroupInfo `json:"ProxyInfos,omitempty" name:"ProxyInfos"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeCdbProxyInfoResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCdbProxyInfoResponseParams `json:"Response"`
+}
+
+func (r *DescribeCdbProxyInfoResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCdbProxyInfoResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeCdbZoneConfigRequestParams struct {
 
 }
@@ -4675,6 +5589,87 @@ func (r *DescribeCloneListResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeCloneListResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBFeaturesRequestParams struct {
+	// 实例 ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type DescribeDBFeaturesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID，格式如：cdb-c1nl9rpv 或者 cdbro-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeDBFeaturesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBFeaturesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBFeaturesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBFeaturesResponseParams struct {
+	// 是否支持数据库审计功能。
+	IsSupportAudit *bool `json:"IsSupportAudit,omitempty" name:"IsSupportAudit"`
+
+	// 开启审计是否需要升级内核版本。
+	AuditNeedUpgrade *bool `json:"AuditNeedUpgrade,omitempty" name:"AuditNeedUpgrade"`
+
+	// 是否支持数据库加密功能。
+	IsSupportEncryption *bool `json:"IsSupportEncryption,omitempty" name:"IsSupportEncryption"`
+
+	// 开启加密是否需要升级内核版本。
+	EncryptionNeedUpgrade *bool `json:"EncryptionNeedUpgrade,omitempty" name:"EncryptionNeedUpgrade"`
+
+	// 是否为异地只读实例。
+	IsRemoteRo *bool `json:"IsRemoteRo,omitempty" name:"IsRemoteRo"`
+
+	// 主实例所在地域。
+	MasterRegion *string `json:"MasterRegion,omitempty" name:"MasterRegion"`
+
+	// 是否支持小版本升级。
+	IsSupportUpdateSubVersion *bool `json:"IsSupportUpdateSubVersion,omitempty" name:"IsSupportUpdateSubVersion"`
+
+	// 当前内核版本。
+	CurrentSubVersion *string `json:"CurrentSubVersion,omitempty" name:"CurrentSubVersion"`
+
+	// 可供升级的内核版本。
+	TargetSubVersion *string `json:"TargetSubVersion,omitempty" name:"TargetSubVersion"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeDBFeaturesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBFeaturesResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBFeaturesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBFeaturesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5091,7 +6086,7 @@ func (r *DescribeDBInstanceRebootTimeResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDBInstancesRequestParams struct {
-	// 项目 ID，可使用 [查询项目列表](https://cloud.tencent.com/document/product/378/4400) 接口查询项目 ID。
+	// 项目 ID。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 实例类型，可取值：1 - 主实例，2 - 灾备实例，3 - 只读实例。
@@ -5100,7 +6095,7 @@ type DescribeDBInstancesRequestParams struct {
 	// 实例的内网 IP 地址。
 	Vips []*string `json:"Vips,omitempty" name:"Vips"`
 
-	// 实例状态，可取值：<br>0 - 创建中<br>1 - 运行中<br>4 - 正在进行隔离操作<br>5 - 隔离中（可在回收站恢复开机）
+	// 实例状态，可取值：<br>0 - 创建中<br>1 - 运行中<br>4 - 正在进行隔离操作<br>5 - 已隔离（可在回收站恢复开机）
 	Status []*uint64 `json:"Status,omitempty" name:"Status"`
 
 	// 偏移量，默认值为 0。
@@ -5186,12 +6181,21 @@ type DescribeDBInstancesRequestParams struct {
 
 	// 标签键值
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 数据库代理 IP 。
+	ProxyVips []*string `json:"ProxyVips,omitempty" name:"ProxyVips"`
+
+	// 数据库代理 ID 。
+	ProxyIds []*string `json:"ProxyIds,omitempty" name:"ProxyIds"`
+
+	// 数据库引擎类型。
+	EngineTypes []*string `json:"EngineTypes,omitempty" name:"EngineTypes"`
 }
 
 type DescribeDBInstancesRequest struct {
 	*tchttp.BaseRequest
 	
-	// 项目 ID，可使用 [查询项目列表](https://cloud.tencent.com/document/product/378/4400) 接口查询项目 ID。
+	// 项目 ID。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 实例类型，可取值：1 - 主实例，2 - 灾备实例，3 - 只读实例。
@@ -5200,7 +6204,7 @@ type DescribeDBInstancesRequest struct {
 	// 实例的内网 IP 地址。
 	Vips []*string `json:"Vips,omitempty" name:"Vips"`
 
-	// 实例状态，可取值：<br>0 - 创建中<br>1 - 运行中<br>4 - 正在进行隔离操作<br>5 - 隔离中（可在回收站恢复开机）
+	// 实例状态，可取值：<br>0 - 创建中<br>1 - 运行中<br>4 - 正在进行隔离操作<br>5 - 已隔离（可在回收站恢复开机）
 	Status []*uint64 `json:"Status,omitempty" name:"Status"`
 
 	// 偏移量，默认值为 0。
@@ -5286,6 +6290,15 @@ type DescribeDBInstancesRequest struct {
 
 	// 标签键值
 	Tags []*Tag `json:"Tags,omitempty" name:"Tags"`
+
+	// 数据库代理 IP 。
+	ProxyVips []*string `json:"ProxyVips,omitempty" name:"ProxyVips"`
+
+	// 数据库代理 ID 。
+	ProxyIds []*string `json:"ProxyIds,omitempty" name:"ProxyIds"`
+
+	// 数据库引擎类型。
+	EngineTypes []*string `json:"EngineTypes,omitempty" name:"EngineTypes"`
 }
 
 func (r *DescribeDBInstancesRequest) ToJsonString() string {
@@ -5332,6 +6345,9 @@ func (r *DescribeDBInstancesRequest) FromJsonString(s string) error {
 	delete(f, "UniqueVpcIds")
 	delete(f, "UniqSubnetIds")
 	delete(f, "Tags")
+	delete(f, "ProxyVips")
+	delete(f, "ProxyIds")
+	delete(f, "EngineTypes")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBInstancesRequest has unknown keys!", "")
 	}
@@ -5827,21 +6843,27 @@ func (r *DescribeDatabasesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeDefaultParamsRequestParams struct {
-	// mysql版本，目前支持 ["5.1", "5.5", "5.6", "5.7"]。
+	// 引擎版本，目前支持 ["5.1", "5.5", "5.6", "5.7", "8.0"]
 	EngineVersion *string `json:"EngineVersion,omitempty" name:"EngineVersion"`
 
 	// 默认参数模板类型。支持值包括："HIGH_STABILITY" - 高稳定模板，"HIGH_PERFORMANCE" - 高性能模板。
 	TemplateType *string `json:"TemplateType,omitempty" name:"TemplateType"`
+
+	// 参数模板引擎，默认值：InnoDB
+	EngineType *string `json:"EngineType,omitempty" name:"EngineType"`
 }
 
 type DescribeDefaultParamsRequest struct {
 	*tchttp.BaseRequest
 	
-	// mysql版本，目前支持 ["5.1", "5.5", "5.6", "5.7"]。
+	// 引擎版本，目前支持 ["5.1", "5.5", "5.6", "5.7", "8.0"]
 	EngineVersion *string `json:"EngineVersion,omitempty" name:"EngineVersion"`
 
 	// 默认参数模板类型。支持值包括："HIGH_STABILITY" - 高稳定模板，"HIGH_PERFORMANCE" - 高性能模板。
 	TemplateType *string `json:"TemplateType,omitempty" name:"TemplateType"`
+
+	// 参数模板引擎，默认值：InnoDB
+	EngineType *string `json:"EngineType,omitempty" name:"EngineType"`
 }
 
 func (r *DescribeDefaultParamsRequest) ToJsonString() string {
@@ -5858,6 +6880,7 @@ func (r *DescribeDefaultParamsRequest) FromJsonString(s string) error {
 	}
 	delete(f, "EngineVersion")
 	delete(f, "TemplateType")
+	delete(f, "EngineType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDefaultParamsRequest has unknown keys!", "")
 	}
@@ -6052,10 +7075,10 @@ type DescribeErrorLogDataRequestParams struct {
 	// 实例 ID 。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 开始时间戳。
+	// 开始时间戳。例如 1585142640 。
 	StartTime *uint64 `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间戳。
+	// 结束时间戳。例如 1585142640 。
 	EndTime *uint64 `json:"EndTime,omitempty" name:"EndTime"`
 
 	// 要匹配的关键字列表，最多支持15个关键字。
@@ -6077,10 +7100,10 @@ type DescribeErrorLogDataRequest struct {
 	// 实例 ID 。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 开始时间戳。
+	// 开始时间戳。例如 1585142640 。
 	StartTime *uint64 `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间戳。
+	// 结束时间戳。例如 1585142640 。
 	EndTime *uint64 `json:"EndTime,omitempty" name:"EndTime"`
 
 	// 要匹配的关键字列表，最多支持15个关键字。
@@ -6717,6 +7740,92 @@ func (r *DescribeProxyCustomConfResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeProxySupportParamRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type DescribeProxySupportParamRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeProxySupportParamRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeProxySupportParamRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProxySupportParamRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeProxySupportParamResponseParams struct {
+	// 支持最大代理版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProxyVersion *string `json:"ProxyVersion,omitempty" name:"ProxyVersion"`
+
+	// 是否支持连接池
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportPool *bool `json:"SupportPool,omitempty" name:"SupportPool"`
+
+	// 连接池最小值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PoolMin *uint64 `json:"PoolMin,omitempty" name:"PoolMin"`
+
+	// 连接池最大值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PoolMax *uint64 `json:"PoolMax,omitempty" name:"PoolMax"`
+
+	// 是否支持事务拆分
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportTransSplit *bool `json:"SupportTransSplit,omitempty" name:"SupportTransSplit"`
+
+	// 支持连接池的最小代理版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportPoolMinVersion *string `json:"SupportPoolMinVersion,omitempty" name:"SupportPoolMinVersion"`
+
+	// 支持事务拆分的最小代理版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportTransSplitMinVersion *string `json:"SupportTransSplitMinVersion,omitempty" name:"SupportTransSplitMinVersion"`
+
+	// 是否支持设置只读
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportReadOnly *bool `json:"SupportReadOnly,omitempty" name:"SupportReadOnly"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeProxySupportParamResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeProxySupportParamResponseParams `json:"Response"`
+}
+
+func (r *DescribeProxySupportParamResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeProxySupportParamResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeRemoteBackupConfigRequestParams struct {
 	// 实例 ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -6913,6 +8022,12 @@ func (r *DescribeRoMinScaleResponse) FromJsonString(s string) error {
 type DescribeRollbackRangeTimeRequestParams struct {
 	// 实例 ID 列表，单个实例 ID 的格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
+
+	// 克隆实例与源实例是否在同一可用区，是:"false"，否:"true"
+	IsRemoteZone *string `json:"IsRemoteZone,omitempty" name:"IsRemoteZone"`
+
+	// 克隆实例与源实例不在同一地域时需填写克隆实例所在地域，例："ap-guangzhou"
+	BackupRegion *string `json:"BackupRegion,omitempty" name:"BackupRegion"`
 }
 
 type DescribeRollbackRangeTimeRequest struct {
@@ -6920,6 +8035,12 @@ type DescribeRollbackRangeTimeRequest struct {
 	
 	// 实例 ID 列表，单个实例 ID 的格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
+
+	// 克隆实例与源实例是否在同一可用区，是:"false"，否:"true"
+	IsRemoteZone *string `json:"IsRemoteZone,omitempty" name:"IsRemoteZone"`
+
+	// 克隆实例与源实例不在同一地域时需填写克隆实例所在地域，例："ap-guangzhou"
+	BackupRegion *string `json:"BackupRegion,omitempty" name:"BackupRegion"`
 }
 
 func (r *DescribeRollbackRangeTimeRequest) ToJsonString() string {
@@ -6935,6 +8056,8 @@ func (r *DescribeRollbackRangeTimeRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "InstanceIds")
+	delete(f, "IsRemoteZone")
+	delete(f, "BackupRegion")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeRollbackRangeTimeRequest has unknown keys!", "")
 	}
@@ -7056,10 +8179,10 @@ type DescribeSlowLogDataRequestParams struct {
 	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 开始时间戳。
+	// 开始时间戳。例如 1585142640 。
 	StartTime *uint64 `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间戳。
+	// 结束时间戳。例如 1585142640 。
 	EndTime *uint64 `json:"EndTime,omitempty" name:"EndTime"`
 
 	// 客户端 Host 列表。
@@ -7093,10 +8216,10 @@ type DescribeSlowLogDataRequest struct {
 	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 开始时间戳。
+	// 开始时间戳。例如 1585142640 。
 	StartTime *uint64 `json:"StartTime,omitempty" name:"StartTime"`
 
-	// 结束时间戳。
+	// 结束时间戳。例如 1585142640 。
 	EndTime *uint64 `json:"EndTime,omitempty" name:"EndTime"`
 
 	// 客户端 Host 列表。
@@ -8210,7 +9333,7 @@ type InstanceInfo struct {
 	// 内存容量，单位为 MB
 	Memory *int64 `json:"Memory,omitempty" name:"Memory"`
 
-	// 实例状态，可能的返回值：0-创建中；1-运行中；4-隔离中；5-已隔离
+	// 实例状态，可能的返回值：0-创建中；1-运行中；4-正在进行隔离操作；5-已隔离
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
 	// 私有网络 ID，例如：51102
@@ -8339,6 +9462,9 @@ type InstanceInfo struct {
 	// 最大延迟阈值
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxDelayTime *int64 `json:"MaxDelayTime,omitempty" name:"MaxDelayTime"`
+
+	// 实例磁盘类型，仅云盘版实例才返回该值。可能的值为 CLOUD_SSD：SSD云硬盘， CLOUD_HSSD：增强型SSD云硬盘
+	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
 }
 
 type InstanceRebootTime struct {
@@ -9407,6 +10533,67 @@ func (r *ModifyBackupDownloadRestrictionResponse) FromJsonString(s string) error
 }
 
 // Predefined struct for user
+type ModifyBackupEncryptionStatusRequestParams struct {
+	// 实例ID，格式如：cdb-XXXX。与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 设置实例新增的自动物理备份文件默认加密状态。可选值为 on或者off。
+	EncryptionStatus *string `json:"EncryptionStatus,omitempty" name:"EncryptionStatus"`
+}
+
+type ModifyBackupEncryptionStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID，格式如：cdb-XXXX。与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 设置实例新增的自动物理备份文件默认加密状态。可选值为 on或者off。
+	EncryptionStatus *string `json:"EncryptionStatus,omitempty" name:"EncryptionStatus"`
+}
+
+func (r *ModifyBackupEncryptionStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyBackupEncryptionStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "EncryptionStatus")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyBackupEncryptionStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyBackupEncryptionStatusResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyBackupEncryptionStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyBackupEncryptionStatusResponseParams `json:"Response"`
+}
+
+func (r *ModifyBackupEncryptionStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyBackupEncryptionStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyCDBProxyConnectionPoolRequestParams struct {
 	// 数据库代理ID
 	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
@@ -9643,6 +10830,238 @@ func (r *ModifyCDBProxyVipVPortResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyCDBProxyVipVPortResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCdbProxyAddressDescRequestParams struct {
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 代理组地址ID
+	ProxyAddressId *string `json:"ProxyAddressId,omitempty" name:"ProxyAddressId"`
+
+	// 描述
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+}
+
+type ModifyCdbProxyAddressDescRequest struct {
+	*tchttp.BaseRequest
+	
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 代理组地址ID
+	ProxyAddressId *string `json:"ProxyAddressId,omitempty" name:"ProxyAddressId"`
+
+	// 描述
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+}
+
+func (r *ModifyCdbProxyAddressDescRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCdbProxyAddressDescRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ProxyGroupId")
+	delete(f, "ProxyAddressId")
+	delete(f, "Desc")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCdbProxyAddressDescRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCdbProxyAddressDescResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyCdbProxyAddressDescResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCdbProxyAddressDescResponseParams `json:"Response"`
+}
+
+func (r *ModifyCdbProxyAddressDescResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCdbProxyAddressDescResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCdbProxyAddressVipAndVPortRequestParams struct {
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 代理组地址ID
+	ProxyAddressId *string `json:"ProxyAddressId,omitempty" name:"ProxyAddressId"`
+
+	// 私有网络ID
+	UniqVpcId *string `json:"UniqVpcId,omitempty" name:"UniqVpcId"`
+
+	// 私有子网ID
+	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
+
+	// IP地址
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// 端口
+	VPort *uint64 `json:"VPort,omitempty" name:"VPort"`
+
+	// 旧IP地址回收时间
+	ReleaseDuration *uint64 `json:"ReleaseDuration,omitempty" name:"ReleaseDuration"`
+}
+
+type ModifyCdbProxyAddressVipAndVPortRequest struct {
+	*tchttp.BaseRequest
+	
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 代理组地址ID
+	ProxyAddressId *string `json:"ProxyAddressId,omitempty" name:"ProxyAddressId"`
+
+	// 私有网络ID
+	UniqVpcId *string `json:"UniqVpcId,omitempty" name:"UniqVpcId"`
+
+	// 私有子网ID
+	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
+
+	// IP地址
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// 端口
+	VPort *uint64 `json:"VPort,omitempty" name:"VPort"`
+
+	// 旧IP地址回收时间
+	ReleaseDuration *uint64 `json:"ReleaseDuration,omitempty" name:"ReleaseDuration"`
+}
+
+func (r *ModifyCdbProxyAddressVipAndVPortRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCdbProxyAddressVipAndVPortRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ProxyGroupId")
+	delete(f, "ProxyAddressId")
+	delete(f, "UniqVpcId")
+	delete(f, "UniqSubnetId")
+	delete(f, "Vip")
+	delete(f, "VPort")
+	delete(f, "ReleaseDuration")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCdbProxyAddressVipAndVPortRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCdbProxyAddressVipAndVPortResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyCdbProxyAddressVipAndVPortResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCdbProxyAddressVipAndVPortResponseParams `json:"Response"`
+}
+
+func (r *ModifyCdbProxyAddressVipAndVPortResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCdbProxyAddressVipAndVPortResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCdbProxyParamRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 连接池阈值
+	ConnectionPoolLimit *uint64 `json:"ConnectionPoolLimit,omitempty" name:"ConnectionPoolLimit"`
+}
+
+type ModifyCdbProxyParamRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 连接池阈值
+	ConnectionPoolLimit *uint64 `json:"ConnectionPoolLimit,omitempty" name:"ConnectionPoolLimit"`
+}
+
+func (r *ModifyCdbProxyParamRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCdbProxyParamRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ProxyGroupId")
+	delete(f, "ConnectionPoolLimit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCdbProxyParamRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCdbProxyParamResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyCdbProxyParamResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCdbProxyParamResponseParams `json:"Response"`
+}
+
+func (r *ModifyCdbProxyParamResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCdbProxyParamResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10669,6 +12088,7 @@ type OpenAuditServiceRequestParams struct {
 	// 审计日志保存时长。支持值包括：
 	// 7 - 一周
 	// 30 - 一个月；
+	// 90 - 三个月；
 	// 180 - 六个月；
 	// 365 - 一年；
 	// 1095 - 三年；
@@ -10678,11 +12098,13 @@ type OpenAuditServiceRequestParams struct {
 	// 高频审计日志保存时长。支持值包括：
 	// 7 - 一周
 	// 30 - 一个月；
-	// 180 - 六个月；
-	// 365 - 一年；
-	// 1095 - 三年；
-	// 1825 - 五年；
 	HighLogExpireDay *uint64 `json:"HighLogExpireDay,omitempty" name:"HighLogExpireDay"`
+
+	// 审计规则。同RuleTemplateIds都不填是全审计。
+	AuditRuleFilters []*AuditRuleFilters `json:"AuditRuleFilters,omitempty" name:"AuditRuleFilters"`
+
+	// 规则模版ID。同AuditRuleFilters都不填是全审计。
+	RuleTemplateIds []*string `json:"RuleTemplateIds,omitempty" name:"RuleTemplateIds"`
 }
 
 type OpenAuditServiceRequest struct {
@@ -10694,6 +12116,7 @@ type OpenAuditServiceRequest struct {
 	// 审计日志保存时长。支持值包括：
 	// 7 - 一周
 	// 30 - 一个月；
+	// 90 - 三个月；
 	// 180 - 六个月；
 	// 365 - 一年；
 	// 1095 - 三年；
@@ -10703,11 +12126,13 @@ type OpenAuditServiceRequest struct {
 	// 高频审计日志保存时长。支持值包括：
 	// 7 - 一周
 	// 30 - 一个月；
-	// 180 - 六个月；
-	// 365 - 一年；
-	// 1095 - 三年；
-	// 1825 - 五年；
 	HighLogExpireDay *uint64 `json:"HighLogExpireDay,omitempty" name:"HighLogExpireDay"`
+
+	// 审计规则。同RuleTemplateIds都不填是全审计。
+	AuditRuleFilters []*AuditRuleFilters `json:"AuditRuleFilters,omitempty" name:"AuditRuleFilters"`
+
+	// 规则模版ID。同AuditRuleFilters都不填是全审计。
+	RuleTemplateIds []*string `json:"RuleTemplateIds,omitempty" name:"RuleTemplateIds"`
 }
 
 func (r *OpenAuditServiceRequest) ToJsonString() string {
@@ -10725,6 +12150,8 @@ func (r *OpenAuditServiceRequest) FromJsonString(s string) error {
 	delete(f, "InstanceId")
 	delete(f, "LogExpireDay")
 	delete(f, "HighLogExpireDay")
+	delete(f, "AuditRuleFilters")
+	delete(f, "RuleTemplateIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OpenAuditServiceRequest has unknown keys!", "")
 	}
@@ -10750,6 +12177,74 @@ func (r *OpenAuditServiceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *OpenAuditServiceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type OpenDBInstanceEncryptionRequestParams struct {
+	// 云数据库实例 ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 用户自定义密钥ID，CMK唯一标识符。该值为空时，将使用腾讯云自动生成的密钥KMS-CDB。
+	KeyId *string `json:"KeyId,omitempty" name:"KeyId"`
+
+	// 用户自定义密钥的存储地域。如：ap-guangzhou 。KeyId不为空时，该参数必填。
+	KeyRegion *string `json:"KeyRegion,omitempty" name:"KeyRegion"`
+}
+
+type OpenDBInstanceEncryptionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 云数据库实例 ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 用户自定义密钥ID，CMK唯一标识符。该值为空时，将使用腾讯云自动生成的密钥KMS-CDB。
+	KeyId *string `json:"KeyId,omitempty" name:"KeyId"`
+
+	// 用户自定义密钥的存储地域。如：ap-guangzhou 。KeyId不为空时，该参数必填。
+	KeyRegion *string `json:"KeyRegion,omitempty" name:"KeyRegion"`
+}
+
+func (r *OpenDBInstanceEncryptionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OpenDBInstanceEncryptionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "KeyId")
+	delete(f, "KeyRegion")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "OpenDBInstanceEncryptionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type OpenDBInstanceEncryptionResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type OpenDBInstanceEncryptionResponse struct {
+	*tchttp.BaseResponse
+	Response *OpenDBInstanceEncryptionResponseParams `json:"Response"`
+}
+
+func (r *OpenDBInstanceEncryptionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *OpenDBInstanceEncryptionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10930,6 +12425,10 @@ type ParamTemplateInfo struct {
 
 	// 参数模板类型
 	TemplateType *string `json:"TemplateType,omitempty" name:"TemplateType"`
+
+	// 参数模板引擎
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EngineType *string `json:"EngineType,omitempty" name:"EngineType"`
 }
 
 type Parameter struct {
@@ -10973,6 +12472,10 @@ type ParameterDetail struct {
 
 	// 参数是公式类型时，该字段有效，表示公式类型最小值
 	MinFunc *string `json:"MinFunc,omitempty" name:"MinFunc"`
+
+	// 参数是否不支持修改
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsNotSupportEdit *bool `json:"IsNotSupportEdit,omitempty" name:"IsNotSupportEdit"`
 }
 
 type PoolConf struct {
@@ -10987,6 +12490,79 @@ type PoolConf struct {
 	// 最小可保持连接阈值：单位（秒）
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MinPoolConnectionTimeOut *int64 `json:"MinPoolConnectionTimeOut,omitempty" name:"MinPoolConnectionTimeOut"`
+}
+
+type ProxyAddress struct {
+	// 代理组地址ID
+	ProxyAddressId *string `json:"ProxyAddressId,omitempty" name:"ProxyAddressId"`
+
+	// 私有网络ID
+	UniqVpcId *string `json:"UniqVpcId,omitempty" name:"UniqVpcId"`
+
+	// 私有子网ID
+	UniqSubnetId *string `json:"UniqSubnetId,omitempty" name:"UniqSubnetId"`
+
+	// IP地址
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// 端口
+	VPort *uint64 `json:"VPort,omitempty" name:"VPort"`
+
+	// 权重分配模式；
+	// 系统自动分配："system"， 自定义："custom"
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WeightMode *string `json:"WeightMode,omitempty" name:"WeightMode"`
+
+	// 是否开启延迟剔除，取值："true" | "false"
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsKickOut *bool `json:"IsKickOut,omitempty" name:"IsKickOut"`
+
+	// 最小保留数量，最小取值：0
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MinCount *uint64 `json:"MinCount,omitempty" name:"MinCount"`
+
+	// 延迟剔除阈值，最小取值：0
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MaxDelay *uint64 `json:"MaxDelay,omitempty" name:"MaxDelay"`
+
+	// 是否自动添加RO，取值："true" | "false"
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoAddRo *bool `json:"AutoAddRo,omitempty" name:"AutoAddRo"`
+
+	// 是否是只读，取值："true" | "false"
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReadOnly *bool `json:"ReadOnly,omitempty" name:"ReadOnly"`
+
+	// 是否开启事务分离
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TransSplit *bool `json:"TransSplit,omitempty" name:"TransSplit"`
+
+	// 是否开启故障转移
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FailOver *bool `json:"FailOver,omitempty" name:"FailOver"`
+
+	// 是否开启连接池
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ConnectionPool *bool `json:"ConnectionPool,omitempty" name:"ConnectionPool"`
+
+	// 描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+
+	// 实例读权重分配
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProxyAllocation []*ProxyAllocation `json:"ProxyAllocation,omitempty" name:"ProxyAllocation"`
+}
+
+type ProxyAllocation struct {
+	// 代理节点所属地域
+	Region *string `json:"Region,omitempty" name:"Region"`
+
+	// 代理节点所属可用区
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 代理实例分布
+	ProxyInstance []*ProxyInst `json:"ProxyInstance,omitempty" name:"ProxyInstance"`
 }
 
 type ProxyGroup struct {
@@ -11011,6 +12587,47 @@ type ProxyGroup struct {
 	RWInstInfo *RWInfo `json:"RWInstInfo,omitempty" name:"RWInstInfo"`
 }
 
+type ProxyGroupInfo struct {
+	// 代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
+	// 代理版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProxyVersion *string `json:"ProxyVersion,omitempty" name:"ProxyVersion"`
+
+	// 代理支持升级版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportUpgradeProxyVersion *string `json:"SupportUpgradeProxyVersion,omitempty" name:"SupportUpgradeProxyVersion"`
+
+	// 代理状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 代理任务状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TaskStatus *string `json:"TaskStatus,omitempty" name:"TaskStatus"`
+
+	// 代理组节点信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProxyNode []*ProxyNode `json:"ProxyNode,omitempty" name:"ProxyNode"`
+
+	// 代理组地址信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProxyAddress []*ProxyAddress `json:"ProxyAddress,omitempty" name:"ProxyAddress"`
+
+	// 连接池阈值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ConnectionPoolLimit *uint64 `json:"ConnectionPoolLimit,omitempty" name:"ConnectionPoolLimit"`
+
+	// 支持创建地址
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportCreateProxyAddress *bool `json:"SupportCreateProxyAddress,omitempty" name:"SupportCreateProxyAddress"`
+
+	// 支持升级代理版本所需的cdb版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportUpgradeProxyMysqlVersion *string `json:"SupportUpgradeProxyMysqlVersion,omitempty" name:"SupportUpgradeProxyMysqlVersion"`
+}
+
 type ProxyGroups struct {
 	// 代理基本信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -11031,6 +12648,83 @@ type ProxyGroups struct {
 	// 代理路由信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RWInstInfo *RWInfos `json:"RWInstInfo,omitempty" name:"RWInstInfo"`
+}
+
+type ProxyInst struct {
+	// 实例ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+
+	// 实例类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// 实例状态，可能的返回值：0-创建中；1-运行中；4-隔离中；5-已隔离
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *int64 `json:"Status,omitempty" name:"Status"`
+
+	// 只读权重,如果权重为系统自动分配，改值不生效，只代表是否启用该实例
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Weight *uint64 `json:"Weight,omitempty" name:"Weight"`
+
+	// 实例所属地域
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Region *string `json:"Region,omitempty" name:"Region"`
+
+	// 实例所属可用区
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+}
+
+type ProxyNode struct {
+	// 代理节点ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProxyId *string `json:"ProxyId,omitempty" name:"ProxyId"`
+
+	// CPU核数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Cpu *uint64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 内存大小
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Mem *uint64 `json:"Mem,omitempty" name:"Mem"`
+
+	// 节点状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 代理节点可用区
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 代理节点地域
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Region *string `json:"Region,omitempty" name:"Region"`
+
+	// 连接数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Connection *uint64 `json:"Connection,omitempty" name:"Connection"`
+}
+
+type ProxyNodeCustom struct {
+	// 节点个数
+	NodeCount *uint64 `json:"NodeCount,omitempty" name:"NodeCount"`
+
+	// CPU核数
+	Cpu *uint64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 内存大小
+	Mem *uint64 `json:"Mem,omitempty" name:"Mem"`
+
+	// 地域
+	Region *string `json:"Region,omitempty" name:"Region"`
+
+	// 可用区
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
 }
 
 type ProxyNodeInfo struct {
@@ -11793,6 +13487,17 @@ type Rule struct {
 	// 权重
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Weight *uint64 `json:"Weight,omitempty" name:"Weight"`
+}
+
+type RuleFilters struct {
+	// 审计规则过滤条件的参数名称。可选值：host – 客户端 IP；user – 数据库账户；dbName – 数据库名称；sqlType-SQL类型；sql-sql语句；affectRows -影响行数；sentRows-返回行数；checkRows-扫描行数；execTime-执行时间。
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 审计规则过滤条件的匹配类型。可选值：INC – 包含；EXC – 不包含；EQS – 等于；NEQ – 不等于；REG-正则；GT-大于；LT-小于。
+	Compare *string `json:"Compare,omitempty" name:"Compare"`
+
+	// 审计规则过滤条件的匹配值。sqlType条件的Value需在一下选择"alter", "changeuser", "create", "delete", "drop", "execute", "insert", "login", "logout", "other", "replace", "select", "set", "update"。
+	Value []*string `json:"Value,omitempty" name:"Value"`
 }
 
 type SecurityGroup struct {
@@ -12582,106 +14287,6 @@ type TaskDetail struct {
 }
 
 // Predefined struct for user
-type UpgradeCDBProxyRequestParams struct {
-	// 实例ID
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
-
-	// 数据库代理ID
-	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
-
-	// 代理节点个数
-	ProxyCount *int64 `json:"ProxyCount,omitempty" name:"ProxyCount"`
-
-	// 代理节点核数
-	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
-
-	// 代理节点内存大小
-	Mem *int64 `json:"Mem,omitempty" name:"Mem"`
-
-	// 重新负载均衡：auto（自动），manual（手动）
-	ReloadBalance *string `json:"ReloadBalance,omitempty" name:"ReloadBalance"`
-
-	// 升级时间 nowTime（升级完成时）timeWindow（实例维护时间）
-	UpgradeTime *string `json:"UpgradeTime,omitempty" name:"UpgradeTime"`
-}
-
-type UpgradeCDBProxyRequest struct {
-	*tchttp.BaseRequest
-	
-	// 实例ID
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
-
-	// 数据库代理ID
-	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
-
-	// 代理节点个数
-	ProxyCount *int64 `json:"ProxyCount,omitempty" name:"ProxyCount"`
-
-	// 代理节点核数
-	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
-
-	// 代理节点内存大小
-	Mem *int64 `json:"Mem,omitempty" name:"Mem"`
-
-	// 重新负载均衡：auto（自动），manual（手动）
-	ReloadBalance *string `json:"ReloadBalance,omitempty" name:"ReloadBalance"`
-
-	// 升级时间 nowTime（升级完成时）timeWindow（实例维护时间）
-	UpgradeTime *string `json:"UpgradeTime,omitempty" name:"UpgradeTime"`
-}
-
-func (r *UpgradeCDBProxyRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *UpgradeCDBProxyRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "InstanceId")
-	delete(f, "ProxyGroupId")
-	delete(f, "ProxyCount")
-	delete(f, "Cpu")
-	delete(f, "Mem")
-	delete(f, "ReloadBalance")
-	delete(f, "UpgradeTime")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeCDBProxyRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type UpgradeCDBProxyResponseParams struct {
-	// 异步处理ID
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	AsyncRequestId *string `json:"AsyncRequestId,omitempty" name:"AsyncRequestId"`
-
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-}
-
-type UpgradeCDBProxyResponse struct {
-	*tchttp.BaseResponse
-	Response *UpgradeCDBProxyResponseParams `json:"Response"`
-}
-
-func (r *UpgradeCDBProxyResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *UpgradeCDBProxyResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
 type UpgradeCDBProxyVersionRequestParams struct {
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -12887,10 +14492,10 @@ type UpgradeDBInstanceRequestParams struct {
 	// 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC" - 基础版实例。
 	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
 
-	// 升级后的实例cpu核数， 如果不传将根据 Memory 指定的内存值自动填充对应的cpu值。
+	// 升级后的实例cpu核数，如果不传将根据 Memory 指定的内存值自动填充对应的cpu值。
 	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
 
-	// 是否极速变配。0-普通升级，1-极速变配。选择极速变配会根据资源状况校验是否可以进行极速变配，满足条件则进行极速变配，不满足条件会返回报错信息。
+	// 是否极速变配。0-普通升级，1-极速变配，2 极速优先。选择极速变配会根据资源状况校验是否可以进行极速变配，满足条件则进行极速变配，不满足条件会返回报错信息。
 	FastUpgrade *int64 `json:"FastUpgrade,omitempty" name:"FastUpgrade"`
 
 	// 延迟阈值。取值范围1~10，默认值为10。
@@ -12901,6 +14506,9 @@ type UpgradeDBInstanceRequestParams struct {
 
 	// 主节点可用区，该值仅在跨区迁移时生效。仅支持同地域下的可用区进行迁移。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
+
+	// 针对跨集群搬迁场景，选择同可用区RO的处理逻辑。together-同可用区RO跟随主实例迁移至目标可用区（默认选项），severally-同可用区RO保持原部署模式、不迁移至目标可用区。
+	RoTransType *string `json:"RoTransType,omitempty" name:"RoTransType"`
 }
 
 type UpgradeDBInstanceRequest struct {
@@ -12939,10 +14547,10 @@ type UpgradeDBInstanceRequest struct {
 	// 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC" - 基础版实例。
 	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
 
-	// 升级后的实例cpu核数， 如果不传将根据 Memory 指定的内存值自动填充对应的cpu值。
+	// 升级后的实例cpu核数，如果不传将根据 Memory 指定的内存值自动填充对应的cpu值。
 	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
 
-	// 是否极速变配。0-普通升级，1-极速变配。选择极速变配会根据资源状况校验是否可以进行极速变配，满足条件则进行极速变配，不满足条件会返回报错信息。
+	// 是否极速变配。0-普通升级，1-极速变配，2 极速优先。选择极速变配会根据资源状况校验是否可以进行极速变配，满足条件则进行极速变配，不满足条件会返回报错信息。
 	FastUpgrade *int64 `json:"FastUpgrade,omitempty" name:"FastUpgrade"`
 
 	// 延迟阈值。取值范围1~10，默认值为10。
@@ -12953,6 +14561,9 @@ type UpgradeDBInstanceRequest struct {
 
 	// 主节点可用区，该值仅在跨区迁移时生效。仅支持同地域下的可用区进行迁移。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
+
+	// 针对跨集群搬迁场景，选择同可用区RO的处理逻辑。together-同可用区RO跟随主实例迁移至目标可用区（默认选项），severally-同可用区RO保持原部署模式、不迁移至目标可用区。
+	RoTransType *string `json:"RoTransType,omitempty" name:"RoTransType"`
 }
 
 func (r *UpgradeDBInstanceRequest) ToJsonString() string {
@@ -12983,6 +14594,7 @@ func (r *UpgradeDBInstanceRequest) FromJsonString(s string) error {
 	delete(f, "MaxDelayTime")
 	delete(f, "CrossCluster")
 	delete(f, "ZoneId")
+	delete(f, "RoTransType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeDBInstanceRequest has unknown keys!", "")
 	}

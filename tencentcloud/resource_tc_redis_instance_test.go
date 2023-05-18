@@ -208,10 +208,17 @@ func TestAccTencentCloudRedisInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccRedisInstanceNetworkUpdate(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_instance_test"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_test", "port", "6380"),
+				),
+			},
+			{
 				ResourceName:            "tencentcloud_redis_instance.redis_instance_test",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"password", "type", "redis_shard_num", "redis_replicas_num", "force_delete"},
+				ImportStateVerifyIgnore: []string{"password", "type", "redis_shard_num", "redis_replicas_num", "force_delete", "operation_network"},
 			},
 		},
 	})
@@ -568,6 +575,30 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
   tags = {
     "abc" = "abc"
   }
+}`
+}
+
+func testAccRedisInstanceNetworkUpdate() string {
+	return defaultVpcVariable + `
+resource "tencentcloud_redis_instance" "redis_instance_test" {
+  availability_zone = "ap-guangzhou-3"
+  type_id            = 2
+  password           = "AAA123456BBB"
+  mem_size           = 12288
+  name               = "terraform_test_update"
+  port               = 6380
+  redis_shard_num    = 1
+  redis_replicas_num = 1
+  vpc_id 			 = var.vpc_id
+  subnet_id			 = var.subnet_id
+  no_auth            = true
+  security_groups    = [var.sg_id]
+
+  tags = {
+    "abc" = "abc"
+  }
+
+  operation_network  = "changeVPort"
 }`
 }
 

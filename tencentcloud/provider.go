@@ -286,6 +286,9 @@ Cloud Load Balancer(CLB)
 	tencentcloud_clb_customized_config
     tencentcloud_clb_snat_ip
 	tencentcloud_clb_function_targets_attachment
+	tencentcloud_clb_instance_sla_config
+	tencentcloud_clb_instance_mix_ip_target_config
+	tencentcloud_clb_replace_cert_for_lbs
 
 Cloud Object Storage(COS)
   Data Source
@@ -558,6 +561,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_instance_shards
 	tencentcloud_redis_instance_zone_info
 	tencentcloud_redis_instance_task_list
+	tencentcloud_redis_instance_node_info
 
   Resource
     tencentcloud_redis_instance
@@ -575,6 +579,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_upgrade_proxy_version_operation
 	tencentcloud_redis_maintenance_window
 	tencentcloud_redis_replica_readonly
+	tencentcloud_redis_switch_master
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -1399,6 +1404,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_instance_shards":                     dataSourceTencentCloudRedisInstanceShards(),
 			"tencentcloud_redis_instance_zone_info":                  dataSourceTencentCloudRedisInstanceZoneInfo(),
 			"tencentcloud_redis_instance_task_list":                  dataSourceTencentCloudRedisInstanceTaskList(),
+			"tencentcloud_redis_instance_node_info":                  dataSourceTencentCloudRedisInstanceNodeInfo(),
 			"tencentcloud_as_scaling_configs":                        dataSourceTencentCloudAsScalingConfigs(),
 			"tencentcloud_as_scaling_groups":                         dataSourceTencentCloudAsScalingGroups(),
 			"tencentcloud_as_scaling_policies":                       dataSourceTencentCloudAsScalingPolicies(),
@@ -1719,6 +1725,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_customized_config":                       resourceTencentCloudClbCustomizedConfig(),
 			"tencentcloud_clb_snat_ip":                                 resourceTencentCloudClbSnatIp(),
 			"tencentcloud_clb_function_targets_attachment":             resourceTencentCloudClbFunctionTargetsAttachment(),
+			"tencentcloud_clb_instance_mix_ip_target_config":           resourceTencentCloudClbInstanceMixIpTargetConfig(),
+			"tencentcloud_clb_instance_sla_config":                     resourceTencentCloudClbInstanceSlaConfig(),
+			"tencentcloud_clb_replace_cert_for_lbs":                    resourceTencentCloudClbReplaceCertForLbs(),
 			"tencentcloud_container_cluster":                           resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":                  resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                          resourceTencentCloudTkeCluster(),
@@ -1772,6 +1781,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_upgrade_proxy_version_operation":       resourceTencentCloudRedisUpgradeProxyVersionOperation(),
 			"tencentcloud_redis_maintenance_window":                    resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_redis_replica_readonly":                      resourceTencentCloudRedisReplicaReadonly(),
+			"tencentcloud_redis_switch_master":                         resourceTencentCloudRedisSwitchMaster(),
 			"tencentcloud_as_scaling_config":                           resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                            resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                               resourceTencentCloudAsAttachment(),
