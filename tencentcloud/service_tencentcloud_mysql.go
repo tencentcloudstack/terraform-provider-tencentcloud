@@ -1901,3 +1901,632 @@ func (me *MysqlService) DescribeMysqlDataBackupOverviewByFilter(ctx context.Cont
 
 	return
 }
+
+func (me *MysqlService) DescribeMysqlDbFeaturesByFilter(ctx context.Context, param map[string]interface{}) (dbFeatures *cdb.DescribeDBFeaturesResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeDBFeaturesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().DescribeDBFeatures(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	dbFeatures = response.Response
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlInstTablesByFilter(ctx context.Context, param map[string]interface{}) (instTables []*string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeTablesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Database" {
+			request.Database = v.(*string)
+		}
+		if k == "TableRegexp" {
+			request.TableRegexp = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		tables []*string
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMysqlClient().DescribeTables(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		tables = append(tables, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	instTables = tables
+	return
+}
+
+func (me *MysqlService) DescribeMysqlInstanceCharsetByFilter(ctx context.Context, instanceId string) (instanceCharset *cdb.DescribeDBInstanceCharsetResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeDBInstanceCharsetRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().DescribeDBInstanceCharset(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	instanceCharset = response.Response
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlInstanceInfoById(ctx context.Context, instanceId string) (instanceInfo *cdb.DescribeDBInstanceInfoResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeDBInstanceInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().DescribeDBInstanceInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	instanceInfo = response.Response
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlInstanceParamRecordByFilter(ctx context.Context, param map[string]interface{}) (instanceParamRecord []*cdb.ParamRecord, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeInstanceParamRecordsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset      int64 = 0
+		limit       int64 = 20
+		paramRecord       = make([]*cdb.ParamRecord, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMysqlClient().DescribeInstanceParamRecords(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		paramRecord = append(paramRecord, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	instanceParamRecord = paramRecord
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlInstanceRebootTimeByFilter(ctx context.Context, param map[string]interface{}) (instanceRebootTime []*cdb.InstanceRebootTime, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeDBInstanceRebootTimeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().DescribeDBInstanceRebootTime(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	instanceRebootTime = response.Response.Items
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlProxyCustomById(ctx context.Context, instanceId string) (proxyCustom *cdb.DescribeProxyCustomConfResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeProxyCustomConfRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().DescribeProxyCustomConf(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	proxyCustom = response.Response
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlRollbackRangeTimeByFilter(ctx context.Context, param map[string]interface{}) (rollbackRangeTime []*cdb.InstanceRollbackRangeTime, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeRollbackRangeTimeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+		if k == "IsRemoteZone" {
+			request.IsRemoteZone = v.(*string)
+		}
+		if k == "BackupRegion" {
+			request.BackupRegion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().DescribeRollbackRangeTime(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.Items) < 1 {
+		return
+	}
+
+	rollbackRangeTime = response.Response.Items
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlSlowLogByFilter(ctx context.Context, param map[string]interface{}) (slowLog []*cdb.SlowLogInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeSlowLogsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMysqlClient().DescribeSlowLogs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		slowLog = append(slowLog, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlSlowLogDataByFilter(ctx context.Context, param map[string]interface{}) (slowLogData []*cdb.SlowLogItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeSlowLogDataRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*uint64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*uint64)
+		}
+		if k == "UserHosts" {
+			request.UserHosts = v.([]*string)
+		}
+		if k == "UserNames" {
+			request.UserNames = v.([]*string)
+		}
+		if k == "DataBases" {
+			request.DataBases = v.([]*string)
+		}
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "InstType" {
+			request.InstType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMysqlClient().DescribeSlowLogData(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		slowLogData = append(slowLogData, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlSupportedPrivilegesById(ctx context.Context, instanceId string) (supportedPrivileges *cdb.DescribeSupportedPrivilegesResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeSupportedPrivilegesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().DescribeSupportedPrivileges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	supportedPrivileges = response.Response
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlSwitchRecordById(ctx context.Context, instanceId string) (switchRecord []*cdb.DBSwitchInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeDBSwitchRecordsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMysqlClient().DescribeDBSwitchRecords(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		switchRecord = append(switchRecord, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlUploadedFilesByFilter(ctx context.Context, param map[string]interface{}) (uploadedFiles []*cdb.SqlFileInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeUploadedFilesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Path" {
+			request.Path = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMysqlClient().DescribeUploadedFiles(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		uploadedFiles = append(uploadedFiles, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MysqlService) DescribeMysqlUserTaskByFilter(ctx context.Context, param map[string]interface{}) (userTask []*cdb.TaskDetail, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdb.NewDescribeTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "AsyncRequestId" {
+			request.AsyncRequestId = v.(*string)
+		}
+		if k == "TaskTypes" {
+			var taskTypes []*int64
+			for _, vv := range v.([]*string) {
+				task := MYSQL_TASK_TYPES[*vv]
+				taskTypes = append(taskTypes, &task)
+			}
+
+			request.TaskTypes = taskTypes
+		}
+		if k == "TaskStatus" {
+			var taskStatus []*int64
+			for _, vv := range v.([]*string) {
+				task := MYSQL_TASK_STATUS[*vv]
+				taskStatus = append(taskStatus, &task)
+			}
+
+			request.TaskStatus = taskStatus
+		}
+		if k == "StartTimeBegin" {
+			request.StartTimeBegin = v.(*string)
+		}
+		if k == "StartTimeEnd" {
+			request.StartTimeEnd = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMysqlClient().DescribeTasks(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		userTask = append(userTask, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
