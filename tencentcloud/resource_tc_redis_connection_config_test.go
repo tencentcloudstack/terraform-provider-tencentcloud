@@ -23,14 +23,14 @@ func TestAccTencentCloudRedisConnectionConfigResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_connection_config.connection_config", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_redis_connection_config.connection_config", "instance_id", defaultCrsInstanceId),
 					resource.TestCheckResourceAttr("tencentcloud_redis_connection_config.connection_config", "client_limit", "20000"),
-					resource.TestCheckResourceAttr("tencentcloud_redis_connection_config.connection_config", "bandwidth", "20"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_connection_config.connection_config", "add_bandwidth", "20"),
 				),
 			},
-			// {
-			// 	ResourceName:      "tencentcloud_redis_connection_config.connection_config",
-			// 	ImportState:       true,
-			// 	ImportStateVerify: true,
-			// },
+			{
+				ResourceName:      "tencentcloud_redis_connection_config.connection_config",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -70,7 +70,7 @@ const testAccRedisConnectionConfig = testAccRedisConnectionConfigVar + `
 resource "tencentcloud_redis_connection_config" "connection_config" {
    instance_id = var.instance_id
    client_limit = "20000"
-   bandwidth = "20"
+   add_bandwidth = "20"
 }
 
 `

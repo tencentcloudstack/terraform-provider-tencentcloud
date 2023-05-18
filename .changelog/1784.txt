@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_redis_instance_node_info
+```
+
+```release-note:enhancement
+resource/tencentcloud_kubernetes_addon_attachment: The instance supports instance ip, vpc_id, subnet_id, port modification
+```
+
+```release-note:enhancement
+resource/tencentcloud_redis_connection_config: Deprecate the attribute bandwidth, add the attributes total_bandwidth, add_bandwidth, min_add_bandwidth, max_add_bandwidth
+```

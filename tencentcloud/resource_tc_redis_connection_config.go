@@ -12,6 +12,13 @@ resource "tencentcloud_redis_connection_config" "connection_config" {
 
 ```
 
+Import
+
+Redis connectionConfig can be imported, e.g.
+
+```
+$ terraform import tencentcloud_redis_connection_config.connection_config instance_id
+```
 */
 package tencentcloud
 
@@ -33,9 +40,9 @@ func resourceTencentCloudRedisConnectionConfig() *schema.Resource {
 		Read:   resourceTencentCloudRedisConnectionConfigRead,
 		Update: resourceTencentCloudRedisConnectionConfigUpdate,
 		Delete: resourceTencentCloudRedisConnectionConfigDelete,
-		// Importer: &schema.ResourceImporter{
-		// 	State: schema.ImportStatePassthrough,
-		// },
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -52,7 +59,39 @@ func resourceTencentCloudRedisConnectionConfig() *schema.Resource {
 			"bandwidth": {
 				Optional:    true,
 				Type:        schema.TypeInt,
+				Deprecated:  "Configure `add_bandwidth` instead. This attribute will be removed in the next major version of the provider",
 				Description: "Additional bandwidth, greater than 0, in MB.",
+			},
+
+			"total_bandwidth": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Total bandwidth of the instance = additional bandwidth * number of shards + standard bandwidth * number of shards * (number of primary nodes + number of read-only replica nodes), the number of shards of the standard architecture = 1, in Mb/s.",
+			},
+
+			"base_bandwidth": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "standard bandwidth. Refers to the bandwidth allocated by the system to each node when an instance is purchased.",
+			},
+
+			"add_bandwidth": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Refers to the additional bandwidth of the instance. When the standard bandwidth does not meet the demand, the user can increase the bandwidth by himself. When the read-only copy is enabled, the total bandwidth of the instance = additional bandwidth * number of fragments + standard bandwidth * number of fragments * Max ([number of read-only replicas, 1] ), the number of shards in the standard architecture = 1, and when read-only replicas are not enabled, the total bandwidth of the instance = additional bandwidth * number of shards + standard bandwidth * number of shards, and the number of shards in the standard architecture = 1.",
+			},
+
+			"min_add_bandwidth": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Additional bandwidth sets the lower limit.",
+			},
+
+			"max_add_bandwidth": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Additional bandwidth is capped.",
 			},
 		},
 	}
@@ -105,9 +144,34 @@ func resourceTencentCloudRedisConnectionConfigRead(d *schema.ResourceData, meta 
 		_ = d.Set("client_limit", connectionConfig.ClientLimit)
 	}
 
-	// if connectionConfig.Bandwidth != nil {
-	// 	_ = d.Set("bandwidth", connectionConfig.Bandwidth)
-	// }
+	if connectionConfig.NetLimit != nil && connectionConfig.RedisShardNum != nil {
+		netLimt := *connectionConfig.NetLimit
+		shardNum := *connectionConfig.RedisShardNum
+		_ = d.Set("total_bandwidth", netLimt*shardNum*8)
+	}
+
+	bandwidthRange, err := service.DescribeBandwidthRangeById(ctx, instanceId)
+	if err != nil {
+		return err
+	}
+
+	if connectionConfig == nil {
+		log.Printf("[WARN]%s resource `DescribeBandwidthRangeById` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
+	if bandwidthRange.BaseBandwidth != nil {
+		_ = d.Set("base_bandwidth", bandwidthRange.BaseBandwidth)
+	}
+	if bandwidthRange.AddBandwidth != nil {
+		_ = d.Set("add_bandwidth", bandwidthRange.AddBandwidth)
+	}
+	if bandwidthRange.MinAddBandwidth != nil {
+		_ = d.Set("min_add_bandwidth", bandwidthRange.MinAddBandwidth)
+	}
+	if bandwidthRange.MaxAddBandwidth != nil {
+		_ = d.Set("max_add_bandwidth", bandwidthRange.MaxAddBandwidth)
+	}
 
 	return nil
 }
@@ -129,7 +193,12 @@ func resourceTencentCloudRedisConnectionConfigUpdate(d *schema.ResourceData, met
 		request.ClientLimit = helper.IntInt64(v.(int))
 	}
 
+	// bandwidth is about to be deprecated, use the add_bandwidth attribute
 	if v, ok := d.GetOkExists("bandwidth"); ok {
+		request.Bandwidth = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("add_bandwidth"); ok {
 		request.Bandwidth = helper.IntInt64(v.(int))
 	}
 

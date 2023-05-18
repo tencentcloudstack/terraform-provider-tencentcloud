@@ -74,7 +74,7 @@ func TestAccTencentCloudTcrNamespace_basic_and_update(t *testing.T) {
 				Config:    testAccTCRNamespace_basic,
 				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test_ns"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_public", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_auto_scan", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_prevent_vul", "true"),
@@ -92,7 +92,7 @@ func TestAccTencentCloudTcrNamespace_basic_and_update(t *testing.T) {
 				Config: testAccTCRNamespace_basic_update_remark,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRNamespaceExists("tencentcloud_tcr_namespace.mytcr_namespace"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test2"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "name", "test2_ns"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_public", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_auto_scan", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_namespace.mytcr_namespace", "is_prevent_vul", "false"),
@@ -167,7 +167,7 @@ const testAccTCRNamespace_basic = defaultTCRInstanceData + `
 
 resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
   instance_id 	 = local.tcr_id
-  name			 = "test"
+  name			 = "test_ns"
   is_public		 = true
   is_auto_scan	 = true
   is_prevent_vul = true
@@ -181,7 +181,7 @@ const testAccTCRNamespace_basic_update_remark = defaultTCRInstanceData + `
 
 resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
   instance_id 	 = local.tcr_id
-  name        	 = "test2"
+  name        	 = "test2_ns"
   is_public   	 = false
   is_auto_scan	 = false
   is_prevent_vul = false

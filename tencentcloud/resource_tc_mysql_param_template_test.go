@@ -24,6 +24,7 @@ func TestAccTencentCloudMysqlParamTemplateResource_basic(t *testing.T) {
 				ImportStateVerify: true,
 				ImportStateVerifyIgnore: []string{
 					"engine_type",
+					"param_list",
 				},
 			},
 		},
@@ -36,8 +37,20 @@ resource "tencentcloud_mysql_param_template" "param_template" {
   name           = "terraform-test"
   description    = "terraform-test"
   engine_version = "8.0"
-  template_type  = "HIGH_STABILITY"
-  engine_type    = "InnoDB"
+  param_list {
+    current_value = "1"
+    name          = "auto_increment_increment"
+  }
+  param_list {
+    current_value = "1"
+    name          = "auto_increment_offset"
+  }
+  param_list {
+    current_value = "ON"
+    name          = "automatic_sp_privileges"
+  }
+  template_type = "HIGH_STABILITY"
+  engine_type   = "InnoDB"
 }
 
 `

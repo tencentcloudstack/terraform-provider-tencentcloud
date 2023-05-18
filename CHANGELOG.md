@@ -1,3 +1,47 @@
+## 1.81.1 (May 17, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dbbrain_db_space_status` ([#1776](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1776))
+* **New Data Source:** `tencentcloud_dbbrain_slow_logs` ([#1776](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1776))
+* **New Data Source:** `tencentcloud_dbbrain_sql_templates` ([#1776](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1776))
+* **New Data Source:** `tencentcloud_eip_address_quota` ([#1780](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1780))
+* **New Data Source:** `tencentcloud_eip_network_account_type` ([#1780](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1780))
+* **New Data Source:** `tencentcloud_nat_dc_route` ([#1775](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1775))
+* **New Data Source:** `tencentcloud_redis_instance_node_info` ([#1784](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1784))
+* **New Data Source:** `tencentcloud_tse_nacos_server_interfaces` ([#1774](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1774))
+* **New Data Source:** `tencentcloud_vpc_bandwidth_package_bill_usage` ([#1780](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1780))
+* **New Data Source:** `tencentcloud_vpc_bandwidth_package_quota` ([#1780](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1780))
+* **New Resource:** `tencentcloud_eip_normal_address_return` ([#1780](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1780))
+* **New Resource:** `tencentcloud_eip_public_address_adjust` ([#1780](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1780))
+* **New Resource:** `tencentcloud_lighthouse_disk` ([#1782](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1782))
+* **New Resource:** `tencentcloud_lighthouse_key_pair_attachment` ([#1782](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1782))
+* **New Resource:** `tencentcloud_lighthouse_reboot_instance` ([#1782](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1782))
+* **New Resource:** `tencentcloud_lighthouse_start_instance` ([#1782](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1782))
+* **New Resource:** `tencentcloud_lighthouse_stop_instance` ([#1782](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1782))
+* **New Resource:** `tencentcloud_nat_refresh_nat_dc_route` ([#1775](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1775))
+* **New Resource:** `tencentcloud_redis_backup_download_restriction` ([#1680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1680))
+* **New Resource:** `tencentcloud_redis_clear_instance_operation` ([#1680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1680))
+* **New Resource:** `tencentcloud_redis_renew_instance_operation` ([#1680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1680))
+* **New Resource:** `tencentcloud_redis_startup_instance_operation` ([#1680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1680))
+* **New Resource:** `tencentcloud_redis_switch_master` ([#1785](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1785))
+* **New Resource:** `tencentcloud_redis_upgrade_cache_version_operation` ([#1680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1680))
+* **New Resource:** `tencentcloud_redis_upgrade_multi_zone_operation` ([#1680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1680))
+* **New Resource:** `tencentcloud_redis_upgrade_proxy_version_operation` ([#1680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1680))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_gaap_proxy: support param network_type ([#1783](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1783))
+* resource/tencentcloud_kubernetes_addon_attachment: The instance supports instance ip, vpc_id, subnet_id, port modification ([#1784](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1784))
+* resource/tencentcloud_kubernetes_addon_attachment: adjust the example for installing tcr addon ([#1770](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1770))
+* resource/tencentcloud_kubernetes_cluster: adjust notice for the cluster usage. ([#1786](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1786))
+* resource/tencentcloud_kubernetes_cluster_endpoint: add parameter extensive_parameters ([#1762](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1762))
+* resource/tencentcloud_lighthouse_instance: support update `bundle_id`, `blueprint_id`, `renew_flag`, `password`, support params `permit_default_key_pair_login`, `is_update_bundle_id_auto_voucher` ([#1782](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1782))
+* resource/tencentcloud_mysql_param_template: support set `param_list` ([#1777](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1777))
+* resource/tencentcloud_postgresql_instance: support to update minor kernel versions by field `db_kernel_version` ([#1712](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1712))
+* resource/tencentcloud_redis_connection_config: Deprecate the attribute bandwidth, add the attributes total_bandwidth, add_bandwidth, min_add_bandwidth, max_add_bandwidth ([#1784](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1784))
+* resource/tencentcloud_redis_instance: Support `typeid` immediate switching ([#1680](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1680))
+
 ## 1.81.0 (May 12, 2023)
 
 Upgrade terraform plugin sdk from v1 to v2 ([#1714](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1714))

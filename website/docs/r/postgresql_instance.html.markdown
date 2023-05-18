@@ -143,6 +143,38 @@ resource "tencentcloud_postgresql_instance" "pg" {
 }
 ```
 
+upgrade kernel version
+
+```hcl
+resource "tencentcloud_postgresql_instance" "test" {
+  name                 = "tf_postsql_instance_update"
+  availability_zone    = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
+  charge_type          = "POSTPAID_BY_HOUR"
+  vpc_id               = local.vpc_id
+  subnet_id            = local.subnet_id
+  engine_version       = "13.3"
+  root_password        = "*"
+  charset              = "LATIN1"
+  project_id           = 0
+  public_access_switch = false
+  security_groups      = [local.sg_id]
+  memory               = 4
+  storage              = 250
+  backup_plan {
+    min_backup_start_time        = "01:10:11"
+    max_backup_start_time        = "02:10:11"
+    base_backup_retention_period = 5
+    backup_period                = ["monday", "thursday", "sunday"]
+  }
+
+  db_kernel_version = "v13.3_r1.4" # eg:from v13.3_r1.1 to v13.3_r1.4
+
+  tags = {
+    tf = "teest"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -157,7 +189,7 @@ The following arguments are supported:
 * `backup_plan` - (Optional, List) Specify DB backup plan.
 * `charge_type` - (Optional, String, ForceNew) Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`.
 * `charset` - (Optional, String, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
-* `db_kernel_version` - (Optional, String) PostgreSQL kernel version number. If it is specified, an instance running kernel DBKernelVersion will be created.
+* `db_kernel_version` - (Optional, String) PostgreSQL kernel version number. If it is specified, an instance running kernel DBKernelVersion will be created. It supports updating the minor kernel version immediately.
 * `db_major_version` - (Optional, String) PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
 * `db_major_vesion` - (Optional, String, **Deprecated**) `db_major_vesion` will be deprecated, use `db_major_version` instead. PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
 * `db_node_set` - (Optional, Set) Specify instance node info for disaster migration.

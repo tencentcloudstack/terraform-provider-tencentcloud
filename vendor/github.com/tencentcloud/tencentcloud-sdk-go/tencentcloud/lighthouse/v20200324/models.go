@@ -276,7 +276,11 @@ type AttachDisksRequestParams struct {
 	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 续费标识。
+	// 自动续费标识。取值范围：
+	// 
+	// NOTIFY_AND_AUTO_RENEW：通知过期且自动续费。 NOTIFY_AND_MANUAL_RENEW：通知过期不自动续费，用户需要手动续费。 DISABLE_NOTIFY_AND_AUTO_RENEW：不自动续费，且不通知。
+	// 
+	// 默认取值：NOTIFY_AND_MANUAL_RENEW。若该参数指定为NOTIFY_AND_AUTO_RENEW，在账户余额充足的情况下，云盘到期后将按月自动续费。
 	RenewFlag *string `json:"RenewFlag,omitempty" name:"RenewFlag"`
 }
 
@@ -289,7 +293,11 @@ type AttachDisksRequest struct {
 	// 实例ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 续费标识。
+	// 自动续费标识。取值范围：
+	// 
+	// NOTIFY_AND_AUTO_RENEW：通知过期且自动续费。 NOTIFY_AND_MANUAL_RENEW：通知过期不自动续费，用户需要手动续费。 DISABLE_NOTIFY_AND_AUTO_RENEW：不自动续费，且不通知。
+	// 
+	// 默认取值：NOTIFY_AND_MANUAL_RENEW。若该参数指定为NOTIFY_AND_AUTO_RENEW，在账户余额充足的情况下，云盘到期后将按月自动续费。
 	RenewFlag *string `json:"RenewFlag,omitempty" name:"RenewFlag"`
 }
 
@@ -334,6 +342,17 @@ func (r *AttachDisksResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *AttachDisksResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type AutoMountConfiguration struct {
+	// 待挂载的实例ID。指定的实例必须处于“运行中”状态。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例内的挂载点。仅Linux操作系统的实例可传入该参数, 不传则默认挂载在“/data/disk”路径下。
+	MountPoint *string `json:"MountPoint,omitempty" name:"MountPoint"`
+
+	// 文件系统类型。取值: “ext4”、“xfs”。仅Linux操作系统的实例可传入该参数, 不传则默认为“ext4”。
+	FileSystemType *string `json:"FileSystemType,omitempty" name:"FileSystemType"`
 }
 
 type Blueprint struct {
@@ -677,6 +696,121 @@ func (r *CreateDiskBackupResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateDiskBackupResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDisksRequestParams struct {
+	// 可用区。可通过[DescribeZones](https://cloud.tencent.com/document/product/1207/57513)返回值中的Zone获取。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 云硬盘大小, 单位: GB。
+	DiskSize *int64 `json:"DiskSize,omitempty" name:"DiskSize"`
+
+	// 云硬盘介质类型。取值: "CLOUD_PREMIUM"(高性能云盘), "CLOUD_SSD"(SSD云硬盘)。
+	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
+
+	// 云硬盘包年包月相关参数设置。
+	DiskChargePrepaid *DiskChargePrepaid `json:"DiskChargePrepaid,omitempty" name:"DiskChargePrepaid"`
+
+	// 云硬盘名称。最大长度60。
+	DiskName *string `json:"DiskName,omitempty" name:"DiskName"`
+
+	// 云硬盘个数。取值范围: [1, 30]。默认值: 1。
+	DiskCount *int64 `json:"DiskCount,omitempty" name:"DiskCount"`
+
+	// 指定云硬盘备份点配额，不传时默认为不带备份点配额。目前只支持不带或设置1个云硬盘备份点配额。
+	DiskBackupQuota *int64 `json:"DiskBackupQuota,omitempty" name:"DiskBackupQuota"`
+
+	// 是否自动使用代金券。默认不使用。
+	AutoVoucher *bool `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 自动挂载并初始化数据盘。
+	AutoMountConfiguration *AutoMountConfiguration `json:"AutoMountConfiguration,omitempty" name:"AutoMountConfiguration"`
+}
+
+type CreateDisksRequest struct {
+	*tchttp.BaseRequest
+	
+	// 可用区。可通过[DescribeZones](https://cloud.tencent.com/document/product/1207/57513)返回值中的Zone获取。
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 云硬盘大小, 单位: GB。
+	DiskSize *int64 `json:"DiskSize,omitempty" name:"DiskSize"`
+
+	// 云硬盘介质类型。取值: "CLOUD_PREMIUM"(高性能云盘), "CLOUD_SSD"(SSD云硬盘)。
+	DiskType *string `json:"DiskType,omitempty" name:"DiskType"`
+
+	// 云硬盘包年包月相关参数设置。
+	DiskChargePrepaid *DiskChargePrepaid `json:"DiskChargePrepaid,omitempty" name:"DiskChargePrepaid"`
+
+	// 云硬盘名称。最大长度60。
+	DiskName *string `json:"DiskName,omitempty" name:"DiskName"`
+
+	// 云硬盘个数。取值范围: [1, 30]。默认值: 1。
+	DiskCount *int64 `json:"DiskCount,omitempty" name:"DiskCount"`
+
+	// 指定云硬盘备份点配额，不传时默认为不带备份点配额。目前只支持不带或设置1个云硬盘备份点配额。
+	DiskBackupQuota *int64 `json:"DiskBackupQuota,omitempty" name:"DiskBackupQuota"`
+
+	// 是否自动使用代金券。默认不使用。
+	AutoVoucher *bool `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 自动挂载并初始化数据盘。
+	AutoMountConfiguration *AutoMountConfiguration `json:"AutoMountConfiguration,omitempty" name:"AutoMountConfiguration"`
+}
+
+func (r *CreateDisksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDisksRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Zone")
+	delete(f, "DiskSize")
+	delete(f, "DiskType")
+	delete(f, "DiskChargePrepaid")
+	delete(f, "DiskName")
+	delete(f, "DiskCount")
+	delete(f, "DiskBackupQuota")
+	delete(f, "AutoVoucher")
+	delete(f, "AutoMountConfiguration")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDisksRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDisksResponseParams struct {
+	// 当通过本接口来创建云硬盘时会返回该参数，表示一个或多个云硬盘ID。返回云硬盘ID列表并不代表云硬盘创建成功。
+	// 
+	// 可根据 [DescribeDisks](https://cloud.tencent.com/document/product/1207/66093) 接口查询返回的DiskSet中对应云硬盘的ID的状态来判断创建是否完成；如果云硬盘状态由“PENDING”变为“UNATTACHED”或“ATTACHED”，则为创建成功。
+	DiskIdSet []*string `json:"DiskIdSet,omitempty" name:"DiskIdSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateDisksResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateDisksResponseParams `json:"Response"`
+}
+
+func (r *CreateDisksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDisksResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4168,7 +4302,13 @@ type DiskChargePrepaid struct {
 	// 新购周期。
 	Period *int64 `json:"Period,omitempty" name:"Period"`
 
-	// 续费标识。
+	// 自动续费标识。取值范围：
+	// 
+	// NOTIFY_AND_AUTO_RENEW：通知过期且自动续费。
+	// NOTIFY_AND_MANUAL_RENEW：通知过期不自动续费，用户需要手动续费。
+	// DISABLE_NOTIFY_AND_AUTO_RENEW：不自动续费，且不通知。
+	// 
+	// 默认取值：NOTIFY_AND_MANUAL_RENEW。若该参数指定为NOTIFY_AND_AUTO_RENEW，在账户余额充足的情况下，云盘到期后将按月自动续费。
 	RenewFlag *string `json:"RenewFlag,omitempty" name:"RenewFlag"`
 
 	// 新购单位. 默认值: "m"。
@@ -4954,6 +5094,60 @@ type InternetAccessible struct {
 
 	// 是否分配公网 IP。
 	PublicIpAssigned *bool `json:"PublicIpAssigned,omitempty" name:"PublicIpAssigned"`
+}
+
+// Predefined struct for user
+type IsolateDisksRequestParams struct {
+	// 云硬盘ID列表。一个或多个待操作的云硬盘ID。可通过[DescribeDisks](https://cloud.tencent.com/document/product/1207/66093)接口返回值中的DiskId获取。每次请求退还数据盘数量总计上限为20。
+	DiskIds []*string `json:"DiskIds,omitempty" name:"DiskIds"`
+}
+
+type IsolateDisksRequest struct {
+	*tchttp.BaseRequest
+	
+	// 云硬盘ID列表。一个或多个待操作的云硬盘ID。可通过[DescribeDisks](https://cloud.tencent.com/document/product/1207/66093)接口返回值中的DiskId获取。每次请求退还数据盘数量总计上限为20。
+	DiskIds []*string `json:"DiskIds,omitempty" name:"DiskIds"`
+}
+
+func (r *IsolateDisksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *IsolateDisksRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DiskIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "IsolateDisksRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type IsolateDisksResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type IsolateDisksResponse struct {
+	*tchttp.BaseResponse
+	Response *IsolateDisksResponseParams `json:"Response"`
+}
+
+func (r *IsolateDisksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *IsolateDisksResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -5790,13 +5984,13 @@ func (r *ModifySnapshotAttributeResponse) FromJsonString(s string) error {
 
 type PolicyDetail struct {
 	// 用户折扣。
-	UserDiscount *int64 `json:"UserDiscount,omitempty" name:"UserDiscount"`
+	UserDiscount *float64 `json:"UserDiscount,omitempty" name:"UserDiscount"`
 
 	// 公共折扣。
-	CommonDiscount *int64 `json:"CommonDiscount,omitempty" name:"CommonDiscount"`
+	CommonDiscount *float64 `json:"CommonDiscount,omitempty" name:"CommonDiscount"`
 
 	// 最终折扣。
-	FinalDiscount *int64 `json:"FinalDiscount,omitempty" name:"FinalDiscount"`
+	FinalDiscount *float64 `json:"FinalDiscount,omitempty" name:"FinalDiscount"`
 
 	// 活动折扣。取值为null，表示无有效值，即没有折扣。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -5882,17 +6076,89 @@ type RegionInfo struct {
 }
 
 type RenewDiskChargePrepaid struct {
-	// 新购周期。
+	// 续费周期。
 	Period *int64 `json:"Period,omitempty" name:"Period"`
 
-	// 续费标识。
+	// 续费标识。取值范围：
+	// 
+	// NOTIFY_AND_AUTO_RENEW：通知过期且自动续费。 NOTIFY_AND_MANUAL_RENEW：通知过期不自动续费，用户需要手动续费。 DISABLE_NOTIFY_AND_AUTO_RENEW：不自动续费，且不通知。
+	// 
+	// 默认取值：NOTIFY_AND_MANUAL_RENEW。若该参数指定为NOTIFY_AND_AUTO_RENEW，在账户余额充足的情况下，云硬盘到期后将按月自动续费。
 	RenewFlag *string `json:"RenewFlag,omitempty" name:"RenewFlag"`
 
-	// 周期单位. 默认值: "m"。
+	// 周期单位。取值范围：“m”(月)。默认值: "m"。
 	TimeUnit *string `json:"TimeUnit,omitempty" name:"TimeUnit"`
 
-	// 当前实例到期时间。
+	// 当前实例到期时间。如“2018-01-01 00:00:00”。指定该参数即可对齐云硬盘所挂载的实例到期时间。该参数与Period必须指定其一，且不支持同时指定。
 	CurInstanceDeadline *string `json:"CurInstanceDeadline,omitempty" name:"CurInstanceDeadline"`
+}
+
+// Predefined struct for user
+type RenewDisksRequestParams struct {
+	// 云硬盘ID列表。一个或多个待操作的云硬盘ID。可通过[DescribeDisks](https://cloud.tencent.com/document/product/1207/66093)接口返回值中的DiskId获取。每次请求续费数据盘数量总计上限为50。
+	DiskIds []*string `json:"DiskIds,omitempty" name:"DiskIds"`
+
+	// 续费云硬盘包年包月相关参数设置。
+	RenewDiskChargePrepaid *RenewDiskChargePrepaid `json:"RenewDiskChargePrepaid,omitempty" name:"RenewDiskChargePrepaid"`
+
+	// 是否自动使用代金券。默认不使用。
+	AutoVoucher *bool `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+}
+
+type RenewDisksRequest struct {
+	*tchttp.BaseRequest
+	
+	// 云硬盘ID列表。一个或多个待操作的云硬盘ID。可通过[DescribeDisks](https://cloud.tencent.com/document/product/1207/66093)接口返回值中的DiskId获取。每次请求续费数据盘数量总计上限为50。
+	DiskIds []*string `json:"DiskIds,omitempty" name:"DiskIds"`
+
+	// 续费云硬盘包年包月相关参数设置。
+	RenewDiskChargePrepaid *RenewDiskChargePrepaid `json:"RenewDiskChargePrepaid,omitempty" name:"RenewDiskChargePrepaid"`
+
+	// 是否自动使用代金券。默认不使用。
+	AutoVoucher *bool `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+}
+
+func (r *RenewDisksRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RenewDisksRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "DiskIds")
+	delete(f, "RenewDiskChargePrepaid")
+	delete(f, "AutoVoucher")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RenewDisksRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RenewDisksResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type RenewDisksResponse struct {
+	*tchttp.BaseResponse
+	Response *RenewDisksResponseParams `json:"Response"`
+}
+
+func (r *RenewDisksResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RenewDisksResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user

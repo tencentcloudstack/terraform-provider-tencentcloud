@@ -6279,3 +6279,113 @@ func (me *VpcService) DescribeNatDcRouteByFilter(ctx context.Context, param map[
 
 	return
 }
+
+func (me *VpcService) DescribeEipAddressQuota(ctx context.Context) (addressQuota []*vpc.Quota, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeAddressQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeAddressQuota(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	addressQuota = append(addressQuota, response.Response.QuotaSet...)
+
+	return
+}
+
+func (me *VpcService) DescribeEipNetworkAccountType(ctx context.Context) (networkAccountType *string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeNetworkAccountTypeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeNetworkAccountType(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	networkAccountType = response.Response.NetworkAccountType
+
+	return
+}
+
+func (me *VpcService) DescribeVpcBandwidthPackageQuota(ctx context.Context) (bandwidthPackageQuota []*vpc.Quota, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeBandwidthPackageQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeBandwidthPackageQuota(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	bandwidthPackageQuota = append(bandwidthPackageQuota, response.Response.QuotaSet...)
+
+	return
+}
+
+func (me *VpcService) DescribeVpcBandwidthPackageBillUsageByFilter(ctx context.Context, param map[string]interface{}) (bandwidthPackageBillUsage []*vpc.BandwidthPackageBillBandwidth, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeBandwidthPackageBillUsageRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "BandwidthPackageId" {
+			request.BandwidthPackageId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeBandwidthPackageBillUsage(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	bandwidthPackageBillUsage = append(bandwidthPackageBillUsage, response.Response.BandwidthPackageBillBandwidthSet...)
+
+	return
+}

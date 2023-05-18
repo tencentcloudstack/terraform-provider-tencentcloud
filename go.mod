@@ -14,7 +14,6 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/hashicorp/hcl/v2 v2.13.0
-	github.com/hashicorp/terraform-plugin-sdk v1.7.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.20.0
 	github.com/katbyte/terrafmt v0.2.0
 	github.com/mitchellh/go-homedir v1.1.0
@@ -31,7 +30,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.520
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.576
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.658
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.539
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.627
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
@@ -39,7 +38,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.599
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.412
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.652
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.658
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.572
@@ -54,7 +53,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.383
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.514
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.199
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.644
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.656
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.535
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb v1.0.644
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mongodb v1.0.651
@@ -64,7 +63,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.625
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.290
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.533
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.633
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.657
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.542
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.275
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.529
@@ -191,6 +190,7 @@ require (
 	github.com/hashicorp/terraform-json v0.14.0 // indirect
 	github.com/hashicorp/terraform-plugin-go v0.12.0 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.7.0 // indirect
+	github.com/hashicorp/terraform-plugin-sdk v1.7.0 // indirect
 	github.com/hashicorp/terraform-plugin-test v1.2.0 // indirect
 	github.com/hashicorp/terraform-registry-address v0.0.0-20220623143253-7d51757b572c // indirect
 	github.com/hashicorp/terraform-svchost v0.0.0-20200729002733-f050f53b9734 // indirect

@@ -38,7 +38,7 @@ data "tencentcloud_tcr_image_manifests" "image_manifests" {
 	registry_id = "%s"
 	namespace_name = "%s" 
 	repository_name = "%s"
-	image_version = "v1"
+	image_version = "vv1"
 }
 
 `
