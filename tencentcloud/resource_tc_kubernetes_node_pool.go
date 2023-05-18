@@ -529,7 +529,7 @@ func resourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "tlinux2.4x86_64",
-				Description: "Operating system of the cluster, the available values include: `tlinux2.4x86_64`, `ubuntu18.04.1x86_64`, `ubuntu16.04.1 LTSx86_64`, `centos7.6.0_x64` and `centos7.2x86_64`. Default is 'tlinux2.4x86_64'. This parameter will only affect new nodes, not including the existing nodes.",
+				Description: "Operating system of the cluster. Please refer to [TencentCloud Documentation](https://www.tencentcloud.com/document/product/457/46750?lang=en&pg=#list-of-public-images-supported-by-tke) for available values. Default is 'tlinux2.4x86_64'. This parameter will only affect new nodes, not including the existing nodes.",
 			},
 			"node_os_type": {
 				Type:        schema.TypeString,
