@@ -67,7 +67,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id                   = "skey-11112222"
+    key_ids                   = "skey-11112222"
   }
 
   worker_config {
@@ -90,7 +90,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id                   = "skey-11112222"
+    key_ids                   = "skey-11112222"
 	cam_role_name			  = "CVM_QcsRole"
   }
 
@@ -161,7 +161,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id                   = "skey-11112222"
+    key_ids                   = "skey-11112222"
   }
 
   worker_config {
@@ -185,7 +185,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
 	cam_role_name			  = "CVM_QcsRole"
-    keys_id                   = "skey-11112222"
+    key_ids                   = "skey-11112222"
   }
 
   labels = {
@@ -254,7 +254,7 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id                   = "skey-11112222"
+    key_ids                   = "skey-11112222"
   }
 
   extension_addon {
@@ -337,7 +337,7 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id                   = "skey-11112222"
+    key_ids                   = "skey-11112222"
   }
 
   node_pool_global_config {
@@ -406,7 +406,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    keys_id                   = "skey-11112222"
+    key_ids                   = "skey-11112222"
   }
 
   labels = {
