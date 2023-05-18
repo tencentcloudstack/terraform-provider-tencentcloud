@@ -11,13 +11,16 @@ var testDataTCRRepositoriesNameAll = "data.tencentcloud_tcr_repositories.id_test
 func TestAccTencentCloudTcrRepositoriesData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRRepositoryDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config:    testAccTencentCloudDataTCRRepositoriesBasic,
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: testAccTencentCloudDataTCRRepositoriesBasic,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testDataTCRRepositoriesNameAll, "repository_list.0.name"),
 					resource.TestCheckResourceAttrSet(testDataTCRRepositoriesNameAll, "repository_list.0.create_time"),

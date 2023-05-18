@@ -19,7 +19,7 @@ func init() {
 	})
 }
 
-// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_repository
+// go test -v ./tencentcloud -sweep=ap-shanghai -sweep-run=tencentcloud_tcr_repository
 func testSweepTCRRepository(r string) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -70,13 +70,16 @@ func testSweepTCRRepository(r string) error {
 func TestAccTencentCloudTcrRepository_basic_and_update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRRepositoryDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config:    testAccTCRRepository_basic,
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: testAccTCRRepository_basic,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_tcr_repository.mytcr_repository", "name", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_repository.mytcr_repository", "brief_desc", "111"),
@@ -94,6 +97,10 @@ func TestAccTencentCloudTcrRepository_basic_and_update(t *testing.T) {
 			},
 			{
 				Config: testAccTCRRepository_basic_update_remark,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTCRRepositoryExists("tencentcloud_tcr_repository.mytcr_repository"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_repository.mytcr_repository", "brief_desc", "2222"),

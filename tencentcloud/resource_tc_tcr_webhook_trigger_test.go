@@ -15,15 +15,16 @@ import (
 func TestAccTencentCloudTcrWebhookTriggerResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRWebhookTriggerDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config:    fmt.Sprintf(testAccTCRWebhookTrigger, "webhooktrigger", "webhooktrigger", "webhooktrigger"),
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: fmt.Sprintf(testAccTCRWebhookTrigger, "webhooktrigger", "webhooktrigger", "webhooktrigger"),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTCRWebhookTriggerExists("tencentcloud_tcr_webhook_trigger.my_trigger"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_webhook_trigger.my_trigger", "id"),
@@ -42,6 +43,10 @@ func TestAccTencentCloudTcrWebhookTriggerResource_basic(t *testing.T) {
 			},
 			{
 				Config: fmt.Sprintf(testAccTCRWebhookTrigger_update, "webhooktrigger", "webhooktrigger", "webhooktrigger"),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTCRWebhookTriggerExists("tencentcloud_tcr_webhook_trigger.my_trigger"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_webhook_trigger.my_trigger", "id"),

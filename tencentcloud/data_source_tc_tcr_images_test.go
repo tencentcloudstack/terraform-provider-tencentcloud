@@ -12,14 +12,15 @@ const testObjectName = "data.tencentcloud_tcr_images.images"
 func TestAccTencentCloudTcrImagesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config:    fmt.Sprintf(testAccTcrImagesDataSource_id, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: fmt.Sprintf(testAccTcrImagesDataSource_id, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testObjectName, "id"),
 					resource.TestCheckResourceAttr(testObjectName, "registry_id", defaultTCRInstanceId),
@@ -35,14 +36,15 @@ func TestAccTencentCloudTcrImagesDataSource_basic(t *testing.T) {
 func TestAccTencentCloudTcrImagesDataSource_exact(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config:    fmt.Sprintf(testAccTcrImagesDataSource_exact, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: fmt.Sprintf(testAccTcrImagesDataSource_exact, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testObjectName, "id"),
 					resource.TestCheckResourceAttr(testObjectName, "registry_id", defaultTCRInstanceId),
@@ -59,14 +61,15 @@ func TestAccTencentCloudTcrImagesDataSource_exact(t *testing.T) {
 func TestAccTencentCloudTcrImagesDataSource_exact_version(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config:    fmt.Sprintf(testAccTcrImagesDataSource_exact_version, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: fmt.Sprintf(testAccTcrImagesDataSource_exact_version, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testObjectName, "id"),
 					resource.TestCheckResourceAttr(testObjectName, "registry_id", defaultTCRInstanceId),

@@ -18,7 +18,7 @@ func init() {
 	})
 }
 
-// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_immutable_tag_rule
+// go test -v ./tencentcloud -sweep=ap-shanghai -sweep-run=tencentcloud_tcr_immutable_tag_rule
 func testSweepTcrImmutableTagRule(r string) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -46,22 +46,23 @@ func testSweepTcrImmutableTagRule(r string) error {
 func TestAccTencentCloudTcrImmutableTagRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTcrImmutableTagRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config:    fmt.Sprintf(testAccTcrImmutableTagRule_basic, defaultTCRInstanceId, defaultTCRNamespace),
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: fmt.Sprintf(testAccTcrImmutableTagRule_basic, defaultTCRInstanceId, defaultTCRNamespace),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTcrImmutableTagRuleExists("tencentcloud_tcr_immutable_tag_rule.my_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_immutable_tag_rule.my_rule", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_immutable_tag_rule.my_rule", "rule.#"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_immutable_tag_rule.my_rule", "rule.0.repository_pattern", "**"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_immutable_tag_rule.my_rule", "rule.0.repository_decoration", "repoMatches"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_immutable_tag_rule.my_rule", "rule.0.tag_pattern", "**"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_immutable_tag_rule.my_rule", "rule.0.tag_pattern", "v1"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_immutable_tag_rule.my_rule", "rule.0.tag_decoration", "matches"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_immutable_tag_rule.my_rule", "rule.0.disabled", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_immutable_tag_rule.my_rule", "registry_id", defaultTCRInstanceId),
@@ -70,6 +71,10 @@ func TestAccTencentCloudTcrImmutableTagRuleResource_basic(t *testing.T) {
 			},
 			{
 				Config: fmt.Sprintf(testAccTcrImmutableTagRule_update, defaultTCRInstanceId, defaultTCRNamespace),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTcrImmutableTagRuleExists("tencentcloud_tcr_immutable_tag_rule.my_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_immutable_tag_rule.my_rule", "id"),
@@ -163,7 +168,7 @@ resource "tencentcloud_tcr_immutable_tag_rule" "my_rule" {
   namespace_name = "%s"
   rule {
 	repository_pattern = "**"
-	tag_pattern = "**"
+	tag_pattern = "v1"
 	repository_decoration = "repoMatches"
 	tag_decoration = "matches"
 	disabled = false

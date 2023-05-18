@@ -11,13 +11,16 @@ var testDataTCRTokensNameAll = "data.tencentcloud_tcr_tokens.id_test"
 func TestAccTencentCloudTcrTokensData(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRTokenDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config:    testAccTencentCloudDataTCRTokensBasic,
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: testAccTencentCloudDataTCRTokensBasic,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeAggregateTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testDataTCRTokensNameAll, "token_list.0.token_id"),
 					resource.TestCheckResourceAttrSet(testDataTCRTokensNameAll, "token_list.0.create_time"),

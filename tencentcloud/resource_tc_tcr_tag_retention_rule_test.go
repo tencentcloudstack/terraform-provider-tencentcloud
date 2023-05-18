@@ -14,15 +14,16 @@ import (
 func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRTagRetentionRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config:    testAccTcrTagRetentionRule,
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: testAccTcrTagRetentionRule,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTCRTagRetentionRuleExists("tencentcloud_tcr_tag_retention_rule.my_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "id"),
@@ -37,6 +38,10 @@ func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 			},
 			{
 				Config: testAccTcrTagRetentionRule_update,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTCRTagRetentionRuleExists("tencentcloud_tcr_tag_retention_rule.my_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "id"),
