@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sqlserver_incre_backup_migration" "incre_backup_migration" {
-  instance_id = "mssql-i1z41iwd"
-  backup_migration_id = "migration_00001"
-  backup_files =
-  is_recovery = "No"
+  instance_id = "mssql-4gmc5805"
+  backup_migration_id = "mssql-backup-migration-9tj0sxnz"
+  backup_files = []
+  is_recovery = "NO"
 }
 ```
 
@@ -184,6 +184,14 @@ func resourceTencentCloudSqlserverIncreBackupMigrationRead(d *schema.ResourceDat
 func resourceTencentCloudSqlserverIncreBackupMigrationUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_sqlserver_incre_backup_migration.update")()
 	defer inconsistentCheck(d, meta)()
+
+	immutableArgs := []string{"instance_id", "backup_migration_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	var (
 		logId   = getLogId(contextNil)

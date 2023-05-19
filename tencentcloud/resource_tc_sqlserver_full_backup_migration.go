@@ -4,11 +4,11 @@ Provides a resource to create a sqlserver full_backup_migration
 Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_full_backup_migration" "full_backup_migration" {
-  instance_id = "mssql-i1z41iwd"
+resource "tencentcloud_sqlserver_full_backup_migration" "my_migration" {
+  instance_id = "mssql-qelbzgwf"
   recovery_type = "FULL"
   upload_type = "COS_URL"
-  migration_name = "test_migration"
+  migration_name = "migration_test"
   backup_files = []
 }
 ```
@@ -191,6 +191,14 @@ func resourceTencentCloudSqlserverFullBackupMigrationRead(d *schema.ResourceData
 func resourceTencentCloudSqlserverFullBackupMigrationUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_sqlserver_full_backup_migration.update")()
 	defer inconsistentCheck(d, meta)()
+
+	immutableArgs := []string{"instance_id", "backup_files"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	var (
 		logId   = getLogId(contextNil)

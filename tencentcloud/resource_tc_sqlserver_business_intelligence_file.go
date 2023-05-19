@@ -4,11 +4,28 @@ Provides a resource to create a sqlserver business_intelligence_file
 Example Usage
 
 ```hcl
+resource "tencentcloud_sqlserver_business_intelligence_instance" "business_intelligence_instance" {
+  zone = "ap-guangzhou-6"
+  memory = 4
+  storage = 20
+  cpu = 2
+  machine_type = "CLOUD_PREMIUM"
+  project_id = 0
+  subnet_id = "subnet-dwj7ipnc"
+  vpc_id = "vpc-4owdpnwr"
+  db_version = "201603"
+  security_group_list = []
+  weekly = [1, 2, 3, 4, 5, 6, 7]
+  start_time = "00:00"
+  span = 6
+  instance_name = "create_db_name"
+}
+
 resource "tencentcloud_sqlserver_business_intelligence_file" "business_intelligence_file" {
-  instance_id = "mssql-wu8wka8a"
-  file_u_r_l = ""
-  file_type = "SSIS"
-  remark = ""
+  instance_id = tencentcloud_sqlserver_business_intelligence_instance.business_intelligence_instance.id
+  file_url = "https://keep-sqlserver-1308919341.cos.ap-guangzhou.myqcloud.com/test.xlsx"
+  file_type = "FLAT"
+  remark = "test case."
 }
 ```
 
@@ -38,7 +55,6 @@ func resourceTencentCloudSqlserverBusinessIntelligenceFile() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSqlserverBusinessIntelligenceFileCreate,
 		Read:   resourceTencentCloudSqlserverBusinessIntelligenceFileRead,
-		Update: resourceTencentCloudSqlserverBusinessIntelligenceFileUpdate,
 		Delete: resourceTencentCloudSqlserverBusinessIntelligenceFileDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -46,21 +62,25 @@ func resourceTencentCloudSqlserverBusinessIntelligenceFile() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "instance id.",
 			},
 			"file_url": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cos Url.",
 			},
 			"file_type": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "File Type FLAT - Flat File as Data Source, SSIS - ssis project package.",
 			},
 			"remark": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "remark.",
 			},
@@ -169,21 +189,6 @@ func resourceTencentCloudSqlserverBusinessIntelligenceFileRead(d *schema.Resourc
 	}
 
 	return nil
-}
-
-func resourceTencentCloudSqlserverBusinessIntelligenceFileUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_sqlserver_business_intelligence_file.update")()
-	defer inconsistentCheck(d, meta)()
-
-	immutableArgs := []string{"instance_id", "file_url", "file_type", "remark"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
-	return resourceTencentCloudSqlserverIncreBackupMigrationRead(d, meta)
 }
 
 func resourceTencentCloudSqlserverBusinessIntelligenceFileDelete(d *schema.ResourceData, meta interface{}) error {

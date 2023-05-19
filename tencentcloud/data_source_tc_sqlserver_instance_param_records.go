@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_sqlserver_instance_param_records" "instance_param_records" {
-  instance_id = "mssql-j8kv137v"
-  }
+  instance_id = "mssql-qelbzgwf"
+}
 ```
 */
 package tencentcloud

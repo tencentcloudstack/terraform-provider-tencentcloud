@@ -6,9 +6,8 @@ Example Usage
 ```hcl
 resource "tencentcloud_sqlserver_general_backup" "general_backup" {
   strategy = 0
-  db_names = ["db1", "db2"]
-  instance_id = "mssql-i1z41iwd"
-  backup_name = "bk_name"
+  instance_id = "mssql-qelbzgwf"
+  backup_name = "create_sqlserver_backup_name"
 }
 ```
 
@@ -244,6 +243,14 @@ func resourceTencentCloudSqlserverGeneralBackupRead(d *schema.ResourceData, meta
 func resourceTencentCloudSqlserverGeneralBackupUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_sqlserver_general_backup.update")()
 	defer inconsistentCheck(d, meta)()
+
+	immutableArgs := []string{"strategy", "db_names", "instance_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	var (
 		logId      = getLogId(contextNil)

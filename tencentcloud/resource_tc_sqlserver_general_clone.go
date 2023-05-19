@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sqlserver_general_clone" "general_clone" {
-  instance_id = "Instance ID in the format of mssql-j8kv137v"
-  old_name    = "old_db_name"
-  new_name    = "new_db_name"
+  instance_id = "mssql-qelbzgwf"
+  old_name    = "keep_pubsub_db"
+  new_name    = "keep_pubsub_db_new_name"
 }
 ```
 
@@ -47,6 +47,7 @@ func resourceTencentCloudSqlserverGeneralClone() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Instance ID.",
 			},
 			"old_name": {

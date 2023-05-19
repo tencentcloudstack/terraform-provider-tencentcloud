@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sqlserver_general_communication" "general_communication" {
-  instance_id_set =
+  instance_id = "mssql-qelbzgwf"
 }
 ```
 
@@ -34,7 +34,6 @@ func resourceTencentCloudSqlserverGeneralCommunication() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudSqlserverGeneralCommunicationCreate,
 		Read:   resourceTencentCloudSqlserverGeneralCommunicationRead,
-		Update: resourceTencentCloudSqlserverGeneralCommunicationUpdate,
 		Delete: resourceTencentCloudSqlserverGeneralCommunicationDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -42,6 +41,7 @@ func resourceTencentCloudSqlserverGeneralCommunication() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "ID of instances.",
 			},
@@ -143,21 +143,6 @@ func resourceTencentCloudSqlserverGeneralCommunicationRead(d *schema.ResourceDat
 	}
 
 	return nil
-}
-
-func resourceTencentCloudSqlserverGeneralCommunicationUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_sqlserver_general_communication.update")()
-	defer inconsistentCheck(d, meta)()
-
-	immutableArgs := []string{"instance_id"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
-	return resourceTencentCloudSqlserverGeneralCommunicationRead(d, meta)
 }
 
 func resourceTencentCloudSqlserverGeneralCommunicationDelete(d *schema.ResourceData, meta interface{}) error {

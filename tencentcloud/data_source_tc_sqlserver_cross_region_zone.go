@@ -4,9 +4,9 @@ Use this data source to query detailed information of sqlserver datasource_cross
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_cross_region_zone" "datasource_cross_region_zone" {
-  instance_id = "mssql-j8kv137v"
-    }
+data "tencentcloud_sqlserver_cross_region_zone" "cross_region_zone" {
+  instance_id = "mssql-qelbzgwf"
+}
 ```
 */
 package tencentcloud

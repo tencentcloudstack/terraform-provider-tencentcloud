@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_sqlserver_slowlogs" "slowlogs" {
-  instance_id = "mssql-j8kv137v"
-  start_time = ""
-  end_time = ""
-  }
+  instance_id = "mssql-qelbzgwf"
+  start_time = "2020-05-01 00:00:00"
+  end_time = "2023-05-18 00:00:00"
+}
 ```
 */
 package tencentcloud

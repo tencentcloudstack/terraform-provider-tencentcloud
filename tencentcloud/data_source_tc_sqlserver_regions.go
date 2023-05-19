@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_sqlserver_regions" "datasource_regions" {
-  }
+}
 ```
 */
 package tencentcloud

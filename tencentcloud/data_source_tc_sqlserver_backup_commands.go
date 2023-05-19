@@ -6,10 +6,10 @@ Example Usage
 ```hcl
 data "tencentcloud_sqlserver_backup_commands" "backup_command" {
   backup_file_type = "FULL"
-  data_base_name = "db_name"
-  is_recovery = "No"
+  data_base_name = "keep-publish-instance"
+  is_recovery = "NO"
   local_path = ""
-  }
+}
 ```
 */
 package tencentcloud

@@ -6,7 +6,7 @@ Example Usage
 ```hcl
 data "tencentcloud_sqlserver_project_security_groups" "project_security_groups" {
   project_id = 0
-  }
+}
 ```
 */
 package tencentcloud
