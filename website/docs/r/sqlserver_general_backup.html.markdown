@@ -16,9 +16,8 @@ Provides a resource to create a sqlserver general_backup
 ```hcl
 resource "tencentcloud_sqlserver_general_backup" "general_backup" {
   strategy    = 0
-  db_names    = ["db1", "db2"]
-  instance_id = "mssql-i1z41iwd"
-  backup_name = "bk_name"
+  instance_id = "mssql-qelbzgwf"
+  backup_name = "create_sqlserver_backup_name"
 }
 ```
 

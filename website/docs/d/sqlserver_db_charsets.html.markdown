@@ -14,8 +14,8 @@ Use this data source to query detailed information of sqlserver datasource_d_b_c
 ## Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_db_charsets" "datasource_d_b_charsets" {
-  instance_id = "mssql-j8kv137v"
+data "tencentcloud_sqlserver_db_charsets" "db_charsets" {
+  instance_id = "mssql-qelbzgwf"
 }
 ```
 

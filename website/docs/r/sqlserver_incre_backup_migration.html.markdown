@@ -15,10 +15,10 @@ Provides a resource to create a sqlserver incre_backup_migration
 
 ```hcl
 resource "tencentcloud_sqlserver_incre_backup_migration" "incre_backup_migration" {
-  instance_id         = "mssql-i1z41iwd"
-  backup_migration_id = "migration_00001"
-  backup_files        =
-  is_recovery         = "No"
+  instance_id         = "mssql-4gmc5805"
+  backup_migration_id = "mssql-backup-migration-9tj0sxnz"
+  backup_files        = []
+  is_recovery         = "NO"
 }
 ```
 

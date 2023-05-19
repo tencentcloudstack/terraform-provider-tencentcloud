@@ -15,8 +15,8 @@ Use this data source to query detailed information of sqlserver rollback_time
 
 ```hcl
 data "tencentcloud_sqlserver_rollback_time" "rollback_time" {
-  instance_id = "mssql-j8kv137v"
-  dbs         =
+  instance_id = "mssql-qelbzgwf"
+  dbs         = ["keep_pubsub_db"]
 }
 ```
 

@@ -14,11 +14,11 @@ Provides a resource to create a sqlserver full_backup_migration
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_full_backup_migration" "full_backup_migration" {
-  instance_id    = "mssql-i1z41iwd"
+resource "tencentcloud_sqlserver_full_backup_migration" "my_migration" {
+  instance_id    = "mssql-qelbzgwf"
   recovery_type  = "FULL"
   upload_type    = "COS_URL"
-  migration_name = "test_migration"
+  migration_name = "migration_test"
   backup_files   = []
 }
 ```

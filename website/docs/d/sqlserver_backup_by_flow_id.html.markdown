@@ -14,9 +14,15 @@ Use this data source to query detailed information of sqlserver datasource_backu
 ## Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_backup_by_flow_id" "datasource_backup_by_flow_id" {
-  instance_id = "mssql-i1z41iwd"
-  flow_id     = ""
+resource "tencentcloud_sqlserver_general_backup" "general_backup" {
+  strategy    = 0
+  instance_id = "mssql-qelbzgwf"
+  backup_name = "create_sqlserver_backup_name"
+}
+
+data "tencentcloud_sqlserver_backup_by_flow_id" "backup_by_flow_id" {
+  instance_id = tencentcloud_sqlserver_general_backup.general_backup.instance_id
+  flow_id     = tencentcloud_sqlserver_general_backup.general_backup.flow_id
 }
 ```
 

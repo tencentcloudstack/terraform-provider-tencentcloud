@@ -15,7 +15,7 @@ Provides a resource to create a sqlserver general_communication
 
 ```hcl
 resource "tencentcloud_sqlserver_general_communication" "general_communication" {
-  instance_id_set =
+  instance_id = "mssql-qelbzgwf"
 }
 ```
 
@@ -23,7 +23,7 @@ resource "tencentcloud_sqlserver_general_communication" "general_communication" 
 
 The following arguments are supported:
 
-* `instance_id` - (Required, String) ID of instances.
+* `instance_id` - (Required, String, ForceNew) ID of instances.
 
 ## Attributes Reference
 

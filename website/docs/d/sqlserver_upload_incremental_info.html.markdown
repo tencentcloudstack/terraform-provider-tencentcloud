@@ -15,9 +15,9 @@ Use this data source to query detailed information of sqlserver upload_increment
 
 ```hcl
 data "tencentcloud_sqlserver_upload_incremental_info" "upload_incremental_info" {
-  instance_id              = "mssql-j8kv137v"
-  backup_migration_id      = "migration_id"
-  incremental_migration_id = ""
+  instance_id              = "mssql-4tgeyeeh"
+  backup_migration_id      = "mssql-backup-migration-83t5u3tv"
+  incremental_migration_id = "mssql-incremental-migration-h36gkdxn"
 }
 ```
 

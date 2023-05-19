@@ -15,25 +15,20 @@ Provides a resource to create a sqlserver business_intelligence_instance
 
 ```hcl
 resource "tencentcloud_sqlserver_business_intelligence_instance" "business_intelligence_instance" {
-  zone                = "ap-guangzhou-1"
-  memory              = 10
-  storage             = 100
+  zone                = "ap-guangzhou-6"
+  memory              = 4
+  storage             = 20
   cpu                 = 2
-  machine_type        = "CLOUD_SSD"
+  machine_type        = "CLOUD_PREMIUM"
   project_id          = 0
-  goods_num           = 1
-  subnet_id           = "subnet-bdoe83fa"
-  vpc_id              = "vpc-dsp338hz"
-  d_b_version         = ""
-  security_group_list =
-  weekly              =
-  start_time          = ""
-  span                =
-  resource_tags {
-    tag_key   = ""
-    tag_value = ""
-
-  }
+  subnet_id           = "subnet-dwj7ipnc"
+  vpc_id              = "vpc-4owdpnwr"
+  db_version          = "201603"
+  security_group_list = []
+  weekly              = [1, 2, 3, 4, 5, 6, 7]
+  start_time          = "00:00"
+  span                = 6
+  instance_name       = "create_db_name"
 }
 ```
 
