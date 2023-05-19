@@ -1050,6 +1050,10 @@ TencentDB for DBbrain(dbbrain)
 	tencentcloud_dbbrain_health_scores
 	tencentcloud_dbbrain_sql_templates
 	tencentcloud_dbbrain_db_space_status
+	tencentcloud_dbbrain_top_space_schemas
+	tencentcloud_dbbrain_top_space_tables
+	tencentcloud_dbbrain_top_space_schema_time_series
+	tencentcloud_dbbrain_top_space_table_time_series
 
   Resource
 	tencentcloud_dbbrain_sql_filter
@@ -1615,6 +1619,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_health_scores":                     dataSourceTencentCloudDbbrainHealthScores(),
 			"tencentcloud_dbbrain_sql_templates":                     dataSourceTencentCloudDbbrainSqlTemplates(),
 			"tencentcloud_dbbrain_db_space_status":                   dataSourceTencentCloudDbbrainDbSpaceStatus(),
+			"tencentcloud_dbbrain_top_space_schemas":                 dataSourceTencentCloudDbbrainTopSpaceSchemas(),
+			"tencentcloud_dbbrain_top_space_tables":                  dataSourceTencentCloudDbbrainTopSpaceTables(),
+			"tencentcloud_dbbrain_top_space_schema_time_series":      dataSourceTencentCloudDbbrainTopSpaceSchemaTimeSeries(),
+			"tencentcloud_dbbrain_top_space_table_time_series":       dataSourceTencentCloudDbbrainTopSpaceTableTimeSeries(),
 			"tencentcloud_dts_sync_jobs":                             dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                         dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                          dataSourceTencentCloudDtsMigrateJobs(),
