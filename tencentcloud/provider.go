@@ -853,6 +853,8 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_reboot_instance
 	tencentcloud_lighthouse_key_pair_attachment
 	tencentcloud_lighthouse_disk
+	tencentcloud_lighthouse_renew_disk
+	tencentcloud_lighthouse_renew_instance
 
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
@@ -866,6 +868,8 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_instance_disk_num
 	tencentcloud_lighthouse_instance_blueprint
 	tencentcloud_lighthouse_disk_config
+	tencentcloud_lighthouse_all_scene
+	tencentcloud_lighthouse_modify_instance_bundle
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -1673,8 +1677,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_nacos_server_interfaces":               dataSourceTencentCloudTseNacosServerInterfaces(),
 			"tencentcloud_tse_zookeeper_replicas":                    dataSourceTencentCloudTseZookeeperReplicas(),
 			"tencentcloud_tse_zookeeper_server_interfaces":           dataSourceTencentCloudTseZookeeperServerInterfaces(),
+			"tencentcloud_lighthouse_modify_instance_bundle":         dataSourceTencentCloudLighthouseModifyInstanceBundle(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
 			"tencentcloud_lighthouse_scene":                          dataSourceTencentCloudLighthouseScene(),
+			"tencentcloud_lighthouse_all_scene":                      dataSourceTencentCloudLighthouseAllScene(),
 			"tencentcloud_lighthouse_reset_instance_blueprint":       dataSourceTencentCloudLighthouseResetInstanceBlueprint(),
 			"tencentcloud_lighthouse_region":                         dataSourceTencentCloudLighthouseRegion(),
 			"tencentcloud_lighthouse_instance_vnc_url":               dataSourceTencentCloudLighthouseInstanceVncUrl(),
@@ -2196,6 +2202,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_reboot_instance":                 resourceTencentCloudLighthouseRebootInstance(),
 			"tencentcloud_lighthouse_key_pair_attachment":             resourceTencentCloudLighthouseKeyPairAttachment(),
 			"tencentcloud_lighthouse_disk":                            resourceTencentCloudLighthouseDisk(),
+			"tencentcloud_lighthouse_renew_disk":                      resourceTencentCloudLighthouseRenewDisk(),
+			"tencentcloud_lighthouse_renew_instance":                  resourceTencentCloudLighthouseRenewInstance(),
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
