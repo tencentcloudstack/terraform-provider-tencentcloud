@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_sqlserver_general_clone" "general_clone" {
-  instance_id = "Instance ID in the format of mssql-j8kv137v"
-  old_name    = "old_db_name"
-  new_name    = "new_db_name"
+  instance_id = "mssql-qelbzgwf"
+  old_name    = "keep_pubsub_db"
+  new_name    = "keep_pubsub_db_new_name"
 }
 ```
 
@@ -45,8 +45,9 @@ func resourceTencentCloudSqlserverGeneralClone() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Required:    true,
 				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 				Description: "Instance ID.",
 			},
 			"old_name": {
@@ -58,105 +59,6 @@ func resourceTencentCloudSqlserverGeneralClone() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "New database name. In offline migration, OldName will be used if NewName is left empty (OldName and NewName cannot be both empty). In database cloning, OldName and NewName must be both specified and cannot have the same value.",
-			},
-			"db_detail": {
-				Computed:    true,
-				Type:        schema.TypeList,
-				Description: "Sqlserver db Clone detail.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"collation_name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "database collation.",
-						},
-						"is_auto_cleanup_on": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Whether to automatically clean up after turning on CT 0: No 1: Yes.",
-						},
-						"is_broker_enabled": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Proxy enabled 0: No 1: Yes.",
-						},
-						"is_cdc_enabled": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Whether CDC is enabled/disabled 0: Disabled 1: Enabled.",
-						},
-						"is_db_chaining_on": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Whether CT is enabled/disabled 0: Disabled 1: Enabled.",
-						},
-						"is_encrypted": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Whether to encrypt 0: No 1: Yes.",
-						},
-						"is_fulltext_enabled": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Whether to enable full text 0: No 1: Yes.",
-						},
-						"is_mirroring": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Whether it is a mirror image 0: No 1: Yes.",
-						},
-						"is_published": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Published or not 0: No 1: Yes.",
-						},
-						"is_read_committed_snapshot_on": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Whether to enable snapshot 0: No 1: Yes.",
-						},
-						"is_subscribed": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Subscribed 0: No 1: Yes.",
-						},
-						"is_trust_worthy_on": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Trustworthy 0: No 1: Yes.",
-						},
-						"mirroring_state": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "mirror status.",
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "db name.",
-						},
-						"recovery_model_desc": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "recovery mode.",
-						},
-						"retention_period": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "retention days.",
-						},
-						"state_desc": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "database status.",
-						},
-						"user_access_desc": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "user type.",
-						},
-					},
-				},
 			},
 		},
 	}
@@ -173,6 +75,7 @@ func resourceTencentCloudSqlserverGeneralCloneCreate(d *schema.ResourceData, met
 		request    = sqlserver.NewCloneDBRequest()
 		response   = sqlserver.NewCloneDBResponse()
 		instanceId string
+		oldName    string
 		newName    string
 		flowId     int64
 	)
@@ -185,6 +88,7 @@ func resourceTencentCloudSqlserverGeneralCloneCreate(d *schema.ResourceData, met
 	renameRestore := sqlserver.RenameRestoreDatabase{}
 	if v, ok := d.GetOk("old_name"); ok {
 		renameRestore.OldName = helper.String(v.(string))
+		oldName = v.(string)
 	}
 
 	if v, ok := d.GetOk("new_name"); ok {
@@ -254,7 +158,8 @@ func resourceTencentCloudSqlserverGeneralCloneCreate(d *schema.ResourceData, met
 		return err
 	}
 
-	d.SetId(strings.Join([]string{instanceId, newName}, FILED_SP))
+	d.SetId(strings.Join([]string{instanceId, oldName, newName}, FILED_SP))
+
 	return resourceTencentCloudSqlserverGeneralCloneRead(d, meta)
 }
 
@@ -267,84 +172,36 @@ func resourceTencentCloudSqlserverGeneralCloneRead(d *schema.ResourceData, meta 
 		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
 		service    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 		instanceId string
-		dbName     string
+		oldName    string
+		newName    string
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId = idSplit[0]
-	dbName = idSplit[1]
+	oldName = idSplit[1]
+	newName = idSplit[2]
 
 	generalClone, err := service.DescribeSqlserverGeneralCloneById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
-	list := make([]map[string]interface{}, 0)
+	if generalClone == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `sqlserver_general_clone` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
 	for _, v := range generalClone {
-		if *v.Name == dbName {
-			var infoMap = map[string]interface{}{}
-			if v.CollationName != nil {
-				infoMap["collation_name"] = v.CollationName
-			}
-			if v.IsAutoCleanupOn != nil {
-				infoMap["is_auto_cleanup_on"] = v.IsAutoCleanupOn
-			}
-			if v.IsBrokerEnabled != nil {
-				infoMap["is_broker_enabled"] = v.IsBrokerEnabled
-			}
-			if v.IsCdcEnabled != nil {
-				infoMap["is_cdc_enabled"] = v.IsCdcEnabled
-			}
-			if v.IsDbChainingOn != nil {
-				infoMap["is_db_chaining_on"] = v.IsDbChainingOn
-			}
-			if v.IsEncrypted != nil {
-				infoMap["is_encrypted"] = v.IsEncrypted
-			}
-			if v.IsFulltextEnabled != nil {
-				infoMap["is_fulltext_enabled"] = v.IsFulltextEnabled
-			}
-			if v.IsMirroring != nil {
-				infoMap["is_mirroring"] = v.IsMirroring
-			}
-			if v.IsPublished != nil {
-				infoMap["is_published"] = v.IsPublished
-			}
-			if v.IsReadCommittedSnapshotOn != nil {
-				infoMap["is_read_committed_snapshot_on"] = v.IsReadCommittedSnapshotOn
-			}
-			if v.IsSubscribed != nil {
-				infoMap["is_subscribed"] = v.IsSubscribed
-			}
-			if v.IsTrustworthyOn != nil {
-				infoMap["is_trust_worthy_on"] = v.IsTrustworthyOn
-			}
-			if v.MirroringState != nil {
-				infoMap["mirroring_state"] = v.MirroringState
-			}
-			if v.Name != nil {
-				infoMap["name"] = v.Name
-			}
-			if v.RecoveryModelDesc != nil {
-				infoMap["recovery_model_desc"] = v.RecoveryModelDesc
-			}
-			if v.RetentionPeriod != nil {
-				infoMap["retention_period"] = v.RetentionPeriod
-			}
-			if v.StateDesc != nil {
-				infoMap["state_desc"] = v.StateDesc
-			}
-			if v.UserAccessDesc != nil {
-				infoMap["user_access_desc"] = v.UserAccessDesc
-			}
-			list = append(list, infoMap)
-			break
+		if *v.Name == newName {
+			_ = d.Set("instance_id", instanceId)
+			_ = d.Set("old_name", oldName)
+			_ = d.Set("new_name", v.Name)
 		}
 	}
-	_ = d.Set("db_detail", list)
 
 	return nil
 }
@@ -359,20 +216,24 @@ func resourceTencentCloudSqlserverGeneralCloneUpdate(d *schema.ResourceData, met
 		service    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request    = sqlserver.NewModifyDBNameRequest()
 		instanceId string
-		dbName     string
-		newName    string
 		flowId     int64
+		oldName    string
+		newName    string
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId = idSplit[0]
-	dbName = idSplit[1]
 
 	request.InstanceId = &instanceId
-	request.OldDBName = &dbName
+	if d.HasChange("old_name") {
+		if v, ok := d.GetOk("old_name"); ok {
+			request.OldDBName = helper.String(v.(string))
+			oldName = v.(string)
+		}
+	}
 
 	if d.HasChange("new_name") {
 		if v, ok := d.GetOk("new_name"); ok {
@@ -437,7 +298,7 @@ func resourceTencentCloudSqlserverGeneralCloneUpdate(d *schema.ResourceData, met
 		return err
 	}
 
-	d.SetId(strings.Join([]string{instanceId, newName}, FILED_SP))
+	d.SetId(strings.Join([]string{instanceId, oldName, newName}, FILED_SP))
 	return resourceTencentCloudSqlserverGeneralCloneRead(d, meta)
 }
 
@@ -455,11 +316,11 @@ func resourceTencentCloudSqlserverGeneralCloneDelete(d *schema.ResourceData, met
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 2 {
+	if len(idSplit) != 3 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	instanceId = idSplit[0]
-	dbName = idSplit[1]
+	dbName = idSplit[2]
 
 	result, err := service.DeleteSqlserverGeneralCloneDB(ctx, instanceId, dbName)
 	if err != nil {

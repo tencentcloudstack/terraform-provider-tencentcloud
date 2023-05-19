@@ -617,6 +617,17 @@ SQLServer
 	tencentcloud_sqlserver_publish_subscribes
 	tencentcloud_sqlserver_basic_instances
 	tencentcloud_sqlserver_backup_commands
+	tencentcloud_sqlserver_backup_by_flow_id
+	tencentcloud_sqlserver_backup_upload_size
+	tencentcloud_sqlserver_cross_region_zone
+	tencentcloud_sqlserver_db_charsets
+	tencentcloud_sqlserver_instance_param_records
+	tencentcloud_sqlserver_project_security_groups
+	tencentcloud_sqlserver_regions
+	tencentcloud_sqlserver_rollback_time
+	tencentcloud_sqlserver_slowlogs
+	tencentcloud_sqlserver_upload_backup_info
+	tencentcloud_sqlserver_upload_incremental_info
 
   Resource
 	tencentcloud_sqlserver_instance
@@ -631,6 +642,10 @@ SQLServer
 	tencentcloud_sqlserver_general_backup
 	tencentcloud_sqlserver_general_clone
     tencentcloud_sqlserver_full_backup_migration
+	tencentcloud_sqlserver_incre_backup_migration
+    tencentcloud_sqlserver_business_intelligence_file
+	tencentcloud_sqlserver_business_intelligence_instance
+	tencentcloud_sqlserver_general_communication
 
 SSL Certificates
   Data Source
@@ -1495,6 +1510,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_account_db_attachments":          dataSourceTencentCloudSqlserverAccountDBAttachments(),
 			"tencentcloud_sqlserver_readonly_groups":                 dataSourceTencentCloudSqlserverReadonlyGroups(),
 			"tencentcloud_sqlserver_backup_commands":                 dataSourceTencentCloudSqlserverBackupCommands(),
+			"tencentcloud_sqlserver_backup_by_flow_id":               dataSourceTencentCloudSqlserverBackupByFlowId(),
+			"tencentcloud_sqlserver_backup_upload_size":              dataSourceTencentCloudSqlserverBackupUploadSize(),
+			"tencentcloud_sqlserver_cross_region_zone":               dataSourceTencentCloudSqlserverCrossRegionZone(),
+			"tencentcloud_sqlserver_db_charsets":                     dataSourceTencentCloudSqlserverDBCharsets(),
 			"tencentcloud_ckafka_users":                              dataSourceTencentCloudCkafkaUsers(),
 			"tencentcloud_ckafka_acls":                               dataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_ckafka_topics":                             dataSourceTencentCloudCkafkaTopics(),
@@ -1511,6 +1530,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_vod_snapshot_by_time_offset_templates":     dataSourceTencentCloudVodSnapshotByTimeOffsetTemplates(),
 			"tencentcloud_vod_super_player_configs":                  dataSourceTencentCloudVodSuperPlayerConfigs(),
 			"tencentcloud_sqlserver_publish_subscribes":              dataSourceTencentSqlserverPublishSubscribes(),
+			"tencentcloud_sqlserver_instance_param_records":          dataSourceTencentCloudSqlserverInstanceParamRecords(),
+			"tencentcloud_sqlserver_project_security_groups":         dataSourceTencentCloudSqlserverProjectSecurityGroups(),
+			"tencentcloud_sqlserver_regions":                         dataSourceTencentCloudSqlserverRegions(),
+			"tencentcloud_sqlserver_rollback_time":                   dataSourceTencentCloudSqlserverRollbackTime(),
+			"tencentcloud_sqlserver_slowlogs":                        dataSourceTencentCloudSqlserverSlowlogs(),
+			"tencentcloud_sqlserver_upload_backup_info":              dataSourceTencentCloudSqlserverUploadBackupInfo(),
+			"tencentcloud_sqlserver_upload_incremental_info":         dataSourceTencentCloudSqlserverUploadIncrementalInfo(),
 			"tencentcloud_api_gateway_usage_plans":                   dataSourceTencentCloudAPIGatewayUsagePlans(),
 			"tencentcloud_api_gateway_ip_strategies":                 dataSourceTencentCloudAPIGatewayIpStrategy(),
 			"tencentcloud_api_gateway_customer_domains":              dataSourceTencentCloudAPIGatewayCustomerDomains(),
@@ -1895,6 +1921,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_general_backup":                    resourceTencentCloudSqlserverGeneralBackup(),
 			"tencentcloud_sqlserver_general_clone":                     resourceTencentCloudSqlserverGeneralClone(),
 			"tencentcloud_sqlserver_full_backup_migration":             resourceTencentCloudSqlserverFullBackupMigration(),
+			"tencentcloud_sqlserver_incre_backup_migration":            resourceTencentCloudSqlserverIncreBackupMigration(),
+			"tencentcloud_sqlserver_business_intelligence_file":        resourceTencentCloudSqlserverBusinessIntelligenceFile(),
+			"tencentcloud_sqlserver_business_intelligence_instance":    resourceTencentCloudSqlserverBusinessIntelligenceInstance(),
+			"tencentcloud_sqlserver_general_communication":             resourceTencentCloudSqlserverGeneralCommunication(),
 			"tencentcloud_ckafka_instance":                             resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                 resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                  resourceTencentCloudCkafkaAcl(),
