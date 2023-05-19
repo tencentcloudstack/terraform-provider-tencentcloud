@@ -25,9 +25,9 @@ func TestAccTencentCloudPostgresqlBackupPlanConfigResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testAccPostgresqlBackupPlanConfigObject, "max_backup_start_time", "02:00:00"),
 					resource.TestCheckResourceAttr(testAccPostgresqlBackupPlanConfigObject, "base_backup_retention_period", "7"),
 					resource.TestCheckResourceAttr(testAccPostgresqlBackupPlanConfigObject, "backup_period.#", "3"),
-					resource.TestCheckTypeSetElemAttr(testAccPostgresqlBackupPlanConfigObject, "backup_period.*", "1"),
-					resource.TestCheckTypeSetElemAttr(testAccPostgresqlBackupPlanConfigObject, "backup_period.*", "3"),
-					resource.TestCheckTypeSetElemAttr(testAccPostgresqlBackupPlanConfigObject, "backup_period.*", "5"),
+					resource.TestCheckTypeSetElemAttr(testAccPostgresqlBackupPlanConfigObject, "backup_period.*", "monday"),
+					resource.TestCheckTypeSetElemAttr(testAccPostgresqlBackupPlanConfigObject, "backup_period.*", "wednesday"),
+					resource.TestCheckTypeSetElemAttr(testAccPostgresqlBackupPlanConfigObject, "backup_period.*", "friday"),
 				),
 			},
 			{
