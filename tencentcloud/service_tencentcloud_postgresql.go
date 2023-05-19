@@ -1047,3 +1047,32 @@ func (me *PostgresqlService) DescribePostgresqlReadonlyGroupsByFilter(ctx contex
 
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlBackupPlanConfigById(ctx context.Context, dBInstanceId string) (BackupPlanConfig *postgresql.BackupPlan, errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeBackupPlansRequest()
+	request.DBInstanceId = &dBInstanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Plans) < 1 {
+		return
+	}
+
+	BackupPlanConfig = response.Response.Plans[0]
+	return
+}

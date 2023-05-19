@@ -43,9 +43,10 @@ func TestAccTencentCloudPostgresqlReadonlyGroupsDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccPostgresqlReadonlyGroupsDataSource = `
+const testAccPostgresqlReadonlyGroupsDataSource = CommonPresetPGSQL + `
+
 resource "tencentcloud_postgresql_readonly_group" "group" {
-	master_db_instance_id = "postgres-gzg9jb2n"
+	master_db_instance_id = local.pgsql_id
 	name = "test-datasource"
 	project_id = 0
 	vpc_id = "vpc-86v957zb"
