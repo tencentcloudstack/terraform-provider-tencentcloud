@@ -16,7 +16,7 @@ func init() {
 	})
 }
 
-// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_tcr_customized_domain
+// go test -v ./tencentcloud -sweep=ap-shanghai -sweep-run=tencentcloud_tcr_customized_domain
 func testSweepTcrCustomizedDomain(r string) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -53,14 +53,15 @@ func testSweepTcrCustomizedDomain(r string) error {
 func TestAccTencentCloudTcrCustomizedDomainResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config:    fmt.Sprintf(testAccTcrCustomizedDomain, defaultTCRSSL),
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: fmt.Sprintf(testAccTcrCustomizedDomain, defaultTCRSSL),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_customized_domain.my_domain", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_customized_domain.my_domain", "registry_id"),

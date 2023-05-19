@@ -12,14 +12,15 @@ const testTcrImageManifestsObjectName = "data.tencentcloud_tcr_image_manifests.i
 func TestAccTencentCloudTcrImageManifestsDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config:    fmt.Sprintf(testAccTcrImageManifestsDataSource, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: fmt.Sprintf(testAccTcrImageManifestsDataSource, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(testTcrImageManifestsObjectName),
 					resource.TestCheckResourceAttrSet(testTcrImageManifestsObjectName, "id"),
@@ -38,7 +39,7 @@ data "tencentcloud_tcr_image_manifests" "image_manifests" {
 	registry_id = "%s"
 	namespace_name = "%s" 
 	repository_name = "%s"
-	image_version = "v1"
+	image_version = "vv1"
 }
 
 `

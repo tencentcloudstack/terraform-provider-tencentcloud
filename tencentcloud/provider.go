@@ -477,6 +477,18 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_binlog_backup_overview
 	tencentcloud_mysql_clone_list
 	tencentcloud_mysql_data_backup_overview
+	tencentcloud_mysql_db_features
+	tencentcloud_mysql_inst_tables
+	tencentcloud_mysql_instance_charset
+	tencentcloud_mysql_instance_info
+	tencentcloud_mysql_instance_param_record
+	tencentcloud_mysql_instance_reboot_time
+	tencentcloud_mysql_rollback_range_time
+	tencentcloud_mysql_slow_log
+	tencentcloud_mysql_slow_log_data
+	tencentcloud_mysql_supported_privileges
+	tencentcloud_mysql_switch_record
+	tencentcloud_mysql_user_task
 
   Resource
     tencentcloud_mysql_instance
@@ -741,6 +753,7 @@ Virtual Private Cloud(VPC)
     tencentcloud_vpc
 	tencentcloud_vpc_acl
 	tencentcloud_vpc_acl_attachment
+	tencentcloud_vpc_traffic_package
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule
@@ -1388,6 +1401,19 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_binlog_backup_overview":              dataSourceTencentCloudMysqlBinlogBackupOverview(),
 			"tencentcloud_mysql_clone_list":                          dataSourceTencentCloudMysqlCloneList(),
 			"tencentcloud_mysql_data_backup_overview":                dataSourceTencentCloudMysqlDataBackupOverview(),
+			"tencentcloud_mysql_db_features":                         dataSourceTencentCloudMysqlDbFeatures(),
+			"tencentcloud_mysql_inst_tables":                         dataSourceTencentCloudMysqlInstTables(),
+			"tencentcloud_mysql_instance_charset":                    dataSourceTencentCloudMysqlInstanceCharset(),
+			"tencentcloud_mysql_instance_info":                       dataSourceTencentCloudMysqlInstanceInfo(),
+			"tencentcloud_mysql_instance_param_record":               dataSourceTencentCloudMysqlInstanceParamRecord(),
+			"tencentcloud_mysql_instance_reboot_time":                dataSourceTencentCloudMysqlInstanceRebootTime(),
+			"tencentcloud_mysql_proxy_custom":                        dataSourceTencentCloudMysqlProxyCustom(),
+			"tencentcloud_mysql_rollback_range_time":                 dataSourceTencentCloudMysqlRollbackRangeTime(),
+			"tencentcloud_mysql_slow_log":                            dataSourceTencentCloudMysqlSlowLog(),
+			"tencentcloud_mysql_slow_log_data":                       dataSourceTencentCloudMysqlSlowLogData(),
+			"tencentcloud_mysql_supported_privileges":                dataSourceTencentCloudMysqlSupportedPrivileges(),
+			"tencentcloud_mysql_switch_record":                       dataSourceTencentCloudMysqlSwitchRecord(),
+			"tencentcloud_mysql_user_task":                           dataSourceTencentCloudMysqlUserTask(),
 			"tencentcloud_cos_bucket_object":                         dataSourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_buckets":                               dataSourceTencentCloudCosBuckets(),
 			"tencentcloud_cfs_file_systems":                          dataSourceTencentCloudCfsFileSystems(),
@@ -1669,6 +1695,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_acl_attachment":                          resourceTencentCloudVpcAclAttachment(),
 			"tencentcloud_vpc_bandwidth_package":                       resourceTencentCloudVpcBandwidthPackage(),
 			"tencentcloud_vpc_bandwidth_package_attachment":            resourceTencentCloudVpcBandwidthPackageAttachment(),
+			"tencentcloud_vpc_traffic_package":                         resourceTencentCloudVpcTrafficPackage(),
 			"tencentcloud_ipv6_address_bandwidth":                      resourceTencentCloudIpv6AddressBandwidth(),
 			"tencentcloud_subnet":                                      resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                 resourceTencentCloudRouteEntry(),

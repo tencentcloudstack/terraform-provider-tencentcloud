@@ -10,14 +10,15 @@ import (
 func TestAccTencentCloudTcrImageSignatureOperationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck: func() {
-			testAccPreCheck(t)
-		},
+		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config:    fmt.Sprintf(testAccTcrImageSignatureOperation, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
-				PreConfig: func() { testAccStepSetRegion(t, "ap-shanghai") },
+				Config: fmt.Sprintf(testAccTcrImageSignatureOperation, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_create_image_signature_operation.sign_operation", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_create_image_signature_operation.sign_operation", "registry_id", defaultTCRInstanceId),
