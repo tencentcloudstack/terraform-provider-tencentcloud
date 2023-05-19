@@ -1035,6 +1035,10 @@ TencentDB for DBbrain(dbbrain)
 	tencentcloud_dbbrain_health_scores
 	tencentcloud_dbbrain_sql_templates
 	tencentcloud_dbbrain_db_space_status
+	tencentcloud_dbbrain_top_space_schemas
+	tencentcloud_dbbrain_top_space_tables
+	tencentcloud_dbbrain_top_space_schema_time_series
+	tencentcloud_dbbrain_top_space_table_time_series
 
   Resource
 	tencentcloud_dbbrain_sql_filter

@@ -5,11 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dbbrain_top_space_schemas" "top_space_schemas" {
-  instance_id = ""
-  limit =
-  sort_by = ""
-  product = ""
-    }
+  instance_id = "%s"
+  sort_by = "DataLength"
+  product = "mysql"
+}
 ```
 */
 package tencentcloud
@@ -50,7 +49,7 @@ func dataSourceTencentCloudDbbrainTopSpaceSchemas() *schema.Resource {
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include： mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL, the default is mysql.",
+				Description: "Service product type, supported values include: mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL, the default is mysql.",
 			},
 
 			"top_space_schemas": {
@@ -97,7 +96,7 @@ func dataSourceTencentCloudDbbrainTopSpaceSchemas() *schema.Resource {
 						"physical_file_size": {
 							Type:        schema.TypeFloat,
 							Computed:    true,
-							Description: "The sum (MB) of the independent physical file sizes corresponding to all tables in the library. Note： This field may return null, indicating that no valid value can be obtained.",
+							Description: "The sum (MB) of the independent physical file sizes corresponding to all tables in the library. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},

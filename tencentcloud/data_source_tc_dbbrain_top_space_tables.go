@@ -3,13 +3,22 @@ Use this data source to query detailed information of dbbrain top_space_tables
 
 Example Usage
 
+Sort by PhysicalFileSize
 ```hcl
 data "tencentcloud_dbbrain_top_space_tables" "top_space_tables" {
-  instance_id = ""
-  limit =
-  sort_by = ""
-  product = ""
-    }
+  instance_id = "%s"
+  sort_by = "PhysicalFileSize"
+  product = "mysql"
+}
+```
+
+Sort by TotalLength
+```hcl
+data "tencentcloud_dbbrain_top_space_tables" "top_space_tables" {
+  instance_id = "%s"
+  sort_by = "PhysicalFileSize"
+  product = "mysql"
+}
 ```
 */
 package tencentcloud
@@ -50,7 +59,7 @@ func dataSourceTencentCloudDbbrainTopSpaceTables() *schema.Resource {
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include： mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL, the default is mysql.",
+				Description: "Service product type, supported values include: mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL, the default is mysql.",
 			},
 
 			"top_space_tables": {

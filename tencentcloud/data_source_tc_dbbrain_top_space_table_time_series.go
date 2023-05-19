@@ -5,13 +5,12 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dbbrain_top_space_table_time_series" "top_space_table_time_series" {
-  instance_id = ""
-  limit =
-  sort_by = ""
-  start_date = ""
-  end_date = ""
-  product = ""
-  }
+  instance_id = "%s"
+  sort_by = "DataLength"
+  start_date = "%s"
+  end_date = "%s"
+  product = "mysql"
+}
 ```
 */
 package tencentcloud
@@ -64,7 +63,7 @@ func dataSourceTencentCloudDbbrainTopSpaceTableTimeSeries() *schema.Resource {
 			"product": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Service product type, supported values include： mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL, the default is mysql.",
+				Description: "Service product type, supported values include: mysql - cloud database MySQL, cynosdb - cloud database CynosDB for MySQL, the default is mysql.",
 			},
 
 			"top_space_table_time_series": {
@@ -116,7 +115,7 @@ func dataSourceTencentCloudDbbrainTopSpaceTableTimeSeries() *schema.Resource {
 													Elem: &schema.Schema{
 														Type: schema.TypeFloat,
 													},
-													Description: "Index value. Note： This field may return null, indicating that no valid value can be obtained.",
+													Description: "Index value. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 											},
 										},
