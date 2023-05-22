@@ -1755,6 +1755,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_deploy_group":                          resourceTencentCloudMysqlDeployGroup(),
 			"tencentcloud_mysql_local_binlog_config":                   resourceTencentCloudMysqlLocalBinlogConfig(),
 			"tencentcloud_mysql_audit_log_file":                        resourceTencentCloudMysqlAuditLogFile(),
+			"tencentcloud_mysql_backup_download_restriction":			resourceTencentCloudMysqlBackupDownloadRestriction(),
 			"tencentcloud_cos_bucket":                                  resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                           resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                             resourceTencentCloudCfsFileSystem(),
