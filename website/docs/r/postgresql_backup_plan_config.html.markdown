@@ -27,11 +27,11 @@ resource "tencentcloud_postgresql_backup_plan_config" "backup_plan_config" {
 
 The following arguments are supported:
 
-* `db_instance_id` - (Required, String, ForceNew) instance id.
-* `backup_period` - (Optional, Set: [`String`], ForceNew) Backup cycle, which means on which days each week the instance will be backed up. The parameter value should be the lowercase names of the days of the week.
-* `base_backup_retention_period` - (Optional, Int, ForceNew) Backup retention period in days. Value range:3-7.
-* `max_backup_start_time` - (Optional, String, ForceNew) The latest time to start a backup.
-* `min_backup_start_time` - (Optional, String, ForceNew) The earliest time to start a backup.
+* `db_instance_id` - (Required, String) instance id.
+* `backup_period` - (Optional, Set: [`String`]) Backup cycle, which means on which days each week the instance will be backed up. The parameter value should be the lowercase names of the days of the week.
+* `base_backup_retention_period` - (Optional, Int) Backup retention period in days. Value range:3-7.
+* `max_backup_start_time` - (Optional, String) The latest time to start a backup.
+* `min_backup_start_time` - (Optional, String) The earliest time to start a backup.
 
 ## Attributes Reference
 
