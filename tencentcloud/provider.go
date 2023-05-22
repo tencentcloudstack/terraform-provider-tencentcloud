@@ -758,6 +758,7 @@ Virtual Private Cloud(VPC)
 	tencentcloud_vpc_traffic_package
 	tencentcloud_vpc_snapshot_policy
 	tencentcloud_vpc_snapshot_policy_attachment
+	tencentcloud_vpc_snapshot_policy_config
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule
@@ -1717,6 +1718,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_traffic_package":                         resourceTencentCloudVpcTrafficPackage(),
 			"tencentcloud_vpc_snapshot_policy":                         resourceTencentCloudVpcSnapshotPolicy(),
 			"tencentcloud_vpc_snapshot_policy_attachment":              resourceTencentCloudVpcSnapshotPolicyAttachment(),
+			"tencentcloud_vpc_snapshot_policy_config":                  resourceTencentCloudVpcSnapshotPolicyConfig(),
 			"tencentcloud_ipv6_address_bandwidth":                      resourceTencentCloudIpv6AddressBandwidth(),
 			"tencentcloud_subnet":                                      resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                 resourceTencentCloudRouteEntry(),
