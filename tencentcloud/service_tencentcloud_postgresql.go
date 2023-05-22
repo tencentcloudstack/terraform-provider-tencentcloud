@@ -1076,3 +1076,115 @@ func (me *PostgresqlService) DescribePostgresqlBackupPlanConfigById(ctx context.
 	BackupPlanConfig = response.Response.Plans[0]
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlBaseBackupsByFilter(ctx context.Context, param map[string]interface{}) (BaseBackups []*postgresql.BaseBackup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeBaseBackupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "MinFinishTime" {
+			request.MinFinishTime = v.(*string)
+		}
+		if k == "MaxFinishTime" {
+			request.MaxFinishTime = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*postgresql.Filter)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = helper.Int64Uint64(offset)
+		request.Limit = helper.Int64Uint64(limit)
+		response, err := me.client.UsePostgresqlClient().DescribeBaseBackups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BaseBackupSet) < 1 {
+			break
+		}
+		BaseBackups = append(BaseBackups, response.Response.BaseBackupSet...)
+		if len(response.Response.BaseBackupSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlBaseBackupById(ctx context.Context, dBInstanceId string) (BaseBackup *postgresql.BaseBackup, errRet error) {
+	logId := getLogId(ctx)
+
+	params := map[string]interface{}{
+		"Filters": []*postgresql.Filter{
+			{
+				Name: helper.String("db-instance-id"),
+				Values: []*string{
+					helper.String(dBInstanceId),
+				},
+			},
+		},
+	}
+
+	backups, err := me.DescribePostgresqlBaseBackupsByFilter(ctx, params)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(backups) == 1 {
+		BaseBackup = backups[0]
+		log.Printf("[DEBUG]%s DescribePostgresqlBaseBackupById success, BaseBackupId:[%s]\n", logId, *BaseBackup.Id)
+	}
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlBaseBackupById(ctx context.Context, dBInstanceId string, baseBackupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteBaseBackupRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.BaseBackupId = &baseBackupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteBaseBackup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
