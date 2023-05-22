@@ -806,7 +806,6 @@ func (me *PostgresqlService) DescribeDBEncryptionKeys(ctx context.Context, reque
 }
 
 func (me *PostgresqlService) DescribePostgresqlReadonlyGroups(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
-func (me *PostgresqlService) DescribePostgresqlReadonlyGroups(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewDescribeReadOnlyGroupsRequest()
 	defer func() {
@@ -1150,6 +1149,8 @@ func (me *PostgresqlService) DescribePostgresqlBaseBackupById(ctx context.Contex
 				},
 			},
 		},
+		"OrderBy":     helper.String("StartTime"),
+		"OrderByType": helper.String("desc"),
 	}
 
 	backups, err := me.DescribePostgresqlBaseBackupsByFilter(ctx, params)
@@ -1158,10 +1159,9 @@ func (me *PostgresqlService) DescribePostgresqlBaseBackupById(ctx context.Contex
 		return
 	}
 
-	if len(backups) == 1 {
-		BaseBackup = backups[0]
-		log.Printf("[DEBUG]%s DescribePostgresqlBaseBackupById success, BaseBackupId:[%s]\n", logId, *BaseBackup.Id)
-	}
+	BaseBackup = backups[0]
+	log.Printf("[DEBUG]%s DescribePostgresqlBaseBackupById success, BaseBackupId:[%s]\n", logId, *BaseBackup.Id)
+
 	return
 }
 
