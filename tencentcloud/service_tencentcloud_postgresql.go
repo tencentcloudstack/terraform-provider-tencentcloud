@@ -805,7 +805,7 @@ func (me *PostgresqlService) DescribeDBEncryptionKeys(ctx context.Context, reque
 	return
 }
 
-func (me *PostgresqlService) DescribePostgresqlReadOnlyGroups(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroups(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewDescribeReadOnlyGroupsRequest()
 	defer func() {
@@ -1006,4 +1006,73 @@ func (me *PostgresqlService) PostgresqlUpgradeKernelVersionRefreshFunc(instanceI
 
 		return instance, *instance.DBInstanceStatus, nil
 	}
+}
+
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroupsByFilter(ctx context.Context, param map[string]interface{}) (ReadOnlyGroups []*postgresql.ReadOnlyGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeReadOnlyGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*postgresql.Filter)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeReadOnlyGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ReadOnlyGroupList) < 1 {
+		return
+	}
+	ReadOnlyGroups = response.Response.ReadOnlyGroupList
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlBackupPlanConfigById(ctx context.Context, dBInstanceId string) (BackupPlanConfig *postgresql.BackupPlan, errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeBackupPlansRequest()
+	request.DBInstanceId = &dBInstanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeBackupPlans(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Plans) < 1 {
+		return
+	}
+
+	BackupPlanConfig = response.Response.Plans[0]
+	return
 }
