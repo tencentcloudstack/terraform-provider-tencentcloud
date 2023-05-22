@@ -231,64 +231,61 @@ func resourceTencentCloudVpcSnapshotPolicyRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
-	if snapshotPolicies != nil {
-		for _, snapshotPolicy := range snapshotPolicies {
-			if snapshotPolicy.SnapshotPolicyName != nil {
-				_ = d.Set("snapshot_policy_name", snapshotPolicy.SnapshotPolicyName)
-			}
-
-			if snapshotPolicy.BackupType != nil {
-				_ = d.Set("backup_type", snapshotPolicy.BackupType)
-			}
-
-			if snapshotPolicy.KeepTime != nil {
-				_ = d.Set("keep_time", snapshotPolicy.KeepTime)
-			}
-
-			if snapshotPolicy.CreateNewCos != nil {
-				_ = d.Set("create_new_cos", snapshotPolicy.CreateNewCos)
-			}
-
-			if snapshotPolicy.CosRegion != nil {
-				_ = d.Set("cos_region", snapshotPolicy.CosRegion)
-			}
-
-			if snapshotPolicy.CosBucket != nil {
-				_ = d.Set("cos_bucket", snapshotPolicy.CosBucket)
-			}
-
-			if snapshotPolicy.SnapshotPolicyId != nil {
-				_ = d.Set("snapshot_policy_id", snapshotPolicy.SnapshotPolicyId)
-			}
-
-			if snapshotPolicy.BackupPolicies != nil {
-				backupPoliciesList := []interface{}{}
-				for _, backupPolicies := range snapshotPolicy.BackupPolicies {
-					backupPoliciesMap := map[string]interface{}{}
-
-					if backupPolicies.BackupDay != nil {
-						backupPoliciesMap["backup_day"] = backupPolicies.BackupDay
-					}
-
-					if backupPolicies.BackupTime != nil {
-						backupPoliciesMap["backup_time"] = backupPolicies.BackupTime
-					}
-
-					backupPoliciesList = append(backupPoliciesList, backupPoliciesMap)
-				}
-
-				_ = d.Set("backup_policies", backupPoliciesList)
-			}
-
-			if snapshotPolicy.Enable != nil {
-				_ = d.Set("enable", snapshotPolicy.Enable)
-			}
-
-			if snapshotPolicy.CreateTime != nil {
-				_ = d.Set("create_time", snapshotPolicy.CreateTime)
-			}
+	for _, snapshotPolicy := range snapshotPolicies {
+		if snapshotPolicy.SnapshotPolicyName != nil {
+			_ = d.Set("snapshot_policy_name", snapshotPolicy.SnapshotPolicyName)
 		}
 
+		if snapshotPolicy.BackupType != nil {
+			_ = d.Set("backup_type", snapshotPolicy.BackupType)
+		}
+
+		if snapshotPolicy.KeepTime != nil {
+			_ = d.Set("keep_time", snapshotPolicy.KeepTime)
+		}
+
+		if snapshotPolicy.CreateNewCos != nil {
+			_ = d.Set("create_new_cos", snapshotPolicy.CreateNewCos)
+		}
+
+		if snapshotPolicy.CosRegion != nil {
+			_ = d.Set("cos_region", snapshotPolicy.CosRegion)
+		}
+
+		if snapshotPolicy.CosBucket != nil {
+			_ = d.Set("cos_bucket", snapshotPolicy.CosBucket)
+		}
+
+		if snapshotPolicy.SnapshotPolicyId != nil {
+			_ = d.Set("snapshot_policy_id", snapshotPolicy.SnapshotPolicyId)
+		}
+
+		if snapshotPolicy.BackupPolicies != nil {
+			backupPoliciesList := []interface{}{}
+			for _, backupPolicies := range snapshotPolicy.BackupPolicies {
+				backupPoliciesMap := map[string]interface{}{}
+
+				if backupPolicies.BackupDay != nil {
+					backupPoliciesMap["backup_day"] = backupPolicies.BackupDay
+				}
+
+				if backupPolicies.BackupTime != nil {
+					backupPoliciesMap["backup_time"] = backupPolicies.BackupTime
+				}
+
+				backupPoliciesList = append(backupPoliciesList, backupPoliciesMap)
+			}
+
+			_ = d.Set("backup_policies", backupPoliciesList)
+		}
+
+		if snapshotPolicy.Enable != nil {
+			_ = d.Set("enable", snapshotPolicy.Enable)
+		}
+
+		if snapshotPolicy.CreateTime != nil {
+			_ = d.Set("create_time", snapshotPolicy.CreateTime)
+		}
 	}
 
 	return nil
