@@ -321,6 +321,9 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_disaster_recover_group_quota
 	tencentcloud_cvm_chc_hosts
 	tencentcloud_cvm_chc_denied_actions
+	tencentcloud_cvm_image_quota
+	tencentcloud_cvm_image_share_permission
+	tencentcloud_cvm_import_image_os
 
   Resource
     tencentcloud_instance
@@ -341,6 +344,8 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_security_group_attachment
 	tencentcloud_cvm_reboot_instance
 	tencentcloud_cvm_chc_config
+	tencentcloud_cvm_renew_instance
+	tencentcloud_cvm_sync_image
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -1659,10 +1664,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_cvm_disaster_recover_group_quota":          dataSourceTencentCloudCvmDisasterRecoverGroupQuota(),
 			"tencentcloud_cvm_chc_hosts":                             dataSourceTencentCloudCvmChcHosts(),
 			"tencentcloud_cvm_chc_denied_actions":                    dataSourceTencentCloudCvmChcDeniedActions(),
+			"tencentcloud_cvm_image_quota":                           dataSourceTencentCloudCvmImageQuota(),
+			"tencentcloud_cvm_import_image_os":                       dataSourceTencentCloudCvmImportImageOs(),
 			"tencentcloud_tsf_application":                           dataSourceTencentCloudTsfApplication(),
 			"tencentcloud_tsf_application_config":                    dataSourceTencentCloudTsfApplicationConfig(),
 			"tencentcloud_tsf_application_file_config":               dataSourceTencentCloudTsfApplicationFileConfig(),
 			"tencentcloud_tsf_application_public_config":             dataSourceTencentCloudTsfApplicationPublicConfig(),
+			"tencentcloud_cvm_image_share_permission":                dataSourceTencentCloudCvmImageSharePermission(),
 			"tencentcloud_tsf_cluster":                               dataSourceTencentCloudTsfCluster(),
 			"tencentcloud_tsf_microservice":                          dataSourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_unit_rules":                            dataSourceTencentCloudTsfUnitRules(),
@@ -2201,6 +2209,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cvm_security_group_attachment":              resourceTencentCloudCvmSecurityGroupAttachment(),
 			"tencentcloud_cvm_reboot_instance":                        resourceTencentCloudCvmRebootInstance(),
 			"tencentcloud_cvm_chc_config":                             resourceTencentCloudCvmChcConfig(),
+			"tencentcloud_cvm_sync_image":                             resourceTencentCloudCvmSyncImage(),
+			"tencentcloud_cvm_renew_instance":                         resourceTencentCloudCvmRenewInstance(),
 			"tencentcloud_lighthouse_disk_backup":                     resourceTencentCloudLighthouseDiskBackup(),
 			"tencentcloud_lighthouse_apply_disk_backup":               resourceTencentCloudLighthouseApplyDiskBackup(),
 			"tencentcloud_lighthouse_disk_attachment":                 resourceTencentCloudLighthouseDiskAttachment(),
