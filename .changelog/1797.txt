@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_lighthouse_all_scene
+```
+
+```release-note:new-data-source
+tencentcloud_lighthouse_modify_instance_bundle
+```
+
+```release-note:new-resource
+tencentcloud_lighthouse_renew_disk
+```
+
+```release-note:new-resource
+tencentcloud_lighthouse_renew_instance
+```

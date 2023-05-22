@@ -806,6 +806,7 @@ func (me *PostgresqlService) DescribeDBEncryptionKeys(ctx context.Context, reque
 }
 
 func (me *PostgresqlService) DescribePostgresqlReadonlyGroups(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroups(ctx context.Context, filter []*postgresql.Filter) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewDescribeReadOnlyGroupsRequest()
 	defer func() {

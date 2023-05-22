@@ -321,6 +321,9 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_disaster_recover_group_quota
 	tencentcloud_cvm_chc_hosts
 	tencentcloud_cvm_chc_denied_actions
+	tencentcloud_cvm_image_quota
+	tencentcloud_cvm_image_share_permission
+	tencentcloud_cvm_import_image_os
 
   Resource
     tencentcloud_instance
@@ -341,6 +344,8 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_security_group_attachment
 	tencentcloud_cvm_reboot_instance
 	tencentcloud_cvm_chc_config
+	tencentcloud_cvm_renew_instance
+	tencentcloud_cvm_sync_image
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -758,6 +763,9 @@ Virtual Private Cloud(VPC)
 	tencentcloud_vpc_acl
 	tencentcloud_vpc_acl_attachment
 	tencentcloud_vpc_traffic_package
+	tencentcloud_vpc_snapshot_policy
+	tencentcloud_vpc_snapshot_policy_attachment
+	tencentcloud_vpc_snapshot_policy_config
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule
@@ -857,6 +865,8 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_reboot_instance
 	tencentcloud_lighthouse_key_pair_attachment
 	tencentcloud_lighthouse_disk
+	tencentcloud_lighthouse_renew_disk
+	tencentcloud_lighthouse_renew_instance
 
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
@@ -870,6 +880,8 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_instance_disk_num
 	tencentcloud_lighthouse_instance_blueprint
 	tencentcloud_lighthouse_disk_config
+	tencentcloud_lighthouse_all_scene
+	tencentcloud_lighthouse_modify_instance_bundle
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -1655,10 +1667,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_cvm_disaster_recover_group_quota":          dataSourceTencentCloudCvmDisasterRecoverGroupQuota(),
 			"tencentcloud_cvm_chc_hosts":                             dataSourceTencentCloudCvmChcHosts(),
 			"tencentcloud_cvm_chc_denied_actions":                    dataSourceTencentCloudCvmChcDeniedActions(),
+			"tencentcloud_cvm_image_quota":                           dataSourceTencentCloudCvmImageQuota(),
+			"tencentcloud_cvm_import_image_os":                       dataSourceTencentCloudCvmImportImageOs(),
 			"tencentcloud_tsf_application":                           dataSourceTencentCloudTsfApplication(),
 			"tencentcloud_tsf_application_config":                    dataSourceTencentCloudTsfApplicationConfig(),
 			"tencentcloud_tsf_application_file_config":               dataSourceTencentCloudTsfApplicationFileConfig(),
 			"tencentcloud_tsf_application_public_config":             dataSourceTencentCloudTsfApplicationPublicConfig(),
+			"tencentcloud_cvm_image_share_permission":                dataSourceTencentCloudCvmImageSharePermission(),
 			"tencentcloud_tsf_cluster":                               dataSourceTencentCloudTsfCluster(),
 			"tencentcloud_tsf_microservice":                          dataSourceTencentCloudTsfMicroservice(),
 			"tencentcloud_tsf_unit_rules":                            dataSourceTencentCloudTsfUnitRules(),
@@ -1679,8 +1694,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_nacos_server_interfaces":               dataSourceTencentCloudTseNacosServerInterfaces(),
 			"tencentcloud_tse_zookeeper_replicas":                    dataSourceTencentCloudTseZookeeperReplicas(),
 			"tencentcloud_tse_zookeeper_server_interfaces":           dataSourceTencentCloudTseZookeeperServerInterfaces(),
+			"tencentcloud_lighthouse_modify_instance_bundle":         dataSourceTencentCloudLighthouseModifyInstanceBundle(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
 			"tencentcloud_lighthouse_scene":                          dataSourceTencentCloudLighthouseScene(),
+			"tencentcloud_lighthouse_all_scene":                      dataSourceTencentCloudLighthouseAllScene(),
 			"tencentcloud_lighthouse_reset_instance_blueprint":       dataSourceTencentCloudLighthouseResetInstanceBlueprint(),
 			"tencentcloud_lighthouse_region":                         dataSourceTencentCloudLighthouseRegion(),
 			"tencentcloud_lighthouse_instance_vnc_url":               dataSourceTencentCloudLighthouseInstanceVncUrl(),
@@ -1710,6 +1727,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_bandwidth_package":                       resourceTencentCloudVpcBandwidthPackage(),
 			"tencentcloud_vpc_bandwidth_package_attachment":            resourceTencentCloudVpcBandwidthPackageAttachment(),
 			"tencentcloud_vpc_traffic_package":                         resourceTencentCloudVpcTrafficPackage(),
+			"tencentcloud_vpc_snapshot_policy":                         resourceTencentCloudVpcSnapshotPolicy(),
+			"tencentcloud_vpc_snapshot_policy_attachment":              resourceTencentCloudVpcSnapshotPolicyAttachment(),
+			"tencentcloud_vpc_snapshot_policy_config":                  resourceTencentCloudVpcSnapshotPolicyConfig(),
 			"tencentcloud_ipv6_address_bandwidth":                      resourceTencentCloudIpv6AddressBandwidth(),
 			"tencentcloud_subnet":                                      resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                 resourceTencentCloudRouteEntry(),
@@ -2193,6 +2213,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cvm_security_group_attachment":              resourceTencentCloudCvmSecurityGroupAttachment(),
 			"tencentcloud_cvm_reboot_instance":                        resourceTencentCloudCvmRebootInstance(),
 			"tencentcloud_cvm_chc_config":                             resourceTencentCloudCvmChcConfig(),
+			"tencentcloud_cvm_sync_image":                             resourceTencentCloudCvmSyncImage(),
+			"tencentcloud_cvm_renew_instance":                         resourceTencentCloudCvmRenewInstance(),
 			"tencentcloud_lighthouse_disk_backup":                     resourceTencentCloudLighthouseDiskBackup(),
 			"tencentcloud_lighthouse_apply_disk_backup":               resourceTencentCloudLighthouseApplyDiskBackup(),
 			"tencentcloud_lighthouse_disk_attachment":                 resourceTencentCloudLighthouseDiskAttachment(),
@@ -2204,6 +2226,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_reboot_instance":                 resourceTencentCloudLighthouseRebootInstance(),
 			"tencentcloud_lighthouse_key_pair_attachment":             resourceTencentCloudLighthouseKeyPairAttachment(),
 			"tencentcloud_lighthouse_disk":                            resourceTencentCloudLighthouseDisk(),
+			"tencentcloud_lighthouse_renew_disk":                      resourceTencentCloudLighthouseRenewDisk(),
+			"tencentcloud_lighthouse_renew_instance":                  resourceTencentCloudLighthouseRenewInstance(),
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
