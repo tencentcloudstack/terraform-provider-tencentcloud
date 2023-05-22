@@ -1,20 +1,20 @@
 ---
 subcategory: "TencentCloud Lighthouse(Lighthouse)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_lighthouse_scene"
-sidebar_current: "docs-tencentcloud-datasource-lighthouse_scene"
+page_title: "TencentCloud: tencentcloud_lighthouse_all_scene"
+sidebar_current: "docs-tencentcloud-datasource-lighthouse_all_scene"
 description: |-
-  Use this data source to query detailed information of lighthouse scene with region
+  Use this data source to query detailed information of all region lighthouse scene
 ---
 
-# tencentcloud_lighthouse_scene
+# tencentcloud_lighthouse_all_scene
 
-Use this data source to query detailed information of lighthouse scene with region
+Use this data source to query detailed information of all region lighthouse scene
 
 ## Example Usage
 
 ```hcl
-data "tencentcloud_lighthouse_scene" "scene" {
+data "tencentcloud_lighthouse_all_scene" "scene" {
   offset = 0
   limit  = 20
 }

@@ -1,10 +1,10 @@
 /*
-Use this data source to query detailed information of lighthouse scene with region
+Use this data source to query detailed information of all region lighthouse scene
 
 Example Usage
 
 ```hcl
-data "tencentcloud_lighthouse_scene" "scene" {
+data "tencentcloud_lighthouse_all_scene" "scene" {
   offset = 0
   limit = 20
 }
@@ -21,9 +21,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudLighthouseScene() *schema.Resource {
+func dataSourceTencentCloudLighthouseAllScene() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudLighthouseSceneRead,
+		Read: dataSourceTencentCloudLighthouseAllSceneRead,
 		Schema: map[string]*schema.Schema{
 			"scene_ids": {
 				Optional: true,
@@ -82,7 +82,7 @@ func dataSourceTencentCloudLighthouseScene() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudLighthouseSceneRead(d *schema.ResourceData, meta interface{}) error {
+func dataSourceTencentCloudLighthouseAllSceneRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_lighthouse_scene.read")()
 	defer inconsistentCheck(d, meta)()
 
@@ -110,10 +110,10 @@ func dataSourceTencentCloudLighthouseSceneRead(d *schema.ResourceData, meta inte
 
 	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var sceneSet []*lighthouse.Scene
+	var sceneSet []*lighthouse.SceneInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeLighthouseSceneByFilter(ctx, paramMap)
+		result, e := service.DescribeLighthouseAllSceneByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}

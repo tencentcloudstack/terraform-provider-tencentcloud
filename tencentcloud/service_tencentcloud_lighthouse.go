@@ -708,6 +708,60 @@ func (me *LightHouseService) DescribeLighthouseSceneByFilter(ctx context.Context
 	return
 }
 
+func (me *LightHouseService) DescribeLighthouseAllSceneByFilter(ctx context.Context, param map[string]interface{}) (scene []*lighthouse.SceneInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeAllScenesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "scene_ids" {
+			request.SceneIds = helper.Strings(v.([]string))
+		}
+		if k == "offset" {
+			request.Offset = helper.IntInt64(v.(int))
+		}
+		if k == "limit" {
+			request.Limit = helper.IntInt64(v.(int))
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeAllScenes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SceneInfoSet) < 1 {
+			break
+		}
+		scene = append(scene, response.Response.SceneInfoSet...)
+		if len(response.Response.SceneInfoSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
 func (me *LightHouseService) DescribeLighthouseResetInstanceBlueprintByFilter(ctx context.Context, param map[string]interface{}) (resetInstanceBlueprint []*lighthouse.ResetInstanceBlueprint, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -1134,6 +1188,82 @@ func (me *LightHouseService) TerminateLighthouseDiskById(ctx context.Context, di
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseLighthouseClient().TerminateDisks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *LightHouseService) DescribeLighthouseModifyInstanceBundleByFilter(ctx context.Context, param map[string]interface{}) (modifyInstanceBundle []*lighthouse.ModifyBundle, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = lighthouse.NewDescribeModifyInstanceBundlesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "filters" {
+			request.Filters = v.([]*lighthouse.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseLighthouseClient().DescribeModifyInstanceBundles(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.ModifyBundleSet) < 1 {
+			break
+		}
+		modifyInstanceBundle = append(modifyInstanceBundle, response.Response.ModifyBundleSet...)
+		if len(response.Response.ModifyBundleSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *LightHouseService) ModifyFirewallRuleDescription(ctx context.Context, instanceId string, firewallRule lighthouse.FirewallRule) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewModifyFirewallRuleDescriptionRequest()
+	request.InstanceId = &instanceId
+	request.FirewallRule = &firewallRule
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().ModifyFirewallRuleDescription(request)
 	if err != nil {
 		errRet = err
 		return
