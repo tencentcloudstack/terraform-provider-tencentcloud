@@ -1259,15 +1259,15 @@ func Provider() *schema.Provider {
 		Schema: map[string]*schema.Schema{
 			"secret_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_ID, nil),
-				Description: "This is the TencentCloud access key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.",
+				Description: "This is the TencentCloud access key. It can be sourced from the `TENCENTCLOUD_SECRET_ID` environment variable.",
 			},
 			"secret_key": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc(PROVIDER_SECRET_KEY, nil),
-				Description: "This is the TencentCloud secret key. It must be provided, but it can also be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.",
+				Description: "This is the TencentCloud secret key. It can be sourced from the `TENCENTCLOUD_SECRET_KEY` environment variable.",
 				Sensitive:   true,
 			},
 			"security_token": {
