@@ -6442,3 +6442,112 @@ func (me *VpcService) DeleteVpcTrafficPackageById(ctx context.Context, trafficPa
 
 	return
 }
+
+func (me *VpcService) DescribeVpcSnapshotPoliciesById(ctx context.Context, snapshotPolicyId string) (snapshotPolices []*vpc.SnapshotPolicy, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeSnapshotPoliciesRequest()
+	request.SnapshotPolicyIds = []*string{&snapshotPolicyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeSnapshotPolicies(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	snapshotPolices = response.Response.SnapshotPolicySet
+	return
+}
+
+func (me *VpcService) DeleteVpcSnapshotPoliciesById(ctx context.Context, snapshotPolicyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteSnapshotPoliciesRequest()
+	request.SnapshotPolicyIds = []*string{&snapshotPolicyId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DeleteSnapshotPolicies(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DescribeVpcSnapshotPolicyAttachmentById(ctx context.Context, snapshotPolicyId string) (snapshotPolicyAttachment []*vpc.SnapshotInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeSnapshotAttachedInstancesRequest()
+	request.SnapshotPolicyId = &snapshotPolicyId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeSnapshotAttachedInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceSet) < 1 {
+		return
+	}
+
+	snapshotPolicyAttachment = response.Response.InstanceSet
+	return
+}
+
+func (me *VpcService) DeleteVpcSnapshotPolicyAttachmentById(ctx context.Context, snapshotPolicyId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDetachSnapshotInstancesRequest()
+	request.SnapshotPolicyId = &snapshotPolicyId
+
+	snapshotInstace, err := me.DescribeVpcSnapshotPolicyAttachmentById(ctx, snapshotPolicyId)
+	if err != nil {
+		errRet = err
+		return
+	}
+	request.Instances = snapshotInstace
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DetachSnapshotInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
