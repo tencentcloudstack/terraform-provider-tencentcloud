@@ -28,11 +28,14 @@ package tencentcloud
 
 import (
 	"context"
+	"log"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mysql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudMysqlBackupDownloadRestriction() *schema.Resource {
@@ -218,6 +221,11 @@ func resourceTencentCloudMysqlBackupDownloadRestrictionUpdate(d *schema.Resource
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().ModifyBackupDownloadRestriction(request)
 		if e != nil {
+			if sdkerr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if strings.Contains(sdkerr.Code, "FailedOperation") {
+					return resource.NonRetryableError(e)
+				}
+			}
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
