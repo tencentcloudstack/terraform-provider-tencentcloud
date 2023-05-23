@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_tsf_repository
+```
+
+```release-note:new-resource
+tencentcloud_tsf_application_file_config
+```
+
+```release-note:new-resource
+tencentcloud_tsf_enable_unit_rule
+```
