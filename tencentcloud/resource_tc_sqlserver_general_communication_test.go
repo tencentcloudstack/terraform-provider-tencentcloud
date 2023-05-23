@@ -11,7 +11,6 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudSqlserverGeneralCommunicationResource_basic -v
 func TestAccTencentCloudSqlserverGeneralCommunicationResource_basic(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)

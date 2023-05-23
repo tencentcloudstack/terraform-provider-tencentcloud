@@ -13,7 +13,6 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudSqlserverGeneralCloneResource_basic -v
 func TestAccTencentCloudSqlserverGeneralCloneResource_basic(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
