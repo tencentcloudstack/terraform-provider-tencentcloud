@@ -1135,3 +1135,144 @@ func (me *PostgresqlService) DescribePostgresqlSecurityGroupConfigById(ctx conte
 	SecurityGroupConfigs = response.Response.SecurityGroupSet
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlInstanceNetworkAccessAttachmentById(ctx context.Context, dBInstanceId string) (InstanceNetworkAccessAttachment *postgresql.DBInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeDBInstanceAttributeRequest()
+	request.DBInstanceId = &dBInstanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	InstanceNetworkAccessAttachment = response.Response.DBInstance
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlInstanceNetworkAccessAttachmentById(ctx context.Context, dBInstanceId, vpcId, subnetId, vip string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteDBInstanceNetworkAccessRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	request.Vip = &vip
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteDBInstanceNetworkAccess(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) PostgresqlInstanceNetworkAccessAttachmentStateRefreshFunc(dBInstanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribePostgresqlInstanceNetworkAccessAttachmentById(ctx, dBInstanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.DBInstanceStatus), nil
+	}
+}
+
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetworkAccessAttachmentById(ctx context.Context, dbInstanceId, roGroupId string) (roGroup *postgresql.ReadOnlyGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	paramMap := map[string]interface{}{
+		"Filters": []*postgresql.Filter{
+			{
+				Name:   helper.String("db-master-instance-id"),
+				Values: []*string{helper.String(dbInstanceId)},
+			},
+		},
+	}
+
+	result, err := me.DescribePostgresqlReadonlyGroupsByFilter(ctx, paramMap)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if roGroupId != "" {
+		for _, group := range result {
+			if *group.ReadOnlyGroupId == roGroupId {
+				roGroup = group
+
+				break
+			}
+		}
+	} else {
+		roGroup = result[0]
+	}
+	log.Printf("[DEBUG]%s DescribePostgresqlReadonlyGroupsByFilter success, MasterDBInstanceId:[%s], ReadOnlyGroupId:[%s], \n", logId, *roGroup.MasterDBInstanceId, *roGroup.ReadOnlyGroupId)
+
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlReadonlyGroupNetworkAccessAttachmentById(ctx context.Context, readOnlyGroupId, vpcId, subnetId, vip string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteReadOnlyGroupNetworkAccessRequest()
+	request.ReadOnlyGroupId = &readOnlyGroupId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	request.Vip = &vip
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteReadOnlyGroupNetworkAccess(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) PostgresqlReadonlyGroupNetworkAccessAttachmentStateRefreshFunc(dbInstanceId, readOnlyGroupId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribePostgresqlReadonlyGroupNetworkAccessAttachmentById(ctx, dbInstanceId, readOnlyGroupId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
