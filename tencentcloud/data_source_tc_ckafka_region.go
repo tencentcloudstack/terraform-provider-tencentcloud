@@ -53,7 +53,7 @@ func dataSourceTencentCloudCkafkaRegion() *schema.Resource {
 						"region_code_v3": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Region Code（V3 version）.",
+							Description: "Region Code(V3 version).",
 						},
 						"support": {
 							Type:        schema.TypeString,

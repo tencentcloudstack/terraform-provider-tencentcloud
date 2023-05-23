@@ -639,7 +639,7 @@ func dataSourceTencentCloudCkafkaConnectResource() *schema.Resource {
 												"broker_address": {
 													Type:        schema.TypeString,
 													Computed:    true,
-													Description: "Broker address for Kafka connection, required for self-build                        .",
+													Description: "Broker address for Kafka connection, required for self-build.",
 												},
 												"region": {
 													Type:        schema.TypeString,

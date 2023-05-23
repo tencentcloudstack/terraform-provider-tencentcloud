@@ -155,6 +155,7 @@ Cloud Kafka(ckafka)
     tencentcloud_ckafka_topics
     tencentcloud_ckafka_instances
 	tencentcloud_ckafka_connect_resource
+	tencentcloud_ckafka_region
 
   Resource
 	tencentcloud_ckafka_instance
