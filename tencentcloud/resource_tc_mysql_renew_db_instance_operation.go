@@ -109,7 +109,7 @@ func resourceTencentCloudMysqlRenewDbInstanceOperationCreate(d *schema.ResourceD
 
 	dealId := *response.Response.DealId
 	d.SetId(instanceId)
-	d.Set("deal_id", dealId)
+	_ = d.Set("deal_id", dealId)
 
 	return resourceTencentCloudMysqlRenewDbInstanceOperationRead(d, meta)
 }
