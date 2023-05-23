@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_cls_alarm
+```
+
+```release-note:new-resource
+tencentcloud_cls_alarm_notice
+```
