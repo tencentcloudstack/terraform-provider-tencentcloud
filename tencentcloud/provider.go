@@ -503,6 +503,8 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_security_groups_attachment
 	tencentcloud_mysql_local_binlog_config
 	tencentcloud_mysql_audit_log_file
+	tencentcloud_mysql_backup_download_restriction
+	tencentcloud_mysql_renew_db_instance_operation
 
 Cloud Monitor(Monitor)
   Data Source
@@ -1755,8 +1757,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_deploy_group":                          resourceTencentCloudMysqlDeployGroup(),
 			"tencentcloud_mysql_local_binlog_config":                   resourceTencentCloudMysqlLocalBinlogConfig(),
 			"tencentcloud_mysql_audit_log_file":                        resourceTencentCloudMysqlAuditLogFile(),
-			"tencentcloud_mysql_backup_download_restriction":			resourceTencentCloudMysqlBackupDownloadRestriction(),
-			"tencentcloud_mysql_renew_db_instance_operation":			resourceTencentCloudMysqlRenewDbInstanceOperation(),
+			"tencentcloud_mysql_backup_download_restriction":           resourceTencentCloudMysqlBackupDownloadRestriction(),
+			"tencentcloud_mysql_renew_db_instance_operation":           resourceTencentCloudMysqlRenewDbInstanceOperation(),
 			"tencentcloud_cos_bucket":                                  resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                           resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                             resourceTencentCloudCfsFileSystem(),
