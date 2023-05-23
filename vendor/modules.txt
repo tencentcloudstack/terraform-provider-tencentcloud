@@ -373,8 +373,6 @@ github.com/gofrs/flock
 # github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
 ## explicit
 github.com/golang/groupcache/lru
-# github.com/golang/mock v1.6.0
-## explicit; go 1.11
 # github.com/golang/protobuf v1.5.2
 ## explicit; go 1.9
 github.com/golang/protobuf/jsonpb
@@ -704,8 +702,6 @@ github.com/inconshreveable/mousetrap
 # github.com/jgautheron/goconst v1.5.1
 ## explicit; go 1.13
 github.com/jgautheron/goconst
-# github.com/jhump/protoreflect v1.6.1
-## explicit; go 1.14
 # github.com/jingyugao/rowserrcheck v1.1.1
 ## explicit; go 1.13
 github.com/jingyugao/rowserrcheck/passes/rowserr
@@ -801,8 +797,8 @@ github.com/mgechev/revive/formatter
 github.com/mgechev/revive/internal/typeparams
 github.com/mgechev/revive/lint
 github.com/mgechev/revive/rule
-# github.com/mitchellh/cli v1.1.0
-## explicit; go 1.11
+# github.com/mitchellh/cli v1.0.0
+## explicit
 github.com/mitchellh/cli
 # github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db
 ## explicit
@@ -883,11 +879,12 @@ github.com/pmezard/go-difflib/difflib
 # github.com/polyfloyd/go-errorlint v1.4.0
 ## explicit; go 1.20
 github.com/polyfloyd/go-errorlint/errorlint
-# github.com/posener/complete v1.2.3
-## explicit; go 1.13
+# github.com/posener/complete v1.2.1
+## explicit
 github.com/posener/complete
 github.com/posener/complete/cmd
 github.com/posener/complete/cmd/install
+github.com/posener/complete/match
 # github.com/prometheus/client_golang v1.12.1
 ## explicit; go 1.13
 github.com/prometheus/client_golang/prometheus
@@ -983,10 +980,9 @@ github.com/sonatard/noctx/reqwithoutctx
 # github.com/sourcegraph/go-diff v0.7.0
 ## explicit; go 1.14
 github.com/sourcegraph/go-diff/diff
-# github.com/spf13/afero v1.9.2
-## explicit; go 1.16
+# github.com/spf13/afero v1.8.2
+## explicit; go 1.13
 github.com/spf13/afero
-github.com/spf13/afero/internal/common
 github.com/spf13/afero/mem
 # github.com/spf13/cast v1.5.0
 ## explicit; go 1.18
@@ -1089,7 +1085,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.658
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.661
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.662
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1183,7 +1179,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.661
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.662
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.199
@@ -1377,7 +1373,7 @@ golang.org/x/crypto/openpgp/packet
 golang.org/x/crypto/openpgp/s2k
 golang.org/x/crypto/ssh
 golang.org/x/crypto/ssh/internal/bcrypt_pbkdf
-# golang.org/x/exp v0.0.0-20220827204233-334a2380cb91
+# golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e
 ## explicit; go 1.18
 golang.org/x/exp/constraints
 golang.org/x/exp/slices
@@ -1421,7 +1417,6 @@ golang.org/x/sys/unix
 golang.org/x/sys/windows
 # golang.org/x/text v0.8.0
 ## explicit; go 1.17
-golang.org/x/text/runes
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi

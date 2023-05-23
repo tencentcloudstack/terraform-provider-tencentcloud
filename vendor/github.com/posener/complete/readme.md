@@ -1,29 +1,28 @@
 # complete
 
+A tool for bash writing bash completion in go, and bash completion for the go command line.
+
 [![Build Status](https://travis-ci.org/posener/complete.svg?branch=master)](https://travis-ci.org/posener/complete)
 [![codecov](https://codecov.io/gh/posener/complete/branch/master/graph/badge.svg)](https://codecov.io/gh/posener/complete)
 [![golangci](https://golangci.com/badges/github.com/posener/complete.svg)](https://golangci.com/r/github.com/posener/complete)
 [![GoDoc](https://godoc.org/github.com/posener/complete?status.svg)](http://godoc.org/github.com/posener/complete)
-[![goreadme](https://goreadme.herokuapp.com/badge/posener/complete.svg)](https://goreadme.herokuapp.com)
-
-Package complete provides a tool for bash writing bash completion in go, and bash completion for the go command line.
+[![Go Report Card](https://goreportcard.com/badge/github.com/posener/complete)](https://goreportcard.com/report/github.com/posener/complete)
 
 Writing bash completion scripts is a hard work. This package provides an easy way
 to create bash completion scripts for any command, and also an easy way to install/uninstall
 the completion of the command.
 
-#### Go Command Bash Completion
+## go command bash completion
 
-In [./cmd/gocomplete](./cmd/gocomplete) there is an example for bash completion for the `go` command line.
+In [gocomplete](./gocomplete) there is an example for bash completion for the `go` command line.
 
 This is an example that uses the `complete` package on the `go` command - the `complete` package
-can also be used to implement any completions, see #usage.
+can also be used to implement any completions, see [Usage](#usage).
 
-#### Install
+### Install
 
 1. Type in your shell:
-
-```go
+```
 go get -u github.com/posener/complete/gocomplete
 gocomplete -install
 ```
@@ -32,13 +31,13 @@ gocomplete -install
 
 Uninstall by `gocomplete -uninstall`
 
-#### Features
+### Features
 
 - Complete `go` command, including sub commands and all flags.
 - Complete packages names or `.go` files when necessary.
 - Complete test names after `-run` flag.
 
-#### Complete package
+## complete package
 
 Supported shells:
 
@@ -46,7 +45,7 @@ Supported shells:
 - [x] zsh
 - [x] fish
 
-#### Usage
+### Usage
 
 Assuming you have program called `run` and you want to have bash completion
 for it, meaning, if you type `run` then space, then press the `Tab` key,
@@ -54,7 +53,7 @@ the shell will suggest relevant complete options.
 
 In that case, we will create a program called `runcomplete`, a go program,
 with a `func main()` and so, that will make the completion of the `run`
-program. Once the `runcomplete` will be in a binary form, we could
+program. Once the `runcomplete` will be in a binary form, we could 
 `runcomplete -install` and that will add to our shell all the bash completion
 options for `run`.
 
@@ -111,21 +110,9 @@ func main() {
 }
 ```
 
-#### Self completing program
+### Self completing program
 
 In case that the program that we want to complete is written in go we
 can make it self completing.
-Here is an example: [./example/self/main.go](./example/self/main.go) .
 
-## Sub Packages
-
-* [cmd](./cmd): Package cmd used for command line options for the complete tool
-
-* [gocomplete](./gocomplete): Package main is complete tool for the go command line
-
-* [match](./match): Package match contains matchers that decide if to apply completion.
-
-
----
-
-Created by [goreadme](https://github.com/apps/goreadme)
+Here is an [example](./example/self/main.go)
