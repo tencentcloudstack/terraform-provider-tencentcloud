@@ -2255,3 +2255,144 @@ func (me *TsfService) DeleteTsfBindApiGroupById(ctx context.Context, groupId str
 
 	return
 }
+
+func (me *TsfService) DescribeTsfRepositoryByFilter(ctx context.Context, param map[string]interface{}) (repositoryList *tsf.RepositoryList, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeRepositoriesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SearchWord" {
+			request.SearchWord = v.(*string)
+		}
+		if k == "RepositoryType" {
+			request.RepositoryType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset     uint64 = 0
+		limit      uint64 = 20
+		total      int64
+		repository = make([]*tsf.RepositoryInfo, 0)
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeRepositories(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response.Result == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		repository = append(repository, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	repositoryList = &tsf.RepositoryList{
+		TotalCount: &total,
+		Content:    repository,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfApplicationFileConfigById(ctx context.Context, configId string) (applicationFileConfig *tsf.FileConfig, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeFileConfigsRequest()
+	request.ConfigId = &configId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeFileConfigs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Result.Content) < 1 {
+		return
+	}
+
+	applicationFileConfig = response.Response.Result.Content[0]
+	return
+}
+
+func (me *TsfService) DeleteTsfApplicationFileConfigById(ctx context.Context, configId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDeleteFileConfigRequest()
+	request.ConfigId = &configId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DeleteFileConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TsfService) DescribeTsfEnableUnitRuleById(ctx context.Context, id string) (enableUnitRuleAttachment *tsf.UnitRule, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeUnitRuleRequest()
+	request.Id = &id
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeUnitRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	enableUnitRuleAttachment = response.Response.Result
+	return
+}

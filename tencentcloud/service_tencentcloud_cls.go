@@ -624,3 +624,153 @@ func (me *ClsService) DeleteClsIndex(ctx context.Context, id string) (errRet err
 
 	return
 }
+
+func (me *ClsService) DescribeClsAlarmById(ctx context.Context, alarmId string) (alarm *cls.AlarmInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeAlarmsRequest()
+	filter := &cls.Filter{
+		Key:    helper.String("alarmId"),
+		Values: []*string{&alarmId},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*cls.AlarmInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClsClient().DescribeAlarms(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Alarms) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Alarms...)
+		if len(response.Response.Alarms) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	alarm = instances[0]
+	return
+}
+
+func (me *ClsService) DeleteClsAlarmById(ctx context.Context, alarmId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteAlarmRequest()
+	request.AlarmId = &alarmId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteAlarm(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DescribeClsAlarmNoticeById(ctx context.Context, alarmNoticeId string) (alarmNotice *cls.AlarmNotice, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeAlarmNoticesRequest()
+	filter := &cls.Filter{
+		Key:    helper.String("alarmNoticeId"),
+		Values: []*string{&alarmNoticeId},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*cls.AlarmNotice, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClsClient().DescribeAlarmNotices(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AlarmNotices) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.AlarmNotices...)
+		if len(response.Response.AlarmNotices) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	alarmNotice = instances[0]
+	return
+}
+
+func (me *ClsService) DeleteClsAlarmNoticeById(ctx context.Context, alarmNoticeId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteAlarmNoticeRequest()
+	request.AlarmNoticeId = &alarmNoticeId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteAlarmNotice(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

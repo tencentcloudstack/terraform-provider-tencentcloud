@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_vpc_snapshot_policy
+```
+
+```release-note:new-resource
+tencentcloud_vpc_snapshot_policy_attachment
+```

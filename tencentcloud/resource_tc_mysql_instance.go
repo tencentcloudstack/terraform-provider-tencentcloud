@@ -1145,6 +1145,11 @@ func mysqlMasterInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, 
 			supportsParameters[*parameter.Name] = parameter
 		}
 
+		version := d.Get("engine_version").(string)
+		if version == "8.0" && oldParameters["lower_case_table_names"] != newParameters["lower_case_table_names"] {
+			return fmt.Errorf("this mysql 8.0 not support param `lower_case_table_names` set")
+		}
+
 		for parameName := range newParameters {
 			if _, has := supportsParameters[parameName]; !has {
 				return fmt.Errorf("this mysql not support param %s set", parameName)

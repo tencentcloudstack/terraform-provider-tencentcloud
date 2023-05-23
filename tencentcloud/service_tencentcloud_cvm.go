@@ -1651,3 +1651,89 @@ func (me *CvmService) CvmChcInstanceDeployVpcStateRefreshFunc(chcId string, fail
 		return response.Response.ChcHostSet[0], helper.PString(response.Response.ChcHostSet[0].DeployVirtualPrivateCloud.VpcId), nil
 	}
 }
+
+func (me *CvmService) CvmSyncImagesStateRefreshFunc(imageId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		request := cvm.NewDescribeImagesRequest()
+		request.ImageIds = []*string{&imageId}
+		response, err := me.client.UseCvmClient().DescribeImages(request)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if response == nil || response.Response == nil || len(response.Response.ImageSet) < 1 {
+			return nil, "", fmt.Errorf("Not found instance.")
+		}
+
+		if response.Response.ImageSet[0].ImageState == nil {
+			return response.Response.ImageSet[0], "", nil
+		}
+		return response.Response.ImageSet[0], helper.PString(response.Response.ImageSet[0].ImageState), nil
+	}
+}
+
+func (me *CvmService) DescribeCvmImageQuotaByFilter(ctx context.Context, param map[string]interface{}) (imageQuota int64, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cvm.NewDescribeImageQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeImageQuota(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Response is null")
+		return
+	}
+	imageQuota = *response.Response.ImageNumQuota
+
+	return
+}
+
+func (me *CvmService) DescribeCvmImageSharePermissionByFilter(ctx context.Context, param map[string]interface{}) (imageSharePermission []*cvm.SharePermission, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cvm.NewDescribeImageSharePermissionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ImageId" {
+			request.ImageId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCvmClient().DescribeImageSharePermission(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Response is null")
+	}
+	imageSharePermission = response.Response.SharePermissionSet
+
+	return
+}

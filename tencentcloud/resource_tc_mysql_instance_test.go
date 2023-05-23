@@ -285,6 +285,63 @@ func TestAccTencentCloudMysqlInstanceResource_MasterInstance_basic_and_update(t 
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlInstanceResource_mysql8 -v
+func TestAccTencentCloudMysqlInstanceResource_mysql8(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckMysqlMasterInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccMysqlMasterInstance_mysql8("utf8"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql8"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.mysql8", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "charge_type", "POSTPAID"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "engine_version", "8.0"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "internet_service", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "slave_deploy_mode", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "first_slave_zone", "ap-guangzhou-4"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "second_slave_zone", "ap-guangzhou-4"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "slave_sync_mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "availability_zone", "ap-guangzhou-4"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "instance_name", "myTestMysql"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "mem_size", "1000"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "volume_size", "25"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "intranet_port", "3306"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "tags.createdBy", "terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.character_set_server", "utf8"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.lower_case_table_names", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.max_connections", "1000"),
+				),
+			},
+			{
+				Config: testAccMysqlMasterInstance_mysql8("gbk"),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql8"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.mysql8", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "charge_type", "POSTPAID"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "engine_version", "8.0"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "internet_service", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "slave_deploy_mode", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "first_slave_zone", "ap-guangzhou-4"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "second_slave_zone", "ap-guangzhou-4"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "slave_sync_mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "availability_zone", "ap-guangzhou-4"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "instance_name", "myTestMysql"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "mem_size", "1000"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "volume_size", "25"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "intranet_port", "3306"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "tags.createdBy", "terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.character_set_server", "gbk"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.lower_case_table_names", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.max_connections", "1000"),
+				),
+			},
+		},
+	})
+}
+
 func testAccCheckMysqlMasterInstanceDestroy(s *terraform.State) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -507,4 +564,35 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   force_delete      = true
 }`
 	return fmt.Sprintf(tpl, instance_name, instranet_port)
+}
+
+func testAccMysqlMasterInstance_mysql8(value string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_mysql_instance" "mysql8" {
+	internet_service = 1
+	engine_version   = "8.0"
+	charge_type = "POSTPAID"
+	root_password     = "password123"
+	slave_deploy_mode = 0
+	first_slave_zone  = "ap-guangzhou-4"
+	second_slave_zone = "ap-guangzhou-4"
+	slave_sync_mode   = 1
+	availability_zone = "ap-guangzhou-4"
+	project_id        = 0
+	instance_name     = "myTestMysql"
+	mem_size          = 1000
+	volume_size       = 25
+	intranet_port     = 3306
+	security_groups   = ["sg-ngx2bo7j"]
+  
+	tags = {
+	  createdBy = "terraform"
+	}
+  
+	parameters = {
+	  character_set_server = "%s"
+	  lower_case_table_names = 0
+	  max_connections = "1000"
+	}
+}`, value)
 }

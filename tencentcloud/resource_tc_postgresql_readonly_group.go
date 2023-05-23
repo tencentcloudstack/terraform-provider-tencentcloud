@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_postgresql_readonly_group" "group" {
-  master_db_instance_id = "postgres-f44wlfdv"
+  master_db_instance_id = "postgres-gzg9jb2n"
   name = "world"
   project_id = 0
   vpc_id = "vpc-86v957zb"

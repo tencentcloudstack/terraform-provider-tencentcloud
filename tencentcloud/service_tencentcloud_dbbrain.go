@@ -989,3 +989,190 @@ func (me *DbbrainService) DescribeDbbrainSqlTemplatesByFilter(ctx context.Contex
 
 	return response.Response, nil
 }
+
+func (me *DbbrainService) DescribeDbbrainTopSpaceSchemasByFilter(ctx context.Context, param map[string]interface{}) (TopSpaceSchemas []*dbbrain.SchemaSpaceData, Timestamp *int64, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeTopSpaceSchemasRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDbbrainClient().DescribeTopSpaceSchemas(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.TopSpaceSchemas) < 1 {
+		return
+	}
+	TopSpaceSchemas = response.Response.TopSpaceSchemas
+	Timestamp = response.Response.Timestamp
+
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainTopSpaceSchemaTimeSeriesByFilter(ctx context.Context, param map[string]interface{}) (TopSpaceSchemaTimeSeries []*dbbrain.SchemaSpaceTimeSeries, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeTopSpaceSchemaTimeSeriesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+		if k == "StartDate" {
+			request.StartDate = v.(*string)
+		}
+		if k == "EndDate" {
+			request.EndDate = v.(*string)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDbbrainClient().DescribeTopSpaceSchemaTimeSeries(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.TopSpaceSchemaTimeSeries) < 1 {
+		return
+	}
+	TopSpaceSchemaTimeSeries = response.Response.TopSpaceSchemaTimeSeries
+
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainTopSpaceTableTimeSeriesByFilter(ctx context.Context, param map[string]interface{}) (TopSpaceTableTimeSeries []*dbbrain.TableSpaceTimeSeries, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeTopSpaceTableTimeSeriesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+		if k == "StartDate" {
+			request.StartDate = v.(*string)
+		}
+		if k == "EndDate" {
+			request.EndDate = v.(*string)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDbbrainClient().DescribeTopSpaceTableTimeSeries(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.TopSpaceTableTimeSeries) < 1 {
+		return
+	}
+	TopSpaceTableTimeSeries = response.Response.TopSpaceTableTimeSeries
+
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainTopSpaceTablesByFilter(ctx context.Context, param map[string]interface{}) (TopSpaceTables []*dbbrain.TableSpaceData, Timestamp *int64, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeTopSpaceTablesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDbbrainClient().DescribeTopSpaceTables(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.TopSpaceTables) < 1 {
+		return
+	}
+	TopSpaceTables = response.Response.TopSpaceTables
+	Timestamp = response.Response.Timestamp
+
+	return
+}

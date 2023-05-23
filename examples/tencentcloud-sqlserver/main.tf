@@ -121,6 +121,13 @@ resource "tencentcloud_sqlserver_general_clone" "general_clone" {
   new_name    = "keep_pubsub_db_new_name"
 }
 
+resource "tencentcloud_sqlserver_incre_backup_migration" "incre_backup_migration" {
+  instance_id = "mssql-qelbzgwf"
+  backup_migration_id = "mssql-backup-migration-bgvpf971"
+  backup_files = []
+  is_recovery = "NO"
+}
+
 data "tencentcloud_sqlserver_instances" "id_example" {
   id = tencentcloud_sqlserver_instance.example.id
 }
@@ -165,4 +172,37 @@ data "tencentcloud_sqlserver_publish_subscribes" "publish_subscribes" {
 
 data "tencentcloud_sqlserver_basic_instances" "id_test"{
 	id = tencentcloud_sqlserver_basic_instance.test.id
+}
+
+data "tencentcloud_sqlserver_upload_incremental_info" "upload_incremental_info" {
+  instance_id = "mssql-4tgeyeeh"
+  backup_migration_id = "mssql-backup-migration-83t5u3tv"
+  incremental_migration_id = "mssql-incremental-migration-h36gkdxn"
+}
+
+data "tencentcloud_sqlserver_instance_param_records" "instance_param_records" {
+  instance_id = "mssql-qelbzgwf"
+}
+
+data "tencentcloud_sqlserver_project_security_groups" "project_security_groups" {
+  project_id = 0
+}
+
+data "tencentcloud_sqlserver_regions" "datasource_regions" {
+}
+
+data "tencentcloud_sqlserver_rollback_time" "rollback_time" {
+  instance_id = "mssql-qelbzgwf"
+  dbs = ["keep_pubsub_db"]
+}
+
+data "tencentcloud_sqlserver_slowlogs" "slowlogs" {
+  instance_id = "mssql-qelbzgwf"
+  start_time = "2020-05-01 00:00:00"
+  end_time = "2023-05-18 00:00:00"
+}
+
+data "tencentcloud_sqlserver_upload_backup_info" "upload_backup_info" {
+  instance_id = "mssql-qelbzgwf"
+  backup_migration_id = "mssql-backup-migration-8a0f3eht"
 }

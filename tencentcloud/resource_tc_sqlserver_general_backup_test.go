@@ -27,6 +27,11 @@ func TestAccTencentCloudSqlserverGeneralBackupResource_basic(t *testing.T) {
 				),
 			},
 			{
+				ResourceName:      "tencentcloud_sqlserver_general_backup.general_backup",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				Config: testAccSqlserverGeneralBackupUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverBackupExists("tencentcloud_sqlserver_general_backup.general_backup"),
@@ -48,7 +53,7 @@ func testAccCheckSqlserverGeneralBackupDestroy(s *terraform.State) error {
 		service := SqlserverService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 5 {
+		if len(idSplit) != 6 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 
@@ -88,7 +93,7 @@ func testAccCheckSqlserverBackupExists(n string) resource.TestCheckFunc {
 		service := SqlserverService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 5 {
+		if len(idSplit) != 6 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 
@@ -126,6 +131,7 @@ resource "tencentcloud_sqlserver_general_backup" "general_backup" {
 
 const testAccSqlserverGeneralBackupUpdate = `
 resource "tencentcloud_sqlserver_general_backup" "general_backup" {
+  strategy = 0
   instance_id = "mssql-qelbzgwf"
   backup_name = "update_sqlserver_backup_name"
 }
