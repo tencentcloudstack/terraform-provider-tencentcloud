@@ -766,6 +766,7 @@ Virtual Private Cloud(VPC)
 	tencentcloud_vpc_snapshot_policy
 	tencentcloud_vpc_snapshot_policy_attachment
 	tencentcloud_vpc_snapshot_policy_config
+	tencentcloud_vpc_net_detect
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule
@@ -797,6 +798,7 @@ Private Link(PLS)
 Flow Logs(FL)
   Resource
  	tencentcloud_vpc_flow_log
+	tencentcloud_vpc_flow_log_config
 
 VPN Connections(VPN)
   Data Source
@@ -1161,6 +1163,7 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_business_log_configs
 	tencentcloud_tsf_api_detail
 	tencentcloud_tsf_microservice_api_version
+	tencentcloud_tsf_repository
 
   Resource
   	tencentcloud_tsf_cluster
@@ -1183,6 +1186,8 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_application_file_config_release
 	tencentcloud_tsf_instances_attachment
 	tencentcloud_tsf_bind_api_group
+	tencentcloud_tsf_application_file_config
+	tencentcloud_tsf_enable_unit_rule
 
 Media Processing Service(MPS)
   Resource
@@ -1685,6 +1690,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_business_log_configs":                  dataSourceTencentCloudTsfBusinessLogConfigs(),
 			"tencentcloud_tsf_api_detail":                            dataSourceTencentCloudTsfApiDetail(),
 			"tencentcloud_tsf_microservice_api_version":              dataSourceTencentCloudTsfMicroserviceApiVersion(),
+			"tencentcloud_tsf_repository":                            dataSourceTencentCloudTsfRepository(),
 			"tencentcloud_lighthouse_bundle":                         dataSourceTencentCloudLighthouseBundle(),
 			"tencentcloud_api_gateway_api_docs":                      dataSourceTencentCloudAPIGatewayAPIDocs(),
 			"tencentcloud_api_gateway_api_apps":                      dataSourceTencentCloudAPIGatewayAPIApps(),
@@ -1729,6 +1735,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_snapshot_policy":                           resourceTencentCloudVpcSnapshotPolicy(),
 			"tencentcloud_vpc_snapshot_policy_attachment":                resourceTencentCloudVpcSnapshotPolicyAttachment(),
 			"tencentcloud_vpc_snapshot_policy_config":                    resourceTencentCloudVpcSnapshotPolicyConfig(),
+			"tencentcloud_vpc_net_detect":                                resourceTencentCloudVpcNetDetect(),
+			"tencentcloud_vpc_flow_log_config":                           resourceTencentCloudVpcFlowLogConfig(),
 			"tencentcloud_ipv6_address_bandwidth":                        resourceTencentCloudIpv6AddressBandwidth(),
 			"tencentcloud_subnet":                                        resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                   resourceTencentCloudRouteEntry(),
@@ -2184,6 +2192,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_application_file_config_release":        resourceTencentCloudTsfApplicationFileConfigRelease(),
 			"tencentcloud_tsf_instances_attachment":                   resourceTencentCloudTsfInstancesAttachment(),
 			"tencentcloud_tsf_bind_api_group":                         resourceTencentCloudTsfBindApiGroup(),
+			"tencentcloud_tsf_application_file_config":                resourceTencentCloudTsfApplicationFileConfig(),
+			"tencentcloud_tsf_enable_unit_rule":                       resourceTencentCloudTsfEnableUnitRule(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                     resourceTencentCloudMpsWatermarkTemplate(),
