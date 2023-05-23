@@ -45,10 +45,61 @@ func NewClient(credential common.CredentialIface, region string, clientProfile *
 }
 
 
+func NewAddMachineGroupInfoRequest() (request *AddMachineGroupInfoRequest) {
+    request = &AddMachineGroupInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "AddMachineGroupInfo")
+    
+    
+    return
+}
+
+func NewAddMachineGroupInfoResponse() (response *AddMachineGroupInfoResponse) {
+    response = &AddMachineGroupInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// AddMachineGroupInfo
+// 用于添加机器组信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+func (c *Client) AddMachineGroupInfo(request *AddMachineGroupInfoRequest) (response *AddMachineGroupInfoResponse, err error) {
+    return c.AddMachineGroupInfoWithContext(context.Background(), request)
+}
+
+// AddMachineGroupInfo
+// 用于添加机器组信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
+func (c *Client) AddMachineGroupInfoWithContext(ctx context.Context, request *AddMachineGroupInfoRequest) (response *AddMachineGroupInfoResponse, err error) {
+    if request == nil {
+        request = NewAddMachineGroupInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("AddMachineGroupInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewAddMachineGroupInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewApplyConfigToMachineGroupRequest() (request *ApplyConfigToMachineGroupRequest) {
     request = &ApplyConfigToMachineGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ApplyConfigToMachineGroup")
     
     
@@ -116,6 +167,7 @@ func NewCloseKafkaConsumerRequest() (request *CloseKafkaConsumerRequest) {
     request = &CloseKafkaConsumerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CloseKafkaConsumer")
     
     
@@ -181,6 +233,7 @@ func NewCreateAlarmRequest() (request *CreateAlarmRequest) {
     request = &CreateAlarmRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateAlarm")
     
     
@@ -250,6 +303,7 @@ func NewCreateAlarmNoticeRequest() (request *CreateAlarmNoticeRequest) {
     request = &CreateAlarmNoticeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateAlarmNotice")
     
     
@@ -311,6 +365,7 @@ func NewCreateConfigRequest() (request *CreateConfigRequest) {
     request = &CreateConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateConfig")
     
     
@@ -384,6 +439,7 @@ func NewCreateConfigExtraRequest() (request *CreateConfigExtraRequest) {
     request = &CreateConfigExtraRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateConfigExtra")
     
     
@@ -398,7 +454,7 @@ func NewCreateConfigExtraResponse() (response *CreateConfigExtraResponse) {
 }
 
 // CreateConfigExtra
-// 本接口用于创建特殊采集配置任务
+// 本接口用于创建特殊采集配置任务，特殊采集配置应用于自建K8S环境的采集Agent
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -417,7 +473,7 @@ func (c *Client) CreateConfigExtra(request *CreateConfigExtraRequest) (response 
 }
 
 // CreateConfigExtra
-// 本接口用于创建特殊采集配置任务
+// 本接口用于创建特殊采集配置任务，特殊采集配置应用于自建K8S环境的采集Agent
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -451,6 +507,7 @@ func NewCreateConsumerRequest() (request *CreateConsumerRequest) {
     request = &CreateConsumerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateConsumer")
     
     
@@ -514,73 +571,70 @@ func (c *Client) CreateConsumerWithContext(ctx context.Context, request *CreateC
     return
 }
 
-func NewCreateDataTransformRequest() (request *CreateDataTransformRequest) {
-    request = &CreateDataTransformRequest{
+func NewCreateCosRechargeRequest() (request *CreateCosRechargeRequest) {
+    request = &CreateCosRechargeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("cls", APIVersion, "CreateDataTransform")
+    
+    request.Init().WithApiInfo("cls", APIVersion, "CreateCosRecharge")
     
     
     return
 }
 
-func NewCreateDataTransformResponse() (response *CreateDataTransformResponse) {
-    response = &CreateDataTransformResponse{
+func NewCreateCosRechargeResponse() (response *CreateCosRechargeResponse) {
+    response = &CreateCosRechargeResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// CreateDataTransform
-// 本接口用于创建数据加工任务。
+// CreateCosRecharge
+// 本接口用于创建cos导入任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATAFROMTASKCONFLICT = "InvalidParameter.DataFromTaskConflict"
-//  INVALIDPARAMETER_INVALIDETLCONTENT = "InvalidParameter.InvalidEtlContent"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
-func (c *Client) CreateDataTransform(request *CreateDataTransformRequest) (response *CreateDataTransformResponse, err error) {
-    return c.CreateDataTransformWithContext(context.Background(), request)
+func (c *Client) CreateCosRecharge(request *CreateCosRechargeRequest) (response *CreateCosRechargeResponse, err error) {
+    return c.CreateCosRechargeWithContext(context.Background(), request)
 }
 
-// CreateDataTransform
-// 本接口用于创建数据加工任务。
+// CreateCosRecharge
+// 本接口用于创建cos导入任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATAFROMTASKCONFLICT = "InvalidParameter.DataFromTaskConflict"
-//  INVALIDPARAMETER_INVALIDETLCONTENT = "InvalidParameter.InvalidEtlContent"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
-func (c *Client) CreateDataTransformWithContext(ctx context.Context, request *CreateDataTransformRequest) (response *CreateDataTransformResponse, err error) {
+func (c *Client) CreateCosRechargeWithContext(ctx context.Context, request *CreateCosRechargeRequest) (response *CreateCosRechargeResponse, err error) {
     if request == nil {
-        request = NewCreateDataTransformRequest()
+        request = NewCreateCosRechargeRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("CreateDataTransform require credential")
+        return nil, errors.New("CreateCosRecharge require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewCreateDataTransformResponse()
+    response = NewCreateCosRechargeResponse()
     err = c.Send(request, response)
     return
 }
@@ -589,6 +643,7 @@ func NewCreateExportRequest() (request *CreateExportRequest) {
     request = &CreateExportRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateExport")
     
     
@@ -607,6 +662,7 @@ func NewCreateExportResponse() (response *CreateExportResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TOPICCLOSED = "FailedOperation.TopicClosed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_EXPORT = "LimitExceeded.Export"
@@ -625,6 +681,7 @@ func (c *Client) CreateExport(request *CreateExportRequest) (response *CreateExp
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TOPICCLOSED = "FailedOperation.TopicClosed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_EXPORT = "LimitExceeded.Export"
@@ -654,6 +711,7 @@ func NewCreateIndexRequest() (request *CreateIndexRequest) {
     request = &CreateIndexRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateIndex")
     
     
@@ -679,11 +737,14 @@ func NewCreateIndexResponse() (response *CreateIndexResponse) {
 //  INVALIDPARAMETER_INVALIDINDEXRULEFORSEARCHLOW = "InvalidParameter.InValidIndexRuleForSearchLow"
 //  INVALIDPARAMETER_INDEXCONFLICT = "InvalidParameter.IndexConflict"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXOPERATING = "LimitExceeded.IndexOperating"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateIndex(request *CreateIndexRequest) (response *CreateIndexResponse, err error) {
     return c.CreateIndexWithContext(context.Background(), request)
 }
@@ -700,11 +761,14 @@ func (c *Client) CreateIndex(request *CreateIndexRequest) (response *CreateIndex
 //  INVALIDPARAMETER_INVALIDINDEXRULEFORSEARCHLOW = "InvalidParameter.InValidIndexRuleForSearchLow"
 //  INVALIDPARAMETER_INDEXCONFLICT = "InvalidParameter.IndexConflict"
 //  LIMITEXCEEDED = "LimitExceeded"
+//  LIMITEXCEEDED_INDEXOPERATING = "LimitExceeded.IndexOperating"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateIndexWithContext(ctx context.Context, request *CreateIndexRequest) (response *CreateIndexResponse, err error) {
     if request == nil {
         request = NewCreateIndexRequest()
@@ -725,6 +789,7 @@ func NewCreateLogsetRequest() (request *CreateLogsetRequest) {
     request = &CreateLogsetRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateLogset")
     
     
@@ -796,6 +861,7 @@ func NewCreateMachineGroupRequest() (request *CreateMachineGroupRequest) {
     request = &CreateMachineGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateMachineGroup")
     
     
@@ -822,7 +888,7 @@ func NewCreateMachineGroupResponse() (response *CreateMachineGroupResponse) {
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_MACHINEGROUP = "LimitExceeded.MachineGroup"
 //  LIMITEXCEEDED_MACHINEGROUPIP = "LimitExceeded.MachineGroupIp"
-//  LIMITEXCEEDED_MACHINEGROUPLABELS = "LimitExceeded.MachineGroupLabels"
+//  LIMITEXCEEDED_MACHINEGROUPIPLABELS = "LimitExceeded.MachineGroupIpLabels"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
@@ -845,7 +911,7 @@ func (c *Client) CreateMachineGroup(request *CreateMachineGroupRequest) (respons
 //  LIMITEXCEEDED = "LimitExceeded"
 //  LIMITEXCEEDED_MACHINEGROUP = "LimitExceeded.MachineGroup"
 //  LIMITEXCEEDED_MACHINEGROUPIP = "LimitExceeded.MachineGroupIp"
-//  LIMITEXCEEDED_MACHINEGROUPLABELS = "LimitExceeded.MachineGroupLabels"
+//  LIMITEXCEEDED_MACHINEGROUPIPLABELS = "LimitExceeded.MachineGroupIpLabels"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
@@ -871,6 +937,7 @@ func NewCreateShipperRequest() (request *CreateShipperRequest) {
     request = &CreateShipperRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateShipper")
     
     
@@ -885,7 +952,7 @@ func NewCreateShipperResponse() (response *CreateShipperResponse) {
 }
 
 // CreateShipper
-// 创建新的投递规则，【！！！注意】使用此接口，需要检查是否配置了投递COS的角色和权限。如果没有配置，请参考文档投递权限查看和配置https://cloud.tencent.com/document/product/614/71623。
+// 新建投递到COS的任务，【！！！注意】使用此接口，需要检查是否配置了投递COS的角色和权限。如果没有配置，请参考文档投递权限查看和配置https://cloud.tencent.com/document/product/614/71623。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -907,7 +974,7 @@ func (c *Client) CreateShipper(request *CreateShipperRequest) (response *CreateS
 }
 
 // CreateShipper
-// 创建新的投递规则，【！！！注意】使用此接口，需要检查是否配置了投递COS的角色和权限。如果没有配置，请参考文档投递权限查看和配置https://cloud.tencent.com/document/product/614/71623。
+// 新建投递到COS的任务，【！！！注意】使用此接口，需要检查是否配置了投递COS的角色和权限。如果没有配置，请参考文档投递权限查看和配置https://cloud.tencent.com/document/product/614/71623。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -944,6 +1011,7 @@ func NewCreateTopicRequest() (request *CreateTopicRequest) {
     request = &CreateTopicRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "CreateTopic")
     
     
@@ -963,6 +1031,7 @@ func NewCreateTopicResponse() (response *CreateTopicResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVALIDPERIOD = "FailedOperation.InvalidPeriod"
+//  FAILEDOPERATION_TOPICCREATING = "FailedOperation.TopicCreating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_TOPICCONFLICT = "InvalidParameter.TopicConflict"
@@ -985,6 +1054,7 @@ func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopic
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INVALIDPERIOD = "FailedOperation.InvalidPeriod"
+//  FAILEDOPERATION_TOPICCREATING = "FailedOperation.TopicCreating"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_TOPICCONFLICT = "InvalidParameter.TopicConflict"
@@ -1017,6 +1087,7 @@ func NewDeleteAlarmRequest() (request *DeleteAlarmRequest) {
     request = &DeleteAlarmRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteAlarm")
     
     
@@ -1078,6 +1149,7 @@ func NewDeleteAlarmNoticeRequest() (request *DeleteAlarmNoticeRequest) {
     request = &DeleteAlarmNoticeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteAlarmNotice")
     
     
@@ -1143,6 +1215,7 @@ func NewDeleteConfigRequest() (request *DeleteConfigRequest) {
     request = &DeleteConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteConfig")
     
     
@@ -1212,6 +1285,7 @@ func NewDeleteConfigExtraRequest() (request *DeleteConfigExtraRequest) {
     request = &DeleteConfigExtraRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteConfigExtra")
     
     
@@ -1226,7 +1300,7 @@ func NewDeleteConfigExtraResponse() (response *DeleteConfigExtraResponse) {
 }
 
 // DeleteConfigExtra
-// 本接口用于删除特殊采集规则配置
+// 本接口用于删除特殊采集规则配置，特殊采集配置应用于自建K8S环境的采集Agent
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1243,7 +1317,7 @@ func (c *Client) DeleteConfigExtra(request *DeleteConfigExtraRequest) (response 
 }
 
 // DeleteConfigExtra
-// 本接口用于删除特殊采集规则配置
+// 本接口用于删除特殊采集规则配置，特殊采集配置应用于自建K8S环境的采集Agent
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1275,6 +1349,7 @@ func NewDeleteConfigFromMachineGroupRequest() (request *DeleteConfigFromMachineG
     request = &DeleteConfigFromMachineGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteConfigFromMachineGroup")
     
     
@@ -1342,6 +1417,7 @@ func NewDeleteConsumerRequest() (request *DeleteConsumerRequest) {
     request = &DeleteConsumerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteConsumer")
     
     
@@ -1401,79 +1477,11 @@ func (c *Client) DeleteConsumerWithContext(ctx context.Context, request *DeleteC
     return
 }
 
-func NewDeleteDataTransformRequest() (request *DeleteDataTransformRequest) {
-    request = &DeleteDataTransformRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    request.Init().WithApiInfo("cls", APIVersion, "DeleteDataTransform")
-    
-    
-    return
-}
-
-func NewDeleteDataTransformResponse() (response *DeleteDataTransformResponse) {
-    response = &DeleteDataTransformResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DeleteDataTransform
-// 本接口用于删除数据加工任务
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATAFROMTASKNOTEXIST = "InvalidParameter.DataFromTaskNotExist"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
-//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
-//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
-//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
-func (c *Client) DeleteDataTransform(request *DeleteDataTransformRequest) (response *DeleteDataTransformResponse, err error) {
-    return c.DeleteDataTransformWithContext(context.Background(), request)
-}
-
-// DeleteDataTransform
-// 本接口用于删除数据加工任务
-//
-// 可能返回的错误码:
-//  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATAFROMTASKNOTEXIST = "InvalidParameter.DataFromTaskNotExist"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
-//  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
-//  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
-//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
-//  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
-func (c *Client) DeleteDataTransformWithContext(ctx context.Context, request *DeleteDataTransformRequest) (response *DeleteDataTransformResponse, err error) {
-    if request == nil {
-        request = NewDeleteDataTransformRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteDataTransform require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDeleteDataTransformResponse()
-    err = c.Send(request, response)
-    return
-}
-
 func NewDeleteExportRequest() (request *DeleteExportRequest) {
     request = &DeleteExportRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteExport")
     
     
@@ -1537,6 +1545,7 @@ func NewDeleteIndexRequest() (request *DeleteIndexRequest) {
     request = &DeleteIndexRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteIndex")
     
     
@@ -1557,6 +1566,7 @@ func NewDeleteIndexResponse() (response *DeleteIndexResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED_INDEXOPERATING = "LimitExceeded.IndexOperating"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
@@ -1576,6 +1586,7 @@ func (c *Client) DeleteIndex(request *DeleteIndexRequest) (response *DeleteIndex
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  LIMITEXCEEDED_INDEXOPERATING = "LimitExceeded.IndexOperating"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
@@ -1604,6 +1615,7 @@ func NewDeleteLogsetRequest() (request *DeleteLogsetRequest) {
     request = &DeleteLogsetRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteLogset")
     
     
@@ -1671,6 +1683,7 @@ func NewDeleteMachineGroupRequest() (request *DeleteMachineGroupRequest) {
     request = &DeleteMachineGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteMachineGroup")
     
     
@@ -1734,10 +1747,59 @@ func (c *Client) DeleteMachineGroupWithContext(ctx context.Context, request *Del
     return
 }
 
+func NewDeleteMachineGroupInfoRequest() (request *DeleteMachineGroupInfoRequest) {
+    request = &DeleteMachineGroupInfoRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DeleteMachineGroupInfo")
+    
+    
+    return
+}
+
+func NewDeleteMachineGroupInfoResponse() (response *DeleteMachineGroupInfoResponse) {
+    response = &DeleteMachineGroupInfoResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteMachineGroupInfo
+// 用于删除机器组信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteMachineGroupInfo(request *DeleteMachineGroupInfoRequest) (response *DeleteMachineGroupInfoResponse, err error) {
+    return c.DeleteMachineGroupInfoWithContext(context.Background(), request)
+}
+
+// DeleteMachineGroupInfo
+// 用于删除机器组信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteMachineGroupInfoWithContext(ctx context.Context, request *DeleteMachineGroupInfoRequest) (response *DeleteMachineGroupInfoResponse, err error) {
+    if request == nil {
+        request = NewDeleteMachineGroupInfoRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteMachineGroupInfo require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteMachineGroupInfoResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteShipperRequest() (request *DeleteShipperRequest) {
     request = &DeleteShipperRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteShipper")
     
     
@@ -1807,6 +1869,7 @@ func NewDeleteTopicRequest() (request *DeleteTopicRequest) {
     request = &DeleteTopicRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DeleteTopic")
     
     
@@ -1834,6 +1897,7 @@ func NewDeleteTopicResponse() (response *DeleteTopicResponse) {
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  OPERATIONDENIED_TOPICHASDATAFORMTASK = "OperationDenied.TopicHasDataFormTask"
 //  OPERATIONDENIED_TOPICHASDELIVERFUNCTION = "OperationDenied.TopicHasDeliverFunction"
+//  OPERATIONDENIED_TOPICHASSCHEDULESQLTASK = "OperationDenied.TopicHasScheduleSqlTask"
 //  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) DeleteTopic(request *DeleteTopicRequest) (response *DeleteTopicResponse, err error) {
@@ -1854,6 +1918,7 @@ func (c *Client) DeleteTopic(request *DeleteTopicRequest) (response *DeleteTopic
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  OPERATIONDENIED_TOPICHASDATAFORMTASK = "OperationDenied.TopicHasDataFormTask"
 //  OPERATIONDENIED_TOPICHASDELIVERFUNCTION = "OperationDenied.TopicHasDeliverFunction"
+//  OPERATIONDENIED_TOPICHASSCHEDULESQLTASK = "OperationDenied.TopicHasScheduleSqlTask"
 //  RESOURCENOTFOUND_LOGSETNOTEXIST = "ResourceNotFound.LogsetNotExist"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) DeleteTopicWithContext(ctx context.Context, request *DeleteTopicRequest) (response *DeleteTopicResponse, err error) {
@@ -1876,6 +1941,7 @@ func NewDescribeAlarmNoticesRequest() (request *DescribeAlarmNoticesRequest) {
     request = &DescribeAlarmNoticesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeAlarmNotices")
     
     
@@ -1939,6 +2005,7 @@ func NewDescribeAlarmsRequest() (request *DescribeAlarmsRequest) {
     request = &DescribeAlarmsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeAlarms")
     
     
@@ -1990,10 +2057,73 @@ func (c *Client) DescribeAlarmsWithContext(ctx context.Context, request *Describ
     return
 }
 
+func NewDescribeAlertRecordHistoryRequest() (request *DescribeAlertRecordHistoryRequest) {
+    request = &DescribeAlertRecordHistoryRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeAlertRecordHistory")
+    
+    
+    return
+}
+
+func NewDescribeAlertRecordHistoryResponse() (response *DescribeAlertRecordHistoryResponse) {
+    response = &DescribeAlertRecordHistoryResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeAlertRecordHistory
+// 获取告警历史，例如今天未恢复的告警
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeAlertRecordHistory(request *DescribeAlertRecordHistoryRequest) (response *DescribeAlertRecordHistoryResponse, err error) {
+    return c.DescribeAlertRecordHistoryWithContext(context.Background(), request)
+}
+
+// DescribeAlertRecordHistory
+// 获取告警历史，例如今天未恢复的告警
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+func (c *Client) DescribeAlertRecordHistoryWithContext(ctx context.Context, request *DescribeAlertRecordHistoryRequest) (response *DescribeAlertRecordHistoryResponse, err error) {
+    if request == nil {
+        request = NewDescribeAlertRecordHistoryRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeAlertRecordHistory require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeAlertRecordHistoryResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeConfigExtrasRequest() (request *DescribeConfigExtrasRequest) {
     request = &DescribeConfigExtrasRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeConfigExtras")
     
     
@@ -2008,7 +2138,7 @@ func NewDescribeConfigExtrasResponse() (response *DescribeConfigExtrasResponse) 
 }
 
 // DescribeConfigExtras
-// 本接口用于获取特殊采集配置
+// 本接口用于获取特殊采集配置，特殊采集配置应用于自建K8S环境的采集Agent
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2020,12 +2150,13 @@ func NewDescribeConfigExtrasResponse() (response *DescribeConfigExtrasResponse) 
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) DescribeConfigExtras(request *DescribeConfigExtrasRequest) (response *DescribeConfigExtrasResponse, err error) {
     return c.DescribeConfigExtrasWithContext(context.Background(), request)
 }
 
 // DescribeConfigExtras
-// 本接口用于获取特殊采集配置
+// 本接口用于获取特殊采集配置，特殊采集配置应用于自建K8S环境的采集Agent
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2037,6 +2168,7 @@ func (c *Client) DescribeConfigExtras(request *DescribeConfigExtrasRequest) (res
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) DescribeConfigExtrasWithContext(ctx context.Context, request *DescribeConfigExtrasRequest) (response *DescribeConfigExtrasResponse, err error) {
     if request == nil {
         request = NewDescribeConfigExtrasRequest()
@@ -2057,6 +2189,7 @@ func NewDescribeConfigMachineGroupsRequest() (request *DescribeConfigMachineGrou
     request = &DescribeConfigMachineGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeConfigMachineGroups")
     
     
@@ -2126,6 +2259,7 @@ func NewDescribeConfigsRequest() (request *DescribeConfigsRequest) {
     request = &DescribeConfigsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeConfigs")
     
     
@@ -2153,6 +2287,7 @@ func NewDescribeConfigsResponse() (response *DescribeConfigsResponse) {
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) DescribeConfigs(request *DescribeConfigsRequest) (response *DescribeConfigsResponse, err error) {
     return c.DescribeConfigsWithContext(context.Background(), request)
 }
@@ -2171,6 +2306,7 @@ func (c *Client) DescribeConfigs(request *DescribeConfigsRequest) (response *Des
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) DescribeConfigsWithContext(ctx context.Context, request *DescribeConfigsRequest) (response *DescribeConfigsResponse, err error) {
     if request == nil {
         request = NewDescribeConfigsRequest()
@@ -2191,6 +2327,7 @@ func NewDescribeConsumerRequest() (request *DescribeConsumerRequest) {
     request = &DescribeConsumerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeConsumer")
     
     
@@ -2252,31 +2389,33 @@ func (c *Client) DescribeConsumerWithContext(ctx context.Context, request *Descr
     return
 }
 
-func NewDescribeDataTransformInfoRequest() (request *DescribeDataTransformInfoRequest) {
-    request = &DescribeDataTransformInfoRequest{
+func NewDescribeCosRechargesRequest() (request *DescribeCosRechargesRequest) {
+    request = &DescribeCosRechargesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("cls", APIVersion, "DescribeDataTransformInfo")
+    
+    request.Init().WithApiInfo("cls", APIVersion, "DescribeCosRecharges")
     
     
     return
 }
 
-func NewDescribeDataTransformInfoResponse() (response *DescribeDataTransformInfoResponse) {
-    response = &DescribeDataTransformInfoResponse{
+func NewDescribeCosRechargesResponse() (response *DescribeCosRechargesResponse) {
+    response = &DescribeCosRechargesResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// DescribeDataTransformInfo
-// 本接口用于获取数据加工任务列表基本信息
+// DescribeCosRecharges
+// 本接口用于获取cos导入配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_TOPICCONFLICT = "InvalidParameter.TopicConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
@@ -2284,18 +2423,19 @@ func NewDescribeDataTransformInfoResponse() (response *DescribeDataTransformInfo
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
-func (c *Client) DescribeDataTransformInfo(request *DescribeDataTransformInfoRequest) (response *DescribeDataTransformInfoResponse, err error) {
-    return c.DescribeDataTransformInfoWithContext(context.Background(), request)
+func (c *Client) DescribeCosRecharges(request *DescribeCosRechargesRequest) (response *DescribeCosRechargesResponse, err error) {
+    return c.DescribeCosRechargesWithContext(context.Background(), request)
 }
 
-// DescribeDataTransformInfo
-// 本接口用于获取数据加工任务列表基本信息
+// DescribeCosRecharges
+// 本接口用于获取cos导入配置
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_TOPICCONFLICT = "InvalidParameter.TopicConflict"
+//  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
@@ -2303,18 +2443,18 @@ func (c *Client) DescribeDataTransformInfo(request *DescribeDataTransformInfoReq
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
-func (c *Client) DescribeDataTransformInfoWithContext(ctx context.Context, request *DescribeDataTransformInfoRequest) (response *DescribeDataTransformInfoResponse, err error) {
+func (c *Client) DescribeCosRechargesWithContext(ctx context.Context, request *DescribeCosRechargesRequest) (response *DescribeCosRechargesResponse, err error) {
     if request == nil {
-        request = NewDescribeDataTransformInfoRequest()
+        request = NewDescribeCosRechargesRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("DescribeDataTransformInfo require credential")
+        return nil, errors.New("DescribeCosRecharges require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewDescribeDataTransformInfoResponse()
+    response = NewDescribeCosRechargesResponse()
     err = c.Send(request, response)
     return
 }
@@ -2323,6 +2463,7 @@ func NewDescribeExportsRequest() (request *DescribeExportsRequest) {
     request = &DescribeExportsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeExports")
     
     
@@ -2390,6 +2531,7 @@ func NewDescribeIndexRequest() (request *DescribeIndexRequest) {
     request = &DescribeIndexRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeIndex")
     
     
@@ -2459,6 +2601,7 @@ func NewDescribeLogContextRequest() (request *DescribeLogContextRequest) {
     request = &DescribeLogContextRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeLogContext")
     
     
@@ -2485,6 +2628,7 @@ func NewDescribeLogContextResponse() (response *DescribeLogContextResponse) {
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
+//  LIMITEXCEEDED_SEARCHRESULTTOOLARGE = "LimitExceeded.SearchResultTooLarge"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
@@ -2508,6 +2652,7 @@ func (c *Client) DescribeLogContext(request *DescribeLogContextRequest) (respons
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
+//  LIMITEXCEEDED_SEARCHRESULTTOOLARGE = "LimitExceeded.SearchResultTooLarge"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
@@ -2534,6 +2679,7 @@ func NewDescribeLogHistogramRequest() (request *DescribeLogHistogramRequest) {
     request = &DescribeLogHistogramRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeLogHistogram")
     
     
@@ -2548,7 +2694,7 @@ func NewDescribeLogHistogramResponse() (response *DescribeLogHistogramResponse) 
 }
 
 // DescribeLogHistogram
-// 本接口用于构建直方图
+// 本接口用于构建日志数量直方图
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2556,6 +2702,7 @@ func NewDescribeLogHistogramResponse() (response *DescribeLogHistogramResponse) 
 //  FAILEDOPERATION_QUERYERROR = "FailedOperation.QueryError"
 //  FAILEDOPERATION_SEARCHTIMEOUT = "FailedOperation.SearchTimeout"
 //  FAILEDOPERATION_SYNTAXERROR = "FailedOperation.SyntaxError"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
 //  FAILEDOPERATION_TOPICISOLATED = "FailedOperation.TopicIsolated"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2565,13 +2712,14 @@ func NewDescribeLogHistogramResponse() (response *DescribeLogHistogramResponse) 
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  OPERATIONDENIED_NEWSYNTAXNOTSUPPORTED = "OperationDenied.NewSyntaxNotSupported"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) DescribeLogHistogram(request *DescribeLogHistogramRequest) (response *DescribeLogHistogramResponse, err error) {
     return c.DescribeLogHistogramWithContext(context.Background(), request)
 }
 
 // DescribeLogHistogram
-// 本接口用于构建直方图
+// 本接口用于构建日志数量直方图
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -2579,6 +2727,7 @@ func (c *Client) DescribeLogHistogram(request *DescribeLogHistogramRequest) (res
 //  FAILEDOPERATION_QUERYERROR = "FailedOperation.QueryError"
 //  FAILEDOPERATION_SEARCHTIMEOUT = "FailedOperation.SearchTimeout"
 //  FAILEDOPERATION_SYNTAXERROR = "FailedOperation.SyntaxError"
+//  FAILEDOPERATION_TAGQPSLIMIT = "FailedOperation.TagQpsLimit"
 //  FAILEDOPERATION_TOPICISOLATED = "FailedOperation.TopicIsolated"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2588,6 +2737,7 @@ func (c *Client) DescribeLogHistogram(request *DescribeLogHistogramRequest) (res
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  OPERATIONDENIED_NEWSYNTAXNOTSUPPORTED = "OperationDenied.NewSyntaxNotSupported"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) DescribeLogHistogramWithContext(ctx context.Context, request *DescribeLogHistogramRequest) (response *DescribeLogHistogramResponse, err error) {
     if request == nil {
@@ -2609,6 +2759,7 @@ func NewDescribeLogsetsRequest() (request *DescribeLogsetsRequest) {
     request = &DescribeLogsetsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeLogsets")
     
     
@@ -2678,6 +2829,7 @@ func NewDescribeMachineGroupConfigsRequest() (request *DescribeMachineGroupConfi
     request = &DescribeMachineGroupConfigsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeMachineGroupConfigs")
     
     
@@ -2745,6 +2897,7 @@ func NewDescribeMachineGroupsRequest() (request *DescribeMachineGroupsRequest) {
     request = &DescribeMachineGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeMachineGroups")
     
     
@@ -2812,6 +2965,7 @@ func NewDescribeMachinesRequest() (request *DescribeMachinesRequest) {
     request = &DescribeMachinesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeMachines")
     
     
@@ -2881,6 +3035,7 @@ func NewDescribePartitionsRequest() (request *DescribePartitionsRequest) {
     request = &DescribePartitionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribePartitions")
     
     
@@ -2948,6 +3103,7 @@ func NewDescribeShipperTasksRequest() (request *DescribeShipperTasksRequest) {
     request = &DescribeShipperTasksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeShipperTasks")
     
     
@@ -3017,6 +3173,7 @@ func NewDescribeShippersRequest() (request *DescribeShippersRequest) {
     request = &DescribeShippersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeShippers")
     
     
@@ -3031,7 +3188,7 @@ func NewDescribeShippersResponse() (response *DescribeShippersResponse) {
 }
 
 // DescribeShippers
-// 获取投递规则信息列表
+// 获取投递到COS的任务配置信息
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3046,12 +3203,13 @@ func NewDescribeShippersResponse() (response *DescribeShippersResponse) {
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) DescribeShippers(request *DescribeShippersRequest) (response *DescribeShippersResponse, err error) {
     return c.DescribeShippersWithContext(context.Background(), request)
 }
 
 // DescribeShippers
-// 获取投递规则信息列表
+// 获取投递到COS的任务配置信息
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3066,6 +3224,7 @@ func (c *Client) DescribeShippers(request *DescribeShippersRequest) (response *D
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) DescribeShippersWithContext(ctx context.Context, request *DescribeShippersRequest) (response *DescribeShippersResponse, err error) {
     if request == nil {
         request = NewDescribeShippersRequest()
@@ -3086,6 +3245,7 @@ func NewDescribeTopicsRequest() (request *DescribeTopicsRequest) {
     request = &DescribeTopicsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "DescribeTopics")
     
     
@@ -3100,7 +3260,7 @@ func NewDescribeTopicsResponse() (response *DescribeTopicsResponse) {
 }
 
 // DescribeTopics
-//  本接口用于获取日志主题列表，支持分页
+// 本接口用于获取日志主题列表，支持分页
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3115,13 +3275,14 @@ func NewDescribeTopicsResponse() (response *DescribeTopicsResponse) {
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  OPERATIONDENIED_ANALYSISSWITCHCLOSE = "OperationDenied.AnalysisSwitchClose"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTopics(request *DescribeTopicsRequest) (response *DescribeTopicsResponse, err error) {
     return c.DescribeTopicsWithContext(context.Background(), request)
 }
 
 // DescribeTopics
-//  本接口用于获取日志主题列表，支持分页
+// 本接口用于获取日志主题列表，支持分页
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3136,6 +3297,7 @@ func (c *Client) DescribeTopics(request *DescribeTopicsRequest) (response *Descr
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  OPERATIONDENIED_ANALYSISSWITCHCLOSE = "OperationDenied.AnalysisSwitchClose"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTopicsWithContext(ctx context.Context, request *DescribeTopicsRequest) (response *DescribeTopicsResponse, err error) {
     if request == nil {
@@ -3157,6 +3319,7 @@ func NewGetAlarmLogRequest() (request *GetAlarmLogRequest) {
     request = &GetAlarmLogRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "GetAlarmLog")
     
     
@@ -3190,6 +3353,7 @@ func NewGetAlarmLogResponse() (response *GetAlarmLogResponse) {
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) GetAlarmLog(request *GetAlarmLogRequest) (response *GetAlarmLogResponse, err error) {
     return c.GetAlarmLogWithContext(context.Background(), request)
 }
@@ -3214,6 +3378,7 @@ func (c *Client) GetAlarmLog(request *GetAlarmLogRequest) (response *GetAlarmLog
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) GetAlarmLogWithContext(ctx context.Context, request *GetAlarmLogRequest) (response *GetAlarmLogResponse, err error) {
     if request == nil {
         request = NewGetAlarmLogRequest()
@@ -3234,6 +3399,7 @@ func NewMergePartitionRequest() (request *MergePartitionRequest) {
     request = &MergePartitionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "MergePartition")
     
     
@@ -3305,6 +3471,7 @@ func NewModifyAlarmRequest() (request *ModifyAlarmRequest) {
     request = &ModifyAlarmRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ModifyAlarm")
     
     
@@ -3376,6 +3543,7 @@ func NewModifyAlarmNoticeRequest() (request *ModifyAlarmNoticeRequest) {
     request = &ModifyAlarmNoticeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ModifyAlarmNotice")
     
     
@@ -3396,6 +3564,7 @@ func NewModifyAlarmNoticeResponse() (response *ModifyAlarmNoticeResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ALARMCONFLICT = "InvalidParameter.AlarmConflict"
 //  INVALIDPARAMETER_ALARMNOTICECONFLICT = "InvalidParameter.AlarmNoticeConflict"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -3415,6 +3584,7 @@ func (c *Client) ModifyAlarmNotice(request *ModifyAlarmNoticeRequest) (response 
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_ALARMCONFLICT = "InvalidParameter.AlarmConflict"
 //  INVALIDPARAMETER_ALARMNOTICECONFLICT = "InvalidParameter.AlarmNoticeConflict"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -3443,6 +3613,7 @@ func NewModifyConfigRequest() (request *ModifyConfigRequest) {
     request = &ModifyConfigRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ModifyConfig")
     
     
@@ -3473,6 +3644,7 @@ func NewModifyConfigResponse() (response *ModifyConfigResponse) {
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CONFIGNOTEXIST = "ResourceNotFound.ConfigNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) ModifyConfig(request *ModifyConfigRequest) (response *ModifyConfigResponse, err error) {
     return c.ModifyConfigWithContext(context.Background(), request)
 }
@@ -3494,6 +3666,7 @@ func (c *Client) ModifyConfig(request *ModifyConfigRequest) (response *ModifyCon
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CONFIGNOTEXIST = "ResourceNotFound.ConfigNotExist"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) ModifyConfigWithContext(ctx context.Context, request *ModifyConfigRequest) (response *ModifyConfigResponse, err error) {
     if request == nil {
         request = NewModifyConfigRequest()
@@ -3514,6 +3687,7 @@ func NewModifyConfigExtraRequest() (request *ModifyConfigExtraRequest) {
     request = &ModifyConfigExtraRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ModifyConfigExtra")
     
     
@@ -3528,7 +3702,7 @@ func NewModifyConfigExtraResponse() (response *ModifyConfigExtraResponse) {
 }
 
 // ModifyConfigExtra
-// 本接口用于修改特殊采集配置任务
+// 本接口用于修改特殊采集配置任务，特殊采集配置应用于自建K8S环境的采集Agent
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3541,12 +3715,13 @@ func NewModifyConfigExtraResponse() (response *ModifyConfigExtraResponse) {
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) ModifyConfigExtra(request *ModifyConfigExtraRequest) (response *ModifyConfigExtraResponse, err error) {
     return c.ModifyConfigExtraWithContext(context.Background(), request)
 }
 
 // ModifyConfigExtra
-// 本接口用于修改特殊采集配置任务
+// 本接口用于修改特殊采集配置任务，特殊采集配置应用于自建K8S环境的采集Agent
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -3559,6 +3734,7 @@ func (c *Client) ModifyConfigExtra(request *ModifyConfigExtraRequest) (response 
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) ModifyConfigExtraWithContext(ctx context.Context, request *ModifyConfigExtraRequest) (response *ModifyConfigExtraResponse, err error) {
     if request == nil {
         request = NewModifyConfigExtraRequest()
@@ -3579,6 +3755,7 @@ func NewModifyConsumerRequest() (request *ModifyConsumerRequest) {
     request = &ModifyConsumerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ModifyConsumer")
     
     
@@ -3638,75 +3815,70 @@ func (c *Client) ModifyConsumerWithContext(ctx context.Context, request *ModifyC
     return
 }
 
-func NewModifyDataTransformRequest() (request *ModifyDataTransformRequest) {
-    request = &ModifyDataTransformRequest{
+func NewModifyCosRechargeRequest() (request *ModifyCosRechargeRequest) {
+    request = &ModifyCosRechargeRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-    request.Init().WithApiInfo("cls", APIVersion, "ModifyDataTransform")
+    
+    request.Init().WithApiInfo("cls", APIVersion, "ModifyCosRecharge")
     
     
     return
 }
 
-func NewModifyDataTransformResponse() (response *ModifyDataTransformResponse) {
-    response = &ModifyDataTransformResponse{
+func NewModifyCosRechargeResponse() (response *ModifyCosRechargeResponse) {
+    response = &ModifyCosRechargeResponse{
         BaseResponse: &tchttp.BaseResponse{},
     }
     return
 }
 
-// ModifyDataTransform
-// 本接口用于修改数据加工任务
+// ModifyCosRecharge
+// 本接口用于修改cos导入任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATAFROMTASKCONFLICT = "InvalidParameter.DataFromTaskConflict"
-//  INVALIDPARAMETER_DATAFROMTASKNOTEXIST = "InvalidParameter.DataFromTaskNotExist"
-//  INVALIDPARAMETER_INVALIDETLCONTENT = "InvalidParameter.InvalidEtlContent"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
-func (c *Client) ModifyDataTransform(request *ModifyDataTransformRequest) (response *ModifyDataTransformResponse, err error) {
-    return c.ModifyDataTransformWithContext(context.Background(), request)
+func (c *Client) ModifyCosRecharge(request *ModifyCosRechargeRequest) (response *ModifyCosRechargeResponse, err error) {
+    return c.ModifyCosRechargeWithContext(context.Background(), request)
 }
 
-// ModifyDataTransform
-// 本接口用于修改数据加工任务
+// ModifyCosRecharge
+// 本接口用于修改cos导入任务
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
-//  INVALIDPARAMETER_DATAFROMTASKCONFLICT = "InvalidParameter.DataFromTaskConflict"
-//  INVALIDPARAMETER_DATAFROMTASKNOTEXIST = "InvalidParameter.DataFromTaskNotExist"
-//  INVALIDPARAMETER_INVALIDETLCONTENT = "InvalidParameter.InvalidEtlContent"
+//  INVALIDPARAMETER_DBDUPLICATION = "InvalidParameter.DbDuplication"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
-//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
-func (c *Client) ModifyDataTransformWithContext(ctx context.Context, request *ModifyDataTransformRequest) (response *ModifyDataTransformResponse, err error) {
+func (c *Client) ModifyCosRechargeWithContext(ctx context.Context, request *ModifyCosRechargeRequest) (response *ModifyCosRechargeResponse, err error) {
     if request == nil {
-        request = NewModifyDataTransformRequest()
+        request = NewModifyCosRechargeRequest()
     }
     
     if c.GetCredential() == nil {
-        return nil, errors.New("ModifyDataTransform require credential")
+        return nil, errors.New("ModifyCosRecharge require credential")
     }
 
     request.SetContext(ctx)
     
-    response = NewModifyDataTransformResponse()
+    response = NewModifyCosRechargeResponse()
     err = c.Send(request, response)
     return
 }
@@ -3715,6 +3887,7 @@ func NewModifyIndexRequest() (request *ModifyIndexRequest) {
     request = &ModifyIndexRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ModifyIndex")
     
     
@@ -3729,7 +3902,7 @@ func NewModifyIndexResponse() (response *ModifyIndexResponse) {
 }
 
 // ModifyIndex
-// 本接口用于修改索引配置
+// 本接口用于修改索引配置，该接口除受默认接口请求频率限制外，针对单个日志主题，并发数不能超过1，即同一时间同一个日志主题只能有一个正在执行的索引配置修改操作。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3738,19 +3911,22 @@ func NewModifyIndexResponse() (response *ModifyIndexResponse) {
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDINDEXRULEFORSEARCHLOW = "InvalidParameter.InValidIndexRuleForSearchLow"
+//  LIMITEXCEEDED_INDEXOPERATING = "LimitExceeded.IndexOperating"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_INDEXNOTEXIST = "ResourceNotFound.IndexNotExist"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyIndex(request *ModifyIndexRequest) (response *ModifyIndexResponse, err error) {
     return c.ModifyIndexWithContext(context.Background(), request)
 }
 
 // ModifyIndex
-// 本接口用于修改索引配置
+// 本接口用于修改索引配置，该接口除受默认接口请求频率限制外，针对单个日志主题，并发数不能超过1，即同一时间同一个日志主题只能有一个正在执行的索引配置修改操作。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
@@ -3759,13 +3935,16 @@ func (c *Client) ModifyIndex(request *ModifyIndexRequest) (response *ModifyIndex
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INVALIDINDEXRULEFORSEARCHLOW = "InvalidParameter.InValidIndexRuleForSearchLow"
+//  LIMITEXCEEDED_INDEXOPERATING = "LimitExceeded.IndexOperating"
 //  MISSINGPARAMETER = "MissingParameter"
+//  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACLFAILED = "OperationDenied.ACLFailed"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_INDEXNOTEXIST = "ResourceNotFound.IndexNotExist"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyIndexWithContext(ctx context.Context, request *ModifyIndexRequest) (response *ModifyIndexResponse, err error) {
     if request == nil {
         request = NewModifyIndexRequest()
@@ -3786,6 +3965,7 @@ func NewModifyLogsetRequest() (request *ModifyLogsetRequest) {
     request = &ModifyLogsetRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ModifyLogset")
     
     
@@ -3857,6 +4037,7 @@ func NewModifyMachineGroupRequest() (request *ModifyMachineGroupRequest) {
     request = &ModifyMachineGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ModifyMachineGroup")
     
     
@@ -3881,7 +4062,7 @@ func NewModifyMachineGroupResponse() (response *ModifyMachineGroupResponse) {
 //  INVALIDPARAMETER_MACHINEGROUPCONFLICT = "InvalidParameter.MachineGroupConflict"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED_MACHINEGROUPIP = "LimitExceeded.MachineGroupIp"
-//  LIMITEXCEEDED_MACHINEGROUPLABELS = "LimitExceeded.MachineGroupLabels"
+//  LIMITEXCEEDED_MACHINEGROUPIPLABELS = "LimitExceeded.MachineGroupIpLabels"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
@@ -3903,7 +4084,7 @@ func (c *Client) ModifyMachineGroup(request *ModifyMachineGroupRequest) (respons
 //  INVALIDPARAMETER_MACHINEGROUPCONFLICT = "InvalidParameter.MachineGroupConflict"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED_MACHINEGROUPIP = "LimitExceeded.MachineGroupIp"
-//  LIMITEXCEEDED_MACHINEGROUPLABELS = "LimitExceeded.MachineGroupLabels"
+//  LIMITEXCEEDED_MACHINEGROUPIPLABELS = "LimitExceeded.MachineGroupIpLabels"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
@@ -3930,6 +4111,7 @@ func NewModifyShipperRequest() (request *ModifyShipperRequest) {
     request = &ModifyShipperRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ModifyShipper")
     
     
@@ -3997,6 +4179,7 @@ func NewModifyTopicRequest() (request *ModifyTopicRequest) {
     request = &ModifyTopicRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "ModifyTopic")
     
     
@@ -4074,6 +4257,7 @@ func NewOpenKafkaConsumerRequest() (request *OpenKafkaConsumerRequest) {
     request = &OpenKafkaConsumerRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "OpenKafkaConsumer")
     
     
@@ -4095,6 +4279,7 @@ func NewOpenKafkaConsumerResponse() (response *OpenKafkaConsumerResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXPORTCONFLICT = "InvalidParameter.ExportConflict"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -4115,6 +4300,7 @@ func (c *Client) OpenKafkaConsumer(request *OpenKafkaConsumerRequest) (response 
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_EXPORTCONFLICT = "InvalidParameter.ExportConflict"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
@@ -4143,6 +4329,7 @@ func NewRetryShipperTaskRequest() (request *RetryShipperTaskRequest) {
     request = &RetryShipperTaskRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "RetryShipperTask")
     
     
@@ -4216,6 +4403,7 @@ func NewSearchLogRequest() (request *SearchLogRequest) {
     request = &SearchLogRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "SearchLog")
     
     
@@ -4242,12 +4430,14 @@ func NewSearchLogResponse() (response *SearchLogResponse) {
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
+//  LIMITEXCEEDED_SEARCHRESOURCES = "LimitExceeded.SearchResources"
 //  LIMITEXCEEDED_SEARCHRESULTTOOLARGE = "LimitExceeded.SearchResultTooLarge"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  OPERATIONDENIED_NEWSYNTAXNOTSUPPORTED = "OperationDenied.NewSyntaxNotSupported"
 //  OPERATIONDENIED_OPERATIONNOTSUPPORTINSEARCHLOW = "OperationDenied.OperationNotSupportInSearchLow"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) SearchLog(request *SearchLogRequest) (response *SearchLogResponse, err error) {
@@ -4267,12 +4457,14 @@ func (c *Client) SearchLog(request *SearchLogRequest) (response *SearchLogRespon
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  LIMITEXCEEDED_LOGSEARCH = "LimitExceeded.LogSearch"
+//  LIMITEXCEEDED_SEARCHRESOURCES = "LimitExceeded.SearchResources"
 //  LIMITEXCEEDED_SEARCHRESULTTOOLARGE = "LimitExceeded.SearchResultTooLarge"
 //  MISSINGPARAMETER = "MissingParameter"
 //  OPERATIONDENIED = "OperationDenied"
 //  OPERATIONDENIED_ACCOUNTDESTROY = "OperationDenied.AccountDestroy"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
+//  OPERATIONDENIED_NEWSYNTAXNOTSUPPORTED = "OperationDenied.NewSyntaxNotSupported"
 //  OPERATIONDENIED_OPERATIONNOTSUPPORTINSEARCHLOW = "OperationDenied.OperationNotSupportInSearchLow"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
 func (c *Client) SearchLogWithContext(ctx context.Context, request *SearchLogRequest) (response *SearchLogResponse, err error) {
@@ -4295,6 +4487,7 @@ func NewSplitPartitionRequest() (request *SplitPartitionRequest) {
     request = &SplitPartitionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "SplitPartition")
     
     
@@ -4372,6 +4565,7 @@ func NewUploadLogRequest() (request *UploadLogRequest) {
     request = &UploadLogRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("cls", APIVersion, "UploadLog")
     request.SetContentType("application/octet-stream")
     
@@ -4388,7 +4582,7 @@ func NewUploadLogResponse() (response *UploadLogResponse) {
 // UploadLog
 // ## 提示
 //
-// 为了保障您日志数据的可靠性以及更高效地使用日志服务，建议您使用CLS优化后的接口[上传结构化日志](https://cloud.tencent.com/document/api/614/16873)上传日志。
+// 为了保障您日志数据的可靠性以及更高效地使用日志服务，建议您使用CLS优化后的接口[上传结构化日志](https://cloud.tencent.com/document/product/614/16873)上传日志。
 //
 // 
 //
@@ -4396,7 +4590,7 @@ func NewUploadLogResponse() (response *UploadLogResponse) {
 //
 // 
 //
-// 同时云API上传日志接口也支持同步上传日志数据，如果您选继续使用此接口请参考下文。
+// 同时云API上传日志接口也支持同步上传日志数据，如果您选择继续使用此接口请参考下文。
 //
 // 
 //
@@ -4717,6 +4911,7 @@ func NewUploadLogResponse() (response *UploadLogResponse) {
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_PARTITIONNOTEXIST = "ResourceNotFound.PartitionNotExist"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) UploadLog(request *UploadLogRequest, data []byte) (response *UploadLogResponse, err error) {
     return c.UploadLogWithContext(context.Background(), request, data)
 }
@@ -4724,7 +4919,7 @@ func (c *Client) UploadLog(request *UploadLogRequest, data []byte) (response *Up
 // UploadLog
 // ## 提示
 //
-// 为了保障您日志数据的可靠性以及更高效地使用日志服务，建议您使用CLS优化后的接口[上传结构化日志](https://cloud.tencent.com/document/api/614/16873)上传日志。
+// 为了保障您日志数据的可靠性以及更高效地使用日志服务，建议您使用CLS优化后的接口[上传结构化日志](https://cloud.tencent.com/document/product/614/16873)上传日志。
 //
 // 
 //
@@ -4732,7 +4927,7 @@ func (c *Client) UploadLog(request *UploadLogRequest, data []byte) (response *Up
 //
 // 
 //
-// 同时云API上传日志接口也支持同步上传日志数据，如果您选继续使用此接口请参考下文。
+// 同时云API上传日志接口也支持同步上传日志数据，如果您选择继续使用此接口请参考下文。
 //
 // 
 //
@@ -5053,6 +5248,7 @@ func (c *Client) UploadLog(request *UploadLogRequest, data []byte) (response *Up
 //  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_PARTITIONNOTEXIST = "ResourceNotFound.PartitionNotExist"
 //  RESOURCENOTFOUND_TOPICNOTEXIST = "ResourceNotFound.TopicNotExist"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) UploadLogWithContext(ctx context.Context, request *UploadLogRequest, data []byte) (response *UploadLogResponse, err error) {
     if request == nil {
         request = NewUploadLogRequest()

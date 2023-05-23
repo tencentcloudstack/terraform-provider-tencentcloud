@@ -848,6 +848,8 @@ Cloud Log Service(CLS)
 	tencentcloud_cls_machine_group
 	tencentcloud_cls_cos_shipper
 	tencentcloud_cls_index
+	tencentcloud_cls_alarm
+	tencentcloud_cls_alarm_notice
 
 TencentCloud Lighthouse(Lighthouse)
   Resource
@@ -2036,6 +2038,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_machine_group":                           resourceTencentCloudClsMachineGroup(),
 			"tencentcloud_cls_cos_shipper":                             resourceTencentCloudClsCosShipper(),
 			"tencentcloud_cls_index":                                   resourceTencentCloudClsIndex(),
+			"tencentcloud_cls_alarm":                                   resourceTencentCloudClsAlarm(),
+			"tencentcloud_cls_alarm_notice":                            resourceTencentCloudClsAlarmNotice(),
 			"tencentcloud_lighthouse_instance":                         resourceTencentCloudLighthouseInstance(),
 			"tencentcloud_tem_environment":                             resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                             resourceTencentCloudTemApplication(),
