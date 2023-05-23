@@ -1076,3 +1076,62 @@ func (me *PostgresqlService) DescribePostgresqlBackupPlanConfigById(ctx context.
 	BackupPlanConfig = response.Response.Plans[0]
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlBackupDownloadRestrictionConfigById(ctx context.Context, restrictionType string) (BackupDownloadRestrictionConfig *postgresql.DescribeBackupDownloadRestrictionResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeBackupDownloadRestrictionRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeBackupDownloadRestriction(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	BackupDownloadRestrictionConfig = response.Response
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlSecurityGroupConfigById(ctx context.Context, dBInstanceId string, readOnlyGroupId string) (SecurityGroupConfigs []*postgresql.SecurityGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeDBInstanceSecurityGroupsRequest()
+
+	if dBInstanceId != "" {
+		request.DBInstanceId = &dBInstanceId
+	}
+	if readOnlyGroupId != "" {
+		request.ReadOnlyGroupId = &readOnlyGroupId
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.SecurityGroupSet) < 1 {
+		return
+	}
+
+	SecurityGroupConfigs = response.Response.SecurityGroupSet
+	return
+}
