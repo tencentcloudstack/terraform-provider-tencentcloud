@@ -1,5 +1,5 @@
 /*
-Use this data source to query detailed information of lighthouse scene
+Use this data source to query detailed information of lighthouse scene with region
 
 Example Usage
 

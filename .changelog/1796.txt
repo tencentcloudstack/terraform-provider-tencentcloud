@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_dbbrain_top_space_schemas
+```
+
+```release-note:new-data-source
+tencentcloud_dbbrain_top_space_tables
+```
+
+```release-note:new-data-source
+tencentcloud_dbbrain_top_space_schema_time_series
+```
+
+```release-note:new-data-source
+tencentcloud_dbbrain_top_space_table_time_series
+```

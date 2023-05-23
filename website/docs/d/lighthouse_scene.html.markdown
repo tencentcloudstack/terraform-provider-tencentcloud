@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_lighthouse_scene"
 sidebar_current: "docs-tencentcloud-datasource-lighthouse_scene"
 description: |-
-  Use this data source to query detailed information of lighthouse scene
+  Use this data source to query detailed information of lighthouse scene with region
 ---
 
 # tencentcloud_lighthouse_scene
 
-Use this data source to query detailed information of lighthouse scene
+Use this data source to query detailed information of lighthouse scene with region
 
 ## Example Usage
 

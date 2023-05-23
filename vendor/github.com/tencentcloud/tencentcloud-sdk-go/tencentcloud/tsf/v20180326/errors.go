@@ -566,6 +566,9 @@ const (
 	// 无法获取应用。
 	INVALIDPARAMETERVALUE_APPLICATIONNOTEXISTS = "InvalidParameterValue.ApplicationNotExists"
 
+	// 无效的应用排序类型。
+	INVALIDPARAMETERVALUE_APPLICATIONORDERTYPEINVALID = "InvalidParameterValue.ApplicationOrderTypeInvalid"
+
 	// 无效的应用分页参数。
 	INVALIDPARAMETERVALUE_APPLICATIONPAGELIMITINVALID = "InvalidParameterValue.ApplicationPageLimitInvalid"
 
@@ -931,6 +934,9 @@ const (
 
 	// 无效请求参数。
 	INVALIDPARAMETERVALUE_TASKPARAMETERINVALID = "InvalidParameterValue.TaskParameterInvalid"
+
+	// TSF应用性能管理业务日志搜索解析时间格式错误。
+	INVALIDPARAMETERVALUE_TSFAPMBUSILOGSEARCHPARSERSPDATEFORMATERROR = "InvalidParameterValue.TsfApmBusiLogSearchParseRspDateFormatError"
 
 	// 仅有停止状态下的部署组才可以不启动。
 	INVALIDPARAMETERVALUE_WRONGDONTSTARTVALUE = "InvalidParameterValue.WrongDontStartValue"

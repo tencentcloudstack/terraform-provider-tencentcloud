@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_postgresql_readonly_groups
+```
+
+```release-note:new-resource
+tencentcloud_postgresql_backup_plan_config
+```
