@@ -2280,10 +2280,10 @@ func (me *TsfService) DescribeTsfRepositoryByFilter(ctx context.Context, param m
 	ratelimit.Check(request.GetAction())
 
 	var (
-		offset uint64 = 0
-		limit  uint64 = 20
-		total  int64
-		repository   = make([]*tsf.RepositoryInfo, 0)
+		offset     uint64 = 0
+		limit      uint64 = 20
+		total      int64
+		repository = make([]*tsf.RepositoryInfo, 0)
 	)
 	for {
 		request.Offset = &offset
