@@ -15,11 +15,6 @@ Use this data source to query detailed information of ckafka connect_resource
 
 ```hcl
 data "tencentcloud_ckafka_connect_resource" "connect_resource" {
-  type            = "DTS"
-  search_word     = "resourceName"
-  offset          = 0
-  limit           = 20
-  resource_region = "region"
 }
 ```
 

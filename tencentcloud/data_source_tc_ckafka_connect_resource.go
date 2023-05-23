@@ -5,12 +5,7 @@ Example Usage
 
 ```hcl
 data "tencentcloud_ckafka_connect_resource" "connect_resource" {
-  type = "DTS"
-  search_word = "resourceName"
-  offset = 0
-  limit = 20
-  resource_region = "region"
-  }
+}
 ```
 */
 package tencentcloud
