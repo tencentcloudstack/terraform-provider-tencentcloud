@@ -4,12 +4,17 @@ Provides a resource to create a postgresql backup_download_restriction_config
 Example Usage
 
 ```hcl
+resource "tencentcloud_vpc" "pg_vpc" {
+	name       = var.instance_name
+	cidr_block = var.vpc_cidr
+}
+
 resource "tencentcloud_postgresql_backup_download_restriction_config" "backup_download_restriction_config" {
-  restriction_type = ""
-  vpc_restriction_effect = ""
-  vpc_id_set =
-  ip_restriction_effect = ""
-  ip_set =
+  restriction_type = "INTRANET"
+  vpc_restriction_effect = "DENY"
+  vpc_id_set = [tencentcloud_vpc.pg_vpc.id]
+  ip_restriction_effect = "DENY"
+  ip_set = ["0.0.0.0"]
 }
 ```
 
@@ -46,13 +51,13 @@ func resourceTencentCloudPostgresqlBackupDownloadRestrictionConfig() *schema.Res
 			"restriction_type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Backup file download restriction type:NONE:Unlimited, both internal and external networks can be downloaded.INTRANET:Only intranet downloads are allowed.CUSTOMIZE:Customize the vpc or ip that limits downloads.",
+				Description: "Backup file download restriction type: NONE:Unlimited, both internal and external networks can be downloaded. INTRANET:Only intranet downloads are allowed. CUSTOMIZE:Customize the vpc or ip that limits downloads.",
 			},
 
 			"vpc_restriction_effect": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "vpc limit Strategy:ALLOW,DENY.",
+				Description: "vpc limit Strategy: ALLOW, DENY.",
 			},
 
 			"vpc_id_set": {
@@ -67,7 +72,7 @@ func resourceTencentCloudPostgresqlBackupDownloadRestrictionConfig() *schema.Res
 			"ip_restriction_effect": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "ip limit Strategy:ALLOW,DENY.",
+				Description: "ip limit Strategy: ALLOW, DENY.",
 			},
 
 			"ip_set": {
@@ -76,7 +81,7 @@ func resourceTencentCloudPostgresqlBackupDownloadRestrictionConfig() *schema.Res
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "The list of ip&amp;#39;s that are allowed or denied to download backup files.",
+				Description: "The list of ips that are allowed or denied to download backup files.",
 			},
 		},
 	}
