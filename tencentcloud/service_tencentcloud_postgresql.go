@@ -838,7 +838,7 @@ func (me *PostgresqlService) DescribePostgresqlReadonlyGroups(ctx context.Contex
 	}
 }
 
-func (me *PostgresqlService) DescribePostgresqlReadOnlyGroupById(ctx context.Context, groupId string) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
+func (me *PostgresqlService) DescribePostgresqlReadOnlyGroupById(ctx context.Context, dbInstanceId string) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewDescribeReadOnlyGroupsRequest()
 	defer func() {
@@ -851,7 +851,7 @@ func (me *PostgresqlService) DescribePostgresqlReadOnlyGroupById(ctx context.Con
 		request.Filters,
 		&postgresql.Filter{
 			Name:   helper.String("db-master-instance-id"),
-			Values: []*string{&groupId},
+			Values: []*string{&dbInstanceId},
 		},
 	)
 
@@ -1191,6 +1191,36 @@ func (me *PostgresqlService) DescribePostgresqlDBInstanceNetInfoById(ctx context
 	return nil, nil
 }
 
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetInfoById(ctx context.Context, id string) (dBInstanceNetInfo *postgresql.DBInstanceNetInfo, errRet error) {
+	logElapsed("DescribePostgresqlReadonlyGroupNetInfoById called")()
+	idSplit := strings.Split(id, FILED_SP)
+	if len(idSplit) != 5 {
+		return nil, fmt.Errorf("id is broken,%s, location:%s", id, "resource.tencentcloud_postgresql_readonly_group_network_access_attachment.read")
+	}
+
+	dbInstanceId := idSplit[0]
+	roGroupId := idSplit[1]
+	vpcId := idSplit[2]
+	vip := idSplit[3]
+	port := idSplit[4]
+
+	ret, err := me.DescribePostgresqlReadonlyGroupNetworkAccessAttachmentById(ctx, dbInstanceId, roGroupId)
+	if err != nil {
+		return nil, err
+	}
+
+	if ret != nil {
+		for _, info := range ret.DBInstanceNetInfo {
+			// vpc, vip and port may empty before creating completed.
+			if (*info.VpcId == vpcId || vpcId == "") && (*info.Ip == vip || vip == "") && (helper.UInt64ToStr(*info.Port) == port || port == "") {
+				dBInstanceNetInfo = info
+				return
+			}
+		}
+	}
+	return nil, nil
+}
+
 func (me *PostgresqlService) DeletePostgresqlInstanceNetworkAccessAttachmentById(ctx context.Context, dBInstanceId, vpcId, subnetId, vip string) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -1270,7 +1300,7 @@ func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetworkAccessAttachm
 	} else {
 		roGroup = result[0]
 	}
-	log.Printf("[DEBUG]%s DescribePostgresqlReadonlyGroupsByFilter success, MasterDBInstanceId:[%s], ReadOnlyGroupId:[%s], \n", logId, *roGroup.MasterDBInstanceId, *roGroup.ReadOnlyGroupId)
+	log.Printf("[DEBUG]%s DescribePostgresqlReadonlyGroupNetworkAccessAttachmentById dbInstanceId:[%s] roGroupId:[%s] success, result is roGroup:[%v], \n", logId, dbInstanceId, roGroupId, roGroup)
 
 	return
 }
@@ -1302,30 +1332,25 @@ func (me *PostgresqlService) DeletePostgresqlReadonlyGroupNetworkAccessAttachmen
 	return
 }
 
-func (me *PostgresqlService) PostgresqlReadonlyGroupNetworkAccessAttachmentStateRefreshFunc(dbInstanceId, readOnlyGroupId string, failStates []string) resource.StateRefreshFunc {
+func (me *PostgresqlService) PostgresqlReadonlyGroupNetworkAccessAttachmentStateRefreshFunc(id string, failStates []string) resource.StateRefreshFunc {
+	logElapsed("PostgresqlReadonlyGroupNetworkAccessAttachmentStateRefreshFunc called")()
 	return func() (interface{}, string, error) {
 		ctx := contextNil
 
-		object, err := me.DescribePostgresqlReadonlyGroupNetworkAccessAttachmentById(ctx, dbInstanceId, readOnlyGroupId)
+		object, err := me.DescribePostgresqlReadonlyGroupNetInfoById(ctx, id)
 
 		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
 			return nil, "", err
+		}
+		if object == nil {
+			return &postgresql.DBInstanceNetInfo{}, "closed", nil
 		}
 
 		return object, helper.PString(object.Status), nil
 	}
-	// return func() (interface{}, string, error) {
-	// 	ctx := contextNil
-
-	// 	object, err := me.DescribePostgresqlDBInstanceNetInfoById(ctx, id)
-
-	// 	if err != nil {
-	// 		return nil, "", err
-	// 	}
-	// 	if object == nil {
-	// 		return &postgresql.DBInstanceNetInfo{}, "closed", nil
-	// 	}
-
-	// 	return object, helper.PString(object.Status), nil
-	// }
 }

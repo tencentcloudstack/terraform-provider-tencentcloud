@@ -3,13 +3,59 @@ Provides a resource to create a postgresql readonly_group_network_access_attachm
 
 Example Usage
 
+Vip assigned by system.
+```hcl
+resource "tencentcloud_vpc" "vpc" {
+	cidr_block = "172.18.111.0/24"
+	name       = "test-pg-network-vpc"
+  }
+
+  resource "tencentcloud_subnet" "subnet" {
+	availability_zone = var.default_az
+	cidr_block        = "172.18.111.0/24"
+	name              = "test-pg-network-sub1"
+	vpc_id            = tencentcloud_vpc.vpc.id
+  }
+
+  locals {
+	my_vpc_id = tencentcloud_subnet.subnet.vpc_id
+	my_subnet_id = tencentcloud_subnet.subnet.id
+  }
+
+  resource "tencentcloud_postgresql_readonly_group" "group" {
+	master_db_instance_id = local.pgsql_id
+	name = "tf_test_postgresql_readonly_group"
+	project_id = 0
+	vpc_id  	  		= local.my_vpc_id
+	subnet_id 		= local.my_subnet_id
+	replay_lag_eliminate = 1
+	replay_latency_eliminate =  1
+	max_replay_lag = 100
+	max_replay_latency = 512
+	min_delay_eliminate_reserve = 1
+  }
+
+resource "tencentcloud_postgresql_readonly_group_network_access_attachment" "readonly_group_network_access_attachment" {
+  db_instance_id = local.pgsql_id
+  readonly_group_id = tencentcloud_postgresql_readonly_group.group.id
+  vpc_id = local.my_vpc_id
+  subnet_id = local.my_subnet_id
+  is_assign_vip = false
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
+Vip specified by user.
 ```hcl
 resource "tencentcloud_postgresql_readonly_group_network_access_attachment" "readonly_group_network_access_attachment" {
-  readonly_group_id = "pgro-xxxx"
-  vpc_id = "vpc-xxx"
-  subnet_id = "subnet-xxx"
-  is_assign_vip = false
-  vip = ""
+  db_instance_id = local.pgsql_id
+  readonly_group_id = tencentcloud_postgresql_readonly_group.group.id
+  vpc_id = local.my_vpc_id
+  subnet_id = local.my_subnet_id
+  is_assign_vip = true
+  vip = "172.18.111.111"
   tags = {
     "createdBy" = "terraform"
   }
@@ -85,6 +131,7 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachment() *schem
 
 			"vip": {
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Target VIP.",
@@ -107,13 +154,13 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentCreate(d 
 	logId := getLogId(contextNil)
 
 	var (
-		request        = postgresql.NewCreateReadOnlyGroupNetworkAccessRequest()
-		dbInstanceId   string
-		roGroupId      string
-		vpcId          string
-		vip            string
-		port           string
-		isAutoAssigned bool
+		request      = postgresql.NewCreateReadOnlyGroupNetworkAccessRequest()
+		dbInstanceId string
+		roGroupId    string
+		vpcId        string
+		vip          string
+		port         string
+		isUserAssign bool
 	)
 	if v, ok := d.GetOk("db_instance_id"); ok {
 		dbInstanceId = v.(string)
@@ -135,7 +182,7 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentCreate(d 
 
 	if v, ok := d.GetOkExists("is_assign_vip"); ok {
 		request.IsAssignVip = helper.Bool(v.(bool))
-		isAutoAssigned = v.(bool)
+		isUserAssign = v.(bool)
 	}
 
 	if v, ok := d.GetOk("vip"); ok {
@@ -157,38 +204,36 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentCreate(d 
 		return err
 	}
 
-	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	id := strings.Join([]string{dbInstanceId, roGroupId, vpcId, vip, port}, FILED_SP)
 
-	conf := BuildStateChangeConf([]string{}, []string{"opened"}, 180*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupNetworkAccessAttachmentStateRefreshFunc(dbInstanceId, roGroupId, []string{}))
+	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	conf := BuildStateChangeConf([]string{}, []string{"opened"}, 180*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupNetworkAccessAttachmentStateRefreshFunc(id, []string{}))
 
 	var ret interface{}
 	var e error
 	if ret, e = conf.WaitForState(); e != nil {
 		return e
 	} else {
-		object := ret.(*postgresql.ReadOnlyGroup)
+		object := ret.(*postgresql.DBInstanceNetInfo)
 		// fill out the port and vip
-		for _, info := range object.DBInstanceNetInfo {
-			if info != nil {
-				if isAutoAssigned {
-					// find the port
-					if *info.VpcId == vpcId && *info.Ip == vip {
-						port = helper.UInt64ToStr(*info.Port)
-						break
-					}
-				} else {
-					// find the port and vip when is_assign_vip is true
-					if *info.VpcId == vpcId {
-						port = helper.UInt64ToStr(*info.Port)
-						vip = *info.Ip
-						break
-					}
+		if object != nil {
+			if isUserAssign {
+				// find the port
+				if *object.VpcId == vpcId && *object.Ip == vip {
+					port = helper.UInt64ToStr(*object.Port)
+				}
+			} else {
+				// find the port and vip when is_assign_vip is true
+				if *object.VpcId == vpcId {
+					port = helper.UInt64ToStr(*object.Port)
+					vip = *object.Ip
 				}
 			}
 		}
 	}
 
-	d.SetId(strings.Join([]string{dbInstanceId, roGroupId, vpcId, vip, port}, FILED_SP))
+	id = strings.Join([]string{dbInstanceId, roGroupId, vpcId, vip, port}, FILED_SP)
+	d.SetId(id)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -215,7 +260,7 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentRead(d *s
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 5 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+		return fmt.Errorf("id is broken,%s, location:%s", d.Id(), "resource.tencentcloud_postgresql_readonly_group_network_access_attachment.read")
 	}
 
 	dbInstanceId := idSplit[0]
@@ -235,6 +280,10 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentRead(d *s
 		return nil
 	}
 
+	if ReadonlyGroupNetworkAccessAttachment.MasterDBInstanceId != nil {
+		_ = d.Set("db_instance_id", ReadonlyGroupNetworkAccessAttachment.MasterDBInstanceId)
+	}
+
 	if ReadonlyGroupNetworkAccessAttachment.ReadOnlyGroupId != nil {
 		_ = d.Set("readonly_group_id", ReadonlyGroupNetworkAccessAttachment.ReadOnlyGroupId)
 	}
@@ -247,16 +296,22 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentRead(d *s
 		_ = d.Set("subnet_id", ReadonlyGroupNetworkAccessAttachment.SubnetId)
 	}
 
-	if ReadonlyGroupNetworkAccessAttachment.DBInstanceNetInfo != nil {
-		for _, info := range ReadonlyGroupNetworkAccessAttachment.DBInstanceNetInfo {
-			if *info.VpcId == vpcId && helper.UInt64ToStr(*info.Port) == port {
-				if info.Ip != nil {
-					vip = *info.Ip
-					log.Printf("[DEBUG]%s the id:[%s]'s filed vip[%s] updated successfully!\n", logId, d.Id(), vip)
-					break
+	if vip == "" {
+		// That's mean isUserAssign is false and need to set vip assigned by system
+		if ReadonlyGroupNetworkAccessAttachment.DBInstanceNetInfo != nil {
+			for _, info := range ReadonlyGroupNetworkAccessAttachment.DBInstanceNetInfo {
+				if *info.VpcId == vpcId && helper.UInt64ToStr(*info.Port) == port {
+					if info.Ip != nil {
+						vip = *info.Ip
+						log.Printf("[DEBUG]%s the id:[%s]'s filed vip[%s] updated successfully!\n", logId, d.Id(), vip)
+						break
+					}
 				}
 			}
 		}
+		// update the vip into unique id
+		id := strings.Join([]string{dbInstanceId, roGroupId, vpcId, vip, port}, FILED_SP)
+		d.SetId(id)
 	}
 	_ = d.Set("vip", vip)
 
@@ -286,11 +341,9 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentDelete(d 
 	}
 
 	var subnetId string
-	dbInstanceId := idSplit[0]
 	roGroupId := idSplit[1]
 	vpcId := idSplit[2]
 	vip := idSplit[3]
-
 	if v, ok := d.GetOk("subnet_id"); ok {
 		subnetId = v.(string)
 	}
@@ -299,7 +352,7 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentDelete(d 
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"closed"}, 180*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupNetworkAccessAttachmentStateRefreshFunc(dbInstanceId, roGroupId, []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"closed"}, 180*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupNetworkAccessAttachmentStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
