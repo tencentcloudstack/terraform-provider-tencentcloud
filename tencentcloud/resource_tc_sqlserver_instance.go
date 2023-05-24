@@ -76,13 +76,11 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 		"vpc_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Computed:    true,
 			Description: "ID of VPC.",
 		},
 		"subnet_id": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Computed:    true,
 			Description: "ID of subnet.",
 		},
 		"storage": {
@@ -119,7 +117,6 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 		"vip": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Computed:    true,
 			Description: "IP for private access.",
 		},
 		"vport": {
