@@ -138,7 +138,6 @@ func resourceTencentCloudSqlserverConfigDatabaseMdfUpdate(d *schema.ResourceData
 	dbName := idSplit[1]
 
 	request.InstanceId = &instanceId
-	request.InstanceId = &instanceId
 	dbNames := make([]*string, 0)
 	dbNames = append(dbNames, &dbName)
 	request.DBNames = dbNames
