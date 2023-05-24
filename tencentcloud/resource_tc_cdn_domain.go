@@ -2834,7 +2834,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 	if ok := checkCdnInfoWritable(d, "ip_filter", dc.IpFilter); ok {
 		dMap := map[string]interface{}{
 			"switch":      dc.IpFilter.Switch,
-			"filter_type":  dc.IpFilter.FilterType,
+			"filter_type": dc.IpFilter.FilterType,
 			"filters":     dc.IpFilter.Filters,
 			"return_code": dc.IpFilter.ReturnCode,
 		}
@@ -3039,7 +3039,7 @@ func resourceTencentCloudCdnDomainRead(d *schema.ResourceData, meta interface{})
 			for i := range rules {
 				item := rules[i]
 				rule := map[string]interface{}{
-					"follow_origin":      item.FollowOrigin,
+					"follow_origin":    item.FollowOrigin,
 					"max_age_contents": item.MaxAgeContents,
 					"max_age_type":     item.MaxAgeType,
 					"max_age_time":     item.MaxAgeTime,
