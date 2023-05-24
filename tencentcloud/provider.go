@@ -862,6 +862,12 @@ Cloud Log Service(CLS)
 	tencentcloud_cls_index
 	tencentcloud_cls_alarm
 	tencentcloud_cls_alarm_notice
+	tencentcloud_cls_ckafka_consumer
+	tencentcloud_cls_cos_recharge
+	tencentcloud_cls_export
+
+  Data Source
+	tencentcloud_cls_shipper_tasks
 
 TencentCloud Lighthouse(Lighthouse)
   Resource
@@ -1724,6 +1730,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_instance_disk_num":              dataSourceTencentCloudLighthouseInstanceDiskNum(),
 			"tencentcloud_lighthouse_instance_blueprint":             dataSourceTencentCloudLighthouseInstanceBlueprint(),
 			"tencentcloud_lighthouse_disk_config":                    dataSourceTencentCloudLighthouseDiskConfig(),
+			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2064,6 +2071,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_index":                                     resourceTencentCloudClsIndex(),
 			"tencentcloud_cls_alarm":                                     resourceTencentCloudClsAlarm(),
 			"tencentcloud_cls_alarm_notice":                              resourceTencentCloudClsAlarmNotice(),
+			"tencentcloud_cls_ckafka_consumer":                           resourceTencentCloudClsCkafkaConsumer(),
+			"tencentcloud_cls_cos_recharge":                              resourceTencentCloudClsCosRecharge(),
+			"tencentcloud_cls_export":                                    resourceTencentCloudClsExport(),
 			"tencentcloud_lighthouse_instance":                           resourceTencentCloudLighthouseInstance(),
 			"tencentcloud_tem_environment":                               resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                               resourceTencentCloudTemApplication(),
