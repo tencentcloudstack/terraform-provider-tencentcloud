@@ -3,13 +3,27 @@ Provides a resource to create a postgresql instance_network_access_attachment
 
 Example Usage
 
+Vip assigned by system.
 ```hcl
 resource "tencentcloud_postgresql_instance_network_access_attachment" "instance_network_access_attachment" {
-  db_instance_id = ""
-  vpc_id = "vpc-xxx"
-  subnet_id = "subnet-xxx"
+  db_instance_id = tencentcloud_postgresql_instance.test.id
+  vpc_id = local.vpc_id
+  subnet_id = local.subnet_id
   is_assign_vip = false
-  vip = ""
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
+Vip specified by user.
+```hcl
+resource "tencentcloud_postgresql_instance_network_access_attachment" "instance_network_access_attachment" {
+  db_instance_id = tencentcloud_postgresql_instance.test.id
+  vpc_id = local.my_vpc_id
+  subnet_id = local.my_subnet_id
+  is_assign_vip = true
+  vip = "172.18.111.111"
   tags = {
     "createdBy" = "terraform"
   }
@@ -78,6 +92,7 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessAttachment() *schema.Res
 
 			"vip": {
 				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Target VIP.",
@@ -86,6 +101,7 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessAttachment() *schema.Res
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Tag description list.",
 			},
 		},
@@ -99,12 +115,12 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessAttachmentCreate(d *sche
 	logId := getLogId(contextNil)
 
 	var (
-		request        = postgresql.NewCreateDBInstanceNetworkAccessRequest()
-		dbInstanceId   string
-		vpcId          string
-		vip            string
-		port           string
-		isAutoAssigned bool
+		request      = postgresql.NewCreateDBInstanceNetworkAccessRequest()
+		dbInstanceId string
+		vpcId        string
+		vip          string
+		port         string
+		isUserAssign bool
 	)
 	if v, ok := d.GetOk("db_instance_id"); ok {
 		request.DBInstanceId = helper.String(v.(string))
@@ -122,7 +138,7 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessAttachmentCreate(d *sche
 
 	if v, ok := d.GetOkExists("is_assign_vip"); ok {
 		request.IsAssignVip = helper.Bool(v.(bool))
-		isAutoAssigned = v.(bool)
+		isUserAssign = v.(bool)
 	}
 
 	if v, ok := d.GetOk("vip"); ok {
@@ -144,37 +160,38 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessAttachmentCreate(d *sche
 		return err
 	}
 
-	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	id := strings.Join([]string{dbInstanceId, vpcId, vip, port}, FILED_SP)
 
-	conf := BuildStateChangeConf([]string{}, []string{"opened"}, 180*readRetryTimeout, time.Second, service.PostgresqlInstanceNetworkAccessAttachmentStateRefreshFunc(dbInstanceId, []string{}))
+	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+	conf := BuildStateChangeConf([]string{}, []string{"opened"}, 180*readRetryTimeout, time.Second, service.PostgresqlInstanceNetworkAccessAttachmentStateRefreshFunc(id, []string{}))
 
 	var ret interface{}
 	var e error
 	if ret, e = conf.WaitForState(); e != nil {
 		return e
 	} else {
-		object := ret.(*postgresql.DBInstance)
-		for _, info := range object.DBInstanceNetInfo {
-			if info != nil {
-				if isAutoAssigned {
-					// find the port and vip when is_assign_vip is true
-					if *info.VpcId == vpcId {
-						port = helper.UInt64ToStr(*info.Port)
-						vip = *info.Ip
-						break
-					}
-				} else {
-					// find the port
-					if *info.VpcId == vpcId && *info.Ip == vip {
-						port = helper.UInt64ToStr(*info.Port)
-						break
-					}
+		object := ret.(*postgresql.DBInstanceNetInfo)
+		// for _, info := range object {
+		if object != nil {
+			if isUserAssign {
+				// find the port
+				if *object.VpcId == vpcId && *object.Ip == vip {
+					port = helper.UInt64ToStr(*object.Port)
+
+				}
+			} else {
+				// find the port and vip when is_assign_vip is false
+				if *object.VpcId == vpcId {
+					port = helper.UInt64ToStr(*object.Port)
+					vip = *object.Ip
 				}
 			}
 		}
+		// }
 	}
 
-	d.SetId(strings.Join([]string{dbInstanceId, vpcId, vip, port}, FILED_SP))
+	id = strings.Join([]string{dbInstanceId, vpcId, vip, port}, FILED_SP)
+	d.SetId(id)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -201,7 +218,7 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessAttachmentRead(d *schema
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 4 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+		return fmt.Errorf("id is broken,%s, location:%s", d.Id(), "resource.tencentcloud_postgresql_instance_network_access_attachment.read")
 	}
 
 	dbInstanceId := idSplit[0]
@@ -232,16 +249,22 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessAttachmentRead(d *schema
 		_ = d.Set("subnet_id", InstanceNetworkAccessAttachment.SubnetId)
 	}
 
-	if InstanceNetworkAccessAttachment.DBInstanceNetInfo != nil {
-		for _, info := range InstanceNetworkAccessAttachment.DBInstanceNetInfo {
-			if *info.VpcId == vpcId && helper.UInt64ToStr(*info.Port) == port {
-				if info.Ip != nil {
-					vip = *info.Ip
-					log.Printf("[DEBUG]%s the id:[%s]'s filed vip[%s] updated successfully!\n", logId, d.Id(), vip)
-					break
+	if vip == "" {
+		// That's mean isUserAssign is false and need to set vip assigned by system
+		if InstanceNetworkAccessAttachment.DBInstanceNetInfo != nil {
+			for _, info := range InstanceNetworkAccessAttachment.DBInstanceNetInfo {
+				if *info.VpcId == vpcId && helper.UInt64ToStr(*info.Port) == port {
+					if info.Ip != nil {
+						vip = *info.Ip
+						log.Printf("[DEBUG]%s the id:[%s]'s filed vip[%s] updated successfully!\n", logId, d.Id(), vip)
+						break
+					}
 				}
 			}
 		}
+		// update the vip into unique id
+		id := strings.Join([]string{dbInstanceId, vpcId, vip, port}, FILED_SP)
+		d.SetId(id)
 	}
 	_ = d.Set("vip", vip)
 
@@ -267,7 +290,7 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessAttachmentDelete(d *sche
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 4 {
-		return fmt.Errorf("id is broken,%s", d.Id())
+		return fmt.Errorf("id is broken,%s, location:%s", d.Id(), "resource.tencentcloud_postgresql_instance_network_access_attachment.delete")
 	}
 
 	var subnetId string
@@ -282,7 +305,7 @@ func resourceTencentCloudPostgresqlInstanceNetworkAccessAttachmentDelete(d *sche
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"closed"}, 180*readRetryTimeout, time.Second, service.PostgresqlInstanceNetworkAccessAttachmentStateRefreshFunc(dbInstanceId, []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"closed"}, 180*readRetryTimeout, time.Second, service.PostgresqlInstanceNetworkAccessAttachmentStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

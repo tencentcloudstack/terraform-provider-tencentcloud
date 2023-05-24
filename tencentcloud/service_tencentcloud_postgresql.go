@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -1137,6 +1138,7 @@ func (me *PostgresqlService) DescribePostgresqlSecurityGroupConfigById(ctx conte
 }
 
 func (me *PostgresqlService) DescribePostgresqlInstanceNetworkAccessAttachmentById(ctx context.Context, dBInstanceId string) (InstanceNetworkAccessAttachment *postgresql.DBInstance, errRet error) {
+	logElapsed("DescribePostgresqlInstanceNetworkAccessAttachmentById called")()
 	logId := getLogId(ctx)
 
 	request := postgresql.NewDescribeDBInstanceAttributeRequest()
@@ -1159,6 +1161,34 @@ func (me *PostgresqlService) DescribePostgresqlInstanceNetworkAccessAttachmentBy
 
 	InstanceNetworkAccessAttachment = response.Response.DBInstance
 	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlDBInstanceNetInfoById(ctx context.Context, id string) (dBInstanceNetInfo *postgresql.DBInstanceNetInfo, errRet error) {
+	logElapsed("DescribePostgresqlDBInstanceNetInfoById called")()
+	idSplit := strings.Split(id, FILED_SP)
+	if len(idSplit) != 4 {
+		return nil, fmt.Errorf("id is broken,%s, location:%s", id, "resource.tencentcloud_postgresql_instance_network_access_attachment.read")
+	}
+
+	dbInstanceId := idSplit[0]
+	vpcId := idSplit[1]
+	vip := idSplit[2]
+	port := idSplit[3]
+
+	ret, err := me.DescribePostgresqlInstanceNetworkAccessAttachmentById(ctx, dbInstanceId)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, info := range ret.DBInstanceNetInfo {
+		// vpc, vip and port may empty before creating completed.
+		if (*info.VpcId == vpcId || vpcId == "") && (*info.Ip == vip || vip == "") && (helper.UInt64ToStr(*info.Port) == port || port == "") {
+			dBInstanceNetInfo = info
+			return
+		}
+	}
+
+	return nil, nil
 }
 
 func (me *PostgresqlService) DeletePostgresqlInstanceNetworkAccessAttachmentById(ctx context.Context, dBInstanceId, vpcId, subnetId, vip string) (errRet error) {
@@ -1188,17 +1218,26 @@ func (me *PostgresqlService) DeletePostgresqlInstanceNetworkAccessAttachmentById
 	return
 }
 
-func (me *PostgresqlService) PostgresqlInstanceNetworkAccessAttachmentStateRefreshFunc(dBInstanceId string, failStates []string) resource.StateRefreshFunc {
+func (me *PostgresqlService) PostgresqlInstanceNetworkAccessAttachmentStateRefreshFunc(id string, failStates []string) resource.StateRefreshFunc {
+	logElapsed("PostgresqlInstanceNetworkAccessAttachmentStateRefreshFunc called")()
 	return func() (interface{}, string, error) {
 		ctx := contextNil
 
-		object, err := me.DescribePostgresqlInstanceNetworkAccessAttachmentById(ctx, dBInstanceId)
+		object, err := me.DescribePostgresqlDBInstanceNetInfoById(ctx, id)
 
 		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
 			return nil, "", err
 		}
+		if object == nil {
+			return &postgresql.DBInstanceNetInfo{}, "closed", nil
+		}
 
-		return object, helper.PString(object.DBInstanceStatus), nil
+		return object, helper.PString(object.Status), nil
 	}
 }
 
@@ -1275,4 +1314,18 @@ func (me *PostgresqlService) PostgresqlReadonlyGroupNetworkAccessAttachmentState
 
 		return object, helper.PString(object.Status), nil
 	}
+	// return func() (interface{}, string, error) {
+	// 	ctx := contextNil
+
+	// 	object, err := me.DescribePostgresqlDBInstanceNetInfoById(ctx, id)
+
+	// 	if err != nil {
+	// 		return nil, "", err
+	// 	}
+	// 	if object == nil {
+	// 		return &postgresql.DBInstanceNetInfo{}, "closed", nil
+	// 	}
+
+	// 	return object, helper.PString(object.Status), nil
+	// }
 }

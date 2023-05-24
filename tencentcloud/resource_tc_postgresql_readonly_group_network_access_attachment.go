@@ -93,6 +93,7 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachment() *schem
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Tag description list.",
 			},
 		},
@@ -170,16 +171,16 @@ func resourceTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentCreate(d 
 		for _, info := range object.DBInstanceNetInfo {
 			if info != nil {
 				if isAutoAssigned {
+					// find the port
+					if *info.VpcId == vpcId && *info.Ip == vip {
+						port = helper.UInt64ToStr(*info.Port)
+						break
+					}
+				} else {
 					// find the port and vip when is_assign_vip is true
 					if *info.VpcId == vpcId {
 						port = helper.UInt64ToStr(*info.Port)
 						vip = *info.Ip
-						break
-					}
-				} else {
-					// find the port
-					if *info.VpcId == vpcId && *info.Ip == vip {
-						port = helper.UInt64ToStr(*info.Port)
 						break
 					}
 				}
