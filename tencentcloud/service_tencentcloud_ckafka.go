@@ -940,3 +940,54 @@ func (me *CkafkaService) CkafkaConnectResourceStateRefreshFunc(resourceId string
 		return object, helper.Int64ToStr(*object.Status), nil
 	}
 }
+
+func (me *CkafkaService) DescribeCkafkaConnectResourceByFilter(ctx context.Context, params map[string]interface{}) (describeConnectResourceResp *ckafka.DescribeConnectResourcesResp, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDescribeConnectResourcesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	offset := 0
+	limit := 20
+	for k, v := range params {
+		if k == "type" {
+			request.Type = helper.String(v.(string))
+		}
+		if k == "search_word" {
+			request.SearchWord = helper.String(v.(string))
+		}
+		if k == "resource_region" {
+			request.ResourceRegion = helper.String(v.(string))
+		}
+		if k == "offset" {
+			offset = v.(int)
+		}
+		if k == "limit" {
+			limit = v.(int)
+		}
+	}
+
+	request.Offset = helper.IntInt64(offset)
+	request.Limit = helper.IntInt64(limit)
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeConnectResources(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Result == nil {
+		errRet = fmt.Errorf("Response is null")
+		return
+	}
+
+	describeConnectResourceResp = response.Response.Result
+	return
+}

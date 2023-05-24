@@ -11,7 +11,6 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudSqlserverBusinessIntelligenceInstanceResource_basic -v
 func TestAccTencentCloudSqlserverBusinessIntelligenceInstanceResource_basic(t *testing.T) {
-	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)

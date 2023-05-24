@@ -50,6 +50,7 @@ The following arguments are supported:
 * `tags` - (Optional, Map) The tags of the SQL Server.
 * `voucher_ids` - (Optional, Set: [`String`]) An array of voucher IDs, currently only one can be used for a single order.
 * `vpc_id` - (Optional, String, ForceNew) ID of VPC.
+* `wait_switch` - (Optional, Int) The way to execute the allocation. Supported values include: 0 - execute immediately, 1 - execute in maintenance window.
 
 ## Attributes Reference
 

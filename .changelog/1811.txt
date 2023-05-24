@@ -1,0 +1,27 @@
+```release-note:new-resource
+tencentcloud_sqlserver_complete_expansion
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_config_database_cdc
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_config_database_ct
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_config_database_mdf
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_config_instance_param
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_config_instance_ro_group
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_instance: Support wait_switch
+```

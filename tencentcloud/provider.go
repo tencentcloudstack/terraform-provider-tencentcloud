@@ -154,6 +154,8 @@ Cloud Kafka(ckafka)
     tencentcloud_ckafka_acls
     tencentcloud_ckafka_topics
     tencentcloud_ckafka_instances
+	tencentcloud_ckafka_connect_resource
+	tencentcloud_ckafka_region
 
   Resource
 	tencentcloud_ckafka_instance
@@ -508,6 +510,8 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_security_groups_attachment
 	tencentcloud_mysql_local_binlog_config
 	tencentcloud_mysql_audit_log_file
+	tencentcloud_mysql_backup_download_restriction
+	tencentcloud_mysql_renew_db_instance_operation
 
 Cloud Monitor(Monitor)
   Data Source
@@ -657,6 +661,12 @@ SQLServer
     tencentcloud_sqlserver_business_intelligence_file
 	tencentcloud_sqlserver_business_intelligence_instance
 	tencentcloud_sqlserver_general_communication
+	tencentcloud_sqlserver_complete_expansion
+	tencentcloud_sqlserver_config_database_cdc
+	tencentcloud_sqlserver_config_database_ct
+	tencentcloud_sqlserver_config_database_mdf
+	tencentcloud_sqlserver_config_instance_param
+	tencentcloud_sqlserver_config_instance_ro_group
 
 SSL Certificates
   Data Source
@@ -854,6 +864,12 @@ Cloud Log Service(CLS)
 	tencentcloud_cls_index
 	tencentcloud_cls_alarm
 	tencentcloud_cls_alarm_notice
+	tencentcloud_cls_ckafka_consumer
+	tencentcloud_cls_cos_recharge
+	tencentcloud_cls_export
+
+  Data Source
+	tencentcloud_cls_shipper_tasks
 
 TencentCloud Lighthouse(Lighthouse)
   Resource
@@ -1548,6 +1564,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_acls":                               dataSourceTencentCloudCkafkaAcls(),
 			"tencentcloud_ckafka_topics":                             dataSourceTencentCloudCkafkaTopics(),
 			"tencentcloud_ckafka_instances":                          dataSourceTencentCloudCkafkaInstances(),
+			"tencentcloud_ckafka_connect_resource":                   dataSourceTencentCloudCkafkaConnectResource(),
+			"tencentcloud_ckafka_region":                             dataSourceTencentCloudCkafkaRegion(),
 			"tencentcloud_audit_cos_regions":                         dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                           dataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                    dataSourceTencentCloudAudits(),
@@ -1714,6 +1732,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_instance_disk_num":              dataSourceTencentCloudLighthouseInstanceDiskNum(),
 			"tencentcloud_lighthouse_instance_blueprint":             dataSourceTencentCloudLighthouseInstanceBlueprint(),
 			"tencentcloud_lighthouse_disk_config":                    dataSourceTencentCloudLighthouseDiskConfig(),
+			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1826,6 +1845,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_deploy_group":                                  resourceTencentCloudMysqlDeployGroup(),
 			"tencentcloud_mysql_local_binlog_config":                           resourceTencentCloudMysqlLocalBinlogConfig(),
 			"tencentcloud_mysql_audit_log_file":                                resourceTencentCloudMysqlAuditLogFile(),
+			"tencentcloud_mysql_backup_download_restriction":                   resourceTencentCloudMysqlBackupDownloadRestriction(),
+			"tencentcloud_mysql_renew_db_instance_operation":                   resourceTencentCloudMysqlRenewDbInstanceOperation(),
 			"tencentcloud_cos_bucket":                                          resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                                   resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                                     resourceTencentCloudCfsFileSystem(),
@@ -1975,6 +1996,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_business_intelligence_file":                resourceTencentCloudSqlserverBusinessIntelligenceFile(),
 			"tencentcloud_sqlserver_business_intelligence_instance":            resourceTencentCloudSqlserverBusinessIntelligenceInstance(),
 			"tencentcloud_sqlserver_general_communication":                     resourceTencentCloudSqlserverGeneralCommunication(),
+			"tencentcloud_sqlserver_complete_expansion":                        resourceTencentCloudSqlserverCompleteExpansion(),
+			"tencentcloud_sqlserver_config_database_cdc":                       resourceTencentCloudSqlserverConfigDatabaseCDC(),
+			"tencentcloud_sqlserver_config_database_ct":                        resourceTencentCloudSqlserverConfigDatabaseCT(),
+			"tencentcloud_sqlserver_config_database_mdf":                       resourceTencentCloudSqlserverConfigDatabaseMdf(),
+			"tencentcloud_sqlserver_config_instance_param":                     resourceTencentCloudSqlserverConfigInstanceParam(),
+			"tencentcloud_sqlserver_config_instance_ro_group":                  resourceTencentCloudSqlserverConfigInstanceRoGroup(),
 			"tencentcloud_ckafka_instance":                                     resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                         resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                          resourceTencentCloudCkafkaAcl(),
@@ -2048,6 +2075,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_index":                                           resourceTencentCloudClsIndex(),
 			"tencentcloud_cls_alarm":                                           resourceTencentCloudClsAlarm(),
 			"tencentcloud_cls_alarm_notice":                                    resourceTencentCloudClsAlarmNotice(),
+			"tencentcloud_cls_ckafka_consumer":                                 resourceTencentCloudClsCkafkaConsumer(),
+			"tencentcloud_cls_cos_recharge":                                    resourceTencentCloudClsCosRecharge(),
+			"tencentcloud_cls_export":                                          resourceTencentCloudClsExport(),
 			"tencentcloud_lighthouse_instance":                                 resourceTencentCloudLighthouseInstance(),
 			"tencentcloud_tem_environment":                                     resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                                     resourceTencentCloudTemApplication(),

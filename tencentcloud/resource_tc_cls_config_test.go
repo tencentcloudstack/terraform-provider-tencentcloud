@@ -19,6 +19,11 @@ func TestAccTencentCloudClsConfig_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cls_config.config", "name", "config"),
 				),
 			},
+			{
+				ResourceName:      "tencentcloud_cls_config.config",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
@@ -35,6 +40,11 @@ func TestAccTencentCloudClsConfig_FullRegex(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_cls_config.config", "name", "tf-full-regex-config-test"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_cls_config.config",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
