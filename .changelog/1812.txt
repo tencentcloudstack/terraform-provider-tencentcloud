@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_mysql_backup_download_restriction
+```
+
+```release-note:new-resource
+tencentcloud_mysql_renew_db_instance_operation
+```
