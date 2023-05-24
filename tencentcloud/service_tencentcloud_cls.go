@@ -914,3 +914,175 @@ func (me *ClsService) DeleteClsAlarmNoticeById(ctx context.Context, alarmNoticeI
 
 	return
 }
+
+func (me *ClsService) DescribeClsCkafkaConsumerById(ctx context.Context, topicId string) (ckafkaConsumer *cls.DescribeConsumerResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeConsumerRequest()
+	request.TopicId = &topicId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeConsumer(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	ckafkaConsumer = response.Response
+	return
+}
+
+func (me *ClsService) DeleteClsCkafkaConsumerById(ctx context.Context, topicId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteConsumerRequest()
+	request.TopicId = &topicId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteConsumer(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DescribeClsCosRechargeById(ctx context.Context, topicId string, rechargeId string) (cosRecharge *cls.CosRechargeInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeCosRechargesRequest()
+	request.TopicId = &topicId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeCosRecharges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, info := range response.Response.Data {
+		if *info.Id == rechargeId {
+			cosRecharge = info
+			break
+		}
+	}
+	return
+}
+
+func (me *ClsService) DescribeClsExportById(ctx context.Context, topicId string, exportId string) (export *cls.ExportInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeExportsRequest()
+	request.TopicId = &topicId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeExports(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, info := range response.Response.Exports {
+		if *info.ExportId == exportId {
+			export = info
+			break
+		}
+	}
+
+	return
+}
+
+func (me *ClsService) DeleteClsExportById(ctx context.Context, exportId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteExportRequest()
+	request.ExportId = &exportId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteExport(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DescribeClsShipperTasksByFilter(ctx context.Context, param map[string]interface{}) (shipperTasks []*cls.ShipperTaskInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeShipperTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ShipperId" {
+			request.ShipperId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*int64)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeShipperTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	shipperTasks = response.Response.Tasks
+
+	return
+}
