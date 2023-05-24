@@ -5,6 +5,8 @@ import (
 	"testing"
 )
 
+const testAccPgInstanceNetworkAccessAttachmentObject = "tencentcloud_postgresql_instance_network_access_attachment.instance_network_access_attachment"
+
 func TestAccTencentCloudPostgresqlInstanceNetworkAccessAttachmentResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -12,13 +14,16 @@ func TestAccTencentCloudPostgresqlInstanceNetworkAccessAttachmentResource_basic(
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
+		CheckDestroy: testAccCheckPgInstanceNetworkAccessAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlInstanceNetworkAccessAttachment,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_postgresql_instance_network_access_attachment.instance_network_access_attachment", "id")),
+				Check:  resource.ComposeTestCheckFunc(
+					testAccCheckTCRVPCAttachmentExists(testAccPgInstanceNetworkAccessAttachmentObject)
+					resource.TestCheckResourceAttrSet(testAccPgInstanceNetworkAccessAttachmentObject, "id")),
 			},
 			{
-				ResourceName:      "tencentcloud_postgresql_instance_network_access_attachment.instance_network_access_attachment",
+				ResourceName:      testAccPgInstanceNetworkAccessAttachmentObject,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},

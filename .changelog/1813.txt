@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_postgresql_instance_network_access_attachment
+```
+
+```release-note:new-resource
+tencentcloud_postgresql_readonly_group_network_access_attachment
+```

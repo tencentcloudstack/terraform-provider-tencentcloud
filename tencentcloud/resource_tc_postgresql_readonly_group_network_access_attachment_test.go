@@ -16,7 +16,9 @@ func TestAccTencentCloudPostgresqlReadonlyGroupNetworkAccessAttachmentResource_b
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlReadonlyGroupNetworkAccessAttachment,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_postgresql_readonly_group_network_access_attachment.readonly_group_network_access_attachment", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_postgresql_readonly_group_network_access_attachment.readonly_group_network_access_attachment", "id"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_postgresql_readonly_group_network_access_attachment.readonly_group_network_access_attachment",
