@@ -416,6 +416,42 @@ func (me *ClsService) DeleteClsMachineGroup(ctx context.Context, id string) (err
 	return
 }
 
+func (me *ClsService) DescribeClsMachineGroupByConfigId(ctx context.Context, configId, groupId string) (machineGroup *cls.MachineGroupInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeConfigMachineGroupsRequest()
+	)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ConfigId = &configId
+
+	response, err := me.client.UseClsClient().DescribeConfigMachineGroups(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instances := response.Response.MachineGroups
+
+	for _, instance := range instances {
+		if *instance.GroupId == groupId {
+			machineGroup = instance
+			break
+		}
+	}
+
+	return
+}
+
 // cls cos shipper
 func (me *ClsService) DescribeClsCosShippersByFilter(ctx context.Context, filters map[string]string) (instances []*cls.ShipperInfo, errRet error) {
 	var (
@@ -548,6 +584,58 @@ func (me *ClsService) DeleteClsCosShipper(ctx context.Context, id string) (errRe
 }
 
 // cls config
+func (me *ClsService) DescribeClsConfigById(ctx context.Context, configId string) (config *cls.ConfigInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeConfigsRequest()
+
+	filter := &cls.Filter{
+		Key:    helper.String("configId"),
+		Values: []*string{&configId},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*cls.ConfigInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClsClient().DescribeConfigs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Configs) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Configs...)
+		if len(response.Response.Configs) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	config = instances[0]
+	return
+}
+
 func (me *ClsService) DeleteClsConfig(ctx context.Context, id string) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -574,6 +662,58 @@ func (me *ClsService) DeleteClsConfig(ctx context.Context, id string) (errRet er
 }
 
 // cls config extra
+func (me *ClsService) DescribeClsConfigExtraById(ctx context.Context, configExtraId string) (config *cls.ConfigExtraInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeConfigExtrasRequest()
+
+	filter := &cls.Filter{
+		Key:    helper.String("configExtraId"),
+		Values: []*string{&configExtraId},
+	}
+	request.Filters = append(request.Filters, filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*cls.ConfigExtraInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClsClient().DescribeConfigExtras(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Configs) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Configs...)
+		if len(response.Response.Configs) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	config = instances[0]
+	return
+}
+
 func (me *ClsService) DeleteClsConfigExtra(ctx context.Context, id string) (errRet error) {
 	logId := getLogId(ctx)
 

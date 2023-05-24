@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_cls_config: support import function
+```
+
+```release-note:enhancement
+resource/tencentcloud_cls_config_extra: support import function
+```
+
+```release-note:enhancement
+resource/tencentcloud_cls_config_attachment: support import function
+```

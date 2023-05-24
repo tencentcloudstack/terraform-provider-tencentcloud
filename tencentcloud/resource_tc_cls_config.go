@@ -33,6 +33,14 @@ resource "tencentcloud_cls_config" "config" {
 #  user_define_rule = ""
 }
 ```
+
+Import
+
+cls config can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cls_config.config config_id
+```
 */
 package tencentcloud
 
@@ -53,6 +61,9 @@ func resourceTencentCloudClsConfig() *schema.Resource {
 		Read:   resourceTencentCloudClsConfigRead,
 		Delete: resourceTencentCloudClsConfigDelete,
 		Update: resourceTencentCloudClsConfigUpdate,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -146,6 +157,60 @@ func resourceTencentCloudClsConfig() *schema.Resource {
 							Type:        schema.TypeInt,
 							Optional:    true,
 							Description: "Size of the data to be rewound in incremental collection mode. Default value: -1 (full collection).",
+						},
+						"is_gbk": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "GBK encoding. Default 0.",
+						},
+						"json_standard": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "standard json. Default 0.",
+						},
+						"protocol": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "syslog protocol, tcp or udp.",
+						},
+						"address": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "syslog system log collection specifies the address and port that the collector listens to.",
+						},
+						"parse_protocol": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "parse protocol.",
+						},
+						"metadata_type": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "metadata type.",
+						},
+						"path_regex": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "metadata path regex.",
+						},
+						"meta_tags": {
+							Type:        schema.TypeList,
+							Optional:    true,
+							Description: "metadata tags.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"key": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "tag key.",
+									},
+									"value": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "tag value.",
+									},
+								},
+							},
 						},
 					},
 				},
@@ -252,6 +317,40 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 		if v, ok := dMap["backtracking"]; ok {
 			extractRule.Backtracking = helper.IntInt64(v.(int))
 		}
+		if v, ok := dMap["is_gbk"]; ok {
+			extractRule.IsGBK = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["json_standard"]; ok {
+			extractRule.JsonStandard = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["protocol"]; ok {
+			extractRule.Protocol = helper.String(v.(string))
+		}
+		if v, ok := dMap["address"]; ok {
+			extractRule.Address = helper.String(v.(string))
+		}
+		if v, ok := dMap["parse_protocol"]; ok {
+			extractRule.ParseProtocol = helper.String(v.(string))
+		}
+		if v, ok := dMap["metadata_type"]; ok {
+			extractRule.MetadataType = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["path_regex"]; ok {
+			extractRule.PathRegex = helper.String(v.(string))
+		}
+		if v, ok := dMap["meta_tags"]; ok {
+			for _, item := range v.([]interface{}) {
+				metaTagsMap := item.(map[string]interface{})
+				metaTagInfo := cls.MetaTagInfo{}
+				if v, ok := metaTagsMap["key"]; ok {
+					metaTagInfo.Key = helper.String(v.(string))
+				}
+				if v, ok := metaTagsMap["value"]; ok {
+					metaTagInfo.Value = helper.String(v.(string))
+				}
+				extractRule.MetaTags = append(extractRule.MetaTags, &metaTagInfo)
+			}
+		}
 		extractRules = append(extractRules, &extractRule)
 		request.ExtractRule = extractRules[0]
 	}
@@ -293,11 +392,178 @@ func resourceTencentCloudClsConfigCreate(d *schema.ResourceData, meta interface{
 
 	id := *response.Response.ConfigId
 	d.SetId(id)
-	return nil
+	return resourceTencentCloudClsConfigRead(d, meta)
 }
 
 func resourceTencentCloudClsConfigRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cls_config.read")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	configId := d.Id()
+
+	config, err := service.DescribeClsConfigById(ctx, configId)
+	if err != nil {
+		return err
+	}
+
+	if config == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `ClsConfig` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
+	if config.Name != nil {
+		_ = d.Set("name", config.Name)
+	}
+
+	if config.Output != nil {
+		_ = d.Set("output", config.Output)
+	}
+
+	if config.Path != nil {
+		_ = d.Set("path", config.Path)
+	}
+
+	if config.LogType != nil {
+		_ = d.Set("log_type", config.LogType)
+	}
+
+	if config.ExtractRule != nil {
+		extractRuleMap := map[string]interface{}{}
+
+		if config.ExtractRule.TimeKey != nil {
+			extractRuleMap["time_key"] = config.ExtractRule.TimeKey
+		}
+
+		if config.ExtractRule.TimeFormat != nil {
+			extractRuleMap["time_format"] = config.ExtractRule.TimeFormat
+		}
+
+		if config.ExtractRule.Delimiter != nil {
+			extractRuleMap["delimiter"] = config.ExtractRule.Delimiter
+		}
+
+		if config.ExtractRule.LogRegex != nil {
+			extractRuleMap["log_regex"] = config.ExtractRule.LogRegex
+		}
+
+		if config.ExtractRule.BeginRegex != nil {
+			extractRuleMap["begin_regex"] = config.ExtractRule.BeginRegex
+		}
+
+		if config.ExtractRule.Keys != nil {
+			extractRuleMap["keys"] = config.ExtractRule.Keys
+		}
+
+		if config.ExtractRule.FilterKeyRegex != nil {
+			filterKeyRegexList := []interface{}{}
+			for _, filterKeyRegex := range config.ExtractRule.FilterKeyRegex {
+				filterKeyRegexMap := map[string]interface{}{}
+
+				if filterKeyRegex.Key != nil {
+					filterKeyRegexMap["key"] = filterKeyRegex.Key
+				}
+
+				if filterKeyRegex.Regex != nil {
+					filterKeyRegexMap["regex"] = filterKeyRegex.Regex
+				}
+
+				filterKeyRegexList = append(filterKeyRegexList, filterKeyRegexMap)
+			}
+
+			extractRuleMap["filter_key_regex"] = filterKeyRegexList
+		}
+
+		if config.ExtractRule.UnMatchUpLoadSwitch != nil {
+			extractRuleMap["un_match_up_load_switch"] = config.ExtractRule.UnMatchUpLoadSwitch
+		}
+
+		if config.ExtractRule.UnMatchLogKey != nil {
+			extractRuleMap["un_match_log_key"] = config.ExtractRule.UnMatchLogKey
+		}
+
+		if config.ExtractRule.Backtracking != nil {
+			extractRuleMap["backtracking"] = config.ExtractRule.Backtracking
+		}
+
+		if config.ExtractRule.IsGBK != nil {
+			extractRuleMap["is_gbk"] = config.ExtractRule.IsGBK
+		}
+
+		if config.ExtractRule.JsonStandard != nil {
+			extractRuleMap["json_standard"] = config.ExtractRule.JsonStandard
+		}
+
+		if config.ExtractRule.Protocol != nil {
+			extractRuleMap["protocol"] = config.ExtractRule.Protocol
+		}
+
+		if config.ExtractRule.Address != nil {
+			extractRuleMap["address"] = config.ExtractRule.Address
+		}
+
+		if config.ExtractRule.ParseProtocol != nil {
+			extractRuleMap["parse_protocol"] = config.ExtractRule.ParseProtocol
+		}
+
+		if config.ExtractRule.MetadataType != nil {
+			extractRuleMap["metadata_type"] = config.ExtractRule.MetadataType
+		}
+
+		if config.ExtractRule.PathRegex != nil {
+			extractRuleMap["path_regex"] = config.ExtractRule.PathRegex
+		}
+
+		if config.ExtractRule.MetaTags != nil {
+			metaTagsList := []interface{}{}
+			for _, metaTags := range config.ExtractRule.MetaTags {
+				metaTagsMap := map[string]interface{}{}
+
+				if metaTags.Key != nil {
+					metaTagsMap["key"] = metaTags.Key
+				}
+
+				if metaTags.Value != nil {
+					metaTagsMap["value"] = metaTags.Value
+				}
+
+				metaTagsList = append(metaTagsList, metaTagsMap)
+			}
+
+			extractRuleMap["meta_tags"] = metaTagsList
+		}
+
+		_ = d.Set("extract_rule", []interface{}{extractRuleMap})
+	}
+
+	if config.ExcludePaths != nil {
+		excludePathsList := []interface{}{}
+		for _, excludePath := range config.ExcludePaths {
+			excludePathsMap := map[string]interface{}{}
+
+			if excludePath.Type != nil {
+				excludePathsMap["type"] = excludePath.Type
+			}
+
+			if excludePath.Value != nil {
+				excludePathsMap["value"] = excludePath.Value
+			}
+
+			excludePathsList = append(excludePathsList, excludePathsMap)
+		}
+
+		_ = d.Set("exclude_paths", excludePathsList)
+	}
+
+	if config.UserDefineRule != nil {
+		_ = d.Set("user_define_rule", config.UserDefineRule)
+	}
 
 	return nil
 }
@@ -380,6 +646,40 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 			if v, ok := dMap["backtracking"]; ok {
 				extractRule.Backtracking = helper.IntInt64(v.(int))
 			}
+			if v, ok := dMap["is_gbk"]; ok {
+				extractRule.IsGBK = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["json_standard"]; ok {
+				extractRule.JsonStandard = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["protocol"]; ok {
+				extractRule.Protocol = helper.String(v.(string))
+			}
+			if v, ok := dMap["address"]; ok {
+				extractRule.Address = helper.String(v.(string))
+			}
+			if v, ok := dMap["parse_protocol"]; ok {
+				extractRule.ParseProtocol = helper.String(v.(string))
+			}
+			if v, ok := dMap["metadata_type"]; ok {
+				extractRule.MetadataType = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["path_regex"]; ok {
+				extractRule.PathRegex = helper.String(v.(string))
+			}
+			if v, ok := dMap["meta_tags"]; ok {
+				for _, item := range v.([]interface{}) {
+					metaTagsMap := item.(map[string]interface{})
+					metaTagInfo := cls.MetaTagInfo{}
+					if v, ok := metaTagsMap["key"]; ok {
+						metaTagInfo.Key = helper.String(v.(string))
+					}
+					if v, ok := metaTagsMap["value"]; ok {
+						metaTagInfo.Value = helper.String(v.(string))
+					}
+					extractRule.MetaTags = append(extractRule.MetaTags, &metaTagInfo)
+				}
+			}
 			extractRules = append(extractRules, &extractRule)
 			request.ExtractRule = extractRules[0]
 		}
@@ -423,7 +723,7 @@ func resourceTencentCloudClsConfigUpdate(d *schema.ResourceData, meta interface{
 		return err
 	}
 
-	return nil
+	return resourceTencentCloudClsConfigRead(d, meta)
 }
 
 func resourceTencentCloudClsConfigDelete(d *schema.ResourceData, meta interface{}) error {
