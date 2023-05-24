@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_cls_machines
+```
+
+```release-note:new-data-source
+tencentcloud_cls_machine_group_configs
+```

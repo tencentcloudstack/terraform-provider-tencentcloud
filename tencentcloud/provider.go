@@ -868,6 +868,8 @@ Cloud Log Service(CLS)
 
   Data Source
 	tencentcloud_cls_shipper_tasks
+	tencentcloud_cls_machines
+	tencentcloud_cls_machine_group_configs
 
 TencentCloud Lighthouse(Lighthouse)
   Resource
@@ -1731,6 +1733,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_instance_blueprint":             dataSourceTencentCloudLighthouseInstanceBlueprint(),
 			"tencentcloud_lighthouse_disk_config":                    dataSourceTencentCloudLighthouseDiskConfig(),
 			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
+			"tencentcloud_cls_machines":                              dataSourceTencentCloudClsMachines(),
+			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
