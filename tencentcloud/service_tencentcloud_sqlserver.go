@@ -151,13 +151,17 @@ func (me *SqlserverService) ModifySqlserverInstanceProjectId(ctx context.Context
 	return err
 }
 
-func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instanceId string, memory, storage, autoVoucher int, voucherIds []*string) (errRet error) {
+func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instanceId string, memory, storage, autoVoucher int, voucherIds []*string, waitSwitch int) (errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewUpgradeDBInstanceRequest()
 	request.InstanceId = &instanceId
 	request.Memory = helper.IntInt64(memory)
 	request.Storage = helper.IntInt64(storage)
-	request.WaitSwitch = helper.IntInt64(0)
+	if waitSwitch == 1 {
+		request.WaitSwitch = helper.IntInt64(1)
+	} else {
+		request.WaitSwitch = helper.IntInt64(0)
+	}
 	if autoVoucher != 0 {
 		request.AutoVoucher = helper.IntInt64(autoVoucher)
 	}
@@ -186,11 +190,20 @@ func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instan
 		if !has {
 			return resource.NonRetryableError(fmt.Errorf("cannot find SQL Server instance %s", instanceId))
 		}
-		if *instance.Status != 2 {
-			startPending = true
-			return resource.RetryableError(fmt.Errorf("expanding , SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
-		} else if !startPending {
-			return resource.RetryableError(fmt.Errorf("ready for expanding, SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
+		if waitSwitch == 0 {
+			if *instance.Status != 2 {
+				startPending = true
+				return resource.RetryableError(fmt.Errorf("expanding , SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
+			} else if !startPending {
+				return resource.RetryableError(fmt.Errorf("ready for expanding, SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
+			}
+		} else if waitSwitch == 1 {
+			if *instance.Status != 13 {
+				startPending = true
+				return resource.RetryableError(fmt.Errorf("expanding , SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
+			} else if !startPending {
+				return resource.RetryableError(fmt.Errorf("ready for expanding, SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
+			}
 		}
 		return nil
 	})
@@ -2607,5 +2620,216 @@ func (me *SqlserverService) DescribeSqlserverUploadIncrementalInfoByFilter(ctx c
 
 	uploadIncrementalInfo = response.Response
 
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverConfigDatabaseCDCById(ctx context.Context, instanceId string) (configDatabaseCDC []*sqlserver.DbNormalDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBsNormalRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBsNormal(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	configDatabaseCDC = response.Response.DBList
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverGeneralCloudInstanceById(ctx context.Context, instanceId string) (generalCloudInstance *sqlserver.DBInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBInstancesRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	generalCloudInstance = response.Response.DBInstances[0]
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverConfigDatabaseCTById(ctx context.Context, instanceId string) (configDatabaseCT []*sqlserver.DbNormalDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBsNormalRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBsNormal(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	configDatabaseCT = response.Response.DBList
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverConfigDatabaseMdfById(ctx context.Context, instanceId string) (configDatabaseMdf []*sqlserver.DbNormalDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBsNormalRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBsNormal(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	configDatabaseMdf = response.Response.DBList
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverConfigInstanceNetworkById(ctx context.Context, instanceId string) (configInstanceNetwork *sqlserver.DBInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBInstancesRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	configInstanceNetwork = response.Response.DBInstances[0]
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverConfigInstanceParamById(ctx context.Context, instanceId string) (configInstanceParam []*sqlserver.ParameterDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeInstanceParamsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeInstanceParams(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	configInstanceParam = response.Response.Items
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverConfigInstanceRoGroupById(ctx context.Context, instanceId, readOnlyGroupId string) (configInstanceRoGroup *sqlserver.DescribeReadOnlyGroupDetailsResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeReadOnlyGroupDetailsRequest()
+	request.InstanceId = &instanceId
+	request.ReadOnlyGroupId = &readOnlyGroupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeReadOnlyGroupDetails(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	configInstanceRoGroup = response.Response
 	return
 }

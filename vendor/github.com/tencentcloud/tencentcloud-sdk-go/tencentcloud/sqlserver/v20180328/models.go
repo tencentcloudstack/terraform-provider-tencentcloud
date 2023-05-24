@@ -33,11 +33,14 @@ type AccountCreateInfo struct {
 	// 账号备注信息
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
 
-	// 是否为管理员账户，默认为否
+	// 是否为管理员账户，当值为true 等价于基础版AccountType=L0，高可用AccountType=L1，当值为false，等价于AccountType=L3
 	IsAdmin *bool `json:"IsAdmin,omitempty" name:"IsAdmin"`
 
 	// win-windows鉴权,sql-sqlserver鉴权，不填默认值为sql-sqlserver鉴权
 	Authentication *string `json:"Authentication,omitempty" name:"Authentication"`
+
+	// 账号类型，IsAdmin的扩展字段。 L0-超级权限(基础版独有),L1-高级权限,L2-特殊权限,L3-普通权限，默认L3
+	AccountType *string `json:"AccountType,omitempty" name:"AccountType"`
 }
 
 type AccountDetail struct {
@@ -73,6 +76,9 @@ type AccountDetail struct {
 
 	// win-windows鉴权账户需要host
 	Host *string `json:"Host,omitempty" name:"Host"`
+
+	// 账号类型。L0-超级权限(基础版独有),L1-高级权限,L2-特殊权限,L3-普通权限
+	AccountType *string `json:"AccountType,omitempty" name:"AccountType"`
 }
 
 type AccountPassword struct {
@@ -87,8 +93,11 @@ type AccountPrivilege struct {
 	// 数据库用户名
 	UserName *string `json:"UserName,omitempty" name:"UserName"`
 
-	// 数据库权限。ReadWrite表示可读写，ReadOnly表示只读
+	// 数据库权限。ReadWrite表示可读写，ReadOnly表示只读,Delete表示删除DB对该账户的权限，DBOwner所有者
 	Privilege *string `json:"Privilege,omitempty" name:"Privilege"`
+
+	// 账户名称，L0-超级权限(基础版独有),L1-高级权限,L2-特殊权限,L3-普通权限
+	AccountType *string `json:"AccountType,omitempty" name:"AccountType"`
 }
 
 type AccountPrivilegeModifyInfo struct {
@@ -98,8 +107,11 @@ type AccountPrivilegeModifyInfo struct {
 	// 账号权限变更信息
 	DBPrivileges []*DBPrivilegeModifyInfo `json:"DBPrivileges,omitempty" name:"DBPrivileges"`
 
-	// 是否为管理员账户
+	// 是否为管理员账户,当值为true 等价于基础版AccountType=L0，高可用AccountType=L1，当值为false时，表示删除管理员权限，默认false
 	IsAdmin *bool `json:"IsAdmin,omitempty" name:"IsAdmin"`
+
+	// 账号类型，IsAdmin字段的扩展字段。 L0-超级权限(基础版独有),L1-高级权限,L2-特殊权限,L3-普通权限，默认L3
+	AccountType *string `json:"AccountType,omitempty" name:"AccountType"`
 }
 
 type AccountRemark struct {
@@ -1199,6 +1211,435 @@ func (r *CreateBusinessIntelligenceFileResponse) FromJsonString(s string) error 
 }
 
 // Predefined struct for user
+type CreateCloudDBInstancesRequestParams struct {
+	// 实例可用区，类似ap-guangzhou-1（广州一区）；实例可售卖区域可以通过接口DescribeZones获取
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 实例内存大小，单位GB
+	Memory *int64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 实例磁盘大小，单位GB
+	Storage *int64 `json:"Storage,omitempty" name:"Storage"`
+
+	// 实例核心数
+	Cpu *uint64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 购买实例的宿主机磁盘类型,CLOUD_HSSD-虚拟机加强型SSD云盘，CLOUD_TSSD-虚拟机极速型SSD云盘，CLOUD_BSSD-虚拟机通用型SSD云盘
+	MachineType *string `json:"MachineType,omitempty" name:"MachineType"`
+
+	// 付费模式，取值支持 PREPAID（预付费），POSTPAID（后付费）。
+	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
+
+	// 项目ID
+	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 本次购买几个实例，默认值为1。取值不超过10
+	GoodsNum *int64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// VPC子网ID，形如subnet-bdoe83fa；SubnetId和VpcId需同时设置或者同时不设置
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// VPC网络ID，形如vpc-dsp338hz；SubnetId和VpcId需同时设置或者同时不设置
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 购买实例周期，默认取值为1，表示一个月。取值不超过48
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 是否自动使用代金券；1 - 是，0 - 否，默认不使用
+	AutoVoucher *int64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 代金券ID数组，目前单个订单只能使用一张
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
+
+	// sqlserver版本，目前所有支持的版本有：2008R2 (SQL Server 2008 R2 Enterprise)，2012SP3 (SQL Server 2012 Enterprise)，201202 (SQL Server 2012 Standard)，2014SP2 (SQL Server 2014 Enterprise)，201402 (SQL Server 2014 Standard)，2016SP1 (SQL Server 2016 Enterprise)，201602 (SQL Server 2016 Standard)，2017 (SQL Server 2017 Enterprise)，201702 (SQL Server 2017 Standard)，2019 (SQL Server 2019 Enterprise)，201902 (SQL Server 2019 Standard)。每个地域支持售卖的版本不同，可通过DescribeProductConfig接口来拉取每个地域可售卖的版本信息。不填，默认为版本2008R2。
+	DBVersion *string `json:"DBVersion,omitempty" name:"DBVersion"`
+
+	// 自动续费标志：0-正常续费  1-自动续费，默认为1自动续费。只在购买预付费实例时有效。
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
+
+	// 安全组列表，填写形如sg-xxx的安全组ID
+	SecurityGroupList []*string `json:"SecurityGroupList,omitempty" name:"SecurityGroupList"`
+
+	// 可维护时间窗配置，以周为单位，表示周几允许维护，1-7分别代表周一到周末
+	Weekly []*int64 `json:"Weekly,omitempty" name:"Weekly"`
+
+	// 可维护时间窗配置，每天可维护的开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 可维护时间窗配置，持续时间，单位：小时
+	Span *int64 `json:"Span,omitempty" name:"Span"`
+
+	// 是否跨可用区部署，默认值为false
+	MultiZones *bool `json:"MultiZones,omitempty" name:"MultiZones"`
+
+	// 新建实例绑定的标签集合
+	ResourceTags []*ResourceTag `json:"ResourceTags,omitempty" name:"ResourceTags"`
+
+	// 系统字符集排序规则，默认：Chinese_PRC_CI_AS
+	Collation *string `json:"Collation,omitempty" name:"Collation"`
+
+	// 系统时区，默认：China Standard Time
+	TimeZone *string `json:"TimeZone,omitempty" name:"TimeZone"`
+}
+
+type CreateCloudDBInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例可用区，类似ap-guangzhou-1（广州一区）；实例可售卖区域可以通过接口DescribeZones获取
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 实例内存大小，单位GB
+	Memory *int64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 实例磁盘大小，单位GB
+	Storage *int64 `json:"Storage,omitempty" name:"Storage"`
+
+	// 实例核心数
+	Cpu *uint64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 购买实例的宿主机磁盘类型,CLOUD_HSSD-虚拟机加强型SSD云盘，CLOUD_TSSD-虚拟机极速型SSD云盘，CLOUD_BSSD-虚拟机通用型SSD云盘
+	MachineType *string `json:"MachineType,omitempty" name:"MachineType"`
+
+	// 付费模式，取值支持 PREPAID（预付费），POSTPAID（后付费）。
+	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
+
+	// 项目ID
+	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 本次购买几个实例，默认值为1。取值不超过10
+	GoodsNum *int64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// VPC子网ID，形如subnet-bdoe83fa；SubnetId和VpcId需同时设置或者同时不设置
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// VPC网络ID，形如vpc-dsp338hz；SubnetId和VpcId需同时设置或者同时不设置
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 购买实例周期，默认取值为1，表示一个月。取值不超过48
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 是否自动使用代金券；1 - 是，0 - 否，默认不使用
+	AutoVoucher *int64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 代金券ID数组，目前单个订单只能使用一张
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
+
+	// sqlserver版本，目前所有支持的版本有：2008R2 (SQL Server 2008 R2 Enterprise)，2012SP3 (SQL Server 2012 Enterprise)，201202 (SQL Server 2012 Standard)，2014SP2 (SQL Server 2014 Enterprise)，201402 (SQL Server 2014 Standard)，2016SP1 (SQL Server 2016 Enterprise)，201602 (SQL Server 2016 Standard)，2017 (SQL Server 2017 Enterprise)，201702 (SQL Server 2017 Standard)，2019 (SQL Server 2019 Enterprise)，201902 (SQL Server 2019 Standard)。每个地域支持售卖的版本不同，可通过DescribeProductConfig接口来拉取每个地域可售卖的版本信息。不填，默认为版本2008R2。
+	DBVersion *string `json:"DBVersion,omitempty" name:"DBVersion"`
+
+	// 自动续费标志：0-正常续费  1-自动续费，默认为1自动续费。只在购买预付费实例时有效。
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
+
+	// 安全组列表，填写形如sg-xxx的安全组ID
+	SecurityGroupList []*string `json:"SecurityGroupList,omitempty" name:"SecurityGroupList"`
+
+	// 可维护时间窗配置，以周为单位，表示周几允许维护，1-7分别代表周一到周末
+	Weekly []*int64 `json:"Weekly,omitempty" name:"Weekly"`
+
+	// 可维护时间窗配置，每天可维护的开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 可维护时间窗配置，持续时间，单位：小时
+	Span *int64 `json:"Span,omitempty" name:"Span"`
+
+	// 是否跨可用区部署，默认值为false
+	MultiZones *bool `json:"MultiZones,omitempty" name:"MultiZones"`
+
+	// 新建实例绑定的标签集合
+	ResourceTags []*ResourceTag `json:"ResourceTags,omitempty" name:"ResourceTags"`
+
+	// 系统字符集排序规则，默认：Chinese_PRC_CI_AS
+	Collation *string `json:"Collation,omitempty" name:"Collation"`
+
+	// 系统时区，默认：China Standard Time
+	TimeZone *string `json:"TimeZone,omitempty" name:"TimeZone"`
+}
+
+func (r *CreateCloudDBInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudDBInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Zone")
+	delete(f, "Memory")
+	delete(f, "Storage")
+	delete(f, "Cpu")
+	delete(f, "MachineType")
+	delete(f, "InstanceChargeType")
+	delete(f, "ProjectId")
+	delete(f, "GoodsNum")
+	delete(f, "SubnetId")
+	delete(f, "VpcId")
+	delete(f, "Period")
+	delete(f, "AutoVoucher")
+	delete(f, "VoucherIds")
+	delete(f, "DBVersion")
+	delete(f, "AutoRenewFlag")
+	delete(f, "SecurityGroupList")
+	delete(f, "Weekly")
+	delete(f, "StartTime")
+	delete(f, "Span")
+	delete(f, "MultiZones")
+	delete(f, "ResourceTags")
+	delete(f, "Collation")
+	delete(f, "TimeZone")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudDBInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudDBInstancesResponseParams struct {
+	// 订单名称
+	DealName *string `json:"DealName,omitempty" name:"DealName"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateCloudDBInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCloudDBInstancesResponseParams `json:"Response"`
+}
+
+func (r *CreateCloudDBInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudDBInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudReadOnlyDBInstancesRequestParams struct {
+	// 主实例ID，格式如：mssql-3l3fgqn7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例可用区，类似ap-guangzhou-1（广州一区）；实例可售卖区域可以通过接口DescribeZones获取
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 只读组类型选项，1-按照一个实例一个只读组的方式发货，2-新建只读组后发货，所有实例都在这个只读组下面， 3-发货的所有实例都在已有的只读组下面
+	ReadOnlyGroupType *int64 `json:"ReadOnlyGroupType,omitempty" name:"ReadOnlyGroupType"`
+
+	// 实例内存大小，单位GB
+	Memory *int64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 实例磁盘大小，单位GB
+	Storage *int64 `json:"Storage,omitempty" name:"Storage"`
+
+	// 实例核心数
+	Cpu *uint64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 购买实例的宿主机磁盘类型,CLOUD_HSSD-虚拟机加强型SSD云盘，CLOUD_TSSD-虚拟机极速型SSD云盘，CLOUD_BSSD-虚拟机通用型SSD云盘
+	MachineType *string `json:"MachineType,omitempty" name:"MachineType"`
+
+	// 0-默认不升级主实例，1-强制升级主实例完成ro部署；主实例为非集群版时需要填1，强制升级为集群版。填1 说明您已同意将主实例升级到集群版实例。
+	ReadOnlyGroupForcedUpgrade *int64 `json:"ReadOnlyGroupForcedUpgrade,omitempty" name:"ReadOnlyGroupForcedUpgrade"`
+
+	// ReadOnlyGroupType=3时必填,已存在的只读组ID
+	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
+
+	// ReadOnlyGroupType=2时必填，新建的只读组名称
+	ReadOnlyGroupName *string `json:"ReadOnlyGroupName,omitempty" name:"ReadOnlyGroupName"`
+
+	// ReadOnlyGroupType=2时必填，新建的只读组是否开启延迟剔除功能，1-开启，0-关闭。当只读副本与主实例延迟大于阈值后，自动剔除。
+	ReadOnlyGroupIsOfflineDelay *int64 `json:"ReadOnlyGroupIsOfflineDelay,omitempty" name:"ReadOnlyGroupIsOfflineDelay"`
+
+	// ReadOnlyGroupType=2 且 ReadOnlyGroupIsOfflineDelay=1时必填，新建的只读组延迟剔除的阈值。
+	ReadOnlyGroupMaxDelayTime *int64 `json:"ReadOnlyGroupMaxDelayTime,omitempty" name:"ReadOnlyGroupMaxDelayTime"`
+
+	// ReadOnlyGroupType=2 且 ReadOnlyGroupIsOfflineDelay=1时必填，新建的只读组延迟剔除后至少保留只读副本的个数。
+	ReadOnlyGroupMinInGroup *int64 `json:"ReadOnlyGroupMinInGroup,omitempty" name:"ReadOnlyGroupMinInGroup"`
+
+	// 付费模式，取值支持 PREPAID（预付费），POSTPAID（后付费）。
+	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
+
+	// 本次购买几个只读实例，默认值为1。
+	GoodsNum *int64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// VPC子网ID，形如subnet-bdoe83fa；SubnetId和VpcId需同时设置或者同时不设置
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// VPC网络ID，形如vpc-dsp338hz；SubnetId和VpcId需同时设置或者同时不设置
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 购买实例周期，默认取值为1，表示一个月。取值不超过48
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 安全组列表，填写形如sg-xxx的安全组ID
+	SecurityGroupList []*string `json:"SecurityGroupList,omitempty" name:"SecurityGroupList"`
+
+	// 是否自动使用代金券；1 - 是，0 - 否，默认不使用
+	AutoVoucher *int64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 代金券ID数组，目前单个订单只能使用一张
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
+
+	// 新建实例绑定的标签集合
+	ResourceTags []*ResourceTag `json:"ResourceTags,omitempty" name:"ResourceTags"`
+
+	// 系统字符集排序规则，默认：Chinese_PRC_CI_AS
+	Collation *string `json:"Collation,omitempty" name:"Collation"`
+
+	// 系统时区，默认：China Standard Time
+	TimeZone *string `json:"TimeZone,omitempty" name:"TimeZone"`
+}
+
+type CreateCloudReadOnlyDBInstancesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 主实例ID，格式如：mssql-3l3fgqn7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例可用区，类似ap-guangzhou-1（广州一区）；实例可售卖区域可以通过接口DescribeZones获取
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 只读组类型选项，1-按照一个实例一个只读组的方式发货，2-新建只读组后发货，所有实例都在这个只读组下面， 3-发货的所有实例都在已有的只读组下面
+	ReadOnlyGroupType *int64 `json:"ReadOnlyGroupType,omitempty" name:"ReadOnlyGroupType"`
+
+	// 实例内存大小，单位GB
+	Memory *int64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 实例磁盘大小，单位GB
+	Storage *int64 `json:"Storage,omitempty" name:"Storage"`
+
+	// 实例核心数
+	Cpu *uint64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 购买实例的宿主机磁盘类型,CLOUD_HSSD-虚拟机加强型SSD云盘，CLOUD_TSSD-虚拟机极速型SSD云盘，CLOUD_BSSD-虚拟机通用型SSD云盘
+	MachineType *string `json:"MachineType,omitempty" name:"MachineType"`
+
+	// 0-默认不升级主实例，1-强制升级主实例完成ro部署；主实例为非集群版时需要填1，强制升级为集群版。填1 说明您已同意将主实例升级到集群版实例。
+	ReadOnlyGroupForcedUpgrade *int64 `json:"ReadOnlyGroupForcedUpgrade,omitempty" name:"ReadOnlyGroupForcedUpgrade"`
+
+	// ReadOnlyGroupType=3时必填,已存在的只读组ID
+	ReadOnlyGroupId *string `json:"ReadOnlyGroupId,omitempty" name:"ReadOnlyGroupId"`
+
+	// ReadOnlyGroupType=2时必填，新建的只读组名称
+	ReadOnlyGroupName *string `json:"ReadOnlyGroupName,omitempty" name:"ReadOnlyGroupName"`
+
+	// ReadOnlyGroupType=2时必填，新建的只读组是否开启延迟剔除功能，1-开启，0-关闭。当只读副本与主实例延迟大于阈值后，自动剔除。
+	ReadOnlyGroupIsOfflineDelay *int64 `json:"ReadOnlyGroupIsOfflineDelay,omitempty" name:"ReadOnlyGroupIsOfflineDelay"`
+
+	// ReadOnlyGroupType=2 且 ReadOnlyGroupIsOfflineDelay=1时必填，新建的只读组延迟剔除的阈值。
+	ReadOnlyGroupMaxDelayTime *int64 `json:"ReadOnlyGroupMaxDelayTime,omitempty" name:"ReadOnlyGroupMaxDelayTime"`
+
+	// ReadOnlyGroupType=2 且 ReadOnlyGroupIsOfflineDelay=1时必填，新建的只读组延迟剔除后至少保留只读副本的个数。
+	ReadOnlyGroupMinInGroup *int64 `json:"ReadOnlyGroupMinInGroup,omitempty" name:"ReadOnlyGroupMinInGroup"`
+
+	// 付费模式，取值支持 PREPAID（预付费），POSTPAID（后付费）。
+	InstanceChargeType *string `json:"InstanceChargeType,omitempty" name:"InstanceChargeType"`
+
+	// 本次购买几个只读实例，默认值为1。
+	GoodsNum *int64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// VPC子网ID，形如subnet-bdoe83fa；SubnetId和VpcId需同时设置或者同时不设置
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// VPC网络ID，形如vpc-dsp338hz；SubnetId和VpcId需同时设置或者同时不设置
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 购买实例周期，默认取值为1，表示一个月。取值不超过48
+	Period *int64 `json:"Period,omitempty" name:"Period"`
+
+	// 安全组列表，填写形如sg-xxx的安全组ID
+	SecurityGroupList []*string `json:"SecurityGroupList,omitempty" name:"SecurityGroupList"`
+
+	// 是否自动使用代金券；1 - 是，0 - 否，默认不使用
+	AutoVoucher *int64 `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 代金券ID数组，目前单个订单只能使用一张
+	VoucherIds []*string `json:"VoucherIds,omitempty" name:"VoucherIds"`
+
+	// 新建实例绑定的标签集合
+	ResourceTags []*ResourceTag `json:"ResourceTags,omitempty" name:"ResourceTags"`
+
+	// 系统字符集排序规则，默认：Chinese_PRC_CI_AS
+	Collation *string `json:"Collation,omitempty" name:"Collation"`
+
+	// 系统时区，默认：China Standard Time
+	TimeZone *string `json:"TimeZone,omitempty" name:"TimeZone"`
+}
+
+func (r *CreateCloudReadOnlyDBInstancesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudReadOnlyDBInstancesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Zone")
+	delete(f, "ReadOnlyGroupType")
+	delete(f, "Memory")
+	delete(f, "Storage")
+	delete(f, "Cpu")
+	delete(f, "MachineType")
+	delete(f, "ReadOnlyGroupForcedUpgrade")
+	delete(f, "ReadOnlyGroupId")
+	delete(f, "ReadOnlyGroupName")
+	delete(f, "ReadOnlyGroupIsOfflineDelay")
+	delete(f, "ReadOnlyGroupMaxDelayTime")
+	delete(f, "ReadOnlyGroupMinInGroup")
+	delete(f, "InstanceChargeType")
+	delete(f, "GoodsNum")
+	delete(f, "SubnetId")
+	delete(f, "VpcId")
+	delete(f, "Period")
+	delete(f, "SecurityGroupList")
+	delete(f, "AutoVoucher")
+	delete(f, "VoucherIds")
+	delete(f, "ResourceTags")
+	delete(f, "Collation")
+	delete(f, "TimeZone")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCloudReadOnlyDBInstancesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCloudReadOnlyDBInstancesResponseParams struct {
+	// 订单名称数组
+	DealNames []*string `json:"DealNames,omitempty" name:"DealNames"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateCloudReadOnlyDBInstancesResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCloudReadOnlyDBInstancesResponseParams `json:"Response"`
+}
+
+func (r *CreateCloudReadOnlyDBInstancesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCloudReadOnlyDBInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateDBInstancesRequestParams struct {
 	// 实例可用区，类似ap-guangzhou-1（广州一区）；实例可售卖区域可以通过接口DescribeZones获取
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
@@ -2148,13 +2589,21 @@ type DBInstance struct {
 	// 备可用区信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	SlaveZones *SlaveZones `json:"SlaveZones,omitempty" name:"SlaveZones"`
+
+	// 架构标识，SINGLE-单节点 DOUBLE-双节点 TRIPLE-三节点
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Architecture *string `json:"Architecture,omitempty" name:"Architecture"`
+
+	// 类型标识，EXCLUSIVE-独享型，SHARED-共享型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Style *string `json:"Style,omitempty" name:"Style"`
 }
 
 type DBPrivilege struct {
 	// 数据库名
 	DBName *string `json:"DBName,omitempty" name:"DBName"`
 
-	// 数据库权限，ReadWrite表示可读写，ReadOnly表示只读
+	// 数据库权限，ReadWrite表示可读写，ReadOnly表示只读，DBOwner所有者
 	Privilege *string `json:"Privilege,omitempty" name:"Privilege"`
 }
 
@@ -2162,7 +2611,7 @@ type DBPrivilegeModifyInfo struct {
 	// 数据库名
 	DBName *string `json:"DBName,omitempty" name:"DBName"`
 
-	// 权限变更信息。ReadWrite表示可读写，ReadOnly表示只读，Delete表示删除账号对该DB的权限
+	// 权限变更信息。ReadWrite表示可读写，ReadOnly表示只读，Delete表示删除账号对该DB的权限，DBOwner所有者
 	Privilege *string `json:"Privilege,omitempty" name:"Privilege"`
 }
 
@@ -2172,6 +2621,14 @@ type DBRemark struct {
 
 	// 备注信息
 	Remark *string `json:"Remark,omitempty" name:"Remark"`
+}
+
+type DBRenameRes struct {
+	// 新数据库名称
+	NewName *string `json:"NewName,omitempty" name:"NewName"`
+
+	// 老数据库名称
+	OldName *string `json:"OldName,omitempty" name:"OldName"`
 }
 
 type DatabaseTuple struct {
@@ -2250,6 +2707,9 @@ type DbNormalDetail struct {
 
 	// 用户类型
 	UserAccessDesc *string `json:"UserAccessDesc,omitempty" name:"UserAccessDesc"`
+
+	// 数据库创建时间
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
 }
 
 type DbRollbackTimeInfo struct {
@@ -3720,7 +4180,7 @@ type DescribeDBInstanceInterRequestParams struct {
 	// 按照实例ID筛选
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 按照状态筛选 1-互通ip prot打开中；2-互通ip prot已经打开；3-加入到互通组中；4-已加入到互通组；5-互通ip prot回收中；6-互通ip prot已回收；7-从互通组移除中；8-已从互通组中移除
+	// 按照状态筛选 1-互通IP打开中；2-互通IP已经打开；3-加入到互通组中；4-已加入到互通组；5-互通IP回收中；6-互通IP已回收；7-从互通组移除中；8-已从互通组中移除
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
 	// 实例版本代号列表
@@ -3742,7 +4202,7 @@ type DescribeDBInstanceInterRequest struct {
 	// 按照实例ID筛选
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 按照状态筛选 1-互通ip prot打开中；2-互通ip prot已经打开；3-加入到互通组中；4-已加入到互通组；5-互通ip prot回收中；6-互通ip prot已回收；7-从互通组移除中；8-已从互通组中移除
+	// 按照状态筛选 1-互通IP打开中；2-互通IP已经打开；3-加入到互通组中；4-已加入到互通组；5-互通IP回收中；6-互通IP已回收；7-从互通组移除中；8-已从互通组中移除
 	Status *int64 `json:"Status,omitempty" name:"Status"`
 
 	// 实例版本代号列表
@@ -3804,6 +4264,84 @@ func (r *DescribeDBInstanceInterResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBInstanceInterResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBInstancesAttributeRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type DescribeDBInstancesAttributeRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeDBInstancesAttributeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBInstancesAttributeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBInstancesAttributeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBInstancesAttributeResponseParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 定期备份状态 enable-开启，disable-关闭
+	RegularBackupEnable *string `json:"RegularBackupEnable,omitempty" name:"RegularBackupEnable"`
+
+	// 定期备份保留天数 [90 - 3650]天
+	RegularBackupSaveDays *uint64 `json:"RegularBackupSaveDays,omitempty" name:"RegularBackupSaveDays"`
+
+	// 定期备份策略 years-每年，quarters-每季度，months-每月
+	RegularBackupStrategy *string `json:"RegularBackupStrategy,omitempty" name:"RegularBackupStrategy"`
+
+	// 定期备份保留个数
+	RegularBackupCounts *uint64 `json:"RegularBackupCounts,omitempty" name:"RegularBackupCounts"`
+
+	// 定期备份开始日期，格式-YYYY-MM-DD 默认当前日期
+	RegularBackupStartTime *string `json:"RegularBackupStartTime,omitempty" name:"RegularBackupStartTime"`
+
+	// 阻塞进程阈值，单位毫秒
+	BlockedThreshold *int64 `json:"BlockedThreshold,omitempty" name:"BlockedThreshold"`
+
+	// 慢SQL、阻塞、死锁扩展事件文件保留时长
+	EventSaveDays *int64 `json:"EventSaveDays,omitempty" name:"EventSaveDays"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeDBInstancesAttributeResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBInstancesAttributeResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBInstancesAttributeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBInstancesAttributeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5777,6 +6315,101 @@ func (r *DescribeUploadIncrementalInfoResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeXEventsRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 事件类型，slow-慢SQL事件，blocked-阻塞事件，deadlock-死锁事件
+	EventType *string `json:"EventType,omitempty" name:"EventType"`
+
+	// 扩展文件生成开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 扩展文件生成结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 分页返回，页编号，默认值为第0页
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 分页返回，每页返回的数目，取值为1~100，默认值为20
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+type DescribeXEventsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 事件类型，slow-慢SQL事件，blocked-阻塞事件，deadlock-死锁事件
+	EventType *string `json:"EventType,omitempty" name:"EventType"`
+
+	// 扩展文件生成开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 扩展文件生成结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 分页返回，页编号，默认值为第0页
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 分页返回，每页返回的数目，取值为1~100，默认值为20
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeXEventsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeXEventsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "EventType")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeXEventsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeXEventsResponseParams struct {
+	// 扩展事件列表
+	Events []*Events `json:"Events,omitempty" name:"Events"`
+
+	// 扩展事件总数量
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeXEventsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeXEventsResponseParams `json:"Response"`
+}
+
+func (r *DescribeXEventsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeXEventsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeZonesRequestParams struct {
 
 }
@@ -5892,6 +6525,43 @@ func (r *DisassociateSecurityGroupsResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *DisassociateSecurityGroupsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type EventConfig struct {
+	// 事件类型，slow-设置慢SQL阈值，blocked-设置阻塞、死锁阈值
+	EventType *string `json:"EventType,omitempty" name:"EventType"`
+
+	// 阈值，单位毫秒。0表示关闭，大于0表示开启
+	Threshold *int64 `json:"Threshold,omitempty" name:"Threshold"`
+}
+
+type Events struct {
+	// ID
+	Id *int64 `json:"Id,omitempty" name:"Id"`
+
+	// 扩展事件文件名称
+	FileName *string `json:"FileName,omitempty" name:"FileName"`
+
+	// 扩展事件文件大小
+	Size *int64 `json:"Size,omitempty" name:"Size"`
+
+	// 事件类型，slow-慢SQL事件，blocked-阻塞事件，deadlock-死锁事件
+	EventType *string `json:"EventType,omitempty" name:"EventType"`
+
+	// 事件记录状态，1-成功，2-失败
+	Status *int64 `json:"Status,omitempty" name:"Status"`
+
+	// 扩展文件生成开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 扩展文件生成开始时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 内网下载地址
+	InternalAddr *string `json:"InternalAddr,omitempty" name:"InternalAddr"`
+
+	// 外网下载地址
+	ExternalAddr *string `json:"ExternalAddr,omitempty" name:"ExternalAddr"`
 }
 
 type FileAction struct {
@@ -6386,6 +7056,10 @@ type Migration struct {
 	// 是否是最终恢复，全量导入任务该字段为空
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsRecovery *string `json:"IsRecovery,omitempty" name:"IsRecovery"`
+
+	// 重命名的数据库名称集合
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DBRename []*DBRenameRes `json:"DBRename,omitempty" name:"DBRename"`
 }
 
 type MigrationAction struct {
@@ -6569,6 +7243,9 @@ type ModifyBackupMigrationRequestParams struct {
 
 	// UploadType是COS_URL时这里时URL，COS_UPLOAD这里填备份文件的名字；只支持1个备份文件，但1个备份文件内可包含多个库
 	BackupFiles []*string `json:"BackupFiles,omitempty" name:"BackupFiles"`
+
+	// 需要重命名的数据库名称集合
+	DBRename []*RenameRestoreDatabase `json:"DBRename,omitempty" name:"DBRename"`
 }
 
 type ModifyBackupMigrationRequest struct {
@@ -6591,6 +7268,9 @@ type ModifyBackupMigrationRequest struct {
 
 	// UploadType是COS_URL时这里时URL，COS_UPLOAD这里填备份文件的名字；只支持1个备份文件，但1个备份文件内可包含多个库
 	BackupFiles []*string `json:"BackupFiles,omitempty" name:"BackupFiles"`
+
+	// 需要重命名的数据库名称集合
+	DBRename []*RenameRestoreDatabase `json:"DBRename,omitempty" name:"DBRename"`
 }
 
 func (r *ModifyBackupMigrationRequest) ToJsonString() string {
@@ -6611,6 +7291,7 @@ func (r *ModifyBackupMigrationRequest) FromJsonString(s string) error {
 	delete(f, "RecoveryType")
 	delete(f, "UploadType")
 	delete(f, "BackupFiles")
+	delete(f, "DBRename")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyBackupMigrationRequest has unknown keys!", "")
 	}
@@ -8877,7 +9558,13 @@ type RestoreInstanceRequestParams struct {
 	// 按照ReNameRestoreDatabase中的库进行恢复，并重命名，不填则按照默认方式命名恢复的库，且恢复所有的库。
 	RenameRestore []*RenameRestoreDatabase `json:"RenameRestore,omitempty" name:"RenameRestore"`
 
-	// 备份任务组ID，在单库备份文件模式下，可通过[DescribeBackups](https://cloud.tencent.com/document/product/238/19943) 接口获得。
+	// 回档类型，0-覆盖方式；1-重命名方式，默认1
+	Type *uint64 `json:"Type,omitempty" name:"Type"`
+
+	// 需要覆盖回档的数据库，只有覆盖回档时必填
+	DBList []*string `json:"DBList,omitempty" name:"DBList"`
+
+	// 备份任务组ID，在单库备份文件模式下
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 }
 
@@ -8896,7 +9583,13 @@ type RestoreInstanceRequest struct {
 	// 按照ReNameRestoreDatabase中的库进行恢复，并重命名，不填则按照默认方式命名恢复的库，且恢复所有的库。
 	RenameRestore []*RenameRestoreDatabase `json:"RenameRestore,omitempty" name:"RenameRestore"`
 
-	// 备份任务组ID，在单库备份文件模式下，可通过[DescribeBackups](https://cloud.tencent.com/document/product/238/19943) 接口获得。
+	// 回档类型，0-覆盖方式；1-重命名方式，默认1
+	Type *uint64 `json:"Type,omitempty" name:"Type"`
+
+	// 需要覆盖回档的数据库，只有覆盖回档时必填
+	DBList []*string `json:"DBList,omitempty" name:"DBList"`
+
+	// 备份任务组ID，在单库备份文件模式下
 	GroupId *string `json:"GroupId,omitempty" name:"GroupId"`
 }
 
@@ -8916,6 +9609,8 @@ func (r *RestoreInstanceRequest) FromJsonString(s string) error {
 	delete(f, "BackupId")
 	delete(f, "TargetInstanceId")
 	delete(f, "RenameRestore")
+	delete(f, "Type")
+	delete(f, "DBList")
 	delete(f, "GroupId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RestoreInstanceRequest has unknown keys!", "")
@@ -8956,11 +9651,11 @@ type RollbackInstanceRequestParams struct {
 	// 回档类型，0-回档的数据库覆盖原库；1-回档的数据库以重命名的形式生成，不覆盖原库
 	Type *uint64 `json:"Type,omitempty" name:"Type"`
 
-	// 需要回档的数据库
-	DBs []*string `json:"DBs,omitempty" name:"DBs"`
-
 	// 回档目标时间点
 	Time *string `json:"Time,omitempty" name:"Time"`
+
+	// 需要回档的数据库
+	DBs []*string `json:"DBs,omitempty" name:"DBs"`
 
 	// 备份恢复到的同一个APPID下的实例ID，不填则恢复到原实例ID
 	TargetInstanceId *string `json:"TargetInstanceId,omitempty" name:"TargetInstanceId"`
@@ -8978,11 +9673,11 @@ type RollbackInstanceRequest struct {
 	// 回档类型，0-回档的数据库覆盖原库；1-回档的数据库以重命名的形式生成，不覆盖原库
 	Type *uint64 `json:"Type,omitempty" name:"Type"`
 
-	// 需要回档的数据库
-	DBs []*string `json:"DBs,omitempty" name:"DBs"`
-
 	// 回档目标时间点
 	Time *string `json:"Time,omitempty" name:"Time"`
+
+	// 需要回档的数据库
+	DBs []*string `json:"DBs,omitempty" name:"DBs"`
 
 	// 备份恢复到的同一个APPID下的实例ID，不填则恢复到原实例ID
 	TargetInstanceId *string `json:"TargetInstanceId,omitempty" name:"TargetInstanceId"`
@@ -9005,8 +9700,8 @@ func (r *RollbackInstanceRequest) FromJsonString(s string) error {
 	}
 	delete(f, "InstanceId")
 	delete(f, "Type")
-	delete(f, "DBs")
 	delete(f, "Time")
+	delete(f, "DBs")
 	delete(f, "TargetInstanceId")
 	delete(f, "RenameRestore")
 	if len(f) > 0 {
@@ -9355,6 +10050,67 @@ func (r *StartIncrementalMigrationResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *StartIncrementalMigrationResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StartInstanceXEventRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 开启、关闭扩展事件
+	EventConfig []*EventConfig `json:"EventConfig,omitempty" name:"EventConfig"`
+}
+
+type StartInstanceXEventRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 开启、关闭扩展事件
+	EventConfig []*EventConfig `json:"EventConfig,omitempty" name:"EventConfig"`
+}
+
+func (r *StartInstanceXEventRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StartInstanceXEventRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "EventConfig")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "StartInstanceXEventRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StartInstanceXEventResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type StartInstanceXEventResponse struct {
+	*tchttp.BaseResponse
+	Response *StartInstanceXEventResponseParams `json:"Response"`
+}
+
+func (r *StartInstanceXEventResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StartInstanceXEventResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

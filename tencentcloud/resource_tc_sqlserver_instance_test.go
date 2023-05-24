@@ -147,6 +147,7 @@ func batchDeleteSQLServerInstances(ctx context.Context, service SqlserverService
 	return nil
 }
 
+// go test -i; go test -test.run TestAccTencentCloudSqlserverInstanceResource_PostPaid -v
 func TestAccTencentCloudSqlserverInstanceResource_PostPaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -208,6 +209,7 @@ func TestAccTencentCloudSqlserverInstanceResource_PostPaid(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudSqlserverInstanceResource_Prepaid -v
 func TestAccTencentCloudSqlserverInstanceResource_Prepaid(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -236,6 +238,7 @@ func TestAccTencentCloudSqlserverInstanceResource_Prepaid(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudSqlserverInstanceMultiClusterResource -v
 func TestAccTencentCloudSqlserverInstanceMultiClusterResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{

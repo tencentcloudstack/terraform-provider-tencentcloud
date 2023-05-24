@@ -657,6 +657,12 @@ SQLServer
     tencentcloud_sqlserver_business_intelligence_file
 	tencentcloud_sqlserver_business_intelligence_instance
 	tencentcloud_sqlserver_general_communication
+	tencentcloud_sqlserver_complete_expansion
+	tencentcloud_sqlserver_config_database_cdc
+	tencentcloud_sqlserver_config_database_ct
+	tencentcloud_sqlserver_config_database_mdf
+	tencentcloud_sqlserver_config_instance_param
+	tencentcloud_sqlserver_config_instance_ro_group
 
 SSL Certificates
   Data Source
@@ -1975,6 +1981,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_business_intelligence_file":          resourceTencentCloudSqlserverBusinessIntelligenceFile(),
 			"tencentcloud_sqlserver_business_intelligence_instance":      resourceTencentCloudSqlserverBusinessIntelligenceInstance(),
 			"tencentcloud_sqlserver_general_communication":               resourceTencentCloudSqlserverGeneralCommunication(),
+			"tencentcloud_sqlserver_complete_expansion":                  resourceTencentCloudSqlserverCompleteExpansion(),
+			"tencentcloud_sqlserver_config_database_cdc":                 resourceTencentCloudSqlserverConfigDatabaseCDC(),
+			"tencentcloud_sqlserver_config_database_ct":                  resourceTencentCloudSqlserverConfigDatabaseCT(),
+			"tencentcloud_sqlserver_config_database_mdf":                 resourceTencentCloudSqlserverConfigDatabaseMdf(),
+			"tencentcloud_sqlserver_config_instance_param":               resourceTencentCloudSqlserverConfigInstanceParam(),
+			"tencentcloud_sqlserver_config_instance_ro_group":            resourceTencentCloudSqlserverConfigInstanceRoGroup(),
 			"tencentcloud_ckafka_instance":                               resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                   resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                    resourceTencentCloudCkafkaAcl(),
