@@ -661,7 +661,6 @@ SQLServer
 	tencentcloud_sqlserver_config_database_cdc
 	tencentcloud_sqlserver_config_database_ct
 	tencentcloud_sqlserver_config_database_mdf
-	tencentcloud_sqlserver_config_instance_network
 	tencentcloud_sqlserver_config_instance_param
 	tencentcloud_sqlserver_config_instance_ro_group
 
@@ -1986,7 +1985,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_config_database_cdc":                 resourceTencentCloudSqlserverConfigDatabaseCDC(),
 			"tencentcloud_sqlserver_config_database_ct":                  resourceTencentCloudSqlserverConfigDatabaseCT(),
 			"tencentcloud_sqlserver_config_database_mdf":                 resourceTencentCloudSqlserverConfigDatabaseMdf(),
-			"tencentcloud_sqlserver_config_instance_network":             resourceTencentCloudSqlserverConfigInstanceNetwork(),
 			"tencentcloud_sqlserver_config_instance_param":               resourceTencentCloudSqlserverConfigInstanceParam(),
 			"tencentcloud_sqlserver_config_instance_ro_group":            resourceTencentCloudSqlserverConfigInstanceRoGroup(),
 			"tencentcloud_ckafka_instance":                               resourceTencentCloudCkafkaInstance(),
