@@ -429,7 +429,6 @@ func (me *ClsService) DescribeClsMachineGroupByConfigId(ctx context.Context, con
 	}()
 
 	request.ConfigId = &configId
-	instances := make([]*cls.MachineGroupInfo, 0)
 
 	response, err := me.client.UseClsClient().DescribeConfigMachineGroups(request)
 	if err != nil {
@@ -441,7 +440,7 @@ func (me *ClsService) DescribeClsMachineGroupByConfigId(ctx context.Context, con
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	instances = response.Response.MachineGroups
+	instances := response.Response.MachineGroups
 
 	for _, instance := range instances {
 		if *instance.GroupId == groupId {
