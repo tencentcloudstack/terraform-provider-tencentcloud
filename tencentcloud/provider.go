@@ -369,6 +369,9 @@ Direct Connect(DC)
   Data Source
     tencentcloud_dc_instances
     tencentcloud_dcx_instances
+	tencentcloud_dc_internet_address_quota
+	tencentcloud_dc_internet_address_statistics
+	tencentcloud_dc_public_direct_connect_tunnel_routes
 
   Resource
     tencentcloud_dcx
@@ -1425,6 +1428,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_cross_border_flow_monitor":             dataSourceTencentCloudCcnCrossBorderFlowMonitor(),
 			"tencentcloud_ccn_cross_border_region_bandwidth_limits":  dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits(),
 			"tencentcloud_dc_instances":                              dataSourceTencentCloudDcInstances(),
+			"tencentcloud_dc_internet_address_quota":                 dataSourceTencentCloudDcInternetAddressQuota(),
+			"tencentcloud_dc_internet_address_statistics":            dataSourceTencentCloudDcInternetAddressStatistics(),
+			"tencentcloud_dc_public_direct_connect_tunnel_routes":    dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes(),
 			"tencentcloud_dcx_instances":                             dataSourceTencentCloudDcxInstances(),
 			"tencentcloud_dc_gateway_instances":                      dataSourceTencentCloudDcGatewayInstances(),
 			"tencentcloud_dc_gateway_ccn_routes":                     dataSourceTencentCloudDcGatewayCCNRoutes(),
