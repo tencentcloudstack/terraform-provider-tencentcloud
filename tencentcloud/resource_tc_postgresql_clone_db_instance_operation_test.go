@@ -10,7 +10,7 @@ import (
 
 const testAccPostgresqlCloneDbInstanceOperationObject = "tencentcloud_postgresql_clone_db_instance_operation.clone_db_instance_operation"
 
-func TestAccTencentCloudPostgresqlCloneDbInstanceOperationResource_basic(t *testing.T) {
+func TestAccTencentCloudPostgresqlCloneDbInstanceOperationResource_clone(t *testing.T) {
 	t.Parallel()
 	recoverTime := time.Now().AddDate(0, 0, -2).Format("2006-01-02 15:04:05")
 	resource.Test(t, resource.TestCase{

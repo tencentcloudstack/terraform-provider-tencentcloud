@@ -232,9 +232,9 @@ func resourceTencentCloudPostgresqlCloneDbInstanceOperationCreate(d *schema.Reso
 	logId := getLogId(contextNil)
 
 	var (
-		request      = postgresql.NewCloneDBInstanceRequest()
-		response     = postgresql.NewCloneDBInstanceResponse()
-		dBInstanceId string
+		request           = postgresql.NewCloneDBInstanceRequest()
+		response          = postgresql.NewCloneDBInstanceResponse()
+		cloneDbInstanceId string
 	)
 	if v, ok := d.GetOk("db_instance_id"); ok {
 		request.DBInstanceId = helper.String(v.(string))
@@ -349,12 +349,12 @@ func resourceTencentCloudPostgresqlCloneDbInstanceOperationCreate(d *schema.Reso
 		return err
 	}
 
-	dBInstanceId = *response.Response.DBInstanceId
-	d.SetId(dBInstanceId)
+	cloneDbInstanceId = *response.Response.DBInstanceId
+	d.SetId(cloneDbInstanceId)
 
 	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"running"}, 10*readRetryTimeout, time.Second, service.PostgresqlDbInstanceOperationStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"running"}, 10*readRetryTimeout, 10*time.Second, service.PostgresqlDbInstanceOperationStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

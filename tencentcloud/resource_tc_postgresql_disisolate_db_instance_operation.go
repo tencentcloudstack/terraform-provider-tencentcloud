@@ -5,10 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_postgresql_disisolate_db_instance_operation" "disisolate_db_instance_operation" {
-  db_instance_ids = &lt;nil&gt;
-  period = 12
+  db_instance_id_set = [local.pgsql_id]
+  period = 1
   auto_voucher = false
-  voucher_ids = &lt;nil&gt;
 }
 ```
 
@@ -42,7 +41,7 @@ func resourceTencentCloudPostgresqlDisisolateDbInstanceOperation() *schema.Resou
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"db_instance_idss": {
+			"db_instance_id_set": {
 				Required: true,
 				ForceNew: true,
 				Type:     schema.TypeSet,
@@ -90,7 +89,7 @@ func resourceTencentCloudPostgresqlDisisolateDbInstanceOperationCreate(d *schema
 		ids             []string
 		firstInstanceId string
 	)
-	if v, ok := d.GetOk("db_instance_ids"); ok {
+	if v, ok := d.GetOk("db_instance_id_set"); ok {
 		dBInstanceIdSetSet := v.(*schema.Set).List()
 		for i := range dBInstanceIdSetSet {
 			if dBInstanceIdSetSet[i] != nil {
@@ -138,7 +137,7 @@ func resourceTencentCloudPostgresqlDisisolateDbInstanceOperationCreate(d *schema
 
 	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"running"}, 10*readRetryTimeout, time.Second, service.PostgresqlDbInstanceOperationStateRefreshFunc(firstInstanceId, []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"running"}, 10*readRetryTimeout, 10*time.Second, service.PostgresqlDbInstanceOperationStateRefreshFunc(firstInstanceId, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

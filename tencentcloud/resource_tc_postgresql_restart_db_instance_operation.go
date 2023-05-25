@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_postgresql_restart_db_instance_operation" "restart_db_instance_operation" {
-  db_instance_id = "postgres-6r233v55"
+  db_instance_id = local.pgsql_id
 }
 ```
 
@@ -81,7 +81,7 @@ func resourceTencentCloudPostgresqlRestartDbInstanceOperationCreate(d *schema.Re
 
 	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"running"}, 2*readRetryTimeout, time.Second, service.PostgresqlDbInstanceOperationStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"running"}, 2*readRetryTimeout, 10*time.Second, service.PostgresqlDbInstanceOperationStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

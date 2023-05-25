@@ -5,10 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_postgresql_renew_db_instance_operation" "renew_db_instance_operation" {
-  db_instance_ids = "postgres-6fego161"
-  period = 12
+  db_instance_id = tencentcloud_postgresql_instance.oper_test_PREPAID.id
+  period = 1
   auto_voucher = 0
-  voucher_ids = &lt;nil&gt;
 }
 ```
 
@@ -24,6 +23,7 @@ package tencentcloud
 
 import (
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -40,7 +40,7 @@ func resourceTencentCloudPostgresqlRenewDbInstanceOperation() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
-			"db_instance_ids": {
+			"db_instance_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
@@ -84,7 +84,7 @@ func resourceTencentCloudPostgresqlRenewDbInstanceOperationCreate(d *schema.Reso
 		request      = postgresql.NewRenewInstanceRequest()
 		dBInstanceId string
 	)
-	if v, ok := d.GetOk("db_instance_ids"); ok {
+	if v, ok := d.GetOk("db_instance_id"); ok {
 		request.DBInstanceId = helper.String(v.(string))
 		dBInstanceId = v.(string)
 	}
@@ -122,6 +122,14 @@ func resourceTencentCloudPostgresqlRenewDbInstanceOperationCreate(d *schema.Reso
 	}
 
 	d.SetId(dBInstanceId)
+
+	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	conf := BuildStateChangeConf([]string{}, []string{"running"}, 10*readRetryTimeout, 5*time.Second, service.PostgresqlDbInstanceOperationStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
 
 	return resourceTencentCloudPostgresqlRenewDbInstanceOperationRead(d, meta)
 }

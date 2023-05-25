@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_postgresql_delete_log_backup_operation" "delete_log_backup_operation" {
-  db_instance_id = ""
-  log_backup_id = ""
+  db_instance_id = "local.pg_id"
+  log_backup_id = "local.pg_log_backup_id"
 }
 ```
 
