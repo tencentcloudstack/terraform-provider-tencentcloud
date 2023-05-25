@@ -24,6 +24,7 @@ func TestAccTencentCloudCkafkaInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100003"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "period", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "msg_retention_time", "1300"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "max_message_byte", "1024"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "renew_flag", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "kafka_version", "1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "disk_size", "500"),
@@ -40,6 +41,7 @@ func TestAccTencentCloudCkafkaInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "zone_id", "100003"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "period", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "msg_retention_time", "1200"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "max_message_byte", "1025"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "renew_flag", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "kafka_version", "1.1.1"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "disk_size", "500"),
@@ -50,7 +52,7 @@ func TestAccTencentCloudCkafkaInstanceResource(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte"},
 			},
 		},
 	})
@@ -76,7 +78,7 @@ func TestAccTencentCloudCkafkaInstanceMAZResource(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte"},
 			},
 		},
 	})
@@ -102,7 +104,7 @@ func TestAccTencentCloudCkafkaInstanceTypeResource(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte"},
 			},
 		},
 	})
@@ -173,6 +175,7 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   vpc_id             = var.vpc_id
   subnet_id          = var.subnet_id
   msg_retention_time = 1300
+  max_message_byte   = 1024
   renew_flag         = 0
   kafka_version      = "1.1.1"
   disk_size          = 500
@@ -199,6 +202,7 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   vpc_id             =  var.vpc_id
   subnet_id          =  var.subnet_id
   msg_retention_time = 1200
+  max_message_byte   = 1025
   renew_flag         = 0
   kafka_version      = "1.1.1"
   disk_size          = 500
