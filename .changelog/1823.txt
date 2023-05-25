@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_dc_internet_address_quota
+```
+
+```release-note:new-data-source
+tencentcloud_dc_internet_address_statistics
+```
+
+```release-note:new-data-source
+tencentcloud_dc_public_direct_connect_tunnel_routes
+```
