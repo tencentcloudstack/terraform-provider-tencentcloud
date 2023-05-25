@@ -15,8 +15,8 @@ Provides a resource to create a postgresql delete_log_backup_operation
 
 ```hcl
 resource "tencentcloud_postgresql_delete_log_backup_operation" "delete_log_backup_operation" {
-  db_instance_id = ""
-  log_backup_id  = ""
+  db_instance_id = "local.pg_id"
+  log_backup_id  = "local.pg_log_backup_id"
 }
 ```
 
@@ -34,12 +34,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
-
-## Import
-
-postgresql delete_log_backup_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_postgresql_delete_log_backup_operation.delete_log_backup_operation delete_log_backup_operation_id
-```
 

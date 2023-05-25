@@ -10,14 +10,6 @@ resource "tencentcloud_postgresql_disisolate_db_instance_operation" "disisolate_
   auto_voucher = false
 }
 ```
-
-Import
-
-postgresql disisolate_db_instance_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_postgresql_disisolate_db_instance_operation.disisolate_db_instance_operation disisolate_db_instance_operation_id
-```
 */
 package tencentcloud
 
@@ -37,9 +29,6 @@ func resourceTencentCloudPostgresqlDisisolateDbInstanceOperation() *schema.Resou
 		Create: resourceTencentCloudPostgresqlDisisolateDbInstanceOperationCreate,
 		Read:   resourceTencentCloudPostgresqlDisisolateDbInstanceOperationRead,
 		Delete: resourceTencentCloudPostgresqlDisisolateDbInstanceOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"db_instance_id_set": {
 				Required: true,

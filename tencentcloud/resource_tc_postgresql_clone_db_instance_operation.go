@@ -33,14 +33,6 @@ resource "tencentcloud_postgresql_clone_db_instance_operation" "clone_db_instanc
   recovery_target_time = "%s"
 }
 ```
-
-Import
-
-postgresql clone_db_instance_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_postgresql_clone_db_instance_operation.clone_db_instance_operation clone_db_instance_operation_id
-```
 */
 package tencentcloud
 
@@ -59,9 +51,6 @@ func resourceTencentCloudPostgresqlCloneDbInstanceOperation() *schema.Resource {
 		Create: resourceTencentCloudPostgresqlCloneDbInstanceOperationCreate,
 		Read:   resourceTencentCloudPostgresqlCloneDbInstanceOperationRead,
 		Delete: resourceTencentCloudPostgresqlCloneDbInstanceOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"db_instance_id": {
 				Required:    true,

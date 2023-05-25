@@ -10,14 +10,6 @@ resource "tencentcloud_postgresql_renew_db_instance_operation" "renew_db_instanc
   auto_voucher = 0
 }
 ```
-
-Import
-
-postgresql renew_db_instance_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_postgresql_renew_db_instance_operation.renew_db_instance_operation renew_db_instance_operation_id
-```
 */
 package tencentcloud
 
@@ -36,9 +28,6 @@ func resourceTencentCloudPostgresqlRenewDbInstanceOperation() *schema.Resource {
 		Create: resourceTencentCloudPostgresqlRenewDbInstanceOperationCreate,
 		Read:   resourceTencentCloudPostgresqlRenewDbInstanceOperationRead,
 		Delete: resourceTencentCloudPostgresqlRenewDbInstanceOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"db_instance_id": {
 				Required:    true,

@@ -8,14 +8,6 @@ resource "tencentcloud_postgresql_restart_db_instance_operation" "restart_db_ins
   db_instance_id = local.pgsql_id
 }
 ```
-
-Import
-
-postgresql restart_db_instance_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_postgresql_restart_db_instance_operation.restart_db_instance_operation restart_db_instance_operation_id
-```
 */
 package tencentcloud
 
@@ -34,9 +26,6 @@ func resourceTencentCloudPostgresqlRestartDbInstanceOperation() *schema.Resource
 		Create: resourceTencentCloudPostgresqlRestartDbInstanceOperationCreate,
 		Read:   resourceTencentCloudPostgresqlRestartDbInstanceOperationRead,
 		Delete: resourceTencentCloudPostgresqlRestartDbInstanceOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"db_instance_id": {
 				Required:    true,

@@ -15,10 +15,9 @@ Provides a resource to create a postgresql renew_db_instance_operation
 
 ```hcl
 resource "tencentcloud_postgresql_renew_db_instance_operation" "renew_db_instance_operation" {
-  db_instance_ids = "postgres-6fego161"
-  period          = 12
-  auto_voucher    = 0
-  voucher_ids     = & lt ; nil & gt ;
+  db_instance_id = tencentcloud_postgresql_instance.oper_test_PREPAID.id
+  period         = 1
+  auto_voucher   = 0
 }
 ```
 
@@ -26,7 +25,7 @@ resource "tencentcloud_postgresql_renew_db_instance_operation" "renew_db_instanc
 
 The following arguments are supported:
 
-* `db_instance_ids` - (Required, String, ForceNew) Instance ID in the format of postgres-6fego161.
+* `db_instance_id` - (Required, String, ForceNew) Instance ID in the format of postgres-6fego161.
 * `period` - (Required, Int, ForceNew) Renewal duration in months.
 * `auto_voucher` - (Optional, Int, ForceNew) Whether to automatically use vouchers. 1:yes, 0:no. Default value:0.
 * `voucher_ids` - (Optional, Set: [`String`], ForceNew) Voucher ID list (only one voucher can be specified currently).
@@ -38,12 +37,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
-
-## Import
-
-postgresql renew_db_instance_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_postgresql_renew_db_instance_operation.renew_db_instance_operation renew_db_instance_operation_id
-```
 

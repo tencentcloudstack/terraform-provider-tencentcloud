@@ -85,11 +85,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-postgresql clone_db_instance_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_postgresql_clone_db_instance_operation.clone_db_instance_operation clone_db_instance_operation_id
-```
-

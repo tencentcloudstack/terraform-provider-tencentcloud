@@ -9,14 +9,6 @@ resource "tencentcloud_postgresql_delete_log_backup_operation" "delete_log_backu
   log_backup_id = "local.pg_log_backup_id"
 }
 ```
-
-Import
-
-postgresql delete_log_backup_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_postgresql_delete_log_backup_operation.delete_log_backup_operation delete_log_backup_operation_id
-```
 */
 package tencentcloud
 
@@ -35,9 +27,6 @@ func resourceTencentCloudPostgresqlDeleteLogBackupOperation() *schema.Resource {
 		Create: resourceTencentCloudPostgresqlDeleteLogBackupOperationCreate,
 		Read:   resourceTencentCloudPostgresqlDeleteLogBackupOperationRead,
 		Delete: resourceTencentCloudPostgresqlDeleteLogBackupOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"db_instance_id": {
 				Required:    true,

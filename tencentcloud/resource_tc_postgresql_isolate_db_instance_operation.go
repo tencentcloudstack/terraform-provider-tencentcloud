@@ -8,14 +8,6 @@ resource "tencentcloud_postgresql_isolate_db_instance_operation" "isolate_db_ins
   db_instance_id_set = [local.pgsql_id]
 }
 ```
-
-Import
-
-postgresql isolate_db_instance_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_postgresql_isolate_db_instance_operation.isolate_db_instance_operation isolate_db_instance_operation_id
-```
 */
 package tencentcloud
 
@@ -34,9 +26,6 @@ func resourceTencentCloudPostgresqlIsolateDbInstanceOperation() *schema.Resource
 		Create: resourceTencentCloudPostgresqlIsolateDbInstanceOperationCreate,
 		Read:   resourceTencentCloudPostgresqlIsolateDbInstanceOperationRead,
 		Delete: resourceTencentCloudPostgresqlIsolateDbInstanceOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"db_instance_id_set": {
 				Required: true,

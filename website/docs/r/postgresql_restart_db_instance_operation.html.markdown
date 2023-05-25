@@ -15,7 +15,7 @@ Provides a resource to create a postgresql restart_db_instance_operation
 
 ```hcl
 resource "tencentcloud_postgresql_restart_db_instance_operation" "restart_db_instance_operation" {
-  db_instance_id = "postgres-6r233v55"
+  db_instance_id = local.pgsql_id
 }
 ```
 
@@ -32,12 +32,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
-
-## Import
-
-postgresql restart_db_instance_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_postgresql_restart_db_instance_operation.restart_db_instance_operation restart_db_instance_operation_id
-```
 
