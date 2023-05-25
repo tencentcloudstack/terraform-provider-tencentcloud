@@ -1086,3 +1086,65 @@ func (me *ClsService) DescribeClsShipperTasksByFilter(ctx context.Context, param
 
 	return
 }
+
+func (me *ClsService) DescribeClsMachinesByFilter(ctx context.Context, param map[string]interface{}) (machines []*cls.MachineInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeMachinesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeMachines(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	machines = response.Response.Machines
+
+	return
+}
+
+func (me *ClsService) DescribeClsMachineGroupConfigsByFilter(ctx context.Context, param map[string]interface{}) (machineGroupConfigs []*cls.ConfigInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cls.NewDescribeMachineGroupConfigsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeMachineGroupConfigs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	machineGroupConfigs = response.Response.Configs
+	return
+}

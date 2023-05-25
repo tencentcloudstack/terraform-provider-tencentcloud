@@ -289,6 +289,49 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Bandwidth of the public network.",
 			},
+			//"dynamic_disk_config": {
+			//	Type:     schema.TypeList,
+			//	Optional: true,
+			//	MaxItems: 1,
+			//	Computed: true,
+			//	Elem: &schema.Resource{
+			//		Schema: map[string]*schema.Schema{
+			//			"enable": {
+			//				Type:     schema.TypeInt,
+			//				Optional: true,
+			//				Computed: true,
+			//				Description: "Whether to the dynamic disk expansion configuration is enabled." +
+			//					"0: disabled; 1: enabled.",
+			//			},
+			//			"disk_quota_percentage": {
+			//				Type:        schema.TypeInt,
+			//				Optional:    true,
+			//				Computed:    true,
+			//				Description: "Disk quota threshold (in percentage) for triggering the automatic disk expansion event.",
+			//			},
+			//			"step_forward_percentage": {
+			//				Type:        schema.TypeInt,
+			//				Optional:    true,
+			//				Computed:    true,
+			//				Description: "Percentage of dynamic disk expansion each time.",
+			//			},
+			//			"max_disk_space": {
+			//				Type:        schema.TypeInt,
+			//				Optional:    true,
+			//				Computed:    true,
+			//				Description: "Max scale disk size, in GB.",
+			//			},
+			//		},
+			//	},
+			//	Description: "Dynamic disk expansion policy configuration.",
+			//},
+			"max_message_byte": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateIntegerInRange(1024, 12*1024*1024),
+				Description:  "The size of a single message in bytes at the instance level. Value range: `1024 - 12*1024*1024 bytes (i.e., 1KB-12MB).",
+			},
 			"vip": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -429,6 +472,7 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 	modifyRequest.InstanceId = instanceId
 
 	if v, ok := d.GetOk("msg_retention_time"); ok {
+		needModify = true
 		retentionTime := int64(v.(int))
 		modifyRequest.MsgRetentionTime = helper.Int64(retentionTime)
 	}
@@ -486,10 +530,38 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 		modifyRequest.PublicNetwork = helper.Int64(int64(v.(int)))
 	}
 
+	//if v, ok := d.GetOk("dynamic_disk_config"); ok {
+	//	needModify = true
+	//	dynamic := make([]*ckafka.DynamicDiskConfig, 0, 10)
+	//	for _, item := range v.([]interface{}) {
+	//		dMap := item.(map[string]interface{})
+	//		dynamicInfo := ckafka.DynamicDiskConfig{}
+	//		if enable, ok := dMap["enable"]; ok {
+	//			dynamicInfo.Enable = helper.Int64(int64(enable.(int)))
+	//		}
+	//		if stepForwardPercentage, ok := dMap["step_forward_percentage"]; ok {
+	//			dynamicInfo.StepForwardPercentage = helper.Int64(int64(stepForwardPercentage.(int)))
+	//		}
+	//		if diskQuotaPercentage, ok := dMap["disk_quota_percentage"]; ok {
+	//			dynamicInfo.DiskQuotaPercentage = helper.Int64(int64(diskQuotaPercentage.(int)))
+	//		}
+	//		if maxDiskSpace, ok := dMap["max_disk_space"]; ok {
+	//			dynamicInfo.MaxDiskSpace = helper.Int64(int64(maxDiskSpace.(int)))
+	//		}
+	//		dynamic = append(dynamic, &dynamicInfo)
+	//	}
+	//	modifyRequest.DynamicDiskConfig = dynamic[0]
+	//}
+
+	if v, ok := d.GetOkExists("max_message_byte"); ok {
+		needModify = true
+		modifyRequest.MaxMessageByte = helper.Uint64(uint64(v.(int)))
+	}
+
 	if needModify {
-		error := service.ModifyCkafkaInstanceAttributes(ctx, modifyRequest)
-		if error != nil {
-			return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", error.Error())
+		err := service.ModifyCkafkaInstanceAttributes(ctx, modifyRequest)
+		if err != nil {
+			return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", err.Error())
 		}
 	}
 
@@ -633,6 +705,15 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("dynamic_retention_config", dynamicConfig)
 		_ = d.Set("public_network", attr.PublicNetwork)
 
+		//dynamicDiskConfig := make([]map[string]interface{}, 0)
+		//dynamicDiskConfig = append(dynamicDiskConfig, map[string]interface{}{
+		//	"enable":                  attr.DynamicDiskConfig.Enable,
+		//	"disk_quota_percentage":   attr.DynamicDiskConfig.DiskQuotaPercentage,
+		//	"step_forward_percentage": attr.DynamicDiskConfig.StepForwardPercentage,
+		//	"max_disk_space":          attr.DynamicDiskConfig.MaxDiskSpace,
+		//})
+		//_ = d.Set("dynamic_disk_config", dynamicDiskConfig)
+
 		return nil
 	})
 	if err != nil {
@@ -729,9 +810,39 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	error := service.ModifyCkafkaInstanceAttributes(ctx, request)
-	if error != nil {
-		return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", error.Error())
+	//if d.HasChange("dynamic_disk_config") {
+	//	if v, ok := d.GetOk("dynamic_disk_config"); ok {
+	//		dynamic := make([]*ckafka.DynamicDiskConfig, 0, 10)
+	//		for _, item := range v.([]interface{}) {
+	//			dMap := item.(map[string]interface{})
+	//			dynamicInfo := ckafka.DynamicDiskConfig{}
+	//			if enable, ok := dMap["enable"]; ok {
+	//				dynamicInfo.Enable = helper.Int64(int64(enable.(int)))
+	//			}
+	//			if stepForwardPercentage, ok := dMap["step_forward_percentage"]; ok {
+	//				dynamicInfo.StepForwardPercentage = helper.Int64(int64(stepForwardPercentage.(int)))
+	//			}
+	//			if diskQuotaPercentage, ok := dMap["disk_quota_percentage"]; ok {
+	//				dynamicInfo.DiskQuotaPercentage = helper.Int64(int64(diskQuotaPercentage.(int)))
+	//			}
+	//			if maxDiskSpace, ok := dMap["max_disk_space"]; ok {
+	//				dynamicInfo.MaxDiskSpace = helper.Int64(int64(maxDiskSpace.(int)))
+	//			}
+	//			dynamic = append(dynamic, &dynamicInfo)
+	//		}
+	//		request.DynamicDiskConfig = dynamic[0]
+	//	}
+	//}
+
+	if d.HasChange("max_message_byte") {
+		if v, ok := d.GetOkExists("max_message_byte"); ok {
+			request.MaxMessageByte = helper.Uint64(uint64(v.(int)))
+		}
+	}
+
+	err := service.ModifyCkafkaInstanceAttributes(ctx, request)
+	if err != nil {
+		return fmt.Errorf("[API]Set kafka instance attributes fail, reason:%s", err.Error())
 	}
 
 	if d.HasChange("band_width") || d.HasChange("disk_size") || d.HasChange("partition") {

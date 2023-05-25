@@ -369,9 +369,16 @@ Direct Connect(DC)
   Data Source
     tencentcloud_dc_instances
     tencentcloud_dcx_instances
+	tencentcloud_dc_internet_address_quota
+	tencentcloud_dc_internet_address_statistics
+	tencentcloud_dc_public_direct_connect_tunnel_routes
 
   Resource
     tencentcloud_dcx
+	tencentcloud_dcx_extra_config
+	tencentcloud_dc_share_dcx_config
+	tencentcloud_dc_internet_address
+	tencentcloud_dc_internet_address_config
 
 Direct Connect Gateway(DCG)
   Data Source
@@ -381,6 +388,7 @@ Direct Connect Gateway(DCG)
   Resource
     tencentcloud_dc_gateway
     tencentcloud_dc_gateway_ccn_route
+	tencentcloud_dc_gateway_attachment
 
 Domain
   Data Source
@@ -870,6 +878,8 @@ Cloud Log Service(CLS)
 
   Data Source
 	tencentcloud_cls_shipper_tasks
+	tencentcloud_cls_machines
+	tencentcloud_cls_machine_group_configs
 
 TencentCloud Lighthouse(Lighthouse)
   Resource
@@ -1420,6 +1430,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_cross_border_flow_monitor":             dataSourceTencentCloudCcnCrossBorderFlowMonitor(),
 			"tencentcloud_ccn_cross_border_region_bandwidth_limits":  dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits(),
 			"tencentcloud_dc_instances":                              dataSourceTencentCloudDcInstances(),
+			"tencentcloud_dc_internet_address_quota":                 dataSourceTencentCloudDcInternetAddressQuota(),
+			"tencentcloud_dc_internet_address_statistics":            dataSourceTencentCloudDcInternetAddressStatistics(),
+			"tencentcloud_dc_public_direct_connect_tunnel_routes":    dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes(),
 			"tencentcloud_dcx_instances":                             dataSourceTencentCloudDcxInstances(),
 			"tencentcloud_dc_gateway_instances":                      dataSourceTencentCloudDcGatewayInstances(),
 			"tencentcloud_dc_gateway_ccn_routes":                     dataSourceTencentCloudDcGatewayCCNRoutes(),
@@ -1733,6 +1746,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_instance_blueprint":             dataSourceTencentCloudLighthouseInstanceBlueprint(),
 			"tencentcloud_lighthouse_disk_config":                    dataSourceTencentCloudLighthouseDiskConfig(),
 			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
+			"tencentcloud_cls_machines":                              dataSourceTencentCloudClsMachines(),
+			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -1783,8 +1798,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_instances_accept_attach":                         resourceTencentCloudCcnInstancesAcceptAttach(),
 			"tencentcloud_ccn_instances_reset_attach":                          resourceTencentCloudCcnInstancesResetAttach(),
 			"tencentcloud_dcx":                                                 resourceTencentCloudDcxInstance(),
+			"tencentcloud_dcx_extra_config":                                    resourceTencentCloudDcxExtraConfig(),
+			"tencentcloud_dc_share_dcx_config":                                 resourceTencentCloudDcShareDcxConfig(),
+			"tencentcloud_dc_internet_address":                                 resourceTencentCloudDcInternetAddress(),
+			"tencentcloud_dc_internet_address_config":                          resourceTencentCloudDcInternetAddressConfig(),
 			"tencentcloud_dc_gateway":                                          resourceTencentCloudDcGatewayInstance(),
 			"tencentcloud_dc_gateway_ccn_route":                                resourceTencentCloudDcGatewayCcnRouteInstance(),
+			"tencentcloud_dc_gateway_attachment":                               resourceTencentCloudDcGatewayAttachment(),
 			"tencentcloud_vpn_customer_gateway":                                resourceTencentCloudVpnCustomerGateway(),
 			"tencentcloud_vpn_gateway":                                         resourceTencentCloudVpnGateway(),
 			"tencentcloud_vpn_gateway_route":                                   resourceTencentCloudVpnGatewayRoute(),
