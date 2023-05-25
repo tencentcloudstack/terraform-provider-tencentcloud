@@ -499,3 +499,59 @@ func (me *VpcService) DeleteDirectConnectGatewayCcnRoute(ctx context.Context, dc
 	errRet = err
 	return
 }
+
+func (me *VpcService) DescribeDcGatewayAttachmentById(ctx context.Context, vpcId string, directConnectGatewayId string, natGatewayId string) (dcGateway *vpc.DirectConnectGateway, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeDirectConnectGatewaysRequest()
+	request.DirectConnectGatewayIds = []*string{&directConnectGatewayId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeDirectConnectGateways(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, dc := range response.Response.DirectConnectGatewaySet {
+		if *dc.VpcId == vpcId && *dc.NatGatewayId == natGatewayId {
+			dcGateway = dc
+		}
+	}
+
+	return
+}
+
+func (me *VpcService) DeleteDcGatewayAttachmentById(ctx context.Context, vpcId string, directConnectGatewayId string, natGatewayId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDisassociateDirectConnectGatewayNatGatewayRequest()
+	request.VpcId = &vpcId
+	request.DirectConnectGatewayId = &directConnectGatewayId
+	request.NatGatewayId = &natGatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DisassociateDirectConnectGatewayNatGateway(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
