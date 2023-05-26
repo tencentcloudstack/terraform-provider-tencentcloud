@@ -6,12 +6,10 @@ Example Usage
 ```hcl
 resource "tencentcloud_sqlserver_rollback_instance" "rollback_instance" {
   instance_id = "mssql-qelbzgwf"
-  type = 1
-  time = "2023-05-25 19:14:30"
-  dbs = ["keep_pubsub_db2"]
+  time = "%s"
   rename_restore {
     old_name = "keep_pubsub_db2"
-	new_name = "rollback_pubsub_db2"
+	new_name = "rollback_pubsub_db3"
   }
 }
 ```
@@ -30,7 +28,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -54,36 +51,25 @@ func resourceTencentCloudSqlserverRollbackInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},
-			"type": {
-				Required:    true,
-				Type:        schema.TypeInt,
-				Description: "Rollback type. 0: the database rolled back overwrites the original database; 1: the database rolled back is renamed and does not overwrite the original database.",
-			},
 			"time": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Target time point for rollback.",
 			},
-			"dbs": {
-				Optional:    true,
-				Type:        schema.TypeSet,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Database to be rolled back.",
-			},
 			"rename_restore": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeList,
 				Description: "Rename the databases listed in ReNameRestoreDatabase. This parameter takes effect only when Type = 1 which indicates that backup rollback supports renaming databases. If it is left empty, databases will be renamed in the default format and the DBs parameter specifies the databases to be restored.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"old_name": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "Database name. If the OldName database does not exist, a failure will be returned. It can be left empty in offline migration tasks.",
 						},
 						"new_name": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "New database name. In offline migration, OldName will be used if NewName is left empty (OldName and NewName cannot be both empty). In database cloning, OldName and NewName must be both specified and cannot have the same value.",
 						},
 					},
@@ -100,26 +86,14 @@ func resourceTencentCloudSqlserverRollbackInstanceCreate(d *schema.ResourceData,
 	var (
 		instanceId string
 		tmpTime    string
-		tmpType    string
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
 
-	if v, ok := d.GetOk("type"); ok {
-		tmpType = strconv.Itoa(v.(int))
-	}
-
 	if v, ok := d.GetOk("time"); ok {
 		tmpTime = v.(string)
-	}
-
-	dbList := make([]string, 0)
-	if v, ok := d.GetOk("dbs"); ok {
-		for _, item := range v.(*schema.Set).List() {
-			dbList = append(dbList, item.(string))
-		}
 	}
 
 	oldNameList := make([]string, 0)
@@ -136,11 +110,10 @@ func resourceTencentCloudSqlserverRollbackInstanceCreate(d *schema.ResourceData,
 		}
 	}
 
-	dbListStr := strings.Join(dbList, COMMA_SP)
 	oldNameListStr := strings.Join(oldNameList, COMMA_SP)
 	newNameListStr := strings.Join(newNameList, COMMA_SP)
 
-	d.SetId(strings.Join([]string{instanceId, tmpType, tmpTime, dbListStr, oldNameListStr, newNameListStr}, FILED_SP))
+	d.SetId(strings.Join([]string{instanceId, tmpTime, oldNameListStr, newNameListStr}, FILED_SP))
 
 	return resourceTencentCloudSqlserverRollbackInstanceUpdate(d, meta)
 }
@@ -156,16 +129,13 @@ func resourceTencentCloudSqlserverRollbackInstanceRead(d *schema.ResourceData, m
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 6 {
+	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 	instanceId := idSplit[0]
-	tmpType := idSplit[1]
-	tmpTime := idSplit[2]
-	dbListStr := idSplit[3]
-	oldNameListStr := idSplit[4]
-	newNameListStr := idSplit[5]
-	dbList := strings.Split(dbListStr, COMMA_SP)
+	tmpTime := idSplit[1]
+	oldNameListStr := idSplit[2]
+	newNameListStr := idSplit[3]
 	oldNameList := strings.Split(oldNameListStr, COMMA_SP)
 	newNameList := strings.Split(newNameListStr, COMMA_SP)
 
@@ -184,12 +154,8 @@ func resourceTencentCloudSqlserverRollbackInstanceRead(d *schema.ResourceData, m
 		_ = d.Set("instance_id", rollbackInstance.InstanceId)
 	}
 
-	Type, _ := strconv.Atoi(tmpType)
-	_ = d.Set("type", Type)
 	_ = d.Set("time", tmpTime)
-	if len(dbList) != 0 {
-		_ = d.Set("dbs", dbList)
-	}
+
 	renameRestoreList := []interface{}{}
 	for i := 0; i < len(oldNameList); i++ {
 		renameRestoreMap := map[string]interface{}{}
@@ -212,25 +178,18 @@ func resourceTencentCloudSqlserverRollbackInstanceUpdate(d *schema.ResourceData,
 		service = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request = sqlserver.NewRollbackInstanceRequest()
 		flowId  uint64
+		tmpType uint64
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 6 {
+	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 	instanceId := idSplit[0]
 
 	request.InstanceId = &instanceId
-	v, _ := d.GetOk("type")
-	if v == 0 || v == 1 {
-		request.Type = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOk("dbs"); ok {
-		for _, item := range v.(*schema.Set).List() {
-			request.DBs = append(request.DBs, helper.String(item.(string)))
-		}
-	}
+	tmpType = 1
+	request.Type = &tmpType
 
 	if v, ok := d.GetOk("time"); ok {
 		request.Time = helper.String(v.(string))
@@ -306,5 +265,29 @@ func resourceTencentCloudSqlserverRollbackInstanceDelete(d *schema.ResourceData,
 	defer logElapsed("resource.tencentcloud_sqlserver_rollback_instance.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	return nil
+	var (
+		logId            = getLogId(contextNil)
+		ctx              = context.WithValue(context.TODO(), logIdKey, logId)
+		sqlserverService = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+	)
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 4 {
+		return fmt.Errorf("id is broken, id is %s", d.Id())
+	}
+	instanceId := idSplit[0]
+	newNameListStr := idSplit[3]
+	newNameList := strings.Split(newNameListStr, COMMA_SP)
+
+	if len(newNameList) == 0 {
+		return nil
+	}
+
+	tmpNames := make([]*string, len(newNameList))
+	for k, v := range newNameList {
+		tmpNames[k] = &v
+	}
+
+	err := sqlserverService.DeleteSqlserverDB(ctx, instanceId, tmpNames)
+	return err
 }

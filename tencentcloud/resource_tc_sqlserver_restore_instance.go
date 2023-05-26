@@ -8,11 +8,9 @@ resource "tencentcloud_sqlserver_restore_instance" "restore_instance" {
   instance_id = "mssql-qelbzgwf"
   backup_id = 3461718019
   rename_restore {
-	old_name = "keep_pubsub_db2"
-	new_name = "new_keep_pubsub_db2"
+    old_name = "keep_pubsub_db2"
+  	new_name = "restore_keep_pubsub_db2"
   }
-  type = 1
-  db_list = ["keep_pubsub_db2"]
 }
 ```
 
@@ -60,35 +58,23 @@ func resourceTencentCloudSqlserverRestoreInstance() *schema.Resource {
 				Description: "Backup file ID, which can be obtained through the Id field in the returned value of the DescribeBackups API.",
 			},
 			"rename_restore": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeList,
 				Description: "Restore the databases listed in ReNameRestoreDatabase and rename them after restoration. If this parameter is left empty, all databases will be restored and renamed in the default format.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"old_name": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "Database name. If the OldName database does not exist, a failure will be returned.It can be left empty in offline migration tasks.",
 						},
 						"new_name": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Required:    true,
 							Description: "New database name. In offline migration, OldName will be used if NewName is left empty (OldName and NewName cannot be both empty). In database cloning, OldName and NewName must be both specified and cannot have the same value.",
 						},
 					},
 				},
-			},
-			"type": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Default:     1,
-				Description: "Rollback type, 0-overwrite method; 1-rename method, default 1.",
-			},
-			"db_list": {
-				Optional:    true,
-				Type:        schema.TypeSet,
-				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "The database that needs to be covered and rolled back is required only when the file is covered and rolled back.",
 			},
 		},
 	}
@@ -101,7 +87,6 @@ func resourceTencentCloudSqlserverRestoreInstanceCreate(d *schema.ResourceData, 
 	var (
 		instanceId string
 		backupId   string
-		tmpType    string
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -126,22 +111,10 @@ func resourceTencentCloudSqlserverRestoreInstanceCreate(d *schema.ResourceData, 
 		}
 	}
 
-	if v, ok := d.GetOk("type"); ok {
-		tmpType = strconv.Itoa(v.(int))
-	}
-
-	dbList := make([]string, 0)
-	if v, ok := d.GetOk("db_list"); ok {
-		for _, item := range v.(*schema.Set).List() {
-			dbList = append(dbList, item.(string))
-		}
-	}
-
 	oldNameListStr := strings.Join(oldNameList, COMMA_SP)
 	newNameListStr := strings.Join(newNameList, COMMA_SP)
-	dbListStr := strings.Join(dbList, COMMA_SP)
 
-	d.SetId(strings.Join([]string{instanceId, backupId, oldNameListStr, newNameListStr, tmpType, dbListStr}, FILED_SP))
+	d.SetId(strings.Join([]string{instanceId, backupId, oldNameListStr, newNameListStr}, FILED_SP))
 
 	return resourceTencentCloudSqlserverRestoreInstanceUpdate(d, meta)
 }
@@ -157,18 +130,15 @@ func resourceTencentCloudSqlserverRestoreInstanceRead(d *schema.ResourceData, me
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 6 {
+	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 	instanceId := idSplit[0]
 	backupId := idSplit[1]
 	oldNameListStr := idSplit[2]
 	newNameListStr := idSplit[3]
-	tmpType := idSplit[4]
-	dbListStr := idSplit[5]
 	oldNameList := strings.Split(oldNameListStr, COMMA_SP)
 	newNameList := strings.Split(newNameListStr, COMMA_SP)
-	dbList := strings.Split(dbListStr, COMMA_SP)
 
 	restoreInstance, err := service.DescribeSqlserverRestoreInstanceById(ctx, instanceId)
 	if err != nil {
@@ -187,11 +157,6 @@ func resourceTencentCloudSqlserverRestoreInstanceRead(d *schema.ResourceData, me
 
 	tmpBackipId, _ := strconv.Atoi(backupId)
 	_ = d.Set("backup_id", tmpBackipId)
-	Type, _ := strconv.Atoi(tmpType)
-	_ = d.Set("type", Type)
-	if len(dbList) != 0 {
-		_ = d.Set("db_list", dbList)
-	}
 
 	renameRestoreList := []interface{}{}
 	for i := 0; i < len(oldNameList); i++ {
@@ -218,7 +183,7 @@ func resourceTencentCloudSqlserverRestoreInstanceUpdate(d *schema.ResourceData, 
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 6 {
+	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 	instanceId := idSplit[0]
@@ -239,16 +204,6 @@ func resourceTencentCloudSqlserverRestoreInstanceUpdate(d *schema.ResourceData, 
 				parameter.NewName = helper.String(v.(string))
 			}
 			request.RenameRestore = append(request.RenameRestore, &parameter)
-		}
-	}
-
-	if v, ok := d.GetOk("type"); ok {
-		request.Type = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOk("db_list"); ok {
-		for _, item := range v.(*schema.Set).List() {
-			request.DBList = append(request.DBList, helper.String(item.(string)))
 		}
 	}
 
@@ -308,5 +263,29 @@ func resourceTencentCloudSqlserverRestoreInstanceDelete(d *schema.ResourceData, 
 	defer logElapsed("resource.tencentcloud_sqlserver_restore_instance.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	return nil
+	var (
+		logId            = getLogId(contextNil)
+		ctx              = context.WithValue(context.TODO(), logIdKey, logId)
+		sqlserverService = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+	)
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 4 {
+		return fmt.Errorf("id is broken, id is %s", d.Id())
+	}
+	instanceId := idSplit[0]
+	newNameListStr := idSplit[3]
+	newNameList := strings.Split(newNameListStr, COMMA_SP)
+
+	if len(newNameList) == 0 {
+		return nil
+	}
+
+	tmpNames := make([]*string, len(newNameList))
+	for k, v := range newNameList {
+		tmpNames[k] = &v
+	}
+
+	err := sqlserverService.DeleteSqlserverDB(ctx, instanceId, tmpNames)
+	return err
 }

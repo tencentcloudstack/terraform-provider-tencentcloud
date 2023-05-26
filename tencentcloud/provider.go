@@ -671,7 +671,6 @@ SQLServer
 	tencentcloud_sqlserver_config_terminate_db_instance
 	tencentcloud_sqlserver_restore_instance
 	tencentcloud_sqlserver_rollback_instance
-	tencentcloud_sqlserver_config_delete_db
 
 SSL Certificates
   Data Source
@@ -2004,7 +2003,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_config_terminate_db_instance":        resourceTencentCloudSqlserverConfigTerminateDBInstance(),
 			"tencentcloud_sqlserver_restore_instance":                    resourceTencentCloudSqlserverRestoreInstance(),
 			"tencentcloud_sqlserver_rollback_instance":                   resourceTencentCloudSqlserverRollbackInstance(),
-			"tencentcloud_sqlserver_config_delete_db":                    resourceTencentCloudSqlserverConfigDeleteDB(),
 			"tencentcloud_ckafka_instance":                               resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                   resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                    resourceTencentCloudCkafkaAcl(),
