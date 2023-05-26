@@ -659,3 +659,82 @@ func (me *ScfService) DeleteScfFunctionAliasById(ctx context.Context, namespace 
 
 	return
 }
+
+func (me *ScfService) DescribeScfFunctionVersionById(ctx context.Context, functionName string, namespace string, functionVersion string) (FunctionVersion *scf.GetFunctionResponse, errRet error) {
+	logId := getLogId(ctx)
+
+	request := scf.NewGetFunctionRequest()
+	request.FunctionName = &functionName
+	request.Namespace = &namespace
+	request.Qualifier = &functionVersion
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().GetFunction(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	FunctionVersion = response
+	return
+}
+
+func (me *ScfService) DeleteScfFunctionVersionById(ctx context.Context, functionName string, namespace string, functionVersion string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := scf.NewDeleteFunctionRequest()
+	request.FunctionName = &functionName
+	request.Namespace = &namespace
+	request.Qualifier = &functionVersion
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().DeleteFunction(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ScfService) DescribeScfFunctionEventInvokeConfigById(ctx context.Context, namespace string, functionName string) (FunctionEventInvokeConfig *scf.AsyncTriggerConfig, errRet error) {
+	logId := getLogId(ctx)
+
+	request := scf.NewGetFunctionEventInvokeConfigRequest()
+	request.Namespace = &namespace
+	request.FunctionName = &functionName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().GetFunctionEventInvokeConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	FunctionEventInvokeConfig = response.Response.AsyncTriggerConfig
+	return
+}
