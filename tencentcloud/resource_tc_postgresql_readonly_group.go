@@ -25,6 +25,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -61,7 +62,6 @@ func resourceTencentCloudPostgresqlReadonlyGroup() *schema.Resource {
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
 				Required:    true,
 				Description: "VPC ID.",
 			},
@@ -119,13 +119,13 @@ func resourceTencentCloudPostgresqlReadOnlyGroupCreate(d *schema.ResourceData, m
 	logId := getLogId(contextNil)
 
 	var (
-		request      = postgresql.NewCreateReadOnlyGroupRequest()
-		response     *postgresql.CreateReadOnlyGroupResponse
-		dbInstanceId string
+		request            = postgresql.NewCreateReadOnlyGroupRequest()
+		response           *postgresql.CreateReadOnlyGroupResponse
+		msaterDbInstanceId string
 	)
 	if v, ok := d.GetOk("master_db_instance_id"); ok {
 		request.MasterDBInstanceId = helper.String(v.(string))
-		dbInstanceId = v.(string)
+		msaterDbInstanceId = v.(string)
 	}
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
@@ -189,7 +189,7 @@ func resourceTencentCloudPostgresqlReadOnlyGroupCreate(d *schema.ResourceData, m
 	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		groups, e := postgresqlService.DescribePostgresqlReadOnlyGroupById(ctx, dbInstanceId)
+		groups, e := postgresqlService.DescribePostgresqlReadOnlyGroupById(ctx, msaterDbInstanceId)
 		if e != nil {
 			return retryError(e)
 		}
@@ -238,9 +238,106 @@ func resourceTencentCloudPostgresqlReadOnlyGroupUpdate(d *schema.ResourceData, m
 	defer logElapsed("resource.tencentcloud_postgresql_readonly_group.update")()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	request := postgresql.NewModifyReadOnlyGroupConfigRequest()
 
 	request.ReadOnlyGroupId = helper.String(d.Id())
+
+	// update vpc and subnet
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		var (
+			vpcOld             string
+			vpcNew             string
+			subnetOld          string
+			subnetNew          string
+			vipOld             string
+			vipNew             string
+			msaterDbInstanceId string
+		)
+
+		if v, ok := d.GetOk("master_db_instance_id"); ok {
+			msaterDbInstanceId = v.(string)
+		}
+
+		old, new := d.GetChange("vpc_id")
+		if old != nil {
+			vpcOld = old.(string)
+		}
+		if new != nil {
+			vpcNew = new.(string)
+		}
+
+		old, new = d.GetChange("subnet_id")
+		if old != nil {
+			subnetOld = old.(string)
+		}
+		if new != nil {
+			subnetNew = new.(string)
+		}
+
+		// Create new network first, then delete the old one
+		request := postgresql.NewCreateReadOnlyGroupNetworkAccessRequest()
+		request.ReadOnlyGroupId = helper.String(d.Id())
+		request.VpcId = helper.String(vpcNew)
+		request.SubnetId = helper.String(subnetNew)
+		// ip assigned by system
+		request.IsAssignVip = helper.Bool(false)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().CreateReadOnlyGroupNetworkAccess(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s create postgresql ReadOnlyGroup NetworkAccess failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+		// wait for new network enabled
+		conf := BuildStateChangeConf([]string{}, []string{"opened"}, 3*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupNetworkAccessStateRefreshFunc(msaterDbInstanceId, d.Id(), vpcNew, subnetNew, vipOld, "", []string{}))
+
+		if object, e := conf.WaitForState(); e != nil {
+			return e
+		} else {
+			// find the vip assiged by system
+			ret := object.(*postgresql.DBInstanceNetInfo)
+			vipNew = *ret.Ip
+		}
+
+		// wait unit network changing operation of instance done
+		conf = BuildStateChangeConf([]string{}, []string{"running"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(msaterDbInstanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		// delete the old one
+		if v, ok := d.GetOk("private_access_ip"); ok {
+			vipOld = v.(string)
+		}
+		if err := service.DeletePostgresqlReadonlyGroupNetworkAccessById(ctx, d.Id(), vpcOld, subnetOld, vipOld); err != nil {
+			return err
+		}
+
+		// wait for old network removed
+		conf = BuildStateChangeConf([]string{}, []string{"closed"}, 3*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupNetworkAccessStateRefreshFunc(msaterDbInstanceId, d.Id(), vpcOld, subnetOld, vipNew, vipOld, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		// wait unit network changing operation of instance done
+		conf = BuildStateChangeConf([]string{}, []string{"running"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(msaterDbInstanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		// refresh the private ip with new one
+		d.Set("private_access_ip", vipNew)
+	}
 
 	if d.HasChange("name") {
 		request.ReadOnlyGroupName = helper.String(d.Get("name").(string))

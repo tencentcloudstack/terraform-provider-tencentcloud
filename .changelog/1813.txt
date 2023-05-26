@@ -1,7 +1,7 @@
-```release-note:new-resource
-tencentcloud_postgresql_instance_network_access_attachment
+```release-note:enhancement
+resource/tencentcloud_postgresql_instance: support to update `vpc_id` and `subnet_id`
 ```
 
-```release-note:new-resource
-tencentcloud_postgresql_readonly_group_network_access_attachment
+```release-note:enhancement
+resource/tencentcloud_postgresql_readonly_group: support to update `vpc_id` and `subnet_id`
 ```
