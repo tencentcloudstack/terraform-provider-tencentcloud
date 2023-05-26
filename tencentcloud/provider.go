@@ -156,6 +156,11 @@ Cloud Kafka(ckafka)
     tencentcloud_ckafka_instances
 	tencentcloud_ckafka_connect_resource
 	tencentcloud_ckafka_region
+	tencentcloud_ckafka_datahub_topic
+	tencentcloud_ckafka_datahub_group_offsets
+	tencentcloud_ckafka_datahub_task
+	tencentcloud_ckafka_group
+	tencentcloud_ckafka_group_offsets
 
   Resource
 	tencentcloud_ckafka_instance
@@ -1586,6 +1591,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_instances":                          dataSourceTencentCloudCkafkaInstances(),
 			"tencentcloud_ckafka_connect_resource":                   dataSourceTencentCloudCkafkaConnectResource(),
 			"tencentcloud_ckafka_region":                             dataSourceTencentCloudCkafkaRegion(),
+			"tencentcloud_ckafka_datahub_topic":                      dataSourceTencentCloudCkafkaDatahubTopic(),
+			"tencentcloud_ckafka_datahub_group_offsets":              dataSourceTencentCloudCkafkaDatahubGroupOffsets(),
+			"tencentcloud_ckafka_datahub_task":                       dataSourceTencentCloudCkafkaDatahubTask(),
+			"tencentcloud_ckafka_group":                              dataSourceTencentCloudCkafkaGroup(),
+			"tencentcloud_ckafka_group_offsets":                      dataSourceTencentCloudCkafkaGroupOffsets(),
 			"tencentcloud_audit_cos_regions":                         dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                           dataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                    dataSourceTencentCloudAudits(),
