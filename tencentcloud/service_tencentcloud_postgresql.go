@@ -837,7 +837,7 @@ func (me *PostgresqlService) DescribePostgresqlReadonlyGroups(ctx context.Contex
 	}
 }
 
-func (me *PostgresqlService) DescribePostgresqlReadOnlyGroupById(ctx context.Context, groupId string) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
+func (me *PostgresqlService) DescribePostgresqlReadOnlyGroupById(ctx context.Context, dbInstanceId string) (instanceList []*postgresql.ReadOnlyGroup, errRet error) {
 	logId := getLogId(ctx)
 	request := postgresql.NewDescribeReadOnlyGroupsRequest()
 	defer func() {
@@ -850,7 +850,7 @@ func (me *PostgresqlService) DescribePostgresqlReadOnlyGroupById(ctx context.Con
 		request.Filters,
 		&postgresql.Filter{
 			Name:   helper.String("db-master-instance-id"),
-			Values: []*string{&groupId},
+			Values: []*string{&dbInstanceId},
 		},
 	)
 
@@ -1134,4 +1134,18 @@ func (me *PostgresqlService) DescribePostgresqlSecurityGroupConfigById(ctx conte
 
 	SecurityGroupConfigs = response.Response.SecurityGroupSet
 	return
+}
+
+func (me *PostgresqlService) PostgresqlDbInstanceOperationStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		instance, _, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return instance, *instance.DBInstanceStatus, nil
+	}
 }

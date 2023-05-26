@@ -23,6 +23,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -118,11 +119,13 @@ func resourceTencentCloudPostgresqlReadOnlyGroupCreate(d *schema.ResourceData, m
 	logId := getLogId(contextNil)
 
 	var (
-		request  = postgresql.NewCreateReadOnlyGroupRequest()
-		response *postgresql.CreateReadOnlyGroupResponse
+		request      = postgresql.NewCreateReadOnlyGroupRequest()
+		response     *postgresql.CreateReadOnlyGroupResponse
+		dbInstanceId string
 	)
 	if v, ok := d.GetOk("master_db_instance_id"); ok {
 		request.MasterDBInstanceId = helper.String(v.(string))
+		dbInstanceId = v.(string)
 	}
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
@@ -182,6 +185,30 @@ func resourceTencentCloudPostgresqlReadOnlyGroupCreate(d *schema.ResourceData, m
 	instanceId := *response.Response.ReadOnlyGroupId
 	d.SetId(instanceId)
 
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		groups, e := postgresqlService.DescribePostgresqlReadOnlyGroupById(ctx, dbInstanceId)
+		if e != nil {
+			return retryError(e)
+		}
+
+		var status string
+		for _, gg := range groups {
+			if *gg.ReadOnlyGroupId == instanceId {
+				status = *gg.Status
+				if status == "ok" {
+					return nil
+				}
+			}
+		}
+		return resource.RetryableError(fmt.Errorf("waiting status[%s] to running, retry... ", status))
+	})
+	if err != nil {
+		return err
+	}
+
 	//return resourceTencentCloudPostgresqlReadOnlyGroupRead(d, meta)
 	return nil
 }
@@ -192,8 +219,14 @@ func resourceTencentCloudPostgresqlReadOnlyGroupRead(d *schema.ResourceData, met
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	// for now, the id should be the master db instance id, cause the describe api only support this kind of filter.
+	var id string
+	if v, ok := d.GetOk("master_db_instance_id"); ok {
+		id = v.(string)
+	}
+
 	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	_, err := postgresqlService.DescribePostgresqlReadOnlyGroupById(ctx, d.Id())
+	_, err := postgresqlService.DescribePostgresqlReadOnlyGroupById(ctx, id)
 	if err != nil {
 		return err
 	}

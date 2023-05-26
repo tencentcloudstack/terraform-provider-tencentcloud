@@ -9,6 +9,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 var testPostgresqlInstanceResourceName = "tencentcloud_postgresql_instance"
@@ -288,6 +289,11 @@ func testAccCheckPostgresqlInstanceDestroy(s *terraform.State) error {
 			return nil
 		} else {
 			if err != nil {
+				err, ok := err.(*sdkErrors.TencentCloudSDKError)
+				if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+					// it is ok
+					return nil
+				}
 				return err
 			}
 			return fmt.Errorf("delete postgresql instance %s fail", rs.Primary.ID)
