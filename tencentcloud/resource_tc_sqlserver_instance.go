@@ -116,7 +116,7 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 		},
 		"vip": {
 			Type:        schema.TypeString,
-			Optional:    true,
+			Computed:    true,
 			Description: "IP for private access.",
 		},
 		"vport": {
@@ -458,14 +458,12 @@ func sqlServerAllInstanceNetUpdate(d *schema.ResourceData, meta interface{}) err
 		instanceId  = d.Id()
 	)
 
-	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("vip") {
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
 		vpcId := d.Get("vpc_id").(string)
 		subnetId := d.Get("subnet_id").(string)
-		vip := d.Get("vip").(string)
 		request.InstanceId = &instanceId
 		request.NewVpcId = &vpcId
 		request.NewSubnetId = &subnetId
-		request.Vip = &vip
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().ModifyDBInstanceNetwork(request)
 			if e != nil {
@@ -650,26 +648,15 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 		errRet = outErr
 	}
 
-	waitSwitch := d.Get("wait_switch").(int)
-	if waitSwitch == 0 {
-		//computed
-		_ = d.Set("ro_flag", instance.ROFlag)
-		_ = d.Set("create_time", instance.CreateTime)
-		_ = d.Set("status", instance.Status)
-		_ = d.Set("memory", instance.Memory)
-		_ = d.Set("storage", instance.Storage)
-		_ = d.Set("vip", instance.Vip)
-		_ = d.Set("vport", instance.Vport)
-		_ = d.Set("security_groups", securityGroup)
-	} else {
-		//computed
-		_ = d.Set("ro_flag", instance.ROFlag)
-		_ = d.Set("create_time", instance.CreateTime)
-		_ = d.Set("status", instance.Status)
-		_ = d.Set("vip", instance.Vip)
-		_ = d.Set("vport", instance.Vport)
-		_ = d.Set("security_groups", securityGroup)
-	}
+	//computed
+	_ = d.Set("ro_flag", instance.ROFlag)
+	_ = d.Set("create_time", instance.CreateTime)
+	_ = d.Set("status", instance.Status)
+	_ = d.Set("memory", instance.Memory)
+	_ = d.Set("storage", instance.Storage)
+	_ = d.Set("vip", instance.Vip)
+	_ = d.Set("vport", instance.Vport)
+	_ = d.Set("security_groups", securityGroup)
 	return
 }
 

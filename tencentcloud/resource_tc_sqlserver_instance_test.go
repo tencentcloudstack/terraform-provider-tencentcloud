@@ -181,7 +181,7 @@ func TestAccTencentCloudSqlserverInstanceResource_PostPaid(t *testing.T) {
 				ResourceName:            testSqlserverInstanceResourceKey,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"multi_zones", "auto_voucher"},
+				ImportStateVerifyIgnore: []string{"multi_zones", "auto_voucher", "wait_switch"},
 			},
 			{
 				Config: testAccSqlserverInstanceUpdate,
@@ -272,7 +272,7 @@ func TestAccTencentCloudSqlserverInstanceMultiClusterResource(t *testing.T) {
 				ResourceName:            testSqlserverInstanceResourceKey,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"multi_zones"},
+				ImportStateVerifyIgnore: []string{"multi_zones", "wait_switch"},
 			},
 		},
 	})
