@@ -262,10 +262,11 @@ func resourceTencentCloudClbListener() *schema.Resource {
 			"health_check_http_code": {
 				Type:         schema.TypeInt,
 				Optional:     true,
-				ValidateFunc: validateAllowedIntValue([]int{1, 2, 4, 8, 16}),
-				Description: "HTTP health check code of TCP listener. When the value of `health_check_type` of " +
+				ValidateFunc: validateIntegerInRange(1, 31),
+				Description: "HTTP health check code of TCP listener, Valid value ranges: [1~31]. When the value of `health_check_type` of " +
 					"the health check protocol is `HTTP`, this field is required. Valid values: `1`, `2`, `4`, `8`, `16`. " +
-					"`1` means http_1xx, `2` means http_2xx, `4` means http_3xx, `8` means http_4xx, `16` means http_5xx.",
+					"`1` means http_1xx, `2` means http_2xx, `4` means http_3xx, `8` means http_4xx, `16` means http_5xx." +
+					"If you want multiple return codes to indicate health, need to add the corresponding values.",
 			},
 			"health_check_http_path": {
 				Type:        schema.TypeString,
