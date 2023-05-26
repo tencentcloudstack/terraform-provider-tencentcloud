@@ -368,12 +368,14 @@ TDSQL-C MySQL(CynosDB)
 Direct Connect(DC)
   Data Source
     tencentcloud_dc_instances
+	tencentcloud_dc_access_points
     tencentcloud_dcx_instances
 	tencentcloud_dc_internet_address_quota
 	tencentcloud_dc_internet_address_statistics
 	tencentcloud_dc_public_direct_connect_tunnel_routes
 
   Resource
+	tencentcloud_dc_instance
     tencentcloud_dcx
 	tencentcloud_dcx_extra_config
 	tencentcloud_dc_share_dcx_config
@@ -1428,6 +1430,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_cross_border_flow_monitor":             dataSourceTencentCloudCcnCrossBorderFlowMonitor(),
 			"tencentcloud_ccn_cross_border_region_bandwidth_limits":  dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits(),
 			"tencentcloud_dc_instances":                              dataSourceTencentCloudDcInstances(),
+			"tencentcloud_dc_access_points":                          dataSourceTencentCloudDcAccessPoints(),
 			"tencentcloud_dc_internet_address_quota":                 dataSourceTencentCloudDcInternetAddressQuota(),
 			"tencentcloud_dc_internet_address_statistics":            dataSourceTencentCloudDcInternetAddressStatistics(),
 			"tencentcloud_dc_public_direct_connect_tunnel_routes":    dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes(),
@@ -1795,6 +1798,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_routes":                                    resourceTencentCloudCcnRoutes(),
 			"tencentcloud_ccn_instances_accept_attach":                   resourceTencentCloudCcnInstancesAcceptAttach(),
 			"tencentcloud_ccn_instances_reset_attach":                    resourceTencentCloudCcnInstancesResetAttach(),
+			"tencentcloud_dc_instance":                                   resourceTencentCloudDcInstance(),
 			"tencentcloud_dcx":                                           resourceTencentCloudDcxInstance(),
 			"tencentcloud_dcx_extra_config":                              resourceTencentCloudDcxExtraConfig(),
 			"tencentcloud_dc_share_dcx_config":                           resourceTencentCloudDcShareDcxConfig(),

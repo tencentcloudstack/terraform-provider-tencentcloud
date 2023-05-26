@@ -1107,7 +1107,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu/v20180709
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.652
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain/v20210527
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc/v20180410
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.572
