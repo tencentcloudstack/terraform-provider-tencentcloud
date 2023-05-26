@@ -540,3 +540,75 @@ func (me *DcService) DescribeDcPublicDirectConnectTunnelRoutesByFilter(ctx conte
 
 	return
 }
+
+func (me *DcService) DeleteDcInstanceById(ctx context.Context, directConnectId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dc.NewDeleteDirectConnectRequest()
+	request.DirectConnectId = &directConnectId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcClient().DeleteDirectConnect(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DcService) DescribeDcAccessPointsByFilter(ctx context.Context, param map[string]interface{}) (AccessPoints []*dc.AccessPoint, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dc.NewDescribeAccessPointsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "RegionId" {
+			request.RegionId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDcClient().DescribeAccessPoints(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AccessPointSet) < 1 {
+			break
+		}
+		AccessPoints = append(AccessPoints, response.Response.AccessPointSet...)
+		if len(response.Response.AccessPointSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
