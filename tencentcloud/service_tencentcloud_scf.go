@@ -738,3 +738,54 @@ func (me *ScfService) DescribeScfFunctionEventInvokeConfigById(ctx context.Conte
 	FunctionEventInvokeConfig = response.Response.AsyncTriggerConfig
 	return
 }
+
+func (me *ScfService) DescribeScfReservedConcurrencyConfigById(ctx context.Context, namespace string, functionName string) (reservedConcurrencyConfig *scf.GetReservedConcurrencyConfigResponse, errRet error) {
+	logId := getLogId(ctx)
+
+	request := scf.NewGetReservedConcurrencyConfigRequest()
+	request.Namespace = &namespace
+	request.FunctionName = &functionName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().GetReservedConcurrencyConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	reservedConcurrencyConfig = response
+	return
+}
+
+func (me *ScfService) DeleteScfReservedConcurrencyConfigById(ctx context.Context, namespace string, functionName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := scf.NewDeleteReservedConcurrencyConfigRequest()
+	request.Namespace = &namespace
+	request.FunctionName = &functionName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().DeleteReservedConcurrencyConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

@@ -1982,6 +1982,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_scf_function":                                  resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_function_version":                          resourceTencentCloudScfFunctionVersion(),
 			"tencentcloud_scf_function_event_invoke_config":              resourceTencentCloudScfFunctionEventInvokeConfig(),
+			"tencentcloud_scf_reserved_concurrency_config":               resourceTencentCloudScfReservedConcurrencyConfig(),
 			"tencentcloud_scf_namespace":                                 resourceTencentCloudScfNamespace(),
 			"tencentcloud_scf_layer":                                     resourceTencentCloudScfLayer(),
 			"tencentcloud_scf_function_alias":                            resourceTencentCloudScfFunctionAlias(),
