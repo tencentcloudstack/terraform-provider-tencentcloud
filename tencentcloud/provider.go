@@ -682,12 +682,20 @@ SQLServer
     tencentcloud_sqlserver_business_intelligence_file
 	tencentcloud_sqlserver_business_intelligence_instance
 	tencentcloud_sqlserver_general_communication
+	tencentcloud_sqlserver_general_cloud_instance
 	tencentcloud_sqlserver_complete_expansion
 	tencentcloud_sqlserver_config_database_cdc
 	tencentcloud_sqlserver_config_database_ct
 	tencentcloud_sqlserver_config_database_mdf
 	tencentcloud_sqlserver_config_instance_param
 	tencentcloud_sqlserver_config_instance_ro_group
+	tencentcloud_sqlserver_config_instance_security_groups
+	tencentcloud_sqlserver_renew_db_instance
+	tencentcloud_sqlserver_renew_postpaid_db_instance
+	tencentcloud_sqlserver_restart_db_instance
+	tencentcloud_sqlserver_config_terminate_db_instance
+	tencentcloud_sqlserver_restore_instance
+	tencentcloud_sqlserver_rollback_instance
 
 SSL Certificates
   Data Source
@@ -2042,12 +2050,20 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_business_intelligence_file":          resourceTencentCloudSqlserverBusinessIntelligenceFile(),
 			"tencentcloud_sqlserver_business_intelligence_instance":      resourceTencentCloudSqlserverBusinessIntelligenceInstance(),
 			"tencentcloud_sqlserver_general_communication":               resourceTencentCloudSqlserverGeneralCommunication(),
+			"tencentcloud_sqlserver_general_cloud_instance":              resourceTencentCloudSqlserverGeneralCloudInstance(),
 			"tencentcloud_sqlserver_complete_expansion":                  resourceTencentCloudSqlserverCompleteExpansion(),
 			"tencentcloud_sqlserver_config_database_cdc":                 resourceTencentCloudSqlserverConfigDatabaseCDC(),
 			"tencentcloud_sqlserver_config_database_ct":                  resourceTencentCloudSqlserverConfigDatabaseCT(),
 			"tencentcloud_sqlserver_config_database_mdf":                 resourceTencentCloudSqlserverConfigDatabaseMdf(),
 			"tencentcloud_sqlserver_config_instance_param":               resourceTencentCloudSqlserverConfigInstanceParam(),
 			"tencentcloud_sqlserver_config_instance_ro_group":            resourceTencentCloudSqlserverConfigInstanceRoGroup(),
+			"tencentcloud_sqlserver_config_instance_security_groups":     resourceTencentCloudSqlserverConfigInstanceSecurityGroups(),
+			"tencentcloud_sqlserver_renew_db_instance":                   resourceTencentCloudSqlserverRenewDBInstance(),
+			"tencentcloud_sqlserver_renew_postpaid_db_instance":          resourceTencentCloudSqlserverRenewPostpaidDBInstance(),
+			"tencentcloud_sqlserver_restart_db_instance":                 resourceTencentCloudSqlserverRestartDBInstance(),
+			"tencentcloud_sqlserver_config_terminate_db_instance":        resourceTencentCloudSqlserverConfigTerminateDBInstance(),
+			"tencentcloud_sqlserver_restore_instance":                    resourceTencentCloudSqlserverRestoreInstance(),
+			"tencentcloud_sqlserver_rollback_instance":                   resourceTencentCloudSqlserverRollbackInstance(),
 			"tencentcloud_ckafka_instance":                               resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                   resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                    resourceTencentCloudCkafkaAcl(),
