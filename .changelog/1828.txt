@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_cvm_export_images
+```
+
+```release-note:new-resource
+tencentcloud_cvm_image_share_permission
+```
