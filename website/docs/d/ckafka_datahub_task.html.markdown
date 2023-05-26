@@ -170,7 +170,7 @@ In addition to all arguments above, the following attributes are exported:
       * `start_time` - when Offset type timestamp is required.
       * `table_mappings` - maps of table to topic, required when multi topic is selected.
         * `database` - database name.
-        * `table` - table name,use, to seperate.
+        * `table` - table name.
         * `topic_id` - Topic ID.
         * `topic` - Topic name.
       * `topic_id` - Topic Id.

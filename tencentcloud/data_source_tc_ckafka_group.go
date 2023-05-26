@@ -7,7 +7,7 @@ Example Usage
 data "tencentcloud_ckafka_group" "group" {
   instance_id = "ckafka-xxxxxxx"
   search_word = "xxxxxx"
-  }
+}
 ```
 */
 package tencentcloud
