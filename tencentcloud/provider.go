@@ -589,7 +589,6 @@ TencentDB for PostgreSQL(PostgreSQL)
 	tencentcloud_postgresql_renew_db_instance_operation
 	tencentcloud_postgresql_isolate_db_instance_operation
 	tencentcloud_postgresql_disisolate_db_instance_operation
-	tencentcloud_postgresql_clone_db_instance_operation
 	tencentcloud_postgresql_rebalance_readonly_group_operation
 	tencentcloud_postgresql_delete_log_backup_operation
 
@@ -2013,7 +2012,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_renew_db_instance_operation":              resourceTencentCloudPostgresqlRenewDbInstanceOperation(),
 			"tencentcloud_postgresql_isolate_db_instance_operation":            resourceTencentCloudPostgresqlIsolateDbInstanceOperation(),
 			"tencentcloud_postgresql_disisolate_db_instance_operation":         resourceTencentCloudPostgresqlDisisolateDbInstanceOperation(),
-			"tencentcloud_postgresql_clone_db_instance_operation":              resourceTencentCloudPostgresqlCloneDbInstanceOperation(),
 			"tencentcloud_postgresql_rebalance_readonly_group_operation":       resourceTencentCloudPostgresqlRebalanceReadonlyGroupOperation(),
 			"tencentcloud_postgresql_delete_log_backup_operation":              resourceTencentCloudPostgresqlDeleteLogBackupOperation(),
 			"tencentcloud_sqlserver_instance":                                  resourceTencentCloudSqlserverInstance(),

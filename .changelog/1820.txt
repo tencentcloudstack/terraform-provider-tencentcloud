@@ -15,10 +15,6 @@ tencentcloud_postgresql_disisolate_db_instance_operation
 ```
 
 ```release-note:new-resource
-tencentcloud_postgresql_clone_db_instance_operation
-```
-
-```release-note:new-resource
 tencentcloud_postgresql_rebalance_readonly_group_operation
 ```
 
