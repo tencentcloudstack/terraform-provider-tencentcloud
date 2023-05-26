@@ -3,10 +3,6 @@ resource/tencentcloud_sqlserver_instance: support update instance 'vpc-id', 'sub
 ```
 
 ```release-note:new-resource
-tencentcloud_sqlserver_config_instance_security_groups
-```
-
-```release-note:new-resource
 tencentcloud_sqlserver_general_cloud_instance
 ```
 
@@ -15,7 +11,7 @@ tencentcloud_sqlserver_renew_db_instance
 ```
 
 ```release-note:new-resource
-tencentcloud_sqlserver_renew_db_instance
+tencentcloud_sqlserver_renew_postpaid_db_instance
 ```
 
 ```release-note:new-resource
