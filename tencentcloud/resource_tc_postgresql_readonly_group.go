@@ -275,6 +275,27 @@ func resourceTencentCloudPostgresqlReadOnlyGroupUpdate(d *schema.ResourceData, m
 			subnetNew = new.(string)
 		}
 
+		service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+		// get the old ip before creating
+		netInfos, err := service.DescribePostgresqlReadonlyGroupNetInfosById(ctx, msaterDbInstanceId, d.Id())
+		if err != nil {
+			return err
+		}
+
+		var oldNetInfo *postgresql.DBInstanceNetInfo
+		for _, info := range netInfos {
+			if *info.NetType == "private" {
+				if *info.VpcId == vpcOld && *info.SubnetId == subnetOld {
+					oldNetInfo = info
+					break
+				}
+			}
+		}
+
+		if oldNetInfo != nil {
+			vipOld = *oldNetInfo.Ip
+		}
+
 		// Create new network first, then delete the old one
 		request := postgresql.NewCreateReadOnlyGroupNetworkAccessRequest()
 		request.ReadOnlyGroupId = helper.String(d.Id())
@@ -283,7 +304,7 @@ func resourceTencentCloudPostgresqlReadOnlyGroupUpdate(d *schema.ResourceData, m
 		// ip assigned by system
 		request.IsAssignVip = helper.Bool(false)
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().CreateReadOnlyGroupNetworkAccess(request)
 			if e != nil {
 				return retryError(e)
@@ -297,7 +318,6 @@ func resourceTencentCloudPostgresqlReadOnlyGroupUpdate(d *schema.ResourceData, m
 			return err
 		}
 
-		service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 		// wait for new network enabled
 		conf := BuildStateChangeConf([]string{}, []string{"opened"}, 3*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupNetworkAccessStateRefreshFunc(msaterDbInstanceId, d.Id(), vpcNew, subnetNew, vipOld, "", []string{}))
 
@@ -309,16 +329,16 @@ func resourceTencentCloudPostgresqlReadOnlyGroupUpdate(d *schema.ResourceData, m
 			vipNew = *ret.Ip
 		}
 
-		// wait unit network changing operation of instance done
-		conf = BuildStateChangeConf([]string{}, []string{"running"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(msaterDbInstanceId, []string{}))
+		log.Printf("[DEBUG]%s resourceTencentCloudPostgresqlReadOnlyGroupUpdate, msaterDbInstanceId:[%s], roGroupId:[%s], vpcOld:[%s], vpcNew:[%s], subnetOld:[%s], subnetNew:[%s], vipOld:[%s], vipNew:[%s]\n",
+			logId, msaterDbInstanceId, d.Id(), vpcOld, vpcNew, subnetOld, subnetNew, vipOld, vipNew)
+
+		// wait unit network changing operation of ro group done
+		conf = BuildStateChangeConf([]string{}, []string{"ok"}, 3*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupStateRefreshFunc(msaterDbInstanceId, d.Id(), []string{}))
 		if _, e := conf.WaitForState(); e != nil {
 			return e
 		}
 
 		// delete the old one
-		if v, ok := d.GetOk("private_access_ip"); ok {
-			vipOld = v.(string)
-		}
 		if err := service.DeletePostgresqlReadonlyGroupNetworkAccessById(ctx, d.Id(), vpcOld, subnetOld, vipOld); err != nil {
 			return err
 		}
@@ -329,34 +349,33 @@ func resourceTencentCloudPostgresqlReadOnlyGroupUpdate(d *schema.ResourceData, m
 			return e
 		}
 
-		// wait unit network changing operation of instance done
-		conf = BuildStateChangeConf([]string{}, []string{"running"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(msaterDbInstanceId, []string{}))
+		// wait unit network changing operation of ro group done
+		conf = BuildStateChangeConf([]string{}, []string{"ok"}, 3*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupStateRefreshFunc(msaterDbInstanceId, d.Id(), []string{}))
 		if _, e := conf.WaitForState(); e != nil {
 			return e
 		}
 
 		// refresh the private ip with new one
-		d.Set("private_access_ip", vipNew)
 	}
 
-	if d.HasChange("name") {
-		request.ReadOnlyGroupName = helper.String(d.Get("name").(string))
-	}
-	if d.HasChange("replay_lag_eliminate") {
-		request.ReplayLagEliminate = helper.IntUint64(d.Get("replay_lag_eliminate").(int))
-	}
-	if d.HasChange("replay_latency_eliminate") {
-		request.ReplayLatencyEliminate = helper.IntUint64(d.Get("replay_latency_eliminate").(int))
-	}
-	if d.HasChange("max_replay_lag") {
-		request.MaxReplayLag = helper.IntUint64(d.Get("max_replay_lag").(int))
-	}
-	if d.HasChange("max_replay_latency") {
-		request.MaxReplayLatency = helper.IntUint64(d.Get("max_replay_latency").(int))
-	}
-	if d.HasChange("min_delay_eliminate_reserve") {
-		request.MinDelayEliminateReserve = helper.IntUint64(d.Get("min_delay_eliminate_reserve").(int))
-	}
+	// if d.HasChange("name") {
+	request.ReadOnlyGroupName = helper.String(d.Get("name").(string))
+	// }
+	// if d.HasChange("replay_lag_eliminate") {
+	request.ReplayLagEliminate = helper.IntUint64(d.Get("replay_lag_eliminate").(int))
+	// }
+	// if d.HasChange("replay_latency_eliminate") {
+	request.ReplayLatencyEliminate = helper.IntUint64(d.Get("replay_latency_eliminate").(int))
+	// }
+	// if d.HasChange("max_replay_lag") {
+	request.MaxReplayLag = helper.IntUint64(d.Get("max_replay_lag").(int))
+	// }
+	// if d.HasChange("max_replay_latency") {
+	request.MaxReplayLatency = helper.IntUint64(d.Get("max_replay_latency").(int))
+	// }
+	// if d.HasChange("min_delay_eliminate_reserve") {
+	request.MinDelayEliminateReserve = helper.IntUint64(d.Get("min_delay_eliminate_reserve").(int))
+	// }
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().ModifyReadOnlyGroupConfig(request)
