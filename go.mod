@@ -38,7 +38,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.599
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.663
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.663
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.664
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.572
@@ -65,7 +65,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.533
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.657
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.542
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.275
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.664
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.529
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.662
