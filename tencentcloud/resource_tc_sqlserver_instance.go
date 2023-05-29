@@ -648,15 +648,26 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 		errRet = outErr
 	}
 
-	//computed
-	_ = d.Set("ro_flag", instance.ROFlag)
-	_ = d.Set("create_time", instance.CreateTime)
-	_ = d.Set("status", instance.Status)
-	_ = d.Set("memory", instance.Memory)
-	_ = d.Set("storage", instance.Storage)
-	_ = d.Set("vip", instance.Vip)
-	_ = d.Set("vport", instance.Vport)
-	_ = d.Set("security_groups", securityGroup)
+	waitSwitch := d.Get("wait_switch").(int)
+	if waitSwitch == 0 {
+		//computed
+		_ = d.Set("ro_flag", instance.ROFlag)
+		_ = d.Set("create_time", instance.CreateTime)
+		_ = d.Set("status", instance.Status)
+		_ = d.Set("memory", instance.Memory)
+		_ = d.Set("storage", instance.Storage)
+		_ = d.Set("vip", instance.Vip)
+		_ = d.Set("vport", instance.Vport)
+		_ = d.Set("security_groups", securityGroup)
+	} else {
+		//computed
+		_ = d.Set("ro_flag", instance.ROFlag)
+		_ = d.Set("create_time", instance.CreateTime)
+		_ = d.Set("status", instance.Status)
+		_ = d.Set("vip", instance.Vip)
+		_ = d.Set("vport", instance.Vport)
+		_ = d.Set("security_groups", securityGroup)
+	}
 	return
 }
 

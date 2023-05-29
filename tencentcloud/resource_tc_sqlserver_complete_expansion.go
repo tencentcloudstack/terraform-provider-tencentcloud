@@ -34,9 +34,7 @@ func resourceTencentCloudSqlserverCompleteExpansion() *schema.Resource {
 		Create: resourceTencentCloudSqlserverCompleteExpansionCreate,
 		Read:   resourceTencentCloudSqlserverCompleteExpansionRead,
 		Delete: resourceTencentCloudSqlserverCompleteExpansionDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,

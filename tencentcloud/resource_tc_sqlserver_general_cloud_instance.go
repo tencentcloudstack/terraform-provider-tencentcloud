@@ -43,6 +43,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -114,7 +115,6 @@ func resourceTencentCloudSqlserverGeneralCloudInstance() *schema.Resource {
 			"period": {
 				Optional:     true,
 				Type:         schema.TypeInt,
-				Default:      1,
 				ValidateFunc: validateIntegerInRange(1, 48),
 				Description:  "Purchase instance period, the default value is 1, which means one month. The value cannot exceed 48.",
 			},
@@ -126,7 +126,6 @@ func resourceTencentCloudSqlserverGeneralCloudInstance() *schema.Resource {
 			"auto_renew_flag": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Default:     1,
 				Description: "Automatic renewal flag: 0-normal renewal 1-automatic renewal, the default is 1 automatic renewal. Valid only when purchasing a prepaid instance.",
 			},
 			"security_group_list": {
@@ -181,11 +180,6 @@ func resourceTencentCloudSqlserverGeneralCloudInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Default:     "China Standard Time",
 				Description: "System time zone, default: China Standard Time.",
-			},
-			"ha_type": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Upgrade the high-availability architecture of sqlserver, upgrade from mirror disaster recovery to always on cluster disaster recovery, only support 2017 and above and support always on high-availability instances, do not support downgrading to mirror disaster recovery, CLUSTER-upgrade to always on capacity Disaster, if not filled, the high-availability architecture will not be modified.",
 			},
 		},
 	}
@@ -397,6 +391,14 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 			_ = d.Set("instance_charge_type", "POSTPAID")
 		} else {
 			_ = d.Set("instance_charge_type", "PREPAID")
+			TmpEndTime := generalCloudInstance.EndTime
+			if *TmpEndTime != "0000-00-00 00:00:00" {
+				TmpStartTime := generalCloudInstance.StartTime
+				startDate, _ := time.Parse("2006-01-02 15:04:05", *TmpStartTime)
+				endDate, _ := time.Parse("2006-01-02 15:04:05", *TmpEndTime)
+				monthDiff := (endDate.Year()*12 + int(endDate.Month())) - (startDate.Year()*12 + int(startDate.Month()))
+				_ = d.Set("period", monthDiff)
+			}
 		}
 	}
 
@@ -529,6 +531,7 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceUpdate(d *schema.ResourceD
 		instanceId       = d.Id()
 		waitSwitch       int64
 		dealId           string
+		instanceName     string
 	)
 
 	request.InstanceId = &instanceId
@@ -538,6 +541,26 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceUpdate(d *schema.ResourceD
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
+	}
+
+	if d.HasChange("name") {
+		if v, ok := d.GetOk("name"); ok {
+			instanceName = v.(string)
+		}
+	}
+
+	// set name
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		inErr := sqlserverService.ModifySqlserverInstanceName(ctx, instanceId, instanceName)
+		if inErr != nil {
+			return retryError(inErr)
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
 	}
 
 	if d.HasChange("memory") {
@@ -567,7 +590,7 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceUpdate(d *schema.ResourceD
 	waitSwitch = 0
 	request.WaitSwitch = &waitSwitch
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().UpgradeDBInstance(request)
 		if e != nil {
 			return retryError(e)

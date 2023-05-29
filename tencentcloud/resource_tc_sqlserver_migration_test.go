@@ -52,6 +52,7 @@ func testSweepSqlserverMigration(r string) error {
 	return nil
 }
 
+// go test -i; go test -test.run TestAccTencentCloudSqlserverMigrationResource_basic -v
 func TestAccTencentCloudSqlserverMigrationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -139,54 +140,52 @@ func testAccCheckSqlserverMigrationExists(n string) resource.TestCheckFunc {
 
 const testAccSqlserverMigration_account_db = testAccSqlserverBasicInstanceNetwork + CommonPresetSQLServerAccount + `
 resource "tencentcloud_sqlserver_account" "src" {
-	instance_id = local.sqlserver_id
-	name = "tf_sqlserver_migration_src_account"
-	password = "testt1234"
-	is_admin = true
-  }
+  instance_id = local.sqlserver_id
+  name = "tf_sqlserver_migration_src_account"
+  password = "testt1234"
+}
 
-  resource "tencentcloud_sqlserver_account_db_attachment" "src" {
-	instance_id = local.sqlserver_id
-	account_name = tencentcloud_sqlserver_account.src.name
-	db_name = local.sqlserver_db # "keep_sqlserver_db"
-	privilege = "ReadWrite"
-  }
+resource "tencentcloud_sqlserver_account_db_attachment" "src" {
+  instance_id = local.sqlserver_id
+  account_name = tencentcloud_sqlserver_account.src.name
+  db_name = local.sqlserver_db # "keep_sqlserver_db"
+  privilege = "ReadWrite"
+}
 
-  resource "tencentcloud_sqlserver_instance" "dst" {
-	name                          = "tf_sqlserver_dst_instance"
-	availability_zone             = var.default_az
-	charge_type                   = "POSTPAID_BY_HOUR"
-	vpc_id                        = local.vpc_id
-	subnet_id                     = local.subnet_id
-	security_groups               = [local.sg_id]
-	project_id                    = 0
-	memory                        = 2
-	storage                       = 10
-	maintenance_week_set          = [1,2,3]
-	maintenance_start_time        = "09:00"
-	maintenance_time_span         = 3
-	tags = {
-	  "test"                      = "test"
-	}
+resource "tencentcloud_sqlserver_instance" "dst" {
+  name                          = "tf_sqlserver_dst_instance"
+  availability_zone             = var.default_az
+  charge_type                   = "POSTPAID_BY_HOUR"
+  vpc_id                        = local.vpc_id
+  subnet_id                     = local.subnet_id
+  security_groups               = [local.sg_id]
+  project_id                    = 0
+  memory                        = 2
+  storage                       = 10
+  maintenance_week_set          = [1,2,3]
+  maintenance_start_time        = "09:00"
+  maintenance_time_span         = 3
+  tags = {
+    "test"                      = "test"
   }
+}
 
-  resource "tencentcloud_sqlserver_account" "dst" {
-	instance_id = tencentcloud_sqlserver_instance.dst.id
-	name = "tf_sqlserver_migration_dst_account"
-	password = "testt1234"
-	is_admin = true
-  }
+resource "tencentcloud_sqlserver_account" "dst" {
+  instance_id = tencentcloud_sqlserver_instance.dst.id
+  name = "tf_sqlserver_migration_dst_account"
+  password = "testt1234"
+  is_admin = true
+}
 
-  resource "tencentcloud_sqlserver_db" "dst" {
-	instance_id = tencentcloud_sqlserver_instance.dst.id
-	name        = "tf_migration_dst_db"
-	charset     = "Chinese_PRC_BIN"
-	remark      = "testACC-remark"
-  }
+resource "tencentcloud_sqlserver_db" "dst" {
+  instance_id = tencentcloud_sqlserver_instance.dst.id
+  name        = "tf_migration_dst_db"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "testACC-remark"
+}
 `
 
 const testAccSqlserverMigration_basic = testAccSqlserverMigration_account_db + `
-
 resource "tencentcloud_sqlserver_migration" "migration" {
   migrate_name = "tf_test_migration"
   migrate_type = 1
@@ -209,7 +208,6 @@ resource "tencentcloud_sqlserver_migration" "migration" {
 `
 
 const testAccSqlserverMigration_update = testAccSqlserverMigration_account_db + `
-
 resource "tencentcloud_sqlserver_migration" "migration" {
   migrate_name = "tf_test_migration_changed"
   migrate_type = 3

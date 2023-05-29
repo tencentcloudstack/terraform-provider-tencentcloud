@@ -32,7 +32,7 @@ func TestAccTencentCloudSqlserverRenewDBInstanceResource_basic(t *testing.T) {
 const testAccSqlserverRenewDBInstance = testAccSqlserverInstanceBasicPrepaid + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "test_sqlserver_instance"
-  availability_zone             = "ap-guangzhou-7"
+  availability_zone             = local.az
   charge_type                   = "PREPAID"
   period                        = 1
   vpc_id                        = local.vpc_id
