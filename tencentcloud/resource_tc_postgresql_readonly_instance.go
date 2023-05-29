@@ -19,8 +19,21 @@ resource "tencentcloud_postgresql_readonly_instance" "foo" {
   storage               = 250
   subnet_id             = "subnet-enm92y0m"
   vpc_id                = "vpc-86v957zb"
-  zone                  = "ap-guangzhou-6"
+  read_only_group_id    = tencentcloud_postgresql_readonly_group.new_ro_group.id
 }
+
+  resource "tencentcloud_postgresql_readonly_group" "new_ro_group" {
+	master_db_instance_id = local.pgsql_id
+	name = "tf_ro_group_test_new"
+	project_id = 0
+	vpc_id  = local.vpc_id
+	subnet_id 	= local.subnet_id
+	replay_lag_eliminate = 1
+	replay_latency_eliminate =  1
+	max_replay_lag = 100
+	max_replay_latency = 512
+	min_delay_eliminate_reserve = 1
+  }
 ```
 
 Import
@@ -28,7 +41,7 @@ Import
 postgresql readonly instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_postgresql_readonly_instance.foo pgro-bcqx8b9a
+$ terraform import tencentcloud_postgresql_readonly_instance.foo instance_id
 ```
 */
 package tencentcloud
@@ -38,6 +51,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 
@@ -78,6 +92,11 @@ func resourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 				ForceNew:    true,
 				Required:    true,
 				Description: "ID of the primary instance to which the read-only replica belongs.",
+			},
+			"instance_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The instance ID of this readonly resource.",
 			},
 			"zone": {
 				Type:        schema.TypeString,
@@ -154,12 +173,11 @@ func resourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 			//	Optional:    true,
 			//	Description: "The information of tags to be associated with instances. This parameter is left empty by default..",
 			//},
-			//"read_only_group_id": {
-			//	Type:        schema.TypeString,
-			//	ForceNew:    true,
-			//	Optional:    true,
-			//	Description: "RO group ID.",
-			//},
+			"read_only_group_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "RO group ID.",
+			},
 			// Computed values
 			"create_time": {
 				Type:        schema.TypeString,
@@ -345,8 +363,9 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	instanceId := d.Id()
 	postgresqlService := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, d.Id())
+	instance, has, err := postgresqlService.DescribePostgresqlInstanceById(ctx, instanceId)
 	if err != nil {
 		return err
 	}
@@ -355,6 +374,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 		return nil
 	}
 
+	_ = d.Set("instance_id", instanceId)
 	_ = d.Set("db_version", instance.DBVersion)
 	_ = d.Set("storage", instance.DBInstanceStorage)
 	_ = d.Set("memory", instance.DBInstanceMemory)
@@ -373,6 +393,8 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 	_ = d.Set("subnet_id", instance.SubnetId)
 	_ = d.Set("name", instance.DBInstanceName)
 	_ = d.Set("need_support_ipv6", instance.SupportIpv6)
+	// set readonly group when DescribeReadOnlyGroups ready for filter by the readonly group id
+	// _ = d.Set("read_only_group_id", readonlyGroup.Id)
 
 	// security groups
 	// Only redis service support modify Generic DB instance security groups
@@ -425,6 +447,51 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		"voucher_ids",
 	); err != nil {
 		return err
+	}
+
+	if d.HasChange("read_only_group_id") {
+		var (
+			masterInstanceId string
+			roGroupIdOld     string
+			roGroupIdNew     string
+			request          = postgresql.NewModifyDBInstanceReadOnlyGroupRequest()
+			service          = PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+		)
+
+		masterInstanceId = d.Get("master_db_instance_id").(string)
+		old, new := d.GetChange("vpc_id")
+		if old != nil {
+			roGroupIdOld = old.(string)
+		}
+		if new != nil {
+			roGroupIdNew = new.(string)
+		}
+
+		// The real Update operation rather than the operation from create
+		if roGroupIdOld != "" && roGroupIdOld != roGroupIdNew {
+			request.DBInstanceId = &instanceId
+			request.ReadOnlyGroupId = &roGroupIdOld
+			request.NewReadOnlyGroupId = &roGroupIdNew
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().ModifyDBInstanceReadOnlyGroup(request)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s operate postgresql ChangeDbInstanceReadOnlyGroupOperation failed, reason:%+v", logId, err)
+				return err
+			}
+
+			conf := BuildStateChangeConf([]string{}, []string{"ok"}, 2*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupStateRefreshFunc(masterInstanceId, roGroupIdNew, []string{}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+		}
 	}
 
 	var outErr, inErr, checkErr error
