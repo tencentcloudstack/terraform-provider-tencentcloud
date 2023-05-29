@@ -141,46 +141,43 @@ func dataSourceTencentCloudCkafkaTopicSyncReplicaRead(d *schema.ResourceData, me
 	ids := make([]string, 0, len(result))
 	topicInSyncReplicaList := make([]interface{}, 0, len(result))
 
-	if result != nil {
-		for _, topicInSyncReplica := range result {
-			topicInSyncReplicaMap := map[string]interface{}{}
+	for _, topicInSyncReplica := range result {
+		topicInSyncReplicaMap := map[string]interface{}{}
 
-			if topicInSyncReplica.Partition != nil {
-				ids = append(ids, *topicInSyncReplica.Partition)
-				topicInSyncReplicaMap["partition"] = topicInSyncReplica.Partition
-			}
-
-			if topicInSyncReplica.Leader != nil {
-				topicInSyncReplicaMap["leader"] = topicInSyncReplica.Leader
-			}
-
-			if topicInSyncReplica.Replica != nil {
-				topicInSyncReplicaMap["replica"] = topicInSyncReplica.Replica
-			}
-
-			if topicInSyncReplica.InSyncReplica != nil {
-				topicInSyncReplicaMap["in_sync_replica"] = topicInSyncReplica.InSyncReplica
-			}
-
-			if topicInSyncReplica.BeginOffset != nil {
-				topicInSyncReplicaMap["begin_offset"] = topicInSyncReplica.BeginOffset
-			}
-
-			if topicInSyncReplica.EndOffset != nil {
-				topicInSyncReplicaMap["end_offset"] = topicInSyncReplica.EndOffset
-			}
-
-			if topicInSyncReplica.MessageCount != nil {
-				topicInSyncReplicaMap["message_count"] = topicInSyncReplica.MessageCount
-			}
-
-			if topicInSyncReplica.OutOfSyncReplica != nil {
-				topicInSyncReplicaMap["out_of_sync_replica"] = topicInSyncReplica.OutOfSyncReplica
-			}
-
-			topicInSyncReplicaList = append(topicInSyncReplicaList, topicInSyncReplicaMap)
+		if topicInSyncReplica.Partition != nil {
+			ids = append(ids, *topicInSyncReplica.Partition)
+			topicInSyncReplicaMap["partition"] = topicInSyncReplica.Partition
 		}
 
+		if topicInSyncReplica.Leader != nil {
+			topicInSyncReplicaMap["leader"] = topicInSyncReplica.Leader
+		}
+
+		if topicInSyncReplica.Replica != nil {
+			topicInSyncReplicaMap["replica"] = topicInSyncReplica.Replica
+		}
+
+		if topicInSyncReplica.InSyncReplica != nil {
+			topicInSyncReplicaMap["in_sync_replica"] = topicInSyncReplica.InSyncReplica
+		}
+
+		if topicInSyncReplica.BeginOffset != nil {
+			topicInSyncReplicaMap["begin_offset"] = topicInSyncReplica.BeginOffset
+		}
+
+		if topicInSyncReplica.EndOffset != nil {
+			topicInSyncReplicaMap["end_offset"] = topicInSyncReplica.EndOffset
+		}
+
+		if topicInSyncReplica.MessageCount != nil {
+			topicInSyncReplicaMap["message_count"] = topicInSyncReplica.MessageCount
+		}
+
+		if topicInSyncReplica.OutOfSyncReplica != nil {
+			topicInSyncReplicaMap["out_of_sync_replica"] = topicInSyncReplica.OutOfSyncReplica
+		}
+
+		topicInSyncReplicaList = append(topicInSyncReplicaList, topicInSyncReplicaMap)
 	}
 
 	_ = d.Set("topic_in_sync_replica_list", topicInSyncReplicaList)
