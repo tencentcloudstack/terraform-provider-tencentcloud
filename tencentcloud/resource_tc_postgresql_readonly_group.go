@@ -122,12 +122,10 @@ func resourceTencentCloudPostgresqlReadOnlyGroupCreate(d *schema.ResourceData, m
 		request            = postgresql.NewCreateReadOnlyGroupRequest()
 		response           *postgresql.CreateReadOnlyGroupResponse
 		msaterDbInstanceId string
-		dbInstanceId       string
 	)
 	if v, ok := d.GetOk("master_db_instance_id"); ok {
 		request.MasterDBInstanceId = helper.String(v.(string))
 		msaterDbInstanceId = v.(string)
-		dbInstanceId = v.(string)
 	}
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))

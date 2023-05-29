@@ -1136,6 +1136,20 @@ func (me *PostgresqlService) DescribePostgresqlSecurityGroupConfigById(ctx conte
 	return
 }
 
+func (me *PostgresqlService) PostgresqlDbInstanceOperationStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		instance, _, err := me.DescribePostgresqlInstanceById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return instance, *instance.DBInstanceStatus, nil
+	}
+}
+
 func (me *PostgresqlService) PostgresqlDBInstanceStateRefreshFunc(dbInstanceId string, failStates []string) resource.StateRefreshFunc {
 	logElapsed("PostgresqlDBInstanceStateRefreshFunc called")()
 	return func() (interface{}, string, error) {

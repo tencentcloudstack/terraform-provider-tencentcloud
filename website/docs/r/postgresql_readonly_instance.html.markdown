@@ -60,6 +60,8 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the postgresql instance.
+* `private_access_ip` - IP for private access.
+* `private_access_port` - Port for private access.
 
 
 ## Import
