@@ -1256,3 +1256,263 @@ func (me *CkafkaService) DescribeCkafkaGroupOffsetsByFilter(ctx context.Context,
 
 	return
 }
+
+func (me *CkafkaService) DescribeCkafkaGroupInfoByFilter(ctx context.Context, param map[string]interface{}) (groupInfo []*ckafka.GroupInfoResponse, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeGroupInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "group_list" {
+			request.GroupList = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeGroupInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Response body is null")
+		return
+	}
+	groupInfo = response.Response.Result
+
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaTaskStatusByFilter(ctx context.Context, flowId int) (taskStatus *ckafka.TaskStatusResponse, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeTaskStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.FlowId = helper.IntInt64(flowId)
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeTaskStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Response body is null")
+		return
+	}
+	taskStatus = response.Response.Result
+
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaTopicFlowRankingByFilter(ctx context.Context, param map[string]interface{}) (topicFlowRanking *ckafka.TopicFlowRankingResult, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeTopicFlowRankingRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "ranking_type" {
+			request.RankingType = v.(*string)
+		}
+		if k == "begin_date" {
+			request.BeginDate = v.(*string)
+		}
+		if k == "end_date" {
+			request.EndDate = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeTopicFlowRanking(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Response body is null")
+		return
+	}
+	topicFlowRanking = response.Response.Result
+
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaTopicProduceConnectionByFilter(ctx context.Context, param map[string]interface{}) (topicProduceConnection []*ckafka.DescribeConnectInfoResultDTO, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeTopicProduceConnectionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "topic_name" {
+			request.TopicName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeTopicProduceConnection(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Response body is null")
+		return
+	}
+	topicProduceConnection = response.Response.Result
+
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaTopicSubscribeGroupByFilter(ctx context.Context, param map[string]interface{}) (groupInfos []*ckafka.GroupInfoResponse, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeTopicSubscribeGroupRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "TopicName" {
+			request.TopicName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCkafkaClient().DescribeTopicSubscribeGroup(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.GroupsInfo) < 1 {
+			break
+		}
+		groupInfos = append(groupInfos, response.Response.Result.GroupsInfo...)
+		if len(response.Response.Result.GroupsInfo) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaTopicSyncReplicaByFilter(ctx context.Context, param map[string]interface{}) (topicInSyncReplicaInfos []*ckafka.TopicInSyncReplicaInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeTopicSyncReplicaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "topic_name" {
+			request.TopicName = v.(*string)
+		}
+		if k == "out_of_sync_replica_only" {
+			request.OutOfSyncReplicaOnly = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  int64  = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCkafkaClient().DescribeTopicSyncReplica(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.TopicInSyncReplicaList) < 1 {
+			break
+		}
+		topicInSyncReplicaInfos = append(topicInSyncReplicaInfos, response.Response.Result.TopicInSyncReplicaList...)
+		if len(response.Response.Result.TopicInSyncReplicaList) < int(limit) {
+			break
+		}
+
+		offset += uint64(limit)
+	}
+
+	return
+}

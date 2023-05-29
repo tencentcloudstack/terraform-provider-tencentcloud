@@ -161,6 +161,12 @@ Cloud Kafka(ckafka)
 	tencentcloud_ckafka_datahub_task
 	tencentcloud_ckafka_group
 	tencentcloud_ckafka_group_offsets
+	tencentcloud_ckafka_group_info
+	tencentcloud_ckafka_task_status
+	tencentcloud_ckafka_topic_flow_ranking
+	tencentcloud_ckafka_topic_produce_connection
+	tencentcloud_ckafka_topic_subscribe_group
+	tencentcloud_ckafka_topic_sync_replica
 
   Resource
 	tencentcloud_ckafka_instance
@@ -527,6 +533,12 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_audit_log_file
 	tencentcloud_mysql_backup_download_restriction
 	tencentcloud_mysql_renew_db_instance_operation
+	tencentcloud_mysql_backup_encryption_status
+	tencentcloud_mysql_dr_instance_to_mater
+	tencentcloud_mysql_instance_encryption_operation
+	tencentcloud_mysql_password_complexity
+	tencentcloud_mysql_remote_backup_config
+	tencentcloud_mysql_restart_db_instances_operation
 
 Cloud Monitor(Monitor)
   Data Source
@@ -635,6 +647,16 @@ Serverless Cloud Function(SCF)
     tencentcloud_scf_functions
     tencentcloud_scf_logs
     tencentcloud_scf_namespaces
+	tencentcloud_scf_account_info
+	tencentcloud_scf_async_event_management
+	tencentcloud_scf_triggers
+	tencentcloud_scf_async_event_status
+	tencentcloud_scf_function_address
+	tencentcloud_scf_request_status
+	tencentcloud_scf_function_aliases
+	tencentcloud_scf_layer_versions
+	tencentcloud_scf_layers
+	tencentcloud_scf_function_versions
 
   Resource
     tencentcloud_scf_function
@@ -1572,6 +1594,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdn_domain_verifier":                       dataSourceTencentCloudCdnDomainVerifyRecord(),
 			"tencentcloud_scf_functions":                             dataSourceTencentCloudScfFunctions(),
 			"tencentcloud_scf_namespaces":                            dataSourceTencentCloudScfNamespaces(),
+			"tencentcloud_scf_account_info":                          dataSourceTencentCloudScfAccountInfo(),
+			"tencentcloud_scf_async_event_management":                dataSourceTencentCloudScfAsyncEventManagement(),
+			"tencentcloud_scf_triggers":                              dataSourceTencentCloudScfTriggers(),
+			"tencentcloud_scf_async_event_status":                    dataSourceTencentCloudScfAsyncEventStatus(),
+			"tencentcloud_scf_function_address":                      dataSourceTencentCloudScfFunctionAddress(),
+			"tencentcloud_scf_request_status":                        dataSourceTencentCloudScfRequestStatus(),
+			"tencentcloud_scf_function_aliases":                      dataSourceTencentCloudScfFunctionAliases(),
+			"tencentcloud_scf_layer_versions":                        dataSourceTencentCloudScfLayerVersions(),
+			"tencentcloud_scf_layers":                                dataSourceTencentCloudScfLayers(),
+			"tencentcloud_scf_function_versions":                     dataSourceTencentCloudScfFunctionVersions(),
 			"tencentcloud_scf_logs":                                  dataSourceTencentCloudScfLogs(),
 			"tencentcloud_tcaplus_clusters":                          dataSourceTencentCloudTcaplusClusters(),
 			"tencentcloud_tcaplus_tablegroups":                       dataSourceTencentCloudTcaplusTableGroups(),
@@ -1613,6 +1645,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_datahub_task":                       dataSourceTencentCloudCkafkaDatahubTask(),
 			"tencentcloud_ckafka_group":                              dataSourceTencentCloudCkafkaGroup(),
 			"tencentcloud_ckafka_group_offsets":                      dataSourceTencentCloudCkafkaGroupOffsets(),
+			"tencentcloud_ckafka_group_info":                         dataSourceTencentCloudCkafkaGroupInfo(),
+			"tencentcloud_ckafka_task_status":                        dataSourceTencentCloudCkafkaTaskStatus(),
+			"tencentcloud_ckafka_topic_flow_ranking":                 dataSourceTencentCloudCkafkaTopicFlowRanking(),
+			"tencentcloud_ckafka_topic_produce_connection":           dataSourceTencentCloudCkafkaTopicProduceConnection(),
+			"tencentcloud_ckafka_topic_subscribe_group":              dataSourceTencentCloudCkafkaTopicSubscribeGroup(),
+			"tencentcloud_ckafka_topic_sync_replica":                 dataSourceTencentCloudCkafkaTopicSyncReplica(),
 			"tencentcloud_audit_cos_regions":                         dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                           dataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                    dataSourceTencentCloudAudits(),
@@ -1902,6 +1940,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_audit_log_file":                                resourceTencentCloudMysqlAuditLogFile(),
 			"tencentcloud_mysql_backup_download_restriction":                   resourceTencentCloudMysqlBackupDownloadRestriction(),
 			"tencentcloud_mysql_renew_db_instance_operation":                   resourceTencentCloudMysqlRenewDbInstanceOperation(),
+			"tencentcloud_mysql_backup_encryption_status":                      resourceTencentCloudMysqlBackupEncryptionStatus(),
+			"tencentcloud_mysql_db_import_job_operation":                       resourceTencentCloudMysqlDbImportJobOperation(),
+			"tencentcloud_mysql_dr_instance_to_mater":                          resourceTencentCloudMysqlDrInstanceToMater(),
+			"tencentcloud_mysql_instance_encryption_operation":                 resourceTencentCloudMysqlInstanceEncryptionOperation(),
+			"tencentcloud_mysql_isolate_instance":                              resourceTencentCloudMysqlIsolateInstance(),
+			"tencentcloud_mysql_password_complexity":                           resourceTencentCloudMysqlPasswordComplexity(),
+			"tencentcloud_mysql_remote_backup_config":                          resourceTencentCloudMysqlRemoteBackupConfig(),
+			"tencentcloud_mysql_restart_db_instances_operation":                resourceTencentCloudMysqlRestartDbInstancesOperation(),
 			"tencentcloud_cos_bucket":                                          resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                                   resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                                     resourceTencentCloudCfsFileSystem(),
