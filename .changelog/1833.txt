@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_scf_provisioned_concurrency_config
+```
