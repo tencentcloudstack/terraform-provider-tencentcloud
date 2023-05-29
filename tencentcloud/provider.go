@@ -527,6 +527,12 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_audit_log_file
 	tencentcloud_mysql_backup_download_restriction
 	tencentcloud_mysql_renew_db_instance_operation
+	tencentcloud_mysql_backup_encryption_status
+	tencentcloud_mysql_dr_instance_to_mater
+	tencentcloud_mysql_instance_encryption_operation
+	tencentcloud_mysql_password_complexity
+	tencentcloud_mysql_remote_backup_config
+	tencentcloud_mysql_restart_db_instances_operation
 
 Cloud Monitor(Monitor)
   Data Source
@@ -1899,6 +1905,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_audit_log_file":                          resourceTencentCloudMysqlAuditLogFile(),
 			"tencentcloud_mysql_backup_download_restriction":             resourceTencentCloudMysqlBackupDownloadRestriction(),
 			"tencentcloud_mysql_renew_db_instance_operation":             resourceTencentCloudMysqlRenewDbInstanceOperation(),
+			"tencentcloud_mysql_backup_encryption_status":                resourceTencentCloudMysqlBackupEncryptionStatus(),
+			"tencentcloud_mysql_db_import_job_operation":                 resourceTencentCloudMysqlDbImportJobOperation(),
+			"tencentcloud_mysql_dr_instance_to_mater":                    resourceTencentCloudMysqlDrInstanceToMater(),
+			"tencentcloud_mysql_instance_encryption_operation":           resourceTencentCloudMysqlInstanceEncryptionOperation(),
+			"tencentcloud_mysql_isolate_instance":                        resourceTencentCloudMysqlIsolateInstance(),
+			"tencentcloud_mysql_password_complexity":                     resourceTencentCloudMysqlPasswordComplexity(),
+			"tencentcloud_mysql_remote_backup_config":                    resourceTencentCloudMysqlRemoteBackupConfig(),
+			"tencentcloud_mysql_restart_db_instances_operation":          resourceTencentCloudMysqlRestartDbInstancesOperation(),
 			"tencentcloud_cos_bucket":                                    resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                             resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                               resourceTencentCloudCfsFileSystem(),
