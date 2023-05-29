@@ -1149,3 +1149,248 @@ func (me *PostgresqlService) PostgresqlDbInstanceOperationStateRefreshFunc(insta
 		return instance, *instance.DBInstanceStatus, nil
 	}
 }
+
+func (me *PostgresqlService) PostgresqlDBInstanceStateRefreshFunc(dbInstanceId string, failStates []string) resource.StateRefreshFunc {
+	logElapsed("PostgresqlDBInstanceStateRefreshFunc called")()
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, has, err := me.DescribePostgresqlInstanceById(ctx, dbInstanceId)
+
+		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
+			return nil, "", err
+		}
+		if object == nil || !has {
+			return &postgresql.DBInstance{}, "closed", nil
+		}
+
+		return object, helper.PString(object.DBInstanceStatus), nil
+	}
+}
+
+func (me *PostgresqlService) DescribePostgresqlDBInstanceNetInfosById(ctx context.Context, dBInstanceId string) (netInfos []*postgresql.DBInstanceNetInfo, errRet error) {
+	logElapsed("DescribePostgresqlDBInstanceNetInfosById called")()
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDescribeDBInstanceAttributeRequest()
+	request.DBInstanceId = &dBInstanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDBInstanceAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instances := response.Response.DBInstance
+	if instances != nil {
+		netInfos = instances.DBInstanceNetInfo
+	}
+
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlDBInstanceNetworkAccessById(ctx context.Context, dBInstanceId, vpcId, subnetId, vip string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteDBInstanceNetworkAccessRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	request.Vip = &vip
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteDBInstanceNetworkAccess(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) PostgresqlDBInstanceNetworkAccessStateRefreshFunc(dBInstanceId, vpcId, subnetId, oldVip, newVip string, failStates []string) resource.StateRefreshFunc {
+	logElapsed("PostgresqlDBInstanceNetworkAccessStateRefreshFunc called")()
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		netInfos, err := me.DescribePostgresqlDBInstanceNetInfosById(ctx, dBInstanceId)
+
+		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
+			return nil, "", err
+		}
+
+		var object *postgresql.DBInstanceNetInfo
+		for _, info := range netInfos {
+			if *info.NetType == "private" {
+				if *info.VpcId == vpcId && *info.SubnetId == subnetId && (*info.Ip != oldVip || *info.Ip == newVip) {
+					object = info
+					break
+				}
+			}
+		}
+
+		if object == nil {
+			return &postgresql.DBInstanceNetInfo{}, "closed", nil
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
+func (me *PostgresqlService) DescribePostgresqlReadonlyGroupNetInfosById(ctx context.Context, dbInstanceId, roGroupId string) (netInfos []*postgresql.DBInstanceNetInfo, errRet error) {
+	logElapsed("DescribePostgresqlReadonlyGroupNetInfoById called")()
+	logId := getLogId(ctx)
+
+	paramMap := map[string]interface{}{
+		"Filters": []*postgresql.Filter{
+			{
+				Name:   helper.String("db-master-instance-id"),
+				Values: []*string{helper.String(dbInstanceId)},
+			},
+		},
+	}
+
+	result, err := me.DescribePostgresqlReadonlyGroupsByFilter(ctx, paramMap)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	roGroup := result[0]
+	if roGroupId != "" {
+		for _, group := range result {
+			if *group.ReadOnlyGroupId == roGroupId {
+				roGroup = group
+				break
+			}
+		}
+	}
+
+	if roGroup != nil {
+		netInfos = roGroup.DBInstanceNetInfo
+	}
+
+	log.Printf("[DEBUG]%s DescribePostgresqlReadonlyGroupNetworkAccessById dbInstanceId:[%s] roGroupId:[%s] success, result is roGroup:[%v], \n", logId, dbInstanceId, roGroupId, roGroup)
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlReadonlyGroupNetworkAccessById(ctx context.Context, readOnlyGroupId, vpcId, subnetId, vip string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteReadOnlyGroupNetworkAccessRequest()
+	request.ReadOnlyGroupId = &readOnlyGroupId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	request.Vip = &vip
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DeleteReadOnlyGroupNetworkAccess(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *PostgresqlService) PostgresqlReadonlyGroupNetworkAccessStateRefreshFunc(dbInstanceId, roGroupId, vpcId, subnetId, oldVip, newVip string, failStates []string) resource.StateRefreshFunc {
+	logElapsed("PostgresqlReadonlyGroupNetworkAccessStateRefreshFunc called")()
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		netInfos, err := me.DescribePostgresqlReadonlyGroupNetInfosById(ctx, dbInstanceId, roGroupId)
+
+		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
+			return nil, "", err
+		}
+
+		var object *postgresql.DBInstanceNetInfo
+		for _, info := range netInfos {
+			if *info.NetType == "private" {
+				if *info.VpcId == vpcId && *info.SubnetId == subnetId && (*info.Ip != oldVip || *info.Ip == newVip) {
+					object = info
+					break
+				}
+			}
+		}
+
+		if object == nil {
+			return &postgresql.DBInstanceNetInfo{}, "closed", nil
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
+func (me *PostgresqlService) PostgresqlReadonlyGroupStateRefreshFunc(dbInstanceId, roGroupId string, failStates []string) resource.StateRefreshFunc {
+	logElapsed("PostgresqlReadonlyGroupStateRefreshFunc called")()
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		result, err := me.DescribePostgresqlReadOnlyGroupById(ctx, dbInstanceId)
+
+		roGroup := result[0]
+		if roGroupId != "" {
+			for _, group := range result {
+				if *group.ReadOnlyGroupId == roGroupId {
+					roGroup = group
+					break
+				}
+			}
+		}
+
+		if err != nil {
+			err, ok := err.(*sdkErrors.TencentCloudSDKError)
+			if ok && err.GetCode() == "ResourceNotFound.InstanceNotFoundError" {
+				// it is ok
+				return nil, "", nil
+			}
+			return nil, "", err
+		}
+		if roGroup == nil {
+			return &postgresql.ReadOnlyGroup{}, "closed", nil
+		}
+
+		return roGroup, helper.PString(roGroup.Status), nil
+	}
+}

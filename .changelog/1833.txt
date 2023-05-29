@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_scf_provisioned_concurrency_config
+```
+
+```release-note:new-resource
+tencentcloud_scf_invoke_function
+```
+
+```release-note:new-resource
+tencentcloud_scf_sync_invoke_function
+```
+
+```release-note:new-resource
+tencentcloud_scf_terminate_async_event
+```

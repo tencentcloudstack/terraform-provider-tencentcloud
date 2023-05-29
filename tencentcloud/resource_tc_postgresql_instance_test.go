@@ -422,13 +422,33 @@ resource "tencentcloud_postgresql_instance" "test" {
 }
 `
 
-const testAccPostgresqlInstanceUpdate string = testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
+const testAccPGNewVpcSubnet = `
+resource "tencentcloud_vpc" "vpc" {
+	cidr_block = "172.18.111.0/24"
+	name       = "test-pg-network-vpc"
+  }
+  
+  resource "tencentcloud_subnet" "subnet" {
+	availability_zone = var.default_az
+	cidr_block        = "172.18.111.0/24"
+	name              = "test-pg-network-sub1"
+	vpc_id            = tencentcloud_vpc.vpc.id
+  }
+
+  locals {
+	new_vpc_id = tencentcloud_subnet.subnet.vpc_id
+	new_subnet_id = tencentcloud_subnet.subnet.id
+  }
+
+`
+
+const testAccPostgresqlInstanceUpdate string = testAccPGNewVpcSubnet + testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
 resource "tencentcloud_postgresql_instance" "test" {
   name = "tf_postsql_instance_update"
   availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
   charge_type	    = "POSTPAID_BY_HOUR"
-  vpc_id  	  		= local.vpc_id
-  subnet_id 		= local.subnet_id
+  vpc_id  	  		= local.new_vpc_id
+  subnet_id 		= local.new_subnet_id
   engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
   charset 			= "LATIN1"
@@ -452,13 +472,13 @@ resource "tencentcloud_postgresql_instance" "test" {
 }
 `
 
-const testAccPostgresqlInstanceUpgradeKernelVersion string = testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
+const testAccPostgresqlInstanceUpgradeKernelVersion string = testAccPGNewVpcSubnet + testAccPostgresqlInstanceBasic + defaultVpcSubnets + `
 resource "tencentcloud_postgresql_instance" "test" {
   name = "tf_postsql_instance_update"
   availability_zone = data.tencentcloud_availability_zones_by_product.zone.zones[5].name
   charge_type	    = "POSTPAID_BY_HOUR"
-  vpc_id  	  		= local.vpc_id
-  subnet_id 		= local.subnet_id
+  vpc_id  	  		= local.new_vpc_id
+  subnet_id 		= local.new_subnet_id
   engine_version	= "13.3"
   root_password	    = "t1qaA2k1wgvfa3?ZZZ"
   charset 			= "LATIN1"

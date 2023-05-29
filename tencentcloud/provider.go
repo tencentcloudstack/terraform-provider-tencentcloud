@@ -638,6 +638,10 @@ Serverless Cloud Function(SCF)
 	tencentcloud_scf_function_version
 	tencentcloud_scf_function_event_invoke_config
 	tencentcloud_scf_reserved_concurrency_config
+	tencentcloud_scf_provisioned_concurrency_config
+	tencentcloud_scf_invoke_function
+	tencentcloud_scf_sync_invoke_function
+	tencentcloud_scf_terminate_async_event
     tencentcloud_scf_namespace
 	tencentcloud_scf_layer
 	tencentcloud_scf_function_alias
@@ -1984,6 +1988,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_scf_function_version":                          resourceTencentCloudScfFunctionVersion(),
 			"tencentcloud_scf_function_event_invoke_config":              resourceTencentCloudScfFunctionEventInvokeConfig(),
 			"tencentcloud_scf_reserved_concurrency_config":               resourceTencentCloudScfReservedConcurrencyConfig(),
+			"tencentcloud_scf_provisioned_concurrency_config":            resourceTencentCloudScfProvisionedConcurrencyConfig(),
+			"tencentcloud_scf_invoke_function":                           resourceTencentCloudScfInvokeFunction(),
+			"tencentcloud_scf_sync_invoke_function":                      resourceTencentCloudScfSyncInvokeFunction(),
+			"tencentcloud_scf_terminate_async_event":                     resourceTencentCloudScfTerminateAsyncEvent(),
 			"tencentcloud_scf_namespace":                                 resourceTencentCloudScfNamespace(),
 			"tencentcloud_scf_layer":                                     resourceTencentCloudScfLayer(),
 			"tencentcloud_scf_function_alias":                            resourceTencentCloudScfFunctionAlias(),

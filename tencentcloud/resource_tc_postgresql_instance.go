@@ -268,14 +268,12 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 
 			"vpc_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
-				Optional:    true,
+				Required:    true,
 				Description: "ID of VPC.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
-				Optional:    true,
+				Required:    true,
 				Description: "ID of subnet.",
 			},
 			"security_groups": {
@@ -807,6 +805,96 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	}
 
 	var outErr, inErr, checkErr error
+	// update vpc and subnet
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		var (
+			vpcOld    string
+			vpcNew    string
+			subnetOld string
+			subnetNew string
+			vipOld    string
+			vipNew    string
+		)
+
+		old, new := d.GetChange("vpc_id")
+		if old != nil {
+			vpcOld = old.(string)
+		}
+		if new != nil {
+			vpcNew = new.(string)
+		}
+
+		old, new = d.GetChange("subnet_id")
+		if old != nil {
+			subnetOld = old.(string)
+		}
+		if new != nil {
+			subnetNew = new.(string)
+		}
+
+		// Create new network first, then delete the old one
+		request := postgresql.NewCreateDBInstanceNetworkAccessRequest()
+		request.DBInstanceId = helper.String(instanceId)
+		request.VpcId = helper.String(vpcNew)
+		request.SubnetId = helper.String(subnetNew)
+		// ip assigned by system
+		request.IsAssignVip = helper.Bool(false)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().CreateDBInstanceNetworkAccess(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s create postgresql Instance NetworkAccess failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+		// wait for new network enabled
+		conf := BuildStateChangeConf([]string{}, []string{"opened"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceNetworkAccessStateRefreshFunc(instanceId, vpcNew, subnetNew, vipOld, "", []string{}))
+		if object, e := conf.WaitForState(); e != nil {
+			return e
+		} else {
+			// find the vip assiged by system
+			ret := object.(*postgresql.DBInstanceNetInfo)
+			vipNew = *ret.Ip
+		}
+
+		// wait unit network changing operation of instance done
+		conf = BuildStateChangeConf([]string{}, []string{"running"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		// delete the old one
+		if v, ok := d.GetOk("private_access_ip"); ok {
+			vipOld = v.(string)
+		}
+		if err := service.DeletePostgresqlDBInstanceNetworkAccessById(ctx, instanceId, vpcOld, subnetOld, vipOld); err != nil {
+			return err
+		}
+
+		// wait for old network removed
+		conf = BuildStateChangeConf([]string{}, []string{"closed"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceNetworkAccessStateRefreshFunc(instanceId, vpcOld, subnetOld, vipNew, vipOld, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		// wait unit network changing operation of instance done
+		conf = BuildStateChangeConf([]string{}, []string{"running"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		// refresh the private ip with new one
+		_ = d.Set("private_access_ip", vipNew)
+	}
+
 	// update name
 	if d.HasChange("name") {
 		name := d.Get("name").(string)

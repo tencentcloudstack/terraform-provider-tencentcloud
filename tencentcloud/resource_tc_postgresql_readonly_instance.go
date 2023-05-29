@@ -166,6 +166,16 @@ func resourceTencentCloudPostgresqlReadonlyInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Create time of the postgresql instance.",
 			},
+			"private_access_ip": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "IP for private access.",
+			},
+			"private_access_port": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Port for private access.",
+			},
 		},
 	}
 }
@@ -383,6 +393,16 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceRead(d *schema.ResourceData, 
 
 	// computed
 	_ = d.Set("create_time", instance.CreateTime)
+
+	if len(instance.DBInstanceNetInfo) > 0 {
+		for _, v := range instance.DBInstanceNetInfo {
+			// private or inner will not appear at same time, private for instance with vpc
+			if (*v.NetType == "private" || *v.NetType == "inner") && *v.Ip != "" {
+				_ = d.Set("private_access_ip", v.Ip)
+				_ = d.Set("private_access_port", v.Port)
+			}
+		}
+	}
 
 	return nil
 }
