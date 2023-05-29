@@ -161,6 +161,12 @@ Cloud Kafka(ckafka)
 	tencentcloud_ckafka_datahub_task
 	tencentcloud_ckafka_group
 	tencentcloud_ckafka_group_offsets
+	tencentcloud_ckafka_group_info
+	tencentcloud_ckafka_task_status
+	tencentcloud_ckafka_topic_flow_ranking
+	tencentcloud_ckafka_topic_produce_connection
+	tencentcloud_ckafka_topic_subscribe_group
+	tencentcloud_ckafka_topic_sync_replica
 
   Resource
 	tencentcloud_ckafka_instance
@@ -1636,6 +1642,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_datahub_task":                       dataSourceTencentCloudCkafkaDatahubTask(),
 			"tencentcloud_ckafka_group":                              dataSourceTencentCloudCkafkaGroup(),
 			"tencentcloud_ckafka_group_offsets":                      dataSourceTencentCloudCkafkaGroupOffsets(),
+			"tencentcloud_ckafka_group_info":                         dataSourceTencentCloudCkafkaGroupInfo(),
+			"tencentcloud_ckafka_task_status":                        dataSourceTencentCloudCkafkaTaskStatus(),
+			"tencentcloud_ckafka_topic_flow_ranking":                 dataSourceTencentCloudCkafkaTopicFlowRanking(),
+			"tencentcloud_ckafka_topic_produce_connection":           dataSourceTencentCloudCkafkaTopicProduceConnection(),
+			"tencentcloud_ckafka_topic_subscribe_group":              dataSourceTencentCloudCkafkaTopicSubscribeGroup(),
+			"tencentcloud_ckafka_topic_sync_replica":                 dataSourceTencentCloudCkafkaTopicSyncReplica(),
 			"tencentcloud_audit_cos_regions":                         dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                           dataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                    dataSourceTencentCloudAudits(),

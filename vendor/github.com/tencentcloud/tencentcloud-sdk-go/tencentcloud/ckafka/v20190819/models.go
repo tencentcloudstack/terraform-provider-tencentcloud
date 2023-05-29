@@ -929,6 +929,14 @@ type ConsumerGroupResponse struct {
 	GroupListForMonitor []*Group `json:"GroupListForMonitor,omitempty" name:"GroupListForMonitor"`
 }
 
+type ConsumerGroupSpeed struct {
+	// 消费者组名称
+	ConsumerGroupName *string `json:"ConsumerGroupName,omitempty" name:"ConsumerGroupName"`
+
+	// 消费速度 Count/Minute
+	Speed *uint64 `json:"Speed,omitempty" name:"Speed"`
+}
+
 type ConsumerGroupTopic struct {
 	// 主题ID
 	TopicId *string `json:"TopicId,omitempty" name:"TopicId"`
@@ -5476,6 +5484,63 @@ func (r *DescribeRouteResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeTaskStatusRequestParams struct {
+	// 任务唯一标记
+	FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+}
+
+type DescribeTaskStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 任务唯一标记
+	FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+}
+
+func (r *DescribeTaskStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTaskStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "FlowId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTaskStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTaskStatusResponseParams struct {
+	// 返回结果
+	Result *TaskStatusResponse `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeTaskStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTaskStatusResponseParams `json:"Response"`
+}
+
+func (r *DescribeTaskStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTaskStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeTopicAttributesRequestParams struct {
 	// 实例 ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -5621,6 +5686,84 @@ func (r *DescribeTopicDetailResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeTopicDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTopicFlowRankingRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 排行类别(PRO-Topic生产流量/CON-Topic消费流量)
+	RankingType *string `json:"RankingType,omitempty" name:"RankingType"`
+
+	// 排行起始日期
+	BeginDate *string `json:"BeginDate,omitempty" name:"BeginDate"`
+
+	// 排行结束日期
+	EndDate *string `json:"EndDate,omitempty" name:"EndDate"`
+}
+
+type DescribeTopicFlowRankingRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 排行类别(PRO-Topic生产流量/CON-Topic消费流量)
+	RankingType *string `json:"RankingType,omitempty" name:"RankingType"`
+
+	// 排行起始日期
+	BeginDate *string `json:"BeginDate,omitempty" name:"BeginDate"`
+
+	// 排行结束日期
+	EndDate *string `json:"EndDate,omitempty" name:"EndDate"`
+}
+
+func (r *DescribeTopicFlowRankingRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTopicFlowRankingRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "RankingType")
+	delete(f, "BeginDate")
+	delete(f, "EndDate")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeTopicFlowRankingRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeTopicFlowRankingResponseParams struct {
+	// 流量排行
+	Result *TopicFlowRankingResult `json:"Result,omitempty" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeTopicFlowRankingResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeTopicFlowRankingResponseParams `json:"Response"`
+}
+
+func (r *DescribeTopicFlowRankingResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeTopicFlowRankingResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -9096,6 +9239,72 @@ type Region struct {
 	MultiZone *int64 `json:"MultiZone,omitempty" name:"MultiZone"`
 }
 
+// Predefined struct for user
+type RenewCkafkaInstanceRequestParams struct {
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 续费时长, 默认为1, 单位是月
+	TimeSpan *int64 `json:"TimeSpan,omitempty" name:"TimeSpan"`
+}
+
+type RenewCkafkaInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例id
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 续费时长, 默认为1, 单位是月
+	TimeSpan *int64 `json:"TimeSpan,omitempty" name:"TimeSpan"`
+}
+
+func (r *RenewCkafkaInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RenewCkafkaInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "TimeSpan")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RenewCkafkaInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RenewCkafkaInstanceResponseParams struct {
+	// 订单号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BigDealId *string `json:"BigDealId,omitempty" name:"BigDealId"`
+
+	// 子订单号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DealName *string `json:"DealName,omitempty" name:"DealName"`
+}
+
+type RenewCkafkaInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *RenewCkafkaInstanceResponseParams `json:"Response"`
+}
+
+func (r *RenewCkafkaInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RenewCkafkaInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type ReplaceParam struct {
 	// 被替换值
 	OldValue *string `json:"OldValue,omitempty" name:"OldValue"`
@@ -9410,6 +9619,18 @@ type Tag struct {
 	TagValue *string `json:"TagValue,omitempty" name:"TagValue"`
 }
 
+type TaskStatusResponse struct {
+	// 任务状态:
+	// 0 成功
+	// 1 失败
+	// 2 进行中
+	Status *int64 `json:"Status,omitempty" name:"Status"`
+
+	// 输出信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Output *string `json:"Output,omitempty" name:"Output"`
+}
+
 type TdwParam struct {
 	// Tdw的bid
 	Bid *string `json:"Bid,omitempty" name:"Bid"`
@@ -9544,6 +9765,38 @@ type TopicDetailResponse struct {
 	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
 }
 
+type TopicFlowRanking struct {
+	// 主题Id
+	TopicId *string `json:"TopicId,omitempty" name:"TopicId"`
+
+	// 主题名称
+	TopicName *string `json:"TopicName,omitempty" name:"TopicName"`
+
+	// 分区数
+	PartitionNum *uint64 `json:"PartitionNum,omitempty" name:"PartitionNum"`
+
+	// 副本数
+	ReplicaNum *uint64 `json:"ReplicaNum,omitempty" name:"ReplicaNum"`
+
+	// Topic 流量
+	TopicTraffic *string `json:"TopicTraffic,omitempty" name:"TopicTraffic"`
+
+	// Topic 消息堆积
+	MessageHeap *uint64 `json:"MessageHeap,omitempty" name:"MessageHeap"`
+}
+
+type TopicFlowRankingResult struct {
+	// Topic 流量数组
+	TopicFlow []*TopicFlowRanking `json:"TopicFlow,omitempty" name:"TopicFlow"`
+
+	// 消费者组消费速度排行速度
+	ConsumeSpeed []*ConsumerGroupSpeed `json:"ConsumeSpeed,omitempty" name:"ConsumeSpeed"`
+
+	// Topic 消息堆积/占用磁盘排行
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicMessageHeap []*TopicMessageHeapRanking `json:"TopicMessageHeap,omitempty" name:"TopicMessageHeap"`
+}
+
 type TopicInSyncReplicaInfo struct {
 	// 分区名称
 	Partition *string `json:"Partition,omitempty" name:"Partition"`
@@ -9580,6 +9833,32 @@ type TopicInSyncReplicaResult struct {
 
 	// 总计个数
 	TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
+}
+
+type TopicMessageHeapRanking struct {
+	// 主题ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicId *string `json:"TopicId,omitempty" name:"TopicId"`
+
+	// 主题名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicName *string `json:"TopicName,omitempty" name:"TopicName"`
+
+	// 分区数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PartitionNum *uint64 `json:"PartitionNum,omitempty" name:"PartitionNum"`
+
+	// 副本数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReplicaNum *uint64 `json:"ReplicaNum,omitempty" name:"ReplicaNum"`
+
+	// Topic 流量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicTraffic *string `json:"TopicTraffic,omitempty" name:"TopicTraffic"`
+
+	// topic消息堆积/占用磁盘
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MessageHeap *uint64 `json:"MessageHeap,omitempty" name:"MessageHeap"`
 }
 
 type TopicParam struct {
