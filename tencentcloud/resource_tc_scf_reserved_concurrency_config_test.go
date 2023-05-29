@@ -30,9 +30,9 @@ func TestAccTencentCloudScfReservedConcurrencyConfigResource_basic(t *testing.T)
 const testAccScfReservedConcurrencyConfig = `
 
 resource "tencentcloud_scf_reserved_concurrency_config" "reserved_concurrency_config" {
-  function_name = "test_function"
+  function_name = "keep-1676351130"
   reserved_concurrency_mem = 128000
-  namespace = "test_namespace"
+  namespace     = "default"
 }
 
 `

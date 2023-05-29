@@ -637,6 +637,7 @@ Serverless Cloud Function(SCF)
     tencentcloud_scf_function
 	tencentcloud_scf_function_version
 	tencentcloud_scf_function_event_invoke_config
+	tencentcloud_scf_reserved_concurrency_config
     tencentcloud_scf_namespace
 	tencentcloud_scf_layer
 	tencentcloud_scf_function_alias
