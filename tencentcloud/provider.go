@@ -638,6 +638,16 @@ Serverless Cloud Function(SCF)
     tencentcloud_scf_functions
     tencentcloud_scf_logs
     tencentcloud_scf_namespaces
+	tencentcloud_scf_account_info
+	tencentcloud_scf_async_event_management
+	tencentcloud_scf_triggers
+	tencentcloud_scf_async_event_status
+	tencentcloud_scf_function_address
+	tencentcloud_scf_request_status
+	tencentcloud_scf_function_aliases
+	tencentcloud_scf_layer_versions
+	tencentcloud_scf_layers
+	tencentcloud_scf_function_versions
 
   Resource
     tencentcloud_scf_function
@@ -1575,6 +1585,16 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdn_domain_verifier":                       dataSourceTencentCloudCdnDomainVerifyRecord(),
 			"tencentcloud_scf_functions":                             dataSourceTencentCloudScfFunctions(),
 			"tencentcloud_scf_namespaces":                            dataSourceTencentCloudScfNamespaces(),
+			"tencentcloud_scf_account_info":                          dataSourceTencentCloudScfAccountInfo(),
+			"tencentcloud_scf_async_event_management":                dataSourceTencentCloudScfAsyncEventManagement(),
+			"tencentcloud_scf_triggers":                              dataSourceTencentCloudScfTriggers(),
+			"tencentcloud_scf_async_event_status":                    dataSourceTencentCloudScfAsyncEventStatus(),
+			"tencentcloud_scf_function_address":                      dataSourceTencentCloudScfFunctionAddress(),
+			"tencentcloud_scf_request_status":                        dataSourceTencentCloudScfRequestStatus(),
+			"tencentcloud_scf_function_aliases":                      dataSourceTencentCloudScfFunctionAliases(),
+			"tencentcloud_scf_layer_versions":                        dataSourceTencentCloudScfLayerVersions(),
+			"tencentcloud_scf_layers":                                dataSourceTencentCloudScfLayers(),
+			"tencentcloud_scf_function_versions":                     dataSourceTencentCloudScfFunctionVersions(),
 			"tencentcloud_scf_logs":                                  dataSourceTencentCloudScfLogs(),
 			"tencentcloud_tcaplus_clusters":                          dataSourceTencentCloudTcaplusClusters(),
 			"tencentcloud_tcaplus_tablegroups":                       dataSourceTencentCloudTcaplusTableGroups(),
