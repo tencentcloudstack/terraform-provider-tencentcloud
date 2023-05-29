@@ -38,8 +38,8 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_basic(t *testing.T) {
 	})
 }
 
-const testAccPostgresqlReadonlyInstanceInstance string = CommonPresetPGSQL + defaultVpcSubnets + `
-  resource "tencentcloud_postgresql_readonly_instance" "foo" {
+const testAccPostgresqlReadonlyInstanceInstance string = CommonPresetPGSQL + defaultVpcSubnets + defaultSecurityGroupData + `
+  resource "tencentcloud_postgresql_readonly_instance" "instance" {
 	auto_renew_flag       = 0
 	db_version            = "13.3"
 	instance_charge_type  = "POSTPAID_BY_HOUR"

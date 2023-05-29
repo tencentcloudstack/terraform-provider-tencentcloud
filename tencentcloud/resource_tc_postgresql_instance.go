@@ -892,7 +892,7 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 		}
 
 		// refresh the private ip with new one
-		d.Set("private_access_ip", vipNew)
+		_ = d.Set("private_access_ip", vipNew)
 	}
 
 	// update name
