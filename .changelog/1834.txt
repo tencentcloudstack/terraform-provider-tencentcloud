@@ -1,0 +1,19 @@
+```release-note:enhancement
+resource/resource_tc_sqlserver_complete_expansion: Fix the BUG when the sql instance scales up and down.
+```
+
+```release-note:enhancement
+resource/resource_tc_sqlserver_general_cloud_instance: Remove redundant parameters in the import phase.
+```
+
+```release-note:enhancement
+resource/resource_tc_sqlserver_instance: Structural optimization.
+```
+
+```release-note:enhancement
+resource/resource_tc_sqlserver_migration_test: Remove redundant parameters in the import phase.
+```
+
+```release-note:enhancement
+resource/resource_tc_sqlserver_renew_db_instance_test: Structural optimization.
+```
