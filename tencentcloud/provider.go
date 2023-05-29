@@ -156,6 +156,11 @@ Cloud Kafka(ckafka)
     tencentcloud_ckafka_instances
 	tencentcloud_ckafka_connect_resource
 	tencentcloud_ckafka_region
+	tencentcloud_ckafka_datahub_topic
+	tencentcloud_ckafka_datahub_group_offsets
+	tencentcloud_ckafka_datahub_task
+	tencentcloud_ckafka_group
+	tencentcloud_ckafka_group_offsets
 
   Resource
 	tencentcloud_ckafka_instance
@@ -368,12 +373,14 @@ TDSQL-C MySQL(CynosDB)
 Direct Connect(DC)
   Data Source
     tencentcloud_dc_instances
+	tencentcloud_dc_access_points
     tencentcloud_dcx_instances
 	tencentcloud_dc_internet_address_quota
 	tencentcloud_dc_internet_address_statistics
 	tencentcloud_dc_public_direct_connect_tunnel_routes
 
   Resource
+	tencentcloud_dc_instance
     tencentcloud_dcx
 	tencentcloud_dcx_extra_config
 	tencentcloud_dc_share_dcx_config
@@ -583,6 +590,12 @@ TencentDB for PostgreSQL(PostgreSQL)
 	tencentcloud_postgresql_backup_plan_config
 	tencentcloud_postgresql_security_group_config
 	tencentcloud_postgresql_backup_download_restriction_config
+	tencentcloud_postgresql_restart_db_instance_operation
+	tencentcloud_postgresql_renew_db_instance_operation
+	tencentcloud_postgresql_isolate_db_instance_operation
+	tencentcloud_postgresql_disisolate_db_instance_operation
+	tencentcloud_postgresql_rebalance_readonly_group_operation
+	tencentcloud_postgresql_delete_log_backup_operation
 
 TencentDB for Redis(crs)
   Data Source
@@ -622,6 +635,8 @@ Serverless Cloud Function(SCF)
 
   Resource
     tencentcloud_scf_function
+	tencentcloud_scf_function_version
+	tencentcloud_scf_function_event_invoke_config
     tencentcloud_scf_namespace
 	tencentcloud_scf_layer
 	tencentcloud_scf_function_alias
@@ -667,12 +682,19 @@ SQLServer
     tencentcloud_sqlserver_business_intelligence_file
 	tencentcloud_sqlserver_business_intelligence_instance
 	tencentcloud_sqlserver_general_communication
+	tencentcloud_sqlserver_general_cloud_instance
 	tencentcloud_sqlserver_complete_expansion
 	tencentcloud_sqlserver_config_database_cdc
 	tencentcloud_sqlserver_config_database_ct
 	tencentcloud_sqlserver_config_database_mdf
 	tencentcloud_sqlserver_config_instance_param
 	tencentcloud_sqlserver_config_instance_ro_group
+	tencentcloud_sqlserver_renew_db_instance
+	tencentcloud_sqlserver_renew_postpaid_db_instance
+	tencentcloud_sqlserver_restart_db_instance
+	tencentcloud_sqlserver_config_terminate_db_instance
+	tencentcloud_sqlserver_restore_instance
+	tencentcloud_sqlserver_rollback_instance
 
 SSL Certificates
   Data Source
@@ -1428,6 +1450,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_cross_border_flow_monitor":             dataSourceTencentCloudCcnCrossBorderFlowMonitor(),
 			"tencentcloud_ccn_cross_border_region_bandwidth_limits":  dataSourceTencentCloudCcnCrossBorderRegionBandwidthLimits(),
 			"tencentcloud_dc_instances":                              dataSourceTencentCloudDcInstances(),
+			"tencentcloud_dc_access_points":                          dataSourceTencentCloudDcAccessPoints(),
 			"tencentcloud_dc_internet_address_quota":                 dataSourceTencentCloudDcInternetAddressQuota(),
 			"tencentcloud_dc_internet_address_statistics":            dataSourceTencentCloudDcInternetAddressStatistics(),
 			"tencentcloud_dc_public_direct_connect_tunnel_routes":    dataSourceTencentCloudDcPublicDirectConnectTunnelRoutes(),
@@ -1577,6 +1600,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_instances":                          dataSourceTencentCloudCkafkaInstances(),
 			"tencentcloud_ckafka_connect_resource":                   dataSourceTencentCloudCkafkaConnectResource(),
 			"tencentcloud_ckafka_region":                             dataSourceTencentCloudCkafkaRegion(),
+			"tencentcloud_ckafka_datahub_topic":                      dataSourceTencentCloudCkafkaDatahubTopic(),
+			"tencentcloud_ckafka_datahub_group_offsets":              dataSourceTencentCloudCkafkaDatahubGroupOffsets(),
+			"tencentcloud_ckafka_datahub_task":                       dataSourceTencentCloudCkafkaDatahubTask(),
+			"tencentcloud_ckafka_group":                              dataSourceTencentCloudCkafkaGroup(),
+			"tencentcloud_ckafka_group_offsets":                      dataSourceTencentCloudCkafkaGroupOffsets(),
 			"tencentcloud_audit_cos_regions":                         dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                           dataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                    dataSourceTencentCloudAudits(),
@@ -1795,6 +1823,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_routes":                                    resourceTencentCloudCcnRoutes(),
 			"tencentcloud_ccn_instances_accept_attach":                   resourceTencentCloudCcnInstancesAcceptAttach(),
 			"tencentcloud_ccn_instances_reset_attach":                    resourceTencentCloudCcnInstancesResetAttach(),
+			"tencentcloud_dc_instance":                                   resourceTencentCloudDcInstance(),
 			"tencentcloud_dcx":                                           resourceTencentCloudDcxInstance(),
 			"tencentcloud_dcx_extra_config":                              resourceTencentCloudDcxExtraConfig(),
 			"tencentcloud_dc_share_dcx_config":                           resourceTencentCloudDcShareDcxConfig(),
@@ -1951,6 +1980,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_service_linked_role":                       resourceTencentCloudCamServiceLinkedRole(),
 			"tencentcloud_cam_user_saml_config":                          resourceTencentCloudCamUserSamlConfig(),
 			"tencentcloud_scf_function":                                  resourceTencentCloudScfFunction(),
+			"tencentcloud_scf_function_version":                          resourceTencentCloudScfFunctionVersion(),
+			"tencentcloud_scf_function_event_invoke_config":              resourceTencentCloudScfFunctionEventInvokeConfig(),
 			"tencentcloud_scf_namespace":                                 resourceTencentCloudScfNamespace(),
 			"tencentcloud_scf_layer":                                     resourceTencentCloudScfLayer(),
 			"tencentcloud_scf_function_alias":                            resourceTencentCloudScfFunctionAlias(),
@@ -1998,6 +2029,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_backup_plan_config":                 resourceTencentCloudPostgresqlBackupPlanConfig(),
 			"tencentcloud_postgresql_security_group_config":              resourceTencentCloudPostgresqlSecurityGroupConfig(),
 			"tencentcloud_postgresql_backup_download_restriction_config": resourceTencentCloudPostgresqlBackupDownloadRestrictionConfig(),
+			"tencentcloud_postgresql_restart_db_instance_operation":      resourceTencentCloudPostgresqlRestartDbInstanceOperation(),
+			"tencentcloud_postgresql_renew_db_instance_operation":        resourceTencentCloudPostgresqlRenewDbInstanceOperation(),
+			"tencentcloud_postgresql_isolate_db_instance_operation":      resourceTencentCloudPostgresqlIsolateDbInstanceOperation(),
+			"tencentcloud_postgresql_disisolate_db_instance_operation":   resourceTencentCloudPostgresqlDisisolateDbInstanceOperation(),
+			"tencentcloud_postgresql_rebalance_readonly_group_operation": resourceTencentCloudPostgresqlRebalanceReadonlyGroupOperation(),
+			"tencentcloud_postgresql_delete_log_backup_operation":        resourceTencentCloudPostgresqlDeleteLogBackupOperation(),
 			"tencentcloud_sqlserver_instance":                            resourceTencentCloudSqlserverInstance(),
 			"tencentcloud_sqlserver_db":                                  resourceTencentCloudSqlserverDB(),
 			"tencentcloud_sqlserver_account":                             resourceTencentCloudSqlserverAccount(),
@@ -2012,12 +2049,20 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_business_intelligence_file":          resourceTencentCloudSqlserverBusinessIntelligenceFile(),
 			"tencentcloud_sqlserver_business_intelligence_instance":      resourceTencentCloudSqlserverBusinessIntelligenceInstance(),
 			"tencentcloud_sqlserver_general_communication":               resourceTencentCloudSqlserverGeneralCommunication(),
+			"tencentcloud_sqlserver_general_cloud_instance":              resourceTencentCloudSqlserverGeneralCloudInstance(),
 			"tencentcloud_sqlserver_complete_expansion":                  resourceTencentCloudSqlserverCompleteExpansion(),
 			"tencentcloud_sqlserver_config_database_cdc":                 resourceTencentCloudSqlserverConfigDatabaseCDC(),
 			"tencentcloud_sqlserver_config_database_ct":                  resourceTencentCloudSqlserverConfigDatabaseCT(),
 			"tencentcloud_sqlserver_config_database_mdf":                 resourceTencentCloudSqlserverConfigDatabaseMdf(),
 			"tencentcloud_sqlserver_config_instance_param":               resourceTencentCloudSqlserverConfigInstanceParam(),
 			"tencentcloud_sqlserver_config_instance_ro_group":            resourceTencentCloudSqlserverConfigInstanceRoGroup(),
+			"tencentcloud_sqlserver_config_instance_security_groups":     resourceTencentCloudSqlserverConfigInstanceSecurityGroups(),
+			"tencentcloud_sqlserver_renew_db_instance":                   resourceTencentCloudSqlserverRenewDBInstance(),
+			"tencentcloud_sqlserver_renew_postpaid_db_instance":          resourceTencentCloudSqlserverRenewPostpaidDBInstance(),
+			"tencentcloud_sqlserver_restart_db_instance":                 resourceTencentCloudSqlserverRestartDBInstance(),
+			"tencentcloud_sqlserver_config_terminate_db_instance":        resourceTencentCloudSqlserverConfigTerminateDBInstance(),
+			"tencentcloud_sqlserver_restore_instance":                    resourceTencentCloudSqlserverRestoreInstance(),
+			"tencentcloud_sqlserver_rollback_instance":                   resourceTencentCloudSqlserverRollbackInstance(),
 			"tencentcloud_ckafka_instance":                               resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                   resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                    resourceTencentCloudCkafkaAcl(),

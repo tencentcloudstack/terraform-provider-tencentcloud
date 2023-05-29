@@ -461,7 +461,16 @@ resource "tencentcloud_instance" "default" {
 // End of SQLServer
 
 // PostgreSQL
+const defaultPGOperationName = "keep-pg-operation"
+const OperationPresetPGSQL = `
+data "tencentcloud_postgresql_instances" "foo" {
+  name = "` + defaultPGOperationName + `"
+}
 
+locals {
+  pgsql_id = data.tencentcloud_postgresql_instances.foo.instance_list.0.id
+}
+`
 const defaultPGSQLName = "keep-postgresql"
 const CommonPresetPGSQL = `
 data "tencentcloud_postgresql_instances" "foo" {

@@ -28,6 +28,8 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -73,13 +75,11 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 		},
 		"vpc_id": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Description: "ID of VPC.",
 		},
 		"subnet_id": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Description: "ID of subnet.",
 		},
@@ -449,6 +449,70 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 	return nil
 }
 
+func sqlServerAllInstanceNetUpdate(d *schema.ResourceData, meta interface{}) error {
+	var (
+		logId       = getLogId(contextNil)
+		request     = sqlserver.NewModifyDBInstanceNetworkRequest()
+		flowRequest = sqlserver.NewDescribeFlowStatusRequest()
+		flowId      int64
+		instanceId  = d.Id()
+	)
+
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		vpcId := d.Get("vpc_id").(string)
+		subnetId := d.Get("subnet_id").(string)
+		request.InstanceId = &instanceId
+		request.NewVpcId = &vpcId
+		request.NewSubnetId = &subnetId
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().ModifyDBInstanceNetwork(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			if result == nil {
+				e = fmt.Errorf("sqlserver configInstanceNetwork not exists")
+				return resource.NonRetryableError(e)
+			}
+
+			flowId = *result.Response.FlowId
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update sqlserver configInstanceNetwork failed, reason:%+v", logId, err)
+			return err
+		}
+
+		flowRequest.FlowId = &flowId
+		err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().DescribeFlowStatus(flowRequest)
+			if e != nil {
+				return retryError(e)
+			}
+
+			if *result.Response.Status == SQLSERVER_TASK_SUCCESS {
+				return nil
+			} else if *result.Response.Status == SQLSERVER_TASK_RUNNING {
+				return resource.RetryableError(fmt.Errorf("sqlserver configInstanceNetwork status is running"))
+			} else if *result.Response.Status == int64(SQLSERVER_TASK_FAIL) {
+				return resource.NonRetryableError(fmt.Errorf("sqlserver configInstanceNetwork status is fail"))
+			} else {
+				e = fmt.Errorf("sqlserver configInstanceNetwork status illegal")
+				return resource.NonRetryableError(e)
+			}
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s create sqlserver configInstanceNetwork failed, reason:%+v", logId, err)
+			return err
+		}
+	}
+	return nil
+}
+
 func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_sqlserver_instance.update")()
 
@@ -458,6 +522,11 @@ func resourceTencentCloudSqlserverInstanceUpdate(d *schema.ResourceData, meta in
 
 	//basic info update
 	if err := sqlServerAllInstanceRoleUpdate(ctx, d, meta); err != nil {
+		return err
+	}
+
+	//update network
+	if err := sqlServerAllInstanceNetUpdate(d, meta); err != nil {
 		return err
 	}
 
@@ -579,26 +648,15 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 		errRet = outErr
 	}
 
-	waitSwitch := d.Get("wait_switch").(int)
-	if waitSwitch == 0 {
-		//computed
-		_ = d.Set("ro_flag", instance.ROFlag)
-		_ = d.Set("create_time", instance.CreateTime)
-		_ = d.Set("status", instance.Status)
-		_ = d.Set("memory", instance.Memory)
-		_ = d.Set("storage", instance.Storage)
-		_ = d.Set("vip", instance.Vip)
-		_ = d.Set("vport", instance.Vport)
-		_ = d.Set("security_groups", securityGroup)
-	} else {
-		//computed
-		_ = d.Set("ro_flag", instance.ROFlag)
-		_ = d.Set("create_time", instance.CreateTime)
-		_ = d.Set("status", instance.Status)
-		_ = d.Set("vip", instance.Vip)
-		_ = d.Set("vport", instance.Vport)
-		_ = d.Set("security_groups", securityGroup)
-	}
+	//computed
+	_ = d.Set("ro_flag", instance.ROFlag)
+	_ = d.Set("create_time", instance.CreateTime)
+	_ = d.Set("status", instance.Status)
+	_ = d.Set("memory", instance.Memory)
+	_ = d.Set("storage", instance.Storage)
+	_ = d.Set("vip", instance.Vip)
+	_ = d.Set("vport", instance.Vport)
+	_ = d.Set("security_groups", securityGroup)
 	return
 }
 

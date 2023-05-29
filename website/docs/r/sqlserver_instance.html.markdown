@@ -46,10 +46,10 @@ The following arguments are supported:
 * `period` - (Optional, Int) Purchase instance period in month. The value does not exceed 48.
 * `project_id` - (Optional, Int) Project ID, default value is 0.
 * `security_groups` - (Optional, Set: [`String`]) Security group bound to the instance.
-* `subnet_id` - (Optional, String, ForceNew) ID of subnet.
+* `subnet_id` - (Optional, String) ID of subnet.
 * `tags` - (Optional, Map) The tags of the SQL Server.
 * `voucher_ids` - (Optional, Set: [`String`]) An array of voucher IDs, currently only one can be used for a single order.
-* `vpc_id` - (Optional, String, ForceNew) ID of VPC.
+* `vpc_id` - (Optional, String) ID of VPC.
 * `wait_switch` - (Optional, Int) The way to execute the allocation. Supported values include: 0 - execute immediately, 1 - execute in maintenance window.
 
 ## Attributes Reference

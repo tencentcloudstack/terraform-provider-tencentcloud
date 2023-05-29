@@ -991,3 +991,268 @@ func (me *CkafkaService) DescribeCkafkaConnectResourceByFilter(ctx context.Conte
 	describeConnectResourceResp = response.Response.Result
 	return
 }
+
+func (me *CkafkaService) DescribeCkafkaDatahubTopicByFilter(ctx context.Context, paramMap map[string]interface{}) (result *ckafka.DescribeDatahubTopicsResp, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDescribeDatahubTopicsRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	offset := 0
+	limit := 50
+	for k, v := range paramMap {
+		if k == "search_word" {
+			request.SearchWord = helper.String(v.(string))
+		}
+		if k == "offset" {
+			offset = v.(int)
+		}
+		if k == "limit" {
+			limit = v.(int)
+		}
+	}
+	request.Limit = helper.IntUint64(limit)
+	request.Offset = helper.IntUint64(offset)
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCkafkaClient().DescribeDatahubTopics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Response is null")
+		return
+	}
+
+	result = response.Response.Result
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaDatahubGroupOffsetsByFilter(ctx context.Context, param map[string]interface{}) (groupOffsetTopics []*ckafka.GroupOffsetTopic, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeDatahubGroupOffsetsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "name" {
+			request.Name = v.(*string)
+		}
+		if k == "group" {
+			request.Group = v.(*string)
+		}
+		if k == "search_word" {
+			request.SearchWord = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCkafkaClient().DescribeDatahubGroupOffsets(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Result == nil {
+			break
+		}
+		groupOffsetTopics = append(groupOffsetTopics, response.Response.Result.TopicList...)
+		if len(response.Response.Result.TopicList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaDatahubTaskByFilter(ctx context.Context, param map[string]interface{}) (datahubTaskInfos []*ckafka.DatahubTaskInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeDatahubTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "search_word" {
+			request.SearchWord = v.(*string)
+		}
+		if k == "target_type" {
+			request.TargetType = v.(*string)
+		}
+		if k == "task_type" {
+			request.TaskType = v.(*string)
+		}
+		if k == "source_type" {
+			request.SourceType = v.(*string)
+		}
+		if k == "resource" {
+			request.Resource = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCkafkaClient().DescribeDatahubTasks(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.TaskList) < 1 {
+			break
+		}
+		datahubTaskInfos = append(datahubTaskInfos, response.Response.Result.TaskList...)
+		if len(response.Response.Result.TaskList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaGroupByFilter(ctx context.Context, param map[string]interface{}) (groups []*ckafka.DescribeGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeGroupRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "search_word" {
+			request.SearchWord = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCkafkaClient().DescribeGroup(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.Result.GroupList) < 1 {
+			break
+		}
+		groups = append(groups, response.Response.Result.GroupList...)
+		if len(response.Response.Result.GroupList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaGroupOffsetsByFilter(ctx context.Context, param map[string]interface{}) (groupOffsetTopics []*ckafka.GroupOffsetTopic, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeGroupOffsetsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "group" {
+			request.Group = v.(*string)
+		}
+		if k == "topics" {
+			request.Topics = v.([]*string)
+		}
+		if k == "search_word" {
+			request.SearchWord = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCkafkaClient().DescribeGroupOffsets(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.TopicList) < 1 {
+			break
+		}
+		groupOffsetTopics = append(groupOffsetTopics, response.Response.Result.TopicList...)
+		if len(response.Response.Result.TopicList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
