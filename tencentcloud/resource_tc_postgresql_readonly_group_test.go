@@ -37,7 +37,7 @@ func TestAccTencentCloudPostgresqlReadonlyGroupResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyGroupResourceKey, "id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyGroupResourceKey, "master_db_instance_id"),
-					resource.TestCheckResourceAttr(testPostgresqlReadonlyGroupResourceKey, "name", "tf_ro_group_test"),
+					resource.TestCheckResourceAttr(testPostgresqlReadonlyGroupResourceKey, "name", "tf_ro_group_test_updated"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyGroupResourceKey, "vpc_id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyGroupResourceKey, "subnet_id"),
 				),

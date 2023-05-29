@@ -358,24 +358,13 @@ func resourceTencentCloudPostgresqlReadOnlyGroupUpdate(d *schema.ResourceData, m
 		// refresh the private ip with new one
 	}
 
-	// if d.HasChange("name") {
+	// required attributes
 	request.ReadOnlyGroupName = helper.String(d.Get("name").(string))
-	// }
-	// if d.HasChange("replay_lag_eliminate") {
 	request.ReplayLagEliminate = helper.IntUint64(d.Get("replay_lag_eliminate").(int))
-	// }
-	// if d.HasChange("replay_latency_eliminate") {
 	request.ReplayLatencyEliminate = helper.IntUint64(d.Get("replay_latency_eliminate").(int))
-	// }
-	// if d.HasChange("max_replay_lag") {
 	request.MaxReplayLag = helper.IntUint64(d.Get("max_replay_lag").(int))
-	// }
-	// if d.HasChange("max_replay_latency") {
 	request.MaxReplayLatency = helper.IntUint64(d.Get("max_replay_latency").(int))
-	// }
-	// if d.HasChange("min_delay_eliminate_reserve") {
 	request.MinDelayEliminateReserve = helper.IntUint64(d.Get("min_delay_eliminate_reserve").(int))
-	// }
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().ModifyReadOnlyGroupConfig(request)
