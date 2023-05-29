@@ -211,8 +211,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     COMMON_PAYTYPE_POSTPAID,
-				ForceNew:    true,
-				Description: "Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`.",
+				Description: "Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`. It support to update the type from `POSTPAID_BY_HOUR` to `PREPAID`.",
 			},
 			"period": {
 				Type:        schema.TypeInt,
@@ -795,13 +794,83 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	d.Partial(true)
 
 	if err := helper.ImmutableArgsChek(d,
-		"charge_type",
-		"period",
-		"auto_renew_flag",
-		"auto_voucher",
+		// "charge_type",
+		// "period",
+		// "auto_renew_flag",
+		// "auto_voucher",
 		"voucher_ids",
 	); err != nil {
 		return err
+	}
+
+	if d.HasChange("charge_type") {
+		var (
+			chargeTypeOld string
+			chargeTypeNew string
+			period        = 1
+			autoRenew     = 0
+			autoVoucher   = 0
+			request       = postgresql.NewModifyDBInstanceChargeTypeRequest()
+		)
+
+		old, new := d.GetChange("charge_type")
+		if old != nil {
+			chargeTypeOld = old.(string)
+		}
+		if new != nil {
+			chargeTypeNew = new.(string)
+		}
+
+		// The real Update operation rather than the operation from create
+		if chargeTypeOld != "" && chargeTypeOld != chargeTypeNew {
+			if v, ok := d.GetOk("period"); ok {
+				log.Printf("period set")
+				period = v.(int)
+			} else {
+				log.Printf("period not set")
+			}
+
+			if v, ok := d.GetOk("auto_renew_flag"); ok {
+				log.Printf("auto_renew_flag set")
+				autoRenew = v.(int)
+			} else {
+				log.Printf("auto_renew_flag not set")
+			}
+
+			if v, ok := d.GetOk("auto_voucher"); ok {
+				log.Printf("auto_voucher set")
+				autoVoucher = v.(int)
+			} else {
+				log.Printf("auto_voucher not set")
+			}
+
+			request.DBInstanceId = &instanceId
+			request.InstanceChargeType = &chargeTypeNew
+			request.Period = helper.IntInt64(period)
+			request.AutoRenewFlag = helper.IntInt64(autoRenew)
+			request.AutoVoucher = helper.IntInt64(autoVoucher)
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().ModifyDBInstanceChargeType(request)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s operate postgresql ModifyDbInstanceChargeType failed, reason:%+v", logId, err)
+				return err
+			}
+
+			// wait unit charge type changing operation of instance done
+			service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+			conf := BuildStateChangeConf([]string{}, []string{"running"}, 2*readRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
+			if _, e := conf.WaitForState(); e != nil {
+				return e
+			}
+		}
 	}
 
 	var outErr, inErr, checkErr error

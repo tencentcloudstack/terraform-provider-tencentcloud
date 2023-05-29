@@ -189,7 +189,7 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.
 * `auto_voucher` - (Optional, Int) Whether to use voucher, `1` for enabled.
 * `backup_plan` - (Optional, List) Specify DB backup plan.
-* `charge_type` - (Optional, String, ForceNew) Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`.
+* `charge_type` - (Optional, String) Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`. It support to update the type from `POSTPAID_BY_HOUR` to `PREPAID`.
 * `charset` - (Optional, String, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
 * `db_kernel_version` - (Optional, String) PostgreSQL kernel version number. If it is specified, an instance running kernel DBKernelVersion will be created. It supports updating the minor kernel version immediately.
 * `db_major_version` - (Optional, String) PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
