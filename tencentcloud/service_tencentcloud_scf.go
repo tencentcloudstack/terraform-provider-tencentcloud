@@ -789,3 +789,63 @@ func (me *ScfService) DeleteScfReservedConcurrencyConfigById(ctx context.Context
 
 	return
 }
+
+func (me *ScfService) DescribeScfProvisionedConcurrencyConfigById(ctx context.Context, functionName string, qualifier string, namespace string) (provisionedConcurrencyConfig *scf.VersionProvisionedConcurrencyInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := scf.NewGetProvisionedConcurrencyConfigRequest()
+	request.FunctionName = &functionName
+	request.Qualifier = &qualifier
+	request.Namespace = &namespace
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().GetProvisionedConcurrencyConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	info := response.Response.Allocated
+
+	if len(info) < 1 {
+		return
+	}
+
+	provisionedConcurrencyConfig = info[0]
+
+	return
+}
+
+func (me *ScfService) DeleteScfProvisionedConcurrencyConfigById(ctx context.Context, functionName string, qualifier string, namespace string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := scf.NewDeleteProvisionedConcurrencyConfigRequest()
+	request.FunctionName = &functionName
+	request.Qualifier = &qualifier
+	request.Namespace = &namespace
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().DeleteProvisionedConcurrencyConfig(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
