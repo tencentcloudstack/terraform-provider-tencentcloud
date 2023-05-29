@@ -42,7 +42,7 @@ The following arguments are supported:
 * `replay_lag_eliminate` - (Required, Int) Whether to remove a read-only replica from an RO group if the delay between the read-only replica and the primary instance exceeds the threshold. Valid values: 0 (no), 1 (yes).
 * `replay_latency_eliminate` - (Required, Int) Whether to remove a read-only replica from an RO group if the sync log size difference between the read-only replica and the primary instance exceeds the threshold. Valid values: 0 (no), 1 (yes).
 * `subnet_id` - (Required, String) VPC subnet ID.
-* `vpc_id` - (Required, String, ForceNew) VPC ID.
+* `vpc_id` - (Required, String) VPC ID.
 * `security_groups_ids` - (Optional, Set: [`String`]) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
 
 ## Attributes Reference

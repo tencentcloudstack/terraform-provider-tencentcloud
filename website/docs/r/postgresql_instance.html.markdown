@@ -184,6 +184,8 @@ The following arguments are supported:
 * `name` - (Required, String) Name of the postgresql instance.
 * `root_password` - (Required, String) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
 * `storage` - (Required, Int) Volume size(in GB). Allowed value must be a multiple of 10. The storage must be set with the limit of `storage_min` and `storage_max` which data source `tencentcloud_postgresql_specinfos` provides.
+* `subnet_id` - (Required, String) ID of subnet.
+* `vpc_id` - (Required, String) ID of VPC.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.
 * `auto_voucher` - (Optional, Int) Whether to use voucher, `1` for enabled.
 * `backup_plan` - (Optional, List) Specify DB backup plan.
@@ -204,10 +206,8 @@ The following arguments are supported:
 * `public_access_switch` - (Optional, Bool) Indicates whether to enable the access to an instance from public network or not.
 * `root_user` - (Optional, String, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.
 * `security_groups` - (Optional, Set: [`String`]) ID of security group. If both vpc_id and subnet_id are not set, this argument should not be set either.
-* `subnet_id` - (Optional, String, ForceNew) ID of subnet.
 * `tags` - (Optional, Map) The available tags within this postgresql.
 * `voucher_ids` - (Optional, List: [`String`]) Specify Voucher Ids if `auto_voucher` was `1`, only support using 1 vouchers for now.
-* `vpc_id` - (Optional, String, ForceNew) ID of VPC.
 
 The `backup_plan` object supports the following:
 
