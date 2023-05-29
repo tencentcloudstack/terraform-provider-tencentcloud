@@ -1728,3 +1728,227 @@ func (me *ClbService) DeleteClbFunctionTargetsAttachmentById(ctx context.Context
 
 	return
 }
+
+func (me *ClbService) DescribeClbClusterResourcesByFilter(ctx context.Context, param map[string]interface{}) (clusterResources []*clb.ClusterResource, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeClusterResourcesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*clb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeClusterResources(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ClusterResourceSet) < 1 {
+			break
+		}
+		clusterResources = append(clusterResources, response.Response.ClusterResourceSet...)
+		if len(response.Response.ClusterResourceSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbCrossTargetsByFilter(ctx context.Context, param map[string]interface{}) (crossTargets []*clb.CrossTargets, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeCrossTargetsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*clb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeCrossTargets(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CrossTargetSet) < 1 {
+			break
+		}
+		crossTargets = append(crossTargets, response.Response.CrossTargetSet...)
+		if len(response.Response.CrossTargetSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbExclusiveClustersByFilter(ctx context.Context, param map[string]interface{}) (exclusiveClusters []*clb.Cluster, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeExclusiveClustersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*clb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeExclusiveClusters(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ClusterSet) < 1 {
+			break
+		}
+		exclusiveClusters = append(exclusiveClusters, response.Response.ClusterSet...)
+		if len(response.Response.ClusterSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbIdleInstancesByFilter(ctx context.Context, param map[string]interface{}) (idleLoadbalancers []*clb.IdleLoadBalancer, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeIdleLoadBalancersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "LoadBalancerRegion" {
+			request.LoadBalancerRegion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseClbClient().DescribeIdleLoadBalancers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.IdleLoadBalancers) < 1 {
+			break
+		}
+		idleLoadbalancers = append(idleLoadbalancers, response.Response.IdleLoadBalancers...)
+		if len(response.Response.IdleLoadBalancers) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ClbService) DescribeClbListenersByTargets(ctx context.Context, param map[string]interface{}) (listenersByTargets []*clb.LBItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = clb.NewDescribeLBListenersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Backends" {
+			request.Backends = v.([]*clb.LbRsItem)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().DescribeLBListeners(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	listenersByTargets = response.Response.LoadBalancers
+
+	return
+}
