@@ -592,6 +592,9 @@ TencentDB for PostgreSQL(PostgreSQL)
 	tencentcloud_postgresql_xlogs
 	tencentcloud_postgresql_parameter_templates
 	tencentcloud_postgresql_readonly_groups
+	tencentcloud_postgresql_base_backups
+	tencentcloud_postgresql_log_backups
+	tencentcloud_postgresql_backup_download_urls
 
   Resource
 	tencentcloud_postgresql_instance
@@ -1619,6 +1622,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_xlogs":                          datasourceTencentCloudPostgresqlXlogs(),
 			"tencentcloud_postgresql_parameter_templates":            dataSourceTencentCloudPostgresqlParameterTemplates(),
 			"tencentcloud_postgresql_readonly_groups":                dataSourceTencentCloudPostgresqlReadonlyGroups(),
+			"tencentcloud_postgresql_base_backups":                   dataSourceTencentCloudPostgresqlBaseBackups(),
+			"tencentcloud_postgresql_log_backups":                    dataSourceTencentCloudPostgresqlLogBackups(),
+			"tencentcloud_postgresql_backup_download_urls":           dataSourceTencentCloudPostgresqlBackupDownloadUrls(),
 			"tencentcloud_sqlserver_zone_config":                     dataSourceTencentSqlserverZoneConfig(),
 			"tencentcloud_sqlserver_instances":                       dataSourceTencentCloudSqlserverInstances(),
 			"tencentcloud_sqlserver_backups":                         dataSourceTencentCloudSqlserverBackups(),

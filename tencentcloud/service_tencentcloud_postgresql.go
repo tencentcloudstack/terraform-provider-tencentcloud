@@ -1394,3 +1394,169 @@ func (me *PostgresqlService) PostgresqlReadonlyGroupStateRefreshFunc(dbInstanceI
 		return roGroup, helper.PString(roGroup.Status), nil
 	}
 }
+
+func (me *PostgresqlService) DescribePostgresqlBackupDownloadUrlsByFilter(ctx context.Context, param map[string]interface{}) (BackupDownloadUrl *string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeBackupDownloadURLRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DBInstanceId" {
+			request.DBInstanceId = v.(*string)
+		}
+		if k == "BackupType" {
+			request.BackupType = v.(*string)
+		}
+		if k == "BackupId" {
+			request.BackupId = v.(*string)
+		}
+		if k == "URLExpireTime" {
+			request.URLExpireTime = v.(*uint64)
+		}
+		if k == "BackupDownloadRestriction" {
+			request.BackupDownloadRestriction = v.(*postgresql.BackupDownloadRestriction)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UsePostgresqlClient().DescribeBackupDownloadURL(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response.BackupDownloadURL == nil {
+		return
+	}
+	BackupDownloadUrl = response.Response.BackupDownloadURL
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlBaseBackupsByFilter(ctx context.Context, param map[string]interface{}) (BaseBackups []*postgresql.BaseBackup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeBaseBackupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "MinFinishTime" {
+			request.MinFinishTime = v.(*string)
+		}
+		if k == "MaxFinishTime" {
+			request.MaxFinishTime = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*postgresql.Filter)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UsePostgresqlClient().DescribeBaseBackups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BaseBackupSet) < 1 {
+			break
+		}
+		BaseBackups = append(BaseBackups, response.Response.BaseBackupSet...)
+		if len(response.Response.BaseBackupSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlLogBackupsByFilter(ctx context.Context, param map[string]interface{}) (LogBackups []*postgresql.LogBackup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeLogBackupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "MinFinishTime" {
+			request.MinFinishTime = v.(*string)
+		}
+		if k == "MaxFinishTime" {
+			request.MaxFinishTime = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*postgresql.Filter)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UsePostgresqlClient().DescribeLogBackups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.LogBackupSet) < 1 {
+			break
+		}
+		LogBackups = append(LogBackups, response.Response.LogBackupSet...)
+		if len(response.Response.LogBackupSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
