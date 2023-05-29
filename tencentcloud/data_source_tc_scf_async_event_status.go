@@ -85,11 +85,11 @@ func dataSourceTencentCloudScfAsyncEventStatusRead(d *schema.ResourceData, meta 
 
 	service := ScfService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeScfAsyncEventStatus(ctx, paramMap)
+		res, e := service.DescribeScfAsyncEventStatus(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		result = result
+		result = res
 		return nil
 	})
 	if err != nil {
@@ -99,7 +99,7 @@ func dataSourceTencentCloudScfAsyncEventStatusRead(d *schema.ResourceData, meta 
 	asyncEventStatusMap := map[string]interface{}{}
 	if result != nil {
 
-		if result != nil {
+		if result.Status != nil {
 			asyncEventStatusMap["status"] = result.Status
 		}
 

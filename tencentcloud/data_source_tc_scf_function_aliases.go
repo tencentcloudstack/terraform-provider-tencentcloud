@@ -84,7 +84,7 @@ func dataSourceTencentCloudScfFunctionAliases() *schema.Resource {
 											},
 										},
 									},
-									"addtion_version_matchs": {
+									"addition_version_matchs": {
 										Type:        schema.TypeList,
 										Computed:    true,
 										Description: "Additional version with rule-based routing.",
@@ -242,7 +242,7 @@ func dataSourceTencentCloudScfFunctionAliasesRead(d *schema.ResourceData, meta i
 						addtionVersionMatchsList = append(addtionVersionMatchsList, addtionVersionMatchsMap)
 					}
 
-					routingConfigMap["addtion_version_matchs"] = addtionVersionMatchsList
+					routingConfigMap["addition_version_matchs"] = addtionVersionMatchsList
 				}
 
 				aliasMap["routing_config"] = []interface{}{routingConfigMap}
