@@ -286,6 +286,7 @@ Cloud Load Balancer(CLB)
 	tencentcloud_clb_cross_targets
 	tencentcloud_clb_exclusive_clusters
 	tencentcloud_clb_idle_instances
+	tencentcloud_clb_listeners_by_targets
 
   Resource
     tencentcloud_clb_instance
