@@ -849,3 +849,469 @@ func (me *ScfService) DeleteScfProvisionedConcurrencyConfigById(ctx context.Cont
 
 	return
 }
+
+func (me *ScfService) DescribeScfAccountInfo(ctx context.Context) (accountInfo *scf.GetAccountResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = scf.NewGetAccountRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().GetAccount(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	accountInfo = response.Response
+
+	return
+}
+
+func (me *ScfService) DescribeScfAsyncEventManagementByFilter(ctx context.Context, param map[string]interface{}) (AsyncEventManagement []*scf.AsyncEvent, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = scf.NewListAsyncEventsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FunctionName" {
+			request.FunctionName = v.(*string)
+		}
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+		if k == "Qualifier" {
+			request.Qualifier = v.(*string)
+		}
+		if k == "InvokeType" {
+			request.InvokeType = v.([]*string)
+		}
+		if k == "Status" {
+			request.Status = v.([]*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+		if k == "Orderby" {
+			request.Orderby = v.(*string)
+		}
+		if k == "InvokeRequestId" {
+			request.InvokeRequestId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseScfClient().ListAsyncEvents(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EventList) < 1 {
+			break
+		}
+		AsyncEventManagement = append(AsyncEventManagement, response.Response.EventList...)
+		if len(response.Response.EventList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ScfService) DescribeScfTriggersByFilter(ctx context.Context, param map[string]interface{}) (Triggers []*scf.TriggerInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = scf.NewListTriggersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FunctionName" {
+			request.FunctionName = v.(*string)
+		}
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*scf.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseScfClient().ListTriggers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Triggers) < 1 {
+			break
+		}
+		Triggers = append(Triggers, response.Response.Triggers...)
+		if len(response.Response.Triggers) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ScfService) DescribeScfAsyncEventStatus(ctx context.Context, param map[string]interface{}) (asyncEventStatus *scf.AsyncEventStatus, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = scf.NewGetAsyncEventStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InvokeRequestId" {
+			request.InvokeRequestId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().GetAsyncEventStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	asyncEventStatus = response.Response.Result
+
+	return
+}
+
+func (me *ScfService) DescribeScfFunctionAddress(ctx context.Context, param map[string]interface{}) (functionAddress *scf.GetFunctionAddressResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = scf.NewGetFunctionAddressRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FunctionName" {
+			request.FunctionName = v.(*string)
+		}
+		if k == "Qualifier" {
+			request.Qualifier = v.(*string)
+		}
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().GetFunctionAddress(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	functionAddress = response.Response
+
+	return
+}
+
+func (me *ScfService) DescribeScfRequestStatusByFilter(ctx context.Context, param map[string]interface{}) (requestStatus []*scf.RequestStatus, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = scf.NewGetRequestStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FunctionName" {
+			request.FunctionName = v.(*string)
+		}
+		if k == "FunctionRequestId" {
+			request.FunctionRequestId = v.(*string)
+		}
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().GetRequestStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	requestStatus = response.Response.Data
+
+	return
+}
+
+func (me *ScfService) DescribeScfFunctionAliasesByFilter(ctx context.Context, param map[string]interface{}) (FunctionAliases []*scf.Alias, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = scf.NewListAliasesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FunctionName" {
+			request.FunctionName = v.(*string)
+		}
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+		if k == "FunctionVersion" {
+			request.FunctionVersion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = helper.Int64ToStrPoint(offset)
+		request.Limit = helper.Int64ToStrPoint(limit)
+		response, err := me.client.UseScfClient().ListAliases(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Aliases) < 1 {
+			break
+		}
+		FunctionAliases = append(FunctionAliases, response.Response.Aliases...)
+		if len(response.Response.Aliases) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ScfService) DescribeScfLayerVersions(ctx context.Context, param map[string]interface{}) (layerVersions []*scf.LayerVersionInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = scf.NewListLayerVersionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "LayerName" {
+			request.LayerName = v.(*string)
+		}
+		if k == "CompatibleRuntime" {
+			request.CompatibleRuntime = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseScfClient().ListLayerVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	layerVersions = response.Response.LayerVersions
+
+	return
+}
+
+func (me *ScfService) DescribeScfLayersByFilter(ctx context.Context, param map[string]interface{}) (layers []*scf.LayerVersionInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = scf.NewListLayersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CompatibleRuntime" {
+			request.CompatibleRuntime = v.(*string)
+		}
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseScfClient().ListLayers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Layers) < 1 {
+			break
+		}
+		layers = append(layers, response.Response.Layers...)
+		if len(response.Response.Layers) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *ScfService) DescribeScfFunctionVersionsByFilter(ctx context.Context, param map[string]interface{}) (functionVersions []*scf.FunctionVersion, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = scf.NewListVersionByFunctionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FunctionName" {
+			request.FunctionName = v.(*string)
+		}
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseScfClient().ListVersionByFunction(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.FunctionVersion) < 1 {
+			break
+		}
+		functionVersions = append(functionVersions, response.Response.Versions...)
+		if len(response.Response.FunctionVersion) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

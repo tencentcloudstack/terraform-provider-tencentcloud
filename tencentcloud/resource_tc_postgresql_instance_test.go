@@ -234,6 +234,44 @@ func TestAccTencentCloudPostgresqlInstanceResource_prepaid(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudPostgresqlInstanceResource_postpaid_to_prepaid(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccPostgresqlInstancePostpaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "name", "tf_postsql_postpaid"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "period"),
+				),
+			},
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccPostgresqlInstancePostpaid_to_Prepaid,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
+					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "name", "tf_postsql_postpaid_updated_to_prepaid"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "charge_type", "PREPAID"),
+					resource.TestCheckResourceAttr(testPostgresqlInstanceResourceKey, "period", "2"),
+				),
+			},
+			{
+				ResourceName:            testPostgresqlInstanceResourceKey,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"root_password", "spec_code", "public_access_switch", "charset", "backup_plan", "period"},
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -363,6 +401,63 @@ resource "tencentcloud_postgresql_instance" "test" {
   }
 }
 `
+const testAccPostgresqlInstancePostpaid = defaultVpcSubnets + `
+data "tencentcloud_availability_zones_by_product" "zone" {
+  product = "postgres"
+}
+
+data "tencentcloud_security_groups" "internal" {
+  name = "default"
+}
+
+locals {
+  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+}
+
+resource "tencentcloud_postgresql_instance" "test" {
+  name 				= "tf_postsql_postpaid"
+  availability_zone = var.default_az
+  charge_type 		= "POSTPAID_BY_HOUR"
+  period            = 1
+  vpc_id  	  		= local.vpc_id
+  subnet_id 		= local.subnet_id
+  engine_version	= "13.3"
+  root_password	    = "t1qaA2k1wgvfa3?ZZZ"
+  security_groups   = [local.sg_id]
+  charset			= "LATIN1"
+  project_id 		= 0
+  memory 			= 2
+  storage 			= 20
+}`
+
+const testAccPostgresqlInstancePostpaid_to_Prepaid = defaultVpcSubnets + `
+data "tencentcloud_availability_zones_by_product" "zone" {
+  product = "postgres"
+}
+
+data "tencentcloud_security_groups" "internal" {
+  name = "default"
+}
+
+locals {
+  sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+}
+
+resource "tencentcloud_postgresql_instance" "test" {
+  name 				= "tf_postsql_postpaid_updated_to_prepaid"
+  availability_zone = var.default_az
+  charge_type 		= "PREPAID"
+  period            = 2
+  vpc_id  	  		= local.vpc_id
+  subnet_id 		= local.subnet_id
+  engine_version	= "13.3"
+  root_password	    = "t1qaA2k1wgvfa3?ZZZ"
+  security_groups   = [local.sg_id]
+  charset			= "LATIN1"
+  project_id 		= 0
+  memory 			= 2
+  storage 			= 20
+}`
 
 const testAccPostgresqlInstancePrepaid = defaultVpcSubnets + `
 data "tencentcloud_availability_zones_by_product" "zone" {
