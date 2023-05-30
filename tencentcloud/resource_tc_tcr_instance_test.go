@@ -155,7 +155,8 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudTcrInstanceResource_paypaid(t *testing.T) {
+// Neet to fix because tcr deteleInstance api has issue
+func TestAccTencentCloudNeedFixTcrInstanceResource_paypaid(t *testing.T) {
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
