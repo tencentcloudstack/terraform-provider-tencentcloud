@@ -467,30 +467,27 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 			roGroupIdNew = new.(string)
 		}
 
-		// The real Update operation rather than the operation from create
-		if roGroupIdOld != "" && roGroupIdOld != roGroupIdNew {
-			request.DBInstanceId = &instanceId
-			request.ReadOnlyGroupId = &roGroupIdOld
-			request.NewReadOnlyGroupId = &roGroupIdNew
+		request.DBInstanceId = &instanceId
+		request.ReadOnlyGroupId = &roGroupIdOld
+		request.NewReadOnlyGroupId = &roGroupIdNew
 
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().ModifyDBInstanceReadOnlyGroup(request)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-				return nil
-			})
-			if err != nil {
-				log.Printf("[CRITAL]%s operate postgresql ChangeDbInstanceReadOnlyGroupOperation failed, reason:%+v", logId, err)
-				return err
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().ModifyDBInstanceReadOnlyGroup(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate postgresql ChangeDbInstanceReadOnlyGroupOperation failed, reason:%+v", logId, err)
+			return err
+		}
 
-			conf := BuildStateChangeConf([]string{}, []string{"ok"}, 2*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupStateRefreshFunc(masterInstanceId, roGroupIdNew, []string{}))
-			if _, e := conf.WaitForState(); e != nil {
-				return e
-			}
+		conf := BuildStateChangeConf([]string{}, []string{"ok"}, 2*readRetryTimeout, time.Second, service.PostgresqlReadonlyGroupStateRefreshFunc(masterInstanceId, roGroupIdNew, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
 		}
 	}
 
