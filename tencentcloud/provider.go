@@ -282,6 +282,17 @@ Cloud Load Balancer(CLB)
     tencentcloud_clb_listeners
     tencentcloud_clb_redirections
     tencentcloud_clb_target_groups
+	tencentcloud_clb_cluster_resources
+	tencentcloud_clb_cross_targets
+	tencentcloud_clb_exclusive_clusters
+	tencentcloud_clb_idle_instances
+	tencentcloud_clb_listeners_by_targets
+	tencentcloud_clb_instance_by_cert_id
+	tencentcloud_clb_instance_traffic
+	tencentcloud_clb_instance_detail
+	tencentcloud_clb_resources
+	tencentcloud_clb_target_group_list
+	tencentcloud_clb_target_health
 
   Resource
     tencentcloud_clb_instance
@@ -302,6 +313,7 @@ Cloud Load Balancer(CLB)
 	tencentcloud_clb_instance_sla_config
 	tencentcloud_clb_instance_mix_ip_target_config
 	tencentcloud_clb_replace_cert_for_lbs
+	tencentcloud_clb_security_group_attachment
 
 Cloud Object Storage(COS)
   Data Source
@@ -1551,6 +1563,17 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_attachments":                           dataSourceTencentCloudClbServerAttachments(),
 			"tencentcloud_clb_redirections":                          dataSourceTencentCloudClbRedirections(),
 			"tencentcloud_clb_target_groups":                         dataSourceTencentCloudClbTargetGroups(),
+			"tencentcloud_clb_cluster_resources":                     dataSourceTencentCloudClbClusterResources(),
+			"tencentcloud_clb_cross_targets":                         dataSourceTencentCloudClbCrossTargets(),
+			"tencentcloud_clb_exclusive_clusters":                    dataSourceTencentCloudClbExclusiveClusters(),
+			"tencentcloud_clb_idle_instances":                        dataSourceTencentCloudClbIdleInstances(),
+			"tencentcloud_clb_listeners_by_targets":                  dataSourceTencentCloudClbListenersByTargets(),
+			"tencentcloud_clb_instance_by_cert_id":                   dataSourceTencentCloudClbInstanceByCertId(),
+			"tencentcloud_clb_instance_traffic":                      dataSourceTencentCloudClbInstanceTraffic(),
+			"tencentcloud_clb_instance_detail":                       dataSourceTencentCloudClbInstanceDetail(),
+			"tencentcloud_clb_resources":                             dataSourceTencentCloudClbResources(),
+			"tencentcloud_clb_target_group_list":                     dataSourceTencentCloudClbTargetGroupList(),
+			"tencentcloud_clb_target_health":                         dataSourceTencentCloudClbTargetHealth(),
 			"tencentcloud_mongodb_zone_config":                       dataSourceTencentCloudMongodbZoneConfig(),
 			"tencentcloud_mongodb_instances":                         dataSourceTencentCloudMongodbInstances(),
 			"tencentcloud_mongodb_instance_backups":                  dataSourceTencentCloudMongodbInstanceBackups(),
@@ -1910,6 +1933,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_instance_mix_ip_target_config":              resourceTencentCloudClbInstanceMixIpTargetConfig(),
 			"tencentcloud_clb_instance_sla_config":                        resourceTencentCloudClbInstanceSlaConfig(),
 			"tencentcloud_clb_replace_cert_for_lbs":                       resourceTencentCloudClbReplaceCertForLbs(),
+			"tencentcloud_clb_security_group_attachment":                  resourceTencentCloudClbSecurityGroupAttachment(),
 			"tencentcloud_container_cluster":                              resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":                     resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                             resourceTencentCloudTkeCluster(),
