@@ -459,7 +459,7 @@ func resourceTencentCloudPostgresqlReadOnlyInstanceUpdate(d *schema.ResourceData
 		)
 
 		masterInstanceId = d.Get("master_db_instance_id").(string)
-		old, new := d.GetChange("vpc_id")
+		old, new := d.GetChange("read_only_group_id")
 		if old != nil {
 			roGroupIdOld = old.(string)
 		}
