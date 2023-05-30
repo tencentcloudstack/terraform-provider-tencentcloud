@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_postgresql_base_backups
+```
+
+```release-note:new-data-source
+tencentcloud_postgresql_log_backups
+```
+
+```release-note:new-data-source
+tencentcloud_postgresql_backup_download_urls
+```

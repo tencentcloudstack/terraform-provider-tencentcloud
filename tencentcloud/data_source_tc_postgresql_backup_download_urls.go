@@ -17,9 +17,6 @@ data "tencentcloud_postgresql_backup_download_urls" "backup_download_urls" {
 		ip_set =
 
   }
-    tags = {
-    "createdBy" = "terraform"
-  }
 }
 ```
 */
@@ -110,11 +107,6 @@ func dataSourceTencentCloudPostgresqlBackupDownloadUrls() *schema.Resource {
 				Description: "Backup download URL.",
 			},
 
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
