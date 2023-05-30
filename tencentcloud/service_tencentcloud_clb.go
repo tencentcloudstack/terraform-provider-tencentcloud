@@ -230,6 +230,21 @@ func (me *ClbService) DeleteListenerById(ctx context.Context, clbId string, list
 	return nil
 }
 
+func (me *ClbService) DescribeTaskStatusById(ctx context.Context, taskId string) (status int64, errRet error) {
+	logId := getLogId(ctx)
+	request := clb.NewDescribeTaskStatusRequest()
+	request.TaskId = &taskId
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseClbClient().DescribeTaskStatus(request)
+	if err != nil {
+		return 0, errors.WithStack(err)
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	status = *response.Response.Status
+	return
+}
+
 func (me *ClbService) DescribeRulesByFilter(ctx context.Context, params map[string]string) (rules []*clb.RuleOutput, errRet error) {
 	logId := getLogId(ctx)
 	//listener filter
