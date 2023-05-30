@@ -6,8 +6,8 @@ Example Usage
 ```hcl
 data "tencentcloud_postgresql_db_instance_classes" "db_instance_classes" {
   zone = ""
-  d_b_engine = ""
-  d_b_major_version = ""
+  db_engine = ""
+  db_major_version = ""
   }
 ```
 */
@@ -15,6 +15,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -31,13 +32,13 @@ func dataSourceTencentCloudPostgresqlDbInstanceClasses() *schema.Resource {
 				Description: "AZ ID, which can be obtained through the `DescribeZones` API.",
 			},
 
-			"d_b_engine": {
+			"db_engine": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Database engines. Valid values:1. `postgresql` (TencentDB for PostgreSQL)2. `mssql_compatible` (MSSQL compatible-TencentDB for PostgreSQL).",
 			},
 
-			"d_b_major_version": {
+			"db_major_version": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Major version of a database, such as 12 or 13, which can be obtained through the `DescribeDBVersions` API.",
@@ -54,7 +55,7 @@ func dataSourceTencentCloudPostgresqlDbInstanceClasses() *schema.Resource {
 							Computed:    true,
 							Description: "Specification ID.",
 						},
-						"c_p_u": {
+						"cpu": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Number of CPU cores.",
@@ -74,7 +75,7 @@ func dataSourceTencentCloudPostgresqlDbInstanceClasses() *schema.Resource {
 							Computed:    true,
 							Description: "Minimum storage capacity in GB supported by this specification.",
 						},
-						"q_p_s": {
+						"qps": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Estimated QPS for this specification.",
@@ -105,11 +106,11 @@ func dataSourceTencentCloudPostgresqlDbInstanceClassesRead(d *schema.ResourceDat
 		paramMap["Zone"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("d_b_engine"); ok {
+	if v, ok := d.GetOk("db_engine"); ok {
 		paramMap["DBEngine"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("d_b_major_version"); ok {
+	if v, ok := d.GetOk("db_major_version"); ok {
 		paramMap["DBMajorVersion"] = helper.String(v.(string))
 	}
 
@@ -141,7 +142,7 @@ func dataSourceTencentCloudPostgresqlDbInstanceClassesRead(d *schema.ResourceDat
 			}
 
 			if classInfo.CPU != nil {
-				classInfoMap["c_p_u"] = classInfo.CPU
+				classInfoMap["cpu"] = classInfo.CPU
 			}
 
 			if classInfo.Memory != nil {
@@ -157,7 +158,7 @@ func dataSourceTencentCloudPostgresqlDbInstanceClassesRead(d *schema.ResourceDat
 			}
 
 			if classInfo.QPS != nil {
-				classInfoMap["q_p_s"] = classInfo.QPS
+				classInfoMap["qps"] = classInfo.QPS
 			}
 
 			ids = append(ids, *classInfo.SpecCode)

@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudPostgresqlBackupDownloadUrlsDataSource_basic(t *testing.T) {
@@ -24,10 +25,10 @@ func TestAccTencentCloudPostgresqlBackupDownloadUrlsDataSource_basic(t *testing.
 const testAccPostgresqlBackupDownloadUrlsDataSource = `
 
 data "tencentcloud_postgresql_backup_download_urls" "backup_download_urls" {
-  d_b_instance_id = ""
+  db_instance_id = ""
   backup_type = ""
   backup_id = ""
-  u_r_l_expire_time = 
+  url_expire_time = 
   backup_download_restriction {
 		restriction_type = ""
 		vpc_restriction_effect = ""
@@ -35,9 +36,6 @@ data "tencentcloud_postgresql_backup_download_urls" "backup_download_urls" {
 		ip_restriction_effect = ""
 		ip_set = 
 
-  }
-    tags = {
-    "createdBy" = "terraform"
   }
 }
 

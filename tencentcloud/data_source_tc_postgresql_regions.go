@@ -12,6 +12,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -74,13 +75,12 @@ func dataSourceTencentCloudPostgresqlRegionsRead(d *schema.ResourceData, meta in
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	paramMap := make(map[string]interface{})
 	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var regionSet []*postgresql.RegionInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribePostgresqlRegionsByFilter(ctx, paramMap)
+		result, e := service.DescribePostgresqlRegionsByFilter(ctx)
 		if e != nil {
 			return retryError(e)
 		}

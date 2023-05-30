@@ -12,6 +12,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -28,22 +29,22 @@ func dataSourceTencentCloudPostgresqlDbInstanceVersions() *schema.Resource {
 				Description: "List of database versions.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"d_b_engine": {
+						"db_engine": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Database engines. Valid values:1. `postgresql` (TencentDB for PostgreSQL)2. `mssql_compatible` (MSSQL compatible-TencentDB for PostgreSQL).",
 						},
-						"d_b_version": {
+						"db_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Database version, such as 12.4.",
 						},
-						"d_b_major_version": {
+						"db_major_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Database major version, such as 12.",
 						},
-						"d_b_kernel_version": {
+						"db_kernel_version": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Database kernel version, such as v12.4_r1.3.",
@@ -90,13 +91,12 @@ func dataSourceTencentCloudPostgresqlDbInstanceVersionsRead(d *schema.ResourceDa
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	paramMap := make(map[string]interface{})
 	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var versionSet []*postgresql.Version
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribePostgresqlDbInstanceVersionsByFilter(ctx, paramMap)
+		result, e := service.DescribePostgresqlDbInstanceVersionsByFilter(ctx)
 		if e != nil {
 			return retryError(e)
 		}
@@ -115,19 +115,19 @@ func dataSourceTencentCloudPostgresqlDbInstanceVersionsRead(d *schema.ResourceDa
 			versionMap := map[string]interface{}{}
 
 			if version.DBEngine != nil {
-				versionMap["d_b_engine"] = version.DBEngine
+				versionMap["db_engine"] = version.DBEngine
 			}
 
 			if version.DBVersion != nil {
-				versionMap["d_b_version"] = version.DBVersion
+				versionMap["db_version"] = version.DBVersion
 			}
 
 			if version.DBMajorVersion != nil {
-				versionMap["d_b_major_version"] = version.DBMajorVersion
+				versionMap["db_major_version"] = version.DBMajorVersion
 			}
 
 			if version.DBKernelVersion != nil {
-				versionMap["d_b_kernel_version"] = version.DBKernelVersion
+				versionMap["db_kernel_version"] = version.DBKernelVersion
 			}
 
 			if version.SupportedFeatureNames != nil {

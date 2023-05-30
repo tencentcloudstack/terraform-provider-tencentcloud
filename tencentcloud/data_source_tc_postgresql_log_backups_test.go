@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudPostgresqlLogBackupsDataSource_basic(t *testing.T) {
@@ -33,9 +34,7 @@ data "tencentcloud_postgresql_log_backups" "log_backups" {
   }
   order_by = ""
   order_by_type = ""
-    tags = {
-    "createdBy" = "terraform"
-  }
+
 }
 
 `

@@ -1474,12 +1474,12 @@ func (me *PostgresqlService) DescribePostgresqlBaseBackupsByFilter(ctx context.C
 	ratelimit.Check(request.GetAction())
 
 	var (
-		offset uint64 = 0
-		limit  uint64 = 20
+		offset int64 = 0
+		limit  int64 = 20
 	)
 	for {
-		request.Offset = &offset
-		request.Limit = &limit
+		request.Offset = helper.Int64Uint64(offset)
+		request.Limit = helper.Int64Uint64(limit)
 		response, err := me.client.UsePostgresqlClient().DescribeBaseBackups(request)
 		if err != nil {
 			errRet = err

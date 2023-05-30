@@ -25,8 +25,8 @@ const testAccPostgresqlDbInstanceClassesDataSource = `
 
 data "tencentcloud_postgresql_db_instance_classes" "db_instance_classes" {
   zone = ""
-  d_b_engine = ""
-  d_b_major_version = ""
+  db_engine = ""
+  db_major_version = ""
   }
 
 `

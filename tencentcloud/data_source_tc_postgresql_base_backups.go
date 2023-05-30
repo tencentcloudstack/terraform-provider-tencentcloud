@@ -5,15 +5,21 @@ Example Usage
 
 ```hcl
 data "tencentcloud_postgresql_base_backups" "base_backups" {
-  min_finish_time = ""
-  max_finish_time = ""
-  filters {
-		name = ""
-		values =
+  min_finish_time = "%s"
+  max_finish_time = "%s"
 
+  order_by = "StartTime"
+  order_by_type = "asc"
+}
+
+data "tencentcloud_postgresql_base_backups" "base_backups" {
+  filters {
+		name = "db-instance-id"
+		values = [local.pgsql_id]
   }
-  order_by = ""
-  order_by_type = ""
+
+  order_by = "Size"
+  order_by_type = "asc"
 }
 ```
 */
@@ -182,7 +188,7 @@ func dataSourceTencentCloudPostgresqlBaseBackupsRead(d *schema.ResourceData, met
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["filters"] = tmpSet
+		paramMap["Filters"] = tmpSet
 	}
 
 	if v, ok := d.GetOk("order_by"); ok {

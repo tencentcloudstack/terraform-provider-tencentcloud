@@ -12,6 +12,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
@@ -82,13 +83,12 @@ func dataSourceTencentCloudPostgresqlZonesRead(d *schema.ResourceData, meta inte
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	paramMap := make(map[string]interface{})
 	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var zoneSet []*postgresql.ZoneInfo
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribePostgresqlZonesByFilter(ctx, paramMap)
+		result, e := service.DescribePostgresqlZonesByFilter(ctx)
 		if e != nil {
 			return retryError(e)
 		}
@@ -127,7 +127,7 @@ func dataSourceTencentCloudPostgresqlZonesRead(d *schema.ResourceData, meta inte
 			}
 
 			if zoneInfo.StandbyZoneSet != nil {
-				zoneInfoMap["standby_zone_set"] = zoneInfo.StandbyZoneSet
+				zoneInfoMap["standby_zone_set"] = helper.StringsInterfaces(zoneInfo.StandbyZoneSet)
 			}
 
 			ids = append(ids, *zoneInfo.Zone)

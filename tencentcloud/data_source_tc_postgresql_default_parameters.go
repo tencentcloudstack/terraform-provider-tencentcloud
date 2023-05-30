@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 data "tencentcloud_postgresql_default_parameters" "default_parameters" {
-  d_b_major_version = ""
-  d_b_engine = ""
+  db_major_version = ""
+  db_engine = ""
   }
 ```
 */
@@ -14,9 +14,10 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	postgresql "github.com/tencentcloud/tencentcloud-sdk-go-intl-en/tencentcloud/postgres/v20170312"
+	postgresql "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -24,13 +25,13 @@ func dataSourceTencentCloudPostgresqlDefaultParameters() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudPostgresqlDefaultParametersRead,
 		Schema: map[string]*schema.Schema{
-			"d_b_major_version": {
+			"db_major_version": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "The major database version number, such as 11, 12, 13.",
 			},
 
-			"d_b_engine": {
+			"db_engine": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Database engine, such as postgresql, mssql_compatible.",
@@ -42,7 +43,7 @@ func dataSourceTencentCloudPostgresqlDefaultParameters() *schema.Resource {
 				Description: "Parameter informationNote: This field may return null, indicating that no valid values can be obtained.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"i_d": {
+						"id": {
 							Type:        schema.TypeInt,
 							Computed:    true,
 							Description: "Parameter IDNote: this field may return `null`, indicating that no valid values can be obtained.",
@@ -90,12 +91,12 @@ func dataSourceTencentCloudPostgresqlDefaultParameters() *schema.Resource {
 							Computed:    true,
 							Description: "The minimum value of the `integer` or `real` parameterNote: this field may return `null`, indicating that no valid values can be obtained.",
 						},
-						"param_description_c_h": {
+						"param_description_ch": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Parameter description in ChineseNote: this field may return `null`, indicating that no valid values can be obtained.",
 						},
-						"param_description_e_n": {
+						"param_description_en": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Parameter description in EnglishNote: this field may return `null`, indicating that no valid values can be obtained.",
@@ -105,12 +106,12 @@ func dataSourceTencentCloudPostgresqlDefaultParameters() *schema.Resource {
 							Computed:    true,
 							Description: "Whether to restart the instance for the modified parameter to take effect. Valid values: `true` (yes), `false` (no)Note: this field may return `null`, indicating that no valid values can be obtained.",
 						},
-						"classification_c_n": {
+						"classification_cn": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Parameter category in ChineseNote: this field may return `null`, indicating that no valid values can be obtained.",
 						},
-						"classification_e_n": {
+						"classification_en": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Parameter category in EnglishNote: this field may return `null`, indicating that no valid values can be obtained.",
@@ -146,7 +147,7 @@ func dataSourceTencentCloudPostgresqlDefaultParameters() *schema.Resource {
 										Computed:    true,
 										Description: "Parameter nameNote: This field may return null, indicating that no valid values can be obtained.",
 									},
-									"d_b_kernel_version": {
+									"db_kernel_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
 										Description: "The kernel version that corresponds to the parameter informationNote: This field may return null, indicating that no valid values can be obtained.",
@@ -251,11 +252,11 @@ func dataSourceTencentCloudPostgresqlDefaultParametersRead(d *schema.ResourceDat
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	paramMap := make(map[string]interface{})
-	if v, ok := d.GetOk("d_b_major_version"); ok {
+	if v, ok := d.GetOk("db_major_version"); ok {
 		paramMap["DBMajorVersion"] = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("d_b_engine"); ok {
+	if v, ok := d.GetOk("db_engine"); ok {
 		paramMap["DBEngine"] = helper.String(v.(string))
 	}
 
@@ -283,7 +284,7 @@ func dataSourceTencentCloudPostgresqlDefaultParametersRead(d *schema.ResourceDat
 			paramInfoMap := map[string]interface{}{}
 
 			if paramInfo.ID != nil {
-				paramInfoMap["i_d"] = paramInfo.ID
+				paramInfoMap["id"] = paramInfo.ID
 			}
 
 			if paramInfo.Name != nil {
@@ -319,11 +320,11 @@ func dataSourceTencentCloudPostgresqlDefaultParametersRead(d *schema.ResourceDat
 			}
 
 			if paramInfo.ParamDescriptionCH != nil {
-				paramInfoMap["param_description_c_h"] = paramInfo.ParamDescriptionCH
+				paramInfoMap["param_description_ch"] = paramInfo.ParamDescriptionCH
 			}
 
 			if paramInfo.ParamDescriptionEN != nil {
-				paramInfoMap["param_description_e_n"] = paramInfo.ParamDescriptionEN
+				paramInfoMap["param_description_en"] = paramInfo.ParamDescriptionEN
 			}
 
 			if paramInfo.NeedReboot != nil {
@@ -331,11 +332,11 @@ func dataSourceTencentCloudPostgresqlDefaultParametersRead(d *schema.ResourceDat
 			}
 
 			if paramInfo.ClassificationCN != nil {
-				paramInfoMap["classification_c_n"] = paramInfo.ClassificationCN
+				paramInfoMap["classification_cn"] = paramInfo.ClassificationCN
 			}
 
 			if paramInfo.ClassificationEN != nil {
-				paramInfoMap["classification_e_n"] = paramInfo.ClassificationEN
+				paramInfoMap["classification_en"] = paramInfo.ClassificationEN
 			}
 
 			if paramInfo.SpecRelated != nil {
@@ -364,7 +365,7 @@ func dataSourceTencentCloudPostgresqlDefaultParametersRead(d *schema.ResourceDat
 					}
 
 					if versionRelationSet.DBKernelVersion != nil {
-						versionRelationSetMap["d_b_kernel_version"] = versionRelationSet.DBKernelVersion
+						versionRelationSetMap["db_kernel_version"] = versionRelationSet.DBKernelVersion
 					}
 
 					if versionRelationSet.Value != nil {
@@ -390,7 +391,7 @@ func dataSourceTencentCloudPostgresqlDefaultParametersRead(d *schema.ResourceDat
 					versionRelationSetList = append(versionRelationSetList, versionRelationSetMap)
 				}
 
-				paramInfoMap["version_relation_set"] = []interface{}{versionRelationSetList}
+				paramInfoMap["version_relation_set"] = versionRelationSetList
 			}
 
 			if paramInfo.SpecRelationSet != nil {
@@ -429,10 +430,10 @@ func dataSourceTencentCloudPostgresqlDefaultParametersRead(d *schema.ResourceDat
 					specRelationSetList = append(specRelationSetList, specRelationSetMap)
 				}
 
-				paramInfoMap["spec_relation_set"] = []interface{}{specRelationSetList}
+				paramInfoMap["spec_relation_set"] = specRelationSetList
 			}
 
-			ids = append(ids, *paramInfo.DBMajorVersion)
+			ids = append(ids, helper.Int64ToStr(*paramInfo.ID))
 			tmpList = append(tmpList, paramInfoMap)
 		}
 

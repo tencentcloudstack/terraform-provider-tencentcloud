@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudPostgresqlZonesDataSource_basic(t *testing.T) {
@@ -15,7 +16,16 @@ func TestAccTencentCloudPostgresqlZonesDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlZonesDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_postgresql_zones.zones")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_postgresql_zones.zones"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_zones.zones", "zone_set.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_zones.zones", "zone_set.0.zone"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_zones.zones", "zone_set.0.zone_name"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_zones.zones", "zone_set.0.zone_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_zones.zones", "zone_set.0.zone_state"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_zones.zones", "zone_set.0.zone_support_ipv6"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_zones.zones", "zone_set.0.standby_zone_set.#"),
+				),
 			},
 		},
 	})
@@ -23,7 +33,6 @@ func TestAccTencentCloudPostgresqlZonesDataSource_basic(t *testing.T) {
 
 const testAccPostgresqlZonesDataSource = `
 
-data "tencentcloud_postgresql_zones" "zones" {
-  }
+data "tencentcloud_postgresql_zones" "zones" {}
 
 `

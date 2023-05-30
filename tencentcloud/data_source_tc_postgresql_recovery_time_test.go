@@ -1,9 +1,12 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
+
+const testAccPostgresqlrecoverytimeObject = "data.tencentcloud_postgresql_recovery_time.recovery_time"
 
 func TestAccTencentCloudPostgresqlRecoveryTimeDataSource_basic(t *testing.T) {
 	t.Parallel()
@@ -15,19 +18,21 @@ func TestAccTencentCloudPostgresqlRecoveryTimeDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlRecoveryTimeDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_postgresql_recovery_time.recovery_time")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(testAccPostgresqlrecoverytimeObject),
+					resource.TestCheckResourceAttrSet(testAccPostgresqlrecoverytimeObject, "db_instance_id"),
+					resource.TestCheckResourceAttrSet(testAccPostgresqlrecoverytimeObject, "recovery_begin_time"),
+					resource.TestCheckResourceAttrSet(testAccPostgresqlrecoverytimeObject, "recovery_end_time"),
+				),
 			},
 		},
 	})
 }
 
-const testAccPostgresqlRecoveryTimeDataSource = `
+const testAccPostgresqlRecoveryTimeDataSource = CommonPresetPGSQL + `
 
 data "tencentcloud_postgresql_recovery_time" "recovery_time" {
-  d_b_instance_id = ""
-      tags = {
-    "createdBy" = "terraform"
-  }
+  db_instance_id = local.pgsql_id
 }
 
 `

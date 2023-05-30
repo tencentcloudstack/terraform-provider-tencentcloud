@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudPostgresqlDefaultParametersDataSource_basic(t *testing.T) {
@@ -24,8 +25,8 @@ func TestAccTencentCloudPostgresqlDefaultParametersDataSource_basic(t *testing.T
 const testAccPostgresqlDefaultParametersDataSource = `
 
 data "tencentcloud_postgresql_default_parameters" "default_parameters" {
-  d_b_major_version = ""
-  d_b_engine = ""
+  db_major_version = ""
+  db_engine = ""
   }
 
 `
