@@ -26,10 +26,23 @@ resource "tencentcloud_postgresql_readonly_instance" "foo" {
   security_groups_ids = [
     "sg-fefj5n6r",
   ]
-  storage   = 250
-  subnet_id = "subnet-enm92y0m"
-  vpc_id    = "vpc-86v957zb"
-  zone      = "ap-guangzhou-6"
+  storage            = 250
+  subnet_id          = "subnet-enm92y0m"
+  vpc_id             = "vpc-86v957zb"
+  read_only_group_id = tencentcloud_postgresql_readonly_group.new_ro_group.id
+}
+
+resource "tencentcloud_postgresql_readonly_group" "new_ro_group" {
+  master_db_instance_id       = local.pgsql_id
+  name                        = "tf_ro_group_test_new"
+  project_id                  = 0
+  vpc_id                      = local.vpc_id
+  subnet_id                   = local.subnet_id
+  replay_lag_eliminate        = 1
+  replay_latency_eliminate    = 1
+  max_replay_lag              = 100
+  max_replay_latency          = 512
+  min_delay_eliminate_reserve = 1
 }
 ```
 
@@ -52,6 +65,7 @@ The following arguments are supported:
 * `instance_charge_type` - (Optional, String, ForceNew) instance billing mode. Valid values: PREPAID (monthly subscription), POSTPAID_BY_HOUR (pay-as-you-go).
 * `need_support_ipv6` - (Optional, Int, ForceNew) Whether to support IPv6 address access. Valid values: 1 (yes), 0 (no).
 * `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
+* `read_only_group_id` - (Optional, String) RO group ID.
 * `voucher_ids` - (Optional, List: [`String`]) Specify Voucher Ids if `auto_voucher` was `1`, only support using 1 vouchers for now.
 
 ## Attributes Reference
@@ -60,6 +74,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `create_time` - Create time of the postgresql instance.
+* `instance_id` - The instance ID of this readonly resource.
 * `private_access_ip` - IP for private access.
 * `private_access_port` - Port for private access.
 
@@ -69,6 +84,6 @@ In addition to all arguments above, the following attributes are exported:
 postgresql readonly instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_postgresql_readonly_instance.foo pgro-bcqx8b9a
+$ terraform import tencentcloud_postgresql_readonly_instance.foo instance_id
 ```
 

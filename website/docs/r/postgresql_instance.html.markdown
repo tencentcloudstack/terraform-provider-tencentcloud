@@ -11,6 +11,8 @@ description: |-
 
 Use this resource to create postgresql instance.
 
+-> **Note:** To update the charge type, please update the `charge_type` and specify the `period` for the charging period. It only supports updating from `POSTPAID_BY_HOUR` to `PREPAID`, and the `period` field only valid in that upgrading case.
+
 ## Example Usage
 
 ```hcl
@@ -189,7 +191,7 @@ The following arguments are supported:
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, `1` for enabled. NOTES: Only support prepaid instance.
 * `auto_voucher` - (Optional, Int) Whether to use voucher, `1` for enabled.
 * `backup_plan` - (Optional, List) Specify DB backup plan.
-* `charge_type` - (Optional, String, ForceNew) Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`.
+* `charge_type` - (Optional, String) Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`. It only support to update the type from `POSTPAID_BY_HOUR` to `PREPAID`.
 * `charset` - (Optional, String, ForceNew) Charset of the root account. Valid values are `UTF8`,`LATIN1`.
 * `db_kernel_version` - (Optional, String) PostgreSQL kernel version number. If it is specified, an instance running kernel DBKernelVersion will be created. It supports updating the minor kernel version immediately.
 * `db_major_version` - (Optional, String) PostgreSQL major version number. Valid values: 10, 11, 12, 13. If it is specified, an instance running the latest kernel of PostgreSQL DBMajorVersion will be created.
@@ -201,7 +203,7 @@ The following arguments are supported:
 * `max_standby_archive_delay` - (Optional, Int) max_standby_archive_delay applies when WAL data is being read from WAL archive (and is therefore not current). Units are milliseconds if not specified.
 * `max_standby_streaming_delay` - (Optional, Int) max_standby_streaming_delay applies when WAL data is being received via streaming replication. Units are milliseconds if not specified.
 * `need_support_tde` - (Optional, Int) Whether to support data transparent encryption, 1: yes, 0: no (default).
-* `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
+* `period` - (Optional, Int) Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. This field is valid only when creating a `PREPAID` type instance, or updating the charge type from `POSTPAID_BY_HOUR` to `PREPAID`.
 * `project_id` - (Optional, Int) Project id, default value is `0`.
 * `public_access_switch` - (Optional, Bool) Indicates whether to enable the access to an instance from public network or not.
 * `root_user` - (Optional, String, ForceNew) Instance root account name. This parameter is optional, Default value is `root`.

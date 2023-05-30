@@ -467,8 +467,18 @@ data "tencentcloud_postgresql_instances" "foo" {
   name = "` + defaultPGOperationName + `"
 }
 
+data "tencentcloud_postgresql_readonly_groups" "ro_groups" {
+  filters {
+	name = "db-master-instance-id"
+	values = [data.tencentcloud_postgresql_instances.foo.instance_list.0.id]
+  }
+  order_by = "CreateTime"
+  order_by_type = "asc"
+}
+
 locals {
   pgsql_id = data.tencentcloud_postgresql_instances.foo.instance_list.0.id
+  pgrogroup_id = data.tencentcloud_postgresql_readonly_groups.ro_groups.read_only_group_list.0.read_only_group_id
 }
 `
 const defaultPGSQLName = "keep-postgresql"
