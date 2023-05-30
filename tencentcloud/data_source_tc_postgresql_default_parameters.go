@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_postgresql_default_parameters" "default_parameters" {
-  db_major_version = ""
-  db_engine = ""
-  }
+  db_major_version = "13"
+  db_engine = "postgresql"
+}
 ```
 */
 package tencentcloud

@@ -5,15 +5,14 @@ Example Usage
 
 ```hcl
 data "tencentcloud_postgresql_log_backups" "log_backups" {
-  min_finish_time = ""
-  max_finish_time = ""
+  min_finish_time = "%s"
+  max_finish_time = "%s"
   filters {
-		name = ""
-		values =
-
+		name = "db-instance-id"
+		values = [local.pgsql_id]
   }
-  order_by = ""
-  order_by_type = ""
+  order_by = "StartTime"
+  order_by_type = "desc"
 }
 ```
 */

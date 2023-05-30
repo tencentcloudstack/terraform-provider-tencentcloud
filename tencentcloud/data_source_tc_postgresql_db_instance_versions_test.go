@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudPostgresqlDbInstanceVersionsDataSource_basic(t *testing.T) {
@@ -15,7 +16,17 @@ func TestAccTencentCloudPostgresqlDbInstanceVersionsDataSource_basic(t *testing.
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlDbInstanceVersionsDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions", "version_set.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions", "version_set.0.db_engine"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions", "version_set.0.db_version"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions", "version_set.0.db_major_version"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions", "version_set.0.db_kernel_version"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions", "version_set.0.supported_feature_names.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions", "version_set.0.status"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions", "version_set.0.available_upgrade_target.#"),
+				),
 			},
 		},
 	})
@@ -23,7 +34,6 @@ func TestAccTencentCloudPostgresqlDbInstanceVersionsDataSource_basic(t *testing.
 
 const testAccPostgresqlDbInstanceVersionsDataSource = `
 
-data "tencentcloud_postgresql_db_instance_versions" "db_instance_versions" {
-  }
+data "tencentcloud_postgresql_db_instance_versions" "db_instance_versions" {}
 
 `

@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_postgresql_db_instance_classes" "db_instance_classes" {
-  zone = ""
-  db_engine = ""
-  db_major_version = ""
-  }
+  zone = "ap-guangzhou-7"
+  db_engine = "postgresql"
+  db_major_version = "13"
+}
 ```
 */
 package tencentcloud
@@ -35,7 +35,7 @@ func dataSourceTencentCloudPostgresqlDbInstanceClasses() *schema.Resource {
 			"db_engine": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Database engines. Valid values:1. `postgresql` (TencentDB for PostgreSQL)2. `mssql_compatible` (MSSQL compatible-TencentDB for PostgreSQL).",
+				Description: "Database engines. Valid values: 1. `postgresql` (TencentDB for PostgreSQL) 2. `mssql_compatible` (MSSQL compatible-TencentDB for PostgreSQL).",
 			},
 
 			"db_major_version": {
