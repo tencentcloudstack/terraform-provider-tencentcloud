@@ -595,6 +595,12 @@ TencentDB for PostgreSQL(PostgreSQL)
 	tencentcloud_postgresql_base_backups
 	tencentcloud_postgresql_log_backups
 	tencentcloud_postgresql_backup_download_urls
+	tencentcloud_postgresql_db_instance_classes
+	tencentcloud_postgresql_default_parameters
+	tencentcloud_postgresql_recovery_time
+	tencentcloud_postgresql_regions
+	tencentcloud_postgresql_db_instance_versions
+	tencentcloud_postgresql_zones
 
   Resource
 	tencentcloud_postgresql_instance
@@ -1625,6 +1631,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_base_backups":                   dataSourceTencentCloudPostgresqlBaseBackups(),
 			"tencentcloud_postgresql_log_backups":                    dataSourceTencentCloudPostgresqlLogBackups(),
 			"tencentcloud_postgresql_backup_download_urls":           dataSourceTencentCloudPostgresqlBackupDownloadUrls(),
+			"tencentcloud_postgresql_db_instance_classes":            dataSourceTencentCloudPostgresqlDbInstanceClasses(),
+			"tencentcloud_postgresql_default_parameters":             dataSourceTencentCloudPostgresqlDefaultParameters(),
+			"tencentcloud_postgresql_recovery_time":                  dataSourceTencentCloudPostgresqlRecoveryTime(),
+			"tencentcloud_postgresql_regions":                        dataSourceTencentCloudPostgresqlRegions(),
+			"tencentcloud_postgresql_db_instance_versions":           dataSourceTencentCloudPostgresqlDbInstanceVersions(),
+			"tencentcloud_postgresql_zones":                          dataSourceTencentCloudPostgresqlZones(),
 			"tencentcloud_sqlserver_zone_config":                     dataSourceTencentSqlserverZoneConfig(),
 			"tencentcloud_sqlserver_instances":                       dataSourceTencentCloudSqlserverInstances(),
 			"tencentcloud_sqlserver_backups":                         dataSourceTencentCloudSqlserverBackups(),

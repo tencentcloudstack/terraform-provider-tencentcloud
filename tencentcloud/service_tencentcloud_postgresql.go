@@ -1560,3 +1560,204 @@ func (me *PostgresqlService) DescribePostgresqlLogBackupsByFilter(ctx context.Co
 
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlDbInstanceClassesByFilter(ctx context.Context, param map[string]interface{}) (DbInstanceClasses []*postgresql.ClassInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeClassesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Zone" {
+			request.Zone = v.(*string)
+		}
+		if k == "DBEngine" {
+			request.DBEngine = v.(*string)
+		}
+		if k == "DBMajorVersion" {
+			request.DBMajorVersion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeClasses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ClassInfoSet) < 1 {
+		return
+	}
+	DbInstanceClasses = response.Response.ClassInfoSet
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlDefaultParametersByFilter(ctx context.Context, param map[string]interface{}) (DefaultParameters []*postgresql.ParamInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeDefaultParametersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DBMajorVersion" {
+			request.DBMajorVersion = v.(*string)
+		}
+		if k == "DBEngine" {
+			request.DBEngine = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDefaultParameters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ParamInfoSet) < 1 {
+		return
+	}
+	DefaultParameters = response.Response.ParamInfoSet
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlRecoveryTimeByFilter(ctx context.Context, param map[string]interface{}) (ret *postgresql.DescribeAvailableRecoveryTimeResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeAvailableRecoveryTimeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DBInstanceId" {
+			request.DBInstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeAvailableRecoveryTime(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	ret = response.Response
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlRegionsByFilter(ctx context.Context) (Regions []*postgresql.RegionInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeRegionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeRegions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.RegionSet) < 1 {
+		return
+	}
+	Regions = response.Response.RegionSet
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlDbInstanceVersionsByFilter(ctx context.Context) (DbInstanceVersions []*postgresql.Version, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeDBVersionsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeDBVersions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.VersionSet) < 1 {
+		return
+	}
+	DbInstanceVersions = response.Response.VersionSet
+
+	return
+}
+
+func (me *PostgresqlService) DescribePostgresqlZonesByFilter(ctx context.Context) (Zones []*postgresql.ZoneInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = postgresql.NewDescribeZonesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePostgresqlClient().DescribeZones(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ZoneSet) < 1 {
+		return
+	}
+	Zones = response.Response.ZoneSet
+
+	return
+}
