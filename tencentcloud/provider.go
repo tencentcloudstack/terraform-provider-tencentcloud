@@ -313,6 +313,7 @@ Cloud Load Balancer(CLB)
 	tencentcloud_clb_instance_sla_config
 	tencentcloud_clb_instance_mix_ip_target_config
 	tencentcloud_clb_replace_cert_for_lbs
+	tencentcloud_clb_security_group_attachment
 
 Cloud Object Storage(COS)
   Data Source
@@ -1931,6 +1932,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_clb_instance_mix_ip_target_config":             resourceTencentCloudClbInstanceMixIpTargetConfig(),
 			"tencentcloud_clb_instance_sla_config":                       resourceTencentCloudClbInstanceSlaConfig(),
 			"tencentcloud_clb_replace_cert_for_lbs":                      resourceTencentCloudClbReplaceCertForLbs(),
+			"tencentcloud_clb_security_group_attachment":                 resourceTencentCloudClbSecurityGroupAttachment(),
 			"tencentcloud_container_cluster":                             resourceTencentCloudContainerCluster(),
 			"tencentcloud_container_cluster_instance":                    resourceTencentCloudContainerClusterInstance(),
 			"tencentcloud_kubernetes_cluster":                            resourceTencentCloudTkeCluster(),
