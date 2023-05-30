@@ -43,7 +43,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -116,7 +115,7 @@ func resourceTencentCloudSqlserverGeneralCloudInstance() *schema.Resource {
 				Optional:     true,
 				Type:         schema.TypeInt,
 				ValidateFunc: validateIntegerInRange(1, 48),
-				Description:  "Purchase instance period, the default value is 1, which means one month. The value cannot exceed 48.",
+				Description:  "Purchase instance period, the default value is 1, which means one month. The value cannot exceed 48. Valid only when the 'instance_charge_type' parameter value is 'PREPAID'.",
 			},
 			"db_version": {
 				Optional:    true,
@@ -126,7 +125,7 @@ func resourceTencentCloudSqlserverGeneralCloudInstance() *schema.Resource {
 			"auto_renew_flag": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Automatic renewal flag: 0-normal renewal 1-automatic renewal, the default is 1 automatic renewal. Valid only when purchasing a prepaid instance.",
+				Description: "Automatic renewal flag: 0-normal renewal 1-automatic renewal, the default is 1 automatic renewal. Valid only when purchasing a prepaid instance. Valid only when the 'instance_charge_type' parameter value is 'PREPAID'.",
 			},
 			"security_group_list": {
 				Optional:    true,
@@ -181,6 +180,12 @@ func resourceTencentCloudSqlserverGeneralCloudInstance() *schema.Resource {
 				Default:     "China Standard Time",
 				Description: "System time zone, default: China Standard Time.",
 			},
+			"ha_type": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Deprecated:  "It has been deprecated from version 1.81.2.",
+				Description: "Upgrade the high-availability architecture of sqlserver, upgrade from mirror disaster recovery to always on cluster disaster recovery, only support 2017 and above and support always on high-availability instances, do not support downgrading to mirror disaster recovery, CLUSTER-upgrade to always on capacity Disaster, if not filled, the high-availability architecture will not be modified.",
+			},
 		},
 	}
 }
@@ -225,6 +230,15 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceCreate(d *schema.ResourceD
 
 	if v, ok := d.GetOk("instance_charge_type"); ok {
 		request.InstanceChargeType = helper.String(v.(string))
+		if v.(string) == SQLSERVER_TYPE_PREPAID {
+			if v, ok := d.GetOk("period"); ok {
+				request.Period = helper.IntInt64(v.(int))
+			}
+
+			if v, ok := d.GetOk("auto_renew_flag"); ok {
+				request.AutoRenewFlag = helper.IntInt64(v.(int))
+			}
+		}
 	}
 
 	if v, ok := d.GetOk("project_id"); ok {
@@ -239,16 +253,8 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceCreate(d *schema.ResourceD
 		request.VpcId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("period"); ok {
-		request.Period = helper.IntInt64(v.(int))
-	}
-
 	if v, ok := d.GetOk("db_version"); ok {
 		request.DBVersion = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("auto_renew_flag"); ok {
-		request.AutoRenewFlag = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("security_group_list"); ok {
@@ -388,17 +394,9 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceRead(d *schema.ResourceDat
 
 	if generalCloudInstance.PayMode != nil {
 		if *generalCloudInstance.PayMode == 0 {
-			_ = d.Set("instance_charge_type", "POSTPAID")
+			_ = d.Set("instance_charge_type", SQLSERVER_TYPE_POSTPAID)
 		} else {
-			_ = d.Set("instance_charge_type", "PREPAID")
-			TmpEndTime := generalCloudInstance.EndTime
-			if *TmpEndTime != "0000-00-00 00:00:00" {
-				TmpStartTime := generalCloudInstance.StartTime
-				startDate, _ := time.Parse("2006-01-02 15:04:05", *TmpStartTime)
-				endDate, _ := time.Parse("2006-01-02 15:04:05", *TmpEndTime)
-				monthDiff := (endDate.Year()*12 + int(endDate.Month())) - (startDate.Year()*12 + int(startDate.Month()))
-				_ = d.Set("period", monthDiff)
-			}
+			_ = d.Set("instance_charge_type", SQLSERVER_TYPE_PREPAID)
 		}
 	}
 
@@ -546,21 +544,21 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceUpdate(d *schema.ResourceD
 	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			instanceName = v.(string)
+
+			// set name
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				inErr := sqlserverService.ModifySqlserverInstanceName(ctx, instanceId, instanceName)
+				if inErr != nil {
+					return retryError(inErr)
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				return err
+			}
 		}
-	}
-
-	// set name
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr := sqlserverService.ModifySqlserverInstanceName(ctx, instanceId, instanceName)
-		if inErr != nil {
-			return retryError(inErr)
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		return err
 	}
 
 	if d.HasChange("memory") {
@@ -590,7 +588,7 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceUpdate(d *schema.ResourceD
 	waitSwitch = 0
 	request.WaitSwitch = &waitSwitch
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().UpgradeDBInstance(request)
 		if e != nil {
 			return retryError(e)

@@ -33,11 +33,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-sqlserver complete_expansion can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_sqlserver_complete_expansion.complete_expansion complete_expansion_id
-```
-
