@@ -2201,3 +2201,29 @@ func (me *ClbService) DescribeClbTargetHealthByFilter(ctx context.Context, param
 
 	return
 }
+
+func (me *ClbService) SetClbSecurityGroup(ctx context.Context, securityGroup string, lbId string, operation string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := clb.NewSetSecurityGroupForLoadbalancersRequest()
+	request.SecurityGroup = &securityGroup
+	request.LoadBalancerIds = []*string{&lbId}
+	request.OperationType = &operation
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClbClient().SetSecurityGroupForLoadbalancers(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
