@@ -169,25 +169,25 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Synchronous initialization options, Data (full data initialization), Structure (structure initialization), Full (full data and structure initialization, default), None (incremental only).Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Synchronous initialization options, Data (full data initialization), Structure (structure initialization), Full (full data and structure initialization, default), None (incremental only). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"deal_of_exist_same_table": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "The processing of the table with the same name, ReportErrorAfterCheck (pre-check and report error, default), InitializeAfterDelete (delete and re-initialize), ExecuteAfterIgnore (ignore and continue to execute).Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The processing of the table with the same name, ReportErrorAfterCheck (pre-check and report error, default), InitializeAfterDelete (delete and re-initialize), ExecuteAfterIgnore (ignore and continue to execute). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"conflict_handle_type": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Computed:    true,
-							Description: "Conflict handling options, ReportError (error report, the default value), Ignore (ignore), Cover (cover), ConditionCover (condition coverage).Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Conflict handling options, ReportError (error report, the default value), Ignore (ignore), Cover (cover), ConditionCover (condition coverage). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"add_additional_column": {
 							Type:        schema.TypeBool,
 							Optional:    true,
 							Computed:    true,
-							Description: "Whether to add additional columns.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Whether to add additional columns. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"op_types": {
 							Type: schema.TypeSet,
@@ -195,29 +195,29 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Optional:    true,
-							Description: "DML and DDL options to be synchronized, Insert (insert operation), Update (update operation), Delete (delete operation), DDL (structure synchronization), leave blank (not selected), PartialDDL (custom, work with DdlOptions).Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "DML and DDL options to be synchronized, Insert (insert operation), Update (update operation), Delete (delete operation), DDL (structure synchronization), leave blank (not selected), PartialDDL (custom, work with DdlOptions). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"conflict_handle_option": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Description: "Detailed options for conflict handling, such as conditional rows and conditional actions in conditional overrides.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Detailed options for conflict handling, such as conditional rows and conditional actions in conditional overrides. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"condition_column": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Columns covered by the condition.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Columns covered by the condition. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"condition_operator": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Conditional Override Operation.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Conditional Override Operation. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"condition_order_in_src_and_dst": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Conditional Override Priority Processing.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Conditional Override Priority Processing. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -225,13 +225,13 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 						"ddl_options": {
 							Type:        schema.TypeList,
 							Optional:    true,
-							Description: "DDL synchronization options, specifically describe which DDLs to synchronize.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "DDL synchronization options, specifically describe which DDLs to synchronize. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"ddl_object": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Ddl type, such as Database, Table, View, Index, etc..Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Ddl type, such as Database, Table, View, Index, etc. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"ddl_value": {
 										Type: schema.TypeSet,
@@ -239,7 +239,7 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
-										Description: "The specific value of ddl, the possible values for Database [Create,Drop,Alter].The possible values for Table [Create,Drop,Alter,Truncate,Rename].The possible values for View[Create,Drop].For the possible values of Index [Create, Drop].Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "The specific value of ddl, the possible values for Database [Create,Drop,Alter].The possible values for Table [Create,Drop,Alter,Truncate,Rename].The possible values for View[Create,Drop].For the possible values of Index [Create, Drop]. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -258,29 +258,29 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 						"mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Migration object type Partial (partial object).Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Migration object type Partial (partial object). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"databases": {
 							Type:        schema.TypeList,
 							Optional:    true,
 							Computed:    true,
-							Description: "Synchronization object, not null when Mode is Partial.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Synchronization object, not null when Mode is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"db_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "The name of the library that needs to be migrated or synchronized. This item is required when the ObjectMode is Partial.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "The name of the library that needs to be migrated or synchronized. This item is required when the ObjectMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"new_db_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "The name of the library after migration or synchronization, which is the same as the source library by default.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "The name of the library after migration or synchronization, which is the same as the source library by default. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"db_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "DB selection mode: All (for all objects under the current object), Partial (for some objects), when the Mode is Partial, this item is required. Note that synchronization of advanced objects does not depend on this value..Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "DB selection mode: All (for all objects under the current object), Partial (for some objects), when the Mode is Partial, this item is required. Note that synchronization of advanced objects does not depend on this value. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"schema_name": {
 										Type:        schema.TypeString,
@@ -290,33 +290,33 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 									"new_schema_name": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Schema name after migration or synchronization.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Schema name after migration or synchronization. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"table_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Table selection mode: All (for all objects under the current object), Partial (for some objects), this item is required when the DBMode is Partial.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Table selection mode: All (for all objects under the current object), Partial (for some objects), this item is required when the DBMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"tables": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: "A collection of table graph objects, when TableMode is Partial, this item needs to be filled in.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "A collection of table graph objects, when TableMode is Partial, this item needs to be filled in. Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"table_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Table name.Note: This field may return null, indicating that no valid value can be obtained.",
+													Description: "Table name. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"new_table_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "New table name.Note: This field may return null, indicating that no valid value can be obtained.",
+													Description: "New table name. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"filter_condition": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "Filter condition.Note: This field may return null, indicating that no valid value can be obtained.",
+													Description: "Filter condition. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 											},
 										},
@@ -324,23 +324,23 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 									"view_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "View selection mode: All is all view objects under the current object, Partial is part of the view objects.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "View selection mode: All is all view objects under the current object, Partial is part of the view objects. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"views": {
 										Type:        schema.TypeList,
 										Optional:    true,
-										Description: "View object collection, when ViewMode is Partial, this item needs to be filled in.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "View object collection, when ViewMode is Partial, this item needs to be filled in. Note: This field may return null, indicating that no valid value can be obtained.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"view_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "View name.Note: This field may return null, indicating that no valid value can be obtained.",
+													Description: "View name. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 												"new_view_name": {
 													Type:        schema.TypeString,
 													Optional:    true,
-													Description: "New view name.Note: This field may return null, indicating that no valid value can be obtained.",
+													Description: "New view name. Note: This field may return null, indicating that no valid value can be obtained.",
 												},
 											},
 										},
@@ -348,7 +348,7 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 									"function_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Select the mode to be synchronized, Partial is a part, all is an entire selection.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Select the mode to be synchronized, Partial is a part, all is an entire selection. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"functions": {
 										Type: schema.TypeSet,
@@ -357,12 +357,12 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 										},
 										Optional:    true,
 										Computed:    true,
-										Description: "Required when the FunctionMode value is Partial.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Required when the FunctionMode value is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"procedure_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Select the mode to be synchronized, Partial is part, All is the whole selection.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Select the mode to be synchronized, Partial is part, All is the whole selection. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"procedures": {
 										Type: schema.TypeSet,
@@ -371,12 +371,12 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 										},
 										Optional:    true,
 										Computed:    true,
-										Description: "Required when the value of ProcedureMode is Partial.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Required when the value of ProcedureMode is Partial. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"trigger_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Trigger migration mode, all (for all objects under the current object), partial (partial objects).Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Trigger migration mode, all (for all objects under the current object), partial (partial objects). Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"triggers": {
 										Type: schema.TypeSet,
@@ -385,12 +385,12 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 										},
 										Optional:    true,
 										Computed:    true,
-										Description: "When TriggerMode is partial, specify the name of the trigger to be migrated.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "When TriggerMode is partial, specify the name of the trigger to be migrated. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"event_mode": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Description: "Event migration mode, all (for all objects under the current object), partial (partial objects).Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "Event migration mode, all (for all objects under the current object), partial (partial objects). Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 									"events": {
 										Type: schema.TypeSet,
@@ -399,7 +399,7 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 										},
 										Optional:    true,
 										Computed:    true,
-										Description: "When EventMode is partial, specify the name of the event to be migrated.Note: This field may return null, indicating that no valid value can be obtained.",
+										Description: "When EventMode is partial, specify the name of the event to be migrated. Note: This field may return null, indicating that no valid value can be obtained.",
 									},
 								},
 							},
@@ -411,14 +411,14 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 							},
 							Optional:    true,
 							Computed:    true,
-							Description: "For advanced object types, such as function and procedure, when an advanced object needs to be synchronized, the initialization type must include the structure initialization type, that is, the value of the Options.InitType field is Structure or Full.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "For advanced object types, such as function and procedure, when an advanced object needs to be synchronized, the initialization type must include the structure initialization type, that is, the value of the Options.InitType field is Structure or Full. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"online_ddl": {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
 							Computed:    true,
-							Description: "OnlineDDL type.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "OnlineDDL type. Note: This field may return null, indicating that no valid value can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"status": {
@@ -442,7 +442,7 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 			"job_mode": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "The enumeration values are liteMode and fullMode , corresponding to lite mode or normal mode respectively.",
+				Description: "The enumeration values are liteMode and fullMode, corresponding to lite mode or normal mode respectively.",
 			},
 
 			"run_mode": {
@@ -469,129 +469,129 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 						"region": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The english name of region.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The english name of region. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"role": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The node type of tdsql mysql version, the enumeration value is proxy, set.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The node type of tdsql mysql version, the enumeration value is proxy, set. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"db_kernel": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Database kernel type, used to distinguish different kernels in tdsql: percona, mariadb, mysql.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Database kernel type, used to distinguish different kernels in tdsql: percona, mariadb, mysql. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"instance_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Database instance id.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Database instance id. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"ip": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The IP address of the instance, which is required when the access type is non-cdb.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The IP address of the instance, which is required when the access type is non-cdb. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"port": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Instance port, this item is required when the access type is non-cdb.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Instance port, this item is required when the access type is non-cdb. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"user": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Username, required for instances that require username and password authentication for access.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Username, required for instances that require username and password authentication for access. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"password": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Sensitive:   true,
 							Computed:    true,
-							Description: "Password, required for instances that require username and password authentication for access.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Password, required for instances that require username and password authentication for access. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"db_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Database name, when the database is cdwpg, it needs to be provided.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Database name, when the database is cdwpg, it needs to be provided. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Private network ID, which is required for access methods of private network, leased line, and VPN.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Private network ID, which is required for access methods of private network, leased line, and VPN. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The subnet ID under the private network, this item is required for the private network, leased line, and VPN access methods.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The subnet ID under the private network, this item is required for the private network, leased line, and VPN access methods. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"cvm_instance_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "CVM instance short ID, which is the same as the instance ID displayed on the cloud server console page. If it is a self-built instance of CVM, this field needs to be passed.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "CVM instance short ID, which is the same as the instance ID displayed on the cloud server console page. If it is a self-built instance of CVM, this field needs to be passed. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"uniq_dcg_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Leased line gateway ID, which is required for the leased line access type.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Leased line gateway ID, which is required for the leased line access type. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"uniq_vpn_gw_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "VPN gateway ID, which is required for the VPN access type.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "VPN gateway ID, which is required for the VPN access type. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"ccn_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Cloud networking ID, which is required for the cloud networking access type.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Cloud networking ID, which is required for the cloud networking access type. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"supplier": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Cloud vendor type, when the instance is an RDS instance, fill in aliyun, in other cases fill in others, the default is others.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Cloud vendor type, when the instance is an RDS instance, fill in aliyun, in other cases fill in others, the default is others. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"engine_version": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Database version, valid only when the instance is an RDS instance, ignored by other instances, the format is: 5.6 or 5.7, the default is 5.6.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Database version, valid only when the instance is an RDS instance, ignored by other instances, the format is: 5.6 or 5.7, the default is 5.6. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"account": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The account to which the instance belongs. This field is required if it is a cross-account instance.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The account to which the instance belongs. This field is required if it is a cross-account instance. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"account_mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The account to which the resource belongs is empty or self (represents resources within this account), other (represents cross-account resources).Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The account to which the resource belongs is empty or self (represents resources within this account), other (represents cross-account resources). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"account_role": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The role during cross-account synchronization, only [a-zA-Z0-9-_]+ is allowed, if it is a cross-account instance, this field is required.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The role during cross-account synchronization, only [a-zA-Z0-9-_]+ is allowed, if it is a cross-account instance, this field is required. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"role_external_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "External role id.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "External role id. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"tmp_secret_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Temporary key Id, required if it is a cross-account instance.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Temporary key Id, required if it is a cross-account instance. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"tmp_secret_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Temporary key Key, required if it is a cross-account instance.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Temporary key Key, required if it is a cross-account instance. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"tmp_token": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Temporary Token, required if it is a cross-account instance.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Temporary Token, required if it is a cross-account instance. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"encrypt_conn": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Whether to use encrypted transmission, UnEncrypted means not to use encrypted transmission, Encrypted means to use encrypted transmission, the default is UnEncrypted.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Whether to use encrypted transmission, UnEncrypted means not to use encrypted transmission, Encrypted means to use encrypted transmission, the default is UnEncrypted. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -608,129 +608,129 @@ func resourceTencentCloudDtsSyncConfig() *schema.Resource {
 						"region": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The english name of region.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The english name of region. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"role": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The node type of tdsql mysql version, the enumeration value is proxy, set.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The node type of tdsql mysql version, the enumeration value is proxy, set. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"db_kernel": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Database kernel type, used to distinguish different kernels in tdsql: percona, mariadb, mysql.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Database kernel type, used to distinguish different kernels in tdsql: percona, mariadb, mysql. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"instance_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Database instance id.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Database instance id. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"ip": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The IP address of the instance, which is required when the access type is non-cdb.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The IP address of the instance, which is required when the access type is non-cdb. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"port": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "Instance port, this item is required when the access type is non-cdb.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Instance port, this item is required when the access type is non-cdb. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"user": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Username, required for instances that require username and password authentication for access.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Username, required for instances that require username and password authentication for access. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"password": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Sensitive:   true,
 							Computed:    true,
-							Description: "Password, required for instances that require username and password authentication for access.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Password, required for instances that require username and password authentication for access. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"db_name": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Database name, when the database is cdwpg, it needs to be provided.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Database name, when the database is cdwpg, it needs to be provided. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"vpc_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Private network ID, which is required for access methods of private network, leased line, and VPN.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Private network ID, which is required for access methods of private network, leased line, and VPN. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"subnet_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The subnet ID under the private network, this item is required for the private network, leased line, and VPN access methods.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The subnet ID under the private network, this item is required for the private network, leased line, and VPN access methods. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"cvm_instance_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "CVM instance short ID, which is the same as the instance ID displayed on the cloud server console page. If it is a self-built instance of CVM, this field needs to be passed.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "CVM instance short ID, which is the same as the instance ID displayed on the cloud server console page. If it is a self-built instance of CVM, this field needs to be passed. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"uniq_dcg_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Leased line gateway ID, which is required for the leased line access type.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Leased line gateway ID, which is required for the leased line access type. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"uniq_vpn_gw_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "VPN gateway ID, which is required for the VPN access type.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "VPN gateway ID, which is required for the VPN access type. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"ccn_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Cloud networking ID, which is required for the cloud networking access type.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Cloud networking ID, which is required for the cloud networking access type. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"supplier": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Cloud vendor type, when the instance is an RDS instance, fill in aliyun, in other cases fill in others, the default is others.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Cloud vendor type, when the instance is an RDS instance, fill in aliyun, in other cases fill in others, the default is others. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"engine_version": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Database version, valid only when the instance is an RDS instance, ignored by other instances, the format is: 5.6 or 5.7, the default is 5.6.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Database version, valid only when the instance is an RDS instance, ignored by other instances, the format is: 5.6 or 5.7, the default is 5.6. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"account": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The account to which the instance belongs. This field is required if it is a cross-account instance.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The account to which the instance belongs. This field is required if it is a cross-account instance. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"account_mode": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The account to which the resource belongs is empty or self (represents resources within this account), other (represents cross-account resources).Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The account to which the resource belongs is empty or self (represents resources within this account), other (represents cross-account resources). Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"account_role": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "The role during cross-account synchronization, only [a-zA-Z0-9-_]+ is allowed, if it is a cross-account instance, this field is required.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "The role during cross-account synchronization, only [a-zA-Z0-9-_]+ is allowed, if it is a cross-account instance, this field is required. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"role_external_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "External role id.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "External role id. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"tmp_secret_id": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Temporary key Id, required if it is a cross-account instance.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Temporary key Id, required if it is a cross-account instance. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"tmp_secret_key": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Temporary key Key, required if it is a cross-account instance.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Temporary key Key, required if it is a cross-account instance. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"tmp_token": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Temporary Token, required if it is a cross-account instance.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Temporary Token, required if it is a cross-account instance. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 						"encrypt_conn": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Whether to use encrypted transmission, UnEncrypted means not to use encrypted transmission, Encrypted means to use encrypted transmission, the default is UnEncrypted.Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Whether to use encrypted transmission, UnEncrypted means not to use encrypted transmission, Encrypted means to use encrypted transmission, the default is UnEncrypted. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},

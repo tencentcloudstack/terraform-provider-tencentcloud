@@ -72,25 +72,25 @@ func dataSourceTencentCloudDtsMigrateDbInstances() *schema.Resource {
 			"account_mode": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "The owning account of the resource is null or self(resources in the self account)、other(resources in the other account).",
+				Description: "The owning account of the resource is null or self(resources in the self account), other(resources in the other account).",
 			},
 
 			"tmp_secret_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "temporary secret id，used across account.",
+				Description: "temporary secret id, used across account.",
 			},
 
 			"tmp_secret_key": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "temporary secret key，used across account.",
+				Description: "temporary secret key, used across account.",
 			},
 
 			"tmp_token": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "temporary token，used across account.",
+				Description: "temporary token, used across account.",
 			},
 
 			"instances": {
