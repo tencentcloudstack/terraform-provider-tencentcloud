@@ -32,7 +32,7 @@ func TestAccTencentCloudPostgresqlBackupDownloadUrlsDataSource_basic(t *testing.
 					resource.TestCheckResourceAttr("data.tencentcloud_postgresql_backup_download_urls.backup_download_urls", "backup_download_restriction.0.vpc_restriction_effect", "ALLOW"),
 					resource.TestCheckResourceAttr("data.tencentcloud_postgresql_backup_download_urls.backup_download_urls", "backup_download_restriction.0.vpc_id_set.#", "1"),
 					resource.TestCheckResourceAttr("data.tencentcloud_postgresql_backup_download_urls.backup_download_urls", "backup_download_restriction.0.ip_restriction_effect", "ALLOW"),
-					resource.TestCheckResourceAttr("data.tencentcloud_postgresql_backup_download_urls.backup_download_urls", "backup_download_restriction.0.ip_set.#", "0.0.0.0"),
+					resource.TestCheckResourceAttr("data.tencentcloud_postgresql_backup_download_urls.backup_download_urls", "backup_download_restriction.0.ip_set.#", "1"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_backup_download_urls.backup_download_urls", "backup_download_url"),
 				),
 			},

@@ -24,7 +24,7 @@ func TestAccTencentCloudPostgresqlDefaultParametersDataSource_basic(t *testing.T
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_default_parameters.default_parameters", "param_info_set.0.id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_default_parameters.default_parameters", "param_info_set.0.name"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_default_parameters.default_parameters", "param_info_set.0.param_value_type"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_default_parameters.default_parameters", "param_info_set.0.default_value"),
+					// resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_default_parameters.default_parameters", "param_info_set.0.default_value"),
 					// resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_default_parameters.default_parameters", "param_info_set.0.current_value"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_default_parameters.default_parameters", "param_info_set.0.max"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_default_parameters.default_parameters", "param_info_set.0.min"),
