@@ -698,6 +698,7 @@ Serverless Cloud Function(SCF)
     tencentcloud_scf_namespace
 	tencentcloud_scf_layer
 	tencentcloud_scf_function_alias
+	tencentcloud_scf_trigger_config
 
 SQLServer
   Data Source
@@ -2097,6 +2098,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_scf_namespace":                                  resourceTencentCloudScfNamespace(),
 			"tencentcloud_scf_layer":                                      resourceTencentCloudScfLayer(),
 			"tencentcloud_scf_function_alias":                             resourceTencentCloudScfFunctionAlias(),
+			"tencentcloud_scf_trigger_config":                             resourceTencentCloudScfTriggerConfig(),
 			"tencentcloud_tcaplus_cluster":                                resourceTencentCloudTcaplusCluster(),
 			"tencentcloud_tcaplus_tablegroup":                             resourceTencentCloudTcaplusTableGroup(),
 			"tencentcloud_tcaplus_idl":                                    resourceTencentCloudTcaplusIdl(),
