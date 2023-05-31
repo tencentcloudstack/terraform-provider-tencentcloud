@@ -1073,7 +1073,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs v1.0.600
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.666
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.667
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.659
