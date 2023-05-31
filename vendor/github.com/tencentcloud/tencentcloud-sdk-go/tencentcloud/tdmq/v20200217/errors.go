@@ -23,6 +23,9 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// 调用交易服务发生异常。
+	FAILEDOPERATION_CALLTRADE = "FailedOperation.CallTrade"
+
 	// CMQ 后台服务错误。
 	FAILEDOPERATION_CMQBACKENDERROR = "FailedOperation.CmqBackendError"
 
@@ -88,6 +91,9 @@ const (
 
 	// 获取主题分区数失败。
 	FAILEDOPERATION_GETTOPICPARTITIONSFAILED = "FailedOperation.GetTopicPartitionsFailed"
+
+	// 实例尚未就绪，请稍后再试。
+	FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
 
 	// 最大消息超过1MB。
 	FAILEDOPERATION_MAXMESSAGESIZEERROR = "FailedOperation.MaxMessageSizeError"
@@ -169,6 +175,9 @@ const (
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
+
+	// 无效的管理端接口地址。
+	INVALIDPARAMETER_INVALIDADMINURL = "InvalidParameter.InvalidAdminUrl"
 
 	// 错误的分区数。
 	INVALIDPARAMETER_PARTITION = "InvalidParameter.Partition"
@@ -275,6 +284,9 @@ const (
 	// 环境角色不存在。
 	RESOURCENOTFOUND_ENVIRONMENTROLE = "ResourceNotFound.EnvironmentRole"
 
+	// 实例不存在。
+	RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+
 	// 命名空间不存在。
 	RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
 
@@ -310,4 +322,7 @@ const (
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
+
+	// 该实例不支持降配操作。
+	UNSUPPORTEDOPERATION_INSTANCEDOWNGRADE = "UnsupportedOperation.InstanceDowngrade"
 )

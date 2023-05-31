@@ -142,7 +142,7 @@ func TencentSqlServerBasicInfo(isROInstance bool) map[string]*schema.Schema {
 		"wait_switch": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			Default:     0,
+			Deprecated:  "It has been deprecated from version 1.81.2.",
 			Description: "The way to execute the allocation. Supported values include: 0 - execute immediately, 1 - execute in maintenance window.",
 		},
 	}
@@ -377,8 +377,7 @@ func sqlServerAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData,
 		storage := d.Get("storage").(int)
 		autoVoucher := d.Get("auto_voucher").(int)
 		voucherIds := d.Get("voucher_ids").(*schema.Set).List()
-		waitSwitch := d.Get("wait_switch").(int)
-		outErr = sqlserverService.UpgradeSqlserverInstance(ctx, instanceId, memory, storage, autoVoucher, helper.InterfacesStringsPoint(voucherIds), waitSwitch)
+		outErr = sqlserverService.UpgradeSqlserverInstance(ctx, instanceId, memory, storage, autoVoucher, helper.InterfacesStringsPoint(voucherIds))
 
 		if outErr != nil {
 			return outErr
@@ -648,7 +647,6 @@ func tencentSqlServerBasicInfoRead(ctx context.Context, d *schema.ResourceData, 
 		errRet = outErr
 	}
 
-	//computed
 	_ = d.Set("ro_flag", instance.ROFlag)
 	_ = d.Set("create_time", instance.CreateTime)
 	_ = d.Set("status", instance.Status)
@@ -772,25 +770,5 @@ func resourceTencentCLoudSqlserverInstanceDelete(d *schema.ResourceData, meta in
 		return outErr
 	}
 
-	//outErr = sqlserverService.RecycleDBInstance(ctx, instanceId)
-	//if outErr != nil {
-	//	return outErr
-	//}
-	//
-	//outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-	//	_, has, inErr := sqlserverService.DescribeSqlserverInstanceById(ctx, d.Id())
-	//	if inErr != nil {
-	//		return retryError(inErr)
-	//	}
-	//	if has {
-	//		inErr = fmt.Errorf("delete SQL Server instance %s fail, instance still exists from SDK DescribeSqlserverInstanceById", instanceId)
-	//		return resource.RetryableError(inErr)
-	//	}
-	//	return nil
-	//})
-	//
-	//if outErr != nil {
-	//	return outErr
-	//}
 	return nil
 }

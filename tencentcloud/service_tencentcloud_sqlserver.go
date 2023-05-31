@@ -151,17 +151,13 @@ func (me *SqlserverService) ModifySqlserverInstanceProjectId(ctx context.Context
 	return err
 }
 
-func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instanceId string, memory, storage, autoVoucher int, voucherIds []*string, waitSwitch int) (errRet error) {
+func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instanceId string, memory, storage, autoVoucher int, voucherIds []*string) (errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewUpgradeDBInstanceRequest()
 	request.InstanceId = &instanceId
 	request.Memory = helper.IntInt64(memory)
 	request.Storage = helper.IntInt64(storage)
-	if waitSwitch == 1 {
-		request.WaitSwitch = helper.IntInt64(1)
-	} else {
-		request.WaitSwitch = helper.IntInt64(0)
-	}
+	request.WaitSwitch = helper.IntInt64(0)
 	if autoVoucher != 0 {
 		request.AutoVoucher = helper.IntInt64(autoVoucher)
 	}
@@ -190,20 +186,11 @@ func (me *SqlserverService) UpgradeSqlserverInstance(ctx context.Context, instan
 		if !has {
 			return resource.NonRetryableError(fmt.Errorf("cannot find SQL Server instance %s", instanceId))
 		}
-		if waitSwitch == 0 {
-			if *instance.Status != 2 {
-				startPending = true
-				return resource.RetryableError(fmt.Errorf("expanding , SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
-			} else if !startPending {
-				return resource.RetryableError(fmt.Errorf("ready for expanding, SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
-			}
-		} else if waitSwitch == 1 {
-			if *instance.Status != 13 {
-				startPending = true
-				return resource.RetryableError(fmt.Errorf("expanding , SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
-			} else if !startPending {
-				return resource.RetryableError(fmt.Errorf("ready for expanding, SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
-			}
+		if *instance.Status != 2 {
+			startPending = true
+			return resource.RetryableError(fmt.Errorf("expanding , SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
+		} else if !startPending {
+			return resource.RetryableError(fmt.Errorf("ready for expanding, SQL Server instance ID %s, status %d.... ", instanceId, *instance.Status))
 		}
 		return nil
 	})

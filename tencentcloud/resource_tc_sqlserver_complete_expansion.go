@@ -8,14 +8,6 @@ resource "tencentcloud_sqlserver_complete_expansion" "complete_expansion" {
   instance_id = "mssql-qelbzgwf"
 }
 ```
-
-Import
-
-sqlserver complete_expansion can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_sqlserver_complete_expansion.complete_expansion complete_expansion_id
-```
 */
 package tencentcloud
 
@@ -34,9 +26,7 @@ func resourceTencentCloudSqlserverCompleteExpansion() *schema.Resource {
 		Create: resourceTencentCloudSqlserverCompleteExpansionCreate,
 		Read:   resourceTencentCloudSqlserverCompleteExpansionRead,
 		Delete: resourceTencentCloudSqlserverCompleteExpansionDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
