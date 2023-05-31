@@ -535,6 +535,13 @@ The `table_mappings` object supports the following:
 The `table_mappings` object supports the following:
 
 * `database` - (Required, String) database name.
+* `table` - (Required, String) table name,use, to separate.
+* `topic_id` - (Required, String) Topic ID.
+* `topic` - (Required, String) Topic name.
+
+The `table_mappings` object supports the following:
+
+* `database` - (Required, String) database name.
 * `table` - (Required, String) table name,use, to seperate.
 * `topic_id` - (Required, String) Topic ID.
 * `topic` - (Required, String) Topic name.
