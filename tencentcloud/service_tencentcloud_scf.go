@@ -1316,3 +1316,58 @@ func (me *ScfService) DescribeScfFunctionVersionsByFilter(ctx context.Context, p
 
 	return
 }
+
+func (me *ScfService) DescribeScfTriggerConfigById(ctx context.Context, functionName string, namespace string, triggerName string) (triggerConfig *scf.TriggerInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := scf.NewListTriggersRequest()
+	request.FunctionName = &functionName
+	request.Namespace = &namespace
+
+	filter := scf.Filter{
+		Name:   helper.String("TriggerName"),
+		Values: []*string{&triggerName},
+	}
+
+	request.Filters = append(request.Filters, &filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*scf.TriggerInfo, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseScfClient().ListTriggers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Triggers) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Triggers...)
+		if len(response.Response.Triggers) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	triggerConfig = instances[0]
+	return
+}

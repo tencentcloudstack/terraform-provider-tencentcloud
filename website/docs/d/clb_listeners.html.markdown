@@ -48,7 +48,7 @@ In addition to all arguments above, the following attributes are exported:
   * `health_check_http_method` - HTTP health check method of TCP listener.
   * `health_check_http_path` - HTTP health check path of TCP listener.
   * `health_check_http_version` - The HTTP version of the backend service.
-  * `health_check_interval_time` - Interval time of health check. The value range is 5-300 sec, and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.
+  * `health_check_interval_time` - Interval time of health check. The value range is 2-300 sec, and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.
   * `health_check_port` - The health check port is the port of the backend service.
   * `health_check_recv_context` - It represents the result returned by the health check.
   * `health_check_send_context` - It represents the content of the request sent by the health check.

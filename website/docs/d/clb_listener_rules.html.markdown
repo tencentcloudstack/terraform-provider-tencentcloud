@@ -50,7 +50,7 @@ In addition to all arguments above, the following attributes are exported:
   * `health_check_http_domain` - Domain name of health check. NOTES: Only supports listeners of 'HTTPS' and 'HTTP' protocol.
   * `health_check_http_method` - Methods of health check. NOTES: Only supports listeners of 'HTTPS' and 'HTTP' protocol. The default is 'HEAD', the available value include 'HEAD' and 'GET'.
   * `health_check_http_path` - Path of health check. NOTES: Only supports listeners of 'HTTPS' and 'HTTP' protocol.
-  * `health_check_interval_time` - Interval time of health check. The value range is 5-300 sec, and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.
+  * `health_check_interval_time` - Interval time of health check. The value range is 2-300 sec, and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.
   * `health_check_switch` - Indicates whether health check is enabled.
   * `health_check_unhealth_num` - Unhealth threshold of health check, and the default is `3`. If a success result is returned for the health check three consecutive times, the CVM is identified as unhealthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.
   * `http2_switch` - Indicate to set HTTP2 protocol or not.

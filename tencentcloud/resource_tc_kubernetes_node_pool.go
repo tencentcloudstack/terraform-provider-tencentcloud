@@ -143,14 +143,6 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
 }
 
 ```
-
-Import
-
-node pool can be imported, e.g.
-
-```
-$ terraform import tencentcloud_kubernetes_node_pool.test cls-xxx#np-xxx
-```
 */
 package tencentcloud
 

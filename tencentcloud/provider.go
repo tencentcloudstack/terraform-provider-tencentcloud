@@ -167,6 +167,7 @@ Cloud Kafka(ckafka)
 	tencentcloud_ckafka_topic_produce_connection
 	tencentcloud_ckafka_topic_subscribe_group
 	tencentcloud_ckafka_topic_sync_replica
+	tencentcloud_ckafka_zone
 
   Resource
 	tencentcloud_ckafka_instance
@@ -175,6 +176,11 @@ Cloud Kafka(ckafka)
     tencentcloud_ckafka_topic
 	tencentcloud_ckafka_datahub_topic
 	tencentcloud_ckafka_connect_resource
+	tencentcloud_ckafka_renew_instance
+	tencentcloud_ckafka_acl_rule
+	tencentcloud_ckafka_consumer_group
+	tencentcloud_ckafka_consumer_group_modify_offset
+	tencentcloud_ckafka_datahub_task
 
 Cloud Access Management(CAM)
   Data Source
@@ -371,6 +377,8 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_chc_config
 	tencentcloud_cvm_renew_instance
 	tencentcloud_cvm_sync_image
+	tencentcloud_cvm_export_images
+	tencentcloud_cvm_image_share_permission
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -690,6 +698,7 @@ Serverless Cloud Function(SCF)
     tencentcloud_scf_namespace
 	tencentcloud_scf_layer
 	tencentcloud_scf_function_alias
+	tencentcloud_scf_trigger_config
 
 SQLServer
   Data Source
@@ -1185,6 +1194,7 @@ Data Transmission Service(DTS)
 	tencentcloud_dts_sync_jobs
 	tencentcloud_dts_migrate_jobs
 	tencentcloud_dts_compare_tasks
+	tencentcloud_dts_migrate_db_instances
 
   Resource
 	tencentcloud_dts_sync_job
@@ -1195,6 +1205,7 @@ Data Transmission Service(DTS)
 	tencentcloud_dts_migrate_job_resume_operation
 	tencentcloud_dts_compare_task_stop_operation
 	tencentcloud_dts_migrate_job_config
+	tencentcloud_dts_sync_config
 
 TDMQ for RocketMQ(trocket)
   Data Source
@@ -1691,6 +1702,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_topic_produce_connection":           dataSourceTencentCloudCkafkaTopicProduceConnection(),
 			"tencentcloud_ckafka_topic_subscribe_group":              dataSourceTencentCloudCkafkaTopicSubscribeGroup(),
 			"tencentcloud_ckafka_topic_sync_replica":                 dataSourceTencentCloudCkafkaTopicSyncReplica(),
+			"tencentcloud_ckafka_zone":                               dataSourceTencentCloudCkafkaZone(),
 			"tencentcloud_audit_cos_regions":                         dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                           dataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                    dataSourceTencentCloudAudits(),
@@ -1795,6 +1807,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dts_sync_jobs":                             dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                         dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                          dataSourceTencentCloudDtsMigrateJobs(),
+			"tencentcloud_dts_migrate_db_instances":                  dataSourceTencentCloudDtsMigrateDbInstances(),
 			"tencentcloud_tdmq_rocketmq_cluster":                     dataSourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                   dataSourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_topic":                       dataSourceTencentCloudTdmqRocketmqTopic(),
@@ -2088,6 +2101,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_scf_namespace":                                  resourceTencentCloudScfNamespace(),
 			"tencentcloud_scf_layer":                                      resourceTencentCloudScfLayer(),
 			"tencentcloud_scf_function_alias":                             resourceTencentCloudScfFunctionAlias(),
+			"tencentcloud_scf_trigger_config":                             resourceTencentCloudScfTriggerConfig(),
 			"tencentcloud_tcaplus_cluster":                                resourceTencentCloudTcaplusCluster(),
 			"tencentcloud_tcaplus_tablegroup":                             resourceTencentCloudTcaplusTableGroup(),
 			"tencentcloud_tcaplus_idl":                                    resourceTencentCloudTcaplusIdl(),
@@ -2174,6 +2188,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_topic":                                   resourceTencentCloudCkafkaTopic(),
 			"tencentcloud_ckafka_datahub_topic":                           resourceTencentCloudCkafkaDatahubTopic(),
 			"tencentcloud_ckafka_connect_resource":                        resourceTencentCloudCkafkaConnectResource(),
+			"tencentcloud_ckafka_renew_instance":                          resourceTencentCloudCkafkaRenewInstance(),
+			"tencentcloud_ckafka_acl_rule":                                resourceTencentCloudCkafkaAclRule(),
+			"tencentcloud_ckafka_consumer_group":                          resourceTencentCloudCkafkaConsumerGroup(),
+			"tencentcloud_ckafka_consumer_group_modify_offset":            resourceTencentCloudCkafkaConsumerGroupModifyOffset(),
+			"tencentcloud_ckafka_datahub_task":                            resourceTencentCloudCkafkaDatahubTask(),
 			"tencentcloud_audit":                                          resourceTencentCloudAudit(),
 			"tencentcloud_audit_track":                                    resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                          resourceTencentCloudImage(),
@@ -2328,6 +2347,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
 			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			"tencentcloud_dts_sync_config":                            resourceTencentCloudDtsSyncConfig(),
 			"tencentcloud_tdmq_rocketmq_cluster":                      resourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                    resourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_role":                         resourceTencentCloudTdmqRocketmqRole(),
@@ -2429,6 +2449,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cvm_chc_config":                             resourceTencentCloudCvmChcConfig(),
 			"tencentcloud_cvm_sync_image":                             resourceTencentCloudCvmSyncImage(),
 			"tencentcloud_cvm_renew_instance":                         resourceTencentCloudCvmRenewInstance(),
+			"tencentcloud_cvm_export_images":                          resourceTencentCloudCvmExportImages(),
+			"tencentcloud_cvm_image_share_permission":                 resourceTencentCloudCvmImageSharePermission(),
 			"tencentcloud_lighthouse_disk_backup":                     resourceTencentCloudLighthouseDiskBackup(),
 			"tencentcloud_lighthouse_apply_disk_backup":               resourceTencentCloudLighthouseApplyDiskBackup(),
 			"tencentcloud_lighthouse_disk_attachment":                 resourceTencentCloudLighthouseDiskAttachment(),

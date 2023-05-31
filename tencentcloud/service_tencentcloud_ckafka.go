@@ -1516,3 +1516,215 @@ func (me *CkafkaService) DescribeCkafkaTopicSyncReplicaByFilter(ctx context.Cont
 
 	return
 }
+
+func (me *CkafkaService) DescribeCkafkaAclRuleById(ctx context.Context, instanceId string, ruleName string) (aclRule *ckafka.AclRule, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDescribeAclRuleRequest()
+	request.InstanceId = &instanceId
+	request.RuleName = &ruleName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeAclRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.AclRuleList) < 1 {
+		return
+	}
+
+	aclRule = response.Response.Result.AclRuleList[0]
+	return
+}
+
+func (me *CkafkaService) DeleteCkafkaAclRuleById(ctx context.Context, instanceId string, ruleName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDeleteAclRuleRequest()
+	request.InstanceId = &instanceId
+	request.RuleName = &ruleName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DeleteAclRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CkafkaService) DescribeCkafkaConsumerGroupById(ctx context.Context, instanceId string, groupName string) (consumerGroup *ckafka.ConsumerGroupResponse, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDescribeConsumerGroupRequest()
+	request.InstanceId = &instanceId
+	request.GroupName = &groupName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeConsumerGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	consumerGroup = response.Response.Result
+	return
+}
+
+func (me *CkafkaService) DeleteCkafkaConsumerGroupById(ctx context.Context, instanceId string, groupName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDeleteGroupRequest()
+	request.InstanceId = &instanceId
+	request.Group = &groupName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DeleteGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CkafkaService) DeleteCkafkaDatahubTaskById(ctx context.Context, taskId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDeleteDatahubTaskRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DeleteDatahubTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CkafkaService) DescribeDatahubTask(ctx context.Context, taskId string) (result *ckafka.DescribeDatahubTaskRes, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDescribeDatahubTaskRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeDatahubTask(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || response.Response == nil || response.Response.Result == nil {
+		errRet = fmt.Errorf("Response body is null")
+		return
+	}
+	result = response.Response.Result
+	return
+}
+
+func (me *CkafkaService) CkafkaDatahubTaskStateRefreshFunc(taskId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDatahubTask(ctx, taskId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.Int64ToStr(*object.Status), nil
+	}
+}
+
+func (me *CkafkaService) DescribeCkafkaCkafkaZoneByFilter(ctx context.Context, param map[string]interface{}) (ckafkaZone *ckafka.ZoneResponse, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ckafka.NewDescribeCkafkaZoneRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CdcId" {
+			request.CdcId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeCkafkaZone(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		errRet = fmt.Errorf("Response body is null")
+		return
+	}
+	ckafkaZone = response.Response.Result
+
+	return
+}

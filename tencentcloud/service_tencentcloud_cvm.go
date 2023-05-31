@@ -1737,3 +1737,33 @@ func (me *CvmService) DescribeCvmImageSharePermissionByFilter(ctx context.Contex
 
 	return
 }
+
+func (me *CvmService) ModifyImageSharePermission(ctx context.Context, imageId, permission string, accountIds []string) (errRet error) {
+	logId := getLogId(ctx)
+	request := cvm.NewModifyImageSharePermissionRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	request.ImageId = helper.String(imageId)
+	request.Permission = helper.String(permission)
+	request.AccountIds = helper.StringsStringsPoint(accountIds)
+	ratelimit.Check(request.GetAction())
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseCvmClient().ModifyImageSharePermission(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s cvm ModifyImageSharePermission failed, reason:%+v", logId, err)
+		return err
+	}
+	return
+}
