@@ -10,7 +10,7 @@ data "tencentcloud_tdmq_publishers" "publishers" {
   topic      = "keep-topic"
   filters {
     name   = "ProducerName"
-	values = ["test"]
+    values = ["test"]
   }
   sort {
     name  = "ProducerName"

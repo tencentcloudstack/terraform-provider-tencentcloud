@@ -480,6 +480,11 @@ Tencent Kubernetes Engine(TKE)
 	tencentcloud_kubernetes_cluster_endpoint
 
 TDMQ for Pulsar(tpulsar)
+  Data Source
+	tencentcloud_tdmq_environment_attributes
+	tencentcloud_tdmq_publisher_summary
+	tencentcloud_tdmq_publishers
+
   Resource
     tencentcloud_tdmq_instance
 	tencentcloud_tdmq_namespace

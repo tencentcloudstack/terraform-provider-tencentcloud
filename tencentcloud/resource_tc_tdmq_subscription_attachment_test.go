@@ -71,11 +71,11 @@ func testAccCheckTdmqSubscriptionAttachmentDestroy(s *terraform.State) error {
 
 const testAccTdmqSubscriptionAttachment = `
 resource "tencentcloud_tdmq_subscription_attachment" "subscription_attachment" {
-  environment_id    			= "keep-ns"
-  topic_name        			= "keep-topic"
-  subscription_name 			= "test-subcription"
-  remark 						= "test"
-  cluster_id 					= "pulsar-9n95ax58b9vn"
-  auto_create_policy_topic 		= true
+  environment_id           = "keep-ns"
+  topic_name               = "keep-topic"
+  subscription_name        = "test-subcription"
+  remark                   = "test"
+  cluster_id               = "pulsar-9n95ax58b9vn"
+  auto_create_policy_topic = true
 }
 `
