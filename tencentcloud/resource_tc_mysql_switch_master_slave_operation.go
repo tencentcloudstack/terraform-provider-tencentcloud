@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_switch_master_slave_operation" "switch_master_slave_operation" {
-  instance_id = ""
-  dst_slave = ""
-  force_switch =
-  wait_switch =
+  instance_id = "cdb-d9gbh7lt"
+  dst_slave = "first"
+  force_switch = true
+  wait_switch = true
 }
 ```
 
@@ -38,9 +38,7 @@ func resourceTencentCloudMysqlSwitchMasterSlaveOperation() *schema.Resource {
 		Create: resourceTencentCloudMysqlSwitchMasterSlaveOperationCreate,
 		Read:   resourceTencentCloudMysqlSwitchMasterSlaveOperationRead,
 		Delete: resourceTencentCloudMysqlSwitchMasterSlaveOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -130,14 +128,14 @@ func resourceTencentCloudMysqlSwitchMasterSlaveOperationCreate(d *schema.Resourc
 			return nil
 		}
 		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-			return resource.RetryableError(fmt.Errorf("%s create mysql rollback status is %s", instanceId, taskStatus))
+			return resource.RetryableError(fmt.Errorf("%s operate mysql switchMasterSlaveOperation status is %s", instanceId, taskStatus))
 		}
-		err = fmt.Errorf("%s create mysql rollback status is %s,we won't wait for it finish ,it show message:%s", instanceId, taskStatus, message)
+		err = fmt.Errorf("%s operate mysql switchMasterSlaveOperation status is %s,we won't wait for it finish ,it show message:%s", instanceId, taskStatus, message)
 		return resource.NonRetryableError(err)
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create mysql rollback fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s operate mysql switchMasterSlaveOperation fail, reason:%s\n ", logId, err.Error())
 		return err
 	}
 

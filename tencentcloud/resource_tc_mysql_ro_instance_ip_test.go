@@ -18,11 +18,6 @@ func TestAccTencentCloudMysqlRoInstanceIpResource_basic(t *testing.T) {
 				Config: testAccMysqlRoInstanceIp,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mysql_ro_instance_ip.ro_instance_ip", "id")),
 			},
-			{
-				ResourceName:      "tencentcloud_mysql_ro_instance_ip.ro_instance_ip",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }
@@ -30,9 +25,10 @@ func TestAccTencentCloudMysqlRoInstanceIpResource_basic(t *testing.T) {
 const testAccMysqlRoInstanceIp = `
 
 resource "tencentcloud_mysql_ro_instance_ip" "ro_instance_ip" {
-  instance_id = ""
-  uniq_subnet_id = ""
-  uniq_vpc_id = ""
+	instance_id = "cdb-d9gbh7lt"
+	ro_group_id = "cdbrg-bdlvcfpj"
+	uniq_subnet_id = "subnet-dwj7ipnc"
+	uniq_vpc_id = "vpc-4owdpnwr"
 }
 
 `

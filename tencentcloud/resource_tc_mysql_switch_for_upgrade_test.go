@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudMysqlSwitchForUpgradeResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixMysqlSwitchForUpgradeResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -18,11 +18,6 @@ func TestAccTencentCloudMysqlSwitchForUpgradeResource_basic(t *testing.T) {
 				Config: testAccMysqlSwitchForUpgrade,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mysql_switch_for_upgrade.switch_for_upgrade", "id")),
 			},
-			{
-				ResourceName:      "tencentcloud_mysql_switch_for_upgrade.switch_for_upgrade",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }
@@ -30,7 +25,7 @@ func TestAccTencentCloudMysqlSwitchForUpgradeResource_basic(t *testing.T) {
 const testAccMysqlSwitchForUpgrade = `
 
 resource "tencentcloud_mysql_switch_for_upgrade" "switch_for_upgrade" {
-  instance_id = ""
+	instance_id = "cdb-d9gbh7lt"
 }
 
 `

@@ -5,18 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_ro_instance_ip" "ro_instance_ip" {
-  instance_id = ""
-  uniq_subnet_id = ""
-  uniq_vpc_id = ""
+  instance_id = "cdbro-bdlvcfpj"
+  uniq_subnet_id = "subnet-dwj7ipnc"
+  uniq_vpc_id = "vpc-4owdpnwr"
 }
-```
 
-Import
-
-mysql ro_instance_ip can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mysql_ro_instance_ip.ro_instance_ip ro_instance_ip_id
 ```
 */
 package tencentcloud
@@ -36,9 +29,7 @@ func resourceTencentCloudMysqlRoInstanceIp() *schema.Resource {
 		Create: resourceTencentCloudMysqlRoInstanceIpCreate,
 		Read:   resourceTencentCloudMysqlRoInstanceIpRead,
 		Delete: resourceTencentCloudMysqlRoInstanceIpDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -59,6 +50,18 @@ func resourceTencentCloudMysqlRoInstanceIp() *schema.Resource {
 				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "vpc descriptor, for example: vpc-a23yt67j, if this field is passed, UniqSubnetId must be passed.",
+			},
+
+			"ro_vip": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Intranet IP address of the read-only instance.",
+			},
+
+			"ro_vport": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "Intranet port number of the read-only instance.",
 			},
 		},
 	}
@@ -130,6 +133,24 @@ func resourceTencentCloudMysqlRoInstanceIpRead(d *schema.ResourceData, meta inte
 
 	if switchForUpgrade.InstanceId != nil {
 		_ = d.Set("instance_id", switchForUpgrade.InstanceId)
+	}
+
+	if switchForUpgrade.UniqVpcId != nil {
+		_ = d.Set("uniq_vpc_id", switchForUpgrade.UniqVpcId)
+	}
+
+	if switchForUpgrade.UniqSubnetId != nil {
+		_ = d.Set("uniq_subnet_id", switchForUpgrade.UniqSubnetId)
+	}
+
+	if switchForUpgrade.RoVipInfo != nil {
+		if switchForUpgrade.RoVipInfo.RoVip != nil {
+			_ = d.Set("ro_vip", switchForUpgrade.RoVipInfo.RoVip)
+		}
+
+		if switchForUpgrade.RoVipInfo.RoVport != nil {
+			_ = d.Set("ro_vport", switchForUpgrade.RoVipInfo.RoVport)
+		}
 	}
 
 	return nil

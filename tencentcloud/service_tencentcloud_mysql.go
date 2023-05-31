@@ -2783,11 +2783,12 @@ func (me *MysqlService) DescribeMysqlRemoteBackupConfigById(ctx context.Context,
 	return
 }
 
-func (me *MysqlService) DescribeMysqlRollbackById(ctx context.Context, instanceId string) (rollback []*cdb.RollbackInstancesInfo, errRet error) {
+func (me *MysqlService) DescribeMysqlRollbackById(ctx context.Context, instanceId, asyncRequestId string) (rollback []*cdb.RollbackInstancesInfo, errRet error) {
 	logId := getLogId(ctx)
 
 	request := cdb.NewDescribeRollbackTaskDetailRequest()
 	request.InstanceId = &instanceId
+	request.AsyncRequestId = &asyncRequestId
 
 	defer func() {
 		if errRet != nil {
@@ -2804,6 +2805,9 @@ func (me *MysqlService) DescribeMysqlRollbackById(ctx context.Context, instanceI
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if len(response.Response.Items) < 1 {
+		return
+	}
 	rollback = response.Response.Items[0].Detail
 	return
 }

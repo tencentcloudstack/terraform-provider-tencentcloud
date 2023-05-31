@@ -5,17 +5,10 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_ro_group_load_operation" "ro_group_load_operation" {
-  ro_group_id = ""
+  ro_group_id = "cdbrg-bdlvcfpj"
 }
 ```
 
-Import
-
-mysql ro_group_load_operation can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mysql_ro_group_load_operation.ro_group_load_operation ro_group_load_operation_id
-```
 */
 package tencentcloud
 
@@ -33,9 +26,7 @@ func resourceTencentCloudMysqlRoGroupLoadOperation() *schema.Resource {
 		Create: resourceTencentCloudMysqlRoGroupLoadOperationCreate,
 		Read:   resourceTencentCloudMysqlRoGroupLoadOperationRead,
 		Delete: resourceTencentCloudMysqlRoGroupLoadOperationDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"ro_group_id": {
 				Required:    true,

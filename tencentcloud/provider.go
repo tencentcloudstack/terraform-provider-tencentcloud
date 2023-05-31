@@ -1972,7 +1972,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_restart_db_instances_operation":           resourceTencentCloudMysqlRestartDbInstancesOperation(),
 			"tencentcloud_mysql_switch_for_upgrade":                       resourceTencentCloudMysqlSwitchForUpgrade(),
 			"tencentcloud_mysql_rollback":                                 resourceTencentCloudMysqlRollback(),
-			"tencentcloud_mysql_proxy":                                    resourceTencentCloudMysqlProxy(),
+			"tencentcloud_mysql_rollback_stop":                            resourceTencentCloudMysqlRollbackStop(),
 			"tencentcloud_mysql_ro_group":                                 resourceTencentCloudMysqlRoGroup(),
 			"tencentcloud_mysql_ro_instance_ip":                           resourceTencentCloudMysqlRoInstanceIp(),
 			"tencentcloud_mysql_ro_group_load_operation":                  resourceTencentCloudMysqlRoGroupLoadOperation(),

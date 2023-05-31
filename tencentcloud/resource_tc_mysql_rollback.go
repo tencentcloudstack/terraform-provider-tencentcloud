@@ -5,31 +5,21 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_rollback" "rollback" {
-  instances {
-		instance_id = "cdb_xxx"
-		strategy = ""
-		rollback_time = ""
-		databases {
-			database_name = ""
-			new_database_name = ""
-		}
-		tables {
-			database = ""
-			table {
-				table_name = ""
-				new_table_name = ""
-			}
-		}
+  instance_id = "cdb-fitq5t9h"
+  strategy = "full"
+  rollback_time = "2023-05-31 23:13:35"
+  databases {
+    database_name = "tf_ci_test_bak"
+    new_database_name = "tf_ci_test_bak_5"
+  }
+  tables {
+    database = "tf_ci_test_bak"
+    table {
+      table_name = "test"
+      new_table_name = "test_bak"
+    }
   }
 }
-```
-
-Import
-
-mysql rollback can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mysql_rollback.rollback rollback_id
 ```
 */
 package tencentcloud
@@ -38,6 +28,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -50,80 +41,77 @@ func resourceTencentCloudMysqlRollback() *schema.Resource {
 		Create: resourceTencentCloudMysqlRollbackCreate,
 		Read:   resourceTencentCloudMysqlRollbackRead,
 		Delete: resourceTencentCloudMysqlRollbackDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
-			"instances": {
+			"instance_id": {
+				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
+				Description: "Cloud database instance ID.",
+			},
+
+			"strategy": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Rollback strategy. Available values are: table, db, full; the default value is full. table - Extremely fast rollback mode, only import the backup and binlog of the selected table level, if there is a cross-table operation, and the associated table is not selected at the same time, the rollback will fail. In this mode, the parameter Databases must be empty; db - Quick mode, only import the backup and binlog of the selected library level, if there is a cross-database operation, and the associated library is not selected at the same time, the rollback will fail; full - normal rollback mode, the backup and binlog of the entire instance will be imported , at a slower rate.",
+			},
+
+			"rollback_time": {
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "Database rollback time, the time format is: yyyy-mm-dd hh:mm:ss.",
+			},
+
+			"databases": {
 				Type:        schema.TypeList,
-				Description: "Instance details for rollback.",
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The database information to be archived, indicating that the entire database is archived.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"instance_id": {
+						"database_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Cloud database instance ID.",
+							Description: "The original database name before rollback.",
 						},
-						"strategy": {
+						"new_database_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Rollback strategy. Available values are: table, db, full; the default value is full. table - Extremely fast rollback mode, only import the backup and binlog of the selected table level, if there is a cross-table operation, and the associated table is not selected at the same time, the rollback will fail. In this mode, the parameter Databases must be empty; db - Quick mode, only import the backup and binlog of the selected library level, if there is a cross-database operation, and the associated library is not selected at the same time, the rollback will fail; full - normal rollback mode, the backup and binlog of the entire instance will be imported , at a slower rate.",
+							Description: "The new database name after rollback.",
 						},
-						"rollback_time": {
+					},
+				},
+			},
+
+			"tables": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "The database table information to be rolled back, indicating that the file is rolled back by table.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"database": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "Database rollback time, the time format is: yyyy-mm-dd hh:mm:ss.",
+							Description: "Database name.",
 						},
-						"databases": {
+						"table": {
 							Type:        schema.TypeList,
-							Optional:    true,
-							Description: "The database information to be archived, indicating that the entire database is archived.",
+							Required:    true,
+							Description: "Database table details.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
-									"database_name": {
+									"table_name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "The original database name before rollback.",
+										Description: "The original database table name before rollback.",
 									},
-									"new_database_name": {
+									"new_table_name": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "The new database name after rollback.",
-									},
-								},
-							},
-						},
-						"tables": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							Description: "The database table information to be rolled back, indicating that the file is rolled back by table.",
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"database": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "Database name.",
-									},
-									"table": {
-										Type:        schema.TypeList,
-										Required:    true,
-										Description: "Database table details.",
-										Elem: &schema.Resource{
-											Schema: map[string]*schema.Schema{
-												"table_name": {
-													Type:        schema.TypeString,
-													Required:    true,
-													Description: "The original database table name before rollback.",
-												},
-												"new_table_name": {
-													Type:        schema.TypeString,
-													Required:    true,
-													Description: "New database table name after rollback.",
-												},
-											},
-										},
+										Description: "New database table name after rollback.",
 									},
 								},
 							},
@@ -143,62 +131,59 @@ func resourceTencentCloudMysqlRollbackCreate(d *schema.ResourceData, meta interf
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request    = mysql.NewStartBatchRollbackRequest()
-		response   = mysql.NewStartBatchRollbackResponse()
-		instanceId string
+		request               = mysql.NewStartBatchRollbackRequest()
+		response              = mysql.NewStartBatchRollbackResponse()
+		rollbackInstancesInfo = mysql.RollbackInstancesInfo{}
+		instanceId            string
 	)
-	if v, ok := d.GetOk("instances"); ok {
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		rollbackInstancesInfo.InstanceId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("strategy"); ok {
+		rollbackInstancesInfo.Strategy = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("rollback_time"); ok {
+		rollbackInstancesInfo.RollbackTime = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("databases"); ok {
 		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			rollbackInstancesInfo := mysql.RollbackInstancesInfo{}
-			if v, ok := dMap["instance_id"]; ok {
-				rollbackInstancesInfo.InstanceId = helper.String(v.(string))
+			databasesMap := item.(map[string]interface{})
+			rollbackDBName := mysql.RollbackDBName{}
+			if v, ok := databasesMap["database_name"]; ok {
+				rollbackDBName.DatabaseName = helper.String(v.(string))
 			}
-			if v, ok := dMap["strategy"]; ok {
-				rollbackInstancesInfo.Strategy = helper.String(v.(string))
+			if v, ok := databasesMap["new_database_name"]; ok {
+				rollbackDBName.NewDatabaseName = helper.String(v.(string))
 			}
-			if v, ok := dMap["rollback_time"]; ok {
-				rollbackInstancesInfo.RollbackTime = helper.String(v.(string))
-			}
-			if v, ok := dMap["databases"]; ok {
-				for _, item := range v.([]interface{}) {
-					databasesMap := item.(map[string]interface{})
-					rollbackDBName := mysql.RollbackDBName{}
-					if v, ok := databasesMap["database_name"]; ok {
-						rollbackDBName.DatabaseName = helper.String(v.(string))
-					}
-					if v, ok := databasesMap["new_database_name"]; ok {
-						rollbackDBName.NewDatabaseName = helper.String(v.(string))
-					}
-					rollbackInstancesInfo.Databases = append(rollbackInstancesInfo.Databases, &rollbackDBName)
-				}
-			}
-			if v, ok := dMap["tables"]; ok {
-				for _, item := range v.([]interface{}) {
-					tablesMap := item.(map[string]interface{})
-					rollbackTables := mysql.RollbackTables{}
-					if v, ok := tablesMap["database"]; ok {
-						rollbackTables.Database = helper.String(v.(string))
-					}
-					if v, ok := tablesMap["table"]; ok {
-						for _, item := range v.([]interface{}) {
-							tableMap := item.(map[string]interface{})
-							rollbackTableName := mysql.RollbackTableName{}
-							if v, ok := tableMap["table_name"]; ok {
-								rollbackTableName.TableName = helper.String(v.(string))
-							}
-							if v, ok := tableMap["new_table_name"]; ok {
-								rollbackTableName.NewTableName = helper.String(v.(string))
-							}
-							rollbackTables.Table = append(rollbackTables.Table, &rollbackTableName)
-						}
-					}
-					rollbackInstancesInfo.Tables = append(rollbackInstancesInfo.Tables, &rollbackTables)
-				}
-			}
-			request.Instances = append(request.Instances, &rollbackInstancesInfo)
+			rollbackInstancesInfo.Databases = append(rollbackInstancesInfo.Databases, &rollbackDBName)
 		}
 	}
+	if v, ok := d.GetOk("tables"); ok {
+		for _, item := range v.([]interface{}) {
+			tablesMap := item.(map[string]interface{})
+			rollbackTables := mysql.RollbackTables{}
+			if v, ok := tablesMap["database"]; ok {
+				rollbackTables.Database = helper.String(v.(string))
+			}
+			if v, ok := tablesMap["table"]; ok {
+				for _, item := range v.([]interface{}) {
+					tableMap := item.(map[string]interface{})
+					rollbackTableName := mysql.RollbackTableName{}
+					if v, ok := tableMap["table_name"]; ok {
+						rollbackTableName.TableName = helper.String(v.(string))
+					}
+					if v, ok := tableMap["new_table_name"]; ok {
+						rollbackTableName.NewTableName = helper.String(v.(string))
+					}
+					rollbackTables.Table = append(rollbackTables.Table, &rollbackTableName)
+				}
+			}
+			rollbackInstancesInfo.Tables = append(rollbackInstancesInfo.Tables, &rollbackTables)
+		}
+	}
+	request.Instances = append(request.Instances, &rollbackInstancesInfo)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMysqlClient().StartBatchRollback(request)
@@ -215,11 +200,11 @@ func resourceTencentCloudMysqlRollbackCreate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	d.SetId(instanceId)
-
 	asyncRequestId := *response.Response.AsyncRequestId
+	d.SetId(instanceId + FILED_SP + asyncRequestId)
+
 	service := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		taskStatus, message, err := service.DescribeAsyncRequestInfo(ctx, asyncRequestId)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -251,9 +236,14 @@ func resourceTencentCloudMysqlRollbackRead(d *schema.ResourceData, meta interfac
 
 	service := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	instanceId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	instanceId := idSplit[0]
+	asyncRequestId := idSplit[1]
 
-	rollbacks, err := service.DescribeMysqlRollbackById(ctx, instanceId)
+	rollbacks, err := service.DescribeMysqlRollbackById(ctx, instanceId, asyncRequestId)
 	if err != nil {
 		return err
 	}
@@ -265,80 +255,71 @@ func resourceTencentCloudMysqlRollbackRead(d *schema.ResourceData, meta interfac
 	}
 
 	if rollbacks != nil {
-		instancesList := []interface{}{}
-		for _, instances := range rollbacks {
-			instancesMap := map[string]interface{}{}
-
-			if instances.InstanceId != nil {
-				instancesMap["instance_id"] = instances.InstanceId
-			}
-
-			if instances.Strategy != nil {
-				instancesMap["strategy"] = instances.Strategy
-			}
-
-			if instances.RollbackTime != nil {
-				instancesMap["rollback_time"] = instances.RollbackTime
-			}
-
-			if instances.Databases != nil {
-				databasesList := []interface{}{}
-				for _, databases := range instances.Databases {
-					databasesMap := map[string]interface{}{}
-
-					if databases.DatabaseName != nil {
-						databasesMap["database_name"] = databases.DatabaseName
-					}
-
-					if databases.NewDatabaseName != nil {
-						databasesMap["new_database_name"] = databases.NewDatabaseName
-					}
-
-					databasesList = append(databasesList, databasesMap)
-				}
-
-				instancesMap["databases"] = databasesList
-			}
-
-			if instances.Tables != nil {
-				tablesList := []interface{}{}
-				for _, tables := range instances.Tables {
-					tablesMap := map[string]interface{}{}
-
-					if tables.Database != nil {
-						tablesMap["database"] = tables.Database
-					}
-
-					if tables.Table != nil {
-						tableList := []interface{}{}
-						for _, table := range tables.Table {
-							tableMap := map[string]interface{}{}
-
-							if table.TableName != nil {
-								tableMap["table_name"] = table.TableName
-							}
-
-							if table.NewTableName != nil {
-								tableMap["new_table_name"] = table.NewTableName
-							}
-
-							tableList = append(tableList, tableMap)
-						}
-
-						tablesMap["table"] = tableList
-					}
-
-					tablesList = append(tablesList, tablesMap)
-				}
-
-				instancesMap["tables"] = tablesList
-			}
-
-			instancesList = append(instancesList, instancesMap)
+		instances := rollbacks[0]
+		if instances.InstanceId != nil {
+			_ = d.Set("instance_id", instances.InstanceId)
 		}
 
-		_ = d.Set("instances", instancesList)
+		if instances.Strategy != nil {
+			_ = d.Set("strategy", instances.Strategy)
+		}
 
+		if instances.RollbackTime != nil {
+			_ = d.Set("rollback_time", instances.RollbackTime)
+		}
+
+		if instances.Databases != nil {
+			databasesList := []interface{}{}
+			for _, databases := range instances.Databases {
+				databasesMap := map[string]interface{}{}
+
+				if databases.DatabaseName != nil {
+					databasesMap["database_name"] = databases.DatabaseName
+				}
+
+				if databases.NewDatabaseName != nil {
+					databasesMap["new_database_name"] = databases.NewDatabaseName
+				}
+
+				databasesList = append(databasesList, databasesMap)
+			}
+
+			_ = d.Set("databases", databasesList)
+		}
+
+		if instances.Tables != nil {
+			tablesList := []interface{}{}
+			for _, tables := range instances.Tables {
+				tablesMap := map[string]interface{}{}
+
+				if tables.Database != nil {
+					tablesMap["database"] = tables.Database
+				}
+
+				if tables.Table != nil {
+					tableList := []interface{}{}
+					for _, table := range tables.Table {
+						tableMap := map[string]interface{}{}
+
+						if table.TableName != nil {
+							tableMap["table_name"] = table.TableName
+						}
+
+						if table.NewTableName != nil {
+							tableMap["new_table_name"] = table.NewTableName
+						}
+
+						tableList = append(tableList, tableMap)
+					}
+
+					tablesMap["table"] = tableList
+				}
+
+				tablesList = append(tablesList, tablesMap)
+			}
+
+			_ = d.Set("tables", tablesList)
+		}
 	}
 
 	return nil
@@ -347,37 +328,6 @@ func resourceTencentCloudMysqlRollbackRead(d *schema.ResourceData, meta interfac
 func resourceTencentCloudMysqlRollbackDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_mysql_rollback.delete")()
 	defer inconsistentCheck(d, meta)()
-
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	instanceId := d.Id()
-
-	asyncRequestId, err := service.DeleteMysqlRollbackById(ctx, instanceId)
-	if err != nil {
-		return err
-	}
-
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		taskStatus, message, err := service.DescribeAsyncRequestInfo(ctx, asyncRequestId)
-		if err != nil {
-			return resource.NonRetryableError(err)
-		}
-		if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
-			return nil
-		}
-		if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
-			return resource.RetryableError(fmt.Errorf("%s delete mysql rollback status is %s", instanceId, taskStatus))
-		}
-		err = fmt.Errorf("%s delete mysql rollback status is %s,we won't wait for it finish ,it show message:%s", instanceId, taskStatus, message)
-		return resource.NonRetryableError(err)
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s delete mysql rollback fail, reason:%s\n ", logId, err.Error())
-		return err
-	}
 
 	return nil
 }

@@ -5,16 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_switch_for_upgrade" "switch_for_upgrade" {
-  instance_id = ""
+  instance_id = "cdb-d9gbh7lt"
 }
-```
-
-Import
-
-mysql switch_for_upgrade can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mysql_switch_for_upgrade.switch_for_upgrade switch_for_upgrade_id
 ```
 */
 package tencentcloud
@@ -35,9 +27,7 @@ func resourceTencentCloudMysqlSwitchForUpgrade() *schema.Resource {
 		Create: resourceTencentCloudMysqlSwitchForUpgradeCreate,
 		Read:   resourceTencentCloudMysqlSwitchForUpgradeRead,
 		Delete: resourceTencentCloudMysqlSwitchForUpgradeDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,

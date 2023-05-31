@@ -18,35 +18,33 @@ func TestAccTencentCloudMysqlRollbackResource_basic(t *testing.T) {
 				Config: testAccMysqlRollback,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mysql_rollback.rollback", "id")),
 			},
-			{
-				ResourceName:      "tencentcloud_mysql_rollback.rollback",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }
 
-const testAccMysqlRollback = `
+const testAccMysqlRollbackVar = `
+variable "instance_id" {
+  default = "` + defaultDbBrainInstanceId + `"
+}
+`
+
+const testAccMysqlRollback = testAccMysqlRollbackVar + `
 
 resource "tencentcloud_mysql_rollback" "rollback" {
-  instances {
-		instance_id = "cdb_xxx"
-		strategy = ""
-		rollback_time = ""
-		databases {
-			database_name = ""
-			new_database_name = ""
-		}
-		tables {
-			database = ""
-			table {
-				table_name = ""
-				new_table_name = ""
-			}
-		}
-
-  }
+	instance_id = var.instance_id
+	strategy = "full"
+	rollback_time = "2023-05-31 23:13:35"
+	databases {
+	  database_name = "tf_ci_test_bak"
+	  new_database_name = "tf_ci_test_bak_5"
+	}
+	tables {
+	  database = "tf_ci_test_bak"
+	  table {
+		table_name = "test"
+		new_table_name = "test_bak"
+	  }
+	}
 }
 
 `

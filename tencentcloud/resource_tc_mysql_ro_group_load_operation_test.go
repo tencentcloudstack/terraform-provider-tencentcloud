@@ -18,11 +18,6 @@ func TestAccTencentCloudMysqlRoGroupLoadOperationResource_basic(t *testing.T) {
 				Config: testAccMysqlRoGroupLoadOperation,
 				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mysql_ro_group_load_operation.ro_group_load_operation", "id")),
 			},
-			{
-				ResourceName:      "tencentcloud_mysql_ro_group_load_operation.ro_group_load_operation",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }
@@ -30,7 +25,7 @@ func TestAccTencentCloudMysqlRoGroupLoadOperationResource_basic(t *testing.T) {
 const testAccMysqlRoGroupLoadOperation = `
 
 resource "tencentcloud_mysql_ro_group_load_operation" "ro_group_load_operation" {
-  ro_group_id = ""
+	ro_group_id = "cdbrg-bdlvcfpj"
 }
 
 `
