@@ -323,6 +323,25 @@ The `kafka_param` object supports the following:
 * `start_time` - (Optional, Int) It must be passed when the Offset type is timestamp, and the time stamp is passed, accurate to the second.
 * `table_mappings` - (Optional, List) The route from Table to Topic must be passed when the Distribute to multiple topics switch is turned on.
 * `topic_id` - (Optional, String) Topic Id.
+* `topic` - (Optional, String) Topic name, multiple separated by `,`.
+* `use_auto_create_topic` - (Optional, Bool) whether the used topic need to be automatically created (currently only supports SOURCE inflow tasks, if you do not use to distribute to multiple topics, you need to fill in the topic name that needs to be automatically created in the Topic field).
+* `use_table_mapping` - (Optional, Bool) Distribute to multiple topics switch, the default is false.
+* `zone_id` - (Optional, Int) Zone ID.
+
+The `kafka_param` object supports the following:
+
+* `resource` - (Required, String) resource id.
+* `self_built` - (Required, Bool) Whether it is a self-built cluster.
+* `compression_type` - (Optional, String) Whether to compress when writing to the Topic, if it is not enabled, fill in none, if it is enabled, fill in open.
+* `enable_toleration` - (Optional, Bool) Enable the fault-tolerant instance and enable the dead-letter queue.
+* `msg_multiple` - (Optional, Int) 1 source topic message is amplified into msg Multiple and written to the target topic (this parameter is currently only applicable to ckafka flowing into ckafka).
+* `offset_type` - (Optional, String) Offset type, initial position earliest, latest position latest, time point position timestamp.
+* `partition_num` - (Optional, Int) Partition num.
+* `qps_limit` - (Optional, Int) Qps limit.
+* `resource_name` - (Optional, String) resource id name.
+* `start_time` - (Optional, Int) It must be passed when the Offset type is timestamp, and the time stamp is passed, accurate to the second.
+* `table_mappings` - (Optional, List) The route from Table to Topic must be passed when the Distribute to multiple topics switch is turned on.
+* `topic_id` - (Optional, String) Topic Id.
 * `topic` - (Optional, String) Topic name, multiple separated by,.
 * `use_auto_create_topic` - (Optional, Bool) whether the used topic need to be automatically created (currently only supports SOURCE inflow tasks, if you do not use to distribute to multiple topics, you need to fill in the topic name that needs to be automatically created in the Topic field).
 * `use_table_mapping` - (Optional, Bool) Distribute to multiple topics switch, the default is false.
@@ -536,13 +555,6 @@ The `table_mappings` object supports the following:
 
 * `database` - (Required, String) database name.
 * `table` - (Required, String) table name,use, to separate.
-* `topic_id` - (Required, String) Topic ID.
-* `topic` - (Required, String) Topic name.
-
-The `table_mappings` object supports the following:
-
-* `database` - (Required, String) database name.
-* `table` - (Required, String) table name,use, to seperate.
 * `topic_id` - (Required, String) Topic ID.
 * `topic` - (Required, String) Topic name.
 

@@ -164,7 +164,7 @@ func resourceTencentCloudCkafkaDatahubTask() *schema.Resource {
 												"table": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "table name,use, to seperate.",
+													Description: "table name,use, to separate.",
 												},
 												"topic": {
 													Type:        schema.TypeString,
@@ -461,7 +461,7 @@ func resourceTencentCloudCkafkaDatahubTask() *schema.Resource {
 															"topic": {
 																Type:        schema.TypeString,
 																Optional:    true,
-																Description: "Topic name, multiple separated by,.",
+																Description: "Topic name, multiple separated by `,`.",
 															},
 															"offset_type": {
 																Type:        schema.TypeString,
