@@ -87,7 +87,7 @@ The `node_info_list` object supports the following:
 * `node_num` - (Required, Int) Number of nodes.
 * `node_type` - (Required, String) Node specification, and valid values refer to [document of tencentcloud](https://intl.cloud.tencent.com/document/product/845/18376).
 * `disk_size` - (Optional, Int) Node disk size. Unit is GB, and default value is `100`.
-* `disk_type` - (Optional, String) Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`. The default value is `CLOUD_SSD`.
+* `disk_type` - (Optional, String) Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`, `CLOUD_HSSD`. The default value is `CLOUD_SSD`.
 * `encrypt` - (Optional, Bool) Decides to encrypt this disk or not.
 * `type` - (Optional, String) Node type. Valid values are `hotData`, `warmData` and `dedicatedMaster`. The default value is 'hotData`.
 
