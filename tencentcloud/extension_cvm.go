@@ -56,12 +56,14 @@ const (
 	// @Deprecated use cvm.RESOURCEINSUFFICIENT_CLOUDDISKSOLDOUT instead
 	CVM_CLOUD_DISK_SOLD_OUT_ERROR = "ResourceInsufficient.CloudDiskSoldOut"
 
-	CVM_STOP_MODE_KEEP_CHARGING = "KEEP_CHARGING"
-	CVM_STOP_MODE_STOP_CHARGING = "STOP_CHARGING"
-	CVM_SELL_STATUS             = "SELL"
-	CVM_SOLD_OUT_STATUS         = "SOLD_OUT"
-	MIDLINE                     = "-"
-	UNDERLINE                   = "_"
+	CVM_STOP_MODE_KEEP_CHARGING   = "KEEP_CHARGING"
+	CVM_STOP_MODE_STOP_CHARGING   = "STOP_CHARGING"
+	CVM_SELL_STATUS               = "SELL"
+	CVM_SOLD_OUT_STATUS           = "SOLD_OUT"
+	MIDLINE                       = "-"
+	UNDERLINE                     = "_"
+	IMAGE_SHARE_PERMISSION_SHARE  = "SHARE"
+	IMAGE_SHARE_PERMISSION_CANCEL = "CANCEL"
 )
 
 // Only client error can cvm retry, others will directly returns

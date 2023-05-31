@@ -377,6 +377,8 @@ Cloud Virtual Machine(CVM)
 	tencentcloud_cvm_chc_config
 	tencentcloud_cvm_renew_instance
 	tencentcloud_cvm_sync_image
+	tencentcloud_cvm_export_images
+	tencentcloud_cvm_image_share_permission
 
 TDSQL-C MySQL(CynosDB)
   Data Source
@@ -2441,6 +2443,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cvm_chc_config":                             resourceTencentCloudCvmChcConfig(),
 			"tencentcloud_cvm_sync_image":                             resourceTencentCloudCvmSyncImage(),
 			"tencentcloud_cvm_renew_instance":                         resourceTencentCloudCvmRenewInstance(),
+			"tencentcloud_cvm_export_images":                          resourceTencentCloudCvmExportImages(),
+			"tencentcloud_cvm_image_share_permission":                 resourceTencentCloudCvmImageSharePermission(),
 			"tencentcloud_lighthouse_disk_backup":                     resourceTencentCloudLighthouseDiskBackup(),
 			"tencentcloud_lighthouse_apply_disk_backup":               resourceTencentCloudLighthouseApplyDiskBackup(),
 			"tencentcloud_lighthouse_disk_attachment":                 resourceTencentCloudLighthouseDiskAttachment(),
