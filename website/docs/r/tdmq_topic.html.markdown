@@ -45,6 +45,7 @@ The following arguments are supported:
 * `partitions` - (Required, Int) The partitions of topic.
 * `topic_name` - (Required, String, ForceNew) The name of topic to be created.
 * `topic_type` - (Required, Int, ForceNew) The type of topic.
+* `pulsar_topic_type` - (Optional, String, ForceNew) Pulsar Topic Type 0: Non-persistent non-partitioned 1: Non-persistent partitioned 2: Persistent non-partitioned 3: Persistent partitioned.
 * `remark` - (Optional, String) Description of the namespace.
 
 ## Attributes Reference

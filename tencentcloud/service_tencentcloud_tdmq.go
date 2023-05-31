@@ -231,7 +231,7 @@ func (me *TdmqService) DeleteTdmqNamespace(ctx context.Context, environId string
 
 // tdmq topic
 func (me *TdmqService) CreateTdmqTopic(ctx context.Context, environId string, topicName string, partitions uint64,
-	topicType uint64, remark string, clusterId string) (errRet error) {
+	topicType uint64, remark string, clusterId string, pulsarTopicType int64) (errRet error) {
 	logId := getLogId(ctx)
 	request := tdmq.NewCreateTopicRequest()
 	defer func() {
@@ -247,6 +247,7 @@ func (me *TdmqService) CreateTdmqTopic(ctx context.Context, environId string, to
 	request.TopicType = &topicType
 	request.Remark = &remark
 	request.ClusterId = &clusterId
+	request.PulsarTopicType = &pulsarTopicType
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

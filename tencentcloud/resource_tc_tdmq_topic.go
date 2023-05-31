@@ -84,6 +84,12 @@ func resourceTencentCloudTdmqTopic() *schema.Resource {
 				Required:    true,
 				Description: "The Dedicated Cluster Id.",
 			},
+			"pulsar_topic_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Description: "Pulsar Topic Type 0: Non-persistent non-partitioned 1: Non-persistent partitioned 2: Persistent non-partitioned 3: Persistent partitioned.",
+			},
 			"remark": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -109,12 +115,13 @@ func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{
 	tdmqService := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		environId  string
-		topicName  string
-		partitions uint64
-		topicType  uint64
-		remark     string
-		clusterId  string
+		environId       string
+		topicName       string
+		partitions      uint64
+		topicType       uint64
+		remark          string
+		clusterId       string
+		pulsarTopicType int64
 	)
 	if temp, ok := d.GetOk("environ_id"); ok {
 		environId = temp.(string)
@@ -136,8 +143,9 @@ func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{
 	if temp, ok := d.GetOk("cluster_id"); ok {
 		clusterId = temp.(string)
 	}
+	pulsarTopicType = int64(d.Get("pulsar_topic_type").(int))
 
-	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId)
+	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId, pulsarTopicType)
 	if err != nil {
 		return err
 	}
@@ -171,6 +179,7 @@ func resourceTencentCloudTdmqTopicRead(d *schema.ResourceData, meta interface{})
 
 		_ = d.Set("partitions", info.Partitions)
 		_ = d.Set("topic_type", info.TopicType)
+		_ = d.Set("pulsar_topic_type", info.PulsarTopicType)
 		_ = d.Set("remark", info.Remark)
 		_ = d.Set("create_time", info.CreateTime)
 		return nil
