@@ -167,6 +167,7 @@ Cloud Kafka(ckafka)
 	tencentcloud_ckafka_topic_produce_connection
 	tencentcloud_ckafka_topic_subscribe_group
 	tencentcloud_ckafka_topic_sync_replica
+	tencentcloud_ckafka_zone
 
   Resource
 	tencentcloud_ckafka_instance
@@ -175,6 +176,11 @@ Cloud Kafka(ckafka)
     tencentcloud_ckafka_topic
 	tencentcloud_ckafka_datahub_topic
 	tencentcloud_ckafka_connect_resource
+	tencentcloud_ckafka_renew_instance
+	tencentcloud_ckafka_acl_rule
+	tencentcloud_ckafka_consumer_group
+	tencentcloud_ckafka_consumer_group_modify_offset
+	tencentcloud_ckafka_datahub_task
 
 Cloud Access Management(CAM)
   Data Source
@@ -1691,6 +1697,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_topic_produce_connection":           dataSourceTencentCloudCkafkaTopicProduceConnection(),
 			"tencentcloud_ckafka_topic_subscribe_group":              dataSourceTencentCloudCkafkaTopicSubscribeGroup(),
 			"tencentcloud_ckafka_topic_sync_replica":                 dataSourceTencentCloudCkafkaTopicSyncReplica(),
+			"tencentcloud_ckafka_zone":                               dataSourceTencentCloudCkafkaZone(),
 			"tencentcloud_audit_cos_regions":                         dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                           dataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                    dataSourceTencentCloudAudits(),
@@ -2174,6 +2181,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_topic":                                   resourceTencentCloudCkafkaTopic(),
 			"tencentcloud_ckafka_datahub_topic":                           resourceTencentCloudCkafkaDatahubTopic(),
 			"tencentcloud_ckafka_connect_resource":                        resourceTencentCloudCkafkaConnectResource(),
+			"tencentcloud_ckafka_renew_instance":                          resourceTencentCloudCkafkaRenewInstance(),
+			"tencentcloud_ckafka_acl_rule":                                resourceTencentCloudCkafkaAclRule(),
+			"tencentcloud_ckafka_consumer_group":                          resourceTencentCloudCkafkaConsumerGroup(),
+			"tencentcloud_ckafka_consumer_group_modify_offset":            resourceTencentCloudCkafkaConsumerGroupModifyOffset(),
+			"tencentcloud_ckafka_datahub_task":                            resourceTencentCloudCkafkaDatahubTask(),
 			"tencentcloud_audit":                                          resourceTencentCloudAudit(),
 			"tencentcloud_audit_track":                                    resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                          resourceTencentCloudImage(),
