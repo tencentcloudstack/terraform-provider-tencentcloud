@@ -199,6 +199,12 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 				Computed:    true,
 				Description: "cls topic id of the SCF function.",
 			},
+			"func_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Function type. The default value is Event. Enter Event if you need to create a trigger function. Enter HTTP if you need to create an HTTP function service.",
+			},
 			"l5_enable": {
 				Type:        schema.TypeBool,
 				Optional:    true,
@@ -550,6 +556,9 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	if raw, ok := d.GetOk("cls_topic_id"); ok {
 		functionInfo.clsTopicId = helper.String(raw.(string))
 	}
+	if raw, ok := d.GetOk("func_type"); ok {
+		functionInfo.funcType = helper.String(raw.(string))
+	}
 	if err := helper.CheckIfSetTogether(d, "cls_logset_id", "cls_topic_id"); err != nil {
 		return err
 	}
@@ -829,6 +838,7 @@ func resourceTencentCloudScfFunctionRead(d *schema.ResourceData, m interface{}) 
 	_ = d.Set("role", resp.Role)
 	_ = d.Set("cls_logset_id", resp.ClsLogsetId)
 	_ = d.Set("cls_topic_id", resp.ClsTopicId)
+	_ = d.Set("func_type", resp.Type)
 	_ = d.Set("l5_enable", *resp.L5Enable == "TRUE")
 
 	tags := make(map[string]string, len(resp.Tags))
@@ -930,6 +940,10 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 		return nil
 	}
 	namespace, name := split[0], split[1]
+
+	if d.HasChange("func_type") {
+		return fmt.Errorf("`func_type` do not support change now.")
+	}
 
 	d.Partial(true)
 

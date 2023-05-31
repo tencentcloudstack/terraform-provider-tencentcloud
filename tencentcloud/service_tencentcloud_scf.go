@@ -27,6 +27,7 @@ type scfFunctionInfo struct {
 	role            *string
 	clsLogsetId     *string
 	clsTopicId      *string
+	funcType        *string
 	namespace       *string
 	layers          []*scf.LayerVersionSimple
 	l5Enable        *bool
@@ -88,7 +89,7 @@ func (me *ScfService) CreateFunction(ctx context.Context, info scfFunctionInfo) 
 	request.ClsLogsetId = info.clsLogsetId
 	request.ClsTopicId = info.clsTopicId
 	request.Layers = info.layers
-	request.Type = helper.String(SCF_FUNCTION_TYPE_EVENT)
+	request.Type = info.funcType
 
 	request.Code = &scf.Code{
 		CosBucketName:   info.cosBucketName,
