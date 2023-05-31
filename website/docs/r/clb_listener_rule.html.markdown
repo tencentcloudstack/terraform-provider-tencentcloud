@@ -54,7 +54,7 @@ The following arguments are supported:
 * `health_check_http_domain` - (Optional, String) Domain name of health check. NOTES: Only supports listeners of `HTTP` and `HTTPS` protocol.
 * `health_check_http_method` - (Optional, String) Methods of health check. NOTES: Only supports listeners of `HTTP` and `HTTPS` protocol. The default is `HEAD`, the available value are `HEAD` and `GET`.
 * `health_check_http_path` - (Optional, String) Path of health check. NOTES: Only supports listeners of `HTTP` and `HTTPS` protocol.
-* `health_check_interval_time` - (Optional, Int) Interval time of health check. Valid value ranges: (5~300) sec. and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
+* `health_check_interval_time` - (Optional, Int) Interval time of health check. Valid value ranges: (2~300) sec. and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in `tencentcloud_clb_listener_rule`.
 * `health_check_switch` - (Optional, Bool) Indicates whether health check is enabled.
 * `health_check_time_out` - (Optional, Int) Time out of health check. The value range is [2-60](SEC).
 * `health_check_type` - (Optional, String) Type of health check. Valid value is `CUSTOM`, `TCP`, `HTTP`.
