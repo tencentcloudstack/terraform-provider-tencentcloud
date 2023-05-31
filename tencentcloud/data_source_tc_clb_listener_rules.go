@@ -106,7 +106,7 @@ func dataSourceTencentCloudClbListenerRules() *schema.Resource {
 						"health_check_interval_time": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Interval time of health check. The value range is 5-300 sec, and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
+							Description: "Interval time of health check. The value range is 2-300 sec, and the default is `5` sec. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 						},
 						"health_check_health_num": {
 							Type:        schema.TypeInt,
