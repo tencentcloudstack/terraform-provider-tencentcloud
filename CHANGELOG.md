@@ -1,3 +1,16 @@
+## 1.81.4 (May 31, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ckafka_zone` ([#1850](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1850))
+* **New Resource:** `tencentcloud_ckafka_acl_rule` ([#1850](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1850))
+* **New Resource:** `tencentcloud_ckafka_consumer_group` ([#1850](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1850))
+* **New Resource:** `tencentcloud_ckafka_consumer_group_modify_offset` ([#1850](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1850))
+* **New Resource:** `tencentcloud_ckafka_datahub_task` ([#1850](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1850))
+* **New Resource:** `tencentcloud_ckafka_renew_instance` ([#1850](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1850))
+* **New Resource:** `tencentcloud_cvm_export_images` ([#1828](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1828))
+* **New Resource:** `tencentcloud_cvm_image_share_permission` ([#1828](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1828))
+
 ## 1.81.3 (May 31, 2023)
 
 FEATURES:
