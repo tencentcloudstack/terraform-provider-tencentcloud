@@ -167,7 +167,7 @@ Cloud Kafka(ckafka)
 	tencentcloud_ckafka_topic_produce_connection
 	tencentcloud_ckafka_topic_subscribe_group
 	tencentcloud_ckafka_topic_sync_replica
-	tencentcloud_ckafka_ckafka_zone
+	tencentcloud_ckafka_zone
 
   Resource
 	tencentcloud_ckafka_instance
@@ -1697,7 +1697,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_topic_produce_connection":           dataSourceTencentCloudCkafkaTopicProduceConnection(),
 			"tencentcloud_ckafka_topic_subscribe_group":              dataSourceTencentCloudCkafkaTopicSubscribeGroup(),
 			"tencentcloud_ckafka_topic_sync_replica":                 dataSourceTencentCloudCkafkaTopicSyncReplica(),
-			"tencentcloud_ckafka_ckafka_zone":                        dataSourceTencentCloudCkafkaCkafkaZone(),
+			"tencentcloud_ckafka_zone":                               dataSourceTencentCloudCkafkaZone(),
 			"tencentcloud_audit_cos_regions":                         dataSourceTencentCloudAuditCosRegions(),
 			"tencentcloud_audit_key_alias":                           dataSourceTencentCloudAuditKeyAlias(),
 			"tencentcloud_audits":                                    dataSourceTencentCloudAudits(),

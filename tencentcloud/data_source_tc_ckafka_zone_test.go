@@ -14,7 +14,7 @@ func TestAccTencentCloudCkafkaCkafkaZoneDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCkafkaCkafkaZoneDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ckafka_ckafka_zone.ckafka_zone")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_ckafka_zone.ckafka_zone")),
 			},
 		},
 	})
@@ -22,6 +22,6 @@ func TestAccTencentCloudCkafkaCkafkaZoneDataSource_basic(t *testing.T) {
 
 const testAccCkafkaCkafkaZoneDataSource = `
 
-data "tencentcloud_ckafka_ckafka_zone" "ckafka_zone" {
+data "tencentcloud_ckafka_zone" "ckafka_zone" {
 }
 `

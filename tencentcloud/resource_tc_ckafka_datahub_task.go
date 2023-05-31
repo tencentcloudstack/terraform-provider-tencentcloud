@@ -1551,7 +1551,7 @@ func resourceTencentCloudCkafkaDatahubTask() *schema.Resource {
 												"table": {
 													Type:        schema.TypeString,
 													Required:    true,
-													Description: "table name,use, to seperate.",
+													Description: "table name,use, to separate.",
 												},
 												"topic": {
 													Type:        schema.TypeString,

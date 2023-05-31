@@ -1,10 +1,10 @@
 /*
-Use this data source to query detailed information of ckafka ckafka_zone
+Use this data source to query detailed information of ckafka zone
 
 Example Usage
 
 ```hcl
-data "tencentcloud_ckafka_ckafka_zone" "ckafka_zone" {
+data "tencentcloud_ckafka_zone" "ckafka_zone" {
 }
 ```
 */
@@ -19,9 +19,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudCkafkaCkafkaZone() *schema.Resource {
+func dataSourceTencentCloudCkafkaZone() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudCkafkaCkafkaZoneRead,
+		Read: dataSourceTencentCloudCkafkaZoneRead,
 		Schema: map[string]*schema.Schema{
 			"cdc_id": {
 				Optional:    true,
@@ -256,8 +256,8 @@ func dataSourceTencentCloudCkafkaCkafkaZone() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudCkafkaCkafkaZoneRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_ckafka_ckafka_zone.read")()
+func dataSourceTencentCloudCkafkaZoneRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_ckafka_zone.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
