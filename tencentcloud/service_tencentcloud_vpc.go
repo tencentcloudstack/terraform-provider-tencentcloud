@@ -6604,3 +6604,195 @@ func (me *VpcService) DeleteVpcNetDetectById(ctx context.Context, netDetectId st
 
 	return
 }
+
+func (me *VpcService) DescribeVpcClassicLinkAttachmentById(ctx context.Context, vpcId string, instanceId string) (classicLinkAttachment *vpc.ClassicLinkInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeClassicLinkInstancesRequest()
+	filter := vpc.FilterObject{
+		Name:   helper.String("vpc-id"),
+		Values: []*string{&vpcId},
+	}
+	request.Filters = append(request.Filters, &filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*vpc.ClassicLinkInstance, 0)
+	for {
+		request.Offset = helper.Int64ToStrPoint(offset)
+		request.Limit = helper.Int64ToStrPoint(limit)
+		response, err := me.client.UseVpcClient().DescribeClassicLinkInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ClassicLinkInstanceSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.ClassicLinkInstanceSet...)
+		if len(response.Response.ClassicLinkInstanceSet) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+
+	for _, instance := range instances {
+		if *instance.InstanceId == instanceId {
+			classicLinkAttachment = instance
+		}
+	}
+
+	return
+}
+
+func (me *VpcService) DeleteVpcClassicLinkAttachmentById(ctx context.Context, vpcId string, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDetachClassicLinkVpcRequest()
+	request.VpcId = &vpcId
+	request.InstanceIds = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DetachClassicLinkVpc(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DescribeVpcDhcpIpById(ctx context.Context, dhcpIpId string) (dhcpIp *vpc.DhcpIp, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeDhcpIpsRequest()
+	request.DhcpIpIds = []*string{&dhcpIpId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeDhcpIps(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DhcpIpSet) < 1 {
+		return
+	}
+
+	dhcpIp = response.Response.DhcpIpSet[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcDhcpIpById(ctx context.Context, dhcpIpId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteDhcpIpRequest()
+	request.DhcpIpId = &dhcpIpId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DeleteDhcpIp(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DescribeVpcDhcpAssociateAddressById(ctx context.Context, dhcpIpId string, addressIp string) (dhcpAssociateAddress *vpc.DhcpIp, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeDhcpIpsRequest()
+	request.DhcpIpIds = []*string{&dhcpIpId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeDhcpIps(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DhcpIpSet) < 1 {
+		return
+	}
+
+	dhcpIp := response.Response.DhcpIpSet[0]
+	if *dhcpIp.AddressIp != addressIp {
+		return
+	}
+	dhcpAssociateAddress = dhcpIp
+
+	return
+}
+
+func (me *VpcService) DeleteVpcDhcpAssociateAddressById(ctx context.Context, dhcpIpId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDisassociateDhcpIpWithAddressIpRequest()
+	request.DhcpIpId = &dhcpIpId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DisassociateDhcpIpWithAddressIp(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
