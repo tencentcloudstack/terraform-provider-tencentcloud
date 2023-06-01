@@ -2396,3 +2396,306 @@ func (me *TsfService) DescribeTsfEnableUnitRuleById(ctx context.Context, id stri
 	enableUnitRuleAttachment = response.Response.Result
 	return
 }
+
+func (me *TsfService) DescribeTsfDescribePodInstancesByFilter(ctx context.Context, param map[string]interface{}) (describePodInstances *tsf.GroupPodResult, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribePodInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+		if k == "PodNameList" {
+			request.PodNameList = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset    int64 = 0
+		limit     int64 = 20
+		instances []*tsf.GroupPod
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribePodInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	describePodInstances = &tsf.GroupPodResult{
+		TotalCount: helper.IntInt64(len(instances)),
+		Content:    instances,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfGatewayAllGroupApisByFilter(ctx context.Context, param map[string]interface{}) (gatewayAllGroupApis *tsf.GatewayVo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeGatewayAllGroupApisRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayDeployGroupId" {
+			request.GatewayDeployGroupId = v.(*string)
+		}
+		if k == "SearchWord" {
+			request.SearchWord = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTsfClient().DescribeGatewayAllGroupApis(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	gatewayAllGroupApis = response.Response.Result
+
+	return
+}
+
+func (me *TsfService) DescribeTsfGroupGatewaysByFilter(ctx context.Context, param map[string]interface{}) (groupGateways *tsf.TsfPageApiGroupInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeGroupGatewaysRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayDeployGroupId" {
+			request.GatewayDeployGroupId = v.(*string)
+		}
+		if k == "SearchWord" {
+			request.SearchWord = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset   int64 = 0
+		limit    int64 = 20
+		gateways []*tsf.ApiGroupInfo
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeGroupGateways(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		gateways = append(gateways, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	groupGateways = &tsf.TsfPageApiGroupInfo{
+		TotalCount: helper.IntInt64(len(gateways)),
+		Content:    gateways,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfGroupInstancesByFilter(ctx context.Context, param map[string]interface{}) (groupInstances *tsf.TsfPageInstance, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeGroupInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+		if k == "SearchWord" {
+			request.SearchWord = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderType" {
+			request.OrderType = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset    int64 = 0
+		limit     int64 = 20
+		instances []*tsf.Instance
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeGroupInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	groupInstances = &tsf.TsfPageInstance{
+		TotalCount: helper.IntInt64(len(instances)),
+		Content:    instances,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfUsableUnitNamespacesByFilter(ctx context.Context, param map[string]interface{}) (usableUnitNamespaces *tsf.TsfPageUnitNamespace, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeUsableUnitNamespacesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SearchWord" {
+			request.SearchWord = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset     int64 = 0
+		limit      int64 = 20
+		namespaces []*tsf.UnitNamespace
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTsfClient().DescribeUsableUnitNamespaces(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.Content) < 1 {
+			break
+		}
+		namespaces = append(namespaces, response.Response.Result.Content...)
+		if len(response.Response.Result.Content) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	usableUnitNamespaces = &tsf.TsfPageUnitNamespace{
+		TotalCount: helper.IntInt64(len(namespaces)),
+		Content:    namespaces,
+	}
+
+	return
+}
+
+func (me *TsfService) DescribeTsfGroupConfigReleaseByFilter(ctx context.Context, param map[string]interface{}) (groupConfigRelease *tsf.GroupRelease, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tsf.NewDescribeGroupReleaseRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GroupId" {
+			request.GroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTsfClient().DescribeGroupRelease(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	groupConfigRelease = response.Response.Result
+	return
+}
