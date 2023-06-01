@@ -154,20 +154,43 @@ func (me *DtsService) IsolateDtsSyncJobById(ctx context.Context, jobId string) (
 	return
 }
 
+func (me *DtsService) DestroyDtsSyncJobById(ctx context.Context, jobId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDestroySyncJobRequest()
+	request.JobId = helper.String(jobId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "isolate object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseDtsClient().DestroySyncJob(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *DtsService) DeleteDtsSyncJobById(ctx context.Context, jobId string) (errRet error) {
 	var (
 		logId    = getLogId(ctx)
 		request  = dts.NewDestroySyncJobRequest()
 		response = dts.NewDestroySyncJobResponse()
 	)
-
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 				logId, "delete object", request.ToJsonString(), errRet.Error())
 		}
 	}()
-
 	err := me.IsolateDtsSyncJobById(ctx, jobId)
 	if err != nil {
 		errRet = err
@@ -176,7 +199,7 @@ func (me *DtsService) DeleteDtsSyncJobById(ctx context.Context, jobId string) (e
 
 	// err = me.PollingStatusUntil(ctx, jobId, "Isolated")
 	// if err != nil {
-	// 	return err
+	//      return err
 	// }
 
 	ratelimit.Check(request.GetAction())
@@ -195,7 +218,7 @@ func (me *DtsService) DeleteDtsSyncJobById(ctx context.Context, jobId string) (e
 
 	// err = me.PollingStatusUntil(ctx, jobId, "Deleted")
 	// if err != nil {
-	// 	return err
+	//      return err
 	// }
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
@@ -900,6 +923,71 @@ func (me *DtsService) DescribeDtsCompareTaskStopOperationById(ctx context.Contex
 	}
 
 	return
+}
+
+func (me *DtsService) DescribeDtsSyncConfigById(ctx context.Context, jobId string) (syncConfig *dts.SyncJobInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeSyncJobsRequest()
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeSyncJobs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.JobList) < 1 {
+		return
+	}
+
+	syncConfig = response.Response.JobList[0]
+	return
+}
+
+func (me *DtsService) DtsSyncJobConfigIsolateStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsSyncConfigById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || object.Status == nil {
+			return &dts.SyncJobInfo{}, "Isolated", nil
+		}
+
+		return object, helper.PString(object.TradeStatus), nil
+	}
+}
+
+func (me *DtsService) DtsSyncJobConfigDeleteStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsSyncConfigById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || object.Status == nil {
+			return &dts.SyncJobInfo{}, "Deleted", nil
+		}
+
+		return object, helper.PString(object.TradeStatus), nil
+	}
 }
 
 func (me *DtsService) DtsMigrateJobConfigStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {

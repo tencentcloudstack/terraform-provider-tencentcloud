@@ -1197,6 +1197,7 @@ Data Transmission Service(DTS)
 
   Resource
 	tencentcloud_dts_sync_job
+	tencentcloud_dts_sync_config
 	tencentcloud_dts_sync_check_job_operation
 	tencentcloud_dts_sync_job_resume_operation
 	tencentcloud_dts_sync_job_start_operation
@@ -2359,6 +2360,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
 			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			"tencentcloud_dts_sync_config":                            resourceTencentCloudDtsSyncConfig(),
 			"tencentcloud_dts_sync_check_job_operation":               resourceTencentCloudDtsSyncCheckJobOperation(),
 			"tencentcloud_dts_sync_job_resume_operation":              resourceTencentCloudDtsSyncJobResumeOperation(),
 			"tencentcloud_dts_sync_job_start_operation":               resourceTencentCloudDtsSyncJobStartOperation(),

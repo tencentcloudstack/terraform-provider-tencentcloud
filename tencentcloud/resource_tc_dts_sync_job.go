@@ -26,6 +26,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -321,8 +322,24 @@ func resourceTencentCloudDtsSyncJobDelete(d *schema.ResourceData, meta interface
 
 	syncJobId := d.Id()
 
-	if err := service.DeleteDtsSyncJobById(ctx, syncJobId); err != nil {
+	if err := service.IsolateDtsSyncJobById(ctx, syncJobId); err != nil {
 		return err
+	}
+
+	conf := BuildStateChangeConf([]string{}, []string{"Isolated"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobConfigIsolateStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
+
+	if err := service.DestroyDtsSyncJobById(ctx, syncJobId); err != nil {
+		return err
+	}
+
+	conf = BuildStateChangeConf([]string{}, []string{"Deleted"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobConfigDeleteStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
 	}
 
 	return nil
