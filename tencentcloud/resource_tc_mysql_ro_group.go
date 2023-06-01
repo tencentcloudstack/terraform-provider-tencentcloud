@@ -5,29 +5,22 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_ro_group" "ro_group" {
-  ro_group_id = ""
+  instance_id = "cdb-e8i766hx"
+  ro_group_id = "cdbrg-f49t0gnj"
   ro_group_info {
-	ro_group_name = ""
-	ro_max_delay_time =
-	ro_offline_delay =
-	min_ro_in_group =
-	weight_mode = ""
-	replication_delay_time =
+    ro_group_name          = "keep-ro"
+    ro_max_delay_time      = 1
+    ro_offline_delay       = 1
+    min_ro_in_group        = 1
+    weight_mode            = "custom"
+    replication_delay_time = 1
   }
   ro_weight_values {
-	instance_id = ""
-	weight =
+    instance_id = "cdbro-f49t0gnj"
+    weight      = 10
   }
-  is_balance_ro_load =
+  is_balance_ro_load = 1
 }
-```
-
-Import
-
-mysql ro_group can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_mysql_ro_group.ro_group ro_group_id
 ```
 */
 package tencentcloud
@@ -50,9 +43,7 @@ func resourceTencentCloudMysqlRoGroup() *schema.Resource {
 		Read:   resourceTencentCloudMysqlRoGroupRead,
 		Update: resourceTencentCloudMysqlRoGroupUpdate,
 		Delete: resourceTencentCloudMysqlRoGroupDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -181,6 +172,8 @@ func resourceTencentCloudMysqlRoGroupRead(d *schema.ResourceData, meta interface
 		log.Printf("[WARN]%s resource `MysqlRoGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	_ = d.Set("instance_id", instanceId)
 
 	if roGroup.RoGroupId != nil {
 		_ = d.Set("ro_group_id", roGroup.RoGroupId)

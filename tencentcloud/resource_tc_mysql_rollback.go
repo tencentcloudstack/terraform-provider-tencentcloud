@@ -54,7 +54,7 @@ func resourceTencentCloudMysqlRollback() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Rollback strategy. Available values are: table, db, full; the default value is full. table - Extremely fast rollback mode, only import the backup and binlog of the selected table level, if there is a cross-table operation, and the associated table is not selected at the same time, the rollback will fail. In this mode, the parameter Databases must be empty; db - Quick mode, only import the backup and binlog of the selected library level, if there is a cross-database operation, and the associated library is not selected at the same time, the rollback will fail; full - normal rollback mode, the backup and binlog of the entire instance will be imported , at a slower rate.",
+				Description: "Rollback strategy. Available values are: table, db, full; the default value is full. table- Extremely fast rollback mode, only import the backup and binlog of the selected table level, if there is a cross-table operation, and the associated table is not selected at the same time, the rollback will fail. In this mode, the parameter Databases must be empty; db- Quick mode, only import the backup and binlog of the selected library level, if there is a cross-database operation, and the associated library is not selected at the same time, the rollback will fail; full- normal rollback mode, the backup and binlog of the entire instance will be imported, at a slower rate.",
 			},
 
 			"rollback_time": {
@@ -138,6 +138,7 @@ func resourceTencentCloudMysqlRollbackCreate(d *schema.ResourceData, meta interf
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
 		rollbackInstancesInfo.InstanceId = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("strategy"); ok {

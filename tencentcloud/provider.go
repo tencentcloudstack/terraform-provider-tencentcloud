@@ -551,6 +551,13 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_password_complexity
 	tencentcloud_mysql_remote_backup_config
 	tencentcloud_mysql_restart_db_instances_operation
+	tencentcloud_mysql_switch_for_upgrade
+	tencentcloud_mysql_rollback
+	tencentcloud_mysql_rollback_stop
+	tencentcloud_mysql_ro_group
+	tencentcloud_mysql_ro_instance_ip
+	tencentcloud_mysql_ro_group_load_operation
+	tencentcloud_mysql_switch_master_slave_operation
 
 Cloud Monitor(Monitor)
   Data Source

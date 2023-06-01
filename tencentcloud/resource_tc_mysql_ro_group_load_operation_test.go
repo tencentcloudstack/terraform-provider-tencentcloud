@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlRoGroupLoadOperationResource_basic -v
 func TestAccTencentCloudMysqlRoGroupLoadOperationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -25,7 +26,7 @@ func TestAccTencentCloudMysqlRoGroupLoadOperationResource_basic(t *testing.T) {
 const testAccMysqlRoGroupLoadOperation = `
 
 resource "tencentcloud_mysql_ro_group_load_operation" "ro_group_load_operation" {
-	ro_group_id = "cdbrg-bdlvcfpj"
+	ro_group_id = "cdbrg-f49t0gnj"
 }
 
 `
