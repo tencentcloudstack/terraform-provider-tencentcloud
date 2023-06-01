@@ -161,12 +161,6 @@ func resourceTencentCloudCvmImportImage() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Boot mode.",
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
