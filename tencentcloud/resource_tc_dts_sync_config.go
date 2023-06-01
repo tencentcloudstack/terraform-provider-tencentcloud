@@ -1106,7 +1106,7 @@ func resourceTencentCloudDtsSyncConfigRead(d *schema.ResourceData, meta interfac
 			srcInfoMap["encrypt_conn"] = syncConfig.SrcInfo.EncryptConn
 		}
 
-		// reset the password due to the descirbe api always return an empty string
+		// reset the password due to the describe api always return an empty string
 		password := syncConfig.SrcInfo.Password
 		if password != nil && *password != "" {
 			srcInfoMap["password"] = password
@@ -1219,7 +1219,7 @@ func resourceTencentCloudDtsSyncConfigRead(d *schema.ResourceData, meta interfac
 			dstInfoMap["encrypt_conn"] = syncConfig.DstInfo.EncryptConn
 		}
 
-		// reset the password due to the descirbe api always return an empty string
+		// reset the password due to the describe api always return an empty string
 		password := syncConfig.SrcInfo.Password
 		if password != nil && *password != "" {
 			dstInfoMap["password"] = password
