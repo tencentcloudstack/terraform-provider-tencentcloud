@@ -12,7 +12,7 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
 	db_version                   = "5.7"
 	storage_limit                = 1000
 	cluster_name                 = "tf-cynosdb-mysql-sync-dst"
-	password                     = "*"
+	password                     = "cynos@123"
 	instance_maintain_duration   = 3600
 	instance_maintain_start_time = 10800
 	instance_maintain_weekdays   = [
@@ -66,18 +66,18 @@ resource "tencentcloud_dts_sync_job" "sync_job" {
   }
 
 resource "tencentcloud_dts_sync_config" "sync_config" {
-  job_id = tencentcloud_dts_sync_job.sync_job.job_id
-  src_access_type = "cdb"
-  dst_access_type = "cdb"
+	job_id = tencentcloud_dts_sync_job.sync_job.job_id
+	src_access_type = "cdb"
+	dst_access_type = "cdb"
 
-  job_name = "tf_test_sync_config"
-  job_mode = "liteMode"
-  run_mode = "Immediate"
+	job_name = "tf_test_sync_config"
+	job_mode = "liteMode"
+	run_mode = "Immediate"
 
-  objects {
-	mode = "Partial"
-      databases {
-	    db_name = "tf_ci_test"
+	objects {
+		mode = "Partial"
+		databases {
+			db_name = "tf_ci_test"
 			new_db_name = "tf_ci_test_new"
 			db_mode = "Partial"
 			table_mode = "All"
@@ -85,27 +85,27 @@ resource "tencentcloud_dts_sync_config" "sync_config" {
 				table_name = "test"
 				new_table_name = "test_new"
 			}
-	  }
-  }
-  src_info {
+		}
+	}
+	src_info {
 		region        = "ap-guangzhou"
 		instance_id   = "cdb-fitq5t9h"
 		user          = "keep_dts"
-		password      = "*"
+		password      = "Letmein123"
 		db_name       = "tf_ci_test"
 		vpc_id        = local.vpc_id
 		subnet_id     = local.subnet_id
-  }
-  dst_info {
+	}
+	dst_info {
 		region        = "ap-guangzhou"
 		instance_id   = tencentcloud_cynosdb_cluster.foo.id
 		user          = "root"
-		password      = "*"
+		password      = "cynos@123"
 		db_name       = "tf_ci_test_new"
 		vpc_id        = local.vpc_id
 		subnet_id     = local.subnet_id
-  }
-  auto_retry_time_range_minutes = 0
+	}
+	auto_retry_time_range_minutes = 0
 }
 ```
 
