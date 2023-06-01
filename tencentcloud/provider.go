@@ -1203,6 +1203,7 @@ Data Transmission Service(DTS)
 	tencentcloud_dts_sync_job_stop_operation
 	tencentcloud_dts_sync_job_resize_operation
 	tencentcloud_dts_sync_job_recover_operation
+	tencentcloud_dts_sync_job_isolate_operation
 	tencentcloud_dts_sync_job_continue_operation
 	tencentcloud_dts_sync_job_pause_operation
 	tencentcloud_dts_migrate_service
@@ -2364,6 +2365,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dts_sync_job_stop_operation":                resourceTencentCloudDtsSyncJobStopOperation(),
 			"tencentcloud_dts_sync_job_resize_operation":              resourceTencentCloudDtsSyncJobResizeOperation(),
 			"tencentcloud_dts_sync_job_recover_operation":             resourceTencentCloudDtsSyncJobRecoverOperation(),
+			"tencentcloud_dts_sync_job_isolate_operation":             resourceTencentCloudDtsSyncJobIsolateOperation(),
 			"tencentcloud_dts_sync_job_continue_operation":            resourceTencentCloudDtsSyncJobContinueOperation(),
 			"tencentcloud_dts_sync_job_pause_operation":               resourceTencentCloudDtsSyncJobPauseOperation(),
 			"tencentcloud_dts_migrate_service":                        resourceTencentCloudDtsMigrateService(),
