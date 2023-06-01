@@ -1004,7 +1004,7 @@ func (me *DtsService) DtsMigrateJobConfigStateRefreshFunc(jobId string, failStat
 	}
 }
 
-func (me *DtsService) DtsSyncJobOperationStateRefreshFunc(jobId, defaultStatus string, failStates []string) resource.StateRefreshFunc {
+func (me *DtsService) DtsSyncJobTradeStateRefreshFunc(jobId, defaultStatus string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil
 
@@ -1019,5 +1019,23 @@ func (me *DtsService) DtsSyncJobOperationStateRefreshFunc(jobId, defaultStatus s
 		}
 
 		return object, helper.PString(object.TradeStatus), nil
+	}
+}
+
+func (me *DtsService) DtsSyncJobStateRefreshFunc(jobId, defaultStatus string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsSyncJob(ctx, &jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || object.Status == nil {
+			return &dts.SyncJobInfo{}, defaultStatus, nil
+		}
+
+		return object, helper.PString(object.Status), nil
 	}
 }

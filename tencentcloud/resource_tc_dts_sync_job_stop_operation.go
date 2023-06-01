@@ -44,8 +44,8 @@ func resourceTencentCloudDtsSyncJobStopOperationCreate(d *schema.ResourceData, m
 	logId := getLogId(contextNil)
 
 	var (
-		request  = dts.NewStopSyncJobRequest()
-		jobId    string
+		request = dts.NewStopSyncJobRequest()
+		jobId   string
 	)
 	if v, ok := d.GetOk("job_id"); ok {
 		request.JobId = helper.String(v.(string))
@@ -70,7 +70,7 @@ func resourceTencentCloudDtsSyncJobStopOperationCreate(d *schema.ResourceData, m
 
 	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"Stopped"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobOperationStateRefreshFunc(d.Id(), "Stopped", []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"Stopped"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobStateRefreshFunc(d.Id(), "Stopped", []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

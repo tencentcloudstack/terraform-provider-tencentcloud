@@ -1664,7 +1664,8 @@ func resourceTencentCloudDtsSyncConfigUpdate(d *schema.ResourceData, meta interf
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"Running"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobOperationStateRefreshFunc(d.Id(), "Running", []string{}))
+	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	conf := BuildStateChangeConf([]string{}, []string{"Initialized"}, readRetryTimeout, time.Second, service.DtsSyncJobStateRefreshFunc(d.Id(), "", []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

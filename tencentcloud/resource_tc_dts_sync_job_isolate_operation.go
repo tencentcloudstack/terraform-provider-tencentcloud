@@ -71,7 +71,7 @@ func resourceTencentCloudDtsSyncJobIsolateOperationCreate(d *schema.ResourceData
 
 	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"Isolated"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobOperationStateRefreshFunc(d.Id(), "Isolated", []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"Isolated"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobTradeStateRefreshFunc(d.Id(), "Isolated", []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

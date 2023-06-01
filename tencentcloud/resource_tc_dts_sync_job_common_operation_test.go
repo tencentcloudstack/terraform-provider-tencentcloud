@@ -8,7 +8,7 @@ import (
 )
 
 func TestAccTencentCloudDtsSyncJobCommonOperationResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -37,13 +37,6 @@ func TestAccTencentCloudDtsSyncJobCommonOperationResource_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccDtsSyncJobOperation_stop(),
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_stop_operation.sync_job_stop_operation", "id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_stop_operation.sync_job_stop_operation", "job_id"),
-				),
-			},
-			{
 				Config: testAccDtsSyncJobOperation_isolate(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_isolate_operation.sync_job_isolate_operation", "id"),
@@ -55,6 +48,13 @@ func TestAccTencentCloudDtsSyncJobCommonOperationResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_recover_operation.sync_job_recover_operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_recover_operation.sync_job_recover_operation", "job_id"),
+				),
+			},
+			{
+				Config: testAccDtsSyncJobOperation_stop(),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_stop_operation.sync_job_stop_operation", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_stop_operation.sync_job_stop_operation", "job_id"),
 				),
 			},
 			// {
@@ -181,6 +181,14 @@ func testAccDtsSyncJobOperation_basic(name string) string {
 	  }
 	  auto_retry_time_range_minutes = 0
 	}
+
+	resource "tencentcloud_dts_sync_check_job_operation" "sync_check_job_operation" {
+		job_id = tencentcloud_dts_sync_config.sync_config.job_id
+	}
+
+	locals {
+		job_id_checked = tencentcloud_dts_sync_check_job_operation.sync_check_job_operation.id
+	}
 	
 `, name, name)
 	return ret
@@ -191,7 +199,7 @@ func testAccDtsSyncJobOperation_start() string {
 	ret := testAccDtsSyncJobOperation_basic("operation") + `
 
 	resource "tencentcloud_dts_sync_job_start_operation" "sync_job_start_operation" {
-		job_id = tencentcloud_dts_sync_config.sync_config.job_id
+		job_id = local.job_id_checked
 	}
 `
 	return ret
@@ -202,7 +210,7 @@ func testAccDtsSyncJobOperation_stop() string {
 	ret := testAccDtsSyncJobOperation_basic("operation") + `
 
 	resource "tencentcloud_dts_sync_job_stop_operation" "sync_job_stop_operation" {
-		job_id = tencentcloud_dts_sync_config.sync_config.job_id
+		job_id = local.job_id_checked
 	}
 `
 	return ret
@@ -213,7 +221,7 @@ func testAccDtsSyncJobOperation_pause() string {
 	ret := testAccDtsSyncJobOperation_basic("operation") + `
 
 	resource "tencentcloud_dts_sync_job_pause_operation" "sync_job_pause_operation" {
-    	job_id = tencentcloud_dts_sync_config.sync_config.job_id
+    	job_id = local.job_id_checked
 	}
 `
 	return ret
@@ -224,7 +232,7 @@ func testAccDtsSyncJobOperation_resume() string {
 	ret := testAccDtsSyncJobOperation_basic("operation") + `
 
 	resource "tencentcloud_dts_sync_job_resume_operation" "sync_job_resume_operation" {
-		job_id = tencentcloud_dts_sync_config.sync_config.job_id
+		job_id = local.job_id_checked
 	}
 `
 	return ret
@@ -235,7 +243,7 @@ func testAccDtsSyncJobOperation_resize() string {
 	ret := testAccDtsSyncJobOperation_basic("operation") + `
 
 	resource "tencentcloud_dts_sync_job_resize_operation" "sync_job_resize_operation" {
-    	job_id = tencentcloud_dts_sync_config.sync_config.job_id
+    	job_id = local.job_id_checked
 		new_instance_class = "large"
 	}
 `
@@ -247,7 +255,7 @@ func testAccDtsSyncJobOperation_recover() string {
 	ret := testAccDtsSyncJobOperation_basic("operation") + `
 
 	resource "tencentcloud_dts_sync_job_recover_operation" "sync_job_recover_operation" {
-    	job_id = tencentcloud_dts_sync_config.sync_config.job_id
+    	job_id = local.job_id_checked
 	}
 `
 	return ret
@@ -258,7 +266,7 @@ func testAccDtsSyncJobOperation_isolate() string {
 	ret := testAccDtsSyncJobOperation_basic("operation") + `
 
 	resource "tencentcloud_dts_sync_job_isolate_operation" "sync_job_isolate_operation" {
-    	job_id = tencentcloud_dts_sync_config.sync_config.job_id
+    	job_id = local.job_id_checked
 	}
 `
 	return ret
@@ -268,7 +276,7 @@ func testAccDtsSyncJobOperation_continue() string {
 
 	ret := testAccDtsSyncJobOperation_basic("operation") + `
 	resource "tencentcloud_dts_sync_job_continue_operation" "sync_job_continue_operation" {
-    	job_id = tencentcloud_dts_sync_config.sync_config.job_id
+    	job_id = local.job_id_checked
 	}
 `
 	return ret

@@ -70,7 +70,7 @@ func resourceTencentCloudDtsSyncJobPauseOperationCreate(d *schema.ResourceData, 
 
 	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"Paused"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobOperationStateRefreshFunc(d.Id(), "Paused", []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"Paused"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobStateRefreshFunc(d.Id(), "Paused", []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
