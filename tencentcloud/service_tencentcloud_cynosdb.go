@@ -1013,3 +1013,47 @@ func (me *CynosdbService) DescribeCynosdbParamTemplatesByFilter(ctx context.Cont
 	}
 	return
 }
+
+func (me *CynosdbService) CynosdbInstanceIsolateStateRefreshFunc(clusterId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, detail, _, err := me.DescribeClusterById(ctx, clusterId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || object.Status == nil {
+			return &cynosdb.CynosdbCluster{}, "isolated", nil
+		}
+
+		if object != nil || object.Status != nil {
+			return object, helper.PString(object.Status), nil
+		}
+
+		return detail, helper.PString(detail.Status), nil
+	}
+}
+
+func (me *CynosdbService) CynosdbInstanceOfflineStateRefreshFunc(clusterId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, detail, _, err := me.DescribeClusterById(ctx, clusterId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || object.Status == nil {
+			return &cynosdb.CynosdbCluster{}, "offlined", nil
+		}
+
+		if object != nil || object.Status != nil {
+			return object, helper.PString(object.Status), nil
+		}
+
+		return detail, helper.PString(detail.Status), nil
+	}
+}

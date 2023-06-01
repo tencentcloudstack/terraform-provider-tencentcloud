@@ -71,7 +71,7 @@ func resourceTencentCloudDtsSyncJobResumeOperationCreate(d *schema.ResourceData,
 
 	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"Running"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobResumeOperationStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"Running", "Stopped", "Failed"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobResumeOperationStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

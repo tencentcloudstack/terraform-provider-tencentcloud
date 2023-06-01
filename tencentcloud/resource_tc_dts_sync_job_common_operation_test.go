@@ -16,62 +16,74 @@ func TestAccTencentCloudDtsSyncJobCommonOperationResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDtsSyncJobOperation_start(),
+				Config: testAccDtsSyncJobOperation_start("operation_basic"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_start_operation.sync_job_start_operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_start_operation.sync_job_start_operation", "job_id"),
 				),
 			},
 			{
-				Config: testAccDtsSyncJobOperation_pause(),
+				Config: testAccDtsSyncJobOperation_pause("operation_basic"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_pause_operation.sync_job_pause_operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_pause_operation.sync_job_pause_operation", "job_id"),
 				),
 			},
 			{
-				Config: testAccDtsSyncJobOperation_continue(),
+				Config: testAccDtsSyncJobOperation_continue("operation_basic"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_continue_operation.sync_job_continue_operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_continue_operation.sync_job_continue_operation", "job_id"),
 				),
 			},
 			{
-				Config: testAccDtsSyncJobOperation_isolate(),
+				Config: testAccDtsSyncJobOperation_isolate("operation_basic"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_isolate_operation.sync_job_isolate_operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_isolate_operation.sync_job_isolate_operation", "job_id"),
 				),
 			},
 			{
-				Config: testAccDtsSyncJobOperation_recover(),
+				Config: testAccDtsSyncJobOperation_recover("operation_basic"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_recover_operation.sync_job_recover_operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_recover_operation.sync_job_recover_operation", "job_id"),
 				),
 			},
 			{
-				Config: testAccDtsSyncJobOperation_stop(),
+				Config: testAccDtsSyncJobOperation_stop("operation_basic"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_stop_operation.sync_job_stop_operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_stop_operation.sync_job_stop_operation", "job_id"),
 				),
 			},
-			// {
-			// 	Config: testAccDtsSyncJobOperation_resume(),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_resume_operation.sync_job_resume_operation", "id"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_resume_operation.sync_job_resume_operation", "job_id"),
-			// 	),
-			// },
-			// {
-			// 	Config: testAccDtsSyncJobOperation_resize(),
-			// 	Check: resource.ComposeTestCheckFunc(
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_resize_operation.sync_job_resize_operation", "id"),
-			// 		resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_resize_operation.sync_job_resize_operation", "job_id"),
-			// 		resource.TestCheckResourceAttr("tencentcloud_dts_sync_job_resize_operation.sync_job_resize_operation", "new_instance_class", "large"),
-			// 	),
-			// },
+		},
+	})
+}
+
+func TestAccTencentCloudDtsSyncJobCommonOperationResource_resize(t *testing.T) {
+	// t.Parallel()
+	resource.Test(t, resource.TestCase{
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
+		Providers: testAccProviders,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDtsSyncJobOperation_start("operation_resize"),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_start_operation.sync_job_start_operation", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_start_operation.sync_job_start_operation", "job_id"),
+				),
+			},
+			{
+				Config: testAccDtsSyncJobOperation_resize("operation_resize"),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_resize_operation.sync_job_resize_operation", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dts_sync_job_resize_operation.sync_job_resize_operation", "job_id"),
+					resource.TestCheckResourceAttr("tencentcloud_dts_sync_job_resize_operation.sync_job_resize_operation", "new_instance_class", "micro"),
+				),
+			},
 		},
 	})
 }
@@ -194,9 +206,9 @@ func testAccDtsSyncJobOperation_basic(name string) string {
 	return ret
 }
 
-func testAccDtsSyncJobOperation_start() string {
+func testAccDtsSyncJobOperation_start(name string) string {
 
-	ret := testAccDtsSyncJobOperation_basic("operation") + `
+	ret := testAccDtsSyncJobOperation_basic(name) + `
 
 	resource "tencentcloud_dts_sync_job_start_operation" "sync_job_start_operation" {
 		job_id = local.job_id_checked
@@ -205,9 +217,9 @@ func testAccDtsSyncJobOperation_start() string {
 	return ret
 }
 
-func testAccDtsSyncJobOperation_stop() string {
+func testAccDtsSyncJobOperation_stop(name string) string {
 
-	ret := testAccDtsSyncJobOperation_basic("operation") + `
+	ret := testAccDtsSyncJobOperation_basic(name) + `
 
 	resource "tencentcloud_dts_sync_job_stop_operation" "sync_job_stop_operation" {
 		job_id = local.job_id_checked
@@ -216,9 +228,9 @@ func testAccDtsSyncJobOperation_stop() string {
 	return ret
 }
 
-func testAccDtsSyncJobOperation_pause() string {
+func testAccDtsSyncJobOperation_pause(name string) string {
 
-	ret := testAccDtsSyncJobOperation_basic("operation") + `
+	ret := testAccDtsSyncJobOperation_basic(name) + `
 
 	resource "tencentcloud_dts_sync_job_pause_operation" "sync_job_pause_operation" {
     	job_id = local.job_id_checked
@@ -227,32 +239,32 @@ func testAccDtsSyncJobOperation_pause() string {
 	return ret
 }
 
-func testAccDtsSyncJobOperation_resume() string {
+// func testAccDtsSyncJobOperation_resume(name string) string {
 
-	ret := testAccDtsSyncJobOperation_basic("operation") + `
+// 	ret := testAccDtsSyncJobOperation_basic(name) + `
 
-	resource "tencentcloud_dts_sync_job_resume_operation" "sync_job_resume_operation" {
-		job_id = local.job_id_checked
-	}
-`
-	return ret
-}
+// 	resource "tencentcloud_dts_sync_job_resume_operation" "sync_job_resume_operation" {
+// 		job_id = local.job_id_checked
+// 	}
+// `
+// 	return ret
+// }
 
-func testAccDtsSyncJobOperation_resize() string {
+func testAccDtsSyncJobOperation_resize(name string) string {
 
-	ret := testAccDtsSyncJobOperation_basic("operation") + `
+	ret := testAccDtsSyncJobOperation_basic(name) + `
 
 	resource "tencentcloud_dts_sync_job_resize_operation" "sync_job_resize_operation" {
     	job_id = local.job_id_checked
-		new_instance_class = "large"
+		new_instance_class = "micro"
 	}
 `
 	return ret
 }
 
-func testAccDtsSyncJobOperation_recover() string {
+func testAccDtsSyncJobOperation_recover(name string) string {
 
-	ret := testAccDtsSyncJobOperation_basic("operation") + `
+	ret := testAccDtsSyncJobOperation_basic(name) + `
 
 	resource "tencentcloud_dts_sync_job_recover_operation" "sync_job_recover_operation" {
     	job_id = local.job_id_checked
@@ -261,9 +273,9 @@ func testAccDtsSyncJobOperation_recover() string {
 	return ret
 }
 
-func testAccDtsSyncJobOperation_isolate() string {
+func testAccDtsSyncJobOperation_isolate(name string) string {
 
-	ret := testAccDtsSyncJobOperation_basic("operation") + `
+	ret := testAccDtsSyncJobOperation_basic(name) + `
 
 	resource "tencentcloud_dts_sync_job_isolate_operation" "sync_job_isolate_operation" {
     	job_id = local.job_id_checked
@@ -272,9 +284,9 @@ func testAccDtsSyncJobOperation_isolate() string {
 	return ret
 }
 
-func testAccDtsSyncJobOperation_continue() string {
+func testAccDtsSyncJobOperation_continue(name string) string {
 
-	ret := testAccDtsSyncJobOperation_basic("operation") + `
+	ret := testAccDtsSyncJobOperation_basic(name) + `
 	resource "tencentcloud_dts_sync_job_continue_operation" "sync_job_continue_operation" {
     	job_id = local.job_id_checked
 	}

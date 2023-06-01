@@ -57,6 +57,7 @@ func resourceTencentCloudDtsSyncJobResizeOperationCreate(d *schema.ResourceData,
 	)
 	if v, ok := d.GetOk("job_id"); ok {
 		request.JobId = helper.String(v.(string))
+		jobId = v.(string)
 	}
 
 	if v, ok := d.GetOk("new_instance_class"); ok {
@@ -81,13 +82,13 @@ func resourceTencentCloudDtsSyncJobResizeOperationCreate(d *schema.ResourceData,
 
 	service := DtsService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"Running", "Stopped"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobStateRefreshFunc(d.Id(), "Running", []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"Running", "Stopped"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobStateRefreshFunc(d.Id(), "Stopped", []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
 
-	conf = BuildStateChangeConf([]string{}, []string{"Normal"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobTradeStateRefreshFunc(d.Id(), "", []string{}))
+	conf = BuildStateChangeConf([]string{}, []string{"Normal", "Isolated"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobTradeStateRefreshFunc(d.Id(), "Isolated", []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
