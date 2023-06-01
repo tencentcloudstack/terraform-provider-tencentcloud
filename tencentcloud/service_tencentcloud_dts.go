@@ -915,3 +915,21 @@ func (me *DtsService) DtsMigrateJobConfigStateRefreshFunc(jobId string, failStat
 		return object, helper.PString(object.Status), nil
 	}
 }
+
+func (me *DtsService) DtsSyncJobOperationStateRefreshFunc(jobId, defaultStatus string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsSyncJob(ctx, &jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || object.TradeStatus == nil {
+			return &dts.SyncJobInfo{}, defaultStatus, nil
+		}
+
+		return object, helper.PString(object.TradeStatus), nil
+	}
+}
