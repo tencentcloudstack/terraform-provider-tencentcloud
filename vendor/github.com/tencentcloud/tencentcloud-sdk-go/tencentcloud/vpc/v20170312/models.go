@@ -96,6 +96,10 @@ type AccessPolicy struct {
 
 	// 更新时间
 	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
+
+	// Remark
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Remark *string `json:"Remark,omitempty" name:"Remark"`
 }
 
 type AccountAttribute struct {
@@ -1004,7 +1008,7 @@ type AssignPrivateIpAddressesRequestParams struct {
 	// 新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 }
 
@@ -1020,7 +1024,7 @@ type AssignPrivateIpAddressesRequest struct {
 	// 新申请的内网IP地址个数，与PrivateIpAddresses至少提供一个。内网IP地址个数总和不能超过配额数，详见<a href="/document/product/576/18527">弹性网卡使用限制</a>。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 }
 
@@ -2734,7 +2738,7 @@ type CreateAndAttachNetworkInterfaceRequestParams struct {
 	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 
 	// 指定绑定的安全组，例如：['sg-1dd51d']。
@@ -2771,7 +2775,7 @@ type CreateAndAttachNetworkInterfaceRequest struct {
 	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 
 	// 指定绑定的安全组，例如：['sg-1dd51d']。
@@ -4453,7 +4457,7 @@ type CreateNetworkInterfaceRequestParams struct {
 	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 
 	// 指定绑定的安全组，例如：['sg-1dd51d']。
@@ -4487,7 +4491,7 @@ type CreateNetworkInterfaceRequest struct {
 	// 新申请的内网IP地址个数，内网IP地址个数总和不能超过配额数。
 	SecondaryPrivateIpAddressCount *uint64 `json:"SecondaryPrivateIpAddressCount,omitempty" name:"SecondaryPrivateIpAddressCount"`
 
-	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	// IP服务质量等级，和SecondaryPrivateIpAddressCount配合使用，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 
 	// 指定绑定的安全组，例如：['sg-1dd51d']。
@@ -6069,8 +6073,11 @@ type CreateVpnGatewaySslClientRequestParams struct {
 	// SSL-VPN-SERVER 实例ID。
 	SslVpnServerId *string `json:"SslVpnServerId,omitempty" name:"SslVpnServerId"`
 
-	// name
+	// SSL-VPN-CLIENT实例Name。不可和SslVpnClientNames同时使用。
 	SslVpnClientName *string `json:"SslVpnClientName,omitempty" name:"SslVpnClientName"`
+
+	// SSL-VPN-CLIENT实例Name数字。批量创建时使用。不可和SslVpnClientName同时使用。
+	SslVpnClientNames []*string `json:"SslVpnClientNames,omitempty" name:"SslVpnClientNames"`
 }
 
 type CreateVpnGatewaySslClientRequest struct {
@@ -6079,8 +6086,11 @@ type CreateVpnGatewaySslClientRequest struct {
 	// SSL-VPN-SERVER 实例ID。
 	SslVpnServerId *string `json:"SslVpnServerId,omitempty" name:"SslVpnServerId"`
 
-	// name
+	// SSL-VPN-CLIENT实例Name。不可和SslVpnClientNames同时使用。
 	SslVpnClientName *string `json:"SslVpnClientName,omitempty" name:"SslVpnClientName"`
+
+	// SSL-VPN-CLIENT实例Name数字。批量创建时使用。不可和SslVpnClientName同时使用。
+	SslVpnClientNames []*string `json:"SslVpnClientNames,omitempty" name:"SslVpnClientNames"`
 }
 
 func (r *CreateVpnGatewaySslClientRequest) ToJsonString() string {
@@ -6097,6 +6107,7 @@ func (r *CreateVpnGatewaySslClientRequest) FromJsonString(s string) error {
 	}
 	delete(f, "SslVpnServerId")
 	delete(f, "SslVpnClientName")
+	delete(f, "SslVpnClientNames")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateVpnGatewaySslClientRequest has unknown keys!", "")
 	}
@@ -6133,80 +6144,80 @@ func (r *CreateVpnGatewaySslClientResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateVpnGatewaySslServerRequestParams struct {
-	// VPN实例ID
+	// VPN网关实例ID。
 	VpnGatewayId *string `json:"VpnGatewayId,omitempty" name:"VpnGatewayId"`
 
-	// SSL_VPN_SERVER 实例名
+	// SSL-VPN-SERVER 实例名称，长度不超过60个字节。
 	SslVpnServerName *string `json:"SslVpnServerName,omitempty" name:"SslVpnServerName"`
 
-	// 本端地址网段
+	// 云端地址（CIDR）列表。
 	LocalAddress []*string `json:"LocalAddress,omitempty" name:"LocalAddress"`
 
-	// 客户端地址网段
+	// 客户端地址网段。
 	RemoteAddress *string `json:"RemoteAddress,omitempty" name:"RemoteAddress"`
 
-	// SSL VPN服务端监听协议。当前仅支持 UDP。默认UDP
+	// SSL VPN服务端监听协议。当前仅支持 UDP，默认UDP。
 	SslVpnProtocol *string `json:"SslVpnProtocol,omitempty" name:"SslVpnProtocol"`
 
-	// SSL VPN服务端监听协议端口。默认1194。
+	// SSL VPN服务端监听协议端口，默认1194。
 	SslVpnPort *int64 `json:"SslVpnPort,omitempty" name:"SslVpnPort"`
 
-	// 认证算法。可选 'SHA1', 'MD5', 'NONE'。默认NONE
+	// 认证算法。可选 'SHA1', 'MD5', 'NONE'，默认NONE。
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitempty" name:"IntegrityAlgorithm"`
 
-	// 加密算法。可选 'AES-128-CBC', 'AES-192-CBC', 'AES-256-CBC', 'NONE'。默认NONE
+	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 'NONE'，默认NONE。
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitempty" name:"EncryptAlgorithm"`
 
-	// 是否支持压缩。当前仅支持不支持压缩。默认False
+	// 是否支持压缩。当前仅支持不支持压缩，默认False。
 	Compress *bool `json:"Compress,omitempty" name:"Compress"`
 
-	// 是否开启SSO认证
+	// 是否开启SSO认证。默认为False
 	SsoEnabled *bool `json:"SsoEnabled,omitempty" name:"SsoEnabled"`
 
-	// 是否开启策略访问控制
+	// 是否开启策略访问控制。默认为False
 	AccessPolicyEnabled *bool `json:"AccessPolicyEnabled,omitempty" name:"AccessPolicyEnabled"`
 
-	// SAML-DATA
+	// SAML-DATA，开启SSO时传。
 	SamlData *string `json:"SamlData,omitempty" name:"SamlData"`
 }
 
 type CreateVpnGatewaySslServerRequest struct {
 	*tchttp.BaseRequest
 	
-	// VPN实例ID
+	// VPN网关实例ID。
 	VpnGatewayId *string `json:"VpnGatewayId,omitempty" name:"VpnGatewayId"`
 
-	// SSL_VPN_SERVER 实例名
+	// SSL-VPN-SERVER 实例名称，长度不超过60个字节。
 	SslVpnServerName *string `json:"SslVpnServerName,omitempty" name:"SslVpnServerName"`
 
-	// 本端地址网段
+	// 云端地址（CIDR）列表。
 	LocalAddress []*string `json:"LocalAddress,omitempty" name:"LocalAddress"`
 
-	// 客户端地址网段
+	// 客户端地址网段。
 	RemoteAddress *string `json:"RemoteAddress,omitempty" name:"RemoteAddress"`
 
-	// SSL VPN服务端监听协议。当前仅支持 UDP。默认UDP
+	// SSL VPN服务端监听协议。当前仅支持 UDP，默认UDP。
 	SslVpnProtocol *string `json:"SslVpnProtocol,omitempty" name:"SslVpnProtocol"`
 
-	// SSL VPN服务端监听协议端口。默认1194。
+	// SSL VPN服务端监听协议端口，默认1194。
 	SslVpnPort *int64 `json:"SslVpnPort,omitempty" name:"SslVpnPort"`
 
-	// 认证算法。可选 'SHA1', 'MD5', 'NONE'。默认NONE
+	// 认证算法。可选 'SHA1', 'MD5', 'NONE'，默认NONE。
 	IntegrityAlgorithm *string `json:"IntegrityAlgorithm,omitempty" name:"IntegrityAlgorithm"`
 
-	// 加密算法。可选 'AES-128-CBC', 'AES-192-CBC', 'AES-256-CBC', 'NONE'。默认NONE
+	// 加密算法。可选 'AES-128-CBC','AES-192-CBC', 'AES-256-CBC', 'NONE'，默认NONE。
 	EncryptAlgorithm *string `json:"EncryptAlgorithm,omitempty" name:"EncryptAlgorithm"`
 
-	// 是否支持压缩。当前仅支持不支持压缩。默认False
+	// 是否支持压缩。当前仅支持不支持压缩，默认False。
 	Compress *bool `json:"Compress,omitempty" name:"Compress"`
 
-	// 是否开启SSO认证
+	// 是否开启SSO认证。默认为False
 	SsoEnabled *bool `json:"SsoEnabled,omitempty" name:"SsoEnabled"`
 
-	// 是否开启策略访问控制
+	// 是否开启策略访问控制。默认为False
 	AccessPolicyEnabled *bool `json:"AccessPolicyEnabled,omitempty" name:"AccessPolicyEnabled"`
 
-	// SAML-DATA
+	// SAML-DATA，开启SSO时传。
 	SamlData *string `json:"SamlData,omitempty" name:"SamlData"`
 }
 
@@ -6242,10 +6253,10 @@ func (r *CreateVpnGatewaySslServerRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type CreateVpnGatewaySslServerResponseParams struct {
-	// 创建SSL-VPN server 异步任务ID
+	// 创建SSL-VPN server 异步任务ID。
 	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
-	// SSL-VPN server 唯一ID
+	// SSL-VPN-SERVER 唯一ID。
 	SslVpnServerId *string `json:"SslVpnServerId,omitempty" name:"SslVpnServerId"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -8531,15 +8542,21 @@ func (r *DeleteVpnGatewayRoutesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DeleteVpnGatewaySslClientRequestParams struct {
-	// SSL-VPN-CLIENT 实例ID。
+	// SSL-VPN-CLIENT 实例ID。不可和SslVpnClientIds同时使用。
 	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+
+	// SSL-VPN-CLIENT 实例ID列表。批量删除时使用。不可和SslVpnClientId同时使用。
+	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
 }
 
 type DeleteVpnGatewaySslClientRequest struct {
 	*tchttp.BaseRequest
 	
-	// SSL-VPN-CLIENT 实例ID。
+	// SSL-VPN-CLIENT 实例ID。不可和SslVpnClientIds同时使用。
 	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+
+	// SSL-VPN-CLIENT 实例ID列表。批量删除时使用。不可和SslVpnClientId同时使用。
+	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
 }
 
 func (r *DeleteVpnGatewaySslClientRequest) ToJsonString() string {
@@ -8555,6 +8572,7 @@ func (r *DeleteVpnGatewaySslClientRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "SslVpnClientId")
+	delete(f, "SslVpnClientIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteVpnGatewaySslClientRequest has unknown keys!", "")
 	}
@@ -10113,7 +10131,7 @@ type DescribeCrossBorderFlowMonitorRequestParams struct {
 	// 云联网所属账号。
 	CcnUin *string `json:"CcnUin,omitempty" name:"CcnUin"`
 
-	// 时间粒度。
+	// 时间粒度。单位为:秒，如60为60s的时间粒度
 	Period *int64 `json:"Period,omitempty" name:"Period"`
 
 	// 开始时间。
@@ -10138,7 +10156,7 @@ type DescribeCrossBorderFlowMonitorRequest struct {
 	// 云联网所属账号。
 	CcnUin *string `json:"CcnUin,omitempty" name:"CcnUin"`
 
-	// 时间粒度。
+	// 时间粒度。单位为:秒，如60为60s的时间粒度
 	Period *int64 `json:"Period,omitempty" name:"Period"`
 
 	// 开始时间。
@@ -13453,7 +13471,7 @@ type DescribeSnapshotFilesRequestParams struct {
 	// 偏移量，默认为0。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大为200。
+	// 返回数量，默认为20，最大为100。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 }
 
@@ -13475,7 +13493,7 @@ type DescribeSnapshotFilesRequest struct {
 	// 偏移量，默认为0。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 返回数量，默认为20，最大为200。
+	// 返回数量，默认为20，最大为100。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 }
 
@@ -14248,7 +14266,7 @@ func (r *DescribeVpcEndPointResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeVpcEndPointServiceRequestParams struct {
-	// 过滤条件。
+	// 过滤条件。不支持同时传入参数 EndPointServiceIds and Filters。
 	// <li> service-id - String - （过滤条件）终端节点服务唯一ID。</li>
 	// <li>service-name - String - （过滤条件）终端节点实例名称。</li>
 	// <li>service-instance-id - String - （过滤条件）后端服务的唯一ID，比如lb-xxx。</li>
@@ -14261,14 +14279,14 @@ type DescribeVpcEndPointServiceRequestParams struct {
 	// 单页返回数量，默认为20，最大值为100。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 终端节点服务ID。
+	// 终端节点服务ID。不支持同时传入参数 EndPointServiceIds and Filters。
 	EndPointServiceIds []*string `json:"EndPointServiceIds,omitempty" name:"EndPointServiceIds"`
 }
 
 type DescribeVpcEndPointServiceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 过滤条件。
+	// 过滤条件。不支持同时传入参数 EndPointServiceIds and Filters。
 	// <li> service-id - String - （过滤条件）终端节点服务唯一ID。</li>
 	// <li>service-name - String - （过滤条件）终端节点实例名称。</li>
 	// <li>service-instance-id - String - （过滤条件）后端服务的唯一ID，比如lb-xxx。</li>
@@ -14281,7 +14299,7 @@ type DescribeVpcEndPointServiceRequest struct {
 	// 单页返回数量，默认为20，最大值为100。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 终端节点服务ID。
+	// 终端节点服务ID。不支持同时传入参数 EndPointServiceIds and Filters。
 	EndPointServiceIds []*string `json:"EndPointServiceIds,omitempty" name:"EndPointServiceIds"`
 }
 
@@ -15176,18 +15194,19 @@ type DescribeVpnGatewaySslClientsRequestParams struct {
 	// 过滤条件，参数不支持同时指定SslVpnClientIds和Filters。
 	// <li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li>
 	// <li>vpn-gateway-id - String - （过滤条件）VPN实例ID形如：vpngw-5aluhh9t。</li>
-	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpngwSslServer-123456。</li>
-	// <li>ssl-vpn-client-id - String - （过滤条件）SSL-VPN-CLIENT实例ID形如：vpngwSslClient-123456。</li>
+	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpns-1j2w6xpx。</li>
+	// <li>ssl-vpn-client-id - String - （过滤条件）SSL-VPN-CLIENT实例ID形如：vpnc-3rlxp4nd。</li>
 	// <li>ssl-vpn-client-name - String - （过滤条件）SSL-VPN-CLIENT实例名称。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
-	// 偏移量
+	// 偏移量，默认值0。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 请求对象个数
+	// 请求对象个数，默认值20。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// SSL-VPN-CLIENT实例ID。形如：vpngwSslClient-f49l6u0z。每次请求的实例的上限为100。参数不支持同时指定SslVpnClientIds和Filters。
+	// SSL-VPN-CLIENT实例ID。形如：	
+	// vpns-1jww3xpx。每次请求的实例的上限为100。参数不支持同时指定SslVpnClientIds和Filters。
 	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
 
 	// VPN门户网站使用。默认是False。
@@ -15200,18 +15219,19 @@ type DescribeVpnGatewaySslClientsRequest struct {
 	// 过滤条件，参数不支持同时指定SslVpnClientIds和Filters。
 	// <li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li>
 	// <li>vpn-gateway-id - String - （过滤条件）VPN实例ID形如：vpngw-5aluhh9t。</li>
-	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpngwSslServer-123456。</li>
-	// <li>ssl-vpn-client-id - String - （过滤条件）SSL-VPN-CLIENT实例ID形如：vpngwSslClient-123456。</li>
+	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpns-1j2w6xpx。</li>
+	// <li>ssl-vpn-client-id - String - （过滤条件）SSL-VPN-CLIENT实例ID形如：vpnc-3rlxp4nd。</li>
 	// <li>ssl-vpn-client-name - String - （过滤条件）SSL-VPN-CLIENT实例名称。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
-	// 偏移量
+	// 偏移量，默认值0。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 请求对象个数
+	// 请求对象个数，默认值20。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// SSL-VPN-CLIENT实例ID。形如：vpngwSslClient-f49l6u0z。每次请求的实例的上限为100。参数不支持同时指定SslVpnClientIds和Filters。
+	// SSL-VPN-CLIENT实例ID。形如：	
+	// vpns-1jww3xpx。每次请求的实例的上限为100。参数不支持同时指定SslVpnClientIds和Filters。
 	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
 
 	// VPN门户网站使用。默认是False。
@@ -15246,7 +15266,7 @@ type DescribeVpnGatewaySslClientsResponseParams struct {
 	// 符合条件的实例数量。
 	TotalCount *uint64 `json:"TotalCount,omitempty" name:"TotalCount"`
 
-	// 符合条件的实例个数。
+	// SSL-VPN-CLIENT 实例列表。
 	SslVpnClientSet []*SslVpnClient `json:"SslVpnClientSet,omitempty" name:"SslVpnClientSet"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -15271,21 +15291,21 @@ func (r *DescribeVpnGatewaySslClientsResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeVpnGatewaySslServersRequestParams struct {
-	// 偏移量
+	// 偏移量。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 请求对象个数
+	// 请求对象个数。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 	// SSL-VPN-SERVER实例ID。形如：vpngwSslServer-12345678。每次请求的实例的上限为100。参数不支持同时指定SslVpnServerIds和Filters。
 	SslVpnServerIds []*string `json:"SslVpnServerIds,omitempty" name:"SslVpnServerIds"`
 
 	// 过滤条件，参数不支持同时指定SslVpnServerIds和Filters。
-	// <li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li>
-	// <li>vpn-gateway-id - String - （过滤条件）VPN实例ID形如：vpngw-5aluhh9t。</li>
+	// <li>vpc-id - String - （过滤条件）VPC实例ID，形如：vpc-f49l6u0z。</li>
+	// <li>vpn-gateway-id - String - （过滤条件）VPN实例ID，形如：vpngw-5aluhh9t。</li>
 	// <li>vpn-gateway-name - String - （过滤条件）VPN实例名称。</li>
 	// <li>ssl-vpn-server-name - String - （过滤条件）SSL-VPN-SERVER实例名称。</li>
-	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpngwSslServer-123456。</li>
+	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID，形如：vpns-xxx。</li>
 	Filters []*FilterObject `json:"Filters,omitempty" name:"Filters"`
 
 	// vpn门户使用。 默认Flase
@@ -15295,21 +15315,21 @@ type DescribeVpnGatewaySslServersRequestParams struct {
 type DescribeVpnGatewaySslServersRequest struct {
 	*tchttp.BaseRequest
 	
-	// 偏移量
+	// 偏移量。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 请求对象个数
+	// 请求对象个数。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
 	// SSL-VPN-SERVER实例ID。形如：vpngwSslServer-12345678。每次请求的实例的上限为100。参数不支持同时指定SslVpnServerIds和Filters。
 	SslVpnServerIds []*string `json:"SslVpnServerIds,omitempty" name:"SslVpnServerIds"`
 
 	// 过滤条件，参数不支持同时指定SslVpnServerIds和Filters。
-	// <li>vpc-id - String - （过滤条件）VPC实例ID形如：vpc-f49l6u0z。</li>
-	// <li>vpn-gateway-id - String - （过滤条件）VPN实例ID形如：vpngw-5aluhh9t。</li>
+	// <li>vpc-id - String - （过滤条件）VPC实例ID，形如：vpc-f49l6u0z。</li>
+	// <li>vpn-gateway-id - String - （过滤条件）VPN实例ID，形如：vpngw-5aluhh9t。</li>
 	// <li>vpn-gateway-name - String - （过滤条件）VPN实例名称。</li>
 	// <li>ssl-vpn-server-name - String - （过滤条件）SSL-VPN-SERVER实例名称。</li>
-	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID形如：vpngwSslServer-123456。</li>
+	// <li>ssl-vpn-server-id - String - （过滤条件）SSL-VPN-SERVER实例ID，形如：vpns-xxx。</li>
 	Filters []*FilterObject `json:"Filters,omitempty" name:"Filters"`
 
 	// vpn门户使用。 默认Flase
@@ -16178,15 +16198,21 @@ func (r *DisableSnapshotPoliciesResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DisableVpnGatewaySslClientCertRequestParams struct {
-	// SSL-VPN-CLIENT 实例ID。
+	// SSL-VPN-CLIENT 实例ID。不可和SslVpnClientIds同时使用。
 	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+
+	// SSL-VPN-CLIENT 实例ID列表。批量禁用时使用。不可和SslVpnClientId同时使用。
+	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
 }
 
 type DisableVpnGatewaySslClientCertRequest struct {
 	*tchttp.BaseRequest
 	
-	// SSL-VPN-CLIENT 实例ID。
+	// SSL-VPN-CLIENT 实例ID。不可和SslVpnClientIds同时使用。
 	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+
+	// SSL-VPN-CLIENT 实例ID列表。批量禁用时使用。不可和SslVpnClientId同时使用。
+	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
 }
 
 func (r *DisableVpnGatewaySslClientCertRequest) ToJsonString() string {
@@ -16202,6 +16228,7 @@ func (r *DisableVpnGatewaySslClientCertRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "SslVpnClientId")
+	delete(f, "SslVpnClientIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisableVpnGatewaySslClientCertRequest has unknown keys!", "")
 	}
@@ -16743,27 +16770,33 @@ func (r *DownloadCustomerGatewayConfigurationResponse) FromJsonString(s string) 
 
 // Predefined struct for user
 type DownloadVpnGatewaySslClientCertRequestParams struct {
-	// SSL-VPN-CLIENT 实例ID。
+	// SSL-VPN-CLIENT 实例ID。不可以和SslVpnClientIds同时使用。
 	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
 
-	// SAML-TOKEN
+	// SAML Token（SAML令牌）。
 	SamlToken *string `json:"SamlToken,omitempty" name:"SamlToken"`
 
-	// VPN门户网站使用。默认Flase
+	// VPN门户网站使用。默认False
 	IsVpnPortal *bool `json:"IsVpnPortal,omitempty" name:"IsVpnPortal"`
+
+	// SSL-VPN-CLIENT 实例ID列表。批量下载时使用。不可以和SslVpnClientId同时使用。
+	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
 }
 
 type DownloadVpnGatewaySslClientCertRequest struct {
 	*tchttp.BaseRequest
 	
-	// SSL-VPN-CLIENT 实例ID。
+	// SSL-VPN-CLIENT 实例ID。不可以和SslVpnClientIds同时使用。
 	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
 
-	// SAML-TOKEN
+	// SAML Token（SAML令牌）。
 	SamlToken *string `json:"SamlToken,omitempty" name:"SamlToken"`
 
-	// VPN门户网站使用。默认Flase
+	// VPN门户网站使用。默认False
 	IsVpnPortal *bool `json:"IsVpnPortal,omitempty" name:"IsVpnPortal"`
+
+	// SSL-VPN-CLIENT 实例ID列表。批量下载时使用。不可以和SslVpnClientId同时使用。
+	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
 }
 
 func (r *DownloadVpnGatewaySslClientCertRequest) ToJsonString() string {
@@ -16781,6 +16814,7 @@ func (r *DownloadVpnGatewaySslClientCertRequest) FromJsonString(s string) error 
 	delete(f, "SslVpnClientId")
 	delete(f, "SamlToken")
 	delete(f, "IsVpnPortal")
+	delete(f, "SslVpnClientIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DownloadVpnGatewaySslClientCertRequest has unknown keys!", "")
 	}
@@ -16789,13 +16823,13 @@ func (r *DownloadVpnGatewaySslClientCertRequest) FromJsonString(s string) error 
 
 // Predefined struct for user
 type DownloadVpnGatewaySslClientCertResponseParams struct {
-	// 无
+	// SSL-VPN 客户端配置。
 	SslClientConfigsSet *string `json:"SslClientConfigsSet,omitempty" name:"SslClientConfigsSet"`
 
-	// SSL-VPN client配置
+	// SSL-VPN 客户端配置。
 	SslClientConfig []*SslClientConfig `json:"SslClientConfig,omitempty" name:"SslClientConfig"`
 
-	// 是否鉴权成功 只有传入SamlToken 才生效
+	// 是否鉴权成功 只有传入SamlToken 才生效，1为成功，0为失败。
 	Authenticated *uint64 `json:"Authenticated,omitempty" name:"Authenticated"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
@@ -17187,15 +17221,21 @@ func (r *EnableVpcEndPointConnectResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type EnableVpnGatewaySslClientCertRequestParams struct {
-	// SSL-VPN-CLIENT 实例ID。
+	// SSL-VPN-CLIENT 实例ID。不可和SslVpnClientIds同时使用。
 	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+
+	// SSL-VPN-CLIENT 实例ID列表。批量启用时使用。不可和SslVpnClientId同时使用。
+	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
 }
 
 type EnableVpnGatewaySslClientCertRequest struct {
 	*tchttp.BaseRequest
 	
-	// SSL-VPN-CLIENT 实例ID。
+	// SSL-VPN-CLIENT 实例ID。不可和SslVpnClientIds同时使用。
 	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
+
+	// SSL-VPN-CLIENT 实例ID列表。批量启用时使用。不可和SslVpnClientId同时使用。
+	SslVpnClientIds []*string `json:"SslVpnClientIds,omitempty" name:"SslVpnClientIds"`
 }
 
 func (r *EnableVpnGatewaySslClientCertRequest) ToJsonString() string {
@@ -17211,6 +17251,7 @@ func (r *EnableVpnGatewaySslClientCertRequest) FromJsonString(s string) error {
 		return err
 	}
 	delete(f, "SslVpnClientId")
+	delete(f, "SslVpnClientIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableVpnGatewaySslClientCertRequest has unknown keys!", "")
 	}
@@ -20613,7 +20654,7 @@ type ModifyNetworkInterfaceQosRequestParams struct {
 	// 弹性网卡ID，支持批量修改。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitempty" name:"NetworkInterfaceIds"`
 
-	// 服务质量，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	// 服务质量，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 
 	// DirectSend端口范围最大值。
@@ -20626,7 +20667,7 @@ type ModifyNetworkInterfaceQosRequest struct {
 	// 弹性网卡ID，支持批量修改。
 	NetworkInterfaceIds []*string `json:"NetworkInterfaceIds,omitempty" name:"NetworkInterfaceIds"`
 
-	// 服务质量，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	// 服务质量，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 
 	// DirectSend端口范围最大值。
@@ -22412,7 +22453,7 @@ type PrivateIpAddressSpecification struct {
 	// AVAILABLE：可用的
 	State *string `json:"State,omitempty" name:"State"`
 
-	// IP服务质量等级，可选值：PT、AU、AG、DEFAULT，分别代表白金、金、银、默认四个等级。
+	// IP服务质量等级，可选值：PT、AU、AG、DEFAULT，分别代表云金、云银、云铜、默认四个等级。
 	QosLevel *string `json:"QosLevel,omitempty" name:"QosLevel"`
 }
 
@@ -24429,16 +24470,19 @@ type SslClientConfig struct {
 
 	// 客户端证书
 	SslVpnCert *string `json:"SslVpnCert,omitempty" name:"SslVpnCert"`
+
+	// SSL-VPN-CLIENT 实例ID。
+	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
 }
 
 type SslVpnClient struct {
-	// VPC实例ID
+	// VPC实例ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
-	// SSL-VPN-SERVER 实例ID
+	// SSL-VPN-SERVER 实例ID。
 	SslVpnServerId *string `json:"SslVpnServerId,omitempty" name:"SslVpnServerId"`
 
-	// 证书状态. 
+	// 证书状态。
 	// 0:创建中
 	// 1:正常
 	// 2:已停用
@@ -24446,16 +24490,16 @@ type SslVpnClient struct {
 	// 4.创建出错
 	CertStatus *uint64 `json:"CertStatus,omitempty" name:"CertStatus"`
 
-	// SSL-VPN-CLIENT 实例ID
+	// SSL-VPN-CLIENT 实例ID。
 	SslVpnClientId *string `json:"SslVpnClientId,omitempty" name:"SslVpnClientId"`
 
-	// 证书开始时间
+	// 证书开始时间。
 	CertBeginTime *string `json:"CertBeginTime,omitempty" name:"CertBeginTime"`
 
-	// 证书到期时间
+	// 证书到期时间。
 	CertEndTime *string `json:"CertEndTime,omitempty" name:"CertEndTime"`
 
-	// CLIENT NAME
+	// CLIENT NAME。
 	Name *string `json:"Name,omitempty" name:"Name"`
 
 	// 创建CLIENT 状态。
