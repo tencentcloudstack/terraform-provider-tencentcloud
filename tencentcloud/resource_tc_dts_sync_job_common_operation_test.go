@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudDtsSyncJobCommonOperationResource_basic(t *testing.T) {
+func TestAccTencentCloudDtsSyncJobStartOperationResource_basic(t *testing.T) {
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -61,7 +61,7 @@ func TestAccTencentCloudDtsSyncJobCommonOperationResource_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudDtsSyncJobCommonOperationResource_resize(t *testing.T) {
+func TestAccTencentCloudDtsSyncJobStartOperationResource_resize(t *testing.T) {
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {

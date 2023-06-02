@@ -233,7 +233,7 @@ func resourceTencentCloudLighthouseDiskCreate(d *schema.ResourceData, meta inter
 
 	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{"UNATTACHED"}, 20*readRetryTimeout, time.Second, service.LighthouseDiskStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"UNATTACHED", "ATTACHED"}, 20*readRetryTimeout, time.Second, service.LighthouseDiskStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

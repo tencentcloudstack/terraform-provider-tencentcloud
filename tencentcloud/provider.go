@@ -1194,6 +1194,7 @@ Data Transmission Service(DTS)
 	tencentcloud_dts_sync_jobs
 	tencentcloud_dts_migrate_jobs
 	tencentcloud_dts_compare_tasks
+	tencentcloud_dts_migrate_db_instances
 
   Resource
 	tencentcloud_dts_sync_job
@@ -1815,6 +1816,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dts_sync_jobs":                             dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                         dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                          dataSourceTencentCloudDtsMigrateJobs(),
+			"tencentcloud_dts_migrate_db_instances":                  dataSourceTencentCloudDtsMigrateDbInstances(),
 			"tencentcloud_tdmq_rocketmq_cluster":                     dataSourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                   dataSourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_topic":                       dataSourceTencentCloudTdmqRocketmqTopic(),

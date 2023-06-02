@@ -188,7 +188,7 @@ func (me *DtsService) DeleteDtsSyncJobById(ctx context.Context, jobId string) (e
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "delete object", request.ToJsonString(), errRet.Error())
+				logId, "isolate object", request.ToJsonString(), errRet.Error())
 		}
 	}()
 	err := me.IsolateDtsSyncJobById(ctx, jobId)
@@ -925,71 +925,6 @@ func (me *DtsService) DescribeDtsCompareTaskStopOperationById(ctx context.Contex
 	return
 }
 
-func (me *DtsService) DescribeDtsSyncConfigById(ctx context.Context, jobId string) (syncConfig *dts.SyncJobInfo, errRet error) {
-	logId := getLogId(ctx)
-
-	request := dts.NewDescribeSyncJobsRequest()
-	request.JobId = &jobId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseDtsClient().DescribeSyncJobs(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	if len(response.Response.JobList) < 1 {
-		return
-	}
-
-	syncConfig = response.Response.JobList[0]
-	return
-}
-
-func (me *DtsService) DtsSyncJobConfigIsolateStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
-	return func() (interface{}, string, error) {
-		ctx := contextNil
-
-		object, err := me.DescribeDtsSyncConfigById(ctx, jobId)
-
-		if err != nil {
-			return nil, "", err
-		}
-
-		if object == nil || object.TradeStatus == nil {
-			return &dts.SyncJobInfo{}, "Isolated", nil
-		}
-
-		return object, helper.PString(object.TradeStatus), nil
-	}
-}
-
-func (me *DtsService) DtsSyncJobConfigDeleteStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
-	return func() (interface{}, string, error) {
-		ctx := contextNil
-
-		object, err := me.DescribeDtsSyncConfigById(ctx, jobId)
-
-		if err != nil {
-			return nil, "", err
-		}
-
-		if object == nil || object.TradeStatus == nil {
-			return &dts.SyncJobInfo{}, "Offlined", nil
-		}
-
-		return object, helper.PString(object.TradeStatus), nil
-	}
-}
-
 func (me *DtsService) DtsMigrateJobConfigStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil
@@ -1037,5 +972,145 @@ func (me *DtsService) DtsSyncJobStateRefreshFunc(jobId, defaultStatus string, fa
 		}
 
 		return object, helper.PString(object.Status), nil
+	}
+}
+
+func (me *DtsService) DescribeDtsMigrateDbInstancesByFilter(ctx context.Context, param map[string]interface{}) (migrateDbInstances []*dts.MigrateDBItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dts.NewDescribeMigrateDBInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DatabaseType" {
+			request.DatabaseType = v.(*string)
+		}
+		if k == "MigrateRole" {
+			request.MigrateRole = v.(*string)
+		}
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "InstanceName" {
+			request.InstanceName = v.(*string)
+		}
+		if k == "Limit" {
+			request.Limit = v.(*int64)
+		}
+		if k == "Offset" {
+			request.Offset = v.(*int64)
+		}
+		if k == "AccountMode" {
+			request.AccountMode = v.(*string)
+		}
+		if k == "TmpSecretId" {
+			request.TmpSecretId = v.(*string)
+		}
+		if k == "TmpSecretKey" {
+			request.TmpSecretKey = v.(*string)
+		}
+		if k == "TmpToken" {
+			request.TmpToken = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDtsClient().DescribeMigrateDBInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Instances) < 1 {
+			break
+		}
+		migrateDbInstances = append(migrateDbInstances, response.Response.Instances...)
+		if len(response.Response.Instances) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *DtsService) DescribeDtsSyncConfigById(ctx context.Context, jobId string) (syncConfig *dts.SyncJobInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dts.NewDescribeSyncJobsRequest()
+	request.JobId = &jobId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDtsClient().DescribeSyncJobs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.JobList) < 1 {
+		return
+	}
+
+	syncConfig = response.Response.JobList[0]
+	return
+}
+
+func (me *DtsService) DtsSyncJobConfigIsolateStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsSyncConfigById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || object.Status == nil {
+			return &dts.SyncJobInfo{}, "Isolated", nil
+		}
+
+		return object, helper.PString(object.TradeStatus), nil
+	}
+}
+
+func (me *DtsService) DtsSyncJobConfigDeleteStateRefreshFunc(jobId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsSyncConfigById(ctx, jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || object.Status == nil {
+			return &dts.SyncJobInfo{}, "Deleted", nil
+		}
+
+		return object, helper.PString(object.TradeStatus), nil
 	}
 }
