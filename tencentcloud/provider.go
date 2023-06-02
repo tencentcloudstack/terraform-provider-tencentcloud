@@ -559,6 +559,13 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_password_complexity
 	tencentcloud_mysql_remote_backup_config
 	tencentcloud_mysql_restart_db_instances_operation
+	tencentcloud_mysql_switch_for_upgrade
+	tencentcloud_mysql_rollback
+	tencentcloud_mysql_rollback_stop
+	tencentcloud_mysql_ro_group
+	tencentcloud_mysql_ro_instance_ip
+	tencentcloud_mysql_ro_group_load_operation
+	tencentcloud_mysql_switch_master_slave_operation
 
 Cloud Monitor(Monitor)
   Data Source
@@ -2027,6 +2034,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_password_complexity":                      resourceTencentCloudMysqlPasswordComplexity(),
 			"tencentcloud_mysql_remote_backup_config":                     resourceTencentCloudMysqlRemoteBackupConfig(),
 			"tencentcloud_mysql_restart_db_instances_operation":           resourceTencentCloudMysqlRestartDbInstancesOperation(),
+			"tencentcloud_mysql_switch_for_upgrade":                       resourceTencentCloudMysqlSwitchForUpgrade(),
+			"tencentcloud_mysql_rollback":                                 resourceTencentCloudMysqlRollback(),
+			"tencentcloud_mysql_rollback_stop":                            resourceTencentCloudMysqlRollbackStop(),
+			"tencentcloud_mysql_ro_group":                                 resourceTencentCloudMysqlRoGroup(),
+			"tencentcloud_mysql_ro_instance_ip":                           resourceTencentCloudMysqlRoInstanceIp(),
+			"tencentcloud_mysql_ro_group_load_operation":                  resourceTencentCloudMysqlRoGroupLoadOperation(),
+			"tencentcloud_mysql_switch_master_slave_operation":            resourceTencentCloudMysqlSwitchMasterSlaveOperation(),
 			"tencentcloud_cos_bucket":                                     resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                              resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                                resourceTencentCloudCfsFileSystem(),

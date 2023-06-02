@@ -2782,3 +2782,92 @@ func (me *MysqlService) DescribeMysqlRemoteBackupConfigById(ctx context.Context,
 	remoteBackupConfig = response.Response
 	return
 }
+
+func (me *MysqlService) DescribeMysqlRollbackById(ctx context.Context, instanceId, asyncRequestId string) (rollback []*cdb.RollbackInstancesInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDescribeRollbackTaskDetailRequest()
+	request.InstanceId = &instanceId
+	request.AsyncRequestId = &asyncRequestId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DescribeRollbackTaskDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) < 1 {
+		return
+	}
+	rollback = response.Response.Items[0].Detail
+	return
+}
+
+func (me *MysqlService) DeleteMysqlRollbackById(ctx context.Context, instanceId string) (asyncRequestId string, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewStopRollbackRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().StopRollback(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	asyncRequestId = *response.Response.AsyncRequestId
+	return
+}
+
+func (me *MysqlService) DescribeMysqlRoGroupById(ctx context.Context, instanceId string, roGroupId string) (roGroup *cdb.RoGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewDescribeRoGroupsRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().DescribeRoGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RoGroups) < 1 {
+		return
+	}
+
+	for _, v := range response.Response.RoGroups {
+		if *v.RoGroupId == roGroupId {
+			roGroup = v
+			return
+		}
+	}
+
+	return
+}

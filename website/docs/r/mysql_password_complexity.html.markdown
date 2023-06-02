@@ -15,10 +15,22 @@ Provides a resource to create a mysql password_complexity
 
 ```hcl
 resource "tencentcloud_mysql_password_complexity" "password_complexity" {
-  instance_id = ""
+  instance_id = var.instance_id
   param_list {
-    name          = ""
-    current_value = ""
+    name          = "validate_password_length"
+    current_value = "8"
+  }
+  param_list {
+    name          = "validate_password_mixed_case_count"
+    current_value = "2"
+  }
+  param_list {
+    name          = "validate_password_number_count"
+    current_value = "2"
+  }
+  param_list {
+    name          = "validate_password_special_char_count"
+    current_value = "2"
   }
 }
 ```
