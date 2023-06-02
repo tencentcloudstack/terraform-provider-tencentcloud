@@ -326,7 +326,7 @@ func resourceTencentCloudDtsSyncJobDelete(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{"Isolated"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobConfigIsolateStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"Isolated", "Stopped"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobConfigIsolateStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -336,7 +336,7 @@ func resourceTencentCloudDtsSyncJobDelete(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	conf = BuildStateChangeConf([]string{}, []string{"Deleted"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobConfigDeleteStateRefreshFunc(d.Id(), []string{}))
+	conf = BuildStateChangeConf([]string{}, []string{"Offlined"}, 2*readRetryTimeout, time.Second, service.DtsSyncJobConfigDeleteStateRefreshFunc(d.Id(), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

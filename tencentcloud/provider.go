@@ -1215,14 +1215,23 @@ Data Transmission Service(DTS)
 
   Resource
 	tencentcloud_dts_sync_job
-	tencentcloud_dts_compare_task
+	tencentcloud_dts_sync_config
+	tencentcloud_dts_sync_check_job_operation
+	tencentcloud_dts_sync_job_resume_operation
+	tencentcloud_dts_sync_job_start_operation
+	tencentcloud_dts_sync_job_stop_operation
+	tencentcloud_dts_sync_job_resize_operation
+	tencentcloud_dts_sync_job_recover_operation
+	tencentcloud_dts_sync_job_isolate_operation
+	tencentcloud_dts_sync_job_continue_operation
+	tencentcloud_dts_sync_job_pause_operation
 	tencentcloud_dts_migrate_service
 	tencentcloud_dts_migrate_job
+	tencentcloud_dts_migrate_job_config
 	tencentcloud_dts_migrate_job_start_operation
 	tencentcloud_dts_migrate_job_resume_operation
 	tencentcloud_dts_compare_task_stop_operation
-	tencentcloud_dts_migrate_job_config
-	tencentcloud_dts_sync_config
+	tencentcloud_dts_compare_task
 
 TDMQ for RocketMQ(trocket)
   Data Source
@@ -2394,21 +2403,28 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
-			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
-			"tencentcloud_dts_sync_config":                            resourceTencentCloudDtsSyncConfig(),
 			"tencentcloud_tdmq_rocketmq_cluster":                      resourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                    resourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_role":                         resourceTencentCloudTdmqRocketmqRole(),
 			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
+			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			"tencentcloud_dts_sync_config":                            resourceTencentCloudDtsSyncConfig(),
+			"tencentcloud_dts_sync_check_job_operation":               resourceTencentCloudDtsSyncCheckJobOperation(),
+			"tencentcloud_dts_sync_job_resume_operation":              resourceTencentCloudDtsSyncJobResumeOperation(),
+			"tencentcloud_dts_sync_job_start_operation":               resourceTencentCloudDtsSyncJobStartOperation(),
+			"tencentcloud_dts_sync_job_stop_operation":                resourceTencentCloudDtsSyncJobStopOperation(),
+			"tencentcloud_dts_sync_job_resize_operation":              resourceTencentCloudDtsSyncJobResizeOperation(),
+			"tencentcloud_dts_sync_job_recover_operation":             resourceTencentCloudDtsSyncJobRecoverOperation(),
+			"tencentcloud_dts_sync_job_isolate_operation":             resourceTencentCloudDtsSyncJobIsolateOperation(),
+			"tencentcloud_dts_sync_job_continue_operation":            resourceTencentCloudDtsSyncJobContinueOperation(),
+			"tencentcloud_dts_sync_job_pause_operation":               resourceTencentCloudDtsSyncJobPauseOperation(),
 			"tencentcloud_dts_migrate_service":                        resourceTencentCloudDtsMigrateService(),
 			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
 			"tencentcloud_dts_migrate_job_config":                     resourceTencentCloudDtsMigrateJobConfig(),
 			"tencentcloud_dts_migrate_job_start_operation":            resourceTencentCloudDtsMigrateJobStartOperation(),
 			"tencentcloud_dts_migrate_job_resume_operation":           resourceTencentCloudDtsMigrateJobResumeOperation(),
-			"tencentcloud_dts_sync_check_job_operation":               resourceTencentCloudDtsSyncCheckJobOperation(),
-			"tencentcloud_dts_sync_job_resume_operation":              resourceTencentCloudDtsSyncJobResumeOperation(),
 			"tencentcloud_dts_compare_task_stop_operation":            resourceTencentCloudDtsCompareTaskStopOperation(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),
