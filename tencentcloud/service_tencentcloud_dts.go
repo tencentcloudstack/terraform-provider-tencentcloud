@@ -1089,7 +1089,7 @@ func (me *DtsService) DtsSyncJobConfigIsolateStateRefreshFunc(jobId string, fail
 			return nil, "", err
 		}
 
-		if object == nil || object.Status == nil {
+		if object == nil || object.TradeStatus == nil {
 			return &dts.SyncJobInfo{}, "Isolated", nil
 		}
 
@@ -1107,8 +1107,8 @@ func (me *DtsService) DtsSyncJobConfigDeleteStateRefreshFunc(jobId string, failS
 			return nil, "", err
 		}
 
-		if object == nil || object.Status == nil {
-			return &dts.SyncJobInfo{}, "Deleted", nil
+		if object == nil || object.TradeStatus == nil {
+			return &dts.SyncJobInfo{}, "Offlined", nil
 		}
 
 		return object, helper.PString(object.TradeStatus), nil
