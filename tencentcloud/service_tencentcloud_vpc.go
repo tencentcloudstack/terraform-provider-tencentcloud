@@ -6796,3 +6796,266 @@ func (me *VpcService) DeleteVpcDhcpAssociateAddressById(ctx context.Context, dhc
 
 	return
 }
+
+func (me *VpcService) DescribeVpcById(ctx context.Context, vpcId string) (instance *vpc.Vpc, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeVpcsRequest()
+	request.VpcIds = []*string{&vpcId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*vpc.Vpc, 0)
+	for {
+		request.Offset = helper.Int64ToStrPoint(offset)
+		request.Limit = helper.Int64ToStrPoint(limit)
+		response, err := me.client.UseVpcClient().DescribeVpcs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.VpcSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.VpcSet...)
+		if len(response.Response.VpcSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	instance = instances[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcIpv6CidrBlockById(ctx context.Context, vpcId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewUnassignIpv6CidrBlockRequest()
+	request.VpcId = &vpcId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().UnassignIpv6CidrBlock(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DescribeSubnetById(ctx context.Context, subnetId string) (instance *vpc.Subnet, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeSubnetsRequest()
+	request.SubnetIds = []*string{&subnetId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	instances := make([]*vpc.Subnet, 0)
+	for {
+		request.Offset = helper.Int64ToStrPoint(offset)
+		request.Limit = helper.Int64ToStrPoint(limit)
+		response, err := me.client.UseVpcClient().DescribeSubnets(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SubnetSet) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.SubnetSet...)
+		if len(response.Response.SubnetSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	instance = instances[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcIpv6SubnetCidrBlockById(ctx context.Context, vpcId string, subnetId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewUnassignIpv6SubnetCidrBlockRequest()
+	request.VpcId = &vpcId
+
+	ipv6SubnetCidrBlock := vpc.Ipv6SubnetCidrBlock{}
+	ipv6SubnetCidrBlock.SubnetId = &subnetId
+	request.Ipv6SubnetCidrBlocks = append(request.Ipv6SubnetCidrBlocks, &ipv6SubnetCidrBlock)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().UnassignIpv6SubnetCidrBlock(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DescribeVpcIpv6EniAddressById(ctx context.Context, vpcId string, ipv6Address string) (ipv6EniAddress *vpc.VpcIpv6Address, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeVpcIpv6AddressesRequest()
+	request.VpcId = &vpcId
+	request.Ipv6Addresses = []*string{&ipv6Address}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeVpcIpv6Addresses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Ipv6AddressSet) < 1 {
+		return
+	}
+
+	ipv6EniAddress = response.Response.Ipv6AddressSet[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcIpv6EniAddressById(ctx context.Context, networkInterfaceId string, ipv6Address string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewUnassignIpv6AddressesRequest()
+	request.NetworkInterfaceId = &networkInterfaceId
+	address := vpc.Ipv6Address{}
+	address.Address = &ipv6Address
+	request.Ipv6Addresses = append(request.Ipv6Addresses, &address)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().UnassignIpv6Addresses(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DescribeVpcLocalGatewayById(ctx context.Context, localGatewayId string) (localGateway *vpc.LocalGateway, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeLocalGatewayRequest()
+
+	filter := vpc.Filter{
+		Name:   helper.String("local-gateway-id"),
+		Values: []*string{&localGatewayId},
+	}
+
+	request.Filters = append(request.Filters, &filter)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeLocalGateway(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.LocalGatewaySet) < 1 {
+		return
+	}
+
+	localGateway = response.Response.LocalGatewaySet[0]
+	return
+}
+
+func (me *VpcService) DeleteVpcLocalGatewayById(ctx context.Context, cdcId string, localGatewayId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteLocalGatewayRequest()
+	request.CdcId = &cdcId
+	request.LocalGatewayId = &localGatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DeleteLocalGateway(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

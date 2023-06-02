@@ -866,6 +866,11 @@ Virtual Private Cloud(VPC)
 	tencentcloud_vpc_snapshot_policy_config
 	tencentcloud_vpc_net_detect
 	tencentcloud_vpc_dhcp_ip
+	tencentcloud_vpc_ipv6_cidr_block
+	tencentcloud_vpc_ipv6_subnet_cidr_block
+	tencentcloud_vpc_ipv6_eni_address
+	tencentcloud_vpc_local_gateway
+	tencentcloud_vpc_resume_snapshot_instance
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule
@@ -1902,7 +1907,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_flow_log_config":                            resourceTencentCloudVpcFlowLogConfig(),
 			"tencentcloud_vpc_classic_link_attachment":                    resourceTencentCloudVpcClassicLinkAttachment(),
 			"tencentcloud_vpc_dhcp_ip":                                    resourceTencentCloudVpcDhcpIp(),
+			"tencentcloud_vpc_ipv6_cidr_block":                            resourceTencentCloudVpcIpv6CidrBlock(),
+			"tencentcloud_vpc_ipv6_subnet_cidr_block":                     resourceTencentCloudVpcIpv6SubnetCidrBlock(),
+			"tencentcloud_vpc_ipv6_eni_address":                           resourceTencentCloudVpcIpv6EniAddress(),
 			"tencentcloud_vpc_dhcp_associate_address":                     resourceTencentCloudVpcDhcpAssociateAddress(),
+			"tencentcloud_vpc_local_gateway":                              resourceTencentCloudVpcLocalGateway(),
+			"tencentcloud_vpc_resume_snapshot_instance":                   resourceTencentCloudVpcResumeSnapshotInstance(),
 			"tencentcloud_ipv6_address_bandwidth":                         resourceTencentCloudIpv6AddressBandwidth(),
 			"tencentcloud_subnet":                                         resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                    resourceTencentCloudRouteEntry(),
