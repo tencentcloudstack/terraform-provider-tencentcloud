@@ -39,7 +39,7 @@ func testSweepDtsSyncJob(r string) error {
 		}
 
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			err := dtsService.DeleteDtsSyncJobById(ctx, delId)
+			err := dtsService.DestroyDtsSyncJobById(ctx, delId)
 			if err != nil {
 				return retryError(err)
 			}

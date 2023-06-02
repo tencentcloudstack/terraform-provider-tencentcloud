@@ -64,6 +64,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
@@ -220,6 +221,11 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		dealRes, err = meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().DescribeResourcesByDealName(dealReq)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), err.Error())
+			if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkErr.Code == "InvalidParameterValue.DealNameNotFound" {
+					return resource.RetryableError(fmt.Errorf("DealName[%s] Not Found, retry... reason: %s", *dealName, err.Error()))
+				}
+			}
 			return retryError(err)
 		}
 		return nil
@@ -742,9 +748,21 @@ func resourceTencentCloudCynosdbClusterDelete(d *schema.ResourceData, meta inter
 		return err
 	}
 
+	conf := BuildStateChangeConf([]string{}, []string{"isolated"}, 2*readRetryTimeout, time.Second, cynosdbService.CynosdbInstanceIsolateStateRefreshFunc(d.Id(), []string{}))
+
+	if _, e := conf.WaitForState(); e != nil {
+		return e
+	}
+
 	if forceDelete {
 		if err = cynosdbService.OfflineCluster(ctx, clusterID); err != nil {
 			return err
+		}
+
+		conf := BuildStateChangeConf([]string{}, []string{"offlined"}, 2*readRetryTimeout, time.Second, cynosdbService.CynosdbInstanceOfflineStateRefreshFunc(d.Id(), []string{}))
+
+		if _, e := conf.WaitForState(); e != nil {
+			return e
 		}
 	}
 

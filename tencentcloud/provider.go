@@ -1194,6 +1194,7 @@ Data Transmission Service(DTS)
 	tencentcloud_dts_sync_jobs
 	tencentcloud_dts_migrate_jobs
 	tencentcloud_dts_compare_tasks
+	tencentcloud_dts_migrate_db_instances
 
   Resource
 	tencentcloud_dts_sync_job
@@ -1204,6 +1205,7 @@ Data Transmission Service(DTS)
 	tencentcloud_dts_migrate_job_resume_operation
 	tencentcloud_dts_compare_task_stop_operation
 	tencentcloud_dts_migrate_job_config
+	tencentcloud_dts_sync_config
 
 TDMQ for RocketMQ(trocket)
   Data Source
@@ -1805,6 +1807,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dts_sync_jobs":                             dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                         dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                          dataSourceTencentCloudDtsMigrateJobs(),
+			"tencentcloud_dts_migrate_db_instances":                  dataSourceTencentCloudDtsMigrateDbInstances(),
 			"tencentcloud_tdmq_rocketmq_cluster":                     dataSourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                   dataSourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_topic":                       dataSourceTencentCloudTdmqRocketmqTopic(),
@@ -2344,6 +2347,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
 			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			"tencentcloud_dts_sync_config":                            resourceTencentCloudDtsSyncConfig(),
 			"tencentcloud_tdmq_rocketmq_cluster":                      resourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                    resourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_role":                         resourceTencentCloudTdmqRocketmqRole(),
