@@ -46,7 +46,7 @@ func testAccCheckTdmqSubscriptionAttachmentDestroy(s *terraform.State) error {
 		}
 
 		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 5 {
+		if len(idSplit) != 4 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 

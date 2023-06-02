@@ -918,6 +918,46 @@ func (me *TdmqService) DescribeTdmqSubscriptionAttachmentById(ctx context.Contex
 	return
 }
 
+func (me *TdmqService) GetTdmqTopicsAttachmentById(ctx context.Context, environmentId, Topic, subscriptionName, clusterId string) (has bool, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDescribeTopicsRequest()
+	topicRetry := fmt.Sprint(Topic + "-" + subscriptionName + "-" + "RETRY")
+	topicDLQ := fmt.Sprint(Topic + "-" + subscriptionName + "-" + "DLQ")
+
+	request.EnvironmentId = &environmentId
+	request.ClusterId = &clusterId
+
+	request.Filters = []*tdmq.Filter{
+		{
+			Name:   common.StringPtr("TopicName"),
+			Values: common.StringPtrs([]string{topicRetry, topicDLQ}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeTopics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
 func (me *TdmqService) DeleteTdmqTopicsAttachmentById(ctx context.Context, environmentId, Topic, subscriptionName, clusterId string) (errRet error) {
 	logId := getLogId(ctx)
 

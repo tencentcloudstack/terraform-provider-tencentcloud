@@ -21,7 +21,3 @@ tencentcloud_tdmq_rabbitmq_vip_instance
 ```release-note:new-data-source
 tencentcloud_tdmq_vip_instance
 ```
-
-```release-note:new-resource
-tencentcloud_tdmq_subscription_attachment
-```

@@ -28,7 +28,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -41,6 +40,7 @@ func resourceTencentCloudTdmqSubscriptionAttachment() *schema.Resource {
 	return &schema.Resource{
 		Create: resourceTencentCloudTdmqSubscriptionAttachmentCreate,
 		Read:   resourceTencentCloudTdmqSubscriptionAttachmentRead,
+		Update: resourceTencentCloudTdmqSubscriptionAttachmentUpdate,
 		Delete: resourceTencentCloudTdmqSubscriptionAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
@@ -78,7 +78,6 @@ func resourceTencentCloudTdmqSubscriptionAttachment() *schema.Resource {
 			},
 			"auto_create_policy_topic": {
 				Optional:    true,
-				ForceNew:    true,
 				Type:        schema.TypeBool,
 				Description: "Whether to automatically create dead letters and retry topics, True means to create, False means not to create, the default is to automatically create dead letters and retry topics.",
 			},
@@ -153,7 +152,7 @@ func resourceTencentCloudTdmqSubscriptionAttachmentCreate(d *schema.ResourceData
 		return err
 	}
 
-	d.SetId(strings.Join([]string{environmentId, Topic, subscriptionName, clusterId, strconv.FormatBool(autoCreatePolicyTopic)}, FILED_SP))
+	d.SetId(strings.Join([]string{environmentId, Topic, subscriptionName, clusterId}, FILED_SP))
 
 	return resourceTencentCloudTdmqSubscriptionAttachmentRead(d, meta)
 }
@@ -169,14 +168,13 @@ func resourceTencentCloudTdmqSubscriptionAttachmentRead(d *schema.ResourceData, 
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 5 {
+	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 	environmentId := idSplit[0]
 	Topic := idSplit[1]
 	subscriptionName := idSplit[2]
 	clusterId := idSplit[3]
-	autoCreatePolicyTopicStr := idSplit[4]
 
 	subscriptionAttachment, err := service.DescribeTdmqSubscriptionAttachmentById(ctx, environmentId, Topic, subscriptionName, clusterId)
 	if err != nil {
@@ -207,8 +205,20 @@ func resourceTencentCloudTdmqSubscriptionAttachmentRead(d *schema.ResourceData, 
 
 	_ = d.Set("cluster_id", clusterId)
 
-	autoCreatePolicyTopic, _ := strconv.ParseBool(autoCreatePolicyTopicStr)
-	_ = d.Set("auto_create_policy_topic", autoCreatePolicyTopic)
+	// Get Topics Status For auto_create_policy_topic
+	has, err := service.GetTdmqTopicsAttachmentById(ctx, environmentId, Topic, subscriptionName, clusterId)
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("auto_create_policy_topic", has)
+
+	return nil
+}
+
+func resourceTencentCloudTdmqSubscriptionAttachmentUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tdmq_subscription_attachment.update")()
+	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
@@ -218,13 +228,14 @@ func resourceTencentCloudTdmqSubscriptionAttachmentDelete(d *schema.ResourceData
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId                 = getLogId(contextNil)
+		ctx                   = context.WithValue(context.TODO(), logIdKey, logId)
+		service               = TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
+		autoCreatePolicyTopic bool
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 5 {
+	if len(idSplit) != 4 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 
@@ -232,18 +243,19 @@ func resourceTencentCloudTdmqSubscriptionAttachmentDelete(d *schema.ResourceData
 	Topic := idSplit[1]
 	subscriptionName := idSplit[2]
 	clusterId := idSplit[3]
-	autoCreatePolicyTopicStr := idSplit[4]
-	autoCreatePolicyTopic, _ := strconv.ParseBool(autoCreatePolicyTopicStr)
 
 	// Delete Subscription
 	if err := service.DeleteTdmqSubscriptionAttachmentById(ctx, environmentId, Topic, subscriptionName, clusterId); err != nil {
 		return err
 	}
 
-	if autoCreatePolicyTopic {
-		// Delete Topics
-		if err := service.DeleteTdmqTopicsAttachmentById(ctx, environmentId, Topic, subscriptionName, clusterId); err != nil {
-			return err
+	if v, ok := d.GetOk("auto_create_policy_topic"); ok {
+		autoCreatePolicyTopic = v.(bool)
+		if autoCreatePolicyTopic {
+			// Delete Topics
+			if err := service.DeleteTdmqTopicsAttachmentById(ctx, environmentId, Topic, subscriptionName, clusterId); err != nil {
+				return err
+			}
 		}
 	}
 

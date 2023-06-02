@@ -573,6 +573,7 @@ func resourceTencentCloudSqlserverGeneralCloudInstanceUpdate(d *schema.ResourceD
 		}
 	}
 
+	// ++++必填
 	if d.HasChange("cpu") {
 		if v, ok := d.GetOk("cpu"); ok {
 			request.Cpu = helper.IntInt64(v.(int))
