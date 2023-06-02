@@ -100,7 +100,7 @@ func resourceTencentCloudVpcIpv6SubnetCidrBlockCreate(d *schema.ResourceData, me
 				subnetId = v.(string)
 				ipv6SubnetCidrBlock.SubnetId = helper.String(v.(string))
 			}
-			if v, _ := dMap["ipv6_cidr_block"]; v != "" {
+			if v, ok := dMap["ipv6_cidr_block"]; ok {
 				ipv6SubnetCidrBlock.Ipv6CidrBlock = helper.String(v.(string))
 			}
 			request.Ipv6SubnetCidrBlocks = append(request.Ipv6SubnetCidrBlocks, &ipv6SubnetCidrBlock)
