@@ -1280,6 +1280,12 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_api_detail
 	tencentcloud_tsf_microservice_api_version
 	tencentcloud_tsf_repository
+	tencentcloud_tsf_pod_instances
+	tencentcloud_tsf_gateway_all_group_apis
+	tencentcloud_tsf_group_gateways
+	tencentcloud_tsf_usable_unit_namespaces
+	tencentcloud_tsf_group_instances
+	tencentcloud_tsf_group_config_release
 
   Resource
   	tencentcloud_tsf_cluster
@@ -1856,6 +1862,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_api_detail":                            dataSourceTencentCloudTsfApiDetail(),
 			"tencentcloud_tsf_microservice_api_version":              dataSourceTencentCloudTsfMicroserviceApiVersion(),
 			"tencentcloud_tsf_repository":                            dataSourceTencentCloudTsfRepository(),
+			"tencentcloud_tsf_pod_instances":                         dataSourceTencentCloudTsfPodInstances(),
+			"tencentcloud_tsf_gateway_all_group_apis":                dataSourceTencentCloudTsfGatewayAllGroupApis(),
+			"tencentcloud_tsf_group_gateways":                        dataSourceTencentCloudTsfGroupGateways(),
+			"tencentcloud_tsf_usable_unit_namespaces":                dataSourceTencentCloudTsfUsableUnitNamespaces(),
+			"tencentcloud_tsf_group_instances":                       dataSourceTencentCloudTsfGroupInstances(),
+			"tencentcloud_tsf_group_config_release":                  dataSourceTencentCloudTsfGroupConfigRelease(),
 			"tencentcloud_lighthouse_bundle":                         dataSourceTencentCloudLighthouseBundle(),
 			"tencentcloud_api_gateway_api_docs":                      dataSourceTencentCloudAPIGatewayAPIDocs(),
 			"tencentcloud_api_gateway_api_apps":                      dataSourceTencentCloudAPIGatewayAPIApps(),
