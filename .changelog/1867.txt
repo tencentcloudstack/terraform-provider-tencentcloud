@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_as_advices
+```
+
+```release-note:new-data-source
+tencentcloud_as_limits
+```
+
+```release-note:new-data-source
+tencentcloud_as_last_activity
+```
