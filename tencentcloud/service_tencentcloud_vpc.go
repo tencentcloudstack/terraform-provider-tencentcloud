@@ -7515,3 +7515,300 @@ func (me *VpcService) DescribeVpcRouteConflicts(ctx context.Context, param map[s
 
 	return
 }
+
+func (me *VpcService) DescribeVpcSecurityGroupLimits(ctx context.Context, param map[string]interface{}) (securityGroupLimit *vpc.SecurityGroupLimitSet, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeSecurityGroupLimitsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeSecurityGroupLimits(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	securityGroupLimit = response.Response.SecurityGroupLimitSet
+
+	return
+}
+
+func (me *VpcService) DescribeVpcSecurityGroupReferences(ctx context.Context, param map[string]interface{}) (securityGroupReferences []*vpc.ReferredSecurityGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeSecurityGroupReferencesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SecurityGroupIds" {
+			request.SecurityGroupIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeSecurityGroupReferences(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	securityGroupReferences = response.Response.ReferredSecurityGroupSet
+
+	return
+}
+
+func (me *VpcService) DescribeVpcSgSnapshotFileContent(ctx context.Context, param map[string]interface{}) (sgSnapshotFileContent *vpc.DescribeSgSnapshotFileContentResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeSgSnapshotFileContentRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SnapshotPolicyId" {
+			request.SnapshotPolicyId = v.(*string)
+		}
+		if k == "SnapshotFileId" {
+			request.SnapshotFileId = v.(*string)
+		}
+		if k == "SecurityGroupId" {
+			request.SecurityGroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeSgSnapshotFileContent(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	sgSnapshotFileContent = response.Response
+
+	return
+}
+
+func (me *VpcService) DescribeVpcSnapshotFilesByFilter(ctx context.Context, param map[string]interface{}) (SnapshotFiles []*vpc.SnapshotFileInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeSnapshotFilesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "BusinessType" {
+			request.BusinessType = v.(*string)
+		}
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "StartDate" {
+			request.StartDate = v.(*string)
+		}
+		if k == "EndDate" {
+			request.EndDate = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeSnapshotFiles(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SnapshotFileSet) < 1 {
+			break
+		}
+		SnapshotFiles = append(SnapshotFiles, response.Response.SnapshotFileSet...)
+		if len(response.Response.SnapshotFileSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcSubnetResourceDashboardByFilter(ctx context.Context, param map[string]interface{}) (subnetResourceDashboard []*vpc.ResourceStatistics, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeSubnetResourceDashboardRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "SubnetIds" {
+			request.SubnetIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeSubnetResourceDashboard(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	subnetResourceDashboard = response.Response.ResourceStatisticsSet
+
+	return
+}
+
+func (me *VpcService) DescribeVpcTemplateLimits(ctx context.Context) (templateLimit *vpc.TemplateLimit, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeTemplateLimitsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeTemplateLimits(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	templateLimit = response.Response.TemplateLimit
+
+	return
+}
+
+func (me *VpcService) DescribeVpcUsedIpAddressByFilter(ctx context.Context, param map[string]interface{}) (UsedIpAddress []*vpc.IpAddressStates, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeUsedIpAddressRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "VpcId" {
+			request.VpcId = v.(*string)
+		}
+		if k == "SubnetId" {
+			request.SubnetId = v.(*string)
+		}
+		if k == "IpAddresses" {
+			request.IpAddresses = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseVpcClient().DescribeUsedIpAddress(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.IpAddressStates) < 1 {
+			break
+		}
+		UsedIpAddress = append(UsedIpAddress, response.Response.IpAddressStates...)
+		if len(response.Response.IpAddressStates) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *VpcService) DescribeVpcLimitsByFilter(ctx context.Context, param map[string]interface{}) (limits []*vpc.VpcLimit, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewDescribeVpcLimitsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "LimitTypes" {
+			request.LimitTypes = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeVpcLimits(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	limits = response.Response.VpcLimitSet
+
+	return
+}

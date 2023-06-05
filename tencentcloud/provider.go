@@ -863,6 +863,14 @@ Virtual Private Cloud(VPC)
 	tencentcloud_vpc_product_quota
 	tencentcloud_vpc_resource_dashboard
 	tencentcloud_vpc_route_conflicts
+	tencentcloud_vpc_security_group_limits
+	tencentcloud_vpc_security_group_references
+	tencentcloud_vpc_sg_snapshot_file_content
+	tencentcloud_vpc_snapshot_files
+	tencentcloud_vpc_subnet_resource_dashboard
+	tencentcloud_vpc_template_limits
+	tencentcloud_vpc_used_ip_address
+	tencentcloud_vpc_limits
     tencentcloud_vpc_instances
     tencentcloud_vpc_route_tables
     tencentcloud_vpc_subnets
@@ -1539,6 +1547,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_product_quota":                         dataSourceTencentCloudVpcProductQuota(),
 			"tencentcloud_vpc_resource_dashboard":                    dataSourceTencentCloudVpcResourceDashboard(),
 			"tencentcloud_vpc_route_conflicts":                       dataSourceTencentCloudVpcRouteConflicts(),
+			"tencentcloud_vpc_security_group_limits":                 dataSourceTencentCloudVpcSecurityGroupLimits(),
+			"tencentcloud_vpc_security_group_references":             dataSourceTencentCloudVpcSecurityGroupReferences(),
+			"tencentcloud_vpc_sg_snapshot_file_content":              dataSourceTencentCloudVpcSgSnapshotFileContent(),
+			"tencentcloud_vpc_snapshot_files":                        dataSourceTencentCloudVpcSnapshotFiles(),
+			"tencentcloud_vpc_subnet_resource_dashboard":             dataSourceTencentCloudVpcSubnetResourceDashboard(),
+			"tencentcloud_vpc_template_limits":                       dataSourceTencentCloudVpcTemplateLimits(),
+			"tencentcloud_vpc_limits":                                dataSourceTencentCloudVpcLimits(),
+			"tencentcloud_vpc_used_ip_address":                       dataSourceTencentCloudVpcUsedIpAddress(),
 			"tencentcloud_subnet":                                    dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                               dataSourceTencentCloudRouteTable(),
 			"tencentcloud_domains":                                   dataSourceTencentCloudDomains(),
