@@ -121,6 +121,18 @@ func resourceTencentCloudDcdbHourdbInstance() *schema.Resource {
 				Description: "name of this instance.",
 			},
 
+			"dcn_region": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "DCN source region.",
+			},
+
+			"dcn_instance_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "DCN source instance ID.",
+			},
+
 			"resource_tags": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -219,6 +231,14 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 
 			request.ResourceTags = append(request.ResourceTags, &resourceTag)
 		}
+	}
+
+	if v, ok := d.GetOk("dcn_region"); ok {
+		request.DcnRegion = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("dcn_instance_id"); ok {
+		request.DcnInstanceId = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -360,6 +380,13 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("resource_tags", resourceTagsList)
 	}
 
+	if dcn, err := service.DescribeDcnDetailById(ctx, instanceId); dcn != nil {
+		_ = d.Set("dcn_region", dcn.Region)
+		_ = d.Set("dcn_instance_id", dcn.InstanceId)
+	} else {
+		return err
+	}
+
 	if sg, err := service.DescribeDcdbSecurityGroup(ctx, instanceId); sg != nil {
 		sgId := sg.Groups[0].SecurityGroupId
 		_ = d.Set("security_group_id", sgId)
@@ -427,6 +454,13 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
 		}
+	}
+
+	if d.HasChange("dcn_region") {
+		return fmt.Errorf("`dcn_region` do not support change now.")
+	}
+	if d.HasChange("dcn_instance_id") {
+		return fmt.Errorf("`dcn_instance_id` do not support change now.")
 	}
 
 	if d.HasChange("resource_tags") {

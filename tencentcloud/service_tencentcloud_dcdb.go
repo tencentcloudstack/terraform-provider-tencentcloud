@@ -42,6 +42,21 @@ func (me *DcdbService) DescribeDcdbAccount(ctx context.Context, instanceId, user
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if userName != "" {
+		// filter
+		for _, user := range response.Response.Users {
+			if *user.UserName == userName {
+				account = &dcdb.DescribeAccountsResponseParams{
+					InstanceId: response.Response.InstanceId,
+					RequestId:  response.Response.RequestId,
+					Users:      []*dcdb.DBAccount{user},
+				}
+				return
+			}
+		}
+	}
+
 	account = response.Response
 	return
 }
