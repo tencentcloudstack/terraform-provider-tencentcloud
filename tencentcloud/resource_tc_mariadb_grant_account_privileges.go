@@ -16,11 +16,12 @@ resource "tencentcloud_mariadb_grant_account_privileges" "grant_account_privileg
 package tencentcloud
 
 import (
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
 )
 
 func resourceTencentCloudMariadbGrantAccountPrivileges() *schema.Resource {
@@ -59,7 +60,7 @@ func resourceTencentCloudMariadbGrantAccountPrivileges() *schema.Resource {
 				ForceNew:    true,
 				Type:        schema.TypeSet,
 				Elem:        &schema.Schema{Type: schema.TypeString},
-				Description: "Global permission: SELECT，INSERT，UPDATE，DELETE，CREATE，DROP，REFERENCES，INDEX，ALTER，CREATE TEMPORARY TABLES，LOCK TABLES，EXECUTE，CREATE VIEW，SHOW VIEW，CREATE ROUTINE，ALTER ROUTINE，EVENT，TRIGGER，SHOW DATABASES，REPLICATION CLIENT，REPLICATION SLAVE 库权限： SELECT，INSERT，UPDATE，DELETE，CREATE，DROP，REFERENCES，INDEX，ALTER，CREATE TEMPORARY TABLES，LOCK TABLES，EXECUTE，CREATE VIEW，SHOW VIEW，CREATE ROUTINE，ALTER ROUTINE，EVENT，TRIGGER 表/视图权限： SELECT，INSERT，UPDATE，DELETE，CREATE，DROP，REFERENCES，INDEX，ALTER，CREATE VIEW，SHOW VIEW，TRIGGER 存储过程/函数权限： ALTER ROUTINE，EXECUTE 字段权限： INSERT，REFERENCES，SELECT，UPDATE.",
+				Description: "Global permissions: SELECT, Insert, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALT, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALT ROUTINE, EVENT, TRIGGER, SHOW DATABASES, REPLICATION CLIENT, REPLICATION SLAVE Library permissions: SELECT, Insert, UPDATE, DELETE, CRAVE EATE, DROP, REFERENCES, INDEX, ALT, CREATE TEMPORARY TABLES, LOCK TABLES, EXECUTE, CREATE VIEW, SHOW VIEW, CREATE ROUTINE, ALT ROUTINE, EVENT, TRIGGER Table/View Permissions: SELECT, Insert, UPDATE, DELETE, CREATE, DROP, REFERENCES, INDEX, ALT, CREATE VIEW, SHOW VIEW, TRIGGER Stored Procedure/Function Permissions: ALT ROUTINE, EXECUTE Field Permissions: Insert, REFERENCES, SELECT, UPDATE.",
 			},
 			"type": {
 				Optional:    true,

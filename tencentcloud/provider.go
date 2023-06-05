@@ -1126,6 +1126,16 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_parameters
 	tencentcloud_mariadb_log_file_retention_period
 	tencentcloud_mariadb_security_groups
+	tencentcloud_mariadb_account_privileges
+	tencentcloud_mariadb_activate_hour_db_instance
+	tencentcloud_mariadb_backup_time
+	tencentcloud_mariadb_cancel_dcn_job
+	tencentcloud_mariadb_clone_account
+	tencentcloud_mariadb_close_db_extranet_access
+	tencentcloud_mariadb_copy_account_privileges
+	tencentcloud_mariadb_create_tmp_instance
+	tencentcloud_mariadb_flush_binlog
+	tencentcloud_mariadb_grant_account_privileges
 
 Real User Monitoring(RUM)
   Data Source
