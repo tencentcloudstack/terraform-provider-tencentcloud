@@ -38,10 +38,10 @@ func dataSourceTencentCloudVpcSecurityGroupLimits() *schema.Resource {
 							Computed:    true,
 							Description: "number of sg polciy can be created.",
 						},
-						"refered_security_group_limit": {
+						"referred_security_group_limit": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "number of sg can be refered.",
+							Description: "number of sg can be referred.",
 						},
 						"security_group_instance_limit": {
 							Type:        schema.TypeInt,
@@ -58,15 +58,15 @@ func dataSourceTencentCloudVpcSecurityGroupLimits() *schema.Resource {
 							Computed:    true,
 							Description: "number of sg extended policy.",
 						},
-						"security_group_refered_cvm_and_eni_limit": {
+						"security_group_referred_cvm_and_eni_limit": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "number of eni and cvm can be refered.",
+							Description: "number of eni and cvm can be referred.",
 						},
-						"security_group_refered_svc_limit": {
+						"security_group_referred_svc_limit": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "number of svc can be refered.",
+							Description: "number of svc can be referred.",
 						},
 					},
 				},
@@ -119,7 +119,7 @@ func dataSourceTencentCloudVpcSecurityGroupLimitsRead(d *schema.ResourceData, me
 		}
 
 		if securityGroupLimitSet.ReferedSecurityGroupLimit != nil {
-			securityGroupLimitSetMap["refered_security_group_limit"] = securityGroupLimitSet.ReferedSecurityGroupLimit
+			securityGroupLimitSetMap["referred_security_group_limit"] = securityGroupLimitSet.ReferedSecurityGroupLimit
 		}
 
 		if securityGroupLimitSet.SecurityGroupInstanceLimit != nil {
@@ -135,11 +135,11 @@ func dataSourceTencentCloudVpcSecurityGroupLimitsRead(d *schema.ResourceData, me
 		}
 
 		if securityGroupLimitSet.SecurityGroupReferedCvmAndEniLimit != nil {
-			securityGroupLimitSetMap["security_group_refered_cvm_and_eni_limit"] = securityGroupLimitSet.SecurityGroupReferedCvmAndEniLimit
+			securityGroupLimitSetMap["security_group_referred_cvm_and_eni_limit"] = securityGroupLimitSet.SecurityGroupReferedCvmAndEniLimit
 		}
 
 		if securityGroupLimitSet.SecurityGroupReferedSvcLimit != nil {
-			securityGroupLimitSetMap["security_group_refered_svc_limit"] = securityGroupLimitSet.SecurityGroupReferedSvcLimit
+			securityGroupLimitSetMap["security_group_referred_svc_limit"] = securityGroupLimitSet.SecurityGroupReferedSvcLimit
 		}
 
 		ids = append(ids, helper.UInt64ToStr(*securityGroupLimitSet.SecurityGroupLimit))
