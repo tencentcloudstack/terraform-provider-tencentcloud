@@ -852,6 +852,25 @@ Virtual Private Cloud(VPC)
     tencentcloud_subnet
     tencentcloud_vpc
     tencentcloud_vpc_acls
+	tencentcloud_vpc_account_attributes
+	tencentcloud_vpc_classic_link_instances
+	tencentcloud_vpc_gateway_flow_monitor_detail
+	tencentcloud_vpc_gateway_flow_qos
+	tencentcloud_vpc_cvm_instances
+	tencentcloud_vpc_net_detect_states
+	tencentcloud_vpc_network_interface_limit
+	tencentcloud_vpc_private_ip_addresses
+	tencentcloud_vpc_product_quota
+	tencentcloud_vpc_resource_dashboard
+	tencentcloud_vpc_route_conflicts
+	tencentcloud_vpc_security_group_limits
+	tencentcloud_vpc_security_group_references
+	tencentcloud_vpc_sg_snapshot_file_content
+	tencentcloud_vpc_snapshot_files
+	tencentcloud_vpc_subnet_resource_dashboard
+	tencentcloud_vpc_template_limits
+	tencentcloud_vpc_used_ip_address
+	tencentcloud_vpc_limits
     tencentcloud_vpc_instances
     tencentcloud_vpc_route_tables
     tencentcloud_vpc_subnets
@@ -909,6 +928,7 @@ Private Link(PLS)
   Resource
 	tencentcloud_vpc_end_point_service
 	tencentcloud_vpc_end_point
+	tencentcloud_vpc_enable_end_point_connect
 	tencentcloud_vpc_end_point_service_white_list
 
 Flow Logs(FL)
@@ -1518,6 +1538,25 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_acls":                                  dataSourceTencentCloudVpcAcls(),
 			"tencentcloud_vpc_bandwidth_package_quota":               dataSourceTencentCloudVpcBandwidthPackageQuota(),
 			"tencentcloud_vpc_bandwidth_package_bill_usage":          dataSourceTencentCloudVpcBandwidthPackageBillUsage(),
+			"tencentcloud_vpc_account_attributes":                    dataSourceTencentCloudVpcAccountAttributes(),
+			"tencentcloud_vpc_classic_link_instances":                dataSourceTencentCloudVpcClassicLinkInstances(),
+			"tencentcloud_vpc_gateway_flow_monitor_detail":           dataSourceTencentCloudVpcGatewayFlowMonitorDetail(),
+			"tencentcloud_vpc_gateway_flow_qos":                      dataSourceTencentCloudVpcGatewayFlowQos(),
+			"tencentcloud_vpc_cvm_instances":                         dataSourceTencentCloudVpcCvmInstances(),
+			"tencentcloud_vpc_net_detect_states":                     dataSourceTencentCloudVpcNetDetectStates(),
+			"tencentcloud_vpc_network_interface_limit":               dataSourceTencentCloudVpcNetworkInterfaceLimit(),
+			"tencentcloud_vpc_private_ip_addresses":                  dataSourceTencentCloudVpcPrivateIpAddresses(),
+			"tencentcloud_vpc_product_quota":                         dataSourceTencentCloudVpcProductQuota(),
+			"tencentcloud_vpc_resource_dashboard":                    dataSourceTencentCloudVpcResourceDashboard(),
+			"tencentcloud_vpc_route_conflicts":                       dataSourceTencentCloudVpcRouteConflicts(),
+			"tencentcloud_vpc_security_group_limits":                 dataSourceTencentCloudVpcSecurityGroupLimits(),
+			"tencentcloud_vpc_security_group_references":             dataSourceTencentCloudVpcSecurityGroupReferences(),
+			"tencentcloud_vpc_sg_snapshot_file_content":              dataSourceTencentCloudVpcSgSnapshotFileContent(),
+			"tencentcloud_vpc_snapshot_files":                        dataSourceTencentCloudVpcSnapshotFiles(),
+			"tencentcloud_vpc_subnet_resource_dashboard":             dataSourceTencentCloudVpcSubnetResourceDashboard(),
+			"tencentcloud_vpc_template_limits":                       dataSourceTencentCloudVpcTemplateLimits(),
+			"tencentcloud_vpc_limits":                                dataSourceTencentCloudVpcLimits(),
+			"tencentcloud_vpc_used_ip_address":                       dataSourceTencentCloudVpcUsedIpAddress(),
 			"tencentcloud_subnet":                                    dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                               dataSourceTencentCloudRouteTable(),
 			"tencentcloud_domains":                                   dataSourceTencentCloudDomains(),
@@ -2436,6 +2475,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_end_point_service":                      resourceTencentCloudVpcEndPointService(),
 			"tencentcloud_vpc_end_point":                              resourceTencentCloudVpcEndPoint(),
 			"tencentcloud_vpc_end_point_service_white_list":           resourceTencentCloudVpcEndPointServiceWhiteList(),
+			"tencentcloud_vpc_enable_end_point_connect":               resourceTencentCloudVpcEnableEndPointConnect(),
 			"tencentcloud_ci_bucket_attachment":                       resourceTencentCloudCiBucketAttachment(),
 			"tencentcloud_tcmq_queue":                                 resourceTencentCloudTcmqQueue(),
 			"tencentcloud_tcmq_topic":                                 resourceTencentCloudTcmqTopic(),
