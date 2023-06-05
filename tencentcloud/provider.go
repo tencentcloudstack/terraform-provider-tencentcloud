@@ -124,6 +124,9 @@ Auto Scaling(AS)
     tencentcloud_as_scaling_groups
     tencentcloud_as_scaling_policies
 	tencentcloud_as_instances
+	tencentcloud_as_advices
+	tencentcloud_as_limits
+	tencentcloud_as_last_activity
 
   Resource
     tencentcloud_as_scaling_config
@@ -1899,6 +1902,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_tcmq_topic":                                dataSourceTencentCloudTcmqTopic(),
 			"tencentcloud_tcmq_subscribe":                            dataSourceTencentCloudTcmqSubscribe(),
 			"tencentcloud_as_instances":                              dataSourceTencentCloudAsInstances(),
+			"tencentcloud_as_advices":                                dataSourceTencentCloudAsAdvices(),
+			"tencentcloud_as_limits":                                 dataSourceTencentCloudAsLimits(),
+			"tencentcloud_as_last_activity":                          dataSourceTencentCloudAsLastActivity(),
 			"tencentcloud_cynosdb_accounts":                          dataSourceTencentCloudCynosdbAccounts(),
 			"tencentcloud_cynosdb_cluster_instance_groups":           dataSourceTencentCloudCynosdbClusterInstanceGroups(),
 			"tencentcloud_cynosdb_cluster_params":                    dataSourceTencentCloudCynosdbClusterParams(),
@@ -2136,6 +2142,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_maintenance_window":                       resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_redis_replica_readonly":                         resourceTencentCloudRedisReplicaReadonly(),
 			"tencentcloud_redis_switch_master":                            resourceTencentCloudRedisSwitchMaster(),
+			"tencentcloud_as_load_balancer":                               resourceTencentCloudAsLoadBalancer(),
 			"tencentcloud_as_scaling_config":                              resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                               resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                                  resourceTencentCloudAsAttachment(),

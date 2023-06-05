@@ -172,7 +172,7 @@ type AttachLoadBalancersRequestParams struct {
 	// 传统型负载均衡器ID列表，每个伸缩组绑定传统型负载均衡器数量上限为20，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitempty" name:"LoadBalancerIds"`
 
-	// 应用型负载均衡器列表，每个伸缩组绑定应用型负载均衡器数量上限为50，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
+	// 应用型负载均衡器列表，每个伸缩组绑定应用型负载均衡器数量上限为100，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
 }
 
@@ -185,7 +185,7 @@ type AttachLoadBalancersRequest struct {
 	// 传统型负载均衡器ID列表，每个伸缩组绑定传统型负载均衡器数量上限为20，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitempty" name:"LoadBalancerIds"`
 
-	// 应用型负载均衡器列表，每个伸缩组绑定应用型负载均衡器数量上限为50，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
+	// 应用型负载均衡器列表，每个伸缩组绑定应用型负载均衡器数量上限为100，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
 }
 
@@ -408,6 +408,10 @@ type ClearLaunchConfigurationAttributesRequestParams struct {
 	// 是否清空云服务器实例名相关设置信息，非必填，默认为 false。
 	// 填 true 代表清空主机名设置信息，清空后基于此新创建的云主机将按照“as-{{ 伸缩组AutoScalingGroupName }}”进行设置。
 	ClearInstanceNameSettings *bool `json:"ClearInstanceNameSettings,omitempty" name:"ClearInstanceNameSettings"`
+
+	// 是否清空置放群组信息，非必填，默认为 false。
+	// 填 true 代表清空置放群组信息，清空后基于此新创建的云主机将不指定任何置放群组。
+	ClearDisasterRecoverGroupIds *bool `json:"ClearDisasterRecoverGroupIds,omitempty" name:"ClearDisasterRecoverGroupIds"`
 }
 
 type ClearLaunchConfigurationAttributesRequest struct {
@@ -427,6 +431,10 @@ type ClearLaunchConfigurationAttributesRequest struct {
 	// 是否清空云服务器实例名相关设置信息，非必填，默认为 false。
 	// 填 true 代表清空主机名设置信息，清空后基于此新创建的云主机将按照“as-{{ 伸缩组AutoScalingGroupName }}”进行设置。
 	ClearInstanceNameSettings *bool `json:"ClearInstanceNameSettings,omitempty" name:"ClearInstanceNameSettings"`
+
+	// 是否清空置放群组信息，非必填，默认为 false。
+	// 填 true 代表清空置放群组信息，清空后基于此新创建的云主机将不指定任何置放群组。
+	ClearDisasterRecoverGroupIds *bool `json:"ClearDisasterRecoverGroupIds,omitempty" name:"ClearDisasterRecoverGroupIds"`
 }
 
 func (r *ClearLaunchConfigurationAttributesRequest) ToJsonString() string {
@@ -445,6 +453,7 @@ func (r *ClearLaunchConfigurationAttributesRequest) FromJsonString(s string) err
 	delete(f, "ClearDataDisks")
 	delete(f, "ClearHostNameSettings")
 	delete(f, "ClearInstanceNameSettings")
+	delete(f, "ClearDisasterRecoverGroupIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ClearLaunchConfigurationAttributesRequest has unknown keys!", "")
 	}
@@ -669,7 +678,7 @@ type CreateAutoScalingGroupRequestParams struct {
 	// 伸缩组内实例所属项目ID。不填为默认项目。
 	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// 应用型负载均衡器列表，目前长度上限为50，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
+	// 应用型负载均衡器列表，目前长度上限为100，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
 
 	// 子网ID列表，VPC场景下必须指定子网。多个子网以填写顺序为优先级，依次进行尝试，直至可以成功创建实例。
@@ -683,7 +692,7 @@ type CreateAutoScalingGroupRequestParams struct {
 	// 可用区列表，基础网络场景下必须指定可用区。多个可用区以填写顺序为优先级，依次进行尝试，直至可以成功创建实例。
 	Zones []*string `json:"Zones,omitempty" name:"Zones"`
 
-	// 重试策略，取值包括 IMMEDIATE_RETRY、 INCREMENTAL_INTERVALS、NO_RETRY，默认取值为 IMMEDIATE_RETRY。
+	// 重试策略，取值包括 IMMEDIATE_RETRY、 INCREMENTAL_INTERVALS、NO_RETRY，默认取值为 IMMEDIATE_RETRY。部分成功的伸缩活动判定为一次失败活动。
 	// <br><li> IMMEDIATE_RETRY，立即重试，在较短时间内快速重试，连续失败超过一定次数（5次）后不再重试。
 	// <br><li> INCREMENTAL_INTERVALS，间隔递增重试，随着连续失败次数的增加，重试间隔逐渐增大，重试间隔从秒级到1天不等。
 	// <br><li> NO_RETRY，不进行重试，直到再次收到用户调用或者告警信息后才会重试。
@@ -769,7 +778,7 @@ type CreateAutoScalingGroupRequest struct {
 	// 伸缩组内实例所属项目ID。不填为默认项目。
 	ProjectId *uint64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// 应用型负载均衡器列表，目前长度上限为50，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
+	// 应用型负载均衡器列表，目前长度上限为100，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
 
 	// 子网ID列表，VPC场景下必须指定子网。多个子网以填写顺序为优先级，依次进行尝试，直至可以成功创建实例。
@@ -783,7 +792,7 @@ type CreateAutoScalingGroupRequest struct {
 	// 可用区列表，基础网络场景下必须指定可用区。多个可用区以填写顺序为优先级，依次进行尝试，直至可以成功创建实例。
 	Zones []*string `json:"Zones,omitempty" name:"Zones"`
 
-	// 重试策略，取值包括 IMMEDIATE_RETRY、 INCREMENTAL_INTERVALS、NO_RETRY，默认取值为 IMMEDIATE_RETRY。
+	// 重试策略，取值包括 IMMEDIATE_RETRY、 INCREMENTAL_INTERVALS、NO_RETRY，默认取值为 IMMEDIATE_RETRY。部分成功的伸缩活动判定为一次失败活动。
 	// <br><li> IMMEDIATE_RETRY，立即重试，在较短时间内快速重试，连续失败超过一定次数（5次）后不再重试。
 	// <br><li> INCREMENTAL_INTERVALS，间隔递增重试，随着连续失败次数的增加，重试间隔逐渐增大，重试间隔从秒级到1天不等。
 	// <br><li> NO_RETRY，不进行重试，直到再次收到用户调用或者告警信息后才会重试。
@@ -987,6 +996,16 @@ type CreateLaunchConfigurationRequestParams struct {
 	// <br><li>ORIGINAL：使用设置的云盘类型
 	// <br><li>AUTOMATIC：自动选择当前可用的云盘类型
 	DiskTypePolicy *string `json:"DiskTypePolicy,omitempty" name:"DiskTypePolicy"`
+
+	// 高性能计算集群ID。<br>
+	// 注意：此字段默认为空。
+	HpcClusterId *string `json:"HpcClusterId,omitempty" name:"HpcClusterId"`
+
+	// IPv6公网带宽相关信息设置。若新建实例包含IPv6地址，该参数可为新建实例的IPv6地址分配公网带宽。关联启动配置的伸缩组Ipv6AddressCount参数为0时，该参数不会生效。
+	IPv6InternetAccessible *IPv6InternetAccessible `json:"IPv6InternetAccessible,omitempty" name:"IPv6InternetAccessible"`
+
+	// 置放群组id，仅支持指定一个。
+	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitempty" name:"DisasterRecoverGroupIds"`
 }
 
 type CreateLaunchConfigurationRequest struct {
@@ -1071,6 +1090,16 @@ type CreateLaunchConfigurationRequest struct {
 	// <br><li>ORIGINAL：使用设置的云盘类型
 	// <br><li>AUTOMATIC：自动选择当前可用的云盘类型
 	DiskTypePolicy *string `json:"DiskTypePolicy,omitempty" name:"DiskTypePolicy"`
+
+	// 高性能计算集群ID。<br>
+	// 注意：此字段默认为空。
+	HpcClusterId *string `json:"HpcClusterId,omitempty" name:"HpcClusterId"`
+
+	// IPv6公网带宽相关信息设置。若新建实例包含IPv6地址，该参数可为新建实例的IPv6地址分配公网带宽。关联启动配置的伸缩组Ipv6AddressCount参数为0时，该参数不会生效。
+	IPv6InternetAccessible *IPv6InternetAccessible `json:"IPv6InternetAccessible,omitempty" name:"IPv6InternetAccessible"`
+
+	// 置放群组id，仅支持指定一个。
+	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitempty" name:"DisasterRecoverGroupIds"`
 }
 
 func (r *CreateLaunchConfigurationRequest) ToJsonString() string {
@@ -1107,6 +1136,9 @@ func (r *CreateLaunchConfigurationRequest) FromJsonString(s string) error {
 	delete(f, "InstanceNameSettings")
 	delete(f, "InstanceChargePrepaid")
 	delete(f, "DiskTypePolicy")
+	delete(f, "HpcClusterId")
+	delete(f, "IPv6InternetAccessible")
+	delete(f, "DisasterRecoverGroupIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateLaunchConfigurationRequest has unknown keys!", "")
 	}
@@ -1155,14 +1187,17 @@ type CreateLifecycleHookRequestParams struct {
 	// 生命周期挂钩超时之前可以经过的最长时间（以秒为单位），范围从30到7200秒，默认值为300秒
 	HeartbeatTimeout *int64 `json:"HeartbeatTimeout,omitempty" name:"HeartbeatTimeout"`
 
-	// 弹性伸缩向通知目标发送的附加信息，默认值为空字符串""。最大长度不能超过1024个字节。
+	// 弹性伸缩向通知目标发送的附加信息，配置通知时使用,默认值为空字符串""。最大长度不能超过1024个字节。
 	NotificationMetadata *string `json:"NotificationMetadata,omitempty" name:"NotificationMetadata"`
 
-	// 通知目标
+	// 通知目标。NotificationTarget和LifecycleCommand参数互斥，二者不可同时指定。
 	NotificationTarget *NotificationTarget `json:"NotificationTarget,omitempty" name:"NotificationTarget"`
 
 	// 进行生命周期挂钩的场景类型，取值范围包括NORMAL 和 EXTENSION。说明：设置为EXTENSION值，在AttachInstances、DetachInstances、RemoveInstaces接口时会触发生命周期挂钩操作，值为NORMAL则不会在这些接口中触发生命周期挂钩。
 	LifecycleTransitionType *string `json:"LifecycleTransitionType,omitempty" name:"LifecycleTransitionType"`
+
+	// 远程命令执行对象。NotificationTarget和LifecycleCommand参数互斥，二者不可同时指定。
+	LifecycleCommand *LifecycleCommand `json:"LifecycleCommand,omitempty" name:"LifecycleCommand"`
 }
 
 type CreateLifecycleHookRequest struct {
@@ -1183,14 +1218,17 @@ type CreateLifecycleHookRequest struct {
 	// 生命周期挂钩超时之前可以经过的最长时间（以秒为单位），范围从30到7200秒，默认值为300秒
 	HeartbeatTimeout *int64 `json:"HeartbeatTimeout,omitempty" name:"HeartbeatTimeout"`
 
-	// 弹性伸缩向通知目标发送的附加信息，默认值为空字符串""。最大长度不能超过1024个字节。
+	// 弹性伸缩向通知目标发送的附加信息，配置通知时使用,默认值为空字符串""。最大长度不能超过1024个字节。
 	NotificationMetadata *string `json:"NotificationMetadata,omitempty" name:"NotificationMetadata"`
 
-	// 通知目标
+	// 通知目标。NotificationTarget和LifecycleCommand参数互斥，二者不可同时指定。
 	NotificationTarget *NotificationTarget `json:"NotificationTarget,omitempty" name:"NotificationTarget"`
 
 	// 进行生命周期挂钩的场景类型，取值范围包括NORMAL 和 EXTENSION。说明：设置为EXTENSION值，在AttachInstances、DetachInstances、RemoveInstaces接口时会触发生命周期挂钩操作，值为NORMAL则不会在这些接口中触发生命周期挂钩。
 	LifecycleTransitionType *string `json:"LifecycleTransitionType,omitempty" name:"LifecycleTransitionType"`
+
+	// 远程命令执行对象。NotificationTarget和LifecycleCommand参数互斥，二者不可同时指定。
+	LifecycleCommand *LifecycleCommand `json:"LifecycleCommand,omitempty" name:"LifecycleCommand"`
 }
 
 func (r *CreateLifecycleHookRequest) ToJsonString() string {
@@ -1213,6 +1251,7 @@ func (r *CreateLifecycleHookRequest) FromJsonString(s string) error {
 	delete(f, "NotificationMetadata")
 	delete(f, "NotificationTarget")
 	delete(f, "LifecycleTransitionType")
+	delete(f, "LifecycleCommand")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateLifecycleHookRequest has unknown keys!", "")
 	}
@@ -1370,17 +1409,32 @@ type CreateScalingPolicyRequestParams struct {
 	// 告警触发策略名称。
 	ScalingPolicyName *string `json:"ScalingPolicyName,omitempty" name:"ScalingPolicyName"`
 
-	// 告警触发后，期望实例数修改方式。取值 ：<br><li>CHANGE_IN_CAPACITY：增加或减少若干期望实例数</li><li>EXACT_CAPACITY：调整至指定期望实例数</li> <li>PERCENT_CHANGE_IN_CAPACITY：按百分比调整期望实例数</li>
+	// 告警触发策略类型，默认类型为SIMPLE。取值范围：<br><li>SIMPLE：简单策略</li><li>TARGET_TRACKING：目标追踪策略</li>
+	ScalingPolicyType *string `json:"ScalingPolicyType,omitempty" name:"ScalingPolicyType"`
+
+	// 告警触发后，期望实例数修改方式，仅适用于简单策略。取值范围：<br><li>CHANGE_IN_CAPACITY：增加或减少若干期望实例数</li><li>EXACT_CAPACITY：调整至指定期望实例数</li> <li>PERCENT_CHANGE_IN_CAPACITY：按百分比调整期望实例数</li>
 	AdjustmentType *string `json:"AdjustmentType,omitempty" name:"AdjustmentType"`
 
-	// 告警触发后，期望实例数的调整值。取值：<br><li>当 AdjustmentType 为 CHANGE_IN_CAPACITY 时，AdjustmentValue 为正数表示告警触发后增加实例，为负数表示告警触发后减少实例 </li> <li> 当 AdjustmentType 为 EXACT_CAPACITY 时，AdjustmentValue 的值即为告警触发后新的期望实例数，需要大于或等于0 </li> <li> 当 AdjustmentType 为 PERCENT_CHANGE_IN_CAPACITY 时，AdjusmentValue 为正数表示告警触发后按百分比增加实例，为负数表示告警触发后按百分比减少实例，单位是：%。
+	// 告警触发后，期望实例数的调整值，仅适用于简单策略。<br><li>当 AdjustmentType 为 CHANGE_IN_CAPACITY 时，AdjustmentValue 为正数表示告警触发后增加实例，为负数表示告警触发后减少实例 </li> <li> 当 AdjustmentType 为 EXACT_CAPACITY 时，AdjustmentValue 的值即为告警触发后新的期望实例数，需要大于或等于0 </li> <li> 当 AdjustmentType 为 PERCENT_CHANGE_IN_CAPACITY 时，AdjusmentValue 为正数表示告警触发后按百分比增加实例，为负数表示告警触发后按百分比减少实例，单位是：%。
 	AdjustmentValue *int64 `json:"AdjustmentValue,omitempty" name:"AdjustmentValue"`
 
-	// 告警监控指标。
+	// 冷却时间，单位为秒，仅适用于简单策略。默认冷却时间300秒。
+	Cooldown *uint64 `json:"Cooldown,omitempty" name:"Cooldown"`
+
+	// 告警监控指标，仅适用于简单策略。
 	MetricAlarm *MetricAlarm `json:"MetricAlarm,omitempty" name:"MetricAlarm"`
 
-	// 冷却时间，单位为秒。默认冷却时间300秒。
-	Cooldown *uint64 `json:"Cooldown,omitempty" name:"Cooldown"`
+	// 预定义监控项，仅适用于目标追踪策略。取值范围：<br><li>ASG_AVG_CPU_UTILIZATION：平均CPU使用率</li><li>ASG_AVG_LAN_TRAFFIC_OUT：平均内网出带宽</li><li>ASG_AVG_LAN_TRAFFIC_IN：平均内网入带宽</li><li>ASG_AVG_WAN_TRAFFIC_OUT：平均外网出带宽</li><li>ASG_AVG_WAN_TRAFFIC_IN：平均外网出带宽</li>
+	PredefinedMetricType *string `json:"PredefinedMetricType,omitempty" name:"PredefinedMetricType"`
+
+	// 目标值，仅适用于目标追踪策略。<br><li>ASG_AVG_CPU_UTILIZATION：[1, 100)，单位：%</li><li>ASG_AVG_LAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>ASG_AVG_LAN_TRAFFIC_IN：>0，单位：Mbps</li><li>ASG_AVG_WAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>ASG_AVG_WAN_TRAFFIC_IN：>0，单位：Mbps</li>
+	TargetValue *uint64 `json:"TargetValue,omitempty" name:"TargetValue"`
+
+	// 实例预热时间，单位为秒，仅适用于目标追踪策略。取值范围为0-3600，默认预热时间300秒。
+	EstimatedInstanceWarmup *uint64 `json:"EstimatedInstanceWarmup,omitempty" name:"EstimatedInstanceWarmup"`
+
+	// 是否禁用缩容，仅适用于目标追踪策略，默认值为 false。取值范围：<br><li>true：目标追踪策略仅触发扩容</li><li>false：目标追踪策略触发扩容和缩容</li>
+	DisableScaleIn *bool `json:"DisableScaleIn,omitempty" name:"DisableScaleIn"`
 
 	// 此参数已不再生效，请使用[创建通知](https://cloud.tencent.com/document/api/377/33185)。
 	// 通知组ID，即为用户组ID集合。
@@ -1396,17 +1450,32 @@ type CreateScalingPolicyRequest struct {
 	// 告警触发策略名称。
 	ScalingPolicyName *string `json:"ScalingPolicyName,omitempty" name:"ScalingPolicyName"`
 
-	// 告警触发后，期望实例数修改方式。取值 ：<br><li>CHANGE_IN_CAPACITY：增加或减少若干期望实例数</li><li>EXACT_CAPACITY：调整至指定期望实例数</li> <li>PERCENT_CHANGE_IN_CAPACITY：按百分比调整期望实例数</li>
+	// 告警触发策略类型，默认类型为SIMPLE。取值范围：<br><li>SIMPLE：简单策略</li><li>TARGET_TRACKING：目标追踪策略</li>
+	ScalingPolicyType *string `json:"ScalingPolicyType,omitempty" name:"ScalingPolicyType"`
+
+	// 告警触发后，期望实例数修改方式，仅适用于简单策略。取值范围：<br><li>CHANGE_IN_CAPACITY：增加或减少若干期望实例数</li><li>EXACT_CAPACITY：调整至指定期望实例数</li> <li>PERCENT_CHANGE_IN_CAPACITY：按百分比调整期望实例数</li>
 	AdjustmentType *string `json:"AdjustmentType,omitempty" name:"AdjustmentType"`
 
-	// 告警触发后，期望实例数的调整值。取值：<br><li>当 AdjustmentType 为 CHANGE_IN_CAPACITY 时，AdjustmentValue 为正数表示告警触发后增加实例，为负数表示告警触发后减少实例 </li> <li> 当 AdjustmentType 为 EXACT_CAPACITY 时，AdjustmentValue 的值即为告警触发后新的期望实例数，需要大于或等于0 </li> <li> 当 AdjustmentType 为 PERCENT_CHANGE_IN_CAPACITY 时，AdjusmentValue 为正数表示告警触发后按百分比增加实例，为负数表示告警触发后按百分比减少实例，单位是：%。
+	// 告警触发后，期望实例数的调整值，仅适用于简单策略。<br><li>当 AdjustmentType 为 CHANGE_IN_CAPACITY 时，AdjustmentValue 为正数表示告警触发后增加实例，为负数表示告警触发后减少实例 </li> <li> 当 AdjustmentType 为 EXACT_CAPACITY 时，AdjustmentValue 的值即为告警触发后新的期望实例数，需要大于或等于0 </li> <li> 当 AdjustmentType 为 PERCENT_CHANGE_IN_CAPACITY 时，AdjusmentValue 为正数表示告警触发后按百分比增加实例，为负数表示告警触发后按百分比减少实例，单位是：%。
 	AdjustmentValue *int64 `json:"AdjustmentValue,omitempty" name:"AdjustmentValue"`
 
-	// 告警监控指标。
+	// 冷却时间，单位为秒，仅适用于简单策略。默认冷却时间300秒。
+	Cooldown *uint64 `json:"Cooldown,omitempty" name:"Cooldown"`
+
+	// 告警监控指标，仅适用于简单策略。
 	MetricAlarm *MetricAlarm `json:"MetricAlarm,omitempty" name:"MetricAlarm"`
 
-	// 冷却时间，单位为秒。默认冷却时间300秒。
-	Cooldown *uint64 `json:"Cooldown,omitempty" name:"Cooldown"`
+	// 预定义监控项，仅适用于目标追踪策略。取值范围：<br><li>ASG_AVG_CPU_UTILIZATION：平均CPU使用率</li><li>ASG_AVG_LAN_TRAFFIC_OUT：平均内网出带宽</li><li>ASG_AVG_LAN_TRAFFIC_IN：平均内网入带宽</li><li>ASG_AVG_WAN_TRAFFIC_OUT：平均外网出带宽</li><li>ASG_AVG_WAN_TRAFFIC_IN：平均外网出带宽</li>
+	PredefinedMetricType *string `json:"PredefinedMetricType,omitempty" name:"PredefinedMetricType"`
+
+	// 目标值，仅适用于目标追踪策略。<br><li>ASG_AVG_CPU_UTILIZATION：[1, 100)，单位：%</li><li>ASG_AVG_LAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>ASG_AVG_LAN_TRAFFIC_IN：>0，单位：Mbps</li><li>ASG_AVG_WAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>ASG_AVG_WAN_TRAFFIC_IN：>0，单位：Mbps</li>
+	TargetValue *uint64 `json:"TargetValue,omitempty" name:"TargetValue"`
+
+	// 实例预热时间，单位为秒，仅适用于目标追踪策略。取值范围为0-3600，默认预热时间300秒。
+	EstimatedInstanceWarmup *uint64 `json:"EstimatedInstanceWarmup,omitempty" name:"EstimatedInstanceWarmup"`
+
+	// 是否禁用缩容，仅适用于目标追踪策略，默认值为 false。取值范围：<br><li>true：目标追踪策略仅触发扩容</li><li>false：目标追踪策略触发扩容和缩容</li>
+	DisableScaleIn *bool `json:"DisableScaleIn,omitempty" name:"DisableScaleIn"`
 
 	// 此参数已不再生效，请使用[创建通知](https://cloud.tencent.com/document/api/377/33185)。
 	// 通知组ID，即为用户组ID集合。
@@ -1427,10 +1496,15 @@ func (r *CreateScalingPolicyRequest) FromJsonString(s string) error {
 	}
 	delete(f, "AutoScalingGroupId")
 	delete(f, "ScalingPolicyName")
+	delete(f, "ScalingPolicyType")
 	delete(f, "AdjustmentType")
 	delete(f, "AdjustmentValue")
-	delete(f, "MetricAlarm")
 	delete(f, "Cooldown")
+	delete(f, "MetricAlarm")
+	delete(f, "PredefinedMetricType")
+	delete(f, "TargetValue")
+	delete(f, "EstimatedInstanceWarmup")
+	delete(f, "DisableScaleIn")
 	delete(f, "NotificationUserGroupIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateScalingPolicyRequest has unknown keys!", "")
@@ -2668,6 +2742,7 @@ type DescribeScalingPoliciesRequestParams struct {
 	// <li> auto-scaling-policy-id - String - 是否必填：否 -（过滤条件）按照告警策略ID过滤。</li>
 	// <li> auto-scaling-group-id - String - 是否必填：否 -（过滤条件）按照伸缩组ID过滤。</li>
 	// <li> scaling-policy-name - String - 是否必填：否 -（过滤条件）按照告警策略名称过滤。</li>
+	// <li> scaling-policy-type - String - 是否必填：否 -（过滤条件）按照告警策略类型过滤，取值范围为SIMPLE，TARGET_TRACKING。</li>
 	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。参数不支持同时指定`AutoScalingPolicyIds`和`Filters`。
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
@@ -2688,6 +2763,7 @@ type DescribeScalingPoliciesRequest struct {
 	// <li> auto-scaling-policy-id - String - 是否必填：否 -（过滤条件）按照告警策略ID过滤。</li>
 	// <li> auto-scaling-group-id - String - 是否必填：否 -（过滤条件）按照伸缩组ID过滤。</li>
 	// <li> scaling-policy-name - String - 是否必填：否 -（过滤条件）按照告警策略名称过滤。</li>
+	// <li> scaling-policy-type - String - 是否必填：否 -（过滤条件）按照告警策略类型过滤，取值范围为SIMPLE，TARGET_TRACKING。</li>
 	// 每次请求的`Filters`的上限为10，`Filter.Values`的上限为5。参数不支持同时指定`AutoScalingPolicyIds`和`Filters`。
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
@@ -2907,7 +2983,7 @@ type DetachLoadBalancersRequestParams struct {
 	// 传统负载均衡器ID列表，列表长度上限为20，LoadBalancerIds 和 ForwardLoadBalancerIdentifications 二者同时最多只能指定一个
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitempty" name:"LoadBalancerIds"`
 
-	// 应用型负载均衡器标识信息列表，列表长度上限为50，LoadBalancerIds 和 ForwardLoadBalancerIdentifications二者同时最多只能指定一个
+	// 应用型负载均衡器标识信息列表，列表长度上限为100，LoadBalancerIds 和 ForwardLoadBalancerIdentifications二者同时最多只能指定一个
 	ForwardLoadBalancerIdentifications []*ForwardLoadBalancerIdentification `json:"ForwardLoadBalancerIdentifications,omitempty" name:"ForwardLoadBalancerIdentifications"`
 }
 
@@ -2920,7 +2996,7 @@ type DetachLoadBalancersRequest struct {
 	// 传统负载均衡器ID列表，列表长度上限为20，LoadBalancerIds 和 ForwardLoadBalancerIdentifications 二者同时最多只能指定一个
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitempty" name:"LoadBalancerIds"`
 
-	// 应用型负载均衡器标识信息列表，列表长度上限为50，LoadBalancerIds 和 ForwardLoadBalancerIdentifications二者同时最多只能指定一个
+	// 应用型负载均衡器标识信息列表，列表长度上限为100，LoadBalancerIds 和 ForwardLoadBalancerIdentifications二者同时最多只能指定一个
 	ForwardLoadBalancerIdentifications []*ForwardLoadBalancerIdentification `json:"ForwardLoadBalancerIdentifications,omitempty" name:"ForwardLoadBalancerIdentifications"`
 }
 
@@ -3107,11 +3183,17 @@ type EnhancedService struct {
 
 	// 开启云监控服务。若不指定该参数，则默认开启云监控服务。
 	MonitorService *RunMonitorServiceEnabled `json:"MonitorService,omitempty" name:"MonitorService"`
+
+	// 该参数已废弃，查询时会返回空值，请勿使用。
+	AutomationService []*RunAutomationServiceEnabled `json:"AutomationService,omitempty" name:"AutomationService"`
+
+	// 开启自动化助手服务。若不指定该参数，则默认逻辑与CVM保持一致。注意：此字段可能返回 null，表示取不到有效值。
+	AutomationToolsService *RunAutomationServiceEnabled `json:"AutomationToolsService,omitempty" name:"AutomationToolsService"`
 }
 
 // Predefined struct for user
 type ExecuteScalingPolicyRequestParams struct {
-	// 告警伸缩策略ID
+	// 告警伸缩策略ID，不支持目标追踪策略。
 	AutoScalingPolicyId *string `json:"AutoScalingPolicyId,omitempty" name:"AutoScalingPolicyId"`
 
 	// 是否检查伸缩组活动处于冷却时间内，默认值为false
@@ -3124,7 +3206,7 @@ type ExecuteScalingPolicyRequestParams struct {
 type ExecuteScalingPolicyRequest struct {
 	*tchttp.BaseRequest
 	
-	// 告警伸缩策略ID
+	// 告警伸缩策略ID，不支持目标追踪策略。
 	AutoScalingPolicyId *string `json:"AutoScalingPolicyId,omitempty" name:"AutoScalingPolicyId"`
 
 	// 是否检查伸缩组活动处于冷却时间内，默认值为false
@@ -3231,6 +3313,22 @@ type HostNameSettings struct {
 	HostNameStyle *string `json:"HostNameStyle,omitempty" name:"HostNameStyle"`
 }
 
+type IPv6InternetAccessible struct {
+	// 网络计费模式。取值包括TRAFFIC_POSTPAID_BY_HOUR、BANDWIDTH_PACKAGE，默认取值为TRAFFIC_POSTPAID_BY_HOUR。查看当前账户类型可参考[账户类型说明](https://cloud.tencent.com/document/product/1199/49090#judge)。
+	// <br><li> IPv6对标准账户类型支持TRAFFIC_POSTPAID_BY_HOUR。
+	// <br><li> IPv6对传统账户类型支持BANDWIDTH_PACKAGE。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
+
+	// 公网出带宽上限，单位：Mbps。<br>默认值：0，此时不为IPv6分配公网带宽。不同机型、可用区、计费模式的带宽上限范围不一致，具体限制详见[公网带宽上限](https://cloud.tencent.com/document/product/213/12523)。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InternetMaxBandwidthOut *uint64 `json:"InternetMaxBandwidthOut,omitempty" name:"InternetMaxBandwidthOut"`
+
+	// 带宽包ID。可通过[DescribeBandwidthPackages](https://cloud.tencent.com/document/api/215/19209)接口返回值中的`BandwidthPackageId`获取。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	BandwidthPackageId *string `json:"BandwidthPackageId,omitempty" name:"BandwidthPackageId"`
+}
+
 type Instance struct {
 	// 实例ID
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -3251,13 +3349,19 @@ type Instance struct {
 	// <li>TERMINATING：中止中
 	// <li>TERMINATION_FAILED：中止失败
 	// <li>ATTACHING：绑定中
+	// <li>ATTACH_FAILED：绑定失败
 	// <li>DETACHING：解绑中
-	// <li>ATTACHING_LB：绑定LB中<li>DETACHING_LB：解绑LB中
+	// <li>DETACH_FAILED：解绑失败
+	// <li>ATTACHING_LB：绑定LB中
+	// <li>DETACHING_LB：解绑LB中
+	// <li>MODIFYING_LB：修改LB中
 	// <li>STARTING：开机中
 	// <li>START_FAILED：开机失败
 	// <li>STOPPING：关机中
 	// <li>STOP_FAILED：关机失败
 	// <li>STOPPED：已关机
+	// <li>IN_LAUNCHING_HOOK：扩容生命周期挂钩中
+	// <li>IN_TERMINATING_HOOK：缩容生命周期挂钩中
 	LifeCycleState *string `json:"LifeCycleState,omitempty" name:"LifeCycleState"`
 
 	// 健康状态，取值包括HEALTHY和UNHEALTHY
@@ -3283,6 +3387,17 @@ type Instance struct {
 
 	// 伸缩组名称
 	AutoScalingGroupName *string `json:"AutoScalingGroupName,omitempty" name:"AutoScalingGroupName"`
+
+	// 预热状态，取值如下：
+	// <li>WAITING_ENTER_WARMUP：等待进入预热
+	// <li>NO_NEED_WARMUP：无需预热
+	// <li>IN_WARMUP：预热中
+	// <li>AFTER_WARMUP：完成预热
+	WarmupStatus *string `json:"WarmupStatus,omitempty" name:"WarmupStatus"`
+
+	// 置放群组id，仅支持指定一个。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitempty" name:"DisasterRecoverGroupIds"`
 }
 
 type InstanceChargePrepaid struct {
@@ -3460,6 +3575,13 @@ type LaunchConfiguration struct {
 	// <br><li>ORIGINAL：使用设置的云盘类型
 	// <br><li>AUTOMATIC：自动选择当前可用区下可用的云盘类型
 	DiskTypePolicy *string `json:"DiskTypePolicy,omitempty" name:"DiskTypePolicy"`
+
+	// 高性能计算集群ID。<br>
+	// 注意：此字段默认为空。
+	HpcClusterId *string `json:"HpcClusterId,omitempty" name:"HpcClusterId"`
+
+	// IPv6公网带宽相关信息设置。
+	IPv6InternetAccessible *IPv6InternetAccessible `json:"IPv6InternetAccessible,omitempty" name:"IPv6InternetAccessible"`
 }
 
 type LifecycleActionResultInfo struct {
@@ -3469,14 +3591,47 @@ type LifecycleActionResultInfo struct {
 	// 实例标识。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
-	// 通知的结果，表示通知CMQ是否成功。
+	// 执行活动ID。可通过TAT的[查询执行活动](https://cloud.tencent.com/document/api/1340/52679)API查询具体的执行结果。
+	InvocationId *string `json:"InvocationId,omitempty" name:"InvocationId"`
+
+	// 命令调用的结果，表示执行TAT命令是否成功。<br>
+	// <li>SUCCESSFUL 命令调用成功，不代表命令执行成功，执行的具体情况可根据InvocationId进行查询</li>
+	// <li>FAILED 命令调用失败</li>
+	// <li>NONE</li>
+	InvokeCommandResult *string `json:"InvokeCommandResult,omitempty" name:"InvokeCommandResult"`
+
+	// 通知的结果，表示通知CMQ/TDMQ是否成功。<br>
+	// <li>SUCCESSFUL 通知成功</li>
+	// <li>FAILED 通知失败</li>
+	// <li>NONE</li>
 	NotificationResult *string `json:"NotificationResult,omitempty" name:"NotificationResult"`
 
 	// 生命周期挂钩动作的执行结果，取值包括 CONTINUE、ABANDON。
 	LifecycleActionResult *string `json:"LifecycleActionResult,omitempty" name:"LifecycleActionResult"`
 
-	// 结果的原因。
+	// 结果的原因。<br>
+	// <li>HEARTBEAT_TIMEOUT 由于心跳超时，结果根据DefaultResult设置。</li>
+	// <li>NOTIFICATION_FAILURE 由于发送通知失败，结果根据DefaultResult设置。</li>
+	// <li>CALL_INTERFACE 调用了接口CompleteLifecycleAction设置结果。</li>
+	// <li>ANOTHER_ACTION_ABANDON 另一个生命周期操作的结果已设置为“ABANDON”。</li>
+	// <li>COMMAND_CALL_FAILURE  由于命令调用失败，结果根据DefaultResult设置。</li>
+	// <li>COMMAND_EXEC_FINISH  命令执行完成。</li>
+	// <li>COMMAND_EXEC_FAILURE 由于命令执行失败，结果根据DefaultResult设置。</li>
+	// <li>COMMAND_EXEC_RESULT_CHECK_FAILURE 由于命令结果检查失败，结果根据DefaultResult设置。</li>
 	ResultReason *string `json:"ResultReason,omitempty" name:"ResultReason"`
+}
+
+type LifecycleCommand struct {
+	// 远程命令ID。若选择执行命令，则此项必填。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CommandId *string `json:"CommandId,omitempty" name:"CommandId"`
+
+	// 自定义参数。字段类型为 json encoded string。如：{"varA": "222"}。
+	// key为自定义参数名称，value为该参数的默认取值。kv均为字符串型。
+	// 如果未提供该参数取值，将使用 Command 的 DefaultParameters 进行替换。
+	// 自定义参数最多20个。自定义参数名称需符合以下规范：字符数目上限64，可选范围【a-zA-Z0-9-_】。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Parameters *string `json:"Parameters,omitempty" name:"Parameters"`
 }
 
 type LifecycleHook struct {
@@ -3509,6 +3664,10 @@ type LifecycleHook struct {
 
 	// 生命周期挂钩适用场景
 	LifecycleTransitionType *string `json:"LifecycleTransitionType,omitempty" name:"LifecycleTransitionType"`
+
+	// 远程命令执行对象
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LifecycleCommand *LifecycleCommand `json:"LifecycleCommand,omitempty" name:"LifecycleCommand"`
 }
 
 type LimitedLoginSettings struct {
@@ -3518,14 +3677,12 @@ type LimitedLoginSettings struct {
 
 type LoginSettings struct {
 	// 实例登录密码。不同操作系统类型密码复杂度限制不一样，具体如下：<br><li>Linux实例密码必须8到16位，至少包括两项[a-z，A-Z]、[0-9] 和 [( ) ` ~ ! @ # $ % ^ & * - + = | { } [ ] : ; ' , . ? / ]中的特殊符号。<br><li>Windows实例密码必须12到16位，至少包括三项[a-z]，[A-Z]，[0-9] 和 [( ) ` ~ ! @ # $ % ^ & * - + = { } [ ] : ; ' , . ? /]中的特殊符号。<br><br>若不指定该参数，则由系统随机生成密码，并通过站内信方式通知到用户。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	Password *string `json:"Password,omitempty" name:"Password"`
 
 	// 密钥ID列表。关联密钥后，就可以通过对应的私钥来访问实例；KeyId可通过接口DescribeKeyPairs获取，密钥与密码不能同时指定，同时Windows操作系统不支持指定密钥。当前仅支持购买的时候指定一个密钥。
 	KeyIds []*string `json:"KeyIds,omitempty" name:"KeyIds"`
 
 	// 保持镜像的原始设置。该参数与Password或KeyIds.N不能同时指定。只有使用自定义镜像、共享镜像或外部导入镜像创建实例时才能指定该参数为TRUE。取值范围：<br><li>TRUE：表示保持镜像的登录设置<br><li>FALSE：表示不保持镜像的登录设置<br><br>默认取值：FALSE。
-	// 注意：此字段可能返回 null，表示取不到有效值。
 	KeepImageLogin *bool `json:"KeepImageLogin,omitempty" name:"KeepImageLogin"`
 }
 
@@ -3547,6 +3704,9 @@ type MetricAlarm struct {
 
 	// 统计类型，可选字段如下：<br><li>AVERAGE：平均值</li><li>MAXIMUM：最大值<li>MINIMUM：最小值</li><br> 默认取值：AVERAGE
 	Statistic *string `json:"Statistic,omitempty" name:"Statistic"`
+
+	// 精确告警阈值，本参数不作为入参输入，仅用作查询接口出参：<br><li>CPU_UTILIZATION：(0, 100]，单位：%</li><li>MEM_UTILIZATION：(0, 100]，单位：%</li><li>LAN_TRAFFIC_OUT：>0，单位：Mbps </li><li>LAN_TRAFFIC_IN：>0，单位：Mbps</li><li>WAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>WAN_TRAFFIC_IN：>0，单位：Mbps</li>
+	PreciseThreshold *float64 `json:"PreciseThreshold,omitempty" name:"PreciseThreshold"`
 }
 
 // Predefined struct for user
@@ -3589,9 +3749,11 @@ type ModifyAutoScalingGroupRequestParams struct {
 	// 可用区列表
 	Zones []*string `json:"Zones,omitempty" name:"Zones"`
 
-	// 重试策略，取值包括 IMMEDIATE_RETRY、 INCREMENTAL_INTERVALS、NO_RETRY，默认取值为 IMMEDIATE_RETRY。
-	// <br><li> IMMEDIATE_RETRY，立即重试，在较短时间内快速重试，连续失败超过一定次数（5次）后不再重试。
-	// <br><li> INCREMENTAL_INTERVALS，间隔递增重试，随着连续失败次数的增加，重试间隔逐渐增大，重试间隔从秒级到1天不等。
+	// 重试策略，取值包括 IMMEDIATE_RETRY、 INCREMENTAL_INTERVALS、NO_RETRY，默认取值为 IMMEDIATE_RETRY。部分成功的伸缩活动判定为一次失败活动。
+	// <br><li>
+	// IMMEDIATE_RETRY，立即重试，在较短时间内快速重试，连续失败超过一定次数（5次）后不再重试。
+	// <br><li>
+	// INCREMENTAL_INTERVALS，间隔递增重试，随着连续失败次数的增加，重试间隔逐渐增大，重试间隔从秒级到1天不等。
 	// <br><li> NO_RETRY，不进行重试，直到再次收到用户调用或者告警信息后才会重试。
 	RetryPolicy *string `json:"RetryPolicy,omitempty" name:"RetryPolicy"`
 
@@ -3681,9 +3843,11 @@ type ModifyAutoScalingGroupRequest struct {
 	// 可用区列表
 	Zones []*string `json:"Zones,omitempty" name:"Zones"`
 
-	// 重试策略，取值包括 IMMEDIATE_RETRY、 INCREMENTAL_INTERVALS、NO_RETRY，默认取值为 IMMEDIATE_RETRY。
-	// <br><li> IMMEDIATE_RETRY，立即重试，在较短时间内快速重试，连续失败超过一定次数（5次）后不再重试。
-	// <br><li> INCREMENTAL_INTERVALS，间隔递增重试，随着连续失败次数的增加，重试间隔逐渐增大，重试间隔从秒级到1天不等。
+	// 重试策略，取值包括 IMMEDIATE_RETRY、 INCREMENTAL_INTERVALS、NO_RETRY，默认取值为 IMMEDIATE_RETRY。部分成功的伸缩活动判定为一次失败活动。
+	// <br><li>
+	// IMMEDIATE_RETRY，立即重试，在较短时间内快速重试，连续失败超过一定次数（5次）后不再重试。
+	// <br><li>
+	// INCREMENTAL_INTERVALS，间隔递增重试，随着连续失败次数的增加，重试间隔逐渐增大，重试间隔从秒级到1天不等。
 	// <br><li> NO_RETRY，不进行重试，直到再次收到用户调用或者告警信息后才会重试。
 	RetryPolicy *string `json:"RetryPolicy,omitempty" name:"RetryPolicy"`
 
@@ -3949,6 +4113,16 @@ type ModifyLaunchConfigurationAttributesRequestParams struct {
 
 	// CAM角色名称。可通过DescribeRoleList接口返回值中的roleName获取。
 	CamRoleName *string `json:"CamRoleName,omitempty" name:"CamRoleName"`
+
+	// 高性能计算集群ID。<br>
+	// 注意：此字段默认为空。
+	HpcClusterId *string `json:"HpcClusterId,omitempty" name:"HpcClusterId"`
+
+	// IPv6公网带宽相关信息设置。若新建实例包含IPv6地址，该参数可为新建实例的IPv6地址分配公网带宽。关联启动配置的伸缩组Ipv6AddressCount参数为0时，该参数不会生效。
+	IPv6InternetAccessible *IPv6InternetAccessible `json:"IPv6InternetAccessible,omitempty" name:"IPv6InternetAccessible"`
+
+	// 置放群组id，仅支持指定一个。
+	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitempty" name:"DisasterRecoverGroupIds"`
 }
 
 type ModifyLaunchConfigurationAttributesRequest struct {
@@ -4032,6 +4206,16 @@ type ModifyLaunchConfigurationAttributesRequest struct {
 
 	// CAM角色名称。可通过DescribeRoleList接口返回值中的roleName获取。
 	CamRoleName *string `json:"CamRoleName,omitempty" name:"CamRoleName"`
+
+	// 高性能计算集群ID。<br>
+	// 注意：此字段默认为空。
+	HpcClusterId *string `json:"HpcClusterId,omitempty" name:"HpcClusterId"`
+
+	// IPv6公网带宽相关信息设置。若新建实例包含IPv6地址，该参数可为新建实例的IPv6地址分配公网带宽。关联启动配置的伸缩组Ipv6AddressCount参数为0时，该参数不会生效。
+	IPv6InternetAccessible *IPv6InternetAccessible `json:"IPv6InternetAccessible,omitempty" name:"IPv6InternetAccessible"`
+
+	// 置放群组id，仅支持指定一个。
+	DisasterRecoverGroupIds []*string `json:"DisasterRecoverGroupIds,omitempty" name:"DisasterRecoverGroupIds"`
 }
 
 func (r *ModifyLaunchConfigurationAttributesRequest) ToJsonString() string {
@@ -4064,6 +4248,9 @@ func (r *ModifyLaunchConfigurationAttributesRequest) FromJsonString(s string) er
 	delete(f, "InstanceNameSettings")
 	delete(f, "EnhancedService")
 	delete(f, "CamRoleName")
+	delete(f, "HpcClusterId")
+	delete(f, "IPv6InternetAccessible")
+	delete(f, "DisasterRecoverGroupIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyLaunchConfigurationAttributesRequest has unknown keys!", "")
 	}
@@ -4121,6 +4308,9 @@ type ModifyLifecycleHookRequestParams struct {
 
 	// 通知目标信息。
 	NotificationTarget *NotificationTarget `json:"NotificationTarget,omitempty" name:"NotificationTarget"`
+
+	// 远程命令执行对象。
+	LifecycleCommand *LifecycleCommand `json:"LifecycleCommand,omitempty" name:"LifecycleCommand"`
 }
 
 type ModifyLifecycleHookRequest struct {
@@ -4153,6 +4343,9 @@ type ModifyLifecycleHookRequest struct {
 
 	// 通知目标信息。
 	NotificationTarget *NotificationTarget `json:"NotificationTarget,omitempty" name:"NotificationTarget"`
+
+	// 远程命令执行对象。
+	LifecycleCommand *LifecycleCommand `json:"LifecycleCommand,omitempty" name:"LifecycleCommand"`
 }
 
 func (r *ModifyLifecycleHookRequest) ToJsonString() string {
@@ -4175,6 +4368,7 @@ func (r *ModifyLifecycleHookRequest) FromJsonString(s string) error {
 	delete(f, "NotificationMetadata")
 	delete(f, "LifecycleTransitionType")
 	delete(f, "NotificationTarget")
+	delete(f, "LifecycleCommand")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyLifecycleHookRequest has unknown keys!", "")
 	}
@@ -4208,7 +4402,7 @@ type ModifyLoadBalancerTargetAttributesRequestParams struct {
 	// 伸缩组ID
 	AutoScalingGroupId *string `json:"AutoScalingGroupId,omitempty" name:"AutoScalingGroupId"`
 
-	// 需修改目标规则属性的应用型负载均衡器列表，列表长度上限为50
+	// 需修改目标规则属性的应用型负载均衡器列表，列表长度上限为100
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
 }
 
@@ -4218,7 +4412,7 @@ type ModifyLoadBalancerTargetAttributesRequest struct {
 	// 伸缩组ID
 	AutoScalingGroupId *string `json:"AutoScalingGroupId,omitempty" name:"AutoScalingGroupId"`
 
-	// 需修改目标规则属性的应用型负载均衡器列表，列表长度上限为50
+	// 需修改目标规则属性的应用型负载均衡器列表，列表长度上限为100
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
 }
 
@@ -4275,7 +4469,7 @@ type ModifyLoadBalancersRequestParams struct {
 	// 传统负载均衡器ID列表，目前长度上限为20，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitempty" name:"LoadBalancerIds"`
 
-	// 应用型负载均衡器列表，目前长度上限为50，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
+	// 应用型负载均衡器列表，目前长度上限为100，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
 
 	// 负载均衡器校验策略，取值包括 ALL 和 DIFF，默认取值为 ALL。
@@ -4293,7 +4487,7 @@ type ModifyLoadBalancersRequest struct {
 	// 传统负载均衡器ID列表，目前长度上限为20，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	LoadBalancerIds []*string `json:"LoadBalancerIds,omitempty" name:"LoadBalancerIds"`
 
-	// 应用型负载均衡器列表，目前长度上限为50，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
+	// 应用型负载均衡器列表，目前长度上限为100，LoadBalancerIds 和 ForwardLoadBalancers 二者同时最多只能指定一个
 	ForwardLoadBalancers []*ForwardLoadBalancer `json:"ForwardLoadBalancers,omitempty" name:"ForwardLoadBalancers"`
 
 	// 负载均衡器校验策略，取值包括 ALL 和 DIFF，默认取值为 ALL。
@@ -4451,17 +4645,29 @@ type ModifyScalingPolicyRequestParams struct {
 	// 告警策略名称。
 	ScalingPolicyName *string `json:"ScalingPolicyName,omitempty" name:"ScalingPolicyName"`
 
-	// 告警触发后，期望实例数修改方式。取值 ：<br><li>CHANGE_IN_CAPACITY：增加或减少若干期望实例数</li><li>EXACT_CAPACITY：调整至指定期望实例数</li> <li>PERCENT_CHANGE_IN_CAPACITY：按百分比调整期望实例数</li>
+	// 告警触发后，期望实例数修改方式，仅适用于简单策略。取值范围：<br><li>CHANGE_IN_CAPACITY：增加或减少若干期望实例数</li><li>EXACT_CAPACITY：调整至指定期望实例数</li> <li>PERCENT_CHANGE_IN_CAPACITY：按百分比调整期望实例数</li>
 	AdjustmentType *string `json:"AdjustmentType,omitempty" name:"AdjustmentType"`
 
-	// 告警触发后，期望实例数的调整值。取值：<br><li>当 AdjustmentType 为 CHANGE_IN_CAPACITY 时，AdjustmentValue 为正数表示告警触发后增加实例，为负数表示告警触发后减少实例 </li> <li> 当 AdjustmentType 为 EXACT_CAPACITY 时，AdjustmentValue 的值即为告警触发后新的期望实例数，需要大于或等于0 </li> <li> 当 AdjustmentType 为 PERCENT_CHANGE_IN_CAPACITY 时，AdjusmentValue 为正数表示告警触发后按百分比增加实例，为负数表示告警触发后按百分比减少实例，单位是：%。
+	// 告警触发后，期望实例数的调整值，仅适用于简单策略。<br><li>当 AdjustmentType 为 CHANGE_IN_CAPACITY 时，AdjustmentValue 为正数表示告警触发后增加实例，为负数表示告警触发后减少实例 </li> <li> 当 AdjustmentType 为 EXACT_CAPACITY 时，AdjustmentValue 的值即为告警触发后新的期望实例数，需要大于或等于0 </li> <li> 当 AdjustmentType 为 PERCENT_CHANGE_IN_CAPACITY 时，AdjusmentValue 为正数表示告警触发后按百分比增加实例，为负数表示告警触发后按百分比减少实例，单位是：%。
 	AdjustmentValue *int64 `json:"AdjustmentValue,omitempty" name:"AdjustmentValue"`
 
-	// 冷却时间，单位为秒。
+	// 冷却时间，仅适用于简单策略，单位为秒。
 	Cooldown *uint64 `json:"Cooldown,omitempty" name:"Cooldown"`
 
-	// 告警监控指标。
+	// 告警监控指标，仅适用于简单策略。
 	MetricAlarm *MetricAlarm `json:"MetricAlarm,omitempty" name:"MetricAlarm"`
+
+	// 预定义监控项，仅适用于目标追踪策略。取值范围：<br><li>ASG_AVG_CPU_UTILIZATION：平均CPU使用率</li><li>ASG_AVG_LAN_TRAFFIC_OUT：平均内网出带宽</li><li>ASG_AVG_LAN_TRAFFIC_IN：平均内网入带宽</li><li>ASG_AVG_WAN_TRAFFIC_OUT：平均外网出带宽</li><li>ASG_AVG_WAN_TRAFFIC_IN：平均外网出带宽</li>
+	PredefinedMetricType *string `json:"PredefinedMetricType,omitempty" name:"PredefinedMetricType"`
+
+	// 目标值，仅适用于目标追踪策略。<br><li>ASG_AVG_CPU_UTILIZATION：[1, 100)，单位：%</li><li>ASG_AVG_LAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>ASG_AVG_LAN_TRAFFIC_IN：>0，单位：Mbps</li><li>ASG_AVG_WAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>ASG_AVG_WAN_TRAFFIC_IN：>0，单位：Mbps</li>
+	TargetValue *uint64 `json:"TargetValue,omitempty" name:"TargetValue"`
+
+	// 实例预热时间，单位为秒，仅适用于目标追踪策略。取值范围为0-3600。
+	EstimatedInstanceWarmup *uint64 `json:"EstimatedInstanceWarmup,omitempty" name:"EstimatedInstanceWarmup"`
+
+	// 是否禁用缩容，仅适用于目标追踪策略。取值范围：<br><li>true：目标追踪策略仅触发扩容</li><li>false：目标追踪策略触发扩容和缩容</li>
+	DisableScaleIn *bool `json:"DisableScaleIn,omitempty" name:"DisableScaleIn"`
 
 	// 通知组ID，即为用户组ID集合，用户组ID可以通过[ListGroups](https://cloud.tencent.com/document/product/598/34589)查询。
 	// 如果需要清空通知用户组，需要在列表中传入特定字符串 "NULL"。
@@ -4477,17 +4683,29 @@ type ModifyScalingPolicyRequest struct {
 	// 告警策略名称。
 	ScalingPolicyName *string `json:"ScalingPolicyName,omitempty" name:"ScalingPolicyName"`
 
-	// 告警触发后，期望实例数修改方式。取值 ：<br><li>CHANGE_IN_CAPACITY：增加或减少若干期望实例数</li><li>EXACT_CAPACITY：调整至指定期望实例数</li> <li>PERCENT_CHANGE_IN_CAPACITY：按百分比调整期望实例数</li>
+	// 告警触发后，期望实例数修改方式，仅适用于简单策略。取值范围：<br><li>CHANGE_IN_CAPACITY：增加或减少若干期望实例数</li><li>EXACT_CAPACITY：调整至指定期望实例数</li> <li>PERCENT_CHANGE_IN_CAPACITY：按百分比调整期望实例数</li>
 	AdjustmentType *string `json:"AdjustmentType,omitempty" name:"AdjustmentType"`
 
-	// 告警触发后，期望实例数的调整值。取值：<br><li>当 AdjustmentType 为 CHANGE_IN_CAPACITY 时，AdjustmentValue 为正数表示告警触发后增加实例，为负数表示告警触发后减少实例 </li> <li> 当 AdjustmentType 为 EXACT_CAPACITY 时，AdjustmentValue 的值即为告警触发后新的期望实例数，需要大于或等于0 </li> <li> 当 AdjustmentType 为 PERCENT_CHANGE_IN_CAPACITY 时，AdjusmentValue 为正数表示告警触发后按百分比增加实例，为负数表示告警触发后按百分比减少实例，单位是：%。
+	// 告警触发后，期望实例数的调整值，仅适用于简单策略。<br><li>当 AdjustmentType 为 CHANGE_IN_CAPACITY 时，AdjustmentValue 为正数表示告警触发后增加实例，为负数表示告警触发后减少实例 </li> <li> 当 AdjustmentType 为 EXACT_CAPACITY 时，AdjustmentValue 的值即为告警触发后新的期望实例数，需要大于或等于0 </li> <li> 当 AdjustmentType 为 PERCENT_CHANGE_IN_CAPACITY 时，AdjusmentValue 为正数表示告警触发后按百分比增加实例，为负数表示告警触发后按百分比减少实例，单位是：%。
 	AdjustmentValue *int64 `json:"AdjustmentValue,omitempty" name:"AdjustmentValue"`
 
-	// 冷却时间，单位为秒。
+	// 冷却时间，仅适用于简单策略，单位为秒。
 	Cooldown *uint64 `json:"Cooldown,omitempty" name:"Cooldown"`
 
-	// 告警监控指标。
+	// 告警监控指标，仅适用于简单策略。
 	MetricAlarm *MetricAlarm `json:"MetricAlarm,omitempty" name:"MetricAlarm"`
+
+	// 预定义监控项，仅适用于目标追踪策略。取值范围：<br><li>ASG_AVG_CPU_UTILIZATION：平均CPU使用率</li><li>ASG_AVG_LAN_TRAFFIC_OUT：平均内网出带宽</li><li>ASG_AVG_LAN_TRAFFIC_IN：平均内网入带宽</li><li>ASG_AVG_WAN_TRAFFIC_OUT：平均外网出带宽</li><li>ASG_AVG_WAN_TRAFFIC_IN：平均外网出带宽</li>
+	PredefinedMetricType *string `json:"PredefinedMetricType,omitempty" name:"PredefinedMetricType"`
+
+	// 目标值，仅适用于目标追踪策略。<br><li>ASG_AVG_CPU_UTILIZATION：[1, 100)，单位：%</li><li>ASG_AVG_LAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>ASG_AVG_LAN_TRAFFIC_IN：>0，单位：Mbps</li><li>ASG_AVG_WAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>ASG_AVG_WAN_TRAFFIC_IN：>0，单位：Mbps</li>
+	TargetValue *uint64 `json:"TargetValue,omitempty" name:"TargetValue"`
+
+	// 实例预热时间，单位为秒，仅适用于目标追踪策略。取值范围为0-3600。
+	EstimatedInstanceWarmup *uint64 `json:"EstimatedInstanceWarmup,omitempty" name:"EstimatedInstanceWarmup"`
+
+	// 是否禁用缩容，仅适用于目标追踪策略。取值范围：<br><li>true：目标追踪策略仅触发扩容</li><li>false：目标追踪策略触发扩容和缩容</li>
+	DisableScaleIn *bool `json:"DisableScaleIn,omitempty" name:"DisableScaleIn"`
 
 	// 通知组ID，即为用户组ID集合，用户组ID可以通过[ListGroups](https://cloud.tencent.com/document/product/598/34589)查询。
 	// 如果需要清空通知用户组，需要在列表中传入特定字符串 "NULL"。
@@ -4512,6 +4730,10 @@ func (r *ModifyScalingPolicyRequest) FromJsonString(s string) error {
 	delete(f, "AdjustmentValue")
 	delete(f, "Cooldown")
 	delete(f, "MetricAlarm")
+	delete(f, "PredefinedMetricType")
+	delete(f, "TargetValue")
+	delete(f, "EstimatedInstanceWarmup")
+	delete(f, "DisableScaleIn")
 	delete(f, "NotificationUserGroupIds")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyScalingPolicyRequest has unknown keys!", "")
@@ -4723,6 +4945,12 @@ func (r *RemoveInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type RunAutomationServiceEnabled struct {
+	// 是否开启[自动化助手](https://cloud.tencent.com/document/product/1340)服务。取值范围：<br><li>TRUE：表示开启自动化助手服务<br><li>FALSE：表示不开启自动化助手服务
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Enabled *bool `json:"Enabled,omitempty" name:"Enabled"`
+}
+
 type RunMonitorServiceEnabled struct {
 	// 是否开启[云监控](https://cloud.tencent.com/document/product/248)服务。取值范围：<br><li>TRUE：表示开启云监控服务<br><li>FALSE：表示不开启云监控服务<br><br>默认取值：TRUE。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -4870,20 +5098,45 @@ type ScalingPolicy struct {
 	// 告警触发策略ID。
 	AutoScalingPolicyId *string `json:"AutoScalingPolicyId,omitempty" name:"AutoScalingPolicyId"`
 
+	// 告警触发策略类型。取值：
+	// - SIMPLE：简单策略
+	// - TARGET_TRACKING：目标追踪策略
+	ScalingPolicyType *string `json:"ScalingPolicyType,omitempty" name:"ScalingPolicyType"`
+
 	// 告警触发策略名称。
 	ScalingPolicyName *string `json:"ScalingPolicyName,omitempty" name:"ScalingPolicyName"`
 
-	// 告警触发后，期望实例数修改方式。取值 ：<br><li>CHANGE_IN_CAPACITY：增加或减少若干期望实例数</li><li>EXACT_CAPACITY：调整至指定期望实例数</li> <li>PERCENT_CHANGE_IN_CAPACITY：按百分比调整期望实例数</li>
+	// 告警触发后，期望实例数修改方式，仅适用于简单策略。取值范围：<br><li>CHANGE_IN_CAPACITY：增加或减少若干期望实例数</li><li>EXACT_CAPACITY：调整至指定期望实例数</li> <li>PERCENT_CHANGE_IN_CAPACITY：按百分比调整期望实例数</li>
 	AdjustmentType *string `json:"AdjustmentType,omitempty" name:"AdjustmentType"`
 
-	// 告警触发后，期望实例数的调整值。
+	// 告警触发后，期望实例数的调整值，仅适用于简单策略。
 	AdjustmentValue *int64 `json:"AdjustmentValue,omitempty" name:"AdjustmentValue"`
 
-	// 冷却时间。
+	// 冷却时间，仅适用于简单策略。
 	Cooldown *uint64 `json:"Cooldown,omitempty" name:"Cooldown"`
 
-	// 告警监控指标。
+	// 简单告警触发策略告警监控指标，仅适用于简单策略。
 	MetricAlarm *MetricAlarm `json:"MetricAlarm,omitempty" name:"MetricAlarm"`
+
+	// 预定义监控项，仅适用于目标追踪策略。取值范围：<br><li>ASG_AVG_CPU_UTILIZATION：平均CPU使用率</li><li>ASG_AVG_LAN_TRAFFIC_OUT：平均内网出带宽</li><li>ASG_AVG_LAN_TRAFFIC_IN：平均内网入带宽</li><li>ASG_AVG_WAN_TRAFFIC_OUT：平均外网出带宽</li><li>ASG_AVG_WAN_TRAFFIC_IN：平均外网出带宽</li>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PredefinedMetricType *string `json:"PredefinedMetricType,omitempty" name:"PredefinedMetricType"`
+
+	// 目标值，仅适用于目标追踪策略。<br><li>ASG_AVG_CPU_UTILIZATION：[1, 100)，单位：%</li><li>ASG_AVG_LAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>ASG_AVG_LAN_TRAFFIC_IN：>0，单位：Mbps</li><li>ASG_AVG_WAN_TRAFFIC_OUT：>0，单位：Mbps</li><li>ASG_AVG_WAN_TRAFFIC_IN：>0，单位：Mbps</li>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TargetValue *uint64 `json:"TargetValue,omitempty" name:"TargetValue"`
+
+	// 实例预热时间，单位为秒，仅适用于目标追踪策略。取值范围为0-3600。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EstimatedInstanceWarmup *uint64 `json:"EstimatedInstanceWarmup,omitempty" name:"EstimatedInstanceWarmup"`
+
+	// 是否禁用缩容，仅适用于目标追踪策略。取值范围：<br><li>true：目标追踪策略仅触发扩容</li><li>false：目标追踪策略触发扩容和缩容</li>
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DisableScaleIn *bool `json:"DisableScaleIn,omitempty" name:"DisableScaleIn"`
+
+	// 告警监控指标列表，仅适用于目标追踪策略。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	MetricAlarms []*MetricAlarm `json:"MetricAlarms,omitempty" name:"MetricAlarms"`
 
 	// 通知组ID，即为用户组ID集合。
 	NotificationUserGroupIds []*string `json:"NotificationUserGroupIds,omitempty" name:"NotificationUserGroupIds"`
@@ -5285,6 +5538,9 @@ type UpgradeLaunchConfigurationRequestParams struct {
 	// <br><li>ORIGINAL：使用设置的云盘类型
 	// <br><li>AUTOMATIC：自动选择当前可用的云盘类型
 	DiskTypePolicy *string `json:"DiskTypePolicy,omitempty" name:"DiskTypePolicy"`
+
+	// IPv6公网带宽相关信息设置。若新建实例包含IPv6地址，该参数可为新建实例的IPv6地址分配公网带宽。关联启动配置的伸缩组Ipv6AddressCount参数为0时，该参数不会生效。
+	IPv6InternetAccessible *IPv6InternetAccessible `json:"IPv6InternetAccessible,omitempty" name:"IPv6InternetAccessible"`
 }
 
 type UpgradeLaunchConfigurationRequest struct {
@@ -5362,6 +5618,9 @@ type UpgradeLaunchConfigurationRequest struct {
 	// <br><li>ORIGINAL：使用设置的云盘类型
 	// <br><li>AUTOMATIC：自动选择当前可用的云盘类型
 	DiskTypePolicy *string `json:"DiskTypePolicy,omitempty" name:"DiskTypePolicy"`
+
+	// IPv6公网带宽相关信息设置。若新建实例包含IPv6地址，该参数可为新建实例的IPv6地址分配公网带宽。关联启动配置的伸缩组Ipv6AddressCount参数为0时，该参数不会生效。
+	IPv6InternetAccessible *IPv6InternetAccessible `json:"IPv6InternetAccessible,omitempty" name:"IPv6InternetAccessible"`
 }
 
 func (r *UpgradeLaunchConfigurationRequest) ToJsonString() string {
@@ -5397,6 +5656,7 @@ func (r *UpgradeLaunchConfigurationRequest) FromJsonString(s string) error {
 	delete(f, "InstanceNameSettings")
 	delete(f, "InstanceChargePrepaid")
 	delete(f, "DiskTypePolicy")
+	delete(f, "IPv6InternetAccessible")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeLaunchConfigurationRequest has unknown keys!", "")
 	}
@@ -5442,14 +5702,17 @@ type UpgradeLifecycleHookRequestParams struct {
 	// 生命周期挂钩超时之前可以经过的最长时间（以秒为单位），范围从30到7200秒，默认值为300秒
 	HeartbeatTimeout *int64 `json:"HeartbeatTimeout,omitempty" name:"HeartbeatTimeout"`
 
-	// 弹性伸缩向通知目标发送的附加信息，默认值为空字符串""
+	// 弹性伸缩向通知目标发送的附加信息，配置通知时使用，默认值为空字符串""
 	NotificationMetadata *string `json:"NotificationMetadata,omitempty" name:"NotificationMetadata"`
 
-	// 通知目标
+	// 通知目标。NotificationTarget和LifecycleCommand参数互斥，二者不可同时指定。
 	NotificationTarget *NotificationTarget `json:"NotificationTarget,omitempty" name:"NotificationTarget"`
 
 	// 进行生命周期挂钩的场景类型，取值范围包括NORMAL 和 EXTENSION。说明：设置为EXTENSION值，在AttachInstances、DetachInstances、RemoveInstaces接口时会触发生命周期挂钩操作，值为NORMAL则不会在这些接口中触发生命周期挂钩。
 	LifecycleTransitionType *string `json:"LifecycleTransitionType,omitempty" name:"LifecycleTransitionType"`
+
+	// 远程命令执行对象。NotificationTarget和LifecycleCommand参数互斥，二者不可同时指定。
+	LifecycleCommand *LifecycleCommand `json:"LifecycleCommand,omitempty" name:"LifecycleCommand"`
 }
 
 type UpgradeLifecycleHookRequest struct {
@@ -5470,14 +5733,17 @@ type UpgradeLifecycleHookRequest struct {
 	// 生命周期挂钩超时之前可以经过的最长时间（以秒为单位），范围从30到7200秒，默认值为300秒
 	HeartbeatTimeout *int64 `json:"HeartbeatTimeout,omitempty" name:"HeartbeatTimeout"`
 
-	// 弹性伸缩向通知目标发送的附加信息，默认值为空字符串""
+	// 弹性伸缩向通知目标发送的附加信息，配置通知时使用，默认值为空字符串""
 	NotificationMetadata *string `json:"NotificationMetadata,omitempty" name:"NotificationMetadata"`
 
-	// 通知目标
+	// 通知目标。NotificationTarget和LifecycleCommand参数互斥，二者不可同时指定。
 	NotificationTarget *NotificationTarget `json:"NotificationTarget,omitempty" name:"NotificationTarget"`
 
 	// 进行生命周期挂钩的场景类型，取值范围包括NORMAL 和 EXTENSION。说明：设置为EXTENSION值，在AttachInstances、DetachInstances、RemoveInstaces接口时会触发生命周期挂钩操作，值为NORMAL则不会在这些接口中触发生命周期挂钩。
 	LifecycleTransitionType *string `json:"LifecycleTransitionType,omitempty" name:"LifecycleTransitionType"`
+
+	// 远程命令执行对象。NotificationTarget和LifecycleCommand参数互斥，二者不可同时指定。
+	LifecycleCommand *LifecycleCommand `json:"LifecycleCommand,omitempty" name:"LifecycleCommand"`
 }
 
 func (r *UpgradeLifecycleHookRequest) ToJsonString() string {
@@ -5500,6 +5766,7 @@ func (r *UpgradeLifecycleHookRequest) FromJsonString(s string) error {
 	delete(f, "NotificationMetadata")
 	delete(f, "NotificationTarget")
 	delete(f, "LifecycleTransitionType")
+	delete(f, "LifecycleCommand")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeLifecycleHookRequest has unknown keys!", "")
 	}
