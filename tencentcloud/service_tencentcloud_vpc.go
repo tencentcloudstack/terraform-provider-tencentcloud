@@ -7812,3 +7812,192 @@ func (me *VpcService) DescribeVpcLimitsByFilter(ctx context.Context, param map[s
 
 	return
 }
+
+func (me *VpcService) DescribeVpcNetworkAclQuintupleById(ctx context.Context, networkAclId string) (networkAclQuintuples []*vpc.NetworkAclQuintupleEntry, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeNetworkAclQuintupleEntriesRequest()
+	request.NetworkAclId = &networkAclId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeNetworkAclQuintupleEntries(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.NetworkAclQuintupleSet) < 1 {
+		return
+	}
+
+	networkAclQuintuples = response.Response.NetworkAclQuintupleSet
+	return
+}
+
+func (me *VpcService) DeleteVpcNetworkAclQuintupleById(ctx context.Context, networkAclId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDeleteNetworkAclQuintupleEntriesRequest()
+	request.NetworkAclId = &networkAclId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DeleteNetworkAclQuintupleEntries(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DeleteVpcEniSgAttachmentById(ctx context.Context, networkInterfaceId string, securityGroupIds []string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDisassociateNetworkInterfaceSecurityGroupsRequest()
+	request.NetworkInterfaceIds = []*string{&networkInterfaceId}
+	request.SecurityGroupIds = common.StringPtrs(securityGroupIds)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DisassociateNetworkInterfaceSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *VpcService) DescribeVpcNetDetectStateCheck(ctx context.Context, param map[string]interface{}) (netDetectStateCheck []*vpc.NetDetectIpState, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewCheckNetDetectStateRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DetectDestinationIp" {
+			request.DetectDestinationIp = v.([]*string)
+		}
+		if k == "NextHopType" {
+			request.NextHopType = v.(*string)
+		}
+		if k == "NextHopDestination" {
+			request.NextHopDestination = v.(*string)
+		}
+		if k == "NetDetectId" {
+			request.NetDetectId = v.(*string)
+		}
+		if k == "VpcId" {
+			request.VpcId = v.(*string)
+		}
+		if k == "SubnetId" {
+			request.SubnetId = v.(*string)
+		}
+		if k == "NetDetectName" {
+			request.NetDetectName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().CheckNetDetectState(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	netDetectStateCheck = response.Response.NetDetectIpStateSet
+
+	return
+}
+
+func (me *VpcService) DescribeVpcNotifyRoutesById(ctx context.Context, routeTableId string, routeItemId string) (notifyRoute *vpc.Route, errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewDescribeRouteTablesRequest()
+	request.RouteTableIds = []*string{&routeTableId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().DescribeRouteTables(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RouteTableSet) < 1 {
+		return
+	}
+
+	for _, routeTable := range response.Response.RouteTableSet {
+		for _, route := range routeTable.RouteSet {
+			if *route.RouteItemId == routeItemId {
+				notifyRoute = route
+				break
+			}
+		}
+	}
+	return
+}
+
+func (me *VpcService) DeleteVpcNotifyRoutesById(ctx context.Context, routeTableId string, routeItemId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := vpc.NewWithdrawNotifyRoutesRequest()
+	request.RouteTableId = &routeTableId
+	request.RouteItemIds = []*string{&routeItemId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().WithdrawNotifyRoutes(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

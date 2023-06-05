@@ -858,6 +858,7 @@ Virtual Private Cloud(VPC)
 	tencentcloud_vpc_gateway_flow_qos
 	tencentcloud_vpc_cvm_instances
 	tencentcloud_vpc_net_detect_states
+	tencentcloud_vpc_net_detect_state_check
 	tencentcloud_vpc_network_interface_limit
 	tencentcloud_vpc_private_ip_addresses
 	tencentcloud_vpc_product_quota
@@ -888,6 +889,7 @@ Virtual Private Cloud(VPC)
   Resource
     tencentcloud_eni
     tencentcloud_eni_attachment
+	tencentcloud_eni_sg_attachment
     tencentcloud_vpc
 	tencentcloud_vpc_acl
 	tencentcloud_vpc_acl_attachment
@@ -1557,6 +1559,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_template_limits":                       dataSourceTencentCloudVpcTemplateLimits(),
 			"tencentcloud_vpc_limits":                                dataSourceTencentCloudVpcLimits(),
 			"tencentcloud_vpc_used_ip_address":                       dataSourceTencentCloudVpcUsedIpAddress(),
+			"tencentcloud_vpc_net_detect_state_check":                dataSourceTencentCloudVpcNetDetectStateCheck(),
 			"tencentcloud_subnet":                                    dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                               dataSourceTencentCloudRouteTable(),
 			"tencentcloud_domains":                                   dataSourceTencentCloudDomains(),
@@ -1977,6 +1980,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc":                                            resourceTencentCloudVpcInstance(),
 			"tencentcloud_vpc_acl":                                        resourceTencentCloudVpcACL(),
 			"tencentcloud_vpc_acl_attachment":                             resourceTencentCloudVpcAclAttachment(),
+			"tencentcloud_vpc_network_acl_quintuple":                      resourceTencentCloudVpcNetworkAclQuintuple(),
+			"tencentcloud_vpc_notify_routes":                              resourceTencentCloudVpcNotifyRoutes(),
 			"tencentcloud_vpc_bandwidth_package":                          resourceTencentCloudVpcBandwidthPackage(),
 			"tencentcloud_vpc_bandwidth_package_attachment":               resourceTencentCloudVpcBandwidthPackageAttachment(),
 			"tencentcloud_vpc_traffic_package":                            resourceTencentCloudVpcTrafficPackage(),
@@ -2009,6 +2014,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eip_normal_address_return":                      resourceTencentCloudEipNormalAddressReturn(),
 			"tencentcloud_eni":                                            resourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":                                 resourceTencentCloudEniAttachment(),
+			"tencentcloud_eni_sg_attachment":                              resourceTencentCloudEniSgAttachment(),
 			"tencentcloud_ccn":                                            resourceTencentCloudCcn(),
 			"tencentcloud_ccn_attachment":                                 resourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":                            resourceTencentCloudCcnBandwidthLimit(),
