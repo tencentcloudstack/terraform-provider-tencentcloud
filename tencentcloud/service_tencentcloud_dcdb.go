@@ -877,3 +877,116 @@ func (me *DcdbService) DescribeDcdbDBTablesByFilter(ctx context.Context, param m
 
 	return
 }
+
+func (me *DcdbService) DescribeDcdbDedicatedClusterDbInstanceById(ctx context.Context, instanceId string) (dedicatedClusterDbInstance *dcdb.DescribeDCDBInstanceDetailResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDescribeDCDBInstanceDetailRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDCDBInstanceDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	dedicatedClusterDbInstance = response.Response
+	return
+}
+
+func (me *DcdbService) DeleteDcdbDedicatedClusterDbInstanceById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewTerminateDedicatedDBInstanceRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().TerminateDedicatedDBInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbEncryptAttributesConfigById(ctx context.Context, instanceId string) (encryptAttributesConfig *dcdb.DescribeDBEncryptAttributesResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDescribeDBEncryptAttributesRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDBEncryptAttributes(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	encryptAttributesConfig = response.Response
+	return
+}
+
+func (me *DcdbService) DescribeDcdbDbSyncModeConfigById(ctx context.Context, instanceId string) (dbSyncModeConfig *dcdb.DescribeDBSyncModeResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dcdb.NewDescribeDBSyncModeRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDBSyncMode(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	dbSyncModeConfig = response.Response
+	return
+}
+
+func (me *DcdbService) DcdbDbSyncModeConfigStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDcdbDbSyncModeConfigById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.Int64ToStr(*object.IsModifying), nil
+	}
+}

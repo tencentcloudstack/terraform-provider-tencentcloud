@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_dcdb_db_sync_mode_config
+```
+
+```release-note:new-resource
+tencentcloud_dcdb_encrypt_attributes_config
+```

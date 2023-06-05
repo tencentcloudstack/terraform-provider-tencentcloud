@@ -64,7 +64,7 @@ func NewActiveHourDCDBInstanceResponse() (response *ActiveHourDCDBInstanceRespon
 }
 
 // ActiveHourDCDBInstance
-// 解隔离DCDB后付费实例
+// 解隔离TDSQL按量计费实例
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -76,7 +76,7 @@ func (c *Client) ActiveHourDCDBInstance(request *ActiveHourDCDBInstanceRequest) 
 }
 
 // ActiveHourDCDBInstance
-// 解隔离DCDB后付费实例
+// 解隔离TDSQL按量计费实例
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -558,7 +558,7 @@ func NewCreateDCDBInstanceResponse() (response *CreateDCDBInstanceResponse) {
 }
 
 // CreateDCDBInstance
-// 本接口（CreateDCDBInstance）用于创建包年包月的云数据库实例，可通过传入实例规格、数据库版本号、购买时长等信息创建云数据库实例。
+// 本接口（CreateDCDBInstance）用于创建包年包月的TDSQL实例，可通过传入实例规格、数据库版本号、购买时长等信息创建云数据库实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -569,6 +569,7 @@ func NewCreateDCDBInstanceResponse() (response *CreateDCDBInstanceResponse) {
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
 //  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
 //  INVALIDPARAMETER_CHECKPARAMNOTPASS = "InvalidParameter.CheckParamNotPass"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  INVALIDPARAMETER_SPECNOTFOUND = "InvalidParameter.SpecNotFound"
@@ -583,7 +584,7 @@ func (c *Client) CreateDCDBInstance(request *CreateDCDBInstanceRequest) (respons
 }
 
 // CreateDCDBInstance
-// 本接口（CreateDCDBInstance）用于创建包年包月的云数据库实例，可通过传入实例规格、数据库版本号、购买时长等信息创建云数据库实例。
+// 本接口（CreateDCDBInstance）用于创建包年包月的TDSQL实例，可通过传入实例规格、数据库版本号、购买时长等信息创建云数据库实例。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -594,6 +595,7 @@ func (c *Client) CreateDCDBInstance(request *CreateDCDBInstanceRequest) (respons
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
 //  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
 //  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
 //  INVALIDPARAMETER_CHECKPARAMNOTPASS = "InvalidParameter.CheckParamNotPass"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  INVALIDPARAMETER_SPECNOTFOUND = "InvalidParameter.SpecNotFound"
@@ -619,6 +621,80 @@ func (c *Client) CreateDCDBInstanceWithContext(ctx context.Context, request *Cre
     return
 }
 
+func NewCreateDedicatedClusterDCDBInstanceRequest() (request *CreateDedicatedClusterDCDBInstanceRequest) {
+    request = &CreateDedicatedClusterDCDBInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dcdb", APIVersion, "CreateDedicatedClusterDCDBInstance")
+    
+    
+    return
+}
+
+func NewCreateDedicatedClusterDCDBInstanceResponse() (response *CreateDedicatedClusterDCDBInstanceResponse) {
+    response = &CreateDedicatedClusterDCDBInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateDedicatedClusterDCDBInstance
+// 创建TDSQL独享集群实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TAGQUOTAEXCEEDLIMIT = "FailedOperation.TagQuotaExceedLimit"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_FENCEERROR = "InternalError.FenceError"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER_VPCNOTFOUND = "InvalidParameter.VpcNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALEXCLUSTERID = "InvalidParameterValue.IllegalExclusterID"
+//  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
+//  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEUNAVAILABLE_EXCLUSTERSTATUSABNORMAL = "ResourceUnavailable.ExclusterStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateDedicatedClusterDCDBInstance(request *CreateDedicatedClusterDCDBInstanceRequest) (response *CreateDedicatedClusterDCDBInstanceResponse, err error) {
+    return c.CreateDedicatedClusterDCDBInstanceWithContext(context.Background(), request)
+}
+
+// CreateDedicatedClusterDCDBInstance
+// 创建TDSQL独享集群实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_TAGQUOTAEXCEEDLIMIT = "FailedOperation.TagQuotaExceedLimit"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_FENCEERROR = "InternalError.FenceError"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_GETVPCFAILED = "InternalError.GetVpcFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER_VPCNOTFOUND = "InvalidParameter.VpcNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALEXCLUSTERID = "InvalidParameterValue.IllegalExclusterID"
+//  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
+//  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
+//  RESOURCEINSUFFICIENT = "ResourceInsufficient"
+//  RESOURCEUNAVAILABLE_EXCLUSTERSTATUSABNORMAL = "ResourceUnavailable.ExclusterStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateDedicatedClusterDCDBInstanceWithContext(ctx context.Context, request *CreateDedicatedClusterDCDBInstanceRequest) (response *CreateDedicatedClusterDCDBInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateDedicatedClusterDCDBInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateDedicatedClusterDCDBInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateDedicatedClusterDCDBInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateHourDCDBInstanceRequest() (request *CreateHourDCDBInstanceRequest) {
     request = &CreateHourDCDBInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -638,7 +714,7 @@ func NewCreateHourDCDBInstanceResponse() (response *CreateHourDCDBInstanceRespon
 }
 
 // CreateHourDCDBInstance
-// 创建DCDB后付费实例
+// 创建TDSQL按量计费实例
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -652,6 +728,7 @@ func NewCreateHourDCDBInstanceResponse() (response *CreateHourDCDBInstanceRespon
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CHECKPARAMNOTPASS = "InvalidParameter.CheckParamNotPass"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETER_SUBNETNOTFOUND = "InvalidParameter.SubnetNotFound"
 //  INVALIDPARAMETER_VPCNOTFOUND = "InvalidParameter.VpcNotFound"
 //  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
 //  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
@@ -662,7 +739,7 @@ func (c *Client) CreateHourDCDBInstance(request *CreateHourDCDBInstanceRequest) 
 }
 
 // CreateHourDCDBInstance
-// 创建DCDB后付费实例
+// 创建TDSQL按量计费实例
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
@@ -676,6 +753,7 @@ func (c *Client) CreateHourDCDBInstance(request *CreateHourDCDBInstanceRequest) 
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_CHECKPARAMNOTPASS = "InvalidParameter.CheckParamNotPass"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETER_SUBNETNOTFOUND = "InvalidParameter.SubnetNotFound"
 //  INVALIDPARAMETER_VPCNOTFOUND = "InvalidParameter.VpcNotFound"
 //  INVALIDPARAMETERVALUE_ILLEGALZONE = "InvalidParameterValue.IllegalZone"
 //  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
@@ -693,6 +771,68 @@ func (c *Client) CreateHourDCDBInstanceWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewCreateHourDCDBInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateTmpDCDBInstanceRequest() (request *CreateTmpDCDBInstanceRequest) {
+    request = &CreateTmpDCDBInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dcdb", APIVersion, "CreateTmpDCDBInstance")
+    
+    
+    return
+}
+
+func NewCreateTmpDCDBInstanceResponse() (response *CreateTmpDCDBInstanceResponse) {
+    response = &CreateTmpDCDBInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateTmpDCDBInstance
+// 回档TDSQL实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
+//  INTERNALERROR_RETREATETIME = "InternalError.RetreateTime"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETER_NOTSUPPORTEDPAYMODE = "InvalidParameter.NotSupportedPayMode"
+//  RESOURCEINUSE_TEMPINSTANCEEXIST = "ResourceInUse.TempInstanceExist"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateTmpDCDBInstance(request *CreateTmpDCDBInstanceRequest) (response *CreateTmpDCDBInstanceResponse, err error) {
+    return c.CreateTmpDCDBInstanceWithContext(context.Background(), request)
+}
+
+// CreateTmpDCDBInstance
+// 回档TDSQL实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
+//  INTERNALERROR_RETREATETIME = "InternalError.RetreateTime"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETER_NOTSUPPORTEDPAYMODE = "InvalidParameter.NotSupportedPayMode"
+//  RESOURCEINUSE_TEMPINSTANCEEXIST = "ResourceInUse.TempInstanceExist"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) CreateTmpDCDBInstanceWithContext(ctx context.Context, request *CreateTmpDCDBInstanceRequest) (response *CreateTmpDCDBInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateTmpDCDBInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateTmpDCDBInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateTmpDCDBInstanceResponse()
     err = c.Send(request, response)
     return
 }
@@ -881,6 +1021,114 @@ func (c *Client) DescribeAccountsWithContext(ctx context.Context, request *Descr
     request.SetContext(ctx)
     
     response = NewDescribeAccountsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeBackupFilesRequest() (request *DescribeBackupFilesRequest) {
+    request = &DescribeBackupFilesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dcdb", APIVersion, "DescribeBackupFiles")
+    
+    
+    return
+}
+
+func NewDescribeBackupFilesResponse() (response *DescribeBackupFilesResponse) {
+    response = &DescribeBackupFilesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBackupFiles
+// 本接口(DescribeBackupFiles)用于查看备份文件列表。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBackupFiles(request *DescribeBackupFilesRequest) (response *DescribeBackupFilesResponse, err error) {
+    return c.DescribeBackupFilesWithContext(context.Background(), request)
+}
+
+// DescribeBackupFiles
+// 本接口(DescribeBackupFiles)用于查看备份文件列表。
+//
+// 可能返回的错误码:
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeBackupFilesWithContext(ctx context.Context, request *DescribeBackupFilesRequest) (response *DescribeBackupFilesResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackupFilesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackupFiles require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackupFilesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDBEncryptAttributesRequest() (request *DescribeDBEncryptAttributesRequest) {
+    request = &DescribeDBEncryptAttributesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dcdb", APIVersion, "DescribeDBEncryptAttributes")
+    
+    
+    return
+}
+
+func NewDescribeDBEncryptAttributesResponse() (response *DescribeDBEncryptAttributesResponse) {
+    response = &DescribeDBEncryptAttributesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDBEncryptAttributes
+// 本接口(DescribeDBEncryptAttributes)用于查询实例数据加密状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
+func (c *Client) DescribeDBEncryptAttributes(request *DescribeDBEncryptAttributesRequest) (response *DescribeDBEncryptAttributesResponse, err error) {
+    return c.DescribeDBEncryptAttributesWithContext(context.Background(), request)
+}
+
+// DescribeDBEncryptAttributes
+// 本接口(DescribeDBEncryptAttributes)用于查询实例数据加密状态。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
+func (c *Client) DescribeDBEncryptAttributesWithContext(ctx context.Context, request *DescribeDBEncryptAttributesRequest) (response *DescribeDBEncryptAttributesResponse, err error) {
+    if request == nil {
+        request = NewDescribeDBEncryptAttributesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDBEncryptAttributes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDBEncryptAttributesResponse()
     err = c.Send(request, response)
     return
 }
@@ -1225,6 +1473,64 @@ func (c *Client) DescribeDBSyncModeWithContext(ctx context.Context, request *Des
     request.SetContext(ctx)
     
     response = NewDescribeDBSyncModeResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDCDBInstanceDetailRequest() (request *DescribeDCDBInstanceDetailRequest) {
+    request = &DescribeDCDBInstanceDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dcdb", APIVersion, "DescribeDCDBInstanceDetail")
+    
+    
+    return
+}
+
+func NewDescribeDCDBInstanceDetailResponse() (response *DescribeDCDBInstanceDetailResponse) {
+    response = &DescribeDCDBInstanceDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDCDBInstanceDetail
+// 本接口（DescribeDCDBInstanceDetail）用于获取TDSQL实例详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeDCDBInstanceDetail(request *DescribeDCDBInstanceDetailRequest) (response *DescribeDCDBInstanceDetailResponse, err error) {
+    return c.DescribeDCDBInstanceDetailWithContext(context.Background(), request)
+}
+
+// DescribeDCDBInstanceDetail
+// 本接口（DescribeDCDBInstanceDetail）用于获取TDSQL实例详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_GETSUBNETFAILED = "InternalError.GetSubnetFailed"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) DescribeDCDBInstanceDetailWithContext(ctx context.Context, request *DescribeDCDBInstanceDetailRequest) (response *DescribeDCDBInstanceDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeDCDBInstanceDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDCDBInstanceDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDCDBInstanceDetailResponse()
     err = c.Send(request, response)
     return
 }
@@ -2240,6 +2546,10 @@ func NewDescribeSqlLogsResponse() (response *DescribeSqlLogsResponse) {
 }
 
 // DescribeSqlLogs
+// 已废弃接口
+//
+// 
+//
 // 本接口（DescribeSqlLogs）用于获取实例SQL日志。
 //
 // 可能返回的错误码:
@@ -2254,6 +2564,10 @@ func (c *Client) DescribeSqlLogs(request *DescribeSqlLogsRequest) (response *Des
 }
 
 // DescribeSqlLogs
+// 已废弃接口
+//
+// 
+//
 // 本接口（DescribeSqlLogs）用于获取实例SQL日志。
 //
 // 可能返回的错误码:
@@ -2348,7 +2662,7 @@ func NewDestroyDCDBInstanceResponse() (response *DestroyDCDBInstanceResponse) {
 }
 
 // DestroyDCDBInstance
-// 本接口(DestroyDCDBInstance)用于销毁已隔离的包年包月实例。
+// 本接口(DestroyDCDBInstance)用于销毁已隔离的TDSQL包年包月实例。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2363,7 +2677,7 @@ func (c *Client) DestroyDCDBInstance(request *DestroyDCDBInstanceRequest) (respo
 }
 
 // DestroyDCDBInstance
-// 本接口(DestroyDCDBInstance)用于销毁已隔离的包年包月实例。
+// 本接口(DestroyDCDBInstance)用于销毁已隔离的TDSQL包年包月实例。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2408,7 +2722,7 @@ func NewDestroyHourDCDBInstanceResponse() (response *DestroyHourDCDBInstanceResp
 }
 
 // DestroyHourDCDBInstance
-// 本接口（DestroyHourDCDBInstance）用于销毁按量计费实例。
+// 本接口（DestroyHourDCDBInstance）用于TDSQL销毁按量计费实例。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2423,7 +2737,7 @@ func (c *Client) DestroyHourDCDBInstance(request *DestroyHourDCDBInstanceRequest
 }
 
 // DestroyHourDCDBInstance
-// 本接口（DestroyHourDCDBInstance）用于销毁按量计费实例。
+// 本接口（DestroyHourDCDBInstance）用于TDSQL销毁按量计费实例。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2814,7 +3128,7 @@ func NewIsolateHourDCDBInstanceResponse() (response *IsolateHourDCDBInstanceResp
 }
 
 // IsolateHourDCDBInstance
-// 隔离DCDB后付费实例
+// 隔离TDSQL按量计费实例
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2826,7 +3140,7 @@ func (c *Client) IsolateHourDCDBInstance(request *IsolateHourDCDBInstanceRequest
 }
 
 // IsolateHourDCDBInstance
-// 隔离DCDB后付费实例
+// 隔离TDSQL按量计费实例
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER = "InvalidParameter"
@@ -2899,6 +3213,60 @@ func (c *Client) KillSessionWithContext(ctx context.Context, request *KillSessio
     request.SetContext(ctx)
     
     response = NewKillSessionResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyAccountConfigRequest() (request *ModifyAccountConfigRequest) {
+    request = &ModifyAccountConfigRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dcdb", APIVersion, "ModifyAccountConfig")
+    
+    
+    return
+}
+
+func NewModifyAccountConfigResponse() (response *ModifyAccountConfigResponse) {
+    response = &ModifyAccountConfigResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyAccountConfig
+// 修改账号的一些配置，比如 max_user_connections
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_MODIFYUSERCONFIGFAILED = "FailedOperation.ModifyUserConfigFailed"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEUNAVAILABLE_INSTANCEHASBEENLOCKED = "ResourceUnavailable.InstanceHasBeenLocked"
+func (c *Client) ModifyAccountConfig(request *ModifyAccountConfigRequest) (response *ModifyAccountConfigResponse, err error) {
+    return c.ModifyAccountConfigWithContext(context.Background(), request)
+}
+
+// ModifyAccountConfig
+// 修改账号的一些配置，比如 max_user_connections
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_MODIFYUSERCONFIGFAILED = "FailedOperation.ModifyUserConfigFailed"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEUNAVAILABLE_INSTANCEHASBEENLOCKED = "ResourceUnavailable.InstanceHasBeenLocked"
+func (c *Client) ModifyAccountConfigWithContext(ctx context.Context, request *ModifyAccountConfigRequest) (response *ModifyAccountConfigResponse, err error) {
+    if request == nil {
+        request = NewModifyAccountConfigRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyAccountConfig require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyAccountConfigResponse()
     err = c.Send(request, response)
     return
 }
@@ -3043,6 +3411,70 @@ func (c *Client) ModifyAccountPrivilegesWithContext(ctx context.Context, request
     return
 }
 
+func NewModifyDBEncryptAttributesRequest() (request *ModifyDBEncryptAttributesRequest) {
+    request = &ModifyDBEncryptAttributesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dcdb", APIVersion, "ModifyDBEncryptAttributes")
+    
+    
+    return
+}
+
+func NewModifyDBEncryptAttributesResponse() (response *ModifyDBEncryptAttributesResponse) {
+    response = &ModifyDBEncryptAttributesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyDBEncryptAttributes
+// 本接口(ModifyDBEncryptAttributes)用于修改实例数据加密。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEUNAVAILABLE_BADINSTANCESTATUS = "ResourceUnavailable.BadInstanceStatus"
+//  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
+//  RESOURCEUNAVAILABLE_INSTANCEHASBEENLOCKED = "ResourceUnavailable.InstanceHasBeenLocked"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
+func (c *Client) ModifyDBEncryptAttributes(request *ModifyDBEncryptAttributesRequest) (response *ModifyDBEncryptAttributesResponse, err error) {
+    return c.ModifyDBEncryptAttributesWithContext(context.Background(), request)
+}
+
+// ModifyDBEncryptAttributes
+// 本接口(ModifyDBEncryptAttributes)用于修改实例数据加密。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_OSSOPERATIONFAILED = "FailedOperation.OssOperationFailed"
+//  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEUNAVAILABLE_BADINSTANCESTATUS = "ResourceUnavailable.BadInstanceStatus"
+//  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
+//  RESOURCEUNAVAILABLE_INSTANCEHASBEENLOCKED = "ResourceUnavailable.InstanceHasBeenLocked"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
+func (c *Client) ModifyDBEncryptAttributesWithContext(ctx context.Context, request *ModifyDBEncryptAttributesRequest) (response *ModifyDBEncryptAttributesResponse, err error) {
+    if request == nil {
+        request = NewModifyDBEncryptAttributesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDBEncryptAttributes require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDBEncryptAttributesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyDBInstanceNameRequest() (request *ModifyDBInstanceNameRequest) {
     request = &ModifyDBInstanceNameRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3065,6 +3497,7 @@ func NewModifyDBInstanceNameResponse() (response *ModifyDBInstanceNameResponse) 
 // 本接口（ModifyDBInstanceName）用于修改实例名字
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
 //  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
@@ -3077,6 +3510,7 @@ func (c *Client) ModifyDBInstanceName(request *ModifyDBInstanceNameRequest) (res
 // 本接口（ModifyDBInstanceName）用于修改实例名字
 //
 // 可能返回的错误码:
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
 //  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
@@ -3213,6 +3647,7 @@ func NewModifyDBInstancesProjectResponse() (response *ModifyDBInstancesProjectRe
 // 可能返回的错误码:
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -3226,6 +3661,7 @@ func (c *Client) ModifyDBInstancesProject(request *ModifyDBInstancesProjectReque
 // 可能返回的错误码:
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_INNERSYSTEMERROR = "InternalError.InnerSystemError"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
@@ -3335,6 +3771,7 @@ func NewModifyDBSyncModeResponse() (response *ModifyDBSyncModeResponse) {
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_BADSYNCMODE = "InvalidParameterValue.BadSyncMode"
+//  INVALIDPARAMETERVALUE_SYNCMODENOTALLOWED = "InvalidParameterValue.SyncModeNotAllowed"
 //  RESOURCENOTFOUND_NOINSTANCEFOUND = "ResourceNotFound.NoInstanceFound"
 //  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
@@ -3354,6 +3791,7 @@ func (c *Client) ModifyDBSyncMode(request *ModifyDBSyncModeRequest) (response *M
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETERVALUE_BADSYNCMODE = "InvalidParameterValue.BadSyncMode"
+//  INVALIDPARAMETERVALUE_SYNCMODENOTALLOWED = "InvalidParameterValue.SyncModeNotAllowed"
 //  RESOURCENOTFOUND_NOINSTANCEFOUND = "ResourceNotFound.NoInstanceFound"
 //  RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
@@ -4007,6 +4445,7 @@ func NewUpgradeDCDBInstanceResponse() (response *UpgradeDCDBInstanceResponse) {
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_QUERYPRICEFAILED = "InternalError.QueryPriceFailed"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETER_NOTSUPPORTEDPAYMODE = "InvalidParameter.NotSupportedPayMode"
@@ -4028,6 +4467,7 @@ func (c *Client) UpgradeDCDBInstance(request *UpgradeDCDBInstanceRequest) (respo
 //  FAILEDOPERATION_PAYFAILED = "FailedOperation.PayFailed"
 //  INTERNALERROR_CAMAUTHFAILED = "InternalError.CamAuthFailed"
 //  INTERNALERROR_DBOPERATIONFAILED = "InternalError.DbOperationFailed"
+//  INTERNALERROR_QUERYPRICEFAILED = "InternalError.QueryPriceFailed"
 //  INVALIDPARAMETER_GENERICPARAMETERERROR = "InvalidParameter.GenericParameterError"
 //  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
 //  INVALIDPARAMETER_NOTSUPPORTEDPAYMODE = "InvalidParameter.NotSupportedPayMode"
@@ -4049,6 +4489,132 @@ func (c *Client) UpgradeDCDBInstanceWithContext(ctx context.Context, request *Up
     request.SetContext(ctx)
     
     response = NewUpgradeDCDBInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpgradeDedicatedDCDBInstanceRequest() (request *UpgradeDedicatedDCDBInstanceRequest) {
+    request = &UpgradeDedicatedDCDBInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dcdb", APIVersion, "UpgradeDedicatedDCDBInstance")
+    
+    
+    return
+}
+
+func NewUpgradeDedicatedDCDBInstanceResponse() (response *UpgradeDedicatedDCDBInstanceResponse) {
+    response = &UpgradeDedicatedDCDBInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpgradeDedicatedDCDBInstance
+// 本接口（UpgradeDedicatedDCDBInstance）用于升级TDSQL独享集群实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_FENCEERROR = "InternalError.FenceError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALEXCLUSTERID = "InvalidParameterValue.IllegalExclusterID"
+//  RESOURCEUNAVAILABLE_EXCLUSTERSTATUSABNORMAL = "ResourceUnavailable.ExclusterStatusAbnormal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
+func (c *Client) UpgradeDedicatedDCDBInstance(request *UpgradeDedicatedDCDBInstanceRequest) (response *UpgradeDedicatedDCDBInstanceResponse, err error) {
+    return c.UpgradeDedicatedDCDBInstanceWithContext(context.Background(), request)
+}
+
+// UpgradeDedicatedDCDBInstance
+// 本接口（UpgradeDedicatedDCDBInstance）用于升级TDSQL独享集群实例
+//
+// 可能返回的错误码:
+//  INTERNALERROR_FENCEERROR = "InternalError.FenceError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETERVALUE_ILLEGALEXCLUSTERID = "InvalidParameterValue.IllegalExclusterID"
+//  RESOURCEUNAVAILABLE_EXCLUSTERSTATUSABNORMAL = "ResourceUnavailable.ExclusterStatusAbnormal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+//  UNSUPPORTEDOPERATION_INVALIDOPERATION = "UnsupportedOperation.InvalidOperation"
+func (c *Client) UpgradeDedicatedDCDBInstanceWithContext(ctx context.Context, request *UpgradeDedicatedDCDBInstanceRequest) (response *UpgradeDedicatedDCDBInstanceResponse, err error) {
+    if request == nil {
+        request = NewUpgradeDedicatedDCDBInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeDedicatedDCDBInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpgradeDedicatedDCDBInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpgradeHourDCDBInstanceRequest() (request *UpgradeHourDCDBInstanceRequest) {
+    request = &UpgradeHourDCDBInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("dcdb", APIVersion, "UpgradeHourDCDBInstance")
+    
+    
+    return
+}
+
+func NewUpgradeHourDCDBInstanceResponse() (response *UpgradeHourDCDBInstanceResponse) {
+    response = &UpgradeHourDCDBInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpgradeHourDCDBInstance
+// 本接口（UpgradeHourDCDBInstance）用于升级分布式数据库TDSQL按量计费实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  INTERNALERROR_CREATEFLOWERROR = "InternalError.CreateFlowError"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETER_NOTSUPPORTEDPAYMODE = "InvalidParameter.NotSupportedPayMode"
+//  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) UpgradeHourDCDBInstance(request *UpgradeHourDCDBInstanceRequest) (response *UpgradeHourDCDBInstanceResponse, err error) {
+    return c.UpgradeHourDCDBInstanceWithContext(context.Background(), request)
+}
+
+// UpgradeHourDCDBInstance
+// 本接口（UpgradeHourDCDBInstance）用于升级分布式数据库TDSQL按量计费实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CREATEORDERFAILED = "FailedOperation.CreateOrderFailed"
+//  INTERNALERROR_CREATEFLOWERROR = "InternalError.CreateFlowError"
+//  INTERNALERROR_OPERATEDATABASEFAILED = "InternalError.OperateDatabaseFailed"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INSTANCENOTFOUND = "InvalidParameter.InstanceNotFound"
+//  INVALIDPARAMETER_NOTSUPPORTEDPAYMODE = "InvalidParameter.NotSupportedPayMode"
+//  INVALIDPARAMETERVALUE_SPECIDILLEGAL = "InvalidParameterValue.SpecIdIllegal"
+//  RESOURCEUNAVAILABLE_INSTANCESTATUSABNORMAL = "ResourceUnavailable.InstanceStatusAbnormal"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
+func (c *Client) UpgradeHourDCDBInstanceWithContext(ctx context.Context, request *UpgradeHourDCDBInstanceRequest) (response *UpgradeHourDCDBInstanceResponse, err error) {
+    if request == nil {
+        request = NewUpgradeHourDCDBInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeHourDCDBInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpgradeHourDCDBInstanceResponse()
     err = c.Send(request, response)
     return
 }
