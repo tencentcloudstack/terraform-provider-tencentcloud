@@ -617,6 +617,16 @@ func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId str
 		return
 	}
 
+	if instanceId != "" {
+		for _, detail := range response.Response.DcnDetails {
+			if *detail.InstanceId == instanceId {
+				dbInstance = detail
+				return
+			}
+		}
+	}
+
+	// default is return the first one(maybe the master)
 	dbInstance = response.Response.DcnDetails[0]
 	return
 }
@@ -1003,5 +1013,19 @@ func (me *DcdbService) DcdbDbSyncModeConfigStateRefreshFunc(instanceId string, f
 		}
 
 		return object, helper.Int64ToStr(*object.IsModifying), nil
+	}
+}
+
+func (me *DcdbService) DcdbDcnStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDcnDetailById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.Int64ToStr(*object.DcnStatus), nil
 	}
 }

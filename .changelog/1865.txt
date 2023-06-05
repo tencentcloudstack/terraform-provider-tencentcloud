@@ -13,3 +13,7 @@ tencentcloud_dcdb_cancel_dcn_job_operation
 ```release-note:enhancement
 resource/tencentcloud_dcdb_hourdb_instance: support `dcn_region` and `dcn_instance_id` fields.
 ```
+
+```release-note:enhancement
+resource/tencentcloud_dcdb_db_instance: adjust the logic of dcn.
+```

@@ -35,6 +35,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -161,13 +162,13 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		request    = dcdb.NewCreateHourDCDBInstanceRequest()
-		response   *dcdb.CreateHourDCDBInstanceResponse
-		instanceId string
-
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		request       = dcdb.NewCreateHourDCDBInstanceRequest()
+		response      *dcdb.CreateHourDCDBInstanceResponse
+		instanceId    string
+		dcnInstanceId string
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		service       = DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	)
 
 	if v, ok := d.GetOk("zones"); ok {
@@ -239,6 +240,7 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 
 	if v, ok := d.GetOk("dcn_instance_id"); ok {
 		request.DcnInstanceId = helper.String(v.(string))
+		dcnInstanceId = v.(string)
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -287,6 +289,15 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 	}
 	if !initRet {
 		return fmt.Errorf("db instance init failed")
+	}
+
+	if dcnInstanceId != "" {
+		// need to wait dcn init processing complete
+		// 0:none; 1:creating, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"2"}, 3*readRetryTimeout, time.Second, service.DcdbDcnStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
 	}
 
 	return resourceTencentCloudDcdbHourdbInstanceRead(d, meta)
@@ -380,7 +391,7 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("resource_tags", resourceTagsList)
 	}
 
-	if dcn, err := service.DescribeDcnDetailById(ctx, instanceId); dcn != nil {
+	if dcn, err := service.DescribeDcnDetailById(ctx, ""); dcn != nil {
 		_ = d.Set("dcn_region", dcn.Region)
 		_ = d.Set("dcn_instance_id", dcn.InstanceId)
 	} else {
