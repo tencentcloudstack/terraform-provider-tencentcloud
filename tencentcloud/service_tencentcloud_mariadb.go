@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
@@ -711,5 +712,92 @@ func (me *MariadbService) DescribeDBEncryptAttributes(ctx context.Context, insta
 
 	encryptAttributes = response.Response
 
+	return
+}
+
+func (me *MariadbService) DescribeFlowById(ctx context.Context, flowId int64) (flowParams *mariadb.DescribeFlowResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeFlowRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.FlowId = &flowId
+	response, err := me.client.UseMariadbClient().DescribeFlow(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	flowParams = response.Response
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbAccountPrivilegesById(ctx context.Context, instanceId string, user string, host string) (accountPrivileges *mariadb.DescribeAccountPrivilegesResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mariadb.NewDescribeAccountPrivilegesRequest()
+	request.InstanceId = &instanceId
+	request.UserName = &user
+	request.Host = &host
+	request.DbName = common.StringPtr("*")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeAccountPrivileges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	accountPrivileges = response.Response
+	return
+}
+
+func (me *MariadbService) DescribeMariadbBackupTimeById(ctx context.Context, instanceId string) (backupTime *mariadb.DBBackupTimeConfig, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mariadb.NewDescribeBackupTimeRequest()
+	request.InstanceIds = common.StringPtrs([]string{instanceId})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeBackupTime(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	backupTime = response.Response.Items[0]
 	return
 }
