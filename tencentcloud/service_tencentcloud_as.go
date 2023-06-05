@@ -713,3 +713,56 @@ func (me *AsService) DescribeAsLastActivity(ctx context.Context, param map[strin
 
 	return
 }
+
+func (me *AsService) DescribeAsLoadBalancerById(ctx context.Context, autoScalingGroupId string) (loadBalancer *as.AutoScalingGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := as.NewDescribeAutoScalingGroupsRequest()
+	request.AutoScalingGroupIds = []*string{&autoScalingGroupId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAsClient().DescribeAutoScalingGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AutoScalingGroupSet) < 1 {
+		return
+	}
+
+	loadBalancer = response.Response.AutoScalingGroupSet[0]
+	return
+}
+
+func (me *AsService) DeleteAsLoadBalancerById(ctx context.Context, autoScalingGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := as.NewDetachLoadBalancersRequest()
+	request.AutoScalingGroupId = &autoScalingGroupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAsClient().DetachLoadBalancers(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
