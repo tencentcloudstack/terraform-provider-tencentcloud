@@ -475,11 +475,11 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 	}
 
 	if dbInstance.VpcId != nil {
-		_ = d.Set("vpc_id", dbInstance.VpcId)
+		_ = d.Set("vpc_id", helper.Int64ToStrPoint(*dbInstance.VpcId))
 	}
 
 	if dbInstance.SubnetId != nil {
-		_ = d.Set("subnet_id", dbInstance.SubnetId)
+		_ = d.Set("subnet_id", helper.Int64ToStrPoint(*dbInstance.SubnetId))
 	}
 
 	if dbInstance.DbVersionId != nil {

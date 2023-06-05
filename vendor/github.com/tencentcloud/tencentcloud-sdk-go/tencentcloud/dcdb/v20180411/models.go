@@ -405,6 +405,14 @@ type ColumnPrivilege struct {
 	Privileges []*string `json:"Privileges,omitempty" name:"Privileges"`
 }
 
+type ConfigValue struct {
+	// 配置项的名称，支持填写max_user_connections
+	Config *string `json:"Config,omitempty" name:"Config"`
+
+	// 配置值
+	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
 type ConstraintRange struct {
 	// 约束类型为section时的最小值
 	Min *string `json:"Min,omitempty" name:"Min"`
@@ -669,11 +677,7 @@ type CreateDCDBInstanceRequestParams struct {
 	// 虚拟私有网络子网 ID，VpcId不为空时必填
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 数据库引擎版本，当前可选：8.0.18，10.1.9，5.7.17。
-	// 8.0.18 - MySQL 8.0.18；
-	// 10.1.9 - Mariadb 10.1.9；
-	// 5.7.17 - Percona 5.7.17。
-	// 如果不填的话，默认为5.7.17，表示Percona 5.7.17。
+	// 数据库引擎版本，当前可选：8.0，5.7，10.1，10.0。
 	DbVersionId *string `json:"DbVersionId,omitempty" name:"DbVersionId"`
 
 	// 是否自动使用代金券进行支付，默认不使用。
@@ -688,7 +692,7 @@ type CreateDCDBInstanceRequestParams struct {
 	// 实例名称， 可以通过该字段自主的设置实例的名字
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
-	// 是否支持IPv6
+	// 是否支持IPv6，0:不支持，1:支持
 	Ipv6Flag *int64 `json:"Ipv6Flag,omitempty" name:"Ipv6Flag"`
 
 	// 标签键值对数组
@@ -703,7 +707,7 @@ type CreateDCDBInstanceRequestParams struct {
 	// DCN源实例ID
 	DcnInstanceId *string `json:"DcnInstanceId,omitempty" name:"DcnInstanceId"`
 
-	// 自动续费标记，0表示默认状态(用户未设置，即初始状态即手动续费，用户开通了预付费不停服特权也会进行自动续费)， 1表示自动续费，2表示明确不自动续费(用户设置)，若业务无续费概念或无需自动续费，需要设置为0
+	// 自动续费标记，0:默认状态(用户未设置，即初始状态即手动续费，用户开通了预付费不停服特权也会进行自动续费)， 1:自动续费，2:明确不自动续费(用户设置)。若业务无续费概念或无需自动续费，需要设置为0
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
 
 	// 安全组ids，安全组可以传数组形式，兼容之前SecurityGroupId参数
@@ -747,11 +751,7 @@ type CreateDCDBInstanceRequest struct {
 	// 虚拟私有网络子网 ID，VpcId不为空时必填
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 数据库引擎版本，当前可选：8.0.18，10.1.9，5.7.17。
-	// 8.0.18 - MySQL 8.0.18；
-	// 10.1.9 - Mariadb 10.1.9；
-	// 5.7.17 - Percona 5.7.17。
-	// 如果不填的话，默认为5.7.17，表示Percona 5.7.17。
+	// 数据库引擎版本，当前可选：8.0，5.7，10.1，10.0。
 	DbVersionId *string `json:"DbVersionId,omitempty" name:"DbVersionId"`
 
 	// 是否自动使用代金券进行支付，默认不使用。
@@ -766,7 +766,7 @@ type CreateDCDBInstanceRequest struct {
 	// 实例名称， 可以通过该字段自主的设置实例的名字
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
-	// 是否支持IPv6
+	// 是否支持IPv6，0:不支持，1:支持
 	Ipv6Flag *int64 `json:"Ipv6Flag,omitempty" name:"Ipv6Flag"`
 
 	// 标签键值对数组
@@ -781,7 +781,7 @@ type CreateDCDBInstanceRequest struct {
 	// DCN源实例ID
 	DcnInstanceId *string `json:"DcnInstanceId,omitempty" name:"DcnInstanceId"`
 
-	// 自动续费标记，0表示默认状态(用户未设置，即初始状态即手动续费，用户开通了预付费不停服特权也会进行自动续费)， 1表示自动续费，2表示明确不自动续费(用户设置)，若业务无续费概念或无需自动续费，需要设置为0
+	// 自动续费标记，0:默认状态(用户未设置，即初始状态即手动续费，用户开通了预付费不停服特权也会进行自动续费)， 1:自动续费，2:明确不自动续费(用户设置)。若业务无续费概念或无需自动续费，需要设置为0
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
 
 	// 安全组ids，安全组可以传数组形式，兼容之前SecurityGroupId参数
@@ -859,6 +859,249 @@ func (r *CreateDCDBInstanceResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateDedicatedClusterDCDBInstanceRequestParams struct {
+	// 分配实例个数
+	GoodsNum *int64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// 分片数量
+	ShardNum *int64 `json:"ShardNum,omitempty" name:"ShardNum"`
+
+	// 分片內存大小, 单位GB
+	ShardMemory *int64 `json:"ShardMemory,omitempty" name:"ShardMemory"`
+
+	// 分片磁盘大小, 单位GB
+	ShardStorage *int64 `json:"ShardStorage,omitempty" name:"ShardStorage"`
+
+	// 独享集群集群uuid
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// （废弃）可用区
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 项目ID
+	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// （废弃）cpu大小，单位：核
+	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 网络ID
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网ID
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// （废弃）分片机型
+	ShardMachine *string `json:"ShardMachine,omitempty" name:"ShardMachine"`
+
+	// 分片的节点个数
+	ShardNodeNum *int64 `json:"ShardNodeNum,omitempty" name:"ShardNodeNum"`
+
+	// （废弃）节点cpu核数，单位：1/100核
+	ShardNodeCpu *int64 `json:"ShardNodeCpu,omitempty" name:"ShardNodeCpu"`
+
+	// （废弃）节点內存大小，单位：GB
+	ShardNodeMemory *int64 `json:"ShardNodeMemory,omitempty" name:"ShardNodeMemory"`
+
+	// （废弃）节点磁盘大小，单位：GB
+	ShardNodeStorage *int64 `json:"ShardNodeStorage,omitempty" name:"ShardNodeStorage"`
+
+	// db版本
+	DbVersionId *string `json:"DbVersionId,omitempty" name:"DbVersionId"`
+
+	// 安全组ID
+	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
+
+	// DCN源实例ID
+	DcnInstanceId *string `json:"DcnInstanceId,omitempty" name:"DcnInstanceId"`
+
+	// DCN源实例地域名
+	DcnRegion *string `json:"DcnRegion,omitempty" name:"DcnRegion"`
+
+	// 自定义实例名称
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+
+	// 标签
+	ResourceTags []*ResourceTag `json:"ResourceTags,omitempty" name:"ResourceTags"`
+
+	// 支持IPv6标志：1 支持， 0 不支持
+	Ipv6Flag *int64 `json:"Ipv6Flag,omitempty" name:"Ipv6Flag"`
+
+	// （废弃）Pid，可通过获取独享集群售卖配置接口得到
+	Pid *int64 `json:"Pid,omitempty" name:"Pid"`
+
+	// 参数列表。本接口的可选值为：character_set_server（字符集，必传），lower_case_table_names（表名大小写敏感，必传，0 - 敏感；1-不敏感），innodb_page_size（innodb数据页，默认16K），sync_mode（同步模式：0 - 异步； 1 - 强同步；2 - 强同步可退化。默认为强同步可退化）。
+	InitParams []*DBParamValue `json:"InitParams,omitempty" name:"InitParams"`
+
+	// 指定主节点uuid，不填随机分配
+	MasterHostId *string `json:"MasterHostId,omitempty" name:"MasterHostId"`
+
+	// 指定从节点uuid，不填随机分配
+	SlaveHostIds []*string `json:"SlaveHostIds,omitempty" name:"SlaveHostIds"`
+
+	// 需要回档的源实例ID
+	RollbackInstanceId *string `json:"RollbackInstanceId,omitempty" name:"RollbackInstanceId"`
+
+	// 回档时间
+	RollbackTime *string `json:"RollbackTime,omitempty" name:"RollbackTime"`
+}
+
+type CreateDedicatedClusterDCDBInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 分配实例个数
+	GoodsNum *int64 `json:"GoodsNum,omitempty" name:"GoodsNum"`
+
+	// 分片数量
+	ShardNum *int64 `json:"ShardNum,omitempty" name:"ShardNum"`
+
+	// 分片內存大小, 单位GB
+	ShardMemory *int64 `json:"ShardMemory,omitempty" name:"ShardMemory"`
+
+	// 分片磁盘大小, 单位GB
+	ShardStorage *int64 `json:"ShardStorage,omitempty" name:"ShardStorage"`
+
+	// 独享集群集群uuid
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// （废弃）可用区
+	Zone *string `json:"Zone,omitempty" name:"Zone"`
+
+	// 项目ID
+	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// （废弃）cpu大小，单位：核
+	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 网络ID
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网ID
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// （废弃）分片机型
+	ShardMachine *string `json:"ShardMachine,omitempty" name:"ShardMachine"`
+
+	// 分片的节点个数
+	ShardNodeNum *int64 `json:"ShardNodeNum,omitempty" name:"ShardNodeNum"`
+
+	// （废弃）节点cpu核数，单位：1/100核
+	ShardNodeCpu *int64 `json:"ShardNodeCpu,omitempty" name:"ShardNodeCpu"`
+
+	// （废弃）节点內存大小，单位：GB
+	ShardNodeMemory *int64 `json:"ShardNodeMemory,omitempty" name:"ShardNodeMemory"`
+
+	// （废弃）节点磁盘大小，单位：GB
+	ShardNodeStorage *int64 `json:"ShardNodeStorage,omitempty" name:"ShardNodeStorage"`
+
+	// db版本
+	DbVersionId *string `json:"DbVersionId,omitempty" name:"DbVersionId"`
+
+	// 安全组ID
+	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
+
+	// DCN源实例ID
+	DcnInstanceId *string `json:"DcnInstanceId,omitempty" name:"DcnInstanceId"`
+
+	// DCN源实例地域名
+	DcnRegion *string `json:"DcnRegion,omitempty" name:"DcnRegion"`
+
+	// 自定义实例名称
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+
+	// 标签
+	ResourceTags []*ResourceTag `json:"ResourceTags,omitempty" name:"ResourceTags"`
+
+	// 支持IPv6标志：1 支持， 0 不支持
+	Ipv6Flag *int64 `json:"Ipv6Flag,omitempty" name:"Ipv6Flag"`
+
+	// （废弃）Pid，可通过获取独享集群售卖配置接口得到
+	Pid *int64 `json:"Pid,omitempty" name:"Pid"`
+
+	// 参数列表。本接口的可选值为：character_set_server（字符集，必传），lower_case_table_names（表名大小写敏感，必传，0 - 敏感；1-不敏感），innodb_page_size（innodb数据页，默认16K），sync_mode（同步模式：0 - 异步； 1 - 强同步；2 - 强同步可退化。默认为强同步可退化）。
+	InitParams []*DBParamValue `json:"InitParams,omitempty" name:"InitParams"`
+
+	// 指定主节点uuid，不填随机分配
+	MasterHostId *string `json:"MasterHostId,omitempty" name:"MasterHostId"`
+
+	// 指定从节点uuid，不填随机分配
+	SlaveHostIds []*string `json:"SlaveHostIds,omitempty" name:"SlaveHostIds"`
+
+	// 需要回档的源实例ID
+	RollbackInstanceId *string `json:"RollbackInstanceId,omitempty" name:"RollbackInstanceId"`
+
+	// 回档时间
+	RollbackTime *string `json:"RollbackTime,omitempty" name:"RollbackTime"`
+}
+
+func (r *CreateDedicatedClusterDCDBInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDedicatedClusterDCDBInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "GoodsNum")
+	delete(f, "ShardNum")
+	delete(f, "ShardMemory")
+	delete(f, "ShardStorage")
+	delete(f, "ClusterId")
+	delete(f, "Zone")
+	delete(f, "ProjectId")
+	delete(f, "Cpu")
+	delete(f, "VpcId")
+	delete(f, "SubnetId")
+	delete(f, "ShardMachine")
+	delete(f, "ShardNodeNum")
+	delete(f, "ShardNodeCpu")
+	delete(f, "ShardNodeMemory")
+	delete(f, "ShardNodeStorage")
+	delete(f, "DbVersionId")
+	delete(f, "SecurityGroupId")
+	delete(f, "DcnInstanceId")
+	delete(f, "DcnRegion")
+	delete(f, "InstanceName")
+	delete(f, "ResourceTags")
+	delete(f, "Ipv6Flag")
+	delete(f, "Pid")
+	delete(f, "InitParams")
+	delete(f, "MasterHostId")
+	delete(f, "SlaveHostIds")
+	delete(f, "RollbackInstanceId")
+	delete(f, "RollbackTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDedicatedClusterDCDBInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDedicatedClusterDCDBInstanceResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateDedicatedClusterDCDBInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateDedicatedClusterDCDBInstanceResponseParams `json:"Response"`
+}
+
+func (r *CreateDedicatedClusterDCDBInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDedicatedClusterDCDBInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateHourDCDBInstanceRequestParams struct {
 	// 分片内存大小，单位：GB，可以通过 DescribeShardSpec
 	//  查询实例规格获得。
@@ -891,11 +1134,7 @@ type CreateHourDCDBInstanceRequestParams struct {
 	//  查询实例规格获得。
 	ShardCpu *int64 `json:"ShardCpu,omitempty" name:"ShardCpu"`
 
-	// 数据库引擎版本，当前可选：10.0.10，10.1.9，5.7.17。
-	// 10.0.10 - Mariadb 10.0.10；
-	// 10.1.9 - Mariadb 10.1.9；
-	// 5.7.17 - Percona 5.7.17。
-	// 如果不填的话，默认为10.1.9，表示Mariadb 10.1.9。
+	// 数据库引擎版本，当前可选：8.0，5.7，10.1，10.0。
 	DbVersionId *string `json:"DbVersionId,omitempty" name:"DbVersionId"`
 
 	// 分片节点可用区分布，最多可填两个可用区。当分片规格为一主两从时，其中两个节点在第一个可用区。
@@ -907,7 +1146,7 @@ type CreateHourDCDBInstanceRequestParams struct {
 	// 实例名称， 可以通过该字段自主的设置实例的名字
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
-	// 是否支持IPv6
+	// 是否支持IPv6，0:不支持，1:支持
 	Ipv6Flag *int64 `json:"Ipv6Flag,omitempty" name:"Ipv6Flag"`
 
 	// 标签键值对数组
@@ -925,7 +1164,7 @@ type CreateHourDCDBInstanceRequestParams struct {
 	// 需要回档的源实例ID
 	RollbackInstanceId *string `json:"RollbackInstanceId,omitempty" name:"RollbackInstanceId"`
 
-	// 回档时间
+	// 回档时间，例如“2021-11-22 00:00:00”
 	RollbackTime *string `json:"RollbackTime,omitempty" name:"RollbackTime"`
 
 	// 安全组ids，安全组可以传数组形式，兼容之前SecurityGroupId参数
@@ -966,11 +1205,7 @@ type CreateHourDCDBInstanceRequest struct {
 	//  查询实例规格获得。
 	ShardCpu *int64 `json:"ShardCpu,omitempty" name:"ShardCpu"`
 
-	// 数据库引擎版本，当前可选：10.0.10，10.1.9，5.7.17。
-	// 10.0.10 - Mariadb 10.0.10；
-	// 10.1.9 - Mariadb 10.1.9；
-	// 5.7.17 - Percona 5.7.17。
-	// 如果不填的话，默认为10.1.9，表示Mariadb 10.1.9。
+	// 数据库引擎版本，当前可选：8.0，5.7，10.1，10.0。
 	DbVersionId *string `json:"DbVersionId,omitempty" name:"DbVersionId"`
 
 	// 分片节点可用区分布，最多可填两个可用区。当分片规格为一主两从时，其中两个节点在第一个可用区。
@@ -982,7 +1217,7 @@ type CreateHourDCDBInstanceRequest struct {
 	// 实例名称， 可以通过该字段自主的设置实例的名字
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
-	// 是否支持IPv6
+	// 是否支持IPv6，0:不支持，1:支持
 	Ipv6Flag *int64 `json:"Ipv6Flag,omitempty" name:"Ipv6Flag"`
 
 	// 标签键值对数组
@@ -1000,7 +1235,7 @@ type CreateHourDCDBInstanceRequest struct {
 	// 需要回档的源实例ID
 	RollbackInstanceId *string `json:"RollbackInstanceId,omitempty" name:"RollbackInstanceId"`
 
-	// 回档时间
+	// 回档时间，例如“2021-11-22 00:00:00”
 	RollbackTime *string `json:"RollbackTime,omitempty" name:"RollbackTime"`
 
 	// 安全组ids，安全组可以传数组形式，兼容之前SecurityGroupId参数
@@ -1078,6 +1313,70 @@ func (r *CreateHourDCDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+// Predefined struct for user
+type CreateTmpDCDBInstanceRequestParams struct {
+	// 回档实例的ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 回档时间点
+	RollbackTime *string `json:"RollbackTime,omitempty" name:"RollbackTime"`
+}
+
+type CreateTmpDCDBInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 回档实例的ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 回档时间点
+	RollbackTime *string `json:"RollbackTime,omitempty" name:"RollbackTime"`
+}
+
+func (r *CreateTmpDCDBInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateTmpDCDBInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "RollbackTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateTmpDCDBInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateTmpDCDBInstanceResponseParams struct {
+	// 任务流ID
+	FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateTmpDCDBInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateTmpDCDBInstanceResponseParams `json:"Response"`
+}
+
+func (r *CreateTmpDCDBInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateTmpDCDBInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type DBAccount struct {
 	// 用户名
 	UserName *string `json:"UserName,omitempty" name:"UserName"`
@@ -1103,6 +1402,9 @@ type DBAccount struct {
 
 	// 针对只读账号，设置策略是否固定备机，0：不固定备机，即备机不满足条件与客户端不断开连接，Proxy选择其他可用备机，1：备机不满足条件断开连接，确保一个连接固定备机。
 	SlaveConst *int64 `json:"SlaveConst,omitempty" name:"SlaveConst"`
+
+	// 用户最大连接数，0代表无限制	
+	MaxUserConnections *int64 `json:"MaxUserConnections,omitempty" name:"MaxUserConnections"`
 }
 
 type DBParamValue struct {
@@ -1708,6 +2010,185 @@ func (r *DescribeAccountsResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeBackupFilesRequestParams struct {
+	// 按实例ID查询
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 按分片ID查询
+	ShardId *string `json:"ShardId,omitempty" name:"ShardId"`
+
+	// 备份类型，Data:数据备份，Binlog:Binlog备份，Errlog:错误日志，Slowlog:慢日志
+	BackupType *string `json:"BackupType,omitempty" name:"BackupType"`
+
+	// 按开始时间查询
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 按结束时间查询
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 分页参数
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 分页参数
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 排序参数，可选值：Time,Size
+	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
+
+	// 排序参数，可选值：DESC,ASC
+	OrderType *string `json:"OrderType,omitempty" name:"OrderType"`
+}
+
+type DescribeBackupFilesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 按实例ID查询
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 按分片ID查询
+	ShardId *string `json:"ShardId,omitempty" name:"ShardId"`
+
+	// 备份类型，Data:数据备份，Binlog:Binlog备份，Errlog:错误日志，Slowlog:慢日志
+	BackupType *string `json:"BackupType,omitempty" name:"BackupType"`
+
+	// 按开始时间查询
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 按结束时间查询
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 分页参数
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 分页参数
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 排序参数，可选值：Time,Size
+	OrderBy *string `json:"OrderBy,omitempty" name:"OrderBy"`
+
+	// 排序参数，可选值：DESC,ASC
+	OrderType *string `json:"OrderType,omitempty" name:"OrderType"`
+}
+
+func (r *DescribeBackupFilesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupFilesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ShardId")
+	delete(f, "BackupType")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "OrderBy")
+	delete(f, "OrderType")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBackupFilesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeBackupFilesResponseParams struct {
+	// 备份文件列表
+	Files []*InstanceBackupFileItem `json:"Files,omitempty" name:"Files"`
+
+	// 总条目数
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeBackupFilesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeBackupFilesResponseParams `json:"Response"`
+}
+
+func (r *DescribeBackupFilesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeBackupFilesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBEncryptAttributesRequestParams struct {
+	// 实例Id，形如：tdsqlshard-ow728lmc。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type DescribeDBEncryptAttributesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id，形如：tdsqlshard-ow728lmc。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeDBEncryptAttributesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBEncryptAttributesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBEncryptAttributesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDBEncryptAttributesResponseParams struct {
+	// 是否启用加密，1-已开启；0-未开启。
+	EncryptStatus *int64 `json:"EncryptStatus,omitempty" name:"EncryptStatus"`
+
+	// DEK密钥
+	CipherText *string `json:"CipherText,omitempty" name:"CipherText"`
+
+	// DEK密钥过期日期。
+	ExpireDate *string `json:"ExpireDate,omitempty" name:"ExpireDate"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeDBEncryptAttributesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDBEncryptAttributesResponseParams `json:"Response"`
+}
+
+func (r *DescribeDBEncryptAttributesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDBEncryptAttributesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeDBLogFilesRequestParams struct {
 	// 实例 ID，形如：dcdbt-ow7t8lmc。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -2120,6 +2601,230 @@ func (r *DescribeDBSyncModeResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeDBSyncModeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDCDBInstanceDetailRequestParams struct {
+	// 实例ID，形如dcdbt-7oaxtcb7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+type DescribeDCDBInstanceDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID，形如dcdbt-7oaxtcb7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+}
+
+func (r *DescribeDCDBInstanceDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDCDBInstanceDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDCDBInstanceDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDCDBInstanceDetailResponseParams struct {
+	// 实例ID，形如dcdbt-7oaxtcb7
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例名称
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+
+	// 实例状态。0-实例创建中；1-异步任务处理中；2-运行中；3-实例未初始化；-1-实例已隔离
+	Status *int64 `json:"Status,omitempty" name:"Status"`
+
+	// 实例目前运行状态描述
+	StatusDesc *string `json:"StatusDesc,omitempty" name:"StatusDesc"`
+
+	// 实例内网IP地址
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// 实例内网端口
+	Vport *int64 `json:"Vport,omitempty" name:"Vport"`
+
+	// 实例节点数。值为2时表示一主一从，值为3时表示一主二从
+	NodeCount *int64 `json:"NodeCount,omitempty" name:"NodeCount"`
+
+	// 实例所在地域名称，形如ap-guangzhou
+	Region *string `json:"Region,omitempty" name:"Region"`
+
+	// 实例私有网络ID，形如vpc-r9jr0de3
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 实例私有网络子网ID，形如subnet-6rqs61o2
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// 外网状态，0-未开通；1-已开通；2-关闭；3-开通中；4-关闭中
+	WanStatus *int64 `json:"WanStatus,omitempty" name:"WanStatus"`
+
+	// 外网访问的域名，公网可解析
+	WanDomain *string `json:"WanDomain,omitempty" name:"WanDomain"`
+
+	// 外网IP地址，公网可访问
+	WanVip *string `json:"WanVip,omitempty" name:"WanVip"`
+
+	// 外网访问端口
+	WanPort *int64 `json:"WanPort,omitempty" name:"WanPort"`
+
+	// 实例所属项目ID
+	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
+
+	// 实例自动续费标志。0-正常续费；1-自动续费；2-到期不续费
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
+
+	// 独享集群ID
+	ExclusterId *string `json:"ExclusterId,omitempty" name:"ExclusterId"`
+
+	// 付费模式。prepaid-预付费；postpaid-按量计费
+	PayMode *string `json:"PayMode,omitempty" name:"PayMode"`
+
+	// 实例创建时间，格式为 2006-01-02 15:04:05
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 实例到期时间，格式为 2006-01-02 15:04:05
+	PeriodEndTime *string `json:"PeriodEndTime,omitempty" name:"PeriodEndTime"`
+
+	// 数据库版本信息
+	DbVersion *string `json:"DbVersion,omitempty" name:"DbVersion"`
+
+	// 实例是否支持审计。0-不支持；1-支持
+	IsAuditSupported *int64 `json:"IsAuditSupported,omitempty" name:"IsAuditSupported"`
+
+	// 实例是否支持数据加密。0-不支持；1-支持
+	IsEncryptSupported *int64 `json:"IsEncryptSupported,omitempty" name:"IsEncryptSupported"`
+
+	// 实例母机机器型号
+	Machine *string `json:"Machine,omitempty" name:"Machine"`
+
+	// 实例内存大小，单位 GB，各个分片的内存大小的和
+	Memory *int64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 实例磁盘存储大小，单位 GB，各个分片的磁盘大小的和
+	Storage *int64 `json:"Storage,omitempty" name:"Storage"`
+
+	// 实例存储空间使用率，计算方式为：各个分片已经使用的磁盘大小的和/各个分片的磁盘大小的和。
+	StorageUsage *float64 `json:"StorageUsage,omitempty" name:"StorageUsage"`
+
+	// 日志存储空间大小，单位GB
+	LogStorage *int64 `json:"LogStorage,omitempty" name:"LogStorage"`
+
+	// 产品类型ID
+	Pid *int64 `json:"Pid,omitempty" name:"Pid"`
+
+	// 主DB可用区
+	MasterZone *string `json:"MasterZone,omitempty" name:"MasterZone"`
+
+	// 从DB可用区
+	SlaveZones []*string `json:"SlaveZones,omitempty" name:"SlaveZones"`
+
+	// 分片信息
+	Shards []*ShardBriefInfo `json:"Shards,omitempty" name:"Shards"`
+
+	// 内网IPv6
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Vip6 *string `json:"Vip6,omitempty" name:"Vip6"`
+
+	// 实例Cpu核数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 实例QPS
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Qps *int64 `json:"Qps,omitempty" name:"Qps"`
+
+	// DB引擎
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DbEngine *string `json:"DbEngine,omitempty" name:"DbEngine"`
+
+	// 是否支持IPv6
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Ipv6Flag *int64 `json:"Ipv6Flag,omitempty" name:"Ipv6Flag"`
+
+	// 外网IPv6地址，公网可访问
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WanVipv6 *string `json:"WanVipv6,omitempty" name:"WanVipv6"`
+
+	// 外网状态，0-未开通；1-已开通；2-关闭；3-开通中；4-关闭中
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WanStatusIpv6 *int64 `json:"WanStatusIpv6,omitempty" name:"WanStatusIpv6"`
+
+	// 外网IPv6端口
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	WanPortIpv6 *int64 `json:"WanPortIpv6,omitempty" name:"WanPortIpv6"`
+
+	// 标签信息
+	ResourceTags []*ResourceTag `json:"ResourceTags,omitempty" name:"ResourceTags"`
+
+	// DCN标志，0-无，1-主实例，2-灾备实例
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DcnFlag *int64 `json:"DcnFlag,omitempty" name:"DcnFlag"`
+
+	// DCN状态，0-无，1-创建中，2-同步中，3-已断开
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DcnStatus *int64 `json:"DcnStatus,omitempty" name:"DcnStatus"`
+
+	// DCN灾备实例数
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DcnDstNum *int64 `json:"DcnDstNum,omitempty" name:"DcnDstNum"`
+
+	// 1： 主实例（独享型）, 2: 主实例, 3： 灾备实例, 4： 灾备实例（独享型）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceType *int64 `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// 实例是否支持设置用户连接数限制，内核为10.1暂不支持。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsMaxUserConnectionsSupported *bool `json:"IsMaxUserConnectionsSupported,omitempty" name:"IsMaxUserConnectionsSupported"`
+
+	// 对外显示的数据库版本
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DbVersionId *string `json:"DbVersionId,omitempty" name:"DbVersionId"`
+
+	// 加密状态, 0-未开启，1-已开启
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EncryptStatus *int64 `json:"EncryptStatus,omitempty" name:"EncryptStatus"`
+
+	// 独享集群类型，0:公有云, 1:金融围笼, 2:CDC集群
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExclusterType *int64 `json:"ExclusterType,omitempty" name:"ExclusterType"`
+
+	// VPC就近访问
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RsAccessStrategy *int64 `json:"RsAccessStrategy,omitempty" name:"RsAccessStrategy"`
+
+	// 尚未回收的网络资源
+	ReservedNetResources []*ReservedNetResource `json:"ReservedNetResources,omitempty" name:"ReservedNetResources"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeDCDBInstanceDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDCDBInstanceDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeDCDBInstanceDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDCDBInstanceDetailResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4119,6 +4824,41 @@ func (r *InitDCDBInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type InstanceBackupFileItem struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例名称
+	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
+
+	// 实例状态
+	InstanceStatus *int64 `json:"InstanceStatus,omitempty" name:"InstanceStatus"`
+
+	// 分片ID
+	ShardId *string `json:"ShardId,omitempty" name:"ShardId"`
+
+	// 文件路径
+	FilePath *string `json:"FilePath,omitempty" name:"FilePath"`
+
+	// 文件名
+	FileName *string `json:"FileName,omitempty" name:"FileName"`
+
+	// 文件大小
+	FileSize *int64 `json:"FileSize,omitempty" name:"FileSize"`
+
+	// 备份类型，Data:数据备份，Binlog:Binlog备份，Errlog:错误日志，Slowlog:慢日志
+	BackupType *string `json:"BackupType,omitempty" name:"BackupType"`
+
+	// 手动备份，0:否，1:是
+	ManualBackup *int64 `json:"ManualBackup,omitempty" name:"ManualBackup"`
+
+	// 备份开始时间
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 备份结束时间
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+}
+
 // Predefined struct for user
 type IsolateDedicatedDBInstanceRequestParams struct {
 	// 实例 Id，形如：dcdbt-ow728lmc。
@@ -4175,14 +4915,14 @@ func (r *IsolateDedicatedDBInstanceResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type IsolateHourDCDBInstanceRequestParams struct {
-	// 实例uuid列表
+	// 待升级的实例ID列表。形如：["dcdbt-ow728lmc"]，可以通过 DescribeDCDBInstances 查询实例详情获得。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 }
 
 type IsolateHourDCDBInstanceRequest struct {
 	*tchttp.BaseRequest
 	
-	// 实例uuid列表
+	// 待升级的实例ID列表。形如：["dcdbt-ow728lmc"]，可以通过 DescribeDCDBInstances 查询实例详情获得。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 }
 
@@ -4323,6 +5063,81 @@ type LogFileInfo struct {
 
 	// 文件名
 	FileName *string `json:"FileName,omitempty" name:"FileName"`
+}
+
+// Predefined struct for user
+type ModifyAccountConfigRequestParams struct {
+	// 实例 ID，格式如：tdsqlshard-kpkvq5oj，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 账号的名称
+	UserName *string `json:"UserName,omitempty" name:"UserName"`
+
+	// 账号的域名
+	Host *string `json:"Host,omitempty" name:"Host"`
+
+	// 配置列表，每一个元素是Config和Value的组合
+	Configs []*ConfigValue `json:"Configs,omitempty" name:"Configs"`
+}
+
+type ModifyAccountConfigRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID，格式如：tdsqlshard-kpkvq5oj，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 账号的名称
+	UserName *string `json:"UserName,omitempty" name:"UserName"`
+
+	// 账号的域名
+	Host *string `json:"Host,omitempty" name:"Host"`
+
+	// 配置列表，每一个元素是Config和Value的组合
+	Configs []*ConfigValue `json:"Configs,omitempty" name:"Configs"`
+}
+
+func (r *ModifyAccountConfigRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyAccountConfigRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "UserName")
+	delete(f, "Host")
+	delete(f, "Configs")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyAccountConfigRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyAccountConfigResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyAccountConfigResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyAccountConfigResponseParams `json:"Response"`
+}
+
+func (r *ModifyAccountConfigResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyAccountConfigResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -4506,6 +5321,67 @@ func (r *ModifyAccountPrivilegesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyAccountPrivilegesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBEncryptAttributesRequestParams struct {
+	// 实例Id，形如：tdsqlshard-ow728lmc。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 是否启用数据加密，开启后暂不支持关闭。本接口的可选值为：1-开启数据加密。
+	EncryptEnabled *int64 `json:"EncryptEnabled,omitempty" name:"EncryptEnabled"`
+}
+
+type ModifyDBEncryptAttributesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id，形如：tdsqlshard-ow728lmc。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 是否启用数据加密，开启后暂不支持关闭。本接口的可选值为：1-开启数据加密。
+	EncryptEnabled *int64 `json:"EncryptEnabled,omitempty" name:"EncryptEnabled"`
+}
+
+func (r *ModifyDBEncryptAttributesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBEncryptAttributesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "EncryptEnabled")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBEncryptAttributesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBEncryptAttributesResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyDBEncryptAttributesResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyDBEncryptAttributesResponseParams `json:"Response"`
+}
+
+func (r *ModifyDBEncryptAttributesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBEncryptAttributesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5125,6 +6001,14 @@ func (r *ModifyRealServerAccessStrategyResponse) FromJsonString(s string) error 
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type NodeInfo struct {
+	// DB节点ID
+	NodeId *string `json:"NodeId,omitempty" name:"NodeId"`
+
+	// DB节点角色，取值为master或者slave
+	Role *string `json:"Role,omitempty" name:"Role"`
+}
+
 // Predefined struct for user
 type OpenDBExtranetAccessRequestParams struct {
 	// 待开放外网访问的实例ID。形如：dcdbt-ow728lmc。
@@ -5368,6 +6252,23 @@ func (r *RenewDCDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type ReservedNetResource struct {
+	// 私有网络
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
+
+	// VpcId,SubnetId下保留的内网ip
+	Vip *string `json:"Vip,omitempty" name:"Vip"`
+
+	// Vip下的端口
+	Vports []*int64 `json:"Vports,omitempty" name:"Vports"`
+
+	// Vip的回收时间	
+	RecycleTime *string `json:"RecycleTime,omitempty" name:"RecycleTime"`
+}
+
 // Predefined struct for user
 type ResetAccountPasswordRequestParams struct {
 	// 实例 ID，形如：dcdbt-ow728lmc。
@@ -5486,6 +6387,54 @@ type SecurityGroupBound struct {
 
 	// 网络协议，支持 UDP、TCP 等
 	IpProtocol *string `json:"IpProtocol,omitempty" name:"IpProtocol"`
+}
+
+type ShardBriefInfo struct {
+	// 分片SerialId
+	ShardSerialId *string `json:"ShardSerialId,omitempty" name:"ShardSerialId"`
+
+	// 分片ID，形如shard-7vg1o339
+	ShardInstanceId *string `json:"ShardInstanceId,omitempty" name:"ShardInstanceId"`
+
+	// 分片运行状态
+	Status *int64 `json:"Status,omitempty" name:"Status"`
+
+	// 分片运行状态描述
+	StatusDesc *string `json:"StatusDesc,omitempty" name:"StatusDesc"`
+
+	// 分片创建时间
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 分片内存大小，单位GB
+	Memory *int64 `json:"Memory,omitempty" name:"Memory"`
+
+	// 分片磁盘大小，单位GB
+	Storage *int64 `json:"Storage,omitempty" name:"Storage"`
+
+	// 分片日志磁盘空间大小，单位GB
+	LogDisk *int64 `json:"LogDisk,omitempty" name:"LogDisk"`
+
+	// 分片节点个数
+	NodeCount *int64 `json:"NodeCount,omitempty" name:"NodeCount"`
+
+	// 分片磁盘空间使用率
+	StorageUsage *float64 `json:"StorageUsage,omitempty" name:"StorageUsage"`
+
+	// 分片Proxy版本信息
+	ProxyVersion *string `json:"ProxyVersion,omitempty" name:"ProxyVersion"`
+
+	// 分片主DB可用区
+	ShardMasterZone *string `json:"ShardMasterZone,omitempty" name:"ShardMasterZone"`
+
+	// 分片从DB可用区
+	ShardSlaveZones []*string `json:"ShardSlaveZones,omitempty" name:"ShardSlaveZones"`
+
+	// 分片Cpu核数
+	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// DB节点信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NodesInfo []*NodeInfo `json:"NodesInfo,omitempty" name:"NodesInfo"`
 }
 
 type ShardInfo struct {
@@ -5919,6 +6868,228 @@ func (r *UpgradeDCDBInstanceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpgradeDCDBInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpgradeDedicatedDCDBInstanceRequestParams struct {
+	// 升级类型，取值为ADD，SPLIT和EXPAND。ADD-添加分片；SPLIT-切分某个分片；EXPAND-垂直扩容某个分片
+	UpgradeType *string `json:"UpgradeType,omitempty" name:"UpgradeType"`
+
+	// 实例ID，形如 dcdbt-mlfjm74h
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 当UpgradeType取值为ADD时，添加分片的配置参数
+	AddShardConfig *AddShardConfig `json:"AddShardConfig,omitempty" name:"AddShardConfig"`
+
+	// 当UpgradeType取值为EXPAND时，垂直扩容分片的配置参数
+	ExpandShardConfig *ExpandShardConfig `json:"ExpandShardConfig,omitempty" name:"ExpandShardConfig"`
+
+	// 当UpgradeType取值为SPLIT时，切分分片的配置参数
+	SplitShardConfig *SplitShardConfig `json:"SplitShardConfig,omitempty" name:"SplitShardConfig"`
+
+	// 错过切换时间窗口时，是否自动重试一次，0-否，1-是
+	SwitchAutoRetry *int64 `json:"SwitchAutoRetry,omitempty" name:"SwitchAutoRetry"`
+
+	// 切换时间窗口开始时间
+	SwitchStartTime *string `json:"SwitchStartTime,omitempty" name:"SwitchStartTime"`
+
+	// 切换时间窗口结束时间
+	SwitchEndTime *string `json:"SwitchEndTime,omitempty" name:"SwitchEndTime"`
+}
+
+type UpgradeDedicatedDCDBInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 升级类型，取值为ADD，SPLIT和EXPAND。ADD-添加分片；SPLIT-切分某个分片；EXPAND-垂直扩容某个分片
+	UpgradeType *string `json:"UpgradeType,omitempty" name:"UpgradeType"`
+
+	// 实例ID，形如 dcdbt-mlfjm74h
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 当UpgradeType取值为ADD时，添加分片的配置参数
+	AddShardConfig *AddShardConfig `json:"AddShardConfig,omitempty" name:"AddShardConfig"`
+
+	// 当UpgradeType取值为EXPAND时，垂直扩容分片的配置参数
+	ExpandShardConfig *ExpandShardConfig `json:"ExpandShardConfig,omitempty" name:"ExpandShardConfig"`
+
+	// 当UpgradeType取值为SPLIT时，切分分片的配置参数
+	SplitShardConfig *SplitShardConfig `json:"SplitShardConfig,omitempty" name:"SplitShardConfig"`
+
+	// 错过切换时间窗口时，是否自动重试一次，0-否，1-是
+	SwitchAutoRetry *int64 `json:"SwitchAutoRetry,omitempty" name:"SwitchAutoRetry"`
+
+	// 切换时间窗口开始时间
+	SwitchStartTime *string `json:"SwitchStartTime,omitempty" name:"SwitchStartTime"`
+
+	// 切换时间窗口结束时间
+	SwitchEndTime *string `json:"SwitchEndTime,omitempty" name:"SwitchEndTime"`
+}
+
+func (r *UpgradeDedicatedDCDBInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpgradeDedicatedDCDBInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "UpgradeType")
+	delete(f, "InstanceId")
+	delete(f, "AddShardConfig")
+	delete(f, "ExpandShardConfig")
+	delete(f, "SplitShardConfig")
+	delete(f, "SwitchAutoRetry")
+	delete(f, "SwitchStartTime")
+	delete(f, "SwitchEndTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeDedicatedDCDBInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpgradeDedicatedDCDBInstanceResponseParams struct {
+	// 异步任务流程ID
+	FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type UpgradeDedicatedDCDBInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *UpgradeDedicatedDCDBInstanceResponseParams `json:"Response"`
+}
+
+func (r *UpgradeDedicatedDCDBInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpgradeDedicatedDCDBInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpgradeHourDCDBInstanceRequestParams struct {
+	// 待升级的实例ID。形如：dcdbt-ow728lmc，可以通过 DescribeDCDBInstances 查询实例详情获得。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 升级类型，取值范围: 
+	// <li> ADD: 新增分片 </li> 
+	//  <li> EXPAND: 升级实例中的已有分片 </li> 
+	//  <li> SPLIT: 将已有分片中的数据切分到新增分片上</li>
+	UpgradeType *string `json:"UpgradeType,omitempty" name:"UpgradeType"`
+
+	// 新增分片配置，当UpgradeType为ADD时生效。
+	AddShardConfig *AddShardConfig `json:"AddShardConfig,omitempty" name:"AddShardConfig"`
+
+	// 扩容分片配置，当UpgradeType为EXPAND时生效。
+	ExpandShardConfig *ExpandShardConfig `json:"ExpandShardConfig,omitempty" name:"ExpandShardConfig"`
+
+	// 切分分片配置，当UpgradeType为SPLIT时生效。
+	SplitShardConfig *SplitShardConfig `json:"SplitShardConfig,omitempty" name:"SplitShardConfig"`
+
+	// 切换开始时间，格式如: "2019-12-12 07:00:00"。开始时间必须在当前时间一个小时以后，3天以内。
+	SwitchStartTime *string `json:"SwitchStartTime,omitempty" name:"SwitchStartTime"`
+
+	// 切换结束时间,  格式如: "2019-12-12 07:15:00"，结束时间必须大于开始时间。
+	SwitchEndTime *string `json:"SwitchEndTime,omitempty" name:"SwitchEndTime"`
+
+	// 是否自动重试。 0：不自动重试  1：自动重试
+	SwitchAutoRetry *int64 `json:"SwitchAutoRetry,omitempty" name:"SwitchAutoRetry"`
+
+	// 变更部署时指定的新可用区列表，第1个为主可用区，其余为从可用区
+	Zones []*string `json:"Zones,omitempty" name:"Zones"`
+}
+
+type UpgradeHourDCDBInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 待升级的实例ID。形如：dcdbt-ow728lmc，可以通过 DescribeDCDBInstances 查询实例详情获得。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 升级类型，取值范围: 
+	// <li> ADD: 新增分片 </li> 
+	//  <li> EXPAND: 升级实例中的已有分片 </li> 
+	//  <li> SPLIT: 将已有分片中的数据切分到新增分片上</li>
+	UpgradeType *string `json:"UpgradeType,omitempty" name:"UpgradeType"`
+
+	// 新增分片配置，当UpgradeType为ADD时生效。
+	AddShardConfig *AddShardConfig `json:"AddShardConfig,omitempty" name:"AddShardConfig"`
+
+	// 扩容分片配置，当UpgradeType为EXPAND时生效。
+	ExpandShardConfig *ExpandShardConfig `json:"ExpandShardConfig,omitempty" name:"ExpandShardConfig"`
+
+	// 切分分片配置，当UpgradeType为SPLIT时生效。
+	SplitShardConfig *SplitShardConfig `json:"SplitShardConfig,omitempty" name:"SplitShardConfig"`
+
+	// 切换开始时间，格式如: "2019-12-12 07:00:00"。开始时间必须在当前时间一个小时以后，3天以内。
+	SwitchStartTime *string `json:"SwitchStartTime,omitempty" name:"SwitchStartTime"`
+
+	// 切换结束时间,  格式如: "2019-12-12 07:15:00"，结束时间必须大于开始时间。
+	SwitchEndTime *string `json:"SwitchEndTime,omitempty" name:"SwitchEndTime"`
+
+	// 是否自动重试。 0：不自动重试  1：自动重试
+	SwitchAutoRetry *int64 `json:"SwitchAutoRetry,omitempty" name:"SwitchAutoRetry"`
+
+	// 变更部署时指定的新可用区列表，第1个为主可用区，其余为从可用区
+	Zones []*string `json:"Zones,omitempty" name:"Zones"`
+}
+
+func (r *UpgradeHourDCDBInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpgradeHourDCDBInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "UpgradeType")
+	delete(f, "AddShardConfig")
+	delete(f, "ExpandShardConfig")
+	delete(f, "SplitShardConfig")
+	delete(f, "SwitchStartTime")
+	delete(f, "SwitchEndTime")
+	delete(f, "SwitchAutoRetry")
+	delete(f, "Zones")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpgradeHourDCDBInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpgradeHourDCDBInstanceResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type UpgradeHourDCDBInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *UpgradeHourDCDBInstanceResponseParams `json:"Response"`
+}
+
+func (r *UpgradeHourDCDBInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpgradeHourDCDBInstanceResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

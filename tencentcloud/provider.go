@@ -1084,6 +1084,8 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_security_group_attachment
 	tencentcloud_dcdb_account_privileges
 	tencentcloud_dcdb_db_parameters
+	tencentcloud_dcdb_db_sync_mode_config
+	tencentcloud_dcdb_encrypt_attributes_config
 
 Short Message Service(SMS)
   Resource
@@ -2360,6 +2362,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_db_instance":                           resourceTencentCloudDcdbDbInstance(),
 			"tencentcloud_dcdb_account_privileges":                    resourceTencentCloudDcdbAccountPrivileges(),
 			"tencentcloud_dcdb_db_parameters":                         resourceTencentCloudDcdbDbParameters(),
+			"tencentcloud_dcdb_encrypt_attributes_config":             resourceTencentCloudDcdbEncryptAttributesConfig(),
+			"tencentcloud_dcdb_db_sync_mode_config":                   resourceTencentCloudDcdbDbSyncModeConfig(),
 			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":       resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_instance":                           resourceTencentCloudMariadbInstance(),

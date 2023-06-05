@@ -59,6 +59,9 @@ const (
 	// 修改账号权限失败。
 	FAILEDOPERATION_MODIFYRIGHTFAILED = "FailedOperation.ModifyRightFailed"
 
+	// 修改账号配置失败。
+	FAILEDOPERATION_MODIFYUSERCONFIGFAILED = "FailedOperation.ModifyUserConfigFailed"
+
 	// 消息队列操作失败。
 	FAILEDOPERATION_MSGQUEUEOPERATIONFAILED = "FailedOperation.MsgQueueOperationFailed"
 
@@ -85,6 +88,9 @@ const (
 
 	// 标签键值校验或鉴权失败。
 	FAILEDOPERATION_TAGDRYRUNERROR = "FailedOperation.TagDryRunError"
+
+	// 标签配额不足。
+	FAILEDOPERATION_TAGQUOTAEXCEEDLIMIT = "FailedOperation.TagQuotaExceedLimit"
 
 	// 实例安全组信息更新失败。
 	FAILEDOPERATION_UPDATEINSTANCEINFOFAILED = "FailedOperation.UpdateInstanceInfoFailed"
@@ -118,6 +124,9 @@ const (
 
 	// 备份文件签名失败。
 	INTERNALERROR_COSSIGNURL = "InternalError.CosSignUrl"
+
+	// 创建流程失败。
+	INTERNALERROR_CREATEFLOWERROR = "InternalError.CreateFlowError"
 
 	// 创建任务流程失败。
 	INTERNALERROR_CREATEFLOWFAILED = "InternalError.CreateFlowFailed"
@@ -332,6 +341,12 @@ const (
 	// 请求过于频繁。
 	LIMITEXCEEDED_TOOFREQUENTLYCALLED = "LimitExceeded.TooFrequentlyCalled"
 
+	// 临时实例已经存在了。
+	RESOURCEINUSE_TEMPINSTANCEEXIST = "ResourceInUse.TempInstanceExist"
+
+	// 资源不足。
+	RESOURCEINSUFFICIENT = "ResourceInsufficient"
+
 	// 指定的账号不存在。
 	RESOURCENOTFOUND_ACCOUNTDOESNOTEXIST = "ResourceNotFound.AccountDoesNotExist"
 
@@ -349,6 +364,9 @@ const (
 
 	// COS API调用错误。
 	RESOURCEUNAVAILABLE_COSAPIFAILED = "ResourceUnavailable.CosApiFailed"
+
+	// 独享集群状态异常。
+	RESOURCEUNAVAILABLE_EXCLUSTERSTATUSABNORMAL = "ResourceUnavailable.ExclusterStatusAbnormal"
 
 	// 数据库实例已被删除。
 	RESOURCEUNAVAILABLE_INSTANCEALREADYDELETED = "ResourceUnavailable.InstanceAlreadyDeleted"
