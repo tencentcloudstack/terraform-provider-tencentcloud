@@ -179,6 +179,53 @@ func (me *DtsService) DestroyDtsSyncJobById(ctx context.Context, jobId string) (
 	return
 }
 
+func (me *DtsService) DeleteDtsSyncJobById(ctx context.Context, jobId string) (errRet error) {
+	var (
+		logId    = getLogId(ctx)
+		request  = dts.NewDestroySyncJobRequest()
+		response = dts.NewDestroySyncJobResponse()
+	)
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "isolate object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+	err := me.IsolateDtsSyncJobById(ctx, jobId)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	// err = me.PollingStatusUntil(ctx, jobId, "Isolated")
+	// if err != nil {
+	//      return err
+	// }
+
+	ratelimit.Check(request.GetAction())
+	err = resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+		request.JobId = helper.String(jobId)
+		_, err := me.client.UseDtsClient().DestroySyncJob(request)
+		if err != nil {
+			time.Sleep(10 * time.Second)
+			return resource.RetryableError(fmt.Errorf("destroy failed, retry... %v", err))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
+	// err = me.PollingStatusUntil(ctx, jobId, "Deleted")
+	// if err != nil {
+	//      return err
+	// }
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *DtsService) PollingSyncJobStatusUntil(ctx context.Context, jobId string, targetStatus string) error {
 	logId := getLogId(ctx)
 
@@ -892,6 +939,42 @@ func (me *DtsService) DtsMigrateJobConfigStateRefreshFunc(jobId string, failStat
 	}
 }
 
+func (me *DtsService) DtsSyncJobTradeStateRefreshFunc(jobId, defaultStatus string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsSyncJob(ctx, &jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || object.TradeStatus == nil {
+			return &dts.SyncJobInfo{}, defaultStatus, nil
+		}
+
+		return object, helper.PString(object.TradeStatus), nil
+	}
+}
+
+func (me *DtsService) DtsSyncJobStateRefreshFunc(jobId, defaultStatus string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDtsSyncJob(ctx, &jobId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || object.Status == nil {
+			return &dts.SyncJobInfo{}, defaultStatus, nil
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
 func (me *DtsService) DescribeDtsMigrateDbInstancesByFilter(ctx context.Context, param map[string]interface{}) (migrateDbInstances []*dts.MigrateDBItem, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -1006,7 +1089,7 @@ func (me *DtsService) DtsSyncJobConfigIsolateStateRefreshFunc(jobId string, fail
 			return nil, "", err
 		}
 
-		if object == nil || object.Status == nil {
+		if object == nil || object.TradeStatus == nil {
 			return &dts.SyncJobInfo{}, "Isolated", nil
 		}
 
@@ -1024,8 +1107,8 @@ func (me *DtsService) DtsSyncJobConfigDeleteStateRefreshFunc(jobId string, failS
 			return nil, "", err
 		}
 
-		if object == nil || object.Status == nil {
-			return &dts.SyncJobInfo{}, "Deleted", nil
+		if object == nil || object.TradeStatus == nil {
+			return &dts.SyncJobInfo{}, "Offlined", nil
 		}
 
 		return object, helper.PString(object.TradeStatus), nil

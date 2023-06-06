@@ -22,7 +22,7 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   db_version                   = "5.7"
   storage_limit                = 1000
   cluster_name                 = "tf-cynosdb-mysql-sync-dst"
-  password                     = "cynos@123"
+  password                     = "*"
   instance_maintain_duration   = 3600
   instance_maintain_start_time = 10800
   instance_maintain_weekdays = [
@@ -101,7 +101,7 @@ resource "tencentcloud_dts_sync_config" "sync_config" {
     region      = "ap-guangzhou"
     instance_id = "cdb-fitq5t9h"
     user        = "keep_dts"
-    password    = "Letmein123"
+    password    = "*"
     db_name     = "tf_ci_test"
     vpc_id      = local.vpc_id
     subnet_id   = local.subnet_id
@@ -110,7 +110,7 @@ resource "tencentcloud_dts_sync_config" "sync_config" {
     region      = "ap-guangzhou"
     instance_id = tencentcloud_cynosdb_cluster.foo.id
     user        = "root"
-    password    = "cynos@123"
+    password    = "*"
     db_name     = "tf_ci_test_new"
     vpc_id      = local.vpc_id
     subnet_id   = local.subnet_id

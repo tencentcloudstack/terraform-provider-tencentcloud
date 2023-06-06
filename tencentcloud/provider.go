@@ -124,6 +124,9 @@ Auto Scaling(AS)
     tencentcloud_as_scaling_groups
     tencentcloud_as_scaling_policies
 	tencentcloud_as_instances
+	tencentcloud_as_advices
+	tencentcloud_as_limits
+	tencentcloud_as_last_activity
 
   Resource
     tencentcloud_as_scaling_config
@@ -488,6 +491,11 @@ Tencent Kubernetes Engine(TKE)
 	tencentcloud_kubernetes_cluster_endpoint
 
 TDMQ for Pulsar(tpulsar)
+  Data Source
+	tencentcloud_tdmq_environment_attributes
+	tencentcloud_tdmq_publisher_summary
+	tencentcloud_tdmq_publishers
+
   Resource
     tencentcloud_tdmq_instance
 	tencentcloud_tdmq_namespace
@@ -559,6 +567,13 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_password_complexity
 	tencentcloud_mysql_remote_backup_config
 	tencentcloud_mysql_restart_db_instances_operation
+	tencentcloud_mysql_switch_for_upgrade
+	tencentcloud_mysql_rollback
+	tencentcloud_mysql_rollback_stop
+	tencentcloud_mysql_ro_group
+	tencentcloud_mysql_ro_instance_ip
+	tencentcloud_mysql_ro_group_load_operation
+	tencentcloud_mysql_switch_master_slave_operation
 
 Cloud Monitor(Monitor)
   Data Source
@@ -840,6 +855,26 @@ Virtual Private Cloud(VPC)
     tencentcloud_subnet
     tencentcloud_vpc
     tencentcloud_vpc_acls
+	tencentcloud_vpc_account_attributes
+	tencentcloud_vpc_classic_link_instances
+	tencentcloud_vpc_gateway_flow_monitor_detail
+	tencentcloud_vpc_gateway_flow_qos
+	tencentcloud_vpc_cvm_instances
+	tencentcloud_vpc_net_detect_states
+	tencentcloud_vpc_net_detect_state_check
+	tencentcloud_vpc_network_interface_limit
+	tencentcloud_vpc_private_ip_addresses
+	tencentcloud_vpc_product_quota
+	tencentcloud_vpc_resource_dashboard
+	tencentcloud_vpc_route_conflicts
+	tencentcloud_vpc_security_group_limits
+	tencentcloud_vpc_security_group_references
+	tencentcloud_vpc_sg_snapshot_file_content
+	tencentcloud_vpc_snapshot_files
+	tencentcloud_vpc_subnet_resource_dashboard
+	tencentcloud_vpc_template_limits
+	tencentcloud_vpc_used_ip_address
+	tencentcloud_vpc_limits
     tencentcloud_vpc_instances
     tencentcloud_vpc_route_tables
     tencentcloud_vpc_subnets
@@ -857,6 +892,7 @@ Virtual Private Cloud(VPC)
   Resource
     tencentcloud_eni
     tencentcloud_eni_attachment
+	tencentcloud_eni_sg_attachment
     tencentcloud_vpc
 	tencentcloud_vpc_acl
 	tencentcloud_vpc_acl_attachment
@@ -866,6 +902,11 @@ Virtual Private Cloud(VPC)
 	tencentcloud_vpc_snapshot_policy_config
 	tencentcloud_vpc_net_detect
 	tencentcloud_vpc_dhcp_ip
+	tencentcloud_vpc_ipv6_cidr_block
+	tencentcloud_vpc_ipv6_subnet_cidr_block
+	tencentcloud_vpc_ipv6_eni_address
+	tencentcloud_vpc_local_gateway
+	tencentcloud_vpc_resume_snapshot_instance
     tencentcloud_subnet
     tencentcloud_security_group
     tencentcloud_security_group_rule
@@ -892,6 +933,7 @@ Private Link(PLS)
   Resource
 	tencentcloud_vpc_end_point_service
 	tencentcloud_vpc_end_point
+	tencentcloud_vpc_enable_end_point_connect
 	tencentcloud_vpc_end_point_service_white_list
 
 Flow Logs(FL)
@@ -1067,6 +1109,8 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_security_group_attachment
 	tencentcloud_dcdb_account_privileges
 	tencentcloud_dcdb_db_parameters
+	tencentcloud_dcdb_db_sync_mode_config
+	tencentcloud_dcdb_encrypt_attributes_config
 
 Short Message Service(SMS)
   Resource
@@ -1198,14 +1242,23 @@ Data Transmission Service(DTS)
 
   Resource
 	tencentcloud_dts_sync_job
-	tencentcloud_dts_compare_task
+	tencentcloud_dts_sync_config
+	tencentcloud_dts_sync_check_job_operation
+	tencentcloud_dts_sync_job_resume_operation
+	tencentcloud_dts_sync_job_start_operation
+	tencentcloud_dts_sync_job_stop_operation
+	tencentcloud_dts_sync_job_resize_operation
+	tencentcloud_dts_sync_job_recover_operation
+	tencentcloud_dts_sync_job_isolate_operation
+	tencentcloud_dts_sync_job_continue_operation
+	tencentcloud_dts_sync_job_pause_operation
 	tencentcloud_dts_migrate_service
 	tencentcloud_dts_migrate_job
+	tencentcloud_dts_migrate_job_config
 	tencentcloud_dts_migrate_job_start_operation
 	tencentcloud_dts_migrate_job_resume_operation
 	tencentcloud_dts_compare_task_stop_operation
-	tencentcloud_dts_migrate_job_config
-	tencentcloud_dts_sync_config
+	tencentcloud_dts_compare_task
 
 TDMQ for RocketMQ(trocket)
   Data Source
@@ -1275,6 +1328,12 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_api_detail
 	tencentcloud_tsf_microservice_api_version
 	tencentcloud_tsf_repository
+	tencentcloud_tsf_pod_instances
+	tencentcloud_tsf_gateway_all_group_apis
+	tencentcloud_tsf_group_gateways
+	tencentcloud_tsf_usable_unit_namespaces
+	tencentcloud_tsf_group_instances
+	tencentcloud_tsf_group_config_release
 
   Resource
   	tencentcloud_tsf_cluster
@@ -1490,6 +1549,26 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_acls":                                  dataSourceTencentCloudVpcAcls(),
 			"tencentcloud_vpc_bandwidth_package_quota":               dataSourceTencentCloudVpcBandwidthPackageQuota(),
 			"tencentcloud_vpc_bandwidth_package_bill_usage":          dataSourceTencentCloudVpcBandwidthPackageBillUsage(),
+			"tencentcloud_vpc_account_attributes":                    dataSourceTencentCloudVpcAccountAttributes(),
+			"tencentcloud_vpc_classic_link_instances":                dataSourceTencentCloudVpcClassicLinkInstances(),
+			"tencentcloud_vpc_gateway_flow_monitor_detail":           dataSourceTencentCloudVpcGatewayFlowMonitorDetail(),
+			"tencentcloud_vpc_gateway_flow_qos":                      dataSourceTencentCloudVpcGatewayFlowQos(),
+			"tencentcloud_vpc_cvm_instances":                         dataSourceTencentCloudVpcCvmInstances(),
+			"tencentcloud_vpc_net_detect_states":                     dataSourceTencentCloudVpcNetDetectStates(),
+			"tencentcloud_vpc_network_interface_limit":               dataSourceTencentCloudVpcNetworkInterfaceLimit(),
+			"tencentcloud_vpc_private_ip_addresses":                  dataSourceTencentCloudVpcPrivateIpAddresses(),
+			"tencentcloud_vpc_product_quota":                         dataSourceTencentCloudVpcProductQuota(),
+			"tencentcloud_vpc_resource_dashboard":                    dataSourceTencentCloudVpcResourceDashboard(),
+			"tencentcloud_vpc_route_conflicts":                       dataSourceTencentCloudVpcRouteConflicts(),
+			"tencentcloud_vpc_security_group_limits":                 dataSourceTencentCloudVpcSecurityGroupLimits(),
+			"tencentcloud_vpc_security_group_references":             dataSourceTencentCloudVpcSecurityGroupReferences(),
+			"tencentcloud_vpc_sg_snapshot_file_content":              dataSourceTencentCloudVpcSgSnapshotFileContent(),
+			"tencentcloud_vpc_snapshot_files":                        dataSourceTencentCloudVpcSnapshotFiles(),
+			"tencentcloud_vpc_subnet_resource_dashboard":             dataSourceTencentCloudVpcSubnetResourceDashboard(),
+			"tencentcloud_vpc_template_limits":                       dataSourceTencentCloudVpcTemplateLimits(),
+			"tencentcloud_vpc_limits":                                dataSourceTencentCloudVpcLimits(),
+			"tencentcloud_vpc_used_ip_address":                       dataSourceTencentCloudVpcUsedIpAddress(),
+			"tencentcloud_vpc_net_detect_state_check":                dataSourceTencentCloudVpcNetDetectStateCheck(),
 			"tencentcloud_subnet":                                    dataSourceTencentCloudSubnet(),
 			"tencentcloud_route_table":                               dataSourceTencentCloudRouteTable(),
 			"tencentcloud_domains":                                   dataSourceTencentCloudDomains(),
@@ -1819,10 +1898,19 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rocketmq_topic":                       dataSourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_role":                        dataSourceTencentCloudTdmqRocketmqRole(),
 			"tencentcloud_tdmq_rocketmq_group":                       dataSourceTencentCloudTdmqRocketmqGroup(),
+			"tencentcloud_tdmq_environment_attributes":               dataSourceTencentCloudTdmqEnvironmentAttributes(),
+			"tencentcloud_tdmq_publisher_summary":                    dataSourceTencentCloudTdmqPublisherSummary(),
+			"tencentcloud_tdmq_publishers":                           dataSourceTencentCloudTdmqPublishers(),
+			"tencentcloud_tdmq_rabbitmq_node_list":                   dataSourceTencentCloudTdmqRabbitmqNodeList(),
+			"tencentcloud_tdmq_rabbitmq_vip_instance":                dataSourceTencentCloudTdmqRabbitmqVipInstance(),
+			"tencentcloud_tdmq_vip_instance":                         dataSourceTencentCloudTdmqVipInstance(),
 			"tencentcloud_tcmq_queue":                                dataSourceTencentCloudTcmqQueue(),
 			"tencentcloud_tcmq_topic":                                dataSourceTencentCloudTcmqTopic(),
 			"tencentcloud_tcmq_subscribe":                            dataSourceTencentCloudTcmqSubscribe(),
 			"tencentcloud_as_instances":                              dataSourceTencentCloudAsInstances(),
+			"tencentcloud_as_advices":                                dataSourceTencentCloudAsAdvices(),
+			"tencentcloud_as_limits":                                 dataSourceTencentCloudAsLimits(),
+			"tencentcloud_as_last_activity":                          dataSourceTencentCloudAsLastActivity(),
 			"tencentcloud_cynosdb_accounts":                          dataSourceTencentCloudCynosdbAccounts(),
 			"tencentcloud_cynosdb_cluster_instance_groups":           dataSourceTencentCloudCynosdbClusterInstanceGroups(),
 			"tencentcloud_cynosdb_cluster_params":                    dataSourceTencentCloudCynosdbClusterParams(),
@@ -1857,6 +1945,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_api_detail":                            dataSourceTencentCloudTsfApiDetail(),
 			"tencentcloud_tsf_microservice_api_version":              dataSourceTencentCloudTsfMicroserviceApiVersion(),
 			"tencentcloud_tsf_repository":                            dataSourceTencentCloudTsfRepository(),
+			"tencentcloud_tsf_pod_instances":                         dataSourceTencentCloudTsfPodInstances(),
+			"tencentcloud_tsf_gateway_all_group_apis":                dataSourceTencentCloudTsfGatewayAllGroupApis(),
+			"tencentcloud_tsf_group_gateways":                        dataSourceTencentCloudTsfGroupGateways(),
+			"tencentcloud_tsf_usable_unit_namespaces":                dataSourceTencentCloudTsfUsableUnitNamespaces(),
+			"tencentcloud_tsf_group_instances":                       dataSourceTencentCloudTsfGroupInstances(),
+			"tencentcloud_tsf_group_config_release":                  dataSourceTencentCloudTsfGroupConfigRelease(),
 			"tencentcloud_lighthouse_bundle":                         dataSourceTencentCloudLighthouseBundle(),
 			"tencentcloud_api_gateway_api_docs":                      dataSourceTencentCloudAPIGatewayAPIDocs(),
 			"tencentcloud_api_gateway_api_apps":                      dataSourceTencentCloudAPIGatewayAPIApps(),
@@ -1898,6 +1992,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc":                                            resourceTencentCloudVpcInstance(),
 			"tencentcloud_vpc_acl":                                        resourceTencentCloudVpcACL(),
 			"tencentcloud_vpc_acl_attachment":                             resourceTencentCloudVpcAclAttachment(),
+			"tencentcloud_vpc_network_acl_quintuple":                      resourceTencentCloudVpcNetworkAclQuintuple(),
+			"tencentcloud_vpc_notify_routes":                              resourceTencentCloudVpcNotifyRoutes(),
 			"tencentcloud_vpc_bandwidth_package":                          resourceTencentCloudVpcBandwidthPackage(),
 			"tencentcloud_vpc_bandwidth_package_attachment":               resourceTencentCloudVpcBandwidthPackageAttachment(),
 			"tencentcloud_vpc_traffic_package":                            resourceTencentCloudVpcTrafficPackage(),
@@ -1908,7 +2004,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_flow_log_config":                            resourceTencentCloudVpcFlowLogConfig(),
 			"tencentcloud_vpc_classic_link_attachment":                    resourceTencentCloudVpcClassicLinkAttachment(),
 			"tencentcloud_vpc_dhcp_ip":                                    resourceTencentCloudVpcDhcpIp(),
+			"tencentcloud_vpc_ipv6_cidr_block":                            resourceTencentCloudVpcIpv6CidrBlock(),
+			"tencentcloud_vpc_ipv6_subnet_cidr_block":                     resourceTencentCloudVpcIpv6SubnetCidrBlock(),
+			"tencentcloud_vpc_ipv6_eni_address":                           resourceTencentCloudVpcIpv6EniAddress(),
 			"tencentcloud_vpc_dhcp_associate_address":                     resourceTencentCloudVpcDhcpAssociateAddress(),
+			"tencentcloud_vpc_local_gateway":                              resourceTencentCloudVpcLocalGateway(),
+			"tencentcloud_vpc_resume_snapshot_instance":                   resourceTencentCloudVpcResumeSnapshotInstance(),
 			"tencentcloud_ipv6_address_bandwidth":                         resourceTencentCloudIpv6AddressBandwidth(),
 			"tencentcloud_subnet":                                         resourceTencentCloudVpcSubnet(),
 			"tencentcloud_route_entry":                                    resourceTencentCloudRouteEntry(),
@@ -1925,6 +2026,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eip_normal_address_return":                      resourceTencentCloudEipNormalAddressReturn(),
 			"tencentcloud_eni":                                            resourceTencentCloudEni(),
 			"tencentcloud_eni_attachment":                                 resourceTencentCloudEniAttachment(),
+			"tencentcloud_eni_sg_attachment":                              resourceTencentCloudEniSgAttachment(),
 			"tencentcloud_ccn":                                            resourceTencentCloudCcn(),
 			"tencentcloud_ccn_attachment":                                 resourceTencentCloudCcnAttachment(),
 			"tencentcloud_ccn_bandwidth_limit":                            resourceTencentCloudCcnBandwidthLimit(),
@@ -2011,6 +2113,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_password_complexity":                      resourceTencentCloudMysqlPasswordComplexity(),
 			"tencentcloud_mysql_remote_backup_config":                     resourceTencentCloudMysqlRemoteBackupConfig(),
 			"tencentcloud_mysql_restart_db_instances_operation":           resourceTencentCloudMysqlRestartDbInstancesOperation(),
+			"tencentcloud_mysql_switch_for_upgrade":                       resourceTencentCloudMysqlSwitchForUpgrade(),
+			"tencentcloud_mysql_rollback":                                 resourceTencentCloudMysqlRollback(),
+			"tencentcloud_mysql_rollback_stop":                            resourceTencentCloudMysqlRollbackStop(),
+			"tencentcloud_mysql_ro_group":                                 resourceTencentCloudMysqlRoGroup(),
+			"tencentcloud_mysql_ro_instance_ip":                           resourceTencentCloudMysqlRoInstanceIp(),
+			"tencentcloud_mysql_ro_group_load_operation":                  resourceTencentCloudMysqlRoGroupLoadOperation(),
+			"tencentcloud_mysql_switch_master_slave_operation":            resourceTencentCloudMysqlSwitchMasterSlaveOperation(),
 			"tencentcloud_cos_bucket":                                     resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                              resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cfs_file_system":                                resourceTencentCloudCfsFileSystem(),
@@ -2039,6 +2148,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_maintenance_window":                       resourceTencentCloudRedisMaintenanceWindow(),
 			"tencentcloud_redis_replica_readonly":                         resourceTencentCloudRedisReplicaReadonly(),
 			"tencentcloud_redis_switch_master":                            resourceTencentCloudRedisSwitchMaster(),
+			"tencentcloud_as_load_balancer":                               resourceTencentCloudAsLoadBalancer(),
 			"tencentcloud_as_scaling_config":                              resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                               resourceTencentCloudAsScalingGroup(),
 			"tencentcloud_as_attachment":                                  resourceTencentCloudAsAttachment(),
@@ -2241,6 +2351,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_topic":                                     resourceTencentCloudTdmqTopic(),
 			"tencentcloud_tdmq_role":                                      resourceTencentCloudTdmqRole(),
 			"tencentcloud_tdmq_namespace_role_attachment":                 resourceTencentCloudTdmqNamespaceRoleAttachment(),
+			"tencentcloud_tdmq_subscription_attachment":                   resourceTencentCloudTdmqSubscriptionAttachment(),
 			"tencentcloud_cos_bucket_policy":                              resourceTencentCloudCosBucketPolicy(),
 			"tencentcloud_cos_bucket_domain_certificate_attachment":       resourceTencentCloudCosBucketDomainCertificateAttachment(),
 			"tencentcloud_address_template":                               resourceTencentCloudAddressTemplate(),
@@ -2309,6 +2420,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_db_instance":                           resourceTencentCloudDcdbDbInstance(),
 			"tencentcloud_dcdb_account_privileges":                    resourceTencentCloudDcdbAccountPrivileges(),
 			"tencentcloud_dcdb_db_parameters":                         resourceTencentCloudDcdbDbParameters(),
+			"tencentcloud_dcdb_encrypt_attributes_config":             resourceTencentCloudDcdbEncryptAttributesConfig(),
+			"tencentcloud_dcdb_db_sync_mode_config":                   resourceTencentCloudDcdbDbSyncModeConfig(),
 			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":       resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_instance":                           resourceTencentCloudMariadbInstance(),
@@ -2352,21 +2465,28 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_taw_instance":                           resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                              resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":          resourceTencentCloudRumOfflineLogConfigAttachment(),
-			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
-			"tencentcloud_dts_sync_config":                            resourceTencentCloudDtsSyncConfig(),
 			"tencentcloud_tdmq_rocketmq_cluster":                      resourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                    resourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_role":                         resourceTencentCloudTdmqRocketmqRole(),
 			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
+			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
+			"tencentcloud_dts_sync_config":                            resourceTencentCloudDtsSyncConfig(),
+			"tencentcloud_dts_sync_check_job_operation":               resourceTencentCloudDtsSyncCheckJobOperation(),
+			"tencentcloud_dts_sync_job_resume_operation":              resourceTencentCloudDtsSyncJobResumeOperation(),
+			"tencentcloud_dts_sync_job_start_operation":               resourceTencentCloudDtsSyncJobStartOperation(),
+			"tencentcloud_dts_sync_job_stop_operation":                resourceTencentCloudDtsSyncJobStopOperation(),
+			"tencentcloud_dts_sync_job_resize_operation":              resourceTencentCloudDtsSyncJobResizeOperation(),
+			"tencentcloud_dts_sync_job_recover_operation":             resourceTencentCloudDtsSyncJobRecoverOperation(),
+			"tencentcloud_dts_sync_job_isolate_operation":             resourceTencentCloudDtsSyncJobIsolateOperation(),
+			"tencentcloud_dts_sync_job_continue_operation":            resourceTencentCloudDtsSyncJobContinueOperation(),
+			"tencentcloud_dts_sync_job_pause_operation":               resourceTencentCloudDtsSyncJobPauseOperation(),
 			"tencentcloud_dts_migrate_service":                        resourceTencentCloudDtsMigrateService(),
 			"tencentcloud_dts_migrate_job":                            resourceTencentCloudDtsMigrateJob(),
 			"tencentcloud_dts_migrate_job_config":                     resourceTencentCloudDtsMigrateJobConfig(),
 			"tencentcloud_dts_migrate_job_start_operation":            resourceTencentCloudDtsMigrateJobStartOperation(),
 			"tencentcloud_dts_migrate_job_resume_operation":           resourceTencentCloudDtsMigrateJobResumeOperation(),
-			"tencentcloud_dts_sync_check_job_operation":               resourceTencentCloudDtsSyncCheckJobOperation(),
-			"tencentcloud_dts_sync_job_resume_operation":              resourceTencentCloudDtsSyncJobResumeOperation(),
 			"tencentcloud_dts_compare_task_stop_operation":            resourceTencentCloudDtsCompareTaskStopOperation(),
 			"tencentcloud_dts_compare_task":                           resourceTencentCloudDtsCompareTask(),
 			"tencentcloud_cvm_hpc_cluster":                            resourceTencentCloudCvmHpcCluster(),
@@ -2374,6 +2494,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpc_end_point_service":                      resourceTencentCloudVpcEndPointService(),
 			"tencentcloud_vpc_end_point":                              resourceTencentCloudVpcEndPoint(),
 			"tencentcloud_vpc_end_point_service_white_list":           resourceTencentCloudVpcEndPointServiceWhiteList(),
+			"tencentcloud_vpc_enable_end_point_connect":               resourceTencentCloudVpcEnableEndPointConnect(),
 			"tencentcloud_ci_bucket_attachment":                       resourceTencentCloudCiBucketAttachment(),
 			"tencentcloud_tcmq_queue":                                 resourceTencentCloudTcmqQueue(),
 			"tencentcloud_tcmq_topic":                                 resourceTencentCloudTcmqTopic(),
@@ -2463,6 +2584,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_cvm_renew_instance":                         resourceTencentCloudCvmRenewInstance(),
 			"tencentcloud_cvm_export_images":                          resourceTencentCloudCvmExportImages(),
 			"tencentcloud_cvm_image_share_permission":                 resourceTencentCloudCvmImageSharePermission(),
+			"tencentcloud_cvm_import_image":                           resourceTencentCloudCvmImportImage(),
+			"tencentcloud_cvm_renew_host":                             resourceTencentCloudCvmRenewHost(),
+			"tencentcloud_cvm_program_fpga_image":                     resourceTencentCloudCvmProgramFpgaImage(),
+			"tencentcloud_cvm_modify_instance_disk_type":              resourceTencentCloudCvmModifyInstanceDiskType(),
 			"tencentcloud_lighthouse_disk_backup":                     resourceTencentCloudLighthouseDiskBackup(),
 			"tencentcloud_lighthouse_apply_disk_backup":               resourceTencentCloudLighthouseApplyDiskBackup(),
 			"tencentcloud_lighthouse_disk_attachment":                 resourceTencentCloudLighthouseDiskAttachment(),

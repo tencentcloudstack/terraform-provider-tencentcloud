@@ -49,6 +49,7 @@ func NewAttachInstancesRequest() (request *AttachInstancesRequest) {
     request = &AttachInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "AttachInstances")
     
     
@@ -138,6 +139,7 @@ func NewAttachLoadBalancersRequest() (request *AttachLoadBalancersRequest) {
     request = &AttachLoadBalancersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "AttachLoadBalancers")
     
     
@@ -167,6 +169,7 @@ func NewAttachLoadBalancersResponse() (response *AttachLoadBalancersResponse) {
 //  INVALIDPARAMETERVALUE_FORWARDLB = "InvalidParameterValue.ForwardLb"
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDCLBREGION = "InvalidParameterValue.InvalidClbRegion"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  LIMITEXCEEDED_AFTERATTACHLBLIMITEXCEEDED = "LimitExceeded.AfterAttachLbLimitExceeded"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
@@ -199,6 +202,7 @@ func (c *Client) AttachLoadBalancers(request *AttachLoadBalancersRequest) (respo
 //  INVALIDPARAMETERVALUE_FORWARDLB = "InvalidParameterValue.ForwardLb"
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDCLBREGION = "InvalidParameterValue.InvalidClbRegion"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  LIMITEXCEEDED_AFTERATTACHLBLIMITEXCEEDED = "LimitExceeded.AfterAttachLbLimitExceeded"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
@@ -231,6 +235,7 @@ func NewClearLaunchConfigurationAttributesRequest() (request *ClearLaunchConfigu
     request = &ClearLaunchConfigurationAttributesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ClearLaunchConfigurationAttributes")
     
     
@@ -280,6 +285,7 @@ func NewCompleteLifecycleActionRequest() (request *CompleteLifecycleActionReques
     request = &CompleteLifecycleActionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "CompleteLifecycleAction")
     
     
@@ -304,12 +310,14 @@ func NewCompleteLifecycleActionResponse() (response *CompleteLifecycleActionResp
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 //  INVALIDPARAMETER_MUSTONEPARAMETER = "InvalidParameter.MustOneParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCEID = "InvalidParameterValue.InvalidInstanceId"
 //  INVALIDPARAMETERVALUE_INVALIDLIFECYCLEHOOKID = "InvalidParameterValue.InvalidLifecycleHookId"
 //  RESOURCENOTFOUND_LIFECYCLEHOOKINSTANCENOTFOUND = "ResourceNotFound.LifecycleHookInstanceNotFound"
 //  RESOURCENOTFOUND_LIFECYCLEHOOKNOTFOUND = "ResourceNotFound.LifecycleHookNotFound"
+//  RESOURCENOTFOUND_LIFECYCLEHOOKTOKENNOTFOUND = "ResourceNotFound.LifecycleHookTokenNotFound"
 //  RESOURCEUNAVAILABLE_LIFECYCLEACTIONRESULTHASSET = "ResourceUnavailable.LifecycleActionResultHasSet"
 func (c *Client) CompleteLifecycleAction(request *CompleteLifecycleActionRequest) (response *CompleteLifecycleActionResponse, err error) {
     return c.CompleteLifecycleActionWithContext(context.Background(), request)
@@ -326,12 +334,14 @@ func (c *Client) CompleteLifecycleAction(request *CompleteLifecycleActionRequest
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
+//  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 //  INVALIDPARAMETER_MUSTONEPARAMETER = "InvalidParameter.MustOneParameter"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCEID = "InvalidParameterValue.InvalidInstanceId"
 //  INVALIDPARAMETERVALUE_INVALIDLIFECYCLEHOOKID = "InvalidParameterValue.InvalidLifecycleHookId"
 //  RESOURCENOTFOUND_LIFECYCLEHOOKINSTANCENOTFOUND = "ResourceNotFound.LifecycleHookInstanceNotFound"
 //  RESOURCENOTFOUND_LIFECYCLEHOOKNOTFOUND = "ResourceNotFound.LifecycleHookNotFound"
+//  RESOURCENOTFOUND_LIFECYCLEHOOKTOKENNOTFOUND = "ResourceNotFound.LifecycleHookTokenNotFound"
 //  RESOURCEUNAVAILABLE_LIFECYCLEACTIONRESULTHASSET = "ResourceUnavailable.LifecycleActionResultHasSet"
 func (c *Client) CompleteLifecycleActionWithContext(ctx context.Context, request *CompleteLifecycleActionRequest) (response *CompleteLifecycleActionResponse, err error) {
     if request == nil {
@@ -353,6 +363,7 @@ func NewCreateAutoScalingGroupRequest() (request *CreateAutoScalingGroupRequest)
     request = &CreateAutoScalingGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "CreateAutoScalingGroup")
     
     
@@ -396,6 +407,7 @@ func NewCreateAutoScalingGroupResponse() (response *CreateAutoScalingGroupRespon
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SIZE = "InvalidParameterValue.Size"
 //  INVALIDPARAMETERVALUE_SUBNETIDS = "InvalidParameterValue.SubnetIds"
+//  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPARAMETERVALUE_ZONEMISMATCHREGION = "InvalidParameterValue.ZoneMismatchRegion"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -445,6 +457,7 @@ func (c *Client) CreateAutoScalingGroup(request *CreateAutoScalingGroupRequest) 
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_SIZE = "InvalidParameterValue.Size"
 //  INVALIDPARAMETERVALUE_SUBNETIDS = "InvalidParameterValue.SubnetIds"
+//  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPARAMETERVALUE_ZONEMISMATCHREGION = "InvalidParameterValue.ZoneMismatchRegion"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -480,6 +493,7 @@ func NewCreateAutoScalingGroupFromInstanceRequest() (request *CreateAutoScalingG
     request = &CreateAutoScalingGroupFromInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "CreateAutoScalingGroupFromInstance")
     
     
@@ -585,6 +599,7 @@ func NewCreateLaunchConfigurationRequest() (request *CreateLaunchConfigurationRe
     request = &CreateLaunchConfigurationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "CreateLaunchConfiguration")
     
     
@@ -616,17 +631,24 @@ func NewCreateLaunchConfigurationResponse() (response *CreateLaunchConfiguration
 //  INVALIDPARAMETER_HOSTNAMEUNAVAILABLE = "InvalidParameter.HostNameUnavailable"
 //  INVALIDPARAMETER_INVALIDCOMBINATION = "InvalidParameter.InvalidCombination"
 //  INVALIDPARAMETER_MUSTONEPARAMETER = "InvalidParameter.MustOneParameter"
+//  INVALIDPARAMETER_PARAMETERDEPRECATED = "InvalidParameter.ParameterDeprecated"
 //  INVALIDPARAMETER_PARAMETERMUSTBEDELETED = "InvalidParameter.ParameterMustBeDeleted"
+//  INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_CVMCONFIGURATIONERROR = "InvalidParameterValue.CvmConfigurationError"
 //  INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
+//  INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 //  INVALIDPARAMETERVALUE_INSTANCENAMEILLEGAL = "InvalidParameterValue.InstanceNameIllegal"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
+//  INVALIDPARAMETERVALUE_INVALIDDISASTERRECOVERGROUPID = "InvalidParameterValue.InvalidDisasterRecoverGroupId"
+//  INVALIDPARAMETERVALUE_INVALIDHPCCLUSTERID = "InvalidParameterValue.InvalidHpcClusterId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPE = "InvalidParameterValue.InvalidInstanceType"
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHCONFIGURATION = "InvalidParameterValue.InvalidLaunchConfiguration"
+//  INVALIDPARAMETERVALUE_INVALIDSECURITYGROUPID = "InvalidParameterValue.InvalidSecurityGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDSNAPSHOTID = "InvalidParameterValue.InvalidSnapshotId"
 //  INVALIDPARAMETERVALUE_LAUNCHCONFIGURATIONNAMEDUPLICATED = "InvalidParameterValue.LaunchConfigurationNameDuplicated"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MISSINGBANDWIDTHPACKAGEID = "InvalidParameterValue.MissingBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_NOTSTRINGTYPEFLOAT = "InvalidParameterValue.NotStringTypeFloat"
 //  INVALIDPARAMETERVALUE_PROJECTIDNOTFOUND = "InvalidParameterValue.ProjectIdNotFound"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
@@ -637,6 +659,9 @@ func NewCreateLaunchConfigurationResponse() (response *CreateLaunchConfiguration
 //  LIMITEXCEEDED_LAUNCHCONFIGURATIONQUOTANOTENOUGH = "LimitExceeded.LaunchConfigurationQuotaNotEnough"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_INSTANCEMARKETOPTIONS = "MissingParameter.InstanceMarketOptions"
+//  RESOURCENOTFOUND_BANDWIDTHPACKAGEIDNOTFOUND = "ResourceNotFound.BandwidthPackageIdNotFound"
+//  RESOURCENOTFOUND_DISASTERRECOVERGROUPNOTFOUND = "ResourceNotFound.DisasterRecoverGroupNotFound"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
 func (c *Client) CreateLaunchConfiguration(request *CreateLaunchConfigurationRequest) (response *CreateLaunchConfigurationResponse, err error) {
     return c.CreateLaunchConfigurationWithContext(context.Background(), request)
 }
@@ -659,17 +684,24 @@ func (c *Client) CreateLaunchConfiguration(request *CreateLaunchConfigurationReq
 //  INVALIDPARAMETER_HOSTNAMEUNAVAILABLE = "InvalidParameter.HostNameUnavailable"
 //  INVALIDPARAMETER_INVALIDCOMBINATION = "InvalidParameter.InvalidCombination"
 //  INVALIDPARAMETER_MUSTONEPARAMETER = "InvalidParameter.MustOneParameter"
+//  INVALIDPARAMETER_PARAMETERDEPRECATED = "InvalidParameter.ParameterDeprecated"
 //  INVALIDPARAMETER_PARAMETERMUSTBEDELETED = "InvalidParameter.ParameterMustBeDeleted"
+//  INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_CVMCONFIGURATIONERROR = "InvalidParameterValue.CvmConfigurationError"
 //  INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
+//  INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 //  INVALIDPARAMETERVALUE_INSTANCENAMEILLEGAL = "InvalidParameterValue.InstanceNameIllegal"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
+//  INVALIDPARAMETERVALUE_INVALIDDISASTERRECOVERGROUPID = "InvalidParameterValue.InvalidDisasterRecoverGroupId"
+//  INVALIDPARAMETERVALUE_INVALIDHPCCLUSTERID = "InvalidParameterValue.InvalidHpcClusterId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPE = "InvalidParameterValue.InvalidInstanceType"
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHCONFIGURATION = "InvalidParameterValue.InvalidLaunchConfiguration"
+//  INVALIDPARAMETERVALUE_INVALIDSECURITYGROUPID = "InvalidParameterValue.InvalidSecurityGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDSNAPSHOTID = "InvalidParameterValue.InvalidSnapshotId"
 //  INVALIDPARAMETERVALUE_LAUNCHCONFIGURATIONNAMEDUPLICATED = "InvalidParameterValue.LaunchConfigurationNameDuplicated"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MISSINGBANDWIDTHPACKAGEID = "InvalidParameterValue.MissingBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_NOTSTRINGTYPEFLOAT = "InvalidParameterValue.NotStringTypeFloat"
 //  INVALIDPARAMETERVALUE_PROJECTIDNOTFOUND = "InvalidParameterValue.ProjectIdNotFound"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
@@ -680,6 +712,9 @@ func (c *Client) CreateLaunchConfiguration(request *CreateLaunchConfigurationReq
 //  LIMITEXCEEDED_LAUNCHCONFIGURATIONQUOTANOTENOUGH = "LimitExceeded.LaunchConfigurationQuotaNotEnough"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_INSTANCEMARKETOPTIONS = "MissingParameter.InstanceMarketOptions"
+//  RESOURCENOTFOUND_BANDWIDTHPACKAGEIDNOTFOUND = "ResourceNotFound.BandwidthPackageIdNotFound"
+//  RESOURCENOTFOUND_DISASTERRECOVERGROUPNOTFOUND = "ResourceNotFound.DisasterRecoverGroupNotFound"
+//  UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
 func (c *Client) CreateLaunchConfigurationWithContext(ctx context.Context, request *CreateLaunchConfigurationRequest) (response *CreateLaunchConfigurationResponse, err error) {
     if request == nil {
         request = NewCreateLaunchConfigurationRequest()
@@ -700,6 +735,7 @@ func NewCreateLifecycleHookRequest() (request *CreateLifecycleHookRequest) {
     request = &CreateLifecycleHookRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "CreateLifecycleHook")
     
     
@@ -718,7 +754,11 @@ func NewCreateLifecycleHookResponse() (response *CreateLifecycleHookResponse) {
 //
 // 
 //
-// * 您可以为生命周期挂钩配置消息通知，弹性伸缩会通知您的CMQ消息队列，通知内容形如：
+// * 您可以为生命周期挂钩配置消息通知或执行自动化助手命令。
+//
+// 
+//
+// 如果您配置了通知消息，弹性伸缩会通知您的TDMQ消息队列，通知内容形如：
 //
 // 
 //
@@ -754,6 +794,8 @@ func NewCreateLifecycleHookResponse() (response *CreateLifecycleHookResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLCMQERROR = "InternalError.CallCmqError"
+//  INTERNALERROR_CALLTATERROR = "InternalError.CallTATError"
 //  INTERNALERROR_CALLEEERROR = "InternalError.CalleeError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
@@ -767,6 +809,7 @@ func NewCreateLifecycleHookResponse() (response *CreateLifecycleHookResponse) {
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 //  RESOURCENOTFOUND_CMQQUEUENOTFOUND = "ResourceNotFound.CmqQueueNotFound"
+//  RESOURCENOTFOUND_COMMANDNOTFOUND = "ResourceNotFound.CommandNotFound"
 //  RESOURCENOTFOUND_TDMQCMQQUEUENOTFOUND = "ResourceNotFound.TDMQCMQQueueNotFound"
 //  RESOURCENOTFOUND_TDMQCMQTOPICNOTFOUND = "ResourceNotFound.TDMQCMQTopicNotFound"
 //  RESOURCEUNAVAILABLE_CMQTOPICHASNOSUBSCRIBER = "ResourceUnavailable.CmqTopicHasNoSubscriber"
@@ -780,7 +823,11 @@ func (c *Client) CreateLifecycleHook(request *CreateLifecycleHookRequest) (respo
 //
 // 
 //
-// * 您可以为生命周期挂钩配置消息通知，弹性伸缩会通知您的CMQ消息队列，通知内容形如：
+// * 您可以为生命周期挂钩配置消息通知或执行自动化助手命令。
+//
+// 
+//
+// 如果您配置了通知消息，弹性伸缩会通知您的TDMQ消息队列，通知内容形如：
 //
 // 
 //
@@ -816,6 +863,8 @@ func (c *Client) CreateLifecycleHook(request *CreateLifecycleHookRequest) (respo
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_CALLCMQERROR = "InternalError.CallCmqError"
+//  INTERNALERROR_CALLTATERROR = "InternalError.CallTATError"
 //  INTERNALERROR_CALLEEERROR = "InternalError.CalleeError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
@@ -829,6 +878,7 @@ func (c *Client) CreateLifecycleHook(request *CreateLifecycleHookRequest) (respo
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 //  RESOURCENOTFOUND_CMQQUEUENOTFOUND = "ResourceNotFound.CmqQueueNotFound"
+//  RESOURCENOTFOUND_COMMANDNOTFOUND = "ResourceNotFound.CommandNotFound"
 //  RESOURCENOTFOUND_TDMQCMQQUEUENOTFOUND = "ResourceNotFound.TDMQCMQQueueNotFound"
 //  RESOURCENOTFOUND_TDMQCMQTOPICNOTFOUND = "ResourceNotFound.TDMQCMQTopicNotFound"
 //  RESOURCEUNAVAILABLE_CMQTOPICHASNOSUBSCRIBER = "ResourceUnavailable.CmqTopicHasNoSubscriber"
@@ -853,6 +903,7 @@ func NewCreateNotificationConfigurationRequest() (request *CreateNotificationCon
     request = &CreateNotificationConfigurationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "CreateNotificationConfiguration")
     
     
@@ -1036,6 +1087,7 @@ func NewCreateScalingPolicyRequest() (request *CreateScalingPolicyRequest) {
     request = &CreateScalingPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "CreateScalingPolicy")
     
     
@@ -1053,6 +1105,7 @@ func NewCreateScalingPolicyResponse() (response *CreateScalingPolicyResponse) {
 // 本接口（CreateScalingPolicy）用于创建告警触发策略。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CALLMONITORERROR = "InternalError.CallMonitorError"
 //  INTERNALERROR_CALLNOTIFICATIONERROR = "InternalError.CallNotificationError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
@@ -1065,6 +1118,7 @@ func NewCreateScalingPolicyResponse() (response *CreateScalingPolicyResponse) {
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPARAMETERVALUE_USERGROUPIDNOTFOUND = "InvalidParameterValue.UserGroupIdNotFound"
 //  LIMITEXCEEDED_QUOTANOTENOUGH = "LimitExceeded.QuotaNotEnough"
+//  LIMITEXCEEDED_TARGETTRACKINGSCALINGPOLICY = "LimitExceeded.TargetTrackingScalingPolicy"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 func (c *Client) CreateScalingPolicy(request *CreateScalingPolicyRequest) (response *CreateScalingPolicyResponse, err error) {
     return c.CreateScalingPolicyWithContext(context.Background(), request)
@@ -1074,6 +1128,7 @@ func (c *Client) CreateScalingPolicy(request *CreateScalingPolicyRequest) (respo
 // 本接口（CreateScalingPolicy）用于创建告警触发策略。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CALLMONITORERROR = "InternalError.CallMonitorError"
 //  INTERNALERROR_CALLNOTIFICATIONERROR = "InternalError.CallNotificationError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
@@ -1086,6 +1141,7 @@ func (c *Client) CreateScalingPolicy(request *CreateScalingPolicyRequest) (respo
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPARAMETERVALUE_USERGROUPIDNOTFOUND = "InvalidParameterValue.UserGroupIdNotFound"
 //  LIMITEXCEEDED_QUOTANOTENOUGH = "LimitExceeded.QuotaNotEnough"
+//  LIMITEXCEEDED_TARGETTRACKINGSCALINGPOLICY = "LimitExceeded.TargetTrackingScalingPolicy"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 func (c *Client) CreateScalingPolicyWithContext(ctx context.Context, request *CreateScalingPolicyRequest) (response *CreateScalingPolicyResponse, err error) {
     if request == nil {
@@ -1107,6 +1163,7 @@ func NewCreateScheduledActionRequest() (request *CreateScheduledActionRequest) {
     request = &CreateScheduledActionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "CreateScheduledAction")
     
     
@@ -1188,6 +1245,7 @@ func NewDeleteAutoScalingGroupRequest() (request *DeleteAutoScalingGroupRequest)
     request = &DeleteAutoScalingGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DeleteAutoScalingGroup")
     
     
@@ -1202,7 +1260,7 @@ func NewDeleteAutoScalingGroupResponse() (response *DeleteAutoScalingGroupRespon
 }
 
 // DeleteAutoScalingGroup
-// 本接口（DeleteAutoScalingGroup）用于删除指定伸缩组，删除前提是伸缩组内无实例且当前未在执行伸缩活动。
+// 本接口（DeleteAutoScalingGroup）用于删除指定伸缩组，删除前提是伸缩组内无运行中（IN_SERVICE）状态的实例且当前未在执行伸缩活动。删除伸缩组后，创建失败（CREATION_FAILED）、中止失败（TERMINATION_FAILED）、解绑失败（DETACH_FAILED）等非运行中状态的实例不会被销毁。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1220,7 +1278,7 @@ func (c *Client) DeleteAutoScalingGroup(request *DeleteAutoScalingGroupRequest) 
 }
 
 // DeleteAutoScalingGroup
-// 本接口（DeleteAutoScalingGroup）用于删除指定伸缩组，删除前提是伸缩组内无实例且当前未在执行伸缩活动。
+// 本接口（DeleteAutoScalingGroup）用于删除指定伸缩组，删除前提是伸缩组内无运行中（IN_SERVICE）状态的实例且当前未在执行伸缩活动。删除伸缩组后，创建失败（CREATION_FAILED）、中止失败（TERMINATION_FAILED）、解绑失败（DETACH_FAILED）等非运行中状态的实例不会被销毁。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -1253,6 +1311,7 @@ func NewDeleteLaunchConfigurationRequest() (request *DeleteLaunchConfigurationRe
     request = &DeleteLaunchConfigurationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DeleteLaunchConfiguration")
     
     
@@ -1314,6 +1373,7 @@ func NewDeleteLifecycleHookRequest() (request *DeleteLifecycleHookRequest) {
     request = &DeleteLifecycleHookRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DeleteLifecycleHook")
     
     
@@ -1371,6 +1431,7 @@ func NewDeleteNotificationConfigurationRequest() (request *DeleteNotificationCon
     request = &DeleteNotificationConfigurationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DeleteNotificationConfiguration")
     
     
@@ -1422,6 +1483,7 @@ func NewDeleteScalingPolicyRequest() (request *DeleteScalingPolicyRequest) {
     request = &DeleteScalingPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DeleteScalingPolicy")
     
     
@@ -1475,6 +1537,7 @@ func NewDeleteScheduledActionRequest() (request *DeleteScheduledActionRequest) {
     request = &DeleteScheduledActionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DeleteScheduledAction")
     
     
@@ -1526,6 +1589,7 @@ func NewDescribeAccountLimitsRequest() (request *DescribeAccountLimitsRequest) {
     request = &DescribeAccountLimitsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeAccountLimits")
     
     
@@ -1575,6 +1639,7 @@ func NewDescribeAutoScalingActivitiesRequest() (request *DescribeAutoScalingActi
     request = &DescribeAutoScalingActivitiesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeAutoScalingActivities")
     
     
@@ -1638,6 +1703,7 @@ func NewDescribeAutoScalingAdvicesRequest() (request *DescribeAutoScalingAdvices
     request = &DescribeAutoScalingAdvicesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeAutoScalingAdvices")
     
     
@@ -1689,6 +1755,7 @@ func NewDescribeAutoScalingGroupLastActivitiesRequest() (request *DescribeAutoSc
     request = &DescribeAutoScalingGroupLastActivitiesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeAutoScalingGroupLastActivities")
     
     
@@ -1742,6 +1809,7 @@ func NewDescribeAutoScalingGroupsRequest() (request *DescribeAutoScalingGroupsRe
     request = &DescribeAutoScalingGroupsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeAutoScalingGroups")
     
     
@@ -1775,6 +1843,7 @@ func NewDescribeAutoScalingGroupsResponse() (response *DescribeAutoScalingGroups
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPERMISSION = "InvalidPermission"
+//  LIMITEXCEEDED_FILTERVALUESTOOLONG = "LimitExceeded.FilterValuesTooLong"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAutoScalingGroups(request *DescribeAutoScalingGroupsRequest) (response *DescribeAutoScalingGroupsResponse, err error) {
     return c.DescribeAutoScalingGroupsWithContext(context.Background(), request)
@@ -1800,6 +1869,7 @@ func (c *Client) DescribeAutoScalingGroups(request *DescribeAutoScalingGroupsReq
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPERMISSION = "InvalidPermission"
+//  LIMITEXCEEDED_FILTERVALUESTOOLONG = "LimitExceeded.FilterValuesTooLong"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeAutoScalingGroupsWithContext(ctx context.Context, request *DescribeAutoScalingGroupsRequest) (response *DescribeAutoScalingGroupsResponse, err error) {
     if request == nil {
@@ -1821,6 +1891,7 @@ func NewDescribeAutoScalingInstancesRequest() (request *DescribeAutoScalingInsta
     request = &DescribeAutoScalingInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeAutoScalingInstances")
     
     
@@ -1851,6 +1922,7 @@ func NewDescribeAutoScalingInstancesResponse() (response *DescribeAutoScalingIns
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCEID = "InvalidParameterValue.InvalidInstanceId"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  LIMITEXCEEDED_FILTERVALUESTOOLONG = "LimitExceeded.FilterValuesTooLong"
 func (c *Client) DescribeAutoScalingInstances(request *DescribeAutoScalingInstancesRequest) (response *DescribeAutoScalingInstancesResponse, err error) {
     return c.DescribeAutoScalingInstancesWithContext(context.Background(), request)
@@ -1873,6 +1945,7 @@ func (c *Client) DescribeAutoScalingInstances(request *DescribeAutoScalingInstan
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCEID = "InvalidParameterValue.InvalidInstanceId"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  LIMITEXCEEDED_FILTERVALUESTOOLONG = "LimitExceeded.FilterValuesTooLong"
 func (c *Client) DescribeAutoScalingInstancesWithContext(ctx context.Context, request *DescribeAutoScalingInstancesRequest) (response *DescribeAutoScalingInstancesResponse, err error) {
     if request == nil {
@@ -1894,6 +1967,7 @@ func NewDescribeLaunchConfigurationsRequest() (request *DescribeLaunchConfigurat
     request = &DescribeLaunchConfigurationsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeLaunchConfigurations")
     
     
@@ -1923,7 +1997,9 @@ func NewDescribeLaunchConfigurationsResponse() (response *DescribeLaunchConfigur
 //  INVALIDPARAMETERCONFLICT = "InvalidParameterConflict"
 //  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHCONFIGURATIONID = "InvalidParameterValue.InvalidLaunchConfigurationId"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPERMISSION = "InvalidPermission"
+//  LIMITEXCEEDED_FILTERVALUESTOOLONG = "LimitExceeded.FilterValuesTooLong"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeLaunchConfigurations(request *DescribeLaunchConfigurationsRequest) (response *DescribeLaunchConfigurationsResponse, err error) {
     return c.DescribeLaunchConfigurationsWithContext(context.Background(), request)
@@ -1945,7 +2021,9 @@ func (c *Client) DescribeLaunchConfigurations(request *DescribeLaunchConfigurati
 //  INVALIDPARAMETERCONFLICT = "InvalidParameterConflict"
 //  INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHCONFIGURATIONID = "InvalidParameterValue.InvalidLaunchConfigurationId"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPERMISSION = "InvalidPermission"
+//  LIMITEXCEEDED_FILTERVALUESTOOLONG = "LimitExceeded.FilterValuesTooLong"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeLaunchConfigurationsWithContext(ctx context.Context, request *DescribeLaunchConfigurationsRequest) (response *DescribeLaunchConfigurationsResponse, err error) {
     if request == nil {
@@ -1967,6 +2045,7 @@ func NewDescribeLifecycleHooksRequest() (request *DescribeLifecycleHooksRequest)
     request = &DescribeLifecycleHooksRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeLifecycleHooks")
     
     
@@ -2040,6 +2119,7 @@ func NewDescribeNotificationConfigurationsRequest() (request *DescribeNotificati
     request = &DescribeNotificationConfigurationsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeNotificationConfigurations")
     
     
@@ -2107,6 +2187,7 @@ func NewDescribeScalingPoliciesRequest() (request *DescribeScalingPoliciesReques
     request = &DescribeScalingPoliciesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeScalingPolicies")
     
     
@@ -2168,6 +2249,7 @@ func NewDescribeScheduledActionsRequest() (request *DescribeScheduledActionsRequ
     request = &DescribeScheduledActionsRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DescribeScheduledActions")
     
     
@@ -2241,6 +2323,7 @@ func NewDetachInstancesRequest() (request *DetachInstancesRequest) {
     request = &DetachInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DetachInstances")
     
     
@@ -2324,6 +2407,7 @@ func NewDetachLoadBalancersRequest() (request *DetachLoadBalancersRequest) {
     request = &DetachLoadBalancersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DetachLoadBalancers")
     
     
@@ -2415,6 +2499,7 @@ func NewDisableAutoScalingGroupRequest() (request *DisableAutoScalingGroupReques
     request = &DisableAutoScalingGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "DisableAutoScalingGroup")
     
     
@@ -2520,6 +2605,7 @@ func NewEnableAutoScalingGroupRequest() (request *EnableAutoScalingGroupRequest)
     request = &EnableAutoScalingGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "EnableAutoScalingGroup")
     
     
@@ -2573,6 +2659,7 @@ func NewExecuteScalingPolicyRequest() (request *ExecuteScalingPolicyRequest) {
     request = &ExecuteScalingPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ExecuteScalingPolicy")
     
     
@@ -2595,11 +2682,14 @@ func NewExecuteScalingPolicyResponse() (response *ExecuteScalingPolicyResponse) 
 //
 // * 伸缩策略所属伸缩组处于伸缩活动时，会拒绝执行伸缩策略。
 //
+// * 本接口不支持执行目标追踪策略。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION_NOACTIVITYTOGENERATE = "FailedOperation.NoActivityToGenerate"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGPOLICYID = "InvalidParameterValue.InvalidAutoScalingPolicyId"
+//  INVALIDPARAMETERVALUE_TARGETTRACKINGSCALINGPOLICY = "InvalidParameterValue.TargetTrackingScalingPolicy"
 //  RESOURCEINUSE_AUTOSCALINGGROUPNOTACTIVE = "ResourceInUse.AutoScalingGroupNotActive"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 //  RESOURCENOTFOUND_SCALINGPOLICYNOTFOUND = "ResourceNotFound.ScalingPolicyNotFound"
@@ -2618,11 +2708,14 @@ func (c *Client) ExecuteScalingPolicy(request *ExecuteScalingPolicyRequest) (res
 //
 // * 伸缩策略所属伸缩组处于伸缩活动时，会拒绝执行伸缩策略。
 //
+// * 本接口不支持执行目标追踪策略。
+//
 // 可能返回的错误码:
 //  FAILEDOPERATION_NOACTIVITYTOGENERATE = "FailedOperation.NoActivityToGenerate"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGPOLICYID = "InvalidParameterValue.InvalidAutoScalingPolicyId"
+//  INVALIDPARAMETERVALUE_TARGETTRACKINGSCALINGPOLICY = "InvalidParameterValue.TargetTrackingScalingPolicy"
 //  RESOURCEINUSE_AUTOSCALINGGROUPNOTACTIVE = "ResourceInUse.AutoScalingGroupNotActive"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 //  RESOURCENOTFOUND_SCALINGPOLICYNOTFOUND = "ResourceNotFound.ScalingPolicyNotFound"
@@ -2648,6 +2741,7 @@ func NewModifyAutoScalingGroupRequest() (request *ModifyAutoScalingGroupRequest)
     request = &ModifyAutoScalingGroupRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ModifyAutoScalingGroup")
     
     
@@ -2692,6 +2786,7 @@ func NewModifyAutoScalingGroupResponse() (response *ModifyAutoScalingGroupRespon
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
+//  RESOURCEUNAVAILABLE_FORBIDDENMODIFYVPC = "ResourceUnavailable.ForbiddenModifyVpc"
 //  RESOURCEUNAVAILABLE_LAUNCHCONFIGURATIONSTATUSABNORMAL = "ResourceUnavailable.LaunchConfigurationStatusAbnormal"
 //  RESOURCEUNAVAILABLE_PROJECTINCONSISTENT = "ResourceUnavailable.ProjectInconsistent"
 func (c *Client) ModifyAutoScalingGroup(request *ModifyAutoScalingGroupRequest) (response *ModifyAutoScalingGroupResponse, err error) {
@@ -2729,6 +2824,7 @@ func (c *Client) ModifyAutoScalingGroup(request *ModifyAutoScalingGroupRequest) 
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
+//  RESOURCEUNAVAILABLE_FORBIDDENMODIFYVPC = "ResourceUnavailable.ForbiddenModifyVpc"
 //  RESOURCEUNAVAILABLE_LAUNCHCONFIGURATIONSTATUSABNORMAL = "ResourceUnavailable.LaunchConfigurationStatusAbnormal"
 //  RESOURCEUNAVAILABLE_PROJECTINCONSISTENT = "ResourceUnavailable.ProjectInconsistent"
 func (c *Client) ModifyAutoScalingGroupWithContext(ctx context.Context, request *ModifyAutoScalingGroupRequest) (response *ModifyAutoScalingGroupResponse, err error) {
@@ -2751,6 +2847,7 @@ func NewModifyDesiredCapacityRequest() (request *ModifyDesiredCapacityRequest) {
     request = &ModifyDesiredCapacityRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ModifyDesiredCapacity")
     
     
@@ -2816,6 +2913,7 @@ func NewModifyLaunchConfigurationAttributesRequest() (request *ModifyLaunchConfi
     request = &ModifyLaunchConfigurationAttributesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ModifyLaunchConfigurationAttributes")
     
     
@@ -2839,22 +2937,31 @@ func NewModifyLaunchConfigurationAttributesResponse() (response *ModifyLaunchCon
 // * 本接口支持修改部分简单类型。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CALLEEERROR = "InternalError.CalleeError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 //  INVALIDPARAMETER_HOSTNAMEUNAVAILABLE = "InvalidParameter.HostNameUnavailable"
 //  INVALIDPARAMETER_INSCENARIO = "InvalidParameter.InScenario"
 //  INVALIDPARAMETER_INVALIDCOMBINATION = "InvalidParameter.InvalidCombination"
+//  INVALIDPARAMETER_PARAMETERDEPRECATED = "InvalidParameter.ParameterDeprecated"
 //  INVALIDPARAMETER_PARAMETERMUSTBEDELETED = "InvalidParameter.ParameterMustBeDeleted"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_CVMCONFIGURATIONERROR = "InvalidParameterValue.CvmConfigurationError"
 //  INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
+//  INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 //  INVALIDPARAMETERVALUE_IMAGENOTFOUND = "InvalidParameterValue.ImageNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCENAMEILLEGAL = "InvalidParameterValue.InstanceNameIllegal"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
+//  INVALIDPARAMETERVALUE_INVALIDDISASTERRECOVERGROUPID = "InvalidParameterValue.InvalidDisasterRecoverGroupId"
+//  INVALIDPARAMETERVALUE_INVALIDHPCCLUSTERID = "InvalidParameterValue.InvalidHpcClusterId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPE = "InvalidParameterValue.InvalidInstanceType"
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHCONFIGURATIONID = "InvalidParameterValue.InvalidLaunchConfigurationId"
+//  INVALIDPARAMETERVALUE_INVALIDSECURITYGROUPID = "InvalidParameterValue.InvalidSecurityGroupId"
 //  INVALIDPARAMETERVALUE_LAUNCHCONFIGURATIONNAMEDUPLICATED = "InvalidParameterValue.LaunchConfigurationNameDuplicated"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MISSINGBANDWIDTHPACKAGEID = "InvalidParameterValue.MissingBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_NOTSTRINGTYPEFLOAT = "InvalidParameterValue.NotStringTypeFloat"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPARAMETERVALUE_TOOSHORT = "InvalidParameterValue.TooShort"
@@ -2862,6 +2969,8 @@ func NewModifyLaunchConfigurationAttributesResponse() (response *ModifyLaunchCon
 //  INVALIDPARAMETERVALUE_USERDATASIZEEXCEEDED = "InvalidParameterValue.UserDataSizeExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
+//  RESOURCENOTFOUND_BANDWIDTHPACKAGEIDNOTFOUND = "ResourceNotFound.BandwidthPackageIdNotFound"
+//  RESOURCENOTFOUND_DISASTERRECOVERGROUPNOTFOUND = "ResourceNotFound.DisasterRecoverGroupNotFound"
 //  RESOURCENOTFOUND_LAUNCHCONFIGURATIONIDNOTFOUND = "ResourceNotFound.LaunchConfigurationIdNotFound"
 func (c *Client) ModifyLaunchConfigurationAttributes(request *ModifyLaunchConfigurationAttributesRequest) (response *ModifyLaunchConfigurationAttributesResponse, err error) {
     return c.ModifyLaunchConfigurationAttributesWithContext(context.Background(), request)
@@ -2877,22 +2986,31 @@ func (c *Client) ModifyLaunchConfigurationAttributes(request *ModifyLaunchConfig
 // * 本接口支持修改部分简单类型。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CALLEEERROR = "InternalError.CalleeError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 //  INVALIDPARAMETER_HOSTNAMEUNAVAILABLE = "InvalidParameter.HostNameUnavailable"
 //  INVALIDPARAMETER_INSCENARIO = "InvalidParameter.InScenario"
 //  INVALIDPARAMETER_INVALIDCOMBINATION = "InvalidParameter.InvalidCombination"
+//  INVALIDPARAMETER_PARAMETERDEPRECATED = "InvalidParameter.ParameterDeprecated"
 //  INVALIDPARAMETER_PARAMETERMUSTBEDELETED = "InvalidParameter.ParameterMustBeDeleted"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_CVMCONFIGURATIONERROR = "InvalidParameterValue.CvmConfigurationError"
 //  INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
+//  INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 //  INVALIDPARAMETERVALUE_IMAGENOTFOUND = "InvalidParameterValue.ImageNotFound"
 //  INVALIDPARAMETERVALUE_INSTANCENAMEILLEGAL = "InvalidParameterValue.InstanceNameIllegal"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
+//  INVALIDPARAMETERVALUE_INVALIDDISASTERRECOVERGROUPID = "InvalidParameterValue.InvalidDisasterRecoverGroupId"
+//  INVALIDPARAMETERVALUE_INVALIDHPCCLUSTERID = "InvalidParameterValue.InvalidHpcClusterId"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPE = "InvalidParameterValue.InvalidInstanceType"
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHCONFIGURATIONID = "InvalidParameterValue.InvalidLaunchConfigurationId"
+//  INVALIDPARAMETERVALUE_INVALIDSECURITYGROUPID = "InvalidParameterValue.InvalidSecurityGroupId"
 //  INVALIDPARAMETERVALUE_LAUNCHCONFIGURATIONNAMEDUPLICATED = "InvalidParameterValue.LaunchConfigurationNameDuplicated"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_MISSINGBANDWIDTHPACKAGEID = "InvalidParameterValue.MissingBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_NOTSTRINGTYPEFLOAT = "InvalidParameterValue.NotStringTypeFloat"
 //  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
 //  INVALIDPARAMETERVALUE_TOOSHORT = "InvalidParameterValue.TooShort"
@@ -2900,6 +3018,8 @@ func (c *Client) ModifyLaunchConfigurationAttributes(request *ModifyLaunchConfig
 //  INVALIDPARAMETERVALUE_USERDATASIZEEXCEEDED = "InvalidParameterValue.UserDataSizeExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
+//  RESOURCENOTFOUND_BANDWIDTHPACKAGEIDNOTFOUND = "ResourceNotFound.BandwidthPackageIdNotFound"
+//  RESOURCENOTFOUND_DISASTERRECOVERGROUPNOTFOUND = "ResourceNotFound.DisasterRecoverGroupNotFound"
 //  RESOURCENOTFOUND_LAUNCHCONFIGURATIONIDNOTFOUND = "ResourceNotFound.LaunchConfigurationIdNotFound"
 func (c *Client) ModifyLaunchConfigurationAttributesWithContext(ctx context.Context, request *ModifyLaunchConfigurationAttributesRequest) (response *ModifyLaunchConfigurationAttributesResponse, err error) {
     if request == nil {
@@ -2921,6 +3041,7 @@ func NewModifyLifecycleHookRequest() (request *ModifyLifecycleHookRequest) {
     request = &ModifyLifecycleHookRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ModifyLifecycleHook")
     
     
@@ -2938,11 +3059,13 @@ func NewModifyLifecycleHookResponse() (response *ModifyLifecycleHookResponse) {
 // 此接口用于修改生命周期挂钩。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CALLTATERROR = "InternalError.CallTATError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  RESOURCENOTFOUND_CMQQUEUENOTFOUND = "ResourceNotFound.CmqQueueNotFound"
+//  RESOURCENOTFOUND_COMMANDNOTFOUND = "ResourceNotFound.CommandNotFound"
 //  RESOURCENOTFOUND_LIFECYCLEHOOKNOTFOUND = "ResourceNotFound.LifecycleHookNotFound"
 //  RESOURCENOTFOUND_TDMQCMQQUEUENOTFOUND = "ResourceNotFound.TDMQCMQQueueNotFound"
 //  RESOURCENOTFOUND_TDMQCMQTOPICNOTFOUND = "ResourceNotFound.TDMQCMQTopicNotFound"
@@ -2955,11 +3078,13 @@ func (c *Client) ModifyLifecycleHook(request *ModifyLifecycleHookRequest) (respo
 // 此接口用于修改生命周期挂钩。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_CALLTATERROR = "InternalError.CallTATError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  RESOURCENOTFOUND_CMQQUEUENOTFOUND = "ResourceNotFound.CmqQueueNotFound"
+//  RESOURCENOTFOUND_COMMANDNOTFOUND = "ResourceNotFound.CommandNotFound"
 //  RESOURCENOTFOUND_LIFECYCLEHOOKNOTFOUND = "ResourceNotFound.LifecycleHookNotFound"
 //  RESOURCENOTFOUND_TDMQCMQQUEUENOTFOUND = "ResourceNotFound.TDMQCMQQueueNotFound"
 //  RESOURCENOTFOUND_TDMQCMQTOPICNOTFOUND = "ResourceNotFound.TDMQCMQTopicNotFound"
@@ -2984,6 +3109,7 @@ func NewModifyLoadBalancerTargetAttributesRequest() (request *ModifyLoadBalancer
     request = &ModifyLoadBalancerTargetAttributesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ModifyLoadBalancerTargetAttributes")
     
     
@@ -3011,6 +3137,7 @@ func NewModifyLoadBalancerTargetAttributesResponse() (response *ModifyLoadBalanc
 //  INVALIDPARAMETERVALUE_FORWARDLB = "InvalidParameterValue.ForwardLb"
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDCLBREGION = "InvalidParameterValue.InvalidClbRegion"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  LIMITEXCEEDED_AFTERATTACHLBLIMITEXCEEDED = "LimitExceeded.AfterAttachLbLimitExceeded"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
@@ -3042,6 +3169,7 @@ func (c *Client) ModifyLoadBalancerTargetAttributes(request *ModifyLoadBalancerT
 //  INVALIDPARAMETERVALUE_FORWARDLB = "InvalidParameterValue.ForwardLb"
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDCLBREGION = "InvalidParameterValue.InvalidClbRegion"
+//  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  LIMITEXCEEDED_AFTERATTACHLBLIMITEXCEEDED = "LimitExceeded.AfterAttachLbLimitExceeded"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
@@ -3075,6 +3203,7 @@ func NewModifyLoadBalancersRequest() (request *ModifyLoadBalancersRequest) {
     request = &ModifyLoadBalancersRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ModifyLoadBalancers")
     
     
@@ -3101,6 +3230,7 @@ func NewModifyLoadBalancersResponse() (response *ModifyLoadBalancersResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_NOACTIVITYTOGENERATE = "FailedOperation.NoActivityToGenerate"
+//  INTERNALERROR_CALLLBERROR = "InternalError.CallLbError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
@@ -3111,7 +3241,9 @@ func NewModifyLoadBalancersResponse() (response *ModifyLoadBalancersResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDCLBREGION = "InvalidParameterValue.InvalidClbRegion"
 //  INVALIDPARAMETERVALUE_LBPROJECTINCONSISTENT = "InvalidParameterValue.LbProjectInconsistent"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 //  RESOURCENOTFOUND_LISTENERNOTFOUND = "ResourceNotFound.ListenerNotFound"
@@ -3138,6 +3270,7 @@ func (c *Client) ModifyLoadBalancers(request *ModifyLoadBalancersRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_NOACTIVITYTOGENERATE = "FailedOperation.NoActivityToGenerate"
+//  INTERNALERROR_CALLLBERROR = "InternalError.CallLbError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
@@ -3148,7 +3281,9 @@ func (c *Client) ModifyLoadBalancers(request *ModifyLoadBalancersRequest) (respo
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDCLBREGION = "InvalidParameterValue.InvalidClbRegion"
 //  INVALIDPARAMETERVALUE_LBPROJECTINCONSISTENT = "InvalidParameterValue.LbProjectInconsistent"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
+//  INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
 //  MISSINGPARAMETER_INSCENARIO = "MissingParameter.InScenario"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 //  RESOURCENOTFOUND_LISTENERNOTFOUND = "ResourceNotFound.ListenerNotFound"
@@ -3178,6 +3313,7 @@ func NewModifyNotificationConfigurationRequest() (request *ModifyNotificationCon
     request = &ModifyNotificationConfigurationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ModifyNotificationConfiguration")
     
     
@@ -3247,6 +3383,7 @@ func NewModifyScalingPolicyRequest() (request *ModifyScalingPolicyRequest) {
     request = &ModifyScalingPolicyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ModifyScalingPolicy")
     
     
@@ -3310,6 +3447,7 @@ func NewModifyScheduledActionRequest() (request *ModifyScheduledActionRequest) {
     request = &ModifyScheduledActionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ModifyScheduledAction")
     
     
@@ -3387,6 +3525,7 @@ func NewRemoveInstancesRequest() (request *RemoveInstancesRequest) {
     request = &RemoveInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "RemoveInstances")
     
     
@@ -3466,6 +3605,7 @@ func NewScaleInInstancesRequest() (request *ScaleInInstancesRequest) {
     request = &ScaleInInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ScaleInInstances")
     
     
@@ -3549,6 +3689,7 @@ func NewScaleOutInstancesRequest() (request *ScaleOutInstancesRequest) {
     request = &ScaleOutInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "ScaleOutInstances")
     
     
@@ -3624,6 +3765,7 @@ func NewSetInstancesProtectionRequest() (request *SetInstancesProtectionRequest)
     request = &SetInstancesProtectionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "SetInstancesProtection")
     
     
@@ -3646,6 +3788,7 @@ func NewSetInstancesProtectionResponse() (response *SetInstancesProtectionRespon
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCEID = "InvalidParameterValue.InvalidInstanceId"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 //  RESOURCENOTFOUND_INSTANCESNOTINAUTOSCALINGGROUP = "ResourceNotFound.InstancesNotInAutoScalingGroup"
 func (c *Client) SetInstancesProtection(request *SetInstancesProtectionRequest) (response *SetInstancesProtectionResponse, err error) {
@@ -3661,6 +3804,7 @@ func (c *Client) SetInstancesProtection(request *SetInstancesProtectionRequest) 
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETERVALUE_INVALIDAUTOSCALINGGROUPID = "InvalidParameterValue.InvalidAutoScalingGroupId"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCEID = "InvalidParameterValue.InvalidInstanceId"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  RESOURCENOTFOUND_AUTOSCALINGGROUPNOTFOUND = "ResourceNotFound.AutoScalingGroupNotFound"
 //  RESOURCENOTFOUND_INSTANCESNOTINAUTOSCALINGGROUP = "ResourceNotFound.InstancesNotInAutoScalingGroup"
 func (c *Client) SetInstancesProtectionWithContext(ctx context.Context, request *SetInstancesProtectionRequest) (response *SetInstancesProtectionResponse, err error) {
@@ -3683,6 +3827,7 @@ func NewStartAutoScalingInstancesRequest() (request *StartAutoScalingInstancesRe
     request = &StartAutoScalingInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "StartAutoScalingInstances")
     
     
@@ -3756,6 +3901,7 @@ func NewStopAutoScalingInstancesRequest() (request *StopAutoScalingInstancesRequ
     request = &StopAutoScalingInstancesRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "StopAutoScalingInstances")
     
     
@@ -3847,6 +3993,7 @@ func NewUpgradeLaunchConfigurationRequest() (request *UpgradeLaunchConfiguration
     request = &UpgradeLaunchConfigurationRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "UpgradeLaunchConfiguration")
     
     
@@ -3877,22 +4024,27 @@ func NewUpgradeLaunchConfigurationResponse() (response *UpgradeLaunchConfigurati
 //  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 //  INVALIDPARAMETER_INVALIDCOMBINATION = "InvalidParameter.InvalidCombination"
 //  INVALIDPARAMETER_MUSTONEPARAMETER = "InvalidParameter.MustOneParameter"
+//  INVALIDPARAMETER_PARAMETERDEPRECATED = "InvalidParameter.ParameterDeprecated"
 //  INVALIDPARAMETER_PARAMETERMUSTBEDELETED = "InvalidParameter.ParameterMustBeDeleted"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_CVMCONFIGURATIONERROR = "InvalidParameterValue.CvmConfigurationError"
 //  INVALIDPARAMETERVALUE_CVMERROR = "InvalidParameterValue.CvmError"
 //  INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
+//  INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPE = "InvalidParameterValue.InvalidInstanceType"
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHCONFIGURATIONID = "InvalidParameterValue.InvalidLaunchConfigurationId"
 //  INVALIDPARAMETERVALUE_LAUNCHCONFIGURATIONNAMEDUPLICATED = "InvalidParameterValue.LaunchConfigurationNameDuplicated"
+//  INVALIDPARAMETERVALUE_MISSINGBANDWIDTHPACKAGEID = "InvalidParameterValue.MissingBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_NOTSTRINGTYPEFLOAT = "InvalidParameterValue.NotStringTypeFloat"
 //  INVALIDPARAMETERVALUE_PROJECTIDNOTFOUND = "InvalidParameterValue.ProjectIdNotFound"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_USERDATAFORMATERROR = "InvalidParameterValue.UserDataFormatError"
 //  INVALIDPARAMETERVALUE_USERDATASIZEEXCEEDED = "InvalidParameterValue.UserDataSizeExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_BANDWIDTHPACKAGEIDNOTFOUND = "ResourceNotFound.BandwidthPackageIdNotFound"
 //  RESOURCENOTFOUND_LAUNCHCONFIGURATIONIDNOTFOUND = "ResourceNotFound.LaunchConfigurationIdNotFound"
 func (c *Client) UpgradeLaunchConfiguration(request *UpgradeLaunchConfigurationRequest) (response *UpgradeLaunchConfigurationResponse, err error) {
     return c.UpgradeLaunchConfigurationWithContext(context.Background(), request)
@@ -3915,22 +4067,27 @@ func (c *Client) UpgradeLaunchConfiguration(request *UpgradeLaunchConfigurationR
 //  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
 //  INVALIDPARAMETER_INVALIDCOMBINATION = "InvalidParameter.InvalidCombination"
 //  INVALIDPARAMETER_MUSTONEPARAMETER = "InvalidParameter.MustOneParameter"
+//  INVALIDPARAMETER_PARAMETERDEPRECATED = "InvalidParameter.ParameterDeprecated"
 //  INVALIDPARAMETER_PARAMETERMUSTBEDELETED = "InvalidParameter.ParameterMustBeDeleted"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_CVMCONFIGURATIONERROR = "InvalidParameterValue.CvmConfigurationError"
 //  INVALIDPARAMETERVALUE_CVMERROR = "InvalidParameterValue.CvmError"
 //  INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
+//  INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
 //  INVALIDPARAMETERVALUE_INSTANCETYPENOTSUPPORTED = "InvalidParameterValue.InstanceTypeNotSupported"
 //  INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
 //  INVALIDPARAMETERVALUE_INVALIDINSTANCETYPE = "InvalidParameterValue.InvalidInstanceType"
 //  INVALIDPARAMETERVALUE_INVALIDLAUNCHCONFIGURATIONID = "InvalidParameterValue.InvalidLaunchConfigurationId"
 //  INVALIDPARAMETERVALUE_LAUNCHCONFIGURATIONNAMEDUPLICATED = "InvalidParameterValue.LaunchConfigurationNameDuplicated"
+//  INVALIDPARAMETERVALUE_MISSINGBANDWIDTHPACKAGEID = "InvalidParameterValue.MissingBandwidthPackageId"
 //  INVALIDPARAMETERVALUE_NOTSTRINGTYPEFLOAT = "InvalidParameterValue.NotStringTypeFloat"
 //  INVALIDPARAMETERVALUE_PROJECTIDNOTFOUND = "InvalidParameterValue.ProjectIdNotFound"
 //  INVALIDPARAMETERVALUE_RANGE = "InvalidParameterValue.Range"
 //  INVALIDPARAMETERVALUE_USERDATAFORMATERROR = "InvalidParameterValue.UserDataFormatError"
 //  INVALIDPARAMETERVALUE_USERDATASIZEEXCEEDED = "InvalidParameterValue.UserDataSizeExceeded"
 //  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_BANDWIDTHPACKAGEIDNOTFOUND = "ResourceNotFound.BandwidthPackageIdNotFound"
 //  RESOURCENOTFOUND_LAUNCHCONFIGURATIONIDNOTFOUND = "ResourceNotFound.LaunchConfigurationIdNotFound"
 func (c *Client) UpgradeLaunchConfigurationWithContext(ctx context.Context, request *UpgradeLaunchConfigurationRequest) (response *UpgradeLaunchConfigurationResponse, err error) {
     if request == nil {
@@ -3952,6 +4109,7 @@ func NewUpgradeLifecycleHookRequest() (request *UpgradeLifecycleHookRequest) {
     request = &UpgradeLifecycleHookRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
+    
     request.Init().WithApiInfo("as", APIVersion, "UpgradeLifecycleHook")
     
     
@@ -3976,6 +4134,7 @@ func NewUpgradeLifecycleHookResponse() (response *UpgradeLifecycleHookResponse) 
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CALLCMQERROR = "InternalError.CallCmqError"
 //  INTERNALERROR_CALLSTSERROR = "InternalError.CallStsError"
+//  INTERNALERROR_CALLTATERROR = "InternalError.CallTATError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
@@ -3984,8 +4143,10 @@ func NewUpgradeLifecycleHookResponse() (response *UpgradeLifecycleHookResponse) 
 //  INVALIDPARAMETERVALUE_INVALIDLIFECYCLEHOOKID = "InvalidParameterValue.InvalidLifecycleHookId"
 //  INVALIDPARAMETERVALUE_LIFECYCLEHOOKNAMEDUPLICATED = "InvalidParameterValue.LifecycleHookNameDuplicated"
 //  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_COMMANDNOTFOUND = "ResourceNotFound.CommandNotFound"
 //  RESOURCENOTFOUND_LIFECYCLEHOOKNOTFOUND = "ResourceNotFound.LifecycleHookNotFound"
 //  RESOURCEUNAVAILABLE_CMQTOPICHASNOSUBSCRIBER = "ResourceUnavailable.CmqTopicHasNoSubscriber"
+//  RESOURCEUNAVAILABLE_TDMQCMQTOPICHASNOSUBSCRIBER = "ResourceUnavailable.TDMQCMQTopicHasNoSubscriber"
 func (c *Client) UpgradeLifecycleHook(request *UpgradeLifecycleHookRequest) (response *UpgradeLifecycleHookResponse, err error) {
     return c.UpgradeLifecycleHookWithContext(context.Background(), request)
 }
@@ -4001,6 +4162,7 @@ func (c *Client) UpgradeLifecycleHook(request *UpgradeLifecycleHookRequest) (res
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_CALLCMQERROR = "InternalError.CallCmqError"
 //  INTERNALERROR_CALLSTSERROR = "InternalError.CallStsError"
+//  INTERNALERROR_CALLTATERROR = "InternalError.CallTATError"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ACTIONNOTFOUND = "InvalidParameter.ActionNotFound"
 //  INVALIDPARAMETER_CONFLICT = "InvalidParameter.Conflict"
@@ -4009,8 +4171,10 @@ func (c *Client) UpgradeLifecycleHook(request *UpgradeLifecycleHookRequest) (res
 //  INVALIDPARAMETERVALUE_INVALIDLIFECYCLEHOOKID = "InvalidParameterValue.InvalidLifecycleHookId"
 //  INVALIDPARAMETERVALUE_LIFECYCLEHOOKNAMEDUPLICATED = "InvalidParameterValue.LifecycleHookNameDuplicated"
 //  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCENOTFOUND_COMMANDNOTFOUND = "ResourceNotFound.CommandNotFound"
 //  RESOURCENOTFOUND_LIFECYCLEHOOKNOTFOUND = "ResourceNotFound.LifecycleHookNotFound"
 //  RESOURCEUNAVAILABLE_CMQTOPICHASNOSUBSCRIBER = "ResourceUnavailable.CmqTopicHasNoSubscriber"
+//  RESOURCEUNAVAILABLE_TDMQCMQTOPICHASNOSUBSCRIBER = "ResourceUnavailable.TDMQCMQTopicHasNoSubscriber"
 func (c *Client) UpgradeLifecycleHookWithContext(ctx context.Context, request *UpgradeLifecycleHookRequest) (response *UpgradeLifecycleHookResponse, err error) {
     if request == nil {
         request = NewUpgradeLifecycleHookRequest()

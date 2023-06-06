@@ -2,8 +2,12 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+
+	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	tdmqRocketmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -736,5 +740,494 @@ func (me *TdmqRocketmqService) DescribeTdmqRocketmqGroupByFilter(ctx context.Con
 		}
 		offset += pageSize
 	}
+	return
+}
+
+func (me *TdmqService) DescribeTdmqEnvironmentAttributesByFilter(ctx context.Context, param map[string]interface{}) (environmentAttributes *tdmq.DescribeEnvironmentAttributesResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeEnvironmentAttributesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "EnvironmentId" {
+			request.EnvironmentId = v.(*string)
+		}
+
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeEnvironmentAttributes(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	environmentAttributes = response.Response
+	return
+}
+
+func (me *TdmqService) DescribeTdmqPublisherSummaryByFilter(ctx context.Context, param map[string]interface{}) (publisherSummary *tdmq.DescribePublisherSummaryResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribePublisherSummaryRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+		if k == "Topic" {
+			request.Topic = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribePublisherSummary(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	publisherSummary = response.Response
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqPublishersByFilter(ctx context.Context, param map[string]interface{}) (publishers []*tdmq.Publisher, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribePublishersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "Namespace" {
+			request.Namespace = v.(*string)
+		}
+		if k == "Topic" {
+			request.Topic = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tdmq.Filter)
+		}
+		if k == "Sort" {
+			request.Sort = v.(*tdmq.Sort)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTdmqClient().DescribePublishers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || *response.Response.TotalCount == 0 {
+			break
+		}
+
+		publishers = append(publishers, response.Response.Publishers...)
+		if len(response.Response.Publishers) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqSubscriptionAttachmentById(ctx context.Context, environmentId, Topic, subscriptionName, clusterId string) (subscriptionAttachment *tdmq.Subscription, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDescribeSubscriptionsRequest()
+	request.EnvironmentId = &environmentId
+	request.TopicName = &Topic
+	request.SubscriptionName = &subscriptionName
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeSubscriptions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	subscriptionAttachment = response.Response.SubscriptionSets[0]
+	return
+}
+
+func (me *TdmqService) GetTdmqTopicsAttachmentById(ctx context.Context, environmentId, Topic, subscriptionName, clusterId string) (has bool, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDescribeTopicsRequest()
+	topicRetry := fmt.Sprint(Topic + "-" + subscriptionName + "-" + "RETRY")
+	topicDLQ := fmt.Sprint(Topic + "-" + subscriptionName + "-" + "DLQ")
+
+	request.EnvironmentId = &environmentId
+	request.ClusterId = &clusterId
+
+	request.Filters = []*tdmq.Filter{
+		{
+			Name:   common.StringPtr("TopicName"),
+			Values: common.StringPtrs([]string{topicRetry, topicDLQ}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeTopics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func (me *TdmqService) DeleteTdmqTopicsAttachmentById(ctx context.Context, environmentId, Topic, subscriptionName, clusterId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDeleteTopicsRequest()
+	topicRetry := fmt.Sprint(Topic + "-" + subscriptionName + "-" + "RETRY")
+	topicDLQ := fmt.Sprint(Topic + "-" + subscriptionName + "-" + "DLQ")
+	request.TopicSets = []*tdmq.TopicRecord{
+		{
+			EnvironmentId: &environmentId,
+			TopicName:     &topicRetry,
+		},
+		{
+			EnvironmentId: &environmentId,
+			TopicName:     &topicDLQ,
+		},
+	}
+	request.ClusterId = &clusterId
+	request.EnvironmentId = &environmentId
+	request.Force = common.BoolPtr(true)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DeleteTopics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DeleteTdmqSubscriptionAttachmentById(ctx context.Context, environmentId, Topic, subscriptionName, clusterId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDeleteSubscriptionsRequest()
+	request.SubscriptionTopicSets = []*tdmq.SubscriptionTopic{
+		{
+			EnvironmentId:    &environmentId,
+			TopicName:        &Topic,
+			SubscriptionName: &subscriptionName,
+		},
+	}
+	request.ClusterId = &clusterId
+	request.EnvironmentId = &environmentId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DeleteSubscriptions(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqDeadLetterSourceQueueByFilter(ctx context.Context, param map[string]interface{}) (deadLetterSourceQueue []*tdmq.CmqDeadLetterSource, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeCmqDeadLetterSourceQueuesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DeadLetterQueueName" {
+			request.DeadLetterQueueName = v.(*string)
+		}
+		if k == "SourceQueueName" {
+			request.SourceQueueName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTdmqClient().DescribeCmqDeadLetterSourceQueues(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || *response.Response.TotalCount == 0 {
+			break
+		}
+
+		deadLetterSourceQueue = append(deadLetterSourceQueue, response.Response.QueueSet...)
+		if len(response.Response.QueueSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqNodeListByFilter(ctx context.Context, param map[string]interface{}) (rabbitmqNodeList []*tdmq.RabbitMQPrivateNode, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeRabbitMQNodeListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "NodeName" {
+			request.NodeName = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tdmq.Filter)
+		}
+		if k == "SortElement" {
+			request.SortElement = v.(*string)
+		}
+		if k == "SortOrder" {
+			request.SortOrder = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTdmqClient().DescribeRabbitMQNodeList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || *response.Response.TotalCount == 0 {
+			break
+		}
+
+		rabbitmqNodeList = append(rabbitmqNodeList, response.Response.NodeList...)
+		if len(response.Response.NodeList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqVipInstanceByFilter(ctx context.Context, param map[string]interface{}) (rabbitmqVipInstance []*tdmq.RabbitMQVipInstance, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeRabbitMQVipInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*tdmq.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTdmqClient().DescribeRabbitMQVipInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || *response.Response.TotalCount == 0 {
+			break
+		}
+
+		rabbitmqVipInstance = append(rabbitmqVipInstance, response.Response.Instances...)
+		if len(response.Response.Instances) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqVipInstanceByFilter(ctx context.Context, param map[string]interface{}) (vipInstance *tdmq.DescribeRocketMQVipInstanceDetailResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeRocketMQVipInstanceDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeRocketMQVipInstanceDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	vipInstance = response.Response
 	return
 }
