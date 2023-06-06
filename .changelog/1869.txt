@@ -1,0 +1,19 @@
+```release-note:enhancement
+resource/tencentcloud_dcdb_account: support to update the `password` field.
+```
+
+```release-note:enhancement
+resource/tencentcloud_dcdb_hourdb_instance: support to update the `project_id` field.
+```
+
+```release-note:enhancement
+resource/tencentcloud_dcdb_db_instance: support to update `project_id` and `period` fields.
+```
+
+```release-note:enhancement
+resource/tencentcloud_dcdb_hourdb_instance: support the `extranet_access` field.
+```
+
+```release-note:enhancement
+resource/tencentcloud_dcdb_db_instance: support the `extranet_access` field.
+```

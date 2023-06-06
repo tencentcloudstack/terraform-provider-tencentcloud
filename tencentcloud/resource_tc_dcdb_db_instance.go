@@ -167,6 +167,12 @@ func resourceTencentCloudDcdbDbInstance() *schema.Resource {
 				Description: "Whether to support IPv6.",
 			},
 
+			"extranet_access": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to open the extranet access.",
+			},
+
 			"resource_tags": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -249,6 +255,7 @@ func resourceTencentCloudDcdbDbInstanceCreate(d *schema.ResourceData, meta inter
 		response      = dcdb.NewCreateDCDBInstanceResponse()
 		instanceId    string
 		dcnInstanceId string
+		ipv6Flag      int
 		service       = DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	)
 	if v, ok := d.GetOk("zones"); ok {
@@ -307,6 +314,7 @@ func resourceTencentCloudDcdbDbInstanceCreate(d *schema.ResourceData, meta inter
 
 	if v, _ := d.GetOk("ipv6_flag"); v != nil {
 		request.Ipv6Flag = helper.IntInt64(v.(int))
+		ipv6Flag = v.(int)
 	}
 
 	if v, ok := d.GetOk("resource_tags"); ok {
@@ -426,6 +434,14 @@ func resourceTencentCloudDcdbDbInstanceCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	if v, ok := d.GetOkExists("extranet_access"); ok && v != nil {
+		flag := v.(bool)
+		err := service.SetDcdbExtranetAccess(ctx, instanceId, ipv6Flag, flag)
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudDcdbDbInstanceRead(d, meta)
 }
 
@@ -486,12 +502,12 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("project_id", dbInstance.ProjectId)
 	}
 
-	if dbInstance.VpcId != nil {
-		_ = d.Set("vpc_id", helper.Int64ToStrPoint(*dbInstance.VpcId))
+	if dbInstance.UniqueVpcId != nil {
+		_ = d.Set("vpc_id", dbInstance.UniqueVpcId)
 	}
 
-	if dbInstance.SubnetId != nil {
-		_ = d.Set("subnet_id", helper.Int64ToStrPoint(*dbInstance.SubnetId))
+	if dbInstance.UniqueSubnetId != nil {
+		_ = d.Set("subnet_id", dbInstance.UniqueSubnetId)
 	}
 
 	if dbInstance.DbVersionId != nil {
@@ -512,6 +528,17 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 
 	if dbInstance.Ipv6Flag != nil {
 		_ = d.Set("ipv6_flag", dbInstance.Ipv6Flag)
+	}
+
+	if dbInstance.WanStatus != nil {
+		//0-未开通；1-已开通；2-关闭；3-开通中
+		if *dbInstance.WanStatus == DCDB_WAN_STATUS_UNOPEN || *dbInstance.WanStatus == DCDB_WAN_STATUS_CLOSED {
+			_ = d.Set("extranet_access", false)
+		}
+
+		if *dbInstance.WanStatus == DCDB_WAN_STATUS_OPENED {
+			_ = d.Set("extranet_access", true)
+		}
 	}
 
 	if dbInstance.ResourceTags != nil {
@@ -587,8 +614,12 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	request := dcdb.NewModifyDBInstanceNameRequest()
+	var (
+		request = dcdb.NewModifyDBInstanceNameRequest()
+		service = DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+	)
 
 	instanceId := d.Id()
 
@@ -596,8 +627,42 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("zones") {
 		return fmt.Errorf("`zones` do not support change now.")
 	}
-	if d.HasChange("period") {
-		return fmt.Errorf("`period` do not support change now.")
+
+	if d.HasChange("period") || d.HasChange("auto_voucher") || d.HasChange("voucher_ids") {
+		if period, ok := d.GetOk("period"); ok {
+			request := dcdb.NewRenewDCDBInstanceRequest()
+
+			request.InstanceId = &instanceId
+			request.Period = helper.IntInt64(period.(int))
+			if v, _ := d.GetOk("auto_voucher"); v != nil {
+				request.AutoVoucher = helper.Bool(v.(bool))
+			}
+			if v, ok := d.GetOk("voucher_ids"); ok {
+				voucherIdsSet := v.(*schema.Set).List()
+				for i := range voucherIdsSet {
+					if voucherIdsSet[i] != nil {
+						voucherIds := voucherIdsSet[i].(string)
+						request.VoucherIds = append(request.VoucherIds, &voucherIds)
+					}
+				}
+			}
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcdbClient().RenewDCDBInstance(request)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s operate dcdb renewDCDBInstanceOperation failed, reason:%+v", logId, err)
+				return err
+			}
+			_ = d.Set("period", period)
+		}
+		time.Sleep(2 * time.Second)
 	}
 	if d.HasChange("shard_memory") {
 		return fmt.Errorf("`shard_memory` do not support change now.")
@@ -612,8 +677,43 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`shard_count` do not support change now.")
 	}
 
+	// if d.HasChange("extranet_access") {
+	if v, ok := d.GetOkExists("extranet_access"); ok && v != nil {
+		flag := v.(bool)
+		var ipv6Flag int
+		if v, _ := d.GetOk("ipv6_flag"); v != nil {
+			ipv6Flag = v.(int)
+		}
+		err := service.SetDcdbExtranetAccess(ctx, instanceId, ipv6Flag, flag)
+		if err != nil {
+			return err
+		}
+		time.Sleep(2 * time.Second)
+	}
+	// }
+
 	if d.HasChange("project_id") {
-		return fmt.Errorf("`project_id` do not support change now.")
+		if projectId, ok := d.GetOk("project_id"); ok {
+			request := dcdb.NewModifyDBInstancesProjectRequest()
+
+			request.InstanceIds = []*string{&instanceId}
+			request.ProjectId = helper.IntInt64(projectId.(int))
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcdbClient().ModifyDBInstancesProject(request)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s operate dcdb modifyInstanceProjectOperation failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+		time.Sleep(2 * time.Second)
 	}
 	if d.HasChange("vpc_id") {
 		return fmt.Errorf("`vpc_id` do not support change now.")
@@ -623,12 +723,6 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 	}
 	if d.HasChange("db_version_id") {
 		return fmt.Errorf("`db_version_id` do not support change now.")
-	}
-	if d.HasChange("auto_voucher") {
-		return fmt.Errorf("`auto_voucher` do not support change now.")
-	}
-	if d.HasChange("voucher_ids") {
-		return fmt.Errorf("`voucher_ids` do not support change now.")
 	}
 
 	if d.HasChange("ipv6_flag") {
@@ -656,22 +750,20 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
 		}
-	}
-
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcdbClient().ModifyDBInstanceName(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcdbClient().ModifyDBInstanceName(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update dcdb dbInstance failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update dcdb dbInstance failed, reason:%+v", logId, err)
-		return err
 	}
-
 	return resourceTencentCloudDcdbDbInstanceRead(d, meta)
 }
 

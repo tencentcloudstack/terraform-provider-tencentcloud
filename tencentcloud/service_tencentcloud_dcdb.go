@@ -1060,3 +1060,61 @@ func (me *DcdbService) DcdbAccountRefreshFunc(instanceId string, userName string
 		return user, *user.UserName, nil
 	}
 }
+
+func (me *DcdbService) SetDcdbExtranetAccess(ctx context.Context, instanceId string, ipv6Flag int, enable bool) (errRet error) {
+	logId := getLogId(ctx)
+	var flowId *int64
+
+	if enable {
+		request := dcdb.NewOpenDBExtranetAccessRequest()
+		request.InstanceId = &instanceId
+		request.Ipv6Flag = helper.IntInt64(ipv6Flag)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseDcdbClient().OpenDBExtranetAccess(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			flowId = result.Response.FlowId
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate dcdb openDBExtranetAccessOperation failed, reason:%+v", logId, err)
+			errRet = err
+			return
+		}
+
+	} else {
+		request := dcdb.NewCloseDBExtranetAccessRequest()
+		request.InstanceId = &instanceId
+		request.Ipv6Flag = helper.IntInt64(ipv6Flag)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseDcdbClient().CloseDBExtranetAccess(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			flowId = result.Response.FlowId
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate dcdb closeDBExtranetAccessOperation failed, reason:%+v", logId, err)
+			errRet = err
+			return
+		}
+	}
+
+	if flowId != nil {
+		// need to wait operation complete
+		// 0:success; 1:failed, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"0"}, 2*readRetryTimeout, time.Second, me.DcdbDbInstanceStateRefreshFunc(flowId, []string{"1"}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+	return
+}

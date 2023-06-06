@@ -1,0 +1,8 @@
+package tencentcloud
+
+const (
+	DCDB_WAN_STATUS_UNOPEN  = 0
+	DCDB_WAN_STATUS_OPENED  = 1
+	DCDB_WAN_STATUS_CLOSED  = 2
+	DCDB_WAN_STATUS_OPENING = 3
+)

@@ -13,12 +13,12 @@ import (
 func init() {
 	resource.AddTestSweepers("tencentcloud_dcdb_hourdb_instance", &resource.Sweeper{
 		Name: "tencentcloud_dcdb_hourdb_instance",
-		F:    testSweepDCDBHourdbInstance,
+		F:    testSweepDcdbHourdbInstance,
 	})
 }
 
 // go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_dcdb_hourdb_instance
-func testSweepDCDBHourdbInstance(r string) error {
+func testSweepDcdbHourdbInstance(r string) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	cli, _ := sharedClientForRegion(r)
@@ -52,7 +52,7 @@ func testSweepDCDBHourdbInstance(r string) error {
 	return nil
 }
 
-func TestAccTencentCloudDCDBHourdbInstance_basic(t *testing.T) {
+func TestAccTencentCloudDcdbHourdbInstance_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -74,6 +74,7 @@ func TestAccTencentCloudDCDBHourdbInstance_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "shard_node_count", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "shard_count", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "db_version_id", "8.0"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "resource_tags.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "resource_tags.0.tag_key", "aaa"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "resource_tags.0.tag_value", "bbb"),
@@ -85,7 +86,8 @@ func TestAccTencentCloudDCDBHourdbInstance_basic(t *testing.T) {
 					testAccCheckDcdbHourdbInstanceExists("tencentcloud_dcdb_hourdb_instance.hourdb_instance"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "subnet_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "security_group_id"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "project_id", defaultProjectId),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "extranet_access", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "instance_name", "test_dcdb_hourdb_instance_CHANGED"),
 				),
 			},
@@ -147,7 +149,7 @@ func testAccCheckDcdbHourdbInstanceExists(re string) resource.TestCheckFunc {
 	}
 }
 
-const testAccDcdbHourdb_vpc_config = `
+const testAccDcdbHourdb_vpc_config = defaultAzVariable + `
 data "tencentcloud_security_groups" "internal" {
 	name = "default"
 }
@@ -171,7 +173,7 @@ const testAccDcdbHourdbInstance_basic = testAccDcdbHourdb_vpc_config + `
 
 resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
   instance_name = "test_dcdb_hourdb_instance"
-  zones = ["ap-guangzhou-5"]
+  zones = [var.default_az]
   shard_memory = "2"
   shard_storage = "10"
   shard_node_count = "2"
@@ -180,6 +182,7 @@ resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
   subnet_id = local.subnet_id
   security_group_id = local.sg_id
   db_version_id = "8.0"
+  project_id = 0
   resource_tags {
 	tag_key = "aaa"
 	tag_value = "bbb"
@@ -188,19 +191,21 @@ resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
 
 `
 
-const testAccDcdbHourdbInstance_update = testAccDcdbHourdb_vpc_config + `
+const testAccDcdbHourdbInstance_update = testAccDcdbHourdb_vpc_config + defaultProjectVariable + `
 
 resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
   instance_name = "test_dcdb_hourdb_instance_CHANGED"
-  zones = ["ap-guangzhou-5"]
+  zones = [var.default_az]
   shard_memory = "2"
   shard_storage = "10"
   shard_node_count = "2"
   shard_count = "2"
   vpc_id = local.vpc_id
   subnet_id = local.subnet_id
-  security_group_id = local.sg_id
+  security_group_id = ""
   db_version_id = "8.0"
+  project_id = var.default_project
+  extranet_access = false
   resource_tags {
 	tag_key = "aaa"
 	tag_value = "bbb"
