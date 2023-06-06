@@ -47,6 +47,9 @@ const (
 	// STS 接口调用失败。
 	INTERNALERROR_CALLSTSERROR = "InternalError.CallStsError"
 
+	// TAT 接口调用失败。
+	INTERNALERROR_CALLTATERROR = "InternalError.CallTATError"
+
 	// Tag 接口调用失败。
 	INTERNALERROR_CALLTAGERROR = "InternalError.CallTagError"
 
@@ -95,6 +98,9 @@ const (
 	// 参数缺失，两种参数之中必须指定其中一个。
 	INVALIDPARAMETER_MUSTONEPARAMETER = "InvalidParameter.MustOneParameter"
 
+	// 该参数已废弃。
+	INVALIDPARAMETER_PARAMETERDEPRECATED = "InvalidParameter.ParameterDeprecated"
+
 	// 部分参数存在互斥应该删掉。
 	INVALIDPARAMETER_PARAMETERMUSTBEDELETED = "InvalidParameter.ParameterMustBeDeleted"
 
@@ -103,6 +109,9 @@ const (
 
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 当前账户不支持带宽包ID参数。
+	INVALIDPARAMETERVALUE_ACCOUNTNOTSUPPORTBANDWIDTHPACKAGEID = "InvalidParameterValue.AccountNotSupportBandwidthPackageId"
 
 	// 指定的基础容量过大，需小于等于最大实例数。
 	INVALIDPARAMETERVALUE_BASECAPACITYTOOLARGE = "InvalidParameterValue.BaseCapacityTooLarge"
@@ -143,6 +152,9 @@ const (
 	// 主机名不合法。
 	INVALIDPARAMETERVALUE_HOSTNAMEILLEGAL = "InvalidParameterValue.HostNameIllegal"
 
+	// 指定的IPv6公网带宽计费模式不合法。
+	INVALIDPARAMETERVALUE_IPV6INTERNETCHARGETYPE = "InvalidParameterValue.IPv6InternetChargeType"
+
 	// 指定的镜像不存在。
 	INVALIDPARAMETERVALUE_IMAGENOTFOUND = "InvalidParameterValue.ImageNotFound"
 
@@ -167,8 +179,14 @@ const (
 	// 为CLB指定的地域不合法。
 	INVALIDPARAMETERVALUE_INVALIDCLBREGION = "InvalidParameterValue.InvalidClbRegion"
 
+	// 指定的置放群组ID格式不正确。
+	INVALIDPARAMETERVALUE_INVALIDDISASTERRECOVERGROUPID = "InvalidParameterValue.InvalidDisasterRecoverGroupId"
+
 	// 过滤条件无效。
 	INVALIDPARAMETERVALUE_INVALIDFILTER = "InvalidParameterValue.InvalidFilter"
+
+	// 高性能计算集群ID无效。
+	INVALIDPARAMETERVALUE_INVALIDHPCCLUSTERID = "InvalidParameterValue.InvalidHpcClusterId"
 
 	// 镜像ID无效。
 	INVALIDPARAMETERVALUE_INVALIDIMAGEID = "InvalidParameterValue.InvalidImageId"
@@ -197,6 +215,9 @@ const (
 	// 定时任务名称包含无效字符。
 	INVALIDPARAMETERVALUE_INVALIDSCHEDULEDACTIONNAMEINCLUDEILLEGALCHAR = "InvalidParameterValue.InvalidScheduledActionNameIncludeIllegalChar"
 
+	// 安全组ID无效。
+	INVALIDPARAMETERVALUE_INVALIDSECURITYGROUPID = "InvalidParameterValue.InvalidSecurityGroupId"
+
 	// 快照ID无效。
 	INVALIDPARAMETERVALUE_INVALIDSNAPSHOTID = "InvalidParameterValue.InvalidSnapshotId"
 
@@ -217,6 +238,9 @@ const (
 
 	// 取值超出限制。
 	INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+
+	// 当前账户在带宽包模式中必须填写带宽包ID参数。
+	INVALIDPARAMETERVALUE_MISSINGBANDWIDTHPACKAGEID = "InvalidParameterValue.MissingBandwidthPackageId"
 
 	// 无资源权限。
 	INVALIDPARAMETERVALUE_NORESOURCEPERMISSION = "InvalidParameterValue.NoResourcePermission"
@@ -250,6 +274,9 @@ const (
 
 	// 负载均衡器四层监听器的后端端口重复。
 	INVALIDPARAMETERVALUE_TARGETPORTDUPLICATED = "InvalidParameterValue.TargetPortDuplicated"
+
+	// 不支持执行目标追踪策略。
+	INVALIDPARAMETERVALUE_TARGETTRACKINGSCALINGPOLICY = "InvalidParameterValue.TargetTrackingScalingPolicy"
 
 	// 指定的阈值不在有效范围。
 	INVALIDPARAMETERVALUE_THRESHOLDOUTOFRANGE = "InvalidParameterValue.ThresholdOutOfRange"
@@ -308,6 +335,9 @@ const (
 	// 定时任务数量超过限制。
 	LIMITEXCEEDED_SCHEDULEDACTIONLIMITEXCEEDED = "LimitExceeded.ScheduledActionLimitExceeded"
 
+	// 每个伸缩组限制创建一个目标追踪策略。
+	LIMITEXCEEDED_TARGETTRACKINGSCALINGPOLICY = "LimitExceeded.TargetTrackingScalingPolicy"
+
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
@@ -347,8 +377,17 @@ const (
 	// 通知不存在。
 	RESOURCENOTFOUND_AUTOSCALINGNOTIFICATIONNOTFOUND = "ResourceNotFound.AutoScalingNotificationNotFound"
 
+	// 指定的带宽包ID不存在。
+	RESOURCENOTFOUND_BANDWIDTHPACKAGEIDNOTFOUND = "ResourceNotFound.BandwidthPackageIdNotFound"
+
 	// 指定的 CMQ queue 不存在。
 	RESOURCENOTFOUND_CMQQUEUENOTFOUND = "ResourceNotFound.CmqQueueNotFound"
+
+	// 命令不存在。
+	RESOURCENOTFOUND_COMMANDNOTFOUND = "ResourceNotFound.CommandNotFound"
+
+	// 指定的置放群组ID不存在。
+	RESOURCENOTFOUND_DISASTERRECOVERGROUPNOTFOUND = "ResourceNotFound.DisasterRecoverGroupNotFound"
 
 	// 指定的实例不存在。
 	RESOURCENOTFOUND_INSTANCESNOTFOUND = "ResourceNotFound.InstancesNotFound"
@@ -364,6 +403,9 @@ const (
 
 	// 无法找到指定生命周期挂钩。
 	RESOURCENOTFOUND_LIFECYCLEHOOKNOTFOUND = "ResourceNotFound.LifecycleHookNotFound"
+
+	// 指定的生命周期挂钩Token不存在。
+	RESOURCENOTFOUND_LIFECYCLEHOOKTOKENNOTFOUND = "ResourceNotFound.LifecycleHookTokenNotFound"
 
 	// 指定的Listener不存在。
 	RESOURCENOTFOUND_LISTENERNOTFOUND = "ResourceNotFound.ListenerNotFound"
@@ -403,6 +445,9 @@ const (
 
 	// 实例和伸缩组Vpc不一致。
 	RESOURCEUNAVAILABLE_CVMVPCINCONSISTENT = "ResourceUnavailable.CvmVpcInconsistent"
+
+	// 绑定负载均衡器的伸缩组禁止修改Vpc。
+	RESOURCEUNAVAILABLE_FORBIDDENMODIFYVPC = "ResourceUnavailable.ForbiddenModifyVpc"
 
 	// 实例无法添加至伸缩组。
 	RESOURCEUNAVAILABLE_INSTANCECANNOTATTACH = "ResourceUnavailable.InstanceCannotAttach"
@@ -445,6 +490,9 @@ const (
 
 	// 指定的可用区不可用。
 	RESOURCEUNAVAILABLE_ZONEUNAVAILABLE = "ResourceUnavailable.ZoneUnavailable"
+
+	// 未授权弹性伸缩预设服务角色AS_QCSRole，请前往弹性伸缩控制台进行授权。
+	UNAUTHORIZEDOPERATION_AUTOSCALINGROLEUNAUTHORIZED = "UnauthorizedOperation.AutoScalingRoleUnauthorized"
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
