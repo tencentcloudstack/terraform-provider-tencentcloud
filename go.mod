@@ -26,7 +26,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.571
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.624
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.466
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.655
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.520
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
@@ -45,7 +45,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.652
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.572
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb v1.0.670
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod v1.0.539
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain v1.0.414
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts v1.0.628

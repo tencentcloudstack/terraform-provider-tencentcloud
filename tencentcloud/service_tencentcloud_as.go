@@ -623,3 +623,146 @@ func flattenInstanceTagsMapping(list []*as.InstanceTag) map[string]interface{} {
 	}
 	return result
 }
+
+func (me *AsService) DescribeAsAdvices(ctx context.Context, param map[string]interface{}) (advices []*as.AutoScalingAdvice, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = as.NewDescribeAutoScalingAdvicesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "AutoScalingGroupIds" {
+			request.AutoScalingGroupIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAsClient().DescribeAutoScalingAdvices(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	advices = response.Response.AutoScalingAdviceSet
+
+	return
+}
+
+func (me *AsService) DescribeAsLimits(ctx context.Context) (limits *as.DescribeAccountLimitsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = as.NewDescribeAccountLimitsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAsClient().DescribeAccountLimits(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	limits = response.Response
+
+	return
+}
+
+func (me *AsService) DescribeAsLastActivity(ctx context.Context, param map[string]interface{}) (lastActivity []*as.Activity, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = as.NewDescribeAutoScalingGroupLastActivitiesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "AutoScalingGroupIds" {
+			request.AutoScalingGroupIds = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAsClient().DescribeAutoScalingGroupLastActivities(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	lastActivity = response.Response.ActivitySet
+
+	return
+}
+
+func (me *AsService) DescribeAsLoadBalancerById(ctx context.Context, autoScalingGroupId string) (loadBalancer *as.AutoScalingGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := as.NewDescribeAutoScalingGroupsRequest()
+	request.AutoScalingGroupIds = []*string{&autoScalingGroupId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAsClient().DescribeAutoScalingGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AutoScalingGroupSet) < 1 {
+		return
+	}
+
+	loadBalancer = response.Response.AutoScalingGroupSet[0]
+	return
+}
+
+func (me *AsService) DeleteAsLoadBalancerById(ctx context.Context, autoScalingGroupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := as.NewDetachLoadBalancersRequest()
+	request.AutoScalingGroupId = &autoScalingGroupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAsClient().DetachLoadBalancers(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

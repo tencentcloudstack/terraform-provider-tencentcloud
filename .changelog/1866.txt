@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_vpc_net_detect_state_check
+```
+
+```release-note:new-resource
+tencentcloud_eni_sg_attachment
+```
