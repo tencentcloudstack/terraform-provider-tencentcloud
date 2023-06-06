@@ -9,6 +9,14 @@ resource "tencentcloud_dcdb_db_sync_mode_config" "config" {
   sync_mode = 2
 }
 ```
+
+Import
+
+dcdb db_sync_mode_config can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_dcdb_db_sync_mode_config.db_sync_mode_config db_sync_mode_config_id
+```
 */
 package tencentcloud
 
@@ -29,6 +37,9 @@ func resourceTencentCloudDcdbDbSyncModeConfig() *schema.Resource {
 		Read:   resourceTencentCloudDcdbDbSyncModeConfigRead,
 		Update: resourceTencentCloudDcdbDbSyncModeConfigUpdate,
 		Delete: resourceTencentCloudDcdbDbSyncModeConfigDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,

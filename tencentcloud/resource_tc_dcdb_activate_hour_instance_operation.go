@@ -27,9 +27,9 @@ func resourceTencentCloudDcdbActivateHourInstanceOperation() *schema.Resource {
 		Delete: resourceTencentCloudDcdbActivateHourInstanceOperationDelete,
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
-				Required: true,
-				ForceNew: true,
-				Type:     schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
 				Description: "instance ID in the format of dcdbt-ow728lmc, which can be obtained through the `DescribeDCDBInstances` API.",
 			},
 		},
