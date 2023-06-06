@@ -55,6 +55,7 @@ func (me *DcdbService) DescribeDcdbAccount(ctx context.Context, instanceId, user
 				return
 			}
 		}
+		return
 	}
 
 	account = response.Response
@@ -624,6 +625,7 @@ func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId str
 				return
 			}
 		}
+		return
 	}
 
 	// default is return the first one(maybe the master)
@@ -1037,5 +1039,24 @@ func (me *DcdbService) DcdbDcnStateRefreshFunc(instanceId string, failStates []s
 		}
 
 		return object, helper.Int64ToStr(*object.DcnStatus), nil
+	}
+}
+
+func (me *DcdbService) DcdbAccountRefreshFunc(instanceId string, userName string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDcdbAccount(ctx, instanceId, userName)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || len(object.Users) < 1 {
+			return &dcdb.DBAccount{}, "deleted", nil
+		}
+
+		user := object.Users[0]
+		return user, *user.UserName, nil
 	}
 }
