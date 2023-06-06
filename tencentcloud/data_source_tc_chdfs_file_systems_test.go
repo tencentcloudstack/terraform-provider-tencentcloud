@@ -24,7 +24,6 @@ func TestAccTencentCloudChdfsFileSystemsDataSource_basic(t *testing.T) {
 
 const testAccChdfsFileSystemsDataSource = `
 
-data "tencentcloud_chdfs_file_systems" "file_systems" {
-  }
+data "tencentcloud_chdfs_file_systems" "file_systems" {}
 
 `
