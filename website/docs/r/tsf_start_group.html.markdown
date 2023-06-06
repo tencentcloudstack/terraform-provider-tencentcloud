@@ -24,7 +24,7 @@ resource "tencentcloud_tsf_start_group" "start_group" {
 
 The following arguments are supported:
 
-* `group_id` - (Required, String) GroupId.
+* `group_id` - (Required, String) group id.
 * `operate` - (Required, String) Operation, `start`- start the group, `stop`- stop the group.
 
 ## Attributes Reference
