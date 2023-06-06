@@ -391,11 +391,15 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("resource_tags", resourceTagsList)
 	}
 
-	if dcn, err := service.DescribeDcnDetailById(ctx, ""); dcn != nil {
-		_ = d.Set("dcn_region", dcn.Region)
-		_ = d.Set("dcn_instance_id", dcn.InstanceId)
-	} else {
-		return err
+	if v, ok := d.GetOk("dcn_instance_id"); ok {
+		dcnInstanceId := v.(string)
+
+		if dcn, err := service.DescribeDcnDetailById(ctx, dcnInstanceId); dcn != nil {
+			_ = d.Set("dcn_region", dcn.Region)
+			_ = d.Set("dcn_instance_id", dcn.InstanceId)
+		} else {
+			return err
+		}
 	}
 
 	if sg, err := service.DescribeDcdbSecurityGroup(ctx, instanceId); sg != nil {

@@ -15,5 +15,5 @@ resource/tencentcloud_dcdb_hourdb_instance: support `dcn_region` and `dcn_instan
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_dcdb_db_instance: adjust the logic of dcn.
+resource/tencentcloud_dcdb_db_instance: optimize the processing logic of dcn.
 ```

@@ -668,6 +668,12 @@ func (me *DcdbService) DcdbDbInstanceStateRefreshFunc(flowId *int64, failStates 
 			return nil, "", err
 		}
 
+		for _, str := range failStates {
+			if strings.Contains(str, helper.Int64ToStr(*object.Status)) {
+				return &dcdb.DescribeFlowResponseParams{}, "1", nil
+			}
+		}
+
 		return object, helper.Int64ToStr(*object.Status), nil
 	}
 }
@@ -1024,6 +1030,10 @@ func (me *DcdbService) DcdbDcnStateRefreshFunc(instanceId string, failStates []s
 
 		if err != nil {
 			return nil, "", err
+		}
+
+		if object == nil || object.DcnStatus == nil {
+			return &object.DcnStatus, "0", nil
 		}
 
 		return object, helper.Int64ToStr(*object.DcnStatus), nil

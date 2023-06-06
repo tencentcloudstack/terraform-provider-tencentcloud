@@ -35,11 +35,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-dcdb db_sync_mode_config can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_dcdb_db_sync_mode_config.db_sync_mode_config db_sync_mode_config_id
-```
-
