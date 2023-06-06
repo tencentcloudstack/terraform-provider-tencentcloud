@@ -1377,6 +1377,7 @@ Cloud HDFS(CHDFS)
   Data Source
 	tencentcloud_chdfs_access_groups
 	tencentcloud_chdfs_mount_points
+	tencentcloud_chdfs_file_systems
 
   Resource
 	tencentcloud_chdfs_access_group
@@ -1913,6 +1914,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_domains":                               dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                       dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                        dataSourceTencentCloudChdfsMountPoints(),
+			"tencentcloud_chdfs_file_systems":                        dataSourceTencentCloudChdfsFileSystems(),
 			"tencentcloud_tcm_mesh":                                  dataSourceTencentCloudTcmMesh(),
 			"tencentcloud_lighthouse_firewall_rules_template":        dataSourceTencentCloudLighthouseFirewallRulesTemplate(),
 			"tencentcloud_cvm_instance_vnc_url":                      dataSourceTencentCloudCvmInstanceVncUrl(),

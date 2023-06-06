@@ -436,3 +436,29 @@ func (me *ChdfsService) DescribeChdfsMountPointsByFilter(ctx context.Context, pa
 
 	return
 }
+
+func (me *ChdfsService) DescribeChdfsFileSystems(ctx context.Context) (fileSystems []*chdfs.FileSystem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = chdfs.NewDescribeFileSystemsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseChdfsClient().DescribeFileSystems(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	fileSystems = response.Response.FileSystems
+
+	return
+}
