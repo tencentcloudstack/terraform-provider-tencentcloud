@@ -1,0 +1,15 @@
+```release-note:new-data-source
+tencentcloud_mysql_databases
+```
+
+```release-note:new-data-source
+tencentcloud_mysql_error_log
+```
+
+```release-note:new-data-source
+tencentcloud_mysql_project_security_group
+```
+
+```release-note:new-data-source
+tencentcloud_mysql_ro_min_scale
+```
