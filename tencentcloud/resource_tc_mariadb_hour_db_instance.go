@@ -86,7 +86,6 @@ func resourceTencentCloudMariadbHourDbInstance() *schema.Resource {
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
 				Description: "subnet id, it&amp;#39;s required when vpcId is set.",
 			},
 
@@ -100,14 +99,12 @@ func resourceTencentCloudMariadbHourDbInstance() *schema.Resource {
 			"instance_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
 				Description: "name of this instance.",
 			},
 
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
-				Computed:    true,
 				Description: "Tag description list.",
 			},
 		},
