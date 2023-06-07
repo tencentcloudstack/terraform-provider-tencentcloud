@@ -173,6 +173,40 @@ func (me *MariadbService) DescribeMariadbDbInstance(ctx context.Context, instanc
 	return
 }
 
+func (me *MariadbService) DescribeMariadbDbInstanceDetail(ctx context.Context, instanceId string) (dbInstanceDetail *mariadb.DescribeDBInstanceDetailResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBInstanceDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+
+	response, err := me.client.UseMariadbClient().DescribeDBInstanceDetail(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	dbInstanceDetail = response.Response
+	return
+}
+
 func (me *MariadbService) DeleteMariadbDbInstanceById(ctx context.Context, instanceId string) (errRet error) {
 	logId := getLogId(ctx)
 
@@ -799,5 +833,35 @@ func (me *MariadbService) DescribeMariadbBackupTimeById(ctx context.Context, ins
 	}
 
 	backupTime = response.Response.Items[0]
+	return
+}
+
+func (me *MariadbService) DescribeDBInstanceDetailById(ctx context.Context, instanceId string) (dbDetail *mariadb.DescribeDBInstanceDetailResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := mariadb.NewDescribeDBInstanceDetailRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeDBInstanceDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	dbDetail = response.Response
 	return
 }

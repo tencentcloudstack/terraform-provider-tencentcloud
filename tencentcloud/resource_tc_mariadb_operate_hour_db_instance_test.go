@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudMariadbActivateHourDbInstanceResource_basic -v
-func TestAccTencentCloudMariadbActivateHourDbInstanceResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudMariadbOperateHourDbInstanceResource_basic -v
+func TestAccTencentCloudMariadbOperateHourDbInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -18,7 +18,7 @@ func TestAccTencentCloudMariadbActivateHourDbInstanceResource_basic(t *testing.T
 			{
 				Config: testAccMariadbActivateHourDbInstance,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_mariadb_activate_hour_db_instance.activate_hour_db_instance", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mariadb_operate_hour_db_instance.activate_hour_db_instance", "id"),
 				),
 			},
 		},
@@ -26,7 +26,8 @@ func TestAccTencentCloudMariadbActivateHourDbInstanceResource_basic(t *testing.T
 }
 
 const testAccMariadbActivateHourDbInstance = `
-resource "tencentcloud_mariadb_activate_hour_db_instance" "activate_hour_db_instance" {
+resource "tencentcloud_mariadb_operate_hour_db_instance" "activate_hour_db_instance" {
   instance_id = "tdsql-9vqvls95"
+  operate     = "activate"
 }
 `

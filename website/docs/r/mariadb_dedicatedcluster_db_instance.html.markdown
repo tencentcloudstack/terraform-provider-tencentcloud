@@ -35,9 +35,13 @@ The following arguments are supported:
 * `memory` - (Required, Int) instance memory.
 * `storage` - (Required, Int) instance disk storage.
 * `db_version_id` - (Optional, String) db engine version, default to 0.
+* `extranet_access` - (Optional, Int) External network status, 0-closed; 1- Opening; Default not enabled.
 * `instance_name` - (Optional, String) name of this instance.
+* `project_id` - (Optional, Int) Project ID, if not passed, indicates the default project.
+* `rs_access_strategy` - (Optional, Int) RS proximity mode, 0- no strategy, 1- access to the nearest available zone.
 * `subnet_id` - (Optional, String) subnet id, it&amp;#39;s required when vpcId is set.
 * `tags` - (Optional, Map) Tag description list.
+* `vip` - (Optional, String) vip.
 * `vpc_id` - (Optional, String) vpc id.
 
 ## Attributes Reference

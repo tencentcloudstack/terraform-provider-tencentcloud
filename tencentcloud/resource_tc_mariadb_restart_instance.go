@@ -1,12 +1,11 @@
 /*
-Provides a resource to create a mariadb create_tmp_instance
+Provides a resource to create a mariadb restart_instance
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_mariadb_create_tmp_instance" "create_tmp_instance" {
-  instance_id   = "tdsql-9vqvls95"
-  rollback_time = "2023-06-05 01:00:00"
+resource "tencentcloud_mariadb_restart_instance" "restart_instance" {
+  instance_id = "tdsql-9vqvls95"
 }
 ```
 */
@@ -24,38 +23,38 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudMariadbCreateTmpInstance() *schema.Resource {
+func resourceTencentCloudMariadbRestartInstance() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudMariadbCreateTmpInstanceCreate,
-		Read:   resourceTencentCloudMariadbCreateTmpInstanceRead,
-		Delete: resourceTencentCloudMariadbCreateTmpInstanceDelete,
+		Create: resourceTencentCloudMariadbRestartInstanceCreate,
+		Read:   resourceTencentCloudMariadbRestartInstanceRead,
+		Delete: resourceTencentCloudMariadbRestartInstanceDelete,
 
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Instance ID.",
+				Description: "instance ID.",
 			},
-			"rollback_time": {
-				Required:    true,
+			"restart_time": {
+				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Rollback time.",
+				Description: "expected restart time.",
 			},
 		},
 	}
 }
 
-func resourceTencentCloudMariadbCreateTmpInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mariadb_create_tmp_instance.create")()
+func resourceTencentCloudMariadbRestartInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mariadb_restart_instance.create")()
 	defer inconsistentCheck(d, meta)()
 
 	var (
 		logId      = getLogId(contextNil)
 		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
 		service    = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request    = mariadb.NewCreateTmpInstancesRequest()
+		request    = mariadb.NewRestartDBInstancesRequest()
 		instanceId string
 		flowId     int64
 	)
@@ -65,12 +64,12 @@ func resourceTencentCloudMariadbCreateTmpInstanceCreate(d *schema.ResourceData, 
 		instanceId = v.(string)
 	}
 
-	if v, ok := d.GetOk("rollback_time"); ok {
-		request.RollbackTime = helper.String(v.(string))
+	if v, ok := d.GetOk("restart_time"); ok {
+		request.RestartTime = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().CreateTmpInstances(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().RestartDBInstances(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -79,14 +78,14 @@ func resourceTencentCloudMariadbCreateTmpInstanceCreate(d *schema.ResourceData, 
 
 		flowId = *result.Response.FlowId
 		return nil
-
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s operate mariadb createTmpInstance failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate mariadb restartInstance failed, reason:%+v", logId, err)
 		return err
 	}
 
+	// wait
 	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeFlowById(ctx, flowId)
 		if e != nil {
@@ -96,34 +95,34 @@ func resourceTencentCloudMariadbCreateTmpInstanceCreate(d *schema.ResourceData, 
 		if *result.Status == MARIADB_TASK_SUCCESS {
 			return nil
 		} else if *result.Status == MARIADB_TASK_RUNNING {
-			return resource.RetryableError(fmt.Errorf("operate mariadb createTmpInstance status is running"))
+			return resource.RetryableError(fmt.Errorf("operate mariadb restartInstance status is running"))
 		} else if *result.Status == MARIADB_TASK_FAIL {
-			return resource.NonRetryableError(fmt.Errorf("operate mariadb createTmpInstance status is fail"))
+			return resource.NonRetryableError(fmt.Errorf("operate mariadb restartInstance status is fail"))
 		} else {
-			e = fmt.Errorf("operate mariadb createTmpInstance status illegal")
+			e = fmt.Errorf("operate mariadb restartInstance status illegal")
 			return resource.NonRetryableError(e)
 		}
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s operate mariadb createTmpInstance task failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s operate mariadb restartInstance task failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(instanceId)
 
-	return resourceTencentCloudMariadbCreateTmpInstanceRead(d, meta)
+	return resourceTencentCloudMariadbRestartInstanceRead(d, meta)
 }
 
-func resourceTencentCloudMariadbCreateTmpInstanceRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mariadb_create_tmp_instance.read")()
+func resourceTencentCloudMariadbRestartInstanceRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mariadb_restart_instance.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudMariadbCreateTmpInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mariadb_create_tmp_instance.delete")()
+func resourceTencentCloudMariadbRestartInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_mariadb_restart_instance.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

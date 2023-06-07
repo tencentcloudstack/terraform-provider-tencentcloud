@@ -104,7 +104,6 @@ variable "vpc_id" {
 `
 
 const testAccMariadbHourDbInstance = testAccMariadbHourDbInstanceVar + `
-
 resource "tencentcloud_mariadb_hour_db_instance" "basic" {
   db_version_id = "8.0"
   instance_name = "db-test-2"
@@ -117,6 +116,7 @@ resource "tencentcloud_mariadb_hour_db_instance" "basic" {
   tags          = {
 	createdBy   = "terraform"
   }
+  rs_access_strategy = 1
+  extranet_access = 0
 }
-
 `
