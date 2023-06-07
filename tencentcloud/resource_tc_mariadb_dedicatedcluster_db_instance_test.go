@@ -39,7 +39,5 @@ resource "tencentcloud_mariadb_dedicatedcluster_db_instance" "dedicatedcluster_d
   subnet_id          = "subnet-3ku415by"
   db_version_id      = "8.0"
   instance_name      = "cluster-mariadb-test-1"
-  rs_access_strategy = 1
-  extranet_access    = 0
 }
 `

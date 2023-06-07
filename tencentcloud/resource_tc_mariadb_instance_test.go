@@ -142,7 +142,5 @@ resource "tencentcloud_mariadb_instance" "instance" {
 	}
 	dcn_region = ""
 	dcn_instance_id = ""
-	rs_access_strategy = 1
-	extranet_access = 0
 }
 `

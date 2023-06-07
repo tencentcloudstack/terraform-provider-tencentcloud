@@ -67,17 +67,14 @@ The following arguments are supported:
 * `db_version_id` - (Optional, String) Database engine version, currently available: 8.0.18, 10.1.9, 5.7.17. If not passed, the default is Percona 5.7.17.
 * `dcn_instance_id` - (Optional, String, ForceNew) DCN source instance ID.
 * `dcn_region` - (Optional, String, ForceNew) DCN source region.
-* `extranet_access` - (Optional, Int) External network status, 0-closed; 1- Opening; Default not enabled.
 * `init_params` - (Optional, List, ForceNew) Parameter list. The optional values of this interface are: character_set_server (character set, required) enum: utf8,latin1,gbk,utf8mb4,gb18030, lower_case_table_names (table name case sensitive, required, 0 - sensitive; 1 - insensitive), innodb_page_size (innodb data page, Default 16K), sync_mode (sync mode: 0 - asynchronous; 1 - strong synchronous; 2 - strong synchronous can degenerate. The default is strong synchronous can degenerate).
 * `instance_name` - (Optional, String) Instance name, you can set the name of the instance independently through this field.
 * `ipv6_flag` - (Optional, Int) Whether IPv6 is supported.
 * `period` - (Optional, Int, ForceNew) The duration of the purchase, unit: month.
 * `project_id` - (Optional, Int) Project ID, which can be obtained by viewing the project list, if not passed, it will be associated with the default project.
-* `rs_access_strategy` - (Optional, Int) RS proximity mode, 0- no strategy, 1- access to the nearest available zone.
 * `security_group_ids` - (Optional, Set: [`String`]) Security group ID list.
 * `subnet_id` - (Optional, String) Virtual private network subnet ID, required when VpcId is not empty.
 * `tags` - (Optional, Map) tag list.
-* `vip` - (Optional, String) Intranet IP address.
 * `voucher_ids` - (Optional, Set: [`String`], ForceNew) A list of voucher IDs. Currently, only one voucher can be specified.
 * `vpc_id` - (Optional, String) Virtual private network ID, if not passed, it means that it is created as a basic network.
 
@@ -116,6 +113,7 @@ In addition to all arguments above, the following attributes are exported:
 * `tdsql_version` - TDSQL version information.
 * `uin` - The account to which the instance belongs.
 * `update_time` - The last update time of the instance in the format of 2006-01-02 15:04:05.
+* `vip` - Intranet IP address.
 * `vipv6` - Intranet IPv6.
 * `vport` - Intranet port.
 * `wan_domain` - The domain name accessed from the external network, which can be resolved by the public network.

@@ -116,7 +116,5 @@ resource "tencentcloud_mariadb_hour_db_instance" "basic" {
   tags          = {
 	createdBy   = "terraform"
   }
-  rs_access_strategy = 1
-  extranet_access = 0
 }
 `

@@ -29,3 +29,11 @@ tencentcloud_sqlserver_start_backup_full_migration
 ```release-note:new-resource
 tencentcloud_sqlserver_start_backup_incremental_migration
 ```
+
+```release-note:enhancement
+resource/tencentcloud_mariadb_account: support to update `password`
+```
+
+```release-note:new-resource
+tencentcloud_mariadb_instance_config
+```

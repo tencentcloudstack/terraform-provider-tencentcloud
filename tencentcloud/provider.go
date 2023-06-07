@@ -1158,6 +1158,7 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_switch_ha
 	tencentcloud_mariadb_restart_instance
 	tencentcloud_mariadb_renew_instance
+	tencentcloud_mariadb_instance_config
 
 Real User Monitoring(RUM)
   Data Source
@@ -2461,6 +2462,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_switch_ha":                          resourceTencentCloudMariadbSwitchHA(),
 			"tencentcloud_mariadb_restart_instance":                   resourceTencentCloudMariadbRestartInstance(),
 			"tencentcloud_mariadb_renew_instance":                     resourceTencentCloudMariadbRenewInstance(),
+			"tencentcloud_mariadb_instance_config":                    resourceTencentCloudMariadbInstanceConfig(),
 			"tencentcloud_tdcpg_cluster":                              resourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                             resourceTencentCloudTdcpgInstance(),
 			"tencentcloud_css_watermark":                              resourceTencentCloudCssWatermark(),

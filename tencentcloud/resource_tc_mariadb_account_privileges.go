@@ -49,11 +49,13 @@ func resourceTencentCloudMariadbAccountPrivileges() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "instance id.",
 			},
 			"accounts": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "account information.",
@@ -339,9 +341,9 @@ func resourceTencentCloudMariadbAccountPrivilegesUpdate(d *schema.ResourceData, 
 
 	needChange := false
 
-	immutableArgs := []string{"global_privileges", "database_privileges", "table_privileges", "column_privileges", "view_privileges", "function_privileges", "procedure_privileges"}
+	mutableArgs := []string{"global_privileges", "database_privileges", "table_privileges", "column_privileges", "view_privileges", "function_privileges", "procedure_privileges"}
 
-	for _, v := range immutableArgs {
+	for _, v := range mutableArgs {
 		if d.HasChange(v) {
 			needChange = true
 			break

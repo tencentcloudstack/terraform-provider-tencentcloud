@@ -28,8 +28,8 @@ resource "tencentcloud_mariadb_account_privileges" "account_privileges" {
 
 The following arguments are supported:
 
-* `accounts` - (Required, List) account information.
-* `instance_id` - (Required, String) instance id.
+* `accounts` - (Required, List, ForceNew) account information.
+* `instance_id` - (Required, String, ForceNew) instance id.
 * `column_privileges` - (Optional, List) Column permission. Valid values of `Privileges`: `SELECT`, `INSERT`, `UPDATE`, `REFERENCES`.Note: if the parameter is left empty, no change will be made to the granted column permissions. To clear the granted column permissions, set `Privileges` to an empty array.
 * `database_privileges` - (Optional, List) Database permission. Valid values of `Privileges`: `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `CREATE`, `DROP`, `REFERENCES`, `INDEX`, `ALTER`, `CREATE TEMPORARY TABLES`, `LOCK TABLES`, `EXECUTE`, `CREATE VIEW`, `SHOW VIEW`, `CREATE ROUTINE`, `ALTER ROUTINE`, `EVENT`, `TRIGGER`.Note: if the parameter is left empty, no change will be made to the granted database permissions. To clear the granted database permissions, set `Privileges` to an empty array.
 * `function_privileges` - (Optional, List) Database function permissions. Valid values of `Privileges`: `ALTER ROUTINE`, `EXECUTE`.Note: if the parameter is not passed in, no change will be made to the granted function permissions. To clear the granted function permissions, set `Privileges` to an empty array.
