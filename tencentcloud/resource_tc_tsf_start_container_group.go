@@ -80,9 +80,7 @@ func resourceTencentCloudTsfStartContainerGroupRead(d *schema.ResourceData, meta
 		return nil
 	}
 
-	if startContainerGroup.GroupId != nil {
-		_ = d.Set("group_id", startContainerGroup.GroupId)
-	}
+	_ = d.Set("group_id", groupId)
 
 	return nil
 }
@@ -155,22 +153,22 @@ func resourceTencentCloudTsfStartContainerGroupUpdate(d *schema.ResourceData, me
 				err = fmt.Errorf("group %s not exists", groupId)
 				return resource.NonRetryableError(err)
 			}
-			if operate == "start" && *groupInfo.GroupStatus == "Running" {
+			if operate == "start" && *groupInfo.Status == "Running" {
 				return nil
 			}
-			if operate == "stop" && *groupInfo.GroupStatus == "Paused" {
+			if operate == "stop" && *groupInfo.Status == "Paused" {
 				return nil
 			}
-			if operate == "start" && *groupInfo.GroupStatus == "Paused" {
-				return resource.RetryableError(fmt.Errorf("start or stop operation status is %s", *groupInfo.GroupStatus))
+			if operate == "start" && *groupInfo.Status == "Paused" {
+				return resource.RetryableError(fmt.Errorf("start or stop operation status is %s", *groupInfo.Status))
 			}
-			if operate == "stop" && *groupInfo.GroupStatus == "Running" {
-				return resource.RetryableError(fmt.Errorf("start or stop operation status is %s", *groupInfo.GroupStatus))
+			if operate == "stop" && *groupInfo.Status == "Running" {
+				return resource.RetryableError(fmt.Errorf("start or stop operation status is %s", *groupInfo.Status))
 			}
-			if *groupInfo.GroupStatus == "Waiting" || *groupInfo.GroupStatus == "Updating" {
-				return resource.RetryableError(fmt.Errorf("start or stop operation status is %s", *groupInfo.GroupStatus))
+			if *groupInfo.Status == "Waiting" || *groupInfo.Status == "Updating" {
+				return resource.RetryableError(fmt.Errorf("start or stop operation status is %s", *groupInfo.Status))
 			}
-			err = fmt.Errorf("start or stop operation status is %v, we won't wait for it finish", *groupInfo.GroupStatus)
+			err = fmt.Errorf("start or stop operation status is %v, we won't wait for it finish", *groupInfo.Status)
 			return resource.NonRetryableError(err)
 		})
 

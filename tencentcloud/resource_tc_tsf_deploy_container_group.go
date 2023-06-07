@@ -1201,13 +1201,13 @@ func resourceTencentCloudTsfDeployContainerGroupCreate(d *schema.ResourceData, m
 			err = fmt.Errorf("group %s not exists", groupId)
 			return resource.NonRetryableError(err)
 		}
-		if *groupInfo.GroupStatus == "Running" {
+		if *groupInfo.Status == "Running" {
 			return nil
 		}
-		if *groupInfo.GroupStatus == "Waiting" || *groupInfo.GroupStatus == "Updating" {
-			return resource.RetryableError(fmt.Errorf("deploy container group status is %s", *groupInfo.GroupStatus))
+		if *groupInfo.Status == "Waiting" || *groupInfo.Status == "Updating" {
+			return resource.RetryableError(fmt.Errorf("deploy container group status is %s", *groupInfo.Status))
 		}
-		err = fmt.Errorf("deploy container group status is %v, we won't wait for it finish", *groupInfo.GroupStatus)
+		err = fmt.Errorf("deploy container group status is %v, we won't wait for it finish", *groupInfo.Status)
 		return resource.NonRetryableError(err)
 	})
 

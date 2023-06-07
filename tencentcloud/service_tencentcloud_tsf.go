@@ -2759,10 +2759,10 @@ func (me *TsfService) DescribeTsfReleaseApiGroupById(ctx context.Context, groupI
 	return
 }
 
-func (me *TsfService) DescribeTsfStartContainerGroupById(ctx context.Context, groupId string) (startContainerGroup *tsf.VmGroupOther, errRet error) {
+func (me *TsfService) DescribeTsfStartContainerGroupById(ctx context.Context, groupId string) (startContainerGroup *tsf.ContainerGroupOther, errRet error) {
 	logId := getLogId(ctx)
 
-	request := tsf.NewDescribeGroupAttributeRequest()
+	request := tsf.NewDescribeContainerGroupAttributeRequest()
 	request.GroupId = &groupId
 
 	defer func() {
@@ -2773,7 +2773,7 @@ func (me *TsfService) DescribeTsfStartContainerGroupById(ctx context.Context, gr
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseTsfClient().DescribeGroupAttribute(request)
+	response, err := me.client.UseTsfClient().DescribeContainerGroupAttribute(request)
 	if err != nil {
 		errRet = err
 		return
