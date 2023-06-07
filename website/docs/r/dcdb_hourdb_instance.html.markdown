@@ -41,6 +41,8 @@ The following arguments are supported:
 * `shard_node_count` - (Required, Int) node count for each shard. It can be obtained by querying api DescribeShardSpec.
 * `shard_storage` - (Required, Int) storage(GB) for each shard. It can be obtained by querying api DescribeShardSpec.
 * `db_version_id` - (Optional, String) db engine version, default to Percona 5.7.17.
+* `dcn_instance_id` - (Optional, String) DCN source instance ID.
+* `dcn_region` - (Optional, String) DCN source region.
 * `instance_name` - (Optional, String) name of this instance.
 * `project_id` - (Optional, Int) project id.
 * `resource_tags` - (Optional, List) resource tags.

@@ -35,6 +35,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -121,6 +122,18 @@ func resourceTencentCloudDcdbHourdbInstance() *schema.Resource {
 				Description: "name of this instance.",
 			},
 
+			"dcn_region": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "DCN source region.",
+			},
+
+			"dcn_instance_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "DCN source instance ID.",
+			},
+
 			"resource_tags": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -149,13 +162,13 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		request    = dcdb.NewCreateHourDCDBInstanceRequest()
-		response   *dcdb.CreateHourDCDBInstanceResponse
-		instanceId string
-
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		request       = dcdb.NewCreateHourDCDBInstanceRequest()
+		response      *dcdb.CreateHourDCDBInstanceResponse
+		instanceId    string
+		dcnInstanceId string
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		service       = DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	)
 
 	if v, ok := d.GetOk("zones"); ok {
@@ -221,6 +234,15 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 		}
 	}
 
+	if v, ok := d.GetOk("dcn_region"); ok {
+		request.DcnRegion = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("dcn_instance_id"); ok {
+		request.DcnInstanceId = helper.String(v.(string))
+		dcnInstanceId = v.(string)
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseDcdbClient().CreateHourDCDBInstance(request)
 		if e != nil {
@@ -261,12 +283,30 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 		},
 	}
 
-	initRet, _, err := service.InitDcdbDbInstance(ctx, instanceId, defaultInitParams)
+	initRet, flowId, err := service.InitDcdbDbInstance(ctx, instanceId, defaultInitParams)
 	if err != nil {
 		return err
 	}
 	if !initRet {
 		return fmt.Errorf("db instance init failed")
+	}
+
+	if flowId != nil {
+		// need to wait init operation success
+		// 0:success; 1:failed, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"0"}, 3*readRetryTimeout, time.Second, service.DcdbDbInstanceStateRefreshFunc(helper.UInt64Int64(*flowId), []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
+	if dcnInstanceId != "" {
+		// need to wait dcn init processing complete
+		// 0:none; 1:creating, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"2"}, 3*readRetryTimeout, time.Second, service.DcdbDcnStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
 	}
 
 	return resourceTencentCloudDcdbHourdbInstanceRead(d, meta)
@@ -367,6 +407,20 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		return err
 	}
 
+	// set dcn id and region
+	if dcns, err := service.DescribeDcnDetailById(ctx, instanceId); dcns != nil {
+		for _, dcn := range dcns {
+			var master *dcdb.DcnDetailItem
+			if *dcn.DcnFlag == DCDB_DCN_FLAG_MASTER {
+				master = dcn
+				_ = d.Set("dcn_region", master.Region)
+				_ = d.Set("dcn_instance_id", master.InstanceId)
+			}
+		}
+	} else {
+		return err
+	}
+
 	return nil
 }
 
@@ -427,6 +481,13 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
 		}
+	}
+
+	if d.HasChange("dcn_region") {
+		return fmt.Errorf("`dcn_region` do not support change now.")
+	}
+	if d.HasChange("dcn_instance_id") {
+		return fmt.Errorf("`dcn_instance_id` do not support change now.")
 	}
 
 	if d.HasChange("resource_tags") {

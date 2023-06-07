@@ -245,10 +245,11 @@ func resourceTencentCloudDcdbDbInstanceCreate(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
-		request    = dcdb.NewCreateDCDBInstanceRequest()
-		response   = dcdb.NewCreateDCDBInstanceResponse()
-		instanceId string
-		service    = DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		request       = dcdb.NewCreateDCDBInstanceRequest()
+		response      = dcdb.NewCreateDCDBInstanceResponse()
+		instanceId    string
+		dcnInstanceId string
+		service       = DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	)
 	if v, ok := d.GetOk("zones"); ok {
 		zonesSet := v.(*schema.Set).List()
@@ -342,6 +343,7 @@ func resourceTencentCloudDcdbDbInstanceCreate(d *schema.ResourceData, meta inter
 
 	if v, ok := d.GetOk("dcn_instance_id"); ok {
 		request.DcnInstanceId = helper.String(v.(string))
+		dcnInstanceId = v.(string)
 	}
 
 	if v, _ := d.GetOk("auto_renew_flag"); v != nil {
@@ -414,6 +416,16 @@ func resourceTencentCloudDcdbDbInstanceCreate(d *schema.ResourceData, meta inter
 			return e
 		}
 	}
+
+	if dcnInstanceId != "" {
+		// need to wait dcn init processing complete
+		// 0:none; 1:creating, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"2"}, 3*readRetryTimeout, time.Second, service.DcdbDcnStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
 	return resourceTencentCloudDcdbDbInstanceRead(d, meta)
 }
 
@@ -542,13 +554,6 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 
 	// }
 
-	if dcn, err := service.DescribeDcnDetailById(ctx, instanceId); dcn != nil {
-		_ = d.Set("dcn_region", dcn.Region)
-		_ = d.Set("dcn_instance_id", dcn.InstanceId)
-	} else {
-		return err
-	}
-
 	if dbInstance.AutoRenewFlag != nil {
 		_ = d.Set("auto_renew_flag", dbInstance.AutoRenewFlag)
 	}
@@ -559,6 +564,20 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 			sgIds = append(sgIds, sg.SecurityGroupId)
 		}
 		_ = d.Set("security_group_ids", sgIds)
+	} else {
+		return err
+	}
+
+	// set dcn id and region
+	if dcns, err := service.DescribeDcnDetailById(ctx, instanceId); dcns != nil {
+		for _, dcn := range dcns {
+			var master *dcdb.DcnDetailItem
+			if *dcn.DcnFlag == DCDB_DCN_FLAG_MASTER {
+				master = dcn
+				_ = d.Set("dcn_region", master.Region)
+				_ = d.Set("dcn_instance_id", master.InstanceId)
+			}
+		}
 	} else {
 		return err
 	}

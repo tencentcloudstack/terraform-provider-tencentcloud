@@ -52,7 +52,7 @@ func testSweepDCDBHourdbInstance(r string) error {
 	return nil
 }
 
-func TestAccTencentCloudDCDBHourdbInstance_basic(t *testing.T) {
+func TestAccTencentCloudDcdbHourdbInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -147,7 +147,7 @@ func testAccCheckDcdbHourdbInstanceExists(re string) resource.TestCheckFunc {
 	}
 }
 
-const testAccDcdbHourdb_vpc_config = `
+const testAccDcdbHourdb_vpc_config = defaultAzVariable + `
 data "tencentcloud_security_groups" "internal" {
 	name = "default"
 }
@@ -171,7 +171,7 @@ const testAccDcdbHourdbInstance_basic = testAccDcdbHourdb_vpc_config + `
 
 resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
   instance_name = "test_dcdb_hourdb_instance"
-  zones = ["ap-guangzhou-5"]
+  zones = [var.default_az]
   shard_memory = "2"
   shard_storage = "10"
   shard_node_count = "2"
@@ -192,7 +192,7 @@ const testAccDcdbHourdbInstance_update = testAccDcdbHourdb_vpc_config + `
 
 resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
   instance_name = "test_dcdb_hourdb_instance_CHANGED"
-  zones = ["ap-guangzhou-5"]
+  zones = [var.default_az]
   shard_memory = "2"
   shard_storage = "10"
   shard_node_count = "2"

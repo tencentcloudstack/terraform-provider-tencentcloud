@@ -1111,6 +1111,9 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_db_parameters
 	tencentcloud_dcdb_db_sync_mode_config
 	tencentcloud_dcdb_encrypt_attributes_config
+	tencentcloud_dcdb_cancel_dcn_job_operation
+	tencentcloud_dcdb_activate_hour_instance_operation
+	tencentcloud_dcdb_isolate_hour_instance_operation
 
 Short Message Service(SMS)
   Resource
@@ -2418,6 +2421,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_db_parameters":                         resourceTencentCloudDcdbDbParameters(),
 			"tencentcloud_dcdb_encrypt_attributes_config":             resourceTencentCloudDcdbEncryptAttributesConfig(),
 			"tencentcloud_dcdb_db_sync_mode_config":                   resourceTencentCloudDcdbDbSyncModeConfig(),
+			"tencentcloud_dcdb_activate_hour_instance_operation":      resourceTencentCloudDcdbActivateHourInstanceOperation(),
+			"tencentcloud_dcdb_isolate_hour_instance_operation":       resourceTencentCloudDcdbIsolateHourInstanceOperation(),
+			"tencentcloud_dcdb_cancel_dcn_job_operation":              resourceTencentCloudDcdbCancelDcnJobOperation(),
 			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":       resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_instance":                           resourceTencentCloudMariadbInstance(),
