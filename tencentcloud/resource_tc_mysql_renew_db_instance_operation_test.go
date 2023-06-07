@@ -8,7 +8,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudMysqlRenewDbInstanceOperationResource_basic -v
 func TestAccTencentCloudMysqlRenewDbInstanceOperationResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,

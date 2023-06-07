@@ -52,7 +52,7 @@ func testSweepDcdbDbInstance(r string) error {
 	return nil
 }
 
-func TestAccNeedFixTencentCloudDcdbDbInstanceResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixDcdbDbInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
