@@ -52,7 +52,7 @@ func testSweepDcdbHourdbInstance(r string) error {
 	return nil
 }
 
-func TestAccTencentCloudDcdbHourdbInstance_basic(t *testing.T) {
+func TestAccTencentCloudDcdbHourdbInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
