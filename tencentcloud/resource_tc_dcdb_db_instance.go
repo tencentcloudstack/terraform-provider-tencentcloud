@@ -173,6 +173,32 @@ func resourceTencentCloudDcdbDbInstance() *schema.Resource {
 				Description: "Whether to open the extranet access.",
 			},
 
+			"rs_access_strategy": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "RS nearest access mode, 0-no policy, 1-nearest access.",
+			},
+
+			"vip": {
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "The field is required to specify VIP.",
+			},
+
+			"vipv6": {
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "The field is required to specify VIPv6.",
+			},
+
+			"vport": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Intranet port.",
+			},
+
 			"resource_tags": {
 				Optional:    true,
 				Type:        schema.TypeList,
@@ -255,6 +281,8 @@ func resourceTencentCloudDcdbDbInstanceCreate(d *schema.ResourceData, meta inter
 		response      = dcdb.NewCreateDCDBInstanceResponse()
 		instanceId    string
 		dcnInstanceId string
+		vpcId         string
+		subnetId      string
 		ipv6Flag      int
 		service       = DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 	)
@@ -442,6 +470,37 @@ func resourceTencentCloudDcdbDbInstanceCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	if v, ok := d.GetOkExists("rs_access_strategy"); ok && v != nil {
+		rsStrategy := v.(int)
+		err := service.SetRealServerAccessStrategy(ctx, instanceId, rsStrategy)
+		if err != nil {
+			return err
+		}
+	}
+
+	var (
+		vip   string
+		vipv6 string
+	)
+
+	if v, ok := d.GetOk("vip"); ok {
+		vip = v.(string)
+	}
+	if v, ok := d.GetOk("vipv6"); ok {
+		vipv6 = v.(string)
+	}
+
+	if vip != "" || vipv6 != "" {
+		if vpcId == "" || subnetId == "" {
+			return fmt.Errorf("`vpc_id` and `subnet_id` cannot be empty when setting `vip` or `vipv6` fields!")
+		}
+
+		err := service.SetNetworkVip(ctx, instanceId, vpcId, subnetId, vip, vipv6)
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudDcdbDbInstanceRead(d, meta)
 }
 
@@ -617,6 +676,17 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
+	// set vip and vipv6
+	if detail, err := service.DescribeDcdbDbInstanceDetailById(ctx, instanceId); detail != nil {
+		if detail != nil {
+			_ = d.Set("vip", detail.Vip)
+			_ = d.Set("vipv6", detail.Vip6)
+			_ = d.Set("vport", detail.Vport)
+		}
+	} else {
+		return err
+	}
+
 	return nil
 }
 
@@ -703,6 +773,15 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 	}
 	// }
 
+	if v, ok := d.GetOkExists("rs_access_strategy"); ok && v != nil {
+		rsStrategy := v.(int)
+		err := service.SetRealServerAccessStrategy(ctx, instanceId, rsStrategy)
+		if err != nil {
+			return err
+		}
+		time.Sleep(2 * time.Second)
+	}
+
 	if d.HasChange("project_id") {
 		if projectId, ok := d.GetOk("project_id"); ok {
 			request := dcdb.NewModifyDBInstancesProjectRequest()
@@ -726,6 +805,37 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 		}
 		time.Sleep(2 * time.Second)
 	}
+
+	if d.HasChange("vip") || d.HasChange("vipv6") {
+		var (
+			vip      string
+			vipv6    string
+			vpcId    string
+			subnetId string
+		)
+		if v, ok := d.GetOk("vip"); ok {
+			vip = v.(string)
+		}
+		if v, ok := d.GetOk("vipv6"); ok {
+			vipv6 = v.(string)
+		}
+		if v, ok := d.GetOk("vpc_id"); ok {
+			vpcId = v.(string)
+		}
+		if v, ok := d.GetOk("subnet_id"); ok {
+			subnetId = v.(string)
+		}
+
+		if vpcId == "" || subnetId == "" {
+			return fmt.Errorf("`vpc_id` and `subnet_id` cannot be empty when updating `vip` or `vipv6` fields!")
+		}
+
+		err := service.SetNetworkVip(ctx, instanceId, vpcId, subnetId, vip, vipv6)
+		if err != nil {
+			return err
+		}
+	}
+
 	if d.HasChange("vpc_id") {
 		return fmt.Errorf("`vpc_id` do not support change now.")
 	}

@@ -531,6 +531,7 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		if detail != nil {
 			_ = d.Set("vip", detail.Vip)
 			_ = d.Set("vipv6", detail.Vip6)
+			_ = d.Set("vport", detail.Vport)
 		}
 	} else {
 		return err
@@ -666,13 +667,6 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 		if err != nil {
 			return err
 		}
-	}
-
-	if d.HasChange("dcn_region") {
-		return fmt.Errorf("`dcn_region` do not support change now.")
-	}
-	if d.HasChange("dcn_instance_id") {
-		return fmt.Errorf("`dcn_instance_id` do not support change now.")
 	}
 
 	if d.HasChange("dcn_region") {
