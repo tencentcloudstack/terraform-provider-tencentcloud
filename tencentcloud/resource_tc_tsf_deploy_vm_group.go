@@ -696,10 +696,6 @@ func resourceTencentCloudTsfDeployVmGroupRead(d *schema.ResourceData, meta inter
 		_ = d.Set("deploy_desc", deployVmGroup.DeployDesc)
 	}
 
-	// if deployVmGroup.ForceStart != nil {
-	// 	_ = d.Set("force_start", deployVmGroup.ForceStart)
-	// }
-
 	if deployVmGroup.EnableHealthCheck != nil {
 		_ = d.Set("enable_health_check", deployVmGroup.EnableHealthCheck)
 	}
@@ -837,18 +833,6 @@ func resourceTencentCloudTsfDeployVmGroupRead(d *schema.ResourceData, meta inter
 	if deployVmGroup.StopScript != nil {
 		_ = d.Set("stop_script", deployVmGroup.StopScript)
 	}
-
-	// if deployVmGroup.IncrementalDeployment != nil {
-	// 	_ = d.Set("incremental_deployment", deployVmGroup.IncrementalDeployment)
-	// }
-
-	// if deployVmGroup.JdkName != nil {
-	// 	_ = d.Set("jdk_name", deployVmGroup.JdkName)
-	// }
-
-	// if deployVmGroup.JdkVersion != nil {
-	// 	_ = d.Set("jdk_version", deployVmGroup.JdkVersion)
-	// }
 
 	if deployVmGroup.AgentProfileList != nil {
 		agentProfileListList := []interface{}{}

@@ -1329,14 +1329,6 @@ func resourceTencentCloudTsfDeployContainerGroupRead(d *schema.ResourceData, met
 		_ = d.Set("istio_mem_limit", deployContainerGroup.IstioMemLimit)
 	}
 
-	// if deployContainerGroup.MaxSurge != nil {
-	// 	_ = d.Set("max_surge", deployContainerGroup.MaxSurge)
-	// }
-
-	// if deployContainerGroup.MaxUnavailable != nil {
-	// 	_ = d.Set("max_unavailable", deployContainerGroup.MaxUnavailable)
-	// }
-
 	if deployContainerGroup.HealthCheckSettings != nil {
 		healthCheckSettingsMap := map[string]interface{}{}
 
@@ -1489,84 +1481,9 @@ func resourceTencentCloudTsfDeployContainerGroupRead(d *schema.ResourceData, met
 
 	}
 
-	// if deployContainerGroup.ServiceSetting != nil {
-	// 	serviceSettingMap := map[string]interface{}{}
-
-	// 	if deployContainerGroup.ServiceSetting.AccessType != nil {
-	// 		serviceSettingMap["access_type"] = deployContainerGroup.ServiceSetting.AccessType
-	// 	}
-
-	// 	if deployContainerGroup.ServiceSetting.ProtocolPorts != nil {
-	// 		protocolPortsList := []interface{}{}
-	// 		for _, protocolPorts := range deployContainerGroup.ServiceSetting.ProtocolPorts {
-	// 			protocolPortsMap := map[string]interface{}{}
-
-	// 			if protocolPorts.Protocol != nil {
-	// 				protocolPortsMap["protocol"] = protocolPorts.Protocol
-	// 			}
-
-	// 			if protocolPorts.Port != nil {
-	// 				protocolPortsMap["port"] = protocolPorts.Port
-	// 			}
-
-	// 			if protocolPorts.TargetPort != nil {
-	// 				protocolPortsMap["target_port"] = protocolPorts.TargetPort
-	// 			}
-
-	// 			if protocolPorts.NodePort != nil {
-	// 				protocolPortsMap["node_port"] = protocolPorts.NodePort
-	// 			}
-
-	// 			protocolPortsList = append(protocolPortsList, protocolPortsMap)
-	// 		}
-
-	// 		serviceSettingMap["protocol_ports"] = []interface{}{protocolPortsList}
-	// 	}
-
-	// 	if deployContainerGroup.ServiceSetting.SubnetId != nil {
-	// 		serviceSettingMap["subnet_id"] = deployContainerGroup.ServiceSetting.SubnetId
-	// 	}
-
-	// 	if deployContainerGroup.ServiceSetting.DisableService != nil {
-	// 		serviceSettingMap["disable_service"] = deployContainerGroup.ServiceSetting.DisableService
-	// 	}
-
-	// 	if deployContainerGroup.ServiceSetting.HeadlessService != nil {
-	// 		serviceSettingMap["headless_service"] = deployContainerGroup.ServiceSetting.HeadlessService
-	// 	}
-
-	// 	if deployContainerGroup.ServiceSetting.AllowDeleteService != nil {
-	// 		serviceSettingMap["allow_delete_service"] = deployContainerGroup.ServiceSetting.AllowDeleteService
-	// 	}
-
-	// 	if deployContainerGroup.ServiceSetting.OpenSessionAffinity != nil {
-	// 		serviceSettingMap["open_session_affinity"] = deployContainerGroup.ServiceSetting.OpenSessionAffinity
-	// 	}
-
-	// 	if deployContainerGroup.ServiceSetting.SessionAffinityTimeoutSeconds != nil {
-	// 		serviceSettingMap["session_affinity_timeout_seconds"] = deployContainerGroup.ServiceSetting.SessionAffinityTimeoutSeconds
-	// 	}
-
-	// 	_ = d.Set("service_setting", []interface{}{serviceSettingMap})
-	// }
-
 	if deployContainerGroup.DeployAgent != nil {
 		_ = d.Set("deploy_agent", deployContainerGroup.DeployAgent)
 	}
-
-	// if deployContainerGroup.SchedulingStrategy != nil {
-	// 	schedulingStrategyMap := map[string]interface{}{}
-
-	// 	if deployContainerGroup.SchedulingStrategy.Type != nil {
-	// 		schedulingStrategyMap["type"] = deployContainerGroup.SchedulingStrategy.Type
-	// 	}
-
-	// 	_ = d.Set("scheduling_strategy", []interface{}{schedulingStrategyMap})
-	// }
-
-	// if deployContainerGroup.IncrementalDeployment != nil {
-	// 	_ = d.Set("incremental_deployment", deployContainerGroup.IncrementalDeployment)
-	// }
 
 	if deployContainerGroup.RepoType != nil {
 		_ = d.Set("repo_type", deployContainerGroup.RepoType)

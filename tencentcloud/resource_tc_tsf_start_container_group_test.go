@@ -56,7 +56,7 @@ func testAccCheckTsfStartContainerGroupExists(r string) resource.TestCheckFunc {
 			return fmt.Errorf("tsf container group %s is not found", rs.Primary.ID)
 		}
 
-		if *res.GroupStatus != "Running" && *res.GroupStatus != "Paused" {
+		if *res.Status != "Running" && *res.Status != "Paused" {
 			return fmt.Errorf("tsf container group %s start or stop operation failed", rs.Primary.ID)
 		}
 
