@@ -1141,3 +1141,46 @@ func (me *DcdbService) SetRealServerAccessStrategy(ctx context.Context, instance
 
 	return
 }
+
+func (me *DcdbService) SetNetworkVip(ctx context.Context, instanceId, vpcId, subnetId, vip, vipv6 string) (errRet error) {
+	logId := getLogId(ctx)
+	var flowId *int64
+
+	request := dcdb.NewModifyInstanceNetworkRequest()
+
+	request.InstanceId = &instanceId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	if vip != "" {
+		request.Vip = &vip
+	}
+	if vipv6 != "" {
+		request.Vipv6 = &vipv6
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseDcdbClient().ModifyInstanceNetwork(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		flowId = result.Response.FlowId
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s operate dcdb modifyInstanceNetworkOperation failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if flowId != nil {
+		// need to wait operation complete
+		// 0:success; 1:failed, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"0"}, 2*readRetryTimeout, time.Second, me.DcdbDbInstanceStateRefreshFunc(flowId, []string{"1"}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
+	return
+}

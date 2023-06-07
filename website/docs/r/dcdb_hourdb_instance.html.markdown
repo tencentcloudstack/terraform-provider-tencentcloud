@@ -48,8 +48,11 @@ The following arguments are supported:
 * `ipv6_flag` - (Optional, Int) Whether to support IPv6.
 * `project_id` - (Optional, Int) project id.
 * `resource_tags` - (Optional, List) resource tags.
+* `rs_access_strategy` - (Optional, Int) RS nearest access mode, 0-no policy, 1-nearest access.
 * `security_group_id` - (Optional, String) security group id.
 * `subnet_id` - (Optional, String) subnet id, it&amp;#39;s required when vpcId is set.
+* `vip` - (Optional, String, ForceNew) The field is required to specify VIP.
+* `vipv6` - (Optional, String, ForceNew) The field is required to specify VIPv6.
 * `vpc_id` - (Optional, String) vpc id.
 * `zones` - (Optional, Set: [`String`]) available zone.
 
@@ -63,7 +66,7 @@ The `resource_tags` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `vport` - Intranet port.
 
 
 ## Import

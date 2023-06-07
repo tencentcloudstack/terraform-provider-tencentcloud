@@ -152,6 +152,26 @@ func resourceTencentCloudDcdbHourdbInstance() *schema.Resource {
 				Description: "RS nearest access mode, 0-no policy, 1-nearest access.",
 			},
 
+			"vip": {
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "The field is required to specify VIP.",
+			},
+
+			"vipv6": {
+				Optional:    true,
+				ForceNew:    true,
+				Type:        schema.TypeString,
+				Description: "The field is required to specify VIPv6.",
+			},
+
+			"vport": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Intranet port.",
+			},
+
 			"resource_tags": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -184,6 +204,8 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 		response      *dcdb.CreateHourDCDBInstanceResponse
 		instanceId    string
 		dcnInstanceId string
+		vpcId         string
+		subnetId      string
 		ipv6Flag      int
 		logId         = getLogId(contextNil)
 		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
@@ -216,10 +238,12 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 
 	if v, ok := d.GetOk("vpc_id"); ok {
 		request.VpcId = helper.String(v.(string))
+		vpcId = v.(string)
 	}
 
 	if v, ok := d.GetOk("subnet_id"); ok {
 		request.SubnetId = helper.String(v.(string))
+		subnetId = v.(string)
 	}
 
 	if v, ok := d.GetOk("db_version_id"); ok {
@@ -344,6 +368,29 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 	if v, ok := d.GetOkExists("rs_access_strategy"); ok && v != nil {
 		rsStrategy := v.(int)
 		err := service.SetRealServerAccessStrategy(ctx, instanceId, rsStrategy)
+		if err != nil {
+			return err
+		}
+	}
+
+	var (
+		vip   string
+		vipv6 string
+	)
+
+	if v, ok := d.GetOk("vip"); ok {
+		vip = v.(string)
+	}
+	if v, ok := d.GetOk("vipv6"); ok {
+		vipv6 = v.(string)
+	}
+
+	if vip != "" || vipv6 != "" {
+		if vpcId == "" || subnetId == "" {
+			return fmt.Errorf("`vpc_id` and `subnet_id` cannot be empty when setting `vip` or `vipv6` fields!")
+		}
+
+		err := service.SetNetworkVip(ctx, instanceId, vpcId, subnetId, vip, vipv6)
 		if err != nil {
 			return err
 		}
@@ -479,6 +526,16 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		return err
 	}
 
+	// set vip and vipv6
+	if detail, err := service.DescribeDcdbDbInstanceDetailById(ctx, instanceId); detail != nil {
+		if detail != nil {
+			_ = d.Set("vip", detail.Vip)
+			_ = d.Set("vipv6", detail.Vip6)
+		}
+	} else {
+		return err
+	}
+
 	return nil
 }
 
@@ -579,6 +636,36 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 			}
 		}
 		time.Sleep(2 * time.Second)
+	}
+
+	if d.HasChange("vip") || d.HasChange("vipv6") {
+		var (
+			vip      string
+			vipv6    string
+			vpcId    string
+			subnetId string
+		)
+		if v, ok := d.GetOk("vip"); ok {
+			vip = v.(string)
+		}
+		if v, ok := d.GetOk("vipv6"); ok {
+			vipv6 = v.(string)
+		}
+		if v, ok := d.GetOk("vpc_id"); ok {
+			vpcId = v.(string)
+		}
+		if v, ok := d.GetOk("subnet_id"); ok {
+			subnetId = v.(string)
+		}
+
+		if vpcId == "" || subnetId == "" {
+			return fmt.Errorf("`vpc_id` and `subnet_id` cannot be empty when updating `vip` or `vipv6` fields!")
+		}
+
+		err := service.SetNetworkVip(ctx, instanceId, vpcId, subnetId, vip, vipv6)
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("dcn_region") {
