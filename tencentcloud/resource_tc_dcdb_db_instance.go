@@ -580,17 +580,6 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 
 	// }
 
-	if v, ok := d.GetOk("dcn_instance_id"); ok {
-		dcnInstanceId := v.(string)
-
-		if dcn, err := service.DescribeDcnDetailById(ctx, dcnInstanceId); dcn != nil {
-			_ = d.Set("dcn_region", dcn.Region)
-			_ = d.Set("dcn_instance_id", dcn.InstanceId)
-		} else {
-			return err
-		}
-	}
-
 	if dbInstance.AutoRenewFlag != nil {
 		_ = d.Set("auto_renew_flag", dbInstance.AutoRenewFlag)
 	}
@@ -610,6 +599,20 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 		// end
 
 		_ = d.Set("security_group_ids", sgIds)
+	} else {
+		return err
+	}
+
+	// set dcn id and region
+	if dcns, err := service.DescribeDcnDetailById(ctx, instanceId); dcns != nil {
+		for _, dcn := range dcns {
+			var master *dcdb.DcnDetailItem
+			if *dcn.DcnFlag == DCDB_DCN_FLAG_MASTER {
+				master = dcn
+				_ = d.Set("dcn_region", master.Region)
+				_ = d.Set("dcn_instance_id", master.InstanceId)
+			}
+		}
 	} else {
 		return err
 	}

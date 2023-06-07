@@ -455,17 +455,6 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("resource_tags", resourceTagsList)
 	}
 
-	if v, ok := d.GetOk("dcn_instance_id"); ok {
-		dcnInstanceId := v.(string)
-
-		if dcn, err := service.DescribeDcnDetailById(ctx, dcnInstanceId); dcn != nil {
-			_ = d.Set("dcn_region", dcn.Region)
-			_ = d.Set("dcn_instance_id", dcn.InstanceId)
-		} else {
-			return err
-		}
-	}
-
 	if sg, err := service.DescribeDcdbSecurityGroup(ctx, instanceId); sg != nil {
 		sgId := ""
 		if len(sg.Groups) > 0 {
@@ -476,9 +465,15 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		return err
 	}
 
-	if insDetail, err := service.DescribeDcdbDbInstanceDetailById(ctx, instanceId); insDetail != nil {
-		if insDetail.RsAccessStrategy != nil {
-			_ = d.Set("rs_access_strategy", insDetail.RsAccessStrategy)
+	// set dcn id and region
+	if dcns, err := service.DescribeDcnDetailById(ctx, instanceId); dcns != nil {
+		for _, dcn := range dcns {
+			var master *dcdb.DcnDetailItem
+			if *dcn.DcnFlag == DCDB_DCN_FLAG_MASTER {
+				master = dcn
+				_ = d.Set("dcn_region", master.Region)
+				_ = d.Set("dcn_instance_id", master.InstanceId)
+			}
 		}
 	} else {
 		return err
@@ -584,6 +579,13 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 			}
 		}
 		time.Sleep(2 * time.Second)
+	}
+
+	if d.HasChange("dcn_region") {
+		return fmt.Errorf("`dcn_region` do not support change now.")
+	}
+	if d.HasChange("dcn_instance_id") {
+		return fmt.Errorf("`dcn_instance_id` do not support change now.")
 	}
 
 	if d.HasChange("dcn_region") {

@@ -593,7 +593,7 @@ func (me *DcdbService) DeleteDcdbDbInstanceById(ctx context.Context, instanceId 
 	return
 }
 
-func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId string) (dbInstance *dcdb.DcnDetailItem, errRet error) {
+func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId string) (dcnDetails []*dcdb.DcnDetailItem, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dcdb.NewDescribeDcnDetailRequest()
@@ -618,18 +618,18 @@ func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId str
 		return
 	}
 
-	if instanceId != "" {
-		for _, detail := range response.Response.DcnDetails {
-			if *detail.InstanceId == instanceId {
-				dbInstance = detail
-				return
-			}
-		}
-		return
-	}
+	// we need this relationship about master and dcn, so no need to filter the results
+	// if instanceId != "" {
+	// 	for _, detail := range response.Response.DcnDetails {
+	// 		if *detail.InstanceId == instanceId {
+	// 			dbInstance = detail
+	// 			return
+	// 		}
+	// 	}
+	// 	return
+	// }
 
-	// default is return the first one(maybe the master)
-	dbInstance = response.Response.DcnDetails[0]
+	dcnDetails = response.Response.DcnDetails
 	return
 }
 
@@ -1027,18 +1027,18 @@ func (me *DcdbService) DcdbDbSyncModeConfigStateRefreshFunc(instanceId string, f
 func (me *DcdbService) DcdbDcnStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil
-
-		object, err := me.DescribeDcnDetailById(ctx, instanceId)
+		rets, err := me.DescribeDcnDetailById(ctx, instanceId)
 
 		if err != nil {
 			return nil, "", err
 		}
 
-		if object == nil || object.DcnStatus == nil {
-			return &object.DcnStatus, "0", nil
+		for _, object := range rets {
+			if *object.InstanceId == instanceId {
+				return object, helper.Int64ToStr(*object.DcnStatus), nil
+			}
 		}
-
-		return object, helper.Int64ToStr(*object.DcnStatus), nil
+		return &dcdb.DcnDetailItem{}, "0", nil
 	}
 }
 

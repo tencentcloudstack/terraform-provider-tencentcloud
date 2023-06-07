@@ -545,6 +545,10 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_supported_privileges
 	tencentcloud_mysql_switch_record
 	tencentcloud_mysql_user_task
+	tencentcloud_mysql_databases
+	tencentcloud_mysql_error_log
+	tencentcloud_mysql_project_security_group
+	tencentcloud_mysql_ro_min_scale
 
   Resource
     tencentcloud_mysql_instance
@@ -1111,6 +1115,9 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_db_parameters
 	tencentcloud_dcdb_db_sync_mode_config
 	tencentcloud_dcdb_encrypt_attributes_config
+	tencentcloud_dcdb_cancel_dcn_job_operation
+	tencentcloud_dcdb_activate_hour_instance_operation
+	tencentcloud_dcdb_isolate_hour_instance_operation
 	tencentcloud_dcdb_flush_binlog_operation
 	tencentcloud_dcdb_switch_db_instance_ha_operation
 
@@ -1636,6 +1643,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_supported_privileges":                dataSourceTencentCloudMysqlSupportedPrivileges(),
 			"tencentcloud_mysql_switch_record":                       dataSourceTencentCloudMysqlSwitchRecord(),
 			"tencentcloud_mysql_user_task":                           dataSourceTencentCloudMysqlUserTask(),
+			"tencentcloud_mysql_databases":                           dataSourceTencentCloudMysqlDatabases(),
+			"tencentcloud_mysql_error_log":                           dataSourceTencentCloudMysqlErrorLog(),
+			"tencentcloud_mysql_project_security_group":              dataSourceTencentCloudMysqlProjectSecurityGroup(),
+			"tencentcloud_mysql_ro_min_scale":                        dataSourceTencentCloudMysqlRoMinScale(),
 			"tencentcloud_cos_bucket_object":                         dataSourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_buckets":                               dataSourceTencentCloudCosBuckets(),
 			"tencentcloud_cfs_file_systems":                          dataSourceTencentCloudCfsFileSystems(),
@@ -2420,6 +2431,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_db_parameters":                         resourceTencentCloudDcdbDbParameters(),
 			"tencentcloud_dcdb_encrypt_attributes_config":             resourceTencentCloudDcdbEncryptAttributesConfig(),
 			"tencentcloud_dcdb_db_sync_mode_config":                   resourceTencentCloudDcdbDbSyncModeConfig(),
+			"tencentcloud_dcdb_activate_hour_instance_operation":      resourceTencentCloudDcdbActivateHourInstanceOperation(),
+			"tencentcloud_dcdb_isolate_hour_instance_operation":       resourceTencentCloudDcdbIsolateHourInstanceOperation(),
+			"tencentcloud_dcdb_cancel_dcn_job_operation":              resourceTencentCloudDcdbCancelDcnJobOperation(),
 			"tencentcloud_dcdb_flush_binlog_operation":                resourceTencentCloudDcdbFlushBinlogOperation(),
 			"tencentcloud_dcdb_switch_db_instance_ha_operation":       resourceTencentCloudDcdbSwitchDbInstanceHaOperation(),
 			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
