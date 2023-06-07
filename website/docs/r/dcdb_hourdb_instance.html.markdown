@@ -43,7 +43,9 @@ The following arguments are supported:
 * `db_version_id` - (Optional, String) db engine version, default to Percona 5.7.17.
 * `dcn_instance_id` - (Optional, String) DCN source instance ID.
 * `dcn_region` - (Optional, String) DCN source region.
+* `extranet_access` - (Optional, Bool) Whether to open the extranet access.
 * `instance_name` - (Optional, String) name of this instance.
+* `ipv6_flag` - (Optional, Int) Whether to support IPv6.
 * `project_id` - (Optional, Int) project id.
 * `resource_tags` - (Optional, List) resource tags.
 * `security_group_id` - (Optional, String) security group id.
