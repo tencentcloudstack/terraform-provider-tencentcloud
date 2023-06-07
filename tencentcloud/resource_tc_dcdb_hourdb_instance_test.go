@@ -14,6 +14,7 @@ func init() {
 	resource.AddTestSweepers("tencentcloud_dcdb_hourdb_instance", &resource.Sweeper{
 		Name: "tencentcloud_dcdb_hourdb_instance",
 		F:    testSweepDcdbHourdbInstance,
+		F:    testSweepDcdbHourdbInstance,
 	})
 }
 
