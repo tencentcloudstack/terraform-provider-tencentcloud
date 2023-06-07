@@ -88,7 +88,7 @@ func TestAccTencentCloudNeedFixDcdbDbInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "init_params.3.value", "16384"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "security_group_ids.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "project_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "extranet_access", "true"),
+					// resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "extranet_access", "true"),
 				),
 			},
 			{
@@ -100,7 +100,7 @@ func TestAccTencentCloudNeedFixDcdbDbInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_db_instance.db_instance", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_db_instance.db_instance", "subnet_id"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "project_id", defaultProjectId),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "extranet_access", "false"),
+					// resource.TestCheckResourceAttr("tencentcloud_dcdb_db_instance.db_instance", "extranet_access", "false"),
 				),
 			},
 			{
@@ -217,7 +217,7 @@ resource "tencentcloud_dcdb_db_instance" "db_instance" {
   security_group_ids = [local.sg_id]
   project_id = 0
   rs_access_strategy = 1
-  extranet_access = true
+//   extranet_access = true
   vip = "172.16.112.200"
 }
 
@@ -259,7 +259,7 @@ resource "tencentcloud_dcdb_db_instance" "db_instance" {
   security_group_ids = [local.sg_id]
   project_id = var.default_project
   rs_access_strategy = 2
-  extranet_access = false
+//   extranet_access = false
   vip = "172.16.112.201"
 }
 

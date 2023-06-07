@@ -664,6 +664,10 @@ func (me *DcdbService) DcdbDbInstanceStateRefreshFunc(flowId *int64, failStates 
 	return func() (interface{}, string, error) {
 		ctx := contextNil
 
+		if *flowId == 0 {
+			return &dcdb.DescribeFlowResponseParams{}, "0", nil
+		}
+
 		object, err := me.DescribeDcdbFlowById(ctx, flowId)
 
 		if err != nil {

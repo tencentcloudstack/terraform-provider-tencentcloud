@@ -154,14 +154,12 @@ func resourceTencentCloudDcdbHourdbInstance() *schema.Resource {
 
 			"vip": {
 				Optional:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The field is required to specify VIP.",
 			},
 
 			"vipv6": {
 				Optional:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The field is required to specify VIPv6.",
 			},
