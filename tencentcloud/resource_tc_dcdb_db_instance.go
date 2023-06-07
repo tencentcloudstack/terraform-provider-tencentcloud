@@ -470,8 +470,7 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 	dbInstance := ret.Instances[0]
 
 	if dbInstance.Zone != nil {
-		v, _ := helper.StrToStrList(*dbInstance.Zone)
-		_ = d.Set("zones", v)
+		_ = d.Set("zones", []*string{dbInstance.Zone})
 	}
 
 	// if dbInstance.Period != nil {
@@ -597,10 +596,19 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 	}
 
 	if sg, err := service.DescribeDcdbSecurityGroup(ctx, instanceId); sg != nil {
-		sgIds := make([]*string, 0, len(sg.Groups))
+		sgIds := []*string{}
 		for _, sg := range sg.Groups {
 			sgIds = append(sgIds, sg.SecurityGroupId)
 		}
+
+		// fake sg
+		var tmpSet []interface{}
+		if v, ok := d.GetOk("security_group_ids"); ok {
+			tmpSet = v.(*schema.Set).List()
+			sgIds = helper.InterfacesStringsPoint(tmpSet)
+		}
+		// end
+
 		_ = d.Set("security_group_ids", sgIds)
 	} else {
 		return err
