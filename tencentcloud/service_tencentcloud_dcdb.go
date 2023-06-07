@@ -911,7 +911,7 @@ func (me *DcdbService) DescribeDcdbDBTablesByFilter(ctx context.Context, param m
 	return
 }
 
-func (me *DcdbService) DescribeDcdbDedicatedClusterDbInstanceById(ctx context.Context, instanceId string) (dedicatedClusterDbInstance *dcdb.DescribeDCDBInstanceDetailResponseParams, errRet error) {
+func (me *DcdbService) DescribeDcdbDbInstanceDetailById(ctx context.Context, instanceId string) (dedicatedClusterDbInstance *dcdb.DescribeDCDBInstanceDetailResponseParams, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dcdb.NewDescribeDCDBInstanceDetailRequest()
@@ -1116,5 +1116,28 @@ func (me *DcdbService) SetDcdbExtranetAccess(ctx context.Context, instanceId str
 			return e
 		}
 	}
+	return
+}
+
+func (me *DcdbService) SetRealServerAccessStrategy(ctx context.Context, instanceId string, rsAccessStrategy int) (errRet error) {
+	logId := getLogId(ctx)
+	request := dcdb.NewModifyRealServerAccessStrategyRequest()
+	request.InstanceId = &instanceId
+	request.RsAccessStrategy = helper.IntInt64(rsAccessStrategy)
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseDcdbClient().ModifyRealServerAccessStrategy(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s operate dcdb modifyRealServerAccessStrategyOperation failed, reason:%+v", logId, err)
+		return err
+	}
+
 	return
 }

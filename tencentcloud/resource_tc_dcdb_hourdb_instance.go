@@ -146,6 +146,12 @@ func resourceTencentCloudDcdbHourdbInstance() *schema.Resource {
 				Description: "Whether to open the extranet access.",
 			},
 
+			"rs_access_strategy": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "RS nearest access mode, 0-no policy, 1-nearest access.",
+			},
+
 			"resource_tags": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -301,12 +307,21 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 		},
 	}
 
-	initRet, _, err := service.InitDcdbDbInstance(ctx, instanceId, defaultInitParams)
+	initRet, flowId, err := service.InitDcdbDbInstance(ctx, instanceId, defaultInitParams)
 	if err != nil {
 		return err
 	}
 	if !initRet {
 		return fmt.Errorf("db instance init failed")
+	}
+
+	if flowId != nil {
+		// need to wait init operation success
+		// 0:success; 1:failed, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"0"}, 3*readRetryTimeout, time.Second, service.DcdbDbInstanceStateRefreshFunc(helper.UInt64Int64(*flowId), []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
 	}
 
 	if dcnInstanceId != "" {
@@ -321,6 +336,14 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 	if v, ok := d.GetOkExists("extranet_access"); ok && v != nil {
 		flag := v.(bool)
 		err := service.SetDcdbExtranetAccess(ctx, instanceId, ipv6Flag, flag)
+		if err != nil {
+			return err
+		}
+	}
+
+	if v, ok := d.GetOkExists("rs_access_strategy"); ok && v != nil {
+		rsStrategy := v.(int)
+		err := service.SetRealServerAccessStrategy(ctx, instanceId, rsStrategy)
 		if err != nil {
 			return err
 		}
@@ -453,6 +476,14 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		return err
 	}
 
+	if insDetail, err := service.DescribeDcdbDbInstanceDetailById(ctx, instanceId); insDetail != nil {
+		if insDetail.RsAccessStrategy != nil {
+			_ = d.Set("rs_access_strategy", insDetail.RsAccessStrategy)
+		}
+	} else {
+		return err
+	}
+
 	return nil
 }
 
@@ -516,6 +547,15 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 			ipv6Flag = v.(int)
 		}
 		err := service.SetDcdbExtranetAccess(ctx, instanceId, ipv6Flag, flag)
+		if err != nil {
+			return err
+		}
+		time.Sleep(2 * time.Second)
+	}
+
+	if v, ok := d.GetOkExists("rs_access_strategy"); ok && v != nil {
+		rsStrategy := v.(int)
+		err := service.SetRealServerAccessStrategy(ctx, instanceId, rsStrategy)
 		if err != nil {
 			return err
 		}
