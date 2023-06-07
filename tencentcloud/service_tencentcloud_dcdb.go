@@ -42,6 +42,22 @@ func (me *DcdbService) DescribeDcdbAccount(ctx context.Context, instanceId, user
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if userName != "" {
+		// filter
+		for _, user := range response.Response.Users {
+			if *user.UserName == userName {
+				account = &dcdb.DescribeAccountsResponseParams{
+					InstanceId: response.Response.InstanceId,
+					RequestId:  response.Response.RequestId,
+					Users:      []*dcdb.DBAccount{user},
+				}
+				return
+			}
+		}
+		return
+	}
+
 	account = response.Response
 	return
 }
@@ -577,7 +593,7 @@ func (me *DcdbService) DeleteDcdbDbInstanceById(ctx context.Context, instanceId 
 	return
 }
 
-func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId string) (dbInstance *dcdb.DcnDetailItem, errRet error) {
+func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId string) (dcnDetails []*dcdb.DcnDetailItem, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dcdb.NewDescribeDcnDetailRequest()
@@ -602,7 +618,18 @@ func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId str
 		return
 	}
 
-	dbInstance = response.Response.DcnDetails[0]
+	// we need this relationship about master and dcn, so no need to filter the results
+	// if instanceId != "" {
+	// 	for _, detail := range response.Response.DcnDetails {
+	// 		if *detail.InstanceId == instanceId {
+	// 			dbInstance = detail
+	// 			return
+	// 		}
+	// 	}
+	// 	return
+	// }
+
+	dcnDetails = response.Response.DcnDetails
 	return
 }
 
@@ -641,6 +668,12 @@ func (me *DcdbService) DcdbDbInstanceStateRefreshFunc(flowId *int64, failStates 
 
 		if err != nil {
 			return nil, "", err
+		}
+
+		for _, str := range failStates {
+			if strings.Contains(str, helper.Int64ToStr(*object.Status)) {
+				return &dcdb.DescribeFlowResponseParams{}, "1", nil
+			}
 		}
 
 		return object, helper.Int64ToStr(*object.Status), nil
@@ -988,5 +1021,42 @@ func (me *DcdbService) DcdbDbSyncModeConfigStateRefreshFunc(instanceId string, f
 		}
 
 		return object, helper.Int64ToStr(*object.IsModifying), nil
+	}
+}
+
+func (me *DcdbService) DcdbDcnStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+		rets, err := me.DescribeDcnDetailById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		for _, object := range rets {
+			if *object.InstanceId == instanceId {
+				return object, helper.Int64ToStr(*object.DcnStatus), nil
+			}
+		}
+		return &dcdb.DcnDetailItem{}, "0", nil
+	}
+}
+
+func (me *DcdbService) DcdbAccountRefreshFunc(instanceId string, userName string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDcdbAccount(ctx, instanceId, userName)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || len(object.Users) < 1 {
+			return &dcdb.DBAccount{}, "deleted", nil
+		}
+
+		user := object.Users[0]
+		return user, *user.UserName, nil
 	}
 }
