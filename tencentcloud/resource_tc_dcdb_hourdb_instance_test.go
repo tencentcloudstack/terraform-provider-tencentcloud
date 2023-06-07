@@ -75,7 +75,7 @@ func TestAccTencentCloudDcdbHourdbInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "shard_count", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "db_version_id", "8.0"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "project_id", "0"),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "rs_access_strategy", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "rs_access_strategy", "0"),
 					// resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "extranet_access", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "vip", "172.16.112.200"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "resource_tags.#", "1"),
@@ -90,7 +90,7 @@ func TestAccTencentCloudDcdbHourdbInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "subnet_id"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "project_id", defaultProjectId),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "rs_access_strategy", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "rs_access_strategy", "1"),
 					// resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "extranet_access", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "vip", "172.16.112.201"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "instance_name", "test_dcdb_hourdb_instance_CHANGED"),
@@ -188,7 +188,7 @@ resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
   security_group_id = local.sg_id
   db_version_id = "8.0"
   project_id = 0
-  rs_access_strategy = 1
+  rs_access_strategy = 0
 //   extranet_access = true
   vip = "172.16.112.200"
   resource_tags {
@@ -213,7 +213,7 @@ resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
   security_group_id = ""
   db_version_id = "8.0"
   project_id = var.default_project
-  rs_access_strategy = 2
+  rs_access_strategy = 1
 //   extranet_access = false
   vip = "172.16.112.201"
   resource_tags {
