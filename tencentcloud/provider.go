@@ -545,6 +545,10 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_supported_privileges
 	tencentcloud_mysql_switch_record
 	tencentcloud_mysql_user_task
+	tencentcloud_mysql_databases
+	tencentcloud_mysql_error_log
+	tencentcloud_mysql_project_security_group
+	tencentcloud_mysql_ro_min_scale
 
   Resource
     tencentcloud_mysql_instance
@@ -1637,6 +1641,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_supported_privileges":                dataSourceTencentCloudMysqlSupportedPrivileges(),
 			"tencentcloud_mysql_switch_record":                       dataSourceTencentCloudMysqlSwitchRecord(),
 			"tencentcloud_mysql_user_task":                           dataSourceTencentCloudMysqlUserTask(),
+			"tencentcloud_mysql_databases":                           dataSourceTencentCloudMysqlDatabases(),
+			"tencentcloud_mysql_error_log":                           dataSourceTencentCloudMysqlErrorLog(),
+			"tencentcloud_mysql_project_security_group":              dataSourceTencentCloudMysqlProjectSecurityGroup(),
+			"tencentcloud_mysql_ro_min_scale":                        dataSourceTencentCloudMysqlRoMinScale(),
 			"tencentcloud_cos_bucket_object":                         dataSourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_buckets":                               dataSourceTencentCloudCosBuckets(),
 			"tencentcloud_cfs_file_systems":                          dataSourceTencentCloudCfsFileSystems(),
