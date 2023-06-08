@@ -173,12 +173,6 @@ func resourceTencentCloudDcdbDbInstance() *schema.Resource {
 				Description: "Whether to open the extranet access.",
 			},
 
-			"rs_access_strategy": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "RS nearest access mode, 0-no policy, 1-nearest access.",
-			},
-
 			"vip": {
 				Optional:    true,
 				Computed:    true,
@@ -470,14 +464,6 @@ func resourceTencentCloudDcdbDbInstanceCreate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if v, ok := d.GetOkExists("rs_access_strategy"); ok && v != nil {
-		rsStrategy := v.(int)
-		err := service.SetRealServerAccessStrategy(ctx, instanceId, rsStrategy)
-		if err != nil {
-			return err
-		}
-	}
-
 	var (
 		vip   string
 		vipv6 string
@@ -672,10 +658,9 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	// set rs_access_strategy, vip, vipv6 and vport
+	// set vip, vipv6 and vport
 	if detail, err := service.DescribeDcdbDbInstanceDetailById(ctx, instanceId); err == nil {
 		if detail != nil {
-			_ = d.Set("rs_access_strategy", detail.RsAccessStrategy)
 			_ = d.Set("vip", detail.Vip)
 			_ = d.Set("vipv6", detail.Vip6)
 			_ = d.Set("vport", detail.Vport)
@@ -763,7 +748,6 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`shard_count` do not support change now.")
 	}
 
-	// if d.HasChange("extranet_access") {
 	if v, ok := d.GetOkExists("extranet_access"); ok && v != nil {
 		flag := v.(bool)
 		var ipv6Flag int
@@ -771,16 +755,6 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 			ipv6Flag = v.(int)
 		}
 		err := service.SetDcdbExtranetAccess(ctx, instanceId, ipv6Flag, flag)
-		if err != nil {
-			return err
-		}
-		time.Sleep(2 * time.Second)
-	}
-	// }
-
-	if v, ok := d.GetOkExists("rs_access_strategy"); ok && v != nil {
-		rsStrategy := v.(int)
-		err := service.SetRealServerAccessStrategy(ctx, instanceId, rsStrategy)
 		if err != nil {
 			return err
 		}

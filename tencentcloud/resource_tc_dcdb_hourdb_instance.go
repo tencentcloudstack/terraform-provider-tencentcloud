@@ -146,12 +146,6 @@ func resourceTencentCloudDcdbHourdbInstance() *schema.Resource {
 				Description: "Whether to open the extranet access.",
 			},
 
-			"rs_access_strategy": {
-				Optional:    true,
-				Type:        schema.TypeInt,
-				Description: "RS nearest access mode, 0-no policy, 1-nearest access.",
-			},
-
 			"vip": {
 				Optional:    true,
 				Computed:    true,
@@ -365,14 +359,6 @@ func resourceTencentCloudDcdbHourdbInstanceCreate(d *schema.ResourceData, meta i
 		}
 	}
 
-	if v, ok := d.GetOkExists("rs_access_strategy"); ok && v != nil {
-		rsStrategy := v.(int)
-		err := service.SetRealServerAccessStrategy(ctx, instanceId, rsStrategy)
-		if err != nil {
-			return err
-		}
-	}
-
 	var (
 		vip   string
 		vipv6 string
@@ -523,10 +509,9 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 		return err
 	}
 
-	// set rs_access_strategy, vip, vipv6 and vport
+	// set vip, vipv6 and vport
 	if detail, err := service.DescribeDcdbDbInstanceDetailById(ctx, instanceId); err == nil {
 		if detail != nil {
-			_ = d.Set("rs_access_strategy", detail.RsAccessStrategy)
 			_ = d.Set("vip", detail.Vip)
 			_ = d.Set("vipv6", detail.Vip6)
 			_ = d.Set("vport", detail.Vport)
@@ -598,15 +583,6 @@ func resourceTencentCloudDcdbHourdbInstanceUpdate(d *schema.ResourceData, meta i
 			ipv6Flag = v.(int)
 		}
 		err := service.SetDcdbExtranetAccess(ctx, instanceId, ipv6Flag, flag)
-		if err != nil {
-			return err
-		}
-		time.Sleep(2 * time.Second)
-	}
-
-	if v, ok := d.GetOkExists("rs_access_strategy"); ok && v != nil {
-		rsStrategy := v.(int)
-		err := service.SetRealServerAccessStrategy(ctx, instanceId, rsStrategy)
 		if err != nil {
 			return err
 		}

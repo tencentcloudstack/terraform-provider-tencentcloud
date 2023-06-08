@@ -230,7 +230,6 @@ resource "tencentcloud_dcdb_db_instance" "db_instance" {
   }
   security_group_ids = [local.sg_id]
   project_id = 0
-  rs_access_strategy = 1
 //   extranet_access = true
 }
 
@@ -272,7 +271,6 @@ resource "tencentcloud_dcdb_db_instance" "db_instance" {
   }
   security_group_ids = [local.sg_id]
   project_id = var.default_project
-  rs_access_strategy = 2
 //   extranet_access = false
 }
 
