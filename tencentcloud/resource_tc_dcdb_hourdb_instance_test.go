@@ -77,7 +77,6 @@ func TestAccTencentCloudDcdbHourdbInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "project_id", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "rs_access_strategy", "0"),
 					// resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "extranet_access", "true"),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "vip", "172.16.112.200"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "resource_tags.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "resource_tags.0.tag_key", "aaa"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "resource_tags.0.tag_value", "bbb"),
@@ -92,7 +91,7 @@ func TestAccTencentCloudDcdbHourdbInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "project_id", defaultProjectId),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "rs_access_strategy", "1"),
 					// resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "extranet_access", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "vip", "172.16.112.201"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "vip", "172.18.111.10"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_hourdb_instance.hourdb_instance", "instance_name", "test_dcdb_hourdb_instance_CHANGED"),
 				),
 			},
@@ -166,11 +165,25 @@ data "tencentcloud_vpc_instances" "vpc" {
 data "tencentcloud_vpc_subnets" "subnet" {
 	vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
 }
+
+resource "tencentcloud_vpc" "vpc" {
+	cidr_block = "172.18.111.0/24"
+	name       = "test-pg-network-vpc"
+  }
+  
+  resource "tencentcloud_subnet" "subnet" {
+	availability_zone = var.default_az
+	cidr_block        = "172.18.111.0/24"
+	name              = "test-pg-network-sub1"
+	vpc_id            = tencentcloud_vpc.vpc.id
+  }
 	
 locals {
 	vpc_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
 	subnet_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
 	sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+	new_vpc_id = tencentcloud_subnet.subnet.vpc_id
+	new_subnet_id = tencentcloud_subnet.subnet.id
 }
 `
 
@@ -190,7 +203,6 @@ resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
   project_id = 0
   rs_access_strategy = 0
 //   extranet_access = true
-  vip = "172.16.112.200"
   resource_tags {
 	tag_key = "aaa"
 	tag_value = "bbb"
@@ -208,14 +220,14 @@ resource "tencentcloud_dcdb_hourdb_instance" "hourdb_instance" {
   shard_storage = "10"
   shard_node_count = "2"
   shard_count = "2"
-  vpc_id = local.vpc_id
-  subnet_id = local.subnet_id
+  vpc_id    = local.new_vpc_id
+  subnet_id = local.new_subnet_id
+  vip       = "172.18.111.10"
   security_group_id = ""
   db_version_id = "8.0"
   project_id = var.default_project
   rs_access_strategy = 1
 //   extranet_access = false
-  vip = "172.16.112.201"
   resource_tags {
 	tag_key = "aaa"
 	tag_value = "bbb"

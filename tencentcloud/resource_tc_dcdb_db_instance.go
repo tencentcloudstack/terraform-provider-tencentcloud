@@ -181,14 +181,14 @@ func resourceTencentCloudDcdbDbInstance() *schema.Resource {
 
 			"vip": {
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "The field is required to specify VIP.",
 			},
 
 			"vipv6": {
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "The field is required to specify VIPv6.",
 			},
@@ -643,7 +643,7 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("auto_renew_flag", dbInstance.AutoRenewFlag)
 	}
 
-	if sg, err := service.DescribeDcdbSecurityGroup(ctx, instanceId); sg != nil {
+	if sg, err := service.DescribeDcdbSecurityGroup(ctx, instanceId); err == nil {
 		sgIds := []*string{}
 		for _, sg := range sg.Groups {
 			sgIds = append(sgIds, sg.SecurityGroupId)
@@ -663,7 +663,7 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 	}
 
 	// set dcn id and region
-	if dcns, err := service.DescribeDcnDetailById(ctx, instanceId); dcns != nil {
+	if dcns, err := service.DescribeDcnDetailById(ctx, instanceId); err == nil {
 		for _, dcn := range dcns {
 			var master *dcdb.DcnDetailItem
 			if *dcn.DcnFlag == DCDB_DCN_FLAG_MASTER {
@@ -676,9 +676,10 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	// set vip and vipv6
-	if detail, err := service.DescribeDcdbDbInstanceDetailById(ctx, instanceId); detail != nil {
+	// set rs_access_strategy, vip, vipv6 and vport
+	if detail, err := service.DescribeDcdbDbInstanceDetailById(ctx, instanceId); err == nil {
 		if detail != nil {
+			_ = d.Set("rs_access_strategy", detail.RsAccessStrategy)
 			_ = d.Set("vip", detail.Vip)
 			_ = d.Set("vipv6", detail.Vip6)
 			_ = d.Set("vport", detail.Vport)
@@ -806,7 +807,7 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 		time.Sleep(2 * time.Second)
 	}
 
-	if d.HasChange("vip") || d.HasChange("vipv6") {
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("vip") || d.HasChange("vipv6") {
 		var (
 			vip      string
 			vipv6    string
@@ -827,7 +828,7 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 		}
 
 		if vpcId == "" || subnetId == "" {
-			return fmt.Errorf("`vpc_id` and `subnet_id` cannot be empty when updating `vip` or `vipv6` fields!")
+			return fmt.Errorf("`vpc_id` and `subnet_id` cannot be empty when updating network configs!")
 		}
 
 		err := service.SetNetworkVip(ctx, instanceId, vpcId, subnetId, vip, vipv6)
@@ -836,12 +837,6 @@ func resourceTencentCloudDcdbDbInstanceUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	if d.HasChange("vpc_id") {
-		return fmt.Errorf("`vpc_id` do not support change now.")
-	}
-	if d.HasChange("subnet_id") {
-		return fmt.Errorf("`subnet_id` do not support change now.")
-	}
 	if d.HasChange("db_version_id") {
 		return fmt.Errorf("`db_version_id` do not support change now.")
 	}
