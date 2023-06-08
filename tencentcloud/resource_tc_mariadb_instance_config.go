@@ -10,7 +10,6 @@ resource "tencentcloud_mariadb_instance_config" "test" {
   subnet_id          = "subnet-3ku415by"
   rs_access_strategy = 1
   extranet_access    = 0
-  project_id         = 0
   vip                = "127.0.0.1"
 }
 ```
@@ -32,7 +31,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -59,12 +57,6 @@ func resourceTencentCloudMariadbInstanceConfig() *schema.Resource {
 				Computed:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 				Description:  "RS proximity mode, 0- no strategy, 1- access to the nearest available zone.",
-			},
-			"project_id": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Computed:    true,
-				Description: "Project ID, if not passed, indicates the default project.",
 			},
 			"extranet_access": {
 				Type:         schema.TypeInt,
@@ -134,10 +126,6 @@ func resourceTencentCloudMariadbInstanceConfigRead(d *schema.ResourceData, meta 
 
 	if dbDetail.InstanceId != nil {
 		_ = d.Set("instance_id", dbDetail.InstanceId)
-	}
-
-	if dbDetail.ProjectId != nil {
-		_ = d.Set("project_id", dbDetail.ProjectId)
 	}
 
 	if dbDetail.RsAccessStrategy != nil {
@@ -339,31 +327,6 @@ func resourceTencentCloudMariadbInstanceConfigUpdate(d *schema.ResourceData, met
 					log.Printf("[CRITAL]%s operate mariadb network task failed, reason:%+v", logId, err)
 					return err
 				}
-			}
-		}
-
-		// set project_id
-		if v, ok := d.GetOk("project_id"); ok {
-			projectId := int64(v.(int))
-
-			MPRequest := mariadb.NewModifyDBInstancesProjectRequest()
-			MPRequest.InstanceIds = common.StringPtrs([]string{instanceId})
-			MPRequest.ProjectId = &projectId
-
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyDBInstancesProject(MPRequest)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s operate mariadb modifyInstanceProject failed, reason:%+v", logId, err)
-				return err
 			}
 		}
 	}

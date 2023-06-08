@@ -59,6 +59,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -847,6 +848,31 @@ func resourceTencentCloudMariadbInstanceUpdate(d *schema.ResourceData, meta inte
 		resourceName := BuildTagResourceName("mariadb", "instance", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
+		}
+	}
+
+	if d.HasChange("project_id") {
+		if v, ok := d.GetOkExists("project_id"); ok {
+			projectId := int64(v.(int))
+			MPRequest := mariadb.NewModifyDBInstancesProjectRequest()
+			MPRequest.InstanceIds = common.StringPtrs([]string{instanceId})
+			MPRequest.ProjectId = &projectId
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyDBInstancesProject(MPRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s operate mariadb modifyInstanceProject failed, reason:%+v", logId, err)
+				return err
+			}
 		}
 	}
 

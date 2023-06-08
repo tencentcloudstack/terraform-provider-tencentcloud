@@ -34,6 +34,5 @@ resource "tencentcloud_mariadb_instance_config" "test" {
   instance_id        = "tdsql-9vqvls95"
   rs_access_strategy = 1
   extranet_access    = 0
-  project_id         = 0
 }
 `

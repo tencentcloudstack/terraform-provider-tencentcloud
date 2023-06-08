@@ -32,6 +32,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -68,6 +69,12 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "dedicated cluster id.",
+			},
+
+			"project_id": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "project id.",
 			},
 
 			"vpc_id": {
@@ -131,6 +138,10 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceCreate(d *schema.Resou
 
 	if v, ok := d.GetOk("cluster_id"); ok {
 		request.ClusterId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("project_id"); ok {
+		request.ProjectId = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("vpc_id"); ok {
@@ -249,6 +260,10 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceRead(d *schema.Resourc
 		_ = d.Set("cluster_id", dbInstance.ExclusterId)
 	}
 
+	if dbInstance.ProjectId != nil {
+		_ = d.Set("project_id", dbInstance.ProjectId)
+	}
+
 	if dbInstance.UniqueVpcId != nil {
 		_ = d.Set("vpc_id", dbInstance.UniqueVpcId)
 	}
@@ -361,6 +376,31 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceUpdate(d *schema.Resou
 		resourceName := BuildTagResourceName("mariadb", "mariadb-dedicatedcluster-instance", tcClient.Region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
+		}
+	}
+
+	if d.HasChange("project_id") {
+		if v, ok := d.GetOkExists("project_id"); ok {
+			projectId := int64(v.(int))
+			MPRequest := mariadb.NewModifyDBInstancesProjectRequest()
+			MPRequest.InstanceIds = common.StringPtrs([]string{instanceId})
+			MPRequest.ProjectId = &projectId
+
+			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyDBInstancesProject(MPRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s operate mariadb modifyInstanceProject failed, reason:%+v", logId, err)
+				return err
+			}
 		}
 	}
 

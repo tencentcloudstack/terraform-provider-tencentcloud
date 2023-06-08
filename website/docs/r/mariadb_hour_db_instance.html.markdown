@@ -39,6 +39,7 @@ The following arguments are supported:
 * `zones` - (Required, Set: [`String`]) available zone of instance.
 * `db_version_id` - (Optional, String) db engine version, default to 10.1.9.
 * `instance_name` - (Optional, String) name of this instance.
+* `project_id` - (Optional, Int) project id.
 * `subnet_id` - (Optional, String) subnet id, it&amp;#39;s required when vpcId is set.
 * `tags` - (Optional, Map) Tag description list.
 * `vpc_id` - (Optional, String) vpc id.
