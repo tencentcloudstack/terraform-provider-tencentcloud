@@ -48,7 +48,6 @@ The following arguments are supported:
 * `ipv6_flag` - (Optional, Int) Whether to support IPv6.
 * `project_id` - (Optional, Int) project id.
 * `resource_tags` - (Optional, List) resource tags.
-* `rs_access_strategy` - (Optional, Int) RS nearest access mode, 0-no policy, 1-nearest access.
 * `security_group_id` - (Optional, String) security group id.
 * `subnet_id` - (Optional, String) subnet id, its required when vpcId is set.
 * `vip` - (Optional, String) The field is required to specify VIP.

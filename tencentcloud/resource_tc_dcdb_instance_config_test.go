@@ -40,7 +40,7 @@ func TestAccTencentCloudDcdbInstanceConfigResource_basic(t *testing.T) {
 const testAccDcdbInstanceConfig = CommonPresetDcdb + `
 
 resource "tencentcloud_dcdb_instance_config" "instance_config" {
-  instance_id = "tdsqlshard-970m7tfv"
+  instance_id = local.dcdb_id
   rs_access_strategy = 0
 }
 
@@ -49,7 +49,7 @@ resource "tencentcloud_dcdb_instance_config" "instance_config" {
 const testAccDcdbInstanceConfig_update = CommonPresetDcdb + `
 
 resource "tencentcloud_dcdb_instance_config" "instance_config" {
-  instance_id = "tdsqlshard-970m7tfv"
+  instance_id = local.dcdb_id
   rs_access_strategy = 1
 }
 
