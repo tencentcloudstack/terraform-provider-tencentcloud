@@ -631,7 +631,7 @@ func resourceTencentCloudTsfDeployVmGroupCreate(d *schema.ResourceData, meta int
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		groupInfo, err := service.DescribeTsfStartContainerGroupById(ctx, groupId)
+		groupInfo, err := service.DescribeTsfStartGroupById(ctx, groupId)
 		if err != nil {
 			return retryError(err)
 		}
@@ -639,13 +639,13 @@ func resourceTencentCloudTsfDeployVmGroupCreate(d *schema.ResourceData, meta int
 			err = fmt.Errorf("group %s not exists", groupId)
 			return resource.NonRetryableError(err)
 		}
-		if *groupInfo.Status == "Running" {
+		if *groupInfo.GroupStatus == "Running" {
 			return nil
 		}
-		if *groupInfo.Status == "Waiting" || *groupInfo.Status == "Updating" {
-			return resource.RetryableError(fmt.Errorf("deploy vm group status is %s", *groupInfo.Status))
+		if *groupInfo.GroupStatus == "Waiting" || *groupInfo.GroupStatus == "Updating" {
+			return resource.RetryableError(fmt.Errorf("deploy vm group status is %s", *groupInfo.GroupStatus))
 		}
-		err = fmt.Errorf("deploy vm group status is %v, we won't wait for it finish", *groupInfo.Status)
+		err = fmt.Errorf("deploy vm group status is %v, we won't wait for it finish", *groupInfo.GroupStatus)
 		return resource.NonRetryableError(err)
 	})
 
