@@ -15,10 +15,11 @@ Provides a MySQL account resource for database management. A MySQL instance supp
 
 ```hcl
 resource "tencentcloud_mysql_account" "default" {
-  mysql_id    = "terraform-test-local-database"
-  name        = "tf_account"
-  password    = "********"
-  description = "My test account"
+  mysql_id             = "terraform-test-local-database"
+  name                 = "tf_test"
+  password             = "********"
+  description          = "My test account"
+  max_user_connections = 10
 }
 ```
 
@@ -31,6 +32,7 @@ The following arguments are supported:
 * `password` - (Required, String) Operation password.
 * `description` - (Optional, String) Database description.
 * `host` - (Optional, String, ForceNew) Account host, default is `%`.
+* `max_user_connections` - (Optional, Int) The maximum number of available connections for a new account, the default value is 10240, and the maximum value that can be set is 10240.
 
 ## Attributes Reference
 
