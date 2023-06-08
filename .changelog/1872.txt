@@ -9,3 +9,7 @@ tencentcloud_dcdb_flush_binlog_operation
 ```release-note:new-resource
 tencentcloud_dcdb_switch_db_instance_ha_operation
 ```
+
+```release-note:new-resource
+tencentcloud_dcdb_instance_config
+```

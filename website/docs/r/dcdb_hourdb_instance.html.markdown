@@ -50,7 +50,7 @@ The following arguments are supported:
 * `resource_tags` - (Optional, List) resource tags.
 * `rs_access_strategy` - (Optional, Int) RS nearest access mode, 0-no policy, 1-nearest access.
 * `security_group_id` - (Optional, String) security group id.
-* `subnet_id` - (Optional, String) subnet id, it&amp;#39;s required when vpcId is set.
+* `subnet_id` - (Optional, String) subnet id, its required when vpcId is set.
 * `vip` - (Optional, String) The field is required to specify VIP.
 * `vipv6` - (Optional, String) The field is required to specify VIPv6.
 * `vpc_id` - (Optional, String) vpc id.

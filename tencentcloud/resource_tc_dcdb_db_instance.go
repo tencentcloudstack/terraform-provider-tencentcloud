@@ -77,7 +77,7 @@ func resourceTencentCloudDcdbDbInstance() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "&amp;quot;The availability zone distribution of shard nodes can be filled with up to two availability zones. When the shard specification is one master and two slaves, two of the nodes are in the first availability zone.&amp;quot;&amp;quot;Note that the current availability zone that can be sold needs to be pulled through the DescribeDCDBSaleInfo interface.&amp;quot;.",
+				Description: "The availability zone distribution of shard nodes can be filled with up to two availability zones. When the shard specification is one master and two slaves, two of the nodes are in the first availability zone.Note that the current availability zone that can be sold needs to be pulled through the DescribeDCDBSaleInfo interface.",
 			},
 
 			"period": {
@@ -89,19 +89,19 @@ func resourceTencentCloudDcdbDbInstance() *schema.Resource {
 			"shard_memory": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "&amp;quot;Shard memory size, unit: GB, can pass DescribeShardSpec&amp;quot;&amp;quot;Query the instance specification to obtain.&amp;quot;.",
+				Description: "Shard memory size, unit: GB, can pass DescribeShardSpec Query the instance specification to obtain.",
 			},
 
 			"shard_storage": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "&amp;quot;Shard storage size, unit: GB, can pass DescribeShardSpec&amp;quot;&amp;quot;Query the instance specification to obtain.&amp;quot;.",
+				Description: " Shard storage size, unit: GB, can pass DescribeShardSpec  Query the instance specification to obtain.",
 			},
 
 			"shard_node_count": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "&amp;quot;Number of single shard nodes, can pass DescribeShardSpec&amp;quot;&amp;quot;Query the instance specification to obtain.&amp;quot;.",
+				Description: " Number of single shard nodes, can pass DescribeShardSpec  Query the instance specification to obtain.",
 			},
 
 			"shard_count": {
@@ -137,7 +137,7 @@ func resourceTencentCloudDcdbDbInstance() *schema.Resource {
 			"db_version_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "&amp;quot;Database engine version, currently available: 8.0.18, 10.1.9, 5.7.17.&amp;quot;&amp;quot;8.0.18 - MySQL 8.0.18;&amp;quot;&amp;quot;10.1.9 - Mariadb 10.1.9;&amp;quot;&amp;quot;5.7.17 - Percona 5.7.17&amp;quot;&amp;quot;If not filled, the default is 5.7.17, which means Percona 5.7.17.&amp;quot;.",
+				Description: " Database engine version, currently available: 8.0.18, 10.1.9, 5.7.17.  8.0.18 - MySQL 8.0.18;  10.1.9 - Mariadb 10.1.9;  5.7.17 - Percona 5.7.17  If not filled, the default is 5.7.17, which means Percona 5.7.17.",
 			},
 
 			"auto_voucher": {
@@ -222,7 +222,7 @@ func resourceTencentCloudDcdbDbInstance() *schema.Resource {
 			"init_params": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "&amp;quot;parameter list. The optional values of this interface are:&amp;quot;&amp;quot;character_set_server (character set, must be passed),&amp;quot;&amp;quot;lower_case_table_names (table name is case sensitive, must be passed, 0 - sensitive; 1 - insensitive),&amp;quot;&amp;quot;innodb_page_size (innodb data page, default 16K),&amp;quot;&amp;quot;sync_mode ( Synchronous mode: 0 - asynchronous; 1 - strong synchronous; 2 - strong synchronous degenerate. The default is strong synchronous degenerate)&amp;quot;.",
+				Description: " parameter list. The optional values of this interface are:  character_set_server (character set, must be passed),  lower_case_table_names (table name is case sensitive, must be passed, 0 - sensitive; 1 - insensitive),  innodb_page_size (innodb data page, default 16K),  sync_mode ( Synchronous mode: 0 - asynchronous; 1 - strong synchronous; 2 - strong synchronous degenerate. The default is strong synchronous degenerate) .",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"param": {
@@ -254,7 +254,7 @@ func resourceTencentCloudDcdbDbInstance() *schema.Resource {
 			"auto_renew_flag": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "&amp;quot;Automatic renewal flag, 0 means the default state (the user has not set it, that is, the initial state is manual renewal, and the user has activated the prepaid non-stop privilege and will also perform automatic renewal).&amp;quot;&amp;quot;1 means automatic renewal, 2 means no automatic renewal (user setting).&amp;quot;&amp;quot;if the business has no concept of renewal or automatic renewal is not required, it needs to be set to 0.&amp;quot;.",
+				Description: " Automatic renewal flag, 0 means the default state (the user has not set it, that is, the initial state is manual renewal, and the user has activated the prepaid non-stop privilege and will also perform automatic renewal).  1 means automatic renewal, 2 means no automatic renewal (user setting).  if the business has no concept of renewal or automatic renewal is not required, it needs to be set to 0.",
 			},
 
 			"security_group_ids": {
@@ -528,10 +528,6 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 
 	dbInstance := ret.Instances[0]
 
-	if dbInstance.Zone != nil {
-		_ = d.Set("zones", []*string{dbInstance.Zone})
-	}
-
 	// if dbInstance.Period != nil {
 	// 	_ = d.Set("period", dbInstance.Period)
 	// }
@@ -683,6 +679,14 @@ func resourceTencentCloudDcdbDbInstanceRead(d *schema.ResourceData, meta interfa
 			_ = d.Set("vip", detail.Vip)
 			_ = d.Set("vipv6", detail.Vip6)
 			_ = d.Set("vport", detail.Vport)
+
+			if detail.MasterZone != nil {
+				zones := []*string{detail.MasterZone}
+				if detail.SlaveZones != nil {
+					zones = append(zones, detail.SlaveZones...)
+				}
+				_ = d.Set("zones", zones)
+			}
 		}
 	} else {
 		return err

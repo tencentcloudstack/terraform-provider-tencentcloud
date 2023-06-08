@@ -95,7 +95,7 @@ func resourceTencentCloudDcdbHourdbInstance() *schema.Resource {
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "subnet id, it&amp;#39;s required when vpcId is set.",
+				Description: "subnet id, its required when vpcId is set.",
 			},
 
 			"db_version_id": {
@@ -427,9 +427,6 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 	}
 
 	hourdbInstance := hourdbInstances.Instances[0]
-	if hourdbInstance.Zone != nil {
-		_ = d.Set("zones", []*string{hourdbInstance.Zone})
-	}
 
 	if hourdbInstance.ShardDetail[0] != nil { // Memory and Storage is params for one shard
 		shard := hourdbInstance.ShardDetail[0]
@@ -533,6 +530,14 @@ func resourceTencentCloudDcdbHourdbInstanceRead(d *schema.ResourceData, meta int
 			_ = d.Set("vip", detail.Vip)
 			_ = d.Set("vipv6", detail.Vip6)
 			_ = d.Set("vport", detail.Vport)
+
+			if detail.MasterZone != nil {
+				zones := []*string{detail.MasterZone}
+				if detail.SlaveZones != nil {
+					zones = append(zones, detail.SlaveZones...)
+				}
+				_ = d.Set("zones", zones)
+			}
 		}
 	} else {
 		return err
