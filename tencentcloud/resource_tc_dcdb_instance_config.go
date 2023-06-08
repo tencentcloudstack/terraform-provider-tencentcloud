@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_dcdb_instance_config" "instance_config" {
-  instance_id = ""
-  rs_access_strategy =
+  instance_id = local.dcdb_id
+  rs_access_strategy = 0
 }
 ```
 

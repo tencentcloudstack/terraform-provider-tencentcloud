@@ -154,17 +154,17 @@ func testAccCheckDcdbHourdbInstanceExists(re string) resource.TestCheckFunc {
 const testAccDcdbHourdb_vpc_config = defaultAzVariable + `
 data "tencentcloud_security_groups" "internal" {
 	name = "default"
-}
-
-data "tencentcloud_vpc_instances" "vpc" {
-	name ="Default-VPC"
-}
-	
-data "tencentcloud_vpc_subnets" "subnet" {
+  }
+  
+  data "tencentcloud_vpc_instances" "vpc" {
+	name = "Default-VPC"
+  }
+  
+  data "tencentcloud_vpc_subnets" "subnet" {
 	vpc_id = data.tencentcloud_vpc_instances.vpc.instance_list.0.vpc_id
-}
-
-resource "tencentcloud_vpc" "vpc" {
+  }
+  
+  resource "tencentcloud_vpc" "vpc" {
 	cidr_block = "172.18.111.0/24"
 	name       = "test-pg-network-vpc"
   }
@@ -175,14 +175,14 @@ resource "tencentcloud_vpc" "vpc" {
 	name              = "test-pg-network-sub1"
 	vpc_id            = tencentcloud_vpc.vpc.id
   }
-	
-locals {
-	vpc_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
-	subnet_id = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
-	sg_id = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
-	new_vpc_id = tencentcloud_subnet.subnet.vpc_id
+  
+  locals {
+	vpc_id        = data.tencentcloud_vpc_subnets.subnet.instance_list.0.vpc_id
+	subnet_id     = data.tencentcloud_vpc_subnets.subnet.instance_list.0.subnet_id
+	sg_id         = data.tencentcloud_security_groups.internal.security_groups.0.security_group_id
+	new_vpc_id    = tencentcloud_subnet.subnet.vpc_id
 	new_subnet_id = tencentcloud_subnet.subnet.id
-}
+  }  
 `
 
 const testAccDcdbHourdbInstance_basic = testAccDcdbHourdb_vpc_config + `
