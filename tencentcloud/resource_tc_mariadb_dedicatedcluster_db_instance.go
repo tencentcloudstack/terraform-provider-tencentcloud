@@ -77,6 +77,13 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstance() *schema.Resource {
 				Description: "project id.",
 			},
 
+			"vip": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "vip.",
+			},
+
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -264,6 +271,10 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceRead(d *schema.Resourc
 		_ = d.Set("project_id", dbInstance.ProjectId)
 	}
 
+	if dbInstance.Vip != nil {
+		_ = d.Set("vip", dbInstance.Vip)
+	}
+
 	if dbInstance.UniqueVpcId != nil {
 		_ = d.Set("vpc_id", dbInstance.UniqueVpcId)
 	}
@@ -298,6 +309,7 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceUpdate(d *schema.Resou
 	var (
 		logId      = getLogId(contextNil)
 		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request    = mariadb.NewModifyDBInstanceNameRequest()
 		instanceId = d.Id()
 	)
@@ -350,22 +362,22 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceUpdate(d *schema.Resou
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
 		}
-	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyDBInstanceName(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyDBInstanceName(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s create mariadb dedicatedclusterDbInstance failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s create mariadb dedicatedclusterDbInstance failed, reason:%+v", logId, err)
-		return err
 	}
 
 	if d.HasChange("tags") {
@@ -386,7 +398,7 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceUpdate(d *schema.Resou
 			MPRequest.InstanceIds = common.StringPtrs([]string{instanceId})
 			MPRequest.ProjectId = &projectId
 
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyDBInstancesProject(MPRequest)
 				if e != nil {
 					return retryError(e)
@@ -400,6 +412,66 @@ func resourceTencentCloudMariadbDedicatedclusterDbInstanceUpdate(d *schema.Resou
 			if err != nil {
 				log.Printf("[CRITAL]%s operate mariadb modifyInstanceProject failed, reason:%+v", logId, err)
 				return err
+			}
+		}
+	}
+
+	if d.HasChange("vip") {
+		if v, ok := d.GetOk("vip"); ok {
+			Vip := v.(string)
+			var VipFlowId int64
+			VipRequest := mariadb.NewModifyInstanceNetworkRequest()
+			VipRequest.InstanceId = &instanceId
+			VipRequest.Vip = &Vip
+			if v, ok := d.GetOk("vpc_id"); ok {
+				VipRequest.VpcId = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOk("subnet_id"); ok {
+				VipRequest.SubnetId = helper.String(v.(string))
+			}
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyInstanceNetwork(VipRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				VipFlowId = *result.Response.FlowId
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s operate mariadb network failed, reason:%+v", logId, err)
+				return err
+			}
+
+			// wait
+			if VipFlowId != NONE_FLOW_TASK {
+				err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+					result, e := service.DescribeFlowById(ctx, VipFlowId)
+					if e != nil {
+						return retryError(e)
+					}
+
+					if *result.Status == MARIADB_TASK_SUCCESS {
+						return nil
+					} else if *result.Status == MARIADB_TASK_RUNNING {
+						return resource.RetryableError(fmt.Errorf("operate mariadb network status is running"))
+					} else if *result.Status == MARIADB_TASK_FAIL {
+						return resource.NonRetryableError(fmt.Errorf("operate mariadb network status is fail"))
+					} else {
+						e = fmt.Errorf("operate mariadb network status illegal")
+						return resource.NonRetryableError(e)
+					}
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s operate mariadb network task failed, reason:%+v", logId, err)
+					return err
+				}
 			}
 		}
 	}

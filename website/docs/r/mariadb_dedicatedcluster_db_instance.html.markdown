@@ -39,6 +39,7 @@ The following arguments are supported:
 * `project_id` - (Optional, Int) project id.
 * `subnet_id` - (Optional, String) subnet id, it&amp;#39;s required when vpcId is set.
 * `tags` - (Optional, Map) Tag description list.
+* `vip` - (Optional, String) vip.
 * `vpc_id` - (Optional, String) vpc id.
 
 ## Attributes Reference

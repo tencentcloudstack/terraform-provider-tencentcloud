@@ -35,15 +35,15 @@ resource/tencentcloud_mariadb_account: support to update `password`
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_mariadb_hour_db_instance: support to update `project_id`
+resource/tencentcloud_mariadb_hour_db_instance: support to update `project_id`, `vip`
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_mariadb_instance: support to update `project_id`
+resource/tencentcloud_mariadb_instance: support to update `project_id`, `vip`
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_mariadb_dedicatedcluster_db_instance: support to update `project_id`
+resource/tencentcloud_mariadb_dedicatedcluster_db_instance: support to update `project_id`, `vip`
 ```
 
 ```release-note:new-resource

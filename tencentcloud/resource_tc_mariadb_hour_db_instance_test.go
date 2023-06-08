@@ -112,7 +112,7 @@ resource "tencentcloud_mariadb_hour_db_instance" "basic" {
   storage       = 10
   subnet_id     = var.subnet_id
   vpc_id        = var.vpc_id
-  zones         = ["ap-guangzhou-7","ap-guangzhou-7"]
+  zones         = ["ap-guangzhou-6","ap-guangzhou-7"]
   tags          = {
 	createdBy   = "terraform"
   }

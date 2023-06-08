@@ -5,16 +5,20 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mariadb_hour_db_instance" "basic" {
-  db_version_id = "8.0"
-  instance_name = "db-test-2"
+  db_version_id = "10.0"
+  instance_name = "db-test-del"
   memory        = 2
   node_count    = 2
   storage       = 10
   subnet_id     = "subnet-jdi5xn22"
   vpc_id        = "vpc-k1t8ickr"
-  zones         = ["ap-guangzhou-7","ap-guangzhou-7"]
+  vip           = "10.0.0.197"
+  zones         = [
+    "ap-guangzhou-6",
+    "ap-guangzhou-7",
+  ]
   tags          = {
-	createdBy   = "terraform"
+    createdBy   = "terraform"
   }
 }
 
@@ -51,10 +55,8 @@ func resourceTencentCloudMariadbHourDbInstance() *schema.Resource {
 		},
 		Schema: map[string]*schema.Schema{
 			"zones": {
-				Type: schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 				Required:    true,
 				Description: "available zone of instance.",
 			},
@@ -94,6 +96,13 @@ func resourceTencentCloudMariadbHourDbInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "subnet id, it&amp;#39;s required when vpcId is set.",
+			},
+
+			"vip": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "vip.",
 			},
 
 			"db_version_id": {
@@ -179,6 +188,7 @@ func resourceTencentCloudMariadbHourDbInstanceCreate(d *schema.ResourceData, met
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
@@ -256,6 +266,9 @@ func resourceTencentCloudMariadbHourDbInstanceRead(d *schema.ResourceData, meta 
 	if hourDbInstance.Zone != nil {
 		var zones []*string
 		zones = append(zones, hourDbInstance.Zone)
+		if hourDbInstance.SlaveZones != nil {
+			zones = append(zones, hourDbInstance.SlaveZones...)
+		}
 		_ = d.Set("zones", zones)
 	}
 
@@ -273,6 +286,10 @@ func resourceTencentCloudMariadbHourDbInstanceRead(d *schema.ResourceData, meta 
 
 	if hourDbInstance.ProjectId != nil {
 		_ = d.Set("project_id", hourDbInstance.ProjectId)
+	}
+
+	if hourDbInstance.Vip != nil {
+		_ = d.Set("vip", hourDbInstance.Vip)
 	}
 
 	if hourDbInstance.VpcId != nil {
@@ -309,6 +326,7 @@ func resourceTencentCloudMariadbHourDbInstanceUpdate(d *schema.ResourceData, met
 	var (
 		logId      = getLogId(contextNil)
 		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = MariadbService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request    = mariadb.NewModifyDBInstanceNameRequest()
 		instanceId = d.Id()
 	)
@@ -347,22 +365,22 @@ func resourceTencentCloudMariadbHourDbInstanceUpdate(d *schema.ResourceData, met
 		if v, ok := d.GetOk("instance_name"); ok {
 			request.InstanceName = helper.String(v.(string))
 		}
-	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyDBInstanceName(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyDBInstanceName(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s create mariadb hourDbInstance failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-
-	if err != nil {
-		log.Printf("[CRITAL]%s create mariadb hourDbInstance failed, reason:%+v", logId, err)
-		return err
 	}
 
 	if d.HasChange("tags") {
@@ -383,7 +401,7 @@ func resourceTencentCloudMariadbHourDbInstanceUpdate(d *schema.ResourceData, met
 			MPRequest.InstanceIds = common.StringPtrs([]string{instanceId})
 			MPRequest.ProjectId = &projectId
 
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyDBInstancesProject(MPRequest)
 				if e != nil {
 					return retryError(e)
@@ -397,6 +415,66 @@ func resourceTencentCloudMariadbHourDbInstanceUpdate(d *schema.ResourceData, met
 			if err != nil {
 				log.Printf("[CRITAL]%s operate mariadb modifyInstanceProject failed, reason:%+v", logId, err)
 				return err
+			}
+		}
+	}
+
+	if d.HasChange("vip") {
+		if v, ok := d.GetOk("vip"); ok {
+			Vip := v.(string)
+			var VipFlowId int64
+			VipRequest := mariadb.NewModifyInstanceNetworkRequest()
+			VipRequest.InstanceId = &instanceId
+			VipRequest.Vip = &Vip
+			if v, ok := d.GetOk("vpc_id"); ok {
+				VipRequest.VpcId = helper.String(v.(string))
+			}
+
+			if v, ok := d.GetOk("subnet_id"); ok {
+				VipRequest.SubnetId = helper.String(v.(string))
+			}
+
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyInstanceNetwork(VipRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+
+				VipFlowId = *result.Response.FlowId
+				return nil
+			})
+
+			if err != nil {
+				log.Printf("[CRITAL]%s operate mariadb network failed, reason:%+v", logId, err)
+				return err
+			}
+
+			// wait
+			if VipFlowId != NONE_FLOW_TASK {
+				err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+					result, e := service.DescribeFlowById(ctx, VipFlowId)
+					if e != nil {
+						return retryError(e)
+					}
+
+					if *result.Status == MARIADB_TASK_SUCCESS {
+						return nil
+					} else if *result.Status == MARIADB_TASK_RUNNING {
+						return resource.RetryableError(fmt.Errorf("operate mariadb network status is running"))
+					} else if *result.Status == MARIADB_TASK_FAIL {
+						return resource.NonRetryableError(fmt.Errorf("operate mariadb network status is fail"))
+					} else {
+						e = fmt.Errorf("operate mariadb network status illegal")
+						return resource.NonRetryableError(e)
+					}
+				})
+
+				if err != nil {
+					log.Printf("[CRITAL]%s operate mariadb network task failed, reason:%+v", logId, err)
+					return err
+				}
 			}
 		}
 	}

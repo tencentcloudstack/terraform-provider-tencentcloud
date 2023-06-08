@@ -32,7 +32,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	mariadb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mariadb/v20170312"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudMariadbInstanceConfig() *schema.Resource {
@@ -64,24 +63,6 @@ func resourceTencentCloudMariadbInstanceConfig() *schema.Resource {
 				Computed:     true,
 				ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 				Description:  "External network status, 0-closed; 1- Opening; Default not enabled.",
-			},
-			"vip": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "vip.",
-			},
-			"subnet_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "subnet id, it&amp;#39;s required when vpcId is set; If modifying VIP, this parameter is required.",
-			},
-			"vpc_id": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Computed:    true,
-				Description: "vpc id; If modifying VIP, this parameter is required.",
 			},
 		},
 	}
@@ -136,18 +117,6 @@ func resourceTencentCloudMariadbInstanceConfigRead(d *schema.ResourceData, meta 
 		_ = d.Set("extranet_access", dbDetail.WanStatus)
 	}
 
-	if dbDetail.Vip != nil {
-		_ = d.Set("vip", dbDetail.Vip)
-	}
-
-	if dbDetail.SubnetId != nil {
-		_ = d.Set("subnet_id", dbDetail.SubnetId)
-	}
-
-	if dbDetail.VpcId != nil {
-		_ = d.Set("vpc_id", dbDetail.VpcId)
-	}
-
 	return nil
 }
 
@@ -165,7 +134,7 @@ func resourceTencentCloudMariadbInstanceConfigUpdate(d *schema.ResourceData, met
 
 	needChange := false
 
-	mutableArgs := []string{"rs_access_strategy", "project_id", "extranet_access", "vip", "subnet_id", "vpc_id"}
+	mutableArgs := []string{"rs_access_strategy", "extranet_access"}
 
 	for _, v := range mutableArgs {
 		if d.HasChange(v) {
@@ -267,64 +236,6 @@ func resourceTencentCloudMariadbInstanceConfigUpdate(d *schema.ResourceData, met
 
 				if err != nil {
 					log.Printf("[CRITAL]%s operate mariadb DBExtranetAccess task failed, reason:%+v", logId, err)
-					return err
-				}
-			}
-		}
-
-		// set vip
-		if v, ok := d.GetOk("vip"); ok {
-			Vip := v.(string)
-			var VipFlowId int64
-			VipRequest := mariadb.NewModifyInstanceNetworkRequest()
-			VipRequest.InstanceId = &Vip
-			if v, ok := d.GetOk("vpc_id"); ok {
-				VipRequest.VpcId = helper.String(v.(string))
-			}
-
-			if v, ok := d.GetOk("subnet_id"); ok {
-				VipRequest.SubnetId = helper.String(v.(string))
-			}
-
-			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyInstanceNetwork(VipRequest)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-				}
-
-				VipFlowId = *result.Response.FlowId
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s operate mariadb network failed, reason:%+v", logId, err)
-				return err
-			}
-
-			// wait
-			if VipFlowId != NONE_FLOW_TASK {
-				err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
-					result, e := service.DescribeFlowById(ctx, VipFlowId)
-					if e != nil {
-						return retryError(e)
-					}
-
-					if *result.Status == MARIADB_TASK_SUCCESS {
-						return nil
-					} else if *result.Status == MARIADB_TASK_RUNNING {
-						return resource.RetryableError(fmt.Errorf("operate mariadb network status is running"))
-					} else if *result.Status == MARIADB_TASK_FAIL {
-						return resource.NonRetryableError(fmt.Errorf("operate mariadb network status is fail"))
-					} else {
-						e = fmt.Errorf("operate mariadb network status illegal")
-						return resource.NonRetryableError(e)
-					}
-				})
-
-				if err != nil {
-					log.Printf("[CRITAL]%s operate mariadb network task failed, reason:%+v", logId, err)
 					return err
 				}
 			}
