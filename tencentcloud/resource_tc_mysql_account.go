@@ -79,6 +79,7 @@ func resourceTencentCloudMysqlAccount() *schema.Resource {
 			},
 			"max_user_connections": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "The maximum number of available connections for a new account, the default value is 10240, and the maximum value that can be set is 10240.",
 			},
