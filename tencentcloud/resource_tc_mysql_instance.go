@@ -803,11 +803,6 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	_ = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
 	_ = d.Set("device_type", mysqlInfo.DeviceType)
 
-	// isUniversal := mysqlInfo.DeviceType != nil && *mysqlInfo.DeviceType == "UNIVERSAL"
-	// if _, ok := d.GetOk("device_type"); ok || !isUniversal {
-	// 	_ = d.Set("device_type", mysqlInfo.DeviceType)
-	// }
-
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
 		sdkErr, ok := err.(*errors.TencentCloudSDKError)

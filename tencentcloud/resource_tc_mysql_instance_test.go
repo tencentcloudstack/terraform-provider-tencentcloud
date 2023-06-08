@@ -154,6 +154,7 @@ func TestAccTencentCloudMysqlInstanceResource_DeviceType(t *testing.T) {
 		},
 	})
 }
+
 // go test -i; go test -test.run TestAccTencentCloudMysqlInstanceResource_MasterInstance_fullslave -v
 func TestAccTencentCloudMysqlInstanceResource_MasterInstance_fullslave(t *testing.T) {
 	resource.Test(t, resource.TestCase{
