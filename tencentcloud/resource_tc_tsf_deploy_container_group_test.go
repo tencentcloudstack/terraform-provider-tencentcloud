@@ -30,7 +30,6 @@ func TestAccTencentCloudTsfDeployContainerGroupResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "cpu_request"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "mem_request"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "do_not_start"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "repo_name"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "update_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "update_ivl"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "agent_cpu_request"),
@@ -51,9 +50,6 @@ func TestAccTencentCloudTsfDeployContainerGroupResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "health_check_settings.0.readiness_probe.0.port"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "health_check_settings.0.readiness_probe.0.path"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "health_check_settings.0.readiness_probe.0.type"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "envs.#"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "envs.0.name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "envs.0.value"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "service_setting.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "service_setting.0.access_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "service_setting.0.protocol_ports.#"),
@@ -70,13 +66,6 @@ func TestAccTencentCloudTsfDeployContainerGroupResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "scheduling_strategy.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "scheduling_strategy.0.type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "repo_type"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "volume_info_list.#"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "volume_info_list.0.volume_type"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "volume_info_list.0.volume_name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "volume_mount_info_list.#"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "volume_mount_info_list.0.volume_mount_name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "volume_mount_info_list.0.volume_mount_path"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "volume_mount_info_list.0.read_or_write"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "volume_clean"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "warmup_setting.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tsf_deploy_container_group.deploy_container_group", "warmup_setting.0.enabled"),
@@ -89,97 +78,64 @@ func TestAccTencentCloudTsfDeployContainerGroupResource_basic(t *testing.T) {
 const testAccTsfDeployContainerGroup = `
 
 resource "tencentcloud_tsf_deploy_container_group" "deploy_container_group" {
-	group_id          = "group-abqz7mxa"
-	tag_name          = "provider"
-	instance_num      = 1
-	server            = "ccr.ccs.tencentyun.com"
-	reponame          = "tsf_100011913960/terraform"
-	cpu_limit         = "0.5"
-	mem_limit         = "1280"
-	jvm_opts          = "-Xms128m -Xmx512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m"
+	group_id          = "group-yqml6w3a"
 	cpu_request       = "0.25"
 	mem_request       = "640"
+	server            = "ccr.ccs.tencentyun.com"
+	reponame          = "tsf_100011913960/terraform"
+	tag_name          = "terraform-only-1"
 	do_not_start      = false
-	repo_name         = "tsf_100011913960/terraform"
+	instance_num      = 1
 	update_type       = 1
 	update_ivl        = 10
+	mem_limit         = "1280"
+	cpu_limit         = "0.5"
 	agent_cpu_request = "0.1"
 	agent_cpu_limit   = "0.2"
 	agent_mem_request = "125"
 	agent_mem_limit   = "400"
-	istio_cpu_request = ""
-	istio_cpu_limit   = ""
-	istio_mem_request = ""
-	istio_mem_limit   = ""
 	max_surge         = "25%"
 	max_unavailable   = "0"
-	health_check_settings {
-	  readiness_probe {
-		action_type           = "TCP"
-		initial_delay_seconds = 0
-		timeout_seconds       = 3
-		period_seconds        = 30
-		success_threshold     = 1
-		failure_threshold     = 3
-		scheme                = "HTTP"
-		port                  = 80
-		path                  = "/"
-		# command               = ""
-		type                  = "TSF_DEFAULT"
-	  }
-	}
-	envs {
-	  name  = "JAVA_TOOL_OPTIONS"
-	  value = "-Xloggc:/data/tsf_apm/monitor/jvm-metrics/gclog.log"
-	}
 	service_setting {
-	  access_type = 1
-	  protocol_ports {
-		protocol    = "TCP"
-		port        = 9091
-		target_port = 8081
-		node_port   = 30001
-	  }
-	  subnet_id                        = ""
-	  disable_service                  = false
-	  headless_service                 = false
-	  allow_delete_service             = true
-	  open_session_affinity            = false
-	  session_affinity_timeout_seconds = 10800
-  
+		access_type = 1
+		protocol_ports {
+			protocol    = "TCP"
+			port        = 18081
+			target_port = 18081
+			node_port   = 30001
+		}
+		subnet_id						 = ""
+		disable_service                  = false
+		headless_service                 = false
+		allow_delete_service             = true
+		open_session_affinity            = false
+		session_affinity_timeout_seconds = 10800
+	
+	}
+	health_check_settings {
+		readiness_probe {
+			action_type           = "TCP"
+			initial_delay_seconds = 0
+			timeout_seconds       = 3
+			period_seconds        = 30
+			success_threshold     = 1
+			failure_threshold     = 3
+			scheme                = "HTTP"
+			port                  = 80
+			path                  = "/"
+			type                  = "TSF_DEFAULT"
+		}
+	}
+	scheduling_strategy {
+		type = "NONE"
 	}
 	deploy_agent = true
-	scheduling_strategy {
-	  type = "NONE"
-	}
-	# incremental_deployment =
 	repo_type = "personal"
-	volume_info_list {
-	  volume_type   = "emptyDir"
-	  volume_name   = "data"
-	  # volume_config = ""
-  
-	}
-	volume_mount_info_list {
-	  volume_mount_name     = "data"
-	  volume_mount_path     = "/dev"
-	  volume_mount_sub_path = ""
-	  read_or_write         = "2"
-  
-	}
 	volume_clean = false
-	# agent_profile_list {
-	# 	agent_type = ""
-	# 	agent_version = ""
-  
-	# }
+	jvm_opts          = "-Xms128m -Xmx512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m"
 	warmup_setting {
-	  enabled = false
-	  # warmup_time =
-	  # curvature =
-	  # enabled_protection =
-  
+		enabled = false
 	}
-  }
+}
 
 `

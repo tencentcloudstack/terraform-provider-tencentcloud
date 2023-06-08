@@ -5,97 +5,64 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_tsf_deploy_container_group" "deploy_container_group" {
-  group_id          = "group-ynd95rea"
-  tag_name          = "20220831204059"
-  instance_num      = 1
-  server            = "ccr.ccs.tencentyun.com"
-  reponame          = "tsf_100011913960/garden-container"
-  cpu_limit         = "0.5"
-  mem_limit         = "1280"
-  jvm_opts          = "-Xms128m -Xmx512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m"
-  cpu_request       = "0.25"
-  mem_request       = "640"
-  do_not_start      = false
-  repo_name         = "tsf_100011913960/garden-container"
-  update_type       = 1
-  update_ivl        = 10
-  agent_cpu_request = "0.1"
-  agent_cpu_limit   = "0.2"
-  agent_mem_request = "125"
-  agent_mem_limit   = "400"
-  istio_cpu_request = ""
-  istio_cpu_limit   = ""
-  istio_mem_request = ""
-  istio_mem_limit   = ""
-  max_surge         = "25%"
-  max_unavailable   = "0"
-  health_check_settings {
-    readiness_probe {
-      action_type           = "TCP"
-      initial_delay_seconds = 0
-      timeout_seconds       = 3
-      period_seconds        = 30
-      success_threshold     = 1
-      failure_threshold     = 3
-      scheme                = "HTTP"
-      port                  = 0
-      path                  = "/"
-      command               = ""
-      type                  = "TSF_DEFAULT"
-    }
-  }
-  envs {
-    name  = "JAVA_TOOL_OPTIONS"
-    value = "-Xloggc:/data/tsf_apm/monitor/jvm-metrics/gclog.log"
-  }
-  service_setting {
-    access_type = 1
-    protocol_ports {
-      protocol    = "TCP"
-      port        = 9090
-      target_port = 8080
-      # node_port =
-    }
-    subnet_id                        = ""
-    disable_service                  = false
-    headless_service                 = false
-    allow_delete_service             = true
-    open_session_affinity            = false
-    session_affinity_timeout_seconds = 10800
+	group_id          = "group-yqml6w3a"
+	cpu_request       = "0.25"
+	mem_request       = "640"
+	server            = "ccr.ccs.tencentyun.com"
+	reponame          = "tsf_100011913960/terraform"
+	tag_name          = "terraform-only-1"
+	do_not_start      = false
+	instance_num      = 1
+	update_type       = 1
+	update_ivl        = 10
+	mem_limit         = "1280"
+	cpu_limit         = "0.5"
+	agent_cpu_request = "0.1"
+	agent_cpu_limit   = "0.2"
+	agent_mem_request = "125"
+	agent_mem_limit   = "400"
+	max_surge         = "25%"
+	max_unavailable   = "0"
+	service_setting {
+		access_type = 1
+		protocol_ports {
+			protocol    = "TCP"
+			port        = 18081
+			target_port = 18081
+			node_port   = 30001
+		}
+		subnet_id						 = ""
+		disable_service                  = false
+		headless_service                 = false
+		allow_delete_service             = true
+		open_session_affinity            = false
+		session_affinity_timeout_seconds = 10800
 
-  }
-  deploy_agent = true
-  scheduling_strategy {
-    type = "NONE"
-  }
-  # incremental_deployment =
-  repo_type = "personal"
-  volume_info_list {
-    volume_type   = "emptyDir"
-    volume_name   = "data"
-    volume_config = ""
-
-  }
-  volume_mount_info_list {
-    volume_mount_name     = "data"
-    volume_mount_path     = "/dev"
-    volume_mount_sub_path = ""
-    read_or_write         = "2"
-
-  }
-  volume_clean = false
-  # agent_profile_list {
-  # 	agent_type = ""
-  # 	agent_version = ""
-
-  # }
-  warmup_setting {
-    enabled = false
-    # warmup_time =
-    # curvature =
-    # enabled_protection =
-
-  }
+	}
+	health_check_settings {
+		readiness_probe {
+			action_type           = "TCP"
+			initial_delay_seconds = 0
+			timeout_seconds       = 3
+			period_seconds        = 30
+			success_threshold     = 1
+			failure_threshold     = 3
+			scheme                = "HTTP"
+			port                  = 80
+			path                  = "/"
+			type                  = "TSF_DEFAULT"
+		}
+	}
+	scheduling_strategy {
+		type = "NONE"
+	}
+	deploy_agent = true
+	repo_type = "personal"
+	volume_clean = false
+	jvm_opts          = "-Xms128m -Xmx512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m"
+	warmup_setting {
+		enabled = false
+	}
 }
 ```
 */
@@ -310,7 +277,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 
 			"health_check_settings": {
 				Optional:    true,
-				Computed:    true,
 				ForceNew:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -321,7 +287,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "Liveness probe. Note: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -333,49 +298,41 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 									"initial_delay_seconds": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The time delay for the container to start the health check. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"timeout_seconds": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The maximum timeout period for each health check response. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"period_seconds": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The time interval for performing health checks. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"success_threshold": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The number of consecutive successful health checks required for the backend container to transition from failure to success. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"failure_threshold": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The number of consecutive successful health checks required for the backend container to transition from success to failure. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"scheme": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "The protocol used for HTTP health checks. HTTP and HTTPS are supported. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"port": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The port used for health checks, ranging from 1 to 65535. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"path": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "The request path for HTTP health checks. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"command": {
@@ -384,13 +341,11 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
-										Computed:    true,
 										Description: "The command to be executed for command health checks. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"type": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "The type of readiness probe. TSF_DEFAULT represents the default readiness probe of TSF, while K8S_NATIVE represents the native readiness probe of Kubernetes. If this field is not specified, the native readiness probe of Kubernetes is used by default. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 								},
@@ -400,7 +355,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
-							Computed:    true,
 							Description: "Readiness health check. Note: This field may return null, indicating that no valid values can be obtained.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -412,49 +366,41 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 									"initial_delay_seconds": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The time to delay the start of the container health check. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"timeout_seconds": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The maximum timeout period for each health check response. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"period_seconds": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The time interval for performing health checks. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"success_threshold": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The number of consecutive successful health checks required for the backend container to transition from failure to success. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"failure_threshold": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The number of consecutive successful health checks required for the backend container to transition from success to failure. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"scheme": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "The protocol used for HTTP health checks. HTTP and HTTPS are supported. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"port": {
 										Type:        schema.TypeInt,
 										Optional:    true,
-										Computed:    true,
 										Description: "The port used for health checks, ranging from 1 to 65535. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"path": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "The request path for HTTP health checks. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"command": {
@@ -463,13 +409,11 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Optional:    true,
-										Computed:    true,
 										Description: "The command to be executed for command check. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 									"type": {
 										Type:        schema.TypeString,
 										Optional:    true,
-										Computed:    true,
 										Description: "The type of readiness probe. TSF_DEFAULT represents the default readiness probe of TSF, while K8S_NATIVE represents the native readiness probe of Kubernetes. If this field is not specified, the native readiness probe of Kubernetes is used by default. Note: This field may return null, indicating that no valid values can be obtained.",
 									},
 								},
@@ -1192,7 +1136,7 @@ func resourceTencentCloudTsfDeployContainerGroupCreate(d *schema.ResourceData, m
 	d.SetId(groupId)
 
 	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
 		groupInfo, err := service.DescribeTsfStartContainerGroupById(ctx, groupId)
 		if err != nil {
 			return retryError(err)
@@ -1329,111 +1273,111 @@ func resourceTencentCloudTsfDeployContainerGroupRead(d *schema.ResourceData, met
 		_ = d.Set("istio_mem_limit", deployContainerGroup.IstioMemLimit)
 	}
 
-	if deployContainerGroup.HealthCheckSettings != nil {
-		healthCheckSettingsMap := map[string]interface{}{}
+	// if deployContainerGroup.HealthCheckSettings != nil {
+	// 	healthCheckSettingsMap := map[string]interface{}{}
 
-		if deployContainerGroup.HealthCheckSettings.LivenessProbe != nil {
-			livenessProbeMap := map[string]interface{}{}
+	// 	if deployContainerGroup.HealthCheckSettings.LivenessProbe != nil {
+	// 		livenessProbeMap := map[string]interface{}{}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.ActionType != nil {
-				livenessProbeMap["action_type"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.ActionType
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.ActionType != nil {
+	// 			livenessProbeMap["action_type"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.ActionType
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.InitialDelaySeconds != nil {
-				livenessProbeMap["initial_delay_seconds"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.InitialDelaySeconds
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.InitialDelaySeconds != nil {
+	// 			livenessProbeMap["initial_delay_seconds"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.InitialDelaySeconds
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.TimeoutSeconds != nil {
-				livenessProbeMap["timeout_seconds"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.TimeoutSeconds
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.TimeoutSeconds != nil {
+	// 			livenessProbeMap["timeout_seconds"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.TimeoutSeconds
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.PeriodSeconds != nil {
-				livenessProbeMap["period_seconds"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.PeriodSeconds
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.PeriodSeconds != nil {
+	// 			livenessProbeMap["period_seconds"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.PeriodSeconds
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.SuccessThreshold != nil {
-				livenessProbeMap["success_threshold"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.SuccessThreshold
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.SuccessThreshold != nil {
+	// 			livenessProbeMap["success_threshold"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.SuccessThreshold
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.FailureThreshold != nil {
-				livenessProbeMap["failure_threshold"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.FailureThreshold
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.FailureThreshold != nil {
+	// 			livenessProbeMap["failure_threshold"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.FailureThreshold
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.Scheme != nil {
-				livenessProbeMap["scheme"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.Scheme
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.Scheme != nil {
+	// 			livenessProbeMap["scheme"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.Scheme
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.Port != nil {
-				livenessProbeMap["port"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.Port
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.Port != nil {
+	// 			livenessProbeMap["port"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.Port
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.Path != nil {
-				livenessProbeMap["path"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.Path
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.Path != nil {
+	// 			livenessProbeMap["path"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.Path
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.Command != nil {
-				livenessProbeMap["command"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.Command
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.Command != nil {
+	// 			livenessProbeMap["command"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.Command
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.LivenessProbe.Type != nil {
-				livenessProbeMap["type"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.Type
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.LivenessProbe.Type != nil {
+	// 			livenessProbeMap["type"] = deployContainerGroup.HealthCheckSettings.LivenessProbe.Type
+	// 		}
 
-			healthCheckSettingsMap["liveness_probe"] = []interface{}{livenessProbeMap}
-		}
+	// 		healthCheckSettingsMap["liveness_probe"] = []interface{}{livenessProbeMap}
+	// 	}
 
-		if deployContainerGroup.HealthCheckSettings.ReadinessProbe != nil {
-			readinessProbeMap := map[string]interface{}{}
+	// 	if deployContainerGroup.HealthCheckSettings.ReadinessProbe != nil {
+	// 		readinessProbeMap := map[string]interface{}{}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.ActionType != nil {
-				readinessProbeMap["action_type"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.ActionType
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.ActionType != nil {
+	// 			readinessProbeMap["action_type"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.ActionType
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.InitialDelaySeconds != nil {
-				readinessProbeMap["initial_delay_seconds"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.InitialDelaySeconds
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.InitialDelaySeconds != nil {
+	// 			readinessProbeMap["initial_delay_seconds"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.InitialDelaySeconds
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.TimeoutSeconds != nil {
-				readinessProbeMap["timeout_seconds"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.TimeoutSeconds
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.TimeoutSeconds != nil {
+	// 			readinessProbeMap["timeout_seconds"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.TimeoutSeconds
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.PeriodSeconds != nil {
-				readinessProbeMap["period_seconds"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.PeriodSeconds
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.PeriodSeconds != nil {
+	// 			readinessProbeMap["period_seconds"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.PeriodSeconds
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.SuccessThreshold != nil {
-				readinessProbeMap["success_threshold"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.SuccessThreshold
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.SuccessThreshold != nil {
+	// 			readinessProbeMap["success_threshold"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.SuccessThreshold
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.FailureThreshold != nil {
-				readinessProbeMap["failure_threshold"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.FailureThreshold
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.FailureThreshold != nil {
+	// 			readinessProbeMap["failure_threshold"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.FailureThreshold
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.Scheme != nil {
-				readinessProbeMap["scheme"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.Scheme
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.Scheme != nil {
+	// 			readinessProbeMap["scheme"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.Scheme
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.Port != nil {
-				readinessProbeMap["port"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.Port
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.Port != nil {
+	// 			readinessProbeMap["port"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.Port
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.Path != nil {
-				readinessProbeMap["path"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.Path
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.Path != nil {
+	// 			readinessProbeMap["path"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.Path
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.Command != nil {
-				readinessProbeMap["command"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.Command
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.Command != nil {
+	// 			readinessProbeMap["command"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.Command
+	// 		}
 
-			if deployContainerGroup.HealthCheckSettings.ReadinessProbe.Type != nil {
-				readinessProbeMap["type"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.Type
-			}
+	// 		if deployContainerGroup.HealthCheckSettings.ReadinessProbe.Type != nil {
+	// 			readinessProbeMap["type"] = deployContainerGroup.HealthCheckSettings.ReadinessProbe.Type
+	// 		}
 
-			healthCheckSettingsMap["readiness_probe"] = []interface{}{readinessProbeMap}
-		}
+	// 		healthCheckSettingsMap["readiness_probe"] = []interface{}{readinessProbeMap}
+	// 	}
 
-		_ = d.Set("health_check_settings", []interface{}{healthCheckSettingsMap})
-	}
+	// 	_ = d.Set("health_check_settings", []interface{}{healthCheckSettingsMap})
+	// }
 
 	if deployContainerGroup.Envs != nil {
 		envsList := []interface{}{}

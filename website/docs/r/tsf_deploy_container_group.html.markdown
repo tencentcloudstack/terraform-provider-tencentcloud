@@ -15,56 +15,31 @@ Provides a resource to create a tsf deploy_container_group
 
 ```hcl
 resource "tencentcloud_tsf_deploy_container_group" "deploy_container_group" {
-  group_id          = "group-ynd95rea"
-  tag_name          = "20220831204059"
-  instance_num      = 1
-  server            = "ccr.ccs.tencentyun.com"
-  reponame          = "tsf_100011913960/garden-container"
-  cpu_limit         = "0.5"
-  mem_limit         = "1280"
-  jvm_opts          = "-Xms128m -Xmx512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m"
+  group_id          = "group-yqml6w3a"
   cpu_request       = "0.25"
   mem_request       = "640"
+  server            = "ccr.ccs.tencentyun.com"
+  reponame          = "tsf_100011913960/terraform"
+  tag_name          = "terraform-only-1"
   do_not_start      = false
-  repo_name         = "tsf_100011913960/garden-container"
+  instance_num      = 1
   update_type       = 1
   update_ivl        = 10
+  mem_limit         = "1280"
+  cpu_limit         = "0.5"
   agent_cpu_request = "0.1"
   agent_cpu_limit   = "0.2"
   agent_mem_request = "125"
   agent_mem_limit   = "400"
-  istio_cpu_request = ""
-  istio_cpu_limit   = ""
-  istio_mem_request = ""
-  istio_mem_limit   = ""
   max_surge         = "25%"
   max_unavailable   = "0"
-  health_check_settings {
-    readiness_probe {
-      action_type           = "TCP"
-      initial_delay_seconds = 0
-      timeout_seconds       = 3
-      period_seconds        = 30
-      success_threshold     = 1
-      failure_threshold     = 3
-      scheme                = "HTTP"
-      port                  = 0
-      path                  = "/"
-      command               = ""
-      type                  = "TSF_DEFAULT"
-    }
-  }
-  envs {
-    name  = "JAVA_TOOL_OPTIONS"
-    value = "-Xloggc:/data/tsf_apm/monitor/jvm-metrics/gclog.log"
-  }
   service_setting {
     access_type = 1
     protocol_ports {
       protocol    = "TCP"
-      port        = 9090
-      target_port = 8080
-      # node_port =
+      port        = 18081
+      target_port = 18081
+      node_port   = 30001
     }
     subnet_id                        = ""
     disable_service                  = false
@@ -74,37 +49,29 @@ resource "tencentcloud_tsf_deploy_container_group" "deploy_container_group" {
     session_affinity_timeout_seconds = 10800
 
   }
-  deploy_agent = true
+  health_check_settings {
+    readiness_probe {
+      action_type           = "TCP"
+      initial_delay_seconds = 0
+      timeout_seconds       = 3
+      period_seconds        = 30
+      success_threshold     = 1
+      failure_threshold     = 3
+      scheme                = "HTTP"
+      port                  = 80
+      path                  = "/"
+      type                  = "TSF_DEFAULT"
+    }
+  }
   scheduling_strategy {
     type = "NONE"
   }
-  # incremental_deployment =
-  repo_type = "personal"
-  volume_info_list {
-    volume_type   = "emptyDir"
-    volume_name   = "data"
-    volume_config = ""
-
-  }
-  volume_mount_info_list {
-    volume_mount_name     = "data"
-    volume_mount_path     = "/dev"
-    volume_mount_sub_path = ""
-    read_or_write         = "2"
-
-  }
+  deploy_agent = true
+  repo_type    = "personal"
   volume_clean = false
-  # agent_profile_list {
-  # 	agent_type = ""
-  # 	agent_version = ""
-
-  # }
+  jvm_opts     = "-Xms128m -Xmx512m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m"
   warmup_setting {
     enabled = false
-    # warmup_time =
-    # curvature =
-    # enabled_protection =
-
   }
 }
 ```
