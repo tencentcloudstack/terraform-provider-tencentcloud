@@ -77,6 +77,7 @@ func init() {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlAccountResource_basic -v
 func TestAccTencentCloudMysqlAccountResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -91,6 +92,7 @@ func TestAccTencentCloudMysqlAccountResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_account.mysql_account", "mysql_id"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "name", "keep_dbbrain"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "description", "test from terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_account.mysql_account", "max_user_connections", "10"),
 				),
 			},
 			{
@@ -206,6 +208,7 @@ resource "tencentcloud_mysql_account" "mysql_account" {
     host = "192.168.0.%%"
 	password = "Test@123456#"
 	description = "test from terraform"
+	max_user_connections = 10
 }
 	`, CommonPresetMysql)
 }

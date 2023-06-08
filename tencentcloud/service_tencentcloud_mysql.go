@@ -302,7 +302,7 @@ func (me *MysqlService) DescribeCaresParameters(ctx context.Context, instanceId 
 }
 
 func (me *MysqlService) CreateAccount(ctx context.Context, mysqlId string,
-	accountName, accountHost, accountPassword, accountDescription string) (asyncRequestId string, errRet error) {
+	accountName, accountHost, accountPassword, accountDescription string, maxUserConnections int64) (asyncRequestId string, errRet error) {
 
 	logId := getLogId(ctx)
 
@@ -315,6 +315,7 @@ func (me *MysqlService) CreateAccount(ctx context.Context, mysqlId string,
 	request.Password = &accountPassword
 	request.Accounts = accountInfos
 	request.Description = &accountDescription
+	request.MaxUserConnections = &maxUserConnections
 
 	defer func() {
 		if errRet != nil {
@@ -354,6 +355,35 @@ func (me *MysqlService) ModifyAccountPassword(ctx context.Context, mysqlId strin
 	}()
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseMysqlClient().ModifyAccountPassword(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	asyncRequestId = *response.Response.AsyncRequestId
+	return
+}
+
+func (me *MysqlService) ModifyAccountMaxUserConnections(ctx context.Context, mysqlId, accountName, accountHost string, maxUserConnections int64) (asyncRequestId string, errRet error) {
+
+	logId := getLogId(ctx)
+
+	request := cdb.NewModifyAccountMaxUserConnectionsRequest()
+
+	var accountInfo = cdb.Account{User: &accountName, Host: &accountHost}
+	var accountInfos = []*cdb.Account{&accountInfo}
+
+	request.InstanceId = &mysqlId
+	request.Accounts = accountInfos
+	request.MaxUserConnections = &maxUserConnections
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMysqlClient().ModifyAccountMaxUserConnections(request)
 	if err != nil {
 		errRet = err
 		return
