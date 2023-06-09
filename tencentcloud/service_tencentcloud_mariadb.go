@@ -143,6 +143,563 @@ func (me *MariadbService) DescribeMariadbDbInstancesByFilter(ctx context.Context
 	return
 }
 
+func (me *MariadbService) DescribeMariadbDcnDetailByFilter(ctx context.Context, param map[string]interface{}) (dcnDetail []*mariadb.DcnDetailItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDcnDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeDcnDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	dcnDetail = response.Response.DcnDetails
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbFileDownloadUrlByFilter(ctx context.Context, param map[string]interface{}) (fileDownloadUrl *mariadb.DescribeFileDownloadUrlResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeFileDownloadUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "FilePath" {
+			request.FilePath = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeFileDownloadUrl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	fileDownloadUrl = response.Response
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbFlowByFilter(ctx context.Context, param map[string]interface{}) (flow *mariadb.DescribeFlowResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeFlowRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FlowId" {
+			request.FlowId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeFlow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	flow = response.Response
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbInstanceNodeInfoByFilter(ctx context.Context, param map[string]interface{}) (instanceNodeInfo []*mariadb.NodeInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeInstanceNodeInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMariadbClient().DescribeInstanceNodeInfo(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || *response.Response.TotalCount == 0 {
+			break
+		}
+
+		instanceNodeInfo = append(instanceNodeInfo, response.Response.NodesInfo...)
+		if len(response.Response.NodesInfo) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbInstanceSpecsByFilter(ctx context.Context) (instanceSpecs []*mariadb.InstanceSpec, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBInstanceSpecsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeDBInstanceSpecs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	instanceSpecs = response.Response.Specs
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbOrdersByFilter(ctx context.Context, dealName string) (orders []*mariadb.Deal, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeOrdersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.DealNames = common.StringPtrs([]string{dealName})
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeOrders(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || *response.Response.TotalCount == 0 {
+		return
+	}
+
+	orders = response.Response.Deals
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbPriceByFilter(ctx context.Context, param map[string]interface{}) (price *mariadb.DescribePriceResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribePriceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Zone" {
+			request.Zone = v.(*string)
+		}
+		if k == "NodeCount" {
+			request.NodeCount = v.(*int64)
+		}
+		if k == "Memory" {
+			request.Memory = v.(*int64)
+		}
+		if k == "Storage" {
+			request.Storage = v.(*int64)
+		}
+		if k == "Count" {
+			request.Count = v.(*int64)
+		}
+		if k == "Period" {
+			request.Period = v.(*int64)
+		}
+		if k == "Paymode" {
+			request.Paymode = v.(*string)
+		}
+		if k == "AmountUnit" {
+			request.AmountUnit = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribePrice(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	price = response.Response
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbProjectSecurityGroupsByFilter(ctx context.Context, param map[string]interface{}) (projectSecurityGroups []*mariadb.SecurityGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeProjectSecurityGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+		if k == "ProjectId" {
+			request.ProjectId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeProjectSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || *response.Response.Total == 0 {
+		return
+	}
+
+	projectSecurityGroups = response.Response.Groups
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbRenewalPriceByFilter(ctx context.Context, param map[string]interface{}) (renewalPrice *mariadb.DescribeRenewalPriceResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeRenewalPriceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Period" {
+			request.Period = v.(*int64)
+		}
+		if k == "AmountUnit" {
+			request.AmountUnit = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeRenewalPrice(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	renewalPrice = response.Response
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbSaleInfoByFilter(ctx context.Context) (saleInfo []*mariadb.RegionInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeSaleInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeSaleInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.RegionList) < 1 {
+		return
+	}
+
+	saleInfo = response.Response.RegionList
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbSlowLogsByFilter(ctx context.Context, param map[string]interface{}) (slowLogs *mariadb.DescribeDBSlowLogsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBSlowLogsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "Db" {
+			request.Db = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+		if k == "Slave" {
+			request.Slave = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseMariadbClient().DescribeDBSlowLogs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || *response.Response.Total == 0 {
+			break
+		}
+
+		slowLogs.Data = append(slowLogs.Data, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbUpgradePriceByFilter(ctx context.Context, param map[string]interface{}) (upgradePrice *mariadb.DescribeUpgradePriceResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeUpgradePriceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Memory" {
+			request.Memory = v.(*int64)
+		}
+		if k == "Storage" {
+			request.Storage = v.(*int64)
+		}
+		if k == "NodeCount" {
+			request.NodeCount = v.(*int64)
+		}
+		if k == "AmountUnit" {
+			request.AmountUnit = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeUpgradePrice(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	upgradePrice = response.Response
+
+	return
+}
+
+func (me *MariadbService) DescribeMariadbLogFilesByFilter(ctx context.Context, param map[string]interface{}) (logFiles *mariadb.DescribeDBLogFilesResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = mariadb.NewDescribeDBLogFilesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Type" {
+			request.Type = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMariadbClient().DescribeDBLogFiles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	logFiles = response.Response
+
+	return
+}
+
 func (me *MariadbService) DescribeMariadbDbInstance(ctx context.Context, instanceId string) (dbInstance *mariadb.DBInstance, errRet error) {
 	var (
 		logId   = getLogId(ctx)

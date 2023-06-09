@@ -1145,6 +1145,19 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_database_objects
 	tencentcloud_mariadb_databases
 	tencentcloud_mariadb_database_table
+	tencentcloud_mariadb_dcn_detail
+	tencentcloud_mariadb_file_download_url
+	tencentcloud_mariadb_flow
+	tencentcloud_mariadb_instance_specs
+	tencentcloud_mariadb_log_files
+	tencentcloud_mariadb_orders
+	tencentcloud_mariadb_price
+	tencentcloud_mariadb_project_security_groups
+	tencentcloud_mariadb_renewal_price
+	tencentcloud_mariadb_sale_info
+	tencentcloud_mariadb_slow_logs
+	tencentcloud_mariadb_upgrade_price
+
   Resource
 	tencentcloud_mariadb_dedicatedcluster_db_instance
 	tencentcloud_mariadb_instance
@@ -1877,6 +1890,19 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_database_objects":                  dataSourceTencentCloudMariadbDatabaseObjects(),
 			"tencentcloud_mariadb_databases":                         dataSourceTencentCloudMariadbDatabases(),
 			"tencentcloud_mariadb_database_table":                    dataSourceTencentCloudMariadbDatabaseTable(),
+			"tencentcloud_mariadb_dcn_detail":                        dataSourceTencentCloudMariadbDcnDetail(),
+			"tencentcloud_mariadb_file_download_url":                 dataSourceTencentCloudMariadbFileDownloadUrl(),
+			"tencentcloud_mariadb_flow":                              dataSourceTencentCloudMariadbFlow(),
+			"tencentcloud_mariadb_instance_node_info":                dataSourceTencentCloudMariadbInstanceNodeInfo(),
+			"tencentcloud_mariadb_instance_specs":                    dataSourceTencentCloudMariadbInstanceSpecs(),
+			"tencentcloud_mariadb_log_files":                         dataSourceTencentCloudMariadbLogFiles(),
+			"tencentcloud_mariadb_orders":                            dataSourceTencentCloudMariadbOrders(),
+			"tencentcloud_mariadb_price":                             dataSourceTencentCloudMariadbPrice(),
+			"tencentcloud_mariadb_project_security_groups":           dataSourceTencentCloudMariadbProjectSecurityGroups(),
+			"tencentcloud_mariadb_renewal_price":                     dataSourceTencentCloudMariadbRenewalPrice(),
+			"tencentcloud_mariadb_sale_info":                         dataSourceTencentCloudMariadbSaleInfo(),
+			"tencentcloud_mariadb_slow_logs":                         dataSourceTencentCloudMariadbSlowLogs(),
+			"tencentcloud_mariadb_upgrade_price":                     dataSourceTencentCloudMariadbUpgradePrice(),
 			"tencentcloud_tdcpg_clusters":                            dataSourceTencentCloudTdcpgClusters(),
 			"tencentcloud_tdcpg_instances":                           dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                            dataSourceTencentCloudCatProbeData(),
