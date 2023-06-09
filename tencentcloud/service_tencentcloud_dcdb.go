@@ -664,6 +664,10 @@ func (me *DcdbService) DcdbDbInstanceStateRefreshFunc(flowId *int64, failStates 
 	return func() (interface{}, string, error) {
 		ctx := contextNil
 
+		if *flowId == 0 {
+			return &dcdb.DescribeFlowResponseParams{}, "0", nil
+		}
+
 		object, err := me.DescribeDcdbFlowById(ctx, flowId)
 
 		if err != nil {
@@ -911,7 +915,7 @@ func (me *DcdbService) DescribeDcdbDBTablesByFilter(ctx context.Context, param m
 	return
 }
 
-func (me *DcdbService) DescribeDcdbDedicatedClusterDbInstanceById(ctx context.Context, instanceId string) (dedicatedClusterDbInstance *dcdb.DescribeDCDBInstanceDetailResponseParams, errRet error) {
+func (me *DcdbService) DescribeDcdbDbInstanceDetailById(ctx context.Context, instanceId string) (dedicatedClusterDbInstance *dcdb.DescribeDCDBInstanceDetailResponseParams, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dcdb.NewDescribeDCDBInstanceDetailRequest()
@@ -1116,5 +1120,71 @@ func (me *DcdbService) SetDcdbExtranetAccess(ctx context.Context, instanceId str
 			return e
 		}
 	}
+	return
+}
+
+func (me *DcdbService) SetRealServerAccessStrategy(ctx context.Context, instanceId string, rsAccessStrategy int) (errRet error) {
+	logId := getLogId(ctx)
+	request := dcdb.NewModifyRealServerAccessStrategyRequest()
+	request.InstanceId = &instanceId
+	request.RsAccessStrategy = helper.IntInt64(rsAccessStrategy)
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseDcdbClient().ModifyRealServerAccessStrategy(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s operate dcdb modifyRealServerAccessStrategyOperation failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return
+}
+
+func (me *DcdbService) SetNetworkVip(ctx context.Context, instanceId, vpcId, subnetId, vip, vipv6 string) (errRet error) {
+	logId := getLogId(ctx)
+	var flowId *int64
+
+	request := dcdb.NewModifyInstanceNetworkRequest()
+
+	request.InstanceId = &instanceId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	if vip != "" {
+		request.Vip = &vip
+	}
+	if vipv6 != "" {
+		request.Vipv6 = &vipv6
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseDcdbClient().ModifyInstanceNetwork(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		flowId = result.Response.FlowId
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s operate dcdb modifyInstanceNetworkOperation failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if flowId != nil {
+		// need to wait operation complete
+		// 0:success; 1:failed, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"0"}, 2*readRetryTimeout, time.Second, me.DcdbDbInstanceStateRefreshFunc(flowId, []string{"1"}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
 	return
 }

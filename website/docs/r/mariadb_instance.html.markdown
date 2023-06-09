@@ -75,6 +75,7 @@ The following arguments are supported:
 * `security_group_ids` - (Optional, Set: [`String`]) Security group ID list.
 * `subnet_id` - (Optional, String) Virtual private network subnet ID, required when VpcId is not empty.
 * `tags` - (Optional, Map) tag list.
+* `vip` - (Optional, String) Intranet IP address.
 * `voucher_ids` - (Optional, Set: [`String`], ForceNew) A list of voucher IDs. Currently, only one voucher can be specified.
 * `vpc_id` - (Optional, String) Virtual private network ID, if not passed, it means that it is created as a basic network.
 
@@ -113,7 +114,6 @@ In addition to all arguments above, the following attributes are exported:
 * `tdsql_version` - TDSQL version information.
 * `uin` - The account to which the instance belongs.
 * `update_time` - The last update time of the instance in the format of 2006-01-02 15:04:05.
-* `vip` - Intranet IP address.
 * `vipv6` - Intranet IPv6.
 * `vport` - Intranet port.
 * `wan_domain` - The domain name accessed from the external network, which can be resolved by the public network.
