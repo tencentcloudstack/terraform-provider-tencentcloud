@@ -81,7 +81,7 @@ resource "tencentcloud_lighthouse_instance" "instance" {
 
   instance_name = "terraform"
   zone          = "ap-guangzhou-3"
-
+  isolate_data_disk = true
   containers {
     container_image = "ccr.ccs.tencentyun.com/qcloud/nginx"
     container_name = "nginx"
@@ -152,6 +152,7 @@ resource "tencentcloud_lighthouse_instance" "instance" {
 
   instance_name = "terraform"
   zone          = "ap-guangzhou-3"
+  isolate_data_disk = true
 
   containers {
     container_image = "ccr.ccs.tencentyun.com/qcloud/nginx"
