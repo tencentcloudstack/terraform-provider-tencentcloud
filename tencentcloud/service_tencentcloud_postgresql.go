@@ -1761,3 +1761,63 @@ func (me *PostgresqlService) DescribePostgresqlZonesByFilter(ctx context.Context
 
 	return
 }
+
+func (me *PostgresqlService) DescribePostgresqlBaseBackupById(ctx context.Context, baseBackupId string) (BaseBackup *postgresql.BaseBackup, errRet error) {
+	logId := getLogId(ctx)
+
+	params := map[string]interface{}{
+		"Filters": []*postgresql.Filter{
+			{
+				Name: helper.String("base-backup-id"),
+				Values: []*string{
+					helper.String(baseBackupId),
+				},
+			},
+		},
+	}
+
+	backups, err := me.DescribePostgresqlBaseBackupsByFilter(ctx, params)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if len(backups) == 1 {
+		BaseBackup = backups[0]
+		log.Printf("[DEBUG]%s DescribePostgresqlBaseBackupById success, BaseBackupId:[%s]\n", logId, *BaseBackup.Id)
+	}
+	return
+}
+
+func (me *PostgresqlService) DeletePostgresqlBaseBackupById(ctx context.Context, dBInstanceId string, baseBackupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := postgresql.NewDeleteBaseBackupRequest()
+	request.DBInstanceId = &dBInstanceId
+	request.BaseBackupId = &baseBackupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	errRet = resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+		response, e := me.client.UsePostgresqlClient().DeleteBaseBackup(request)
+		if e != nil {
+			tcErr := e.(*sdkErrors.TencentCloudSDKError)
+
+			if tcErr.Code == "FailedOperation.FailedOperationError" {
+				return resource.RetryableError(fmt.Errorf("state not ready, retry...: %v", e.Error()))
+			}
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		}
+		return nil
+	})
+
+	return
+}

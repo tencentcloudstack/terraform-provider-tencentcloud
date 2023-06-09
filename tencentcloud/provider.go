@@ -658,6 +658,7 @@ TencentDB for PostgreSQL(PostgreSQL)
 	tencentcloud_postgresql_delete_log_backup_operation
 	tencentcloud_postgresql_modify_account_remark_operation
 	tencentcloud_postgresql_modify_switch_time_period_operation
+	tencentcloud_postgresql_base_backup
 
 TencentDB for Redis(crs)
   Data Source
@@ -2306,6 +2307,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_readonly_group":                      resourceTencentCloudPostgresqlReadonlyGroup(),
 			"tencentcloud_postgresql_readonly_attachment":                 resourceTencentCloudPostgresqlReadonlyAttachment(),
 			"tencentcloud_postgresql_parameter_template":                  resourceTencentCloudPostgresqlParameterTemplate(),
+			"tencentcloud_postgresql_base_backup":                         resourceTencentCloudPostgresqlBaseBackup(),
 			"tencentcloud_postgresql_backup_plan_config":                  resourceTencentCloudPostgresqlBackupPlanConfig(),
 			"tencentcloud_postgresql_security_group_config":               resourceTencentCloudPostgresqlSecurityGroupConfig(),
 			"tencentcloud_postgresql_backup_download_restriction_config":  resourceTencentCloudPostgresqlBackupDownloadRestrictionConfig(),
