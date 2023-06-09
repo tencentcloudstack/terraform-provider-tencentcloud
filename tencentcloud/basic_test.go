@@ -1016,9 +1016,11 @@ variable "cbs_backup_disk_id" {
 
 // CRS
 const (
-	defaultCrsInstanceId = "crs-jf4ico4v"
-	defaultCrsVpcId      = "vpc-4owdpnwr"
-	defaultCrsSubnetId   = "subnet-4o0zd840"
+	defaultCrsInstanceId     = "crs-jf4ico4v"
+	defaultCrsVpcId          = "vpc-4owdpnwr"
+	defaultCrsSubnetId       = "subnet-4o0zd840"
+	defaultCrsSecurityGroups = "sg-edmur627"
+	defaultCrsGroupId        = "crs-rpl-orfiwmn5"
 )
 
 // End of CRS

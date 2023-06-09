@@ -43,6 +43,6 @@ const testAccMysqlDataBackupOverviewDataSource = `
 
 data "tencentcloud_mysql_data_backup_overview" "data_backup_overview" {
   product = "mysql"
-                        }
+}
 
 `
