@@ -82,6 +82,8 @@ var retryableErrorCode = []string{
 	"ResourceBusy",
 	// teo
 	"InvalidParameter.ActionInProgress",
+	// posgresql
+	"OperationDenied.InstanceStatusLimitError",
 }
 
 // retryableCosErrorCode is retryable error code for COS/CI SDK

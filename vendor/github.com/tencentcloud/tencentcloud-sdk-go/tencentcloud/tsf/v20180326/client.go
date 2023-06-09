@@ -2449,6 +2449,58 @@ func (c *Client) CreateTaskFlowWithContext(ctx context.Context, request *CreateT
     return
 }
 
+func NewCreateUnitNamespacesRequest() (request *CreateUnitNamespacesRequest) {
+    request = &CreateUnitNamespacesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tsf", APIVersion, "CreateUnitNamespaces")
+    
+    
+    return
+}
+
+func NewCreateUnitNamespacesResponse() (response *CreateUnitNamespacesResponse) {
+    response = &CreateUnitNamespacesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateUnitNamespaces
+// 批量创建单元化命名空间
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GATEWAYCONSULERROR = "InternalError.GatewayConsulError"
+//  INVALIDPARAMETERVALUE_GATEWAYPARAMETERINVALID = "InvalidParameterValue.GatewayParameterInvalid"
+//  MISSINGPARAMETER_GATEWAYPARAMETERREQUIRED = "MissingParameter.GatewayParameterRequired"
+func (c *Client) CreateUnitNamespaces(request *CreateUnitNamespacesRequest) (response *CreateUnitNamespacesResponse, err error) {
+    return c.CreateUnitNamespacesWithContext(context.Background(), request)
+}
+
+// CreateUnitNamespaces
+// 批量创建单元化命名空间
+//
+// 可能返回的错误码:
+//  INTERNALERROR_GATEWAYCONSULERROR = "InternalError.GatewayConsulError"
+//  INVALIDPARAMETERVALUE_GATEWAYPARAMETERINVALID = "InvalidParameterValue.GatewayParameterInvalid"
+//  MISSINGPARAMETER_GATEWAYPARAMETERREQUIRED = "MissingParameter.GatewayParameterRequired"
+func (c *Client) CreateUnitNamespacesWithContext(ctx context.Context, request *CreateUnitNamespacesRequest) (response *CreateUnitNamespacesResponse, err error) {
+    if request == nil {
+        request = NewCreateUnitNamespacesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateUnitNamespaces require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateUnitNamespacesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateUnitRuleRequest() (request *CreateUnitRuleRequest) {
     request = &CreateUnitRuleRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2677,6 +2729,7 @@ func NewDeleteApplicationResponse() (response *DeleteApplicationResponse) {
 // 删除应用
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CLOUDAPIPROXYERROR = "FailedOperation.CloudApiProxyError"
 //  INTERNALERROR_APPLICATIONREPODELETEPKG = "InternalError.ApplicationRepoDeletePkg"
 //  INTERNALERROR_CLOUDAPIPROXYERROR = "InternalError.CloudApiProxyError"
 //  INTERNALERROR_REMOTESERVICECALLERROR = "InternalError.RemoteServiceCallError"
@@ -2691,6 +2744,7 @@ func (c *Client) DeleteApplication(request *DeleteApplicationRequest) (response 
 // 删除应用
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_CLOUDAPIPROXYERROR = "FailedOperation.CloudApiProxyError"
 //  INTERNALERROR_APPLICATIONREPODELETEPKG = "InternalError.ApplicationRepoDeletePkg"
 //  INTERNALERROR_CLOUDAPIPROXYERROR = "InternalError.CloudApiProxyError"
 //  INTERNALERROR_REMOTESERVICECALLERROR = "InternalError.RemoteServiceCallError"
@@ -2933,6 +2987,7 @@ func NewDeleteContainerGroupResponse() (response *DeleteContainerGroupResponse) 
 // 可能返回的错误码:
 //  FAILEDOPERATION_CONTAINERGROUPKUBERNETEAPIINVOKEERROR = "FailedOperation.ContainergroupKuberneteApiInvokeError"
 //  FAILEDOPERATION_CONTAINERGROUPKUBERNETECONNECTERROR = "FailedOperation.ContainergroupKuberneteConnectError"
+//  FAILEDOPERATION_CONTAINERGROUPKUBERNETESAPIINVOKEERROR = "FailedOperation.ContainergroupKubernetesApiInvokeError"
 //  INTERNALERROR_CLOUDAPIPROXYERROR = "InternalError.CloudApiProxyError"
 //  INTERNALERROR_CONTAINERGROUPKUBERNETEAPIINVOKEERROR = "InternalError.ContainergroupKuberneteApiInvokeError"
 //  INTERNALERROR_CONTAINERGROUPKUBERNETECONNECTERROR = "InternalError.ContainergroupKuberneteConnectError"
@@ -2952,6 +3007,7 @@ func (c *Client) DeleteContainerGroup(request *DeleteContainerGroupRequest) (res
 // 可能返回的错误码:
 //  FAILEDOPERATION_CONTAINERGROUPKUBERNETEAPIINVOKEERROR = "FailedOperation.ContainergroupKuberneteApiInvokeError"
 //  FAILEDOPERATION_CONTAINERGROUPKUBERNETECONNECTERROR = "FailedOperation.ContainergroupKuberneteConnectError"
+//  FAILEDOPERATION_CONTAINERGROUPKUBERNETESAPIINVOKEERROR = "FailedOperation.ContainergroupKubernetesApiInvokeError"
 //  INTERNALERROR_CLOUDAPIPROXYERROR = "InternalError.CloudApiProxyError"
 //  INTERNALERROR_CONTAINERGROUPKUBERNETEAPIINVOKEERROR = "InternalError.ContainergroupKuberneteApiInvokeError"
 //  INTERNALERROR_CONTAINERGROUPKUBERNETECONNECTERROR = "InternalError.ContainergroupKuberneteConnectError"
@@ -3023,6 +3079,54 @@ func (c *Client) DeleteFileConfigWithContext(ctx context.Context, request *Delet
     request.SetContext(ctx)
     
     response = NewDeleteFileConfigResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteGatewayApiRequest() (request *DeleteGatewayApiRequest) {
+    request = &DeleteGatewayApiRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tsf", APIVersion, "DeleteGatewayApi")
+    
+    
+    return
+}
+
+func NewDeleteGatewayApiResponse() (response *DeleteGatewayApiResponse) {
+    response = &DeleteGatewayApiResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteGatewayApi
+// 批量删除API
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_GATEWAYPARAMETERINVALID = "InvalidParameterValue.GatewayParameterInvalid"
+func (c *Client) DeleteGatewayApi(request *DeleteGatewayApiRequest) (response *DeleteGatewayApiResponse, err error) {
+    return c.DeleteGatewayApiWithContext(context.Background(), request)
+}
+
+// DeleteGatewayApi
+// 批量删除API
+//
+// 可能返回的错误码:
+//  INVALIDPARAMETERVALUE_GATEWAYPARAMETERINVALID = "InvalidParameterValue.GatewayParameterInvalid"
+func (c *Client) DeleteGatewayApiWithContext(ctx context.Context, request *DeleteGatewayApiRequest) (response *DeleteGatewayApiResponse, err error) {
+    if request == nil {
+        request = NewDeleteGatewayApiRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteGatewayApi require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteGatewayApiResponse()
     err = c.Send(request, response)
     return
 }
@@ -4076,6 +4180,7 @@ func NewDeployContainerGroupResponse() (response *DeployContainerGroupResponse) 
 //  FAILEDOPERATION_CLUSTERQUERYFAILED = "FailedOperation.ClusterQueryFailed"
 //  FAILEDOPERATION_CONTAINERGROUPKUBERNETEAPIINVOKEERROR = "FailedOperation.ContainergroupKuberneteApiInvokeError"
 //  FAILEDOPERATION_CONTAINERGROUPKUBERNETESAPIINVOKEERROR = "FailedOperation.ContainergroupKubernetesApiInvokeError"
+//  FAILEDOPERATION_CONTAINERGROUPKUBERNETESCONNECTERROR = "FailedOperation.ContainergroupKubernetesConnectError"
 //  FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
 //  FAILEDOPERATION_UNHANDLEDEXCEPTION = "FailedOperation.UnhandledException"
 //  INTERNALERROR_CONTAINERGROUPKUBERNETEAPIINVOKEERROR = "InternalError.ContainergroupKuberneteApiInvokeError"
@@ -4125,6 +4230,7 @@ func (c *Client) DeployContainerGroup(request *DeployContainerGroupRequest) (res
 //  FAILEDOPERATION_CLUSTERQUERYFAILED = "FailedOperation.ClusterQueryFailed"
 //  FAILEDOPERATION_CONTAINERGROUPKUBERNETEAPIINVOKEERROR = "FailedOperation.ContainergroupKuberneteApiInvokeError"
 //  FAILEDOPERATION_CONTAINERGROUPKUBERNETESAPIINVOKEERROR = "FailedOperation.ContainergroupKubernetesApiInvokeError"
+//  FAILEDOPERATION_CONTAINERGROUPKUBERNETESCONNECTERROR = "FailedOperation.ContainergroupKubernetesConnectError"
 //  FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
 //  FAILEDOPERATION_UNHANDLEDEXCEPTION = "FailedOperation.UnhandledException"
 //  INTERNALERROR_CONTAINERGROUPKUBERNETEAPIINVOKEERROR = "InternalError.ContainergroupKuberneteApiInvokeError"
@@ -4789,6 +4895,7 @@ func NewDescribeApplicationsResponse() (response *DescribeApplicationsResponse) 
 //  FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
 //  INTERNALERROR_UNHANDLEDEXCEPTION = "InternalError.UnhandledException"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE_APPLICATIONORDERTYPEINVALID = "InvalidParameterValue.ApplicationOrderTypeInvalid"
 //  INVALIDPARAMETERVALUE_APPLICATIONPAGELIMITINVALID = "InvalidParameterValue.ApplicationPageLimitInvalid"
 //  RESOURCENOTFOUND_LICENSESERVERNOTFOUND = "ResourceNotFound.LicenseServerNotFound"
 //  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
@@ -4806,6 +4913,7 @@ func (c *Client) DescribeApplications(request *DescribeApplicationsRequest) (res
 //  FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
 //  INTERNALERROR_UNHANDLEDEXCEPTION = "InternalError.UnhandledException"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  INVALIDPARAMETERVALUE_APPLICATIONORDERTYPEINVALID = "InvalidParameterValue.ApplicationOrderTypeInvalid"
 //  INVALIDPARAMETERVALUE_APPLICATIONPAGELIMITINVALID = "InvalidParameterValue.ApplicationPageLimitInvalid"
 //  RESOURCENOTFOUND_LICENSESERVERNOTFOUND = "ResourceNotFound.LicenseServerNotFound"
 //  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
@@ -8941,6 +9049,7 @@ func NewDescribeSimpleApplicationsResponse() (response *DescribeSimpleApplicatio
 //  FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
+//  UNAUTHORIZEDOPERATION_NOLICENSE = "UnauthorizedOperation.NoLicense"
 //  UNAUTHORIZEDOPERATION_NOPRIVILEGE = "UnauthorizedOperation.NoPrivilege"
 func (c *Client) DescribeSimpleApplications(request *DescribeSimpleApplicationsRequest) (response *DescribeSimpleApplicationsResponse, err error) {
     return c.DescribeSimpleApplicationsWithContext(context.Background(), request)
@@ -8954,6 +9063,7 @@ func (c *Client) DescribeSimpleApplications(request *DescribeSimpleApplicationsR
 //  FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
+//  UNAUTHORIZEDOPERATION_NOLICENSE = "UnauthorizedOperation.NoLicense"
 //  UNAUTHORIZEDOPERATION_NOPRIVILEGE = "UnauthorizedOperation.NoPrivilege"
 func (c *Client) DescribeSimpleApplicationsWithContext(ctx context.Context, request *DescribeSimpleApplicationsRequest) (response *DescribeSimpleApplicationsResponse, err error) {
     if request == nil {
@@ -12410,6 +12520,7 @@ func NewSearchBusinessLogResponse() (response *SearchBusinessLogResponse) {
 //  INTERNALERROR_UNHANDLEDEXCEPTION = "InternalError.UnhandledException"
 //  INVALIDPARAMETER_TSFAPMBUSILOGCFGAPPRELATIONPARAMERROR = "InvalidParameter.TsfApmBusiLogCfgAppRelationParamError"
 //  INVALIDPARAMETER_TSFAPMBUSILOGSEARCHREQUESTPARAMERROR = "InvalidParameter.TsfApmBusiLogSearchRequestParamError"
+//  INVALIDPARAMETERVALUE_TSFAPMBUSILOGSEARCHPARSERSPDATEFORMATERROR = "InvalidParameterValue.TsfApmBusiLogSearchParseRspDateFormatError"
 //  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
 //  UNAUTHORIZEDOPERATION_NOPRIVILEGE = "UnauthorizedOperation.NoPrivilege"
 func (c *Client) SearchBusinessLog(request *SearchBusinessLogRequest) (response *SearchBusinessLogResponse, err error) {
@@ -12425,6 +12536,7 @@ func (c *Client) SearchBusinessLog(request *SearchBusinessLogRequest) (response 
 //  INTERNALERROR_UNHANDLEDEXCEPTION = "InternalError.UnhandledException"
 //  INVALIDPARAMETER_TSFAPMBUSILOGCFGAPPRELATIONPARAMERROR = "InvalidParameter.TsfApmBusiLogCfgAppRelationParamError"
 //  INVALIDPARAMETER_TSFAPMBUSILOGSEARCHREQUESTPARAMERROR = "InvalidParameter.TsfApmBusiLogSearchRequestParamError"
+//  INVALIDPARAMETERVALUE_TSFAPMBUSILOGSEARCHPARSERSPDATEFORMATERROR = "InvalidParameterValue.TsfApmBusiLogSearchParseRspDateFormatError"
 //  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
 //  UNAUTHORIZEDOPERATION_NOPRIVILEGE = "UnauthorizedOperation.NoPrivilege"
 func (c *Client) SearchBusinessLogWithContext(ctx context.Context, request *SearchBusinessLogRequest) (response *SearchBusinessLogResponse, err error) {

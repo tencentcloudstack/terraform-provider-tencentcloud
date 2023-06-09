@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -231,7 +232,7 @@ func (me *TdmqService) DeleteTdmqNamespace(ctx context.Context, environId string
 
 // tdmq topic
 func (me *TdmqService) CreateTdmqTopic(ctx context.Context, environId string, topicName string, partitions uint64,
-	topicType uint64, remark string, clusterId string) (errRet error) {
+	topicType int64, remark string, clusterId string, pulsarTopicType int64) (errRet error) {
 	logId := getLogId(ctx)
 	request := tdmq.NewCreateTopicRequest()
 	defer func() {
@@ -244,9 +245,14 @@ func (me *TdmqService) CreateTdmqTopic(ctx context.Context, environId string, to
 	request.EnvironmentId = &environId
 	request.TopicName = &topicName
 	request.Partitions = &partitions
-	request.TopicType = &topicType
+	if topicType != NoneTopicType {
+		request.TopicType = common.Uint64Ptr(uint64(topicType))
+	}
 	request.Remark = &remark
 	request.ClusterId = &clusterId
+	if pulsarTopicType != NonePulsarTopicType {
+		request.PulsarTopicType = &pulsarTopicType
+	}
 
 	if err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())

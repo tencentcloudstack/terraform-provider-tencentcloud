@@ -147,6 +147,7 @@ func batchDeleteSQLServerInstances(ctx context.Context, service SqlserverService
 	return nil
 }
 
+// go test -i; go test -test.run TestAccTencentCloudSqlserverInstanceResource_PostPaid -v
 func TestAccTencentCloudSqlserverInstanceResource_PostPaid(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -180,7 +181,7 @@ func TestAccTencentCloudSqlserverInstanceResource_PostPaid(t *testing.T) {
 				ResourceName:            testSqlserverInstanceResourceKey,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"multi_zones", "auto_voucher"},
+				ImportStateVerifyIgnore: []string{"multi_zones", "auto_voucher", "wait_switch"},
 			},
 			{
 				Config: testAccSqlserverInstanceUpdate,
@@ -208,6 +209,7 @@ func TestAccTencentCloudSqlserverInstanceResource_PostPaid(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudSqlserverInstanceResource_Prepaid -v
 func TestAccTencentCloudSqlserverInstanceResource_Prepaid(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -236,6 +238,7 @@ func TestAccTencentCloudSqlserverInstanceResource_Prepaid(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudSqlserverInstanceMultiClusterResource -v
 func TestAccTencentCloudSqlserverInstanceMultiClusterResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -269,7 +272,7 @@ func TestAccTencentCloudSqlserverInstanceMultiClusterResource(t *testing.T) {
 				ResourceName:            testSqlserverInstanceResourceKey,
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"multi_zones"},
+				ImportStateVerifyIgnore: []string{"multi_zones", "wait_switch"},
 			},
 		},
 	})
@@ -360,7 +363,6 @@ resource "tencentcloud_sqlserver_instance" "test" {
   maintenance_week_set          = [1,2,3]
   maintenance_start_time        = "09:00"
   maintenance_time_span         = 3
-
   tags = {
     "test"                      = "test"
   }
@@ -369,20 +371,19 @@ resource "tencentcloud_sqlserver_instance" "test" {
 
 const testAccSqlserverInstanceUpdate string = testAccSqlserverBasicInstanceNetwork + `
 resource "tencentcloud_sqlserver_instance" "test" {
-  name                      = "tf_sqlserver_instance_update"
+  name                          = "tf_sqlserver_instance_update"
   availability_zone             = var.default_az
   charge_type                   = "POSTPAID_BY_HOUR"
-  vpc_id                        = local.vpc_id
-  subnet_id                     = local.subnet_id
+  vpc_id                        = "vpc-1yg5ua6l"
+  subnet_id                     = "subnet-h7av55g8"
   security_groups               = [local.sg_id]
-  memory                    = 4
-  storage                   = 20
-  maintenance_week_set      = [2,3,4]
-  maintenance_start_time    = "08:00"
-  maintenance_time_span     = 4
-
+  memory                    	= 4
+  storage                   	= 20
+  maintenance_week_set      	= [2,3,4]
+  maintenance_start_time    	= "08:00"
+  maintenance_time_span     	= 4
   tags = {
-    abc                     = "abc"
+    "abc"                  		= "abc"
   }
 }
 `
@@ -410,8 +411,8 @@ resource "tencentcloud_sqlserver_instance" "test" {
   availability_zone             = local.az
   charge_type                   = "PREPAID"
   period                        = 1
-  vpc_id                        = local.vpc_id
-  subnet_id                     = local.vpc_subnet_id
+  vpc_id                        = "vpc-1yg5ua6l"
+  subnet_id                     = "subnet-h7av55g8"
   project_id                    = 0
   memory                        = 2
   storage                       = 10

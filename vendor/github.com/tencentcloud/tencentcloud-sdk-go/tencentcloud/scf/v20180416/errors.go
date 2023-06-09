@@ -26,8 +26,26 @@ const (
 	// 创建触发器失败。
 	FAILEDOPERATION_APIGW = "FailedOperation.Apigw"
 
+	// 获取Apm InstanceId失败。
+	FAILEDOPERATION_APMCONFIGINSTANCEID = "FailedOperation.ApmConfigInstanceId"
+
 	// 当前异步事件状态不支持此操作，请稍后重试。
 	FAILEDOPERATION_ASYNCEVENTSTATUS = "FailedOperation.AsyncEventStatus"
+
+	// 登录信息验证失败，token 验证失败。
+	FAILEDOPERATION_AUTHFAILURE = "FailedOperation.AuthFailure"
+
+	// 调用 NetDeploy 失败。
+	FAILEDOPERATION_CALLNETDEPLOYFAILED = "FailedOperation.CallNetDeployFailed"
+
+	// 请求role信息失败。
+	FAILEDOPERATION_CALLROLEFAILED = "FailedOperation.CallRoleFailed"
+
+	// CLS服务未注册。
+	FAILEDOPERATION_CLSSERVICEUNREGISTERED = "FailedOperation.ClsServiceUnregistered"
+
+	// CopyAsyncRun 传参异常。
+	FAILEDOPERATION_COPYASYNCRUN = "FailedOperation.CopyAsyncRun"
 
 	// 复制函数失败。
 	FAILEDOPERATION_COPYFAILED = "FailedOperation.CopyFailed"
@@ -86,6 +104,9 @@ const (
 	// 获取函数代码地址失败。
 	FAILEDOPERATION_GETFUNCTIONADDRESS = "FailedOperation.GetFunctionAddress"
 
+	// InstanceNotFound 实例不存在。
+	FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+
 	// 当前账号或命名空间处于欠费状态，请在可用时重试。
 	FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 
@@ -107,6 +128,12 @@ const (
 	// 删除定时预置任务失败。
 	FAILEDOPERATION_PROVISIONDELETETIMER = "FailedOperation.ProvisionDeleteTimer"
 
+	// 预置超过可用。
+	FAILEDOPERATION_PROVISIONEDEXCEEDAVAILABLE = "FailedOperation.ProvisionedExceedAvailable"
+
+	// 预置超限。
+	FAILEDOPERATION_PROVISIONEDEXCEEDRESERVED = "FailedOperation.ProvisionedExceedReserved"
+
 	// 当前函数版本已有预置任务处于进行中，请稍后重试。
 	FAILEDOPERATION_PROVISIONEDINPROGRESS = "FailedOperation.ProvisionedInProgress"
 
@@ -119,8 +146,14 @@ const (
 	// 角色不存在。
 	FAILEDOPERATION_QCSROLENOTFOUND = "FailedOperation.QcsRoleNotFound"
 
+	// ReservedExceedTotal 总保留超限。
+	FAILEDOPERATION_RESERVEDEXCEEDTOTAL = "FailedOperation.ReservedExceedTotal"
+
 	// 当前函数已有保留并发设置任务处于进行中，请稍后重试。
 	FAILEDOPERATION_RESERVEDINPROGRESS = "FailedOperation.ReservedInProgress"
+
+	// ServiceClosed 请确认后再操作。
+	FAILEDOPERATION_SERVICECLOSED = "FailedOperation.ServiceClosed"
 
 	// Topic不存在。
 	FAILEDOPERATION_TOPICNOTEXIST = "FailedOperation.TopicNotExist"
@@ -139,6 +172,12 @@ const (
 
 	// UpdateFunctionConfiguration操作失败。
 	FAILEDOPERATION_UPDATEFUNCTIONCONFIGURATION = "FailedOperation.UpdateFunctionConfiguration"
+
+	// 更新状态操作失败。
+	FAILEDOPERATION_UPDATESTATUS = "FailedOperation.UpdateStatus"
+
+	// 与原状态一致，无需更改。
+	FAILEDOPERATION_UPDATETRIGGERSTATUS = "FailedOperation.UpdateTriggerStatus"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -164,17 +203,32 @@ const (
 	// 内部服务错误。
 	INTERNALERROR_GETROLEERROR = "InternalError.GetRoleError"
 
+	// 获取sts票据信息失败。
+	INTERNALERROR_GETSTSTOKENFAILED = "InternalError.GetStsTokenFailed"
+
 	// 内部系统错误。
 	INTERNALERROR_SYSTEM = "InternalError.System"
 
 	// 内部服务错误。
 	INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 
+	// 日志参数有误。
+	INVALIDPARAMETER_CLS = "InvalidParameter.Cls"
+
 	// FunctionName取值与规范不符，请修正后再试。可参考：https://tencentcs.com/5jXKFnBW。
 	INVALIDPARAMETER_FUNCTIONNAME = "InvalidParameter.FunctionName"
 
+	// 创建函数传参异常。
+	INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+
 	// 请求参数不合法。
 	INVALIDPARAMETER_PAYLOAD = "InvalidParameter.Payload"
+
+	// 请求大小超限。
+	INVALIDPARAMETER_REQUESTTOOLARGE = "InvalidParameter.RequestTooLarge"
+
+	// RoleCheck 传参有误。
+	INVALIDPARAMETER_ROLECHECK = "InvalidParameter.RoleCheck"
 
 	// RoutingConfig参数传入错误。
 	INVALIDPARAMETER_ROUTINGCONFIG = "InvalidParameter.RoutingConfig"
@@ -194,6 +248,21 @@ const (
 	// ApiGateway参数错误。
 	INVALIDPARAMETERVALUE_APIGATEWAY = "InvalidParameterValue.ApiGateway"
 
+	// ApmConfig参数传入错误。
+	INVALIDPARAMETERVALUE_APMCONFIG = "InvalidParameterValue.ApmConfig"
+
+	// ApmConfigInstanceId参数传入错误。
+	INVALIDPARAMETERVALUE_APMCONFIGINSTANCEID = "InvalidParameterValue.ApmConfigInstanceId"
+
+	// ApmConfigRegion参数传入错误。
+	INVALIDPARAMETERVALUE_APMCONFIGREGION = "InvalidParameterValue.ApmConfigRegion"
+
+	// Args 参数值有误。
+	INVALIDPARAMETERVALUE_ARGS = "InvalidParameterValue.Args"
+
+	// AsyncRunEnable 取值不正确。
+	INVALIDPARAMETERVALUE_ASYNCRUNENABLE = "InvalidParameterValue.AsyncRunEnable"
+
 	// 函数异步重试配置参数无效。
 	INVALIDPARAMETERVALUE_ASYNCTRIGGERCONFIG = "InvalidParameterValue.AsyncTriggerConfig"
 
@@ -206,8 +275,14 @@ const (
 	// cfs配置项取值与规范不符。
 	INVALIDPARAMETERVALUE_CFSPARAMETERERROR = "InvalidParameterValue.CfsParameterError"
 
+	// cfs参数格式与规范不符。
+	INVALIDPARAMETERVALUE_CFSSTRUCTIONERROR = "InvalidParameterValue.CfsStructionError"
+
 	// Ckafka传入错误。
 	INVALIDPARAMETERVALUE_CKAFKA = "InvalidParameterValue.Ckafka"
+
+	// 运行函数时的参数传入有误。
+	INVALIDPARAMETERVALUE_CLIENTCONTEXT = "InvalidParameterValue.ClientContext"
 
 	// Cls传入错误。
 	INVALIDPARAMETERVALUE_CLS = "InvalidParameterValue.Cls"
@@ -227,6 +302,9 @@ const (
 	// CodeSource传入错误。
 	INVALIDPARAMETERVALUE_CODESOURCE = "InvalidParameterValue.CodeSource"
 
+	// Command[Entrypoint] 参数值有误。
+	INVALIDPARAMETERVALUE_COMMAND = "InvalidParameterValue.Command"
+
 	// CompatibleRuntimes参数传入错误。
 	INVALIDPARAMETERVALUE_COMPATIBLERUNTIMES = "InvalidParameterValue.CompatibleRuntimes"
 
@@ -241,6 +319,9 @@ const (
 
 	// CosBucketRegion取值与规范不符，请修正后再试。可参考：https://tencentcs.com/5jXKFnBW。
 	INVALIDPARAMETERVALUE_COSBUCKETREGION = "InvalidParameterValue.CosBucketRegion"
+
+	// COS通知规则冲突。
+	INVALIDPARAMETERVALUE_COSNOTIFYRULECONFLICT = "InvalidParameterValue.CosNotifyRuleConflict"
 
 	// CosObjectName不符合规范。
 	INVALIDPARAMETERVALUE_COSOBJECTNAME = "InvalidParameterValue.CosObjectName"
@@ -257,8 +338,20 @@ const (
 	// 默认Namespace无法创建。
 	INVALIDPARAMETERVALUE_DEFAULTNAMESPACE = "InvalidParameterValue.DefaultNamespace"
 
+	// DemoID  对应的函数模板 ，code 参数值有误，请确认后重试。
+	INVALIDPARAMETERVALUE_DEMO = "InvalidParameterValue.Demo"
+
+	// DemoId 不存在。
+	INVALIDPARAMETERVALUE_DEMOID = "InvalidParameterValue.DemoId"
+
 	// Description传入错误。
 	INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
+
+	// 环境变量DNS[OS_NAMESERVER]配置有误。
+	INVALIDPARAMETERVALUE_DNSINFO = "InvalidParameterValue.DnsInfo"
+
+	// DynamicEnabled 参数传入错误。
+	INVALIDPARAMETERVALUE_DYNAMICENABLED = "InvalidParameterValue.DynamicEnabled"
 
 	// EipConfig参数错误。
 	INVALIDPARAMETERVALUE_EIPCONFIG = "InvalidParameterValue.EipConfig"
@@ -278,8 +371,17 @@ const (
 	// Filters参数错误。
 	INVALIDPARAMETERVALUE_FILTERS = "InvalidParameterValue.Filters"
 
+	// Function取值与规范不符，请修正后再试。可参考：https://tencentcs.com/5jXKFnBW。
+	INVALIDPARAMETERVALUE_FUNCTION = "InvalidParameterValue.Function"
+
 	// 函数不存在。
 	INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
+
+	// 请求 id 传参错误。
+	INVALIDPARAMETERVALUE_FUNCTIONREQUESTID = "InvalidParameterValue.FunctionRequestId"
+
+	// FunctionType参数错误。
+	INVALIDPARAMETERVALUE_FUNCTIONTYPE = "InvalidParameterValue.FunctionType"
 
 	// GitBranch不符合规范。
 	INVALIDPARAMETERVALUE_GITBRANCH = "InvalidParameterValue.GitBranch"
@@ -293,11 +395,17 @@ const (
 	// GitPassword不符合规范。
 	INVALIDPARAMETERVALUE_GITPASSWORD = "InvalidParameterValue.GitPassword"
 
+	// GitPasswordSecret 传参有误。
+	INVALIDPARAMETERVALUE_GITPASSWORDSECRET = "InvalidParameterValue.GitPasswordSecret"
+
 	// GitUrl不符合规范。
 	INVALIDPARAMETERVALUE_GITURL = "InvalidParameterValue.GitUrl"
 
 	// GitUserName不符合规范。
 	INVALIDPARAMETERVALUE_GITUSERNAME = "InvalidParameterValue.GitUserName"
+
+	// GitUserNameSecret 传参有误。
+	INVALIDPARAMETERVALUE_GITUSERNAMESECRET = "InvalidParameterValue.GitUserNameSecret"
 
 	// Handler传入错误。
 	INVALIDPARAMETERVALUE_HANDLER = "InvalidParameterValue.Handler"
@@ -305,11 +413,23 @@ const (
 	// IdleTimeOut参数传入错误。
 	INVALIDPARAMETERVALUE_IDLETIMEOUT = "InvalidParameterValue.IdleTimeOut"
 
+	// ImageType 参数值有误。
+	INVALIDPARAMETERVALUE_IMAGETYPE = "InvalidParameterValue.ImageType"
+
+	// imageUri 传入有误。
+	INVALIDPARAMETERVALUE_IMAGEURI = "InvalidParameterValue.ImageUri"
+
 	// InlineZipFile非法。
 	INVALIDPARAMETERVALUE_INLINEZIPFILE = "InvalidParameterValue.InlineZipFile"
 
+	// InstanceConcurrencyConfig 参数传入错误。
+	INVALIDPARAMETERVALUE_INSTANCECONCURRENCYCONFIG = "InvalidParameterValue.InstanceConcurrencyConfig"
+
 	// InvokeType取值与规范不符，请修正后再试。
 	INVALIDPARAMETERVALUE_INVOKETYPE = "InvalidParameterValue.InvokeType"
+
+	// L5Enable取值与规范不符，请修正后再试。
+	INVALIDPARAMETERVALUE_L5ENABLE = "InvalidParameterValue.L5Enable"
 
 	// LayerName参数传入错误。
 	INVALIDPARAMETERVALUE_LAYERNAME = "InvalidParameterValue.LayerName"
@@ -323,11 +443,17 @@ const (
 	// 参数超出长度限制。
 	INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 
+	// MaxConcurrency 参数传入错误。
+	INVALIDPARAMETERVALUE_MAXCONCURRENCY = "InvalidParameterValue.MaxConcurrency"
+
 	// Memory取值与规范不符，请修正后再试。可参考：https://tencentcs.com/5jXKFnBW。
 	INVALIDPARAMETERVALUE_MEMORY = "InvalidParameterValue.Memory"
 
 	// MemorySize错误。
 	INVALIDPARAMETERVALUE_MEMORYSIZE = "InvalidParameterValue.MemorySize"
+
+	// MinCapacity 参数传入错误。
+	INVALIDPARAMETERVALUE_MINCAPACITY = "InvalidParameterValue.MinCapacity"
 
 	// Name参数传入错误。
 	INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
@@ -337,6 +463,12 @@ const (
 
 	// 规则不正确，Namespace为英文字母、数字、-_ 符号组成，长度30。
 	INVALIDPARAMETERVALUE_NAMESPACEINVALID = "InvalidParameterValue.NamespaceInvalid"
+
+	// NodeSpec 参数传入错误。
+	INVALIDPARAMETERVALUE_NODESPEC = "InvalidParameterValue.NodeSpec"
+
+	// NodeType 参数传入错误。
+	INVALIDPARAMETERVALUE_NODETYPE = "InvalidParameterValue.NodeType"
 
 	// 偏移量不合法。
 	INVALIDPARAMETERVALUE_OFFSET = "InvalidParameterValue.Offset"
@@ -371,6 +503,12 @@ const (
 	// 不支持的函数版本。
 	INVALIDPARAMETERVALUE_QUALIFIER = "InvalidParameterValue.Qualifier"
 
+	// 查询版本详情，版本参数传入错误。
+	INVALIDPARAMETERVALUE_QUERYVERSION = "InvalidParameterValue.QueryVersion"
+
+	// 企业版镜像实例ID[RegistryId]传值错误。
+	INVALIDPARAMETERVALUE_REGISTRYID = "InvalidParameterValue.RegistryId"
+
 	// RetCode不合法。
 	INVALIDPARAMETERVALUE_RETCODE = "InvalidParameterValue.RetCode"
 
@@ -392,6 +530,9 @@ const (
 	// Stamp取值与规范不符，请修正后再试。
 	INVALIDPARAMETERVALUE_STAMP = "InvalidParameterValue.Stamp"
 
+	// 起始时间传入错误。
+	INVALIDPARAMETERVALUE_STARTTIME = "InvalidParameterValue.StartTime"
+
 	// 需要同时指定开始日期与结束日期。
 	INVALIDPARAMETERVALUE_STARTTIMEORENDTIME = "InvalidParameterValue.StartTimeOrEndTime"
 
@@ -406,6 +547,9 @@ const (
 
 	// TraceEnable取值与规范不符，请修正后再试。
 	INVALIDPARAMETERVALUE_TRACEENABLE = "InvalidParameterValue.TraceEnable"
+
+	// TrackingTarget 参数输入错误。
+	INVALIDPARAMETERVALUE_TRACKINGTARGET = "InvalidParameterValue.TrackingTarget"
 
 	// TriggerCronConfig参数传入错误。
 	INVALIDPARAMETERVALUE_TRIGGERCRONCONFIG = "InvalidParameterValue.TriggerCronConfig"
@@ -443,6 +587,12 @@ const (
 	// Cdn使用超过最大限制。
 	LIMITEXCEEDED_CDN = "LimitExceeded.Cdn"
 
+	// 用户开启镜像加速函数版本超限。
+	LIMITEXCEEDED_CONTAINERIMAGEACCELERATE = "LimitExceeded.ContainerImageAccelerate"
+
+	// 用户开启镜像加速函数版本超限。
+	LIMITEXCEEDED_CONTAINERIMAGEACCELERATEQUOTA = "LimitExceeded.ContainerImageAccelerateQuota"
+
 	// eip资源超限。
 	LIMITEXCEEDED_EIP = "LimitExceeded.Eip"
 
@@ -467,11 +617,17 @@ const (
 	// InitTimeout达到限制，可提交工单申请提升限制：https://tencentcs.com/7Fixwt63。
 	LIMITEXCEEDED_INITTIMEOUT = "LimitExceeded.InitTimeout"
 
+	// 内网固定IP个数超限。
+	LIMITEXCEEDED_INTRAIP = "LimitExceeded.IntraIp"
+
 	// layer版本数量超出最大限制。
 	LIMITEXCEEDED_LAYERVERSIONS = "LimitExceeded.LayerVersions"
 
 	// layer数量超出最大限制。
 	LIMITEXCEEDED_LAYERS = "LimitExceeded.Layers"
+
+	// 动态扩容最大值超限。
+	LIMITEXCEEDED_MAXCAPACITY = "LimitExceeded.MaxCapacity"
 
 	// 内存超出最大限制。
 	LIMITEXCEEDED_MEMORY = "LimitExceeded.Memory"
@@ -490,6 +646,9 @@ const (
 
 	// 定时触发间隔小于最大限制。
 	LIMITEXCEEDED_PROVISIONTRIGGERINTERVAL = "LimitExceeded.ProvisionTriggerInterval"
+
+	// 配额超限。
+	LIMITEXCEEDED_QUOTA = "LimitExceeded.Quota"
 
 	// 函数异步重试配置异步重试次数超过限制。
 	LIMITEXCEEDED_RETRYNUM = "LimitExceeded.RetryNum"
@@ -514,6 +673,9 @@ const (
 
 	// 缺失 Runtime 字段。
 	MISSINGPARAMETER_RUNTIME = "MissingParameter.Runtime"
+
+	// 账号已被隔离。
+	OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
@@ -560,11 +722,20 @@ const (
 	// 未找到指定的AsyncEvent，请创建后再试。
 	RESOURCENOTFOUND_ASYNCEVENT = "ResourceNotFound.AsyncEvent"
 
+	// 函数需要关联的标签Key不存在。
+	RESOURCENOTFOUND_ATTACHEDTAGKEYNOTFOUND = "ResourceNotFound.AttachedTagKeyNotFound"
+
 	// Cdn不存在。
 	RESOURCENOTFOUND_CDN = "ResourceNotFound.Cdn"
 
 	// 指定的cfs下未找到您所指定的挂载点。
 	RESOURCENOTFOUND_CFSMOUNTINSNOTMATCH = "ResourceNotFound.CfsMountInsNotMatch"
+
+	// CfsProtocolError 参数异常。
+	RESOURCENOTFOUND_CFSPROTOCOLERROR = "ResourceNotFound.CfsProtocolError"
+
+	// 检测cfs状态为不可用。
+	RESOURCENOTFOUND_CFSSTATUSERROR = "ResourceNotFound.CfsStatusError"
 
 	// cfs与云函数所处vpc不一致。
 	RESOURCENOTFOUND_CFSVPCNOTMATCH = "ResourceNotFound.CfsVpcNotMatch"
@@ -596,6 +767,9 @@ const (
 	// 获取cfs信息错误。
 	RESOURCENOTFOUND_GETCFSNOTMATCH = "ResourceNotFound.GetCfsNotMatch"
 
+	// 未找到指定的ImageConfig，请创建后再试。
+	RESOURCENOTFOUND_IMAGECONFIG = "ResourceNotFound.ImageConfig"
+
 	// layer不存在。
 	RESOURCENOTFOUND_LAYER = "ResourceNotFound.Layer"
 
@@ -610,6 +784,9 @@ const (
 
 	// 角色不存在。
 	RESOURCENOTFOUND_ROLE = "ResourceNotFound.Role"
+
+	// Role不存在。
+	RESOURCENOTFOUND_ROLECHECK = "ResourceNotFound.RoleCheck"
 
 	// Timer不存在。
 	RESOURCENOTFOUND_TIMER = "ResourceNotFound.Timer"
@@ -665,11 +842,17 @@ const (
 	// 无法进行此操作。
 	UNAUTHORIZEDOPERATION_UPDATEFUNCTIONCODE = "UnauthorizedOperation.UpdateFunctionCode"
 
+	// 没有权限。
+	UNAUTHORIZEDOPERATION_UPDATETRIGGERSTATUS = "UnauthorizedOperation.UpdateTriggerStatus"
+
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 
 	// 资源还有别名绑定，不支持当前操作，请解绑别名后重试。
 	UNSUPPORTEDOPERATION_ALIASBIND = "UnsupportedOperation.AliasBind"
+
+	// 指定的配置AsyncRunEnable暂不支持，请修正后再试。
+	UNSUPPORTEDOPERATION_ASYNCRUNENABLE = "UnsupportedOperation.AsyncRunEnable"
 
 	// Cdn不支持。
 	UNSUPPORTEDOPERATION_CDN = "UnsupportedOperation.Cdn"
@@ -677,9 +860,21 @@ const (
 	// Cos操作不支持。
 	UNSUPPORTEDOPERATION_COS = "UnsupportedOperation.Cos"
 
+	// 指定的配置EipFixed暂不支持。
+	UNSUPPORTEDOPERATION_EIPFIXED = "UnsupportedOperation.EipFixed"
+
+	// 不支持的地域。
+	UNSUPPORTEDOPERATION_NOTSUPPORTREGION = "UnsupportedOperation.NotSupportRegion"
+
 	// 不支持此地域。
 	UNSUPPORTEDOPERATION_REGION = "UnsupportedOperation.Region"
 
 	// Trigger操作不支持。
 	UNSUPPORTEDOPERATION_TRIGGER = "UnsupportedOperation.Trigger"
+
+	// 指定的配置暂不支持，请修正后再试。
+	UNSUPPORTEDOPERATION_UPDATEFUNCTIONEVENTINVOKECONFIG = "UnsupportedOperation.UpdateFunctionEventInvokeConfig"
+
+	// 指定的配置VpcConfig暂不支持。
+	UNSUPPORTEDOPERATION_VPCCONFIG = "UnsupportedOperation.VpcConfig"
 )

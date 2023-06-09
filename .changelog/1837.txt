@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_instance: support to update `charge_type` and `period`
+```
+
+```release-note:enhancement
+resource/tencentcloud_postgresql_readonly_instance: support the `read_only_group_id` field
+```
+
+```release-note:new-resource
+tencentcloud_postgresql_modify_account_remark_operation
+```
+
+```release-note:new-resource
+tencentcloud_postgresql_modify_switch_time_period_operation
+```

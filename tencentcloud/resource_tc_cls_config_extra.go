@@ -4,34 +4,73 @@ Provides a resource to create a cls config extra
 Example Usage
 
 ```hcl
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "tf-config-extra-test"
+  tags        = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_cls_topic" "topic" {
+  auto_split           = true
+  logset_id            = tencentcloud_cls_logset.logset.id
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags                 = {
+    "test" = "test"
+  }
+  topic_name = "tf-config-extra-test"
+}
+
+resource "tencentcloud_cls_machine_group" "group" {
+  group_name        = "tf-config-extra-test"
+  service_logging   = true
+  auto_update       = true
+  update_end_time   = "19:05:00"
+  update_start_time = "17:05:00"
+
+  machine_group_type {
+    type   = "ip"
+    values = [
+      "192.168.1.1",
+      "192.168.1.2",
+    ]
+  }
+}
+
 resource "tencentcloud_cls_config_extra" "extra" {
-  name = "helloworld"
-  topic_id = tencentcloud_cls_topic.topic.id
-  type = "container_file"
-  log_type = "json_log"
+  name        = "helloworld-test"
+  topic_id    = tencentcloud_cls_topic.topic.id
+  type        = "container_file"
+  log_type    = "json_log"
   config_flag = "label_k8s"
-  logset_id = tencentcloud_cls_logset.logset.id
+  logset_id   = tencentcloud_cls_logset.logset.id
   logset_name = tencentcloud_cls_logset.logset.logset_name
-  topic_name = tencentcloud_cls_topic.topic.topic_name
-#  host_file {
-#    log_path = "/var/log/tmep"
-#    file_pattern = "*.log"
-#    custom_labels = ["key1=value1"]
-#  }
+  topic_name  = tencentcloud_cls_topic.topic.topic_name
   container_file {
-    container = "nginx"
+    container    = "nginx"
     file_pattern = "log"
-    log_path = "/nginx"
-    namespace = "default"
+    log_path     = "/nginx"
+    namespace    = "default"
     workload {
-      container ="nginx"
-      kind = "deployment"
-      name = "nginx"
+      container = "nginx"
+      kind      = "deployment"
+      name      = "nginx"
       namespace = "default"
     }
   }
-  group_id ="27752a9b-9918-440a-8ee7-9c84a14a47ed"
+  group_id = tencentcloud_cls_machine_group.group.id
 }
+```
+
+Import
+
+cls config_extra can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cls_config_extra.config_extra config_extra_id
 ```
 */
 package tencentcloud
@@ -53,6 +92,9 @@ func resourceTencentCloudClsConfigExtra() *schema.Resource {
 		Read:   resourceTencentCloudClsConfigExtraRead,
 		Delete: resourceTencentCloudClsConfigExtraDelete,
 		Update: resourceTencentCloudClsConfigExtraUpdate,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -98,6 +140,7 @@ func resourceTencentCloudClsConfigExtra() *schema.Resource {
 			"host_file": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Node file config info.",
 				Elem: &schema.Resource{
@@ -201,6 +244,7 @@ func resourceTencentCloudClsConfigExtra() *schema.Resource {
 			"container_stdout": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Container stdout info.",
 				Elem: &schema.Resource{
@@ -264,9 +308,15 @@ func resourceTencentCloudClsConfigExtra() *schema.Resource {
 					},
 				},
 			},
+			"log_format": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Log format.",
+			},
 			"extract_rule": {
 				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
 				MaxItems:    1,
 				Description: "Extraction rule. If ExtractRule is set, LogType must be set.",
 				Elem: &schema.Resource{
@@ -324,6 +374,7 @@ func resourceTencentCloudClsConfigExtra() *schema.Resource {
 						"un_match_up_load_switch": {
 							Type:        schema.TypeBool,
 							Optional:    true,
+							Computed:    true,
 							Description: "Whether to upload the logs that failed to be parsed. Valid values: true: yes; false: no.",
 						},
 						"un_match_log_key": {
@@ -334,6 +385,7 @@ func resourceTencentCloudClsConfigExtra() *schema.Resource {
 						"backtracking": {
 							Type:        schema.TypeInt,
 							Optional:    true,
+							Computed:    true,
 							Description: "Size of the data to be rewound in incremental collection mode. Default value: -1 (full collection).",
 						},
 					},
@@ -547,6 +599,9 @@ func resourceTencentCloudClsConfigExtraCreate(d *schema.ResourceData, meta inter
 		containerStdouts = append(containerStdouts, &containerStdout)
 		request.ContainerStdout = containerStdouts[0]
 	}
+	if v, ok := d.GetOk("log_format"); ok {
+		request.LogFormat = helper.String(v.(string))
+	}
 	if v, ok := d.GetOk("extract_rule"); ok {
 		extractRules := make([]*cls.ExtractRuleInfo, 0, 10)
 		if len(v.([]interface{})) != 1 {
@@ -649,11 +704,283 @@ func resourceTencentCloudClsConfigExtraCreate(d *schema.ResourceData, meta inter
 
 	id := *response.Response.ConfigExtraId
 	d.SetId(id)
-	return nil
+	return resourceTencentCloudClsConfigExtraRead(d, meta)
 }
 
 func resourceTencentCloudClsConfigExtraRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cls_config_extra.read")()
+	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	configExtraId := d.Id()
+
+	configExtra, err := service.DescribeClsConfigExtraById(ctx, configExtraId)
+	if err != nil {
+		return err
+	}
+
+	if configExtra == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `ClsConfigExtra` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
+	if configExtra.Name != nil {
+		_ = d.Set("name", configExtra.Name)
+	}
+
+	if configExtra.TopicId != nil {
+		_ = d.Set("topic_id", configExtra.TopicId)
+	}
+
+	if configExtra.Type != nil {
+		_ = d.Set("type", configExtra.Type)
+	}
+
+	if configExtra.LogType != nil {
+		_ = d.Set("log_type", configExtra.LogType)
+	}
+
+	if configExtra.ConfigFlag != nil {
+		_ = d.Set("config_flag", configExtra.ConfigFlag)
+	}
+
+	if configExtra.LogsetId != nil {
+		_ = d.Set("logset_id", configExtra.LogsetId)
+	}
+
+	if configExtra.LogsetName != nil {
+		_ = d.Set("logset_name", configExtra.LogsetName)
+	}
+
+	if configExtra.TopicName != nil {
+		_ = d.Set("topic_name", configExtra.TopicName)
+	}
+
+	if configExtra.HostFile != nil {
+		hostFileMap := map[string]interface{}{}
+
+		if configExtra.HostFile.LogPath != nil {
+			hostFileMap["log_path"] = configExtra.HostFile.LogPath
+		}
+
+		if configExtra.HostFile.FilePattern != nil {
+			hostFileMap["file_pattern"] = configExtra.HostFile.FilePattern
+		}
+
+		if len(configExtra.HostFile.CustomLabels) > 0 {
+			hostFileMap["custom_labels"] = configExtra.HostFile.CustomLabels
+		}
+
+		_ = d.Set("host_file", []interface{}{hostFileMap})
+	}
+
+	if configExtra.ContainerFile != nil {
+		containerFileMap := map[string]interface{}{}
+
+		if configExtra.ContainerFile.Namespace != nil {
+			containerFileMap["namespace"] = configExtra.ContainerFile.Namespace
+		}
+
+		if configExtra.ContainerFile.Container != nil {
+			containerFileMap["container"] = configExtra.ContainerFile.Container
+		}
+
+		if configExtra.ContainerFile.LogPath != nil {
+			containerFileMap["log_path"] = configExtra.ContainerFile.LogPath
+		}
+
+		if configExtra.ContainerFile.FilePattern != nil {
+			containerFileMap["file_pattern"] = configExtra.ContainerFile.FilePattern
+		}
+
+		if len(configExtra.ContainerFile.IncludeLabels) > 0 {
+			containerFileMap["include_labels"] = configExtra.ContainerFile.IncludeLabels
+		}
+
+		if configExtra.ContainerFile.WorkLoad != nil {
+			workLoadMap := map[string]interface{}{}
+
+			if configExtra.ContainerFile.WorkLoad.Kind != nil {
+				workLoadMap["kind"] = configExtra.ContainerFile.WorkLoad.Kind
+			}
+
+			if configExtra.ContainerFile.WorkLoad.Name != nil {
+				workLoadMap["name"] = configExtra.ContainerFile.WorkLoad.Name
+			}
+
+			if configExtra.ContainerFile.WorkLoad.Container != nil {
+				workLoadMap["container"] = configExtra.ContainerFile.WorkLoad.Container
+			}
+
+			if configExtra.ContainerFile.WorkLoad.Namespace != nil {
+				workLoadMap["namespace"] = configExtra.ContainerFile.WorkLoad.Namespace
+			}
+
+			containerFileMap["workload"] = []interface{}{workLoadMap}
+		}
+
+		if configExtra.ContainerFile.ExcludeNamespace != nil {
+			containerFileMap["exclude_namespace"] = configExtra.ContainerFile.ExcludeNamespace
+		}
+
+		if len(configExtra.ContainerFile.ExcludeLabels) > 0 {
+			containerFileMap["exclude_labels"] = configExtra.ContainerFile.ExcludeLabels
+		}
+
+		_ = d.Set("container_file", []interface{}{containerFileMap})
+	}
+
+	if configExtra.ContainerStdout != nil {
+		containerStdoutMap := map[string]interface{}{}
+
+		if configExtra.ContainerStdout.AllContainers != nil {
+			containerStdoutMap["all_containers"] = configExtra.ContainerStdout.AllContainers
+		}
+
+		if configExtra.ContainerStdout.Namespace != nil {
+			containerStdoutMap["namespace"] = configExtra.ContainerStdout.Namespace
+		}
+
+		if configExtra.ContainerStdout.IncludeLabels != nil {
+			containerStdoutMap["include_labels"] = configExtra.ContainerStdout.IncludeLabels
+		}
+
+		if configExtra.ContainerStdout.WorkLoads != nil {
+			workLoadsList := []interface{}{}
+			for _, workLoads := range configExtra.ContainerStdout.WorkLoads {
+				workLoadsMap := map[string]interface{}{}
+
+				if workLoads.Kind != nil {
+					workLoadsMap["kind"] = workLoads.Kind
+				}
+
+				if workLoads.Name != nil {
+					workLoadsMap["name"] = workLoads.Name
+				}
+
+				if workLoads.Container != nil {
+					workLoadsMap["container"] = workLoads.Container
+				}
+
+				if workLoads.Namespace != nil {
+					workLoadsMap["namespace"] = workLoads.Namespace
+				}
+
+				workLoadsList = append(workLoadsList, workLoadsMap)
+			}
+
+			containerStdoutMap["workloads"] = workLoadsList
+		}
+
+		if configExtra.ContainerStdout.ExcludeNamespace != nil {
+			containerStdoutMap["exclude_namespace"] = configExtra.ContainerStdout.ExcludeNamespace
+		}
+
+		if configExtra.ContainerStdout.ExcludeLabels != nil {
+			containerStdoutMap["exclude_labels"] = configExtra.ContainerStdout.ExcludeLabels
+		}
+
+		_ = d.Set("container_stdout", []interface{}{containerStdoutMap})
+	}
+
+	if configExtra.LogFormat != nil {
+		_ = d.Set("log_format", configExtra.LogFormat)
+	}
+
+	if configExtra.ExtractRule != nil {
+		extractRuleMap := map[string]interface{}{}
+
+		if configExtra.ExtractRule.TimeKey != nil {
+			extractRuleMap["time_key"] = configExtra.ExtractRule.TimeKey
+		}
+
+		if configExtra.ExtractRule.TimeFormat != nil {
+			extractRuleMap["time_format"] = configExtra.ExtractRule.TimeFormat
+		}
+
+		if configExtra.ExtractRule.Delimiter != nil {
+			extractRuleMap["delimiter"] = configExtra.ExtractRule.Delimiter
+		}
+
+		if configExtra.ExtractRule.LogRegex != nil {
+			extractRuleMap["log_regex"] = configExtra.ExtractRule.LogRegex
+		}
+
+		if configExtra.ExtractRule.BeginRegex != nil {
+			extractRuleMap["begin_regex"] = configExtra.ExtractRule.BeginRegex
+		}
+
+		if len(configExtra.ExtractRule.Keys) > 0 {
+			extractRuleMap["keys"] = configExtra.ExtractRule.Keys
+		}
+
+		if configExtra.ExtractRule.FilterKeyRegex != nil {
+			filterKeyRegexList := []interface{}{}
+			for _, filterKeyRegex := range configExtra.ExtractRule.FilterKeyRegex {
+				filterKeyRegexMap := map[string]interface{}{}
+
+				if filterKeyRegex.Key != nil {
+					filterKeyRegexMap["key"] = filterKeyRegex.Key
+				}
+
+				if filterKeyRegex.Regex != nil {
+					filterKeyRegexMap["regex"] = filterKeyRegex.Regex
+				}
+
+				filterKeyRegexList = append(filterKeyRegexList, filterKeyRegexMap)
+			}
+
+			extractRuleMap["filter_key_regex"] = filterKeyRegexList
+		}
+
+		if configExtra.ExtractRule.UnMatchUpLoadSwitch != nil {
+			extractRuleMap["un_match_up_load_switch"] = configExtra.ExtractRule.UnMatchUpLoadSwitch
+		}
+
+		if configExtra.ExtractRule.UnMatchLogKey != nil {
+			extractRuleMap["un_match_log_key"] = configExtra.ExtractRule.UnMatchLogKey
+		}
+
+		if configExtra.ExtractRule.Backtracking != nil {
+			extractRuleMap["backtracking"] = configExtra.ExtractRule.Backtracking
+		}
+
+		_ = d.Set("extract_rule", []interface{}{extractRuleMap})
+	}
+
+	if configExtra.ExcludePaths != nil {
+		excludePathsList := []interface{}{}
+		for _, excludePath := range configExtra.ExcludePaths {
+			excludePathsMap := map[string]interface{}{}
+
+			if excludePath.Type != nil {
+				excludePathsMap["type"] = excludePath.Type
+			}
+
+			if excludePath.Value != nil {
+				excludePathsMap["value"] = excludePath.Value
+			}
+
+			excludePathsList = append(excludePathsList, excludePathsMap)
+		}
+
+		_ = d.Set("exclude_paths", excludePathsList)
+
+	}
+
+	if configExtra.UserDefineRule != nil {
+		_ = d.Set("user_define_rule", configExtra.UserDefineRule)
+	}
+
+	if configExtra.GroupId != nil {
+		_ = d.Set("group_id", configExtra.GroupId)
+	}
 
 	return nil
 }
@@ -839,6 +1166,11 @@ func resourceTencentCloudClsConfigExtraUpdate(d *schema.ResourceData, meta inter
 			request.ContainerStdout = containerStdouts[0]
 		}
 	}
+	if d.HasChange("log_format") {
+		if v, ok := d.GetOk("log_format"); ok {
+			request.LogFormat = helper.String(v.(string))
+		}
+	}
 
 	if d.HasChange("log_type") || d.HasChange("extract_rule") {
 		if v, ok := d.GetOk("log_type"); ok {
@@ -942,7 +1274,7 @@ func resourceTencentCloudClsConfigExtraUpdate(d *schema.ResourceData, meta inter
 		return err
 	}
 
-	return nil
+	return resourceTencentCloudClsConfigExtraRead(d, meta)
 }
 
 func resourceTencentCloudClsConfigExtraDelete(d *schema.ResourceData, meta interface{}) error {

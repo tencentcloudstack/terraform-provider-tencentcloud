@@ -14,8 +14,44 @@ Provides a resource to create a cls config extra
 ## Example Usage
 
 ```hcl
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "tf-config-extra-test"
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_cls_topic" "topic" {
+  auto_split           = true
+  logset_id            = tencentcloud_cls_logset.logset.id
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags = {
+    "test" = "test"
+  }
+  topic_name = "tf-config-extra-test"
+}
+
+resource "tencentcloud_cls_machine_group" "group" {
+  group_name        = "tf-config-extra-test"
+  service_logging   = true
+  auto_update       = true
+  update_end_time   = "19:05:00"
+  update_start_time = "17:05:00"
+
+  machine_group_type {
+    type = "ip"
+    values = [
+      "192.168.1.1",
+      "192.168.1.2",
+    ]
+  }
+}
+
 resource "tencentcloud_cls_config_extra" "extra" {
-  name        = "helloworld"
+  name        = "helloworld-test"
   topic_id    = tencentcloud_cls_topic.topic.id
   type        = "container_file"
   log_type    = "json_log"
@@ -23,11 +59,6 @@ resource "tencentcloud_cls_config_extra" "extra" {
   logset_id   = tencentcloud_cls_logset.logset.id
   logset_name = tencentcloud_cls_logset.logset.logset_name
   topic_name  = tencentcloud_cls_topic.topic.topic_name
-  #  host_file {
-  #    log_path = "/var/log/tmep"
-  #    file_pattern = "*.log"
-  #    custom_labels = ["key1=value1"]
-  #  }
   container_file {
     container    = "nginx"
     file_pattern = "log"
@@ -40,7 +71,7 @@ resource "tencentcloud_cls_config_extra" "extra" {
       namespace = "default"
     }
   }
-  group_id = "27752a9b-9918-440a-8ee7-9c84a14a47ed"
+  group_id = tencentcloud_cls_machine_group.group.id
 }
 ```
 
@@ -63,6 +94,7 @@ The following arguments are supported:
 * `group_id` - (Optional, String) Binding group id.
 * `group_ids` - (Optional, Set: [`String`], ForceNew) Binding group ids.
 * `host_file` - (Optional, List) Node file config info.
+* `log_format` - (Optional, String) Log format.
 * `user_define_rule` - (Optional, String) Custom collection rule, which is a serialized JSON string.
 
 The `container_file` object supports the following:
@@ -135,4 +167,12 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
+
+## Import
+
+cls config_extra can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cls_config_extra.config_extra config_extra_id
+```
 

@@ -75,14 +75,22 @@ func resourceTencentCloudTdmqTopic() *schema.Resource {
 			},
 			"topic_type": {
 				Type:        schema.TypeInt,
-				Required:    true,
-				ForceNew:    true,
+				Optional:    true,
+				Computed:    true,
+				Deprecated:  "This input will be gradually discarded and can be switched to PulsarTopicType parameter 0: Normal message; 1: Global sequential messages; 2: Local sequential messages; 3: Retrying queue; 4: Dead letter queue.",
 				Description: "The type of topic.",
 			},
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The Dedicated Cluster Id.",
+			},
+			"pulsar_topic_type": {
+				Type:          schema.TypeInt,
+				Optional:      true,
+				Computed:      true,
+				ConflictsWith: []string{"topic_type"},
+				Description:   "Pulsar Topic Type 0: Non-persistent non-partitioned 1: Non-persistent partitioned 2: Persistent non-partitioned 3: Persistent partitioned.",
 			},
 			"remark": {
 				Type:        schema.TypeString,
@@ -109,12 +117,13 @@ func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{
 	tdmqService := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		environId  string
-		topicName  string
-		partitions uint64
-		topicType  uint64
-		remark     string
-		clusterId  string
+		environId       string
+		topicName       string
+		partitions      uint64
+		topicType       int64
+		remark          string
+		clusterId       string
+		pulsarTopicType int64
 	)
 	if temp, ok := d.GetOk("environ_id"); ok {
 		environId = temp.(string)
@@ -129,7 +138,6 @@ func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 	partitions = uint64(d.Get("partitions").(int))
-	topicType = uint64(d.Get("topic_type").(int))
 	if temp, ok := d.GetOk("remark"); ok {
 		remark = temp.(string)
 	}
@@ -137,7 +145,18 @@ func resourceTencentCloudTdmqTopicCreate(d *schema.ResourceData, meta interface{
 		clusterId = temp.(string)
 	}
 
-	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId)
+	if v, ok := d.GetOkExists("pulsar_topic_type"); ok {
+		pulsarTopicType = int64(v.(int))
+	} else {
+		pulsarTopicType = NonePulsarTopicType
+		if v, ok := d.GetOkExists("topic_type"); ok {
+			topicType = int64(v.(int))
+		} else {
+			topicType = NoneTopicType
+		}
+	}
+
+	err := tdmqService.CreateTdmqTopic(ctx, environId, topicName, partitions, topicType, remark, clusterId, pulsarTopicType)
 	if err != nil {
 		return err
 	}
@@ -171,6 +190,7 @@ func resourceTencentCloudTdmqTopicRead(d *schema.ResourceData, meta interface{})
 
 		_ = d.Set("partitions", info.Partitions)
 		_ = d.Set("topic_type", info.TopicType)
+		_ = d.Set("pulsar_topic_type", info.PulsarTopicType)
 		_ = d.Set("remark", info.Remark)
 		_ = d.Set("create_time", info.CreateTime)
 		return nil
@@ -186,6 +206,10 @@ func resourceTencentCloudTdmqTopicUpdate(d *schema.ResourceData, meta interface{
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	if d.HasChange("topic_type") {
+		return fmt.Errorf("`topic_type` do not support change now.")
+	}
 
 	topicName := d.Id()
 	environId := d.Get("environ_id").(string)

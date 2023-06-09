@@ -99,7 +99,7 @@ func resourceTencentCloudSqlserverGeneralCommunicationCreate(d *schema.ResourceD
 		} else if *result.Response.Status == SQLSERVER_TASK_RUNNING {
 			return resource.RetryableError(fmt.Errorf("sqlserver generalCommunication status is running"))
 		} else if *result.Response.Status == int64(SQLSERVER_TASK_FAIL) {
-			return resource.RetryableError(fmt.Errorf("sqlserver bgeneralCommunication status is running"))
+			return resource.NonRetryableError(fmt.Errorf("sqlserver bgeneralCommunication status is fail"))
 		} else {
 			e = fmt.Errorf("sqlserver generalCommunication status illegal")
 			return resource.NonRetryableError(e)
@@ -174,7 +174,7 @@ func resourceTencentCloudSqlserverGeneralCommunicationDelete(d *schema.ResourceD
 		} else if *result.Response.Status == SQLSERVER_TASK_RUNNING {
 			return resource.RetryableError(fmt.Errorf("sqlserver generalCommunication status is running"))
 		} else if *result.Response.Status == int64(SQLSERVER_TASK_FAIL) {
-			return resource.RetryableError(fmt.Errorf("sqlserver bgeneralCommunication status is running"))
+			return resource.NonRetryableError(fmt.Errorf("sqlserver bgeneralCommunication status is fail"))
 		} else {
 			e = fmt.Errorf("sqlserver generalCommunication status illegal")
 			return resource.NonRetryableError(e)

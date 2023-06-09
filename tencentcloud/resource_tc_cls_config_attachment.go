@@ -9,11 +9,20 @@ resource "tencentcloud_cls_config_attachment" "attach" {
   group_id = "27752a9b-9918-440a-8ee7-9c84a14a47ed"
 }
 
+Import
+
+cls config_attachment can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_cls_config_attachment.attach config_id#group_id
+```
+
 ```
 */
 package tencentcloud
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"strings"
@@ -29,6 +38,9 @@ func resourceTencentCloudClsConfigAttachment() *schema.Resource {
 		Create: resourceTencentCloudClsConfigAttachmentCreate,
 		Read:   resourceTencentCloudClsConfigAttachmentRead,
 		Delete: resourceTencentCloudClsConfigAttachmentDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"config_id": {
 				Type:        schema.TypeString,
@@ -37,9 +49,8 @@ func resourceTencentCloudClsConfigAttachment() *schema.Resource {
 				Description: "Collection configuration id.",
 			},
 			"group_id": {
-				Type:     schema.TypeString,
-				Required: true,
-
+				Type:        schema.TypeString,
+				Required:    true,
 				ForceNew:    true,
 				Description: "Machine group id.",
 			},
@@ -91,6 +102,31 @@ func resourceTencentCloudClsConfigAttachmentCreate(d *schema.ResourceData, meta 
 
 func resourceTencentCloudClsConfigAttachmentRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cls_config_attachment.read")()
+
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	configId := idSplit[0]
+	groupId := idSplit[1]
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	machineGroup, err := service.DescribeClsMachineGroupByConfigId(ctx, configId, groupId)
+	if err != nil {
+		return err
+	}
+
+	if machineGroup == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `ClsConfigAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
+	_ = d.Set("config_id", configId)
+	_ = d.Set("group_id", machineGroup.GroupId)
 
 	return nil
 }

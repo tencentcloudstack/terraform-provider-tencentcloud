@@ -1,6 +1,8 @@
 /*
 Use this resource to create postgresql instance.
 
+-> **Note:** To update the charge type, please update the `charge_type` and specify the `period` for the charging period. It only supports updating from `POSTPAID_BY_HOUR` to `PREPAID`, and the `period` field only valid in that upgrading case.
+
 Example Usage
 
 ```hcl
@@ -211,13 +213,12 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     COMMON_PAYTYPE_POSTPAID,
-				ForceNew:    true,
-				Description: "Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`.",
+				Description: "Pay type of the postgresql instance. Values `POSTPAID_BY_HOUR` (Default), `PREPAID`. It only support to update the type from `POSTPAID_BY_HOUR` to `PREPAID`.",
 			},
 			"period": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Description: "Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
+				Description: "Specify Prepaid period in month. Default `1`. Values: `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`. This field is valid only when creating a `PREPAID` type instance, or updating the charge type from `POSTPAID_BY_HOUR` to `PREPAID`.",
 			},
 			"auto_renew_flag": {
 				Type:        schema.TypeInt,
@@ -268,14 +269,12 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 
 			"vpc_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
-				Optional:    true,
+				Required:    true,
 				Description: "ID of VPC.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
-				ForceNew:    true,
-				Optional:    true,
+				Required:    true,
 				Description: "ID of subnet.",
 			},
 			"security_groups": {
@@ -797,16 +796,182 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 	d.Partial(true)
 
 	if err := helper.ImmutableArgsChek(d,
-		"charge_type",
-		"period",
-		"auto_renew_flag",
-		"auto_voucher",
+		// "charge_type",
+		// "period",
+		// "auto_renew_flag",
+		// "auto_voucher",
 		"voucher_ids",
 	); err != nil {
 		return err
 	}
 
+	if d.HasChange("period") && !d.HasChange("charge_type") {
+		return fmt.Errorf("The `period` field can be changed only when updating the charge type from `POSTPAID_BY_HOUR` to `PREPAID`.")
+	}
+
+	if d.HasChange("charge_type") {
+		var (
+			chargeTypeOld string
+			chargeTypeNew string
+			period        = 1
+			autoRenew     = 0
+			autoVoucher   = 0
+			request       = postgresql.NewModifyDBInstanceChargeTypeRequest()
+		)
+
+		old, new := d.GetChange("charge_type")
+		if old != nil {
+			chargeTypeOld = old.(string)
+		}
+		if new != nil {
+			chargeTypeNew = new.(string)
+		}
+
+		if chargeTypeOld != "POSTPAID_BY_HOUR" || chargeTypeNew != "PREPAID" {
+			return fmt.Errorf("It only support to update the charge type from `POSTPAID_BY_HOUR` to `PREPAID`.")
+		}
+
+		if v, ok := d.GetOk("period"); ok {
+			log.Printf("period set")
+			period = v.(int)
+		} else {
+			log.Printf("period not set")
+		}
+
+		if v, ok := d.GetOk("auto_renew_flag"); ok {
+			log.Printf("auto_renew_flag set")
+			autoRenew = v.(int)
+		} else {
+			log.Printf("auto_renew_flag not set")
+		}
+
+		if v, ok := d.GetOk("auto_voucher"); ok {
+			log.Printf("auto_voucher set")
+			autoVoucher = v.(int)
+		} else {
+			log.Printf("auto_voucher not set")
+		}
+
+		request.DBInstanceId = &instanceId
+		request.InstanceChargeType = &chargeTypeNew
+		request.Period = helper.IntInt64(period)
+		request.AutoRenewFlag = helper.IntInt64(autoRenew)
+		request.AutoVoucher = helper.IntInt64(autoVoucher)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().ModifyDBInstanceChargeType(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate postgresql ModifyDbInstanceChargeType failed, reason:%+v", logId, err)
+			return err
+		}
+
+		// wait unit charge type changing operation of instance done
+		service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+		conf := BuildStateChangeConf([]string{}, []string{"running"}, 2*readRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+	}
+
 	var outErr, inErr, checkErr error
+	// update vpc and subnet
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		var (
+			vpcOld    string
+			vpcNew    string
+			subnetOld string
+			subnetNew string
+			vipOld    string
+			vipNew    string
+		)
+
+		old, new := d.GetChange("vpc_id")
+		if old != nil {
+			vpcOld = old.(string)
+		}
+		if new != nil {
+			vpcNew = new.(string)
+		}
+
+		old, new = d.GetChange("subnet_id")
+		if old != nil {
+			subnetOld = old.(string)
+		}
+		if new != nil {
+			subnetNew = new.(string)
+		}
+
+		// Create new network first, then delete the old one
+		request := postgresql.NewCreateDBInstanceNetworkAccessRequest()
+		request.DBInstanceId = helper.String(instanceId)
+		request.VpcId = helper.String(vpcNew)
+		request.SubnetId = helper.String(subnetNew)
+		// ip assigned by system
+		request.IsAssignVip = helper.Bool(false)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UsePostgresqlClient().CreateDBInstanceNetworkAccess(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s create postgresql Instance NetworkAccess failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
+		// wait for new network enabled
+		conf := BuildStateChangeConf([]string{}, []string{"opened"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceNetworkAccessStateRefreshFunc(instanceId, vpcNew, subnetNew, vipOld, "", []string{}))
+		if object, e := conf.WaitForState(); e != nil {
+			return e
+		} else {
+			// find the vip assiged by system
+			ret := object.(*postgresql.DBInstanceNetInfo)
+			vipNew = *ret.Ip
+		}
+
+		// wait unit network changing operation of instance done
+		conf = BuildStateChangeConf([]string{}, []string{"running"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		// delete the old one
+		if v, ok := d.GetOk("private_access_ip"); ok {
+			vipOld = v.(string)
+		}
+		if err := service.DeletePostgresqlDBInstanceNetworkAccessById(ctx, instanceId, vpcOld, subnetOld, vipOld); err != nil {
+			return err
+		}
+
+		// wait for old network removed
+		conf = BuildStateChangeConf([]string{}, []string{"closed"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceNetworkAccessStateRefreshFunc(instanceId, vpcOld, subnetOld, vipNew, vipOld, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		// wait unit network changing operation of instance done
+		conf = BuildStateChangeConf([]string{}, []string{"running"}, 3*readRetryTimeout, time.Second, service.PostgresqlDBInstanceStateRefreshFunc(instanceId, []string{}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+
+		// refresh the private ip with new one
+		_ = d.Set("private_access_ip", vipNew)
+	}
+
 	// update name
 	if d.HasChange("name") {
 		name := d.Get("name").(string)

@@ -224,10 +224,6 @@ func resourceTencentCloudMariadbAccountUpdate(d *schema.ResourceData, meta inter
 		return fmt.Errorf("`host` do not support change now.")
 	}
 
-	if d.HasChange("password") {
-		return fmt.Errorf("`password` do not support change now.")
-	}
-
 	if d.HasChange("read_only") {
 		return fmt.Errorf("`read_only` do not support change now.")
 	}
@@ -236,22 +232,57 @@ func resourceTencentCloudMariadbAccountUpdate(d *schema.ResourceData, meta inter
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyAccountDescription(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s create mariadb account failed, reason:%+v", logId, err)
+			return err
+		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ModifyAccountDescription(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	// update pwd
+	if d.HasChange("password") {
+		PwdRequest := mariadb.NewResetAccountPasswordRequest()
+		if v, ok := d.GetOk("password"); ok {
+			PwdRequest.Password = helper.String(v.(string))
 		}
-		return nil
-	})
 
-	if err != nil {
-		log.Printf("[CRITAL]%s create mariadb account failed, reason:%+v", logId, err)
-		return err
+		if v, ok := d.GetOk("user_name"); ok {
+			PwdRequest.UserName = helper.String(v.(string))
+		}
+
+		if v, ok := d.GetOk("host"); ok {
+			PwdRequest.Host = helper.String(v.(string))
+		}
+
+		PwdRequest.InstanceId = &instanceId
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseMariadbClient().ResetAccountPassword(PwdRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s operate mariadb resetPassword failed, reason:%+v", logId, err)
+			return err
+		}
+
 	}
 
 	return resourceTencentCloudMariadbAccountRead(d, meta)

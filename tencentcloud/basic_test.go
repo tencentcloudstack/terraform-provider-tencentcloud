@@ -461,7 +461,26 @@ resource "tencentcloud_instance" "default" {
 // End of SQLServer
 
 // PostgreSQL
+const defaultPGOperationName = "keep-pg-operation"
+const OperationPresetPGSQL = `
+data "tencentcloud_postgresql_instances" "foo" {
+  name = "` + defaultPGOperationName + `"
+}
 
+data "tencentcloud_postgresql_readonly_groups" "ro_groups" {
+  filters {
+	name = "db-master-instance-id"
+	values = [data.tencentcloud_postgresql_instances.foo.instance_list.0.id]
+  }
+  order_by = "CreateTime"
+  order_by_type = "asc"
+}
+
+locals {
+  pgsql_id = data.tencentcloud_postgresql_instances.foo.instance_list.0.id
+  pgrogroup_id = data.tencentcloud_postgresql_readonly_groups.ro_groups.read_only_group_list.0.read_only_group_id
+}
+`
 const defaultPGSQLName = "keep-postgresql"
 const CommonPresetPGSQL = `
 data "tencentcloud_postgresql_instances" "foo" {
@@ -818,6 +837,26 @@ const (
 	defaultDcdbSGId          = "sg-ijato2x1"
 	defaultDcdbSGName        = "default"
 )
+
+// ref with `local.dcdb_id`
+const CommonPresetDcdb = `
+
+variable "availability_zone" {
+  default = "` + defaultAZone + `"
+}
+variable "region" {
+  default = "` + defaultRegion + `"
+}
+
+data "tencentcloud_dcdb_instances" "dcdb" {
+  search_name = "instancename"
+  search_key = "` + defaultDcdbInstanceName + `"
+}
+
+locals {
+  dcdb_id = data.tencentcloud_dcdb_instances.dcdb.list.0.instance_id
+}
+`
 
 // End of DCDB
 // SES

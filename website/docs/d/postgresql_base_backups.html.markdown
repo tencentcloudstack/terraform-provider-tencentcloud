@@ -43,7 +43,6 @@ The following arguments are supported:
 * `order_by_type` - (Optional, String) Sorting order. Valid values: `asc` (ascending), `desc` (descending).
 * `order_by` - (Optional, String) Sorting field. Valid values: `StartTime`, `FinishTime`, `Size`.
 * `result_output_file` - (Optional, String) Used to save results.
-* `tags` - (Optional, Map) Tag description list.
 
 The `filters` object supports the following:
 

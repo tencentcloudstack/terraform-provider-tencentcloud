@@ -16,6 +16,11 @@ func TestAccTencentCloudClsConfigAttachment_basic(t *testing.T) {
 			{
 				Config: testAccClsConfigAttachment,
 			},
+			{
+				ResourceName:      "tencentcloud_cls_config_attachment.attach",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }

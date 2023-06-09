@@ -1,0 +1,11 @@
+```release-note:enhancement
+resource/tencentcloud_postgresql_instance: support to update `vpc_id` and `subnet_id`
+```
+
+```release-note:enhancement
+resource/tencentcloud_postgresql_readonly_group: support to update `vpc_id` and `subnet_id`
+```
+
+```release-note:enhancement
+resource/tencentcloud_postgresql_readonly_instance: support `private_access_ip` and `private_access_port` fields
+```

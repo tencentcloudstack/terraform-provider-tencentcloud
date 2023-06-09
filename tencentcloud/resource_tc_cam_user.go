@@ -355,6 +355,12 @@ func resourceTencentCloudCamUserUpdate(d *schema.ResourceData, meta interface{})
 		updateAttrs = append(updateAttrs, "console_login")
 	}
 
+	if d.HasChange("password") {
+		password := d.Get("password").(string)
+		request.Password = helper.String(password)
+		updateAttrs = append(updateAttrs, "password")
+	}
+
 	if d.HasChange("need_reset_password") {
 		resetBool := d.Get("need_reset_password").(bool)
 		resetBool64 := uint64(0)

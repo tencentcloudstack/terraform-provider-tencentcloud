@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_dc_access_points
+```
+
+```release-note:new-resource
+tencentcloud_dc_instance
+```

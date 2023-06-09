@@ -44,8 +44,9 @@ The following arguments are supported:
 * `environ_id` - (Required, String, ForceNew) The name of tdmq namespace.
 * `partitions` - (Required, Int) The partitions of topic.
 * `topic_name` - (Required, String, ForceNew) The name of topic to be created.
-* `topic_type` - (Required, Int, ForceNew) The type of topic.
+* `pulsar_topic_type` - (Optional, Int) Pulsar Topic Type 0: Non-persistent non-partitioned 1: Non-persistent partitioned 2: Persistent non-partitioned 3: Persistent partitioned.
 * `remark` - (Optional, String) Description of the namespace.
+* `topic_type` - (Optional, Int, **Deprecated**) This input will be gradually discarded and can be switched to PulsarTopicType parameter 0: Normal message; 1: Global sequential messages; 2: Local sequential messages; 3: Retrying queue; 4: Dead letter queue. The type of topic.
 
 ## Attributes Reference
 

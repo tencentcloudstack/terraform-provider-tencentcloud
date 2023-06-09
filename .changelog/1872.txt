@@ -1,0 +1,15 @@
+```release-note:enhancement
+resource/tencentcloud_dcdb_hourdb_instance: support `rs_access_strategy`, `vip` and `vipv6` field.
+```
+
+```release-note:new-resource
+tencentcloud_dcdb_flush_binlog_operation
+```
+
+```release-note:new-resource
+tencentcloud_dcdb_switch_db_instance_ha_operation
+```
+
+```release-note:new-resource
+tencentcloud_dcdb_instance_config
+```

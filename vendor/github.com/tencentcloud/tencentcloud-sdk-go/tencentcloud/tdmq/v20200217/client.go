@@ -135,6 +135,7 @@ func NewClearCmqQueueResponse() (response *ClearCmqQueueResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ClearCmqQueue(request *ClearCmqQueueRequest) (response *ClearCmqQueueResponse, err error) {
     return c.ClearCmqQueueWithContext(context.Background(), request)
 }
@@ -145,6 +146,7 @@ func (c *Client) ClearCmqQueue(request *ClearCmqQueueRequest) (response *ClearCm
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) ClearCmqQueueWithContext(ctx context.Context, request *ClearCmqQueueRequest) (response *ClearCmqQueueResponse, err error) {
     if request == nil {
         request = NewClearCmqQueueRequest()
@@ -228,6 +230,10 @@ func NewCreateAMQPClusterResponse() (response *CreateAMQPClusterResponse) {
 }
 
 // CreateAMQPCluster
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 创建AMQP集群
 //
 // 可能返回的错误码:
@@ -245,6 +251,10 @@ func (c *Client) CreateAMQPCluster(request *CreateAMQPClusterRequest) (response 
 }
 
 // CreateAMQPCluster
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 创建AMQP集群
 //
 // 可能返回的错误码:
@@ -292,6 +302,10 @@ func NewCreateAMQPExchangeResponse() (response *CreateAMQPExchangeResponse) {
 }
 
 // CreateAMQPExchange
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 创建AMQP Exchange
 //
 // 可能返回的错误码:
@@ -306,6 +320,10 @@ func (c *Client) CreateAMQPExchange(request *CreateAMQPExchangeRequest) (respons
 }
 
 // CreateAMQPExchange
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 创建AMQP Exchange
 //
 // 可能返回的错误码:
@@ -350,6 +368,10 @@ func NewCreateAMQPQueueResponse() (response *CreateAMQPQueueResponse) {
 }
 
 // CreateAMQPQueue
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 创建AMQP队列
 //
 // 可能返回的错误码:
@@ -364,6 +386,10 @@ func (c *Client) CreateAMQPQueue(request *CreateAMQPQueueRequest) (response *Cre
 }
 
 // CreateAMQPQueue
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 创建AMQP队列
 //
 // 可能返回的错误码:
@@ -408,6 +434,10 @@ func NewCreateAMQPRouteRelationResponse() (response *CreateAMQPRouteRelationResp
 }
 
 // CreateAMQPRouteRelation
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 创建AMQP路由关系
 //
 // 可能返回的错误码:
@@ -422,6 +452,10 @@ func (c *Client) CreateAMQPRouteRelation(request *CreateAMQPRouteRelationRequest
 }
 
 // CreateAMQPRouteRelation
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 创建AMQP路由关系
 //
 // 可能返回的错误码:
@@ -466,6 +500,10 @@ func NewCreateAMQPVHostResponse() (response *CreateAMQPVHostResponse) {
 }
 
 // CreateAMQPVHost
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 创建Amqp Vhost
 //
 // 可能返回的错误码:
@@ -481,6 +519,10 @@ func (c *Client) CreateAMQPVHost(request *CreateAMQPVHostRequest) (response *Cre
 }
 
 // CreateAMQPVHost
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 创建Amqp Vhost
 //
 // 可能返回的错误码:
@@ -607,6 +649,7 @@ func NewCreateCmqQueueResponse() (response *CreateCmqQueueResponse) {
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  RESOURCEUNAVAILABLE_CREATEFAILED = "ResourceUnavailable.CreateFailed"
 //  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateCmqQueue(request *CreateCmqQueueRequest) (response *CreateCmqQueueResponse, err error) {
     return c.CreateCmqQueueWithContext(context.Background(), request)
 }
@@ -627,6 +670,7 @@ func (c *Client) CreateCmqQueue(request *CreateCmqQueueRequest) (response *Creat
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  RESOURCEUNAVAILABLE_CREATEFAILED = "ResourceUnavailable.CreateFailed"
 //  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateCmqQueueWithContext(ctx context.Context, request *CreateCmqQueueRequest) (response *CreateCmqQueueResponse, err error) {
     if request == nil {
         request = NewCreateCmqQueueRequest()
@@ -667,8 +711,10 @@ func NewCreateCmqSubscribeResponse() (response *CreateCmqSubscribeResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CREATESUBSCRIPTION = "FailedOperation.CreateSubscription"
+//  FAILEDOPERATION_CREATETOPIC = "FailedOperation.CreateTopic"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_SUBSCRIPTION = "ResourceInUse.Subscription"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) CreateCmqSubscribe(request *CreateCmqSubscribeRequest) (response *CreateCmqSubscribeResponse, err error) {
     return c.CreateCmqSubscribeWithContext(context.Background(), request)
@@ -680,8 +726,10 @@ func (c *Client) CreateCmqSubscribe(request *CreateCmqSubscribeRequest) (respons
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CREATESUBSCRIPTION = "FailedOperation.CreateSubscription"
+//  FAILEDOPERATION_CREATETOPIC = "FailedOperation.CreateTopic"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_SUBSCRIPTION = "ResourceInUse.Subscription"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 //  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) CreateCmqSubscribeWithContext(ctx context.Context, request *CreateCmqSubscribeRequest) (response *CreateCmqSubscribeResponse, err error) {
     if request == nil {
@@ -877,6 +925,7 @@ func NewCreateEnvironmentRoleResponse() (response *CreateEnvironmentRoleResponse
 //  FAILEDOPERATION_UPDATEENVIRONMENTROLE = "FailedOperation.UpdateEnvironmentRole"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_ENVIRONMENTROLE = "ResourceInUse.EnvironmentRole"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
@@ -895,6 +944,7 @@ func (c *Client) CreateEnvironmentRole(request *CreateEnvironmentRoleRequest) (r
 //  FAILEDOPERATION_UPDATEENVIRONMENTROLE = "FailedOperation.UpdateEnvironmentRole"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCEINUSE_ENVIRONMENTROLE = "ResourceInUse.EnvironmentRole"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
@@ -911,6 +961,162 @@ func (c *Client) CreateEnvironmentRoleWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewCreateEnvironmentRoleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRabbitMQUserRequest() (request *CreateRabbitMQUserRequest) {
+    request = &CreateRabbitMQUserRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "CreateRabbitMQUser")
+    
+    
+    return
+}
+
+func NewCreateRabbitMQUserResponse() (response *CreateRabbitMQUserResponse) {
+    response = &CreateRabbitMQUserResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateRabbitMQUser
+// 创建RabbitMQ的用户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateRabbitMQUser(request *CreateRabbitMQUserRequest) (response *CreateRabbitMQUserResponse, err error) {
+    return c.CreateRabbitMQUserWithContext(context.Background(), request)
+}
+
+// CreateRabbitMQUser
+// 创建RabbitMQ的用户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateRabbitMQUserWithContext(ctx context.Context, request *CreateRabbitMQUserRequest) (response *CreateRabbitMQUserResponse, err error) {
+    if request == nil {
+        request = NewCreateRabbitMQUserRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRabbitMQUser require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRabbitMQUserResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRabbitMQVipInstanceRequest() (request *CreateRabbitMQVipInstanceRequest) {
+    request = &CreateRabbitMQVipInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "CreateRabbitMQVipInstance")
+    
+    
+    return
+}
+
+func NewCreateRabbitMQVipInstanceResponse() (response *CreateRabbitMQVipInstanceResponse) {
+    response = &CreateRabbitMQVipInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateRabbitMQVipInstance
+// 创建RabbitMQ专享版实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateRabbitMQVipInstance(request *CreateRabbitMQVipInstanceRequest) (response *CreateRabbitMQVipInstanceResponse, err error) {
+    return c.CreateRabbitMQVipInstanceWithContext(context.Background(), request)
+}
+
+// CreateRabbitMQVipInstance
+// 创建RabbitMQ专享版实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateRabbitMQVipInstanceWithContext(ctx context.Context, request *CreateRabbitMQVipInstanceRequest) (response *CreateRabbitMQVipInstanceResponse, err error) {
+    if request == nil {
+        request = NewCreateRabbitMQVipInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRabbitMQVipInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRabbitMQVipInstanceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateRabbitMQVirtualHostRequest() (request *CreateRabbitMQVirtualHostRequest) {
+    request = &CreateRabbitMQVirtualHostRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "CreateRabbitMQVirtualHost")
+    
+    
+    return
+}
+
+func NewCreateRabbitMQVirtualHostResponse() (response *CreateRabbitMQVirtualHostResponse) {
+    response = &CreateRabbitMQVirtualHostResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateRabbitMQVirtualHost
+// 创建RabbitMQ的vhost
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateRabbitMQVirtualHost(request *CreateRabbitMQVirtualHostRequest) (response *CreateRabbitMQVirtualHostResponse, err error) {
+    return c.CreateRabbitMQVirtualHostWithContext(context.Background(), request)
+}
+
+// CreateRabbitMQVirtualHost
+// 创建RabbitMQ的vhost
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) CreateRabbitMQVirtualHostWithContext(ctx context.Context, request *CreateRabbitMQVirtualHostRequest) (response *CreateRabbitMQVirtualHostResponse, err error) {
+    if request == nil {
+        request = NewCreateRabbitMQVirtualHostRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateRabbitMQVirtualHost require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateRabbitMQVirtualHostResponse()
     err = c.Send(request, response)
     return
 }
@@ -1144,6 +1350,7 @@ func NewCreateRocketMQTopicResponse() (response *CreateRocketMQTopicResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) CreateRocketMQTopic(request *CreateRocketMQTopicRequest) (response *CreateRocketMQTopicResponse, err error) {
     return c.CreateRocketMQTopicWithContext(context.Background(), request)
 }
@@ -1163,6 +1370,7 @@ func (c *Client) CreateRocketMQTopic(request *CreateRocketMQTopicRequest) (respo
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) CreateRocketMQTopicWithContext(ctx context.Context, request *CreateRocketMQTopicRequest) (response *CreateRocketMQTopicResponse, err error) {
     if request == nil {
         request = NewCreateRocketMQTopicRequest()
@@ -1212,6 +1420,7 @@ func NewCreateRoleResponse() (response *CreateRoleResponse) {
 //  RESOURCEINUSE_ROLE = "ResourceInUse.Role"
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) CreateRole(request *CreateRoleRequest) (response *CreateRoleResponse, err error) {
     return c.CreateRoleWithContext(context.Background(), request)
 }
@@ -1231,6 +1440,7 @@ func (c *Client) CreateRole(request *CreateRoleRequest) (response *CreateRoleRes
 //  RESOURCEINUSE_ROLE = "ResourceInUse.Role"
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) CreateRoleWithContext(ctx context.Context, request *CreateRoleRequest) (response *CreateRoleResponse, err error) {
     if request == nil {
         request = NewCreateRoleRequest()
@@ -1282,6 +1492,7 @@ func NewCreateSubscriptionResponse() (response *CreateSubscriptionResponse) {
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) CreateSubscription(request *CreateSubscriptionRequest) (response *CreateSubscriptionResponse, err error) {
     return c.CreateSubscriptionWithContext(context.Background(), request)
 }
@@ -1303,6 +1514,7 @@ func (c *Client) CreateSubscription(request *CreateSubscriptionRequest) (respons
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) CreateSubscriptionWithContext(ctx context.Context, request *CreateSubscriptionRequest) (response *CreateSubscriptionResponse, err error) {
     if request == nil {
         request = NewCreateSubscriptionRequest()
@@ -1354,6 +1566,7 @@ func NewCreateTopicResponse() (response *CreateTopicResponse) {
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopicResponse, err error) {
     return c.CreateTopicWithContext(context.Background(), request)
 }
@@ -1375,6 +1588,7 @@ func (c *Client) CreateTopic(request *CreateTopicRequest) (response *CreateTopic
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_ENVIRONMENT = "ResourceNotFound.Environment"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) CreateTopicWithContext(ctx context.Context, request *CreateTopicRequest) (response *CreateTopicResponse, err error) {
     if request == nil {
         request = NewCreateTopicRequest()
@@ -1410,6 +1624,10 @@ func NewDeleteAMQPClusterResponse() (response *DeleteAMQPClusterResponse) {
 }
 
 // DeleteAMQPCluster
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 删除AMQP集群
 //
 // 可能返回的错误码:
@@ -1422,6 +1640,10 @@ func (c *Client) DeleteAMQPCluster(request *DeleteAMQPClusterRequest) (response 
 }
 
 // DeleteAMQPCluster
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 删除AMQP集群
 //
 // 可能返回的错误码:
@@ -1464,6 +1686,10 @@ func NewDeleteAMQPExchangeResponse() (response *DeleteAMQPExchangeResponse) {
 }
 
 // DeleteAMQPExchange
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 删除Amqp交换机
 //
 // 可能返回的错误码:
@@ -1477,6 +1703,10 @@ func (c *Client) DeleteAMQPExchange(request *DeleteAMQPExchangeRequest) (respons
 }
 
 // DeleteAMQPExchange
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 删除Amqp交换机
 //
 // 可能返回的错误码:
@@ -1520,6 +1750,10 @@ func NewDeleteAMQPQueueResponse() (response *DeleteAMQPQueueResponse) {
 }
 
 // DeleteAMQPQueue
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 删除Amqp队列
 //
 // 可能返回的错误码:
@@ -1533,6 +1767,10 @@ func (c *Client) DeleteAMQPQueue(request *DeleteAMQPQueueRequest) (response *Del
 }
 
 // DeleteAMQPQueue
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 删除Amqp队列
 //
 // 可能返回的错误码:
@@ -1576,6 +1814,10 @@ func NewDeleteAMQPRouteRelationResponse() (response *DeleteAMQPRouteRelationResp
 }
 
 // DeleteAMQPRouteRelation
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 删除Amqp路由关系
 //
 // 可能返回的错误码:
@@ -1588,6 +1830,10 @@ func (c *Client) DeleteAMQPRouteRelation(request *DeleteAMQPRouteRelationRequest
 }
 
 // DeleteAMQPRouteRelation
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 删除Amqp路由关系
 //
 // 可能返回的错误码:
@@ -1630,6 +1876,10 @@ func NewDeleteAMQPVHostResponse() (response *DeleteAMQPVHostResponse) {
 }
 
 // DeleteAMQPVHost
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 删除Vhost
 //
 // 可能返回的错误码:
@@ -1643,6 +1893,10 @@ func (c *Client) DeleteAMQPVHost(request *DeleteAMQPVHostRequest) (response *Del
 }
 
 // DeleteAMQPVHost
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 删除Vhost
 //
 // 可能返回的错误码:
@@ -1810,6 +2064,7 @@ func NewDeleteCmqSubscribeResponse() (response *DeleteCmqSubscribeResponse) {
 //  FAILEDOPERATION_DELETETOPICS = "FailedOperation.DeleteTopics"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DeleteCmqSubscribe(request *DeleteCmqSubscribeRequest) (response *DeleteCmqSubscribeResponse, err error) {
     return c.DeleteCmqSubscribeWithContext(context.Background(), request)
 }
@@ -1823,6 +2078,7 @@ func (c *Client) DeleteCmqSubscribe(request *DeleteCmqSubscribeRequest) (respons
 //  FAILEDOPERATION_DELETETOPICS = "FailedOperation.DeleteTopics"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DeleteCmqSubscribeWithContext(ctx context.Context, request *DeleteCmqSubscribeRequest) (response *DeleteCmqSubscribeResponse, err error) {
     if request == nil {
         request = NewDeleteCmqSubscribeRequest()
@@ -1864,6 +2120,7 @@ func NewDeleteCmqTopicResponse() (response *DeleteCmqTopicResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DELETECLUSTER = "FailedOperation.DeleteCluster"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DeleteCmqTopic(request *DeleteCmqTopicRequest) (response *DeleteCmqTopicResponse, err error) {
     return c.DeleteCmqTopicWithContext(context.Background(), request)
 }
@@ -1875,6 +2132,7 @@ func (c *Client) DeleteCmqTopic(request *DeleteCmqTopicRequest) (response *Delet
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DELETECLUSTER = "FailedOperation.DeleteCluster"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DeleteCmqTopicWithContext(ctx context.Context, request *DeleteCmqTopicRequest) (response *DeleteCmqTopicResponse, err error) {
     if request == nil {
         request = NewDeleteCmqTopicRequest()
@@ -2468,6 +2726,10 @@ func NewDescribeAMQPClusterResponse() (response *DescribeAMQPClusterResponse) {
 }
 
 // DescribeAMQPCluster
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取单个Amqp集群信息
 //
 // 可能返回的错误码:
@@ -2480,6 +2742,10 @@ func (c *Client) DescribeAMQPCluster(request *DescribeAMQPClusterRequest) (respo
 }
 
 // DescribeAMQPCluster
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取单个Amqp集群信息
 //
 // 可能返回的错误码:
@@ -2578,6 +2844,10 @@ func NewDescribeAMQPCreateQuotaResponse() (response *DescribeAMQPCreateQuotaResp
 }
 
 // DescribeAMQPCreateQuota
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取用户的配额，如Queue容量，Exchange容量，Vhost容量，单Vhost Tps数,剩余可创建集群数
 //
 // 可能返回的错误码:
@@ -2592,6 +2862,10 @@ func (c *Client) DescribeAMQPCreateQuota(request *DescribeAMQPCreateQuotaRequest
 }
 
 // DescribeAMQPCreateQuota
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取用户的配额，如Queue容量，Exchange容量，Vhost容量，单Vhost Tps数,剩余可创建集群数
 //
 // 可能返回的错误码:
@@ -2636,6 +2910,10 @@ func NewDescribeAMQPExchangesResponse() (response *DescribeAMQPExchangesResponse
 }
 
 // DescribeAMQPExchanges
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取AMQP Exchange列表
 //
 // 可能返回的错误码:
@@ -2649,6 +2927,10 @@ func (c *Client) DescribeAMQPExchanges(request *DescribeAMQPExchangesRequest) (r
 }
 
 // DescribeAMQPExchanges
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取AMQP Exchange列表
 //
 // 可能返回的错误码:
@@ -2692,6 +2974,10 @@ func NewDescribeAMQPQueuesResponse() (response *DescribeAMQPQueuesResponse) {
 }
 
 // DescribeAMQPQueues
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取Amqp队列列表
 //
 // 可能返回的错误码:
@@ -2704,6 +2990,10 @@ func (c *Client) DescribeAMQPQueues(request *DescribeAMQPQueuesRequest) (respons
 }
 
 // DescribeAMQPQueues
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取Amqp队列列表
 //
 // 可能返回的错误码:
@@ -2746,6 +3036,10 @@ func NewDescribeAMQPRouteRelationsResponse() (response *DescribeAMQPRouteRelatio
 }
 
 // DescribeAMQPRouteRelations
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取Amqp路由关系列表
 //
 // 可能返回的错误码:
@@ -2758,6 +3052,10 @@ func (c *Client) DescribeAMQPRouteRelations(request *DescribeAMQPRouteRelationsR
 }
 
 // DescribeAMQPRouteRelations
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取Amqp路由关系列表
 //
 // 可能返回的错误码:
@@ -2800,6 +3098,10 @@ func NewDescribeAMQPVHostsResponse() (response *DescribeAMQPVHostsResponse) {
 }
 
 // DescribeAMQPVHosts
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取Amqp Vhost 列表
 //
 // 可能返回的错误码:
@@ -2812,6 +3114,10 @@ func (c *Client) DescribeAMQPVHosts(request *DescribeAMQPVHostsRequest) (respons
 }
 
 // DescribeAMQPVHosts
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 获取Amqp Vhost 列表
 //
 // 可能返回的错误码:
@@ -3226,6 +3532,7 @@ func NewDescribeCmqQueuesResponse() (response *DescribeCmqQueuesResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeCmqQueues(request *DescribeCmqQueuesRequest) (response *DescribeCmqQueuesResponse, err error) {
     return c.DescribeCmqQueuesWithContext(context.Background(), request)
 }
@@ -3235,6 +3542,7 @@ func (c *Client) DescribeCmqQueues(request *DescribeCmqQueuesRequest) (response 
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeCmqQueuesWithContext(ctx context.Context, request *DescribeCmqQueuesRequest) (response *DescribeCmqQueuesResponse, err error) {
     if request == nil {
         request = NewDescribeCmqQueuesRequest()
@@ -3274,6 +3582,7 @@ func NewDescribeCmqSubscriptionDetailResponse() (response *DescribeCmqSubscripti
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CMQBACKENDERROR = "FailedOperation.CmqBackendError"
+//  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
 func (c *Client) DescribeCmqSubscriptionDetail(request *DescribeCmqSubscriptionDetailRequest) (response *DescribeCmqSubscriptionDetailResponse, err error) {
     return c.DescribeCmqSubscriptionDetailWithContext(context.Background(), request)
 }
@@ -3283,6 +3592,7 @@ func (c *Client) DescribeCmqSubscriptionDetail(request *DescribeCmqSubscriptionD
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CMQBACKENDERROR = "FailedOperation.CmqBackendError"
+//  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
 func (c *Client) DescribeCmqSubscriptionDetailWithContext(ctx context.Context, request *DescribeCmqSubscriptionDetailRequest) (response *DescribeCmqSubscriptionDetailResponse, err error) {
     if request == nil {
         request = NewDescribeCmqSubscriptionDetailRequest()
@@ -3325,6 +3635,7 @@ func NewDescribeCmqTopicDetailResponse() (response *DescribeCmqTopicDetailRespon
 //  FAILEDOPERATION_CMQBACKENDERROR = "FailedOperation.CmqBackendError"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeCmqTopicDetail(request *DescribeCmqTopicDetailRequest) (response *DescribeCmqTopicDetailResponse, err error) {
     return c.DescribeCmqTopicDetailWithContext(context.Background(), request)
 }
@@ -3337,6 +3648,7 @@ func (c *Client) DescribeCmqTopicDetail(request *DescribeCmqTopicDetailRequest) 
 //  FAILEDOPERATION_CMQBACKENDERROR = "FailedOperation.CmqBackendError"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeCmqTopicDetailWithContext(ctx context.Context, request *DescribeCmqTopicDetailRequest) (response *DescribeCmqTopicDetailResponse, err error) {
     if request == nil {
         request = NewDescribeCmqTopicDetailRequest()
@@ -3606,6 +3918,7 @@ func NewDescribeNamespaceBundlesOptResponse() (response *DescribeNamespaceBundle
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PULSARADMINERROR = "FailedOperation.PulsarAdminError"
+//  OPERATIONDENIED_DEFAULTENVIRONMENT = "OperationDenied.DefaultEnvironment"
 func (c *Client) DescribeNamespaceBundlesOpt(request *DescribeNamespaceBundlesOptRequest) (response *DescribeNamespaceBundlesOptResponse, err error) {
     return c.DescribeNamespaceBundlesOptWithContext(context.Background(), request)
 }
@@ -3615,6 +3928,7 @@ func (c *Client) DescribeNamespaceBundlesOpt(request *DescribeNamespaceBundlesOp
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_PULSARADMINERROR = "FailedOperation.PulsarAdminError"
+//  OPERATIONDENIED_DEFAULTENVIRONMENT = "OperationDenied.DefaultEnvironment"
 func (c *Client) DescribeNamespaceBundlesOptWithContext(ctx context.Context, request *DescribeNamespaceBundlesOptRequest) (response *DescribeNamespaceBundlesOptResponse, err error) {
     if request == nil {
         request = NewDescribeNamespaceBundlesOptRequest()
@@ -3775,6 +4089,118 @@ func (c *Client) DescribePublishersWithContext(ctx context.Context, request *Des
     return
 }
 
+func NewDescribePulsarProInstanceDetailRequest() (request *DescribePulsarProInstanceDetailRequest) {
+    request = &DescribePulsarProInstanceDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribePulsarProInstanceDetail")
+    
+    
+    return
+}
+
+func NewDescribePulsarProInstanceDetailResponse() (response *DescribePulsarProInstanceDetailResponse) {
+    response = &DescribePulsarProInstanceDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribePulsarProInstanceDetail
+// 获取Pulsar专业版集群实例信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribePulsarProInstanceDetail(request *DescribePulsarProInstanceDetailRequest) (response *DescribePulsarProInstanceDetailResponse, err error) {
+    return c.DescribePulsarProInstanceDetailWithContext(context.Background(), request)
+}
+
+// DescribePulsarProInstanceDetail
+// 获取Pulsar专业版集群实例信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribePulsarProInstanceDetailWithContext(ctx context.Context, request *DescribePulsarProInstanceDetailRequest) (response *DescribePulsarProInstanceDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribePulsarProInstanceDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePulsarProInstanceDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePulsarProInstanceDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribePulsarProInstancesRequest() (request *DescribePulsarProInstancesRequest) {
+    request = &DescribePulsarProInstancesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribePulsarProInstances")
+    
+    
+    return
+}
+
+func NewDescribePulsarProInstancesResponse() (response *DescribePulsarProInstancesResponse) {
+    response = &DescribePulsarProInstancesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribePulsarProInstances
+// 查询用户已购的Pulsar专业版实例列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribePulsarProInstances(request *DescribePulsarProInstancesRequest) (response *DescribePulsarProInstancesResponse, err error) {
+    return c.DescribePulsarProInstancesWithContext(context.Background(), request)
+}
+
+// DescribePulsarProInstances
+// 查询用户已购的Pulsar专业版实例列表
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribePulsarProInstancesWithContext(ctx context.Context, request *DescribePulsarProInstancesRequest) (response *DescribePulsarProInstancesResponse, err error) {
+    if request == nil {
+        request = NewDescribePulsarProInstancesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePulsarProInstances require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePulsarProInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRabbitMQNodeListRequest() (request *DescribeRabbitMQNodeListRequest) {
     request = &DescribeRabbitMQNodeListRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -3797,6 +4223,7 @@ func NewDescribeRabbitMQNodeListResponse() (response *DescribeRabbitMQNodeListRe
 // RabbitMQ专享版查询节点列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 func (c *Client) DescribeRabbitMQNodeList(request *DescribeRabbitMQNodeListRequest) (response *DescribeRabbitMQNodeListResponse, err error) {
     return c.DescribeRabbitMQNodeListWithContext(context.Background(), request)
@@ -3806,6 +4233,7 @@ func (c *Client) DescribeRabbitMQNodeList(request *DescribeRabbitMQNodeListReque
 // RabbitMQ专享版查询节点列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 func (c *Client) DescribeRabbitMQNodeListWithContext(ctx context.Context, request *DescribeRabbitMQNodeListRequest) (response *DescribeRabbitMQNodeListResponse, err error) {
     if request == nil {
@@ -3819,6 +4247,62 @@ func (c *Client) DescribeRabbitMQNodeListWithContext(ctx context.Context, reques
     request.SetContext(ctx)
     
     response = NewDescribeRabbitMQNodeListResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRabbitMQVipInstanceRequest() (request *DescribeRabbitMQVipInstanceRequest) {
+    request = &DescribeRabbitMQVipInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeRabbitMQVipInstance")
+    
+    
+    return
+}
+
+func NewDescribeRabbitMQVipInstanceResponse() (response *DescribeRabbitMQVipInstanceResponse) {
+    response = &DescribeRabbitMQVipInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeRabbitMQVipInstance
+// 获取单个RabbitMQ专享实例信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribeRabbitMQVipInstance(request *DescribeRabbitMQVipInstanceRequest) (response *DescribeRabbitMQVipInstanceResponse, err error) {
+    return c.DescribeRabbitMQVipInstanceWithContext(context.Background(), request)
+}
+
+// DescribeRabbitMQVipInstance
+// 获取单个RabbitMQ专享实例信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribeRabbitMQVipInstanceWithContext(ctx context.Context, request *DescribeRabbitMQVipInstanceRequest) (response *DescribeRabbitMQVipInstanceResponse, err error) {
+    if request == nil {
+        request = NewDescribeRabbitMQVipInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRabbitMQVipInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRabbitMQVipInstanceResponse()
     err = c.Send(request, response)
     return
 }
@@ -3845,6 +4329,10 @@ func NewDescribeRabbitMQVipInstancesResponse() (response *DescribeRabbitMQVipIns
 // 查询用户已购的RabbitMQ专享实例列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 func (c *Client) DescribeRabbitMQVipInstances(request *DescribeRabbitMQVipInstancesRequest) (response *DescribeRabbitMQVipInstancesResponse, err error) {
     return c.DescribeRabbitMQVipInstancesWithContext(context.Background(), request)
@@ -3854,6 +4342,10 @@ func (c *Client) DescribeRabbitMQVipInstances(request *DescribeRabbitMQVipInstan
 // 查询用户已购的RabbitMQ专享实例列表
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 func (c *Client) DescribeRabbitMQVipInstancesWithContext(ctx context.Context, request *DescribeRabbitMQVipInstancesRequest) (response *DescribeRabbitMQVipInstancesResponse, err error) {
     if request == nil {
@@ -4008,6 +4500,7 @@ func NewDescribeRocketMQGroupsResponse() (response *DescribeRocketMQGroupsRespon
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeRocketMQGroups(request *DescribeRocketMQGroupsRequest) (response *DescribeRocketMQGroupsResponse, err error) {
     return c.DescribeRocketMQGroupsWithContext(context.Background(), request)
@@ -4022,6 +4515,7 @@ func (c *Client) DescribeRocketMQGroups(request *DescribeRocketMQGroupsRequest) 
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeRocketMQGroupsWithContext(ctx context.Context, request *DescribeRocketMQGroupsRequest) (response *DescribeRocketMQGroupsResponse, err error) {
     if request == nil {
@@ -4035,6 +4529,56 @@ func (c *Client) DescribeRocketMQGroupsWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeRocketMQGroupsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRocketMQMsgRequest() (request *DescribeRocketMQMsgRequest) {
+    request = &DescribeRocketMQMsgRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeRocketMQMsg")
+    
+    
+    return
+}
+
+func NewDescribeRocketMQMsgResponse() (response *DescribeRocketMQMsgResponse) {
+    response = &DescribeRocketMQMsgResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeRocketMQMsg
+// rocketmq消息详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribeRocketMQMsg(request *DescribeRocketMQMsgRequest) (response *DescribeRocketMQMsgResponse, err error) {
+    return c.DescribeRocketMQMsgWithContext(context.Background(), request)
+}
+
+// DescribeRocketMQMsg
+// rocketmq消息详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+func (c *Client) DescribeRocketMQMsgWithContext(ctx context.Context, request *DescribeRocketMQMsgRequest) (response *DescribeRocketMQMsgResponse, err error) {
+    if request == nil {
+        request = NewDescribeRocketMQMsgRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRocketMQMsg require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRocketMQMsgResponse()
     err = c.Send(request, response)
     return
 }
@@ -4066,6 +4610,7 @@ func NewDescribeRocketMQNamespacesResponse() (response *DescribeRocketMQNamespac
 //  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeRocketMQNamespaces(request *DescribeRocketMQNamespacesRequest) (response *DescribeRocketMQNamespacesResponse, err error) {
     return c.DescribeRocketMQNamespacesWithContext(context.Background(), request)
@@ -4080,6 +4625,7 @@ func (c *Client) DescribeRocketMQNamespaces(request *DescribeRocketMQNamespacesR
 //  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeRocketMQNamespacesWithContext(ctx context.Context, request *DescribeRocketMQNamespacesRequest) (response *DescribeRocketMQNamespacesResponse, err error) {
     if request == nil {
@@ -4124,6 +4670,8 @@ func NewDescribeRocketMQTopicsResponse() (response *DescribeRocketMQTopicsRespon
 //  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeRocketMQTopics(request *DescribeRocketMQTopicsRequest) (response *DescribeRocketMQTopicsResponse, err error) {
     return c.DescribeRocketMQTopicsWithContext(context.Background(), request)
@@ -4138,6 +4686,8 @@ func (c *Client) DescribeRocketMQTopics(request *DescribeRocketMQTopicsRequest) 
 //  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) DescribeRocketMQTopicsWithContext(ctx context.Context, request *DescribeRocketMQTopicsRequest) (response *DescribeRocketMQTopicsResponse, err error) {
     if request == nil {
@@ -4151,6 +4701,64 @@ func (c *Client) DescribeRocketMQTopicsWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewDescribeRocketMQTopicsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeRocketMQVipInstanceDetailRequest() (request *DescribeRocketMQVipInstanceDetailRequest) {
+    request = &DescribeRocketMQVipInstanceDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "DescribeRocketMQVipInstanceDetail")
+    
+    
+    return
+}
+
+func NewDescribeRocketMQVipInstanceDetailResponse() (response *DescribeRocketMQVipInstanceDetailResponse) {
+    response = &DescribeRocketMQVipInstanceDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeRocketMQVipInstanceDetail
+// 获取单个RocketMQ专享集群信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+func (c *Client) DescribeRocketMQVipInstanceDetail(request *DescribeRocketMQVipInstanceDetailRequest) (response *DescribeRocketMQVipInstanceDetailResponse, err error) {
+    return c.DescribeRocketMQVipInstanceDetailWithContext(context.Background(), request)
+}
+
+// DescribeRocketMQVipInstanceDetail
+// 获取单个RocketMQ专享集群信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+func (c *Client) DescribeRocketMQVipInstanceDetailWithContext(ctx context.Context, request *DescribeRocketMQVipInstanceDetailRequest) (response *DescribeRocketMQVipInstanceDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeRocketMQVipInstanceDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeRocketMQVipInstanceDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeRocketMQVipInstanceDetailResponse()
     err = c.Send(request, response)
     return
 }
@@ -4178,11 +4786,11 @@ func NewDescribeRocketMQVipInstancesResponse() (response *DescribeRocketMQVipIns
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
 func (c *Client) DescribeRocketMQVipInstances(request *DescribeRocketMQVipInstancesRequest) (response *DescribeRocketMQVipInstancesResponse, err error) {
     return c.DescribeRocketMQVipInstancesWithContext(context.Background(), request)
 }
@@ -4192,11 +4800,11 @@ func (c *Client) DescribeRocketMQVipInstances(request *DescribeRocketMQVipInstan
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
-//  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ILLEGALMESSAGE = "InternalError.IllegalMessage"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
 func (c *Client) DescribeRocketMQVipInstancesWithContext(ctx context.Context, request *DescribeRocketMQVipInstancesRequest) (response *DescribeRocketMQVipInstancesResponse, err error) {
     if request == nil {
         request = NewDescribeRocketMQVipInstancesRequest()
@@ -4361,6 +4969,7 @@ func NewDescribeTopicsResponse() (response *DescribeTopicsResponse) {
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INVALIDADMINURL = "InvalidParameter.InvalidAdminUrl"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
@@ -4376,6 +4985,7 @@ func (c *Client) DescribeTopics(request *DescribeTopicsRequest) (response *Descr
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
+//  INVALIDPARAMETER_INVALIDADMINURL = "InvalidParameter.InvalidAdminUrl"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
@@ -4476,6 +5086,10 @@ func NewModifyAMQPExchangeResponse() (response *ModifyAMQPExchangeResponse) {
 }
 
 // ModifyAMQPExchange
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 更新Amqp交换机
 //
 // 可能返回的错误码:
@@ -4490,6 +5104,10 @@ func (c *Client) ModifyAMQPExchange(request *ModifyAMQPExchangeRequest) (respons
 }
 
 // ModifyAMQPExchange
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 更新Amqp交换机
 //
 // 可能返回的错误码:
@@ -4534,6 +5152,10 @@ func NewModifyAMQPQueueResponse() (response *ModifyAMQPQueueResponse) {
 }
 
 // ModifyAMQPQueue
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 更新Amqp队列
 //
 // 可能返回的错误码:
@@ -4547,6 +5169,10 @@ func (c *Client) ModifyAMQPQueue(request *ModifyAMQPQueueRequest) (response *Mod
 }
 
 // ModifyAMQPQueue
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 更新Amqp队列
 //
 // 可能返回的错误码:
@@ -4590,6 +5216,10 @@ func NewModifyAMQPVHostResponse() (response *ModifyAMQPVHostResponse) {
 }
 
 // ModifyAMQPVHost
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 更新Vhost
 //
 // 可能返回的错误码:
@@ -4605,6 +5235,10 @@ func (c *Client) ModifyAMQPVHost(request *ModifyAMQPVHostRequest) (response *Mod
 }
 
 // ModifyAMQPVHost
+// 产品下线了，对应的接口也要下线。
+//
+// 
+//
 // 更新Vhost
 //
 // 可能返回的错误码:
@@ -4656,6 +5290,7 @@ func NewModifyClusterResponse() (response *ModifyClusterResponse) {
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETERVALUE_CLUSTERNAMEDUPLICATION = "InvalidParameterValue.ClusterNameDuplication"
 //  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) ModifyCluster(request *ModifyClusterRequest) (response *ModifyClusterResponse, err error) {
     return c.ModifyClusterWithContext(context.Background(), request)
 }
@@ -4667,6 +5302,7 @@ func (c *Client) ModifyCluster(request *ModifyClusterRequest) (response *ModifyC
 //  FAILEDOPERATION = "FailedOperation"
 //  INVALIDPARAMETERVALUE_CLUSTERNAMEDUPLICATION = "InvalidParameterValue.ClusterNameDuplication"
 //  MISSINGPARAMETER = "MissingParameter"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) ModifyClusterWithContext(ctx context.Context, request *ModifyClusterRequest) (response *ModifyClusterResponse, err error) {
     if request == nil {
         request = NewModifyClusterRequest()
@@ -4942,9 +5578,11 @@ func NewModifyEnvironmentRoleResponse() (response *ModifyEnvironmentRoleResponse
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_UPDATEENVIRONMENTROLE = "FailedOperation.UpdateEnvironmentRole"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_ENVIRONMENTROLE = "ResourceNotFound.EnvironmentRole"
 func (c *Client) ModifyEnvironmentRole(request *ModifyEnvironmentRoleRequest) (response *ModifyEnvironmentRoleResponse, err error) {
     return c.ModifyEnvironmentRoleWithContext(context.Background(), request)
@@ -4955,9 +5593,11 @@ func (c *Client) ModifyEnvironmentRole(request *ModifyEnvironmentRoleRequest) (r
 //
 // 可能返回的错误码:
 //  AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_UPDATEENVIRONMENTROLE = "FailedOperation.UpdateEnvironmentRole"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_ENVIRONMENTROLE = "ResourceNotFound.EnvironmentRole"
 func (c *Client) ModifyEnvironmentRoleWithContext(ctx context.Context, request *ModifyEnvironmentRoleRequest) (response *ModifyEnvironmentRoleResponse, err error) {
     if request == nil {
@@ -4971,6 +5611,58 @@ func (c *Client) ModifyEnvironmentRoleWithContext(ctx context.Context, request *
     request.SetContext(ctx)
     
     response = NewModifyEnvironmentRoleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyRabbitMQVipInstanceRequest() (request *ModifyRabbitMQVipInstanceRequest) {
+    request = &ModifyRabbitMQVipInstanceRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "ModifyRabbitMQVipInstance")
+    
+    
+    return
+}
+
+func NewModifyRabbitMQVipInstanceResponse() (response *ModifyRabbitMQVipInstanceResponse) {
+    response = &ModifyRabbitMQVipInstanceResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyRabbitMQVipInstance
+// 修改RabbitMQ专享版实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) ModifyRabbitMQVipInstance(request *ModifyRabbitMQVipInstanceRequest) (response *ModifyRabbitMQVipInstanceResponse, err error) {
+    return c.ModifyRabbitMQVipInstanceWithContext(context.Background(), request)
+}
+
+// ModifyRabbitMQVipInstance
+// 修改RabbitMQ专享版实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+func (c *Client) ModifyRabbitMQVipInstanceWithContext(ctx context.Context, request *ModifyRabbitMQVipInstanceRequest) (response *ModifyRabbitMQVipInstanceResponse, err error) {
+    if request == nil {
+        request = NewModifyRabbitMQVipInstanceRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRabbitMQVipInstance require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRabbitMQVipInstanceResponse()
     err = c.Send(request, response)
     return
 }
@@ -5005,6 +5697,7 @@ func NewModifyRocketMQClusterResponse() (response *ModifyRocketMQClusterResponse
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) ModifyRocketMQCluster(request *ModifyRocketMQClusterRequest) (response *ModifyRocketMQClusterResponse, err error) {
     return c.ModifyRocketMQClusterWithContext(context.Background(), request)
 }
@@ -5021,6 +5714,7 @@ func (c *Client) ModifyRocketMQCluster(request *ModifyRocketMQClusterRequest) (r
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) ModifyRocketMQClusterWithContext(ctx context.Context, request *ModifyRocketMQClusterRequest) (response *ModifyRocketMQClusterResponse, err error) {
     if request == nil {
         request = NewModifyRocketMQClusterRequest()
@@ -5093,6 +5787,60 @@ func (c *Client) ModifyRocketMQGroupWithContext(ctx context.Context, request *Mo
     return
 }
 
+func NewModifyRocketMQInstanceSpecRequest() (request *ModifyRocketMQInstanceSpecRequest) {
+    request = &ModifyRocketMQInstanceSpecRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tdmq", APIVersion, "ModifyRocketMQInstanceSpec")
+    
+    
+    return
+}
+
+func NewModifyRocketMQInstanceSpecResponse() (response *ModifyRocketMQInstanceSpecResponse) {
+    response = &ModifyRocketMQInstanceSpecResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyRocketMQInstanceSpec
+// 本API用于修改RocketMQ专享实例配置，可以支持实例规格、节点数和存储的升配和实例规格的降配。本API发起订单并成功支付后进入实例配置变更的流程，可通过DescribeRocketMQVipInstances查询实例是否已变更完成。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CALLTRADE = "FailedOperation.CallTrade"
+//  FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+//  UNSUPPORTEDOPERATION_INSTANCEDOWNGRADE = "UnsupportedOperation.InstanceDowngrade"
+func (c *Client) ModifyRocketMQInstanceSpec(request *ModifyRocketMQInstanceSpecRequest) (response *ModifyRocketMQInstanceSpecResponse, err error) {
+    return c.ModifyRocketMQInstanceSpecWithContext(context.Background(), request)
+}
+
+// ModifyRocketMQInstanceSpec
+// 本API用于修改RocketMQ专享实例配置，可以支持实例规格、节点数和存储的升配和实例规格的降配。本API发起订单并成功支付后进入实例配置变更的流程，可通过DescribeRocketMQVipInstances查询实例是否已变更完成。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_CALLTRADE = "FailedOperation.CallTrade"
+//  FAILEDOPERATION_INSTANCENOTREADY = "FailedOperation.InstanceNotReady"
+//  RESOURCENOTFOUND_INSTANCE = "ResourceNotFound.Instance"
+//  UNSUPPORTEDOPERATION_INSTANCEDOWNGRADE = "UnsupportedOperation.InstanceDowngrade"
+func (c *Client) ModifyRocketMQInstanceSpecWithContext(ctx context.Context, request *ModifyRocketMQInstanceSpecRequest) (response *ModifyRocketMQInstanceSpecResponse, err error) {
+    if request == nil {
+        request = NewModifyRocketMQInstanceSpecRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyRocketMQInstanceSpec require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyRocketMQInstanceSpecResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewModifyRocketMQNamespaceRequest() (request *ModifyRocketMQNamespaceRequest) {
     request = &ModifyRocketMQNamespaceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5124,6 +5872,7 @@ func NewModifyRocketMQNamespaceResponse() (response *ModifyRocketMQNamespaceResp
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) ModifyRocketMQNamespace(request *ModifyRocketMQNamespaceRequest) (response *ModifyRocketMQNamespaceResponse, err error) {
     return c.ModifyRocketMQNamespaceWithContext(context.Background(), request)
 }
@@ -5141,6 +5890,7 @@ func (c *Client) ModifyRocketMQNamespace(request *ModifyRocketMQNamespaceRequest
 //  RESOURCEINSUFFICIENT = "ResourceInsufficient"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) ModifyRocketMQNamespaceWithContext(ctx context.Context, request *ModifyRocketMQNamespaceRequest) (response *ModifyRocketMQNamespaceResponse, err error) {
     if request == nil {
         request = NewModifyRocketMQNamespaceRequest()
@@ -5242,6 +5992,7 @@ func NewModifyRoleResponse() (response *ModifyRoleResponse) {
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_ROLE = "ResourceNotFound.Role"
 //  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) ModifyRole(request *ModifyRoleRequest) (response *ModifyRoleResponse, err error) {
@@ -5257,6 +6008,7 @@ func (c *Client) ModifyRole(request *ModifyRoleRequest) (response *ModifyRoleRes
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
 //  RESOURCENOTFOUND_BROKERCLUSTER = "ResourceNotFound.BrokerCluster"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_ROLE = "ResourceNotFound.Role"
 //  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) ModifyRoleWithContext(ctx context.Context, request *ModifyRoleRequest) (response *ModifyRoleResponse, err error) {
@@ -5304,6 +6056,7 @@ func NewModifyTopicResponse() (response *ModifyTopicResponse) {
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
 func (c *Client) ModifyTopic(request *ModifyTopicRequest) (response *ModifyTopicResponse, err error) {
     return c.ModifyTopicWithContext(context.Background(), request)
@@ -5320,6 +6073,7 @@ func (c *Client) ModifyTopic(request *ModifyTopicRequest) (response *ModifyTopic
 //  INTERNALERROR_SYSTEMERROR = "InternalError.SystemError"
 //  INVALIDPARAMETERVALUE_INVALIDPARAMS = "InvalidParameterValue.InvalidParams"
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
+//  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
 func (c *Client) ModifyTopicWithContext(ctx context.Context, request *ModifyTopicRequest) (response *ModifyTopicResponse, err error) {
     if request == nil {
@@ -5624,6 +6378,7 @@ func NewResetRocketMQConsumerOffSetResponse() (response *ResetRocketMQConsumerOf
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ResetRocketMQConsumerOffSet(request *ResetRocketMQConsumerOffSetRequest) (response *ResetRocketMQConsumerOffSetResponse, err error) {
     return c.ResetRocketMQConsumerOffSetWithContext(context.Background(), request)
@@ -5636,6 +6391,7 @@ func (c *Client) ResetRocketMQConsumerOffSet(request *ResetRocketMQConsumerOffSe
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER = "InvalidParameter"
+//  RESOURCEINUSE = "ResourceInUse"
 //  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) ResetRocketMQConsumerOffSetWithContext(ctx context.Context, request *ResetRocketMQConsumerOffSetRequest) (response *ResetRocketMQConsumerOffSetResponse, err error) {
     if request == nil {
@@ -5676,6 +6432,7 @@ func NewRewindCmqQueueResponse() (response *RewindCmqQueueResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) RewindCmqQueue(request *RewindCmqQueueRequest) (response *RewindCmqQueueResponse, err error) {
     return c.RewindCmqQueueWithContext(context.Background(), request)
 }
@@ -5685,6 +6442,7 @@ func (c *Client) RewindCmqQueue(request *RewindCmqQueueRequest) (response *Rewin
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
 func (c *Client) RewindCmqQueueWithContext(ctx context.Context, request *RewindCmqQueueRequest) (response *RewindCmqQueueResponse, err error) {
     if request == nil {
         request = NewRewindCmqQueueRequest()
@@ -5800,6 +6558,7 @@ func NewSendCmqMsgResponse() (response *SendCmqMsgResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) SendCmqMsg(request *SendCmqMsgRequest) (response *SendCmqMsgResponse, err error) {
     return c.SendCmqMsgWithContext(context.Background(), request)
 }
@@ -5809,6 +6568,7 @@ func (c *Client) SendCmqMsg(request *SendCmqMsgRequest) (response *SendCmqMsgRes
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND = "ResourceNotFound"
 func (c *Client) SendCmqMsgWithContext(ctx context.Context, request *SendCmqMsgRequest) (response *SendCmqMsgResponse, err error) {
     if request == nil {
         request = NewSendCmqMsgRequest()
@@ -5924,6 +6684,7 @@ func NewSendMsgResponse() (response *SendMsgResponse) {
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) SendMsg(request *SendMsgRequest) (response *SendMsgResponse, err error) {
     return c.SendMsgWithContext(context.Background(), request)
 }
@@ -5941,6 +6702,7 @@ func (c *Client) SendMsg(request *SendMsgRequest) (response *SendMsgResponse, er
 //  MISSINGPARAMETER_NEEDMOREPARAMS = "MissingParameter.NeedMoreParams"
 //  RESOURCENOTFOUND_CLUSTER = "ResourceNotFound.Cluster"
 //  RESOURCENOTFOUND_TOPIC = "ResourceNotFound.Topic"
+//  RESOURCEUNAVAILABLE_FUNDREQUIRED = "ResourceUnavailable.FundRequired"
 func (c *Client) SendMsgWithContext(ctx context.Context, request *SendMsgRequest) (response *SendMsgResponse, err error) {
     if request == nil {
         request = NewSendMsgRequest()

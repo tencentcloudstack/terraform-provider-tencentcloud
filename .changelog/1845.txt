@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_dts_sync_config
+```
+
+```release-note:new-data-source
+tencentcloud_dts_migrate_db_instances
+```
+
+```release-note:enhancement
+resource/tencentcloud_cynosdb_cluster: adjust the delete logic
+```

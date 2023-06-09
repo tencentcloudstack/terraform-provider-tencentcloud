@@ -247,7 +247,7 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 							Optional:     true,
 							Default:      CVM_DISK_TYPE_CLOUD_SSD,
 							ValidateFunc: validateAllowedStringValue(ES_NODE_DISK_TYPE),
-							Description:  "Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`. The default value is `CLOUD_SSD`.",
+							Description:  "Node disk type. Valid values are `CLOUD_SSD` and `CLOUD_PREMIUM`, `CLOUD_HSSD`. The default value is `CLOUD_SSD`.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,

@@ -104,7 +104,7 @@ func resourceTencentCloudTdmqCreate(d *schema.ResourceData, meta interface{}) er
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create cls logset failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tdmq instance failed, reason:%+v", logId, err)
 		return err
 	}
 

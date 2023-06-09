@@ -331,3 +331,284 @@ func (me *DcService) ModifyDirectConnectTunnelAttribute(ctx context.Context, dcx
 	}
 	return
 }
+
+func (me *DcService) DescribeDcShareDcxConfigById(ctx context.Context, directConnectTunnelId string) (ShareDcxConfig *dc.DirectConnectTunnel, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dc.NewDescribeDirectConnectTunnelsRequest()
+	request.DirectConnectTunnelIds = []*string{&directConnectTunnelId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcClient().DescribeDirectConnectTunnels(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DirectConnectTunnelSet) < 1 {
+		return
+	}
+
+	ShareDcxConfig = response.Response.DirectConnectTunnelSet[0]
+	return
+}
+
+func (me *DcService) DescribeDcInternetAddressById(ctx context.Context, instanceId string) (internetAddress *dc.InternetAddressDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dc.NewDescribeInternetAddressRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcClient().DescribeInternetAddress(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	for _, address := range response.Response.Subnets {
+		if *address.InstanceId == instanceId {
+			internetAddress = address
+			break
+		}
+	}
+	return
+}
+
+func (me *DcService) DeleteDcInternetAddressById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dc.NewReleaseInternetAddressRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcClient().ReleaseInternetAddress(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DcService) DescribeDcxExtraConfigById(ctx context.Context, directConnectTunnelId string) (dcxExtraConfig *dc.DirectConnectTunnelExtra, errRet error) {
+	logId := getLogId(ctx)
+
+	request := dc.NewDescribeDirectConnectTunnelExtraRequest()
+	request.DirectConnectTunnelId = &directConnectTunnelId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcClient().DescribeDirectConnectTunnelExtra(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	dcxExtraConfig = response.Response.DirectConnectTunnelExtra
+	return
+}
+
+func (me *DcService) DescribeDcInternetAddressQuota(ctx context.Context) (InternetAddressQuota *dc.DescribeInternetAddressQuotaResponse, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dc.NewDescribeInternetAddressQuotaRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcClient().DescribeInternetAddressQuota(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	InternetAddressQuota = response
+
+	return
+}
+
+func (me *DcService) DescribeDcInternetAddressStatistics(ctx context.Context) (statistics []*dc.InternetAddressStatistics, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dc.NewDescribeInternetAddressStatisticsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcClient().DescribeInternetAddressStatistics(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	statistics = response.Response.InternetAddressStatistics
+	return
+}
+
+func (me *DcService) DescribeDcPublicDirectConnectTunnelRoutesByFilter(ctx context.Context, param map[string]interface{}) (PublicDirectConnectTunnelRoutes []*dc.DirectConnectTunnelRoute, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dc.NewDescribePublicDirectConnectTunnelRoutesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DirectConnectTunnelId" {
+			request.DirectConnectTunnelId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*dc.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDcClient().DescribePublicDirectConnectTunnelRoutes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Routes) < 1 {
+			break
+		}
+		PublicDirectConnectTunnelRoutes = append(PublicDirectConnectTunnelRoutes, response.Response.Routes...)
+		if len(response.Response.Routes) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *DcService) DeleteDcInstanceById(ctx context.Context, directConnectId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := dc.NewDeleteDirectConnectRequest()
+	request.DirectConnectId = &directConnectId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcClient().DeleteDirectConnect(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *DcService) DescribeDcAccessPointsByFilter(ctx context.Context, param map[string]interface{}) (AccessPoints []*dc.AccessPoint, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dc.NewDescribeAccessPointsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "RegionId" {
+			request.RegionId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDcClient().DescribeAccessPoints(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.AccessPointSet) < 1 {
+			break
+		}
+		AccessPoints = append(AccessPoints, response.Response.AccessPointSet...)
+		if len(response.Response.AccessPointSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
