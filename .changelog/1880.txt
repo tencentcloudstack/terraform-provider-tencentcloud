@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_vpn_default_health_check_ip
+```
+
+```release-note:new-resource
+tencentcloud_ccn_instances_reject_attach
+```
