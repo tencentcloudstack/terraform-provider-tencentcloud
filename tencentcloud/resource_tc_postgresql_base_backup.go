@@ -5,8 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_postgresql_base_backup" "base_backup" {
-  db_instance_id = ""
-  new_expire_time = ""
+  db_instance_id = local.pgsql_id
   tags = {
     "createdBy" = "terraform"
   }
@@ -49,6 +48,7 @@ func resourceTencentCloudPostgresqlBaseBackup() *schema.Resource {
 
 			"new_expire_time": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "New expiration time.",
 			},
@@ -70,8 +70,9 @@ func resourceTencentCloudPostgresqlBaseBackupCreate(d *schema.ResourceData, meta
 
 	var (
 		request      = postgresql.NewCreateBaseBackupRequest()
+		response     = postgresql.NewCreateBaseBackupResponse()
 		dBInstanceId string
-		baseBackupId *string
+		baseBackupId string
 	)
 	if v, ok := d.GetOk("db_instance_id"); ok {
 		request.DBInstanceId = helper.String(v.(string))
@@ -85,6 +86,7 @@ func resourceTencentCloudPostgresqlBaseBackupCreate(d *schema.ResourceData, meta
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -92,31 +94,11 @@ func resourceTencentCloudPostgresqlBaseBackupCreate(d *schema.ResourceData, meta
 		return err
 	}
 
+	baseBackupId = *response.Response.BaseBackupId
+
+	d.SetId(strings.Join([]string{dBInstanceId, baseBackupId}, FILED_SP))
+
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := PostgresqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ret, e := service.DescribePostgresqlBaseBackupById(ctx, dBInstanceId)
-		if e != nil {
-			return retryError(e)
-		}
-		if ret == nil {
-			return resource.NonRetryableError(fmt.Errorf("Cannot query BaseBackup id=[%s] after CreateBaseBackup, exit", dBInstanceId))
-		}
-		baseBackupId = ret.Id
-		return nil
-	})
-
-	if err != nil {
-		return err
-	}
-
-	if baseBackupId == nil {
-		return nil
-	}
-
-	d.SetId(strings.Join([]string{dBInstanceId, *baseBackupId}, FILED_SP))
-
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
@@ -143,9 +125,10 @@ func resourceTencentCloudPostgresqlBaseBackupRead(d *schema.ResourceData, meta i
 	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
-	dBInstanceId := idSplit[0]
+	// dBInstanceId := idSplit[0]
+	baseBackupId := idSplit[1]
 
-	BaseBackup, err := service.DescribePostgresqlBaseBackupById(ctx, dBInstanceId)
+	BaseBackup, err := service.DescribePostgresqlBaseBackupById(ctx, baseBackupId)
 	if err != nil {
 		return err
 	}

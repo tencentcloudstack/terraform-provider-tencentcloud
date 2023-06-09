@@ -21,6 +21,10 @@ func TestAccTencentCloudPostgresqlBaseBackupResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlBaseBackup,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-chengdu")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlBaseBackupObject, "id"),
 					resource.TestCheckResourceAttrSet(testAccPostgresqlBaseBackupObject, "db_instance_id"),
@@ -29,6 +33,10 @@ func TestAccTencentCloudPostgresqlBaseBackupResource_basic(t *testing.T) {
 			},
 			{
 				Config: fmt.Sprintf(testAccPostgresqlBaseBackup_update, newExpireTime),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-chengdu")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlBaseBackupObject, "id"),
 					resource.TestCheckResourceAttrSet(testAccPostgresqlBaseBackupObject, "db_instance_id"),
@@ -40,7 +48,31 @@ func TestAccTencentCloudPostgresqlBaseBackupResource_basic(t *testing.T) {
 	})
 }
 
-const testAccPostgresqlBaseBackup = CommonPresetPGSQL + `
+const testAccPostgresqlInstance_common string = `
+data "tencentcloud_security_groups" "cd" {
+  name = "keep-tf-test"
+}
+
+data "tencentcloud_postgresql_instances" "cd" {
+  name = "keep_postsql_instance"
+}
+
+data "tencentcloud_vpc_subnets" "cd1" {
+  name = "keep-tf-test-subnet"
+}
+
+locals {
+  sg_id      = data.tencentcloud_security_groups.cd.security_groups.0.security_group_id
+  vpc_id     = data.tencentcloud_vpc_subnets.cd1.instance_list.0.vpc_id
+  subnet_id  = data.tencentcloud_vpc_subnets.cd1.instance_list.0.subnet_id
+  pgsql_id   = data.tencentcloud_postgresql_instances.cd.instance_list.0.id
+  default_az = "ap-chengdu-1"
+}
+
+
+`
+
+const testAccPostgresqlBaseBackup = testAccPostgresqlInstance_common + `
 
 resource "tencentcloud_postgresql_base_backup" "base_backup" {
   db_instance_id = local.pgsql_id
@@ -51,7 +83,7 @@ resource "tencentcloud_postgresql_base_backup" "base_backup" {
 
 `
 
-const testAccPostgresqlBaseBackup_update = CommonPresetPGSQL + `
+const testAccPostgresqlBaseBackup_update = testAccPostgresqlInstance_common + `
 
 resource "tencentcloud_postgresql_base_backup" "base_backup" {
   db_instance_id = local.pgsql_id

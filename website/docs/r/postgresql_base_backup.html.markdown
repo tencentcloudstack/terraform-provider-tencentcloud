@@ -15,8 +15,7 @@ Provides a resource to create a postgresql base_backup
 
 ```hcl
 resource "tencentcloud_postgresql_base_backup" "base_backup" {
-  db_instance_id  = ""
-  new_expire_time = ""
+  db_instance_id = local.pgsql_id
   tags = {
     "createdBy" = "terraform"
   }

@@ -1,7 +1,3 @@
-```release-note:new-data-source
-tencentcloud_postgresql_base_backups
-```
-
 ```release-note:new-resource
 tencentcloud_postgresql_base_backup
 ```
