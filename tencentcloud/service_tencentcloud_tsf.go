@@ -2853,12 +2853,12 @@ func (me *TsfService) DescribeTsfUnitNamespaceById(ctx context.Context, gatewayI
 	return
 }
 
-func (me *TsfService) DeleteTsfUnitNamespaceById(ctx context.Context, gatewayInstanceId, namespaceId string) (errRet error) {
+func (me *TsfService) DeleteTsfUnitNamespaceById(ctx context.Context, gatewayInstanceId, unitNamespace string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tsf.NewDeleteUnitNamespacesRequest()
 	request.GatewayInstanceId = &gatewayInstanceId
-	request.UnitNamespaceList = []*string{&namespaceId}
+	request.UnitNamespaceList = []*string{&unitNamespace}
 
 	defer func() {
 		if errRet != nil {

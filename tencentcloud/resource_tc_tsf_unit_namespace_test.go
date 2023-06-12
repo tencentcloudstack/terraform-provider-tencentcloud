@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTsfTaskResource_basic -v
+// go test -i; go test -test.run TestAccTencentCloudTsfUnitNamespaceResource_basic -v
 func TestAccTencentCloudTsfUnitNamespaceResource_basic(t *testing.T) {
 	t.Parallel()
 

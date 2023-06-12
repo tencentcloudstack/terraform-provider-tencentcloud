@@ -195,7 +195,12 @@ func resourceTencentCloudTsfUnitNamespaceDelete(d *schema.ResourceData, meta int
 	gatewayInstanceId := idSplit[0]
 	namespaceId := idSplit[1]
 
-	if err := service.DeleteTsfUnitNamespaceById(ctx, gatewayInstanceId, namespaceId); err != nil {
+	unitNamespace, err := service.DescribeTsfUnitNamespaceById(ctx, gatewayInstanceId, namespaceId)
+	if err != nil {
+		return err
+	}
+
+	if err := service.DeleteTsfUnitNamespaceById(ctx, gatewayInstanceId, *unitNamespace.Id); err != nil {
 		return err
 	}
 
