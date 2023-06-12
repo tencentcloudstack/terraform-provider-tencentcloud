@@ -3,9 +3,5 @@ tencentcloud_redis_replicate_attachment
 ```
 
 ```release-note:new-resource
-tencentcloud_redis_change_master_operation
-```
-
-```release-note:new-resource
 tencentcloud_redis_backup_operation
 ```

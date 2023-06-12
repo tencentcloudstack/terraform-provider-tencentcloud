@@ -689,7 +689,6 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_replica_readonly
 	tencentcloud_redis_switch_master
 	tencentcloud_redis_replicate_attachment
-	tencentcloud_redis_change_master_operation
 	tencentcloud_redis_backup_operation
 
 Serverless Cloud Function(SCF)
@@ -2159,7 +2158,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_replica_readonly":                         resourceTencentCloudRedisReplicaReadonly(),
 			"tencentcloud_redis_switch_master":                            resourceTencentCloudRedisSwitchMaster(),
 			"tencentcloud_redis_replicate_attachment":                     resourceTencentCloudRedisReplicateAttachment(),
-			"tencentcloud_redis_change_master_operation":                  resourceTencentCloudRedisChangeMasterOperation(),
 			"tencentcloud_redis_backup_operation":                         resourceTencentCloudRedisBackupOperation(),
 			"tencentcloud_as_load_balancer":                               resourceTencentCloudAsLoadBalancer(),
 			"tencentcloud_as_scaling_config":                              resourceTencentCloudAsScalingConfig(),
