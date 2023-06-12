@@ -16,7 +16,7 @@ func TestAccTencentCloudDcdbProjectsDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDcdbProjectsDataSource,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dcdb_projects.projects"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_projects.projects", "projects.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_projects.projects", "projects.0.project_id"),

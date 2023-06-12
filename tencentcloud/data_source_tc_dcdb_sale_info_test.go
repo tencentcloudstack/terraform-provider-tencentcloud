@@ -16,7 +16,7 @@ func TestAccTencentCloudDcdbSaleInfoDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDcdbSaleInfoDataSource,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dcdb_sale_info.sale_info"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_sale_info.sale_info", "region_list.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_sale_info.sale_info", "region_list.0.region"),
@@ -33,7 +33,7 @@ func TestAccTencentCloudDcdbSaleInfoDataSource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_sale_info.sale_info", "region_list.0.available_choice.0.master_zone.0.zone_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_sale_info.sale_info", "region_list.0.available_choice.0.slave_zones.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_sale_info.sale_info", "region_list.0.available_choice.0.slave_zones.0.zone"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_sale_info.sale_info", "region_list.0.available_choice.0.slave_zones.0.zone_id"),					
+					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_sale_info.sale_info", "region_list.0.available_choice.0.slave_zones.0.zone_id"),
 				),
 			},
 		},

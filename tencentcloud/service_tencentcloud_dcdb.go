@@ -1582,8 +1582,8 @@ func (me *DcdbService) DescribeDcdbShardSpecByFilter(ctx context.Context, param 
 
 func (me *DcdbService) DescribeDcdbSlowLogsByFilter(ctx context.Context, param map[string]interface{}) (slowLogs []*dcdb.SlowLogData, ret *dcdb.DescribeDBSlowLogsResponseParams, errRet error) {
 	var (
-		logId    = getLogId(ctx)
-		request  = dcdb.NewDescribeDBSlowLogsRequest()
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeDBSlowLogsRequest()
 	)
 
 	defer func() {
@@ -1696,66 +1696,6 @@ func (me *DcdbService) DescribeDcdbUpgradePriceByFilter(ctx context.Context, par
 		return
 	}
 	ret = response.Response
-
-	return
-}
-
-func (me *DcdbService) DescribeDcdbUserTasksByFilter(ctx context.Context, param map[string]interface{}) (userTasks []*dcdb.UserTaskInfo, errRet error) {
-	var (
-		logId   = getLogId(ctx)
-		request = dcdb.NewDescribeUserTasksRequest()
-	)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	for k, v := range param {
-		if k == "Statuses" {
-		}
-		if k == "InstanceIds" {
-			request.InstanceIds = v.([]*string)
-		}
-		if k == "FlowTypes" {
-		}
-		if k == "StartTime" {
-			request.StartTime = v.(*string)
-		}
-		if k == "EndTime" {
-			request.EndTime = v.(*string)
-		}
-		if k == "UTaskIds" {
-		}
-	}
-
-	ratelimit.Check(request.GetAction())
-
-	var (
-		offset int64 = 0
-		limit  int64 = 20
-	)
-	for {
-		request.Offset = &offset
-		request.Limit = &limit
-		response, err := me.client.UseDcdbClient().DescribeUserTasks(request)
-		if err != nil {
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || len(response.Response.FlowSet) < 1 {
-			break
-		}
-		userTasks = append(userTasks, response.Response.FlowSet...)
-		if len(response.Response.FlowSet) < int(limit) {
-			break
-		}
-
-		offset += limit
-	}
 
 	return
 }

@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDcdbShardSpecDataSource_basic(t *testing.T) {
@@ -15,7 +16,7 @@ func TestAccTencentCloudDcdbShardSpecDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDcdbShardSpecDataSource,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dcdb_shard_spec.shard_spec"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_shard_spec.shard_spec", "spec_config.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_shard_spec.shard_spec", "spec_config.0.machine"),
