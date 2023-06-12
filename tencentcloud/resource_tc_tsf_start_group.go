@@ -96,7 +96,6 @@ func resourceTencentCloudTsfStartGroupUpdate(d *schema.ResourceData, meta interf
 
 	groupId := d.Id()
 	if v, ok := d.GetOk("operate"); ok {
-		var status bool
 		operate := v.(string)
 		if operate == "start" {
 			request := tsf.NewStartGroupRequest()
@@ -114,10 +113,6 @@ func resourceTencentCloudTsfStartGroupUpdate(d *schema.ResourceData, meta interf
 				log.Printf("[CRITAL]%s update tsf startGroup failed, reason:%+v", logId, err)
 				return err
 			}
-
-			if !status {
-				return fmt.Errorf("[CRITAL]%s start tsf group failed", logId)
-			}
 		}
 		if operate == "stop" {
 			request := tsf.NewStopGroupRequest()
@@ -134,10 +129,6 @@ func resourceTencentCloudTsfStartGroupUpdate(d *schema.ResourceData, meta interf
 			if err != nil {
 				log.Printf("[CRITAL]%s update tsf stopGroup failed, reason:%+v", logId, err)
 				return err
-			}
-
-			if !status {
-				return fmt.Errorf("[CRITAL]%s stop tsf group failed", logId)
 			}
 		}
 

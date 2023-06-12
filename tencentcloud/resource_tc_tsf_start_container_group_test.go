@@ -67,7 +67,7 @@ func testAccCheckTsfStartContainerGroupExists(r string) resource.TestCheckFunc {
 const testAccTsfStartContainerGroup = `
 
 resource "tencentcloud_tsf_start_container_group" "start_container_group" {
-  group_id = "group-ynd95rea"
+  group_id = "group-yqml6w3a"
   operate = "stop"
 }
 
@@ -75,7 +75,7 @@ resource "tencentcloud_tsf_start_container_group" "start_container_group" {
 const testAccTsfStartContainerGroupUp = `
 
 resource "tencentcloud_tsf_start_container_group" "start_container_group" {
-  group_id = "group-ynd95rea"
+  group_id = "group-yqml6w3a"
   operate = "start"
 }
 
