@@ -50,7 +50,7 @@ func testAccCheckTsfUnitNamespaceDestroy(s *terraform.State) error {
 		}
 
 		ids := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(ids) != 3 {
+		if len(ids) != 2 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 		gatewayInstanceId := ids[0]
@@ -78,7 +78,7 @@ func testAccCheckTsfUnitNamespaceExists(r string) resource.TestCheckFunc {
 			return fmt.Errorf("resource %s is not found", r)
 		}
 		ids := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(ids) != 3 {
+		if len(ids) != 2 {
 			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
 		}
 		gatewayInstanceId := ids[0]

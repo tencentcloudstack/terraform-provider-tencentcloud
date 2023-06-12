@@ -43,6 +43,6 @@ In addition to all arguments above, the following attributes are exported:
 tsf unit_namespace can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tsf_unit_namespace.unit_namespace unit_namespace_id
+terraform import tencentcloud_tsf_unit_namespace.unit_namespace gw-ins-lvdypq5k#namespace-vwgo38wy
 ```
 
