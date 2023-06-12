@@ -5,21 +5,22 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dcdb_slow_logs" "slow_logs" {
-  instance_id = ""
-  start_time = ""
-  shard_id = ""
-  end_time = ""
-  db = ""
-  order_by = ""
-  order_by_type = ""
-  slave =
-        }
+	instance_id   = local.dcdb_id
+	start_time    = "%s"
+	end_time      = "%s"
+	shard_id      = "shard-1b5r04az"
+	db            = "tf_test_db"
+	order_by      = "query_time_sum"
+	order_by_type = "desc"
+	slave         = 0
+}
 ```
 */
 package tencentcloud
 
 import (
 	"context"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -259,12 +260,12 @@ func dataSourceTencentCloudDcdbSlowLogsRead(d *schema.ResourceData, meta interfa
 	service := DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		result   *dcdb.DescribeDBSlowLogsResponseParams
+		resp     *dcdb.DescribeDBSlowLogsResponseParams
 		slowLogs []*dcdb.SlowLogData
 		e        error
 	)
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		slowLogs, result, e = service.DescribeDcdbSlowLogsByFilter(ctx, paramMap)
+		slowLogs, resp, e = service.DescribeDcdbSlowLogsByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
@@ -274,105 +275,109 @@ func dataSourceTencentCloudDcdbSlowLogsRead(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	if result != nil {
-		if result.LockTimeSum != nil {
-			_ = d.Set("lock_time_sum", result.LockTimeSum)
+	log.Printf("[DEBUG]%s quey dcdb slow log success, slowLogs.len:%v, resp:[%v], \n ", //result.LockTimeSum:[%v], result.QueryTimeSum:[%v]
+		logId, len(slowLogs), resp)
+	// logId, len(slowLogs), result, result.LockTimeSum, result.QueryTimeSum)
+
+	if resp != nil {
+		if resp.LockTimeSum != nil {
+			_ = d.Set("lock_time_sum", resp.LockTimeSum)
 		}
 
-		if result.QueryCount != nil {
-			_ = d.Set("query_count", result.QueryCount)
+		if resp.QueryCount != nil {
+			_ = d.Set("query_count", resp.QueryCount)
 		}
 
-		if result.QueryTimeSum != nil {
-			_ = d.Set("query_time_sum", result.QueryTimeSum)
+		if resp.QueryTimeSum != nil {
+			_ = d.Set("query_time_sum", resp.QueryTimeSum)
 		}
+	}
 
-		if slowLogs != nil {
-			tmpList := make([]interface{}, 0, len(slowLogs))
-			for _, slowLogData := range slowLogs {
-				slowLogDataMap := map[string]interface{}{}
+	if slowLogs != nil {
+		slowLogDataList := []interface{}{}
+		for _, slowLogData := range slowLogs {
+			slowLogDataMap := map[string]interface{}{}
 
-				if slowLogData.CheckSum != nil {
-					slowLogDataMap["check_sum"] = slowLogData.CheckSum
-				}
-
-				if slowLogData.Db != nil {
-					slowLogDataMap["db"] = slowLogData.Db
-				}
-
-				if slowLogData.FingerPrint != nil {
-					slowLogDataMap["finger_print"] = slowLogData.FingerPrint
-				}
-
-				if slowLogData.LockTimeAvg != nil {
-					slowLogDataMap["lock_time_avg"] = slowLogData.LockTimeAvg
-				}
-
-				if slowLogData.LockTimeMax != nil {
-					slowLogDataMap["lock_time_max"] = slowLogData.LockTimeMax
-				}
-
-				if slowLogData.LockTimeMin != nil {
-					slowLogDataMap["lock_time_min"] = slowLogData.LockTimeMin
-				}
-
-				if slowLogData.LockTimeSum != nil {
-					slowLogDataMap["lock_time_sum"] = slowLogData.LockTimeSum
-				}
-
-				if slowLogData.QueryCount != nil {
-					slowLogDataMap["query_count"] = slowLogData.QueryCount
-				}
-
-				if slowLogData.QueryTimeAvg != nil {
-					slowLogDataMap["query_time_avg"] = slowLogData.QueryTimeAvg
-				}
-
-				if slowLogData.QueryTimeMax != nil {
-					slowLogDataMap["query_time_max"] = slowLogData.QueryTimeMax
-				}
-
-				if slowLogData.QueryTimeMin != nil {
-					slowLogDataMap["query_time_min"] = slowLogData.QueryTimeMin
-				}
-
-				if slowLogData.QueryTimeSum != nil {
-					slowLogDataMap["query_time_sum"] = slowLogData.QueryTimeSum
-				}
-
-				if slowLogData.RowsExaminedSum != nil {
-					slowLogDataMap["rows_examined_sum"] = slowLogData.RowsExaminedSum
-				}
-
-				if slowLogData.RowsSentSum != nil {
-					slowLogDataMap["rows_sent_sum"] = slowLogData.RowsSentSum
-				}
-
-				if slowLogData.TsMax != nil {
-					slowLogDataMap["ts_max"] = slowLogData.TsMax
-				}
-
-				if slowLogData.TsMin != nil {
-					slowLogDataMap["ts_min"] = slowLogData.TsMin
-				}
-
-				if slowLogData.User != nil {
-					slowLogDataMap["user"] = slowLogData.User
-				}
-
-				if slowLogData.ExampleSql != nil {
-					slowLogDataMap["example_sql"] = slowLogData.ExampleSql
-				}
-
-				if slowLogData.Host != nil {
-					slowLogDataMap["host"] = slowLogData.Host
-				}
-
-				tmpList = append(tmpList, slowLogDataMap)
+			if slowLogData.CheckSum != nil {
+				slowLogDataMap["check_sum"] = slowLogData.CheckSum
 			}
 
-			_ = d.Set("data", tmpList)
+			if slowLogData.Db != nil {
+				slowLogDataMap["db"] = slowLogData.Db
+			}
+
+			if slowLogData.FingerPrint != nil {
+				slowLogDataMap["finger_print"] = slowLogData.FingerPrint
+			}
+
+			if slowLogData.LockTimeAvg != nil {
+				slowLogDataMap["lock_time_avg"] = slowLogData.LockTimeAvg
+			}
+
+			if slowLogData.LockTimeMax != nil {
+				slowLogDataMap["lock_time_max"] = slowLogData.LockTimeMax
+			}
+
+			if slowLogData.LockTimeMin != nil {
+				slowLogDataMap["lock_time_min"] = slowLogData.LockTimeMin
+			}
+
+			if slowLogData.LockTimeSum != nil {
+				slowLogDataMap["lock_time_sum"] = slowLogData.LockTimeSum
+			}
+
+			if slowLogData.QueryCount != nil {
+				slowLogDataMap["query_count"] = slowLogData.QueryCount
+			}
+
+			if slowLogData.QueryTimeAvg != nil {
+				slowLogDataMap["query_time_avg"] = slowLogData.QueryTimeAvg
+			}
+
+			if slowLogData.QueryTimeMax != nil {
+				slowLogDataMap["query_time_max"] = slowLogData.QueryTimeMax
+			}
+
+			if slowLogData.QueryTimeMin != nil {
+				slowLogDataMap["query_time_min"] = slowLogData.QueryTimeMin
+			}
+
+			if slowLogData.QueryTimeSum != nil {
+				slowLogDataMap["query_time_sum"] = slowLogData.QueryTimeSum
+			}
+
+			if slowLogData.RowsExaminedSum != nil {
+				slowLogDataMap["rows_examined_sum"] = slowLogData.RowsExaminedSum
+			}
+
+			if slowLogData.RowsSentSum != nil {
+				slowLogDataMap["rows_sent_sum"] = slowLogData.RowsSentSum
+			}
+
+			if slowLogData.TsMax != nil {
+				slowLogDataMap["ts_max"] = slowLogData.TsMax
+			}
+
+			if slowLogData.TsMin != nil {
+				slowLogDataMap["ts_min"] = slowLogData.TsMin
+			}
+
+			if slowLogData.User != nil {
+				slowLogDataMap["user"] = slowLogData.User
+			}
+
+			if slowLogData.ExampleSql != nil {
+				slowLogDataMap["example_sql"] = slowLogData.ExampleSql
+			}
+
+			if slowLogData.Host != nil {
+				slowLogDataMap["host"] = slowLogData.Host
+			}
+
+			slowLogDataList = append(slowLogDataList, slowLogDataMap)
 		}
+
+		_ = d.Set("data", slowLogDataList)
 	}
 
 	d.SetId(instanceId)

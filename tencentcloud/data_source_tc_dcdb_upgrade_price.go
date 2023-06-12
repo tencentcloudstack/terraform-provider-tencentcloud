@@ -4,31 +4,42 @@ Use this data source to query detailed information of dcdb upgrade_price
 Example Usage
 
 ```hcl
-data "tencentcloud_dcdb_upgrade_price" "upgrade_price" {
-  instance_id = ""
-  upgrade_type = ""
+data "tencentcloud_dcdb_upgrade_price" "add_upgrade_price" {
+  instance_id = local.dcdb_id
+  upgrade_type = "ADD"
   add_shard_config {
-		shard_count =
-		shard_memory =
-		shard_storage =
-
+		shard_count = 2
+		shard_memory = 2
+		shard_storage = 100
   }
+  amount_unit = "pent"
+}
+
+data "tencentcloud_dcdb_upgrade_price" "expand_upgrade_price" {
+  instance_id = local.dcdb_id
+  upgrade_type = "EXPAND"
+
   expand_shard_config {
-		shard_instance_ids =
-		shard_memory =
-		shard_storage =
-		shard_node_count =
-
+		shard_instance_ids = ["shard-1b5r04az"]
+		shard_memory = 2
+		shard_storage = 40
+		shard_node_count = 2
   }
+  amount_unit = "pent"
+}
+
+data "tencentcloud_dcdb_upgrade_price" "split_upgrade_price" {
+  instance_id = local.dcdb_id
+  upgrade_type = "SPLIT"
+
   split_shard_config {
-		shard_instance_ids =
-		split_rate =
-		shard_memory =
-		shard_storage =
-
+		shard_instance_ids = ["shard-1b5r04az"]
+		split_rate = 50
+		shard_memory = 2
+		shard_storage = 100
   }
-  amount_unit = ""
-      }
+  amount_unit = "pent"
+}
 ```
 */
 package tencentcloud
@@ -217,7 +228,7 @@ func dataSourceTencentCloudDcdbUpgradePriceRead(d *schema.ResourceData, meta int
 		if v, ok := dMap["shard_storage"]; ok {
 			addShardConfig.ShardStorage = helper.IntInt64(v.(int))
 		}
-		paramMap["add_shard_config"] = &addShardConfig
+		paramMap["AddShardConfig"] = &addShardConfig
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "expand_shard_config"); ok {
@@ -235,7 +246,7 @@ func dataSourceTencentCloudDcdbUpgradePriceRead(d *schema.ResourceData, meta int
 		if v, ok := dMap["shard_node_count"]; ok {
 			expandShardConfig.ShardNodeCount = helper.IntInt64(v.(int))
 		}
-		paramMap["expand_shard_config"] = &expandShardConfig
+		paramMap["ExpandShardConfig"] = &expandShardConfig
 	}
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "split_shard_config"); ok {
@@ -253,7 +264,7 @@ func dataSourceTencentCloudDcdbUpgradePriceRead(d *schema.ResourceData, meta int
 		if v, ok := dMap["shard_storage"]; ok {
 			splitShardConfig.ShardStorage = helper.IntInt64(v.(int))
 		}
-		paramMap["split_shard_config"] = &splitShardConfig
+		paramMap["SplitShardConfig"] = &splitShardConfig
 	}
 
 	if v, ok := d.GetOk("amount_unit"); ok {

@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dcdb_project_security_groups" "project_security_groups" {
-  product = ""
-  project_id =
-  }
+  product    = "dcdb"
+  project_id = 0
+}
 ```
 */
 package tencentcloud
@@ -28,7 +28,7 @@ func dataSourceTencentCloudDcdbProjectSecurityGroups() *schema.Resource {
 			"product": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Database engine name. Valid value: `mariadb`.",
+				Description: "Database engine name. Valid value: `dcdb`.",
 			},
 
 			"project_id": {

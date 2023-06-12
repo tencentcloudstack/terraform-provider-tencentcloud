@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDcdbOrdersDataSource_basic(t *testing.T) {
@@ -15,7 +16,11 @@ func TestAccTencentCloudDcdbOrdersDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDcdbOrdersDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_dcdb_orders.orders")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dcdb_orders.orders"),
+					resource.TestCheckResourceAttr("data.tencentcloud_dcdb_orders.orders", "deal_names.#", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_orders.orders", "deals.#"),
+				),
 			},
 		},
 	})
@@ -24,7 +29,7 @@ func TestAccTencentCloudDcdbOrdersDataSource_basic(t *testing.T) {
 const testAccDcdbOrdersDataSource = `
 
 data "tencentcloud_dcdb_orders" "orders" {
-  deal_names = 
-  }
+  deal_names = ["20230612249034137670121"]
+}
 
 `

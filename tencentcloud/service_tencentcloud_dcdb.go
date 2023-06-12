@@ -1368,6 +1368,9 @@ func (me *DcdbService) DescribeDcdbPriceByFilter(ctx context.Context, param map[
 	}()
 
 	for k, v := range param {
+		if k == "InstanceCount" {
+			request.Count = v.(*int64)
+		}
 		if k == "Zone" {
 			request.Zone = v.(*string)
 		}
@@ -1581,7 +1584,6 @@ func (me *DcdbService) DescribeDcdbSlowLogsByFilter(ctx context.Context, param m
 	var (
 		logId    = getLogId(ctx)
 		request  = dcdb.NewDescribeDBSlowLogsRequest()
-		response = dcdb.NewDescribeDBSlowLogsResponse()
 	)
 
 	defer func() {
@@ -1637,14 +1639,13 @@ func (me *DcdbService) DescribeDcdbSlowLogsByFilter(ctx context.Context, param m
 			break
 		}
 		slowLogs = append(slowLogs, response.Response.Data...)
+		ret = response.Response
 		if len(response.Response.Data) < int(limit) {
 			break
 		}
 
 		offset += limit
 	}
-
-	ret = response.Response
 
 	return
 }

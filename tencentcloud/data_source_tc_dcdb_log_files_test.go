@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudDcdbLogFilesDataSource_basic(t *testing.T) {
@@ -15,18 +16,23 @@ func TestAccTencentCloudDcdbLogFilesDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDcdbLogFilesDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_dcdb_log_files.log_files")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_dcdb_log_files.log_files"),
+					resource.TestCheckResourceAttr("data.tencentcloud_dcdb_log_files.log_files", "shard_id", "shard-1b5r04az"),
+					resource.TestCheckResourceAttr("data.tencentcloud_dcdb_log_files.log_files", "type", "1"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_dcdb_log_files.log_files", "files.#"),
+				),
 			},
 		},
 	})
 }
 
-const testAccDcdbLogFilesDataSource = `
+const testAccDcdbLogFilesDataSource = CommonPresetDcdb + `
 
 data "tencentcloud_dcdb_log_files" "log_files" {
-  instance_id = &lt;nil&gt;
-  shard_id = &lt;nil&gt;
-  type = &lt;nil&gt;
-      }
+	instance_id = local.dcdb_id
+	shard_id    = "shard-1b5r04az"
+	type        = 1
+}
 
 `

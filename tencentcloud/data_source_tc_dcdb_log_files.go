@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dcdb_log_files" "log_files" {
-  instance_id = &lt;nil&gt;
-  shard_id = &lt;nil&gt;
-  type = &lt;nil&gt;
-      }
+  instance_id = local.dcdb_id
+  shard_id    = "shard-1b5r04az"
+  type        = 1
+}
 ```
 */
 package tencentcloud
@@ -120,7 +120,7 @@ func dataSourceTencentCloudDcdbLogFilesRead(d *schema.ResourceData, meta interfa
 	}
 
 	if v, _ := d.GetOk("type"); v != nil {
-		paramMap["Type"] = helper.IntUint64(v.(int))
+		paramMap["Type"] = helper.IntInt64(v.(int))
 	}
 
 	service := DcdbService{client: meta.(*TencentCloudClient).apiV3Conn}

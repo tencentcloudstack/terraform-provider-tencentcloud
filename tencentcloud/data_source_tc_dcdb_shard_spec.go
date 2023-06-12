@@ -4,14 +4,14 @@ Use this data source to query detailed information of dcdb shard_spec
 Example Usage
 
 ```hcl
-data "tencentcloud_dcdb_shard_spec" "shard_spec" {
-  }
+data "tencentcloud_dcdb_shard_spec" "shard_spec" {}
 ```
 */
 package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	dcdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dcdb/v20180411"
@@ -171,7 +171,7 @@ func dataSourceTencentCloudDcdbShardSpecRead(d *schema.ResourceData, meta interf
 					specConfigInfosList = append(specConfigInfosList, specConfigInfosMap)
 				}
 
-				specConfigMap["spec_config_infos"] = []interface{}{specConfigInfosList}
+				specConfigMap["spec_config_infos"] = specConfigInfosList
 			}
 
 			ids = append(ids, *specConfig.Machine)

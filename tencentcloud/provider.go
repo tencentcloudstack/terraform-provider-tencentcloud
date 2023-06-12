@@ -1123,7 +1123,6 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_shard_spec
 	tencentcloud_dcdb_slow_logs
 	tencentcloud_dcdb_upgrade_price
-	tencentcloud_dcdb_user_tasks
 
   Resource
 	tencentcloud_dcdb_account
@@ -1913,7 +1912,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_shard_spec":                           dataSourceTencentCloudDcdbShardSpec(),
 			"tencentcloud_dcdb_slow_logs":                            dataSourceTencentCloudDcdbSlowLogs(),
 			"tencentcloud_dcdb_upgrade_price":                        dataSourceTencentCloudDcdbUpgradePrice(),
-			"tencentcloud_dcdb_user_tasks":                           dataSourceTencentCloudDcdbUserTasks(),
 			"tencentcloud_mariadb_db_instances":                      dataSourceTencentCloudMariadbDbInstances(),
 			"tencentcloud_mariadb_accounts":                          dataSourceTencentCloudMariadbAccounts(),
 			"tencentcloud_mariadb_security_groups":                   dataSourceTencentCloudMariadbSecurityGroups(),

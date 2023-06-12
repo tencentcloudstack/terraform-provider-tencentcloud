@@ -5,15 +5,16 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dcdb_price" "price" {
-  zone = ""
-  period =
-  shard_node_count =
-  shard_memory =
-  shard_storage =
-  shard_count =
-  paymode = ""
-  amount_unit = ""
-    }
+	instance_count   = 1
+	zone             = var.default_az
+	period           = 1
+	shard_node_count = 2
+	shard_memory     = 2
+	shard_storage    = 10
+	shard_count      = 2
+	paymode          = "postpaid"
+	amount_unit      = "pent"
+}
 ```
 */
 package tencentcloud
@@ -31,6 +32,12 @@ func dataSourceTencentCloudDcdbPrice() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudDcdbPriceRead,
 		Schema: map[string]*schema.Schema{
+			"instance_count": {
+				Required:    true,
+				Type:        schema.TypeInt,
+				Description: "The count of instances wants to buy.",
+			},
+
 			"zone": {
 				Required:    true,
 				Type:        schema.TypeString,
@@ -112,6 +119,11 @@ func dataSourceTencentCloudDcdbPriceRead(d *schema.ResourceData, meta interface{
 	)
 
 	paramMap := make(map[string]interface{})
+	if v, _ := d.GetOk("instance_count"); v != nil {
+		paramMap["InstanceCount"] = helper.IntInt64(v.(int))
+		ids = append(ids, helper.IntToStr(v.(int)))
+	}
+
 	if v, ok := d.GetOk("zone"); ok {
 		paramMap["Zone"] = helper.String(v.(string))
 		ids = append(ids, v.(string))
@@ -119,22 +131,22 @@ func dataSourceTencentCloudDcdbPriceRead(d *schema.ResourceData, meta interface{
 
 	if v, _ := d.GetOk("shard_count"); v != nil {
 		paramMap["ShardCount"] = helper.IntInt64(v.(int))
-		ids = append(ids, v.(string))
+		ids = append(ids, helper.IntToStr(v.(int)))
 	}
 
 	if v, _ := d.GetOk("shard_node_count"); v != nil {
 		paramMap["ShardNodeCount"] = helper.IntInt64(v.(int))
-		ids = append(ids, v.(string))
+		ids = append(ids, helper.IntToStr(v.(int)))
 	}
 
 	if v, _ := d.GetOk("shard_memory"); v != nil {
 		paramMap["ShardMemory"] = helper.IntInt64(v.(int))
-		ids = append(ids, v.(string))
+		ids = append(ids, helper.IntToStr(v.(int)))
 	}
 
 	if v, _ := d.GetOk("shard_storage"); v != nil {
 		paramMap["ShardStorage"] = helper.IntInt64(v.(int))
-		ids = append(ids, v.(string))
+		ids = append(ids, helper.IntToStr(v.(int)))
 	}
 
 	if v, _ := d.GetOk("period"); v != nil {
