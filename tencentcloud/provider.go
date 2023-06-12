@@ -2532,7 +2532,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_config_template":                        resourceTencentCloudTsfConfigTemplate(),
 			"tencentcloud_tsf_api_rate_limit_rule":                    resourceTencentCloudTsfApiRateLimitRule(),
 			"tencentcloud_tsf_application_release_config":             resourceTencentCloudTsfApplicationReleaseConfig(),
-			"tencentcloud_tsf_contain_group":                          resourceTencentCloudTsfContainGroup(),
 			"tencentcloud_tsf_lane":                                   resourceTencentCloudTsfLane(),
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
 			"tencentcloud_tsf_group":                                  resourceTencentCloudTsfGroup(),

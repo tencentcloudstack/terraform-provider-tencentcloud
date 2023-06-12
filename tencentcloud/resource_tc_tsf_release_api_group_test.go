@@ -8,7 +8,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudTsfReleaseApiGroupResource_basic -v
 func TestAccTencentCloudTsfReleaseApiGroupResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
@@ -27,9 +27,7 @@ func TestAccTencentCloudTsfReleaseApiGroupResource_basic(t *testing.T) {
 
 const testAccTsfReleaseApiGroup = `
 
-resource "tencentcloud_tsf_start_container_group" "start_container_group" {
-	group_id = "group-ynd95rea"
-	operate = "stop"
+resource "tencentcloud_tsf_release_api_group" "release_api_group" {
+   group_id = "grp-qp0rj3zi"
 }
-
 `
