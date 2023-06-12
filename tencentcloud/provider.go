@@ -247,6 +247,7 @@ Cloud Connect Network(CCN)
     tencentcloud_ccn_bandwidth_limit
 	tencentcloud_ccn_routes
 	tencentcloud_ccn_instances_accept_attach
+	tencentcloud_ccn_instances_reject_attach
 	tencentcloud_ccn_instances_reset_attach
 
 CVM Dedicated Host(CDH)
@@ -658,6 +659,7 @@ TencentDB for PostgreSQL(PostgreSQL)
 	tencentcloud_postgresql_delete_log_backup_operation
 	tencentcloud_postgresql_modify_account_remark_operation
 	tencentcloud_postgresql_modify_switch_time_period_operation
+	tencentcloud_postgresql_base_backup
 
 TencentDB for Redis(crs)
   Data Source
@@ -954,6 +956,7 @@ VPN Connections(VPN)
     tencentcloud_vpn_gateways
     tencentcloud_vpn_gateway_routes
 	tencentcloud_vpn_customer_gateway_vendors
+	tencentcloud_vpn_default_health_check_ip
 
   Resource
     tencentcloud_vpn_customer_gateway
@@ -1616,6 +1619,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpn_gateway_routes":                        dataSourceTencentCloudVpnGatewayRoutes(),
 			"tencentcloud_vpn_connections":                           dataSourceTencentCloudVpnConnections(),
 			"tencentcloud_vpn_customer_gateway_vendors":              dataSourceTencentCloudVpnCustomerGatewayVendors(),
+			"tencentcloud_vpn_default_health_check_ip":               dataSourceTencentCloudVpnDefaultHealthCheckIp(),
 			"tencentcloud_ha_vips":                                   dataSourceTencentCloudHaVips(),
 			"tencentcloud_ha_vip_eip_attachments":                    dataSourceTencentCloudHaVipEipAttachments(),
 			"tencentcloud_ccn_instances":                             dataSourceTencentCloudCcnInstances(),
@@ -2079,6 +2083,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_bandwidth_limit":                            resourceTencentCloudCcnBandwidthLimit(),
 			"tencentcloud_ccn_routes":                                     resourceTencentCloudCcnRoutes(),
 			"tencentcloud_ccn_instances_accept_attach":                    resourceTencentCloudCcnInstancesAcceptAttach(),
+			"tencentcloud_ccn_instances_reject_attach":                    resourceTencentCloudCcnInstancesRejectAttach(),
 			"tencentcloud_ccn_instances_reset_attach":                     resourceTencentCloudCcnInstancesResetAttach(),
 			"tencentcloud_dc_instance":                                    resourceTencentCloudDcInstance(),
 			"tencentcloud_dcx":                                            resourceTencentCloudDcxInstance(),
@@ -2306,6 +2311,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_readonly_group":                      resourceTencentCloudPostgresqlReadonlyGroup(),
 			"tencentcloud_postgresql_readonly_attachment":                 resourceTencentCloudPostgresqlReadonlyAttachment(),
 			"tencentcloud_postgresql_parameter_template":                  resourceTencentCloudPostgresqlParameterTemplate(),
+			"tencentcloud_postgresql_base_backup":                         resourceTencentCloudPostgresqlBaseBackup(),
 			"tencentcloud_postgresql_backup_plan_config":                  resourceTencentCloudPostgresqlBackupPlanConfig(),
 			"tencentcloud_postgresql_security_group_config":               resourceTencentCloudPostgresqlSecurityGroupConfig(),
 			"tencentcloud_postgresql_backup_download_restriction_config":  resourceTencentCloudPostgresqlBackupDownloadRestrictionConfig(),
