@@ -838,6 +838,26 @@ const (
 	defaultDcdbSGName        = "default"
 )
 
+// ref with `local.dcdb_id`
+const CommonPresetDcdb = `
+
+variable "availability_zone" {
+  default = "` + defaultAZone + `"
+}
+variable "region" {
+  default = "` + defaultRegion + `"
+}
+
+data "tencentcloud_dcdb_instances" "dcdb" {
+  search_name = "instancename"
+  search_key = "` + defaultDcdbInstanceName + `"
+}
+
+locals {
+  dcdb_id = data.tencentcloud_dcdb_instances.dcdb.list.0.instance_id
+}
+`
+
 // End of DCDB
 // SES
 const (

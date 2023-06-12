@@ -5,10 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_account" "default" {
-  mysql_id    = "terraform-test-local-database"
-  name        = "tf_account"
-  password    = "********"
-  description = "My test account"
+  mysql_id             = "terraform-test-local-database"
+  name                 = "tf_test"
+  password             = "********"
+  description          = "My test account"
+  max_user_connections = 10
 }
 ```
 
@@ -76,6 +77,12 @@ func resourceTencentCloudMysqlAccount() *schema.Resource {
 				ValidateFunc: validateStringLengthInRange(1, 200),
 				Description:  "Database description.",
 			},
+			"max_user_connections": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "The maximum number of available connections for a new account, the default value is 10240, and the maximum value that can be set is 10240.",
+			},
 		},
 	}
 }
@@ -94,9 +101,10 @@ func resourceTencentCloudMysqlAccountCreate(d *schema.ResourceData, meta interfa
 		accountHost        = d.Get("host").(string)
 		accountPassword    = d.Get("password").(string)
 		accountDescription = d.Get("description").(string)
+		maxUserConnections = int64(d.Get("max_user_connections").(int))
 	)
 
-	asyncRequestId, err := mysqlService.CreateAccount(ctx, mysqlId, accountName, accountHost, accountPassword, accountDescription)
+	asyncRequestId, err := mysqlService.CreateAccount(ctx, mysqlId, accountName, accountHost, accountPassword, accountDescription, maxUserConnections)
 	if err != nil {
 		return err
 	}
@@ -191,6 +199,8 @@ func resourceTencentCloudMysqlAccountRead(d *schema.ResourceData, meta interface
 	_ = d.Set("mysql_id", mysqlId)
 	_ = d.Set("host", *accountInfo.Host)
 	_ = d.Set("name", *accountInfo.User)
+	_ = d.Set("max_user_connections", *accountInfo.MaxUserConnections)
+
 	return nil
 }
 func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interface{}) error {
@@ -269,6 +279,38 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 
 		if err != nil {
 			log.Printf("[CRITAL]%s modify mysql account password fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
+
+	}
+
+	if d.HasChange("max_user_connections") {
+		var maxUserConnections int64
+		if v, ok := d.GetOkExists("max_user_connections"); ok {
+			maxUserConnections = int64(v.(int))
+		}
+		asyncRequestId, err := mysqlService.ModifyAccountMaxUserConnections(ctx, mysqlId, accountName, accountHost, maxUserConnections)
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+			if err != nil {
+				return resource.NonRetryableError(err)
+			}
+			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+				return nil
+			}
+			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("%s modify mysql account maxUserConnections %s task  status is %s", mysqlId, accountName, taskStatus))
+			}
+			err = fmt.Errorf("modify mysql account maxUserConnections task status is %s,we won't wait for it finish ,it show message:%s", taskStatus, message)
+			return resource.NonRetryableError(err)
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s modify mysql account maxUserConnections fail, reason:%s\n ", logId, err.Error())
 			return err
 		}
 

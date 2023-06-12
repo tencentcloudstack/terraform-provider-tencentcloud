@@ -247,6 +247,7 @@ Cloud Connect Network(CCN)
     tencentcloud_ccn_bandwidth_limit
 	tencentcloud_ccn_routes
 	tencentcloud_ccn_instances_accept_attach
+	tencentcloud_ccn_instances_reject_attach
 	tencentcloud_ccn_instances_reset_attach
 
 CVM Dedicated Host(CDH)
@@ -545,6 +546,10 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_supported_privileges
 	tencentcloud_mysql_switch_record
 	tencentcloud_mysql_user_task
+	tencentcloud_mysql_databases
+	tencentcloud_mysql_error_log
+	tencentcloud_mysql_project_security_group
+	tencentcloud_mysql_ro_min_scale
 
   Resource
     tencentcloud_mysql_instance
@@ -654,6 +659,7 @@ TencentDB for PostgreSQL(PostgreSQL)
 	tencentcloud_postgresql_delete_log_backup_operation
 	tencentcloud_postgresql_modify_account_remark_operation
 	tencentcloud_postgresql_modify_switch_time_period_operation
+	tencentcloud_postgresql_base_backup
 
 TencentDB for Redis(crs)
   Data Source
@@ -768,6 +774,8 @@ SQLServer
 	tencentcloud_sqlserver_config_terminate_db_instance
 	tencentcloud_sqlserver_restore_instance
 	tencentcloud_sqlserver_rollback_instance
+	tencentcloud_sqlserver_start_backup_full_migration
+	tencentcloud_sqlserver_start_backup_incremental_migration
 
 SSL Certificates
   Data Source
@@ -948,6 +956,7 @@ VPN Connections(VPN)
     tencentcloud_vpn_gateways
     tencentcloud_vpn_gateway_routes
 	tencentcloud_vpn_customer_gateway_vendors
+	tencentcloud_vpn_default_health_check_ip
 
   Resource
     tencentcloud_vpn_customer_gateway
@@ -1111,6 +1120,12 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_db_parameters
 	tencentcloud_dcdb_db_sync_mode_config
 	tencentcloud_dcdb_encrypt_attributes_config
+	tencentcloud_dcdb_instance_config
+	tencentcloud_dcdb_cancel_dcn_job_operation
+	tencentcloud_dcdb_activate_hour_instance_operation
+	tencentcloud_dcdb_isolate_hour_instance_operation
+	tencentcloud_dcdb_flush_binlog_operation
+	tencentcloud_dcdb_switch_db_instance_ha_operation
 
 Short Message Service(SMS)
   Resource
@@ -1133,6 +1148,19 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_database_objects
 	tencentcloud_mariadb_databases
 	tencentcloud_mariadb_database_table
+	tencentcloud_mariadb_dcn_detail
+	tencentcloud_mariadb_file_download_url
+	tencentcloud_mariadb_flow
+	tencentcloud_mariadb_instance_specs
+	tencentcloud_mariadb_log_files
+	tencentcloud_mariadb_orders
+	tencentcloud_mariadb_price
+	tencentcloud_mariadb_project_security_groups
+	tencentcloud_mariadb_renewal_price
+	tencentcloud_mariadb_sale_info
+	tencentcloud_mariadb_slow_logs
+	tencentcloud_mariadb_upgrade_price
+
   Resource
 	tencentcloud_mariadb_dedicatedcluster_db_instance
 	tencentcloud_mariadb_instance
@@ -1141,6 +1169,15 @@ TencentDB for MariaDB(MariaDB)
 	tencentcloud_mariadb_parameters
 	tencentcloud_mariadb_log_file_retention_period
 	tencentcloud_mariadb_security_groups
+	tencentcloud_mariadb_account_privileges
+	tencentcloud_mariadb_operate_hour_db_instance
+	tencentcloud_mariadb_backup_time
+	tencentcloud_mariadb_cancel_dcn_job
+	tencentcloud_mariadb_flush_binlog
+	tencentcloud_mariadb_switch_ha
+	tencentcloud_mariadb_restart_instance
+	tencentcloud_mariadb_renew_instance
+	tencentcloud_mariadb_instance_config
 
 Real User Monitoring(RUM)
   Data Source
@@ -1383,6 +1420,7 @@ Cloud HDFS(CHDFS)
   Data Source
 	tencentcloud_chdfs_access_groups
 	tencentcloud_chdfs_mount_points
+	tencentcloud_chdfs_file_systems
 
   Resource
 	tencentcloud_chdfs_access_group
@@ -1587,6 +1625,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_vpn_gateway_routes":                        dataSourceTencentCloudVpnGatewayRoutes(),
 			"tencentcloud_vpn_connections":                           dataSourceTencentCloudVpnConnections(),
 			"tencentcloud_vpn_customer_gateway_vendors":              dataSourceTencentCloudVpnCustomerGatewayVendors(),
+			"tencentcloud_vpn_default_health_check_ip":               dataSourceTencentCloudVpnDefaultHealthCheckIp(),
 			"tencentcloud_ha_vips":                                   dataSourceTencentCloudHaVips(),
 			"tencentcloud_ha_vip_eip_attachments":                    dataSourceTencentCloudHaVipEipAttachments(),
 			"tencentcloud_ccn_instances":                             dataSourceTencentCloudCcnInstances(),
@@ -1639,6 +1678,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_supported_privileges":                dataSourceTencentCloudMysqlSupportedPrivileges(),
 			"tencentcloud_mysql_switch_record":                       dataSourceTencentCloudMysqlSwitchRecord(),
 			"tencentcloud_mysql_user_task":                           dataSourceTencentCloudMysqlUserTask(),
+			"tencentcloud_mysql_databases":                           dataSourceTencentCloudMysqlDatabases(),
+			"tencentcloud_mysql_error_log":                           dataSourceTencentCloudMysqlErrorLog(),
+			"tencentcloud_mysql_project_security_group":              dataSourceTencentCloudMysqlProjectSecurityGroup(),
+			"tencentcloud_mysql_ro_min_scale":                        dataSourceTencentCloudMysqlRoMinScale(),
 			"tencentcloud_cos_bucket_object":                         dataSourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_buckets":                               dataSourceTencentCloudCosBuckets(),
 			"tencentcloud_cfs_file_systems":                          dataSourceTencentCloudCfsFileSystems(),
@@ -1857,6 +1900,19 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_database_objects":                  dataSourceTencentCloudMariadbDatabaseObjects(),
 			"tencentcloud_mariadb_databases":                         dataSourceTencentCloudMariadbDatabases(),
 			"tencentcloud_mariadb_database_table":                    dataSourceTencentCloudMariadbDatabaseTable(),
+			"tencentcloud_mariadb_dcn_detail":                        dataSourceTencentCloudMariadbDcnDetail(),
+			"tencentcloud_mariadb_file_download_url":                 dataSourceTencentCloudMariadbFileDownloadUrl(),
+			"tencentcloud_mariadb_flow":                              dataSourceTencentCloudMariadbFlow(),
+			"tencentcloud_mariadb_instance_node_info":                dataSourceTencentCloudMariadbInstanceNodeInfo(),
+			"tencentcloud_mariadb_instance_specs":                    dataSourceTencentCloudMariadbInstanceSpecs(),
+			"tencentcloud_mariadb_log_files":                         dataSourceTencentCloudMariadbLogFiles(),
+			"tencentcloud_mariadb_orders":                            dataSourceTencentCloudMariadbOrders(),
+			"tencentcloud_mariadb_price":                             dataSourceTencentCloudMariadbPrice(),
+			"tencentcloud_mariadb_project_security_groups":           dataSourceTencentCloudMariadbProjectSecurityGroups(),
+			"tencentcloud_mariadb_renewal_price":                     dataSourceTencentCloudMariadbRenewalPrice(),
+			"tencentcloud_mariadb_sale_info":                         dataSourceTencentCloudMariadbSaleInfo(),
+			"tencentcloud_mariadb_slow_logs":                         dataSourceTencentCloudMariadbSlowLogs(),
+			"tencentcloud_mariadb_upgrade_price":                     dataSourceTencentCloudMariadbUpgradePrice(),
 			"tencentcloud_tdcpg_clusters":                            dataSourceTencentCloudTdcpgClusters(),
 			"tencentcloud_tdcpg_instances":                           dataSourceTencentCloudTdcpgInstances(),
 			"tencentcloud_cat_probe_data":                            dataSourceTencentCloudCatProbeData(),
@@ -1919,6 +1975,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_css_domains":                               dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                       dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                        dataSourceTencentCloudChdfsMountPoints(),
+			"tencentcloud_chdfs_file_systems":                        dataSourceTencentCloudChdfsFileSystems(),
 			"tencentcloud_tcm_mesh":                                  dataSourceTencentCloudTcmMesh(),
 			"tencentcloud_lighthouse_firewall_rules_template":        dataSourceTencentCloudLighthouseFirewallRulesTemplate(),
 			"tencentcloud_cvm_instance_vnc_url":                      dataSourceTencentCloudCvmInstanceVncUrl(),
@@ -2032,6 +2089,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_bandwidth_limit":                            resourceTencentCloudCcnBandwidthLimit(),
 			"tencentcloud_ccn_routes":                                     resourceTencentCloudCcnRoutes(),
 			"tencentcloud_ccn_instances_accept_attach":                    resourceTencentCloudCcnInstancesAcceptAttach(),
+			"tencentcloud_ccn_instances_reject_attach":                    resourceTencentCloudCcnInstancesRejectAttach(),
 			"tencentcloud_ccn_instances_reset_attach":                     resourceTencentCloudCcnInstancesResetAttach(),
 			"tencentcloud_dc_instance":                                    resourceTencentCloudDcInstance(),
 			"tencentcloud_dcx":                                            resourceTencentCloudDcxInstance(),
@@ -2259,6 +2317,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_postgresql_readonly_group":                      resourceTencentCloudPostgresqlReadonlyGroup(),
 			"tencentcloud_postgresql_readonly_attachment":                 resourceTencentCloudPostgresqlReadonlyAttachment(),
 			"tencentcloud_postgresql_parameter_template":                  resourceTencentCloudPostgresqlParameterTemplate(),
+			"tencentcloud_postgresql_base_backup":                         resourceTencentCloudPostgresqlBaseBackup(),
 			"tencentcloud_postgresql_backup_plan_config":                  resourceTencentCloudPostgresqlBackupPlanConfig(),
 			"tencentcloud_postgresql_security_group_config":               resourceTencentCloudPostgresqlSecurityGroupConfig(),
 			"tencentcloud_postgresql_backup_download_restriction_config":  resourceTencentCloudPostgresqlBackupDownloadRestrictionConfig(),
@@ -2298,6 +2357,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_config_terminate_db_instance":         resourceTencentCloudSqlserverConfigTerminateDBInstance(),
 			"tencentcloud_sqlserver_restore_instance":                     resourceTencentCloudSqlserverRestoreInstance(),
 			"tencentcloud_sqlserver_rollback_instance":                    resourceTencentCloudSqlserverRollbackInstance(),
+			"tencentcloud_sqlserver_start_backup_full_migration":          resourceTencentCloudSqlserverStartBackupFullMigration(),
+			"tencentcloud_sqlserver_start_backup_incremental_migration":   resourceTencentCloudSqlserverStartBackupIncrementalMigration(),
 			"tencentcloud_ckafka_instance":                                resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                    resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                     resourceTencentCloudCkafkaAcl(),
@@ -2422,6 +2483,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_db_parameters":                         resourceTencentCloudDcdbDbParameters(),
 			"tencentcloud_dcdb_encrypt_attributes_config":             resourceTencentCloudDcdbEncryptAttributesConfig(),
 			"tencentcloud_dcdb_db_sync_mode_config":                   resourceTencentCloudDcdbDbSyncModeConfig(),
+			"tencentcloud_dcdb_instance_config":                       resourceTencentCloudDcdbInstanceConfig(),
+			"tencentcloud_dcdb_activate_hour_instance_operation":      resourceTencentCloudDcdbActivateHourInstanceOperation(),
+			"tencentcloud_dcdb_isolate_hour_instance_operation":       resourceTencentCloudDcdbIsolateHourInstanceOperation(),
+			"tencentcloud_dcdb_cancel_dcn_job_operation":              resourceTencentCloudDcdbCancelDcnJobOperation(),
+			"tencentcloud_dcdb_flush_binlog_operation":                resourceTencentCloudDcdbFlushBinlogOperation(),
+			"tencentcloud_dcdb_switch_db_instance_ha_operation":       resourceTencentCloudDcdbSwitchDbInstanceHaOperation(),
 			"tencentcloud_cat_task_set":                               resourceTencentCloudCatTaskSet(),
 			"tencentcloud_mariadb_dedicatedcluster_db_instance":       resourceTencentCloudMariadbDedicatedclusterDbInstance(),
 			"tencentcloud_mariadb_instance":                           resourceTencentCloudMariadbInstance(),
@@ -2431,6 +2498,15 @@ func Provider() *schema.Provider {
 			"tencentcloud_mariadb_log_file_retention_period":          resourceTencentCloudMariadbLogFileRetentionPeriod(),
 			"tencentcloud_mariadb_security_groups":                    resourceTencentCloudMariadbSecurityGroups(),
 			"tencentcloud_mariadb_encrypt_attributes":                 resourceTencentCloudMariadbEncryptAttributes(),
+			"tencentcloud_mariadb_account_privileges":                 resourceTencentCloudMariadbAccountPrivileges(),
+			"tencentcloud_mariadb_operate_hour_db_instance":           resourceTencentCloudMariadbOperateHourDbInstance(),
+			"tencentcloud_mariadb_backup_time":                        resourceTencentCloudMariadbBackupTime(),
+			"tencentcloud_mariadb_cancel_dcn_job":                     resourceTencentCloudMariadbCancelDcnJob(),
+			"tencentcloud_mariadb_flush_binlog":                       resourceTencentCloudMariadbFlushBinlog(),
+			"tencentcloud_mariadb_switch_ha":                          resourceTencentCloudMariadbSwitchHA(),
+			"tencentcloud_mariadb_restart_instance":                   resourceTencentCloudMariadbRestartInstance(),
+			"tencentcloud_mariadb_renew_instance":                     resourceTencentCloudMariadbRenewInstance(),
+			"tencentcloud_mariadb_instance_config":                    resourceTencentCloudMariadbInstanceConfig(),
 			"tencentcloud_tdcpg_cluster":                              resourceTencentCloudTdcpgCluster(),
 			"tencentcloud_tdcpg_instance":                             resourceTencentCloudTdcpgInstance(),
 			"tencentcloud_css_watermark":                              resourceTencentCloudCssWatermark(),

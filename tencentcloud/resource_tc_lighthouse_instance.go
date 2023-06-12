@@ -170,6 +170,12 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue([]string{"YES", "NO"}),
 				Description:  "Whether to allow login using the default key pair. `YES`: allow login; `NO`: disable login. Default: `YES`.",
 			},
+			"isolate_data_disk": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Whether to return the mounted data disk. `true`: returns both the instance and the mounted data disk; `false`: returns the instance and no longer returns its mounted data disk. Default: `true`.",
+			},
 			"containers": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -721,9 +727,10 @@ func resourceTencentCloudLighthouseInstanceDelete(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 	id := d.Id()
+	isolateDataDisk := d.Get("isolate_data_disk").(bool)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if err := service.IsolateLighthouseInstanceById(ctx, id); err != nil {
+		if err := service.IsolateLighthouseInstanceById(ctx, id, isolateDataDisk); err != nil {
 			return retryError(err)
 		}
 		return nil

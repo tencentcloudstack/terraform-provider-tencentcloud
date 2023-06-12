@@ -42,6 +42,22 @@ func (me *DcdbService) DescribeDcdbAccount(ctx context.Context, instanceId, user
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if userName != "" {
+		// filter
+		for _, user := range response.Response.Users {
+			if *user.UserName == userName {
+				account = &dcdb.DescribeAccountsResponseParams{
+					InstanceId: response.Response.InstanceId,
+					RequestId:  response.Response.RequestId,
+					Users:      []*dcdb.DBAccount{user},
+				}
+				return
+			}
+		}
+		return
+	}
+
 	account = response.Response
 	return
 }
@@ -577,7 +593,7 @@ func (me *DcdbService) DeleteDcdbDbInstanceById(ctx context.Context, instanceId 
 	return
 }
 
-func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId string) (dbInstance *dcdb.DcnDetailItem, errRet error) {
+func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId string) (dcnDetails []*dcdb.DcnDetailItem, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dcdb.NewDescribeDcnDetailRequest()
@@ -602,7 +618,18 @@ func (me *DcdbService) DescribeDcnDetailById(ctx context.Context, instanceId str
 		return
 	}
 
-	dbInstance = response.Response.DcnDetails[0]
+	// we need this relationship about master and dcn, so no need to filter the results
+	// if instanceId != "" {
+	// 	for _, detail := range response.Response.DcnDetails {
+	// 		if *detail.InstanceId == instanceId {
+	// 			dbInstance = detail
+	// 			return
+	// 		}
+	// 	}
+	// 	return
+	// }
+
+	dcnDetails = response.Response.DcnDetails
 	return
 }
 
@@ -637,10 +664,20 @@ func (me *DcdbService) DcdbDbInstanceStateRefreshFunc(flowId *int64, failStates 
 	return func() (interface{}, string, error) {
 		ctx := contextNil
 
+		if *flowId == 0 {
+			return &dcdb.DescribeFlowResponseParams{}, "0", nil
+		}
+
 		object, err := me.DescribeDcdbFlowById(ctx, flowId)
 
 		if err != nil {
 			return nil, "", err
+		}
+
+		for _, str := range failStates {
+			if strings.Contains(str, helper.Int64ToStr(*object.Status)) {
+				return &dcdb.DescribeFlowResponseParams{}, "1", nil
+			}
 		}
 
 		return object, helper.Int64ToStr(*object.Status), nil
@@ -878,7 +915,7 @@ func (me *DcdbService) DescribeDcdbDBTablesByFilter(ctx context.Context, param m
 	return
 }
 
-func (me *DcdbService) DescribeDcdbDedicatedClusterDbInstanceById(ctx context.Context, instanceId string) (dedicatedClusterDbInstance *dcdb.DescribeDCDBInstanceDetailResponseParams, errRet error) {
+func (me *DcdbService) DescribeDcdbDbInstanceDetailById(ctx context.Context, instanceId string) (dedicatedClusterDbInstance *dcdb.DescribeDCDBInstanceDetailResponseParams, errRet error) {
 	logId := getLogId(ctx)
 
 	request := dcdb.NewDescribeDCDBInstanceDetailRequest()
@@ -989,4 +1026,165 @@ func (me *DcdbService) DcdbDbSyncModeConfigStateRefreshFunc(instanceId string, f
 
 		return object, helper.Int64ToStr(*object.IsModifying), nil
 	}
+}
+
+func (me *DcdbService) DcdbDcnStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+		rets, err := me.DescribeDcnDetailById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		for _, object := range rets {
+			if *object.InstanceId == instanceId {
+				return object, helper.Int64ToStr(*object.DcnStatus), nil
+			}
+		}
+		return &dcdb.DcnDetailItem{}, "0", nil
+	}
+}
+
+func (me *DcdbService) DcdbAccountRefreshFunc(instanceId string, userName string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeDcdbAccount(ctx, instanceId, userName)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil || len(object.Users) < 1 {
+			return &dcdb.DBAccount{}, "deleted", nil
+		}
+
+		user := object.Users[0]
+		return user, *user.UserName, nil
+	}
+}
+
+func (me *DcdbService) SetDcdbExtranetAccess(ctx context.Context, instanceId string, ipv6Flag int, enable bool) (errRet error) {
+	logId := getLogId(ctx)
+	var flowId *int64
+
+	if enable {
+		request := dcdb.NewOpenDBExtranetAccessRequest()
+		request.InstanceId = &instanceId
+		request.Ipv6Flag = helper.IntInt64(ipv6Flag)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseDcdbClient().OpenDBExtranetAccess(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			flowId = result.Response.FlowId
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate dcdb openDBExtranetAccessOperation failed, reason:%+v", logId, err)
+			errRet = err
+			return
+		}
+
+	} else {
+		request := dcdb.NewCloseDBExtranetAccessRequest()
+		request.InstanceId = &instanceId
+		request.Ipv6Flag = helper.IntInt64(ipv6Flag)
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := me.client.UseDcdbClient().CloseDBExtranetAccess(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			flowId = result.Response.FlowId
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s operate dcdb closeDBExtranetAccessOperation failed, reason:%+v", logId, err)
+			errRet = err
+			return
+		}
+	}
+
+	if flowId != nil {
+		// need to wait operation complete
+		// 0:success; 1:failed, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"0"}, 2*readRetryTimeout, time.Second, me.DcdbDbInstanceStateRefreshFunc(flowId, []string{"1"}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+	return
+}
+
+func (me *DcdbService) SetRealServerAccessStrategy(ctx context.Context, instanceId string, rsAccessStrategy int) (errRet error) {
+	logId := getLogId(ctx)
+	request := dcdb.NewModifyRealServerAccessStrategyRequest()
+	request.InstanceId = &instanceId
+	request.RsAccessStrategy = helper.IntInt64(rsAccessStrategy)
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseDcdbClient().ModifyRealServerAccessStrategy(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s operate dcdb modifyRealServerAccessStrategyOperation failed, reason:%+v", logId, err)
+		return err
+	}
+
+	return
+}
+
+func (me *DcdbService) SetNetworkVip(ctx context.Context, instanceId, vpcId, subnetId, vip, vipv6 string) (errRet error) {
+	logId := getLogId(ctx)
+	var flowId *int64
+
+	request := dcdb.NewModifyInstanceNetworkRequest()
+
+	request.InstanceId = &instanceId
+	request.VpcId = &vpcId
+	request.SubnetId = &subnetId
+	if vip != "" {
+		request.Vip = &vip
+	}
+	if vipv6 != "" {
+		request.Vipv6 = &vipv6
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseDcdbClient().ModifyInstanceNetwork(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		flowId = result.Response.FlowId
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s operate dcdb modifyInstanceNetworkOperation failed, reason:%+v", logId, err)
+		return err
+	}
+
+	if flowId != nil {
+		// need to wait operation complete
+		// 0:success; 1:failed, 2:running
+		conf := BuildStateChangeConf([]string{}, []string{"0"}, 2*readRetryTimeout, time.Second, me.DcdbDbInstanceStateRefreshFunc(flowId, []string{"1"}))
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
+	}
+
+	return
 }

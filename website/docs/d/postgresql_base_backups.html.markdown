@@ -37,7 +37,7 @@ data "tencentcloud_postgresql_base_backups" "base_backups" {
 
 The following arguments are supported:
 
-* `filters` - (Optional, List) Filter instances using one or more criteria. Valid filter names:db-instance-id: Filter by instance ID (in string format).db-instance-name: Filter by instance name (in string format).db-instance-ip: Filter by instance VPC IP (in string format).
+* `filters` - (Optional, List) Filter instances using one or more criteria. Valid filter names: `db-instance-id`: Filter by instance ID (in string format). `db-instance-name`: Filter by instance name (in string format). `db-instance-ip`: Filter by instance VPC IP (in string format). `base-backup-id`: Filter by base backup ID (in string format).
 * `max_finish_time` - (Optional, String) Maximum end time of a backup in the format of `2018-01-01 00:00:00`. It is the current time by default.
 * `min_finish_time` - (Optional, String) Minimum end time of a backup in the format of `2018-01-01 00:00:00`. It is 7 days ago by default.
 * `order_by_type` - (Optional, String) Sorting order. Valid values: `asc` (ascending), `desc` (descending).

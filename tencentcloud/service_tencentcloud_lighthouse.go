@@ -95,11 +95,12 @@ func (me *LightHouseService) DeleteLighthouseInstanceById(ctx context.Context, i
 	return
 }
 
-func (me *LightHouseService) IsolateLighthouseInstanceById(ctx context.Context, id string) (errRet error) {
+func (me *LightHouseService) IsolateLighthouseInstanceById(ctx context.Context, id string, isolateDataDisk bool) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := lighthouse.NewIsolateInstancesRequest()
 	request.InstanceIds = append(request.InstanceIds, &id)
+	request.IsolateDataDisk = helper.Bool(isolateDataDisk)
 
 	defer func() {
 		if errRet != nil {

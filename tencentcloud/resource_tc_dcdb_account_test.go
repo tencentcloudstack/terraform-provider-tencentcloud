@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -47,20 +48,20 @@ func testSweepDCDBAccount(r string) error {
 	return nil
 }
 
-func TestAcc_NOT_Ready_TencentCloudDCDBAccountResource(t *testing.T) {
+func TestAccTencentCloudDcdbAccountResource_basic(t *testing.T) {
 	t.Parallel()
-
+	timestamp := time.Now().Nanosecond()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckDcdbAccountDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccDcdbAccount_basic, defaultDcdbInstanceId),
+				Config: fmt.Sprintf(testAccDcdbAccount_basic, defaultDcdbInstanceId, timestamp),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDcdbAccountExists("tencentcloud_dcdb_account.basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account.basic", "instance_id"),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_account.basic", "user_name", "mysql"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account.basic", "user_name"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_account.basic", "host", "127.0.0.1"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_account.basic", "password", "===password==="),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_account.basic", "description", "this is a test account"),
@@ -69,12 +70,13 @@ func TestAcc_NOT_Ready_TencentCloudDCDBAccountResource(t *testing.T) {
 				),
 			},
 			{
-				Config: fmt.Sprintf(testAccDcdbAccount_update, defaultDcdbInstanceId),
+				Config: fmt.Sprintf(testAccDcdbAccount_update, defaultDcdbInstanceId, timestamp),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDcdbAccountExists("tencentcloud_dcdb_account.basic"),
 					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account.basic", "instance_id"),
-					resource.TestCheckResourceAttr("tencentcloud_dcdb_account.basic", "user_name", "mysql"),
+					resource.TestCheckResourceAttrSet("tencentcloud_dcdb_account.basic", "user_name"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_account.basic", "host", "127.0.0.1"),
+					resource.TestCheckResourceAttr("tencentcloud_dcdb_account.basic", "password", "===password===updated==="),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_account.basic", "description", "this is a changed test account"),
 					resource.TestCheckResourceAttr("tencentcloud_dcdb_account.basic", "read_only", "0"),
 				),
@@ -104,7 +106,7 @@ func testAccCheckDcdbAccountDestroy(s *terraform.State) error {
 		if err != nil {
 			return err
 		}
-		if account.Users != nil && len(account.Users) > 0 {
+		if account != nil && len(account.Users) > 0 {
 			return fmt.Errorf("dcdb account still exists: %s", rs.Primary.ID)
 		}
 	}
@@ -143,7 +145,7 @@ const testAccDcdbAccount_basic = `
 
 resource "tencentcloud_dcdb_account" "basic" {
 	instance_id = "%s"
-	user_name = "mysql"
+	user_name = "mysql_%d"
 	host = "127.0.0.1"
 	password = "===password==="
 	read_only = 0
@@ -156,9 +158,9 @@ const testAccDcdbAccount_update = `
 
 resource "tencentcloud_dcdb_account" "basic" {
   instance_id = "%s"
-  user_name = "mysql"
+  user_name = "mysql_%d"
   host = "127.0.0.1"
-  password = "===password==="
+  password = "===password===updated==="
   read_only = 0
   description = "this is a changed test account"
   max_user_connections = 10

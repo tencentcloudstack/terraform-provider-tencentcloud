@@ -15,27 +15,36 @@ Use this resource to create ckafka instance.
 
 ## Example Usage
 
+Basic Instance
+
 ```hcl
-resource "tencentcloud_ckafka_instance" "foo" {
-  band_width          = 40
-  disk_size           = 500
-  disk_type           = "CLOUD_BASIC"
-  period              = 1
-  instance_name       = "ckafka-instance-tf-test"
-  specifications_type = "profession"
-  kafka_version       = "1.1.1"
-  msg_retention_time  = 1300
-  multi_zone_flag     = true
-  partition           = 800
-  public_network      = 3
-  renew_flag          = 0
-  subnet_id           = "subnet-4vwihrzk"
-  vpc_id              = "vpc-82p1t1nv"
-  zone_id             = 100006
-  zone_ids = [
-    100006,
-    100007,
-  ]
+variable "vpc_id" {
+  default = "vpc-68vi2d3h"
+}
+
+variable "subnet_id" {
+  default = "subnet-ob6clqwk"
+}
+
+data "tencentcloud_availability_zones_by_product" "gz" {
+  name    = "ap-guangzhou-3"
+  product = "ckafka"
+}
+
+resource "tencentcloud_ckafka_instance" "kafka_instance" {
+  instance_name      = "ckafka-instance-type-tf-test"
+  zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
+  period             = 1
+  vpc_id             = var.vpc_id
+  subnet_id          = var.subnet_id
+  msg_retention_time = 1300
+  renew_flag         = 0
+  kafka_version      = "2.4.1"
+  disk_size          = 1000
+  disk_type          = "CLOUD_BASIC"
+
+  specifications_type = "standard"
+  instance_type       = 2
 
   config {
     auto_create_topic_enable   = true
@@ -44,10 +53,57 @@ resource "tencentcloud_ckafka_instance" "foo" {
   }
 
   dynamic_retention_config {
-    bottom_retention        = 0
-    disk_quota_percentage   = 0
-    enable                  = 1
-    step_forward_percentage = 0
+    enable = 1
+  }
+}
+```
+
+Multi zone Instance
+
+```hcl
+variable "vpc_id" {
+  default = "vpc-68vi2d3h"
+}
+
+variable "subnet_id" {
+  default = "subnet-ob6clqwk"
+}
+
+data "tencentcloud_availability_zones_by_product" "gz3" {
+  name    = "ap-guangzhou-3"
+  product = "ckafka"
+}
+
+data "tencentcloud_availability_zones_by_product" "gz6" {
+  name    = "ap-guangzhou-6"
+  product = "ckafka"
+}
+
+resource "tencentcloud_ckafka_instance" "kafka_instance" {
+  instance_name   = "ckafka-instance-maz-tf-test"
+  zone_id         = data.tencentcloud_availability_zones_by_product.gz3.zones.0.id
+  multi_zone_flag = true
+  zone_ids = [
+    data.tencentcloud_availability_zones_by_product.gz3.zones.0.id,
+    data.tencentcloud_availability_zones_by_product.gz6.zones.0.id
+  ]
+  period             = 1
+  vpc_id             = var.vpc_id
+  subnet_id          = var.subnet_id
+  msg_retention_time = 1300
+  renew_flag         = 0
+  kafka_version      = "1.1.1"
+  disk_size          = 500
+  disk_type          = "CLOUD_BASIC"
+
+  config {
+    auto_create_topic_enable   = true
+    default_num_partitions     = 3
+    default_replication_factor = 3
+  }
+
+  dynamic_retention_config {
+    enable = 1
   }
 }
 ```
@@ -70,7 +126,7 @@ The following arguments are supported:
 * `multi_zone_flag` - (Optional, Bool) Indicates whether the instance is multi zones. NOTE: if set to `true`, `zone_ids` must set together.
 * `partition` - (Optional, Int) Partition Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
 * `period` - (Optional, Int) Prepaid purchase time, such as 1, is one month.
-* `public_network` - (Optional, Int) Bandwidth of the public network.
+* `public_network` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.6. If set public network value, it will cause error. Bandwidth of the public network.
 * `rebalance_time` - (Optional, Int) Modification of the rebalancing time after upgrade.
 * `renew_flag` - (Optional, Int) Prepaid automatic renewal mark, 0 means the default state, the initial state, 1 means automatic renewal, 2 means clear no automatic renewal (user setting).
 * `specifications_type` - (Optional, String) Specifications type of instance. Allowed values are `standard`, `profession`. Default is `profession`.
