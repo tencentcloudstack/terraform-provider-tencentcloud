@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	redis "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis/v20180412"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -1641,7 +1642,61 @@ func (me *RedisService) DescribeRedisInstanceTaskListByFilter(ctx context.Contex
 	return
 }
 
-func (me *RedisService) DescribeRedisReplicateInstanceById(ctx context.Context, instanceId string, groupId string) (replicateInstance *redis.Instances, errRet error) {
+func (me *RedisService) AddReplicationInstance(ctx context.Context, groupId, instanceId, instanceRole string) error {
+	logId := getLogId(ctx)
+	var (
+		request  = redis.NewAddReplicationInstanceRequest()
+		response = redis.NewAddReplicationInstanceResponse()
+	)
+
+	request.GroupId = &groupId
+	request.InstanceId = &instanceId
+	request.InstanceRole = &instanceRole
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseRedisClient().AddReplicationInstance(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		response = result
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create redis replicateAttachment failed, reason:%+v", logId, err)
+		return err
+	}
+
+	taskId := *response.Response.TaskId
+
+	if taskId > 0 {
+		err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+			ok, err := me.DescribeTaskInfo(ctx, instanceId, taskId)
+			if err != nil {
+				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			if ok {
+				return nil
+			} else {
+				return resource.RetryableError(fmt.Errorf("Add replication is processing"))
+			}
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s redis add replication fail, reason:%s\n", logId, err.Error())
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (me *RedisService) DescribeRedisReplicateInstanceById(ctx context.Context, groupId string) (replicateGroup *redis.Groups, errRet error) {
 	logId := getLogId(ctx)
 
 	request := redis.NewDescribeReplicationGroupRequest()
@@ -1659,59 +1714,21 @@ func (me *RedisService) DescribeRedisReplicateInstanceById(ctx context.Context, 
 		offset int64 = 0
 		limit  int64 = 20
 	)
-	for {
-		request.Offset = &offset
-		request.Limit = &limit
-		response, err := me.client.UseRedisClient().DescribeReplicationGroup(request)
-		if err != nil {
-			errRet = err
-			return
-		}
-		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-		if response == nil || len(response.Response.Groups) < 1 {
-			break
-		}
-		for _, v := range response.Response.Groups {
-			for _, instance := range v.Instances {
-				if *instance.InstanceId == instanceId {
-					replicateInstance = instance
-					return
-				}
-			}
-		}
-		if len(response.Response.Groups) < int(limit) {
-			break
-		}
-
-		offset += limit
-	}
-
-	return
-}
-
-func (me *RedisService) DeleteRedisReplicateInstanceById(ctx context.Context, instanceId string, groupId string) (taskId int64, errRet error) {
-	logId := getLogId(ctx)
-
-	request := redis.NewDeleteReplicationInstanceRequest()
-	request.InstanceId = &instanceId
-	request.GroupId = &groupId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseRedisClient().DeleteReplicationInstance(request)
+	request.Offset = &offset
+	request.Limit = &limit
+	response, err := me.client.UseRedisClient().DescribeReplicationGroup(request)
 	if err != nil {
 		errRet = err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	taskId = int64(*response.Response.TaskId)
+
+	if response == nil || len(response.Response.Groups) < 1 {
+		return
+	}
+
+	replicateGroup = response.Response.Groups[0]
+
 	return
 }
 
@@ -1791,5 +1808,57 @@ func (me *RedisService) DescribeBandwidthRangeById(ctx context.Context, instance
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	connectionConfig = response.Response
+	return
+}
+
+func (me *RedisService) DeleteRedisReplicateAttachmentById(ctx context.Context, instanceId string, groupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewRemoveReplicationInstanceRequest()
+	request.InstanceId = &instanceId
+	request.GroupId = &groupId
+	request.SyncType = helper.Bool(false)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().RemoveReplicationInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	taskId := *response.Response.TaskId
+
+	if taskId > 0 {
+		err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+			ok, err := me.DescribeTaskInfo(ctx, instanceId, taskId)
+			if err != nil {
+				if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+			if ok {
+				return nil
+			} else {
+				return resource.RetryableError(fmt.Errorf("remove replication is processing"))
+			}
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s redis remove replication fail, reason:%s\n", logId, err.Error())
+			errRet = err
+			return
+		}
+	}
+
 	return
 }
