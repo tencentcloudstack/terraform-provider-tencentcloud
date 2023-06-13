@@ -122,13 +122,13 @@ func resourceTencentCloudSecurityGroupRuleSet() *schema.Resource {
 		"protocol": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Computed:    true,
+			Default:     "ALL",
 			Description: "Type of IP protocol. Valid values: `TCP`, `UDP` and `ICMP`. Default to all types protocol, and conflicts with `service_template_*`.",
 		},
 		"port": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Computed:    true,
+			Default:     "ALL",
 			Description: "Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports, and conflicts with `service_template_*`.",
 		},
 	}

@@ -243,7 +243,7 @@ func validateCosBucketName(v interface{}, k string) (ws []string, errors []error
 		errors = append(errors, fmt.Errorf("the length of %s must be 1-60: %s", k, value))
 	}
 
-	pattern := `^[a-z0-9]+[a-z0-9-]+[a-z0-9]+-[0-9]{10}$`
+	pattern := `^[a-z0-9]([a-z0-9-]*[a-z0-9])?-[0-9]{10}$`
 	if match, _ := regexp.Match(pattern, []byte(value)); !match {
 		errors = append(errors, fmt.Errorf("%s is not valid, please refer to the official documents: %s", k, value))
 	}
