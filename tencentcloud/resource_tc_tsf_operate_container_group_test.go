@@ -16,7 +16,6 @@ func TestAccTencentCloudTsfOperateContainerGroupResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_TSF) },
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckTsfUnitNamespaceDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTsfOperateContainerGroup,
@@ -28,8 +27,8 @@ func TestAccTencentCloudTsfOperateContainerGroupResource_basic(t *testing.T) {
 			{
 				Config: testAccTsfOperateContainerGroupUp,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTsfOperateContainerGroupExists("tencentcloud_tsf_operate_container_group.Operate_container_group"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_Operate_container_group.Operate_container_group", "id"),
+					testAccCheckTsfOperateContainerGroupExists("tencentcloud_tsf_operate_container_group.operate_container_group"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tsf_operate_container_group.operate_container_group", "id"),
 				),
 			},
 		},
