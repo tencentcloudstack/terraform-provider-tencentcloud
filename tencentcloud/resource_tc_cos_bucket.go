@@ -392,7 +392,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateCosBucketName,
-				Description:  "The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.",
+				Description:  "The name of a bucket to be created. Bucket format should be [custom name]-[appid], for example `mycos-1258798060`.The name cannot start or end with `-`. It only supports English Minuscule and numbers [a-z, 0-9, -] and their combinations. The total number of characters in the name of the complete request field can be up to 60 characters.",
 			},
 			"acl": {
 				Type:     schema.TypeString,
