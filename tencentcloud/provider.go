@@ -1113,6 +1113,18 @@ TDSQL for MySQL(DCDB)
 	tencentcloud_dcdb_security_groups
 	tencentcloud_dcdb_database_objects
 	tencentcloud_dcdb_database_tables
+	tencentcloud_dcdb_file_download_url
+	tencentcloud_dcdb_log_files
+	tencentcloud_dcdb_instance_node_info
+	tencentcloud_dcdb_orders
+	tencentcloud_dcdb_price
+	tencentcloud_dcdb_project_security_groups
+	tencentcloud_dcdb_projects
+	tencentcloud_dcdb_renewal_price
+	tencentcloud_dcdb_sale_info
+	tencentcloud_dcdb_shard_spec
+	tencentcloud_dcdb_slow_logs
+	tencentcloud_dcdb_upgrade_price
 
   Resource
 	tencentcloud_dcdb_account
@@ -1890,6 +1902,18 @@ func Provider() *schema.Provider {
 			"tencentcloud_dcdb_security_groups":                      dataSourceTencentCloudDcdbSecurityGroups(),
 			"tencentcloud_dcdb_database_objects":                     dataSourceTencentCloudDcdbDatabaseObjects(),
 			"tencentcloud_dcdb_database_tables":                      dataSourceTencentCloudDcdbDatabaseTables(),
+			"tencentcloud_dcdb_file_download_url":                    dataSourceTencentCloudDcdbFileDownloadUrl(),
+			"tencentcloud_dcdb_log_files":                            dataSourceTencentCloudDcdbLogFiles(),
+			"tencentcloud_dcdb_instance_node_info":                   dataSourceTencentCloudDcdbInstanceNodeInfo(),
+			"tencentcloud_dcdb_orders":                               dataSourceTencentCloudDcdbOrders(),
+			"tencentcloud_dcdb_price":                                dataSourceTencentCloudDcdbPrice(),
+			"tencentcloud_dcdb_project_security_groups":              dataSourceTencentCloudDcdbProjectSecurityGroups(),
+			"tencentcloud_dcdb_projects":                             dataSourceTencentCloudDcdbProjects(),
+			"tencentcloud_dcdb_renewal_price":                        dataSourceTencentCloudDcdbRenewalPrice(),
+			"tencentcloud_dcdb_sale_info":                            dataSourceTencentCloudDcdbSaleInfo(),
+			"tencentcloud_dcdb_shard_spec":                           dataSourceTencentCloudDcdbShardSpec(),
+			"tencentcloud_dcdb_slow_logs":                            dataSourceTencentCloudDcdbSlowLogs(),
+			"tencentcloud_dcdb_upgrade_price":                        dataSourceTencentCloudDcdbUpgradePrice(),
 			"tencentcloud_mariadb_db_instances":                      dataSourceTencentCloudMariadbDbInstances(),
 			"tencentcloud_mariadb_accounts":                          dataSourceTencentCloudMariadbAccounts(),
 			"tencentcloud_mariadb_security_groups":                   dataSourceTencentCloudMariadbSecurityGroups(),

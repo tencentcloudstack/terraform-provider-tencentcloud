@@ -1188,3 +1188,514 @@ func (me *DcdbService) SetNetworkVip(ctx context.Context, instanceId, vpcId, sub
 
 	return
 }
+
+func (me *DcdbService) DescribeDcdbFileDownloadUrlByFilter(ctx context.Context, param map[string]interface{}) (fileDownloadUrl *string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeFileDownloadUrlRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "ShardId" {
+			request.ShardId = v.(*string)
+		}
+		if k == "FilePath" {
+			request.FilePath = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeFileDownloadUrl(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	fileDownloadUrl = response.Response.PreSignedUrl
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbLogFilesByFilter(ctx context.Context, param map[string]interface{}) (ret *dcdb.DescribeDBLogFilesResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeDBLogFilesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "ShardId" {
+			request.ShardId = v.(*string)
+		}
+		if k == "Type" {
+			request.Type = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDBLogFiles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	ret = response.Response
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbInstanceNodeInfoByFilter(ctx context.Context, param map[string]interface{}) (instanceNodeInfo []*dcdb.BriefNodeInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeDCDBInstanceNodeInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDcdbClient().DescribeDCDBInstanceNodeInfo(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.NodesInfo) < 1 {
+			break
+		}
+		instanceNodeInfo = append(instanceNodeInfo, response.Response.NodesInfo...)
+		if len(response.Response.NodesInfo) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbOrdersByFilter(ctx context.Context, param map[string]interface{}) (orders []*dcdb.Deal, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeOrdersRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "DealNames" {
+			request.DealNames = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeOrders(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Deals) < 1 {
+		return
+	}
+
+	orders = response.Response.Deals
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbPriceByFilter(ctx context.Context, param map[string]interface{}) (ret *dcdb.DescribeDCDBPriceResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeDCDBPriceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceCount" {
+			request.Count = v.(*int64)
+		}
+		if k == "Zone" {
+			request.Zone = v.(*string)
+		}
+		if k == "Period" {
+			request.Period = v.(*int64)
+		}
+		if k == "ShardNodeCount" {
+			request.ShardNodeCount = v.(*int64)
+		}
+		if k == "ShardMemory" {
+			request.ShardMemory = v.(*int64)
+		}
+		if k == "ShardStorage" {
+			request.ShardStorage = v.(*int64)
+		}
+		if k == "ShardCount" {
+			request.ShardCount = v.(*int64)
+		}
+		if k == "Paymode" {
+			request.Paymode = v.(*string)
+		}
+		if k == "AmountUnit" {
+			request.AmountUnit = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDCDBPrice(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	ret = response.Response
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbProjectsByFilter(ctx context.Context) (projects []*dcdb.Project, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeProjectsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeProjects(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Projects) < 1 {
+		return
+	}
+	projects = response.Response.Projects
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbProjectSecurityGroupsByFilter(ctx context.Context, param map[string]interface{}) (projectSecurityGroups []*dcdb.SecurityGroup, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeProjectSecurityGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+		if k == "ProjectId" {
+			request.ProjectId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeProjectSecurityGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Groups) < 1 {
+		return
+	}
+	projectSecurityGroups = response.Response.Groups
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbRenewalPriceByFilter(ctx context.Context, param map[string]interface{}) (ret *dcdb.DescribeDCDBRenewalPriceResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeDCDBRenewalPriceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Period" {
+			request.Period = v.(*int64)
+		}
+		if k == "AmountUnit" {
+			request.AmountUnit = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDCDBRenewalPrice(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	ret = response.Response
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbSaleInfoByFilter(ctx context.Context, param map[string]interface{}) (regionInfo []*dcdb.RegionInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeDCDBSaleInfoRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDCDBSaleInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.RegionList) < 1 {
+		return
+	}
+
+	regionInfo = response.Response.RegionList
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbShardSpecByFilter(ctx context.Context, param map[string]interface{}) (specConfigs []*dcdb.SpecConfig, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeShardSpecRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseDcdbClient().DescribeShardSpec(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.SpecConfig) < 1 {
+		return
+	}
+
+	specConfigs = response.Response.SpecConfig
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbSlowLogsByFilter(ctx context.Context, param map[string]interface{}) (slowLogs []*dcdb.SlowLogData, ret *dcdb.DescribeDBSlowLogsResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeDBSlowLogsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "ShardId" {
+			request.ShardId = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "Db" {
+			request.Db = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+		if k == "Slave" {
+			request.Slave = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDcdbClient().DescribeDBSlowLogs(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data) < 1 {
+			break
+		}
+		slowLogs = append(slowLogs, response.Response.Data...)
+		ret = response.Response
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *DcdbService) DescribeDcdbUpgradePriceByFilter(ctx context.Context, param map[string]interface{}) (ret *dcdb.DescribeDCDBUpgradePriceResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dcdb.NewDescribeDCDBUpgradePriceRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "UpgradeType" {
+			request.UpgradeType = v.(*string)
+		}
+		if k == "AddShardConfig" {
+			request.AddShardConfig = v.(*dcdb.AddShardConfig)
+		}
+		if k == "ExpandShardConfig" {
+			request.ExpandShardConfig = v.(*dcdb.ExpandShardConfig)
+		}
+		if k == "SplitShardConfig" {
+			request.SplitShardConfig = v.(*dcdb.SplitShardConfig)
+		}
+		if k == "AmountUnit" {
+			request.AmountUnit = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseDcdbClient().DescribeDCDBUpgradePrice(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	ret = response.Response
+
+	return
+}
