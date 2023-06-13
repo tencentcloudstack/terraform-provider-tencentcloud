@@ -1,10 +1,10 @@
 /*
-Provides a resource to create a tsf start_container_group
+Provides a resource to create a tsf operate_container_group
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_tsf_start_container_group" "start_container_group" {
+resource "tencentcloud_tsf_operate_container_group" "operate_container_group" {
   group_id = "group-ynd95rea"
   operate = "stop"
 }
@@ -22,12 +22,12 @@ import (
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 )
 
-func resourceTencentCloudTsfStartContainerGroup() *schema.Resource {
+func resourceTencentCloudTsfOperateContainerGroup() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTsfStartContainerGroupCreate,
-		Read:   resourceTencentCloudTsfStartContainerGroupRead,
-		Update: resourceTencentCloudTsfStartContainerGroupUpdate,
-		Delete: resourceTencentCloudTsfStartContainerGroupDelete,
+		Create: resourceTencentCloudTsfOperateContainerGroupCreate,
+		Read:   resourceTencentCloudTsfOperateContainerGroupRead,
+		Update: resourceTencentCloudTsfOperateContainerGroupUpdate,
+		Delete: resourceTencentCloudTsfOperateContainerGroupDelete,
 
 		Schema: map[string]*schema.Schema{
 			"group_id": {
@@ -45,8 +45,8 @@ func resourceTencentCloudTsfStartContainerGroup() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudTsfStartContainerGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tsf_start_container_group.create")()
+func resourceTencentCloudTsfOperateContainerGroupCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tsf_operate_container_group.create")()
 	defer inconsistentCheck(d, meta)()
 
 	var groupId string
@@ -56,11 +56,11 @@ func resourceTencentCloudTsfStartContainerGroupCreate(d *schema.ResourceData, me
 
 	d.SetId(groupId)
 
-	return resourceTencentCloudTsfStartContainerGroupUpdate(d, meta)
+	return resourceTencentCloudTsfOperateContainerGroupUpdate(d, meta)
 }
 
-func resourceTencentCloudTsfStartContainerGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tsf_start_container_group.read")()
+func resourceTencentCloudTsfOperateContainerGroupRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tsf_operate_container_group.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -76,7 +76,7 @@ func resourceTencentCloudTsfStartContainerGroupRead(d *schema.ResourceData, meta
 
 	if startContainerGroup == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `TsfStartContainerGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `TsfOperateContainerGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -85,8 +85,8 @@ func resourceTencentCloudTsfStartContainerGroupRead(d *schema.ResourceData, meta
 	return nil
 }
 
-func resourceTencentCloudTsfStartContainerGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tsf_start_container_group.update")()
+func resourceTencentCloudTsfOperateContainerGroupUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tsf_operate_container_group.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -178,11 +178,11 @@ func resourceTencentCloudTsfStartContainerGroupUpdate(d *schema.ResourceData, me
 		}
 	}
 
-	return resourceTencentCloudTsfStartContainerGroupRead(d, meta)
+	return resourceTencentCloudTsfOperateContainerGroupRead(d, meta)
 }
 
-func resourceTencentCloudTsfStartContainerGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tsf_start_container_group.delete")()
+func resourceTencentCloudTsfOperateContainerGroupDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tsf_Operate_container_group.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

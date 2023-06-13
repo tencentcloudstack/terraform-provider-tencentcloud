@@ -1398,8 +1398,8 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_deploy_container_group
 	tencentcloud_tsf_deploy_vm_group
 	tencentcloud_tsf_release_api_group
-	tencentcloud_tsf_start_container_group
-	tencentcloud_tsf_start_group
+	tencentcloud_tsf_operate_container_group
+	tencentcloud_tsf_operate_group
 	tencentcloud_tsf_unit_namespace
 
 Media Processing Service(MPS)
@@ -2623,8 +2623,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_deploy_container_group":                 resourceTencentCloudTsfDeployContainerGroup(),
 			"tencentcloud_tsf_deploy_vm_group":                        resourceTencentCloudTsfDeployVmGroup(),
 			"tencentcloud_tsf_release_api_group":                      resourceTencentCloudTsfReleaseApiGroup(),
-			"tencentcloud_tsf_start_container_group":                  resourceTencentCloudTsfStartContainerGroup(),
-			"tencentcloud_tsf_start_group":                            resourceTencentCloudTsfStartGroup(),
+			"tencentcloud_tsf_operate_container_group":                resourceTencentCloudTsfOperateContainerGroup(),
+			"tencentcloud_tsf_operate_group":                          resourceTencentCloudTsfOperateGroup(),
 			"tencentcloud_tsf_unit_namespace":                         resourceTencentCloudTsfUnitNamespace(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),

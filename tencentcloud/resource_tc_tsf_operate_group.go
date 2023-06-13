@@ -1,10 +1,10 @@
 /*
-Provides a resource to create a tsf start_group
+Provides a resource to create a tsf operate_group
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_tsf_start_group" "start_group" {
+resource "tencentcloud_tsf_operate_group" "operate_group" {
   group_id = "group-ynd95rea"
   operate  = "start"
 }
@@ -22,12 +22,12 @@ import (
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 )
 
-func resourceTencentCloudTsfStartGroup() *schema.Resource {
+func resourceTencentCloudTsfOperateGroup() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTsfStartGroupCreate,
-		Read:   resourceTencentCloudTsfStartGroupRead,
-		Update: resourceTencentCloudTsfStartGroupUpdate,
-		Delete: resourceTencentCloudTsfStartGroupDelete,
+		Create: resourceTencentCloudTsfOperateGroupCreate,
+		Read:   resourceTencentCloudTsfOperateGroupRead,
+		Update: resourceTencentCloudTsfOperateGroupUpdate,
+		Delete: resourceTencentCloudTsfOperateGroupDelete,
 
 		Schema: map[string]*schema.Schema{
 			"group_id": {
@@ -45,8 +45,8 @@ func resourceTencentCloudTsfStartGroup() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudTsfStartGroupCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tsf_start_group.create")()
+func resourceTencentCloudTsfOperateGroupCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tsf_operate_group.create")()
 	defer inconsistentCheck(d, meta)()
 
 	var groupId string
@@ -56,11 +56,11 @@ func resourceTencentCloudTsfStartGroupCreate(d *schema.ResourceData, meta interf
 
 	d.SetId(groupId)
 
-	return resourceTencentCloudTsfStartGroupUpdate(d, meta)
+	return resourceTencentCloudTsfOperateGroupUpdate(d, meta)
 }
 
-func resourceTencentCloudTsfStartGroupRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tsf_start_group.read")()
+func resourceTencentCloudTsfOperateGroupRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tsf_operate_group.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -76,7 +76,7 @@ func resourceTencentCloudTsfStartGroupRead(d *schema.ResourceData, meta interfac
 
 	if startGroup == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `TsfStartGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `TsfOperateGroup` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -87,8 +87,8 @@ func resourceTencentCloudTsfStartGroupRead(d *schema.ResourceData, meta interfac
 	return nil
 }
 
-func resourceTencentCloudTsfStartGroupUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tsf_start_group.update")()
+func resourceTencentCloudTsfOperateGroupUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tsf_operate_group.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -168,11 +168,11 @@ func resourceTencentCloudTsfStartGroupUpdate(d *schema.ResourceData, meta interf
 
 	}
 
-	return resourceTencentCloudTsfStartGroupRead(d, meta)
+	return resourceTencentCloudTsfOperateGroupRead(d, meta)
 }
 
-func resourceTencentCloudTsfStartGroupDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tsf_start_group.delete")()
+func resourceTencentCloudTsfOperateGroupDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tsf_operate_group.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

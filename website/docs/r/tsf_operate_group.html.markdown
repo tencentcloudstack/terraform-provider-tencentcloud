@@ -1,20 +1,20 @@
 ---
 subcategory: "Tencent Service Framework(TSF)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_tsf_start_group"
-sidebar_current: "docs-tencentcloud-resource-tsf_start_group"
+page_title: "TencentCloud: tencentcloud_tsf_operate_group"
+sidebar_current: "docs-tencentcloud-resource-tsf_operate_group"
 description: |-
-  Provides a resource to create a tsf start_group
+  Provides a resource to create a tsf operate_group
 ---
 
-# tencentcloud_tsf_start_group
+# tencentcloud_tsf_operate_group
 
-Provides a resource to create a tsf start_group
+Provides a resource to create a tsf operate_group
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_tsf_start_group" "start_group" {
+resource "tencentcloud_tsf_operate_group" "operate_group" {
   group_id = "group-ynd95rea"
   operate  = "start"
 }

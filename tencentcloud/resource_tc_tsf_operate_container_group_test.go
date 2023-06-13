@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTsfStartContainerGroupResource_basic -v
-func TestAccTencentCloudTsfStartContainerGroupResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTsfOperateContainerGroupResource_basic -v
+func TestAccTencentCloudTsfOperateContainerGroupResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -19,24 +19,24 @@ func TestAccTencentCloudTsfStartContainerGroupResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckTsfUnitNamespaceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTsfStartContainerGroup,
+				Config: testAccTsfOperateContainerGroup,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTsfStartContainerGroupExists("tencentcloud_tsf_start_container_group.start_container_group"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_start_container_group.start_container_group", "id"),
+					testAccCheckTsfOperateContainerGroupExists("tencentcloud_tsf_operate_container_group.operate_container_group"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tsf_operate_container_group.operate_container_group", "id"),
 				),
 			},
 			{
-				Config: testAccTsfStartContainerGroupUp,
+				Config: testAccTsfOperateContainerGroupUp,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTsfStartContainerGroupExists("tencentcloud_tsf_start_container_group.start_container_group"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_start_container_group.start_container_group", "id"),
+					testAccCheckTsfOperateContainerGroupExists("tencentcloud_tsf_operate_container_group.Operate_container_group"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tsf_Operate_container_group.Operate_container_group", "id"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckTsfStartContainerGroupExists(r string) resource.TestCheckFunc {
+func testAccCheckTsfOperateContainerGroupExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -64,17 +64,17 @@ func testAccCheckTsfStartContainerGroupExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTsfStartContainerGroup = `
+const testAccTsfOperateContainerGroup = `
 
-resource "tencentcloud_tsf_start_container_group" "start_container_group" {
+resource "tencentcloud_tsf_operate_container_group" "operate_container_group" {
   group_id = "group-yqml6w3a"
   operate = "stop"
 }
 
 `
-const testAccTsfStartContainerGroupUp = `
+const testAccTsfOperateContainerGroupUp = `
 
-resource "tencentcloud_tsf_start_container_group" "start_container_group" {
+resource "tencentcloud_tsf_operate_container_group" "operate_container_group" {
   group_id = "group-yqml6w3a"
   operate = "start"
 }

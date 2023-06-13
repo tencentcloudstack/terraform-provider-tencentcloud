@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudTsfStartGroupResource_basic -v
-func TestAccTencentCloudTsfStartGroupResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTsfOperateGroupResource_basic -v
+func TestAccTencentCloudTsfOperateGroupResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -19,24 +19,24 @@ func TestAccTencentCloudTsfStartGroupResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckTsfUnitNamespaceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTsfStartGroup,
+				Config: testAccTsfOperateGroup,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTsfStartGroupExists("tencentcloud_tsf_start_group.start_group"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_start_group.start_group", "id"),
+					testAccCheckTsfOperateGroupExists("tencentcloud_tsf_operate_group.operate_group"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tsf_operate_group.operate_group", "id"),
 				),
 			},
 			{
-				Config: testAccTsfStartGroupUp,
+				Config: testAccTsfOperateGroupUp,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTsfStartGroupExists("tencentcloud_tsf_start_group.start_group"),
-					resource.TestCheckResourceAttrSet("tencentcloud_tsf_start_group.start_group", "id"),
+					testAccCheckTsfOperateGroupExists("tencentcloud_tsf_operate_group.operate_group"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tsf_operate_group.operate_group", "id"),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckTsfStartGroupExists(r string) resource.TestCheckFunc {
+func testAccCheckTsfOperateGroupExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -64,18 +64,18 @@ func testAccCheckTsfStartGroupExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTsfStartGroup = `
+const testAccTsfOperateGroup = `
 
-resource "tencentcloud_tsf_start_group" "start_group" {
+resource "tencentcloud_tsf_operate_group" "operate_group" {
 	group_id = "group-yrjkln9v"
 	operate  = "stop"
 }
 
 `
 
-const testAccTsfStartGroupUp = `
+const testAccTsfOperateGroupUp = `
 
-resource "tencentcloud_tsf_start_group" "start_group" {
+resource "tencentcloud_tsf_operate_group" "operate_group" {
 	group_id = "group-yrjkln9v"
 	operate  = "start"
 }
