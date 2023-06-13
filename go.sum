@@ -850,6 +850,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.670/go.mod 
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.672/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.673 h1:+QDlxKbbn2n6CbPHcoef/ODa/0yfYoxL5CC2UI96Qi8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.673/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.674 h1:iMsBaE3H5o/wtUqsxqeZfnGfn8vUBYMTrkpTAWk1Btk=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.674/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.676 h1:jU+t/PoRS+UhVN9SnIL96rbTSZidDjNKHJVrc/zl80Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.676/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
@@ -945,6 +947,10 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.650 h1:gQFdOUL
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.650/go.mod h1:cNgQjHihEHq9Z2n6sSe/l7gG6pf7nhWue7e+Iu+wQCc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.661 h1:HSmh+b8jidA5B8Ka+caQ6eZA2mgM+aVQQHS6hffs+a4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.661/go.mod h1:TuZbqKrmzJf1EmO+Rb3hE/9iUQBr/OUtMRhWxsYZ2gs=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.673 h1:DjBzrA+GYAe2VuyH8gMke2WnAz4QKRhlcqELXAe1Cks=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.673/go.mod h1:EE5luGR9aUIPqPBSPk4JALRb1MAlpXvYleI71bTD5cw=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674 h1:VsMV1/vsgVzespG7jUzraZS/AbAUllVQjmtVAlA9W/M=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674/go.mod h1:6+MWxaNR4y+spZHYNntulOyj628owTLuWmEFebJOWdA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199 h1:6Yt74l4pA5QtzhwMNIEUt0spXdSBKH744DDqTHJOCP0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199/go.mod h1:Yw6OQ33z3s4k0HVYTNSffB12qOzEJ2Zf1Vj4+5S3sRs=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.669 h1:KCU7jNan7oVcTbPElce0YSKr43eyBWpADJhXzzxoeH8=

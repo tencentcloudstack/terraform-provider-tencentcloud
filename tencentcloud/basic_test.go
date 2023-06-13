@@ -999,6 +999,7 @@ const (
 	defaultTsfGWGroupId       = "group-vzd97zpy"
 	defaultTsfFileConfigId    = "dcfg-f-ab6l9x5y"
 	defaultTsfImageId         = "img-7r9vq8wd"
+	defaultTsfGWNamespaceId   = "namespace-vwgo38wy"
 )
 
 // End of TSF

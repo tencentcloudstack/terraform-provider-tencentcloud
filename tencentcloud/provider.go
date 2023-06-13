@@ -1409,6 +1409,12 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_bind_api_group
 	tencentcloud_tsf_application_file_config
 	tencentcloud_tsf_enable_unit_rule
+	tencentcloud_tsf_deploy_container_group
+	tencentcloud_tsf_deploy_vm_group
+	tencentcloud_tsf_release_api_group
+	tencentcloud_tsf_operate_container_group
+	tencentcloud_tsf_operate_group
+	tencentcloud_tsf_unit_namespace
 
 Media Processing Service(MPS)
   Resource
@@ -2630,7 +2636,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_config_template":                        resourceTencentCloudTsfConfigTemplate(),
 			"tencentcloud_tsf_api_rate_limit_rule":                    resourceTencentCloudTsfApiRateLimitRule(),
 			"tencentcloud_tsf_application_release_config":             resourceTencentCloudTsfApplicationReleaseConfig(),
-			"tencentcloud_tsf_contain_group":                          resourceTencentCloudTsfContainGroup(),
 			"tencentcloud_tsf_lane":                                   resourceTencentCloudTsfLane(),
 			"tencentcloud_tsf_lane_rule":                              resourceTencentCloudTsfLaneRule(),
 			"tencentcloud_tsf_group":                                  resourceTencentCloudTsfGroup(),
@@ -2643,6 +2648,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_bind_api_group":                         resourceTencentCloudTsfBindApiGroup(),
 			"tencentcloud_tsf_application_file_config":                resourceTencentCloudTsfApplicationFileConfig(),
 			"tencentcloud_tsf_enable_unit_rule":                       resourceTencentCloudTsfEnableUnitRule(),
+			"tencentcloud_tsf_deploy_container_group":                 resourceTencentCloudTsfDeployContainerGroup(),
+			"tencentcloud_tsf_deploy_vm_group":                        resourceTencentCloudTsfDeployVmGroup(),
+			"tencentcloud_tsf_release_api_group":                      resourceTencentCloudTsfReleaseApiGroup(),
+			"tencentcloud_tsf_operate_container_group":                resourceTencentCloudTsfOperateContainerGroup(),
+			"tencentcloud_tsf_operate_group":                          resourceTencentCloudTsfOperateGroup(),
+			"tencentcloud_tsf_unit_namespace":                         resourceTencentCloudTsfUnitNamespace(),
 			"tencentcloud_mps_workflow":                               resourceTencentCloudMpsWorkflow(),
 			"tencentcloud_mps_transcode_template":                     resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                     resourceTencentCloudMpsWatermarkTemplate(),
