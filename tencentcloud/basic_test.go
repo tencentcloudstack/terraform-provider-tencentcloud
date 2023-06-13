@@ -858,6 +858,14 @@ locals {
 }
 `
 
+// ref with `local.redis_id`
+const CommonPresetRedis = `
+locals {
+  redis_id = "crs-jf4ico4v"
+  redis_name = "Keep-terraform"
+}
+`
+
 // End of DCDB
 // SES
 const (
