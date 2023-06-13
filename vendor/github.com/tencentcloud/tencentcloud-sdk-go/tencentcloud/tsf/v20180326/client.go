@@ -147,6 +147,7 @@ func NewAddInstancesResponse() (response *AddInstancesResponse) {
 //  INTERNALERROR_TKEAPIFAILEDOPERATION = "InternalError.TkeApiFailedOperation"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEINVALIDIMAGE = "InvalidParameterValue.InstanceInvalidImage"
+//  MISSINGPARAMETER_CLUSTERIDREQUIRED = "MissingParameter.ClusterIdRequired"
 //  MISSINGPARAMETER_INSTANCEIMPORTMODENULL = "MissingParameter.InstanceImportModeNull"
 //  RESOURCEINUSE_INSTANCEHASBEENUSED = "ResourceInUse.InstanceHasBeenUsed"
 //  RESOURCENOTFOUND_CLUSTERNOTEXIST = "ResourceNotFound.ClusterNotExist"
@@ -162,6 +163,7 @@ func (c *Client) AddInstances(request *AddInstancesRequest) (response *AddInstan
 //  INTERNALERROR_TKEAPIFAILEDOPERATION = "InternalError.TkeApiFailedOperation"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  INVALIDPARAMETERVALUE_INSTANCEINVALIDIMAGE = "InvalidParameterValue.InstanceInvalidImage"
+//  MISSINGPARAMETER_CLUSTERIDREQUIRED = "MissingParameter.ClusterIdRequired"
 //  MISSINGPARAMETER_INSTANCEIMPORTMODENULL = "MissingParameter.InstanceImportModeNull"
 //  RESOURCEINUSE_INSTANCEHASBEENUSED = "ResourceInUse.InstanceHasBeenUsed"
 //  RESOURCENOTFOUND_CLUSTERNOTEXIST = "ResourceNotFound.ClusterNotExist"
@@ -4775,6 +4777,7 @@ func NewDescribeApplicationAttributeResponse() (response *DescribeApplicationAtt
 //  INTERNALERROR_INSTANCECOMMONERROR = "InternalError.InstanceCommonError"
 //  INTERNALERROR_UNHANDLEDEXCEPTION = "InternalError.UnhandledException"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  MISSINGPARAMETER_APPLICATIONIDNULL = "MissingParameter.ApplicationIdNull"
 //  RESOURCENOTFOUND_APPLICATIONPROJECTNOTMATCH = "ResourceNotFound.ApplicationProjectNotMatch"
 //  RESOURCENOTFOUND_CLUSTERNOTEXIST = "ResourceNotFound.ClusterNotExist"
 //  RESOURCENOTFOUND_CONTAINERGROUPGROUPNAMESPACECLUSTERNOTFOUND = "ResourceNotFound.ContainergroupGroupNamespaceClusterNotFound"
@@ -4799,6 +4802,7 @@ func (c *Client) DescribeApplicationAttribute(request *DescribeApplicationAttrib
 //  INTERNALERROR_INSTANCECOMMONERROR = "InternalError.InstanceCommonError"
 //  INTERNALERROR_UNHANDLEDEXCEPTION = "InternalError.UnhandledException"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
+//  MISSINGPARAMETER_APPLICATIONIDNULL = "MissingParameter.ApplicationIdNull"
 //  RESOURCENOTFOUND_APPLICATIONPROJECTNOTMATCH = "ResourceNotFound.ApplicationProjectNotMatch"
 //  RESOURCENOTFOUND_CLUSTERNOTEXIST = "ResourceNotFound.ClusterNotExist"
 //  RESOURCENOTFOUND_CONTAINERGROUPGROUPNAMESPACECLUSTERNOTFOUND = "ResourceNotFound.ContainergroupGroupNamespaceClusterNotFound"
@@ -5229,6 +5233,7 @@ func NewDescribeClustersResponse() (response *DescribeClustersResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_CLUSTERQUERYFAILED = "FailedOperation.ClusterQueryFailed"
 //  FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
+//  FAILEDOPERATION_UNHANDLEDEXCEPTION = "FailedOperation.UnhandledException"
 //  INTERNALERROR_UNHANDLEDEXCEPTION = "InternalError.UnhandledException"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETERVALUE_CLUSTERPAGELIMITINVALID = "InvalidParameterValue.ClusterPageLimitInvalid"
@@ -5247,6 +5252,7 @@ func (c *Client) DescribeClusters(request *DescribeClustersRequest) (response *D
 // 可能返回的错误码:
 //  FAILEDOPERATION_CLUSTERQUERYFAILED = "FailedOperation.ClusterQueryFailed"
 //  FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
+//  FAILEDOPERATION_UNHANDLEDEXCEPTION = "FailedOperation.UnhandledException"
 //  INTERNALERROR_UNHANDLEDEXCEPTION = "InternalError.UnhandledException"
 //  INVALIDPARAMETER_PARAMERROR = "InvalidParameter.ParamError"
 //  INVALIDPARAMETERVALUE_CLUSTERPAGELIMITINVALID = "InvalidParameterValue.ClusterPageLimitInvalid"
@@ -5689,6 +5695,80 @@ func (c *Client) DescribeContainerEventsWithContext(ctx context.Context, request
     request.SetContext(ctx)
     
     response = NewDescribeContainerEventsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeContainerGroupAttributeRequest() (request *DescribeContainerGroupAttributeRequest) {
+    request = &DescribeContainerGroupAttributeRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("tsf", APIVersion, "DescribeContainerGroupAttribute")
+    
+    
+    return
+}
+
+func NewDescribeContainerGroupAttributeResponse() (response *DescribeContainerGroupAttributeResponse) {
+    response = &DescribeContainerGroupAttributeResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeContainerGroupAttribute
+// 获取部署组其他字段-用于前端并发调用
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_APPLICATIONQUERYFAILED = "FailedOperation.ApplicationQueryFailed"
+//  FAILEDOPERATION_CONTAINERGROUPKUBERNETECONNECTERROR = "FailedOperation.ContainergroupKuberneteConnectError"
+//  FAILEDOPERATION_CONTAINERGROUPKUBERNETESCONNECTERROR = "FailedOperation.ContainergroupKubernetesConnectError"
+//  FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
+//  INTERNALERROR_CONTAINERGROUPKUBERNETECONNECTERROR = "InternalError.ContainergroupKuberneteConnectError"
+//  INTERNALERROR_CONTAINERGROUPSQLFAILED = "InternalError.ContainergroupSqlFailed"
+//  INTERNALERROR_UNHANDLEDEXCEPTION = "InternalError.UnhandledException"
+//  RESOURCENOTFOUND_CLUSTERNOTEXIST = "ResourceNotFound.ClusterNotExist"
+//  RESOURCENOTFOUND_CONTAINERGROUPGROUPNAMESPACECLUSTERNOTFOUND = "ResourceNotFound.ContainergroupGroupNamespaceClusterNotFound"
+//  RESOURCENOTFOUND_CONTAINERGROUPGROUPNOTFOUND = "ResourceNotFound.ContainergroupGroupNotFound"
+//  RESOURCENOTFOUND_GROUPAPPLICATIONNOTEXIST = "ResourceNotFound.GroupApplicationNotExist"
+//  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
+//  UNAUTHORIZEDOPERATION_NOLICENSE = "UnauthorizedOperation.NoLicense"
+//  UNAUTHORIZEDOPERATION_NOPRIVILEGE = "UnauthorizedOperation.NoPrivilege"
+func (c *Client) DescribeContainerGroupAttribute(request *DescribeContainerGroupAttributeRequest) (response *DescribeContainerGroupAttributeResponse, err error) {
+    return c.DescribeContainerGroupAttributeWithContext(context.Background(), request)
+}
+
+// DescribeContainerGroupAttribute
+// 获取部署组其他字段-用于前端并发调用
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_APPLICATIONQUERYFAILED = "FailedOperation.ApplicationQueryFailed"
+//  FAILEDOPERATION_CONTAINERGROUPKUBERNETECONNECTERROR = "FailedOperation.ContainergroupKuberneteConnectError"
+//  FAILEDOPERATION_CONTAINERGROUPKUBERNETESCONNECTERROR = "FailedOperation.ContainergroupKubernetesConnectError"
+//  FAILEDOPERATION_TSFPRIVILEGEERROR = "FailedOperation.TsfPrivilegeError"
+//  INTERNALERROR_CONTAINERGROUPKUBERNETECONNECTERROR = "InternalError.ContainergroupKuberneteConnectError"
+//  INTERNALERROR_CONTAINERGROUPSQLFAILED = "InternalError.ContainergroupSqlFailed"
+//  INTERNALERROR_UNHANDLEDEXCEPTION = "InternalError.UnhandledException"
+//  RESOURCENOTFOUND_CLUSTERNOTEXIST = "ResourceNotFound.ClusterNotExist"
+//  RESOURCENOTFOUND_CONTAINERGROUPGROUPNAMESPACECLUSTERNOTFOUND = "ResourceNotFound.ContainergroupGroupNamespaceClusterNotFound"
+//  RESOURCENOTFOUND_CONTAINERGROUPGROUPNOTFOUND = "ResourceNotFound.ContainergroupGroupNotFound"
+//  RESOURCENOTFOUND_GROUPAPPLICATIONNOTEXIST = "ResourceNotFound.GroupApplicationNotExist"
+//  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
+//  UNAUTHORIZEDOPERATION_NOLICENSE = "UnauthorizedOperation.NoLicense"
+//  UNAUTHORIZEDOPERATION_NOPRIVILEGE = "UnauthorizedOperation.NoPrivilege"
+func (c *Client) DescribeContainerGroupAttributeWithContext(ctx context.Context, request *DescribeContainerGroupAttributeRequest) (response *DescribeContainerGroupAttributeResponse, err error) {
+    if request == nil {
+        request = NewDescribeContainerGroupAttributeRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeContainerGroupAttribute require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeContainerGroupAttributeResponse()
     err = c.Send(request, response)
     return
 }
@@ -7526,6 +7606,7 @@ func NewDescribeInvocationMetricDataPointResponse() (response *DescribeInvocatio
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_TSFAPMSTATSSEARCHREQUESTPARAMERROR = "InvalidParameter.TsfApmStatsSearchRequestParamError"
+//  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
 func (c *Client) DescribeInvocationMetricDataPoint(request *DescribeInvocationMetricDataPointRequest) (response *DescribeInvocationMetricDataPointResponse, err error) {
     return c.DescribeInvocationMetricDataPointWithContext(context.Background(), request)
 }
@@ -7535,6 +7616,7 @@ func (c *Client) DescribeInvocationMetricDataPoint(request *DescribeInvocationMe
 //
 // 可能返回的错误码:
 //  INVALIDPARAMETER_TSFAPMSTATSSEARCHREQUESTPARAMERROR = "InvalidParameter.TsfApmStatsSearchRequestParamError"
+//  RESOURCENOTFOUND_MICROSERVICEOFFLINE = "ResourceNotFound.MicroserviceOffline"
 func (c *Client) DescribeInvocationMetricDataPointWithContext(ctx context.Context, request *DescribeInvocationMetricDataPointRequest) (response *DescribeInvocationMetricDataPointResponse, err error) {
     if request == nil {
         request = NewDescribeInvocationMetricDataPointRequest()

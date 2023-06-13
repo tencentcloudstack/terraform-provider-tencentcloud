@@ -2699,3 +2699,210 @@ func (me *TsfService) DescribeTsfGroupConfigReleaseByFilter(ctx context.Context,
 	groupConfigRelease = response.Response.Result
 	return
 }
+
+func (me *TsfService) DescribeTsfDeployVmGroupById(ctx context.Context, groupId string) (deployVmGroup *tsf.VmGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeGroupRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	deployVmGroup = response.Response.Result
+	return
+}
+
+func (me *TsfService) DescribeTsfReleaseApiGroupById(ctx context.Context, groupId string) (releaseApiGroup *tsf.ApiGroupInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeApiGroupRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeApiGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	releaseApiGroup = response.Response.Result
+
+	return
+}
+
+func (me *TsfService) DescribeTsfStartContainerGroupById(ctx context.Context, groupId string) (startContainerGroup *tsf.ContainerGroupOther, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeContainerGroupAttributeRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeContainerGroupAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	startContainerGroup = response.Response.Result
+
+	return
+}
+
+func (me *TsfService) DescribeTsfStartGroupById(ctx context.Context, groupId string) (startGroup *tsf.VmGroupOther, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeGroupAttributeRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeGroupAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	startGroup = response.Response.Result
+	return
+}
+
+func (me *TsfService) DescribeTsfUnitNamespaceById(ctx context.Context, gatewayInstanceId, namespaceId string) (unitNamespace *tsf.UnitNamespace, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeUnitNamespacesRequest()
+	request.GatewayInstanceId = &gatewayInstanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeUnitNamespaces(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	for _, v := range response.Response.Result.Content {
+		if *v.NamespaceId == namespaceId {
+			unitNamespace = v
+			return
+		}
+	}
+
+	return
+}
+
+func (me *TsfService) DeleteTsfUnitNamespaceById(ctx context.Context, gatewayInstanceId, unitNamespace string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDeleteUnitNamespacesRequest()
+	request.GatewayInstanceId = &gatewayInstanceId
+	request.UnitNamespaceList = []*string{&unitNamespace}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DeleteUnitNamespaces(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TsfService) DescribeTsfDeployContainerGroupById(ctx context.Context, groupId string) (deployContainerGroup *tsf.ContainerGroupDeploy, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tsf.NewDescribeContainerGroupDeployInfoRequest()
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTsfClient().DescribeContainerGroupDeployInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil {
+		return
+	}
+
+	deployContainerGroup = response.Response.Result
+	return
+}
