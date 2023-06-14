@@ -60,7 +60,7 @@ The following arguments are supported:
 * `device_type` - (Optional, String) Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.
 * `engine_version` - (Optional, String, ForceNew) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7.
 * `fast_upgrade` - (Optional, Int) Specify whether to enable fast upgrade when upgrade instance spec, available value: `1` - enabled, `0` - disabled.
-* `first_slave_zone` - (Optional, String, ForceNew) Zone information about first slave instance.
+* `first_slave_zone` - (Optional, String) Zone information about first slave instance.
 * `force_delete` - (Optional, Bool) Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
 * `internet_service` - (Optional, Int) Indicates whether to enable the access to an instance from public network: 0 - No, 1 - Yes.
 * `intranet_port` - (Optional, Int) Public access port. Valid value ranges: [1024~65535]. The default value is `3306`.
@@ -71,10 +71,10 @@ The following arguments are supported:
 * `prepaid_period` - (Optional, Int) Period of instance. NOTES: Only supported prepaid instance.
 * `project_id` - (Optional, Int) Project ID, default value is 0.
 * `root_password` - (Optional, String) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
-* `second_slave_zone` - (Optional, String, ForceNew) Zone information about second slave instance.
+* `second_slave_zone` - (Optional, String) Zone information about second slave instance.
 * `security_groups` - (Optional, Set: [`String`]) Security groups to use.
-* `slave_deploy_mode` - (Optional, Int, ForceNew) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.
-* `slave_sync_mode` - (Optional, Int, ForceNew) Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
+* `slave_deploy_mode` - (Optional, Int) Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.
+* `slave_sync_mode` - (Optional, Int) Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
 * `subnet_id` - (Optional, String) Private network ID. If `vpc_id` is set, this value is required.
 * `tags` - (Optional, Map) Instance tags.
 * `vpc_id` - (Optional, String) ID of VPC, which can be modified once every 24 hours and can't be removed.

@@ -274,26 +274,22 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"slave_deploy_mode": {
 			Type:         schema.TypeInt,
 			Optional:     true,
-			ForceNew:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1}),
 			Default:      0,
 			Description:  "Availability zone deployment method. Available values: 0 - Single availability zone; 1 - Multiple availability zones.",
 		},
 		"first_slave_zone": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Description: "Zone information about first slave instance.",
 		},
 		"second_slave_zone": {
 			Type:        schema.TypeString,
-			ForceNew:    true,
 			Optional:    true,
 			Description: "Zone information about second slave instance.",
 		},
 		"slave_sync_mode": {
 			Type:         schema.TypeInt,
-			ForceNew:     true,
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
 			Default:      0,
@@ -1330,6 +1326,16 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	immutableArgs := []string{
+		"slave_deploy_mode", "first_slave_zone", "second_slave_zone", "slave_sync_mode",
+	}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	payType := getPayType(d).(int)
 
