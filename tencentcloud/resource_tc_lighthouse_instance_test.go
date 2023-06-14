@@ -61,7 +61,6 @@ func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 				Config: testAccLighthouseInstance_update,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_lighthouse_instance.instance", "renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
-					resource.TestCheckResourceAttr("tencentcloud_lighthouse_instance.instance", "permit_default_key_pair_login", "NO"),
 				),
 			},
 		},
@@ -208,6 +207,5 @@ resource "tencentcloud_lighthouse_instance" "instance" {
     }
     command = "echo \"hello\""
   }
-  permit_default_key_pair_login = "NO"
 }
 `

@@ -1276,6 +1276,11 @@ TencentDB for DBbrain(dbbrain)
 	tencentcloud_dbbrain_top_space_tables
 	tencentcloud_dbbrain_top_space_schema_time_series
 	tencentcloud_dbbrain_top_space_table_time_series
+	tencentcloud_dbbrain_diag_db_instances
+	tencentcloud_dbbrain_mysql_process_list
+	tencentcloud_dbbrain_no_primary_key_tables
+	tencentcloud_dbbrain_redis_top_big_keys
+	tencentcloud_dbbrain_redis_top_key_prefix_list
 
   Resource
 	tencentcloud_dbbrain_sql_filter
@@ -1971,6 +1976,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_dbbrain_top_space_tables":                  dataSourceTencentCloudDbbrainTopSpaceTables(),
 			"tencentcloud_dbbrain_top_space_schema_time_series":      dataSourceTencentCloudDbbrainTopSpaceSchemaTimeSeries(),
 			"tencentcloud_dbbrain_top_space_table_time_series":       dataSourceTencentCloudDbbrainTopSpaceTableTimeSeries(),
+			"tencentcloud_dbbrain_diag_db_instances":                 dataSourceTencentCloudDbbrainDiagDbInstances(),
+			"tencentcloud_dbbrain_mysql_process_list":                dataSourceTencentCloudDbbrainMysqlProcessList(),
+			"tencentcloud_dbbrain_no_primary_key_tables":             dataSourceTencentCloudDbbrainNoPrimaryKeyTables(),
+			"tencentcloud_dbbrain_redis_top_big_keys":                dataSourceTencentCloudDbbrainRedisTopBigKeys(),
+			"tencentcloud_dbbrain_redis_top_key_prefix_list":         dataSourceTencentCloudDbbrainRedisTopKeyPrefixList(),
 			"tencentcloud_dts_sync_jobs":                             dataSourceTencentCloudDtsSyncJobs(),
 			"tencentcloud_dts_compare_tasks":                         dataSourceTencentCloudDtsCompareTasks(),
 			"tencentcloud_dts_migrate_jobs":                          dataSourceTencentCloudDtsMigrateJobs(),
