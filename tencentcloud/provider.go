@@ -1397,6 +1397,9 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_usable_unit_namespaces
 	tencentcloud_tsf_group_instances
 	tencentcloud_tsf_group_config_release
+	tencentcloud_tsf_container_group
+	tencentcloud_tsf_groups
+	tencentcloud_tsf_ms_api_list
 
   Resource
   	tencentcloud_tsf_cluster
@@ -2052,6 +2055,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_usable_unit_namespaces":                dataSourceTencentCloudTsfUsableUnitNamespaces(),
 			"tencentcloud_tsf_group_instances":                       dataSourceTencentCloudTsfGroupInstances(),
 			"tencentcloud_tsf_group_config_release":                  dataSourceTencentCloudTsfGroupConfigRelease(),
+			"tencentcloud_tsf_container_group":                       dataSourceTencentCloudTsfContainerGroup(),
+			"tencentcloud_tsf_groups":                                dataSourceTencentCloudTsfGroups(),
+			"tencentcloud_tsf_ms_api_list":                           dataSourceTencentCloudTsfMsApiList(),
 			"tencentcloud_lighthouse_bundle":                         dataSourceTencentCloudLighthouseBundle(),
 			"tencentcloud_api_gateway_api_docs":                      dataSourceTencentCloudAPIGatewayAPIDocs(),
 			"tencentcloud_api_gateway_api_apps":                      dataSourceTencentCloudAPIGatewayAPIApps(),

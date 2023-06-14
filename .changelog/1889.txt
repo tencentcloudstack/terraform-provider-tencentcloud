@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_tsf_container_group
+```
+
+```release-note:new-data-source
+tencentcloud_tsf_groups
+```
+
+```release-note:new-data-source
+tencentcloud_tsf_ms_api_list
+```
