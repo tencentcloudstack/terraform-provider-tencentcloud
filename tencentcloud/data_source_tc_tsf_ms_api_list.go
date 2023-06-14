@@ -46,12 +46,12 @@ func dataSourceTencentCloudTsfMsApiList() *schema.Resource {
 						"total_count": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Quantity.Note: This field may return null, indicating that no valid value was found.",
+							Description: "Quantity.",
 						},
 						"content": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "api list .Note: This field may return null, indicating that no valid value was found.",
+							Description: "api list.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"path": {

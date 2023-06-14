@@ -1391,6 +1391,8 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_group_instances
 	tencentcloud_tsf_group_config_release
 	tencentcloud_tsf_container_group
+	tencentcloud_tsf_groups
+	tencentcloud_tsf_ms_api_list
 
   Resource
   	tencentcloud_tsf_cluster
