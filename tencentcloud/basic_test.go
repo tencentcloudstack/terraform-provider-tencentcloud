@@ -858,6 +858,14 @@ locals {
 }
 `
 
+// ref with `local.redis_id`
+const CommonPresetRedis = `
+locals {
+  redis_id = "crs-jf4ico4v"
+  redis_name = "Keep-terraform"
+}
+`
+
 // End of DCDB
 // SES
 const (
@@ -999,6 +1007,7 @@ const (
 	defaultTsfGWGroupId       = "group-vzd97zpy"
 	defaultTsfFileConfigId    = "dcfg-f-ab6l9x5y"
 	defaultTsfImageId         = "img-7r9vq8wd"
+	defaultTsfGWNamespaceId   = "namespace-vwgo38wy"
 )
 
 // End of TSF

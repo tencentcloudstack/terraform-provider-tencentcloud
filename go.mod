@@ -83,7 +83,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.529
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.644
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse v1.0.650
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.661
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf v1.0.674
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.669
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
