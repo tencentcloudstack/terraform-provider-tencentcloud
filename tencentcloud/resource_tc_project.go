@@ -1,7 +1,7 @@
 /*
 Provides a resource to create a project
 
-~> **NOTE:** Project can not be destoryed. If run `terraform destroy`, project will be set invisible.
+~> **NOTE:** Project can not be destroyed. If run `terraform destroy`, project will be set invisible.
 
 Example Usage
 
