@@ -181,7 +181,7 @@ resource "tencentcloud_postgresql_instance" "test" {
 
 The following arguments are supported:
 
-* `availability_zone` - (Required, String, ForceNew) Availability zone. NOTE: If value modified but included in `db_node_set`, the diff will be suppressed.
+* `availability_zone` - (Required, String) Availability zone. NOTE: This field could not be modified, please use `db_node_set` instead of modification. The changes on this field will be suppressed when using the `db_node_set`.
 * `memory` - (Required, Int) Memory size(in GB). Allowed value must be larger than `memory` that data source `tencentcloud_postgresql_specinfos` provides.
 * `name` - (Required, String) Name of the postgresql instance.
 * `root_password` - (Required, String) Password of root account. This parameter can be specified when you purchase master instances, but it should be ignored when you purchase read-only instances or disaster recovery instances.
