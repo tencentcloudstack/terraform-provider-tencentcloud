@@ -1,3 +1,49 @@
+## 1.81.7 (June 14, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_dbbrain_diag_db_instances` ([#1886](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1886))
+* **New Data Source:** `tencentcloud_dbbrain_mysql_process_list` ([#1886](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1886))
+* **New Data Source:** `tencentcloud_dbbrain_no_primary_key_tables` ([#1886](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1886))
+* **New Data Source:** `tencentcloud_dbbrain_redis_top_big_keys` ([#1886](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1886))
+* **New Data Source:** `tencentcloud_dbbrain_redis_top_key_prefix_list` ([#1886](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1886))
+* **New Data Source:** `tencentcloud_dcdb_file_download_url` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_instance_node_info` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_log_files` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_orders` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_price` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_project_security_groups` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_projects` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_renewal_price` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_sale_info` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_shard_spec` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_slow_logs` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_dcdb_upgrade_price` ([#1882](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1882))
+* **New Data Source:** `tencentcloud_projects` ([#1891](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1891))
+* **New Data Source:** `tencentcloud_tsf_container_group` ([#1889](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1889))
+* **New Data Source:** `tencentcloud_tsf_groups` ([#1889](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1889))
+* **New Data Source:** `tencentcloud_tsf_ms_api_list` ([#1889](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1889))
+* **New Resource:** `tencentcloud_project` ([#1891](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1891))
+* **New Resource:** `tencentcloud_redis_backup_operation` ([#1875](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1875))
+* **New Resource:** `tencentcloud_redis_replicate_attachment` ([#1875](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1875))
+* **New Resource:** `tencentcloud_tsf_deploy_container_group` ([#1868](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1868))
+* **New Resource:** `tencentcloud_tsf_deploy_vm_group` ([#1868](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1868))
+* **New Resource:** `tencentcloud_tsf_operate_container_group` ([#1868](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1868))
+* **New Resource:** `tencentcloud_tsf_operate_group` ([#1868](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1868))
+* **New Resource:** `tencentcloud_tsf_release_api_group` ([#1868](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1868))
+* **New Resource:** `tencentcloud_tsf_unit_namespace` ([#1868](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1868))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: Update the validation rules for the `bucket` parameter ([#1885](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1885))
+* resource/tencentcloud_mysql_instance: adjust `slave_deploy_mode`, `first_slave_zone`, `second_slave_zone` and `slave_sync_mode` to unchangeable. ([#1892](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1892))
+* resource/tencentcloud_postgresql_instance: adjust `availability_zone` to unchangeable. ([#1888](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1888))
+* resource/tencentcloud_security_group_rule_set: Add default values for the protocol and port fields. ([#1885](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1885))
+
+BUG FIXES:
+
+* resource/tencentcloud_instance: change key_ids null value ([#1883](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1883))
+
 ## 1.81.6 (June 09, 2023)
 
 FEATURES:
