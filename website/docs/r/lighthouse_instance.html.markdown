@@ -96,7 +96,7 @@ The following arguments are supported:
 * `is_update_bundle_id_auto_voucher` - (Optional, Bool) Whether the voucher is deducted automatically when update bundle id. Value range: `true`: indicates automatic deduction of vouchers, `false`: does not automatically deduct vouchers. Default value: `false`.
 * `isolate_data_disk` - (Optional, Bool) Whether to return the mounted data disk. `true`: returns both the instance and the mounted data disk; `false`: returns the instance and no longer returns its mounted data disk. Default: `true`.
 * `login_configuration` - (Optional, List) Login password of the instance. It is only available for Windows instances. If it is not specified, it means that the user choose to set the login password after the instance creation.
-* `permit_default_key_pair_login` - (Optional, String) Whether to allow login using the default key pair. `YES`: allow login; `NO`: disable login. Default: `YES`.
+* `permit_default_key_pair_login` - (Optional, String, **Deprecated**) It will be deprecated. Use `tencentcloud_lighthouse_key_pair_attachment` manage key pair. Whether to allow login using the default key pair. `YES`: allow login; `NO`: disable login. Default: `YES`.
 * `zone` - (Optional, String) List of availability zones. A random AZ is selected by default.
 
 The `containers` object supports the following:
