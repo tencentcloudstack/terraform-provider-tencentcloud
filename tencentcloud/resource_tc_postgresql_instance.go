@@ -305,8 +305,7 @@ func resourceTencentCloudPostgresqlInstance() *schema.Resource {
 			"availability_zone": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "Availability zone. NOTE: If value modified but included in `db_node_set`, the diff will be suppressed.",
+				Description: "Availability zone. NOTE: This field could not be modified, please use `db_node_set` instead of modification. The changes on this field will be suppressed when using the `db_node_set`.",
 				DiffSuppressFunc: func(k, o, n string, d *schema.ResourceData) bool {
 					if o == "" {
 						return false
@@ -1183,9 +1182,9 @@ func resourceTencentCloudPostgresqlInstanceUpdate(d *schema.ResourceData, meta i
 
 	}
 
-	if d.HasChange("zone") {
-		log.Printf("[WARN] argument `zone` modified, skip process")
-
+	if d.HasChange("availability_zone") {
+		log.Printf("[WARN] argument `availability_zone` modified, skip process")
+		return fmt.Errorf("The `availability_zone` cannot be modified, please use `db_node_set` instead of it.")
 	}
 
 	if d.HasChange("db_kernel_version") {

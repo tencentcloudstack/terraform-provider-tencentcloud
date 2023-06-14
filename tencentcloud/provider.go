@@ -45,6 +45,13 @@ Provider Data Sources
   tencentcloud_availability_zones_by_product
   tencentcloud_availability_zones
 
+Project
+  Data Source
+	tencentcloud_projects
+
+  Resource
+	tencentcloud_project
+
 Anti-DDoS(DayuV2)
   Data Source
     tencentcloud_dayu_eip
@@ -1390,6 +1397,9 @@ Tencent Service Framework(TSF)
 	tencentcloud_tsf_usable_unit_namespaces
 	tencentcloud_tsf_group_instances
 	tencentcloud_tsf_group_config_release
+	tencentcloud_tsf_container_group
+	tencentcloud_tsf_groups
+	tencentcloud_tsf_ms_api_list
 
   Resource
   	tencentcloud_tsf_cluster
@@ -1590,6 +1600,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_emr_nodes":                                 dataSourceTencentCloudEmrNodes(),
 			"tencentcloud_availability_zones":                        dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":             dataSourceTencentCloudAvailabilityZonesByProduct(),
+			"tencentcloud_projects":                                  dataSourceTencentCloudProjects(),
 			"tencentcloud_instances":                                 dataSourceTencentCloudInstances(),
 			"tencentcloud_instances_set":                             dataSourceTencentCloudInstancesSet(),
 			"tencentcloud_reserved_instances":                        dataSourceTencentCloudReservedInstances(),
@@ -2044,6 +2055,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_usable_unit_namespaces":                dataSourceTencentCloudTsfUsableUnitNamespaces(),
 			"tencentcloud_tsf_group_instances":                       dataSourceTencentCloudTsfGroupInstances(),
 			"tencentcloud_tsf_group_config_release":                  dataSourceTencentCloudTsfGroupConfigRelease(),
+			"tencentcloud_tsf_container_group":                       dataSourceTencentCloudTsfContainerGroup(),
+			"tencentcloud_tsf_groups":                                dataSourceTencentCloudTsfGroups(),
+			"tencentcloud_tsf_ms_api_list":                           dataSourceTencentCloudTsfMsApiList(),
 			"tencentcloud_lighthouse_bundle":                         dataSourceTencentCloudLighthouseBundle(),
 			"tencentcloud_api_gateway_api_docs":                      dataSourceTencentCloudAPIGatewayAPIDocs(),
 			"tencentcloud_api_gateway_api_apps":                      dataSourceTencentCloudAPIGatewayAPIApps(),
@@ -2069,6 +2083,7 @@ func Provider() *schema.Provider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
+			"tencentcloud_project":                                        resourceTencentCloudProject(),
 			"tencentcloud_emr_cluster":                                    resourceTencentCloudEmrCluster(),
 			"tencentcloud_instance":                                       resourceTencentCloudInstance(),
 			"tencentcloud_instance_set":                                   resourceTencentCloudInstanceSet(),

@@ -168,6 +168,7 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"YES", "NO"}),
+				Deprecated:   "It will be deprecated. Use `tencentcloud_lighthouse_key_pair_attachment` manage key pair.",
 				Description:  "Whether to allow login using the default key pair. `YES`: allow login; `NO`: disable login. Default: `YES`.",
 			},
 			"isolate_data_disk": {
