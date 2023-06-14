@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/pkg/errors"
@@ -116,5 +117,168 @@ func diffTags(oldTags, newTags map[string]interface{}) (replaceTags map[string]s
 			deleteTags = append(deleteTags, k)
 		}
 	}
+	return
+}
+
+func (me *TagService) DescribeProjectById(ctx context.Context, projectId uint64) (project *tag.Project, disable *uint64, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tag.NewDescribeProjectsRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	// query enable project
+	request.AllList = helper.Uint64(0)
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*tag.Project, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTagClient().DescribeProjects(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Projects) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Projects...)
+		if len(response.Response.Projects) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+
+	for _, instance := range instances {
+		if *instance.ProjectId == projectId {
+			project = instance
+			disable = helper.Uint64(0)
+			break
+		}
+	}
+
+	if project != nil {
+		return
+	}
+
+	// query all project
+	offset = 0
+	limit = 20
+
+	request.AllList = helper.Uint64(1)
+	instances = make([]*tag.Project, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTagClient().DescribeProjects(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Projects) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Projects...)
+		if len(response.Response.Projects) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+
+	for _, instance := range instances {
+		if *instance.ProjectId == projectId {
+			project = instance
+			disable = helper.Uint64(1)
+			break
+		}
+	}
+
+	return
+}
+
+func (me *TagService) DisableProjectById(ctx context.Context, projectId uint64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tag.NewUpdateProjectRequest()
+	request.ProjectId = &projectId
+	request.Disable = helper.Int64(1)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTagClient().UpdateProject(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TagService) DescribeProjects(ctx context.Context, param map[string]interface{}) (project []*tag.Project, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tag.NewDescribeProjectsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "AllList" {
+			request.AllList = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTagClient().DescribeProjects(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Projects) < 1 {
+			break
+		}
+		project = append(project, response.Response.Projects...)
+		if len(response.Response.Projects) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
 	return
 }

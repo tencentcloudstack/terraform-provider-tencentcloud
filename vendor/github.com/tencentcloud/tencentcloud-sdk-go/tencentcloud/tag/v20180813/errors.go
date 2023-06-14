@@ -17,14 +17,29 @@ package v20180813
 const (
 	// 此产品的特有错误码
 
+	// CAM签名/鉴权错误。
+	AUTHFAILURE = "AuthFailure"
+
 	// 未通过CAM鉴权。
 	AUTHFAILURE_UNAUTHORIZEDOPERATION = "AuthFailure.UnauthorizedOperation"
 
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// 项目已禁用。
+	FAILEDOPERATION_PROJECTDISABLED = "FailedOperation.ProjectDisabled"
+
+	// 项目数超过限制。
+	FAILEDOPERATION_PROJECTNUMEXCEED = "FailedOperation.ProjectNumExceed"
+
 	// 单次请求的资源appId必须相同。
 	FAILEDOPERATION_RESOURCEAPPIDNOTSAME = "FailedOperation.ResourceAppIdNotSame"
+
+	// 资源标签正在处理中。
+	FAILEDOPERATION_RESOURCETAGPROCESSING = "FailedOperation.ResourceTagProcessing"
+
+	// 标签已经关联配额。
+	FAILEDOPERATION_TAGATTACHEDQUOTA = "FailedOperation.TagAttachedQuota"
 
 	// 已关联资源的标签无法删除。
 	FAILEDOPERATION_TAGATTACHEDRESOURCE = "FailedOperation.TagAttachedResource"
@@ -32,11 +47,20 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// PaginationToken参数非法。
+	INVALIDPARAMETER_PAGINATIONTOKENINVALID = "InvalidParameter.PaginationTokenInvalid"
+
+	// 项目名称已存在。
+	INVALIDPARAMETER_PROJECTNAMEEXISTED = "InvalidParameter.ProjectNameExisted"
+
 	// 系统预留标签键 qcloud、tencent和project 禁止创建。
 	INVALIDPARAMETER_RESERVEDTAGKEY = "InvalidParameter.ReservedTagKey"
 
 	// Tag参数错误。
 	INVALIDPARAMETER_TAG = "InvalidParameter.Tag"
+
+	// 当前业务不支持标签操作。
+	INVALIDPARAMETER_UNSUPPORTEDSERVICE = "InvalidParameter.UnsupportedService"
 
 	// DeleteTags中不能包含ReplaceTags或AddTags中元素。
 	INVALIDPARAMETERVALUE_DELETETAGSPARAMERROR = "InvalidParameterValue.DeleteTagsParamError"
@@ -71,6 +95,9 @@ const (
 	// 标签键包含非法字符。
 	INVALIDPARAMETERVALUE_TAGKEYCHARACTERILLEGAL = "InvalidParameterValue.TagKeyCharacterIllegal"
 
+	// TagList中存在重复的TagKey。
+	INVALIDPARAMETERVALUE_TAGKEYDUPLICATE = "InvalidParameterValue.TagKeyDuplicate"
+
 	// 标签键不能为空值。
 	INVALIDPARAMETERVALUE_TAGKEYEMPTY = "InvalidParameterValue.TagKeyEmpty"
 
@@ -80,11 +107,20 @@ const (
 	// 标签值包含非法字符。
 	INVALIDPARAMETERVALUE_TAGVALUECHARACTERILLEGAL = "InvalidParameterValue.TagValueCharacterIllegal"
 
+	// 标签值不能为空值。
+	INVALIDPARAMETERVALUE_TAGVALUEEMPTY = "InvalidParameterValue.TagValueEmpty"
+
 	// 标签值长度超过限制。
 	INVALIDPARAMETERVALUE_TAGVALUELENGTHEXCEEDED = "InvalidParameterValue.TagValueLengthExceeded"
 
 	// Uin参数不合法。
 	INVALIDPARAMETERVALUE_UININVALID = "InvalidParameterValue.UinInvalid"
+
+	// 超过配额限制。
+	LIMITEXCEEDED = "LimitExceeded"
+
+	// 超过配额限制。
+	LIMITEXCEEDED_QUOTA = "LimitExceeded.Quota"
 
 	// 资源关联的标签数超过限制。
 	LIMITEXCEEDED_RESOURCEATTACHEDTAGS = "LimitExceeded.ResourceAttachedTags"
@@ -95,8 +131,14 @@ const (
 	// 用户创建标签键达到上限数 1000。
 	LIMITEXCEEDED_TAGKEY = "LimitExceeded.TagKey"
 
+	// 单次请求的标签数超过上限。
+	LIMITEXCEEDED_TAGNUMPERREQUEST = "LimitExceeded.TagNumPerRequest"
+
 	// 单个标签键对应标签值达到上限数 1000。
 	LIMITEXCEEDED_TAGVALUE = "LimitExceeded.TagValue"
+
+	// 缺少参数错误。
+	MISSINGPARAMETER = "MissingParameter"
 
 	// 操作被拒绝。
 	OPERATIONDENIED = "OperationDenied"
@@ -110,6 +152,12 @@ const (
 	// 资源关联的标签键不存在。
 	RESOURCENOTFOUND_ATTACHEDTAGKEYNOTFOUND = "ResourceNotFound.AttachedTagKeyNotFound"
 
+	// 记录不存在。
+	RESOURCENOTFOUND_RECORDNOTFOUND = "ResourceNotFound.RecordNotFound"
+
 	// 标签不存在。
 	RESOURCENOTFOUND_TAGNONEXIST = "ResourceNotFound.TagNonExist"
+
+	// 操作不支持。
+	UNSUPPORTEDOPERATION = "UnsupportedOperation"
 )

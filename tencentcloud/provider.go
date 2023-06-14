@@ -45,6 +45,13 @@ Provider Data Sources
   tencentcloud_availability_zones_by_product
   tencentcloud_availability_zones
 
+Project
+  Data Source
+	tencentcloud_projects
+
+  Resource
+	tencentcloud_project
+
 Anti-DDoS(DayuV2)
   Data Source
     tencentcloud_dayu_eip
@@ -1590,6 +1597,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_emr_nodes":                                 dataSourceTencentCloudEmrNodes(),
 			"tencentcloud_availability_zones":                        dataSourceTencentCloudAvailabilityZones(),
 			"tencentcloud_availability_zones_by_product":             dataSourceTencentCloudAvailabilityZonesByProduct(),
+			"tencentcloud_projects":                                  dataSourceTencentCloudProjects(),
 			"tencentcloud_instances":                                 dataSourceTencentCloudInstances(),
 			"tencentcloud_instances_set":                             dataSourceTencentCloudInstancesSet(),
 			"tencentcloud_reserved_instances":                        dataSourceTencentCloudReservedInstances(),
@@ -2069,6 +2077,7 @@ func Provider() *schema.Provider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
+			"tencentcloud_project":                                        resourceTencentCloudProject(),
 			"tencentcloud_emr_cluster":                                    resourceTencentCloudEmrCluster(),
 			"tencentcloud_instance":                                       resourceTencentCloudInstance(),
 			"tencentcloud_instance_set":                                   resourceTencentCloudInstanceSet(),
