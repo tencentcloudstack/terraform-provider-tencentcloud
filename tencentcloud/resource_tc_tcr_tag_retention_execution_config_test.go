@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudTcrTagRetentionExecutionConfigResource_basic(t *testing.T) {
@@ -13,7 +14,7 @@ func TestAccTencentCloudTcrTagRetentionExecutionConfigResource_basic(t *testing.
 		Steps: []resource.TestStep{
 			{
 				// Config: fmt.Sprintf(testAccTcrTagRetentionExecutionConfig, defaultTCRInstanceId),
-				Config: testAccTcrTagRetentionRule_manual, 
+				Config: testAccTcrTagRetentionRule_manual,
 				PreConfig: func() {
 					testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)

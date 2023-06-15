@@ -1576,13 +1576,13 @@ func (me *TCRService) TcrStateRefreshFunc(instanceId string, failStates []string
 	return func() (interface{}, string, error) {
 		ctx := contextNil
 
-		object,has, err := me.DescribeTCRInstanceById(ctx, instanceId)
+		object, has, err := me.DescribeTCRInstanceById(ctx, instanceId)
 
 		if err != nil {
 			return nil, "", err
 		}
 
-		if !has || object==nil{
+		if !has || object == nil {
 			return nil, "Closed", err
 		}
 
