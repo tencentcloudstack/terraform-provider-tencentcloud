@@ -298,7 +298,7 @@ func dataSourceTencentCloudLighthouseInstanceDisksRead(d *schema.ResourceData, m
 		diskList = append(diskList, diskMap)
 	}
 	d.SetId(helper.DataResourceIdsHash(ids))
-	d.Set("disk_list", diskList)
+	_ = d.Set("disk_list", diskList)
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), diskList); e != nil {
