@@ -1053,6 +1053,7 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_disk_config
 	tencentcloud_lighthouse_all_scene
 	tencentcloud_lighthouse_modify_instance_bundle
+	tencentcloud_lighthouse_disks
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -2077,6 +2078,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_instance_disk_num":              dataSourceTencentCloudLighthouseInstanceDiskNum(),
 			"tencentcloud_lighthouse_instance_blueprint":             dataSourceTencentCloudLighthouseInstanceBlueprint(),
 			"tencentcloud_lighthouse_disk_config":                    dataSourceTencentCloudLighthouseDiskConfig(),
+			"tencentcloud_lighthouse_disks":                          dataSourceTencentCloudLighthouseInstanceDisks(),
 			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                              dataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
