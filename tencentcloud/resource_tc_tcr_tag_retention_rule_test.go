@@ -55,6 +55,23 @@ func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccTcrTagRetentionRule_manual,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTCRTagRetentionRuleExists("tencentcloud_tcr_tag_retention_rule.my_rule"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "registry_id"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "namespace_name", "tf_test_ns_retention"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_execution_config.config", "registry_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_execution_config.config", "retention_id"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_execution_config.config", "dry_run", "false"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_execution_config.config", "execution_id"),
+				),
+			},
+			{
 				ResourceName:      "tencentcloud_tcr_tag_retention_rule.my_rule",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -199,5 +216,39 @@ resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
   cron_setting = "daily"
   disabled = true
 }
+
+`
+
+const testAccTcrTagRetentionRule_manual = testAccTCRInstance_retention + `
+
+resource "tencentcloud_tcr_namespace" "my_ns" {
+  instance_id    = tencentcloud_tcr_instance.mytcr_retention.id
+  name           = "tf_test_ns_retention"
+  is_public      = true
+  is_auto_scan   = true
+  is_prevent_vul = true
+  severity       = "medium"
+  cve_whitelist_items {
+    cve_id = "cve-xxxxx"
+  }
+}
+
+resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
+  registry_id    = tencentcloud_tcr_instance.mytcr_retention.id
+  namespace_name = tencentcloud_tcr_namespace.my_ns.name
+  retention_rule {
+    key   = "nDaysSinceLastPush"
+    value = 2
+  }
+  cron_setting = "manual"
+  disabled     = true
+}
+
+resource "tencentcloud_tcr_tag_retention_execution_config" "config" {
+  registry_id  = tencentcloud_tcr_tag_retention_rule.my_rule.registry_id
+  retention_id = tencentcloud_tcr_tag_retention_rule.my_rule.retention_id
+  dry_run      = false
+}
+
 
 `
