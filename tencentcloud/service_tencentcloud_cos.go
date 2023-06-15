@@ -1534,3 +1534,51 @@ func (me *CosService) parseCertId(configId string) (ret *CosBucketDomainCertItem
 	ret = &CosBucketDomainCertItem{bucket, domain}
 	return
 }
+
+func (me *CosService) DescribeCosBucketRefererById(ctx context.Context, bucket string) (*cos.BucketGetRefererResult, error) {
+	var errRet error
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "GetCIGuetzli", bucket, errRet.Error())
+		}
+	}()
+
+	resRaw, err := RetryWithContext(ctx, readRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		res, _, err := me.client.UseTencentCosClient(bucket).Bucket.GetReferer(ctx)
+		return res, err
+	})
+
+	if err != nil {
+		errRet = err
+		return nil, errRet
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIGuetzli", bucket)
+
+	return resRaw.(*cos.BucketGetRefererResult), nil
+}
+
+func (me *CosService) DescribeCosBucketVersionById(ctx context.Context, bucket string) (*cos.BucketGetVersionResult, error) {
+	var errRet error
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "GetCIGuetzli", bucket, errRet.Error())
+		}
+	}()
+
+	resRaw, err := RetryWithContext(ctx, readRetryTimeout, func(ctx context.Context) (interface{}, error) {
+		res, _, err := me.client.UseTencentCosClient(bucket).Bucket.GetVersioning(ctx)
+		return res, err
+	})
+
+	if err != nil {
+		errRet = err
+		return nil, errRet
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIGuetzli", bucket)
+
+	return resRaw.(*cos.BucketGetVersionResult), nil
+}
