@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_as_scaling_group_status
+```
+
+```release-note:new-resource
+tencentcloud_as_scale_in_instances
+```
+
+```release-note:new-resource
+tencentcloud_as_scale_out_instances
+```
+
+```release-note:new-resource
+tencentcloud_as_execute_scaling_policy
+```
