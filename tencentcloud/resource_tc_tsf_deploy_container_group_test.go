@@ -77,8 +77,20 @@ func TestAccTencentCloudTsfDeployContainerGroupResource_basic(t *testing.T) {
 
 const testAccTsfDeployContainerGroup = `
 
+resource "tencentcloud_tsf_group" "group" {
+	application_id = "application-v63x825v"
+	namespace_id = "namespace-ymp6522y"
+	group_name = "terraform-test"
+	cluster_id = "cls-kacd3xqy"
+	group_desc = "terraform desc"
+	alias = "terraform test"
+	tags = {
+	  "createdBy" = "terraform"
+	}
+}
+
 resource "tencentcloud_tsf_deploy_container_group" "deploy_container_group" {
-	group_id          = "group-yqml6w3a"
+	group_id          = tencentcloud_tsf_group.group.id
 	cpu_request       = "0.25"
 	mem_request       = "640"
 	server            = "ccr.ccs.tencentyun.com"

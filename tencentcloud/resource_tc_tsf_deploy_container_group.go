@@ -89,14 +89,12 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"group_id": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "group Id.",
 			},
 
 			"tag_name": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "image version name, v1.",
 			},
@@ -110,7 +108,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"server": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "image server.",
 			},
@@ -118,7 +115,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"reponame": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "old image name, eg: /tsf/server.",
 			},
@@ -126,7 +122,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"cpu_limit": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The maximum number of CPU cores for the business container, corresponding to the limit in K8S. If not specified, it defaults to twice the request.",
 			},
@@ -134,7 +129,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"mem_limit": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The maximum memory size in MiB for the business container, corresponding to the limit in K8S. If not specified, it defaults to twice the request.",
 			},
@@ -142,7 +136,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"jvm_opts": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "jvm options.",
 			},
@@ -150,7 +143,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"cpu_request": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The number of CPU cores allocated to the business container, corresponding to the request in K8S. The default value is 0.25.",
 			},
@@ -158,7 +150,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"mem_request": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The amount of memory in MiB allocated to the business container, corresponding to the request in K8S. The default value is 640 MiB.",
 			},
@@ -166,7 +157,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"do_not_start": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeBool,
 				Description: "Not start right away.",
 			},
@@ -174,7 +164,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"repo_name": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "(Priority use) New image name, such as /tsf/nginx.",
 			},
@@ -182,7 +171,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"update_type": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeInt,
 				Description: "Update method: 0 for fast update, 1 for rolling update.",
 			},
@@ -190,7 +178,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"update_ivl": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeInt,
 				Description: "update Interval, is required when rolling update.",
 			},
@@ -198,7 +185,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"agent_cpu_request": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The number of CPU cores allocated to the agent container corresponds to the request field in Kubernetes.",
 			},
@@ -206,7 +192,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"agent_cpu_limit": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The maximum number of CPU cores allocated to the agent container corresponds to the limit field in Kubernetes.",
 			},
@@ -214,7 +199,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"agent_mem_request": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The amount of memory in MiB allocated to the agent container corresponds to the request field in Kubernetes.",
 			},
@@ -222,7 +206,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"agent_mem_limit": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The maximum amount of memory in MiB allocated to the agent container corresponds to the &amp;#39;limit&amp;#39; field in Kubernetes.",
 			},
@@ -230,7 +213,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"istio_cpu_request": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The number of CPU cores allocated to the istio proxy container corresponds to the &amp;#39;request&amp;#39; field in Kubernetes.",
 			},
@@ -238,7 +220,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"istio_cpu_limit": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The maximum amount of CPU cores allocated to the istio proxy container corresponds to the &amp;#39;limit&amp;#39; field in Kubernetes.",
 			},
@@ -246,7 +227,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"istio_mem_request": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The amount of memory in MiB allocated to the agent container corresponds to the request field in Kubernetes.",
 			},
@@ -254,7 +234,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"istio_mem_limit": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "The maximum amount of memory in MiB allocated to the agent container corresponds to the request field in Kubernetes.",
 			},
@@ -262,7 +241,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"max_surge": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "MaxSurge parameter in Kubernetes rolling update strategy.",
 			},
@@ -270,14 +248,12 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"max_unavailable": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "MaxUnavailable parameter in Kubernetes rolling update strategy.",
 			},
 
 			"health_check_settings": {
 				Optional:    true,
-				ForceNew:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "The configuration information for health checks. If this parameter is not specified, the health check is not set by default.",
@@ -426,7 +402,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"envs": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeList,
 				Description: "The environment variables that the application runs in the deployment group. If this parameter is not specified, no additional environment variables are set by default.",
 				Elem: &schema.Resource{
@@ -493,7 +468,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 
 			"service_setting": {
 				Optional:    true,
-				Computed:    true,
 				ForceNew:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
@@ -577,7 +551,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"deploy_agent": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeBool,
 				Description: "Whether to deploy the agent container. If this parameter is not specified, the agent container will not be deployed by default.",
 			},
@@ -585,7 +558,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"scheduling_strategy": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "Node scheduling strategy. If this parameter is not specified, the node scheduling strategy will not be used by default.",
@@ -603,7 +575,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"incremental_deployment": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeBool,
 				Description: "Whether to perform incremental deployment. The default value is false, which means full update.",
 			},
@@ -611,7 +582,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"repo_type": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "repo type, tcr or leave it blank.",
 			},
@@ -619,7 +589,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"volume_info_list": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeList,
 				Description: "Volume information, as a list.",
 				Elem: &schema.Resource{
@@ -647,7 +616,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"volume_mount_info_list": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeList,
 				Description: "Volume mount point information, list type.",
 				Elem: &schema.Resource{
@@ -681,7 +649,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"volume_clean": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeBool,
 				Description: "Whether to clear the volume information. Default is false.",
 			},
@@ -689,7 +656,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"agent_profile_list": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeList,
 				Description: "javaagent info: SERVICE_AGENT/OT_AGENT.",
 				Elem: &schema.Resource{
@@ -713,7 +679,6 @@ func resourceTencentCloudTsfDeployContainerGroup() *schema.Resource {
 			"warmup_setting": {
 				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "warmup setting.",
@@ -1225,22 +1190,6 @@ func resourceTencentCloudTsfDeployContainerGroupRead(d *schema.ResourceData, met
 		_ = d.Set("mem_request", deployContainerGroup.MemRequest)
 	}
 
-	// if deployContainerGroup.DoNotStart != nil {
-	// 	_ = d.Set("do_not_start", deployContainerGroup.DoNotStart)
-	// }
-
-	// if deployContainerGroup.RepoName != nil {
-	// 	_ = d.Set("repo_name", deployContainerGroup.RepoName)
-	// }
-
-	if deployContainerGroup.UpdateType != nil {
-		_ = d.Set("update_type", deployContainerGroup.UpdateType)
-	}
-
-	if deployContainerGroup.UpdateIvl != nil {
-		_ = d.Set("update_ivl", deployContainerGroup.UpdateIvl)
-	}
-
 	if deployContainerGroup.AgentCpuRequest != nil {
 		_ = d.Set("agent_cpu_request", deployContainerGroup.AgentCpuRequest)
 	}
@@ -1538,15 +1487,11 @@ func resourceTencentCloudTsfDeployContainerGroupUpdate(d *schema.ResourceData, m
 	defer logElapsed("resource.tencentcloud_tsf_deploy_container_group.update")()
 	defer inconsistentCheck(d, meta)()
 	logId := getLogId(contextNil)
-
-	request := tsf.NewModifyContainerReplicasRequest()
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	groupId := d.Id()
 
-	request.GroupId = &groupId
-
-	immutableArgs := []string{"group_id", "tag_name", "server", "reponame", "cpu_limit", "mem_limit", "jvm_opts", "cpu_request", "mem_request", "do_not_start", "repo_name", "update_type", "update_ivl", "agent_cpu_request", "agent_cpu_limit", "agent_mem_request", "agent_mem_limit", "istio_cpu_request", "istio_cpu_limit", "istio_mem_request", "istio_mem_limit", "max_surge", "max_unavailable", "health_check_settings", "envs", "service_setting", "deploy_agent", "scheduling_strategy", "incremental_deployment", "repo_type", "volume_infos", "volume_mount_infos", "volume_info_list", "volume_mount_info_list", "volume_clean", "agent_profile_list", "warmup_setting"}
-
+	immutableArgs := []string{"group_id", "tag_name", "server", "reponame", "cpu_limit", "mem_limit", "jvm_opts", "cpu_request", "mem_request", "do_not_start", "repo_name", "agent_cpu_request", "agent_cpu_limit", "agent_mem_request", "agent_mem_limit", "istio_cpu_request", "istio_cpu_limit", "istio_mem_request", "istio_mem_limit", "max_surge", "max_unavailable", "health_check_settings", "envs", "deploy_agent", "scheduling_strategy", "incremental_deployment", "repo_type", "volume_infos", "volume_mount_infos", "volume_info_list", "volume_mount_info_list", "volume_clean", "agent_profile_list", "warmup_setting"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -1554,23 +1499,128 @@ func resourceTencentCloudTsfDeployContainerGroupUpdate(d *schema.ResourceData, m
 	}
 
 	if d.HasChange("instance_num") {
+		request := tsf.NewModifyContainerReplicasRequest()
+		request.GroupId = &groupId
 		if v, ok := d.GetOk("instance_num"); ok {
 			request.InstanceNum = helper.IntInt64(v.(int))
 		}
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().ModifyContainerReplicas(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update tsf unitRule failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
+		err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+			groupInfo, err := service.DescribeTsfStartContainerGroupById(ctx, groupId)
+			if err != nil {
+				return retryError(err)
+			}
+			if groupInfo == nil {
+				err = fmt.Errorf("group %s not exists", groupId)
+				return resource.NonRetryableError(err)
+			}
+			if *groupInfo.Status == "Running" {
+				return nil
+			}
+			if *groupInfo.Status == "Waiting" || *groupInfo.Status == "Updating" {
+				return resource.RetryableError(fmt.Errorf("update container group status is %s", *groupInfo.Status))
+			}
+			err = fmt.Errorf("update container group status is %v, we won't wait for it finish", *groupInfo.Status)
+			return resource.NonRetryableError(err)
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update container group, reason:%s\n ", logId, err.Error())
+			return err
+		}
 	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().ModifyContainerReplicas(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+	if d.HasChange("access_type") || d.HasChange("protocol_ports") || d.HasChange("update_type") || d.HasChange("update_ivl") || d.HasChange("subnet_id") {
+		request := tsf.NewModifyContainerGroupRequest()
+		request.GroupId = &groupId
+		if v, ok := d.GetOkExists("access_type"); ok {
+			request.AccessType = helper.IntInt64(v.(int))
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update tsf unitRule failed, reason:%+v", logId, err)
-		return err
+
+		if v, ok := d.GetOk("protocol_ports"); ok {
+			for _, item := range v.([]interface{}) {
+				dMap := item.(map[string]interface{})
+				protocolPort := tsf.ProtocolPort{}
+				if v, ok := dMap["protocol"]; ok {
+					protocolPort.Protocol = helper.String(v.(string))
+				}
+				if v, ok := dMap["port"]; ok {
+					protocolPort.Port = helper.IntInt64(v.(int))
+				}
+				if v, ok := dMap["target_port"]; ok {
+					protocolPort.TargetPort = helper.IntInt64(v.(int))
+				}
+				if v, ok := dMap["node_port"]; ok {
+					protocolPort.NodePort = helper.IntInt64(v.(int))
+				}
+				request.ProtocolPorts = append(request.ProtocolPorts, &protocolPort)
+			}
+		}
+
+		if v, ok := d.GetOkExists("update_type"); ok {
+			request.UpdateType = helper.IntInt64(v.(int))
+		}
+
+		if v, ok := d.GetOkExists("update_ivl"); ok {
+			request.UpdateIvl = helper.IntInt64(v.(int))
+		}
+
+		if v, ok := d.GetOk("subnet_id"); ok {
+			request.SubnetId = helper.String(v.(string))
+		}
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTsfClient().ModifyContainerGroup(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update tsf containGroup failed, reason:%+v", logId, err)
+			return err
+		}
+
+		service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
+		err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
+			groupInfo, err := service.DescribeTsfStartContainerGroupById(ctx, groupId)
+			if err != nil {
+				return retryError(err)
+			}
+			if groupInfo == nil {
+				err = fmt.Errorf("group %s not exists", groupId)
+				return resource.NonRetryableError(err)
+			}
+			if *groupInfo.Status == "Running" {
+				return nil
+			}
+			if *groupInfo.Status == "Waiting" || *groupInfo.Status == "Updating" {
+				return resource.RetryableError(fmt.Errorf("update container group status is %s", *groupInfo.Status))
+			}
+			err = fmt.Errorf("update container group status is %v, we won't wait for it finish", *groupInfo.Status)
+			return resource.NonRetryableError(err)
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update container group, reason:%s\n ", logId, err.Error())
+			return err
+		}
 	}
 
 	return resourceTencentCloudTsfDeployContainerGroupRead(d, meta)
@@ -1579,6 +1629,16 @@ func resourceTencentCloudTsfDeployContainerGroupUpdate(d *schema.ResourceData, m
 func resourceTencentCloudTsfDeployContainerGroupDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tsf_deploy_container_group.delete")()
 	defer inconsistentCheck(d, meta)()
+
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	service := TsfService{client: meta.(*TencentCloudClient).apiV3Conn}
+	groupId := d.Id()
+
+	if err := service.DeleteTsfContainGroupById(ctx, groupId); err != nil {
+		return err
+	}
 
 	return nil
 }
