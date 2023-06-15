@@ -400,6 +400,7 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_cluster_instance_groups
 	tencentcloud_cynosdb_cluster_params
 	tencentcloud_cynosdb_param_templates
+	tencentcloud_cynosdb_zone
 
   Resource
     tencentcloud_cynosdb_cluster
@@ -2018,6 +2019,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_cluster_instance_groups":           dataSourceTencentCloudCynosdbClusterInstanceGroups(),
 			"tencentcloud_cynosdb_cluster_params":                    dataSourceTencentCloudCynosdbClusterParams(),
 			"tencentcloud_cynosdb_param_templates":                   dataSourceTencentCloudCynosdbParamTemplates(),
+			"tencentcloud_cynosdb_zone":							  dataSourceTencentCloudCynosdbZone(),
 			"tencentcloud_cvm_instances_modification":                dataSourceTencentCloudCvmInstancesModification(),
 			"tencentcloud_css_domains":                               dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                       dataSourceTencentCloudChdfsAccessGroups(),

@@ -1057,3 +1057,41 @@ func (me *CynosdbService) CynosdbInstanceOfflineStateRefreshFunc(clusterId strin
 		return detail, helper.PString(detail.Status), nil
 	}
 }
+
+func (me *CynosdbService) DescribeCynosdbZoneByFilter(ctx context.Context, param map[string]interface{}) (zone []*cynosdb.SaleRegion, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cynosdb.NewDescribeZonesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "IncludeVirtualZones" {
+			request.IncludeVirtualZones = v.(*bool)
+		}
+		if k == "ShowPermission" {
+			request.ShowPermission = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCynosdbClient().DescribeZones(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.RegionSet) < 1 {
+		return
+	}
+	
+	zone = response.Response.RegionSet
+
+	return
+}
