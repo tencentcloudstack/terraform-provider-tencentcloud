@@ -362,6 +362,45 @@ func (me *LightHouseService) DescribeLighthouseDiskById(ctx context.Context, dis
 	return
 }
 
+func (me *LightHouseService) DescribeLighthouseDisk(ctx context.Context, diskIds []string, filters []*lighthouse.Filter) (disks []*lighthouse.Disk, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeDisksRequest()
+	if len(diskIds) > 0 {
+		request.DiskIds = helper.Strings(diskIds)
+	} else {
+		request.Filters = filters
+	}
+
+	var offset int64 = 0
+	var pageSize int64 = 20
+	disks = make([]*lighthouse.Disk, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseLighthouseClient().DescribeDisks(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.DiskSet) < 1 {
+			break
+		}
+		disks = append(disks, response.Response.DiskSet...)
+		if len(response.Response.DiskSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
+	return
+}
+
 func (me *LightHouseService) LighthouseDiskStateRefreshFunc(diskId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil
