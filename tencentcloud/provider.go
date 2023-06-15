@@ -2200,6 +2200,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_switch_master_slave_operation":            resourceTencentCloudMysqlSwitchMasterSlaveOperation(),
 			"tencentcloud_cos_bucket":                                     resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                              resourceTencentCloudCosBucketObject(),
+			"tencentcloud_cos_bucket_referer":                             resourceTencentCloudCosBucketReferer(),
+			"tencentcloud_cos_bucket_version":                             resourceTencentCloudCosBucketVersion(),
 			"tencentcloud_cfs_file_system":                                resourceTencentCloudCfsFileSystem(),
 			"tencentcloud_cfs_access_group":                               resourceTencentCloudCfsAccessGroup(),
 			"tencentcloud_cfs_access_rule":                                resourceTencentCloudCfsAccessRule(),
