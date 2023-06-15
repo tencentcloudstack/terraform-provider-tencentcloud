@@ -67,7 +67,7 @@ func resourceTencentCloudTcrTagRetentionRule() *schema.Resource {
 
 			"retention_id": {
 				Computed:    true,
-				Type:        schema.TypeString,
+				Type:        schema.TypeInt,
 				Description: "The ID of the retention task.",
 			},
 

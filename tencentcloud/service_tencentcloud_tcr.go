@@ -1571,3 +1571,21 @@ func (me *TCRService) TcrTagRetentionExecutionConfigStateRefreshFunc(registryId 
 		return object, helper.PString(object.Status), nil
 	}
 }
+
+func (me *TCRService) TcrStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object,has, err := me.DescribeTCRInstanceById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if !has || object==nil{
+			return nil, "Closed", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
