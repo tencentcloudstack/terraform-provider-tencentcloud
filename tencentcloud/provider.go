@@ -138,6 +138,7 @@ Auto Scaling(AS)
   Resource
     tencentcloud_as_scaling_config
     tencentcloud_as_scaling_group
+	tencentcloud_as_scaling_group_status
     tencentcloud_as_attachment
     tencentcloud_as_scaling_policy
     tencentcloud_as_schedule
@@ -147,6 +148,9 @@ Auto Scaling(AS)
     tencentcloud_as_protect_instances
     tencentcloud_as_start_instances
     tencentcloud_as_stop_instances
+	tencentcloud_as_scale_in_instances
+	tencentcloud_as_scale_out_instances
+	tencentcloud_as_execute_scaling_policy
 
 Content Delivery Network(CDN)
   Data Source
@@ -2268,6 +2272,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_load_balancer":                               resourceTencentCloudAsLoadBalancer(),
 			"tencentcloud_as_scaling_config":                              resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                               resourceTencentCloudAsScalingGroup(),
+			"tencentcloud_as_scaling_group_status":                        resourceTencentCloudAsScalingGroupStatus(),
 			"tencentcloud_as_attachment":                                  resourceTencentCloudAsAttachment(),
 			"tencentcloud_as_scaling_policy":                              resourceTencentCloudAsScalingPolicy(),
 			"tencentcloud_as_schedule":                                    resourceTencentCloudAsSchedule(),
@@ -2277,6 +2282,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_protect_instances":                           resourceTencentCloudAsProtectInstances(),
 			"tencentcloud_as_start_instances":                             resourceTencentCloudAsStartInstances(),
 			"tencentcloud_as_stop_instances":                              resourceTencentCloudAsStopInstances(),
+			"tencentcloud_as_scale_in_instances":                          resourceTencentCloudAsScaleInInstances(),
+			"tencentcloud_as_scale_out_instances":                         resourceTencentCloudAsScaleOutInstances(),
+			"tencentcloud_as_execute_scaling_policy":                      resourceTencentCloudAsExecuteScalingPolicy(),
 			"tencentcloud_mongodb_instance":                               resourceTencentCloudMongodbInstance(),
 			"tencentcloud_mongodb_sharding_instance":                      resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_mongodb_instance_account":                       resourceTencentCloudMongodbInstanceAccount(),
