@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_tcr_tag_retention_execution_config
+```
+
+```release-note:enhancement
+resource/tencentcloud_mysql_instance: add a computed field `retention_id`.
+```
