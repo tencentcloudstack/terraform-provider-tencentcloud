@@ -334,6 +334,8 @@ Cloud Object Storage(COS)
     tencentcloud_cos_bucket
     tencentcloud_cos_bucket_object
     tencentcloud_cos_bucket_policy
+    tencentcloud_cos_bucket_referer
+    tencentcloud_cos_bucket_version
 	tencentcloud_cos_bucket_domain_certificate_attachment
 
 Cloud Virtual Machine(CVM)
