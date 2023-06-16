@@ -5,14 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
-  service_name   = "niceservice"
-  protocol       = "http&https"
-  service_desc   = "your nice service"
-  net_type       = ["INNER", "OUTER"]
-  ip_version     = "IPv4"
-  release_limit  = 500
-  pre_limit      = 500
-  test_limit     = 500
+  service_name = "test-service"
+  protocol     = "http&https"
+  service_desc = "test"
+  net_type     = ["INNER", "OUTER"]
+  ip_version   = "IPv4"
+  tags {
+    tag_key   = "test-key"
+    tag_value = "test-value"
+  }
+  release_limit = 500
+  pre_limit     = 500
+  test_limit    = 500
 }
 ```
 
@@ -89,6 +93,25 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue(API_GATEWAY_NET_IP_VERSIONS),
 				Description:  "IP version number. Valid values: `IPv4`, `IPv6`. Default value: `IPv4`.",
 			},
+			"tags": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "tag list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"tag_key": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "tag key.",
+						},
+						"tag_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "tag value.",
+						},
+					},
+				},
+			},
 			"release_limit": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -108,11 +131,6 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Description: "API QPS value. Enter a positive number to limit the API query rate per second `QPS`.",
 			},
 			// Computed values.
-			"internal_sub_domain": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Private network access subdomain name.",
-			},
 			"outer_sub_domain": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -167,40 +185,6 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 					},
 				},
 			},
-			"api_list": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "A list of APIs.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"api_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "ID of the API.",
-						},
-						"api_name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Name of the API.",
-						},
-						"api_desc": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Description of the API.",
-						},
-						"path": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Path of the API.",
-						},
-						"method": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "Method of the API.",
-						},
-					},
-				},
-			},
 		},
 	}
 }
@@ -218,13 +202,27 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 		exclusiveSetName  = d.Get("exclusive_set_name").(string)
 		ipVersion         = d.Get("ip_version").(string)
 		netTypes          = helper.InterfacesStrings(d.Get("net_type").(*schema.Set).List())
+		tags              []*apigateway.Tag
 		serviceId         string
 		err               error
-
-		releaseLimit int
-		preLimit     int
-		testLimit    int
+		releaseLimit      int
+		preLimit          int
+		testLimit         int
 	)
+
+	if v, ok := d.GetOk("tags"); ok {
+		for _, item := range v.([]interface{}) {
+			tagsMap := item.(map[string]interface{})
+			tag := apigateway.Tag{}
+			if v, ok := tagsMap["tag_key"]; ok {
+				tag.Key = helper.String(v.(string))
+			}
+			if v, ok := tagsMap["tag_value"]; ok {
+				tag.Value = helper.String(v.(string))
+			}
+			tags = append(tags, &tag)
+		}
+	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		serviceId, err = apiGatewayService.CreateService(ctx,
@@ -235,7 +233,8 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 			ipVersion,
 			"",
 			"",
-			netTypes)
+			netTypes,
+			tags)
 
 		if err != nil {
 			if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -245,21 +244,25 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 			}
 			return retryError(err)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
 
 	//wait service create ok
 	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, has, inErr := apiGatewayService.DescribeService(ctx, serviceId)
+		_, has, inErr := apiGatewayService.DescribeServiceStatusById(ctx, serviceId)
 		if inErr != nil {
 			return retryError(inErr, InternalError)
 		}
+
 		if has {
 			return nil
 		}
+
 		return resource.RetryableError(fmt.Errorf("service %s not found on server", serviceId))
 
 	}); err != nil {
@@ -313,7 +316,7 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 		serviceId         = d.Id()
 		ctx               = context.WithValue(context.TODO(), logIdKey, logId)
 		apiGatewayService = APIGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
-		info              apigateway.DescribeServiceResponse
+		info              apigateway.Service
 		has               bool
 		err               error
 
@@ -323,10 +326,11 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	)
 
 	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		info, has, err = apiGatewayService.DescribeService(ctx, serviceId)
+		info, has, err = apiGatewayService.DescribeServiceStatusById(ctx, serviceId)
 		if err != nil {
 			return retryError(err, InternalError)
 		}
+
 		return nil
 	}); err != nil {
 		return err
@@ -336,22 +340,8 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
-	var apiList = make([]map[string]interface{}, 0, len(info.Response.ApiIdStatusSet))
-
-	for _, item := range info.Response.ApiIdStatusSet {
-		apiList = append(
-			apiList, map[string]interface{}{
-				"api_id":   item.ApiId,
-				"api_name": item.ApiName,
-				"api_desc": item.ApiDesc,
-				"path":     item.Path,
-				"method":   item.Method,
-			})
-	}
-
 	var plans []*apigateway.ApiUsagePlan
-
-	var planList = make([]map[string]interface{}, 0, len(info.Response.ApiIdStatusSet))
+	var planList = make([]map[string]interface{}, 0)
 	var hasContains = make(map[string]bool)
 
 	//from service
@@ -360,6 +350,7 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 		if err != nil {
 			return retryError(err, InternalError)
 		}
+
 		return nil
 	}); err != nil {
 		return err
@@ -386,6 +377,7 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 			return retryError(err, InternalError)
 		}
 		return nil
+
 	}); err != nil {
 		return err
 	}
@@ -400,19 +392,27 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 			})
 	}
 
-	_ = d.Set("service_name", info.Response.ServiceName)
-	_ = d.Set("protocol", info.Response.Protocol)
-	_ = d.Set("service_desc", info.Response.ServiceDesc)
-	_ = d.Set("exclusive_set_name", info.Response.ExclusiveSetName)
-	_ = d.Set("ip_version", info.Response.IpVersion)
-	_ = d.Set("net_type", info.Response.NetTypes)
-	_ = d.Set("internal_sub_domain", info.Response.InternalSubDomain)
-	_ = d.Set("outer_sub_domain", info.Response.OuterSubDomain)
-	_ = d.Set("inner_http_port", info.Response.InnerHttpPort)
-	_ = d.Set("inner_https_port", info.Response.InnerHttpsPort)
-	_ = d.Set("modify_time", info.Response.ModifiedTime)
-	_ = d.Set("create_time", info.Response.CreatedTime)
-	_ = d.Set("api_list", apiList)
+	_ = d.Set("service_name", info.ServiceName)
+	_ = d.Set("protocol", info.Protocol)
+	_ = d.Set("service_desc", info.ServiceDesc)
+	_ = d.Set("exclusive_set_name", info.ExclusiveSetName)
+	_ = d.Set("ip_version", info.IpVersion)
+	_ = d.Set("net_type", info.NetTypes)
+	if info.Tags != nil {
+		tagSets := make([]map[string]interface{}, 0, len(info.Tags))
+		for _, item := range info.Tags {
+			tagSets = append(tagSets, map[string]interface{}{
+				"tag_key":   item.Key,
+				"tag_value": item.Value,
+			})
+		}
+		_ = d.Set("tags", tagSets)
+	}
+	_ = d.Set("outer_sub_domain", info.OuterSubDomain)
+	_ = d.Set("inner_http_port", info.InnerHttpPort)
+	_ = d.Set("inner_https_port", info.InnerHttpsPort)
+	_ = d.Set("modify_time", info.ModifiedTime)
+	_ = d.Set("create_time", info.CreatedTime)
 	_ = d.Set("usage_plan_list", planList)
 
 	environmentList, err := apiGatewayService.DescribeServiceEnvironmentStrategyList(ctx, serviceId)
@@ -457,6 +457,14 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_api_gateway_service.update")()
 
+	immutableArgs := []string{"tags"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	var (
 		logId             = getLogId(contextNil)
 		ctx               = context.WithValue(context.TODO(), logIdKey, logId)
@@ -472,6 +480,7 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 		preLimit     int
 		testLimit    int
 	)
+
 	d.Partial(true)
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if err = apiGatewayService.ModifyService(ctx,
@@ -482,8 +491,10 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 			netTypes); err != nil {
 			return retryError(err)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -547,19 +558,24 @@ func resourceTencentCloudAPIGatewayServiceDelete(d *schema.ResourceData, meta in
 			if err = apiGatewayService.UnReleaseService(ctx, serviceId, env); err != nil {
 				return retryError(err)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
 	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if err = apiGatewayService.DeleteService(ctx, serviceId); err != nil {
+		err = apiGatewayService.DeleteService(ctx, serviceId)
+		if err != nil {
 			return retryError(err)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}

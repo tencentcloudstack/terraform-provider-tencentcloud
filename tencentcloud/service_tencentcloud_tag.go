@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -281,4 +282,33 @@ func (me *TagService) DescribeProjects(ctx context.Context, param map[string]int
 	}
 
 	return
+}
+
+func (me *TagService) DeleteResourceTags(ctx context.Context, tagKey string, resource string) (errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tag.NewDeleteResourceTagRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.TagKey = &tagKey
+	request.Resource = &resource
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTagClient().DeleteResourceTag(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if response == nil {
+		return fmt.Errorf("DeleteResourceTag API fail, return nil response")
+	}
+
+	return nil
 }

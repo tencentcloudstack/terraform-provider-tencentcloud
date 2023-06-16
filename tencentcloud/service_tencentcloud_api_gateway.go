@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	apigateway "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -515,7 +516,8 @@ func (me *APIGatewayService) CreateService(ctx context.Context,
 	ipVersion,
 	setServerName,
 	appidType string,
-	netTypes []string) (serviceId string, errRet error) {
+	netTypes []string,
+	tags []*apigateway.Tag) (serviceId string, errRet error) {
 
 	request := apigateway.NewCreateServiceRequest()
 	request.ServiceName = &serviceName
@@ -536,6 +538,9 @@ func (me *APIGatewayService) CreateService(ctx context.Context,
 		request.SetServerName = &setServerName
 	}
 	request.NetTypes = helper.Strings(netTypes)
+	if tags != nil {
+		request.Tags = tags
+	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAPIGatewayClient().CreateService(request)
@@ -562,6 +567,35 @@ func (me *APIGatewayService) DescribeService(ctx context.Context, serviceId stri
 		return
 	}
 	info = *response
+	has = true
+	return
+}
+
+func (me *APIGatewayService) DescribeServiceStatusById(ctx context.Context, serviceId string) (info apigateway.Service, has bool, errRet error) {
+	request := apigateway.NewDescribeServicesStatusRequest()
+	request.Filters = []*apigateway.Filter{
+		{
+			Name:   common.StringPtr("ServiceId"),
+			Values: common.StringPtrs([]string{serviceId}),
+		},
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseAPIGatewayClient().DescribeServicesStatus(request)
+	if err != nil {
+		if sdkError, ok := err.(*errors.TencentCloudSDKError); ok && sdkError.Code == SERVICE_ERR_CODE {
+			return
+		}
+
+		errRet = err
+		return
+	}
+
+	if response == nil || *response.Response.Result.TotalCount == 0 {
+		return
+	}
+
+	info = *response.Response.Result.ServiceSet[0]
 	has = true
 	return
 }

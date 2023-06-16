@@ -15,11 +15,15 @@ Use this resource to create API gateway service.
 
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
-  service_name  = "niceservice"
-  protocol      = "http&https"
-  service_desc  = "your nice service"
-  net_type      = ["INNER", "OUTER"]
-  ip_version    = "IPv4"
+  service_name = "test-service"
+  protocol     = "http&https"
+  service_desc = "test"
+  net_type     = ["INNER", "OUTER"]
+  ip_version   = "IPv4"
+  tags {
+    tag_key   = "test-key"
+    tag_value = "test-value"
+  }
   release_limit = 500
   pre_limit     = 500
   test_limit    = 500
@@ -38,23 +42,22 @@ The following arguments are supported:
 * `pre_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 * `release_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 * `service_desc` - (Optional, String) Custom service description.
+* `tags` - (Optional, List) tag list.
 * `test_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
+
+The `tags` object supports the following:
+
+* `tag_key` - (Optional, String) tag key.
+* `tag_value` - (Optional, String) tag value.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-* `api_list` - A list of APIs.
-  * `api_desc` - Description of the API.
-  * `api_id` - ID of the API.
-  * `api_name` - Name of the API.
-  * `method` - Method of the API.
-  * `path` - Path of the API.
 * `create_time` - Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 * `inner_http_port` - Port number for http access over private network.
 * `inner_https_port` - Port number for https access over private network.
-* `internal_sub_domain` - Private network access subdomain name.
 * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 * `outer_sub_domain` - Public network access subdomain name.
 * `usage_plan_list` - A list of attach usage plans.
