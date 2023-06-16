@@ -12,7 +12,8 @@ import (
 var testAPIGatewayServiceResourceName = "tencentcloud_api_gateway_service"
 var testAPIGatewayServiceResourceKey = testAPIGatewayServiceResourceName + ".service"
 
-func TestAccTencentCloudNeedFixAPIGateWayServiceResource(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudAPIGateWayServiceResource_basic -v
+func TestAccTencentCloudAPIGateWayServiceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -36,9 +37,10 @@ func TestAccTencentCloudNeedFixAPIGateWayServiceResource(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      testAPIGatewayServiceResourceKey,
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            testAPIGatewayServiceResourceKey,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"modify_time"},
 			},
 			{
 				Config: testAccAPIGatewayServiceUpdate,
@@ -121,6 +123,9 @@ resource "tencentcloud_api_gateway_service" "service" {
   service_desc     = "my nice service"
   net_type         = ["INNER"]
   ip_version       = "IPv4"
+  tags         = {
+    test-key = "test-value"
+  }
   release_limit    = 500
   pre_limit        = 500
   test_limit       = 500
@@ -133,6 +138,9 @@ resource "tencentcloud_api_gateway_service" "service" {
   service_desc     = "your nice service"
   net_type         = ["INNER", "OUTER"]
   ip_version       = "IPv4"
+  tags         = {
+    test-key1 = "test-value1"
+  }
   release_limit    = 100
   pre_limit        = 100
   test_limit       = 100
