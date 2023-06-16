@@ -5,14 +5,14 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "test-service"
+  service_name = "test-del"
   protocol     = "http&https"
   service_desc = "test"
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
-  tags {
-    tag_key   = "test-key"
-    tag_value = "test-value"
+  tags         = {
+    test-key1 = "test-value1"
+    test-key2 = "test-value2"
   }
   release_limit = 500
   pre_limit     = 500
@@ -94,23 +94,9 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Description:  "IP version number. Valid values: `IPv4`, `IPv6`. Default value: `IPv4`.",
 			},
 			"tags": {
-				Type:        schema.TypeList,
+				Type:        schema.TypeMap,
 				Optional:    true,
-				Description: "tag list.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"tag_key": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "tag key.",
-						},
-						"tag_value": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "tag value.",
-						},
-					},
-				},
+				Description: "Tag description list.",
 			},
 			"release_limit": {
 				Type:        schema.TypeInt,
@@ -202,27 +188,12 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 		exclusiveSetName  = d.Get("exclusive_set_name").(string)
 		ipVersion         = d.Get("ip_version").(string)
 		netTypes          = helper.InterfacesStrings(d.Get("net_type").(*schema.Set).List())
-		tags              []*apigateway.Tag
 		serviceId         string
 		err               error
 		releaseLimit      int
 		preLimit          int
 		testLimit         int
 	)
-
-	if v, ok := d.GetOk("tags"); ok {
-		for _, item := range v.([]interface{}) {
-			tagsMap := item.(map[string]interface{})
-			tag := apigateway.Tag{}
-			if v, ok := tagsMap["tag_key"]; ok {
-				tag.Key = helper.String(v.(string))
-			}
-			if v, ok := tagsMap["tag_value"]; ok {
-				tag.Value = helper.String(v.(string))
-			}
-			tags = append(tags, &tag)
-		}
-	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		serviceId, err = apiGatewayService.CreateService(ctx,
@@ -233,8 +204,7 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 			ipVersion,
 			"",
 			"",
-			netTypes,
-			tags)
+			netTypes)
 
 		if err != nil {
 			if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -298,6 +268,15 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 	if testLimit != 0 {
 		_, err = apiGatewayService.ModifyServiceEnvironmentStrategy(ctx, serviceId, int64(testLimit), []string{API_GATEWAY_SERVICE_ENV_TEST})
 		if err != nil {
+			return err
+		}
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::apigw:%s:uin/:service/%s", region, serviceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
 	}
@@ -398,16 +377,6 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("exclusive_set_name", info.ExclusiveSetName)
 	_ = d.Set("ip_version", info.IpVersion)
 	_ = d.Set("net_type", info.NetTypes)
-	if info.Tags != nil {
-		tagSets := make([]map[string]interface{}, 0, len(info.Tags))
-		for _, item := range info.Tags {
-			tagSets = append(tagSets, map[string]interface{}{
-				"tag_key":   item.Key,
-				"tag_value": item.Value,
-			})
-		}
-		_ = d.Set("tags", tagSets)
-	}
 	_ = d.Set("outer_sub_domain", info.OuterSubDomain)
 	_ = d.Set("inner_http_port", info.InnerHttpPort)
 	_ = d.Set("inner_https_port", info.InnerHttpsPort)
@@ -451,19 +420,20 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("test_limit", testLimit)
 	_ = d.Set("release_limit", releaseLimit)
 
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "apigw", "service", tcClient.Region, serviceId)
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
 func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_api_gateway_service.update")()
-
-	immutableArgs := []string{"tags"}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 
 	var (
 		logId             = getLogId(contextNil)
@@ -536,6 +506,17 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 			}
 		}
 
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("apigw", "service", tcClient.Region, serviceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	d.Partial(false)

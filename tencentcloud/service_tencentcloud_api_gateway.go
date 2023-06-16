@@ -516,8 +516,7 @@ func (me *APIGatewayService) CreateService(ctx context.Context,
 	ipVersion,
 	setServerName,
 	appidType string,
-	netTypes []string,
-	tags []*apigateway.Tag) (serviceId string, errRet error) {
+	netTypes []string) (serviceId string, errRet error) {
 
 	request := apigateway.NewCreateServiceRequest()
 	request.ServiceName = &serviceName
@@ -538,9 +537,6 @@ func (me *APIGatewayService) CreateService(ctx context.Context,
 		request.SetServerName = &setServerName
 	}
 	request.NetTypes = helper.Strings(netTypes)
-	if tags != nil {
-		request.Tags = tags
-	}
 
 	ratelimit.Check(request.GetAction())
 	response, err := me.client.UseAPIGatewayClient().CreateService(request)
