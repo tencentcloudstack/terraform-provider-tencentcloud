@@ -1,3 +1,27 @@
+## 1.81.8 (June 16, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_lighthouse_disks` ([#1895](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1895))
+* **New Data Source:** `tencentcloud_tcr_replication_instance_create_tasks` ([#1900](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1900))
+* **New Data Source:** `tencentcloud_tcr_replication_instance_sync_status` ([#1900](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1900))
+* **New Data Source:** `tencentcloud_tcr_tag_retention_executions` ([#1900](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1900))
+* **New Resource:** `tencentcloud_as_execute_scaling_policy` ([#1897](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1897))
+* **New Resource:** `tencentcloud_as_scale_in_instances` ([#1897](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1897))
+* **New Resource:** `tencentcloud_as_scale_out_instances` ([#1897](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1897))
+* **New Resource:** `tencentcloud_as_scaling_group_status` ([#1897](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1897))
+* **New Resource:** `tencentcloud_cos_bucket_referer` ([#1894](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1894))
+* **New Resource:** `tencentcloud_cos_bucket_version` ([#1894](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1894))
+* **New Resource:** `tencentcloud_tcr_tag_retention_execution_config` ([#1896](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1896))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_api_gateway_service: support param `tags`. ([#1898](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1898))
+* resource/tencentcloud_lighthouse_instance: offline param `permit_default_key_pair_login` ([#1899](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1899))
+* resource/tencentcloud_tcm_mesh: support `inject` and `sidecar_resources`. ([#1893](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1893))
+* resource/tencentcloud_tcr_instance: support to update `instance_charge_type_prepaid_period` field. ([#1896](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1896))
+* resource/tencentcloud_tcr_tag_retention_rule: add a computed field `retention_id`. ([#1896](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1896))
+
 ## 1.81.7 (June 14, 2023)
 
 FEATURES:
