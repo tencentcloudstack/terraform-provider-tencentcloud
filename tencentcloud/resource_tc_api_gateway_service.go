@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "test-del"
+  service_name = "niceservice"
   protocol     = "http&https"
-  service_desc = "test"
+  service_desc = "your nice service"
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
   tags         = {
