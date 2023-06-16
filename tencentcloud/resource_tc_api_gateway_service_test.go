@@ -12,7 +12,8 @@ import (
 var testAPIGatewayServiceResourceName = "tencentcloud_api_gateway_service"
 var testAPIGatewayServiceResourceKey = testAPIGatewayServiceResourceName + ".service"
 
-func TestAccTencentCloudNeedFixAPIGateWayServiceResource(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudApiGateWayServiceResource_basic -v
+func TestAccTencentCloudApiGateWayServiceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -30,15 +31,17 @@ func TestAccTencentCloudNeedFixAPIGateWayServiceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "create_time"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "internal_sub_domain"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "inner_http_port"),
+					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "tags.test-key", "test-value"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "release_limit", "500"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "pre_limit", "500"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "test_limit", "500"),
 				),
 			},
 			{
-				ResourceName:      testAPIGatewayServiceResourceKey,
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            testAPIGatewayServiceResourceKey,
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"modify_time"},
 			},
 			{
 				Config: testAccAPIGatewayServiceUpdate,
@@ -53,6 +56,7 @@ func TestAccTencentCloudNeedFixAPIGateWayServiceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "internal_sub_domain"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "outer_sub_domain"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "inner_http_port"),
+					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "tags.test-key1", "test-value1"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "release_limit", "100"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "pre_limit", "100"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "test_limit", "100"),
@@ -121,6 +125,9 @@ resource "tencentcloud_api_gateway_service" "service" {
   service_desc     = "my nice service"
   net_type         = ["INNER"]
   ip_version       = "IPv4"
+  tags         = {
+    test-key = "test-value"
+  }
   release_limit    = 500
   pre_limit        = 500
   test_limit       = 500
@@ -133,6 +140,9 @@ resource "tencentcloud_api_gateway_service" "service" {
   service_desc     = "your nice service"
   net_type         = ["INNER", "OUTER"]
   ip_version       = "IPv4"
+  tags         = {
+    test-key1 = "test-value1"
+  }
   release_limit    = 100
   pre_limit        = 100
   test_limit       = 100

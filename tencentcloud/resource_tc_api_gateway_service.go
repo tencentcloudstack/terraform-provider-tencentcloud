@@ -5,14 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
-  service_name   = "niceservice"
-  protocol       = "http&https"
-  service_desc   = "your nice service"
-  net_type       = ["INNER", "OUTER"]
-  ip_version     = "IPv4"
-  release_limit  = 500
-  pre_limit      = 500
-  test_limit     = 500
+  service_name = "niceservice"
+  protocol     = "http&https"
+  service_desc = "your nice service"
+  net_type     = ["INNER", "OUTER"]
+  ip_version   = "IPv4"
+  tags         = {
+    test-key1 = "test-value1"
+    test-key2 = "test-value2"
+  }
+  release_limit = 500
+  pre_limit     = 500
+  test_limit    = 500
 }
 ```
 
@@ -88,6 +92,11 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Default:      "IPv4",
 				ValidateFunc: validateAllowedStringValue(API_GATEWAY_NET_IP_VERSIONS),
 				Description:  "IP version number. Valid values: `IPv4`, `IPv6`. Default value: `IPv4`.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
 			},
 			"release_limit": {
 				Type:        schema.TypeInt,
@@ -299,6 +308,15 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 		}
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::apigw:%s:uin/:service/%s", region, serviceId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	d.SetId(serviceId)
 
 	return resourceTencentCloudAPIGatewayServiceRead(d, meta)
@@ -451,6 +469,15 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("test_limit", testLimit)
 	_ = d.Set("release_limit", releaseLimit)
 
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "apigw", "service", tcClient.Region, serviceId)
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -525,6 +552,17 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 			}
 		}
 
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("apigw", "service", tcClient.Region, serviceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	d.Partial(false)
