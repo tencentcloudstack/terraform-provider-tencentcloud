@@ -740,6 +740,9 @@ type CreateInstanceRequestParams struct {
 
 	// 是否同步TCR云标签至生成的COS Bucket
 	SyncTag *bool `json:"SyncTag,omitempty" name:"SyncTag"`
+
+	// 是否开启Cos桶多AZ特性
+	EnableCosMAZ *bool `json:"EnableCosMAZ,omitempty" name:"EnableCosMAZ"`
 }
 
 type CreateInstanceRequest struct {
@@ -762,6 +765,9 @@ type CreateInstanceRequest struct {
 
 	// 是否同步TCR云标签至生成的COS Bucket
 	SyncTag *bool `json:"SyncTag,omitempty" name:"SyncTag"`
+
+	// 是否开启Cos桶多AZ特性
+	EnableCosMAZ *bool `json:"EnableCosMAZ,omitempty" name:"EnableCosMAZ"`
 }
 
 func (r *CreateInstanceRequest) ToJsonString() string {
@@ -782,6 +788,7 @@ func (r *CreateInstanceRequest) FromJsonString(s string) error {
 	delete(f, "RegistryChargeType")
 	delete(f, "RegistryChargePrepaid")
 	delete(f, "SyncTag")
+	delete(f, "EnableCosMAZ")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstanceRequest has unknown keys!", "")
 	}
@@ -3120,6 +3127,9 @@ type DeleteSecurityPolicyRequestParams struct {
 
 	// 白名单版本
 	PolicyVersion *string `json:"PolicyVersion,omitempty" name:"PolicyVersion"`
+
+	// 网段或IP(互斥)
+	CidrBlock *string `json:"CidrBlock,omitempty" name:"CidrBlock"`
 }
 
 type DeleteSecurityPolicyRequest struct {
@@ -3133,6 +3143,9 @@ type DeleteSecurityPolicyRequest struct {
 
 	// 白名单版本
 	PolicyVersion *string `json:"PolicyVersion,omitempty" name:"PolicyVersion"`
+
+	// 网段或IP(互斥)
+	CidrBlock *string `json:"CidrBlock,omitempty" name:"CidrBlock"`
 }
 
 func (r *DeleteSecurityPolicyRequest) ToJsonString() string {
@@ -3150,6 +3163,7 @@ func (r *DeleteSecurityPolicyRequest) FromJsonString(s string) error {
 	delete(f, "RegistryId")
 	delete(f, "PolicyIndex")
 	delete(f, "PolicyVersion")
+	delete(f, "CidrBlock")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteSecurityPolicyRequest has unknown keys!", "")
 	}
@@ -4447,97 +4461,6 @@ func (r *DescribeInstanceAllNamespacesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeInstanceAllNamespacesResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type DescribeInstanceAllRequestParams struct {
-	// 实例ID列表(为空时，
-	// 表示获取账号下所有实例)
-	Registryids []*string `json:"Registryids,omitempty" name:"Registryids"`
-
-	// 偏移量,默认0
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
-
-	// 最大输出条数，默认20，最大为100
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
-
-	// 过滤条件
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
-
-	// 获取所有地域的实例，默认为False
-	AllRegion *bool `json:"AllRegion,omitempty" name:"AllRegion"`
-}
-
-type DescribeInstanceAllRequest struct {
-	*tchttp.BaseRequest
-	
-	// 实例ID列表(为空时，
-	// 表示获取账号下所有实例)
-	Registryids []*string `json:"Registryids,omitempty" name:"Registryids"`
-
-	// 偏移量,默认0
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
-
-	// 最大输出条数，默认20，最大为100
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
-
-	// 过滤条件
-	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
-
-	// 获取所有地域的实例，默认为False
-	AllRegion *bool `json:"AllRegion,omitempty" name:"AllRegion"`
-}
-
-func (r *DescribeInstanceAllRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *DescribeInstanceAllRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "Registryids")
-	delete(f, "Offset")
-	delete(f, "Limit")
-	delete(f, "Filters")
-	delete(f, "AllRegion")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeInstanceAllRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type DescribeInstanceAllResponseParams struct {
-	// 总实例个数
-	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
-
-	// 实例信息列表
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Registries []*Registry `json:"Registries,omitempty" name:"Registries"`
-
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-}
-
-type DescribeInstanceAllResponse struct {
-	*tchttp.BaseResponse
-	Response *DescribeInstanceAllResponseParams `json:"Response"`
-}
-
-func (r *DescribeInstanceAllResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *DescribeInstanceAllResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

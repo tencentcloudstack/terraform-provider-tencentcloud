@@ -446,6 +446,10 @@ func NewCreateImageLifecyclePersonalResponse() (response *CreateImageLifecyclePe
 }
 
 // CreateImageLifecyclePersonal
+// 前端与现有逻辑均不再使用，可下线
+//
+// 
+//
 // 用于在个人版中创建清理策略
 //
 // 可能返回的错误码:
@@ -458,6 +462,10 @@ func (c *Client) CreateImageLifecyclePersonal(request *CreateImageLifecyclePerso
 }
 
 // CreateImageLifecyclePersonal
+// 前端与现有逻辑均不再使用，可下线
+//
+// 
+//
 // 用于在个人版中创建清理策略
 //
 // 可能返回的错误码:
@@ -506,6 +514,7 @@ func NewCreateImmutableTagRulesResponse() (response *CreateImmutableTagRulesResp
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
@@ -520,6 +529,7 @@ func (c *Client) CreateImmutableTagRules(request *CreateImmutableTagRulesRequest
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_ERRORTCRRESOURCECONFLICT = "InternalError.ErrorTcrResourceConflict"
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
@@ -872,6 +882,7 @@ func NewCreateMultipleSecurityPolicyResponse() (response *CreateMultipleSecurity
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_ERRORGETDBDATAERROR = "FailedOperation.ErrorGetDBDataError"
 //  FAILEDOPERATION_GETDBDATAERROR = "FailedOperation.GetDBDataError"
 //  FAILEDOPERATION_GETTCRCLIENT = "FailedOperation.GetTcrClient"
 //  INTERNALERROR = "InternalError"
@@ -891,6 +902,7 @@ func (c *Client) CreateMultipleSecurityPolicy(request *CreateMultipleSecurityPol
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_DEPENDENCEERROR = "FailedOperation.DependenceError"
+//  FAILEDOPERATION_ERRORGETDBDATAERROR = "FailedOperation.ErrorGetDBDataError"
 //  FAILEDOPERATION_GETDBDATAERROR = "FailedOperation.GetDBDataError"
 //  FAILEDOPERATION_GETTCRCLIENT = "FailedOperation.GetTcrClient"
 //  INTERNALERROR = "InternalError"
@@ -1021,6 +1033,7 @@ func NewCreateNamespacePersonalResponse() (response *CreateNamespacePersonalResp
 // 创建个人版镜像仓库命名空间，此命名空间全局唯一
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ERRNAMESPACEEXIST = "InvalidParameter.ErrNamespaceExist"
 //  INVALIDPARAMETER_ERRNAMESPACERESERVED = "InvalidParameter.ErrNamespaceReserved"
@@ -1036,6 +1049,7 @@ func (c *Client) CreateNamespacePersonal(request *CreateNamespacePersonalRequest
 // 创建个人版镜像仓库命名空间，此命名空间全局唯一
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETER_ERRNAMESPACEEXIST = "InvalidParameter.ErrNamespaceExist"
 //  INVALIDPARAMETER_ERRNAMESPACERESERVED = "InvalidParameter.ErrNamespaceReserved"
@@ -1413,6 +1427,7 @@ func NewCreateSignaturePolicyResponse() (response *CreateSignaturePolicyResponse
 // 创建镜像签名策略
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSignaturePolicy(request *CreateSignaturePolicyRequest) (response *CreateSignaturePolicyResponse, err error) {
@@ -1423,6 +1438,7 @@ func (c *Client) CreateSignaturePolicy(request *CreateSignaturePolicyRequest) (r
 // 创建镜像签名策略
 //
 // 可能返回的错误码:
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSignaturePolicyWithContext(ctx context.Context, request *CreateSignaturePolicyRequest) (response *CreateSignaturePolicyResponse, err error) {
@@ -1942,6 +1958,10 @@ func NewDeleteImageLifecyclePersonalResponse() (response *DeleteImageLifecyclePe
 }
 
 // DeleteImageLifecyclePersonal
+// 前端与后端目前现有逻辑均不再使用，可下线
+//
+// 
+//
 // 用于在个人版镜像仓库中删除仓库Tag自动清理策略
 //
 // 可能返回的错误码:
@@ -1953,6 +1973,10 @@ func (c *Client) DeleteImageLifecyclePersonal(request *DeleteImageLifecyclePerso
 }
 
 // DeleteImageLifecyclePersonal
+// 前端与后端目前现有逻辑均不再使用，可下线
+//
+// 
+//
 // 用于在个人版镜像仓库中删除仓库Tag自动清理策略
 //
 // 可能返回的错误码:
@@ -2826,6 +2850,10 @@ func NewDeleteSecurityPolicyResponse() (response *DeleteSecurityPolicyResponse) 
 // DeleteSecurityPolicy
 // 删除实例公网访问白名单策略
 //
+// 
+//
+// 注意：当PolicyIndex和CidrBlock同时存在时，CidrBlock优先级更高
+//
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DbError"
@@ -2841,6 +2869,10 @@ func (c *Client) DeleteSecurityPolicy(request *DeleteSecurityPolicyRequest) (res
 
 // DeleteSecurityPolicy
 // 删除实例公网访问白名单策略
+//
+// 
+//
+// 注意：当PolicyIndex和CidrBlock同时存在时，CidrBlock优先级更高
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -3881,70 +3913,6 @@ func (c *Client) DescribeImmutableTagRulesWithContext(ctx context.Context, reque
     request.SetContext(ctx)
     
     response = NewDescribeImmutableTagRulesResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewDescribeInstanceAllRequest() (request *DescribeInstanceAllRequest) {
-    request = &DescribeInstanceAllRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstanceAll")
-    
-    
-    return
-}
-
-func NewDescribeInstanceAllResponse() (response *DescribeInstanceAllResponse) {
-    response = &DescribeInstanceAllResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DescribeInstanceAll
-// 查询全部实例信息
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DBERROR = "InternalError.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINSUFFICIENT_ERRORINSTANCENOTRUNNING = "ResourceInsufficient.ErrorInstanceNotRunning"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeInstanceAll(request *DescribeInstanceAllRequest) (response *DescribeInstanceAllResponse, err error) {
-    return c.DescribeInstanceAllWithContext(context.Background(), request)
-}
-
-// DescribeInstanceAll
-// 查询全部实例信息
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_DBERROR = "InternalError.DbError"
-//  INVALIDPARAMETER = "InvalidParameter"
-//  MISSINGPARAMETER = "MissingParameter"
-//  OPERATIONDENIED = "OperationDenied"
-//  RESOURCEINSUFFICIENT_ERRORINSTANCENOTRUNNING = "ResourceInsufficient.ErrorInstanceNotRunning"
-//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
-//  UNKNOWNPARAMETER = "UnknownParameter"
-//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
-func (c *Client) DescribeInstanceAllWithContext(ctx context.Context, request *DescribeInstanceAllRequest) (response *DescribeInstanceAllResponse, err error) {
-    if request == nil {
-        request = NewDescribeInstanceAllRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeInstanceAll require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDescribeInstanceAllResponse()
     err = c.Send(request, response)
     return
 }

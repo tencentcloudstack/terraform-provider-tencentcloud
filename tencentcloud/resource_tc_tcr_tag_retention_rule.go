@@ -65,12 +65,11 @@ func resourceTencentCloudTcrTagRetentionRule() *schema.Resource {
 				Description: "The Name of the namespace.",
 			},
 
-			// retain for tencentcloud_tcr_tag_retention_executions
-			// "retention_id": {
-			// 	Computed:    true,
-			// 	Type:        schema.TypeString,
-			// 	Description: "The ID of the retention task.",
-			// },
+			"retention_id": {
+				Computed:    true,
+				Type:        schema.TypeInt,
+				Description: "The ID of the retention task.",
+			},
 
 			"retention_rule": {
 				Required:    true,
@@ -221,10 +220,9 @@ func resourceTencentCloudTcrTagRetentionRuleRead(d *schema.ResourceData, meta in
 
 	_ = d.Set("registry_id", registryId)
 
-	// retain for tencentcloud_tcr_tag_retention_executions
-	// if TagRetentionRule.RetentionId != nil {
-	// 	_ = d.Set("retention_id", TagRetentionRule.RetentionId)
-	// }
+	if TagRetentionRule.RetentionId != nil {
+		_ = d.Set("retention_id", TagRetentionRule.RetentionId)
+	}
 
 	if TagRetentionRule.NamespaceName != nil {
 		_ = d.Set("namespace_name", TagRetentionRule.NamespaceName)

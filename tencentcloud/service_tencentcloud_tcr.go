@@ -1528,6 +1528,68 @@ func (me *TCRService) DescribeTcrTagRetentionExecutionTasksByFilter(ctx context.
 	return
 }
 
+func (me *TCRService) DescribeTcrTagRetentionExecutionConfigById(ctx context.Context, registryId string, retentionId string) (TagRetentionExecutionConfig *tcr.RetentionExecution, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDescribeTagRetentionExecutionRequest()
+	request.RegistryId = &registryId
+	request.RetentionId = helper.StrToInt64Point(retentionId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DescribeTagRetentionExecution(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RetentionExecutionList) < 1 {
+		return
+	}
+
+	TagRetentionExecutionConfig = response.Response.RetentionExecutionList[0]
+	return
+}
+
+func (me *TCRService) TcrTagRetentionExecutionConfigStateRefreshFunc(registryId string, retentionId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeTcrTagRetentionExecutionConfigById(ctx, registryId, retentionId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
+func (me *TCRService) TcrStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, has, err := me.DescribeTCRInstanceById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if !has || object == nil {
+			return nil, "Closed", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
 // func (me *TCRService) DescribeTcrSignaturePolicyById(ctx context.Context, registryId string, namespaceName string, policyName string) (SignaturePolicy *tcr.TcrNamespaceInfo, errRet error) {
 // 	logId := getLogId(ctx)
 
