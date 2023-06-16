@@ -50,9 +50,16 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `api_list` - A list of APIs.
+  * `api_desc` - Description of the API.
+  * `api_id` - ID of the API.
+  * `api_name` - Name of the API.
+  * `method` - Method of the API.
+  * `path` - Path of the API.
 * `create_time` - Creation time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 * `inner_http_port` - Port number for http access over private network.
 * `inner_https_port` - Port number for https access over private network.
+* `internal_sub_domain` - Private network access subdomain name.
 * `modify_time` - Last modified time in the format of YYYY-MM-DDThh:mm:ssZ according to ISO 8601 standard. UTC time is used.
 * `outer_sub_domain` - Public network access subdomain name.
 * `usage_plan_list` - A list of attach usage plans.
