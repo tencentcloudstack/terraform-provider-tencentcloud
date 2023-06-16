@@ -834,6 +834,9 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_images
 	tencentcloud_tcr_image_manifests
 	tencentcloud_tcr_tag_retention_execution_tasks
+	tencentcloud_tcr_tag_retention_executions
+	tencentcloud_tcr_replication_instance_create_tasks
+	tencentcloud_tcr_replication_instance_sync_status
 
   Resource
 	tencentcloud_tcr_instance
@@ -1906,6 +1909,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_tcr_images":                                dataSourceTencentCloudTcrImages(),
 			"tencentcloud_tcr_image_manifests":                       dataSourceTencentCloudTcrImageManifests(),
 			"tencentcloud_tcr_tag_retention_execution_tasks":         dataSourceTencentCloudTcrTagRetentionExecutionTasks(),
+			"tencentcloud_tcr_tag_retention_executions":              dataSourceTencentCloudTcrTagRetentionExecutions(),
+			"tencentcloud_tcr_replication_instance_create_tasks":     dataSourceTencentCloudTcrReplicationInstanceCreateTasks(),
+			"tencentcloud_tcr_replication_instance_sync_status":      dataSourceTencentCloudTcrReplicationInstanceSyncStatus(),
 			"tencentcloud_address_templates":                         dataSourceTencentCloudAddressTemplates(),
 			"tencentcloud_address_template_groups":                   dataSourceTencentCloudAddressTemplateGroups(),
 			"tencentcloud_protocol_templates":                        dataSourceTencentCloudProtocolTemplates(),
