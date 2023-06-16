@@ -12,8 +12,8 @@ import (
 var testAPIGatewayServiceResourceName = "tencentcloud_api_gateway_service"
 var testAPIGatewayServiceResourceKey = testAPIGatewayServiceResourceName + ".service"
 
-// go test -i; go test -test.run TestAccTencentCloudAPIGateWayServiceResource_basic -v
-func TestAccTencentCloudAPIGateWayServiceResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudApiGateWayServiceResource_basic -v
+func TestAccTencentCloudApiGateWayServiceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -31,7 +31,7 @@ func TestAccTencentCloudAPIGateWayServiceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "create_time"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "internal_sub_domain"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "inner_http_port"),
-					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "tags"),
+					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "tags.test-key", "test-value"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "release_limit", "500"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "pre_limit", "500"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "test_limit", "500"),
@@ -56,7 +56,7 @@ func TestAccTencentCloudAPIGateWayServiceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "internal_sub_domain"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "outer_sub_domain"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "inner_http_port"),
-					resource.TestCheckResourceAttrSet(testAPIGatewayServiceResourceKey, "tags"),
+					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "tags.test-key1", "test-value1"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "release_limit", "100"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "pre_limit", "100"),
 					resource.TestCheckResourceAttr(testAPIGatewayServiceResourceKey, "test_limit", "100"),
