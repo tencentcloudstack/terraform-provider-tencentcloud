@@ -117,6 +117,11 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Description: "API QPS value. Enter a positive number to limit the API query rate per second `QPS`.",
 			},
 			// Computed values.
+			"internal_sub_domain": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Private network access subdomain name.",
+			},
 			"outer_sub_domain": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -171,6 +176,40 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 					},
 				},
 			},
+			"api_list": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "A list of APIs.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"api_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "ID of the API.",
+						},
+						"api_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Name of the API.",
+						},
+						"api_desc": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Description of the API.",
+						},
+						"path": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Path of the API.",
+						},
+						"method": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Method of the API.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -190,9 +229,10 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 		netTypes          = helper.InterfacesStrings(d.Get("net_type").(*schema.Set).List())
 		serviceId         string
 		err               error
-		releaseLimit      int
-		preLimit          int
-		testLimit         int
+
+		releaseLimit int
+		preLimit     int
+		testLimit    int
 	)
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -214,25 +254,21 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 			}
 			return retryError(err)
 		}
-
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
 
 	//wait service create ok
 	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, has, inErr := apiGatewayService.DescribeServiceStatusById(ctx, serviceId)
+		_, has, inErr := apiGatewayService.DescribeService(ctx, serviceId)
 		if inErr != nil {
 			return retryError(inErr, InternalError)
 		}
-
 		if has {
 			return nil
 		}
-
 		return resource.RetryableError(fmt.Errorf("service %s not found on server", serviceId))
 
 	}); err != nil {
@@ -295,7 +331,7 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 		serviceId         = d.Id()
 		ctx               = context.WithValue(context.TODO(), logIdKey, logId)
 		apiGatewayService = APIGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
-		info              apigateway.Service
+		info              apigateway.DescribeServiceResponse
 		has               bool
 		err               error
 
@@ -305,11 +341,10 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	)
 
 	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		info, has, err = apiGatewayService.DescribeServiceStatusById(ctx, serviceId)
+		info, has, err = apiGatewayService.DescribeService(ctx, serviceId)
 		if err != nil {
 			return retryError(err, InternalError)
 		}
-
 		return nil
 	}); err != nil {
 		return err
@@ -319,8 +354,22 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 		return nil
 	}
 
+	var apiList = make([]map[string]interface{}, 0, len(info.Response.ApiIdStatusSet))
+
+	for _, item := range info.Response.ApiIdStatusSet {
+		apiList = append(
+			apiList, map[string]interface{}{
+				"api_id":   item.ApiId,
+				"api_name": item.ApiName,
+				"api_desc": item.ApiDesc,
+				"path":     item.Path,
+				"method":   item.Method,
+			})
+	}
+
 	var plans []*apigateway.ApiUsagePlan
-	var planList = make([]map[string]interface{}, 0)
+
+	var planList = make([]map[string]interface{}, 0, len(info.Response.ApiIdStatusSet))
 	var hasContains = make(map[string]bool)
 
 	//from service
@@ -329,7 +378,6 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 		if err != nil {
 			return retryError(err, InternalError)
 		}
-
 		return nil
 	}); err != nil {
 		return err
@@ -356,7 +404,6 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 			return retryError(err, InternalError)
 		}
 		return nil
-
 	}); err != nil {
 		return err
 	}
@@ -371,17 +418,19 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 			})
 	}
 
-	_ = d.Set("service_name", info.ServiceName)
-	_ = d.Set("protocol", info.Protocol)
-	_ = d.Set("service_desc", info.ServiceDesc)
-	_ = d.Set("exclusive_set_name", info.ExclusiveSetName)
-	_ = d.Set("ip_version", info.IpVersion)
-	_ = d.Set("net_type", info.NetTypes)
-	_ = d.Set("outer_sub_domain", info.OuterSubDomain)
-	_ = d.Set("inner_http_port", info.InnerHttpPort)
-	_ = d.Set("inner_https_port", info.InnerHttpsPort)
-	_ = d.Set("modify_time", info.ModifiedTime)
-	_ = d.Set("create_time", info.CreatedTime)
+	_ = d.Set("service_name", info.Response.ServiceName)
+	_ = d.Set("protocol", info.Response.Protocol)
+	_ = d.Set("service_desc", info.Response.ServiceDesc)
+	_ = d.Set("exclusive_set_name", info.Response.ExclusiveSetName)
+	_ = d.Set("ip_version", info.Response.IpVersion)
+	_ = d.Set("net_type", info.Response.NetTypes)
+	_ = d.Set("internal_sub_domain", info.Response.InternalSubDomain)
+	_ = d.Set("outer_sub_domain", info.Response.OuterSubDomain)
+	_ = d.Set("inner_http_port", info.Response.InnerHttpPort)
+	_ = d.Set("inner_https_port", info.Response.InnerHttpsPort)
+	_ = d.Set("modify_time", info.Response.ModifiedTime)
+	_ = d.Set("create_time", info.Response.CreatedTime)
+	_ = d.Set("api_list", apiList)
 	_ = d.Set("usage_plan_list", planList)
 
 	environmentList, err := apiGatewayService.DescribeServiceEnvironmentStrategyList(ctx, serviceId)
@@ -450,7 +499,6 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 		preLimit     int
 		testLimit    int
 	)
-
 	d.Partial(true)
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		if err = apiGatewayService.ModifyService(ctx,
@@ -461,10 +509,8 @@ func resourceTencentCloudAPIGatewayServiceUpdate(d *schema.ResourceData, meta in
 			netTypes); err != nil {
 			return retryError(err)
 		}
-
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
@@ -539,24 +585,19 @@ func resourceTencentCloudAPIGatewayServiceDelete(d *schema.ResourceData, meta in
 			if err = apiGatewayService.UnReleaseService(ctx, serviceId, env); err != nil {
 				return retryError(err)
 			}
-
 			return nil
 		})
-
 		if err != nil {
 			return err
 		}
 	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		err = apiGatewayService.DeleteService(ctx, serviceId)
-		if err != nil {
+		if err = apiGatewayService.DeleteService(ctx, serviceId); err != nil {
 			return retryError(err)
 		}
-
 		return nil
 	})
-
 	if err != nil {
 		return err
 	}
