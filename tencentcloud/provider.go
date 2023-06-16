@@ -138,6 +138,7 @@ Auto Scaling(AS)
   Resource
     tencentcloud_as_scaling_config
     tencentcloud_as_scaling_group
+	tencentcloud_as_scaling_group_status
     tencentcloud_as_attachment
     tencentcloud_as_scaling_policy
     tencentcloud_as_schedule
@@ -147,6 +148,9 @@ Auto Scaling(AS)
     tencentcloud_as_protect_instances
     tencentcloud_as_start_instances
     tencentcloud_as_stop_instances
+	tencentcloud_as_scale_in_instances
+	tencentcloud_as_scale_out_instances
+	tencentcloud_as_execute_scaling_policy
 
 Content Delivery Network(CDN)
   Data Source
@@ -341,6 +345,8 @@ Cloud Object Storage(COS)
     tencentcloud_cos_bucket
     tencentcloud_cos_bucket_object
     tencentcloud_cos_bucket_policy
+    tencentcloud_cos_bucket_referer
+    tencentcloud_cos_bucket_version
 	tencentcloud_cos_bucket_domain_certificate_attachment
 
 Cloud Virtual Machine(CVM)
@@ -828,6 +834,9 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_images
 	tencentcloud_tcr_image_manifests
 	tencentcloud_tcr_tag_retention_execution_tasks
+	tencentcloud_tcr_tag_retention_executions
+	tencentcloud_tcr_replication_instance_create_tasks
+	tencentcloud_tcr_replication_instance_sync_status
 
   Resource
 	tencentcloud_tcr_instance
@@ -1054,6 +1063,7 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_disk_config
 	tencentcloud_lighthouse_all_scene
 	tencentcloud_lighthouse_modify_instance_bundle
+	tencentcloud_lighthouse_disks
 
 TencentCloud Elastic Microservice(TEM)
   Resource
@@ -1900,6 +1910,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_tcr_images":                                dataSourceTencentCloudTcrImages(),
 			"tencentcloud_tcr_image_manifests":                       dataSourceTencentCloudTcrImageManifests(),
 			"tencentcloud_tcr_tag_retention_execution_tasks":         dataSourceTencentCloudTcrTagRetentionExecutionTasks(),
+			"tencentcloud_tcr_tag_retention_executions":              dataSourceTencentCloudTcrTagRetentionExecutions(),
+			"tencentcloud_tcr_replication_instance_create_tasks":     dataSourceTencentCloudTcrReplicationInstanceCreateTasks(),
+			"tencentcloud_tcr_replication_instance_sync_status":      dataSourceTencentCloudTcrReplicationInstanceSyncStatus(),
 			"tencentcloud_address_templates":                         dataSourceTencentCloudAddressTemplates(),
 			"tencentcloud_address_template_groups":                   dataSourceTencentCloudAddressTemplateGroups(),
 			"tencentcloud_protocol_templates":                        dataSourceTencentCloudProtocolTemplates(),
@@ -2078,6 +2091,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_instance_disk_num":              dataSourceTencentCloudLighthouseInstanceDiskNum(),
 			"tencentcloud_lighthouse_instance_blueprint":             dataSourceTencentCloudLighthouseInstanceBlueprint(),
 			"tencentcloud_lighthouse_disk_config":                    dataSourceTencentCloudLighthouseDiskConfig(),
+			"tencentcloud_lighthouse_disks":                          dataSourceTencentCloudLighthouseInstanceDisks(),
 			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                              dataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
@@ -2232,6 +2246,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_switch_master_slave_operation":            resourceTencentCloudMysqlSwitchMasterSlaveOperation(),
 			"tencentcloud_cos_bucket":                                     resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                              resourceTencentCloudCosBucketObject(),
+			"tencentcloud_cos_bucket_referer":                             resourceTencentCloudCosBucketReferer(),
+			"tencentcloud_cos_bucket_version":                             resourceTencentCloudCosBucketVersion(),
 			"tencentcloud_cfs_file_system":                                resourceTencentCloudCfsFileSystem(),
 			"tencentcloud_cfs_access_group":                               resourceTencentCloudCfsAccessGroup(),
 			"tencentcloud_cfs_access_rule":                                resourceTencentCloudCfsAccessRule(),
@@ -2263,6 +2279,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_load_balancer":                               resourceTencentCloudAsLoadBalancer(),
 			"tencentcloud_as_scaling_config":                              resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                               resourceTencentCloudAsScalingGroup(),
+			"tencentcloud_as_scaling_group_status":                        resourceTencentCloudAsScalingGroupStatus(),
 			"tencentcloud_as_attachment":                                  resourceTencentCloudAsAttachment(),
 			"tencentcloud_as_scaling_policy":                              resourceTencentCloudAsScalingPolicy(),
 			"tencentcloud_as_schedule":                                    resourceTencentCloudAsSchedule(),
@@ -2272,6 +2289,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_protect_instances":                           resourceTencentCloudAsProtectInstances(),
 			"tencentcloud_as_start_instances":                             resourceTencentCloudAsStartInstances(),
 			"tencentcloud_as_stop_instances":                              resourceTencentCloudAsStopInstances(),
+			"tencentcloud_as_scale_in_instances":                          resourceTencentCloudAsScaleInInstances(),
+			"tencentcloud_as_scale_out_instances":                         resourceTencentCloudAsScaleOutInstances(),
+			"tencentcloud_as_execute_scaling_policy":                      resourceTencentCloudAsExecuteScalingPolicy(),
 			"tencentcloud_mongodb_instance":                               resourceTencentCloudMongodbInstance(),
 			"tencentcloud_mongodb_sharding_instance":                      resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_mongodb_instance_account":                       resourceTencentCloudMongodbInstanceAccount(),
