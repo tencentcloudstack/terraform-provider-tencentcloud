@@ -82,7 +82,7 @@ func resourceTencentCloudSsmSecret() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Computed:    true,
-				Description: "Tags of secret.",
+				Description: "Type of secret.",
 			},
 			"status": {
 				Type:        schema.TypeString,
