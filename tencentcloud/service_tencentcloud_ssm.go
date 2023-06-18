@@ -19,6 +19,7 @@ type SecretInfo struct {
 	secretName  string
 	description string
 	kmsKeyId    string
+	secretType  int64
 	createUin   uint64
 	status      string
 	deleteTime  uint64
@@ -104,6 +105,7 @@ func (me *SsmService) DescribeSecretByName(ctx context.Context, secretName strin
 		secretName:  *response.Response.SecretName,
 		description: *response.Response.Description,
 		kmsKeyId:    *response.Response.KmsKeyId,
+		secretType:  *response.Response.SecretType,
 		createUin:   *response.Response.CreateUin,
 		status:      *response.Response.Status,
 		deleteTime:  *response.Response.DeleteTime,
@@ -174,6 +176,9 @@ func (me *SsmService) CreateSecret(ctx context.Context, param map[string]interfa
 		}
 		if k == "kms_key_id" {
 			request.KmsKeyId = helper.String(v.(string))
+		}
+		if k == "secret_type" {
+			request.SecretType = helper.IntUint64(v.(int))
 		}
 		if k == "secret_binary" {
 			request.SecretBinary = helper.String(v.(string))

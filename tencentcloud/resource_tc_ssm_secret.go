@@ -78,6 +78,12 @@ func resourceTencentCloudSsmSecret() *schema.Resource {
 				Computed:    true,
 				Description: "KMS keyId used to encrypt secret. If it is empty, it means that the CMK created by SSM for you by default is used for encryption. You can also specify the KMS CMK created by yourself in the same region for encryption.",
 			},
+			"secret_type": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tags of secret.",
+			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -102,6 +108,9 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 	}
 	if v, ok := d.GetOk("kms_key_id"); ok {
 		param["kms_key_id"] = v.(string)
+	}
+	if v, ok := d.GetOkExists("secret_type"); ok {
+		param["secret_type"] = v.(int)
 	}
 	//use a default version info, after create secret will delete this version
 	//because sdk do not support create secret without version
@@ -200,6 +209,7 @@ func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("secret_name", secretInfo.secretName)
 	_ = d.Set("description", secretInfo.description)
 	_ = d.Set("kms_key_id", secretInfo.kmsKeyId)
+	_ = d.Set("secret_type", secretInfo.secretType)
 	_ = d.Set("status", secretInfo.status)
 
 	if secretInfo.status == SSM_STATUS_ENABLED {
