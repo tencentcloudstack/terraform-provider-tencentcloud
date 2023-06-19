@@ -4,7 +4,7 @@ Use this data source to query detailed information of tdmq message
 Example Usage
 
 ```hcl
-data "tencentcloud_tdmq_message" "message" {
+data "tencentcloud_tdmq_rocketmq_messages" "message" {
   cluster_id     = "rocketmq-rkrbm52djmro"
   environment_id = "keep_ns"
   topic_name     = "keep-topic"
@@ -24,7 +24,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudTdmqMessage() *schema.Resource {
+func dataSourceTencentCloudTdmqRocketmqMessages() *schema.Resource {
 	return &schema.Resource{
 		Read: dataSourceTencentCloudTdmqMessageRead,
 		Schema: map[string]*schema.Schema{
@@ -117,7 +117,7 @@ func dataSourceTencentCloudTdmqMessage() *schema.Resource {
 }
 
 func dataSourceTencentCloudTdmqMessageRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_tdmq_message.read")()
+	defer logElapsed("data_source.tencentcloud_tdmq_rocketmq_messages.read")()
 	defer inconsistentCheck(d, meta)()
 
 	var (

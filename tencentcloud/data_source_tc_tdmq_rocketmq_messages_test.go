@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixTdmqMessageDataSource_basic -v
-func TestAccTencentCloudNeedFixTdmqMessageDataSource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixTdmqRocketmqMessagesDataSource_basic -v
+func TestAccTencentCloudNeedFixTdmqRocketmqMessagesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -18,7 +18,7 @@ func TestAccTencentCloudNeedFixTdmqMessageDataSource_basic(t *testing.T) {
 			{
 				Config: testAccTdmqMessageDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_message.message"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_rocketmq_messages.message"),
 				),
 			},
 		},
@@ -26,7 +26,7 @@ func TestAccTencentCloudNeedFixTdmqMessageDataSource_basic(t *testing.T) {
 }
 
 const testAccTdmqMessageDataSource = `
-data "tencentcloud_tdmq_message" "message" {
+data "tencentcloud_tdmq_rocketmq_messages" "message" {
   cluster_id     = "rocketmq-rkrbm52djmro"
   environment_id = "keep_ns"
   topic_name     = "keep-topic"

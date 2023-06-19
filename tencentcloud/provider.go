@@ -1343,7 +1343,7 @@ TDMQ for RocketMQ(trocket)
 	tencentcloud_tdmq_rocketmq_topic
 	tencentcloud_tdmq_rocketmq_role
 	tencentcloud_tdmq_rocketmq_group
-	tencentcloud_tdmq_message
+	tencentcloud_tdmq_rocketmq_messages
 
   Resource
 	tencentcloud_tdmq_rocketmq_cluster
@@ -2024,7 +2024,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rabbitmq_node_list":                   dataSourceTencentCloudTdmqRabbitmqNodeList(),
 			"tencentcloud_tdmq_rabbitmq_vip_instance":                dataSourceTencentCloudTdmqRabbitmqVipInstance(),
 			"tencentcloud_tdmq_vip_instance":                         dataSourceTencentCloudTdmqVipInstance(),
-			"tencentcloud_tdmq_message":                              dataSourceTencentCloudTdmqMessage(),
+			"tencentcloud_tdmq_rocketmq_messages":                    dataSourceTencentCloudTdmqRocketmqMessages(),
 			"tencentcloud_tdmq_pro_instances":                        dataSourceTencentCloudTdmqProInstances(),
 			"tencentcloud_tdmq_pro_instance_detail":                  dataSourceTencentCloudTdmqProInstanceDetail(),
 			"tencentcloud_tcmq_queue":                                dataSourceTencentCloudTcmqQueue(),
