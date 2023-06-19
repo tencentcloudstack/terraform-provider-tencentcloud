@@ -406,6 +406,13 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_cluster_instance_groups
 	tencentcloud_cynosdb_cluster_params
 	tencentcloud_cynosdb_param_templates
+	tencentcloud_cynosdb_audit_logs
+	tencentcloud_cynosdb_binlog_download_url
+	tencentcloud_cynosdb_cluster_detail_databases
+	tencentcloud_cynosdb_cluster_param_logs
+	tencentcloud_cynosdb_cluster
+	tencentcloud_cynosdb_describe_instance_slow_queries
+	tencentcloud_cynosdb_describe_instance_error_logs
 
   Resource
     tencentcloud_cynosdb_cluster
@@ -2039,6 +2046,14 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_cluster_params":                    dataSourceTencentCloudCynosdbClusterParams(),
 			"tencentcloud_cynosdb_param_templates":                   dataSourceTencentCloudCynosdbParamTemplates(),
 			"tencentcloud_cvm_instances_modification":                dataSourceTencentCloudCvmInstancesModification(),
+			"tencentcloud_cynosdb_audit_logs":                        dataSourceTencentCloudCynosdbAuditLogs(),
+			"tencentcloud_cynosdb_backup_download_url":               dataSourceTencentCloudCynosdbBackupDownloadUrl(),
+			"tencentcloud_cynosdb_binlog_download_url":               dataSourceTencentCloudCynosdbBinlogDownloadUrl(),
+			"tencentcloud_cynosdb_cluster_detail_databases":          dataSourceTencentCloudCynosdbClusterDetailDatabases(),
+			"tencentcloud_cynosdb_cluster_param_logs":                dataSourceTencentCloudCynosdbClusterParamLogs(),
+			"tencentcloud_cynosdb_cluster":                           dataSourceTencentCloudCynosdbCluster(),
+			"tencentcloud_cynosdb_describe_instance_slow_queries":    dataSourceTencentCloudCynosdbDescribeInstanceSlowQueries(),
+			"tencentcloud_cynosdb_describe_instance_error_logs":      dataSourceTencentCloudCynosdbDescribeInstanceErrorLogs(),
 			"tencentcloud_css_domains":                               dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                       dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                        dataSourceTencentCloudChdfsMountPoints(),
