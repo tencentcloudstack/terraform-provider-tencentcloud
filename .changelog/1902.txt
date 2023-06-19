@@ -1,5 +1,5 @@
 ```release-note:new-data-source
-tencentcloud_tdmq_message
+tencentcloud_tdmq_rocketmq_messages
 ```
 
 ```release-note:new-data-source
