@@ -3,10 +3,6 @@ tencentcloud_cynosdb_audit_logs
 ```
 
 ```release-note:new-data-source
-tencentcloud_cynosdb_backup_download_url
-```
-
-```release-note:new-data-source
 tencentcloud_cynosdb_binlog_download_url
 ```
 
