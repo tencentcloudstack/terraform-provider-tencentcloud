@@ -407,7 +407,6 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_cluster_params
 	tencentcloud_cynosdb_param_templates
 	tencentcloud_cynosdb_audit_logs
-	tencentcloud_cynosdb_backup_download_url
 	tencentcloud_cynosdb_binlog_download_url
 	tencentcloud_cynosdb_cluster_detail_databases
 	tencentcloud_cynosdb_cluster_param_logs
