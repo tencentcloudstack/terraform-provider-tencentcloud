@@ -854,12 +854,16 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.677 h1:pDvK
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.677/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.680 h1:62IlVvNZvqYuZZLGyCCirjdG52Kx3mJ0cbajbG72e5s=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.680/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.683 h1:HGTNnjSYGqG5q8sQWQ0+qqnmPPj/iRcxLlmeq2AAiOE=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.683/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624/go.mod h1:+TXSVyeKwt1IhZRqKPbTREteBcP+K07Q846/ilNzLWA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589 h1:LZihgirMH0vsaGScYexxwY0fTss9vHaSZs/YOQUVESg=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589/go.mod h1:rP1Sng8NNveLZ4HhjuvAZSxdmYQOyFyJY3qaut0xJrA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.572 h1:s6YaKNJla+zow8j+9UDFVWblPRv8kwS4dlAY1IWT15o=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.572/go.mod h1:Wp8vjOiPCqWs8ERh6+XcMYdGul6L8bU/icFY6JzxGdU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.683 h1:0Fa9YTIkTbQcWM04tGexTDEA8rQ7Assb7dUKSvcaYIg=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.683/go.mod h1:/qw8nv7NLZLiaFigLtbAB5mo/2hD7Dl3+zvWMywWu40=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335 h1:D8qrelkK5udv8RzJJIABMzItGIyaZoYnxEVeIsYqiNw=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335/go.mod h1:pz4s3nOhoB9cY0+uWzifuwr7lfh/Gvi1rv0ADxpPzD4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.652 h1:agjXNi5342DaL0TzRx1FjFlT+9VU2l6aN0yERmxiLLc=
