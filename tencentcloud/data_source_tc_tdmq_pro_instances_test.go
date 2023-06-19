@@ -37,10 +37,10 @@ data "tencentcloud_tdmq_pro_instances" "pro_instances" {
 `
 
 const testAccTdmqProInstancesDataSourcelFilter = `
-data "tencentcloud_tdmq_pro_instances" "pro_instances" {
+data "tencentcloud_tdmq_pro_instances" "pro_instances_filter" {
   filters {
-    name   = ""
-    values = ""
+    name   = "InstanceName"
+    values = ["keep"]
   }
 }
 `

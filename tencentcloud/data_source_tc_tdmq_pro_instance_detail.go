@@ -218,6 +218,7 @@ func dataSourceTencentCloudTdmqProInstanceDetailRead(d *schema.ResourceData, met
 
 	if clusterInfo != nil {
 		pulsarProClusterInfoMap := map[string]interface{}{}
+		tmpList := []interface{}{}
 
 		if clusterInfo.ClusterInfo.ClusterId != nil {
 			pulsarProClusterInfoMap["cluster_id"] = clusterInfo.ClusterInfo.ClusterId
@@ -274,7 +275,8 @@ func dataSourceTencentCloudTdmqProInstanceDetailRead(d *schema.ResourceData, met
 			pulsarProClusterInfoMap["can_edit_route"] = clusterInfo.ClusterInfo.CanEditRoute
 		}
 
-		_ = d.Set("cluster_info", pulsarProClusterInfoMap)
+		tmpList = append(tmpList, pulsarProClusterInfoMap)
+		_ = d.Set("cluster_info", tmpList)
 	}
 
 	if clusterInfo.NetworkAccessPointInfos != nil {
@@ -310,6 +312,7 @@ func dataSourceTencentCloudTdmqProInstanceDetailRead(d *schema.ResourceData, met
 
 	if clusterInfo.ClusterSpecInfo != nil {
 		pulsarProClusterSpecInfoMap := map[string]interface{}{}
+		tmpList := []interface{}{}
 
 		if clusterInfo.ClusterSpecInfo.SpecName != nil {
 			pulsarProClusterSpecInfoMap["spec_name"] = clusterInfo.ClusterSpecInfo.SpecName
@@ -335,7 +338,8 @@ func dataSourceTencentCloudTdmqProInstanceDetailRead(d *schema.ResourceData, met
 			pulsarProClusterSpecInfoMap["scalable_tps"] = clusterInfo.ClusterSpecInfo.ScalableTps
 		}
 
-		_ = d.Set("cluster_spec_info", pulsarProClusterSpecInfoMap)
+		tmpList = append(tmpList, pulsarProClusterSpecInfoMap)
+		_ = d.Set("cluster_spec_info", tmpList)
 	}
 
 	d.SetId(clusterId)

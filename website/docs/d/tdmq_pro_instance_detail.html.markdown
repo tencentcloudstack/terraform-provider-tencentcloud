@@ -30,7 +30,7 @@ The following arguments are supported:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `cluster_info` - Cluster infomation.
+* `cluster_info` - Cluster information.
   * `can_edit_route` - Can the route be modifiedNote: This field may return null, indicating that no valid value can be obtained.
   * `cluster_id` - Cluster Id.
   * `cluster_name` - Cluster name.

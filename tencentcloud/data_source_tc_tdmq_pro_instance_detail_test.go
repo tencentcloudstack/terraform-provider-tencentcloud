@@ -27,6 +27,6 @@ func TestAccTencentCloudNeedFixTdmqProInstanceDetailDataSource_basic(t *testing.
 
 const testAccTdmqProInstanceDetailDataSource = `
 data "tencentcloud_tdmq_pro_instance_detail" "pro_instance_detail" {
-  cluster_id = "pulsar-9n95ax58b9vn"
+  cluster_id = "pulsar-5z3g4227qnwr"
 }
 `
