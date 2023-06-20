@@ -48,7 +48,7 @@ func dataSourceTencentCloudCynosdbAccountAllGrantPrivileges() *schema.Resource {
 						"host": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							Description: "Host, default &#39;%&#39;.",
+							Description: "Host, default `%`.",
 						},
 					},
 				},
