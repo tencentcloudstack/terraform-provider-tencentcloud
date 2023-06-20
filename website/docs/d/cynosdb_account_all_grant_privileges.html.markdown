@@ -34,7 +34,7 @@ The following arguments are supported:
 The `account` object supports the following:
 
 * `account_name` - (Required, String) Account.
-* `host` - (Optional, String) Host, default &#39;%&#39;.
+* `host` - (Optional, String) Host, default `%`.
 
 ## Attributes Reference
 
