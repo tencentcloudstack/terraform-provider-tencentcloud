@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_tdmq_rocketmq_messages
+```
+
+```release-note:new-data-source
+tencentcloud_tdmq_pro_instances
+```
+
+```release-note:new-data-source
+tencentcloud_tdmq_pro_instance_detail
+```

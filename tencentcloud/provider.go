@@ -516,6 +516,8 @@ TDMQ for Pulsar(tpulsar)
 	tencentcloud_tdmq_environment_attributes
 	tencentcloud_tdmq_publisher_summary
 	tencentcloud_tdmq_publishers
+	tencentcloud_tdmq_pro_instances
+	tencentcloud_tdmq_pro_instance_detail
 
   Resource
     tencentcloud_tdmq_instance
@@ -1348,6 +1350,7 @@ TDMQ for RocketMQ(trocket)
 	tencentcloud_tdmq_rocketmq_topic
 	tencentcloud_tdmq_rocketmq_role
 	tencentcloud_tdmq_rocketmq_group
+	tencentcloud_tdmq_rocketmq_messages
 
   Resource
 	tencentcloud_tdmq_rocketmq_cluster
@@ -2028,6 +2031,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rabbitmq_node_list":                   dataSourceTencentCloudTdmqRabbitmqNodeList(),
 			"tencentcloud_tdmq_rabbitmq_vip_instance":                dataSourceTencentCloudTdmqRabbitmqVipInstance(),
 			"tencentcloud_tdmq_vip_instance":                         dataSourceTencentCloudTdmqVipInstance(),
+			"tencentcloud_tdmq_rocketmq_messages":                    dataSourceTencentCloudTdmqRocketmqMessages(),
+			"tencentcloud_tdmq_pro_instances":                        dataSourceTencentCloudTdmqProInstances(),
+			"tencentcloud_tdmq_pro_instance_detail":                  dataSourceTencentCloudTdmqProInstanceDetail(),
 			"tencentcloud_tcmq_queue":                                dataSourceTencentCloudTcmqQueue(),
 			"tencentcloud_tcmq_topic":                                dataSourceTencentCloudTcmqTopic(),
 			"tencentcloud_tcmq_subscribe":                            dataSourceTencentCloudTcmqSubscribe(),
