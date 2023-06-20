@@ -111,10 +111,9 @@ func (me *APIGatewayService) DescribeApiKeysStatus(ctx context.Context, secretNa
 	var limit int64 = 100
 	var offset int64 = 0
 
-	request.Limit = &limit
-	request.Offset = &offset
-
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAPIGatewayClient().DescribeApiKeysStatus(request)
 		if err != nil {
@@ -274,10 +273,9 @@ func (me *APIGatewayService) DescribeUsagePlanEnvironments(ctx context.Context,
 	var limit int64 = 100
 	var offset int64 = 0
 
-	request.Limit = &limit
-	request.Offset = &offset
-
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAPIGatewayClient().DescribeUsagePlanEnvironments(request)
 		if err != nil {
@@ -320,10 +318,9 @@ func (me *APIGatewayService) DescribeUsagePlansStatus(ctx context.Context,
 	var limit int64 = 100
 	var offset int64 = 0
 
-	request.Limit = &limit
-	request.Offset = &offset
-
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAPIGatewayClient().DescribeUsagePlansStatus(request)
 		if err != nil {
@@ -389,10 +386,9 @@ func (me *APIGatewayService) DescribeIPStrategies(ctx context.Context, serviceId
 		apiList []*apigateway.DesApisStatus
 	)
 
-	request.Limit = &limit
-	request.Offset = &offset
-
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAPIGatewayClient().DescribeIPStrategy(request)
 		if err != nil {
@@ -424,10 +420,9 @@ func (me *APIGatewayService) DescribeServiceSubDomains(ctx context.Context, serv
 		offset int64 = 0
 	)
 
-	request.Limit = &limit
-	request.Offset = &offset
-
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAPIGatewayClient().DescribeServiceSubDomains(request)
 		if err != nil {
@@ -642,10 +637,9 @@ func (me *APIGatewayService) DescribeServiceUsagePlan(ctx context.Context,
 	var limit int64 = 100
 	var offset int64 = 0
 
-	request.Limit = &limit
-	request.Offset = &offset
-
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAPIGatewayClient().DescribeServiceUsagePlan(request)
 		if err != nil {
@@ -675,10 +669,9 @@ func (me *APIGatewayService) DescribeApiUsagePlan(ctx context.Context,
 	var limit int64 = 100
 	var offset int64 = 0
 
-	request.Limit = &limit
-	request.Offset = &offset
-
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAPIGatewayClient().DescribeApiUsagePlan(request)
 		if err != nil {
@@ -848,10 +841,9 @@ func (me *APIGatewayService) DescribeServicesStatus(ctx context.Context,
 	var limit int64 = 100
 	var offset int64 = 0
 
-	request.Limit = &limit
-	request.Offset = &offset
-
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAPIGatewayClient().DescribeServicesStatus(request)
 		if err != nil {
@@ -897,10 +889,9 @@ func (me *APIGatewayService) DescribeApisStatus(ctx context.Context,
 	var limit int64 = 100
 	var offset int64 = 0
 
-	request.Limit = &limit
-	request.Offset = &offset
-
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAPIGatewayClient().DescribeApisStatus(request)
 		if err != nil {
@@ -938,10 +929,10 @@ func (me *APIGatewayService) DescribeServiceEnvironmentStrategyList(ctx context.
 	}
 
 	request.ServiceId = &serviceId
-	request.Limit = &limit
-	request.Offset = &offset
 
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseAPIGatewayClient().DescribeServiceEnvironmentStrategy(request)
@@ -1000,10 +991,9 @@ func (me *APIGatewayService) DescribeApiEnvironmentStrategyList(ctx context.Cont
 		request.EnvironmentNames = append(request.EnvironmentNames, helper.Strings(environmentNames)...)
 	}
 
-	request.Limit = &limit
-	request.Offset = &offset
-
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseAPIGatewayClient().DescribeApiEnvironmentStrategy(request)
@@ -1171,9 +1161,10 @@ func (me *APIGatewayService) DescribeServiceSubDomainsService(ctx context.Contex
 		offset int64 = 0
 	)
 	request.ServiceId = &serviceId
-	request.Limit = &limit
-	request.Offset = &offset
+
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
 			response, err = me.client.UseAPIGatewayClient().DescribeServiceSubDomains(request)
@@ -1387,10 +1378,9 @@ func (me *APIGatewayService) DescribeIPStrategyStatus(ctx context.Context, servi
 			offset int64 = 0
 		)
 
-		request.Limit = &limit
-		request.Offset = &offset
-
 		for {
+			request.Limit = &limit
+			request.Offset = &offset
 			ratelimit.Check(request.GetAction())
 			response, err := me.client.UseAPIGatewayClient().DescribeIPStrategy(request)
 			if err != nil {
@@ -1560,10 +1550,10 @@ func (me *APIGatewayService) DescribeServiceEnvironmentReleaseHistory(ctx contex
 	request := apigateway.NewDescribeServiceEnvironmentReleaseHistoryRequest()
 	request.ServiceId = &serviceId
 	request.EnvironmentName = &envName
-	request.Limit = &limit
-	request.Offset = &offset
 
 	for {
+		request.Limit = &limit
+		request.Offset = &offset
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseAPIGatewayClient().DescribeServiceEnvironmentReleaseHistory(request)
 		if err != nil {

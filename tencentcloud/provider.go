@@ -413,6 +413,11 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_cluster
 	tencentcloud_cynosdb_describe_instance_slow_queries
 	tencentcloud_cynosdb_describe_instance_error_logs
+	tencentcloud_cynosdb_account_all_grant_privileges
+	tencentcloud_cynosdb_resource_package_list
+	tencentcloud_cynosdb_project_security_groups
+	tencentcloud_cynosdb_resource_package_sale_specs
+	tencentcloud_cynosdb_rollback_time_range
 
   Resource
     tencentcloud_cynosdb_cluster
@@ -2054,6 +2059,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_cluster":                           dataSourceTencentCloudCynosdbCluster(),
 			"tencentcloud_cynosdb_describe_instance_slow_queries":    dataSourceTencentCloudCynosdbDescribeInstanceSlowQueries(),
 			"tencentcloud_cynosdb_describe_instance_error_logs":      dataSourceTencentCloudCynosdbDescribeInstanceErrorLogs(),
+			"tencentcloud_cynosdb_account_all_grant_privileges":      dataSourceTencentCloudCynosdbAccountAllGrantPrivileges(),
+			"tencentcloud_cynosdb_resource_package_list":             dataSourceTencentCloudCynosdbResourcePackageList(),
+			"tencentcloud_cynosdb_project_security_groups":           dataSourceTencentCloudCynosdbProjectSecurityGroups(),
+			"tencentcloud_cynosdb_resource_package_sale_specs":       dataSourceTencentCloudCynosdbResourcePackageSaleSpecs(),
+			"tencentcloud_cynosdb_rollback_time_range":               dataSourceTencentCloudCynosdbRollbackTimeRange(),
 			"tencentcloud_css_domains":                               dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                       dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                        dataSourceTencentCloudChdfsMountPoints(),
