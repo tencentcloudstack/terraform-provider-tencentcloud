@@ -8103,13 +8103,13 @@ func (c *Client) UpgradeProxyWithContext(ctx context.Context, request *UpgradePr
     if request == nil {
         request = NewUpgradeProxyRequest()
     }
-
+    
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeProxy require credential")
     }
 
     request.SetContext(ctx)
-
+    
     response = NewUpgradeProxyResponse()
     err = c.Send(request, response)
     return
@@ -8119,10 +8119,10 @@ func NewUpgradeProxyVersionRequest() (request *UpgradeProxyVersionRequest) {
     request = &UpgradeProxyVersionRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "UpgradeProxyVersion")
-
-
+    
+    
     return
 }
 
@@ -8155,13 +8155,13 @@ func (c *Client) UpgradeProxyVersionWithContext(ctx context.Context, request *Up
     if request == nil {
         request = NewUpgradeProxyVersionRequest()
     }
-
+    
     if c.GetCredential() == nil {
         return nil, errors.New("UpgradeProxyVersion require credential")
     }
 
     request.SetContext(ctx)
-
+    
     response = NewUpgradeProxyVersionResponse()
     err = c.Send(request, response)
     return
