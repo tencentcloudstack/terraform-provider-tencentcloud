@@ -8067,10 +8067,10 @@ func NewUpgradeProxyRequest() (request *UpgradeProxyRequest) {
     request = &UpgradeProxyRequest{
         BaseRequest: &tchttp.BaseRequest{},
     }
-
+    
     request.Init().WithApiInfo("cynosdb", APIVersion, "UpgradeProxy")
-
-
+    
+    
     return
 }
 
