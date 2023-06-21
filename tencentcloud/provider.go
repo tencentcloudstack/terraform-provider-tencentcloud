@@ -348,7 +348,6 @@ Cloud Object Storage(COS)
     tencentcloud_cos_bucket_referer
     tencentcloud_cos_bucket_version
 	tencentcloud_cos_bucket_domain_certificate_attachment
-	tencentcloud_cos_object_acl
 	tencentcloud_cos_bucket_inventory
 
 Cloud Virtual Machine(CVM)
@@ -2554,7 +2553,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_subscription_attachment":                   resourceTencentCloudTdmqSubscriptionAttachment(),
 			"tencentcloud_cos_bucket_policy":                              resourceTencentCloudCosBucketPolicy(),
 			"tencentcloud_cos_bucket_domain_certificate_attachment":       resourceTencentCloudCosBucketDomainCertificateAttachment(),
-			"tencentcloud_cos_object_acl":                                 resourceTencentCloudCosObjectAcl(),
 			"tencentcloud_cos_bucket_inventory":                           resourceTencentCloudCosBucketInventory(),
 			"tencentcloud_address_template":                               resourceTencentCloudAddressTemplate(),
 			"tencentcloud_address_template_group":                         resourceTencentCloudAddressTemplateGroup(),

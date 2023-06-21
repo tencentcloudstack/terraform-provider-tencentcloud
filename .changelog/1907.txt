@@ -1,5 +1,5 @@
 ```release-note:enhancement
-resource/tencentcloud_cos_bucket: format client called
+resource/tencentcloud_cos_bucket: support `enable_intelligent_tiering` and format client called
 ```
 
 ```release-note:enhancement
@@ -7,15 +7,7 @@ resource/tencentcloud_cos_bucket_domain_certificate_attachment: format client ca
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_cos_bucket: format client called
-```
-
-```release-note:enhancement
 resource/tencentcloud_cos_bucket_object: format client called
-```
-
-```release-note:new-resource
-tencentcloud_cos_object_acl
 ```
 
 ```release-note:new-resource
