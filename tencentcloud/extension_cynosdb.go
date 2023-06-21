@@ -181,7 +181,6 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"auto_renew_flag": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			ForceNew:    true,
 			Default:     0,
 			Description: "Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.",
 		},
