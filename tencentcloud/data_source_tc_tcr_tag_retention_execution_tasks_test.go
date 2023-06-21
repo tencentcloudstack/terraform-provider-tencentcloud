@@ -40,8 +40,8 @@ const testAccTcrTagRetentionExecutionTasksDataSource = `
 
 data "tencentcloud_tcr_tag_retention_execution_tasks" "tasks" {
   registry_id = "%s"
-  retention_id = "1"
-  execution_id = "1"
-  }
+  retention_id = 1
+  execution_id = 1
+}
 
 `

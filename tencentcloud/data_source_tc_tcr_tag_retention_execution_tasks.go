@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tcr_tag_retention_execution_tasks" "tasks" {
-  registry_id = "%s"
-  retention_id = "17"
-  execution_id = "1"
-  }
+  registry_id = "tcr_ins_id"
+  retention_id = 1
+  execution_id = 1
+}
 ```
 */
 package tencentcloud

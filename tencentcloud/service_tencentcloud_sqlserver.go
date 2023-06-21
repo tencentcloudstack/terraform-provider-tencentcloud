@@ -324,10 +324,9 @@ func (me *SqlserverService) DescribeSqlserverInstances(ctx context.Context, inst
 	}
 	var offset, limit int64 = 0, 20
 
-	request.Offset = &offset
-	request.Limit = &limit
-
 	for {
+		request.Offset = &offset
+		request.Limit = &limit
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
 		if err != nil {
@@ -436,10 +435,9 @@ func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instan
 
 	var offset, limit int64 = 0, 20
 
-	request.Offset = &offset
-	request.Limit = &limit
-
 	for {
+		request.Offset = &offset
+		request.Limit = &limit
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseSqlserverClient().DescribeBackups(request)
 		if err != nil {
@@ -592,10 +590,9 @@ func (me *SqlserverService) DescribeSqlserverAccounts(ctx context.Context, insta
 
 	var offset, limit uint64 = 0, 20
 
-	request.Offset = &offset
-	request.Limit = &limit
-
 	for {
+		request.Offset = &offset
+		request.Limit = &limit
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseSqlserverClient().DescribeAccounts(request)
 		if err != nil {
@@ -985,10 +982,9 @@ func (me *SqlserverService) DescribeDBsOfInstance(ctx context.Context, instanceI
 	}
 	var offset, limit uint64 = SQLSERVER_DEFAULT_OFFSET, SQLSERVER_DEFAULT_LIMIT
 
-	request.Offset = &offset
-	request.Limit = &limit
-
 	for {
+		request.Offset = &offset
+		request.Limit = &limit
 		var response *sqlserver.DescribeDBsResponse
 		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
@@ -1222,9 +1218,10 @@ func (me *SqlserverService) DescribeSqlserverPublishSubscribes(ctx context.Conte
 		request.SubscribeDBName = &publishDBName
 	}
 	var offset, limit uint64 = SQLSERVER_DEFAULT_OFFSET, SQLSERVER_DEFAULT_LIMIT
-	request.Offset = &offset
-	request.Limit = &limit
+
 	for {
+		request.Offset = &offset
+		request.Limit = &limit
 		ratelimit.Check(request.GetAction())
 		var response *sqlserver.DescribePublishSubscribeResponse
 		var err error
@@ -1645,10 +1642,9 @@ func (me *SqlserverService) DescribeSqlserverBackupByBackupId(ctx context.Contex
 
 	var offset, limit int64 = 0, 20
 
-	request.Offset = &offset
-	request.Limit = &limit
-
 	for {
+		request.Offset = &offset
+		request.Limit = &limit
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseSqlserverClient().DescribeBackups(request)
 		if err != nil {

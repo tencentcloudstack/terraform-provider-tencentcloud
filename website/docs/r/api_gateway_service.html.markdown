@@ -15,11 +15,15 @@ Use this resource to create API gateway service.
 
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
-  service_name  = "niceservice"
-  protocol      = "http&https"
-  service_desc  = "your nice service"
-  net_type      = ["INNER", "OUTER"]
-  ip_version    = "IPv4"
+  service_name = "niceservice"
+  protocol     = "http&https"
+  service_desc = "your nice service"
+  net_type     = ["INNER", "OUTER"]
+  ip_version   = "IPv4"
+  tags = {
+    test-key1 = "test-value1"
+    test-key2 = "test-value2"
+  }
   release_limit = 500
   pre_limit     = 500
   test_limit    = 500
@@ -38,6 +42,7 @@ The following arguments are supported:
 * `pre_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 * `release_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 * `service_desc` - (Optional, String) Custom service description.
+* `tags` - (Optional, Map) Tag description list.
 * `test_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 
 ## Attributes Reference
