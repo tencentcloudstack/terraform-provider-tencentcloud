@@ -421,6 +421,7 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_zone
 
   Resource
+	tencentcloud_cynosdb_cluster_resource_packages_attachment
     tencentcloud_cynosdb_cluster
     tencentcloud_cynosdb_readonly_instance
 	tencentcloud_cynosdb_security_group
@@ -2493,6 +2494,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_audit":                                          resourceTencentCloudAudit(),
 			"tencentcloud_audit_track":                                    resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                          resourceTencentCloudImage(),
+			"tencentcloud_cynosdb_cluster_resource_packages_attachment":   resourceTencentCloudCynosdbClusterResourcePackagesAttachment(),
 			"tencentcloud_cynosdb_cluster":                                resourceTencentCloudCynosdbCluster(),
 			"tencentcloud_cynosdb_readonly_instance":                      resourceTencentCloudCynosdbReadonlyInstance(),
 			"tencentcloud_cynosdb_cluster_password_complexity":            resourceTencentCloudCynosdbClusterPasswordComplexity(),

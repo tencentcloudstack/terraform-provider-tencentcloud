@@ -1745,6 +1745,61 @@ func (me *CynosdbService) DescribeCynosdbResourcePackageListByFilter(ctx context
 	return
 }
 
+func (me *CynosdbService) DescribeCynosdbClusterResourcePackagesAttachmentById(ctx context.Context, clusterId string) (clusterResourcePackagesAttachment *cynosdb.CynosdbClusterDetail, errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewDescribeClusterDetailRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeClusterDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Detail == nil {
+		return
+	}
+
+	clusterResourcePackagesAttachment = response.Response.Detail
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbClusterResourcePackagesAttachmentById(ctx context.Context, clusterId string, packageIdsSet []*string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewUnbindClusterResourcePackagesRequest()
+	request.ClusterId = &clusterId
+	request.PackageIds = packageIdsSet
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().UnbindClusterResourcePackages(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *CynosdbService) CynosdbInstanceIsolateStateRefreshFunc(clusterId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil

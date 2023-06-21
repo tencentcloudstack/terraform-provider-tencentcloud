@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_cynosdb_cluster_resource_packages_attachment
+```
