@@ -130,7 +130,7 @@ resource "tencentcloud_cynosdb_cluster_databases" "cluster_databases" {
 	cluster_id = var.cynosdb_cluster_id
 	db_name = "terraform-test"
 	character_set = "utf8"
-	collate_rule = " utf8_general_ci"
+	collate_rule = "utf8_general_ci"
 	user_host_privileges {
 	  db_user_name = "root"
 	  db_host = "%"
@@ -147,7 +147,7 @@ resource "tencentcloud_cynosdb_cluster_databases" "cluster_databases" {
 	cluster_id = var.cynosdb_cluster_id
 	db_name = "terraform-test"
 	character_set = "utf8"
-	collate_rule = " utf8_general_ci"
+	collate_rule = "utf8_general_ci"
 	user_host_privileges {
 	  db_user_name = "root"
 	  db_host = "%"
