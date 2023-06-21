@@ -407,6 +407,19 @@ TDSQL-C MySQL(CynosDB)
     tencentcloud_cynosdb_readonly_instance
 	tencentcloud_cynosdb_security_group
 	tencentcloud_cynosdb_audit_log_file
+	tencentcloud_cynosdb_cluster_password_complexity
+	tencentcloud_cynosdb_export_instance_error_logs
+	tencentcloud_cynosdb_export_instance_slow_queries
+	tencentcloud_cynosdb_account_privileges
+	tencentcloud_cynosdb_account
+	tencentcloud_cynosdb_binlog_save_days
+	tencentcloud_cynosdb_cluster_databases
+	tencentcloud_cynosdb_instance_param
+	tencentcloud_cynosdb_isolate_instance
+	tencentcloud_cynosdb_param_template
+	tencentcloud_cynosdb_restart_instance
+	tencentcloud_cynosdb_roll_back_cluster
+	tencentcloud_cynosdb_wan
 
 Direct Connect(DC)
   Data Source
@@ -2019,7 +2032,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_cluster_instance_groups":           dataSourceTencentCloudCynosdbClusterInstanceGroups(),
 			"tencentcloud_cynosdb_cluster_params":                    dataSourceTencentCloudCynosdbClusterParams(),
 			"tencentcloud_cynosdb_param_templates":                   dataSourceTencentCloudCynosdbParamTemplates(),
-			"tencentcloud_cynosdb_zone":							  dataSourceTencentCloudCynosdbZone(),
+			"tencentcloud_cynosdb_zone":                              dataSourceTencentCloudCynosdbZone(),
 			"tencentcloud_cvm_instances_modification":                dataSourceTencentCloudCvmInstancesModification(),
 			"tencentcloud_css_domains":                               dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                       dataSourceTencentCloudChdfsAccessGroups(),
@@ -2430,6 +2443,20 @@ func Provider() *schema.Provider {
 			"tencentcloud_image":                                          resourceTencentCloudImage(),
 			"tencentcloud_cynosdb_cluster":                                resourceTencentCloudCynosdbCluster(),
 			"tencentcloud_cynosdb_readonly_instance":                      resourceTencentCloudCynosdbReadonlyInstance(),
+			"tencentcloud_cynosdb_cluster_password_complexity":            resourceTencentCloudCynosdbClusterPasswordComplexity(),
+			"tencentcloud_cynosdb_export_instance_error_logs":             resourceTencentCloudCynosdbExportInstanceErrorLogs(),
+			"tencentcloud_cynosdb_export_instance_slow_queries":           resourceTencentCloudCynosdbExportInstanceSlowQueries(),
+			"tencentcloud_cynosdb_account_privileges":                     resourceTencentCloudCynosdbAccountPrivileges(),
+			"tencentcloud_cynosdb_account":                                resourceTencentCloudCynosdbAccount(),
+			"tencentcloud_cynosdb_binlog_save_days":                       resourceTencentCloudCynosdbBinlogSaveDays(),
+			"tencentcloud_cynosdb_cluster_databases":                      resourceTencentCloudCynosdbClusterDatabases(),
+			"tencentcloud_cynosdb_instance_param":                         resourceTencentCloudCynosdbInstanceParam(),
+			"tencentcloud_cynosdb_isolate_instance":                       resourceTencentCloudCynosdbIsolateInstance(),
+			"tencentcloud_cynosdb_param_template":                         resourceTencentCloudCynosdbParamTemplate(),
+			"tencentcloud_cynosdb_resource_package":                       resourceTencentCloudCynosdbResourcePackage(),
+			"tencentcloud_cynosdb_restart_instance":                       resourceTencentCloudCynosdbRestartInstance(),
+			"tencentcloud_cynosdb_roll_back_cluster":                      resourceTencentCloudCynosdbRollBackCluster(),
+			"tencentcloud_cynosdb_wan":                                    resourceTencentCloudCynosdbWan(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_template":        resourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_vod_image_sprite_template":                      resourceTencentCloudVodImageSpriteTemplate(),
 			"tencentcloud_vod_procedure_template":                         resourceTencentCloudVodProcedureTemplate(),

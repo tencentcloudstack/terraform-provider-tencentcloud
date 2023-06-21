@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudCynosdbZoneDataSource_basic -v
@@ -16,7 +17,7 @@ func TestAccTencentCloudCynosdbZoneDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbZoneDataSource,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_zone.zone"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_zone.zone", "region_set.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_zone.zone", "region_set.0.db_type"),
