@@ -8062,3 +8062,107 @@ func (c *Client) UpgradeInstanceWithContext(ctx context.Context, request *Upgrad
     err = c.Send(request, response)
     return
 }
+
+func NewUpgradeProxyRequest() (request *UpgradeProxyRequest) {
+    request = &UpgradeProxyRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+
+    request.Init().WithApiInfo("cynosdb", APIVersion, "UpgradeProxy")
+
+
+    return
+}
+
+func NewUpgradeProxyResponse() (response *UpgradeProxyResponse) {
+    response = &UpgradeProxyResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpgradeProxy
+// 升级数据库代理配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+func (c *Client) UpgradeProxy(request *UpgradeProxyRequest) (response *UpgradeProxyResponse, err error) {
+    return c.UpgradeProxyWithContext(context.Background(), request)
+}
+
+// UpgradeProxy
+// 升级数据库代理配置
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+func (c *Client) UpgradeProxyWithContext(ctx context.Context, request *UpgradeProxyRequest) (response *UpgradeProxyResponse, err error) {
+    if request == nil {
+        request = NewUpgradeProxyRequest()
+    }
+
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeProxy require credential")
+    }
+
+    request.SetContext(ctx)
+
+    response = NewUpgradeProxyResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpgradeProxyVersionRequest() (request *UpgradeProxyVersionRequest) {
+    request = &UpgradeProxyVersionRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+
+    request.Init().WithApiInfo("cynosdb", APIVersion, "UpgradeProxyVersion")
+
+
+    return
+}
+
+func NewUpgradeProxyVersionResponse() (response *UpgradeProxyVersionResponse) {
+    response = &UpgradeProxyVersionResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpgradeProxyVersion
+// 升级数据库代理版本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+func (c *Client) UpgradeProxyVersion(request *UpgradeProxyVersionRequest) (response *UpgradeProxyVersionResponse, err error) {
+    return c.UpgradeProxyVersionWithContext(context.Background(), request)
+}
+
+// UpgradeProxyVersion
+// 升级数据库代理版本
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DATABASEACCESSERROR = "FailedOperation.DatabaseAccessError"
+//  FAILEDOPERATION_FLOWCREATEERROR = "FailedOperation.FlowCreateError"
+func (c *Client) UpgradeProxyVersionWithContext(ctx context.Context, request *UpgradeProxyVersionRequest) (response *UpgradeProxyVersionResponse, err error) {
+    if request == nil {
+        request = NewUpgradeProxyVersionRequest()
+    }
+
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpgradeProxyVersion require credential")
+    }
+
+    request.SetContext(ctx)
+
+    response = NewUpgradeProxyVersionResponse()
+    err = c.Send(request, response)
+    return
+}
