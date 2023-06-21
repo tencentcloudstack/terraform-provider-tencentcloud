@@ -15,16 +15,16 @@ Provides a resource to create a cynosdb cluster_databases
 
 ```hcl
 resource "tencentcloud_cynosdb_cluster_databases" "cluster_databases" {
-  cluster_id    = "cynosdbmysql-xxxxxxx"
-  db_name       = "test"
+  cluster_id    = "cynosdbmysql-bws8h88b"
+  db_name       = "terraform-test"
   character_set = "utf8"
-  collate_rule  = " utf8_general_ci "
+  collate_rule  = "utf8_general_ci"
   user_host_privileges {
-    db_user_name = ""
-    db_host      = ""
-    db_privilege = ""
+    db_user_name = "root"
+    db_host      = "%"
+    db_privilege = "READ_ONLY"
   }
-  description = "test"
+  description = "terraform test"
 }
 ```
 

@@ -15,21 +15,14 @@ Provides a resource to create a cynosdb instance_param
 
 ```hcl
 resource "tencentcloud_cynosdb_instance_param" "instance_param" {
-  cluster_id   = ""
-  instance_ids =
-  cluster_param_list {
-    param_name    = ""
-    current_value = ""
-    old_value     = ""
+  cluster_id            = "cynosdbmysql-bws8h88b"
+  instance_id           = "cynosdbmysql-ins-rikr6z4o"
+  is_in_maintain_period = "no"
 
-  }
   instance_param_list {
-    param_name    = ""
-    current_value = ""
-    old_value     = ""
-
+    current_value = "0"
+    param_name    = "init_connect"
   }
-  is_in_maintain_period = ""
 }
 ```
 
@@ -37,16 +30,15 @@ resource "tencentcloud_cynosdb_instance_param" "instance_param" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, String) Cluster ID.
-* `instance_id` - (Optional, String) Instance ID.
-* `instance_param_list` - (Optional, List) Instance parameter list.
+* `cluster_id` - (Required, String, ForceNew) Cluster ID.
+* `instance_id` - (Optional, String, ForceNew) Instance ID.
+* `instance_param_list` - (Optional, Set) Instance parameter list.
 * `is_in_maintain_period` - (Optional, String) Yes: modify within the operation and maintenance time window, no: execute immediately (default value).
 
 The `instance_param_list` object supports the following:
 
 * `current_value` - (Required, String) Current value of parameter.
 * `param_name` - (Required, String) Parameter Name.
-* `old_value` - (Optional, String) Parameter old value (only useful when generating parameters) Note: This field may return null, indicating that a valid value cannot be obtained.
 
 ## Attributes Reference
 

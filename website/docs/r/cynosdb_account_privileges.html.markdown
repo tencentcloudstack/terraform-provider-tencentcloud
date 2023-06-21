@@ -52,11 +52,11 @@ resource "tencentcloud_cynosdb_account_privileges" "account_privileges" {
 
 The following arguments are supported:
 
-* `account_name` - (Required, String) Account.
-* `cluster_id` - (Required, String) Cluster ID.
+* `account_name` - (Required, String, ForceNew) Account.
+* `cluster_id` - (Required, String, ForceNew) Cluster ID.
 * `global_privileges` - (Required, Set: [`String`]) Array of global permissions.
 * `database_privileges` - (Optional, List) Array of database permissions.
-* `host` - (Optional, String) Host, default `%`.
+* `host` - (Optional, String, ForceNew) Host, default `%`.
 * `table_privileges` - (Optional, List) array of table permissions.
 
 The `database_privileges` object supports the following:

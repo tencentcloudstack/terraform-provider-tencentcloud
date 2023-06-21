@@ -25,7 +25,7 @@ resource "tencentcloud_cynosdb_binlog_save_days" "binlog_save_days" {
 The following arguments are supported:
 
 * `binlog_save_days` - (Required, Int) Binlog retention days.
-* `cluster_id` - (Required, String) Cluster ID.
+* `cluster_id` - (Required, String, ForceNew) Cluster ID.
 
 ## Attributes Reference
 

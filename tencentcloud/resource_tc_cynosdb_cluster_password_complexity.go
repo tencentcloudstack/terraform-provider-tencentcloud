@@ -56,6 +56,7 @@ func resourceTencentCloudCynosdbClusterPasswordComplexity() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},

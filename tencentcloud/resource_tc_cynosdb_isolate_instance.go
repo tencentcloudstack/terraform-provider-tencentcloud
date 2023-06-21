@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_account" "account" {
-  cluster_id = "cynosdbmysql-bws8h88b"
-  account_name = "terraform_test"
-  account_password = "Password@1234"
-  host = "%"
-  description = "testx"
+  cluster_id           = "cynosdbmysql-bws8h88b"
+  account_name         = "terraform_test"
+  account_password     = "Password@1234"
+  host                 = "%"
+  description          = "testx"
   max_user_connections = 2
 }
 ```
@@ -34,18 +34,18 @@ func resourceTencentCloudCynosdbIsolateInstance() *schema.Resource {
 		Read:   resourceTencentCloudCynosdbIsolateInstanceRead,
 		Update: resourceTencentCloudCynosdbIsolateInstanceUpdate,
 		Delete: resourceTencentCloudCynosdbIsolateInstanceDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
 
 			"instance_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},

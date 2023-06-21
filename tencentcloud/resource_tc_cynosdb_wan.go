@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_wan" "wan" {
-  cluster_id = "cynosdbmysql-bws8h88b"
+  cluster_id      = "cynosdbmysql-bws8h88b"
   instance_grp_id = "cynosdbmysql-grp-lxav0p9z"
 }
 ```
@@ -204,7 +204,7 @@ func resourceTencentCloudCynosdbWanUpdate(d *schema.ResourceData, meta interface
 	defer logElapsed("resource.tencentcloud_cynosdb_wan.update")()
 	defer inconsistentCheck(d, meta)()
 
-	immutableArgs := []string{"instance_grp_id"}
+	immutableArgs := []string{"cluster_id", "instance_grp_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

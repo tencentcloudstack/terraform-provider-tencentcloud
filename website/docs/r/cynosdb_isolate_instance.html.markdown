@@ -28,8 +28,8 @@ resource "tencentcloud_cynosdb_account" "account" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, String) Cluster ID.
-* `instance_id` - (Required, String) Instance ID.
+* `cluster_id` - (Required, String, ForceNew) Cluster ID.
+* `instance_id` - (Required, String, ForceNew) Instance ID.
 * `operate` - (Required, String) isolate, activate.
 
 ## Attributes Reference

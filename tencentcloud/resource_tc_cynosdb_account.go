@@ -5,14 +5,12 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_account" "account" {
-  cluster_id = "xxx"
-  accounts {
-	account_name = ""
-	account_password = ""
-	host = ""
-	description = ""
-	max_user_connections =
-  }
+  cluster_id           = "cynosdbmysql-bws8h88b"
+  account_name         = "terraform_test"
+  account_password     = "Password@1234"
+  host                 = "%"
+  description          = "terraform test"
+  max_user_connections = 2
 }
 ```
 

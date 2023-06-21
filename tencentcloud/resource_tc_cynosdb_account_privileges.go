@@ -72,6 +72,7 @@ func resourceTencentCloudCynosdbAccountPrivileges() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
@@ -79,11 +80,13 @@ func resourceTencentCloudCynosdbAccountPrivileges() *schema.Resource {
 			"account_name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Account.",
 			},
 			"host": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Host, default `%`.",
 			},
 
@@ -352,22 +355,6 @@ func resourceTencentCloudCynosdbAccountPrivilegesUpdate(d *schema.ResourceData, 
 func resourceTencentCloudCynosdbAccountPrivilegesDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cynosdb_account_privileges.delete")()
 	defer inconsistentCheck(d, meta)()
-
-	// logId := getLogId(contextNil)
-	// ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	// service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	// idSplit := strings.Split(d.Id(), FILED_SP)
-	// if len(idSplit) != 3 {
-	// 	return fmt.Errorf("id is broken,%s", d.Id())
-	// }
-	// clusterId := idSplit[0]
-	// accountName := idSplit[1]
-	// host := idSplit[2]
-
-	// if err := service.DeleteCynosdbAccountPrivilegesById(ctx, clusterId, accountName, host); err != nil {
-	// 	return err
-	// }
 
 	return nil
 }

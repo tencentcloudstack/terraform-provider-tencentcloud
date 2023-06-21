@@ -18,7 +18,7 @@ resource "tencentcloud_cynosdb_roll_back_cluster" "roll_back_cluster" {
   cluster_id        = "cynosdbmysql-bws8h88b"
   rollback_strategy = "snapRollback"
   rollback_id       = 732725
-  # expect_time = "	2022-01-20 00:00:00"
+  # expect_time = "2022-01-20 00:00:00"
   expect_time_thresh = 0
   rollback_databases {
     old_database = "users"

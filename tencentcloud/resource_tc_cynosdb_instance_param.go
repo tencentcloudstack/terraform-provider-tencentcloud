@@ -5,21 +5,14 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_instance_param" "instance_param" {
-  cluster_id = ""
-  instance_ids =
-  cluster_param_list {
-		param_name = ""
-		current_value = ""
-		old_value = ""
+  cluster_id            = "cynosdbmysql-bws8h88b"
+  instance_id           = "cynosdbmysql-ins-rikr6z4o"
+  is_in_maintain_period = "no"
 
-  }
   instance_param_list {
-		param_name = ""
-		current_value = ""
-		old_value = ""
-
+    current_value = "0"
+    param_name    = "init_connect"
   }
-  is_in_maintain_period = ""
 }
 ```
 */
@@ -44,25 +37,25 @@ func resourceTencentCloudCynosdbInstanceParam() *schema.Resource {
 		Read:   resourceTencentCloudCynosdbInstanceParamRead,
 		Update: resourceTencentCloudCynosdbInstanceParamUpdate,
 		Delete: resourceTencentCloudCynosdbInstanceParamDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},
 
 			"instance_id": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},
 
 			"instance_param_list": {
 				Optional:    true,
-				Type:        schema.TypeList,
+				Type:        schema.TypeSet,
 				Description: "Instance parameter list.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -75,11 +68,6 @@ func resourceTencentCloudCynosdbInstanceParam() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Current value of parameter.",
-						},
-						"old_value": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Description: "Parameter old value (only useful when generating parameters) Note: This field may return null, indicating that a valid value cannot be obtained.",
 						},
 					},
 				},
@@ -104,7 +92,7 @@ func resourceTencentCloudCynosdbInstanceParamCreate(d *schema.ResourceData, meta
 	}
 
 	var instanceId string
-	if v, ok := d.GetOk("cluster_id"); ok {
+	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
 
@@ -141,32 +129,33 @@ func resourceTencentCloudCynosdbInstanceParamRead(d *schema.ResourceData, meta i
 	}
 
 	_ = d.Set("cluster_id", clusterId)
-	_ = d.Set("instance_ids", instanceId)
+	_ = d.Set("instance_id", instanceId)
 
 	if instanceParam.ParamsItems != nil {
-		currentParamMap := make(map[string]*cynosdb.ParamItemDetail)
-		for _, param := range instanceParam.ParamsItems {
-			currentParamMap[*param.ParamName] = param
-		}
-		instanceParamListList := []interface{}{}
-		if v, ok := d.GetOk("param_items"); ok {
-			paramItems := v.([]interface{})
-			for _, paramItem := range paramItems {
-				item := paramItem.(map[string]interface{})
-				name := item["param_name"].(string)
-				oldValue := item["old_value"].(string)
-				currentParamItem := make(map[string]string)
-				currentParamItem["param_name"] = name
-				currentParamItem["current_value"] = *currentParamMap[name].CurrentValue
-				if oldValue != "" {
-					currentParamItem["old_value"] = oldValue
-				}
-				instanceParamListList = append(instanceParamListList, currentParamItem)
+		checkFlag := true
+		paramItem := make(map[string]string)
+		if v, ok := d.GetOk("instance_param_list"); ok {
+			for _, v := range v.(*schema.Set).List() {
+				dMap := v.(map[string]interface{})
+				key := dMap["param_name"].(string)
+				value := dMap["current_value"].(string)
+				paramItem[key] = value
 			}
+		} else {
+			checkFlag = false
 		}
 
-		_ = d.Set("instance_param_list", instanceParamListList)
-
+		paramInfoSetList := []interface{}{}
+		for _, paramInfoSet := range instanceParam.ParamsItems {
+			if _, ok := paramItem[*paramInfoSet.ParamName]; !ok && checkFlag {
+				continue
+			}
+			paramInfoSetList = append(paramInfoSetList, map[string]interface{}{
+				"param_name":    *paramInfoSet.ParamName,
+				"current_value": *paramInfoSet.CurrentValue,
+			})
+		}
+		_ = d.Set("instance_param_list", paramInfoSetList)
 	}
 
 	return nil
@@ -190,20 +179,32 @@ func resourceTencentCloudCynosdbInstanceParamUpdate(d *schema.ResourceData, meta
 	request.ClusterId = &clusterId
 	request.InstanceIds = []*string{&instanceId}
 
-	if v, ok := d.GetOk("instance_param_list"); ok {
-		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			modifyParamItem := cynosdb.ModifyParamItem{}
-			if v, ok := dMap["param_name"]; ok {
-				modifyParamItem.ParamName = helper.String(v.(string))
+	if d.HasChange("instance_param_list") {
+		oldParam, _ := d.GetChange("instance_param_list")
+		oldItem := oldParam.(*schema.Set).List()
+		oldParamItem := make(map[string]string)
+		for _, v := range oldItem {
+			dMap := v.(map[string]interface{})
+			key := dMap["param_name"].(string)
+			value := dMap["current_value"].(string)
+			oldParamItem[key] = value
+		}
+
+		if v, ok := d.GetOk("instance_param_list"); ok {
+			for _, item := range v.(*schema.Set).List() {
+				dMap := item.(map[string]interface{})
+				paramItem := cynosdb.ModifyParamItem{}
+				if v, ok := dMap["param_name"]; ok {
+					paramItem.ParamName = helper.String(v.(string))
+				}
+				if v, ok := dMap["current_value"]; ok {
+					paramItem.CurrentValue = helper.String(v.(string))
+				}
+				if oldParamItem[*paramItem.ParamName] != "" {
+					paramItem.OldValue = helper.String(oldParamItem[*paramItem.ParamName])
+				}
+				request.InstanceParamList = append(request.InstanceParamList, &paramItem)
 			}
-			if v, ok := dMap["current_value"]; ok {
-				modifyParamItem.CurrentValue = helper.String(v.(string))
-			}
-			if v, ok := dMap["old_value"]; ok {
-				modifyParamItem.OldValue = helper.String(v.(string))
-			}
-			request.InstanceParamList = append(request.InstanceParamList, &modifyParamItem)
 		}
 	}
 

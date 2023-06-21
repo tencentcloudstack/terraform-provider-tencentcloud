@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_binlog_save_days" "binlog_save_days" {
-  cluster_id = "cynosdbmysql-123"
+  cluster_id       = "cynosdbmysql-123"
   binlog_save_days = 7
 }
 ```
@@ -42,6 +42,7 @@ func resourceTencentCloudCynosdbBinlogSaveDays() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster ID.",
 			},

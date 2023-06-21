@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_audit_log_file" "audit_log_file" {
-  instance_id = "xxxxxxx"
-  start_time = "2022-07-12 10:29:20"
-  end_time = "2022-08-12 10:29:20"
+  instance_id = "cynosdbmysql-ins-afqx1hy0"
+  start_time  = "2022-07-12 10:29:20"
+  end_time    = "2022-08-12 10:29:20"
 }
 ```
 */

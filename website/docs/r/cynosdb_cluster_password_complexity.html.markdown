@@ -32,7 +32,7 @@ resource "tencentcloud_cynosdb_cluster_password_complexity" "cluster_password_co
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, String) Cluster ID.
+* `cluster_id` - (Required, String, ForceNew) Cluster ID.
 * `validate_password_length` - (Required, Int) Password length.
 * `validate_password_mixed_case_count` - (Required, Int) Number of uppercase and lowercase characters.
 * `validate_password_number_count` - (Required, Int) Number of digits.
