@@ -123,8 +123,6 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentCreate(d *schema.Re
 		return errors.New("get bucket failed!")
 	}
 
-	tcCosClient := meta.(*TencentCloudClient).apiV3Conn.UseTencentCosClient(bucket)
-
 	option := cos.BucketPutDomainCertificateOptions{}
 	if dcMap, ok := helper.InterfacesHeadMap(d, "domain_certificate"); ok {
 		if certMap, ok := helper.InterfaceToMap(dcMap, "certificate"); ok {
@@ -151,7 +149,7 @@ func resourceTencentCloudCosBucketDomainCertificateAttachmentCreate(d *schema.Re
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := tcCosClient.Bucket.PutDomainCertificate(ctx, &option)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTencentCosClient(bucket).Bucket.PutDomainCertificate(ctx, &option)
 		if e != nil {
 			return retryError(e)
 		} else {
