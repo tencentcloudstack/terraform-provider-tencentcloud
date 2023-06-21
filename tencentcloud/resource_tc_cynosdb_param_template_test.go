@@ -58,7 +58,7 @@ func testAccCheckCynosdbParamTemplateDestroy(s *terraform.State) error {
 		if err != nil {
 			return err
 		}
-		
+
 		return fmt.Errorf("cynosdb cluster param template still exists: %s", rs.Primary.ID)
 	}
 	return nil
