@@ -740,13 +740,13 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 			"intelligent_tiering_days": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     30,
+				Computed:    true,
 				Description: "Specifies the limit of days for standard-tier data to low-frequency data in an intelligent tiered storage configuration, with optional days of 30, 60, 90. Default value is 30.",
 			},
 			"intelligent_tiering_request_frequent": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default:     1,
+				Computed:    true,
 				Description: "Specify the access limit for converting standard layer data into low-frequency layer data in the configuration. The default value is once, which can be used in combination with the number of days to achieve the conversion effect. For example, if the parameter is set to 1 and the number of access days is 30, it means that objects with less than one visit in 30 consecutive days will be reduced from the standard layer to the low frequency layer.",
 			},
 			//computed
@@ -1010,8 +1010,16 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 			return fmt.Errorf("enable_intelligent_tiering, intelligent_tiering_days and intelligent_tiering_request_frequent not support change!")
 		}
 		var transition cos.BucketIntelligentTieringTransition
-		transition.Days = d.Get("intelligent_tiering_days").(int)
-		transition.RequestFrequent = d.Get("intelligent_tiering_request_frequent").(int)
+		if v, ok := d.GetOk("intelligent_tiering_days"); ok {
+			transition.Days = v.(int)
+		} else {
+			transition.Days = 30
+		}
+		if v, ok := d.GetOk("intelligent_tiering_request_frequent"); ok {
+			transition.RequestFrequent = v.(int)
+		} else {
+			transition.RequestFrequent = 1
+		}
 
 		if v, ok := d.GetOk("enable_intelligent_tiering"); ok && v.(bool) {
 			opt := &cos.BucketPutIntelligentTieringOptions{

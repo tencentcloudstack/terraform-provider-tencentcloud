@@ -1644,18 +1644,17 @@ func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket st
 	logId := getLogId(ctx)
 
 	ratelimit.Check("BucketGetIntelligentTiering")
-	var response *cos.Response
-	result, response, errRet = me.client.UseTencentCosClient(bucket).Bucket.GetIntelligentTiering(ctx)
+	intelligentTieringResult, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetIntelligentTiering(ctx)
 	resp, _ := json.Marshal(response.Response.Body)
 	if response.StatusCode == 404 {
 		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)
 		return
 	}
 
-	if errRet != nil {
+	if err != nil {
 		return
 	}
-
+	result = intelligentTieringResult
 	log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s]\n",
 		logId, "GetIntelligentTiering", "", resp)
 	return
