@@ -1788,3 +1788,552 @@ func (me *CynosdbService) CynosdbInstanceOfflineStateRefreshFunc(clusterId strin
 		return detail, helper.PString(detail.Status), nil
 	}
 }
+
+func (me *CynosdbService) DescribeCynosdbZoneByFilter(ctx context.Context, param map[string]interface{}) (zone []*cynosdb.SaleRegion, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cynosdb.NewDescribeZonesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "IncludeVirtualZones" {
+			request.IncludeVirtualZones = v.(*bool)
+		}
+		if k == "ShowPermission" {
+			request.ShowPermission = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCynosdbClient().DescribeZones(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.RegionSet) < 1 {
+		return
+	}
+
+	zone = response.Response.RegionSet
+
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbAccountById(ctx context.Context, clusterId string, accountName string, host string) (account *cynosdb.Account, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeAccountsRequest()
+	request.ClusterId = &clusterId
+	request.AccountNames = []*string{&accountName}
+	request.Hosts = []*string{&host}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeAccounts(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.AccountSet) < 1 {
+		return
+	}
+
+	account = response.Response.AccountSet[0]
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbAccountById(ctx context.Context, clusterId string, accountNames string, host string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDeleteAccountsRequest()
+	request.ClusterId = &clusterId
+	request.Accounts = []*cynosdb.InputAccount{
+		{
+			AccountName: &accountNames,
+			Host:        &host,
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DeleteAccounts(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbAccountPrivilegesById(ctx context.Context, clusterId string, accountName string, host string) (accountPrivileges *cynosdb.DescribeAccountAllGrantPrivilegesResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeAccountAllGrantPrivilegesRequest()
+	request.ClusterId = &clusterId
+	request.Account = &cynosdb.InputAccount{
+		AccountName: &accountName,
+		Host:        &host,
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeAccountAllGrantPrivileges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	accountPrivileges = response.Response
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbAccountPrivilegesById(ctx context.Context, clusterId string, accountName string, host string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewRevokeAccountPrivilegesRequest()
+	request.ClusterId = &clusterId
+	request.Account = &cynosdb.InputAccount{
+		AccountName: &accountName,
+		Host:        &host,
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().RevokeAccountPrivileges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbBinlogSaveDaysById(ctx context.Context, clusterId string) (binlogSaveDays *int64, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeBinlogSaveDaysRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeBinlogSaveDays(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	binlogSaveDays = response.Response.BinlogSaveDays
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbClusterDatabasesById(ctx context.Context, clusterId string, dbName string) (clusterDatabases *cynosdb.DbInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeClusterDetailDatabasesRequest()
+	request.ClusterId = &clusterId
+	request.DbName = &dbName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeClusterDetailDatabases(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || len(response.Response.DbInfos) < 1 {
+		return
+	}
+
+	clusterDatabases = response.Response.DbInfos[0]
+
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbClusterDatabasesById(ctx context.Context, clusterId, dbName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDeleteClusterDatabaseRequest()
+	request.ClusterId = &clusterId
+	request.DbNames = []*string{&dbName}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DeleteClusterDatabase(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbClusterPasswordComplexityById(ctx context.Context, clusterId string) (clusterPasswordComplexity *cynosdb.DescribeClusterPasswordComplexityResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeClusterPasswordComplexityRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeClusterPasswordComplexity(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil {
+		return
+	}
+
+	clusterPasswordComplexity = response.Response
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbClusterPasswordComplexityById(ctx context.Context, clusterId string) (flowId int64, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewCloseClusterPasswordComplexityRequest()
+	request.ClusterIds = []*string{&clusterId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().CloseClusterPasswordComplexity(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	flowId = *response.Response.FlowId
+	return
+}
+
+func (me *CynosdbService) DescribeFlow(ctx context.Context, flowId int64) (ok bool, errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewDescribeFlowRequest()
+	request.FlowId = &flowId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCynosdbClient().DescribeFlow(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if *response.Response.Status == 2 {
+		return
+	}
+	if *response.Response.Status == 0 {
+		ok = true
+		return
+	}
+	errRet = fmt.Errorf("redis task exe fail, task status is %v", *response.Response.Status)
+	return
+}
+
+func (me *CynosdbService) CopyClusterPasswordComplexity(ctx context.Context, clusterId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewCopyClusterPasswordComplexityRequest()
+	request.ClusterIds = []*string{&clusterId}
+	request.SourceClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().CopyClusterPasswordComplexity(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	flowId := *response.Response.FlowId
+	err = resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		ok, err := me.DescribeFlow(ctx, flowId)
+		if err != nil {
+			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if ok {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("create cynosdb clusterPasswordComplexity is processing"))
+		}
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s create cynosdb clusterPasswordComplexity fail, reason:%s\n", logId, err.Error())
+		errRet = err
+		return
+	}
+
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbInstanceParamById(ctx context.Context, clusterId string, instanceId string) (instanceParam *cynosdb.InstanceParamItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeInstanceParamsRequest()
+	request.ClusterId = &clusterId
+	request.InstanceIds = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeInstanceParams(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Items) < 1 {
+		return
+	}
+
+	instanceParam = response.Response.Items[0]
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbWanById(ctx context.Context, instanceGrpId string) (flowId int64, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewCloseWanRequest()
+	request.InstanceGrpId = &instanceGrpId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().CloseWan(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	flowId = *response.Response.FlowId
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbParamTemplateById(ctx context.Context, templateId int64) (paramTemplate *cynosdb.DescribeParamTemplateDetailResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeParamTemplateDetailRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeParamTemplateDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	paramTemplate = response.Response
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbParamTemplateById(ctx context.Context, templateId int64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDeleteParamTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DeleteParamTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CynosdbService) SetRenewFlag(ctx context.Context, instanceId string, autoRenewFlag int64) (errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewSetRenewFlagRequest()
+	request.ResourceIds = []*string{&instanceId}
+	request.AutoRenewFlag = &autoRenewFlag
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseCynosdbClient().SetRenewFlag(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return retryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbResourcePackageById(ctx context.Context, packageId string) (resourcePackage *cynosdb.PackageDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeResourcePackageDetailRequest()
+	request.PackageId = &packageId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeResourcePackageDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Detail) < 1 {
+		return
+	}
+
+	resourcePackage = response.Response.Detail[0]
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbResourcePackageById(ctx context.Context, packageId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewRefundResourcePackageRequest()
+	request.PackageId = &packageId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().RefundResourcePackage(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
