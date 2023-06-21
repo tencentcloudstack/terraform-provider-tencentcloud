@@ -354,9 +354,7 @@ func resourceTencentCloudCosBucketInventoryRead(d *schema.ResourceData, meta int
 	if result.OptionalFields != nil {
 		fields := make([]string, 0)
 		if result.OptionalFields.BucketInventoryFields != nil {
-			for _, item := range result.OptionalFields.BucketInventoryFields {
-				fields = append(fields, item)
-			}
+			fields = append(fields, result.OptionalFields.BucketInventoryFields...)
 			optionalFieldsMap["fields"] = fields
 		}
 	}
