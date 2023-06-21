@@ -254,10 +254,11 @@ resource "tencentcloud_cos_bucket" "object_bucket" {
 }
 
 resource "tencentcloud_cos_bucket_object" "object_acl" {
-  bucket  = tencentcloud_cos_bucket.object_bucket.bucket
-  key     = "tf-object-acl"
+  bucket = tencentcloud_cos_bucket.object_bucket.bucket
+  key = "acl.txt"
   content = "aaaaaaaaaaaaaaaa"
   acl     = "%s"
+  
 }
 `, appid, acl)
 }
