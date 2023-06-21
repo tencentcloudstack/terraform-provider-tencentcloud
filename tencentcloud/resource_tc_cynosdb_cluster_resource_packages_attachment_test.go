@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCynosdbClusterResourcePackagesAttachmentResource_basic -v
-func TestAccTencentCloudCynosdbClusterResourcePackagesAttachmentResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixCynosdbClusterResourcePackagesAttachmentResource_basic -v
+func TestAccTencentCloudNeedFixCynosdbClusterResourcePackagesAttachmentResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
