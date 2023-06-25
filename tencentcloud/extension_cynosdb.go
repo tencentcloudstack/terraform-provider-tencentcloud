@@ -115,14 +115,17 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"vpc_id": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
 			Description: "ID of the VPC.",
 		},
 		"subnet_id": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
 			Description: "ID of the subnet within this VPC.",
+		},
+		"old_ip_reserve_hours": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Recycling time of the old address, must be filled in when modifying the vpcRecycling time of the old address, must be filled in when modifying the vpc.",
 		},
 		"port": {
 			Type:        schema.TypeInt,
@@ -146,13 +149,11 @@ func TencentCynosdbClusterBaseInfo() map[string]*schema.Schema {
 		"storage_limit": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			ForceNew:    true,
 			Description: "Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.",
 		},
 		"cluster_name": {
 			Type:        schema.TypeString,
 			Required:    true,
-			ForceNew:    true,
 			Description: "Name of CynosDB cluster.",
 		},
 		"password": {

@@ -2340,6 +2340,75 @@ func (me *CynosdbService) SetRenewFlag(ctx context.Context, instanceId string, a
 	return
 }
 
+func (me *CynosdbService) ModifyClusterName(ctx context.Context, clusterId string, clusterName string) (errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewModifyClusterNameRequest()
+	request.ClusterId = &clusterId
+	request.ClusterName = &clusterName
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseCynosdbClient().ModifyClusterName(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return retryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+func (me *CynosdbService) ModifyClusterStorage(ctx context.Context, clusterId string, newStorageLimit int64, oldStorageLimit int64) (errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewModifyClusterStorageRequest()
+	request.ClusterId = &clusterId
+	request.NewStorageLimit = &newStorageLimit
+	request.OldStorageLimit = &oldStorageLimit
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseCynosdbClient().ModifyClusterStorage(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return retryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+func (me *CynosdbService) SwitchClusterVpc(ctx context.Context, clusterId string, vpcId string, subnetId string, oldIpReserveHours int64) (errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewSwitchClusterVpcRequest()
+	request.ClusterId = &clusterId
+	request.UniqVpcId = &vpcId
+	request.UniqSubnetId = &subnetId
+	request.OldIpReserveHours = &oldIpReserveHours
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseCynosdbClient().SwitchClusterVpc(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return retryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
 func (me *CynosdbService) DescribeCynosdbResourcePackageById(ctx context.Context, packageId string) (resourcePackage *cynosdb.PackageDetail, errRet error) {
 	logId := getLogId(ctx)
 

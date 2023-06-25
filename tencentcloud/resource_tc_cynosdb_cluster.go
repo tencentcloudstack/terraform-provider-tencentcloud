@@ -66,12 +66,11 @@ import (
 	"log"
 	"time"
 
-	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -726,6 +725,35 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("auto_renew_flag") {
 		autoRenewFlag := int64(d.Get("auto_renew_flag").(int))
 		err := cynosdbService.SetRenewFlag(ctx, clusterId, autoRenewFlag)
+		if err != nil {
+			return err
+		}
+	}
+
+	// update cluster_name
+	if d.HasChange("cluster_name") {
+		clusterName := d.Get("cluster_name").(string)
+		err := cynosdbService.ModifyClusterName(ctx, clusterId, clusterName)
+		if err != nil {
+			return err
+		}
+	}
+
+	// update storage_limit
+	if d.HasChange("storage_limit") {
+		oldStorageLimit, newStorageLimit := d.GetChange("storage_limit")
+		err := cynosdbService.ModifyClusterStorage(ctx, clusterId, int64(newStorageLimit.(int)), int64(oldStorageLimit.(int)))
+		if err != nil {
+			return err
+		}
+	}
+
+	// update vpc
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		vpcId := d.Get("vpc_id").(string)
+		subnetId := d.Get("subnet_id").(string)
+		oldIpReserveHours := int64(d.Get("old_ip_reserve_hours").(int))
+		err := cynosdbService.SwitchClusterVpc(ctx, clusterId, vpcId, subnetId, oldIpReserveHours)
 		if err != nil {
 			return err
 		}
