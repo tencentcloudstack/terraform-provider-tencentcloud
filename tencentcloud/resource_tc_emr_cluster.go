@@ -75,11 +75,10 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				Description: "Display strategy of EMR instance.",
 			},
 			"product_id": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validateIntegerInRange(1, 30),
-				Description:  "The product id of EMR instance.",
+				Type:        schema.TypeInt,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The product id of EMR instance.",
 			},
 			"vpc_settings": {
 				Type:        schema.TypeMap,
