@@ -749,7 +749,7 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 	}
 
 	// update vpc
-	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") || d.HasChange("old_ip_reserve_hours") {
 		vpcId := d.Get("vpc_id").(string)
 		subnetId := d.Get("subnet_id").(string)
 		oldIpReserveHours := int64(d.Get("old_ip_reserve_hours").(int))
