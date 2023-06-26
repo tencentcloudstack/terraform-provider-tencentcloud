@@ -440,6 +440,7 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_restart_instance
 	tencentcloud_cynosdb_roll_back_cluster
 	tencentcloud_cynosdb_wan
+	tencentcloud_cynosdb_cluster_slave_zone
 
 Direct Connect(DC)
   Data Source
@@ -2514,6 +2515,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_restart_instance":                       resourceTencentCloudCynosdbRestartInstance(),
 			"tencentcloud_cynosdb_roll_back_cluster":                      resourceTencentCloudCynosdbRollBackCluster(),
 			"tencentcloud_cynosdb_wan":                                    resourceTencentCloudCynosdbWan(),
+			"tencentcloud_cynosdb_cluster_slave_zone":                 resourceTencentCloudCynosdbClusterSlaveZone(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_template":        resourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_vod_image_sprite_template":                      resourceTencentCloudVodImageSpriteTemplate(),
 			"tencentcloud_vod_procedure_template":                         resourceTencentCloudVodProcedureTemplate(),
