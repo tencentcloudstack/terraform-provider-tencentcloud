@@ -1,3 +1,45 @@
+## 1.81.9 (June 21, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cynosdb_account_all_grant_privileges` ([#1904](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1904))
+* **New Data Source:** `tencentcloud_cynosdb_audit_logs` ([#1903](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1903))
+* **New Data Source:** `tencentcloud_cynosdb_binlog_download_url` ([#1903](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1903))
+* **New Data Source:** `tencentcloud_cynosdb_cluster` ([#1903](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1903))
+* **New Data Source:** `tencentcloud_cynosdb_cluster_detail_databases` ([#1903](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1903))
+* **New Data Source:** `tencentcloud_cynosdb_cluster_param_logs` ([#1903](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1903))
+* **New Data Source:** `tencentcloud_cynosdb_describe_instance_error_logs` ([#1903](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1903))
+* **New Data Source:** `tencentcloud_cynosdb_describe_instance_slow_queries` ([#1903](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1903))
+* **New Data Source:** `tencentcloud_cynosdb_project_security_groups` ([#1904](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1904))
+* **New Data Source:** `tencentcloud_cynosdb_resource_package_list` ([#1904](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1904))
+* **New Data Source:** `tencentcloud_cynosdb_resource_package_sale_specs` ([#1904](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1904))
+* **New Data Source:** `tencentcloud_cynosdb_rollback_time_range` ([#1904](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1904))
+* **New Data Source:** `tencentcloud_cynosdb_zone` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Data Source:** `tencentcloud_tdmq_pro_instance_detail` ([#1902](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1902))
+* **New Data Source:** `tencentcloud_tdmq_pro_instances` ([#1902](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1902))
+* **New Data Source:** `tencentcloud_tdmq_rocketmq_messages` ([#1902](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1902))
+* **New Resource:** `tencentcloud_cos_bucket_inventory` ([#1907](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1907))
+* **New Resource:** `tencentcloud_cynosdb_account` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_account_privileges` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_binlog_save_days` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_cluster_databases` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_cluster_password_complexity` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_cluster_resource_packages_attachment` ([#1906](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1906))
+* **New Resource:** `tencentcloud_cynosdb_export_instance_error_logs` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_export_instance_slow_queries` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_instance_param` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_isolate_instance` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_param_template` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_restart_instance` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_roll_back_cluster` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+* **New Resource:** `tencentcloud_cynosdb_wan` ([#1905](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1905))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cos_bucket: support `enable_intelligent_tiering` and format client called ([#1907](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1907))
+* resource/tencentcloud_cos_bucket_domain_certificate_attachment: format client called ([#1907](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1907))
+* resource/tencentcloud_cos_bucket_object: format client called ([#1907](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1907))
+
 ## 1.81.8 (June 16, 2023)
 
 FEATURES:

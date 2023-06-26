@@ -248,6 +248,17 @@ func resourceTencentCloudCosBucketObjectRead(d *schema.ResourceData, meta interf
 		_ = d.Set("storage_class", response.StorageClass)
 	}
 
+	_, aclResponse, aclErr := meta.(*TencentCloudClient).apiV3Conn.UseTencentCosClient(bucket).Object.GetACL(ctx, key)
+	if aclErr != nil {
+		return fmt.Errorf("cos [GetACL] error: %s, bucket: %s, object: %s", aclErr.Error(), bucket, key)
+	}
+	if aclResponse.StatusCode == 404 {
+		log.Printf("[WARN] [GetACL] returns %d, %s", 404, err)
+		return nil
+	}
+
+	_ = d.Set("acl", aclResponse.Header.Get("x-cos-acl"))
+
 	var tags map[string]string
 	tags, err = cosService.GetObjectTags(ctx, bucket, key)
 	if err != nil {

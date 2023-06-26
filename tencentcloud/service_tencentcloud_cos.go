@@ -128,15 +128,14 @@ func (me *CosService) PutBucket(ctx context.Context, bucket, acl string) (errRet
 		}
 	}()
 	ratelimit.Check("CreateBucket")
-	client := me.client.UseCosClient()
-	response, err := client.CreateBucket(&request)
+	response, err := me.client.UseCosClient().CreateBucket(&request)
 	if err != nil {
 		errRet = fmt.Errorf("cos put bucket error: %s, bucket: %s", err.Error(), bucket)
 		return
 	}
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], endpoint %s\n",
-		logId, "put bucket", request.String(), response.String(), client.Endpoint)
+		logId, "put bucket", request.String(), response.String(), me.client.UseCosClient().Endpoint)
 
 	return nil
 }
@@ -155,8 +154,7 @@ func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, op
 	}()
 
 	ratelimit.Check("TencentcloudCosPutBucket")
-	client := me.client.UseTencentCosClient(bucket)
-	response, err := client.Bucket.Put(ctx, opt)
+	response, err := me.client.UseTencentCosClient(bucket).Bucket.Put(ctx, opt)
 
 	if err != nil {
 		errRet = fmt.Errorf("cos put bucket error: %s, bucket: %s", err.Error(), bucket)
@@ -166,9 +164,36 @@ func (me *CosService) TencentCosPutBucket(ctx context.Context, bucket string, op
 	resp, _ := json.Marshal(response.Response.Body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], baseUrl %s\n",
-		logId, "put bucket", req, resp, client.BaseURL.BucketURL)
+		logId, "put bucket", req, resp, me.client.UseTencentCosClient(bucket).BaseURL.BucketURL)
 
 	return nil
+}
+
+func (me *CosService) TencentCosBucketGetLocation(ctx context.Context, bucket string, opt *cos.BucketPutOptions) (location string, errRet error) {
+	logId := getLogId(ctx)
+
+	req, _ := json.Marshal(opt)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request [%s], reason[%s]\n",
+				logId, "put bucket", req, errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("TencentcloudCosPutBucket")
+	result, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetLocation(ctx)
+	if err != nil {
+		errRet = fmt.Errorf("cos get location error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+	location = result.Location
+	resp, _ := json.Marshal(response.Response.Body)
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s], baseUrl %s\n",
+		logId, "put bucket", req, resp, me.client.UseTencentCosClient(bucket).BaseURL.BucketURL)
+
+	return
 }
 
 func (me *CosService) TencentCosPutBucketACL(
@@ -1581,4 +1606,56 @@ func (me *CosService) DescribeCosBucketVersionById(ctx context.Context, bucket s
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s]\n", logId, "GetCIGuetzli", bucket)
 
 	return resRaw.(*cos.BucketGetVersionResult), nil
+}
+
+func (me *CosService) BucketPutIntelligentTiering(ctx context.Context, bucket string, opt *cos.BucketPutIntelligentTieringOptions) (errRet error) {
+	logId := getLogId(ctx)
+
+	req, _ := json.Marshal(opt)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request [%s], reason[%s]\n",
+				logId, "put bucket", req, errRet.Error())
+		}
+	}()
+
+	ratelimit.Check("BucketPutIntelligentTiering")
+	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutIntelligentTiering(ctx, opt)
+	if err != nil {
+		errRet = fmt.Errorf("cos bucket put intelligent tiering error: %s, bucket: %s", err.Error(), bucket)
+		return
+	}
+
+	resp, _ := json.Marshal(response.Response.Body)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] response body [%s]\n",
+		logId, "BucketPutIntelligentTiering", resp)
+
+	return nil
+}
+
+func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket string) (result *cos.BucketGetIntelligentTieringResult, errRet error) {
+	logId := getLogId(ctx)
+
+	ratelimit.Check("BucketGetIntelligentTiering")
+	intelligentTieringResult, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetIntelligentTiering(ctx)
+	resp, _ := json.Marshal(response.Response.Body)
+	if response.StatusCode == 404 {
+		log.Printf("[WARN]%s, api[%s] returns %d", logId, "GetDomainCertificate", response.StatusCode)
+		return
+	}
+
+	if err != nil {
+		return
+	}
+	result = intelligentTieringResult
+	log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s]\n",
+		logId, "GetIntelligentTiering", "", resp)
+	return
 }
