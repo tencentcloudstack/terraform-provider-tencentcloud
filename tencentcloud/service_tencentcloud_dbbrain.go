@@ -1176,3 +1176,280 @@ func (me *DbbrainService) DescribeDbbrainTopSpaceTablesByFilter(ctx context.Cont
 
 	return
 }
+
+func (me *DbbrainService) DescribeDbbrainDiagDbInstancesByFilter(ctx context.Context, param map[string]interface{}) (items []*dbbrain.InstanceInfo, DbScanStatus *int64, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeDiagDBInstancesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "IsSupported" {
+			request.IsSupported = v.(*bool)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+		if k == "InstanceNames" {
+			request.InstanceNames = v.([]*string)
+		}
+		if k == "InstanceIds" {
+			request.InstanceIds = v.([]*string)
+		}
+		if k == "Regions" {
+			request.Regions = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDbbrainClient().DescribeDiagDBInstances(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Items) < 1 {
+			break
+		}
+		items = append(items, response.Response.Items...)
+		if len(response.Response.Items) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainMysqlProcessListByFilter(ctx context.Context, param map[string]interface{}) (mysqlProcessList []*dbbrain.MySqlProcess, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeMySqlProcessListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "ID" {
+			request.ID = v.(*uint64)
+		}
+		if k == "User" {
+			request.User = v.(*string)
+		}
+		if k == "Host" {
+			request.Host = v.(*string)
+		}
+		if k == "DB" {
+			request.DB = v.(*string)
+		}
+		if k == "State" {
+			request.State = v.(*string)
+		}
+		if k == "Command" {
+			request.Command = v.(*string)
+		}
+		if k == "Time" {
+			request.Time = v.(*uint64)
+		}
+		if k == "Info" {
+			request.Info = v.(*string)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		limit uint64 = 20
+	)
+	request.Limit = &limit
+	response, err := me.client.UseDbbrainClient().DescribeMySqlProcessList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.ProcessList) < 1 {
+		return
+	}
+	mysqlProcessList = response.Response.ProcessList
+
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainNoPrimaryKeyTablesByFilter(ctx context.Context, param map[string]interface{}) (tables []*dbbrain.Table, resp *dbbrain.DescribeNoPrimaryKeyTablesResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeNoPrimaryKeyTablesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Date" {
+			request.Date = v.(*string)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseDbbrainClient().DescribeNoPrimaryKeyTables(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.NoPrimaryKeyTables) < 1 {
+			break
+		}
+		tables = append(tables, response.Response.NoPrimaryKeyTables...)
+		resp = response.Response
+		if len(response.Response.NoPrimaryKeyTables) < int(limit) || *response.Response.NoPrimaryKeyTableRecordCount < limit {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainRedisTopBigKeysByFilter(ctx context.Context, param map[string]interface{}) (redisTopBigKeys []*dbbrain.RedisKeySpaceData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeRedisTopBigKeysRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Date" {
+			request.Date = v.(*string)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+		if k == "SortBy" {
+			request.SortBy = v.(*string)
+		}
+		if k == "KeyType" {
+			request.KeyType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		limit int64 = 20
+	)
+	request.Limit = &limit
+	response, err := me.client.UseDbbrainClient().DescribeRedisTopBigKeys(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.TopKeys) < 1 {
+		return
+	}
+	redisTopBigKeys = response.Response.TopKeys
+
+	return
+}
+
+func (me *DbbrainService) DescribeDbbrainRedisTopKeyPrefixListByFilter(ctx context.Context, param map[string]interface{}) (redisTopKeyPrefixList []*dbbrain.RedisPreKeySpaceData, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = dbbrain.NewDescribeRedisTopKeyPrefixListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "Date" {
+			request.Date = v.(*string)
+		}
+		if k == "Product" {
+			request.Product = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		limit int64 = 20
+	)
+	request.Limit = &limit
+	response, err := me.client.UseDbbrainClient().DescribeRedisTopKeyPrefixList(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Items) < 1 {
+		return
+	}
+	redisTopKeyPrefixList = response.Response.Items
+
+	return
+}

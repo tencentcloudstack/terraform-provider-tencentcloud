@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_cos_bucket: Update the validation rules for the `bucket` parameter
+```
+
+```release-note:enhancement
+resource/tencentcloud_security_group_rule_set: Add default values for the protocol and port fields.
+```

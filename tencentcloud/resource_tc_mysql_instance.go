@@ -293,7 +293,6 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		},
 		"slave_sync_mode": {
 			Type:         schema.TypeInt,
-			ForceNew:     true,
 			Optional:     true,
 			ValidateFunc: validateAllowedIntValue([]int{0, 1, 2}),
 			Default:      0,
@@ -1001,6 +1000,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		cpu := int64(d.Get("cpu").(int))
 		volumeSize := int64(d.Get("volume_size").(int))
 		slaveDeployMode := int64(d.Get("slave_deploy_mode").(int))
+		slaveSyncMode := int64(d.Get("slave_sync_mode").(int))
 		deviceType := ""
 		firstSlaveZone := ""
 		secondSlaveZone := ""
@@ -1021,7 +1021,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			secondSlaveZone = v.(string)
 		}
 
-		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, slaveDeployMode, firstSlaveZone, secondSlaveZone)
+		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, slaveDeployMode, slaveSyncMode, firstSlaveZone, secondSlaveZone)
 
 		if err != nil {
 			return err

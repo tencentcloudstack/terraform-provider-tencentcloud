@@ -1052,7 +1052,7 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		_ = d.Set("key_ids", instance.LoginSettings.KeyIds)
 	} else {
 		_ = d.Set("key_name", "")
-		_ = d.Set("key_ids", []*string{helper.String("")})
+		_ = d.Set("key_ids", []*string{})
 	}
 	if instance.LoginSettings.KeepImageLogin != nil {
 		_ = d.Set("keep_image_login", *instance.LoginSettings.KeepImageLogin == CVM_IMAGE_LOGIN)

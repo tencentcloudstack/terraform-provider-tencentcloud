@@ -45,6 +45,13 @@ func TestAccTencentCloudTcmMeshResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.tracing.0.apm.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.tracing.0.apm.0.enable"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.tracing.0.zipkin.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.inject.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.inject.0.exclude_ip_ranges.#"),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_mesh.basic", "config.0.inject.0.hold_application_until_proxy_starts", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tcm_mesh.basic", "config.0.inject.0.hold_proxy_until_application_ends", "true"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.sidecar_resources.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.sidecar_resources.0.limits.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "config.0.sidecar_resources.0.requests.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "tag_list.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "tag_list.0.key"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcm_mesh.basic", "tag_list.0.passthrough"),
@@ -108,43 +115,67 @@ func testAccCheckMeshExists(r string) resource.TestCheckFunc {
 const testAccTcmMesh = `
 
 resource "tencentcloud_tcm_mesh" "basic" {
-  display_name = "test_mesh"
-  mesh_version = "1.12.5"
-  type = "HOSTED"
-  config {
-    istio {
-      outbound_traffic_policy = "ALLOW_ANY"
-      disable_policy_checks = true
-      enable_pilot_http = true
-      disable_http_retry = true
-      smart_dns {
-        istio_meta_dns_capture = true
-        istio_meta_dns_auto_allocate = true
-      }
-    }
-	tracing {
-		enable = true
+	display_name = "test_mesh"
+	mesh_version = "1.12.5"
+	type         = "HOSTED"
+	config {
+	  istio {
+		outbound_traffic_policy = "ALLOW_ANY"
+		disable_policy_checks   = true
+		enable_pilot_http       = true
+		disable_http_retry      = true
+		smart_dns {
+		  istio_meta_dns_capture       = true
+		  istio_meta_dns_auto_allocate = true
+		}
+		tracing {
+		  enable = false
+		}
+	  }
+	  tracing {
+		enable   = true
 		sampling = 1
 		apm {
-			enable = false
+		  enable = true
+		  region = "ap-guangzhou"
 		}
-		zipkin {
-			address = "10.0.0.1:1000"
-		}
-	}
-	prometheus {
+	  }
+	  prometheus {
 		custom_prom {
-			url = "https://10.0.0.1:1000"
-			auth_type = "none"
-			vpc_id = "vpc-j9yhbzpn"
+		  url       = "https://10.0.0.1:1000"
+		  auth_type = "none"
+		  vpc_id    = "vpc-j9yhbzpn"
 		}
+	  }
+	  inject {
+		exclude_ip_ranges                   = ["172.16.0.0/16"]
+		hold_application_until_proxy_starts = true
+		hold_proxy_until_application_ends   = true
+	  }
+  
+	  sidecar_resources {
+		limits {
+		  name     = "cpu"
+		  quantity = "2"
+		}
+		limits {
+		  name     = "memory"
+		  quantity = "1Gi"
+		}
+		requests {
+		  name     = "cpu"
+		  quantity = "100m"
+		}
+		requests {
+		  name     = "memory"
+		  quantity = "128Mi"
+		}
+	  }
 	}
-  }
-  tag_list {
-    key = "key"
-    value = "value"
-    passthrough = false
-  }
+	tag_list {
+	  key         = "key"
+	  value       = "value"
+	  passthrough = false
+	}
 }
-
 `

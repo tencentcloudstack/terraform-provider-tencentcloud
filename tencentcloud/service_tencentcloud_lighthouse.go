@@ -95,11 +95,12 @@ func (me *LightHouseService) DeleteLighthouseInstanceById(ctx context.Context, i
 	return
 }
 
-func (me *LightHouseService) IsolateLighthouseInstanceById(ctx context.Context, id string) (errRet error) {
+func (me *LightHouseService) IsolateLighthouseInstanceById(ctx context.Context, id string, isolateDataDisk bool) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := lighthouse.NewIsolateInstancesRequest()
 	request.InstanceIds = append(request.InstanceIds, &id)
+	request.IsolateDataDisk = helper.Bool(isolateDataDisk)
 
 	defer func() {
 		if errRet != nil {
@@ -358,6 +359,45 @@ func (me *LightHouseService) DescribeLighthouseDiskById(ctx context.Context, dis
 	}
 
 	diskAttachment = response.Response.DiskSet[0]
+	return
+}
+
+func (me *LightHouseService) DescribeLighthouseDisk(ctx context.Context, diskIds []string, filters []*lighthouse.Filter) (disks []*lighthouse.Disk, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeDisksRequest()
+	if len(diskIds) > 0 {
+		request.DiskIds = helper.Strings(diskIds)
+	} else {
+		request.Filters = filters
+	}
+
+	var offset int64 = 0
+	var pageSize int64 = 20
+	disks = make([]*lighthouse.Disk, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &pageSize
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseLighthouseClient().DescribeDisks(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.DiskSet) < 1 {
+			break
+		}
+		disks = append(disks, response.Response.DiskSet...)
+		if len(response.Response.DiskSet) < int(pageSize) {
+			break
+		}
+		offset += pageSize
+	}
 	return
 }
 
@@ -1090,56 +1130,6 @@ func (me *LightHouseService) DeleteLighthouseKeyPairAttachmentById(ctx context.C
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseLighthouseClient().DisassociateInstancesKeyPairs(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	return
-}
-
-func (me *LightHouseService) DescribeLighthouseInstanceLoginKeyPairById(ctx context.Context, instanceId string) (instanceLoginKeyPair *lighthouse.DescribeInstanceLoginKeyPairAttributeResponseParams, errRet error) {
-	logId := getLogId(ctx)
-
-	request := lighthouse.NewDescribeInstanceLoginKeyPairAttributeRequest()
-	request.InstanceId = &instanceId
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseLighthouseClient().DescribeInstanceLoginKeyPairAttribute(request)
-	if err != nil {
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	instanceLoginKeyPair = response.Response
-	return
-}
-
-func (me *LightHouseService) ModifyInstancesLoginKeyPairAttribute(ctx context.Context, instanceId string, permitLogin string) (errRet error) {
-	logId := getLogId(ctx)
-
-	request := lighthouse.NewModifyInstancesLoginKeyPairAttributeRequest()
-	request.InstanceIds = []*string{&instanceId}
-	request.PermitLogin = helper.String(permitLogin)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-
-	response, err := me.client.UseLighthouseClient().ModifyInstancesLoginKeyPairAttribute(request)
 	if err != nil {
 		errRet = err
 		return

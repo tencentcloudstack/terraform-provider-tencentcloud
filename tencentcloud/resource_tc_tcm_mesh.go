@@ -4,26 +4,68 @@ Provides a resource to create a tcm mesh
 Example Usage
 
 ```hcl
-resource "tencentcloud_tcm_mesh" "basic" {
+resource "tencentcloud_tcm_mesh" "mesh" {
   display_name = "test_mesh"
   mesh_version = "1.12.5"
-  type = "HOSTED"
+  type         = "HOSTED"
   config {
     istio {
       outbound_traffic_policy = "ALLOW_ANY"
-      disable_policy_checks = true
-      enable_pilot_http = true
-      disable_http_retry = true
+      disable_policy_checks   = true
+      enable_pilot_http       = true
+      disable_http_retry      = true
       smart_dns {
-        istio_meta_dns_capture = true
+        istio_meta_dns_capture       = true
         istio_meta_dns_auto_allocate = true
+      }
+      tracing {
+        enable = false
+      }
+    }
+    tracing {
+      enable   = true
+      sampling = 1
+      apm {
+        enable = true
+        region = "ap-guangzhou"
+      }
+    }
+    prometheus {
+      custom_prom {
+        url       = "https://10.0.0.1:1000"
+        auth_type = "none"
+        vpc_id    = "vpc-j9yhbzpn"
+      }
+    }
+    inject {
+      exclude_ip_ranges                   = ["172.16.0.0/16"]
+      hold_application_until_proxy_starts = true
+      hold_proxy_until_application_ends   = true
+    }
+
+    sidecar_resources {
+      limits {
+        name     = "cpu"
+        quantity = "2"
+      }
+      limits {
+        name     = "memory"
+        quantity = "1Gi"
+      }
+      requests {
+        name     = "cpu"
+        quantity = "100m"
+      }
+      requests {
+        name     = "memory"
+        quantity = "128Mi"
       }
     }
   }
   tag_list {
-    key = "key"
-    value = "value"
-    passthrough = true
+    key         = "key"
+    value       = "value"
+    passthrough = false
   }
 }
 
@@ -248,7 +290,68 @@ func resourceTencentCloudTcmMesh() *schema.Resource {
 									"outbound_traffic_policy": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "Outbound traffic policy.",
+										Description: "Outbound traffic policy, REGISTRY_ONLY or ALLOW_ANY, see https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig-OutboundTrafficPolicy-Mode.",
+									},
+									"tracing": {
+										Type:        schema.TypeList,
+										MaxItems:    1,
+										Optional:    true,
+										Description: "Tracing config(Deprecated, please use MeshConfig.Tracing for configuration).",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"sampling": {
+													Type:        schema.TypeFloat,
+													Optional:    true,
+													Computed:    true,
+													Description: "Tracing sampling, 0.0-1.0.",
+												},
+												"enable": {
+													Type:        schema.TypeBool,
+													Optional:    true,
+													Description: "Whether enable tracing.",
+												},
+												"apm": {
+													Type:        schema.TypeList,
+													MaxItems:    1,
+													Optional:    true,
+													Description: "APM config.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"enable": {
+																Type:        schema.TypeBool,
+																Required:    true,
+																Description: "Whether enable APM.",
+															},
+															"region": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Region.",
+															},
+															"instance_id": {
+																Type:        schema.TypeString,
+																Optional:    true,
+																Description: "Instance id of the APM.",
+															},
+														},
+													},
+												},
+												"zipkin": {
+													Type:        schema.TypeList,
+													MaxItems:    1,
+													Optional:    true,
+													Description: "Third party zipkin config.",
+													Elem: &schema.Resource{
+														Schema: map[string]*schema.Schema{
+															"address": {
+																Type:        schema.TypeString,
+																Required:    true,
+																Description: "Zipkin address.",
+															},
+														},
+													},
+												},
+											},
+										},
 									},
 									"disable_policy_checks": {
 										Type:        schema.TypeBool,
@@ -281,6 +384,82 @@ func resourceTencentCloudTcmMesh() *schema.Resource {
 													Type:        schema.TypeBool,
 													Optional:    true,
 													Description: "Enable auto allocate address.",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+						"inject": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "Sidecar inject configuration.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"exclude_ip_ranges": {
+										Type: schema.TypeSet,
+										Elem: &schema.Schema{
+											Type: schema.TypeString,
+										},
+										Optional:    true,
+										Description: "IP ranges that should not be proxied.",
+									},
+									"hold_application_until_proxy_starts": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Let istio-proxy(sidecar) start first, before app container.",
+									},
+									"hold_proxy_until_application_ends": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Description: "Let istio-proxy(sidecar) stop last, after app container.",
+									},
+								},
+							},
+						},
+						"sidecar_resources": {
+							Type:        schema.TypeList,
+							MaxItems:    1,
+							Optional:    true,
+							Description: "Default sidecar requests and limits.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"limits": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Sidecar limits.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"name": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Resource type name, `cpu/memory`.",
+												},
+												"quantity": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Resource quantity, example: cpu-`100m`, memory-`1Gi`.",
+												},
+											},
+										},
+									},
+									"requests": {
+										Type:        schema.TypeSet,
+										Optional:    true,
+										Description: "Sidecar requests.",
+										Elem: &schema.Resource{
+											Schema: map[string]*schema.Schema{
+												"name": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Resource type name, `cpu/memory`.",
+												},
+												"quantity": {
+													Type:        schema.TypeString,
+													Optional:    true,
+													Description: "Resource quantity, example: cpu-`100m`, memory-`1Gi`.",
 												},
 											},
 										},
@@ -328,7 +507,7 @@ func resourceTencentCloudTcmMeshCreate(d *schema.ResourceData, meta interface{})
 
 	var (
 		request  = tcm.NewCreateMeshRequest()
-		response *tcm.CreateMeshResponse
+		response = tcm.NewCreateMeshResponse()
 		meshId   string
 	)
 
@@ -346,101 +525,177 @@ func resourceTencentCloudTcmMeshCreate(d *schema.ResourceData, meta interface{})
 
 	if dMap, ok := helper.InterfacesHeadMap(d, "config"); ok {
 		meshConfig := tcm.MeshConfig{}
-		if TracingMap, ok := helper.InterfaceToMap(dMap, "tracing"); ok {
+		if tracingMap, ok := helper.InterfaceToMap(dMap, "tracing"); ok {
 			tracingConfig := tcm.TracingConfig{}
-			if v, ok := TracingMap["enable"]; ok {
+			if v, ok := tracingMap["enable"]; ok {
 				tracingConfig.Enable = helper.Bool(v.(bool))
 			}
-			if ApmMap, ok := helper.InterfaceToMap(TracingMap, "apm"); ok {
+			if apmMap, ok := helper.InterfaceToMap(tracingMap, "apm"); ok {
 				apm := tcm.APM{}
-				if v, ok := ApmMap["enable"]; ok {
+				if v, ok := apmMap["enable"]; ok {
 					apm.Enable = helper.Bool(v.(bool))
 				}
-				if v, ok := ApmMap["region"]; ok {
+				if v, ok := apmMap["region"]; ok {
 					apm.Region = helper.String(v.(string))
 				}
-				if v, ok := ApmMap["instance_id"]; ok {
+				if v, ok := apmMap["instance_id"]; ok {
 					apm.InstanceId = helper.String(v.(string))
 				}
 				tracingConfig.APM = &apm
 			}
-			if v, ok := TracingMap["sampling"]; ok {
+			if v, ok := tracingMap["sampling"]; ok {
 				tracingConfig.Sampling = helper.Float64(v.(float64))
 			}
-			if ZipkinMap, ok := helper.InterfaceToMap(TracingMap, "zipkin"); ok {
+			if zipkinMap, ok := helper.InterfaceToMap(tracingMap, "zipkin"); ok {
 				tracingZipkin := tcm.TracingZipkin{}
-				if v, ok := ZipkinMap["address"]; ok {
+				if v, ok := zipkinMap["address"]; ok {
 					tracingZipkin.Address = helper.String(v.(string))
 				}
 				tracingConfig.Zipkin = &tracingZipkin
 			}
 			meshConfig.Tracing = &tracingConfig
 		}
-		if PrometheusMap, ok := helper.InterfaceToMap(dMap, "prometheus"); ok {
+		if prometheusMap, ok := helper.InterfaceToMap(dMap, "prometheus"); ok {
 			prometheusConfig := tcm.PrometheusConfig{}
-			if v, ok := PrometheusMap["vpc_id"]; ok {
+			if v, ok := prometheusMap["vpc_id"]; ok {
 				prometheusConfig.VpcId = helper.String(v.(string))
 			}
-			if v, ok := PrometheusMap["subnet_id"]; ok {
+			if v, ok := prometheusMap["subnet_id"]; ok {
 				prometheusConfig.SubnetId = helper.String(v.(string))
 			}
-			if v, ok := PrometheusMap["region"]; ok {
+			if v, ok := prometheusMap["region"]; ok {
 				prometheusConfig.Region = helper.String(v.(string))
 			}
-			if v, ok := PrometheusMap["instance_id"]; ok {
+			if v, ok := prometheusMap["instance_id"]; ok {
 				prometheusConfig.InstanceId = helper.String(v.(string))
 			}
-			if CustomPromMap, ok := helper.InterfaceToMap(PrometheusMap, "custom_prom"); ok {
+			if customPromMap, ok := helper.InterfaceToMap(prometheusMap, "custom_prom"); ok {
 				customPromConfig := tcm.CustomPromConfig{}
-				if v, ok := CustomPromMap["is_public_addr"]; ok {
+				if v, ok := customPromMap["is_public_addr"]; ok {
 					customPromConfig.IsPublicAddr = helper.Bool(v.(bool))
 				}
-				if v, ok := CustomPromMap["vpc_id"]; ok {
+				if v, ok := customPromMap["vpc_id"]; ok {
 					customPromConfig.VpcId = helper.String(v.(string))
 				}
-				if v, ok := CustomPromMap["url"]; ok {
+				if v, ok := customPromMap["url"]; ok {
 					customPromConfig.Url = helper.String(v.(string))
 				}
-				if v, ok := CustomPromMap["auth_type"]; ok {
+				if v, ok := customPromMap["auth_type"]; ok {
 					customPromConfig.AuthType = helper.String(v.(string))
 				}
-				if v, ok := CustomPromMap["username"]; ok {
+				if v, ok := customPromMap["username"]; ok {
 					customPromConfig.Username = helper.String(v.(string))
 				}
-				if v, ok := CustomPromMap["password"]; ok {
+				if v, ok := customPromMap["password"]; ok {
 					customPromConfig.Password = helper.String(v.(string))
 				}
 				prometheusConfig.CustomProm = &customPromConfig
 			}
 			meshConfig.Prometheus = &prometheusConfig
 		}
-		if IstioMap, ok := helper.InterfaceToMap(dMap, "istio"); ok {
+		if istioMap, ok := helper.InterfaceToMap(dMap, "istio"); ok {
 			istioConfig := tcm.IstioConfig{}
-			if v, ok := IstioMap["outbound_traffic_policy"]; ok {
+			if v, ok := istioMap["outbound_traffic_policy"]; ok {
 				istioConfig.OutboundTrafficPolicy = helper.String(v.(string))
 			}
-			if v, ok := IstioMap["disable_policy_checks"]; ok {
+			if v, ok := istioMap["disable_policy_checks"]; ok {
 				istioConfig.DisablePolicyChecks = helper.Bool(v.(bool))
 			}
-			if v, ok := IstioMap["enable_pilot_http"]; ok {
+			if v, ok := istioMap["enable_pilot_http"]; ok {
 				istioConfig.EnablePilotHTTP = helper.Bool(v.(bool))
 			}
-			if v, ok := IstioMap["disable_http_retry"]; ok {
+			if v, ok := istioMap["disable_http_retry"]; ok {
 				istioConfig.DisableHTTPRetry = helper.Bool(v.(bool))
 			}
-			if SmartDNSMap, ok := helper.InterfaceToMap(IstioMap, "smart_dns"); ok {
+			if smartDNSMap, ok := helper.InterfaceToMap(istioMap, "smart_dns"); ok {
 				smartDNSConfig := tcm.SmartDNSConfig{}
-				if v, ok := SmartDNSMap["istio_meta_dns_capture"]; ok {
+				if v, ok := smartDNSMap["istio_meta_dns_capture"]; ok {
 					smartDNSConfig.IstioMetaDNSCapture = helper.Bool(v.(bool))
 				}
-				if v, ok := SmartDNSMap["istio_meta_dns_auto_allocate"]; ok {
+				if v, ok := smartDNSMap["istio_meta_dns_auto_allocate"]; ok {
 					smartDNSConfig.IstioMetaDNSAutoAllocate = helper.Bool(v.(bool))
 				}
 				istioConfig.SmartDNS = &smartDNSConfig
 			}
+			if tracingMap, ok := helper.InterfaceToMap(istioMap, "tracing"); ok {
+				tracingConfig := tcm.TracingConfig{}
+				if v, ok := tracingMap["sampling"]; ok {
+					tracingConfig.Sampling = helper.Float64(v.(float64))
+				}
+				if v, ok := tracingMap["enable"]; ok {
+					tracingConfig.Enable = helper.Bool(v.(bool))
+				}
+				if apmMap, ok := helper.InterfaceToMap(tracingMap, "apm"); ok {
+					apm := tcm.APM{}
+					if v, ok := apmMap["enable"]; ok {
+						apm.Enable = helper.Bool(v.(bool))
+					}
+					if v, ok := apmMap["region"]; ok {
+						apm.Region = helper.String(v.(string))
+					}
+					if v, ok := apmMap["instance_id"]; ok {
+						apm.InstanceId = helper.String(v.(string))
+					}
+					tracingConfig.APM = &apm
+				}
+				if zipkinMap, ok := helper.InterfaceToMap(tracingMap, "zipkin"); ok {
+					tracingZipkin := tcm.TracingZipkin{}
+					if v, ok := zipkinMap["address"]; ok {
+						tracingZipkin.Address = helper.String(v.(string))
+					}
+					tracingConfig.Zipkin = &tracingZipkin
+				}
+				istioConfig.Tracing = &tracingConfig
+			}
 			meshConfig.Istio = &istioConfig
 		}
-
+		if injectMap, ok := helper.InterfaceToMap(dMap, "inject"); ok {
+			injectConfig := tcm.InjectConfig{}
+			if v, ok := injectMap["exclude_ip_ranges"]; ok {
+				excludeIPRangesSet := v.(*schema.Set).List()
+				for i := range excludeIPRangesSet {
+					excludeIPRanges := excludeIPRangesSet[i].(string)
+					injectConfig.ExcludeIPRanges = append(injectConfig.ExcludeIPRanges, &excludeIPRanges)
+				}
+			}
+			if v, ok := injectMap["hold_application_until_proxy_starts"]; ok {
+				injectConfig.HoldApplicationUntilProxyStarts = helper.Bool(v.(bool))
+			}
+			if v, ok := injectMap["hold_proxy_until_application_ends"]; ok {
+				injectConfig.HoldProxyUntilApplicationEnds = helper.Bool(v.(bool))
+			}
+			meshConfig.Inject = &injectConfig
+		}
+		if sidecarResourcesMap, ok := helper.InterfaceToMap(dMap, "sidecar_resources"); ok {
+			resourceRequirements := tcm.ResourceRequirements{}
+			if v, ok := sidecarResourcesMap["limits"]; ok {
+				for _, item := range v.(*schema.Set).List() {
+					limitsMap := item.(map[string]interface{})
+					resource := tcm.Resource{}
+					if v, ok := limitsMap["name"]; ok {
+						resource.Name = helper.String(v.(string))
+					}
+					if v, ok := limitsMap["quantity"]; ok {
+						resource.Quantity = helper.String(v.(string))
+					}
+					resourceRequirements.Limits = append(resourceRequirements.Limits, &resource)
+				}
+			}
+			if v, ok := sidecarResourcesMap["requests"]; ok {
+				for _, item := range v.(*schema.Set).List() {
+					requestsMap := item.(map[string]interface{})
+					resource := tcm.Resource{}
+					if v, ok := requestsMap["name"]; ok {
+						resource.Name = helper.String(v.(string))
+					}
+					if v, ok := requestsMap["quantity"]; ok {
+						resource.Quantity = helper.String(v.(string))
+					}
+					resourceRequirements.Requests = append(resourceRequirements.Requests, &resource)
+				}
+			}
+			meshConfig.SidecarResources = &resourceRequirements
+		}
 		request.Config = &meshConfig
 	}
 
@@ -467,8 +722,7 @@ func resourceTencentCloudTcmMeshCreate(d *schema.ResourceData, meta interface{})
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		response = result
 		return nil
@@ -513,7 +767,6 @@ func resourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{}) e
 	meshId := d.Id()
 
 	meshResponse, err := service.DescribeTcmMesh(ctx, meshId)
-
 	if err != nil {
 		return err
 	}
@@ -521,7 +774,8 @@ func resourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{}) e
 	mesh := meshResponse.Mesh
 	if mesh == nil {
 		d.SetId("")
-		return fmt.Errorf("resource `mesh` %s does not exist", meshId)
+		log.Printf("[WARN]%s resource `TcmMesh` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
 
 	if mesh.MeshId != nil {
@@ -620,6 +874,49 @@ func resourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{}) e
 			if mesh.Config.Istio.OutboundTrafficPolicy != nil {
 				istioMap["outbound_traffic_policy"] = mesh.Config.Istio.OutboundTrafficPolicy
 			}
+
+			if mesh.Config.Istio.Tracing != nil {
+				tracingMap := map[string]interface{}{}
+
+				if mesh.Config.Istio.Tracing.Sampling != nil {
+					tracingMap["sampling"] = mesh.Config.Istio.Tracing.Sampling
+				}
+
+				if mesh.Config.Istio.Tracing.Enable != nil {
+					tracingMap["enable"] = mesh.Config.Istio.Tracing.Enable
+				}
+
+				if mesh.Config.Istio.Tracing.APM != nil {
+					apmMap := map[string]interface{}{}
+
+					if mesh.Config.Istio.Tracing.APM.Enable != nil {
+						apmMap["enable"] = mesh.Config.Istio.Tracing.APM.Enable
+					}
+
+					if mesh.Config.Istio.Tracing.APM.Region != nil {
+						apmMap["region"] = mesh.Config.Istio.Tracing.APM.Region
+					}
+
+					if mesh.Config.Istio.Tracing.APM.InstanceId != nil {
+						apmMap["instance_id"] = mesh.Config.Istio.Tracing.APM.InstanceId
+					}
+
+					tracingMap["apm"] = []interface{}{apmMap}
+				}
+
+				if mesh.Config.Istio.Tracing.Zipkin != nil {
+					zipkinMap := map[string]interface{}{}
+
+					if mesh.Config.Istio.Tracing.Zipkin.Address != nil {
+						zipkinMap["address"] = mesh.Config.Istio.Tracing.Zipkin.Address
+					}
+
+					tracingMap["zipkin"] = []interface{}{zipkinMap}
+				}
+
+				istioMap["tracing"] = []interface{}{tracingMap}
+			}
+
 			if mesh.Config.Istio.DisablePolicyChecks != nil {
 				istioMap["disable_policy_checks"] = mesh.Config.Istio.DisablePolicyChecks
 			}
@@ -642,6 +939,68 @@ func resourceTencentCloudTcmMeshRead(d *schema.ResourceData, meta interface{}) e
 			}
 
 			configMap["istio"] = []interface{}{istioMap}
+		}
+
+		if mesh.Config.Inject != nil {
+			injectMap := map[string]interface{}{}
+
+			if mesh.Config.Inject.ExcludeIPRanges != nil {
+				injectMap["exclude_ip_ranges"] = mesh.Config.Inject.ExcludeIPRanges
+			}
+
+			if mesh.Config.Inject.HoldApplicationUntilProxyStarts != nil {
+				injectMap["hold_application_until_proxy_starts"] = mesh.Config.Inject.HoldApplicationUntilProxyStarts
+			}
+
+			if mesh.Config.Inject.HoldProxyUntilApplicationEnds != nil {
+				injectMap["hold_proxy_until_application_ends"] = mesh.Config.Inject.HoldProxyUntilApplicationEnds
+			}
+
+			configMap["inject"] = []interface{}{injectMap}
+		}
+
+		if mesh.Config.SidecarResources != nil {
+			sidecarResourcesMap := map[string]interface{}{}
+
+			if mesh.Config.SidecarResources.Limits != nil {
+				limitsList := []interface{}{}
+				for _, limits := range mesh.Config.SidecarResources.Limits {
+					limitsMap := map[string]interface{}{}
+
+					if limits.Name != nil {
+						limitsMap["name"] = limits.Name
+					}
+
+					if limits.Quantity != nil {
+						limitsMap["quantity"] = limits.Quantity
+					}
+
+					limitsList = append(limitsList, limitsMap)
+				}
+
+				sidecarResourcesMap["limits"] = limitsList
+			}
+
+			if mesh.Config.SidecarResources.Requests != nil {
+				requestsList := []interface{}{}
+				for _, requests := range mesh.Config.SidecarResources.Requests {
+					requestsMap := map[string]interface{}{}
+
+					if requests.Name != nil {
+						requestsMap["name"] = requests.Name
+					}
+
+					if requests.Quantity != nil {
+						requestsMap["quantity"] = requests.Quantity
+					}
+
+					requestsList = append(requestsList, requestsMap)
+				}
+
+				sidecarResourcesMap["requests"] = requestsList
+			}
+
+			configMap["sidecar_resources"] = []interface{}{sidecarResourcesMap}
 		}
 
 		err = d.Set("config", []interface{}{configMap})
@@ -682,8 +1041,12 @@ func resourceTencentCloudTcmMeshUpdate(d *schema.ResourceData, meta interface{})
 	meshId := d.Id()
 	request.MeshId = &meshId
 
-	if d.HasChange("mesh_id") {
-		return fmt.Errorf("`mesh_id` do not support change now.")
+	immutableArgs := []string{"mesh_id", "mesh_version", "type", "tag_list"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if d.HasChange("display_name") {
@@ -692,117 +1055,182 @@ func resourceTencentCloudTcmMeshUpdate(d *schema.ResourceData, meta interface{})
 		}
 	}
 
-	if d.HasChange("mesh_version") {
-		return fmt.Errorf("`mesh_version` do not support change now.")
-	}
-
-	if d.HasChange("type") {
-		return fmt.Errorf("`type` do not support change now.")
-	}
-
 	if d.HasChange("config") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "config"); ok {
 			meshConfig := tcm.MeshConfig{}
-			if TracingMap, ok := helper.InterfaceToMap(dMap, "tracing"); ok {
+			if tracingMap, ok := helper.InterfaceToMap(dMap, "tracing"); ok {
 				tracingConfig := tcm.TracingConfig{}
-				if v, ok := TracingMap["enable"]; ok {
+				if v, ok := tracingMap["enable"]; ok {
 					tracingConfig.Enable = helper.Bool(v.(bool))
 				}
-				if ApmMap, ok := helper.InterfaceToMap(TracingMap, "apm"); ok {
-					aPM := tcm.APM{}
-					if v, ok := ApmMap["enable"]; ok {
-						aPM.Enable = helper.Bool(v.(bool))
+				if apmMap, ok := helper.InterfaceToMap(tracingMap, "apm"); ok {
+					apm := tcm.APM{}
+					if v, ok := apmMap["enable"]; ok {
+						apm.Enable = helper.Bool(v.(bool))
 					}
-					if v, ok := ApmMap["region"]; ok {
-						aPM.Region = helper.String(v.(string))
+					if v, ok := apmMap["region"]; ok {
+						apm.Region = helper.String(v.(string))
 					}
-					if v, ok := ApmMap["instance_id"]; ok {
-						aPM.InstanceId = helper.String(v.(string))
+					if v, ok := apmMap["instance_id"]; ok {
+						apm.InstanceId = helper.String(v.(string))
 					}
-					tracingConfig.APM = &aPM
+					tracingConfig.APM = &apm
 				}
-				if v, ok := TracingMap["sampling"]; ok {
+				if v, ok := tracingMap["sampling"]; ok {
 					tracingConfig.Sampling = helper.Float64(v.(float64))
 				}
-				if ZipkinMap, ok := helper.InterfaceToMap(TracingMap, "zipkin"); ok {
+				if zipkinMap, ok := helper.InterfaceToMap(tracingMap, "zipkin"); ok {
 					tracingZipkin := tcm.TracingZipkin{}
-					if v, ok := ZipkinMap["address"]; ok {
+					if v, ok := zipkinMap["address"]; ok {
 						tracingZipkin.Address = helper.String(v.(string))
 					}
 					tracingConfig.Zipkin = &tracingZipkin
 				}
 				meshConfig.Tracing = &tracingConfig
 			}
-			if PrometheusMap, ok := helper.InterfaceToMap(dMap, "prometheus"); ok {
+			if prometheusMap, ok := helper.InterfaceToMap(dMap, "prometheus"); ok {
 				prometheusConfig := tcm.PrometheusConfig{}
-				if v, ok := PrometheusMap["vpc_id"]; ok {
+				if v, ok := prometheusMap["vpc_id"]; ok {
 					prometheusConfig.VpcId = helper.String(v.(string))
 				}
-				if v, ok := PrometheusMap["subnet_id"]; ok {
+				if v, ok := prometheusMap["subnet_id"]; ok {
 					prometheusConfig.SubnetId = helper.String(v.(string))
 				}
-				if v, ok := PrometheusMap["region"]; ok {
+				if v, ok := prometheusMap["region"]; ok {
 					prometheusConfig.Region = helper.String(v.(string))
 				}
-				if v, ok := PrometheusMap["instance_id"]; ok {
+				if v, ok := prometheusMap["instance_id"]; ok {
 					prometheusConfig.InstanceId = helper.String(v.(string))
 				}
-				if CustomPromMap, ok := helper.InterfaceToMap(PrometheusMap, "custom_prom"); ok {
+				if customPromMap, ok := helper.InterfaceToMap(prometheusMap, "custom_prom"); ok {
 					customPromConfig := tcm.CustomPromConfig{}
-					if v, ok := CustomPromMap["is_public_addr"]; ok {
+					if v, ok := customPromMap["is_public_addr"]; ok {
 						customPromConfig.IsPublicAddr = helper.Bool(v.(bool))
 					}
-					if v, ok := CustomPromMap["vpc_id"]; ok {
+					if v, ok := customPromMap["vpc_id"]; ok {
 						customPromConfig.VpcId = helper.String(v.(string))
 					}
-					if v, ok := CustomPromMap["url"]; ok {
+					if v, ok := customPromMap["url"]; ok {
 						customPromConfig.Url = helper.String(v.(string))
 					}
-					if v, ok := CustomPromMap["auth_type"]; ok {
+					if v, ok := customPromMap["auth_type"]; ok {
 						customPromConfig.AuthType = helper.String(v.(string))
 					}
-					if v, ok := CustomPromMap["username"]; ok {
+					if v, ok := customPromMap["username"]; ok {
 						customPromConfig.Username = helper.String(v.(string))
 					}
-					if v, ok := CustomPromMap["password"]; ok {
+					if v, ok := customPromMap["password"]; ok {
 						customPromConfig.Password = helper.String(v.(string))
 					}
 					prometheusConfig.CustomProm = &customPromConfig
 				}
 				meshConfig.Prometheus = &prometheusConfig
 			}
-			if IstioMap, ok := helper.InterfaceToMap(dMap, "istio"); ok {
+			if istioMap, ok := helper.InterfaceToMap(dMap, "istio"); ok {
 				istioConfig := tcm.IstioConfig{}
-				if v, ok := IstioMap["outbound_traffic_policy"]; ok {
+				if v, ok := istioMap["outbound_traffic_policy"]; ok {
 					istioConfig.OutboundTrafficPolicy = helper.String(v.(string))
 				}
-				if v, ok := IstioMap["disable_policy_checks"]; ok {
+				if v, ok := istioMap["disable_policy_checks"]; ok {
 					istioConfig.DisablePolicyChecks = helper.Bool(v.(bool))
 				}
-				if v, ok := IstioMap["enable_pilot_http"]; ok {
+				if v, ok := istioMap["enable_pilot_http"]; ok {
 					istioConfig.EnablePilotHTTP = helper.Bool(v.(bool))
 				}
-				if v, ok := IstioMap["disable_http_retry"]; ok {
+				if v, ok := istioMap["disable_http_retry"]; ok {
 					istioConfig.DisableHTTPRetry = helper.Bool(v.(bool))
 				}
-				if SmartDNSMap, ok := helper.InterfaceToMap(IstioMap, "smart_dns"); ok {
+				if smartDNSMap, ok := helper.InterfaceToMap(istioMap, "smart_dns"); ok {
 					smartDNSConfig := tcm.SmartDNSConfig{}
-					if v, ok := SmartDNSMap["istio_meta_dns_capture"]; ok {
+					if v, ok := smartDNSMap["istio_meta_dns_capture"]; ok {
 						smartDNSConfig.IstioMetaDNSCapture = helper.Bool(v.(bool))
 					}
-					if v, ok := SmartDNSMap["istio_meta_dns_auto_allocate"]; ok {
+					if v, ok := smartDNSMap["istio_meta_dns_auto_allocate"]; ok {
 						smartDNSConfig.IstioMetaDNSAutoAllocate = helper.Bool(v.(bool))
 					}
 					istioConfig.SmartDNS = &smartDNSConfig
 				}
+				if tracingMap, ok := helper.InterfaceToMap(istioMap, "tracing"); ok {
+					tracingConfig := tcm.TracingConfig{}
+					if v, ok := tracingMap["sampling"]; ok {
+						tracingConfig.Sampling = helper.Float64(v.(float64))
+					}
+					if v, ok := tracingMap["enable"]; ok {
+						tracingConfig.Enable = helper.Bool(v.(bool))
+					}
+					if apmMap, ok := helper.InterfaceToMap(tracingMap, "apm"); ok {
+						apm := tcm.APM{}
+						if v, ok := apmMap["enable"]; ok {
+							apm.Enable = helper.Bool(v.(bool))
+						}
+						if v, ok := apmMap["region"]; ok {
+							apm.Region = helper.String(v.(string))
+						}
+						if v, ok := apmMap["instance_id"]; ok {
+							apm.InstanceId = helper.String(v.(string))
+						}
+						tracingConfig.APM = &apm
+					}
+					if zipkinMap, ok := helper.InterfaceToMap(tracingMap, "zipkin"); ok {
+						tracingZipkin := tcm.TracingZipkin{}
+						if v, ok := zipkinMap["address"]; ok {
+							tracingZipkin.Address = helper.String(v.(string))
+						}
+						tracingConfig.Zipkin = &tracingZipkin
+					}
+					istioConfig.Tracing = &tracingConfig
+				}
 				meshConfig.Istio = &istioConfig
+			}
+			if injectMap, ok := helper.InterfaceToMap(dMap, "inject"); ok {
+				injectConfig := tcm.InjectConfig{}
+				if v, ok := injectMap["exclude_ip_ranges"]; ok {
+					excludeIPRangesSet := v.(*schema.Set).List()
+					for i := range excludeIPRangesSet {
+						excludeIPRanges := excludeIPRangesSet[i].(string)
+						injectConfig.ExcludeIPRanges = append(injectConfig.ExcludeIPRanges, &excludeIPRanges)
+					}
+				}
+				if v, ok := injectMap["hold_application_until_proxy_starts"]; ok {
+					injectConfig.HoldApplicationUntilProxyStarts = helper.Bool(v.(bool))
+				}
+				if v, ok := injectMap["hold_proxy_until_application_ends"]; ok {
+					injectConfig.HoldProxyUntilApplicationEnds = helper.Bool(v.(bool))
+				}
+				meshConfig.Inject = &injectConfig
+			}
+			if sidecarResourcesMap, ok := helper.InterfaceToMap(dMap, "sidecar_resources"); ok {
+				resourceRequirements := tcm.ResourceRequirements{}
+				if v, ok := sidecarResourcesMap["limits"]; ok {
+					for _, item := range v.(*schema.Set).List() {
+						limitsMap := item.(map[string]interface{})
+						resource := tcm.Resource{}
+						if v, ok := limitsMap["name"]; ok {
+							resource.Name = helper.String(v.(string))
+						}
+						if v, ok := limitsMap["quantity"]; ok {
+							resource.Quantity = helper.String(v.(string))
+						}
+						resourceRequirements.Limits = append(resourceRequirements.Limits, &resource)
+					}
+				}
+				if v, ok := sidecarResourcesMap["requests"]; ok {
+					for _, item := range v.(*schema.Set).List() {
+						requestsMap := item.(map[string]interface{})
+						resource := tcm.Resource{}
+						if v, ok := requestsMap["name"]; ok {
+							resource.Name = helper.String(v.(string))
+						}
+						if v, ok := requestsMap["quantity"]; ok {
+							resource.Quantity = helper.String(v.(string))
+						}
+						resourceRequirements.Requests = append(resourceRequirements.Requests, &resource)
+					}
+				}
+				meshConfig.SidecarResources = &resourceRequirements
 			}
 			request.Config = &meshConfig
 		}
-	}
-
-	if d.HasChange("tag_list") {
-		return fmt.Errorf("`tag_list` do not support change now.")
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -810,14 +1238,13 @@ func resourceTencentCloudTcmMeshUpdate(d *schema.ResourceData, meta interface{})
 		if e != nil {
 			return retryError(e)
 		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
 		return nil
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create tcm mesh failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update tcm mesh failed, reason:%+v", logId, err)
 		return err
 	}
 

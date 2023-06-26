@@ -722,6 +722,15 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
+	// update renew_flag
+	if d.HasChange("auto_renew_flag") {
+		autoRenewFlag := int64(d.Get("auto_renew_flag").(int))
+		err := cynosdbService.SetRenewFlag(ctx, clusterId, autoRenewFlag)
+		if err != nil {
+			return err
+		}
+	}
+
 	d.Partial(false)
 
 	return resourceTencentCloudCynosdbClusterRead(d, meta)

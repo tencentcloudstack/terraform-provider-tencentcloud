@@ -105,9 +105,8 @@ variable "vpc_id" {
 `
 
 const testAccMariadbInstance = testAccMariadbInstanceVar + `
-
 resource "tencentcloud_mariadb_instance" "instance" {
-	zones = ["ap-guangzhou-3",]
+	zones = ["ap-guangzhou-6", "ap-guangzhou-7"]
 	node_count = 2
 	memory = 2
 	storage = 10

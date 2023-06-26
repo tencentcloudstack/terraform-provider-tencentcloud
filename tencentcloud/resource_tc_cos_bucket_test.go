@@ -76,6 +76,7 @@ func TestAccTencentCloudCosBucketResource_basic(t *testing.T) {
 				Config: testAccCosBucket_basic(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_basic"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_basic", "enable_intelligent_tiering", "true"),
 				),
 			},
 			// test update bucket acl
@@ -539,6 +540,7 @@ func testAccCosBucket_basic() string {
 resource "tencentcloud_cos_bucket" "bucket_basic" {
   bucket = "tf-bucket-basic-${local.app_id}"
   acl    = "public-read"
+  enable_intelligent_tiering = true
 }
 `, userInfoData)
 }

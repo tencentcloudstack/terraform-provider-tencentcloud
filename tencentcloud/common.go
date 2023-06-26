@@ -84,6 +84,8 @@ var retryableErrorCode = []string{
 	"InvalidParameter.ActionInProgress",
 	// posgresql
 	"OperationDenied.InstanceStatusLimitError",
+	// apigw
+	"UnsupportedOperation.UnsupportedDeleteService",
 }
 
 // retryableCosErrorCode is retryable error code for COS/CI SDK

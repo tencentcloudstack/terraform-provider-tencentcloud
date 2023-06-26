@@ -174,6 +174,23 @@ func TestAccTencentCloudNeedFixTcrInstanceResource_paypaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_type", "basic"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "tags.test", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "registry_charge_type", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_charge_type_prepaid_period", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_charge_type_prepaid_renew_flag", "1"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_instance.mytcr_instance_paypaid", "expired_at"),
+				),
+			},
+			{
+				Config: testAccTCRInstance_update_paypaid_period,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-shanghai")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+				},
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "name", "paypaidtcrinstance"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_type", "basic"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "tags.test", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "registry_charge_type", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_charge_type_prepaid_period", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance_paypaid", "instance_charge_type_prepaid_renew_flag", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_instance.mytcr_instance_paypaid", "expired_at"),
 				),
@@ -386,6 +403,19 @@ resource "tencentcloud_tcr_instance" "mytcr_instance_paypaid" {
   delete_bucket = true
   registry_charge_type = 2
   instance_charge_type_prepaid_period = 1
+  instance_charge_type_prepaid_renew_flag = 1
+  tags ={
+	test = "test"
+  }
+}`
+
+const testAccTCRInstance_update_paypaid_period = `
+resource "tencentcloud_tcr_instance" "mytcr_instance_paypaid" {
+  name        = "paypaidtcrinstance"
+  instance_type = "basic"
+  delete_bucket = true
+  registry_charge_type = 2
+  instance_charge_type_prepaid_period = 2
   instance_charge_type_prepaid_renew_flag = 1
   tags ={
 	test = "test"

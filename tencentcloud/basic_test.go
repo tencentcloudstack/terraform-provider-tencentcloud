@@ -838,6 +838,34 @@ const (
 	defaultDcdbSGName        = "default"
 )
 
+// ref with `local.dcdb_id`
+const CommonPresetDcdb = `
+
+variable "availability_zone" {
+  default = "` + defaultAZone + `"
+}
+variable "region" {
+  default = "` + defaultRegion + `"
+}
+
+data "tencentcloud_dcdb_instances" "dcdb" {
+  search_name = "instancename"
+  search_key = "` + defaultDcdbInstanceName + `"
+}
+
+locals {
+  dcdb_id = data.tencentcloud_dcdb_instances.dcdb.list.0.instance_id
+}
+`
+
+// ref with `local.redis_id`
+const CommonPresetRedis = `
+locals {
+  redis_id = "crs-jf4ico4v"
+  redis_name = "Keep-terraform"
+}
+`
+
 // End of DCDB
 // SES
 const (
@@ -979,6 +1007,7 @@ const (
 	defaultTsfGWGroupId       = "group-vzd97zpy"
 	defaultTsfFileConfigId    = "dcfg-f-ab6l9x5y"
 	defaultTsfImageId         = "img-7r9vq8wd"
+	defaultTsfGWNamespaceId   = "namespace-vwgo38wy"
 )
 
 // End of TSF
@@ -996,9 +1025,11 @@ variable "cbs_backup_disk_id" {
 
 // CRS
 const (
-	defaultCrsInstanceId = "crs-jf4ico4v"
-	defaultCrsVpcId      = "vpc-4owdpnwr"
-	defaultCrsSubnetId   = "subnet-4o0zd840"
+	defaultCrsInstanceId     = "crs-jf4ico4v"
+	defaultCrsVpcId          = "vpc-4owdpnwr"
+	defaultCrsSubnetId       = "subnet-4o0zd840"
+	defaultCrsSecurityGroups = "sg-edmur627"
+	defaultCrsGroupId        = "crs-rpl-orfiwmn5"
 )
 
 // End of CRS

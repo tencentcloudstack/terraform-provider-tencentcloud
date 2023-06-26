@@ -14,7 +14,7 @@ Provides a resource to create a tcm mesh
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_tcm_mesh" "basic" {
+resource "tencentcloud_tcm_mesh" "mesh" {
   display_name = "test_mesh"
   mesh_version = "1.12.5"
   type         = "HOSTED"
@@ -28,12 +28,54 @@ resource "tencentcloud_tcm_mesh" "basic" {
         istio_meta_dns_capture       = true
         istio_meta_dns_auto_allocate = true
       }
+      tracing {
+        enable = false
+      }
+    }
+    tracing {
+      enable   = true
+      sampling = 1
+      apm {
+        enable = true
+        region = "ap-guangzhou"
+      }
+    }
+    prometheus {
+      custom_prom {
+        url       = "https://10.0.0.1:1000"
+        auth_type = "none"
+        vpc_id    = "vpc-j9yhbzpn"
+      }
+    }
+    inject {
+      exclude_ip_ranges                   = ["172.16.0.0/16"]
+      hold_application_until_proxy_starts = true
+      hold_proxy_until_application_ends   = true
+    }
+
+    sidecar_resources {
+      limits {
+        name     = "cpu"
+        quantity = "2"
+      }
+      limits {
+        name     = "memory"
+        quantity = "1Gi"
+      }
+      requests {
+        name     = "cpu"
+        quantity = "100m"
+      }
+      requests {
+        name     = "memory"
+        quantity = "128Mi"
+      }
     }
   }
   tag_list {
     key         = "key"
     value       = "value"
-    passthrough = true
+    passthrough = false
   }
 }
 ```
@@ -55,10 +97,18 @@ The `apm` object supports the following:
 * `instance_id` - (Optional, String) Instance id of the APM.
 * `region` - (Optional, String) Region.
 
+The `apm` object supports the following:
+
+* `enable` - (Required, Bool) Whether enable APM.
+* `instance_id` - (Optional, String) Instance id of the APM.
+* `region` - (Optional, String) Region.
+
 The `config` object supports the following:
 
+* `inject` - (Optional, List) Sidecar inject configuration.
 * `istio` - (Optional, List) Istio configuration.
 * `prometheus` - (Optional, List) Prometheus configuration.
+* `sidecar_resources` - (Optional, List) Default sidecar requests and limits.
 * `tracing` - (Optional, List) Tracing config.
 
 The `custom_prom` object supports the following:
@@ -70,13 +120,25 @@ The `custom_prom` object supports the following:
 * `username` - (Optional, String) Username of the prometheus, used in basic authentication type.
 * `vpc_id` - (Optional, String) Vpc id.
 
+The `inject` object supports the following:
+
+* `exclude_ip_ranges` - (Optional, Set) IP ranges that should not be proxied.
+* `hold_application_until_proxy_starts` - (Optional, Bool) Let istio-proxy(sidecar) start first, before app container.
+* `hold_proxy_until_application_ends` - (Optional, Bool) Let istio-proxy(sidecar) stop last, after app container.
+
 The `istio` object supports the following:
 
-* `outbound_traffic_policy` - (Required, String) Outbound traffic policy.
+* `outbound_traffic_policy` - (Required, String) Outbound traffic policy, REGISTRY_ONLY or ALLOW_ANY, see https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#MeshConfig-OutboundTrafficPolicy-Mode.
 * `disable_http_retry` - (Optional, Bool) Disable http retry.
 * `disable_policy_checks` - (Optional, Bool) Disable policy checks.
 * `enable_pilot_http` - (Optional, Bool) Enable HTTP/1.0 support.
 * `smart_dns` - (Optional, List) SmartDNS configuration.
+* `tracing` - (Optional, List) Tracing config(Deprecated, please use MeshConfig.Tracing for configuration).
+
+The `limits` object supports the following:
+
+* `name` - (Optional, String) Resource type name, `cpu/memory`.
+* `quantity` - (Optional, String) Resource quantity, example: cpu-`100m`, memory-`1Gi`.
 
 The `prometheus` object supports the following:
 
@@ -85,6 +147,16 @@ The `prometheus` object supports the following:
 * `region` - (Optional, String) Region.
 * `subnet_id` - (Optional, String) Subnet id.
 * `vpc_id` - (Optional, String) Vpc id.
+
+The `requests` object supports the following:
+
+* `name` - (Optional, String) Resource type name, `cpu/memory`.
+* `quantity` - (Optional, String) Resource quantity, example: cpu-`100m`, memory-`1Gi`.
+
+The `sidecar_resources` object supports the following:
+
+* `limits` - (Optional, Set) Sidecar limits.
+* `requests` - (Optional, Set) Sidecar requests.
 
 The `smart_dns` object supports the following:
 

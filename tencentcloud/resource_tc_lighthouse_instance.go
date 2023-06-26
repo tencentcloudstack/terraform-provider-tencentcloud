@@ -168,7 +168,14 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"YES", "NO"}),
+				Deprecated:   "It has been deprecated from version v1.81.8. Use `tencentcloud_lighthouse_key_pair_attachment` manage key pair.",
 				Description:  "Whether to allow login using the default key pair. `YES`: allow login; `NO`: disable login. Default: `YES`.",
+			},
+			"isolate_data_disk": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Whether to return the mounted data disk. `true`: returns both the instance and the mounted data disk; `false`: returns the instance and no longer returns its mounted data disk. Default: `true`.",
 			},
 			"containers": {
 				Type:        schema.TypeList,
@@ -408,23 +415,6 @@ func resourceTencentCloudLighthouseInstanceCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	if v, ok := d.GetOk("permit_default_key_pair_login"); ok {
-		permitLogin := v.(string)
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			e := lighthouseService.ModifyInstancesLoginKeyPairAttribute(ctx, instanceId, permitLogin)
-			if e != nil {
-				return retryError(e)
-			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update lighthouse instanceLoginKeyPair failed, reason:%+v", logId, err)
-			return err
-		}
-	}
-
 	d.SetId(instanceId)
 
 	return resourceTencentCloudLighthouseInstanceRead(d, meta)
@@ -471,14 +461,6 @@ func resourceTencentCloudLighthouseInstanceRead(d *schema.ResourceData, meta int
 		_ = d.Set("zone", instance.Zone)
 	}
 
-	instanceLoginKeyPair, err := lighthouseService.DescribeLighthouseInstanceLoginKeyPairById(ctx, id)
-	if err != nil {
-		return err
-	}
-
-	if instanceLoginKeyPair != nil && instanceLoginKeyPair.PermitLogin != nil {
-		_ = d.Set("permit_default_key_pair_login", instanceLoginKeyPair.PermitLogin)
-	}
 	return nil
 }
 
@@ -693,23 +675,6 @@ func resourceTencentCloudLighthouseInstanceUpdate(d *schema.ResourceData, meta i
 		return fmt.Errorf("`containers` do not support change now.")
 	}
 
-	if d.HasChange("permit_default_key_pair_login") {
-		_, new := d.GetChange("permit_default_key_pair_login")
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			e := service.ModifyInstancesLoginKeyPairAttribute(ctx, id, new.(string))
-			if e != nil {
-				return retryError(e)
-			}
-			return nil
-		})
-		if err != nil {
-			log.Printf("[CRITAL]%s update lighthouse instanceLoginKeyPair failed, reason:%+v", logId, err)
-			return err
-		}
-	}
-
 	return resourceTencentCloudLighthouseInstanceRead(d, meta)
 }
 
@@ -721,9 +686,10 @@ func resourceTencentCloudLighthouseInstanceDelete(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := LightHouseService{client: meta.(*TencentCloudClient).apiV3Conn}
 	id := d.Id()
+	isolateDataDisk := d.Get("isolate_data_disk").(bool)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		if err := service.IsolateLighthouseInstanceById(ctx, id); err != nil {
+		if err := service.IsolateLighthouseInstanceById(ctx, id, isolateDataDisk); err != nil {
 			return retryError(err)
 		}
 		return nil

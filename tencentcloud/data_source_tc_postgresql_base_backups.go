@@ -53,7 +53,7 @@ func dataSourceTencentCloudPostgresqlBaseBackups() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Filter instances using one or more criteria. Valid filter names:db-instance-id: Filter by instance ID (in string format).db-instance-name: Filter by instance name (in string format).db-instance-ip: Filter by instance VPC IP (in string format).",
+				Description: "Filter instances using one or more criteria. Valid filter names: `db-instance-id`: Filter by instance ID (in string format). `db-instance-name`: Filter by instance name (in string format). `db-instance-ip`: Filter by instance VPC IP (in string format). `base-backup-id`: Filter by base backup ID (in string format).",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": {

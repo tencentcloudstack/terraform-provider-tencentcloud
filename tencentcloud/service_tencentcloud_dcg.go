@@ -471,6 +471,61 @@ func (me *VpcService) CreateDirectConnectGatewayCcnRoute(ctx context.Context, dc
 	return
 }
 
+// not used, because if support, it will cause resource destroyed
+func (me *VpcService) ReplaceDirectConnectGatewayCcnRoute(ctx context.Context, dcgId, cidr string, asPaths []string) (routeId string, errRet error) {
+
+	logId := getLogId(ctx)
+
+	request := vpc.NewReplaceDirectConnectGatewayCcnRoutesRequest()
+	request.DirectConnectGatewayId = &dcgId
+
+	var ccnRoute vpc.DirectConnectGatewayCcnRoute
+	ccnRoute.DestinationCidrBlock = &cidr
+	ccnRoute.ASPath = make([]*string, 0, len(asPaths))
+
+	for index := range asPaths {
+		ccnRoute.ASPath = append(ccnRoute.ASPath, &asPaths[index])
+	}
+	request.Routes = []*vpc.DirectConnectGatewayCcnRoute{&ccnRoute}
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseVpcClient().ReplaceDirectConnectGatewayCcnRoutes(request)
+
+	defer func() {
+		if errRet != nil {
+			responseStr := ""
+			if response != nil {
+				responseStr = response.ToJsonString()
+			}
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s],response body [%s], reason[%s]\n",
+				logId,
+				request.GetAction(),
+				request.ToJsonString(),
+				responseStr,
+				errRet.Error())
+		}
+	}()
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	routeIdTemp, has, err := me.GetCcnRouteId(ctx, dcgId, cidr, asPaths)
+
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	if has == 1 {
+		routeId = routeIdTemp
+		return
+	} else {
+		errRet = fmt.Errorf("after api `ReplaceDirectConnectGatewayCcnRoutes`, api `DescribeDirectConnectGatewayCcnRoutes` return null route info")
+	}
+	return
+}
+
 func (me *VpcService) DeleteDirectConnectGatewayCcnRoute(ctx context.Context, dcgId, routeId string) (errRet error) {
 
 	logId := getLogId(ctx)

@@ -1527,3 +1527,263 @@ func (me *TCRService) DescribeTcrTagRetentionExecutionTasksByFilter(ctx context.
 
 	return
 }
+
+func (me *TCRService) DescribeTcrTagRetentionExecutionConfigById(ctx context.Context, registryId string, retentionId string) (TagRetentionExecutionConfig *tcr.RetentionExecution, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDescribeTagRetentionExecutionRequest()
+	request.RegistryId = &registryId
+	request.RetentionId = helper.StrToInt64Point(retentionId)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DescribeTagRetentionExecution(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RetentionExecutionList) < 1 {
+		return
+	}
+
+	TagRetentionExecutionConfig = response.Response.RetentionExecutionList[0]
+	return
+}
+
+func (me *TCRService) TcrTagRetentionExecutionConfigStateRefreshFunc(registryId string, retentionId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeTcrTagRetentionExecutionConfigById(ctx, registryId, retentionId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
+func (me *TCRService) TcrStateRefreshFunc(instanceId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, has, err := me.DescribeTCRInstanceById(ctx, instanceId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if !has || object == nil {
+			return nil, "Closed", err
+		}
+
+		return object, helper.PString(object.Status), nil
+	}
+}
+
+// func (me *TCRService) DescribeTcrSignaturePolicyById(ctx context.Context, registryId string, namespaceName string, policyName string) (SignaturePolicy *tcr.TcrNamespaceInfo, errRet error) {
+// 	logId := getLogId(ctx)
+
+// 	request := tcr.NewDescribeNamespacesRequest()
+// 	request.RegistryId = &registryId
+// 	request.NamespaceName = &namespaceName
+
+// 	defer func() {
+// 		if errRet != nil {
+// 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+// 		}
+// 	}()
+
+// 	ratelimit.Check(request.GetAction())
+
+// 	response, err := me.client.UseTCRClient().DescribeNamespaces(request)
+// 	if err != nil {
+// 		errRet = err
+// 		return
+// 	}
+// 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+// 	if response == nil || len(response.Response.NamespaceList) < 1 {
+// 		return
+// 	}
+
+// 	for _, ns := range response.Response.NamespaceList{
+// 		ns.
+// 	}
+
+// 	return
+// }
+
+// func (me *TCRService) DeleteTcrSignaturePolicyById(ctx context.Context, registryId string, name string, namespaceName string) (errRet error) {
+// 	logId := getLogId(ctx)
+
+// 	request := tcr.NewDeleteSignaturePolicyRequest()
+// 	request.RegistryId = &registryId
+// 	request.Name = &name
+// 	request.NamespaceName = &namespaceName
+
+// 	defer func() {
+// 		if errRet != nil {
+// 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+// 		}
+// 	}()
+
+// 	ratelimit.Check(request.GetAction())
+
+// 	response, err := me.client.UseTCRClient().DeleteSignaturePolicy(request)
+// 	if err != nil {
+// 		errRet = err
+// 		return
+// 	}
+// 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+// 	return
+// }
+
+func (me *TCRService) DescribeTcrReplicationInstanceCreateTasksByFilter(ctx context.Context, param map[string]interface{}) (ret *tcr.DescribeReplicationInstanceCreateTasksResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcr.NewDescribeReplicationInstanceCreateTasksRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ReplicationRegistryId" {
+			request.ReplicationRegistryId = v.(*string)
+		}
+		if k == "ReplicationRegionId" {
+			request.ReplicationRegionId = v.(*uint64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DescribeReplicationInstanceCreateTasks(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+	ret = response.Response
+
+	return
+}
+
+func (me *TCRService) DescribeTcrReplicationInstanceSyncStatusByFilter(ctx context.Context, param map[string]interface{}) (ret *tcr.DescribeReplicationInstanceSyncStatusResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcr.NewDescribeReplicationInstanceSyncStatusRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "RegistryId" {
+			request.RegistryId = v.(*string)
+		}
+		if k == "ReplicationRegistryId" {
+			request.ReplicationRegistryId = v.(*string)
+		}
+		if k == "ReplicationRegionId" {
+			request.ReplicationRegionId = v.(*uint64)
+		}
+		if k == "ShowReplicationLog" {
+			request.ShowReplicationLog = v.(*bool)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+
+	request.Offset = &offset
+	request.Limit = &limit
+	response, err := me.client.UseTCRClient().DescribeReplicationInstanceSyncStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	return response.Response, nil
+}
+
+func (me *TCRService) DescribeTcrTagRetentionExecutionsByFilter(ctx context.Context, param map[string]interface{}) (TagRetentionExecutions []*tcr.RetentionExecution, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tcr.NewDescribeTagRetentionExecutionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "RegistryId" {
+			request.RegistryId = v.(*string)
+		}
+		if k == "RetentionId" {
+			request.RetentionId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTCRClient().DescribeTagRetentionExecution(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.RetentionExecutionList) < 1 {
+			break
+		}
+		TagRetentionExecutions = append(TagRetentionExecutions, response.Response.RetentionExecutionList...)
+		if len(response.Response.RetentionExecutionList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

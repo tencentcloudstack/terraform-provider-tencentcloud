@@ -8001,3 +8001,35 @@ func (me *VpcService) DeleteVpcNotifyRoutesById(ctx context.Context, routeTableI
 
 	return
 }
+
+func (me *VpcService) DescribeVpnDefaultHealthCheckIp(ctx context.Context, param map[string]interface{}) (defaultHealthCheck *vpc.GenerateVpnConnectionDefaultHealthCheckIpResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = vpc.NewGenerateVpnConnectionDefaultHealthCheckIpRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "VpnGatewayId" {
+			request.VpnGatewayId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseVpcClient().GenerateVpnConnectionDefaultHealthCheckIp(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	defaultHealthCheck = response.Response
+
+	return
+}
