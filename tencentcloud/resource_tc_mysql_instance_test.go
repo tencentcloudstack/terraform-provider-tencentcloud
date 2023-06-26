@@ -180,7 +180,7 @@ func TestAccTencentCloudMysqlInstanceResource_MasterInstance_fullslave(t *testin
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql_master"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "instance_name", TestAccTencentCloudMysqlInstanceName),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "slave_deploy_mode", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "slave_sync_mode", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "slave_sync_mode", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "availability_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "first_slave_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone_4),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "second_slave_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone_4),
@@ -516,7 +516,7 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   slave_deploy_mode = 1
   first_slave_zone  = "ap-guangzhou-4"
   second_slave_zone = "ap-guangzhou-4"
-  slave_sync_mode   = 2
+  slave_sync_mode   = 1
   force_delete      = true
 }`
 }

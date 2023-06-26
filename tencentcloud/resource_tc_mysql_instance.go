@@ -994,7 +994,7 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") || d.HasChange("slave_deploy_mode") || d.HasChange("first_slave_zone") || d.HasChange("second_slave_zone") {
+	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") || d.HasChange("slave_deploy_mode") || d.HasChange("first_slave_zone") || d.HasChange("second_slave_zone") || d.HasChange("slave_sync_mode") {
 
 		memSize := int64(d.Get("mem_size").(int))
 		cpu := int64(d.Get("cpu").(int))
