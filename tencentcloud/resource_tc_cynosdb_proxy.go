@@ -77,7 +77,7 @@ func resourceTencentCloudCynosdbProxy() *schema.Resource {
 				Optional:      true,
 				Type:          schema.TypeInt,
 				ConflictsWith: []string{"proxy_zones"},
-				Description:   "Number of database proxy group nodes. If it is set at the same time as the `proxy_zones` field, the `proxy_zones` parameter shall prevail",
+				Description:   "Number of database proxy group nodes. If it is set at the same time as the `proxy_zones` field, the `proxy_zones` parameter shall prevail.",
 			},
 			"connection_pool_type": {
 				Optional:    true,
