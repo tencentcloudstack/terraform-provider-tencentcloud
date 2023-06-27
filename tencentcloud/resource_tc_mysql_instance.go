@@ -288,7 +288,6 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"second_slave_zone": {
 			Type:        schema.TypeString,
 			Optional:    true,
-			Computed:    true,
 			Description: "Zone information about second slave instance.",
 		},
 		"slave_sync_mode": {
