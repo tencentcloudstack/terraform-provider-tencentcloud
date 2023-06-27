@@ -68,7 +68,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -198,7 +197,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		ratelimit.Check(request.GetAction())
 		response, err = meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().CreateClusters(request)
 		if err != nil {
-			if e, ok := err.(*errors.TencentCloudSDKError); ok {
+			if e, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
 				if e.GetCode() == "InvalidParameterValue.DealNameNotFound" {
 					return resource.RetryableError(fmt.Errorf("waiting billing status, retry..."))
 				}
@@ -813,6 +812,11 @@ func resourceTencentCloudCynosdbClusterDelete(d *schema.ResourceData, meta inter
 		conf := BuildStateChangeConf([]string{}, []string{"offlined"}, 2*readRetryTimeout, time.Second, cynosdbService.CynosdbInstanceOfflineStateRefreshFunc(d.Id(), []string{}))
 
 		if _, e := conf.WaitForState(); e != nil {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Message == "record not found" {
+					return nil
+				}
+			}
 			return e
 		}
 	}

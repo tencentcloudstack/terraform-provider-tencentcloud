@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func init() {
@@ -195,6 +196,11 @@ func testAccCheckCynosdbClusterDestroy(s *terraform.State) error {
 
 		_, _, has, err := cynosdbService.DescribeClusterById(ctx, rs.Primary.ID)
 		if err != nil {
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Message == "record not found" {
+					return nil
+				}
+			}
 			return err
 		}
 		if !has {
