@@ -26,7 +26,7 @@ func TestAccTencentCloudCynosdbReloadProxyNodeResource_basic(t *testing.T) {
 
 const testAccCynosdbReloadProxyNode = testAccCynosdbProxy + `
 resource "tencentcloud_cynosdb_reload_proxy_node" "reload_proxy_node" {
-  cluster_id     = tencentcloud_cynosdb_proxy.proxy.id
+  cluster_id     = tencentcloud_cynosdb_proxy.proxy.cluster_id
   proxy_group_id = tencentcloud_cynosdb_proxy.proxy.proxy_group_id
 }
 `
