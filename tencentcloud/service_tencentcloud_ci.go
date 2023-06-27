@@ -310,3 +310,50 @@ func (me *CiService) GetCiGuetzliById(ctx context.Context, bucket string) (*cos.
 
 	return resRaw.(*cos.GetGuetzliResult), nil
 }
+
+
+func (me *CiService) DescribeCiMediaWorkflowById(ctx context.Context, bucket, workflowId string) (mediaWorkflow *cos.MediaWorkflow, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cos.DescribeMediaWorkflowOptions{}
+	request.Ids = workflowId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "DescribeMediaWorkflow", bucket, errRet.Error())
+		}
+	}()
+
+	response, _, err := me.client.UsePicClient(bucket).CI.DescribeMediaWorkflow(ctx, &request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%v, %v], response body [%+v]\n", logId, "DescribeMediaWorkflow", bucket, workflowId, response)
+
+	if len(response.MediaWorkflowList) < 1 {
+		return
+	}
+
+	mediaWorkflow = &response.MediaWorkflowList[0]
+	return
+}
+
+func (me *CiService) DeleteCiMediaWorkflowById(ctx context.Context, bucket, workflowId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, "DeleteMediaWorkflow", bucket, errRet.Error())
+		}
+	}()
+
+	response, _, err := me.client.UsePicClient(bucket).CI.DeleteMediaWorkflow(ctx, workflowId)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%v, %v], response body [%+v]\n", logId, "DeleteMediaWorkflow", bucket, workflowId, response)
+
+	return
+}

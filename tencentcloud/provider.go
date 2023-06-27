@@ -2734,6 +2734,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ci_media_speech_recognition_template":       resourceTencentCloudCiMediaSpeechRecognitionTemplate(),
 			"tencentcloud_ci_guetzli":                                 resourceTencentCloudCIGuetzli(),
 			"tencentcloud_ci_original_image_protection":               resourceTencentCloudCIOriginalImageProtection(),
+			"tencentcloud_ci_media_workflow":						   resourceTencentCloudCiMediaWorkflow(),
 			"tencentcloud_cynosdb_audit_log_file":                     resourceTencentCloudCynosdbAuditLogFile(),
 			"tencentcloud_cynosdb_security_group":                     resourceTencentCloudCynosdbSecurityGroup(),
 			"tencentcloud_dayu_ddos_ip_attachment_v2":                 resourceTencentCloudDayuDDosIpAttachmentV2(),
