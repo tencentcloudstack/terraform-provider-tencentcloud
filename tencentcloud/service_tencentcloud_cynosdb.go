@@ -2465,3 +2465,72 @@ func (me *CynosdbService) CynosdbClusterSlaveZoneStateRefreshFunc(flowId int64, 
 		return object, helper.Int64ToStr(*object.Status), nil
 	}
 }
+
+func (me *CynosdbService) DescribeCynosdbInstanceSlowQueriesByFilter(ctx context.Context, param map[string]interface{}) (InstanceSlowQueries []*cynosdb.SlowQueriesItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cynosdb.NewDescribeInstanceSlowQueriesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "Username" {
+			request.Username = v.(*string)
+		}
+		if k == "Host" {
+			request.Host = v.(*string)
+		}
+		if k == "Database" {
+			request.Database = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCynosdbClient().DescribeInstanceSlowQueries(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SlowQueries) < 1 {
+			break
+		}
+		InstanceSlowQueries = append(InstanceSlowQueries, response.Response.SlowQueries...)
+		if len(response.Response.SlowQueries) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
