@@ -39,15 +39,27 @@ func TestAccTencentCloudCynosdbClusterSlaveZoneResource_basic(t *testing.T) {
 	})
 }
 
-const testAccCynosdbClusterSlaveZone_instance = testAccCynosdbBasic + `
-resource "tencentcloud_cynosdb_cluster" "foo" {
+const testAccCynosdbClusterSlaveZone_instance = defaultSecurityGroupData + defaultVpcSubnets + `
+variable "availability_zone" {
+	default = "ap-guangzhou-4"
+}
+
+variable "new_availability_zone" {
+  default = "ap-guangzhou-6"
+}
+
+variable "my_param_template" {
+  default = "15765"
+}
+
+resource "tencentcloud_cynosdb_cluster" "instance" {
   available_zone               = var.availability_zone
-  vpc_id                       = var.my_vpc
-  subnet_id                    = var.my_subnet
+  vpc_id                       = local.vpc_id
+  subnet_id                    = local.subnet_id
   db_type                      = "MYSQL"
   db_version                   = "5.7"
   storage_limit                = 1000
-  cluster_name                 = "tf-cynosdb-salve-zone"
+  cluster_name                 = "tf_test_cynosdb_cluster_slave_zone"
   password                     = "cynos@123"
   instance_maintain_duration   = 3600
   instance_maintain_start_time = 10800
@@ -64,11 +76,11 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
   instance_cpu_core    = 1
   instance_memory_size = 2
   param_items {
-    name = "character_set_server"
+    name          = "character_set_server"
     current_value = "utf8"
   }
   param_items {
-    name = "time_zone"
+    name          = "time_zone"
     current_value = "+09:00"
   }
 
@@ -87,8 +99,8 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
 const testAccCynosdbClusterSlaveZone = testAccCynosdbClusterSlaveZone_instance + `
 
 resource "tencentcloud_cynosdb_cluster_slave_zone" "cluster_slave_zone" {
-  cluster_id = tencentcloud_cynosdb_cluster.foo.id
-  slave_zone = "ap-guangzhou-6"
+  cluster_id = tencentcloud_cynosdb_cluster.instance.id
+  slave_zone = var.new_availability_zone
 }
 
 `
@@ -96,8 +108,8 @@ resource "tencentcloud_cynosdb_cluster_slave_zone" "cluster_slave_zone" {
 const testAccCynosdbClusterSlaveZone_update = testAccCynosdbClusterSlaveZone_instance + `
 
 resource "tencentcloud_cynosdb_cluster_slave_zone" "cluster_slave_zone" {
-  cluster_id = tencentcloud_cynosdb_cluster.foo.id
-  slave_zone = "ap-guangzhou-4"
+  cluster_id = tencentcloud_cynosdb_cluster.instance.id
+  slave_zone = var.availability_zone
 }
 
 `
