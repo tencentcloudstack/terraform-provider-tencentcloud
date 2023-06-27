@@ -788,6 +788,8 @@ SQLServer
 	tencentcloud_sqlserver_slowlogs
 	tencentcloud_sqlserver_upload_backup_info
 	tencentcloud_sqlserver_upload_incremental_info
+	tencentcloud_sqlserver_query_xevent
+	tencentcloud_sqlserver_datasource_ins_attribute
 
   Resource
 	tencentcloud_sqlserver_instance
@@ -821,6 +823,7 @@ SQLServer
 	tencentcloud_sqlserver_rollback_instance
 	tencentcloud_sqlserver_start_backup_full_migration
 	tencentcloud_sqlserver_start_backup_incremental_migration
+	tencentcloud_sqlserver_start_xevent
 
 SSL Certificates
   Data Source
@@ -1932,6 +1935,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_services":                      dataSourceTencentCloudAPIGatewayServices(),
 			"tencentcloud_api_gateway_api_keys":                      dataSourceTencentCloudAPIGatewayAPIKeys(),
 			"tencentcloud_sqlserver_basic_instances":                 dataSourceTencentCloudSqlserverBasicInstances(),
+			"tencentcloud_sqlserver_query_xevent":                    dataSourceTencentCloudSqlserverQueryXevent(),
+			"tencentcloud_sqlserver_datasource_ins_attribute":        dataSourceTencentCloudSqlserverDatasourceInsAttribute(),
 			"tencentcloud_tcr_instances":                             dataSourceTencentCloudTCRInstances(),
 			"tencentcloud_tcr_namespaces":                            dataSourceTencentCloudTCRNamespaces(),
 			"tencentcloud_tcr_tokens":                                dataSourceTencentCloudTCRTokens(),
@@ -2481,6 +2486,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_rollback_instance":                    resourceTencentCloudSqlserverRollbackInstance(),
 			"tencentcloud_sqlserver_start_backup_full_migration":          resourceTencentCloudSqlserverStartBackupFullMigration(),
 			"tencentcloud_sqlserver_start_backup_incremental_migration":   resourceTencentCloudSqlserverStartBackupIncrementalMigration(),
+			"tencentcloud_sqlserver_start_xevent":                         resourceTencentCloudSqlserverStartXevent(),
 			"tencentcloud_ckafka_instance":                                resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                    resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                     resourceTencentCloudCkafkaAcl(),

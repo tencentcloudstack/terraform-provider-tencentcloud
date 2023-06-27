@@ -856,6 +856,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.680 h1:62Il
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.680/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.683 h1:HGTNnjSYGqG5q8sQWQ0+qqnmPPj/iRcxLlmeq2AAiOE=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.683/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.688 h1:NvpmuwSOoOASDtvz/+ZI+QS7zaWQp9FBQQxBY0p5uhA=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.688/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624/go.mod h1:+TXSVyeKwt1IhZRqKPbTREteBcP+K07Q846/ilNzLWA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589 h1:LZihgirMH0vsaGScYexxwY0fTss9vHaSZs/YOQUVESg=
@@ -919,6 +921,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486 h1:eHLaL+h
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486/go.mod h1:MSsho0YlAsoPCOMqdBfwqGd/SMQ0FTGh0a6emBy2X+g=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.662 h1:aq4XYdDEVOAFdHLTQ7Df4rqkm4B+or7FrUO0L5gT6NU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.662/go.mod h1:FE3CcIADnaBpg2t+ZkDmnR2ruqYcHX/uodUhrVLspfo=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.688 h1:GdnkHYH6WAz8Hx3rS5BeCFaEf6z1CSIFG/HrrYABVco=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.688/go.mod h1:XYVUFXiGJbufmUKwuIoCKk6/llHs7tLD8wORqiC5JdM=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.199 h1:UkF3qBxMbpOf2VjxgzMgqvBCS+Hqr8XXSrtRd+rABMk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.199/go.mod h1:Ofo7/s0NJLXV7rX/Yfx0OPq8NaPie07JwoEGZpxTeJY=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.199 h1:iXRHMlRWbnAokd2SoWpNwysPH6/5qKNYQlSkF4xV7sc=

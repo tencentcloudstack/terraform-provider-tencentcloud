@@ -473,6 +473,7 @@ func NewCreateBackupResponse() (response *CreateBackupResponse) {
 // 本接口(CreateBackup)用于创建备份。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
@@ -496,6 +497,7 @@ func (c *Client) CreateBackup(request *CreateBackupRequest) (response *CreateBac
 // 本接口(CreateBackup)用于创建备份。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
@@ -2635,8 +2637,10 @@ func NewDescribeDBInstancesAttributeResponse() (response *DescribeDBInstancesAtt
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeDBInstancesAttribute(request *DescribeDBInstancesAttributeRequest) (response *DescribeDBInstancesAttributeResponse, err error) {
     return c.DescribeDBInstancesAttributeWithContext(context.Background(), request)
 }
@@ -2647,8 +2651,10 @@ func (c *Client) DescribeDBInstancesAttribute(request *DescribeDBInstancesAttrib
 // 可能返回的错误码:
 //  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
+//  INTERNALERROR_UNKNOWNERROR = "InternalError.UnknownError"
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 func (c *Client) DescribeDBInstancesAttributeWithContext(ctx context.Context, request *DescribeDBInstancesAttributeRequest) (response *DescribeDBInstancesAttributeResponse, err error) {
     if request == nil {
         request = NewDescribeDBInstancesAttributeRequest()
@@ -2805,6 +2811,7 @@ func NewDescribeDBsNormalResponse() (response *DescribeDBsNormalResponse) {
 // 本接口(DescribeDBsNormal)用于查询数据库配置信息，此接口不包含数据库的关联账号
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
@@ -2821,6 +2828,7 @@ func (c *Client) DescribeDBsNormal(request *DescribeDBsNormalRequest) (response 
 // 本接口(DescribeDBsNormal)用于查询数据库配置信息，此接口不包含数据库的关联账号
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DBError"
 //  FAILEDOPERATION_GCSERROR = "FailedOperation.GcsError"
 //  INTERNALERROR_DBERROR = "InternalError.DBError"
 //  INTERNALERROR_GCSERROR = "InternalError.GcsError"
@@ -4027,6 +4035,7 @@ func NewDescribeUploadIncrementalInfoResponse() (response *DescribeUploadIncreme
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETERVALUE_COSPATHERROR = "InvalidParameterValue.CosPathError"
 //  RESOURCENOTFOUND_FULLBACKUPMIGRATIONNOTEXIST = "ResourceNotFound.FullBackupMigrationNotExist"
+//  RESOURCENOTFOUND_INCREBACKUPMIGRATIONNOTEXIST = "ResourceNotFound.IncreBackupMigrationNotExist"
 //  RESOURCEUNAVAILABLE_COSSTATUSERR = "ResourceUnavailable.CosStatusErr"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 //  UNSUPPORTEDOPERATION_UPLOADTYPEERROR = "UnsupportedOperation.UploadTypeError"
@@ -4046,6 +4055,7 @@ func (c *Client) DescribeUploadIncrementalInfo(request *DescribeUploadIncrementa
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETERVALUE_COSPATHERROR = "InvalidParameterValue.CosPathError"
 //  RESOURCENOTFOUND_FULLBACKUPMIGRATIONNOTEXIST = "ResourceNotFound.FullBackupMigrationNotExist"
+//  RESOURCENOTFOUND_INCREBACKUPMIGRATIONNOTEXIST = "ResourceNotFound.IncreBackupMigrationNotExist"
 //  RESOURCEUNAVAILABLE_COSSTATUSERR = "ResourceUnavailable.CosStatusErr"
 //  UNAUTHORIZEDOPERATION_PERMISSIONDENIED = "UnauthorizedOperation.PermissionDenied"
 //  UNSUPPORTEDOPERATION_UPLOADTYPEERROR = "UnsupportedOperation.UploadTypeError"
@@ -6399,6 +6409,7 @@ func NewRestoreInstanceResponse() (response *RestoreInstanceResponse) {
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETERVALUE_DBEXIST = "InvalidParameterValue.DBExist"
 //  LIMITEXCEEDED_TOOMANYDB = "LimitExceeded.TooManyDB"
+//  RESOURCENOTFOUND_DBNOTFOUND = "ResourceNotFound.DBNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_DBINVALIDSTATUS = "ResourceUnavailable.DBInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
@@ -6419,6 +6430,7 @@ func (c *Client) RestoreInstance(request *RestoreInstanceRequest) (response *Res
 //  INVALIDPARAMETER_PARAMSASSERTFAILED = "InvalidParameter.ParamsAssertFailed"
 //  INVALIDPARAMETERVALUE_DBEXIST = "InvalidParameterValue.DBExist"
 //  LIMITEXCEEDED_TOOMANYDB = "LimitExceeded.TooManyDB"
+//  RESOURCENOTFOUND_DBNOTFOUND = "ResourceNotFound.DBNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  RESOURCEUNAVAILABLE_DBINVALIDSTATUS = "ResourceUnavailable.DBInvalidStatus"
 //  RESOURCEUNAVAILABLE_INSTANCESTATUSINVALID = "ResourceUnavailable.InstanceStatusInvalid"
