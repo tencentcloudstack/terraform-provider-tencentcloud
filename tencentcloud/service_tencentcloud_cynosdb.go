@@ -2368,6 +2368,7 @@ func (me *CynosdbService) ModifyClusterStorage(ctx context.Context, clusterId st
 	request.ClusterId = &clusterId
 	request.NewStorageLimit = &newStorageLimit
 	request.OldStorageLimit = &oldStorageLimit
+	request.DealMode = helper.IntInt64(0)
 
 	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
@@ -2393,16 +2394,39 @@ func (me *CynosdbService) SwitchClusterVpc(ctx context.Context, clusterId string
 	request.UniqSubnetId = &subnetId
 	request.OldIpReserveHours = &oldIpReserveHours
 
+	var flowId int64
 	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
-		_, errRet = me.client.UseCynosdbClient().SwitchClusterVpc(request)
+		response, errRet := me.client.UseCynosdbClient().SwitchClusterVpc(request)
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
 			return retryError(errRet)
 		}
+		flowId = *response.Response.FlowId
 		return nil
 	})
 	if errRet != nil {
+		return
+	}
+
+	err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		ok, err := me.DescribeFlow(ctx, flowId)
+		if err != nil {
+			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if ok {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("update cynosdb SwitchClusterVpc is processing"))
+		}
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update cynosdb SwitchClusterVpc fail, reason:%s\n", logId, err.Error())
+		errRet = err
 		return
 	}
 

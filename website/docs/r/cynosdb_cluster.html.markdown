@@ -93,7 +93,8 @@ The following arguments are supported:
 * `ro_group_sg` - (Optional, List: [`String`]) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional, List: [`String`]) IDs of security group for `rw_group`.
 * `serverless_status_flag` - (Optional, String) Specify whether to pause or resume serverless cluster. values: `resume`, `pause`.
-* `storage_limit` - (Optional, Int) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
+* `storage_limit` - (Optional, Int) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, and the transaction mode is `order and pay`. when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
+* `storage_pay_mode` - (Optional, Int) Cluster storage billing mode, pay-as-you-go: `0`-yearly/monthly: `1`-The default is pay-as-you-go. When the DbType is MYSQL, when the cluster computing billing mode is post-paid (including DbMode is SERVERLESS), the storage billing mode can only be billing by volume; rollback and cloning do not support yearly subscriptions monthly storage.
 * `tags` - (Optional, Map) The tags of the CynosDB cluster.
 
 The `param_items` object supports the following:

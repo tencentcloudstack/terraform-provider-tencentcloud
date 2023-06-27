@@ -135,6 +135,10 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 		request.StorageLimit = helper.IntInt64(v.(int))
 	}
 
+	if v, ok := d.GetOk("storage_pay_mode"); ok {
+		request.StoragePayMode = helper.IntInt64(v.(int))
+	}
+
 	// set params
 	if v, ok := d.GetOk("param_items"); ok {
 		paramItems := v.([]interface{})
@@ -207,7 +211,7 @@ func resourceTencentCloudCynosdbClusterCreate(d *schema.ResourceData, meta inter
 	if err != nil {
 		return err
 	}
-	if response != nil && response.Response != nil && len(response.Response.DealNames) != 1 {
+	if response != nil && response.Response != nil && len(response.Response.DealNames) < 1 {
 		return fmt.Errorf("cynosdb cluster id count isn't 1")
 	}
 	//after 1.53.3 the response is async
@@ -377,6 +381,7 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 	_ = d.Set("storage_used", *cluster.UsedStorage/1000/1000)
 	_ = d.Set("auto_renew_flag", *item.RenewFlag)
 	_ = d.Set("serverless_status", cluster.ServerlessStatus)
+	_ = d.Set("storage_pay_mode", cluster.StoragePayMode)
 
 	if _, ok := d.GetOk("serverless_status_flag"); ok && *item.DbMode == CYNOSDB_SERVERLESS {
 		status := *item.ServerlessStatus
@@ -547,6 +552,7 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 		"max_cpu",
 		"auto_pause",
 		"auto_pause_delay",
+		"storage_pay_mode",
 	}
 
 	for _, a := range immutableArgs {
@@ -604,6 +610,14 @@ func resourceTencentCloudCynosdbClusterUpdate(d *schema.ResourceData, meta inter
 
 	// update param
 	if d.HasChange("param_items") {
+		_, _, has, e := cynosdbService.DescribeClusterById(ctx, clusterId)
+		if e != nil {
+			return e
+		}
+		if !has {
+			return fmt.Errorf("[CRITAL]%s updating cynosdb cluster instance failed, instance doesn't exist", logId)
+		}
+
 		o, n := d.GetChange("param_items")
 		oldParams := o.([]interface{})
 		newParams := n.([]interface{})
