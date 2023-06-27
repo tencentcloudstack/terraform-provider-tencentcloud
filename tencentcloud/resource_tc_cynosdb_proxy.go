@@ -345,10 +345,12 @@ func resourceTencentCloudCynosdbProxyRead(d *schema.ResourceData, meta interface
 
 		proxyGroups := proxyGroupRwInfo.ProxyGroup
 		if proxyGroups != nil {
-			if _, ok := d.GetOk("proxy_count"); ok {
-				if proxyGroups.ProxyNodeCount != nil {
-					_ = d.Set("proxy_count", proxyGroups.ProxyNodeCount)
-				}
+			if proxyGroups.ProxyNodeCount != nil {
+				_ = d.Set("proxy_count", proxyGroups.ProxyNodeCount)
+			}
+
+			if proxyGroups.ProxyGroupId != nil {
+				_ = d.Set("proxy_group_id", proxyGroups.ProxyGroupId)
 			}
 		}
 
