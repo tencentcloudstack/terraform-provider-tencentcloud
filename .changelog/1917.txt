@@ -7,5 +7,5 @@ tencentcloud_sqlserver_query_xevent
 ```
 
 ```release-note:new-data-source
-tencentcloud_sqlserver_datasource_ins_attribute
+tencentcloud_sqlserver_ins_attribute
 ```

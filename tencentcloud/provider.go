@@ -789,7 +789,7 @@ SQLServer
 	tencentcloud_sqlserver_upload_backup_info
 	tencentcloud_sqlserver_upload_incremental_info
 	tencentcloud_sqlserver_query_xevent
-	tencentcloud_sqlserver_datasource_ins_attribute
+	tencentcloud_sqlserver_ins_attribute
 
   Resource
 	tencentcloud_sqlserver_instance
@@ -1936,7 +1936,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_keys":                      dataSourceTencentCloudAPIGatewayAPIKeys(),
 			"tencentcloud_sqlserver_basic_instances":                 dataSourceTencentCloudSqlserverBasicInstances(),
 			"tencentcloud_sqlserver_query_xevent":                    dataSourceTencentCloudSqlserverQueryXevent(),
-			"tencentcloud_sqlserver_datasource_ins_attribute":        dataSourceTencentCloudSqlserverDatasourceInsAttribute(),
+			"tencentcloud_sqlserver_ins_attribute":                   dataSourceTencentCloudSqlserverInsAttribute(),
 			"tencentcloud_tcr_instances":                             dataSourceTencentCloudTCRInstances(),
 			"tencentcloud_tcr_namespaces":                            dataSourceTencentCloudTCRNamespaces(),
 			"tencentcloud_tcr_tokens":                                dataSourceTencentCloudTCRTokens(),

@@ -1,10 +1,10 @@
 /*
-Use this data source to query detailed information of sqlserver datasource_ins_attribute
+Use this data source to query detailed information of sqlserver_ins_attribute
 
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_datasource_ins_attribute" "datasource_ins_attribute" {
+data "tencentcloud_sqlserver_ins_attribute" "ins_attribute" {
   instance_id = "mssql-gyg9xycl"
 }
 ```
@@ -20,9 +20,9 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func dataSourceTencentCloudSqlserverDatasourceInsAttribute() *schema.Resource {
+func dataSourceTencentCloudSqlserverInsAttribute() *schema.Resource {
 	return &schema.Resource{
-		Read: dataSourceTencentCloudSqlserverDatasourceInsAttributeRead,
+		Read: dataSourceTencentCloudSqlserverInsAttributeRead,
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -97,8 +97,8 @@ func dataSourceTencentCloudSqlserverDatasourceInsAttribute() *schema.Resource {
 	}
 }
 
-func dataSourceTencentCloudSqlserverDatasourceInsAttributeRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("data_source.tencentcloud_sqlserver_datasource_ins_attribute.read")()
+func dataSourceTencentCloudSqlserverInsAttributeRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("data_source.tencentcloud_sqlserver_ins_attribute.read")()
 	defer inconsistentCheck(d, meta)()
 
 	var (
@@ -116,7 +116,7 @@ func dataSourceTencentCloudSqlserverDatasourceInsAttributeRead(d *schema.Resourc
 	}
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		result, e := service.DescribeSqlserverDatasourceInsAttributeByFilter(ctx, paramMap)
+		result, e := service.DescribeSqlserverInsAttributeByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}

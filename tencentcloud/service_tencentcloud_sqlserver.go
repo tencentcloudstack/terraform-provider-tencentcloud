@@ -3164,7 +3164,7 @@ func (me *SqlserverService) DescribeSqlserverQueryXeventByFilter(ctx context.Con
 	return
 }
 
-func (me *SqlserverService) DescribeSqlserverDatasourceInsAttributeByFilter(ctx context.Context, param map[string]interface{}) (datasourceInsAttribute *sqlserver.DescribeDBInstancesAttributeResponseParams, errRet error) {
+func (me *SqlserverService) DescribeSqlserverInsAttributeByFilter(ctx context.Context, param map[string]interface{}) (datasourceInsAttribute *sqlserver.DescribeDBInstancesAttributeResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = sqlserver.NewDescribeDBInstancesAttributeRequest()
