@@ -444,7 +444,6 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_wan
 	tencentcloud_cynosdb_proxy
 	tencentcloud_cynosdb_reload_proxy_node
-	tencentcloud_cynosdb_proxy_rw_split
 
 Direct Connect(DC)
   Data Source
@@ -2508,7 +2507,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_image":                                          resourceTencentCloudImage(),
 			"tencentcloud_cynosdb_proxy":                                  resourceTencentCloudCynosdbProxy(),
 			"tencentcloud_cynosdb_reload_proxy_node":                      resourceTencentCloudCynosdbReloadProxyNode(),
-			"tencentcloud_cynosdb_proxy_rw_split":                         resourceTencentCloudCynosdbProxyRwSplit(),
 			"tencentcloud_cynosdb_cluster_resource_packages_attachment":   resourceTencentCloudCynosdbClusterResourcePackagesAttachment(),
 			"tencentcloud_cynosdb_cluster":                                resourceTencentCloudCynosdbCluster(),
 			"tencentcloud_cynosdb_readonly_instance":                      resourceTencentCloudCynosdbReadonlyInstance(),

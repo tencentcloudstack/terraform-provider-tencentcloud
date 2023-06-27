@@ -112,6 +112,7 @@ func resourceTencentCloudCynosdbProxy() *schema.Resource {
 			},
 			"proxy_zones": {
 				Optional:      true,
+				Computed:      true,
 				Type:          schema.TypeList,
 				Description:   "Database node information.",
 				ConflictsWith: []string{"proxy_count"},
@@ -257,7 +258,7 @@ func resourceTencentCloudCynosdbProxyCreate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
-	proxy, err := service.DescribeCynosdbProxyById(ctx, clusterId)
+	proxy, err := service.DescribeCynosdbProxyById(ctx, clusterId, "")
 	if err != nil {
 		return err
 	}
@@ -298,7 +299,7 @@ func resourceTencentCloudCynosdbProxyRead(d *schema.ResourceData, meta interface
 	clusterId := idSplit[0]
 	proxyGroupId := idSplit[1]
 
-	proxy, err := service.DescribeCynosdbProxyById(ctx, clusterId)
+	proxy, err := service.DescribeCynosdbProxyById(ctx, clusterId, proxyGroupId)
 	if err != nil {
 		return err
 	}
@@ -309,90 +310,80 @@ func resourceTencentCloudCynosdbProxyRead(d *schema.ResourceData, meta interface
 		return nil
 	}
 
-	if proxy.ProxyGroupInfos != nil {
-		for _, proxyGroupRwInfo := range proxy.ProxyGroupInfos {
-			proxyGroup := proxyGroupRwInfo.ProxyGroup
-			if proxyGroup != nil {
-				if proxyGroup.ProxyGroupId != nil {
-					if proxyGroupId == *proxyGroup.ProxyGroupId {
-						connectionPool := proxyGroupRwInfo.ConnectionPool
-						if connectionPool != nil {
-							if connectionPool.ConnectionPoolType != nil {
-								_ = d.Set("connection_pool_type", connectionPool.ConnectionPoolType)
-							}
+	if proxy != nil {
+		proxyGroupRwInfo := proxy.ProxyGroupInfos[0]
+		connectionPool := proxyGroupRwInfo.ConnectionPool
+		if connectionPool != nil {
+			if connectionPool.ConnectionPoolType != nil {
+				_ = d.Set("connection_pool_type", connectionPool.ConnectionPoolType)
+			}
 
-							if connectionPool.OpenConnectionPool != nil {
-								_ = d.Set("open_connection_pool", connectionPool.OpenConnectionPool)
-							}
+			if connectionPool.OpenConnectionPool != nil {
+				_ = d.Set("open_connection_pool", connectionPool.OpenConnectionPool)
+			}
 
-							if connectionPool.ConnectionPoolTimeOut != nil {
-								_ = d.Set("connection_pool_time_out", connectionPool.ConnectionPoolTimeOut)
-							}
-						}
+			if connectionPool.ConnectionPoolTimeOut != nil {
+				_ = d.Set("connection_pool_time_out", connectionPool.ConnectionPoolTimeOut)
+			}
+		}
 
-						netAddrInfos := proxyGroupRwInfo.NetAddrInfos
-						if netAddrInfos != nil {
-							netAddrInfo := netAddrInfos[0]
-							if netAddrInfo.Description != nil {
-								_ = d.Set("description", netAddrInfo.Description)
-							}
+		netAddrInfos := proxyGroupRwInfo.NetAddrInfos
+		if netAddrInfos != nil {
+			netAddrInfo := netAddrInfos[0]
+			if netAddrInfo.Description != nil {
+				_ = d.Set("description", netAddrInfo.Description)
+			}
 
-							if netAddrInfo.UniqVpcId != nil {
-								_ = d.Set("unique_vpc_id", netAddrInfo.UniqVpcId)
-							}
+			if netAddrInfo.UniqVpcId != nil {
+				_ = d.Set("unique_vpc_id", netAddrInfo.UniqVpcId)
+			}
 
-							if netAddrInfo.UniqSubnetId != nil {
-								_ = d.Set("unique_subnet_id", netAddrInfo.UniqSubnetId)
-							}
-						}
+			if netAddrInfo.UniqSubnetId != nil {
+				_ = d.Set("unique_subnet_id", netAddrInfo.UniqSubnetId)
+			}
+		}
 
-						proxyGroups := proxyGroupRwInfo.ProxyGroup
-						if proxyGroups != nil {
-							if _, ok := d.GetOk("proxy_count"); ok {
-								if proxyGroups.ProxyNodeCount != nil {
-									_ = d.Set("proxy_count", proxyGroups.ProxyNodeCount)
-								}
-							}
-						}
+		proxyGroups := proxyGroupRwInfo.ProxyGroup
+		if proxyGroups != nil {
+			if _, ok := d.GetOk("proxy_count"); ok {
+				if proxyGroups.ProxyNodeCount != nil {
+					_ = d.Set("proxy_count", proxyGroups.ProxyNodeCount)
+				}
+			}
+		}
 
-						proxyNodes := proxyGroupRwInfo.ProxyNodes
-						if proxyNodes != nil {
-							zoneMap := make(map[string]int)
-							for _, v := range proxyNodes {
-								if v.Cpu != nil {
-									_ = d.Set("cpu", v.Cpu)
-								}
+		proxyNodes := proxyGroupRwInfo.ProxyNodes
+		if proxyNodes != nil {
+			zoneMap := make(map[string]int)
+			for _, v := range proxyNodes {
+				if v.Cpu != nil {
+					_ = d.Set("cpu", v.Cpu)
+				}
 
-								if v.Mem != nil {
-									_ = d.Set("mem", v.Mem)
-								}
+				if v.Mem != nil {
+					_ = d.Set("mem", v.Mem)
+				}
 
-								if v.Zone != nil {
-									zone := *v.Zone
-									_, ok := zoneMap[zone]
-									if ok {
-										zoneMap[zone] += 1
-									} else {
-										zoneMap[zone] = 1
-									}
-								}
-							}
-
-							if _, ok := d.GetOk("proxy_zones"); ok {
-								if zoneMap != nil {
-									tmpList := []interface{}{}
-									for k, v := range zoneMap {
-										tmpMap := make(map[string]interface{})
-										tmpMap["proxy_node_zone"] = k
-										tmpMap["proxy_node_count"] = v
-										tmpList = append(tmpList, tmpMap)
-									}
-									_ = d.Set("proxy_zones", tmpList)
-								}
-							}
-						}
+				if v.Zone != nil {
+					zone := *v.Zone
+					_, ok := zoneMap[zone]
+					if ok {
+						zoneMap[zone] += 1
+					} else {
+						zoneMap[zone] = 1
 					}
 				}
+			}
+
+			if zoneMap != nil {
+				tmpList := []interface{}{}
+				for k, v := range zoneMap {
+					tmpMap := make(map[string]interface{})
+					tmpMap["proxy_node_zone"] = k
+					tmpMap["proxy_node_count"] = v
+					tmpList = append(tmpList, tmpMap)
+				}
+				_ = d.Set("proxy_zones", tmpList)
 			}
 		}
 	}

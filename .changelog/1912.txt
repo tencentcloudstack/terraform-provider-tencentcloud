@@ -6,10 +6,6 @@ tencentcloud_cynosdb_proxy
 tencentcloud_cynosdb_reload_proxy_node
 ```
 
-```release-note:new-resource
-tencentcloud_cynosdb_proxy_rw_split
-```
-
 ```release-note:new-data-source
 tencentcloud_cynosdb_proxy_node
 ```

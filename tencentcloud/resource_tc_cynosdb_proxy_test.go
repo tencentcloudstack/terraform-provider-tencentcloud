@@ -76,7 +76,7 @@ func testAccCheckCynosdbProxyExists(n string) resource.TestCheckFunc {
 		}
 		clusterId := idSplit[0]
 
-		proxy, err := cynosdbService.DescribeCynosdbProxyById(ctx, clusterId)
+		proxy, err := cynosdbService.DescribeCynosdbProxyById(ctx, clusterId, "")
 		if err != nil {
 			return err
 		}
@@ -104,7 +104,7 @@ func testAccCheckCynosdbProxyDestroy(s *terraform.State) error {
 		}
 		clusterId := idSplit[0]
 
-		proxy, err := cynosdbService.DescribeCynosdbProxyById(ctx, clusterId)
+		proxy, err := cynosdbService.DescribeCynosdbProxyById(ctx, clusterId, "")
 		if err != nil {
 			return err
 		}

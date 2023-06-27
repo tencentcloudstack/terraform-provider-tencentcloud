@@ -1825,7 +1825,7 @@ func (me *CynosdbService) DeleteCynosdbProxyById(ctx context.Context, clusterId 
 	return response.Response.FlowId, nil
 }
 
-func (me *CynosdbService) DescribeCynosdbProxyById(ctx context.Context, clusterId string) (proxy *cynosdb.DescribeProxiesResponseParams, errRet error) {
+func (me *CynosdbService) DescribeCynosdbProxyById(ctx context.Context, clusterId, proxyGroupId string) (proxy *cynosdb.DescribeProxiesResponseParams, errRet error) {
 	logId := getLogId(ctx)
 
 	request := cynosdb.NewDescribeProxiesRequest()
@@ -1852,6 +1852,15 @@ func (me *CynosdbService) DescribeCynosdbProxyById(ctx context.Context, clusterI
 	}
 
 	proxy = response.Response
+
+	if proxyGroupId != "" {
+		for _, proxyGroupRwInfo := range proxy.ProxyGroupInfos {
+			proxyGroup := proxyGroupRwInfo.ProxyGroup
+			if proxyGroupId == *proxyGroup.ProxyGroupId {
+				proxy.ProxyGroupInfos = []*cynosdb.ProxyGroupInfo{proxyGroupRwInfo}
+			}
+		}
+	}
 
 	return
 }
