@@ -124,6 +124,7 @@ func TestAccTencentCloudMysqlInstanceResource_prepaid(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlInstanceResource_DeviceType -v
 func TestAccTencentCloudMysqlInstanceResource_DeviceType(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -424,7 +425,7 @@ resource "tencentcloud_mysql_instance" "prepaid" {
 
 const testAccMySQLDeviceType = `
 variable "temporary_param_tmpl_id" {
-	default = 16954
+	default = 19656
 }
 
 resource "tencentcloud_mysql_instance" "mysql_exclusive" {
@@ -446,7 +447,7 @@ resource "tencentcloud_mysql_instance" "mysql_exclusive" {
 
 const testAccMySQLDeviceTypeUpdate = `
 variable "temporary_param_tmpl_id" {
-	default = 16954
+	default = 19656
 }
 
 resource "tencentcloud_mysql_instance" "mysql_exclusive" {
