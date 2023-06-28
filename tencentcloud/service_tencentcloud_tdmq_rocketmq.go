@@ -1369,3 +1369,170 @@ func (me *TdmqService) DescribeTdmqMessageByFilter(ctx context.Context, param ma
 
 	return
 }
+
+func (me *TdmqService) DescribeTdmqRabbitmqVirtualHostListByFilter(ctx context.Context, param map[string]interface{}) (rabbitmqVirtualHostList []*tdmq.RabbitMQPrivateVirtualHost, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDescribeRabbitMQVirtualHostListRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTdmqClient().DescribeRabbitMQVirtualHostList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.VirtualHostList) < 1 {
+			break
+		}
+
+		rabbitmqVirtualHostList = append(rabbitmqVirtualHostList, response.Response.VirtualHostList...)
+		if len(response.Response.VirtualHostList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqUserById(ctx context.Context, instanceId, user string) (rabbitmqUser *tdmq.RabbitMQUser, errRet error) {
+	logId := getLogId(ctx)
+	request := tdmq.NewDescribeRabbitMQUserRequest()
+	request.InstanceId = &instanceId
+	if user != "" {
+		request.User = &user
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeRabbitMQUser(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.RabbitMQUserList) < 1 {
+		return
+	}
+
+	rabbitmqUser = response.Response.RabbitMQUserList[0]
+	return
+}
+
+func (me *TdmqService) DeleteTdmqRabbitmqUserById(ctx context.Context, instanceId, user string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tdmq.NewDeleteRabbitMQUserRequest()
+	request.InstanceId = &instanceId
+	request.User = &user
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DeleteRabbitMQUser(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqVirtualHostById(ctx context.Context, instanceId, virtualHost string) (rabbitmqVirtualHost *tdmq.RabbitMQVirtualHostInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDescribeRabbitMQVirtualHostRequest()
+	request.InstanceId = &instanceId
+	if virtualHost != "" {
+		request.VirtualHost = &virtualHost
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeRabbitMQVirtualHost(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.VirtualHostList) < 1 {
+		return
+	}
+
+	rabbitmqVirtualHost = response.Response.VirtualHostList[0]
+	return
+}
+
+func (me *TdmqService) DeleteTdmqRabbitmqVirtualHostById(ctx context.Context, instanceId, virtualHost string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDeleteRabbitMQVirtualHostRequest()
+	request.InstanceId = &instanceId
+	request.VirtualHost = &virtualHost
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DeleteRabbitMQVirtualHost(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
