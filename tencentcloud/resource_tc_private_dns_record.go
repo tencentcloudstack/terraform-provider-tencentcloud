@@ -160,7 +160,9 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 	}
 
 	if len(records) < 1 {
-		return fmt.Errorf("private dns record not exists.")
+		d.SetId("")
+		log.Printf("[WARN]%s resource `PrivateDnsRecord` [%s] not found, please check if it has been deleted.\n", logId, recordId)
+		return nil
 	}
 
 	var record *privatedns.PrivateZoneRecord
@@ -169,6 +171,13 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 			record = item
 		}
 	}
+
+	if record == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `PrivateDnsRecord` [%s] not found, please check if it has been deleted.\n", logId, recordId)
+		return nil
+	}
+
 	_ = d.Set("zone_id", record.ZoneId)
 	_ = d.Set("record_type", record.RecordType)
 	_ = d.Set("sub_domain", record.SubDomain)
