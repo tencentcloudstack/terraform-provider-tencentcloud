@@ -53,7 +53,7 @@ func TestAccTencentCloudCynosdbInstanceSlowQueriesDataSource_basic(t *testing.T)
 const testAccCynosdbInstanceSlowQueriesDataSource = CommonCynosdb + `
 
 data "tencentcloud_cynosdb_instance_slow_queries" "instance_slow_queries" {
-  instance_id = var.cynosdb_cluster_id
+  instance_id = var.cynosdb_cluster_instance_id
   start_time = "%s"
   end_time = "%s"
   username = "keep_dts"
