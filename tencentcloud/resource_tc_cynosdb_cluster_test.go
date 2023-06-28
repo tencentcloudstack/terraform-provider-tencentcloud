@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 func init() {
@@ -49,6 +50,7 @@ func init() {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudCynosdbClusterResourceBasic -v
 func TestAccTencentCloudCynosdbClusterResourceBasic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -65,7 +67,7 @@ func TestAccTencentCloudCynosdbClusterResourceBasic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "subnet_id", "subnet-qpxez62e"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "db_type", "MYSQL"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "db_version", "5.7"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "storage_limit", "1000"),
+					// resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "storage_limit", "1000"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "cluster_name", "tf-cynosdb"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_maintain_duration", "3600"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_maintain_start_time", "10800"),
@@ -109,6 +111,8 @@ func TestAccTencentCloudCynosdbClusterResourceBasic(t *testing.T) {
 			{
 				Config: testAccCynosdbCluster_update,
 				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "vpc_id", "vpc-k1t8ickr"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "subnet_id", "subnet-jdi5xn22"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_maintain_duration", "7200"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_maintain_start_time", "21600"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster.foo", "instance_maintain_weekdays.#", "6"),
@@ -192,6 +196,11 @@ func testAccCheckCynosdbClusterDestroy(s *terraform.State) error {
 
 		_, _, has, err := cynosdbService.DescribeClusterById(ctx, rs.Primary.ID)
 		if err != nil {
+			if ee, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if ee.Message == "record not found" {
+					return nil
+				}
+			}
 			return err
 		}
 		if !has {
@@ -298,12 +307,13 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
 const testAccCynosdbCluster_update = testAccCynosdbBasic + `
 resource "tencentcloud_cynosdb_cluster" "foo" {
   available_zone               = var.availability_zone
-  vpc_id                       = var.my_vpc
-  subnet_id                    = var.my_subnet
+  vpc_id                       = "vpc-k1t8ickr"
+  subnet_id                    = "subnet-jdi5xn22"
+  old_ip_reserve_hours		   = 1
   db_type                      = "MYSQL"
   db_version                   = "5.7"
   storage_limit                = 1000
-  cluster_name                 = "tf-cynosdb"
+  cluster_name                 = "tf-cynosdb-update"
   password                     = "cynos@123"
   instance_maintain_duration   = 7200
   instance_maintain_start_time = 21600

@@ -2501,6 +2501,99 @@ func (me *CynosdbService) SetRenewFlag(ctx context.Context, instanceId string, a
 	return
 }
 
+func (me *CynosdbService) ModifyClusterName(ctx context.Context, clusterId string, clusterName string) (errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewModifyClusterNameRequest()
+	request.ClusterId = &clusterId
+	request.ClusterName = &clusterName
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseCynosdbClient().ModifyClusterName(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return retryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+func (me *CynosdbService) ModifyClusterStorage(ctx context.Context, clusterId string, newStorageLimit int64, oldStorageLimit int64) (errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewModifyClusterStorageRequest()
+	request.ClusterId = &clusterId
+	request.NewStorageLimit = &newStorageLimit
+	request.OldStorageLimit = &oldStorageLimit
+	request.DealMode = helper.IntInt64(0)
+
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		_, errRet = me.client.UseCynosdbClient().ModifyClusterStorage(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return retryError(errRet)
+		}
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	return
+}
+
+func (me *CynosdbService) SwitchClusterVpc(ctx context.Context, clusterId string, vpcId string, subnetId string, oldIpReserveHours int64) (errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewSwitchClusterVpcRequest()
+	request.ClusterId = &clusterId
+	request.UniqVpcId = &vpcId
+	request.UniqSubnetId = &subnetId
+	request.OldIpReserveHours = &oldIpReserveHours
+
+	var flowId int64
+	errRet = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		ratelimit.Check(request.GetAction())
+		response, errRet := me.client.UseCynosdbClient().SwitchClusterVpc(request)
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason:%s", logId, request.GetAction(), errRet.Error())
+			return retryError(errRet)
+		}
+		flowId = *response.Response.FlowId
+		return nil
+	})
+	if errRet != nil {
+		return
+	}
+
+	err := resource.Retry(6*readRetryTimeout, func() *resource.RetryError {
+		ok, err := me.DescribeFlow(ctx, flowId)
+		if err != nil {
+			if _, ok := err.(*sdkErrors.TencentCloudSDKError); !ok {
+				return resource.RetryableError(err)
+			} else {
+				return resource.NonRetryableError(err)
+			}
+		}
+		if ok {
+			return nil
+		} else {
+			return resource.RetryableError(fmt.Errorf("update cynosdb SwitchClusterVpc is processing"))
+		}
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s update cynosdb SwitchClusterVpc fail, reason:%s\n", logId, err.Error())
+		errRet = err
+		return
+	}
+
+	return
+}
+
 func (me *CynosdbService) DescribeCynosdbResourcePackageById(ctx context.Context, packageId string) (resourcePackage *cynosdb.PackageDetail, errRet error) {
 	logId := getLogId(ctx)
 
