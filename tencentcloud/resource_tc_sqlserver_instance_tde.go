@@ -6,8 +6,7 @@ Example Usage
 ```hcl
 resource "tencentcloud_sqlserver_instance_tde" "instance_tde" {
   instance_id             = "mssql-qelbzgwf"
-  certificate_attribution = "others"
-  quote_uin               = ""
+  certificate_attribution = "self"
 }
 ```
 
