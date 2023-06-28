@@ -420,6 +420,8 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_resource_package_sale_specs
 	tencentcloud_cynosdb_rollback_time_range
 	tencentcloud_cynosdb_zone
+	tencentcloud_cynosdb_proxy_node
+	tencentcloud_cynosdb_proxy_version
 
   Resource
 	tencentcloud_cynosdb_cluster_resource_packages_attachment
@@ -440,6 +442,8 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_restart_instance
 	tencentcloud_cynosdb_roll_back_cluster
 	tencentcloud_cynosdb_wan
+	tencentcloud_cynosdb_proxy
+	tencentcloud_cynosdb_reload_proxy_node
 
 Direct Connect(DC)
   Data Source
@@ -2083,6 +2087,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_project_security_groups":           dataSourceTencentCloudCynosdbProjectSecurityGroups(),
 			"tencentcloud_cynosdb_resource_package_sale_specs":       dataSourceTencentCloudCynosdbResourcePackageSaleSpecs(),
 			"tencentcloud_cynosdb_rollback_time_range":               dataSourceTencentCloudCynosdbRollbackTimeRange(),
+			"tencentcloud_cynosdb_proxy_node":                        dataSourceTencentCloudCynosdbProxyNode(),
+			"tencentcloud_cynosdb_proxy_version":                     dataSourceTencentCloudCynosdbProxyVersion(),
 			"tencentcloud_css_domains":                               dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                       dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                        dataSourceTencentCloudChdfsMountPoints(),
@@ -2499,6 +2505,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_audit":                                          resourceTencentCloudAudit(),
 			"tencentcloud_audit_track":                                    resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                          resourceTencentCloudImage(),
+			"tencentcloud_cynosdb_proxy":                                  resourceTencentCloudCynosdbProxy(),
+			"tencentcloud_cynosdb_reload_proxy_node":                      resourceTencentCloudCynosdbReloadProxyNode(),
 			"tencentcloud_cynosdb_cluster_resource_packages_attachment":   resourceTencentCloudCynosdbClusterResourcePackagesAttachment(),
 			"tencentcloud_cynosdb_cluster":                                resourceTencentCloudCynosdbCluster(),
 			"tencentcloud_cynosdb_readonly_instance":                      resourceTencentCloudCynosdbReadonlyInstance(),

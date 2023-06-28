@@ -1800,6 +1800,167 @@ func (me *CynosdbService) DeleteCynosdbClusterResourcePackagesAttachmentById(ctx
 	return
 }
 
+func (me *CynosdbService) DeleteCynosdbProxyById(ctx context.Context, clusterId string) (flowId *int64, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewCloseProxyRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().CloseProxy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return response.Response.FlowId, nil
+}
+
+func (me *CynosdbService) DescribeCynosdbProxyById(ctx context.Context, clusterId, proxyGroupId string) (proxy *cynosdb.DescribeProxiesResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeProxiesRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeProxies(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	proxy = response.Response
+
+	if proxyGroupId != "" {
+		for _, proxyGroupRwInfo := range proxy.ProxyGroupInfos {
+			proxyGroup := proxyGroupRwInfo.ProxyGroup
+			if proxyGroupId == *proxyGroup.ProxyGroupId {
+				proxy.ProxyGroupInfos = []*cynosdb.ProxyGroupInfo{proxyGroupRwInfo}
+			}
+		}
+	}
+
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbProxyNodeByFilter(ctx context.Context, param map[string]interface{}) (proxyNode []*cynosdb.ProxyNodeInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cynosdb.NewDescribeProxyNodesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*cynosdb.QueryFilter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCynosdbClient().DescribeProxyNodes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.ProxyNodeInfos) < 1 {
+			break
+		}
+
+		proxyNode = append(proxyNode, response.Response.ProxyNodeInfos...)
+		if len(response.Response.ProxyNodeInfos) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *CynosdbService) DescribeCynosdbProxyVersionByFilter(ctx context.Context, param map[string]interface{}) (proxyVersion *cynosdb.DescribeSupportProxyVersionResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cynosdb.NewDescribeSupportProxyVersionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ClusterId" {
+			request.ClusterId = v.(*string)
+		}
+		if k == "ProxyGroupId" {
+			request.ProxyGroupId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeSupportProxyVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	proxyVersion = response.Response
+
+	return
+}
+
 func (me *CynosdbService) CynosdbInstanceIsolateStateRefreshFunc(clusterId string, failStates []string) resource.StateRefreshFunc {
 	return func() (interface{}, string, error) {
 		ctx := contextNil
