@@ -5,6 +5,49 @@ Provides a resource to create a VPN gateway.
 
 Example Usage
 
+VPC SSL VPN gateway
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "SSL"
+  vpc_id    = "vpc-86v957zb"
+
+  tags = {
+    test = "test"
+  }
+}
+```
+
+CCN IPEC VPN gateway
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "CCN"
+
+  tags      = {
+    test = "test"
+  }
+}
+```
+
+CCN SSL VPN gateway
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "SSL_CCN"
+
+  tags      = {
+    test = "test"
+  }
+}
+```
+
 POSTPAID_BY_HOUR VPN gateway
 ```hcl
 resource "tencentcloud_vpn_gateway" "my_cgw" {
@@ -80,12 +123,12 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Optional: true,
 				ForceNew: true,
 				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					if v, ok := d.GetOk("type"); ok && v.(string) == "CCN" {
+					if v, ok := d.GetOk("type"); ok && (v.(string) == "CCN" || v.(string) == "SSL_CCN") {
 						return true
 					}
 					return old == new
 				},
-				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.",
+				Description: "ID of the VPC. Required if vpn gateway is not in `CCN` or `SSL_CCN` type, and doesn't make sense for `CCN` or `SSL_CCN` vpn gateway.",
 			},
 			"bandwidth": {
 				Type:        schema.TypeInt,
@@ -102,7 +145,7 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Optional:    true,
-				Description: "Type of gateway instance. Valid value: `IPSEC`, `SSL` and `CCN`. Note: CCN type is only for whitelist customer now.",
+				Description: "Type of gateway instance, Default is `IPSEC`. Valid value: `IPSEC`, `SSL`, `CCN` and `SSL_CCN`.",
 			},
 			"state": {
 				Type:        schema.TypeString,
@@ -203,7 +246,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	request.InstanceChargeType = &chargeType
 	if v, ok := d.GetOk("type"); ok {
 		request.Type = helper.String(v.(string))
-		if v.(string) != "CCN" {
+		if v.(string) != "CCN" && v.(string) != "SSL_CCN" {
 			if _, ok := d.GetOk("vpc_id"); !ok {
 				return fmt.Errorf("[CRITAL] vpc_id is required for vpn gateway in %s type", v.(string))
 			}
@@ -216,7 +259,7 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 		}
 	} else {
 		if _, ok := d.GetOk("vpc_id"); !ok {
-			return fmt.Errorf("[CRITAL] vpc_id is required for vpn gateway in %s type", v.(string))
+			return fmt.Errorf("[CRITAL] vpc_id is required for vpn gateway in %s type", "IPSEC")
 		}
 		request.VpcId = helper.String(d.Get("vpc_id").(string))
 	}

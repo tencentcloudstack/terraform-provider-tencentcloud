@@ -6435,6 +6435,60 @@ func (r *DescribeProxyNodesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeProxySpecsRequestParams struct {
+
+}
+
+type DescribeProxySpecsRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *DescribeProxySpecsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeProxySpecsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeProxySpecsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeProxySpecsResponseParams struct {
+	// 数据库代理规格列表
+	ProxySpecs []*ProxySpec `json:"ProxySpecs,omitempty" name:"ProxySpecs"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeProxySpecsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeProxySpecsResponseParams `json:"Response"`
+}
+
+func (r *DescribeProxySpecsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeProxySpecsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeResourcePackageDetailRequestParams struct {
 	// 资源包唯一ID
 	PackageId *string `json:"PackageId,omitempty" name:"PackageId"`
@@ -6967,6 +7021,75 @@ func (r *DescribeRollbackTimeValidityResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeRollbackTimeValidityResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSupportProxyVersionRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 数据库代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+}
+
+type DescribeSupportProxyVersionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 数据库代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+}
+
+func (r *DescribeSupportProxyVersionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSupportProxyVersionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "ProxyGroupId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSupportProxyVersionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeSupportProxyVersionResponseParams struct {
+	// 支持的数据库代理版本集合
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SupportProxyVersions []*string `json:"SupportProxyVersions,omitempty" name:"SupportProxyVersions"`
+
+	// 当前proxy版本号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurrentProxyVersion *string `json:"CurrentProxyVersion,omitempty" name:"CurrentProxyVersion"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeSupportProxyVersionResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeSupportProxyVersionResponseParams `json:"Response"`
+}
+
+func (r *DescribeSupportProxyVersionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeSupportProxyVersionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10942,6 +11065,14 @@ type ProxyNodeInfo struct {
 
 	// 可用区
 	Zone *string `json:"Zone,omitempty" name:"Zone"`
+}
+
+type ProxySpec struct {
+	// 数据库代理cpu核数
+	Cpu *int64 `json:"Cpu,omitempty" name:"Cpu"`
+
+	// 数据库代理内存
+	Mem *int64 `json:"Mem,omitempty" name:"Mem"`
 }
 
 type ProxyZone struct {

@@ -420,6 +420,9 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_resource_package_sale_specs
 	tencentcloud_cynosdb_rollback_time_range
 	tencentcloud_cynosdb_zone
+	tencentcloud_cynosdb_instance_slow_queries
+	tencentcloud_cynosdb_proxy_node
+	tencentcloud_cynosdb_proxy_version
 
   Resource
 	tencentcloud_cynosdb_cluster_resource_packages_attachment
@@ -440,6 +443,10 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_restart_instance
 	tencentcloud_cynosdb_roll_back_cluster
 	tencentcloud_cynosdb_wan
+	tencentcloud_cynosdb_proxy
+	tencentcloud_cynosdb_reload_proxy_node
+	tencentcloud_cynosdb_cluster_slave_zone
+	tencentcloud_cynosdb_read_only_instance_exclusive_access
 
 Direct Connect(DC)
   Data Source
@@ -743,6 +750,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_switch_master
 	tencentcloud_redis_replicate_attachment
 	tencentcloud_redis_backup_operation
+	tencentcloud_redis_security_group_attachment
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -1524,6 +1532,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_zookeeper_replicas
 	tencentcloud_tse_zookeeper_server_interfaces
 	tencentcloud_tse_nacos_server_interfaces
+	tencentcloud_tse_gateway_nodes
 
   Resource
 	tencentcloud_tse_instance
@@ -1917,6 +1926,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_clusters":                          dataSourceTencentCloudCynosdbClusters(),
 			"tencentcloud_cynosdb_instances":                         dataSourceTencentCloudCynosdbInstances(),
 			"tencentcloud_cynosdb_zone_config":                       dataSourceTencentCynosdbZoneConfig(),
+			"tencentcloud_cynosdb_instance_slow_queries":             dataSourceTencentCloudCynosdbInstanceSlowQueries(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_templates":  dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplates(),
 			"tencentcloud_vod_image_sprite_templates":                dataSourceTencentCloudVodImageSpriteTemplates(),
 			"tencentcloud_vod_procedure_templates":                   dataSourceTencentCloudVodProcedureTemplates(),
@@ -2089,6 +2099,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_project_security_groups":           dataSourceTencentCloudCynosdbProjectSecurityGroups(),
 			"tencentcloud_cynosdb_resource_package_sale_specs":       dataSourceTencentCloudCynosdbResourcePackageSaleSpecs(),
 			"tencentcloud_cynosdb_rollback_time_range":               dataSourceTencentCloudCynosdbRollbackTimeRange(),
+			"tencentcloud_cynosdb_proxy_node":                        dataSourceTencentCloudCynosdbProxyNode(),
+			"tencentcloud_cynosdb_proxy_version":                     dataSourceTencentCloudCynosdbProxyVersion(),
 			"tencentcloud_css_domains":                               dataSourceTencentCloudCssDomains(),
 			"tencentcloud_chdfs_access_groups":                       dataSourceTencentCloudChdfsAccessGroups(),
 			"tencentcloud_chdfs_mount_points":                        dataSourceTencentCloudChdfsMountPoints(),
@@ -2136,6 +2148,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_nacos_server_interfaces":               dataSourceTencentCloudTseNacosServerInterfaces(),
 			"tencentcloud_tse_zookeeper_replicas":                    dataSourceTencentCloudTseZookeeperReplicas(),
 			"tencentcloud_tse_zookeeper_server_interfaces":           dataSourceTencentCloudTseZookeeperServerInterfaces(),
+			"tencentcloud_tse_gateway_nodes":                         dataSourceTencentCloudTseGatewayNodes(),
 			"tencentcloud_lighthouse_modify_instance_bundle":         dataSourceTencentCloudLighthouseModifyInstanceBundle(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
 			"tencentcloud_lighthouse_scene":                          dataSourceTencentCloudLighthouseScene(),
@@ -2340,6 +2353,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_redis_switch_master":                            resourceTencentCloudRedisSwitchMaster(),
 			"tencentcloud_redis_replicate_attachment":                     resourceTencentCloudRedisReplicateAttachment(),
 			"tencentcloud_redis_backup_operation":                         resourceTencentCloudRedisBackupOperation(),
+			"tencentcloud_redis_security_group_attachment":                resourceTencentCloudRedisSecurityGroupAttachment(),
 			"tencentcloud_as_load_balancer":                               resourceTencentCloudAsLoadBalancer(),
 			"tencentcloud_as_scaling_config":                              resourceTencentCloudAsScalingConfig(),
 			"tencentcloud_as_scaling_group":                               resourceTencentCloudAsScalingGroup(),
@@ -2511,6 +2525,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_audit":                                          resourceTencentCloudAudit(),
 			"tencentcloud_audit_track":                                    resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                          resourceTencentCloudImage(),
+			"tencentcloud_cynosdb_proxy":                                  resourceTencentCloudCynosdbProxy(),
+			"tencentcloud_cynosdb_reload_proxy_node":                      resourceTencentCloudCynosdbReloadProxyNode(),
 			"tencentcloud_cynosdb_cluster_resource_packages_attachment":   resourceTencentCloudCynosdbClusterResourcePackagesAttachment(),
 			"tencentcloud_cynosdb_cluster":                                resourceTencentCloudCynosdbCluster(),
 			"tencentcloud_cynosdb_readonly_instance":                      resourceTencentCloudCynosdbReadonlyInstance(),
@@ -2528,6 +2544,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_restart_instance":                       resourceTencentCloudCynosdbRestartInstance(),
 			"tencentcloud_cynosdb_roll_back_cluster":                      resourceTencentCloudCynosdbRollBackCluster(),
 			"tencentcloud_cynosdb_wan":                                    resourceTencentCloudCynosdbWan(),
+			"tencentcloud_cynosdb_cluster_slave_zone":                     resourceTencentCloudCynosdbClusterSlaveZone(),
+			"tencentcloud_cynosdb_read_only_instance_exclusive_access":    resourceTencentCloudCynosdbReadOnlyInstanceExclusiveAccess(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_template":        resourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_vod_image_sprite_template":                      resourceTencentCloudVodImageSpriteTemplate(),
 			"tencentcloud_vod_procedure_template":                         resourceTencentCloudVodProcedureTemplate(),

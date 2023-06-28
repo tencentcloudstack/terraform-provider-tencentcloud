@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_cynosdb_cluster_slave_zone
+```
+
+```release-note:new-resource
+tencentcloud_cynosdb_read_only_instance_exclusive_access
+```
+
+```release-note:new-data-source
+tencentcloud_cynosdb_instance_slow_queries
+```

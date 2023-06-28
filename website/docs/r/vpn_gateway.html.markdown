@@ -15,6 +15,52 @@ Provides a resource to create a VPN gateway.
 
 ## Example Usage
 
+VPC SSL VPN gateway
+
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "SSL"
+  vpc_id    = "vpc-86v957zb"
+
+  tags = {
+    test = "test"
+  }
+}
+```
+
+CCN IPEC VPN gateway
+
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "CCN"
+
+  tags = {
+    test = "test"
+  }
+}
+```
+
+CCN SSL VPN gateway
+
+```hcl
+resource "tencentcloud_vpn_gateway" "my_cgw" {
+  name      = "test"
+  bandwidth = 5
+  zone      = "ap-guangzhou-3"
+  type      = "SSL_CCN"
+
+  tags = {
+    test = "test"
+  }
+}
+```
+
 POSTPAID_BY_HOUR VPN gateway
 
 ```hcl
@@ -60,8 +106,8 @@ The following arguments are supported:
 * `prepaid_period` - (Optional, Int) Period of instance to be prepaid. Valid value: `1`, `2`, `3`, `4`, `6`, `7`, `8`, `9`, `12`, `24`, `36`. The unit is month. Caution: when this para and renew_flag para are valid, the request means to renew several months more pre-paid period. This para can only be changed on `IPSEC` vpn gateway.
 * `prepaid_renew_flag` - (Optional, String) Flag indicates whether to renew or not. Valid value: `NOTIFY_AND_AUTO_RENEW`, `NOTIFY_AND_MANUAL_RENEW`.
 * `tags` - (Optional, Map) A list of tags used to associate different resources.
-* `type` - (Optional, String) Type of gateway instance. Valid value: `IPSEC`, `SSL` and `CCN`. Note: CCN type is only for whitelist customer now.
-* `vpc_id` - (Optional, String, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` type, and doesn't make sense for `CCN` vpn gateway.
+* `type` - (Optional, String) Type of gateway instance, Default is `IPSEC`. Valid value: `IPSEC`, `SSL`, `CCN` and `SSL_CCN`.
+* `vpc_id` - (Optional, String, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` or `SSL_CCN` type, and doesn't make sense for `CCN` or `SSL_CCN` vpn gateway.
 
 ## Attributes Reference
 
