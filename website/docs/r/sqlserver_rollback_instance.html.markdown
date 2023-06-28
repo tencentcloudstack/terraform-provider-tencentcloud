@@ -16,7 +16,7 @@ Provides a resource to create a sqlserver rollback_instance
 ```hcl
 resource "tencentcloud_sqlserver_rollback_instance" "rollback_instance" {
   instance_id = "mssql-qelbzgwf"
-  time        = "%s"
+  time        = "2023-05-23 01:00:00"
   rename_restore {
     old_name = "keep_pubsub_db2"
     new_name = "rollback_pubsub_db3"
@@ -42,7 +42,9 @@ The `rename_restore` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `encryption` - TDE encryption, `enable` encrypted, `disable` unencrypted.
+  * `db_name` - Database name.
+  * `status` - encryption, `enable` encrypted, `disable` unencrypted.
 
 
 ## Import

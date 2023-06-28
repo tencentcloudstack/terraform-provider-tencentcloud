@@ -832,6 +832,8 @@ SQLServer
 	tencentcloud_sqlserver_start_backup_full_migration
 	tencentcloud_sqlserver_start_backup_incremental_migration
 	tencentcloud_sqlserver_start_xevent
+	tencentcloud_sqlserver_instance_tde
+	tencentcloud_sqlserver_database_tde
 
 SSL Certificates
   Data Source
@@ -2556,6 +2558,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_plugin":                             resourceTencentCloudApiGatewayPlugin(),
 			"tencentcloud_api_gateway_plugin_attachment":                  resourceTencentCloudApiGatewayPluginAttachment(),
 			"tencentcloud_sqlserver_basic_instance":                       resourceTencentCloudSqlserverBasicInstance(),
+			"tencentcloud_sqlserver_instance_tde":                         resourceTencentCloudSqlserverInstanceTDE(),
+			"tencentcloud_sqlserver_database_tde":                         resourceTencentCloudSqlserverDatabaseTDE(),
 			"tencentcloud_tcr_instance":                                   resourceTencentCloudTcrInstance(),
 			"tencentcloud_tcr_namespace":                                  resourceTencentCloudTcrNamespace(),
 			"tencentcloud_tcr_repository":                                 resourceTencentCloudTcrRepository(),

@@ -71,10 +71,14 @@ func testAccCheckSqlserverRollbackDBDestroy(s *terraform.State) error {
 const testAccSqlserverRollbackInstanceString = `
 resource "tencentcloud_sqlserver_rollback_instance" "rollback_instance" {
   instance_id = "mssql-qelbzgwf"
-  time = "%s"
+  time        = "%s"
+  rename_restore {
+    old_name = "keep_pubsub_db"
+    new_name = "rollback_pubsub_db"
+  }
   rename_restore {
     old_name = "keep_pubsub_db2"
-	new_name = "rollback_pubsub_db2"
+    new_name = "rollback_pubsub_db2"
   }
 }
 `
