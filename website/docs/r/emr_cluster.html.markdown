@@ -66,7 +66,19 @@ The following arguments are supported:
 * `login_settings` - (Required, Map, ForceNew) Instance login settings.
 * `pay_mode` - (Required, Int) The pay mode of instance. 0 represent POSTPAID_BY_HOUR, 1 represent PREPAID.
 * `placement` - (Required, Map, ForceNew) The location of the instance.
-* `product_id` - (Required, Int, ForceNew) The product id of EMR instance.
+* `product_id` - (Required, Int, ForceNew) Product ID. Different products ID represents different EMR product versions. Value range:
+- 16: represents EMR-V2.3.0
+- 20: indicates EMR-V2.5.0
+- 25: represents EMR-V3.1.0
+- 27: represents KAFKA-V1.0.0
+- 30: indicates EMR-V2.6.0
+- 33: represents EMR-V3.2.1
+- 34: stands for EMR-V3.3.0
+- 36: represents STARROCKS-V1.0.0
+- 37: indicates EMR-V3.4.0
+- 38: represents EMR-V2.7.0
+- 39: stands for STARROCKS-V1.1.0
+- 41: represents DRUID-V1.1.0.
 * `softwares` - (Required, List: [`String`], ForceNew) The softwares of a EMR instance.
 * `support_ha` - (Required, Int, ForceNew) The flag whether the instance support high availability.(0=>not support, 1=>support).
 * `time_span` - (Required, Int) The length of time the instance was purchased. Use with TimeUnit.When TimeUnit is s, the parameter can only be filled in at 3600, representing a metered instance.

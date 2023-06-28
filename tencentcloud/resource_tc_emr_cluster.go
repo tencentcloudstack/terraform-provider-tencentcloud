@@ -75,11 +75,22 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				Description: "Display strategy of EMR instance.",
 			},
 			"product_id": {
-				Type:         schema.TypeInt,
-				Required:     true,
-				ForceNew:     true,
-				ValidateFunc: validateIntegerInRange(1, 30),
-				Description:  "The product id of EMR instance.",
+				Type:     schema.TypeInt,
+				Required: true,
+				ForceNew: true,
+				Description: "Product ID. Different products ID represents different EMR product versions. Value range:\n" +
+					"- 16: represents EMR-V2.3.0\n" +
+					"- 20: indicates EMR-V2.5.0\n" +
+					"- 25: represents EMR-V3.1.0\n" +
+					"- 27: represents KAFKA-V1.0.0\n" +
+					"- 30: indicates EMR-V2.6.0\n" +
+					"- 33: represents EMR-V3.2.1\n" +
+					"- 34: stands for EMR-V3.3.0\n" +
+					"- 36: represents STARROCKS-V1.0.0\n" +
+					"- 37: indicates EMR-V3.4.0\n" +
+					"- 38: represents EMR-V2.7.0\n" +
+					"- 39: stands for STARROCKS-V1.1.0\n" +
+					"- 41: represents DRUID-V1.1.0.",
 			},
 			"vpc_settings": {
 				Type:        schema.TypeMap,

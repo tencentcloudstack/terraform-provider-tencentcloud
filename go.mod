@@ -41,7 +41,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.688
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.683
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.687
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.652
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633
