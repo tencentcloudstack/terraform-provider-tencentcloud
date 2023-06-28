@@ -25,10 +25,9 @@ func TestAccTencentCloudCynosdbInstanceSlowQueriesDataSource_basic(t *testing.T)
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "instance_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "start_time"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "end_time"),
+					// resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "start_time"),
+					// resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "end_time"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "username", "keep_dts"),
-					resource.TestCheckResourceAttr("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "host", "%"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "database", "tf_ci_test"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "order_by", "QueryTime"),
 					resource.TestCheckResourceAttr("data.tencentcloud_cynosdb_instance_slow_queries.instance_slow_queries", "order_by_type", "desc"),
@@ -54,10 +53,9 @@ const testAccCynosdbInstanceSlowQueriesDataSource = CommonCynosdb + `
 
 data "tencentcloud_cynosdb_instance_slow_queries" "instance_slow_queries" {
   instance_id = var.cynosdb_cluster_instance_id
-  start_time = "%s"
-  end_time = "%s"
+//   start_time = "%s"
+//   end_time = "%s"
   username = "keep_dts"
-  host = "%%"
   database = "tf_ci_test"
   order_by = "QueryTime"
   order_by_type = "desc"

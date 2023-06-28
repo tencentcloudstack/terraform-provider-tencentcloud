@@ -38,13 +38,13 @@ resource "tencentcloud_cynosdb_read_only_instance_exclusive_access" "read_only_i
 package tencentcloud
 
 import (
-	"fmt"
 	"log"
 	"strings"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -151,6 +151,12 @@ func resourceTencentCloudCynosdbReadOnlyInstanceExclusiveAccessCreate(d *schema.
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().OpenReadOnlyInstanceExclusiveAccess(request)
 		if e != nil {
+			if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				// repeat to execute this cmd can be ignored
+				if sdkErr.Code == "FailedOperation.OperationFailedError" {
+					return nil
+				}
+			}
 			return retryError(e)
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
@@ -163,17 +169,17 @@ func resourceTencentCloudCynosdbReadOnlyInstanceExclusiveAccessCreate(d *schema.
 		return err
 	}
 
-	flowId = response.Response.FlowId
+	if response.Response == nil || response.Response.FlowId == nil {
+		log.Printf("[CRITAL]%s FlowId is null. Ingnore this operation.", logId)
+	} else {
+		flowId = response.Response.FlowId
 
-	if flowId == nil {
-		return fmt.Errorf("delete [%s] failed, reason: FlowId is null.\n", d.Id())
-	}
+		service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
+		conf := BuildStateChangeConf([]string{}, []string{CYNOSDB_FLOW_STATUS_SUCCESSFUL}, 10*readRetryTimeout, time.Second, service.CynosdbClusterSlaveZoneStateRefreshFunc(*flowId, []string{}))
 
-	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	conf := BuildStateChangeConf([]string{}, []string{CYNOSDB_FLOW_STATUS_SUCCESSFUL}, 30*readRetryTimeout, time.Second, service.CynosdbClusterSlaveZoneStateRefreshFunc(*flowId, []string{}))
-
-	if _, e := conf.WaitForState(); e != nil {
-		return e
+		if _, e := conf.WaitForState(); e != nil {
+			return e
+		}
 	}
 
 	d.SetId(strings.Join([]string{clusterId, instanceId}, FILED_SP))
