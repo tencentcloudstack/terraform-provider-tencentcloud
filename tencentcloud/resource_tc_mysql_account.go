@@ -342,6 +342,13 @@ func resourceTencentCloudMysqlAccountUpdate(d *schema.ResourceData, meta interfa
 			return err
 		}
 
+		resourceId := fmt.Sprintf("%s%s%s", mysqlId, FILED_SP, accountName)
+
+		if newHost.(string) != MYSQL_DEFAULT_ACCOUNT_HOST {
+			resourceId += FILED_SP + newHost.(string)
+		}
+
+		d.SetId(resourceId)
 	}
 
 	d.Partial(false)
