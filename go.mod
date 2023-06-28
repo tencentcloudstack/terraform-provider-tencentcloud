@@ -38,10 +38,14 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.659
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.663
+<<<<<<< HEAD
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.689
+=======
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.687
+>>>>>>> 6df0bdae836518f2b8dc214ee0a5cdc55d004fbb
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.683
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.687
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dbbrain v1.0.652
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dc v1.0.633

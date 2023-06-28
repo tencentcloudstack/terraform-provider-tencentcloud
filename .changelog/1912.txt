@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_cynosdb_proxy
+```
+
+```release-note:new-resource
+tencentcloud_cynosdb_reload_proxy_node
+```
+
+```release-note:new-data-source
+tencentcloud_cynosdb_proxy_node
+```
+
+```release-note:new-data-source
+tencentcloud_cynosdb_proxy_version
+```

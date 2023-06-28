@@ -65,12 +65,12 @@ resource "tencentcloud_cynosdb_cluster" "foo" {
 The following arguments are supported:
 
 * `available_zone` - (Required, String, ForceNew) The available zone of the CynosDB Cluster.
-* `cluster_name` - (Required, String, ForceNew) Name of CynosDB cluster.
+* `cluster_name` - (Required, String) Name of CynosDB cluster.
 * `db_type` - (Required, String, ForceNew) Type of CynosDB, and available values include `MYSQL`.
 * `db_version` - (Required, String, ForceNew) Version of CynosDB, which is related to `db_type`. For `MYSQL`, available value is `5.7`.
 * `password` - (Required, String, ForceNew) Password of `root` account.
-* `subnet_id` - (Required, String, ForceNew) ID of the subnet within this VPC.
-* `vpc_id` - (Required, String, ForceNew) ID of the VPC.
+* `subnet_id` - (Required, String) ID of the subnet within this VPC.
+* `vpc_id` - (Required, String) ID of the VPC.
 * `auto_pause_delay` - (Optional, Int) Specify auto-pause delay in second while `db_mode` is `SERVERLESS`. Value range: `[600, 691200]`. Default: `600`.
 * `auto_pause` - (Optional, String) Specify whether the cluster can auto-pause while `db_mode` is `SERVERLESS`. Values: `yes` (default), `no`.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(MANUAL_RENEW), `1`(AUTO_RENEW). Default value is `0`. Only works for PREPAID cluster.
@@ -84,6 +84,7 @@ The following arguments are supported:
 * `instance_memory_size` - (Optional, Int) Memory capacity of read-write type instance, unit in GB. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
 * `max_cpu` - (Optional, Float64) Maximum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.
 * `min_cpu` - (Optional, Float64) Minimum CPU core count, required while `db_mode` is `SERVERLESS`, request DescribeServerlessInstanceSpecs for more reference.
+* `old_ip_reserve_hours` - (Optional, Int) Recycling time of the old address, must be filled in when modifying the vpcRecycling time of the old address, must be filled in when modifying the vpc.
 * `param_items` - (Optional, List) Specify parameter list of database. It is valid when prarm_template_id is set in create cluster. Use `data.tencentcloud_mysql_default_params` to query available parameter details.
 * `port` - (Optional, Int, ForceNew) Port of CynosDB cluster.
 * `prarm_template_id` - (Optional, Int) The ID of the parameter template.
@@ -92,7 +93,8 @@ The following arguments are supported:
 * `ro_group_sg` - (Optional, List: [`String`]) IDs of security group for `ro_group`.
 * `rw_group_sg` - (Optional, List: [`String`]) IDs of security group for `rw_group`.
 * `serverless_status_flag` - (Optional, String) Specify whether to pause or resume serverless cluster. values: `resume`, `pause`.
-* `storage_limit` - (Optional, Int, ForceNew) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
+* `storage_limit` - (Optional, Int) Storage limit of CynosDB cluster instance, unit in GB. The maximum storage of a non-serverless instance in GB. NOTE: If db_type is `MYSQL` and charge_type is `PREPAID`, the value cannot exceed the maximum storage corresponding to the CPU and memory specifications, and the transaction mode is `order and pay`. when charge_type is `POSTPAID_BY_HOUR`, this argument is unnecessary.
+* `storage_pay_mode` - (Optional, Int) Cluster storage billing mode, pay-as-you-go: `0`-yearly/monthly: `1`-The default is pay-as-you-go. When the DbType is MYSQL, when the cluster computing billing mode is post-paid (including DbMode is SERVERLESS), the storage billing mode can only be billing by volume; rollback and cloning do not support yearly subscriptions monthly storage.
 * `tags` - (Optional, Map) The tags of the CynosDB cluster.
 
 The `param_items` object supports the following:
