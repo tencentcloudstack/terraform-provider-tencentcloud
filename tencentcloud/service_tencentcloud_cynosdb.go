@@ -2646,3 +2646,145 @@ func (me *CynosdbService) DeleteCynosdbResourcePackageById(ctx context.Context, 
 
 	return
 }
+
+func (me *CynosdbService) DescribeCynosdbClusterSlaveZoneById(ctx context.Context, clusterId string) (clusterSlaveZone *cynosdb.CynosdbClusterDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewDescribeClusterDetailRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeClusterDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	clusterSlaveZone = response.Response.Detail
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbClusterSlaveZoneById(ctx context.Context, clusterId string, slaveZone string) (flowId *int64, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cynosdb.NewRemoveClusterSlaveZoneRequest()
+	request.ClusterId = &clusterId
+	request.SlaveZone = &slaveZone
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().RemoveClusterSlaveZone(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	flowId = response.Response.FlowId
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *CynosdbService) CynosdbClusterSlaveZoneStateRefreshFunc(flowId int64, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+
+		request := cynosdb.NewDescribeFlowRequest()
+		request.FlowId = &flowId
+
+		response, err := me.client.UseCynosdbClient().DescribeFlow(request)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		object := response.Response
+		if object == nil {
+			return nil, CYNOSDB_FLOW_STATUS_FAILED, err
+		}
+
+		return object, helper.Int64ToStr(*object.Status), nil
+	}
+}
+
+func (me *CynosdbService) DescribeCynosdbInstanceSlowQueriesByFilter(ctx context.Context, param map[string]interface{}) (InstanceSlowQueries []*cynosdb.SlowQueriesItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cynosdb.NewDescribeInstanceSlowQueriesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "Username" {
+			request.Username = v.(*string)
+		}
+		if k == "Host" {
+			request.Host = v.(*string)
+		}
+		if k == "Database" {
+			request.Database = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "OrderByType" {
+			request.OrderByType = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseCynosdbClient().DescribeInstanceSlowQueries(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SlowQueries) < 1 {
+			break
+		}
+		InstanceSlowQueries = append(InstanceSlowQueries, response.Response.SlowQueries...)
+		if len(response.Response.SlowQueries) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

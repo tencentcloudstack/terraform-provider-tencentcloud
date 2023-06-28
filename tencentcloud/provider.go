@@ -420,6 +420,7 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_resource_package_sale_specs
 	tencentcloud_cynosdb_rollback_time_range
 	tencentcloud_cynosdb_zone
+	tencentcloud_cynosdb_instance_slow_queries
 	tencentcloud_cynosdb_proxy_node
 	tencentcloud_cynosdb_proxy_version
 
@@ -444,6 +445,8 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_wan
 	tencentcloud_cynosdb_proxy
 	tencentcloud_cynosdb_reload_proxy_node
+	tencentcloud_cynosdb_cluster_slave_zone
+	tencentcloud_cynosdb_read_only_instance_exclusive_access
 
 Direct Connect(DC)
   Data Source
@@ -1915,6 +1918,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_clusters":                          dataSourceTencentCloudCynosdbClusters(),
 			"tencentcloud_cynosdb_instances":                         dataSourceTencentCloudCynosdbInstances(),
 			"tencentcloud_cynosdb_zone_config":                       dataSourceTencentCynosdbZoneConfig(),
+			"tencentcloud_cynosdb_instance_slow_queries":             dataSourceTencentCloudCynosdbInstanceSlowQueries(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_templates":  dataSourceTencentCloudVodAdaptiveDynamicStreamingTemplates(),
 			"tencentcloud_vod_image_sprite_templates":                dataSourceTencentCloudVodImageSpriteTemplates(),
 			"tencentcloud_vod_procedure_templates":                   dataSourceTencentCloudVodProcedureTemplates(),
@@ -2524,6 +2528,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_restart_instance":                       resourceTencentCloudCynosdbRestartInstance(),
 			"tencentcloud_cynosdb_roll_back_cluster":                      resourceTencentCloudCynosdbRollBackCluster(),
 			"tencentcloud_cynosdb_wan":                                    resourceTencentCloudCynosdbWan(),
+			"tencentcloud_cynosdb_cluster_slave_zone":                     resourceTencentCloudCynosdbClusterSlaveZone(),
+			"tencentcloud_cynosdb_read_only_instance_exclusive_access":    resourceTencentCloudCynosdbReadOnlyInstanceExclusiveAccess(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_template":        resourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_vod_image_sprite_template":                      resourceTencentCloudVodImageSpriteTemplate(),
 			"tencentcloud_vod_procedure_template":                         resourceTencentCloudVodProcedureTemplate(),
