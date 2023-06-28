@@ -2298,6 +2298,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_reload_balance_proxy_node":                resourceTencentCloudMysqlReloadBalanceProxyNode(),
 			"tencentcloud_mysql_ro_start_replication":                     resourceTencentCloudMysqlRoStartReplication(),
 			"tencentcloud_mysql_ro_stop_replication":                      resourceTencentCloudMysqlRoStopReplication(),
+			"tencentcloud_mysql_upgrade_proxy_version":					   resourceTencentCloudMysqlUpgradeProxyVersion(),
+			"tencentcloud_mysql_switch_proxy":							   resourceTencentCloudMysqlSwitchProxy(),
 			"tencentcloud_cos_bucket":                                     resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                              resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_bucket_referer":                             resourceTencentCloudCosBucketReferer(),

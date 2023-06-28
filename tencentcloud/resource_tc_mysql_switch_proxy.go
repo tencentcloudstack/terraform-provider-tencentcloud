@@ -87,7 +87,7 @@ func resourceTencentCloudMysqlSwitchProxyCreate(d *schema.ResourceData, meta int
 
 	service := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		proxy, err := service.DescribeMysqlProxyById(ctx, instanceId)
+		proxy, err := service.DescribeMysqlProxyById(ctx, instanceId, proxyGroupId)
 		if err != nil {
 			return resource.NonRetryableError(err)
 		}

@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_proxy" "proxy" {
-  instance_id    = "cdb-e4z5r8p9"
+  instance_id    = "cdb-fitq5t9h"
   uniq_vpc_id    = "vpc-4owdpnwr"
   uniq_subnet_id = "subnet-ahv6swf2"
   proxy_node_custom {
@@ -16,8 +16,10 @@ resource "tencentcloud_mysql_proxy" "proxy" {
     zone       = "ap-guangzhou-3"
   }
   security_group        = ["sg-edmur627"]
-  desc                  = "desc"
+  desc                  = "desc1"
   connection_pool_limit = 2
+  vip                   = "172.16.17.101"
+  vport                 = 3306
 }
 ```
 */
@@ -27,6 +29,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -116,8 +119,19 @@ func resourceTencentCloudMysqlProxy() *schema.Resource {
 				Description: "Connection Pool Threshold.",
 			},
 
-			// Computed
+			"vip": {
+				Optional:    true,
+				Computed:	 true,
+				Type:        schema.TypeString,
+				Description: "IP address.",
+			},
 
+			"vport": {
+				Optional:    true,
+				Computed:	 true,
+				Type:        schema.TypeInt,
+				Description: "Port.",
+			},
 		},
 	}
 }
@@ -133,6 +147,8 @@ func resourceTencentCloudMysqlProxyCreate(d *schema.ResourceData, meta interface
 		request    = mysql.NewCreateCdbProxyRequest()
 		response   = mysql.NewCreateCdbProxyResponse()
 		instanceId string
+		vpcId string
+		subnetId string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
@@ -140,10 +156,12 @@ func resourceTencentCloudMysqlProxyCreate(d *schema.ResourceData, meta interface
 	}
 
 	if v, ok := d.GetOk("uniq_vpc_id"); ok {
+		vpcId = v.(string)
 		request.UniqVpcId = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("uniq_subnet_id"); ok {
+		subnetId = v.(string)
 		request.UniqSubnetId = helper.String(v.(string))
 	}
 
@@ -201,8 +219,6 @@ func resourceTencentCloudMysqlProxyCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	d.SetId(instanceId)
-
 	asyncRequestId := *response.Response.AsyncRequestId
 	service := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -225,6 +241,24 @@ func resourceTencentCloudMysqlProxyCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
+	proxy, err := service.DescribeMysqlProxyById(ctx, instanceId, "")
+	if err != nil {
+		return err
+	}
+
+	proxyAddressId := *proxy.ProxyAddress[0].ProxyAddressId
+	proxyGroupId := *proxy.ProxyGroupId
+	d.SetId(instanceId + FILED_SP + proxyGroupId + FILED_SP + proxyAddressId)
+
+	ip := d.Get("vip").(string)
+	port := d.Get("vport").(int)
+	if ip != "" || port > 0 {
+		err := service.ModifyCdbProxyAddressVipAndVPort(ctx, proxyGroupId, proxyAddressId, vpcId, subnetId, ip, uint64(port))
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudMysqlProxyRead(d, meta)
 }
 
@@ -237,8 +271,16 @@ func resourceTencentCloudMysqlProxyRead(d *schema.ResourceData, meta interface{}
 
 	service := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	instanceId := d.Id()
-	proxy, err := service.DescribeMysqlProxyById(ctx, instanceId)
+	items := strings.Split(d.Id(), FILED_SP)
+	if len(items) != 3 {
+		return fmt.Errorf("invalid ID %s", d.Id())
+	}
+
+	instanceId := items[0]
+	proxyGroupId := items[1]
+	proxyAddressId := items[2]
+
+	proxy, err := service.DescribeMysqlProxyById(ctx, instanceId, proxyGroupId)
 	if err != nil {
 		return err
 	}
@@ -251,56 +293,67 @@ func resourceTencentCloudMysqlProxyRead(d *schema.ResourceData, meta interface{}
 
 	_ = d.Set("instance_id", instanceId)
 
-	// if proxy.ProxyAddress.UniqVpcId != nil {
-	// 	_ = d.Set("uniq_vpc_id", proxy.UniqVpcId)
-	// }
+	proxyAddress := proxy.ProxyAddress[0]
+	if proxyAddress.UniqVpcId != nil {
+		_ = d.Set("uniq_vpc_id", proxyAddress.UniqVpcId)
+	}
 
-	// if proxy.UniqSubnetId != nil {
-	// 	_ = d.Set("uniq_subnet_id", proxy.UniqSubnetId)
-	// }
+	if proxyAddress.UniqSubnetId != nil {
+		_ = d.Set("uniq_subnet_id", proxyAddress.UniqSubnetId)
+	}
 
-	// if proxy.ProxyNodeCustom != nil {
-	// 	proxyNodeCustomList := []interface{}{}
-	// 	for _, proxyNodeCustom := range proxy.ProxyNodeCustom {
-	// 		proxyNodeCustomMap := map[string]interface{}{}
+	if proxy.ProxyNode != nil {
+		proxyNodeCustomList := []interface{}{}
+		for _, proxyNodeCustom := range proxy.ProxyNode {
+			proxyNodeCustomMap := map[string]interface{}{}
 
-	// 		if proxy.ProxyNodeCustom.NodeCount != nil {
-	// 			proxyNodeCustomMap["node_count"] = proxy.ProxyNodeCustom.NodeCount
-	// 		}
+			proxyNodeCustomMap["node_count"] = len(proxy.ProxyNode)
 
-	// 		if proxy.ProxyNodeCustom.Cpu != nil {
-	// 			proxyNodeCustomMap["cpu"] = proxy.ProxyNodeCustom.Cpu
-	// 		}
+			if proxyNodeCustom.Cpu != nil {
+				proxyNodeCustomMap["cpu"] = proxyNodeCustom.Cpu
+			}
 
-	// 		if proxy.ProxyNodeCustom.Mem != nil {
-	// 			proxyNodeCustomMap["mem"] = proxy.ProxyNodeCustom.Mem
-	// 		}
+			if proxyNodeCustom.Mem != nil {
+				proxyNodeCustomMap["mem"] = proxyNodeCustom.Mem
+			}
 
-	// 		if proxy.ProxyNodeCustom.Region != nil {
-	// 			proxyNodeCustomMap["region"] = proxy.ProxyNodeCustom.Region
-	// 		}
+			if proxyNodeCustom.Region != nil {
+				proxyNodeCustomMap["region"] = proxyNodeCustom.Region
+			}
 
-	// 		if proxy.ProxyNodeCustom.Zone != nil {
-	// 			proxyNodeCustomMap["zone"] = proxy.ProxyNodeCustom.Zone
-	// 		}
+			if proxyNodeCustom.Zone != nil {
+				proxyNodeCustomMap["zone"] = proxyNodeCustom.Zone
+			}
 
-	// 		proxyNodeCustomList = append(proxyNodeCustomList, proxyNodeCustomMap)
-	// 	}
+			proxyNodeCustomList = append(proxyNodeCustomList, proxyNodeCustomMap)
+		}
 
-	// 	_ = d.Set("proxy_node_custom", proxyNodeCustomList)
+		_ = d.Set("proxy_node_custom", proxyNodeCustomList)
 
-	// }
+	}
 
-	// if proxy.SecurityGroup != nil {
-	// 	_ = d.Set("security_group", proxy.SecurityGroup)
-	// }
+	securityGroups, err := service.DescribeDBSecurityGroups(ctx, proxyAddressId)
+	if err != nil {
+		return err
+	}
+	if len(securityGroups) > 0 {
+		_ = d.Set("security_group", securityGroups)
+	}
 
-	// if proxy.Desc != nil {
-	// 	_ = d.Set("desc", proxy.Desc)
-	// }
+	if proxyAddress.Desc != nil {
+		_ = d.Set("desc", proxyAddress.Desc)
+	}
 
 	if proxy.ConnectionPoolLimit != nil {
 		_ = d.Set("connection_pool_limit", proxy.ConnectionPoolLimit)
+	}
+
+	if proxyAddress.Vip != nil {
+		_ = d.Set("vip", proxyAddress.Vip)
+	}
+
+	if proxyAddress.VPort != nil {
+		_ = d.Set("vport", proxyAddress.VPort)
 	}
 
 	return nil
@@ -313,10 +366,17 @@ func resourceTencentCloudMysqlProxyUpdate(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	instanceId := d.Id()
+	items := strings.Split(d.Id(), FILED_SP)
+	if len(items) != 3 {
+		return fmt.Errorf("invalid ID %s", d.Id())
+	}
+
+	instanceId := items[0]
+	proxyGroupId := items[1]
+	proxyAddressId := items[2]
 
 	service := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	proxy, err := service.DescribeMysqlProxyById(ctx, instanceId)
+	proxy, err := service.DescribeMysqlProxyById(ctx, instanceId, proxyGroupId)
 	if err != nil {
 		return err
 	}
@@ -325,7 +385,7 @@ func resourceTencentCloudMysqlProxyUpdate(d *schema.ResourceData, meta interface
 		return fmt.Errorf("Instance `%s` proxy does not exist", instanceId)
 	}
 
-	immutableArgs := []string{"instance_id", "uniq_vpc_id", "uniq_subnet_id", "security_group", "desc"}
+	immutableArgs := []string{"instance_id", "security_group"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -421,6 +481,26 @@ func resourceTencentCloudMysqlProxyUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
+	if d.HasChange("uniq_vpc_id") || d.HasChange("uniq_subnet_id") || d.HasChange("vip") || d.HasChange("vport") {
+		vpcId := d.Get("uniq_vpc_id").(string)
+		subnetId := d.Get("uniq_subnet_id").(string)
+		ip := d.Get("vip").(string)
+		port := uint64(d.Get("vport").(int))
+
+		err := service.ModifyCdbProxyAddressVipAndVPort(ctx, proxyGroupId, proxyAddressId, vpcId, subnetId, ip, port)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("desc") {
+		desc := d.Get("desc").(string)
+		err := service.ModifyCdbProxyAddressDesc(ctx, proxyGroupId, proxyAddressId, desc)
+		if err != nil {
+			return err
+		}
+	}
+
 	return resourceTencentCloudMysqlProxyRead(d, meta)
 }
 
@@ -432,14 +512,21 @@ func resourceTencentCloudMysqlProxyDelete(d *schema.ResourceData, meta interface
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
-	instanceId := d.Id()
+	items := strings.Split(d.Id(), FILED_SP)
+	if len(items) != 3 {
+		return fmt.Errorf("invalid ID %s", d.Id())
+	}
+
+	instanceId := items[0]
+	proxyGroupId := items[1]
+	// proxyAddressId := items[2]
 
 	if err := service.DeleteMysqlProxyById(ctx, instanceId); err != nil {
 		return err
 	}
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		proxy, err := service.DescribeMysqlProxyById(ctx, instanceId)
+		proxy, err := service.DescribeMysqlProxyById(ctx, instanceId, proxyGroupId)
 		if err != nil {
 			return resource.NonRetryableError(err)
 		}

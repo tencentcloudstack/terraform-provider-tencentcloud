@@ -30,20 +30,21 @@ func TestAccTencentCloudMysqlProxyResource_basic(t *testing.T) {
 const testAccMysqlProxy = `
 
 resource "tencentcloud_mysql_proxy" "proxy" {
-  instance_id = ""
-  uniq_vpc_id = ""
-  uniq_subnet_id = ""
-  proxy_node_custom {
-		node_count = 
-		cpu = 
-		mem = 
-		region = ""
-		zone = ""
-
-  }
-  security_group = 
-  desc = ""
-  connection_pool_limit = 
+	instance_id    = "cdb-fitq5t9h"
+	uniq_vpc_id    = "vpc-4owdpnwr"
+	uniq_subnet_id = "subnet-ahv6swf2"
+	proxy_node_custom {
+	  node_count = 1
+	  cpu        = 2
+	  mem        = 4000
+	  region     = "ap-guangzhou"
+	  zone       = "ap-guangzhou-3"
+	}
+	security_group        = ["sg-edmur627"]
+	desc                  = "desc1"
+	connection_pool_limit = 2
+	vip                   = "172.16.17.101"
+	vport                 = 3306
 }
 
 `

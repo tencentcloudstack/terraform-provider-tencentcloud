@@ -2792,11 +2792,14 @@ func (me *MysqlService) DescribeMysqlPasswordComplexityById(ctx context.Context,
 	return
 }
 
-func (me *MysqlService) DescribeMysqlProxyById(ctx context.Context, instanceId string) (proxy *cdb.ProxyGroupInfo, errRet error) {
+func (me *MysqlService) DescribeMysqlProxyById(ctx context.Context, instanceId, proxyGroupId string) (proxy *cdb.ProxyGroupInfo, errRet error) {
 	logId := getLogId(ctx)
 
 	request := cdb.NewDescribeCdbProxyInfoRequest()
 	request.InstanceId = &instanceId
+	if proxyGroupId != "" {
+		request.ProxyGroupId = &proxyGroupId
+	}
 
 	defer func() {
 		if errRet != nil {
@@ -2818,6 +2821,61 @@ func (me *MysqlService) DescribeMysqlProxyById(ctx context.Context, instanceId s
 	}
 
 	proxy = response.Response.ProxyInfos[0]
+	return
+}
+
+func (me *MysqlService) ModifyCdbProxyAddressVipAndVPort(ctx context.Context, proxyGroupId, proxyAddressId, vpcId, subnetId, ip string, port uint64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewModifyCdbProxyAddressVipAndVPortRequest()
+	request.ProxyGroupId = &proxyGroupId
+	request.ProxyAddressId = &proxyAddressId
+	request.UniqVpcId = &vpcId
+	request.UniqSubnetId = &subnetId
+	request.Vip = &ip
+	request.VPort = &port
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().ModifyCdbProxyAddressVipAndVPort(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *MysqlService) ModifyCdbProxyAddressDesc(ctx context.Context, proxyGroupId, proxyAddressId, desc string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewModifyCdbProxyAddressDescRequest()
+	request.ProxyGroupId = &proxyGroupId
+	request.ProxyAddressId = &proxyAddressId
+	request.Desc = &desc
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().ModifyCdbProxyAddressDesc(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }
 
