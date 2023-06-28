@@ -255,7 +255,7 @@ func resourceTencentCloudCbsStorageCreate(d *schema.ResourceData, meta interface
 	}
 
 	// must wait for finishing creating disk
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(10*readRetryTimeout, func() *resource.RetryError {
 		storage, e := cbsService.DescribeDiskById(ctx, storageId)
 		if e != nil {
 			return retryError(e, InternalError)
