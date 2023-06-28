@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_switch_proxy" "switch_proxy" {
-  instance_id = ""
-  proxy_group_id = ""
+  instance_id = "cdb-fitq5t9h"
+  proxy_group_id = "proxy-h1ub486b"
 }
 ```
 */

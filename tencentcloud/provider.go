@@ -622,6 +622,14 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_ro_instance_ip
 	tencentcloud_mysql_ro_group_load_operation
 	tencentcloud_mysql_switch_master_slave_operation
+	tencentcloud_mysql_proxy
+	tencentcloud_mysql_reset_root_account
+	tencentcloud_mysql_verify_root_account
+	tencentcloud_mysql_reload_balance_proxy_node
+	tencentcloud_mysql_ro_start_replication
+	tencentcloud_mysql_ro_stop_replication
+	tencentcloud_mysql_upgrade_proxy_version
+	tencentcloud_mysql_switch_proxy
 
 Cloud Monitor(Monitor)
   Data Source

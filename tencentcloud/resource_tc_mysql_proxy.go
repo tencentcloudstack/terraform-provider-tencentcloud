@@ -43,7 +43,9 @@ func resourceTencentCloudMysqlProxy() *schema.Resource {
 		Read:   resourceTencentCloudMysqlProxyRead,
 		Update: resourceTencentCloudMysqlProxyUpdate,
 		Delete: resourceTencentCloudMysqlProxyDelete,
-
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
 				Required:    true,
@@ -121,16 +123,28 @@ func resourceTencentCloudMysqlProxy() *schema.Resource {
 
 			"vip": {
 				Optional:    true,
-				Computed:	 true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "IP address.",
 			},
 
 			"vport": {
 				Optional:    true,
-				Computed:	 true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Port.",
+			},
+
+			"proxy_group_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Proxy group id.",
+			},
+
+			"proxy_address_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Proxy address id.",
 			},
 		},
 	}
@@ -147,8 +161,8 @@ func resourceTencentCloudMysqlProxyCreate(d *schema.ResourceData, meta interface
 		request    = mysql.NewCreateCdbProxyRequest()
 		response   = mysql.NewCreateCdbProxyResponse()
 		instanceId string
-		vpcId string
-		subnetId string
+		vpcId      string
+		subnetId   string
 	)
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
@@ -355,6 +369,10 @@ func resourceTencentCloudMysqlProxyRead(d *schema.ResourceData, meta interface{}
 	if proxyAddress.VPort != nil {
 		_ = d.Set("vport", proxyAddress.VPort)
 	}
+
+	_ = d.Set("proxy_group_id", proxyGroupId)
+
+	_ = d.Set("proxy_address_id", proxyAddressId)
 
 	return nil
 }

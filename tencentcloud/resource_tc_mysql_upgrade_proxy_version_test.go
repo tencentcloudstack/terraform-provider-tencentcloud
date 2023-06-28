@@ -16,7 +16,9 @@ func TestAccTencentCloudMysqlUpgradeProxyVersionResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMysqlUpgradeProxyVersion,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mysql_upgrade_proxy_version.upgrade_proxy_version", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_upgrade_proxy_version.upgrade_proxy_version", "id"),
+				),
 			},
 		},
 	})
@@ -25,11 +27,11 @@ func TestAccTencentCloudMysqlUpgradeProxyVersionResource_basic(t *testing.T) {
 const testAccMysqlUpgradeProxyVersion = `
 
 resource "tencentcloud_mysql_upgrade_proxy_version" "upgrade_proxy_version" {
-  instance_id = ""
-  proxy_group_id = ""
-  src_proxy_version = ""
-  dst_proxy_version = ""
-  upgrade_time = ""
+	instance_id       = "cdb-fitq5t9h"
+	proxy_group_id    = "proxy-h1ub486b"
+	src_proxy_version = "1.3.6"
+	dst_proxy_version = "1.3.7"
+	upgrade_time      = "nowTime"
 }
 
 `

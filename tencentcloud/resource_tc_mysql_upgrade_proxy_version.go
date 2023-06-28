@@ -5,11 +5,11 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_mysql_upgrade_proxy_version" "upgrade_proxy_version" {
-  instance_id = ""
-  proxy_group_id = ""
-  src_proxy_version = ""
-  dst_proxy_version = ""
-  upgrade_time = ""
+  instance_id       = "cdb-fitq5t9h"
+  proxy_group_id    = "proxy-h1ub486b"
+  src_proxy_version = "1.3.6"
+  dst_proxy_version = "1.3.7"
+  upgrade_time      = "nowTime"
 }
 ```
 */

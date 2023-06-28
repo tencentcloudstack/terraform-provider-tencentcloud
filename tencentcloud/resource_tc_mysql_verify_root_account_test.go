@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlVerifyRootAccountResource_basic -v
 func TestAccTencentCloudMysqlVerifyRootAccountResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -16,17 +17,19 @@ func TestAccTencentCloudMysqlVerifyRootAccountResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMysqlVerifyRootAccount,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mysql_verify_root_account.verify_root_account", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_verify_root_account.verify_root_account", "id"),
+				),
 			},
 		},
 	})
 }
 
-const testAccMysqlVerifyRootAccount = `
+const testAccMysqlVerifyRootAccount = testAccMysqlInstanceEncryptionOperationVar + `
 
 resource "tencentcloud_mysql_verify_root_account" "verify_root_account" {
-  instance_id = ""
-  password = ""
+  instance_id = tencentcloud_mysql_instance.mysql8.id
+  password = "password123"
 }
 
 `
