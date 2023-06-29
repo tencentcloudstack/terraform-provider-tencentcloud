@@ -22,14 +22,6 @@ tencentcloud_mysql_ro_start_replication
 tencentcloud_mysql_ro_stop_replication
 ```
 
-```release-note:new-resource
-tencentcloud_mysql_upgrade_proxy_version
-```
-
-```release-note:new-resource
-tencentcloud_mysql_switch_proxy
-```
-
 ```release-note:enhancement
 resource/tencentcloud_mysql_account: support update `host`
 ```
