@@ -43,7 +43,9 @@ The following arguments are supported:
 * `uniq_vpc_id` - (Required, String) Vpc id.
 * `connection_pool_limit` - (Optional, Int) Connection Pool Threshold.
 * `desc` - (Optional, String) Describe.
+* `proxy_version` - (Optional, String) The current version of the database agent. No need to fill in when creating.
 * `security_group` - (Optional, Set: [`String`]) Security group.
+* `upgrade_time` - (Optional, String) Upgrade time: nowTime (upgrade completed) timeWindow (instance maintenance time), Required when modifying the agent version, No need to fill in when creating.
 * `vip` - (Optional, String) IP address.
 * `vport` - (Optional, Int) Port.
 

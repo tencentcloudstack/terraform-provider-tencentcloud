@@ -635,8 +635,6 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_reload_balance_proxy_node
 	tencentcloud_mysql_ro_start_replication
 	tencentcloud_mysql_ro_stop_replication
-	tencentcloud_mysql_upgrade_proxy_version
-	tencentcloud_mysql_switch_proxy
 
 Cloud Monitor(Monitor)
   Data Source
@@ -2319,7 +2317,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_reload_balance_proxy_node":                resourceTencentCloudMysqlReloadBalanceProxyNode(),
 			"tencentcloud_mysql_ro_start_replication":                     resourceTencentCloudMysqlRoStartReplication(),
 			"tencentcloud_mysql_ro_stop_replication":                      resourceTencentCloudMysqlRoStopReplication(),
-			"tencentcloud_mysql_upgrade_proxy_version":                    resourceTencentCloudMysqlUpgradeProxyVersion(),
 			"tencentcloud_mysql_switch_proxy":                             resourceTencentCloudMysqlSwitchProxy(),
 			"tencentcloud_cos_bucket":                                     resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                              resourceTencentCloudCosBucketObject(),

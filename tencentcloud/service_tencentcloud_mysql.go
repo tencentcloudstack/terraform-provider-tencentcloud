@@ -2879,6 +2879,34 @@ func (me *MysqlService) ModifyCdbProxyAddressDesc(ctx context.Context, proxyGrou
 	return
 }
 
+func (me *MysqlService) UpgradeCDBProxyVersion(ctx context.Context, instanceId, proxyGroupId, oldProxyVersion, proxyVersion, upgradeTime string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdb.NewUpgradeCDBProxyVersionRequest()
+	request.InstanceId = &instanceId
+	request.ProxyGroupId = &proxyGroupId
+	request.SrcProxyVersion = &oldProxyVersion
+	request.DstProxyVersion = &proxyVersion
+	request.UpgradeTime = &upgradeTime
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseMysqlClient().UpgradeCDBProxyVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *MysqlService) DeleteMysqlProxyById(ctx context.Context, instanceId string) (errRet error) {
 	logId := getLogId(ctx)
 

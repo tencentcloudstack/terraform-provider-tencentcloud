@@ -135,6 +135,19 @@ func resourceTencentCloudMysqlProxy() *schema.Resource {
 				Description: "Port.",
 			},
 
+			"proxy_version": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "The current version of the database agent. No need to fill in when creating.",
+			},
+
+			"upgrade_time": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Upgrade time: nowTime (upgrade completed) timeWindow (instance maintenance time), Required when modifying the agent version, No need to fill in when creating.",
+			},
+
 			"proxy_group_id": {
 				Computed:    true,
 				Type:        schema.TypeString,
@@ -374,6 +387,10 @@ func resourceTencentCloudMysqlProxyRead(d *schema.ResourceData, meta interface{}
 
 	_ = d.Set("proxy_address_id", proxyAddressId)
 
+	if proxy.ProxyVersion != nil {
+		_ = d.Set("proxy_version", proxy.ProxyVersion)
+	}
+
 	return nil
 }
 
@@ -514,6 +531,21 @@ func resourceTencentCloudMysqlProxyUpdate(d *schema.ResourceData, meta interface
 	if d.HasChange("desc") {
 		desc := d.Get("desc").(string)
 		err := service.ModifyCdbProxyAddressDesc(ctx, proxyGroupId, proxyAddressId, desc)
+		if err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("proxy_version") {
+		upgradeTime := ""
+		if v, ok := d.GetOk("upgrade_time"); ok {
+			upgradeTime = v.(string)
+		} else {
+			return fmt.Errorf("The parameter `upgrade_time` must be filled in when modifying the proxy version")
+		}
+
+		oldProxyVersion, proxyVersion := d.GetChange("proxy_version")
+		err := service.UpgradeCDBProxyVersion(ctx, instanceId, proxyGroupId, oldProxyVersion.(string), proxyVersion.(string), upgradeTime)
 		if err != nil {
 			return err
 		}

@@ -38,6 +38,7 @@ func TestAccTencentCloudMysqlProxyResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_proxy.proxy", "connection_pool_limit", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_proxy.proxy", "vip"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_proxy.proxy", "vport"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_proxy.proxy", "proxy_version"),
 				),
 			},
 			{

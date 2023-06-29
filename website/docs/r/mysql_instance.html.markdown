@@ -64,7 +64,7 @@ The following arguments are supported:
 * `force_delete` - (Optional, Bool) Indicate whether to delete instance directly or not. Default is `false`. If set true, the instance will be deleted instead of staying recycle bin. Note: only works for `PREPAID` instance. When the main mysql instance set true, this para of the readonly mysql instance will not take effect.
 * `internet_service` - (Optional, Int) Indicates whether to enable the access to an instance from public network: 0 - No, 1 - Yes.
 * `intranet_port` - (Optional, Int) Public access port. Valid value ranges: [1024~65535]. The default value is `3306`.
-* `max_deay_time` - (Optional, Int) Latency threshold. Value range 1~10.
+* `max_deay_time` - (Optional, Int) Latency threshold. Value range 1~10. Only need to fill in when upgrading kernel subversion and engine version.
 * `param_template_id` - (Optional, Int) Specify parameter template id.
 * `parameters` - (Optional, Map) List of parameters to use.
 * `pay_type` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.36.0. Please use `charge_type` instead. Pay type of instance. Valid values: `0`, `1`. `0`: prepaid, `1`: postpaid.
@@ -78,7 +78,7 @@ The following arguments are supported:
 * `slave_sync_mode` - (Optional, Int) Data replication mode. 0 - Async replication; 1 - Semisync replication; 2 - Strongsync replication.
 * `subnet_id` - (Optional, String) Private network ID. If `vpc_id` is set, this value is required.
 * `tags` - (Optional, Map) Instance tags.
-* `upgrade_subversion` - (Optional, Int) Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version.
+* `upgrade_subversion` - (Optional, Int) Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version. Only need to fill in when upgrading kernel subversion and engine version.
 * `vpc_id` - (Optional, String) ID of VPC, which can be modified once every 24 hours and can't be removed.
 
 ## Attributes Reference

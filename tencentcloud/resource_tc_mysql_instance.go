@@ -258,12 +258,12 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"upgrade_subversion": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			Description: "Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version.",
+			Description: "Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version. Only need to fill in when upgrading kernel subversion and engine version.",
 		},
 		"max_deay_time": {
 			Type:        schema.TypeInt,
 			Optional:    true,
-			Description: "Latency threshold. Value range 1~10.",
+			Description: "Latency threshold. Value range 1~10. Only need to fill in when upgrading kernel subversion and engine version.",
 		},
 
 		"availability_zone": {
