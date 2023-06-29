@@ -629,6 +629,12 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_ro_instance_ip
 	tencentcloud_mysql_ro_group_load_operation
 	tencentcloud_mysql_switch_master_slave_operation
+	tencentcloud_mysql_proxy
+	tencentcloud_mysql_reset_root_account
+	tencentcloud_mysql_verify_root_account
+	tencentcloud_mysql_reload_balance_proxy_node
+	tencentcloud_mysql_ro_start_replication
+	tencentcloud_mysql_ro_stop_replication
 
 Cloud Monitor(Monitor)
   Data Source
@@ -2305,6 +2311,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_ro_instance_ip":                           resourceTencentCloudMysqlRoInstanceIp(),
 			"tencentcloud_mysql_ro_group_load_operation":                  resourceTencentCloudMysqlRoGroupLoadOperation(),
 			"tencentcloud_mysql_switch_master_slave_operation":            resourceTencentCloudMysqlSwitchMasterSlaveOperation(),
+			"tencentcloud_mysql_proxy":                                    resourceTencentCloudMysqlProxy(),
+			"tencentcloud_mysql_reset_root_account":                       resourceTencentCloudMysqlResetRootAccount(),
+			"tencentcloud_mysql_verify_root_account":                      resourceTencentCloudMysqlVerifyRootAccount(),
+			"tencentcloud_mysql_reload_balance_proxy_node":                resourceTencentCloudMysqlReloadBalanceProxyNode(),
+			"tencentcloud_mysql_ro_start_replication":                     resourceTencentCloudMysqlRoStartReplication(),
+			"tencentcloud_mysql_ro_stop_replication":                      resourceTencentCloudMysqlRoStopReplication(),
+			"tencentcloud_mysql_switch_proxy":                             resourceTencentCloudMysqlSwitchProxy(),
 			"tencentcloud_cos_bucket":                                     resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                              resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_bucket_referer":                             resourceTencentCloudCosBucketReferer(),

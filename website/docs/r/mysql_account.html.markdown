@@ -31,7 +31,7 @@ The following arguments are supported:
 * `name` - (Required, String, ForceNew) Account name.
 * `password` - (Required, String) Operation password.
 * `description` - (Optional, String) Database description.
-* `host` - (Optional, String, ForceNew) Account host, default is `%`.
+* `host` - (Optional, String) Account host, default is `%`.
 * `max_user_connections` - (Optional, Int) The maximum number of available connections for a new account, the default value is 10240, and the maximum value that can be set is 10240.
 
 ## Attributes Reference

@@ -251,11 +251,20 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		},
 		"engine_version": {
 			Type:         schema.TypeString,
-			ForceNew:     true,
 			Optional:     true,
 			ValidateFunc: validateAllowedStringValue(MYSQL_SUPPORTS_ENGINE),
 			Default:      MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-2],
-			Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7.",
+			Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7. Upgrade the instance engine version to support 5.6/5.7 and switch immediately.",
+		},
+		"upgrade_subversion": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version. Only need to fill in when upgrading kernel subversion and engine version.",
+		},
+		"max_deay_time": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Latency threshold. Value range 1~10. Only need to fill in when upgrading kernel subversion and engine version.",
 		},
 
 		"availability_zone": {
@@ -1083,6 +1092,53 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			}
 		}
 
+	}
+
+	if d.HasChange("engine_version") || d.HasChange("upgrade_subversion") || d.HasChange("max_deay_time") {
+		engineVersion := ""
+		var upgradeSubversion int64
+		var maxDelayTime int64
+		if v, ok := d.GetOk("engine_version"); ok {
+			engineVersion = v.(string)
+		}
+		if v, ok := d.GetOk("upgrade_subversion"); ok {
+			upgradeSubversion = int64(v.(int))
+		}
+		if v, ok := d.GetOk("max_deay_time"); ok {
+			maxDelayTime = int64(v.(int))
+		}
+
+		asyncRequestId, err := mysqlService.UpgradeDBInstanceEngineVersion(ctx, d.Id(), engineVersion, upgradeSubversion, maxDelayTime)
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
+			if err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+
+			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+				return nil
+			}
+			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("update mysql engineVersion status is %s", taskStatus))
+			}
+			err = fmt.Errorf("update mysql engineVersion task status is %s,we won't wait for it finish ,it show message:%s",
+				",", message)
+			return resource.NonRetryableError(err)
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
 	}
 
 	if d.HasChange("tags") {
