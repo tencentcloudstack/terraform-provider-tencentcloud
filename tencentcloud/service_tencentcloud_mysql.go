@@ -1141,7 +1141,8 @@ func (me *MysqlService) ModifyDBInstanceVipVport(ctx context.Context, mysqlId, v
 }
 
 func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
-	memSize, cpu, volumeSize, fastUpgrade int64, deviceType string) (asyncRequestId string, errRet error) {
+	memSize, cpu, volumeSize, fastUpgrade int64, deviceType string, slaveDeployMode, slaveSyncMode int64,
+	firstSlaveZone, secondSlaveZone string) (asyncRequestId string, errRet error) {
 
 	logId := getLogId(ctx)
 
@@ -1154,6 +1155,10 @@ func (me *MysqlService) UpgradeDBInstance(ctx context.Context, mysqlId string,
 	request.Volume = &volumeSize
 	request.WaitSwitch = &waitSwitch
 	request.FastUpgrade = &fastUpgrade
+	request.DeployMode = &slaveDeployMode
+	request.SlaveZone = &firstSlaveZone
+	request.BackupZone = &secondSlaveZone
+	request.ProtectMode = &slaveSyncMode
 	if deviceType != "" {
 		request.DeviceType = &deviceType
 	}

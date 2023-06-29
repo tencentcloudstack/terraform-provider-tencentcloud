@@ -190,6 +190,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"device_type": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.",
 		},
 		"tags": {
@@ -281,6 +282,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"first_slave_zone": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Zone information about first slave instance.",
 		},
 		"second_slave_zone": {
@@ -797,11 +799,7 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	_ = d.Set("volume_size", mysqlInfo.Volume)
 	_ = d.Set("vpc_id", mysqlInfo.UniqVpcId)
 	_ = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
-
-	isUniversal := mysqlInfo.DeviceType != nil && *mysqlInfo.DeviceType == "UNIVERSAL"
-	if _, ok := d.GetOk("device_type"); ok || !isUniversal {
-		_ = d.Set("device_type", mysqlInfo.DeviceType)
-	}
+	_ = d.Set("device_type", mysqlInfo.DeviceType)
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
@@ -942,14 +940,10 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
 		_ = d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
 		if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
-			if _, ok := d.GetOk("first_slave_zone"); ok {
-				_ = d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
-			}
+			_ = d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
 		}
 		if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
-			if _, ok := d.GetOk("second_slave_zone"); ok {
-				_ = d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
-			}
+			_ = d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
 		}
 		return nil
 	})
@@ -999,12 +993,16 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") {
+	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") || d.HasChange("slave_deploy_mode") || d.HasChange("first_slave_zone") || d.HasChange("second_slave_zone") || d.HasChange("slave_sync_mode") {
 
 		memSize := int64(d.Get("mem_size").(int))
 		cpu := int64(d.Get("cpu").(int))
 		volumeSize := int64(d.Get("volume_size").(int))
+		slaveDeployMode := int64(d.Get("slave_deploy_mode").(int))
+		slaveSyncMode := int64(d.Get("slave_sync_mode").(int))
 		deviceType := ""
+		firstSlaveZone := ""
+		secondSlaveZone := ""
 
 		fastUpgrade := int64(0)
 		if v, ok := d.GetOk("fast_upgrade"); ok {
@@ -1014,7 +1012,15 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			deviceType = v.(string)
 		}
 
-		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType)
+		if v, ok := d.GetOk("first_slave_zone"); ok {
+			firstSlaveZone = v.(string)
+		}
+
+		if v, ok := d.GetOk("second_slave_zone"); ok {
+			secondSlaveZone = v.(string)
+		}
+
+		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, slaveDeployMode, slaveSyncMode, firstSlaveZone, secondSlaveZone)
 
 		if err != nil {
 			return err
@@ -1326,16 +1332,6 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	immutableArgs := []string{
-		"slave_deploy_mode", "first_slave_zone", "second_slave_zone", "slave_sync_mode",
-	}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 
 	payType := getPayType(d).(int)
 
