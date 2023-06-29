@@ -190,6 +190,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"device_type": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.",
 		},
 		"tags": {
@@ -250,11 +251,20 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		},
 		"engine_version": {
 			Type:         schema.TypeString,
-			ForceNew:     true,
 			Optional:     true,
 			ValidateFunc: validateAllowedStringValue(MYSQL_SUPPORTS_ENGINE),
 			Default:      MYSQL_SUPPORTS_ENGINE[len(MYSQL_SUPPORTS_ENGINE)-2],
-			Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7.",
+			Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0, and default is 5.7. Upgrade the instance engine version to support 5.6/5.7 and switch immediately.",
+		},
+		"upgrade_subversion": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Whether it is a kernel subversion upgrade, supported values: 1 - upgrade the kernel subversion; 0 - upgrade the database engine version. Only need to fill in when upgrading kernel subversion and engine version.",
+		},
+		"max_deay_time": {
+			Type:        schema.TypeInt,
+			Optional:    true,
+			Description: "Latency threshold. Value range 1~10. Only need to fill in when upgrading kernel subversion and engine version.",
 		},
 
 		"availability_zone": {
@@ -281,6 +291,7 @@ func resourceTencentCloudMysqlInstance() *schema.Resource {
 		"first_slave_zone": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Zone information about first slave instance.",
 		},
 		"second_slave_zone": {
@@ -797,11 +808,7 @@ func tencentMsyqlBasicInfoRead(ctx context.Context, d *schema.ResourceData, meta
 	_ = d.Set("volume_size", mysqlInfo.Volume)
 	_ = d.Set("vpc_id", mysqlInfo.UniqVpcId)
 	_ = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
-
-	isUniversal := mysqlInfo.DeviceType != nil && *mysqlInfo.DeviceType == "UNIVERSAL"
-	if _, ok := d.GetOk("device_type"); ok || !isUniversal {
-		_ = d.Set("device_type", mysqlInfo.DeviceType)
-	}
+	_ = d.Set("device_type", mysqlInfo.DeviceType)
 
 	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
 	if err != nil {
@@ -942,14 +949,10 @@ func resourceTencentCloudMysqlInstanceRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("slave_sync_mode", int(*backConfig.Response.ProtectMode))
 		_ = d.Set("slave_deploy_mode", int(*backConfig.Response.DeployMode))
 		if backConfig.Response.SlaveConfig != nil && *backConfig.Response.SlaveConfig.Zone != "" {
-			if _, ok := d.GetOk("first_slave_zone"); ok {
-				_ = d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
-			}
+			_ = d.Set("first_slave_zone", *backConfig.Response.SlaveConfig.Zone)
 		}
 		if backConfig.Response.BackupConfig != nil && *backConfig.Response.BackupConfig.Zone != "" {
-			if _, ok := d.GetOk("second_slave_zone"); ok {
-				_ = d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
-			}
+			_ = d.Set("second_slave_zone", *backConfig.Response.BackupConfig.Zone)
 		}
 		return nil
 	})
@@ -999,12 +1002,16 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 		}
 	}
 
-	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") {
+	if d.HasChange("mem_size") || d.HasChange("cpu") || d.HasChange("volume_size") || d.HasChange("device_type") || d.HasChange("slave_deploy_mode") || d.HasChange("first_slave_zone") || d.HasChange("second_slave_zone") || d.HasChange("slave_sync_mode") {
 
 		memSize := int64(d.Get("mem_size").(int))
 		cpu := int64(d.Get("cpu").(int))
 		volumeSize := int64(d.Get("volume_size").(int))
+		slaveDeployMode := int64(d.Get("slave_deploy_mode").(int))
+		slaveSyncMode := int64(d.Get("slave_sync_mode").(int))
 		deviceType := ""
+		firstSlaveZone := ""
+		secondSlaveZone := ""
 
 		fastUpgrade := int64(0)
 		if v, ok := d.GetOk("fast_upgrade"); ok {
@@ -1014,7 +1021,15 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			deviceType = v.(string)
 		}
 
-		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType)
+		if v, ok := d.GetOk("first_slave_zone"); ok {
+			firstSlaveZone = v.(string)
+		}
+
+		if v, ok := d.GetOk("second_slave_zone"); ok {
+			secondSlaveZone = v.(string)
+		}
+
+		asyncRequestId, err := mysqlService.UpgradeDBInstance(ctx, d.Id(), memSize, cpu, volumeSize, fastUpgrade, deviceType, slaveDeployMode, slaveSyncMode, firstSlaveZone, secondSlaveZone)
 
 		if err != nil {
 			return err
@@ -1077,6 +1092,53 @@ func mysqlAllInstanceRoleUpdate(ctx context.Context, d *schema.ResourceData, met
 			}
 		}
 
+	}
+
+	if d.HasChange("engine_version") || d.HasChange("upgrade_subversion") || d.HasChange("max_deay_time") {
+		engineVersion := ""
+		var upgradeSubversion int64
+		var maxDelayTime int64
+		if v, ok := d.GetOk("engine_version"); ok {
+			engineVersion = v.(string)
+		}
+		if v, ok := d.GetOk("upgrade_subversion"); ok {
+			upgradeSubversion = int64(v.(int))
+		}
+		if v, ok := d.GetOk("max_deay_time"); ok {
+			maxDelayTime = int64(v.(int))
+		}
+
+		asyncRequestId, err := mysqlService.UpgradeDBInstanceEngineVersion(ctx, d.Id(), engineVersion, upgradeSubversion, maxDelayTime)
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(6*time.Hour, func() *resource.RetryError {
+			taskStatus, message, err := mysqlService.DescribeAsyncRequestInfo(ctx, asyncRequestId)
+
+			if err != nil {
+				if _, ok := err.(*errors.TencentCloudSDKError); !ok {
+					return resource.RetryableError(err)
+				} else {
+					return resource.NonRetryableError(err)
+				}
+			}
+
+			if taskStatus == MYSQL_TASK_STATUS_SUCCESS {
+				return nil
+			}
+			if taskStatus == MYSQL_TASK_STATUS_INITIAL || taskStatus == MYSQL_TASK_STATUS_RUNNING {
+				return resource.RetryableError(fmt.Errorf("update mysql engineVersion status is %s", taskStatus))
+			}
+			err = fmt.Errorf("update mysql engineVersion task status is %s,we won't wait for it finish ,it show message:%s",
+				",", message)
+			return resource.NonRetryableError(err)
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update mysql engineVersion fail, reason:%s\n ", logId, err.Error())
+			return err
+		}
 	}
 
 	if d.HasChange("tags") {
@@ -1326,16 +1388,6 @@ func resourceTencentCloudMysqlInstanceUpdate(d *schema.ResourceData, meta interf
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	immutableArgs := []string{
-		"slave_deploy_mode", "first_slave_zone", "second_slave_zone", "slave_sync_mode",
-	}
-
-	for _, v := range immutableArgs {
-		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
 
 	payType := getPayType(d).(int)
 

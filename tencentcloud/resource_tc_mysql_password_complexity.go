@@ -87,7 +87,7 @@ func resourceTencentCloudMysqlPasswordComplexityCreate(d *schema.ResourceData, m
 
 	d.SetId(instanceId)
 
-	return resourceTencentCloudMysqlPasswordComplexityRead(d, meta)
+	return resourceTencentCloudMysqlPasswordComplexityUpdate(d, meta)
 }
 
 func resourceTencentCloudMysqlPasswordComplexityRead(d *schema.ResourceData, meta interface{}) error {

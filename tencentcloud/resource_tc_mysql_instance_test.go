@@ -14,6 +14,7 @@ import (
 )
 
 const TestAccTencentCloudMysqlMasterInstance_availability_zone = "ap-guangzhou-3"
+const TestAccTencentCloudMysqlMasterInstance_availability_zone_4 = "ap-guangzhou-4"
 const TestAccTencentCloudMysqlInstanceName = "testAccMysql"
 
 func init() {
@@ -110,18 +111,20 @@ func TestAccTencentCloudMysqlInstanceResource_prepaid(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.prepaid", "charge_type", "PREPAID"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.prepaid", "vpc_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.prepaid", "subnet_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.prepaid", "first_slave_zone"),
 				),
 			},
 			{
 				ResourceName:            "tencentcloud_mysql_instance.prepaid",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "param_template_id", "fast_upgrade"},
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "force_delete", "param_template_id", "fast_upgrade"},
 			},
 		},
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlInstanceResource_DeviceType -v
 func TestAccTencentCloudMysqlInstanceResource_DeviceType(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -133,13 +136,14 @@ func TestAccTencentCloudMysqlInstanceResource_DeviceType(t *testing.T) {
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql_exclusive"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_exclusive", "device_type", "EXCLUSIVE"),
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.mysql_exclusive", "first_slave_zone"),
 				),
 			},
 			{
 				ResourceName:            "tencentcloud_mysql_instance.mysql_exclusive",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "first_slave_zone", "force_delete", "param_template_id", "fast_upgrade"},
+				ImportStateVerifyIgnore: []string{"root_password", "prepaid_period", "force_delete", "param_template_id", "fast_upgrade"},
 			},
 			{
 				Config: testAccMySQLDeviceTypeUpdate,
@@ -152,6 +156,7 @@ func TestAccTencentCloudMysqlInstanceResource_DeviceType(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlInstanceResource_MasterInstance_fullslave -v
 func TestAccTencentCloudMysqlInstanceResource_MasterInstance_fullslave(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -168,6 +173,18 @@ func TestAccTencentCloudMysqlInstanceResource_MasterInstance_fullslave(t *testin
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "availability_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "first_slave_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "second_slave_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone),
+				),
+			},
+			{
+				Config: testAccMysqlMasterInstanceUp_fullslave(),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql_master"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "instance_name", TestAccTencentCloudMysqlInstanceName),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "slave_deploy_mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "slave_sync_mode", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "availability_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "first_slave_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone_4),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql_master", "second_slave_zone", TestAccTencentCloudMysqlMasterInstance_availability_zone_4),
 				),
 			},
 		},
@@ -408,7 +425,7 @@ resource "tencentcloud_mysql_instance" "prepaid" {
 
 const testAccMySQLDeviceType = `
 variable "temporary_param_tmpl_id" {
-	default = 16954
+	default = 19656
 }
 
 resource "tencentcloud_mysql_instance" "mysql_exclusive" {
@@ -430,7 +447,7 @@ resource "tencentcloud_mysql_instance" "mysql_exclusive" {
 
 const testAccMySQLDeviceTypeUpdate = `
 variable "temporary_param_tmpl_id" {
-	default = 16954
+	default = 19656
 }
 
 resource "tencentcloud_mysql_instance" "mysql_exclusive" {
@@ -482,6 +499,25 @@ resource "tencentcloud_mysql_instance" "mysql_master" {
   first_slave_zone  = "ap-guangzhou-3"
   second_slave_zone = "ap-guangzhou-3"
   slave_sync_mode   = 2
+  force_delete      = true
+}`
+}
+
+func testAccMysqlMasterInstanceUp_fullslave() string {
+	return `
+resource "tencentcloud_mysql_instance" "mysql_master" {
+  charge_type       = "POSTPAID"
+  mem_size          = 1000
+  volume_size       = 50
+  instance_name     = "testAccMysql"
+  engine_version    = "5.7"
+  root_password     = "test1234"
+  intranet_port     = 3360
+  availability_zone = "ap-guangzhou-3"
+  slave_deploy_mode = 1
+  first_slave_zone  = "ap-guangzhou-4"
+  second_slave_zone = "ap-guangzhou-4"
+  slave_sync_mode   = 1
   force_delete      = true
 }`
 }
