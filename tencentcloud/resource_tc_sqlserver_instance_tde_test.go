@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudSqlserverInstanceTDEResource_basic -v
-func TestAccTencentCloudSqlserverInstanceTDEResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixSqlserverInstanceTDEResource_basic -v
+func TestAccTencentCloudNeedFixSqlserverInstanceTDEResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)

@@ -13,36 +13,56 @@ Provides a resource to create a sqlserver general_cloud_ro_instance
 
 ## Example Usage
 
+is 2:
+
 ```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
-  instance_id                      = ""
-  zone                             = ""
-  read_only_group_type             =
-  memory                           =
-  storage                          =
-  cpu                              =
-  machine_type                     = ""
-  read_only_group_forced_upgrade   =
-  read_only_group_id               = ""
-  read_only_group_name             = ""
-  read_only_group_is_offline_delay =
-  read_only_group_max_delay_time   =
-  read_only_group_min_in_group     =
-  instance_charge_type             = ""
-  goods_num                        =
-  subnet_id                        = ""
-  vpc_id                           = ""
-  period                           =
-  security_group_list              =
-  auto_voucher                     =
-  voucher_ids                      =
-  resource_tags {
-    tag_key   = ""
-    tag_value = ""
-
+  instance_id                      = "mssql-gyg9xycl"
+  zone                             = "ap-guangzhou-6"
+  read_only_group_type             = 2
+  read_only_group_name             = "test-ro-group"
+  read_only_group_is_offline_delay = 1
+  read_only_group_max_delay_time   = 10
+  read_only_group_min_in_group     = 1
+  memory                           = 4
+  storage                          = 100
+  cpu                              = 2
+  machine_type                     = "CLOUD_BSSD"
+  instance_charge_type             = "POSTPAID"
+  subnet_id                        = "subnet-dwj7ipnc"
+  vpc_id                           = "vpc-4owdpnwr"
+  security_group_list              = ["sg-7kpsbxdb"]
+  collation                        = "Chinese_PRC_CI_AS"
+  time_zone                        = "China Standard Time"
+  resource_tags = {
+    test-key1 = "test-value1"
+    test-key2 = "test-value2"
   }
-  collation = ""
-  time_zone = ""
+}
+```
+
+is 3:
+
+```hcl
+resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
+  instance_id          = "mssql-gyg9xycl"
+  zone                 = "ap-guangzhou-6"
+  read_only_group_type = 3
+  memory               = 4
+  storage              = 100
+  cpu                  = 2
+  machine_type         = "CLOUD_BSSD"
+  read_only_group_id   = "mssqlrg-clboghrj"
+  instance_charge_type = "POSTPAID"
+  subnet_id            = "subnet-dwj7ipnc"
+  vpc_id               = "vpc-4owdpnwr"
+  security_group_list  = ["sg-7kpsbxdb"]
+  collation            = "Chinese_PRC_CI_AS"
+  time_zone            = "China Standard Time"
+  resource_tags = {
+    test-key1 = "test-value1"
+    test-key2 = "test-value2"
+  }
 }
 ```
 
@@ -60,28 +80,22 @@ The following arguments are supported:
 * `collation` - (Optional, String) System character set collation, default: Chinese_PRC_CI_AS.
 * `instance_charge_type` - (Optional, String) Payment mode, the value supports PREPAID (prepaid), POSTPAID (postpaid).
 * `period` - (Optional, Int) Purchase instance period, the default value is 1, which means one month. The value cannot exceed 48.
-* `read_only_group_forced_upgrade` - (Optional, Int) 0 - Default not to upgrade the master instance, 1 - Mandatory upgrade of the master instance to complete ro deployment; if the master instance is a non-cluster version, you need to fill in 1 to force the upgrade to a cluster version. Filling in 1 indicates that you have agreed to upgrade the master instance to a cluster instance.
 * `read_only_group_id` - (Optional, String) Required when ReadOnlyGroupType=3, existing read-only group ID.
 * `read_only_group_is_offline_delay` - (Optional, Int) Required when ReadOnlyGroupType=2, whether to enable the delayed elimination function for the newly created read-only group, 1-on, 0-off. When the delay between the read-only replica and the primary instance is greater than the threshold, it will be automatically removed.
 * `read_only_group_max_delay_time` - (Optional, Int) Mandatory when ReadOnlyGroupType=2 and ReadOnlyGroupIsOfflineDelay=1, the threshold for delay culling of newly created read-only groups.
 * `read_only_group_min_in_group` - (Optional, Int) Required when ReadOnlyGroupType=2 and ReadOnlyGroupIsOfflineDelay=1, the newly created read-only group retains at least the number of read-only replicas after delay elimination.
 * `read_only_group_name` - (Optional, String) Required when ReadOnlyGroupType=2, the name of the newly created read-only group.
-* `resource_tags` - (Optional, List) A collection of tags bound to the new instance.
+* `resource_tags` - (Optional, Map) Tag description list.
 * `security_group_list` - (Optional, Set: [`String`]) Security group list, fill in the security group ID in the form of sg-xxx.
 * `subnet_id` - (Optional, String) VPC subnet ID, in the form of subnet-bdoe83fa; SubnetId and VpcId need to be set at the same time or not set at the same time.
 * `time_zone` - (Optional, String) System time zone, default: China Standard Time.
 * `vpc_id` - (Optional, String) VPC network ID, in the form of vpc-dsp338hz; SubnetId and VpcId need to be set at the same time or not set at the same time.
-
-The `resource_tags` object supports the following:
-
-* `tag_key` - (Optional, String) tag key.
-* `tag_value` - (Optional, String) tag value.
 
 ## Attributes Reference
 
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `ro_instance_id` - Primary read only instance ID, in the format: mssqlro-lbljc5qd.
 
 

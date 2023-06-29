@@ -6,10 +6,8 @@ Example Usage
 ```hcl
 resource "tencentcloud_sqlserver_database_tde" "database_tde" {
   instance_id = "mssql-qelbzgwf"
-  db_tde_encrypt {
-    db_name    = "keep_tde_db"
-    encryption = "enable"
-  }
+  db_names    = ["keep_tde_db", "keep_tde_db2"]
+  encryption  = "enable"
 }
 ```
 
@@ -50,24 +48,16 @@ func resourceTencentCloudSqlserverDatabaseTDE() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Instance ID.",
 			},
-			"db_tde_encrypt": {
+			"db_names": {
 				Required:    true,
-				Type:        schema.TypeList,
-				Description: "Enable and disable database TDE encryption.",
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"db_name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "database.",
-						},
-						"encryption": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "enable - enable encryption, disable - disable encryption.",
-						},
-					},
-				},
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
+				Description: "Database name list.",
+			},
+			"encryption": {
+				Required:    true,
+				Type:        schema.TypeString,
+				Description: "`enable` - enable encryption, `disable` - disable encryption.",
 			},
 		},
 	}
@@ -86,23 +76,16 @@ func resourceTencentCloudSqlserverDatabaseTDECreate(d *schema.ResourceData, meta
 	}
 
 	dbNameList := make([]string, 0)
-	encryptionList := make([]string, 0)
-	if v, ok := d.GetOk("db_tde_encrypt"); ok {
-		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			if v, ok := dMap["db_name"]; ok {
-				dbNameList = append(dbNameList, v.(string))
-			}
-			if v, ok := dMap["encryption"]; ok {
-				encryptionList = append(encryptionList, v.(string))
-			}
+	if v, ok := d.GetOk("db_names"); ok {
+		dbNames := v.(*schema.Set).List()
+		for i := range dbNames {
+			dbName := dbNames[i].(string)
+			dbNameList = append(dbNameList, dbName)
 		}
 	}
 
 	dbNameListStr := strings.Join(dbNameList, COMMA_SP)
-	encryptionListStr := strings.Join(encryptionList, COMMA_SP)
-
-	d.SetId(strings.Join([]string{instanceId, dbNameListStr, encryptionListStr}, FILED_SP))
+	d.SetId(strings.Join([]string{instanceId, dbNameListStr}, FILED_SP))
 
 	return resourceTencentCloudSqlserverDatabaseTDEUpdate(d, meta)
 }
@@ -112,13 +95,14 @@ func resourceTencentCloudSqlserverDatabaseTDERead(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+		encryption string
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 	instanceId := idSplit[0]
@@ -141,22 +125,19 @@ func resourceTencentCloudSqlserverDatabaseTDERead(d *schema.ResourceData, meta i
 	}
 
 	if databaseTDE.DBDetails != nil {
-		tmpList := make([]map[string]interface{}, 0)
+		tmpList := make([]string, 0)
 		for _, item := range databaseTDE.DBDetails {
-			dMap := map[string]interface{}{}
 			if item.Name != nil {
-				dMap["db_name"] = item.Name
+				tmpList = append(tmpList, *item.Name)
 			}
 
 			if item.Encryption != nil {
-				dMap["encryption"] = item.Encryption
+				encryption = *item.Encryption
 			}
-
-			tmpList = append(tmpList, dMap)
 		}
 
-		_ = d.Set("db_tde_encrypt", tmpList)
-
+		_ = d.Set("db_names", tmpList)
+		_ = d.Set("encryption", encryption)
 	}
 
 	return nil
@@ -167,34 +148,35 @@ func resourceTencentCloudSqlserverDatabaseTDEUpdate(d *schema.ResourceData, meta
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request = sqlserver.NewModifyDBEncryptAttributesRequest()
-		flowId  int64
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+		request    = sqlserver.NewModifyDBEncryptAttributesRequest()
+		encryption string
+		flowId     int64
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken, id is %s", d.Id())
 	}
 	instanceId := idSplit[0]
-
-	if v, ok := d.GetOk("db_tde_encrypt"); ok {
-		for _, item := range v.([]interface{}) {
-			dMap := item.(map[string]interface{})
-			parameter := sqlserver.DBTDEEncrypt{}
-			if v, ok := dMap["db_name"]; ok {
-				parameter.DBName = helper.String(v.(string))
-			}
-			if v, ok := dMap["encryption"]; ok {
-				parameter.Encryption = helper.String(v.(string))
-			}
-			request.DBTDEEncrypt = append(request.DBTDEEncrypt, &parameter)
-		}
-	}
+	dbNameListStr := idSplit[1]
+	dbNameList := strings.Split(dbNameListStr, COMMA_SP)
 
 	request.InstanceId = &instanceId
+
+	if v, ok := d.GetOk("encryption"); ok {
+		encryption = v.(string)
+	}
+
+	for _, v := range dbNameList {
+		parameter := sqlserver.DBTDEEncrypt{}
+		parameter.DBName = helper.String(v)
+		parameter.Encryption = helper.String(encryption)
+		request.DBTDEEncrypt = append(request.DBTDEEncrypt, &parameter)
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().ModifyDBEncryptAttributes(request)
 		if e != nil {

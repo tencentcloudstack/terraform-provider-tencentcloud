@@ -32,13 +32,7 @@ func TestAccTencentCloudSqlserverDatabaseTDEResource_basic(t *testing.T) {
 const testAccSqlserverDatabaseTDE = `
 resource "tencentcloud_sqlserver_database_tde" "database_tde" {
   instance_id = "mssql-qelbzgwf"
-  db_tde_encrypt {
-    db_name    = "keep_tde_db"
-    encryption = "enable"
-  }
-  db_tde_encrypt {
-    db_name    = "keep_tde_db2"
-    encryption = "disable"
-  }
+  db_names    = ["keep_tde_db", "keep_tde_db2"]
+  encryption  = "enable"
 }
 `

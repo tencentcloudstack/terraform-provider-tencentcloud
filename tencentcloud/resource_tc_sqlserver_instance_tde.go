@@ -24,11 +24,11 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudSqlserverInstanceTDE() *schema.Resource {
@@ -49,7 +49,7 @@ func resourceTencentCloudSqlserverInstanceTDE() *schema.Resource {
 			"certificate_attribution": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Certificate attribution. self- means to use the account&amp;#39;s own certificate, others- means to refer to the certificate of other accounts, and the default is self.",
+				Description: "Certificate attribution. self- means to use the account's own certificate, others- means to refer to the certificate of other accounts, and the default is self.",
 			},
 			"quote_uin": {
 				Optional:    true,
@@ -65,24 +65,14 @@ func resourceTencentCloudSqlserverInstanceTDECreate(d *schema.ResourceData, meta
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		instanceId             string
-		certificateAttribution string
-		quoteUin               string
+		instanceId string
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 	}
 
-	if v, ok := d.GetOk("certificate_attribution"); ok {
-		certificateAttribution = v.(string)
-	}
-
-	if v, ok := d.GetOk("quote_uin"); ok {
-		quoteUin = v.(string)
-	}
-
-	d.SetId(strings.Join([]string{instanceId, certificateAttribution, quoteUin}, FILED_SP))
+	d.SetId(instanceId)
 
 	return resourceTencentCloudSqlserverInstanceTDEUpdate(d, meta)
 }
@@ -92,16 +82,11 @@ func resourceTencentCloudSqlserverInstanceTDERead(d *schema.ResourceData, meta i
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+		instanceId = d.Id()
 	)
-
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
-	}
-	instanceId := idSplit[0]
 
 	instanceTDE, err := service.DescribeSqlserverInstanceTDEById(ctx, instanceId)
 	if err != nil {
@@ -134,24 +119,23 @@ func resourceTencentCloudSqlserverInstanceTDEUpdate(d *schema.ResourceData, meta
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId   = getLogId(contextNil)
-		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
-		service = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
-		request = sqlserver.NewModifyInstanceEncryptAttributesRequest()
-		flowId  int64
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
+		request    = sqlserver.NewModifyInstanceEncryptAttributesRequest()
+		instanceId = d.Id()
+		flowId     int64
 	)
 
-	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 3 {
-		return fmt.Errorf("id is broken, id is %s", d.Id())
+	if v, ok := d.GetOk("certificate_attribution"); ok {
+		request.CertificateAttribution = helper.String(v.(string))
 	}
-	instanceId := idSplit[0]
-	certificateAttribution := idSplit[1]
-	quoteUin := idSplit[2]
+
+	if v, ok := d.GetOk("quote_uin"); ok {
+		request.QuoteUin = helper.String(v.(string))
+	}
 
 	request.InstanceId = &instanceId
-	request.CertificateAttribution = &certificateAttribution
-	request.QuoteUin = &quoteUin
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().ModifyInstanceEncryptAttributes(request)
