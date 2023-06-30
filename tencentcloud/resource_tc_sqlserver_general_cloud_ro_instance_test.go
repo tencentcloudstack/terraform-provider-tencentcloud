@@ -12,8 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -timeout=0 -test.run TestAccTencentCloudSqlserverGeneralCloudRoInstanceResource_basic -v
-func TestAccTencentCloudSqlserverGeneralCloudRoInstanceResource_basic(t *testing.T) {
+// go test -i; go test -timeout=0 -test.run TestAccTencentCloudNeedFixSqlserverGeneralCloudRoInstanceResource_basic -v
+func TestAccTencentCloudNeedFixSqlserverGeneralCloudRoInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
