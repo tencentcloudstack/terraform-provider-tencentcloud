@@ -6,10 +6,10 @@ Example Usage
 ```hcl
 resource "tencentcloud_sqlserver_restore_instance" "restore_instance" {
   instance_id = "mssql-qelbzgwf"
-  backup_id = 3461718019
+  backup_id   = 3482091273
   rename_restore {
     old_name = "keep_pubsub_db2"
-  	new_name = "restore_keep_pubsub_db2"
+    new_name = "restore_keep_pubsub_db2"
   }
 }
 ```
@@ -72,6 +72,25 @@ func resourceTencentCloudSqlserverRestoreInstance() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "New database name. In offline migration, OldName will be used if NewName is left empty (OldName and NewName cannot be both empty). In database cloning, OldName and NewName must be both specified and cannot have the same value.",
+						},
+					},
+				},
+			},
+			"encryption": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "TDE encryption, `enable` encrypted, `disable` unencrypted.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"db_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Database name.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "encryption, `enable` encrypted, `disable` unencrypted.",
 						},
 					},
 				},
@@ -139,8 +158,8 @@ func resourceTencentCloudSqlserverRestoreInstanceRead(d *schema.ResourceData, me
 	newNameListStr := idSplit[3]
 	oldNameList := strings.Split(oldNameListStr, COMMA_SP)
 	newNameList := strings.Split(newNameListStr, COMMA_SP)
-
-	restoreInstance, err := service.DescribeSqlserverRestoreInstanceById(ctx, instanceId)
+	allNameList := append(oldNameList, newNameList...)
+	restoreInstance, err := service.DescribeSqlserverRestoreInstanceById(ctx, instanceId, allNameList)
 	if err != nil {
 		return err
 	}
@@ -151,7 +170,7 @@ func resourceTencentCloudSqlserverRestoreInstanceRead(d *schema.ResourceData, me
 		return nil
 	}
 
-	if restoreInstance != nil {
+	if restoreInstance.InstanceId != nil {
 		_ = d.Set("instance_id", restoreInstance.InstanceId)
 	}
 
@@ -166,6 +185,21 @@ func resourceTencentCloudSqlserverRestoreInstanceRead(d *schema.ResourceData, me
 		renameRestoreList = append(renameRestoreList, renameRestoreMap)
 	}
 	_ = d.Set("rename_restore", renameRestoreList)
+
+	if restoreInstance.DBDetails != nil {
+		tmpList := make([]map[string]interface{}, 0)
+		for _, item := range restoreInstance.DBDetails {
+			dMap := map[string]interface{}{}
+			if item.Name != nil {
+				dMap["db_name"] = item.Name
+			}
+			if item.Encryption != nil {
+				dMap["status"] = item.Encryption
+			}
+			tmpList = append(tmpList, dMap)
+		}
+		_ = d.Set("encryption", tmpList)
+	}
 
 	return nil
 }
@@ -282,8 +316,8 @@ func resourceTencentCloudSqlserverRestoreInstanceDelete(d *schema.ResourceData, 
 	}
 
 	tmpNames := make([]*string, len(newNameList))
-	for k, v := range newNameList {
-		tmpNames[k] = &v
+	for v := range newNameList {
+		tmpNames[v] = &newNameList[v]
 	}
 
 	err := sqlserverService.DeleteSqlserverDB(ctx, instanceId, tmpNames)

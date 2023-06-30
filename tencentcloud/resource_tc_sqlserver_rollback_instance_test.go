@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudSqlserverRollbackInstanceResource_basic -v
-func TestAccTencentCloudSqlserverRollbackInstanceResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixSqlserverRollbackInstanceResource_basic -v
+func TestAccTencentCloudNeedFixSqlserverRollbackInstanceResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -71,10 +71,14 @@ func testAccCheckSqlserverRollbackDBDestroy(s *terraform.State) error {
 const testAccSqlserverRollbackInstanceString = `
 resource "tencentcloud_sqlserver_rollback_instance" "rollback_instance" {
   instance_id = "mssql-qelbzgwf"
-  time = "%s"
+  time        = "%s"
+  rename_restore {
+    old_name = "keep_pubsub_db"
+    new_name = "rollback_pubsub_db"
+  }
   rename_restore {
     old_name = "keep_pubsub_db2"
-	new_name = "rollback_pubsub_db2"
+    new_name = "rollback_pubsub_db2"
   }
 }
 `

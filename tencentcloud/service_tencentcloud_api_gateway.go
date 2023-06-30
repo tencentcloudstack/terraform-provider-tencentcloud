@@ -509,7 +509,8 @@ func (me *APIGatewayService) CreateService(ctx context.Context,
 	exclusiveSetName,
 	ipVersion,
 	setServerName,
-	appidType string,
+	appidType,
+	instanceId string,
 	netTypes []string) (serviceId string, errRet error) {
 
 	request := apigateway.NewCreateServiceRequest()
@@ -517,9 +518,6 @@ func (me *APIGatewayService) CreateService(ctx context.Context,
 	request.Protocol = &protocol
 	if serviceDesc != "" {
 		request.ServiceDesc = &serviceDesc
-	}
-	if exclusiveSetName != "" {
-		request.ExclusiveSetName = &exclusiveSetName
 	}
 	if ipVersion != "" {
 		request.IpVersion = &ipVersion
@@ -529,6 +527,9 @@ func (me *APIGatewayService) CreateService(ctx context.Context,
 	}
 	if setServerName != "" {
 		request.SetServerName = &setServerName
+	}
+	if instanceId != "" {
+		request.InstanceId = &instanceId
 	}
 	request.NetTypes = helper.Strings(netTypes)
 
@@ -865,7 +866,7 @@ func (me *APIGatewayService) DescribeServicesStatus(ctx context.Context,
 }
 
 func (me *APIGatewayService) DescribeApisStatus(ctx context.Context,
-	serviceId, apiName, apiId string) (infos []*apigateway.DesApisStatus, errRet error) {
+	serviceId, apiName, apiId string) (infos []*apigateway.DescribeApisStatusResultApiIdStatusSetInfo, errRet error) {
 
 	request := apigateway.NewDescribeApisStatusRequest()
 	request.ServiceId = &serviceId

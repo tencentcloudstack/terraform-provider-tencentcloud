@@ -3,6 +3,7 @@ Use this resource to create API gateway service.
 
 Example Usage
 
+Shared Service
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
   service_name = "niceservice"
@@ -14,6 +15,24 @@ resource "tencentcloud_api_gateway_service" "service" {
     test-key1 = "test-value1"
     test-key2 = "test-value2"
   }
+  release_limit = 500
+  pre_limit     = 500
+  test_limit    = 500
+}
+```
+
+Exclusive Service
+```hcl
+resource "tencentcloud_api_gateway_service" "service" {
+  service_name = "service"
+  protocol     = "http&https"
+  service_desc = "your nice service"
+  net_type     = ["INNER", "OUTER"]
+  ip_version   = "IPv4"
+  tags         = {
+    test-key1 = "test-value1"
+  }
+  instance_id   = "instance-rc6fcv4e"
   release_limit = 500
   pre_limit     = 500
   test_limit    = 500
@@ -72,6 +91,7 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Deprecated:  "It has been deprecated from version 1.18.9.",
 				Description: "Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.",
 			},
 			"net_type": {
@@ -97,6 +117,11 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Tag description list.",
+			},
+			"instance_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Exclusive instance ID.",
 			},
 			"release_limit": {
 				Type:        schema.TypeInt,
@@ -228,12 +253,17 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 		ipVersion         = d.Get("ip_version").(string)
 		netTypes          = helper.InterfacesStrings(d.Get("net_type").(*schema.Set).List())
 		serviceId         string
+		instanceId        string
 		err               error
 
 		releaseLimit int
 		preLimit     int
 		testLimit    int
 	)
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
+	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		serviceId, err = apiGatewayService.CreateService(ctx,
@@ -244,6 +274,7 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 			ipVersion,
 			"",
 			"",
+			instanceId,
 			netTypes)
 
 		if err != nil {
@@ -421,9 +452,9 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("service_name", info.Response.ServiceName)
 	_ = d.Set("protocol", info.Response.Protocol)
 	_ = d.Set("service_desc", info.Response.ServiceDesc)
-	_ = d.Set("exclusive_set_name", info.Response.ExclusiveSetName)
 	_ = d.Set("ip_version", info.Response.IpVersion)
 	_ = d.Set("net_type", info.Response.NetTypes)
+	_ = d.Set("instance_id", info.Response.InstanceId)
 	_ = d.Set("internal_sub_domain", info.Response.InternalSubDomain)
 	_ = d.Set("outer_sub_domain", info.Response.OuterSubDomain)
 	_ = d.Set("inner_http_port", info.Response.InnerHttpPort)
@@ -579,6 +610,20 @@ func resourceTencentCloudAPIGatewayServiceDelete(d *schema.ResourceData, meta in
 		serviceId         = d.Id()
 		err               error
 	)
+
+	// del tags
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::apigw:%s:uin/:service/%s", region, serviceId)
+		tmpList := make([]string, 0)
+		for k := range tags {
+			tmpList = append(tmpList, k)
+		}
+		if e := tagService.ModifyTags(ctx, resourceName, nil, tmpList); e != nil {
+			return e
+		}
+	}
 
 	for _, env := range API_GATEWAY_SERVICE_ENVS {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {

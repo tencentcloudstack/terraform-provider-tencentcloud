@@ -83,6 +83,7 @@ func dataSourceTencentCloudAPIGatewayServices() *schema.Resource {
 						"exclusive_set_name": {
 							Type:        schema.TypeString,
 							Computed:    true,
+							Deprecated:  "It has been deprecated from version 1.18.9.",
 							Description: "Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.",
 						},
 						"net_type": {
@@ -262,11 +263,11 @@ func dataSourceTencentCloudAPIGatewayServicesRead(d *schema.ResourceData, meta i
 		}
 
 		list = append(list, map[string]interface{}{
-			"service_id":          info.Response.ServiceId,
-			"service_name":        info.Response.ServiceName,
-			"protocol":            info.Response.Protocol,
-			"service_desc":        info.Response.ServiceDesc,
-			"exclusive_set_name":  info.Response.ExclusiveSetName,
+			"service_id":   info.Response.ServiceId,
+			"service_name": info.Response.ServiceName,
+			"protocol":     info.Response.Protocol,
+			"service_desc": info.Response.ServiceDesc,
+			//"exclusive_set_name":  info.Response.ExclusiveSetName,
 			"ip_version":          info.Response.IpVersion,
 			"net_type":            info.Response.NetTypes,
 			"internal_sub_domain": info.Response.InternalSubDomain,

@@ -16,7 +16,7 @@ Provides a resource to create a sqlserver restore_instance
 ```hcl
 resource "tencentcloud_sqlserver_restore_instance" "restore_instance" {
   instance_id = "mssql-qelbzgwf"
-  backup_id   = 3461718019
+  backup_id   = 3482091273
   rename_restore {
     old_name = "keep_pubsub_db2"
     new_name = "restore_keep_pubsub_db2"
@@ -42,7 +42,9 @@ The `rename_restore` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `encryption` - TDE encryption, `enable` encrypted, `disable` unencrypted.
+  * `db_name` - Database name.
+  * `status` - encryption, `enable` encrypted, `disable` unencrypted.
 
 
 ## Import
