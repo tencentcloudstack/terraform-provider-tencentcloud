@@ -246,10 +246,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"reflect"
 	"time"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
+
+	"github.com/beevik/etree"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -410,20 +411,10 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Optional: true,
 
 				DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
-					var oldXML cos.BucketGetACLResult
-					err := xml.Unmarshal([]byte(olds), &oldXML)
-					if err != nil {
-						return olds == news
-					}
-					var newXML cos.BucketGetACLResult
-					err = xml.Unmarshal([]byte(news), &newXML)
-					if err != nil {
-						return olds == news
-					}
-					suppress := reflect.DeepEqual(oldXML, newXML)
-					return suppress
+					return ACLBodyDiffFunc(olds, news, d)
 				},
-				Description: "ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.",
+				DiffSuppressOnRefresh: true,
+				Description:           "ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.",
 			},
 			"encryption_algorithm": {
 				Type:        schema.TypeString,
@@ -853,6 +844,34 @@ func resourceTencentCloudCosBucketRead(d *schema.ResourceData, meta interface{})
 	}
 
 	aclBody, err := xml.Marshal(aclResult)
+
+	xmlDoc := etree.NewDocument()
+	if err := xmlDoc.ReadFromBytes(aclBody); err != nil {
+		return fmt.Errorf("read xml from bytes error: %v", err)
+	}
+
+	root := xmlDoc.SelectElement("AccessControlPolicy")
+	log.Printf("[DEBUG]%s xmlDoc root.Tag:[%s]", logId, root.Tag)
+
+	list := root.SelectElement("AccessControlList")
+	for _, grant := range list.SelectElements("Grant") {
+		log.Printf("[DEBUG]%s xmlDoc grant.Tag:[%s]", logId, grant.Tag)
+		if permission := grant.SelectElement("Permission"); permission != nil {
+			log.Printf("[DEBUG]%s xmlDoc permission.Tag:[%s], permission.Text:[%s]", logId, permission.Tag, permission.Text())
+		}
+	}
+
+	for _, grantee := range root.FindElements("//Grantee[@type='CanonicalUser']") {
+		log.Printf("[DEBUG]%s xmlDoc CanonicalUser grantee.Tag:[%s]", logId, grantee.Tag)
+		permission := grantee.Parent().SelectElement("Permission")
+		log.Printf("[DEBUG]%s xmlDoc CanonicalUser permission.Tag:[%s], permission.Text:[%s]", logId, permission.Tag, permission.Text())
+	}
+
+	for _, grantee := range root.FindElements("//Grantee[@type='Group']") {
+		log.Printf("[DEBUG]%s xmlDoc Group grantee.Tag:[%s]", logId, grantee.Tag)
+		permission := grantee.Parent().SelectElement("Permission")
+		log.Printf("[DEBUG]%s xmlDoc Group permission.Tag:[%s], permission.Text:[%s]", logId, permission.Tag, permission.Text())
+	}
 
 	if err != nil {
 		log.Printf("[WARN] Marshal XML Error: %s", err.Error())
@@ -1937,4 +1956,126 @@ func setBucketReplication(d *schema.ResourceData, result cos.GetBucketReplicatio
 	}
 	err = d.Set("replica_rules", rules)
 	return
+}
+
+func ACLBodyDiffFunc(olds, news string, d *schema.ResourceData) bool {
+	oldDoc := etree.NewDocument()
+	newDoc := etree.NewDocument()
+
+	if err := oldDoc.ReadFromString(olds); err != nil {
+		log.Printf("[CRITAL]read old xml from string error: %v", err)
+		return false
+	}
+
+	if err := newDoc.ReadFromString(news); err != nil {
+		log.Printf("[CRITAL]read new xml from string error: %v", err)
+		return false
+	}
+
+	oldRoot := oldDoc.SelectElement("AccessControlPolicy")
+	newRoot := newDoc.SelectElement("AccessControlPolicy")
+
+	oldOwner := oldRoot.SelectElement("Owner")
+	oldOwnerId := oldOwner.SelectElement("ID")
+	oldOwnerName := oldOwner.SelectElement("DisplayName")
+
+	newOwner := newRoot.SelectElement("Owner")
+	newOwnerId := newOwner.SelectElement("ID")
+	newOwnerName := newOwner.SelectElement("DisplayName")
+
+	// diff: Owner element
+	if oldOwnerId != newOwnerId || oldOwnerName != newOwnerName {
+		return false
+	}
+
+	// diff check: owner display name(if have)
+	if oldOwnerName != nil {
+		if newOwnerName == nil {
+			return false
+		}
+		if oldOwnerName.Text() != oldOwnerName.Text() {
+			return false
+		}
+	}
+
+	// diff: ACL element
+	var equal = false
+	for _, oldGrantee := range oldRoot.FindElements("//Grantee") {
+		for _, attr := range oldGrantee.Attr {
+			if attr.Key != "type" {
+				// only need to handle the type attribute
+				continue
+			}
+			// anonymous or real user
+			oldGranteeType := attr.Value
+
+			oldGranteeID := oldGrantee.SelectElement("ID")
+			oldGranteeURI := oldGrantee.SelectElement("URI")
+			oldGranteeDisplayName := oldGrantee.SelectElement("DisplayName")
+			oldGrant := oldGrantee.Parent()
+			oldGrantPermission := oldGrant.SelectElement("Permission")
+
+			// find the new grant permission by specified grantee type
+			equal = false
+			for _, newGrantee := range newRoot.FindElements(fmt.Sprintf("//Grantee[@type='%s']", oldGranteeType)) {
+				newGranteeID := newGrantee.SelectElement("ID")
+				newGranteeURI := newGrantee.SelectElement("URI")
+				newGranteeDisplayName := newGrantee.SelectElement("DisplayName")
+				newGrant := newGrantee.Parent()
+				newGrantPermission := newGrant.SelectElement("Permission")
+
+				// diff check: grantee id and name for real user
+				if oldGranteeType == COS_ACL_GRANTEE_TYPE_USER {
+					if oldGranteeID == nil || newGranteeID == nil {
+						continue
+					}
+					if oldGranteeID.Text() != newGranteeID.Text() {
+						continue
+					}
+
+					// diff check: grantee display name(if have)
+					if oldGranteeDisplayName != nil {
+						if newGranteeDisplayName == nil {
+							continue
+						}
+						if oldGranteeDisplayName.Text() != newGranteeDisplayName.Text() {
+							continue
+						}
+					}
+				}
+
+				// diff check: grantee uri for anonymous
+				if oldGranteeType == COS_ACL_GRANTEE_TYPE_ANONYMOUS {
+					if oldGranteeURI == nil || newGranteeURI == nil {
+						continue
+					}
+					if oldGranteeURI.Text() != newGranteeURI.Text() {
+						continue
+					}
+				}
+
+				// diff check: permission
+				if oldGrantPermission == nil || newGrantPermission == nil {
+					continue
+				}
+				if oldGrantPermission.Text() != newGrantPermission.Text() {
+					continue
+				}
+
+				// congrats! passed all diff checks for this grant.
+				equal = true
+
+				var uid string
+				if oldGranteeType == COS_ACL_GRANTEE_TYPE_USER {
+					uid = oldGranteeID.Text()
+				} else {
+					uid = oldGranteeURI.Text()
+				}
+				log.Printf("[DEBUG] diff verification passed for grantee:[%s:%s] %v", oldGranteeType, uid)
+				break
+			}
+		}
+	}
+	log.Printf("[DEBUG] Owner:%s's final equation result between old and new ACL is:[%v]", oldOwnerId.Text(), equal)
+	return equal
 }

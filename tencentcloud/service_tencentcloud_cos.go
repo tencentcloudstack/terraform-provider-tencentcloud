@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/beevik/etree"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -1657,5 +1658,45 @@ func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket st
 	result = intelligentTieringResult
 	log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s]\n",
 		logId, "GetIntelligentTiering", "", resp)
+	return
+}
+
+/*
+The ideal sequence COS wants.
+1.type priority: CanonicalUser first, then Group
+2.permission priority: Read first, then handle write, FullControl, WRITE_ACP, last is the READ_ACP
+*/
+func (me *CosService) transACLBodyOrderly(ctx context.Context, rawAclBody string) (orderlyAclBody string, errRet error) {
+	// logId := getLogId(ctx)
+
+	rawXmlDoc := etree.NewDocument()
+	orderXmlDoc := etree.NewDocument()
+
+	if err := rawXmlDoc.ReadFromString(rawAclBody); err != nil {
+		return "", fmt.Errorf("[CRITAL]read raw xml from string error: %v", err)
+	}
+
+	rawRoot := rawXmlDoc.SelectElement("AccessControlPolicy")
+	orderedRoot := orderXmlDoc.CreateElement("AccessControlPolicy")
+
+	orderedOwner := orderedRoot.CreateElement("Owner")
+	for _, ownerChild := range rawRoot.FindElements("//Owner/*") {
+		orderedOwner.AddChild(ownerChild)
+	}
+
+	orderedACL := orderedRoot.CreateElement("AccessControlList")
+	for _, rawGrantee := range rawRoot.FindElements(fmt.Sprintf("//Grantee[@type='%s']", COS_ACL_GRANTEE_TYPE_USER)) {
+		rawGrant := rawGrantee.Parent()
+
+		targetPermission := rawGrant.FindElement("//[Permission='READ']")
+		if targetPermission != nil {
+			rawGrant = targetPermission.Parent()
+
+			oderedGrant := orderedACL.CreateElement("Grant")
+			oderedGrant.AddChild(rawGrant)
+		}
+
+	}
+
 	return
 }

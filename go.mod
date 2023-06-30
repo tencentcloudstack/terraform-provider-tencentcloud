@@ -6,6 +6,7 @@ require (
 	cloud.google.com/go/iam v1.0.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/aws/aws-sdk-go v1.36.30
+	github.com/beevik/etree v1.2.0
 	github.com/bflad/tfproviderlint v0.14.0
 	github.com/client9/misspell v0.3.4
 	github.com/fatih/color v1.15.0
