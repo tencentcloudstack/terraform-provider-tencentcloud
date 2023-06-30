@@ -126,6 +126,7 @@ func resourceTencentCloudSqlserverDatabaseTDERead(d *schema.ResourceData, meta i
 
 	if databaseTDE.DBDetails != nil {
 		tmpList := make([]string, 0)
+		checkEncryption := make(map[string]string, 0)
 		for _, item := range databaseTDE.DBDetails {
 			if item.Name != nil {
 				tmpList = append(tmpList, *item.Name)
@@ -133,7 +134,12 @@ func resourceTencentCloudSqlserverDatabaseTDERead(d *schema.ResourceData, meta i
 
 			if item.Encryption != nil {
 				encryption = *item.Encryption
+				checkEncryption[encryption] = ""
 			}
+		}
+
+		if len(checkEncryption) != 1 {
+			return fmt.Errorf("sqlserver database tde encryption result is not normal, id is %s", d.Id())
 		}
 
 		_ = d.Set("db_names", tmpList)

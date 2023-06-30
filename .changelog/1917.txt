@@ -1,13 +1,13 @@
-```release-note:new-resource
-tencentcloud_sqlserver_start_xevent
-```
-
 ```release-note:new-data-source
 tencentcloud_sqlserver_query_xevent
 ```
 
 ```release-note:new-data-source
 tencentcloud_sqlserver_ins_attribute
+```
+
+```release-note:new-resource
+tencentcloud_sqlserver_start_xevent
 ```
 
 ```release-note:new-resource
