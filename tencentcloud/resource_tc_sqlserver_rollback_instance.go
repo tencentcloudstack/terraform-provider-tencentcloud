@@ -59,7 +59,7 @@ func resourceTencentCloudSqlserverRollbackInstance() *schema.Resource {
 			"rename_restore": {
 				Required:    true,
 				Type:        schema.TypeList,
-				Description: "Rename the databases listed in ReNameRestoreDatabase. This parameter takes effect only when Type = 1 which indicates that backup rollback supports renaming databases. If it is left empty, databases will be renamed in the default format and the DBs parameter specifies the databases to be restored.",
+				Description: "Rename the databases listed in ReNameRestoreDatabase.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"old_name": {
@@ -70,7 +70,7 @@ func resourceTencentCloudSqlserverRollbackInstance() *schema.Resource {
 						"new_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "New database name. In offline migration, OldName will be used if NewName is left empty (OldName and NewName cannot be both empty). In database cloning, OldName and NewName must be both specified and cannot have the same value.",
+							Description: "New database name.",
 						},
 					},
 				},

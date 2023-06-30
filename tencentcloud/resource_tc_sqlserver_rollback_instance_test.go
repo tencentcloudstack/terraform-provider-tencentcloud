@@ -11,8 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudSqlserverRollbackInstanceResource_basic -v
-func TestAccTencentCloudSqlserverRollbackInstanceResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudNeedFixSqlserverRollbackInstanceResource_basic -v
+func TestAccTencentCloudNeedFixSqlserverRollbackInstanceResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
