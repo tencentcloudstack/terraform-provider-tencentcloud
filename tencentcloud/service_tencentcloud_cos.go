@@ -1663,8 +1663,8 @@ func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket st
 
 /*
 The ideal sequence COS wants.
-1.type priority: CanonicalUser first, then Group
-2.permission priority: Read first, then handle write, FullControl, WRITE_ACP, last is the READ_ACP
+Priority 1: permission priority: Read first, then handle write, FullControl, WRITE_ACP, last is the READ_ACP
+Priority 2: type priority: CanonicalUser first, then Group
 */
 func (me *CosService) transACLBodyOrderly(ctx context.Context, rawAclBody string) (orderlyAclBody string, errRet error) {
 	// logId := getLogId(ctx)
@@ -1685,18 +1685,42 @@ func (me *CosService) transACLBodyOrderly(ctx context.Context, rawAclBody string
 	}
 
 	orderedACL := orderedRoot.CreateElement("AccessControlList")
-	for _, rawGrantee := range rawRoot.FindElements(fmt.Sprintf("//Grantee[@type='%s']", COS_ACL_GRANTEE_TYPE_USER)) {
-		rawGrant := rawGrantee.Parent()
 
-		targetPermission := rawGrant.FindElement("//[Permission='READ']")
-		if targetPermission != nil {
-			rawGrant = targetPermission.Parent()
-
-			oderedGrant := orderedACL.CreateElement("Grant")
-			oderedGrant.AddChild(rawGrant)
+	// by combination of permissionSeq and granteeTypeSeq
+	for _, perSeq := range COSACLPermissionSeq {
+		for _, typeSeq := range COSACLGranteeTypeSeq {
+			for _, grantEle := range rawRoot.FindElements(fmt.Sprintf("//Grant[Permission='%s']", perSeq)) {
+				granteeEle := grantEle.SelectElement("Grantee")
+				if granteeEle != nil {
+					if granteeEle.SelectAttrValue("type", "unknown") == typeSeq {
+						orderedACL.AddChild(grantEle)
+						break
+					}
+				}
+			}
 		}
-
 	}
 
+	// keep for debug the algo
+	// for _, grant := range orderedACL.FindElements("//Grant") {
+	// 	grantee := grant.SelectElement("Grantee")
+	// 	if grantee != nil {
+	// 		// fmt.Printf("===:[%s]====\n", grantee.Tag)
+	// 		id := grantee.SelectElement("ID")
+	// 		if id != nil {
+	// 			fmt.Printf("type:[%s]", id.Text())
+	// 		}
+
+	// 		uri := grantee.SelectElement("URI")
+	// 		if uri != nil {
+	// 			fmt.Printf(" type:[%s]", uri.Text())
+	// 		}
+
+	// 		permission := grant.SelectElement("Permission")
+	// 		if permission != nil {
+	// 			fmt.Printf(" permission:[%s]\n", permission.Text())
+	// 		}
+	// 	}
+	// }
 	return
 }

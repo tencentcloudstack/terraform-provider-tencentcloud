@@ -1993,7 +1993,7 @@ func ACLBodyDiffFunc(olds, news string, d *schema.ResourceData) bool {
 		if newOwnerName == nil {
 			return false
 		}
-		if oldOwnerName.Text() != oldOwnerName.Text() {
+		if oldOwnerName.Text() != newOwnerName.Text() {
 			return false
 		}
 	}
@@ -2071,7 +2071,7 @@ func ACLBodyDiffFunc(olds, news string, d *schema.ResourceData) bool {
 				} else {
 					uid = oldGranteeURI.Text()
 				}
-				log.Printf("[DEBUG] diff verification passed for grantee:[%s:%s] %v", oldGranteeType, uid)
+				log.Printf("[DEBUG] diff verification passed for grantee:[%s:%s]", oldGranteeType, uid)
 				break
 			}
 		}
