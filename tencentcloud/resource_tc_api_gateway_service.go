@@ -235,12 +235,17 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 		ipVersion         = d.Get("ip_version").(string)
 		netTypes          = helper.InterfacesStrings(d.Get("net_type").(*schema.Set).List())
 		serviceId         string
+		instanceId        string
 		err               error
 
 		releaseLimit int
 		preLimit     int
 		testLimit    int
 	)
+
+	if v, ok := d.GetOk("instance_id"); ok {
+		instanceId = v.(string)
+	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		serviceId, err = apiGatewayService.CreateService(ctx,
@@ -251,6 +256,7 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 			ipVersion,
 			"",
 			"",
+			instanceId,
 			netTypes)
 
 		if err != nil {
