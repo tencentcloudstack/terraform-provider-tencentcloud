@@ -3,6 +3,7 @@ Use this resource to create API gateway service.
 
 Example Usage
 
+Shared Service
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
   service_name = "niceservice"
@@ -14,6 +15,24 @@ resource "tencentcloud_api_gateway_service" "service" {
     test-key1 = "test-value1"
     test-key2 = "test-value2"
   }
+  release_limit = 500
+  pre_limit     = 500
+  test_limit    = 500
+}
+```
+
+Exclusive Service
+```hcl
+resource "tencentcloud_api_gateway_service" "service" {
+  service_name = "service"
+  protocol     = "http&https"
+  service_desc = "your nice service"
+  net_type     = ["INNER", "OUTER"]
+  ip_version   = "IPv4"
+  tags         = {
+    test-key1 = "test-value1"
+  }
+  instance_id   = "instance-rc6fcv4e"
   release_limit = 500
   pre_limit     = 500
   test_limit    = 500
@@ -102,7 +121,6 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Computed:    true,
 				Description: "Exclusive instance ID.",
 			},
 			"release_limit": {
@@ -434,7 +452,6 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("service_name", info.Response.ServiceName)
 	_ = d.Set("protocol", info.Response.Protocol)
 	_ = d.Set("service_desc", info.Response.ServiceDesc)
-	_ = d.Set("exclusive_set_name", info.Response.ExclusiveSetName)
 	_ = d.Set("ip_version", info.Response.IpVersion)
 	_ = d.Set("net_type", info.Response.NetTypes)
 	_ = d.Set("instance_id", info.Response.InstanceId)
@@ -593,6 +610,20 @@ func resourceTencentCloudAPIGatewayServiceDelete(d *schema.ResourceData, meta in
 		serviceId         = d.Id()
 		err               error
 	)
+
+	// del tags
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::apigw:%s:uin/:service/%s", region, serviceId)
+		tmpList := make([]string, 0)
+		for k := range tags {
+			tmpList = append(tmpList, k)
+		}
+		if e := tagService.ModifyTags(ctx, resourceName, nil, tmpList); e != nil {
+			return e
+		}
+	}
 
 	for _, env := range API_GATEWAY_SERVICE_ENVS {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {

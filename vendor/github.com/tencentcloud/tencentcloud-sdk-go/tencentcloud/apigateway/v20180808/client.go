@@ -289,6 +289,7 @@ func NewBindIPStrategyResponse() (response *BindIPStrategyResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INVALIDPARAMETERVALUE_INVALIDENVSTATUS = "InvalidParameterValue.InvalidEnvStatus"
 //  LIMITEXCEEDED_REQUESTLIMITEXCEEDED = "LimitExceeded.RequestLimitExceeded"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
 //  RESOURCENOTFOUND_INVALIDIPSTRATEGY = "ResourceNotFound.InvalidIPStrategy"
@@ -303,6 +304,7 @@ func (c *Client) BindIPStrategy(request *BindIPStrategyRequest) (response *BindI
 // 可能返回的错误码:
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INVALIDPARAMETERVALUE_INVALIDENVSTATUS = "InvalidParameterValue.InvalidEnvStatus"
 //  LIMITEXCEEDED_REQUESTLIMITEXCEEDED = "LimitExceeded.RequestLimitExceeded"
 //  RESOURCENOTFOUND_INVALIDAPI = "ResourceNotFound.InvalidApi"
 //  RESOURCENOTFOUND_INVALIDIPSTRATEGY = "ResourceNotFound.InvalidIPStrategy"
@@ -888,9 +890,11 @@ func NewCreateApiKeyResponse() (response *CreateApiKeyResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ACCESSKEYEXIST = "FailedOperation.AccessKeyExist"
+//  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  LIMITEXCEEDED_APIKEYCOUNTLIMITEXCEEDED = "LimitExceeded.ApiKeyCountLimitExceeded"
+//  UNAUTHORIZEDOPERATION_UNCERTIFIEDUSER = "UnauthorizedOperation.UncertifiedUser"
 func (c *Client) CreateApiKey(request *CreateApiKeyRequest) (response *CreateApiKeyResponse, err error) {
     return c.CreateApiKeyWithContext(context.Background(), request)
 }
@@ -900,9 +904,11 @@ func (c *Client) CreateApiKey(request *CreateApiKeyRequest) (response *CreateApi
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ACCESSKEYEXIST = "FailedOperation.AccessKeyExist"
+//  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  LIMITEXCEEDED_APIKEYCOUNTLIMITEXCEEDED = "LimitExceeded.ApiKeyCountLimitExceeded"
+//  UNAUTHORIZEDOPERATION_UNCERTIFIEDUSER = "UnauthorizedOperation.UncertifiedUser"
 func (c *Client) CreateApiKeyWithContext(ctx context.Context, request *CreateApiKeyRequest) (response *CreateApiKeyResponse, err error) {
     if request == nil {
         request = NewCreateApiKeyRequest()
@@ -1100,7 +1106,7 @@ func NewCreateServiceResponse() (response *CreateServiceResponse) {
 // CreateService
 // 本接口（CreateService）用于创建服务。
 //
-// API 网关使用的最大单元为服务，每个服务中可创建多个 API 接口。每个服务有一个默认域名供客户调用，用户也可绑定自定义域名到此服务中。 
+// API 网关使用的最大单元为服务，每个服务中可创建多个 API 接口。每个服务有一个默认域名供客户调用，用户也可绑定自定义域名到此服务中。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1137,7 +1143,7 @@ func (c *Client) CreateService(request *CreateServiceRequest) (response *CreateS
 // CreateService
 // 本接口（CreateService）用于创建服务。
 //
-// API 网关使用的最大单元为服务，每个服务中可创建多个 API 接口。每个服务有一个默认域名供客户调用，用户也可绑定自定义域名到此服务中。 
+// API 网关使用的最大单元为服务，每个服务中可创建多个 API 接口。每个服务有一个默认域名供客户调用，用户也可绑定自定义域名到此服务中。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1202,7 +1208,7 @@ func NewCreateUpstreamResponse() (response *CreateUpstreamResponse) {
 }
 
 // CreateUpstream
-// 用于创建创建后端通道
+// 用于创建后端通道
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1230,7 +1236,7 @@ func (c *Client) CreateUpstream(request *CreateUpstreamRequest) (response *Creat
 }
 
 // CreateUpstream
-// 用于创建创建后端通道
+// 用于创建后端通道
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -1761,7 +1767,10 @@ func NewDeleteServiceResponse() (response *DeleteServiceResponse) {
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
+//  UNSUPPORTEDOPERATION_APILISTNOTEMPTY = "UnsupportedOperation.ApiListNotEmpty"
+//  UNSUPPORTEDOPERATION_EXISTINGONLINEENVIRONMENT = "UnsupportedOperation.ExistingOnlineEnvironment"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_TAGSNOTEMPTY = "UnsupportedOperation.TagsNotEmpty"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDDELETESERVICE = "UnsupportedOperation.UnsupportedDeleteService"
 func (c *Client) DeleteService(request *DeleteServiceRequest) (response *DeleteServiceResponse, err error) {
     return c.DeleteServiceWithContext(context.Background(), request)
@@ -1777,7 +1786,10 @@ func (c *Client) DeleteService(request *DeleteServiceRequest) (response *DeleteS
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDREGION = "InvalidParameterValue.InvalidRegion"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
+//  UNSUPPORTEDOPERATION_APILISTNOTEMPTY = "UnsupportedOperation.ApiListNotEmpty"
+//  UNSUPPORTEDOPERATION_EXISTINGONLINEENVIRONMENT = "UnsupportedOperation.ExistingOnlineEnvironment"
 //  UNSUPPORTEDOPERATION_INVALIDACTION = "UnsupportedOperation.InvalidAction"
+//  UNSUPPORTEDOPERATION_TAGSNOTEMPTY = "UnsupportedOperation.TagsNotEmpty"
 //  UNSUPPORTEDOPERATION_UNSUPPORTEDDELETESERVICE = "UnsupportedOperation.UnsupportedDeleteService"
 func (c *Client) DeleteServiceWithContext(ctx context.Context, request *DeleteServiceRequest) (response *DeleteServiceResponse, err error) {
     if request == nil {
@@ -2842,7 +2854,7 @@ func NewDescribeExclusiveInstanceDetailResponse() (response *DescribeExclusiveIn
 }
 
 // DescribeExclusiveInstanceDetail
-// 本接口（DescribeExclusiveInstanceDetail）用于查询独享实例详情信息。​
+// 本接口（DescribeExclusiveInstanceDetail）用于查询独享实例详情信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2860,7 +2872,7 @@ func (c *Client) DescribeExclusiveInstanceDetail(request *DescribeExclusiveInsta
 }
 
 // DescribeExclusiveInstanceDetail
-// 本接口（DescribeExclusiveInstanceDetail）用于查询独享实例详情信息。​
+// 本接口（DescribeExclusiveInstanceDetail）用于查询独享实例详情信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2908,7 +2920,7 @@ func NewDescribeExclusiveInstancesResponse() (response *DescribeExclusiveInstanc
 }
 
 // DescribeExclusiveInstances
-// 本接口（DescribeExclusiveInstances）用于查询独享实例列表信息。​
+// 本接口（DescribeExclusiveInstances）用于查询独享实例列表信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -2928,7 +2940,7 @@ func (c *Client) DescribeExclusiveInstances(request *DescribeExclusiveInstancesR
 }
 
 // DescribeExclusiveInstances
-// 本接口（DescribeExclusiveInstances）用于查询独享实例列表信息。​
+// 本接口（DescribeExclusiveInstances）用于查询独享实例列表信息。
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
@@ -4763,6 +4775,7 @@ func NewModifyApiResponse() (response *ModifyApiResponse) {
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
+//  INTERNALERROR_CLBEXCEPTION = "InternalError.ClbException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INTERNALERROR_SCFEXCEPTION = "InternalError.ScfException"
 //  INTERNALERROR_TSFEXCEPTION = "InternalError.TsfException"
@@ -4819,6 +4832,7 @@ func (c *Client) ModifyApi(request *ModifyApiRequest) (response *ModifyApiRespon
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
 //  FAILEDOPERATION_SERVICEINOPERATION = "FailedOperation.ServiceInOperation"
 //  INTERNALERROR_APIGWEXCEPTION = "InternalError.ApigwException"
+//  INTERNALERROR_CLBEXCEPTION = "InternalError.ClbException"
 //  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
 //  INTERNALERROR_SCFEXCEPTION = "InternalError.ScfException"
 //  INTERNALERROR_TSFEXCEPTION = "InternalError.TsfException"
@@ -5323,6 +5337,7 @@ func NewModifyServiceResponse() (response *ModifyServiceResponse) {
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_MODIFYNETTYPE = "UnsupportedOperation.ModifyNetType"
 //  UNSUPPORTEDOPERATION_REDUCENETTYPES = "UnsupportedOperation.ReduceNetTypes"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ModifyService(request *ModifyServiceRequest) (response *ModifyServiceResponse, err error) {
     return c.ModifyServiceWithContext(context.Background(), request)
 }
@@ -5339,6 +5354,7 @@ func (c *Client) ModifyService(request *ModifyServiceRequest) (response *ModifyS
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_MODIFYNETTYPE = "UnsupportedOperation.ModifyNetType"
 //  UNSUPPORTEDOPERATION_REDUCENETTYPES = "UnsupportedOperation.ReduceNetTypes"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) ModifyServiceWithContext(ctx context.Context, request *ModifyServiceRequest) (response *ModifyServiceResponse, err error) {
     if request == nil {
         request = NewModifyServiceRequest()
@@ -5513,6 +5529,7 @@ func NewModifyUpstreamResponse() (response *ModifyUpstreamResponse) {
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDUPSTREAM = "InvalidParameterValue.InvalidUpstream"
+//  INVALIDPARAMETERVALUE_INVALIDVPCCONFIG = "InvalidParameterValue.InvalidVpcConfig"
 //  INVALIDPARAMETERVALUE_NOTINOPTIONS = "InvalidParameterValue.NotInOptions"
 //  INVALIDPARAMETERVALUE_RANGEEXCEEDED = "InvalidParameterValue.RangeExceeded"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -5536,6 +5553,7 @@ func (c *Client) ModifyUpstream(request *ModifyUpstreamRequest) (response *Modif
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  INVALIDPARAMETERVALUE_INVALIDUPSTREAM = "InvalidParameterValue.InvalidUpstream"
+//  INVALIDPARAMETERVALUE_INVALIDVPCCONFIG = "InvalidParameterValue.InvalidVpcConfig"
 //  INVALIDPARAMETERVALUE_NOTINOPTIONS = "InvalidParameterValue.NotInOptions"
 //  INVALIDPARAMETERVALUE_RANGEEXCEEDED = "InvalidParameterValue.RangeExceeded"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -5926,6 +5944,7 @@ func NewUnBindSubDomainResponse() (response *UnBindSubDomainResponse) {
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_INVALIDSTATUS = "UnsupportedOperation.InvalidStatus"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) UnBindSubDomain(request *UnBindSubDomainRequest) (response *UnBindSubDomainResponse, err error) {
     return c.UnBindSubDomainWithContext(context.Background(), request)
 }
@@ -5945,6 +5964,7 @@ func (c *Client) UnBindSubDomain(request *UnBindSubDomainRequest) (response *UnB
 //  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDSERVICE = "ResourceNotFound.InvalidService"
 //  UNSUPPORTEDOPERATION_INVALIDSTATUS = "UnsupportedOperation.InvalidStatus"
+//  UNSUPPORTEDOPERATION_UNPACKERROR = "UnsupportedOperation.UnpackError"
 func (c *Client) UnBindSubDomainWithContext(ctx context.Context, request *UnBindSubDomainRequest) (response *UnBindSubDomainResponse, err error) {
     if request == nil {
         request = NewUnBindSubDomainRequest()
@@ -6189,6 +6209,8 @@ func NewUpdateApiKeyResponse() (response *UpdateApiKeyResponse) {
 // 本接口（UpdateApiKey）用于更换用户已创建的一对 API 密钥。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDACCESSKEYID = "ResourceNotFound.InvalidAccessKeyId"
 //  UNSUPPORTEDOPERATION_UINNOTINWHITELIST = "UnsupportedOperation.UinNotInWhiteList"
 func (c *Client) UpdateApiKey(request *UpdateApiKeyRequest) (response *UpdateApiKeyResponse, err error) {
@@ -6199,6 +6221,8 @@ func (c *Client) UpdateApiKey(request *UpdateApiKeyRequest) (response *UpdateApi
 // 本接口（UpdateApiKey）用于更换用户已创建的一对 API 密钥。
 //
 // 可能返回的错误码:
+//  INTERNALERROR_OSSEXCEPTION = "InternalError.OssException"
+//  INVALIDPARAMETER_FORMATERROR = "InvalidParameter.FormatError"
 //  RESOURCENOTFOUND_INVALIDACCESSKEYID = "ResourceNotFound.InvalidAccessKeyId"
 //  UNSUPPORTEDOPERATION_UINNOTINWHITELIST = "UnsupportedOperation.UinNotInWhiteList"
 func (c *Client) UpdateApiKeyWithContext(ctx context.Context, request *UpdateApiKeyRequest) (response *UpdateApiKeyResponse, err error) {
@@ -6236,7 +6260,7 @@ func NewUpdateServiceResponse() (response *UpdateServiceResponse) {
 }
 
 // UpdateService
-// 本接口（UpdateService）用于从服务发布的环境中运行版本切换到特定版本。用户在使用 API 网关创建服务并发布服务到某个环境后，多因为开发过程会产生多个版本，此时可调用本接口。
+// 本接口（UpdateService）用于从服务已发布的环境中将运行版本切换到特定版本。用户在使用 API 网关创建服务并发布服务到某个环境后，如在开发过程产生多个版本需要切换，此时可调用本接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"
@@ -6251,7 +6275,7 @@ func (c *Client) UpdateService(request *UpdateServiceRequest) (response *UpdateS
 }
 
 // UpdateService
-// 本接口（UpdateService）用于从服务发布的环境中运行版本切换到特定版本。用户在使用 API 网关创建服务并发布服务到某个环境后，多因为开发过程会产生多个版本，此时可调用本接口。
+// 本接口（UpdateService）用于从服务已发布的环境中将运行版本切换到特定版本。用户在使用 API 网关创建服务并发布服务到某个环境后，如在开发过程产生多个版本需要切换，此时可调用本接口。
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_SERVICEERROR = "FailedOperation.ServiceError"

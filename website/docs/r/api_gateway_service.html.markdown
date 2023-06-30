@@ -13,6 +13,8 @@ Use this resource to create API gateway service.
 
 ## Example Usage
 
+Shared Service
+
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
   service_name = "niceservice"
@@ -24,6 +26,25 @@ resource "tencentcloud_api_gateway_service" "service" {
     test-key1 = "test-value1"
     test-key2 = "test-value2"
   }
+  release_limit = 500
+  pre_limit     = 500
+  test_limit    = 500
+}
+```
+
+Exclusive Service
+
+```hcl
+resource "tencentcloud_api_gateway_service" "service" {
+  service_name = "service"
+  protocol     = "http&https"
+  service_desc = "your nice service"
+  net_type     = ["INNER", "OUTER"]
+  ip_version   = "IPv4"
+  tags = {
+    test-key1 = "test-value1"
+  }
+  instance_id   = "instance-rc6fcv4e"
   release_limit = 500
   pre_limit     = 500
   test_limit    = 500

@@ -519,9 +519,6 @@ func (me *APIGatewayService) CreateService(ctx context.Context,
 	if serviceDesc != "" {
 		request.ServiceDesc = &serviceDesc
 	}
-	if exclusiveSetName != "" {
-		request.ExclusiveSetName = &exclusiveSetName
-	}
 	if ipVersion != "" {
 		request.IpVersion = &ipVersion
 	}
@@ -869,7 +866,7 @@ func (me *APIGatewayService) DescribeServicesStatus(ctx context.Context,
 }
 
 func (me *APIGatewayService) DescribeApisStatus(ctx context.Context,
-	serviceId, apiName, apiId string) (infos []*apigateway.DesApisStatus, errRet error) {
+	serviceId, apiName, apiId string) (infos []*apigateway.DescribeApisStatusResultApiIdStatusSetInfo, errRet error) {
 
 	request := apigateway.NewDescribeApisStatusRequest()
 	request.ServiceId = &serviceId
