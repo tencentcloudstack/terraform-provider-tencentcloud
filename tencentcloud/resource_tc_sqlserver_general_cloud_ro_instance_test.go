@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudSqlserverGeneralCloudRoInstanceResource_basic -v
+// go test -i; go test -timeout=0 -test.run TestAccTencentCloudSqlserverGeneralCloudRoInstanceResource_basic -v
 func TestAccTencentCloudSqlserverGeneralCloudRoInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -133,7 +133,7 @@ const testAccSqlserverGeneralCloudRoInstanceUpdate = `
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
   instance_id                      = "mssql-gyg9xycl"
   zone                             = "ap-guangzhou-6"
-  read_only_group_type             = 4
+  read_only_group_type             = 2
   read_only_group_name             = "test-ro-group"
   read_only_group_is_offline_delay = 1
   read_only_group_max_delay_time   = 10

@@ -72,6 +72,7 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
+				Deprecated:  "It has been deprecated from version 1.18.9.",
 				Description: "Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.",
 			},
 			"net_type": {
@@ -97,6 +98,12 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Tag description list.",
+			},
+			"instance_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Exclusive instance ID.",
 			},
 			"release_limit": {
 				Type:        schema.TypeInt,
@@ -424,6 +431,7 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("exclusive_set_name", info.Response.ExclusiveSetName)
 	_ = d.Set("ip_version", info.Response.IpVersion)
 	_ = d.Set("net_type", info.Response.NetTypes)
+	_ = d.Set("instance_id", info.Response.InstanceId)
 	_ = d.Set("internal_sub_domain", info.Response.InternalSubDomain)
 	_ = d.Set("outer_sub_domain", info.Response.OuterSubDomain)
 	_ = d.Set("inner_http_port", info.Response.InnerHttpPort)

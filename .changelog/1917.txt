@@ -25,3 +25,11 @@ resource/tencentcloud_sqlserver_restore_instance: support create `encryption`
 ```release-note:enhancement
 resource/tencentcloud_sqlserver_rollback_instance: support create `encryption`
 ```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_restore_instance: support create `encryption`
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_service: support create `instance_id` field(Exclusive instance ID); deprecated the `exclusive_set_name` field.
+```

@@ -389,10 +389,10 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstanceRead(d *schema.ResourceD
 		return nil
 	}
 
-	_ = d.Set("ro_instance_id", roInstanceId)
+	_ = d.Set("instance_id", instanceId)
 
 	if generalCloudRoInstance.InstanceId != nil {
-		_ = d.Set("instance_id", generalCloudRoInstance.InstanceId)
+		_ = d.Set("ro_instance_id", generalCloudRoInstance.InstanceId)
 	}
 
 	if generalCloudRoInstance.Zone != nil {
@@ -446,7 +446,7 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstanceRead(d *schema.ResourceD
 		return err
 	}
 
-	_ = d.Set("tags", tags)
+	_ = d.Set("resource_tags", tags)
 
 	securityGroupList, err := service.DescribeInstanceSecurityGroups(ctx, roInstanceId)
 	if err != nil {
