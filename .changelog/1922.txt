@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_tdmq_send_rocketmq_message
+```
+
+```release-note:new-resource
+tencentcloud_tdmq_rabbitmq_user
+```
+
+```release-note:new-resource
+tencentcloud_tdmq_rabbitmq_virtual_host
+```

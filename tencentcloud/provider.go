@@ -1399,6 +1399,13 @@ TDMQ for RocketMQ(trocket)
 	tencentcloud_tdmq_rocketmq_topic
 	tencentcloud_tdmq_rocketmq_group
 	tencentcloud_tdmq_rocketmq_environment_role
+	tencentcloud_tdmq_send_rocketmq_message
+
+TDMQ for RabbitMQ(trabbit)
+  Resource
+	tencentcloud_tdmq_rabbitmq_user
+	tencentcloud_tdmq_rabbitmq_virtual_host
+
 
 Cloud Infinite(CI)
   Resource
@@ -2593,6 +2600,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_role":                                      resourceTencentCloudTdmqRole(),
 			"tencentcloud_tdmq_namespace_role_attachment":                 resourceTencentCloudTdmqNamespaceRoleAttachment(),
 			"tencentcloud_tdmq_subscription_attachment":                   resourceTencentCloudTdmqSubscriptionAttachment(),
+			"tencentcloud_tdmq_rabbitmq_user":                             resourceTencentCloudTdmqRabbitmqUser(),
+			"tencentcloud_tdmq_rabbitmq_virtual_host":                     resourceTencentCloudTdmqRabbitmqVirtualHost(),
+			"tencentcloud_tdmq_send_rocketmq_message":                     resourceTencentCloudTdmqSendRocketmqMessage(),
 			"tencentcloud_cos_bucket_policy":                              resourceTencentCloudCosBucketPolicy(),
 			"tencentcloud_cos_bucket_domain_certificate_attachment":       resourceTencentCloudCosBucketDomainCertificateAttachment(),
 			"tencentcloud_cos_bucket_inventory":                           resourceTencentCloudCosBucketInventory(),
