@@ -602,6 +602,9 @@ func (me *MariadbService) DescribeMariadbSlowLogsByFilter(ctx context.Context, p
 
 		slowLogs.Data = append(slowLogs.Data, response.Response.Data...)
 		if len(response.Response.Data) < int(limit) {
+			slowLogs.LockTimeSum = response.Response.LockTimeSum
+			slowLogs.QueryCount = response.Response.QueryCount
+			slowLogs.QueryTimeSum = response.Response.QueryTimeSum
 			break
 		}
 
