@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_mysql_instance: Support modifying field `slave_deploy_mode`, `first_slave_zone`, `second_slave_zone`, `slave_sync_mode`.
+```

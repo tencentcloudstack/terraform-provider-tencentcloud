@@ -297,7 +297,7 @@ func dataSourceTencentCloudAPIGatewayAPIsRead(d *schema.ResourceData, meta inter
 		apiName           = d.Get("api_name").(string)
 		apiId             = d.Get("api_id").(string)
 		serviceId         = d.Get("service_id").(string)
-		apiSet            []*apigateway.DesApisStatus
+		apiSet            []*apigateway.DescribeApisStatusResultApiIdStatusSetInfo
 		err               error
 	)
 

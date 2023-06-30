@@ -70,10 +70,14 @@ func testAccCheckSqlserverRestoreDBDestroy(s *terraform.State) error {
 const testAccSqlserverRestoreInstance = `
 resource "tencentcloud_sqlserver_restore_instance" "restore_instance" {
   instance_id = "mssql-qelbzgwf"
-  backup_id = 3461718019
+  backup_id   = 3482091273
   rename_restore {
     old_name = "keep_pubsub_db2"
-  	new_name = "restore_keep_pubsub_db2"
+    new_name = "restore_keep_pubsub_db2"
+  }
+  rename_restore {
+    old_name = "keep_pubsub_db"
+    new_name = "restore_keep_pubsub_db"
   }
 }
 `

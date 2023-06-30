@@ -629,6 +629,12 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_ro_instance_ip
 	tencentcloud_mysql_ro_group_load_operation
 	tencentcloud_mysql_switch_master_slave_operation
+	tencentcloud_mysql_proxy
+	tencentcloud_mysql_reset_root_account
+	tencentcloud_mysql_verify_root_account
+	tencentcloud_mysql_reload_balance_proxy_node
+	tencentcloud_mysql_ro_start_replication
+	tencentcloud_mysql_ro_stop_replication
 
 Cloud Monitor(Monitor)
   Data Source
@@ -796,6 +802,8 @@ SQLServer
 	tencentcloud_sqlserver_slowlogs
 	tencentcloud_sqlserver_upload_backup_info
 	tencentcloud_sqlserver_upload_incremental_info
+	tencentcloud_sqlserver_query_xevent
+	tencentcloud_sqlserver_ins_attribute
 
   Resource
 	tencentcloud_sqlserver_instance
@@ -829,6 +837,9 @@ SQLServer
 	tencentcloud_sqlserver_rollback_instance
 	tencentcloud_sqlserver_start_backup_full_migration
 	tencentcloud_sqlserver_start_backup_incremental_migration
+	tencentcloud_sqlserver_start_xevent
+	tencentcloud_sqlserver_instance_tde
+	tencentcloud_sqlserver_database_tde
 
 SSL Certificates
   Data Source
@@ -1949,6 +1960,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_services":                      dataSourceTencentCloudAPIGatewayServices(),
 			"tencentcloud_api_gateway_api_keys":                      dataSourceTencentCloudAPIGatewayAPIKeys(),
 			"tencentcloud_sqlserver_basic_instances":                 dataSourceTencentCloudSqlserverBasicInstances(),
+			"tencentcloud_sqlserver_query_xevent":                    dataSourceTencentCloudSqlserverQueryXevent(),
+			"tencentcloud_sqlserver_ins_attribute":                   dataSourceTencentCloudSqlserverInsAttribute(),
 			"tencentcloud_tcr_instances":                             dataSourceTencentCloudTCRInstances(),
 			"tencentcloud_tcr_namespaces":                            dataSourceTencentCloudTCRNamespaces(),
 			"tencentcloud_tcr_tokens":                                dataSourceTencentCloudTCRTokens(),
@@ -2312,6 +2325,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_ro_instance_ip":                           resourceTencentCloudMysqlRoInstanceIp(),
 			"tencentcloud_mysql_ro_group_load_operation":                  resourceTencentCloudMysqlRoGroupLoadOperation(),
 			"tencentcloud_mysql_switch_master_slave_operation":            resourceTencentCloudMysqlSwitchMasterSlaveOperation(),
+			"tencentcloud_mysql_proxy":                                    resourceTencentCloudMysqlProxy(),
+			"tencentcloud_mysql_reset_root_account":                       resourceTencentCloudMysqlResetRootAccount(),
+			"tencentcloud_mysql_verify_root_account":                      resourceTencentCloudMysqlVerifyRootAccount(),
+			"tencentcloud_mysql_reload_balance_proxy_node":                resourceTencentCloudMysqlReloadBalanceProxyNode(),
+			"tencentcloud_mysql_ro_start_replication":                     resourceTencentCloudMysqlRoStartReplication(),
+			"tencentcloud_mysql_ro_stop_replication":                      resourceTencentCloudMysqlRoStopReplication(),
+			"tencentcloud_mysql_switch_proxy":                             resourceTencentCloudMysqlSwitchProxy(),
 			"tencentcloud_cos_bucket":                                     resourceTencentCloudCosBucket(),
 			"tencentcloud_cos_bucket_object":                              resourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_bucket_referer":                             resourceTencentCloudCosBucketReferer(),
@@ -2502,6 +2522,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_sqlserver_rollback_instance":                    resourceTencentCloudSqlserverRollbackInstance(),
 			"tencentcloud_sqlserver_start_backup_full_migration":          resourceTencentCloudSqlserverStartBackupFullMigration(),
 			"tencentcloud_sqlserver_start_backup_incremental_migration":   resourceTencentCloudSqlserverStartBackupIncrementalMigration(),
+			"tencentcloud_sqlserver_start_xevent":                         resourceTencentCloudSqlserverStartXevent(),
 			"tencentcloud_ckafka_instance":                                resourceTencentCloudCkafkaInstance(),
 			"tencentcloud_ckafka_user":                                    resourceTencentCloudCkafkaUser(),
 			"tencentcloud_ckafka_acl":                                     resourceTencentCloudCkafkaAcl(),
@@ -2557,6 +2578,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_plugin":                             resourceTencentCloudApiGatewayPlugin(),
 			"tencentcloud_api_gateway_plugin_attachment":                  resourceTencentCloudApiGatewayPluginAttachment(),
 			"tencentcloud_sqlserver_basic_instance":                       resourceTencentCloudSqlserverBasicInstance(),
+			"tencentcloud_sqlserver_instance_tde":                         resourceTencentCloudSqlserverInstanceTDE(),
+			"tencentcloud_sqlserver_database_tde":                         resourceTencentCloudSqlserverDatabaseTDE(),
+			"tencentcloud_sqlserver_general_cloud_ro_instance":            resourceTencentCloudSqlserverGeneralCloudRoInstance(),
 			"tencentcloud_tcr_instance":                                   resourceTencentCloudTcrInstance(),
 			"tencentcloud_tcr_namespace":                                  resourceTencentCloudTcrNamespace(),
 			"tencentcloud_tcr_repository":                                 resourceTencentCloudTcrRepository(),

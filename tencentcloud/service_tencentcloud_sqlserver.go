@@ -2933,7 +2933,7 @@ func (me *SqlserverService) DescribeSqlserverRestartDBInstanceById(ctx context.C
 	return
 }
 
-func (me *SqlserverService) DescribeSqlserverRestoreInstanceById(ctx context.Context, instanceId string) (restoreInstance *sqlserver.InstanceDBDetail, errRet error) {
+func (me *SqlserverService) DescribeSqlserverRestoreInstanceById(ctx context.Context, instanceId string, allNameList []string) (restoreInstance *sqlserver.InstanceDBDetail, errRet error) {
 	logId := getLogId(ctx)
 
 	request := sqlserver.NewDescribeDBsRequest()
@@ -2955,15 +2955,27 @@ func (me *SqlserverService) DescribeSqlserverRestoreInstanceById(ctx context.Con
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if *response.Response.TotalCount == 0 {
+	if *response.Response.TotalCount == 0 || response.Response.DBInstances == nil {
 		return
 	}
 
-	restoreInstance = response.Response.DBInstances[0]
+	restoreInstance = &sqlserver.InstanceDBDetail{}
+	restoreInstance.InstanceId = response.Response.DBInstances[0].InstanceId
+	tmpDbDetails := make([]*sqlserver.DBDetail, 0)
+	for _, v := range allNameList {
+		for _, DbDetail := range response.Response.DBInstances[0].DBDetails {
+			if v == *DbDetail.Name {
+				tmpDbDetails = append(tmpDbDetails, DbDetail)
+				break
+			}
+		}
+	}
+	restoreInstance.DBDetails = tmpDbDetails
+
 	return
 }
 
-func (me *SqlserverService) DescribeSqlserverRollbackInstanceById(ctx context.Context, instanceId string) (rollBackInstance *sqlserver.InstanceDBDetail, errRet error) {
+func (me *SqlserverService) DescribeSqlserverRollbackInstanceById(ctx context.Context, instanceId string, allNameList []string) (rollBackInstance *sqlserver.InstanceDBDetail, errRet error) {
 	logId := getLogId(ctx)
 
 	request := sqlserver.NewDescribeDBsRequest()
@@ -2989,7 +3001,19 @@ func (me *SqlserverService) DescribeSqlserverRollbackInstanceById(ctx context.Co
 		return
 	}
 
-	rollBackInstance = response.Response.DBInstances[0]
+	rollBackInstance = &sqlserver.InstanceDBDetail{}
+	rollBackInstance.InstanceId = response.Response.DBInstances[0].InstanceId
+	tmpDbDetails := make([]*sqlserver.DBDetail, 0)
+	for _, v := range allNameList {
+		for _, DbDetail := range response.Response.DBInstances[0].DBDetails {
+			if v == *DbDetail.Name {
+				tmpDbDetails = append(tmpDbDetails, DbDetail)
+				break
+			}
+		}
+	}
+	rollBackInstance.DBDetails = tmpDbDetails
+
 	return
 }
 
@@ -3050,5 +3074,220 @@ func (me *SqlserverService) DescribeSqlserverDBS(ctx context.Context, instanceId
 	}
 
 	restoreInstance = response.Response.DBInstances[0]
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverGeneralCloudRoInstanceById(ctx context.Context, instanceId string) (generalCloudRoInstance *sqlserver.DBInstance, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBInstancesRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	generalCloudRoInstance = response.Response.DBInstances[0]
+	return
+}
+
+func (me *SqlserverService) DeleteSqlserverGeneralCloudRoInstanceById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDeleteDBInstanceRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DeleteDBInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverQueryXeventByFilter(ctx context.Context, param map[string]interface{}) (queryXevent []*sqlserver.Events, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeXEventsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "EventType" {
+			request.EventType = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSqlserverClient().DescribeXEvents(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Events) < 1 {
+			break
+		}
+		queryXevent = append(queryXevent, response.Response.Events...)
+		if len(response.Response.Events) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverInsAttributeByFilter(ctx context.Context, param map[string]interface{}) (datasourceInsAttribute *sqlserver.DescribeDBInstancesAttributeResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = sqlserver.NewDescribeDBInstancesAttributeRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "InstanceId" {
+			request.InstanceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstancesAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	datasourceInsAttribute = response.Response
+
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverInstanceTDEById(ctx context.Context, instanceId string) (instanceTDE *sqlserver.DescribeDBInstancesAttributeResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBInstancesAttributeRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBInstancesAttribute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instanceTDE = response.Response
+	return
+}
+
+func (me *SqlserverService) DescribeSqlserverDatabaseTDEById(ctx context.Context, instanceId string, dbNameList []string) (databaseTDE *sqlserver.InstanceDBDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := sqlserver.NewDescribeDBsRequest()
+	request.InstanceIdSet = []*string{&instanceId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSqlserverClient().DescribeDBs(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	databaseTDE = &sqlserver.InstanceDBDetail{}
+	databaseTDE.InstanceId = response.Response.DBInstances[0].InstanceId
+	tmpDbDetails := make([]*sqlserver.DBDetail, 0)
+	for _, v := range dbNameList {
+		for _, DbDetail := range response.Response.DBInstances[0].DBDetails {
+			if v == *DbDetail.Name {
+				tmpDbDetails = append(tmpDbDetails, DbDetail)
+				break
+			}
+		}
+	}
+	databaseTDE.DBDetails = tmpDbDetails
+
 	return
 }

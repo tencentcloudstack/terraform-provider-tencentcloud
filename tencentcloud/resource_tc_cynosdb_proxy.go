@@ -378,7 +378,7 @@ func resourceTencentCloudCynosdbProxyRead(d *schema.ResourceData, meta interface
 				}
 			}
 
-			if zoneMap != nil {
+			if len(zoneMap) != 0 {
 				tmpList := []interface{}{}
 				for k, v := range zoneMap {
 					tmpMap := make(map[string]interface{})

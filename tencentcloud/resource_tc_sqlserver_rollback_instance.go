@@ -6,10 +6,10 @@ Example Usage
 ```hcl
 resource "tencentcloud_sqlserver_rollback_instance" "rollback_instance" {
   instance_id = "mssql-qelbzgwf"
-  time = "%s"
+  time        = "2023-05-23 01:00:00"
   rename_restore {
     old_name = "keep_pubsub_db2"
-	new_name = "rollback_pubsub_db3"
+    new_name = "rollback_pubsub_db3"
   }
 }
 ```
@@ -59,7 +59,7 @@ func resourceTencentCloudSqlserverRollbackInstance() *schema.Resource {
 			"rename_restore": {
 				Required:    true,
 				Type:        schema.TypeList,
-				Description: "Rename the databases listed in ReNameRestoreDatabase. This parameter takes effect only when Type = 1 which indicates that backup rollback supports renaming databases. If it is left empty, databases will be renamed in the default format and the DBs parameter specifies the databases to be restored.",
+				Description: "Rename the databases listed in ReNameRestoreDatabase.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"old_name": {
@@ -70,7 +70,26 @@ func resourceTencentCloudSqlserverRollbackInstance() *schema.Resource {
 						"new_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "New database name. In offline migration, OldName will be used if NewName is left empty (OldName and NewName cannot be both empty). In database cloning, OldName and NewName must be both specified and cannot have the same value.",
+							Description: "New database name.",
+						},
+					},
+				},
+			},
+			"encryption": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "TDE encryption, `enable` encrypted, `disable` unencrypted.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"db_name": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Database name.",
+						},
+						"status": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "encryption, `enable` encrypted, `disable` unencrypted.",
 						},
 					},
 				},
@@ -138,8 +157,8 @@ func resourceTencentCloudSqlserverRollbackInstanceRead(d *schema.ResourceData, m
 	newNameListStr := idSplit[3]
 	oldNameList := strings.Split(oldNameListStr, COMMA_SP)
 	newNameList := strings.Split(newNameListStr, COMMA_SP)
-
-	rollbackInstance, err := service.DescribeSqlserverRollbackInstanceById(ctx, instanceId)
+	allNameList := append(oldNameList, newNameList...)
+	rollbackInstance, err := service.DescribeSqlserverRollbackInstanceById(ctx, instanceId, allNameList)
 	if err != nil {
 		return err
 	}
@@ -164,6 +183,21 @@ func resourceTencentCloudSqlserverRollbackInstanceRead(d *schema.ResourceData, m
 		renameRestoreList = append(renameRestoreList, renameRestoreMap)
 	}
 	_ = d.Set("rename_restore", renameRestoreList)
+
+	if rollbackInstance.DBDetails != nil {
+		tmpList := make([]map[string]interface{}, 0)
+		for _, item := range rollbackInstance.DBDetails {
+			dMap := map[string]interface{}{}
+			if item.Name != nil {
+				dMap["db_name"] = item.Name
+			}
+			if item.Encryption != nil {
+				dMap["status"] = item.Encryption
+			}
+			tmpList = append(tmpList, dMap)
+		}
+		_ = d.Set("encryption", tmpList)
+	}
 
 	return nil
 }
@@ -284,8 +318,8 @@ func resourceTencentCloudSqlserverRollbackInstanceDelete(d *schema.ResourceData,
 	}
 
 	tmpNames := make([]*string, len(newNameList))
-	for k, v := range newNameList {
-		tmpNames[k] = &v
+	for v := range newNameList {
+		tmpNames[v] = &newNameList[v]
 	}
 
 	err := sqlserverService.DeleteSqlserverDB(ctx, instanceId, tmpNames)

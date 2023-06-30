@@ -1925,6 +1925,9 @@ type CreateCdbProxyAddressRequestParams struct {
 
 	// 安全组
 	SecurityGroup []*string `json:"SecurityGroup,omitempty" name:"SecurityGroup"`
+
+	// 连接池类型。可选值 transaction（事务级别连接池），connection（会话级别连接池），ConnectionPool为true时生效。
+	ConnectionPoolType *string `json:"ConnectionPoolType,omitempty" name:"ConnectionPoolType"`
 }
 
 type CreateCdbProxyAddressRequest struct {
@@ -1981,6 +1984,9 @@ type CreateCdbProxyAddressRequest struct {
 
 	// 安全组
 	SecurityGroup []*string `json:"SecurityGroup,omitempty" name:"SecurityGroup"`
+
+	// 连接池类型。可选值 transaction（事务级别连接池），connection（会话级别连接池），ConnectionPool为true时生效。
+	ConnectionPoolType *string `json:"ConnectionPoolType,omitempty" name:"ConnectionPoolType"`
 }
 
 func (r *CreateCdbProxyAddressRequest) ToJsonString() string {
@@ -2012,6 +2018,7 @@ func (r *CreateCdbProxyAddressRequest) FromJsonString(s string) error {
 	delete(f, "Vip")
 	delete(f, "VPort")
 	delete(f, "SecurityGroup")
+	delete(f, "ConnectionPoolType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCdbProxyAddressRequest has unknown keys!", "")
 	}
@@ -2498,7 +2505,7 @@ type CreateDBInstanceHourRequestParams struct {
 	// 购买按量计费实例该字段无意义。
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
 
-	// 实例名称。一次购买多个实例命名会用后缀数字区分，例instnaceName=db，goodsNum=3，实例命名分别为db1，db2，db3。
+	// 实例名称。一次购买多个实例命名会用后缀数字区分，例instanceName=db，goodsNum=3，实例命名分别为db1，db2，db3。
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
 	// 实例标签信息。
@@ -2516,7 +2523,7 @@ type CreateDBInstanceHourRequestParams struct {
 	// 参数模板id。
 	ParamTemplateId *int64 `json:"ParamTemplateId,omitempty" name:"ParamTemplateId"`
 
-	// 告警策略id数组。云监控DescribeAlarmPolicy接口返回的OriginId。
+	// 告警策略id数组。腾讯云可观测平台DescribeAlarmPolicy接口返回的OriginId。
 	AlarmPolicyList []*int64 `json:"AlarmPolicyList,omitempty" name:"AlarmPolicyList"`
 
 	// 实例节点数。对于 RO 和 基础版实例， 该值默认为1。 如果需要购买三节点实例， 请将该值设置为3 或指定 BackupZone 参数。当购买主实例，且未指定该参数和 BackupZone 参数时，该值默认是 2， 即购买两节点实例。
@@ -2613,7 +2620,7 @@ type CreateDBInstanceHourRequest struct {
 	// 购买按量计费实例该字段无意义。
 	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitempty" name:"AutoRenewFlag"`
 
-	// 实例名称。一次购买多个实例命名会用后缀数字区分，例instnaceName=db，goodsNum=3，实例命名分别为db1，db2，db3。
+	// 实例名称。一次购买多个实例命名会用后缀数字区分，例instanceName=db，goodsNum=3，实例命名分别为db1，db2，db3。
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
 	// 实例标签信息。
@@ -2631,7 +2638,7 @@ type CreateDBInstanceHourRequest struct {
 	// 参数模板id。
 	ParamTemplateId *int64 `json:"ParamTemplateId,omitempty" name:"ParamTemplateId"`
 
-	// 告警策略id数组。云监控DescribeAlarmPolicy接口返回的OriginId。
+	// 告警策略id数组。腾讯云可观测平台DescribeAlarmPolicy接口返回的OriginId。
 	AlarmPolicyList []*int64 `json:"AlarmPolicyList,omitempty" name:"AlarmPolicyList"`
 
 	// 实例节点数。对于 RO 和 基础版实例， 该值默认为1。 如果需要购买三节点实例， 请将该值设置为3 或指定 BackupZone 参数。当购买主实例，且未指定该参数和 BackupZone 参数时，该值默认是 2， 即购买两节点实例。
@@ -3061,6 +3068,74 @@ func (r *CreateDBInstanceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateDBInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDatabaseRequestParams struct {
+	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 数据库名称。
+	DBName *string `json:"DBName,omitempty" name:"DBName"`
+
+	// 字符集，可选值：utf8，gbk，latin1，utf8mb4。
+	CharacterSetName *string `json:"CharacterSetName,omitempty" name:"CharacterSetName"`
+}
+
+type CreateDatabaseRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例 ID，格式如：cdb-c1nl9rpv，与云数据库控制台页面中显示的实例 ID 相同。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 数据库名称。
+	DBName *string `json:"DBName,omitempty" name:"DBName"`
+
+	// 字符集，可选值：utf8，gbk，latin1，utf8mb4。
+	CharacterSetName *string `json:"CharacterSetName,omitempty" name:"CharacterSetName"`
+}
+
+func (r *CreateDatabaseRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDatabaseRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "DBName")
+	delete(f, "CharacterSetName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateDatabaseRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateDatabaseResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateDatabaseResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateDatabaseResponseParams `json:"Response"`
+}
+
+func (r *CreateDatabaseResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateDatabaseResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4986,101 +5061,6 @@ func (r *DescribeBackupSummariesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type DescribeBackupTablesRequestParams struct {
-	// 实例ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例ID相同。
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
-
-	// 开始时间，格式为：2017-07-12 10:29:20。
-	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
-
-	// 指定的数据库名。
-	DatabaseName *string `json:"DatabaseName,omitempty" name:"DatabaseName"`
-
-	// 要查询的数据表名前缀。
-	SearchTable *string `json:"SearchTable,omitempty" name:"SearchTable"`
-
-	// 分页偏移。
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
-
-	// 分页大小，最小值为1，最大值为2000。
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
-}
-
-type DescribeBackupTablesRequest struct {
-	*tchttp.BaseRequest
-	
-	// 实例ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例ID相同。
-	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
-
-	// 开始时间，格式为：2017-07-12 10:29:20。
-	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
-
-	// 指定的数据库名。
-	DatabaseName *string `json:"DatabaseName,omitempty" name:"DatabaseName"`
-
-	// 要查询的数据表名前缀。
-	SearchTable *string `json:"SearchTable,omitempty" name:"SearchTable"`
-
-	// 分页偏移。
-	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
-
-	// 分页大小，最小值为1，最大值为2000。
-	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
-}
-
-func (r *DescribeBackupTablesRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *DescribeBackupTablesRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "InstanceId")
-	delete(f, "StartTime")
-	delete(f, "DatabaseName")
-	delete(f, "SearchTable")
-	delete(f, "Offset")
-	delete(f, "Limit")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBackupTablesRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type DescribeBackupTablesResponseParams struct {
-	// 返回的数据个数。
-	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
-
-	// 符合条件的数据表数组。
-	Items []*TableName `json:"Items,omitempty" name:"Items"`
-
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-}
-
-type DescribeBackupTablesResponse struct {
-	*tchttp.BaseResponse
-	Response *DescribeBackupTablesResponseParams `json:"Response"`
-}
-
-func (r *DescribeBackupTablesResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *DescribeBackupTablesResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
 type DescribeBackupsRequestParams struct {
 	// 实例ID，格式如：cdb-c1nl9rpv。与云数据库控制台页面中显示的实例 ID 相同。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -5242,6 +5222,12 @@ type DescribeBinlogsRequestParams struct {
 
 	// 分页大小，默认值为20，最小值为1，最大值为100。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// binlog最早开始时间，时间格式：2016-03-17 02:10:37
+	MinStartTime *string `json:"MinStartTime,omitempty" name:"MinStartTime"`
+
+	// binlog最晚开始时间，时间格式：2016-03-17 02:10:37
+	MaxStartTime *string `json:"MaxStartTime,omitempty" name:"MaxStartTime"`
 }
 
 type DescribeBinlogsRequest struct {
@@ -5255,6 +5241,12 @@ type DescribeBinlogsRequest struct {
 
 	// 分页大小，默认值为20，最小值为1，最大值为100。
 	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// binlog最早开始时间，时间格式：2016-03-17 02:10:37
+	MinStartTime *string `json:"MinStartTime,omitempty" name:"MinStartTime"`
+
+	// binlog最晚开始时间，时间格式：2016-03-17 02:10:37
+	MaxStartTime *string `json:"MaxStartTime,omitempty" name:"MaxStartTime"`
 }
 
 func (r *DescribeBinlogsRequest) ToJsonString() string {
@@ -5272,6 +5264,8 @@ func (r *DescribeBinlogsRequest) FromJsonString(s string) error {
 	delete(f, "InstanceId")
 	delete(f, "Offset")
 	delete(f, "Limit")
+	delete(f, "MinStartTime")
+	delete(f, "MaxStartTime")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeBinlogsRequest has unknown keys!", "")
 	}
@@ -6408,7 +6402,7 @@ type DescribeDBPriceRequestParams struct {
 	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
 	ProtectMode *int64 `json:"ProtectMode,omitempty" name:"ProtectMode"`
 
-	// 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC" - 基础版实例。 不指定则默认为通用型实例。
+	// 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC_V2" - 单节点云盘版实例。 不指定则默认为通用型实例。
 	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
 
 	// 实例节点数。对于 RO 和 基础版实例， 该值默认为1。 如果需要询价三节点实例， 请将该值设置为3。其余主实例该值默认为2。
@@ -6451,7 +6445,7 @@ type DescribeDBPriceRequest struct {
 	// 数据复制方式，默认为 0，支持值包括：0 - 表示异步复制，1 - 表示半同步复制，2 - 表示强同步复制。
 	ProtectMode *int64 `json:"ProtectMode,omitempty" name:"ProtectMode"`
 
-	// 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC" - 基础版实例。 不指定则默认为通用型实例。
+	// 实例隔离类型。支持值包括： "UNIVERSAL" - 通用型实例， "EXCLUSIVE" - 独享型实例， "BASIC_V2" - 单节点云盘版实例。 不指定则默认为通用型实例。
 	DeviceType *string `json:"DeviceType,omitempty" name:"DeviceType"`
 
 	// 实例节点数。对于 RO 和 基础版实例， 该值默认为1。 如果需要询价三节点实例， 请将该值设置为3。其余主实例该值默认为2。
@@ -7422,6 +7416,10 @@ type DescribeParamTemplateInfoResponseParams struct {
 	// 参数模板类型。支持值包括："HIGH_STABILITY" - 高稳定模板，"HIGH_PERFORMANCE" - 高性能模板。
 	TemplateType *string `json:"TemplateType,omitempty" name:"TemplateType"`
 
+	// 参数模板引擎。支持值包括："InnoDB"，"RocksDB"。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EngineType *string `json:"EngineType,omitempty" name:"EngineType"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -7859,7 +7857,7 @@ func (r *DescribeRemoteBackupConfigRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type DescribeRemoteBackupConfigResponseParams struct {
-	// 异地备份保留天时间，单位为天
+	// 异地备份保留时间，单位为天
 	ExpireDays *int64 `json:"ExpireDays,omitempty" name:"ExpireDays"`
 
 	// 异地数据备份开关，off - 关闭异地备份，on-开启异地备份
@@ -9131,6 +9129,9 @@ type Inbound struct {
 
 	// 规则限定的方向，进站规则为 INPUT
 	Dir *string `json:"Dir,omitempty" name:"Dir"`
+
+	// 地址模块
+	AddressModule *string `json:"AddressModule,omitempty" name:"AddressModule"`
 
 	// 规则描述
 	Desc *string `json:"Desc,omitempty" name:"Desc"`
@@ -12378,6 +12379,9 @@ type Outbound struct {
 	// 规则限定的方向，进站规则为 OUTPUT
 	Dir *string `json:"Dir,omitempty" name:"Dir"`
 
+	// 地址模块
+	AddressModule *string `json:"AddressModule,omitempty" name:"AddressModule"`
+
 	// 规则描述
 	Desc *string `json:"Desc,omitempty" name:"Desc"`
 }
@@ -12659,9 +12663,9 @@ type ProxyInst struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceName *string `json:"InstanceName,omitempty" name:"InstanceName"`
 
-	// 实例类型
+	// 实例类型：1 master 主实例; 2 ro 只读实例; 3 dr 灾备实例; 4 sdr 小灾备实例
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+	InstanceType *int64 `json:"InstanceType,omitempty" name:"InstanceType"`
 
 	// 实例状态，可能的返回值：0-创建中；1-运行中；4-隔离中；5-已隔离
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -13251,7 +13255,7 @@ type RoGroup struct {
 	// 读写权重分配模式，可选值：system-系统自动分配；custom-自定义。
 	WeightMode *string `json:"WeightMode,omitempty" name:"WeightMode"`
 
-	// 权重值。
+	// 该字段已经废弃，无意义。查看只读实例的权重，请查看 RoInstances 字段里的 Weight 值。
 	Weight *int64 `json:"Weight,omitempty" name:"Weight"`
 
 	// 只读组中的只读实例详情。
@@ -13496,7 +13500,7 @@ type RuleFilters struct {
 	// 审计规则过滤条件的匹配类型。可选值：INC – 包含；EXC – 不包含；EQS – 等于；NEQ – 不等于；REG-正则；GT-大于；LT-小于。
 	Compare *string `json:"Compare,omitempty" name:"Compare"`
 
-	// 审计规则过滤条件的匹配值。sqlType条件的Value需在一下选择"alter", "changeuser", "create", "delete", "drop", "execute", "insert", "login", "logout", "other", "replace", "select", "set", "update"。
+	// 审计规则过滤条件的匹配值。sqlType条件的Value需在以下选择"alter", "changeuser", "create", "delete", "drop", "execute", "insert", "login", "logout", "other", "replace", "select", "set", "update"。
 	Value []*string `json:"Value,omitempty" name:"Value"`
 }
 
@@ -14174,11 +14178,6 @@ func (r *SwitchForUpgradeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type TableName struct {
-	// 表名
-	TableName *string `json:"TableName,omitempty" name:"TableName"`
-}
-
 type TablePrivilege struct {
 	// 数据库名
 	Database *string `json:"Database,omitempty" name:"Database"`
@@ -14380,7 +14379,7 @@ type UpgradeDBInstanceEngineVersionRequestParams struct {
 	// 主实例数据库引擎版本，支持值包括：5.6 和 5.7。
 	EngineVersion *string `json:"EngineVersion,omitempty" name:"EngineVersion"`
 
-	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级中过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
+	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
 	WaitSwitch *int64 `json:"WaitSwitch,omitempty" name:"WaitSwitch"`
 
 	// 是否是内核子版本升级，支持的值：1 - 升级内核子版本；0 - 升级数据库引擎版本。
@@ -14399,7 +14398,7 @@ type UpgradeDBInstanceEngineVersionRequest struct {
 	// 主实例数据库引擎版本，支持值包括：5.6 和 5.7。
 	EngineVersion *string `json:"EngineVersion,omitempty" name:"EngineVersion"`
 
-	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级中过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
+	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
 	WaitSwitch *int64 `json:"WaitSwitch,omitempty" name:"WaitSwitch"`
 
 	// 是否是内核子版本升级，支持的值：1 - 升级内核子版本；0 - 升级数据库引擎版本。
@@ -14480,7 +14479,7 @@ type UpgradeDBInstanceRequestParams struct {
 	// 主实例数据库引擎版本，支持值包括：5.5、5.6 和 5.7。
 	EngineVersion *string `json:"EngineVersion,omitempty" name:"EngineVersion"`
 
-	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级中过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
+	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
 	WaitSwitch *int64 `json:"WaitSwitch,omitempty" name:"WaitSwitch"`
 
 	// 备库 2 的可用区信息，默认为空，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。
@@ -14535,7 +14534,7 @@ type UpgradeDBInstanceRequest struct {
 	// 主实例数据库引擎版本，支持值包括：5.5、5.6 和 5.7。
 	EngineVersion *string `json:"EngineVersion,omitempty" name:"EngineVersion"`
 
-	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级中过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
+	// 切换访问新实例的方式，默认为 0。支持值包括：0 - 立刻切换，1 - 时间窗切换；当该值为 1 时，升级过程中，切换访问新实例的流程将会在时间窗内进行，或者用户主动调用接口 [切换访问新实例](https://cloud.tencent.com/document/product/236/15864) 触发该流程。
 	WaitSwitch *int64 `json:"WaitSwitch,omitempty" name:"WaitSwitch"`
 
 	// 备库 2 的可用区信息，默认为空，升级主实例时可指定该参数，升级只读实例或者灾备实例时指定该参数无意义。

@@ -1,0 +1,27 @@
+```release-note:new-resource
+tencentcloud_mysql_proxy
+```
+
+```release-note:new-resource
+tencentcloud_mysql_reset_root_account
+```
+
+```release-note:new-resource
+tencentcloud_mysql_verify_root_account
+```
+
+```release-note:new-resource
+tencentcloud_mysql_reload_balance_proxy_node
+```
+
+```release-note:new-resource
+tencentcloud_mysql_ro_start_replication
+```
+
+```release-note:new-resource
+tencentcloud_mysql_ro_stop_replication
+```
+
+```release-note:enhancement
+resource/tencentcloud_mysql_account: support update `host`
+```

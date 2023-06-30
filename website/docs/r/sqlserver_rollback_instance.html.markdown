@@ -16,7 +16,7 @@ Provides a resource to create a sqlserver rollback_instance
 ```hcl
 resource "tencentcloud_sqlserver_rollback_instance" "rollback_instance" {
   instance_id = "mssql-qelbzgwf"
-  time        = "%s"
+  time        = "2023-05-23 01:00:00"
   rename_restore {
     old_name = "keep_pubsub_db2"
     new_name = "rollback_pubsub_db3"
@@ -29,12 +29,12 @@ resource "tencentcloud_sqlserver_rollback_instance" "rollback_instance" {
 The following arguments are supported:
 
 * `instance_id` - (Required, String) Instance ID.
-* `rename_restore` - (Required, List) Rename the databases listed in ReNameRestoreDatabase. This parameter takes effect only when Type = 1 which indicates that backup rollback supports renaming databases. If it is left empty, databases will be renamed in the default format and the DBs parameter specifies the databases to be restored.
+* `rename_restore` - (Required, List) Rename the databases listed in ReNameRestoreDatabase.
 * `time` - (Required, String) Target time point for rollback.
 
 The `rename_restore` object supports the following:
 
-* `new_name` - (Required, String) New database name. In offline migration, OldName will be used if NewName is left empty (OldName and NewName cannot be both empty). In database cloning, OldName and NewName must be both specified and cannot have the same value.
+* `new_name` - (Required, String) New database name.
 * `old_name` - (Required, String) Database name. If the OldName database does not exist, a failure will be returned. It can be left empty in offline migration tasks.
 
 ## Attributes Reference
@@ -42,7 +42,9 @@ The `rename_restore` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `encryption` - TDE encryption, `enable` encrypted, `disable` unencrypted.
+  * `db_name` - Database name.
+  * `status` - encryption, `enable` encrypted, `disable` unencrypted.
 
 
 ## Import

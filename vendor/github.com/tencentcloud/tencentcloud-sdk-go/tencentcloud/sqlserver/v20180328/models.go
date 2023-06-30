@@ -1112,6 +1112,14 @@ type CreateBusinessDBInstancesResponseParams struct {
 	// 订单名称
 	DealName *string `json:"DealName,omitempty" name:"DealName"`
 
+	// 流程ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+	// 实例ID集合
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceIdSet []*string `json:"InstanceIdSet,omitempty" name:"InstanceIdSet"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -2423,6 +2431,9 @@ type DBDetail struct {
 
 	// 内部状态。ONLINE表示运行中
 	InternalStatus *string `json:"InternalStatus,omitempty" name:"InternalStatus"`
+
+	// 是否已开启TDE加密，enable-已加密，disable-未加密
+	Encryption *string `json:"Encryption,omitempty" name:"Encryption"`
 }
 
 type DBInstance struct {
@@ -2629,6 +2640,14 @@ type DBRenameRes struct {
 
 	// 老数据库名称
 	OldName *string `json:"OldName,omitempty" name:"OldName"`
+}
+
+type DBTDEEncrypt struct {
+	// 数据库名称
+	DBName *string `json:"DBName,omitempty" name:"DBName"`
+
+	// enable-开启加密，disable-关闭加密
+	Encryption *string `json:"Encryption,omitempty" name:"Encryption"`
 }
 
 type DatabaseTuple struct {
@@ -4325,6 +4344,9 @@ type DescribeDBInstancesAttributeResponseParams struct {
 	// 慢SQL、阻塞、死锁扩展事件文件保留时长
 	EventSaveDays *int64 `json:"EventSaveDays,omitempty" name:"EventSaveDays"`
 
+	// TDE透明数据加密配置
+	TDEConfig *TDEConfigAttribute `json:"TDEConfig,omitempty" name:"TDEConfig"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -4667,6 +4689,9 @@ type DescribeDBsRequestParams struct {
 
 	// 排序规则（desc-降序，asc-升序），默认desc
 	OrderByType *string `json:"OrderByType,omitempty" name:"OrderByType"`
+
+	// 是否已开启TDE加密，enable-已加密，disable-未加密
+	Encryption *string `json:"Encryption,omitempty" name:"Encryption"`
 }
 
 type DescribeDBsRequest struct {
@@ -4686,6 +4711,9 @@ type DescribeDBsRequest struct {
 
 	// 排序规则（desc-降序，asc-升序），默认desc
 	OrderByType *string `json:"OrderByType,omitempty" name:"OrderByType"`
+
+	// 是否已开启TDE加密，enable-已加密，disable-未加密
+	Encryption *string `json:"Encryption,omitempty" name:"Encryption"`
 }
 
 func (r *DescribeDBsRequest) ToJsonString() string {
@@ -4705,6 +4733,7 @@ func (r *DescribeDBsRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Name")
 	delete(f, "OrderByType")
+	delete(f, "Encryption")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDBsRequest has unknown keys!", "")
 	}
@@ -7538,6 +7567,70 @@ func (r *ModifyBackupStrategyResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyDBEncryptAttributesRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 开启、关闭数据库TDE加密
+	DBTDEEncrypt []*DBTDEEncrypt `json:"DBTDEEncrypt,omitempty" name:"DBTDEEncrypt"`
+}
+
+type ModifyDBEncryptAttributesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 开启、关闭数据库TDE加密
+	DBTDEEncrypt []*DBTDEEncrypt `json:"DBTDEEncrypt,omitempty" name:"DBTDEEncrypt"`
+}
+
+func (r *ModifyDBEncryptAttributesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBEncryptAttributesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "DBTDEEncrypt")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDBEncryptAttributesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDBEncryptAttributesResponseParams struct {
+	// 任务流ID
+	FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyDBEncryptAttributesResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyDBEncryptAttributesResponseParams `json:"Response"`
+}
+
+func (r *ModifyDBEncryptAttributesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDBEncryptAttributesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyDBInstanceNameRequestParams struct {
 	// 数据库实例ID，形如mssql-njj2mtpl
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -8292,6 +8385,77 @@ func (r *ModifyIncrementalMigrationResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyIncrementalMigrationResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceEncryptAttributesRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 证书归属。self-表示使用该账号自身的证书，others-表示引用其他账号的证书，默认self。
+	CertificateAttribution *string `json:"CertificateAttribution,omitempty" name:"CertificateAttribution"`
+
+	// 引用的其他主账号ID，当CertificateAttribution 为others时必填。
+	QuoteUin *string `json:"QuoteUin,omitempty" name:"QuoteUin"`
+}
+
+type ModifyInstanceEncryptAttributesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 证书归属。self-表示使用该账号自身的证书，others-表示引用其他账号的证书，默认self。
+	CertificateAttribution *string `json:"CertificateAttribution,omitempty" name:"CertificateAttribution"`
+
+	// 引用的其他主账号ID，当CertificateAttribution 为others时必填。
+	QuoteUin *string `json:"QuoteUin,omitempty" name:"QuoteUin"`
+}
+
+func (r *ModifyInstanceEncryptAttributesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceEncryptAttributesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "CertificateAttribution")
+	delete(f, "QuoteUin")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceEncryptAttributesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceEncryptAttributesResponseParams struct {
+	// 任务流ID
+	FlowId *int64 `json:"FlowId,omitempty" name:"FlowId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyInstanceEncryptAttributesResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyInstanceEncryptAttributesResponseParams `json:"Response"`
+}
+
+func (r *ModifyInstanceEncryptAttributesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceEncryptAttributesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -10237,6 +10401,18 @@ func (r *StopMigrationResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *StopMigrationResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type TDEConfigAttribute struct {
+	// 是否已开通TDE加密，enable-已开通，disable-未开通
+	Encryption *string `json:"Encryption,omitempty" name:"Encryption"`
+
+	// 证书归属。self-表示使用该账号自身的证书，others-表示引用其他账号的证书，none-表示没有证书
+	CertificateAttribution *string `json:"CertificateAttribution,omitempty" name:"CertificateAttribution"`
+
+	// 开通TDE加密时引用的其他主账号ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	QuoteUin *string `json:"QuoteUin,omitempty" name:"QuoteUin"`
 }
 
 // Predefined struct for user

@@ -198,6 +198,7 @@ type ApiIdStatus struct {
 	ApiId *string `json:"ApiId,omitempty" name:"ApiId"`
 
 	// API描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApiDesc *string `json:"ApiDesc,omitempty" name:"ApiDesc"`
 
 	// API PATH。
@@ -246,6 +247,8 @@ type ApiIdStatus struct {
 
 	// 授权API关联的业务API列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
+	//
+	// Deprecated: RelationBuniessApiIds is deprecated.
 	RelationBuniessApiIds []*string `json:"RelationBuniessApiIds,omitempty" name:"RelationBuniessApiIds"`
 
 	// oauth配置信息。
@@ -356,7 +359,7 @@ type ApiInfo struct {
 
 	// API的后端服务参数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	ServiceParameters []*ServiceParameter `json:"ServiceParameters,omitempty" name:"ServiceParameters"`
+	ServiceParameters []*DescribeApiResultServiceParametersInfo `json:"ServiceParameters,omitempty" name:"ServiceParameters"`
 
 	// 常量参数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -422,7 +425,7 @@ type ApiInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ServiceWebsocketTransportFunctionQualifier *string `json:"ServiceWebsocketTransportFunctionQualifier,omitempty" name:"ServiceWebsocketTransportFunctionQualifier"`
 
-	// API绑定微服务服务列表。
+	// API绑定微服务列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MicroServices []*MicroService `json:"MicroServices,omitempty" name:"MicroServices"`
 
@@ -584,12 +587,8 @@ type ApiUsagePlanSet struct {
 	ApiUsagePlanList []*ApiUsagePlan `json:"ApiUsagePlanList,omitempty" name:"ApiUsagePlanList"`
 }
 
-type ApisStatus struct {
-	// 符合条件的 API 接口数量。
-	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+type ApigatewayTags struct {
 
-	// API 接口列表。
-	ApiIdStatusSet []*DesApisStatus `json:"ApiIdStatusSet,omitempty" name:"ApiIdStatusSet"`
 }
 
 // Predefined struct for user
@@ -1195,10 +1194,6 @@ func (r *BindSubDomainRequest) FromJsonString(s string) error {
 
 // Predefined struct for user
 type BindSubDomainResponseParams struct {
-	// 绑定操作是否成功。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *bool `json:"Result,omitempty" name:"Result"`
-
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -1278,15 +1273,19 @@ func (r *BuildAPIDocResponse) FromJsonString(s string) error {
 
 type ConstantParameter struct {
 	// 常量参数名称。只有 ServiceType 是 HTTP 才会用到此参数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Name *string `json:"Name,omitempty" name:"Name"`
 
 	// 常量参数描述。只有 ServiceType 是 HTTP 才会用到此参数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Desc *string `json:"Desc,omitempty" name:"Desc"`
 
 	// 常量参数位置。只有 ServiceType 是 HTTP 才会用到此参数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	Position *string `json:"Position,omitempty" name:"Position"`
 
 	// 常量参数默认值。只有 ServiceType 是 HTTP 才会用到此参数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	DefaultValue *string `json:"DefaultValue,omitempty" name:"DefaultValue"`
 }
 
@@ -1583,7 +1582,7 @@ type CreateApiRequestParams struct {
 	// API 的后端 Mock 返回信息。如果 ServiceType 是 Mock，则此参数必传。
 	ServiceMockReturnMessage *string `json:"ServiceMockReturnMessage,omitempty" name:"ServiceMockReturnMessage"`
 
-	// API绑定微服务服务列表。
+	// API绑定微服务列表。
 	MicroServices []*MicroServiceReq `json:"MicroServices,omitempty" name:"MicroServices"`
 
 	// 微服务的负载均衡配置。
@@ -1746,7 +1745,7 @@ type CreateApiRequest struct {
 	// API 的后端 Mock 返回信息。如果 ServiceType 是 Mock，则此参数必传。
 	ServiceMockReturnMessage *string `json:"ServiceMockReturnMessage,omitempty" name:"ServiceMockReturnMessage"`
 
-	// API绑定微服务服务列表。
+	// API绑定微服务列表。
 	MicroServices []*MicroServiceReq `json:"MicroServices,omitempty" name:"MicroServices"`
 
 	// 微服务的负载均衡配置。
@@ -1939,7 +1938,7 @@ func (r *CreateApiRequest) FromJsonString(s string) error {
 type CreateApiResponseParams struct {
 	// api信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *CreateApiRsp `json:"Result,omitempty" name:"Result"`
+	Result *CreateApiResultInfo `json:"Result,omitempty" name:"Result"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -1959,6 +1958,24 @@ func (r *CreateApiResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *CreateApiResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type CreateApiResultInfo struct {
+	// api id
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ApiId *string `json:"ApiId,omitempty" name:"ApiId"`
+
+	// 路径
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Path *string `json:"Path,omitempty" name:"Path"`
+
+	// 请求方法
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Method *string `json:"Method,omitempty" name:"Method"`
+
+	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
 }
 
 type CreateApiRsp struct {
@@ -2174,16 +2191,13 @@ type CreateServiceRequestParams struct {
 	// 用户自定义的服务描述。
 	ServiceDesc *string `json:"ServiceDesc,omitempty" name:"ServiceDesc"`
 
-	// 独立集群名称，用于指定创建服务所在的独立集群。
-	ExclusiveSetName *string `json:"ExclusiveSetName,omitempty" name:"ExclusiveSetName"`
-
 	// 网络类型列表，用于指定支持的访问类型，INNER为内网访问，OUTER为外网访问。默认为OUTER。
 	NetTypes []*string `json:"NetTypes,omitempty" name:"NetTypes"`
 
 	// IP版本号，支持IPv4和IPv6，默认为IPv4。
 	IpVersion *string `json:"IpVersion,omitempty" name:"IpVersion"`
 
-	// 集群名称。保留字段，tsf serverlss类型使用。
+	// 集群名称。保留字段，tsf serverless类型使用。
 	SetServerName *string `json:"SetServerName,omitempty" name:"SetServerName"`
 
 	// 用户类型。保留类型，serverless用户使用。
@@ -2211,16 +2225,13 @@ type CreateServiceRequest struct {
 	// 用户自定义的服务描述。
 	ServiceDesc *string `json:"ServiceDesc,omitempty" name:"ServiceDesc"`
 
-	// 独立集群名称，用于指定创建服务所在的独立集群。
-	ExclusiveSetName *string `json:"ExclusiveSetName,omitempty" name:"ExclusiveSetName"`
-
 	// 网络类型列表，用于指定支持的访问类型，INNER为内网访问，OUTER为外网访问。默认为OUTER。
 	NetTypes []*string `json:"NetTypes,omitempty" name:"NetTypes"`
 
 	// IP版本号，支持IPv4和IPv6，默认为IPv4。
 	IpVersion *string `json:"IpVersion,omitempty" name:"IpVersion"`
 
-	// 集群名称。保留字段，tsf serverlss类型使用。
+	// 集群名称。保留字段，tsf serverless类型使用。
 	SetServerName *string `json:"SetServerName,omitempty" name:"SetServerName"`
 
 	// 用户类型。保留类型，serverless用户使用。
@@ -2251,7 +2262,6 @@ func (r *CreateServiceRequest) FromJsonString(s string) error {
 	delete(f, "ServiceName")
 	delete(f, "Protocol")
 	delete(f, "ServiceDesc")
-	delete(f, "ExclusiveSetName")
 	delete(f, "NetTypes")
 	delete(f, "IpVersion")
 	delete(f, "SetServerName")
@@ -3271,6 +3281,8 @@ type DesApisStatus struct {
 
 	// 授权API关联的业务API列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
+	//
+	// Deprecated: RelationBuniessApiIds is deprecated.
 	RelationBuniessApiIds []*string `json:"RelationBuniessApiIds,omitempty" name:"RelationBuniessApiIds"`
 
 	// API关联的标签信息。
@@ -4138,6 +4150,32 @@ func (r *DescribeApiResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeApiResultServiceParametersInfo struct {
+	// API的后端服务参数名称。只有ServiceType是HTTP才会用到此参数。前后端参数名称可不同。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// API 的后端服务参数位置，如 head。只有 ServiceType 是 HTTP 才会用到此参数。前后端参数位置可配置不同。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Position *string `json:"Position,omitempty" name:"Position"`
+
+	// API 的后端服务参数对应的前端参数位置，如 head。只有 ServiceType 是 HTTP 才会用到此参数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RelevantRequestParameterPosition *string `json:"RelevantRequestParameterPosition,omitempty" name:"RelevantRequestParameterPosition"`
+
+	// API 的后端服务参数对应的前端参数名称。只有 ServiceType 是 HTTP 才会用到此参数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RelevantRequestParameterName *string `json:"RelevantRequestParameterName,omitempty" name:"RelevantRequestParameterName"`
+
+	// API 的后端服务参数默认值。只有 ServiceType 是 HTTP 才会用到此参数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DefaultValue *string `json:"DefaultValue,omitempty" name:"DefaultValue"`
+
+	// API 的后端服务参数备注。只有 ServiceType 是 HTTP 才会用到此参数。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RelevantRequestParameterDesc *string `json:"RelevantRequestParameterDesc,omitempty" name:"RelevantRequestParameterDesc"`
+}
+
 // Predefined struct for user
 type DescribeApiUsagePlanRequestParams struct {
 	// 待查询的服务唯一 ID。
@@ -4266,7 +4304,7 @@ func (r *DescribeApisStatusRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeApisStatusResponseParams struct {
 	// API 详情列表。
-	Result *ApisStatus `json:"Result,omitempty" name:"Result"`
+	Result *DescribeApisStatusResultInfo `json:"Result,omitempty" name:"Result"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -4286,6 +4324,92 @@ func (r *DescribeApisStatusResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *DescribeApisStatusResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeApisStatusResultApiIdStatusSetInfo struct {
+	// 服务唯一ID。
+	ServiceId *string `json:"ServiceId,omitempty" name:"ServiceId"`
+
+	// API唯一ID。
+	ApiId *string `json:"ApiId,omitempty" name:"ApiId"`
+
+	// 用户自定义的 API 接口描述。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ApiDesc *string `json:"ApiDesc,omitempty" name:"ApiDesc"`
+
+	// 创建时间。按照 ISO8601 标准表示，并且使用 UTC 时间。格式为：YYYY-MM-DDThh:mm:ssZ。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// 最后修改时间。按照 ISO8601 标准表示，并且使用 UTC 时间。格式为：YYYY-MM-DDThh:mm:ssZ。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ModifiedTime *string `json:"ModifiedTime,omitempty" name:"ModifiedTime"`
+
+	// API 接口的名称。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ApiName *string `json:"ApiName,omitempty" name:"ApiName"`
+
+	// VPCID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VpcId *int64 `json:"VpcId,omitempty" name:"VpcId"`
+
+	// VPC唯一ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UniqVpcId *string `json:"UniqVpcId,omitempty" name:"UniqVpcId"`
+
+	// API类型。取值为NORMAL（普通API）和TSF（微服务API）。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ApiType *string `json:"ApiType,omitempty" name:"ApiType"`
+
+	// API协议。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Protocol *string `json:"Protocol,omitempty" name:"Protocol"`
+
+	// 是否买后调试。（云市场预留字段）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	IsDebugAfterCharge *bool `json:"IsDebugAfterCharge,omitempty" name:"IsDebugAfterCharge"`
+
+	// API 鉴权类型。取值为SECRET（密钥对鉴权）、NONE（免鉴权）、OAUTH、EIAM。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AuthType *string `json:"AuthType,omitempty" name:"AuthType"`
+
+	// OAUTH API的类型。当AuthType 为 OAUTH时该字段有效， 取值为NORMAL（业务API）和 OAUTH（授权API）。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ApiBusinessType *string `json:"ApiBusinessType,omitempty" name:"ApiBusinessType"`
+
+	// 关联的授权API 唯一 ID，当AuthType为OAUTH且ApiBusinessType为NORMAL时生效。标示业务API绑定的oauth2.0授权API唯一ID。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AuthRelationApiId *string `json:"AuthRelationApiId,omitempty" name:"AuthRelationApiId"`
+
+	// OAUTH 配置信息。当AuthType是OAUTH时生效。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	OauthConfig *OauthConfig `json:"OauthConfig,omitempty" name:"OauthConfig"`
+
+	// 授权API关联的业务API列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	//
+	// Deprecated: RelationBuniessApiIds is deprecated.
+	RelationBuniessApiIds []*string `json:"RelationBuniessApiIds,omitempty" name:"RelationBuniessApiIds"`
+
+	// API关联的标签信息。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tags []*ApigatewayTags `json:"Tags,omitempty" name:"Tags"`
+
+	// API 的路径，如 /path。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Path *string `json:"Path,omitempty" name:"Path"`
+
+	// API 的请求方法，如 GET。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Method *string `json:"Method,omitempty" name:"Method"`
+}
+
+type DescribeApisStatusResultInfo struct {
+	// 符合条件的 API 接口数量。
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// API 接口列表。
+	ApiIdStatusSet []*DescribeApisStatusResultApiIdStatusSetInfo `json:"ApiIdStatusSet,omitempty" name:"ApiIdStatusSet"`
 }
 
 // Predefined struct for user
@@ -4394,7 +4518,7 @@ func (r *DescribeExclusiveInstancesRequest) FromJsonString(s string) error {
 // Predefined struct for user
 type DescribeExclusiveInstancesResponseParams struct {
 	// 独享实例列表查询结果
-	Result *InstanceInfo `json:"Result,omitempty" name:"Result"`
+	Result *DescribeExclusiveInstancesResult `json:"Result,omitempty" name:"Result"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -4414,6 +4538,10 @@ func (r *DescribeExclusiveInstancesResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *DescribeExclusiveInstancesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type DescribeExclusiveInstancesResult struct {
+
 }
 
 // Predefined struct for user
@@ -5513,10 +5641,6 @@ type DescribeServiceForApiAppResponseParams struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ModifiedTime *string `json:"ModifiedTime,omitempty" name:"ModifiedTime"`
 
-	// 独立集群名称。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	ExclusiveSetName *string `json:"ExclusiveSetName,omitempty" name:"ExclusiveSetName"`
-
 	// 网络类型列表，INNER为内网访问，OUTER为外网访问。
 	NetTypes []*string `json:"NetTypes,omitempty" name:"NetTypes"`
 
@@ -5656,6 +5780,16 @@ func (r *DescribeServiceReleaseVersionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type DescribeServiceReleaseVersionResultVersionListInfo struct {
+	// 版本号。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VersionName *string `json:"VersionName,omitempty" name:"VersionName"`
+
+	// 版本描述。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	VersionDesc *string `json:"VersionDesc,omitempty" name:"VersionDesc"`
+}
+
 // Predefined struct for user
 type DescribeServiceRequestParams struct {
 	// 待查询的服务唯一 ID。
@@ -5711,9 +5845,6 @@ type DescribeServiceResponseParams struct {
 
 	// 服务修改时间。
 	ModifiedTime *string `json:"ModifiedTime,omitempty" name:"ModifiedTime"`
-
-	// 独立集群名称。
-	ExclusiveSetName *string `json:"ExclusiveSetName,omitempty" name:"ExclusiveSetName"`
 
 	// 网络类型列表，INNER为内网访问，OUTER为外网访问。
 	NetTypes []*string `json:"NetTypes,omitempty" name:"NetTypes"`
@@ -6249,7 +6380,7 @@ type DescribeUsagePlanEnvironmentsRequestParams struct {
 	// 待查询的使用计划唯一 ID。
 	UsagePlanId *string `json:"UsagePlanId,omitempty" name:"UsagePlanId"`
 
-	// 定类型，取值为 API、SERVICE，默认值为 SERVICE。
+	// 定义类型，取值为 API、SERVICE，默认值为 SERVICE。
 	BindType *string `json:"BindType,omitempty" name:"BindType"`
 
 	// 返回数量，默认为 20，最大值为 100。
@@ -6265,7 +6396,7 @@ type DescribeUsagePlanEnvironmentsRequest struct {
 	// 待查询的使用计划唯一 ID。
 	UsagePlanId *string `json:"UsagePlanId,omitempty" name:"UsagePlanId"`
 
-	// 定类型，取值为 API、SERVICE，默认值为 SERVICE。
+	// 定义类型，取值为 API、SERVICE，默认值为 SERVICE。
 	BindType *string `json:"BindType,omitempty" name:"BindType"`
 
 	// 返回数量，默认为 20，最大值为 100。
@@ -6781,10 +6912,6 @@ type EnvironmentStrategy struct {
 
 	// 限流值
 	Quota *int64 `json:"Quota,omitempty" name:"Quota"`
-
-	// 限流最大值
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	MaxQuota *int64 `json:"MaxQuota,omitempty" name:"MaxQuota"`
 }
 
 type ErrorCodes struct {
@@ -6890,15 +7017,19 @@ func (r *GenerateApiDocumentResponse) FromJsonString(s string) error {
 
 type HealthCheckConf struct {
 	// 是否开启健康检查。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	IsHealthCheck *bool `json:"IsHealthCheck,omitempty" name:"IsHealthCheck"`
 
 	// 健康检查阈值。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	RequestVolumeThreshold *int64 `json:"RequestVolumeThreshold,omitempty" name:"RequestVolumeThreshold"`
 
 	// 窗口大小。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	SleepWindowInMilliseconds *int64 `json:"SleepWindowInMilliseconds,omitempty" name:"SleepWindowInMilliseconds"`
 
 	// 阈值百分比。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	ErrorThresholdPercentage *int64 `json:"ErrorThresholdPercentage,omitempty" name:"ErrorThresholdPercentage"`
 }
 
@@ -7114,7 +7245,7 @@ type InstanceDetail struct {
 
 	// 可用区列表
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Zones *string `json:"Zones,omitempty" name:"Zones"`
+	Zones []*string `json:"Zones,omitempty" name:"Zones"`
 }
 
 type InstanceInfo struct {
@@ -7597,7 +7728,7 @@ type ModifyApiRequestParams struct {
 	// API 的后端 Mock 返回信息。如果 ServiceType 是 Mock，则此参数必传。
 	ServiceMockReturnMessage *string `json:"ServiceMockReturnMessage,omitempty" name:"ServiceMockReturnMessage"`
 
-	// API绑定微服务服务列表。
+	// API绑定微服务列表。
 	MicroServices []*MicroServiceReq `json:"MicroServices,omitempty" name:"MicroServices"`
 
 	// 微服务的负载均衡配置。
@@ -7763,7 +7894,7 @@ type ModifyApiRequest struct {
 	// API 的后端 Mock 返回信息。如果 ServiceType 是 Mock，则此参数必传。
 	ServiceMockReturnMessage *string `json:"ServiceMockReturnMessage,omitempty" name:"ServiceMockReturnMessage"`
 
-	// API绑定微服务服务列表。
+	// API绑定微服务列表。
 	MicroServices []*MicroServiceReq `json:"MicroServices,omitempty" name:"MicroServices"`
 
 	// 微服务的负载均衡配置。
@@ -8573,7 +8704,7 @@ func (r *ModifyUpstreamRequest) FromJsonString(s string) error {
 type ModifyUpstreamResponseParams struct {
 	// 返回修改后的后端通道信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *UpstreamInfo `json:"Result,omitempty" name:"Result"`
+	Result *ModifyUpstreamResultInfo `json:"Result,omitempty" name:"Result"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -8593,6 +8724,50 @@ func (r *ModifyUpstreamResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *ModifyUpstreamResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type ModifyUpstreamResultInfo struct {
+	// 后端通道唯一ID
+	UpstreamId *string `json:"UpstreamId,omitempty" name:"UpstreamId"`
+
+	// 后端通道名字
+	UpstreamName *string `json:"UpstreamName,omitempty" name:"UpstreamName"`
+
+	// 后端通道描述
+	UpstreamDescription *string `json:"UpstreamDescription,omitempty" name:"UpstreamDescription"`
+
+	// 后端协议，取值范围：HTTP, HTTPS
+	Scheme *string `json:"Scheme,omitempty" name:"Scheme"`
+
+	// 负载均衡算法，取值范围：ROUND_ROBIN
+	Algorithm *string `json:"Algorithm,omitempty" name:"Algorithm"`
+
+	// VPC唯一ID
+	UniqVpcId *string `json:"UniqVpcId,omitempty" name:"UniqVpcId"`
+
+	// 请求重试次数
+	Retries *uint64 `json:"Retries,omitempty" name:"Retries"`
+
+	// 后端节点
+	Nodes []*UpstreamNode `json:"Nodes,omitempty" name:"Nodes"`
+
+	// 创建时间
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// 健康检查配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HealthChecker *UpstreamHealthChecker `json:"HealthChecker,omitempty" name:"HealthChecker"`
+
+	// 后端的类型，取值范围：IP_PORT, K8S
+	UpstreamType *string `json:"UpstreamType,omitempty" name:"UpstreamType"`
+
+	// K8S容器服务配置
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	K8sServices []*K8sService `json:"K8sServices,omitempty" name:"K8sServices"`
+
+	// 网关转发给后端的Host请求头
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpstreamHost *string `json:"UpstreamHost,omitempty" name:"UpstreamHost"`
 }
 
 // Predefined struct for user
@@ -8732,6 +8907,8 @@ type ParameterInfo struct {
 	Maximum *int64 `json:"Maximum,omitempty" name:"Maximum"`
 
 	// 修改时间
+	//
+	// Deprecated: ModifedTime is deprecated.
 	ModifedTime *string `json:"ModifedTime,omitempty" name:"ModifedTime"`
 
 	// 字符类型的值，当Type为string时才有意义
@@ -9211,7 +9388,7 @@ type ServiceReleaseVersion struct {
 
 	// 发布版本列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	VersionList []*ServiceReleaseHistoryInfo `json:"VersionList,omitempty" name:"VersionList"`
+	VersionList []*DescribeServiceReleaseVersionResultVersionListInfo `json:"VersionList,omitempty" name:"VersionList"`
 }
 
 type ServiceSubDomainMappings struct {
@@ -10090,6 +10267,7 @@ type UsagePlan struct {
 	UsagePlanName *string `json:"UsagePlanName,omitempty" name:"UsagePlanName"`
 
 	// 使用计划描述。
+	// 注意：此字段可能返回 null，表示取不到有效值。
 	UsagePlanDesc *string `json:"UsagePlanDesc,omitempty" name:"UsagePlanDesc"`
 
 	// 使用计划qps，-1表示没有限制。
@@ -10209,10 +10387,6 @@ type UsagePlanInfo struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	UsagePlanDesc *string `json:"UsagePlanDesc,omitempty" name:"UsagePlanDesc"`
 
-	// 初始化调用次数。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	InitQuota *int64 `json:"InitQuota,omitempty" name:"InitQuota"`
-
 	// 每秒请求限制数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxRequestNumPreSec *int64 `json:"MaxRequestNumPreSec,omitempty" name:"MaxRequestNumPreSec"`
@@ -10220,10 +10394,6 @@ type UsagePlanInfo struct {
 	// 最大调用次数。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	MaxRequestNum *int64 `json:"MaxRequestNum,omitempty" name:"MaxRequestNum"`
-
-	// 是否隐藏。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	IsHide *int64 `json:"IsHide,omitempty" name:"IsHide"`
 
 	// 创建时间。按照 ISO8601 标准表示，并且使用 UTC 时间。格式为：YYYY-MM-DDThh:mm:ssZ。
 	// 注意：此字段可能返回 null，表示取不到有效值。
