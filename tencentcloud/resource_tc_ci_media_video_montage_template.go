@@ -382,7 +382,7 @@ func resourceTencentCloudCiMediaVideoMontageTemplateCreate(d *schema.ResourceDat
 				}
 				audioMix.EffectConfig = &effectConfig
 			}
-			request.AudioMix = append(request.AudioMix, audioMix)
+			request.AudioMixArray = append(request.AudioMixArray, audioMix)
 		}
 	}
 
@@ -516,9 +516,9 @@ func resourceTencentCloudCiMediaVideoMontageTemplateRead(d *schema.ResourceData,
 			_ = d.Set("container", []interface{}{containerMap})
 		}
 
-		if mediaVideoMontageTemplate.AudioMix != nil {
+		if mediaVideoMontageTemplate.AudioMixArray != nil {
 			audioMixList := []interface{}{}
-			for _, audioMix := range mediaVideoMontageTemplate.AudioMix {
+			for _, audioMix := range mediaVideoMontageTemplate.AudioMixArray {
 				audioMixMap := map[string]interface{}{}
 
 				if audioMix.AudioSource != "" {
@@ -694,7 +694,7 @@ func resourceTencentCloudCiMediaVideoMontageTemplateUpdate(d *schema.ResourceDat
 					}
 					audioMix.EffectConfig = &effectConfig
 				}
-				request.AudioMix = append(request.AudioMix, audioMix)
+				request.AudioMixArray = append(request.AudioMixArray, audioMix)
 			}
 		}
 	}

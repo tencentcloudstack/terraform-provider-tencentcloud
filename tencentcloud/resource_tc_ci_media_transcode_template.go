@@ -663,7 +663,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateCreate(d *schema.ResourceData, 
 				}
 				audioMix.EffectConfig = &effectConfig
 			}
-			request.AudioMix = append(request.AudioMix, audioMix)
+			request.AudioMixArray = append(request.AudioMixArray, audioMix)
 		}
 	}
 
@@ -912,9 +912,9 @@ func resourceTencentCloudCiMediaTranscodeTemplateRead(d *schema.ResourceData, me
 		_ = d.Set("trans_config", []interface{}{transConfigMap})
 	}
 
-	if mediaTranscodeTemplate.AudioMix != nil {
+	if mediaTranscodeTemplate.AudioMixArray != nil {
 		audioMixArrayList := []interface{}{}
-		for _, audioMix := range mediaTranscodeTemplate.AudioMix {
+		for _, audioMix := range mediaTranscodeTemplate.AudioMixArray {
 			audioMixArrayMap := map[string]interface{}{}
 
 			if audioMix.AudioSource != "" {
@@ -1178,7 +1178,7 @@ func resourceTencentCloudCiMediaTranscodeTemplateUpdate(d *schema.ResourceData, 
 					}
 					audioMix.EffectConfig = &effectConfig
 				}
-				request.AudioMix = append(request.AudioMix, audioMix)
+				request.AudioMixArray = append(request.AudioMixArray, audioMix)
 			}
 		}
 	}
