@@ -858,6 +858,7 @@ Secrets Manager(SSM)
   Resource
     tencentcloud_ssm_secret
     tencentcloud_ssm_secret_version
+	tencentcloud_ssm_ssh_key_pair_secret
 
 TcaplusDB
   Data Source
@@ -2614,6 +2615,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kms_external_key":                               resourceTencentCloudKmsExternalKey(),
 			"tencentcloud_ssm_secret":                                     resourceTencentCloudSsmSecret(),
 			"tencentcloud_ssm_secret_version":                             resourceTencentCloudSsmSecretVersion(),
+			"tencentcloud_ssm_ssh_key_pair_secret":                        resourceTencentCloudSsmSshKeyPairSecret(),
 			"tencentcloud_cdh_instance":                                   resourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                         resourceTencentCloudDnspodDomainInstance(),
 			"tencentcloud_dnspod_record":                                  resourceTencentCloudDnspodRecord(),
