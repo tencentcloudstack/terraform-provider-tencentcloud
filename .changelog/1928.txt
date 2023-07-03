@@ -21,7 +21,3 @@ resource/tencentcloud_ci_media_concat_template: adapt to new cos sdk
 ```release-note:enhancement
 resource/tencentcloud_ci_media_video_montage_template: adapt to new cos sdk
 ```
-
-```release-note:enhancement
-resource/tencentcloud_cos_bucket: format client called
-```
