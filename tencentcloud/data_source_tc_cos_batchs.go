@@ -66,7 +66,7 @@ func dataSourceTencentCloudCosBatchs() *schema.Resource {
 						"operation": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "Actions performed on objects in a batch processing job. For example, COSPutObjectCopy",
+							Description: "Actions performed on objects in a batch processing job. For example, COSPutObjectCopy.",
 						},
 						"priority": {
 							Type:        schema.TypeInt,
@@ -109,6 +109,11 @@ func dataSourceTencentCloudCosBatchs() *schema.Resource {
 						},
 					},
 				},
+			},
+			"result_output_file": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Used to save results.",
 			},
 		},
 	}

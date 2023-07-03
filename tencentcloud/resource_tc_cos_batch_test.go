@@ -17,11 +17,11 @@ func TestAccTencentCloudCosBatchResource_basic(t *testing.T) {
 			{
 				Config: testAccCosBatchResource,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket_batch.cos_bucket_batch", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cos_batch.cos_batch", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cos_bucket_batch.cos_bucket_batch",
+				ResourceName:      "tencentcloud_cos_batch.cos_batch",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -30,11 +30,11 @@ func TestAccTencentCloudCosBatchResource_basic(t *testing.T) {
 }
 
 const testAccCosBatchResource = `
-resource "tencentcloud_cos_bucket_batch" "cos_bucket_batch" {
+resource "tencentcloud_cos_batch" "cos_batch" {
     uin = "100022975249"
     appid = "1308919341"
     confirmation_required = true
-    description = "cos_bucket_batch"
+    description = "cos_batch"
     priority = 1
 	status = "Cancelled"
     role_arn = "qcs::cam::uin/100022975249:roleName/COSBatch_QCSRole"
