@@ -113,7 +113,6 @@ func TestAccTencentCloudCosBucketResource_ACL(t *testing.T) {
 				Config: testAccCosBucket_ACL(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_acl"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_acl", "acl", "public-read-write"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_acl", "acl_body"),
 				),
 			},
@@ -566,7 +565,6 @@ func testAccCosBucket_ACL() string {
 
 resource "tencentcloud_cos_bucket" "bucket_acl" {
   bucket	= "tf-bucket-acl-${local.app_id}"
-  acl       = "public-read-write"
   acl_body 	= <<EOF
 <AccessControlPolicy>
     <Owner>

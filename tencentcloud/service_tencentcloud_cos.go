@@ -1297,7 +1297,7 @@ func (me *CosService) GetBucketOriginDomain(ctx context.Context, bucket string) 
 	ratelimit.Check("TencentcloudCosGetBucketOriginDomain")
 	domain, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetDomain(ctx)
 
-	if response.StatusCode == 404 {
+	if response != nil && response.StatusCode == 404 {
 		log.Printf("[WARN] [GetBucketOriginDomain] returns %d, %s", 404, err)
 		return make([]map[string]interface{}, 0), nil
 	}
