@@ -16,12 +16,14 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSsmSshKeyPairSecret,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret", "description", "for tf test"),
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret", "status", "Disabled"),
+				),
 			},
 			{
 				Config: testAccSsmSshKeyPairSecretUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret", "description", "for test"),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret", "status", "Enabled"),
 				),
