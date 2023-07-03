@@ -58,7 +58,7 @@ The following arguments are supported:
 * `net_type` - (Required, Set: [`String`]) Network type list, which is used to specify the supported network types. Valid values: `INNER`, `OUTER`. `INNER` indicates access over private network, and `OUTER` indicates access over public network.
 * `protocol` - (Required, String) Service frontend request type. Valid values: `http`, `https`, `http&https`.
 * `service_name` - (Required, String) Custom service name.
-* `exclusive_set_name` - (Optional, String, ForceNew, **Deprecated**) It has been deprecated from version 1.18.9. Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.
+* `exclusive_set_name` - (Optional, String, ForceNew, **Deprecated**) It has been deprecated from version 1.81.9. Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.
 * `instance_id` - (Optional, String) Exclusive instance ID.
 * `ip_version` - (Optional, String, ForceNew) IP version number. Valid values: `IPv4`, `IPv6`. Default value: `IPv4`.
 * `pre_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
