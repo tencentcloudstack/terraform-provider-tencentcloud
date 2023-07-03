@@ -39,7 +39,7 @@ Using verbose acl
 ```hcl
 resource "tencentcloud_cos_bucket" "with_acl_body" {
   bucket = "mycos-1258798060"
-  # NOTE: Specifiy the priority sequence of permission and user type following rules: `CanonicalUser with READ`, `CanonicalUser with WRITE`, `CanonicalUser with FULL_CONTROL`, `CanonicalUser with WRITE_ACP`, `CanonicalUser with READ_ACP`, then specify the `Group` of permissions same as `CanonicalUser`.
+  # NOTE: Specify the acl_body by the priority sequence of permission and user type with the following sequence: `CanonicalUser with READ`, `CanonicalUser with WRITE`, `CanonicalUser with FULL_CONTROL`, `CanonicalUser with WRITE_ACP`, `CanonicalUser with READ_ACP`, then specify the `Group` of permissions same as `CanonicalUser`.
   acl_body = <<EOF
 <AccessControlPolicy>
 	<Owner>

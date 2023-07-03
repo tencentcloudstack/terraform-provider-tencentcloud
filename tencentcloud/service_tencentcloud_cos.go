@@ -1704,7 +1704,10 @@ func (me *CosService) transACLBodyOrderly(ctx context.Context, rawAclBody string
 
 	buf := &bytes.Buffer{}
 	orderXmlDoc.Indent(2)
-	orderXmlDoc.WriteTo(buf)
+	_, err := orderXmlDoc.WriteTo(buf)
+	if err != nil {
+		return "", fmt.Errorf("transACLBodyOrderly write xml to buffer failed, error: %v", err)
+	}
 	orderlyAclBody = buf.String()
 
 	// keep for debug the algo
