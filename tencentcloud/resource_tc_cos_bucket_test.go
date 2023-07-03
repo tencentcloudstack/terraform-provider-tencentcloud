@@ -113,7 +113,7 @@ func TestAccTencentCloudCosBucketResource_ACL(t *testing.T) {
 				Config: testAccCosBucket_ACL(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckCosBucketExists("tencentcloud_cos_bucket.bucket_acl"),
-					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_acl", "acl", "public-read"),
+					resource.TestCheckResourceAttr("tencentcloud_cos_bucket.bucket_acl", "acl", "public-read-write"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cos_bucket.bucket_acl", "acl_body"),
 				),
 			},
@@ -566,7 +566,7 @@ func testAccCosBucket_ACL() string {
 
 resource "tencentcloud_cos_bucket" "bucket_acl" {
   bucket	= "tf-bucket-acl-${local.app_id}"
-  acl       = "public-read"
+  acl       = "public-read-write"
   acl_body 	= <<EOF
 <AccessControlPolicy>
     <Owner>
@@ -580,20 +580,6 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
             </Grantee>
             <Permission>READ</Permission>
         </Grant>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
-            </Grantee>
-            <Permission>FULL_CONTROL</Permission>
-        </Grant>
-		<Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
-				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
-            </Grantee>
-            <Permission>WRITE_ACP</Permission>
-        </Grant>
 		<Grant>
             <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
                 <ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
@@ -601,6 +587,19 @@ resource "tencentcloud_cos_bucket" "bucket_acl" {
             </Grantee>
             <Permission>READ</Permission>
         </Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/${local.uin}:uin/${local.uin}</ID>
+				<DisplayName>qcs::cam::uin/${local.uin}:uin/${local.uin}</DisplayName>
+			</Grantee>
+			<Permission>FULL_CONTROL</Permission>
+		<Grant>
+            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+                <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+            </Grantee>
+            <Permission>WRITE</Permission>
+        </Grant>
+	</Grant>
     </AccessControlList>
 </AccessControlPolicy>
 EOF

@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"encoding/xml"
@@ -197,7 +198,7 @@ func (me *CosService) TencentCosBucketGetLocation(ctx context.Context, bucket st
 	return
 }
 
-func (me *CosService) TencentCosPutBucketACL(
+func (me *CosService) TencentCosPutBucketACLBody(
 	ctx context.Context,
 	bucket string,
 	reqBody string,
@@ -212,7 +213,7 @@ func (me *CosService) TencentCosPutBucketACL(
 		err := xml.Unmarshal([]byte(reqBody), acl)
 
 		if err != nil {
-			errRet = fmt.Errorf("cos [PutBucketACL] XML Unmarshal error: %s, bucket: %s", err.Error(), bucket)
+			errRet = fmt.Errorf("cos [PutBucketACLBody] XML Unmarshal error: %s, bucket: %s", err.Error(), bucket)
 			return
 		}
 		opt.Body = acl
@@ -227,22 +228,22 @@ func (me *CosService) TencentCosPutBucketACL(
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request [%s], reason[%s]\n",
-				logId, "PutBucketACL", req, errRet.Error())
+				logId, "PutBucketACLBody", req, errRet.Error())
 		}
 	}()
 
-	ratelimit.Check("TencentcloudCosPutBucketACL")
+	ratelimit.Check("TencentcloudCosPutBucketACLBody")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutACL(ctx, opt)
 
 	if err != nil {
-		errRet = fmt.Errorf("cos [PutBucketACL] error: %s, bucket: %s", err.Error(), bucket)
+		errRet = fmt.Errorf("cos [PutBucketACLBody] error: %s, bucket: %s", err.Error(), bucket)
 		return
 	}
 
 	resp, _ := json.Marshal(response.Response.Body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, "PutBucketACL", req, resp)
+		logId, "PutBucketACLBody", req, resp)
 
 	return nil
 }
@@ -1700,6 +1701,11 @@ func (me *CosService) transACLBodyOrderly(ctx context.Context, rawAclBody string
 			}
 		}
 	}
+
+	buf := &bytes.Buffer{}
+	orderXmlDoc.Indent(2)
+	orderXmlDoc.WriteTo(buf)
+	orderlyAclBody = buf.String()
 
 	// keep for debug the algo
 	// for _, grant := range orderedACL.FindElements("//Grant") {
