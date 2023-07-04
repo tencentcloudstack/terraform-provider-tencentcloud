@@ -185,7 +185,6 @@ func resourceTencentCloudTkeTmpConfigCreate(d *schema.ResourceData, meta interfa
 	var (
 		logId   = getLogId(contextNil)
 		request = monitor.NewCreatePrometheusConfigRequest()
-		client  = meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient()
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -210,7 +209,7 @@ func resourceTencentCloudTkeTmpConfigCreate(d *schema.ResourceData, meta interfa
 	ids := strings.Join([]string{*request.InstanceId, *request.ClusterType, *request.ClusterId}, FILED_SP)
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		response, e := client.CreatePrometheusConfig(request)
+		response, e := meta.(*TencentCloudClient).apiV3Conn.UseMonitorClient().CreatePrometheusConfig(request)
 		if e != nil {
 			return retryError(e)
 		} else {
