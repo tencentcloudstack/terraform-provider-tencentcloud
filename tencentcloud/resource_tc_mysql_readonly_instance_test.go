@@ -10,6 +10,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlReadonlyInstanceResource_basic -v
 func TestAccTencentCloudMysqlReadonlyInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -30,6 +31,11 @@ func TestAccTencentCloudMysqlReadonlyInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_readonly_instance.mysql_readonly", "task_status"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_readonly_instance.mysql_readonly", "tags.test", "test-tf"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_mysql_readonly_instance.mysql_readonly",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 			// add tag
 			{

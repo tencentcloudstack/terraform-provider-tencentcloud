@@ -78,7 +78,10 @@ func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 		Update: resourceTencentCloudMysqlReadonlyInstanceUpdate,
 		Delete: resourceTencentCloudMysqlReadonlyInstanceDelete,
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"prepaid_period":    1,
+				"force_delete":      false,
+			}),
 		},
 		Schema: readonlyInstanceInfo,
 	}
