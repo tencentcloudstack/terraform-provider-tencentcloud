@@ -1,10 +1,14 @@
 /*
 Provide a resource to create a SSM secret.
+
 Example Usage
+
+Create user defined secret
+
 ```hcl
 resource "tencentcloud_ssm_secret" "foo" {
   secret_name = "test"
-  description = "test secret"
+  description = "user defined secret"
   recovery_window_in_days = 0
   is_enabled = true
 
@@ -13,7 +17,39 @@ resource "tencentcloud_ssm_secret" "foo" {
   }
 }
 ```
+
+Create redis secret
+
+```hcl
+data "tencentcloud_redis_instances" "instance" {
+  zone = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_ssm_secret" "secret" {
+  secret_name = "for-redis-test"
+  description = "redis secret"
+  is_enabled  = false
+
+  secret_type       = 4
+  additional_config = jsonencode(
+    {
+      "Region" : "ap-guangzhou"
+      "Privilege" : "r",
+      "InstanceId" : data.tencentcloud_redis_instances.instance.instance_list.0.redis_id
+      "ReadonlyPolicy" : ["master"],
+      "Remark" : "for tf test"
+    }
+  )
+  tags = {
+    test-tag = "test"
+  }
+
+  recovery_window_in_days = 0
+}
+```
+
 Import
+
 SSM secret can be imported using the secretName, e.g.
 ```
 $ terraform import tencentcloud_ssm_secret.foo test
@@ -78,6 +114,19 @@ func resourceTencentCloudSsmSecret() *schema.Resource {
 				Computed:    true,
 				Description: "KMS keyId used to encrypt secret. If it is empty, it means that the CMK created by SSM for you by default is used for encryption. You can also specify the KMS CMK created by yourself in the same region for encryption.",
 			},
+			"secret_type": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "Type of secret. `0`: user-defined secret. `4`: redis secret.",
+			},
+
+			"additional_config": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Additional config for specific secret types in JSON string format.",
+			},
+
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -103,9 +152,14 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 	if v, ok := d.GetOk("kms_key_id"); ok {
 		param["kms_key_id"] = v.(string)
 	}
+	if v, ok := d.GetOkExists("secret_type"); ok {
+		param["secret_type"] = v.(int)
+	}
+	if v, ok := d.GetOk("additional_config"); ok {
+		param["additional_config"] = v.(string)
+	}
 	//use a default version info, after create secret will delete this version
 	//because sdk do not support create secret without version
-	param["version_id"] = "default"
 	param["secret_string"] = "default"
 
 	var outErr, inErr error
@@ -121,18 +175,6 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 		return outErr
 	}
 	d.SetId(secretName)
-
-	//delete default version info
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		inErr = ssmService.DeleteSecretVersion(ctx, secretName, "default")
-		if inErr != nil {
-			return retryError(inErr)
-		}
-		return nil
-	})
-	if outErr != nil {
-		return outErr
-	}
 
 	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -200,6 +242,8 @@ func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{})
 	_ = d.Set("secret_name", secretInfo.secretName)
 	_ = d.Set("description", secretInfo.description)
 	_ = d.Set("kms_key_id", secretInfo.kmsKeyId)
+	_ = d.Set("secret_type", secretInfo.secretType)
+	_ = d.Set("additional_config", secretInfo.additionalConfig)
 	_ = d.Set("status", secretInfo.status)
 
 	if secretInfo.status == SSM_STATUS_ENABLED {
@@ -228,6 +272,17 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 
 	d.Partial(true)
 	secretName := d.Id()
+
+	immutableArgs := []string{
+		"secret_type",
+		"additional_config",
+	}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("description") {
 		description := d.Get("description").(string)
