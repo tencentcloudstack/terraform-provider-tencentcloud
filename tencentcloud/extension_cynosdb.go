@@ -32,6 +32,14 @@ const (
 	CYNOSDB_FLOW_STATUS_PROCESSING = "2"
 )
 
+const (
+	STATUS_YES = "yes"
+	STATUS_NO  = "no"
+
+	RW_TYPE = "READWRITE"
+	RO_TYPE = "READONLY"
+)
+
 var (
 	CYNOSDB_PREPAID_PERIOD = []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36}
 	CYNOSDB_CHARGE_TYPE    = map[int64]string{
