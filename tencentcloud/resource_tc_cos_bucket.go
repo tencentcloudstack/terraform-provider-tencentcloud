@@ -450,6 +450,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 					return ACLBodyDiffFunc(olds, news, d)
 				},
 				DiffSuppressOnRefresh: true,
+				ValidateFunc:          validateACLBody,
 				Description:           "ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.",
 			},
 			"encryption_algorithm": {

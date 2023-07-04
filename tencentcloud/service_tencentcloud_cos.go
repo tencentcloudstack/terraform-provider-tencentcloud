@@ -1664,7 +1664,7 @@ func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket st
 
 /*
 The ideal sequence COS wants.
-Priority 1: permission priority: Read first, then handle write, FullControl, WRITE_ACP, last is the READ_ACP
+Priority 1: permission priority: Read first, then handle WRITE, FullControl, WRITE_ACP, last is the READ_ACP
 Priority 2: type priority: CanonicalUser first, then Group
 */
 func (me *CosService) transACLBodyOrderly(ctx context.Context, rawAclBody string) (orderlyAclBody string, errRet error) {

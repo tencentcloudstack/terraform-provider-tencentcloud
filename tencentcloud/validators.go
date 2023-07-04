@@ -10,6 +10,8 @@ import (
 	"unicode"
 	"unicode/utf8"
 
+	"github.com/beevik/etree"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
@@ -247,6 +249,49 @@ func validateCosBucketName(v interface{}, k string) (ws []string, errors []error
 	if match, _ := regexp.Match(pattern, []byte(value)); !match {
 		errors = append(errors, fmt.Errorf("%s is not valid, please refer to the official documents: %s", k, value))
 	}
+	return
+}
+
+func validateACLBody(v interface{}, k string) (ws []string, errors []error) {
+	value := v.(string)
+	xmlDoc := etree.NewDocument()
+
+	if err := xmlDoc.ReadFromString(value); err != nil {
+		errors = append(errors, fmt.Errorf("[CRITAL]read xml from string error: %v", err))
+	}
+
+	rawRoot := xmlDoc.SelectElement("AccessControlPolicy")
+
+	var aType string
+	for _, grantee := range rawRoot.FindElements("//Grantee/*") {
+		found := false
+		for _, validType := range COSACLGranteeTypeSeq {
+			aType = grantee.SelectAttrValue("type", "unknown")
+			if aType == validType {
+				found = true
+				break
+			}
+		}
+		if !found {
+			errors = append(errors, fmt.Errorf("[CRITAL]the Grantee type[%s] is not a valid type, please refer to the official document: %v", aType, "https://cloud.tencent.com/document/product/436/30752#.E6.93.8D.E4.BD.9C-permission"))
+		}
+	}
+
+	var aPermisson string
+	for _, permission := range rawRoot.FindElements("//Permission/*") {
+		found := false
+		for _, validPermission := range COSACLPermissionSeq {
+			aPermisson = permission.Text()
+			if aPermisson == validPermission {
+				found = true
+				break
+			}
+		}
+		if !found {
+			errors = append(errors, fmt.Errorf("[CRITAL]the Grant Permission[%s] is not a valid type, please refer to the official document: %v", aPermisson, "https://cloud.tencent.com/document/product/436/30752#.E6.93.8D.E4.BD.9C-permission"))
+		}
+	}
+
 	return
 }
 
