@@ -826,7 +826,7 @@ github.com/mitchellh/reflectwalk
 github.com/moricho/tparallel
 github.com/moricho/tparallel/pkg/ssafunc
 github.com/moricho/tparallel/pkg/ssainstr
-# github.com/mozillazg/go-httpheader v0.3.1
+# github.com/mozillazg/go-httpheader v0.4.0
 ## explicit; go 1.11
 github.com/mozillazg/go-httpheader
 # github.com/nakabonne/nestif v0.3.1
@@ -1131,7 +1131,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.514
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.656
@@ -1236,7 +1236,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426
-# github.com/tencentyun/cos-go-sdk-v5 v0.7.40
+# github.com/tencentyun/cos-go-sdk-v5 v0.7.42-0.20230629101357-7edd77448a0f
 ## explicit; go 1.12
 github.com/tencentyun/cos-go-sdk-v5
 # github.com/tetafro/godot v1.4.11

@@ -1,6 +1,7 @@
 package httpheader
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"net/textproto"
@@ -20,7 +21,7 @@ type Decoder interface {
 func Decode(header http.Header, v interface{}) error {
 	val := reflect.ValueOf(v)
 	if val.Kind() != reflect.Ptr || val.IsNil() {
-		return fmt.Errorf("v should be point and should not be nil")
+		return errors.New("v should be a pointer and should not be nil")
 	}
 
 	for val.Kind() == reflect.Ptr {
@@ -33,7 +34,12 @@ func Decode(header http.Header, v interface{}) error {
 	return parseValue(header, val)
 }
 
+// parseValue populates the struct fields in val from the header fields.
+// Embedded structs are followed recursively (using the rules defined in the
+// Values function documentation) breadth-first.
 func parseValue(header http.Header, val reflect.Value) error {
+	var embedded []reflect.Value
+
 	typ := val.Type()
 	for i := 0; i < typ.NumField(); i++ {
 		sf := typ.Field(i)
@@ -49,6 +55,8 @@ func parseValue(header http.Header, val reflect.Value) error {
 		name, opts := parseTag(tag)
 		if name == "" {
 			if sf.Anonymous && sv.Kind() == reflect.Struct {
+				// save embedded struct for later processing
+				embedded = append(embedded, sv)
 				continue
 			}
 			name = sf.Name
@@ -103,11 +111,36 @@ func parseValue(header http.Header, val reflect.Value) error {
 			continue
 		}
 
+		if sv.Kind() != reflect.Slice && sv.Kind() != reflect.Array && sv.Kind() != reflect.Interface {
+			vals, exist := headerValues(header, name)
+			if !exist {
+				continue
+			}
+			v := vals[0]
+			vals = vals[1:]
+
+			if err := fillValues(sv, opts, []string{v}); err != nil {
+				return err
+			}
+
+			header.Del(name)
+			for _, v := range vals {
+				header.Add(name, v)
+			}
+			continue
+		}
+
 		valArr, exist := headerValues(header, name)
 		if !exist {
 			continue
 		}
 		if err := fillValues(sv, opts, valArr); err != nil {
+			return err
+		}
+	}
+
+	for _, f := range embedded {
+		if err := parseValue(header, f); err != nil {
 			return err
 		}
 	}

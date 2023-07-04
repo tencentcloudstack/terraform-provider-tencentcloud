@@ -1260,7 +1260,7 @@ func resourceTencentCloudCosBucketAccelerationUpdate(ctx context.Context, meta i
 	opt := &cos.BucketPutAccelerateOptions{
 		Status: status,
 	}
-	response, err := meta.(*TencentCloudClient).apiV3Conn.UseTencentCosClient(d.Id()).Bucket.PutAccelerate(ctx, opt)
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseTencentCosClient(bucket).Bucket.PutAccelerate(ctx, opt)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, status [%s], reason[%s]\n",
 			logId, "put bucket acceleration", opt.Status, err.Error())

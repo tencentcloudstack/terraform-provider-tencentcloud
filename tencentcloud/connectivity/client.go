@@ -158,6 +158,7 @@ type TencentCloudClient struct {
 	dbbrainConn        *dbbrain.Client
 	dtsConn            *dts.Client
 	ciConn             *cos.Client
+	cosBatchConn       *cos.Client
 	tsfConn            *tsf.Client
 	mpsConn            *mps.Client
 	cwpConn            *cwp.Client
@@ -1005,6 +1006,30 @@ func (me *TencentCloudClient) UseDtsClient() *dts.Client {
 	me.dtsConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.dtsConn
+}
+
+// UseCosBatchClient returns ci client for service
+func (me *TencentCloudClient) UseCosBatchClient(uin string) *cos.Client {
+	u, _ := url.Parse(fmt.Sprintf("https://%s.cos-control.%s.myqcloud.com", uin, me.Region))
+
+	if me.cosBatchConn != nil && me.cosBatchConn.BaseURL.BatchURL == u {
+		return me.cosBatchConn
+	}
+
+	baseUrl := &cos.BaseURL{
+		BatchURL: u,
+	}
+
+	me.cosBatchConn = cos.NewClient(baseUrl, &http.Client{
+		Timeout: 100 * time.Second,
+		Transport: &cos.AuthorizationTransport{
+			SecretID:     me.Credential.SecretId,
+			SecretKey:    me.Credential.SecretKey,
+			SessionToken: me.Credential.Token,
+		},
+	})
+
+	return me.cosBatchConn
 }
 
 // UseCiClient returns ci client for service

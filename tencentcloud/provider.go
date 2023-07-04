@@ -340,6 +340,9 @@ Cloud Object Storage(COS)
   Data Source
     tencentcloud_cos_bucket_object
     tencentcloud_cos_buckets
+	tencentcloud_cos_batchs
+	tencentcloud_cos_bucket_inventorys
+	tencentcloud_cos_bucket_multipart_uploads
 
   Resource
     tencentcloud_cos_bucket
@@ -349,6 +352,7 @@ Cloud Object Storage(COS)
     tencentcloud_cos_bucket_version
 	tencentcloud_cos_bucket_domain_certificate_attachment
 	tencentcloud_cos_bucket_inventory
+	tencentcloud_cos_batch
 
 Cloud Virtual Machine(CVM)
   Data Source
@@ -1783,6 +1787,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_mysql_ro_min_scale":                        dataSourceTencentCloudMysqlRoMinScale(),
 			"tencentcloud_cos_bucket_object":                         dataSourceTencentCloudCosBucketObject(),
 			"tencentcloud_cos_buckets":                               dataSourceTencentCloudCosBuckets(),
+			"tencentcloud_cos_batchs":                                dataSourceTencentCloudCosBatchs(),
+			"tencentcloud_cos_bucket_inventorys":                     dataSourceTencentCloudCosBucketInventorys(),
+			"tencentcloud_cos_bucket_multipart_uploads":              dataSourceTencentCloudCosBucketMultipartUploads(),
 			"tencentcloud_cfs_file_systems":                          dataSourceTencentCloudCfsFileSystems(),
 			"tencentcloud_cfs_access_groups":                         dataSourceTencentCloudCfsAccessGroups(),
 			"tencentcloud_cfs_access_rules":                          dataSourceTencentCloudCfsAccessRules(),
@@ -2606,6 +2613,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cos_bucket_policy":                              resourceTencentCloudCosBucketPolicy(),
 			"tencentcloud_cos_bucket_domain_certificate_attachment":       resourceTencentCloudCosBucketDomainCertificateAttachment(),
 			"tencentcloud_cos_bucket_inventory":                           resourceTencentCloudCosBucketInventory(),
+			"tencentcloud_cos_batch":                                      resourceTencentCloudCosBatch(),
 			"tencentcloud_address_template":                               resourceTencentCloudAddressTemplate(),
 			"tencentcloud_address_template_group":                         resourceTencentCloudAddressTemplateGroup(),
 			"tencentcloud_protocol_template":                              resourceTencentCloudProtocolTemplate(),

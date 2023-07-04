@@ -417,7 +417,7 @@ func resourceTencentCloudCiMediaConcatTemplateCreate(d *schema.ResourceData, met
 					}
 					audioMix.EffectConfig = &effectConfig
 				}
-				concatTemplate.AudioMix = append(concatTemplate.AudioMix, audioMix)
+				concatTemplate.AudioMixArray = append(concatTemplate.AudioMixArray, audioMix)
 			}
 		}
 		request.ConcatTemplate = &concatTemplate
@@ -565,9 +565,9 @@ func resourceTencentCloudCiMediaConcatTemplateRead(d *schema.ResourceData, meta 
 			concatTemplateMap["container"] = []interface{}{containerMap}
 		}
 
-		if mediaConcatTemplate.ConcatTemplate.AudioMix != nil {
+		if mediaConcatTemplate.ConcatTemplate.AudioMixArray != nil {
 			audioMixList := []interface{}{}
-			for _, audioMix := range mediaConcatTemplate.ConcatTemplate.AudioMix {
+			for _, audioMix := range mediaConcatTemplate.ConcatTemplate.AudioMixArray {
 				audioMixMap := map[string]interface{}{}
 
 				if audioMix.AudioSource != "" {
@@ -741,7 +741,7 @@ func resourceTencentCloudCiMediaConcatTemplateUpdate(d *schema.ResourceData, met
 						}
 						audioMix.EffectConfig = &effectConfig
 					}
-					concatTemplate.AudioMix = append(concatTemplate.AudioMix, audioMix)
+					concatTemplate.AudioMixArray = append(concatTemplate.AudioMixArray, audioMix)
 				}
 			}
 			request.ConcatTemplate = &concatTemplate

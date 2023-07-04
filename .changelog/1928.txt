@@ -1,0 +1,27 @@
+```release-note:new-data-source
+tencentcloud_cos_batchs
+```
+
+```release-note:new-data-source
+tencentcloud_cos_bucket_inventorys
+```
+
+```release-note:new-data-source
+tencentcloud_cos_bucket_multipart_uploads
+```
+
+```release-note:new-resource
+tencentcloud_cos_batch
+```
+
+```release-note:enhancement
+resource/tencentcloud_ci_media_concat_template: adapt to new cos sdk
+```
+
+```release-note:enhancement
+resource/tencentcloud_ci_media_video_montage_template: adapt to new cos sdk
+```
+
+```release-note:enhancement
+resource/tencentcloud_ci_media_transcode_template: adapt to new cos sdk
+```
