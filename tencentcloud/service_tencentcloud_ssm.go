@@ -16,14 +16,16 @@ type SsmService struct {
 }
 
 type SecretInfo struct {
-	secretName  string
-	description string
-	kmsKeyId    string
-	createUin   uint64
-	status      string
-	deleteTime  uint64
-	createTime  uint64
-	resourceId  string
+	secretName       string
+	description      string
+	kmsKeyId         string
+	secretType       int64
+	additionalConfig string
+	createUin        uint64
+	status           string
+	deleteTime       uint64
+	createTime       uint64
+	resourceId       string
 }
 
 type SecretVersionInfo struct {
@@ -101,14 +103,16 @@ func (me *SsmService) DescribeSecretByName(ctx context.Context, secretName strin
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	secret = &SecretInfo{
-		secretName:  *response.Response.SecretName,
-		description: *response.Response.Description,
-		kmsKeyId:    *response.Response.KmsKeyId,
-		createUin:   *response.Response.CreateUin,
-		status:      *response.Response.Status,
-		deleteTime:  *response.Response.DeleteTime,
-		createTime:  *response.Response.CreateTime,
-		resourceId:  fmt.Sprintf("creatorUin/%d/%s", *response.Response.CreateUin, *response.Response.SecretName),
+		secretName:       *response.Response.SecretName,
+		description:      *response.Response.Description,
+		kmsKeyId:         *response.Response.KmsKeyId,
+		secretType:       *response.Response.SecretType,
+		additionalConfig: *response.Response.AdditionalConfig,
+		createUin:        *response.Response.CreateUin,
+		status:           *response.Response.Status,
+		deleteTime:       *response.Response.DeleteTime,
+		createTime:       *response.Response.CreateTime,
+		resourceId:       fmt.Sprintf("creatorUin/%d/%s", *response.Response.CreateUin, *response.Response.SecretName),
 	}
 	return
 }
@@ -174,6 +178,12 @@ func (me *SsmService) CreateSecret(ctx context.Context, param map[string]interfa
 		}
 		if k == "kms_key_id" {
 			request.KmsKeyId = helper.String(v.(string))
+		}
+		if k == "secret_type" {
+			request.SecretType = helper.IntUint64(v.(int))
+		}
+		if k == "additional_config" {
+			request.AdditionalConfig = helper.String(v.(string))
 		}
 		if k == "secret_binary" {
 			request.SecretBinary = helper.String(v.(string))
