@@ -15,7 +15,7 @@ Provides a resource to create a monitor tmpExporterIntegration
 
 ## Example Usage
 
-Use blackbox-exporter
+### Use blackbox-exporter
 
 ```hcl
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration" {
@@ -27,7 +27,7 @@ resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegration
 }
 ```
 
-Use es-exporter
+### Use es-exporter
 
 ```hcl
 resource "tencentcloud_monitor_tmp_exporter_integration" "tmpExporterIntegrationEs" {

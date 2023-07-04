@@ -43,7 +43,7 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 }
 ```
 
-Using SPOT charge type
+### Using SPOT charge type
 
 ```hcl
 resource "tencentcloud_as_scaling_config" "launch_configuration" {

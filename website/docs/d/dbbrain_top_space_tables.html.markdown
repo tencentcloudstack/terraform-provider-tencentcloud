@@ -13,7 +13,7 @@ Use this data source to query detailed information of dbbrain top_space_tables
 
 ## Example Usage
 
-Sort by PhysicalFileSize
+### Sort by PhysicalFileSize
 
 ```hcl
 data "tencentcloud_dbbrain_top_space_tables" "top_space_tables" {
@@ -23,7 +23,7 @@ data "tencentcloud_dbbrain_top_space_tables" "top_space_tables" {
 }
 ```
 
-Sort by TotalLength
+### Sort by TotalLength
 
 ```hcl
 data "tencentcloud_dbbrain_top_space_tables" "top_space_tables" {
