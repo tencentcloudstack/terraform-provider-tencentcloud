@@ -192,10 +192,6 @@ resource "tencentcloud_ci_media_transcode_template" "media_transcode_template" {
 		audio_bitrate_adj_method = "0"
 		delete_metadata = "false"
 		is_hdr2_sdr = "false"
-		hls_encrypt {
-			is_hls_encrypt = "true"
-			# uri_key = ""
-		}
 	}
 	audio_mix {
 		audio_source = "https://` + defaultCiBucket + `.cos.ap-guangzhou.myqcloud.com/mp3%2Fnizhan-test.mp3"

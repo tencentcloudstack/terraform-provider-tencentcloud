@@ -54,10 +54,6 @@ resource "tencentcloud_ci_media_transcode_template" "media_transcode_template" {
 		audio_bitrate_adj_method = "0"
 		delete_metadata = "false"
 		is_hdr2_sdr = "false"
-		hls_encrypt {
-			is_hls_encrypt = "false"
-			uri_key = ""
-		}
   }
   audio_mix {
 		audio_source = "https://terraform-ci-1308919341.cos.ap-guangzhou.myqcloud.com/mp3%2Fnizhan-test.mp3"
@@ -365,17 +361,20 @@ func resourceTencentCloudCiMediaTranscodeTemplate() *schema.Resource {
 							Type:        schema.TypeList,
 							MaxItems:    1,
 							Optional:    true,
+							Computed:    true,
 							Description: "hls encryption configuration.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"is_hls_encrypt": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "Whether to enable HLS encryption, support encryption when Container.Format is hls.",
 									},
 									"uri_key": {
 										Type:        schema.TypeString,
 										Optional:    true,
+										Computed:    true,
 										Description: "HLS encrypted key, this parameter is only meaningful when IsHlsEncrypt is true.",
 									},
 								},
