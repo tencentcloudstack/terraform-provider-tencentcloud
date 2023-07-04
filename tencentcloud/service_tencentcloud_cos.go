@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"encoding/xml"
@@ -9,6 +10,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/beevik/etree"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -196,7 +198,7 @@ func (me *CosService) TencentCosBucketGetLocation(ctx context.Context, bucket st
 	return
 }
 
-func (me *CosService) TencentCosPutBucketACL(
+func (me *CosService) TencentCosPutBucketACLBody(
 	ctx context.Context,
 	bucket string,
 	reqBody string,
@@ -211,7 +213,7 @@ func (me *CosService) TencentCosPutBucketACL(
 		err := xml.Unmarshal([]byte(reqBody), acl)
 
 		if err != nil {
-			errRet = fmt.Errorf("cos [PutBucketACL] XML Unmarshal error: %s, bucket: %s", err.Error(), bucket)
+			errRet = fmt.Errorf("cos [PutBucketACLBody] XML Unmarshal error: %s, bucket: %s", err.Error(), bucket)
 			return
 		}
 		opt.Body = acl
@@ -226,22 +228,22 @@ func (me *CosService) TencentCosPutBucketACL(
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request [%s], reason[%s]\n",
-				logId, "PutBucketACL", req, errRet.Error())
+				logId, "PutBucketACLBody", req, errRet.Error())
 		}
 	}()
 
-	ratelimit.Check("TencentcloudCosPutBucketACL")
+	ratelimit.Check("TencentcloudCosPutBucketACLBody")
 	response, err := me.client.UseTencentCosClient(bucket).Bucket.PutACL(ctx, opt)
 
 	if err != nil {
-		errRet = fmt.Errorf("cos [PutBucketACL] error: %s, bucket: %s", err.Error(), bucket)
+		errRet = fmt.Errorf("cos [PutBucketACLBody] error: %s, bucket: %s", err.Error(), bucket)
 		return
 	}
 
 	resp, _ := json.Marshal(response.Response.Body)
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, "PutBucketACL", req, resp)
+		logId, "PutBucketACLBody", req, resp)
 
 	return nil
 }
@@ -1295,7 +1297,7 @@ func (me *CosService) GetBucketOriginDomain(ctx context.Context, bucket string) 
 	ratelimit.Check("TencentcloudCosGetBucketOriginDomain")
 	domain, response, err := me.client.UseTencentCosClient(bucket).Bucket.GetDomain(ctx)
 
-	if response.StatusCode == 404 {
+	if response != nil && response.StatusCode == 404 {
 		log.Printf("[WARN] [GetBucketOriginDomain] returns %d, %s", 404, err)
 		return make([]map[string]interface{}, 0), nil
 	}
@@ -1657,5 +1659,77 @@ func (me *CosService) BucketGetIntelligentTiering(ctx context.Context, bucket st
 	result = intelligentTieringResult
 	log.Printf("[DEBUG]%s api[%s] success, request [%s], response body [%s]\n",
 		logId, "GetIntelligentTiering", "", resp)
+	return
+}
+
+/*
+The ideal sequence COS wants.
+Priority 1: permission priority: Read first, then handle WRITE, FullControl, WRITE_ACP, last is the READ_ACP
+Priority 2: type priority: CanonicalUser first, then Group
+*/
+func (me *CosService) transACLBodyOrderly(ctx context.Context, rawAclBody string) (orderlyAclBody string, errRet error) {
+	// logId := getLogId(ctx)
+
+	rawXmlDoc := etree.NewDocument()
+	orderXmlDoc := etree.NewDocument()
+
+	if err := rawXmlDoc.ReadFromString(rawAclBody); err != nil {
+		return "", fmt.Errorf("[CRITAL]read raw xml from string error: %v", err)
+	}
+
+	rawRoot := rawXmlDoc.SelectElement("AccessControlPolicy")
+	orderedRoot := orderXmlDoc.CreateElement("AccessControlPolicy")
+
+	orderedOwner := orderedRoot.CreateElement("Owner")
+	for _, ownerChild := range rawRoot.FindElements("//Owner/*") {
+		orderedOwner.AddChild(ownerChild)
+	}
+
+	orderedACL := orderedRoot.CreateElement("AccessControlList")
+
+	// by combination of permissionSeq and granteeTypeSeq
+	for _, perSeq := range COSACLPermissionSeq {
+		for _, typeSeq := range COSACLGranteeTypeSeq {
+			for _, grantEle := range rawRoot.FindElements(fmt.Sprintf("//Grant[Permission='%s']", perSeq)) {
+				granteeEle := grantEle.SelectElement("Grantee")
+				if granteeEle != nil {
+					if granteeEle.SelectAttrValue("type", "unknown") == typeSeq {
+						orderedACL.AddChild(grantEle)
+						break
+					}
+				}
+			}
+		}
+	}
+
+	buf := &bytes.Buffer{}
+	orderXmlDoc.Indent(2)
+	_, err := orderXmlDoc.WriteTo(buf)
+	if err != nil {
+		return "", fmt.Errorf("transACLBodyOrderly write xml to buffer failed, error: %v", err)
+	}
+	orderlyAclBody = buf.String()
+
+	// keep for debug the algo
+	// for _, grant := range orderedACL.FindElements("//Grant") {
+	// 	grantee := grant.SelectElement("Grantee")
+	// 	if grantee != nil {
+	// 		// fmt.Printf("===:[%s]====\n", grantee.Tag)
+	// 		id := grantee.SelectElement("ID")
+	// 		if id != nil {
+	// 			fmt.Printf("type:[%s]", id.Text())
+	// 		}
+
+	// 		uri := grantee.SelectElement("URI")
+	// 		if uri != nil {
+	// 			fmt.Printf(" type:[%s]", uri.Text())
+	// 		}
+
+	// 		permission := grant.SelectElement("Permission")
+	// 		if permission != nil {
+	// 			fmt.Printf(" permission:[%s]\n", permission.Text())
+	// 		}
+	// 	}
+	// }
 	return
 }

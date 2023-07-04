@@ -26,37 +26,71 @@ resource "tencentcloud_cos_bucket" "mycos" {
 ```
 
 Using verbose acl
+
 ```hcl
 resource "tencentcloud_cos_bucket" "with_acl_body" {
   bucket = "mycos-1258798060"
-  # NOTE: Granting http://cam.qcloud.com/groups/global/AllUsers `READ` Permission is equivalent to "public-read" acl
+  # NOTE: Specify the acl_body by the priority sequence of permission and user type with the following sequence: `CanonicalUser with READ`, `CanonicalUser with WRITE`, `CanonicalUser with FULL_CONTROL`, `CanonicalUser with WRITE_ACP`, `CanonicalUser with READ_ACP`, then specify the `Group` of permissions same as `CanonicalUser`.
   acl_body = <<EOF
 <AccessControlPolicy>
-    <Owner>
-        <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-    </Owner>
-    <AccessControlList>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
-                <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
-            </Grantee>
-            <Permission>READ</Permission>
-        </Grant>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
-            </Grantee>
-            <Permission>WRITE</Permission>
-        </Grant>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
-            </Grantee>
-            <Permission>READ_ACP</Permission>
-        </Grant>
-    </AccessControlList>
+	<Owner>
+		<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+		<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+	</Owner>
+	<AccessControlList>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>READ</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>FULL_CONTROL</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>WRITE_ACP</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>READ_ACP</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>WRITE_ACP</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>READ</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>WRITE</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>FULL_CONTROL</Permission>
+		</Grant>
+	</AccessControlList>
 </AccessControlPolicy>
 EOF
 }
@@ -246,14 +280,17 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"reflect"
+	"strings"
 	"time"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
 
+	"github.com/beevik/etree"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -410,20 +447,11 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Optional: true,
 
 				DiffSuppressFunc: func(k, olds, news string, d *schema.ResourceData) bool {
-					var oldXML cos.BucketGetACLResult
-					err := xml.Unmarshal([]byte(olds), &oldXML)
-					if err != nil {
-						return olds == news
-					}
-					var newXML cos.BucketGetACLResult
-					err = xml.Unmarshal([]byte(news), &newXML)
-					if err != nil {
-						return olds == news
-					}
-					suppress := reflect.DeepEqual(oldXML, newXML)
-					return suppress
+					return ACLBodyDiffFunc(olds, news, d)
 				},
-				Description: "ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.",
+				DiffSuppressOnRefresh: true,
+				ValidateFunc:          validateACLBody,
+				Description:           "ACL XML body for multiple grant info. NOTE: this argument will overwrite `acl`. Check https://intl.cloud.tencent.com/document/product/436/7737 for more detail.",
 			},
 			"encryption_algorithm": {
 				Type:        schema.TypeString,
@@ -1034,15 +1062,26 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	}
 
 	if d.HasChange("acl") {
-		err := resourceTencentCloudCosBucketAclUpdate(ctx, meta, d)
+		bucket := d.Get("bucket").(string)
+		err := waitAclEnable(ctx, meta, bucket)
 		if err != nil {
 			return err
 		}
 
+		err = resourceTencentCloudCosBucketAclUpdate(ctx, meta, d)
+		if err != nil {
+			return err
+		}
 	}
 
 	if d.HasChange("acl_body") {
 		body := d.Get("acl_body")
+		bucket := d.Get("bucket").(string)
+		err := waitAclEnable(ctx, meta, bucket)
+		if err != nil {
+			return err
+		}
+
 		if err := resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx, cosService, d); err != nil {
 			return err
 		}
@@ -1147,6 +1186,32 @@ func resourceTencentCloudCosBucketUpdate(d *schema.ResourceData, meta interface{
 	time.Sleep(3 * time.Second)
 
 	return resourceTencentCloudCosBucketRead(d, meta)
+}
+
+func waitAclEnable(ctx context.Context, meta interface{}, bucket string) error {
+	logId := getLogId(ctx)
+	cosService := CosService{client: meta.(*TencentCloudClient).apiV3Conn}
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		aclResult, e := cosService.GetBucketACL(ctx, bucket)
+		if e != nil {
+			sdkError, ok := e.(*errors.TencentCloudSDKError)
+			if ok {
+				log.Printf("[CRITAL]%s api[%s] fail when try to update acl, reason[%s,%s,%s]\n", logId, "GetBucketACL", sdkError.Error(), sdkError.GetCode(), sdkError.GetMessage())
+
+				if strings.Contains(sdkError.GetMessage(), "NoSuchBucket") {
+					return resource.RetryableError(fmt.Errorf("[CRITAL][retry]%s api[%s] it still on creating, need try again.\n", logId, "GetBucketACL"))
+				}
+			}
+			log.Printf("[CRITAL]%s api[%s] fail when try to update acl, reason[%s]\n", logId, "GetBucketACL", e.Error())
+			return resource.NonRetryableError(e)
+		}
+
+		if aclResult == nil {
+			return resource.RetryableError(fmt.Errorf("[CRITAL][retry]%s api[%s] it still on creating, need try again.\n", logId, "GetBucketACL"))
+		}
+		return nil
+	})
+	return err
 }
 
 func resourceTencentCloudCosBucketDelete(d *schema.ResourceData, meta interface{}) error {
@@ -1640,6 +1705,7 @@ func resourceTencentCloudCosBucketLogStatusUpdate(ctx context.Context, meta inte
 }
 
 func resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx context.Context, service CosService, d *schema.ResourceData) error {
+	logId := getLogId(ctx)
 	aclHeader := ""
 	aclBody := ""
 	body, bodyOk := d.GetOk("acl_body")
@@ -1653,9 +1719,20 @@ func resourceTencentCloudCosBucketOriginACLBodyUpdate(ctx context.Context, servi
 	} else {
 		aclHeader = "private"
 	}
-	if err := service.TencentCosPutBucketACL(ctx, bucket, aclBody, aclHeader); err != nil {
+
+	aclBodyOrderly, err := service.transACLBodyOrderly(ctx, aclBody)
+	if err != nil {
+		return fmt.Errorf("transfer ACL Body failed, reason:%v", err.Error())
+	}
+
+	log.Printf("[DEBUG]%s transACLBodyOrderly success, before:[\n%s\n], after:[\n%s\n]\n", logId, aclBody, aclBodyOrderly)
+
+	if err = service.TencentCosPutBucketACLBody(ctx, bucket, aclBodyOrderly, aclHeader); err != nil {
 		return err
 	}
+
+	log.Printf("[DEBUG]%s api[%s] success, bucket:[%s]\n", logId, "put bucket acl body", bucket)
+
 	return nil
 }
 
@@ -1937,4 +2014,141 @@ func setBucketReplication(d *schema.ResourceData, result cos.GetBucketReplicatio
 	}
 	err = d.Set("replica_rules", rules)
 	return
+}
+
+func ACLBodyDiffFunc(olds, news string, d *schema.ResourceData) (result bool) {
+	defer logElapsed("resource.tencentcloud_cos_bucket.ACLBodyDiffFunc")()
+	log.Printf("[DEBUG] ACLBodyDiffFunc called, before:[\n%s\n], after:[\n%s\n]\n", olds, news)
+
+	oldDoc := etree.NewDocument()
+	newDoc := etree.NewDocument()
+
+	if err := oldDoc.ReadFromString(olds); err != nil {
+		log.Printf("[CRITAL]read old xml from string error: %v", err)
+		return false
+	}
+
+	if err := newDoc.ReadFromString(news); err != nil {
+		log.Printf("[CRITAL]read new xml from string error: %v", err)
+		return false
+	}
+
+	oldRoot := oldDoc.SelectElement("AccessControlPolicy")
+	newRoot := newDoc.SelectElement("AccessControlPolicy")
+
+	if oldRoot == nil || newRoot == nil {
+		log.Println("[CRITAL]oldRoot or newRoot is nil: return false.")
+		return false
+	}
+
+	oldOwner := oldRoot.SelectElement("Owner")
+	newOwner := newRoot.SelectElement("Owner")
+
+	if oldOwner == nil || newOwner == nil {
+		log.Println("[CRITAL]oldOwner or newOwner is nil: return false.")
+		return false
+	}
+
+	oldOwnerId := oldOwner.SelectElement("ID")
+	oldOwnerName := oldOwner.SelectElement("DisplayName")
+	newOwnerId := newOwner.SelectElement("ID")
+	newOwnerName := newOwner.SelectElement("DisplayName")
+
+	// diff: Owner element
+	if oldOwnerId.Text() != newOwnerId.Text() || oldOwnerName.Text() != newOwnerName.Text() {
+		log.Printf("[CRITAL]OwnerId[old:%s, new:%s] or OwnerName[old:%s, new:%s] not equal: return false.\n", oldOwnerId.Text(), newOwnerId.Text(), oldOwnerName.Text(), newOwnerName.Text())
+		return false
+	}
+
+	// diff check: owner display name(if have)
+	if oldOwnerName != nil {
+		if newOwnerName == nil {
+			log.Println("[CRITAL]newOwnerName is nil: return false.")
+			return false
+		}
+		if oldOwnerName.Text() != newOwnerName.Text() {
+			log.Printf("[CRITAL]OwnerName[old:%s, new:%s] not equal: return false.\n", oldOwnerName.Text(), newOwnerName.Text())
+			return false
+		}
+	}
+
+	// diff: ACL element
+	for _, oldGrantee := range oldRoot.FindElements("//Grantee") {
+		for _, attr := range oldGrantee.Attr {
+			if attr.Key != "type" {
+				// only need to handle the type attribute
+				continue
+			}
+			// anonymous or real user
+			oldGranteeType := attr.Value
+
+			oldGranteeID := oldGrantee.SelectElement("ID")
+			oldGranteeURI := oldGrantee.SelectElement("URI")
+			oldGranteeDisplayName := oldGrantee.SelectElement("DisplayName")
+			oldGrant := oldGrantee.Parent()
+			oldGrantPermission := oldGrant.SelectElement("Permission")
+
+			// find the new grant permission by specified grantee type
+			result = false
+			for _, newGrantee := range newRoot.FindElements(fmt.Sprintf("//Grantee[@type='%s']", oldGranteeType)) {
+				newGranteeID := newGrantee.SelectElement("ID")
+				newGranteeURI := newGrantee.SelectElement("URI")
+				newGranteeDisplayName := newGrantee.SelectElement("DisplayName")
+				newGrant := newGrantee.Parent()
+				newGrantPermission := newGrant.SelectElement("Permission")
+
+				// diff check: grantee id and name for real user
+				if oldGranteeType == COS_ACL_GRANTEE_TYPE_USER {
+					if oldGranteeID == nil || newGranteeID == nil {
+						continue
+					}
+					if oldGranteeID.Text() != newGranteeID.Text() {
+						continue
+					}
+
+					// diff check: grantee display name(if have)
+					if oldGranteeDisplayName != nil {
+						if newGranteeDisplayName == nil {
+							continue
+						}
+						if oldGranteeDisplayName.Text() != newGranteeDisplayName.Text() {
+							continue
+						}
+					}
+				}
+
+				// diff check: grantee uri for anonymous
+				if oldGranteeType == COS_ACL_GRANTEE_TYPE_ANONYMOUS {
+					if oldGranteeURI == nil || newGranteeURI == nil {
+						continue
+					}
+					if oldGranteeURI.Text() != newGranteeURI.Text() {
+						continue
+					}
+				}
+
+				// diff check: permission
+				if oldGrantPermission == nil || newGrantPermission == nil {
+					continue
+				}
+				if oldGrantPermission.Text() != newGrantPermission.Text() {
+					continue
+				}
+
+				// congrats! passed all diff checks for this grant.
+				result = true
+
+				var uid string
+				if oldGranteeType == COS_ACL_GRANTEE_TYPE_USER {
+					uid = oldGranteeID.Text()
+				} else {
+					uid = oldGranteeURI.Text()
+				}
+				log.Printf("[DEBUG] diff verification passed for grantee:[%s:%s]\n", oldGranteeType, uid)
+				break
+			}
+		}
+	}
+	log.Printf("[DEBUG] Owner:%s's final equation result between old and new ACL is:[%v]\n", oldOwnerId.Text(), result)
+	return result
 }
