@@ -3,6 +3,8 @@ Provides a resource to create a cloud file system(CFS).
 
 Example Usage
 
+Standard Nfs CFS
+
 ```hcl
 resource "tencentcloud_cfs_file_system" "foo" {
   name              = "test_file_system"
@@ -11,6 +13,54 @@ resource "tencentcloud_cfs_file_system" "foo" {
   protocol          = "NFS"
   vpc_id            = "vpc-ah9fbkap"
   subnet_id         = "subnet-9mu2t9iw"
+}
+```
+
+High-Performance Nfs CFS
+
+```hcl
+resource "tencentcloud_cfs_file_system" "foo" {
+  name              = "test_file_system"
+  net_interface     = "CCN"
+  availability_zone = "ap-guangzhou-6"
+  access_group_id   = "pgroup-drwt29od"
+  protocol          = "TURBO"
+  storage_type      = "TP"
+  capacity          = 10240
+  ccn_id             = "ccn-39lqkygf"
+  cidr_block         = "11.0.0.0/24"
+}
+```
+
+Standard Turbo CFS
+
+```hcl
+resource "tencentcloud_cfs_file_system" "foo" {
+  name              = "test_file_system"
+  net_interface     = "CCN"
+  availability_zone = "ap-guangzhou-6"
+  access_group_id   = "pgroup-drwt29od"
+  protocol          = "TURBO"
+  storage_type      = "TB"
+  capacity          = 20480
+  ccn_id             = "ccn-39lqkygf"
+  cidr_block         = "11.0.0.0/24"
+}
+```
+
+High-Performance Turbo CFS
+
+```hcl
+resource "tencentcloud_cfs_file_system" "foo" {
+  name              = "test_file_system"
+  net_interface     = "CCN"
+  availability_zone = "ap-guangzhou-6"
+  access_group_id   = "pgroup-drwt29od"
+  protocol          = "TURBO"
+  storage_type      = "TP"
+  capacity          = 10240
+  ccn_id             = "ccn-39lqkygf"
+  cidr_block         = "11.0.0.0/24"
 }
 ```
 
@@ -64,31 +114,40 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 				Required:    true,
 				Description: "ID of a access group.",
 			},
+			"net_interface": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      CFS_NET_VPC,
+				ValidateFunc: validateAllowedStringValue(CFS_NET),
+				Description:  "Network type, Default `VPC`. Valid values: `VPC` and `CCN`. Select `VPC` for a Standard or High-Performance file system, and `CCN` for a Standard Turbo or High-Performance Turbo one.",
+			},
 			"protocol": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      CFS_PROTOCOL_NFS,
 				ValidateFunc: validateAllowedStringValue(CFS_PROTOCOL),
 				ForceNew:     true,
-				Description:  "File service protocol. Valid values are `NFS` and `CIFS`. and the default is `NFS`.",
+				Description:  "File system protocol. Valid values: `NFS`, `CIFS`, `TURBO`. If this parameter is left empty, `NFS` is used by default. For the Turbo series, you must set this parameter to `TURBO`.",
 			},
 			"storage_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     CFS_STORAGETYPE_SD,
-				ForceNew:    true,
-				Description: "File service StorageType. Valid values are `SD` and `HP`. and the default is `SD`.",
+				Type:         schema.TypeString,
+				Optional:     true,
+				Default:      CFS_STORAGETYPE_SD,
+				ValidateFunc: validateAllowedStringValue(CFS_STORAGETYPE),
+				ForceNew:     true,
+				Description:  "Storage type of the file system. Valid values: `SD` (Standard), `HP` (High-Performance), `TB` (Standard Turbo), and `TP` (High-Performance Turbo). Default value: `SD`.",
 			},
-
 			"vpc_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "ID of a VPC network.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
+				Computed:    true,
 				ForceNew:    true,
 				Description: "ID of a subnet.",
 			},
@@ -99,7 +158,24 @@ func resourceTencentCloudCfsFileSystem() *schema.Resource {
 				Computed:    true,
 				Description: "IP of mount point.",
 			},
-
+			"ccn_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "CCN instance ID (required if the network type is CCN).",
+			},
+			"cidr_block": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "CCN IP range used by the CFS (required if the network type is CCN), which cannot conflict with other IP ranges bound in CCN.",
+			},
+			"capacity": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				Description: "File system capacity, in GiB (required for the Turbo series). For Standard Turbo, the minimum purchase required is 40,960 GiB (40 TiB) and the expansion increment is 20,480 GiB (20 TiB). For High-Performance Turbo, the minimum purchase required is 20,480 GiB (20 TiB) and the expansion increment is 10,240 GiB (10 TiB).",
+			},
 			// computed
 			"create_time": {
 				Type:        schema.TypeString,
@@ -130,6 +206,7 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 
 	request := cfs.NewCreateCfsFileSystemRequest()
 	request.Zone = helper.String(d.Get("availability_zone").(string))
+	request.NetInterface = helper.String(d.Get("net_interface").(string))
 	request.PGroupId = helper.String(d.Get("access_group_id").(string))
 	request.Protocol = helper.String(d.Get("protocol").(string))
 	request.VpcId = helper.String(d.Get("vpc_id").(string))
@@ -141,7 +218,15 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	if v, ok := d.GetOk("mount_ip"); ok {
 		request.MountIP = helper.String(v.(string))
 	}
-	request.NetInterface = helper.String("VPC")
+	if v, ok := d.GetOk("ccn_id"); ok {
+		request.CcnId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("cidr_block"); ok {
+		request.CidrBlock = helper.String(v.(string))
+	}
+	if v, ok := d.GetOkExists("capacity"); ok {
+		request.Capacity = helper.IntUint64(v.(int))
+	}
 
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
 		for tagKey, tagValue := range v {
@@ -154,7 +239,7 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	}
 
 	fsId := ""
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().CreateCfsFileSystem(request)
 		if err != nil {
@@ -178,7 +263,7 @@ func resourceTencentCloudCfsFileSystemCreate(d *schema.ResourceData, meta interf
 	d.SetId(fsId)
 
 	// wait for success status
-	err = resource.Retry(2*readRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(3*readRetryTimeout, func() *resource.RetryError {
 		fileSystems, errRet := cfsService.DescribeFileSystem(ctx, fsId, "", "")
 		if errRet != nil {
 			return retryError(errRet, InternalError)
@@ -242,6 +327,7 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("protocol", fileSystem.Protocol)
 	_ = d.Set("create_time", fileSystem.CreationTime)
 	_ = d.Set("storage_type", fileSystem.StorageType)
+	_ = d.Set("capacity", fileSystem.SizeLimit)
 
 	var mountTarget *cfs.MountInfo
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
@@ -270,7 +356,9 @@ func resourceTencentCloudCfsFileSystemRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("vpc_id", mountTarget.VpcId)
 		_ = d.Set("subnet_id", mountTarget.SubnetId)
 		_ = d.Set("mount_ip", mountTarget.IpAddress)
-		_ = d.Set("fs_id", mountTarget.FSID)
+		_ = d.Set("ccn_id", mountTarget.CcnID)
+		_ = d.Set("cidr_block", mountTarget.CidrBlock)
+		_ = d.Set("net_interface", mountTarget.NetworkInterface)
 	}
 
 	return nil
@@ -283,6 +371,14 @@ func resourceTencentCloudCfsFileSystemUpdate(d *schema.ResourceData, meta interf
 	fsId := d.Id()
 	cfsService := CfsService{
 		client: meta.(*TencentCloudClient).apiV3Conn,
+	}
+
+	immutableArgs := []string{"ccn_id", "cidr_block", "net_interface", "capacity"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	d.Partial(true)
