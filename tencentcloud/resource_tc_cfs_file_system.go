@@ -21,14 +21,12 @@ High-Performance Nfs CFS
 ```hcl
 resource "tencentcloud_cfs_file_system" "foo" {
   name              = "test_file_system"
-  net_interface     = "CCN"
   availability_zone = "ap-guangzhou-6"
   access_group_id   = "pgroup-drwt29od"
-  protocol          = "TURBO"
-  storage_type      = "TP"
-  capacity          = 10240
-  ccn_id             = "ccn-39lqkygf"
-  cidr_block         = "11.0.0.0/24"
+  protocol          = "NFS"
+  storage_type      = "HP"
+  vpc_id            = "vpc-86v957zb"
+  subnet_id         = "subnet-enm92y0m"
 }
 ```
 
