@@ -13,10 +13,22 @@ Provides a resource to create a cynosdb upgrade_proxy_version
 
 ## Example Usage
 
+modification
+
 ```hcl
 resource "tencentcloud_cynosdb_upgrade_proxy_version" "upgrade_proxy_version" {
   cluster_id        = "cynosdbmysql-bws8h88b"
   proxy_group_id    = "cynosdbmysql-proxy-laz8hd6c"
+  src_proxy_version = "1.3.5"
+  dst_proxy_version = "1.3.7"
+}
+```
+
+Modify all proxy database versions in the current cluster
+
+```hcl
+resource "tencentcloud_cynosdb_upgrade_proxy_version" "upgrade_proxy_version" {
+  cluster_id        = "cynosdbmysql-bws8h88b"
   src_proxy_version = "1.3.5"
   dst_proxy_version = "1.3.7"
 }
