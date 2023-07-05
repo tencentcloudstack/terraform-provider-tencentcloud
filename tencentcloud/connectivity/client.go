@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	ciam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331"
+
 	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -165,6 +167,7 @@ type TencentCloudClient struct {
 	chdfsConn          *chdfs.Client
 	mdlConn            *mdl.Client
 	apmConn            *apm.Client
+	ciamConn           *ciam.Client
 	tseConn            *tse.Client
 }
 
@@ -1161,6 +1164,20 @@ func (me *TencentCloudClient) UseApmClient() *apm.Client {
 	me.apmConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.apmConn
+}
+
+// UseCiamClient returns ciam client for service
+func (me *TencentCloudClient) UseCiamClient() *ciam.Client {
+	if me.ciamConn != nil {
+		return me.ciamConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.ciamConn, _ = ciam.NewClient(me.Credential, me.Region, cpf)
+	me.ciamConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ciamConn
 }
 
 // UseTseClient returns tse client for service
