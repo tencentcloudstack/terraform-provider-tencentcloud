@@ -13,7 +13,7 @@ Provides a resource to create a postgresql backup_download_restriction_config
 
 ## Example Usage
 
-Unlimit the restriction of the backup file download.
+### Unlimit the restriction of the backup file download.
 
 ```hcl
 resource "tencentcloud_postgresql_backup_download_restriction_config" "backup_download_restriction_config" {
@@ -21,7 +21,7 @@ resource "tencentcloud_postgresql_backup_download_restriction_config" "backup_do
 }
 ```
 
-Set the download only to allow the intranet downloads.
+### Set the download only to allow the intranet downloads.
 
 ```hcl
 resource "tencentcloud_postgresql_backup_download_restriction_config" "backup_download_restriction_config" {
@@ -29,7 +29,7 @@ resource "tencentcloud_postgresql_backup_download_restriction_config" "backup_do
 }
 ```
 
-Restrict the backup file download by customizing.
+### Restrict the backup file download by customizing.
 
 ```hcl
 resource "tencentcloud_vpc" "pg_vpc" {

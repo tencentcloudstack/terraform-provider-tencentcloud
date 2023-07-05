@@ -24,6 +24,9 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   }
 }
 ```
+
+
+
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   cluster_id       = "cynosdbmysql-bws8h88b"
@@ -38,7 +41,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 }
 ```
 
-Open connection pool
+### Open connection pool
 
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
@@ -57,7 +60,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 }
 ```
 
-Close connection pool
+### Close connection pool
 
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
@@ -73,6 +76,9 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   }
 }
 ```
+
+
+
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   cluster_id           = "cynosdbmysql-bws8h88b"
@@ -91,6 +97,9 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   }
 }
 ```
+
+
+
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   cluster_id           = "cynosdbmysql-bws8h88b"
@@ -107,7 +116,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 }
 ```
 
-Comprehensive parameter examples
+### Comprehensive parameter examples
 
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {

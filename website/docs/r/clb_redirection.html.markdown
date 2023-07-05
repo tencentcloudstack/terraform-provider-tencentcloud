@@ -13,7 +13,7 @@ Provides a resource to create a CLB redirection.
 
 ## Example Usage
 
-Manual Rewrite
+### Manual Rewrite
 
 ```hcl
 resource "tencentcloud_clb_redirection" "foo" {
@@ -25,7 +25,7 @@ resource "tencentcloud_clb_redirection" "foo" {
 }
 ```
 
-Auto Rewrite
+### Auto Rewrite
 
 ```hcl
 resource "tencentcloud_clb_redirection" "foo" {

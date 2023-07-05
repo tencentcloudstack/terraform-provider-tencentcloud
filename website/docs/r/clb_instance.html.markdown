@@ -13,7 +13,7 @@ Provides a resource to create a CLB instance.
 
 ## Example Usage
 
-INTERNAL CLB
+### INTERNAL CLB
 
 ```hcl
 resource "tencentcloud_clb_instance" "internal_clb" {
@@ -29,7 +29,7 @@ resource "tencentcloud_clb_instance" "internal_clb" {
 }
 ```
 
-OPEN CLB
+### OPEN CLB
 
 ```hcl
 resource "tencentcloud_clb_instance" "open_clb" {
@@ -47,7 +47,7 @@ resource "tencentcloud_clb_instance" "open_clb" {
 }
 ```
 
-Default enable
+### Default enable
 
 ```hcl
 resource "tencentcloud_subnet" "subnet" {
@@ -90,7 +90,7 @@ resource "tencentcloud_clb_instance" "open_clb" {
 }
 ```
 
-CREATE multiple instance
+### CREATE multiple instance
 
 ```hcl
 resource "tencentcloud_clb_instance" "open_clb1" {
@@ -100,7 +100,7 @@ resource "tencentcloud_clb_instance" "open_clb1" {
 }
 ```
 
-CREATE instance with log
+### CREATE instance with log
 
 ```hcl
 resource "tencentcloud_vpc" "vpc_test" {

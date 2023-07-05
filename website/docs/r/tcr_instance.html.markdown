@@ -24,7 +24,7 @@ resource "tencentcloud_tcr_instance" "foo" {
 }
 ```
 
-Using public network access whitelist
+### Using public network access whitelist
 
 ```hcl
 resource "tencentcloud_tcr_instance" "foo" {
@@ -40,7 +40,7 @@ resource "tencentcloud_tcr_instance" "foo" {
 }
 ```
 
-Create with Replications
+### Create with Replications
 
 ```hcl
 resource "tencentcloud_tcr_instance" "foo" {

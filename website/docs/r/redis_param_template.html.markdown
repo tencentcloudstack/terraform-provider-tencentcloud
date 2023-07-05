@@ -25,7 +25,7 @@ resource "tencentcloud_redis_param_template" "param_template" {
 }
 ```
 
-Copy from another template
+### Copy from another template
 
 ```hcl
 resource "tencentcloud_redis_param_template" "param_template" {
