@@ -13,7 +13,7 @@ Provides a resource to verify the domain ownership by specified way when DomainN
 
 ## Example Usage
 
-dnsCheck way:
+### dnsCheck way:
 
 ```hcl
 resource "tencentcloud_css_authenticate_domain_owner_operation" "dnsCheck" {
@@ -22,7 +22,7 @@ resource "tencentcloud_css_authenticate_domain_owner_operation" "dnsCheck" {
 }
 ```
 
-fileCheck way:
+### fileCheck way:
 
 ```hcl
 resource "tencentcloud_css_authenticate_domain_owner_operation" "fileCheck" {

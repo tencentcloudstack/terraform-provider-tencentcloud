@@ -15,7 +15,7 @@ Provide a resource to configure kubernetes cluster app addons.
 
 ## Example Usage
 
-Install cbs addon by passing values
+### Install cbs addon by passing values
 
 ```hcl
 resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
@@ -28,7 +28,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {
 }
 ```
 
-Install tcr addon by passing values
+### Install tcr addon by passing values
 
 ```hcl
 resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
@@ -104,7 +104,7 @@ resource "tencentcloud_tcr_namespace" "my_ns" {
 }
 ```
 
-Install new addon by passing spec json to req_body directly
+### Install new addon by passing spec json to req_body directly
 
 ```hcl
 resource "tencentcloud_kubernetes_addon_attachment" "addon_cbs" {

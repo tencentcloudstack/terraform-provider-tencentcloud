@@ -13,7 +13,7 @@ Provides a COS object resource to put an object(content or file) to the bucket.
 
 ## Example Usage
 
-Uploading a file to a bucket
+### Uploading a file to a bucket
 
 ```hcl
 resource "tencentcloud_cos_bucket_object" "myobject" {
@@ -23,7 +23,7 @@ resource "tencentcloud_cos_bucket_object" "myobject" {
 }
 ```
 
-Uploading a content to a bucket
+### Uploading a content to a bucket
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {

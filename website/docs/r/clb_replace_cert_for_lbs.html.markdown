@@ -22,6 +22,9 @@ resource "tencentcloud_clb_replace_cert_for_lbs" "replace_cert_for_lbs" {
   }
 }
 ```
+
+
+
 ```hcl
 terraform import tencentcloud_clb_replace_cert_for_lbs.replace_cert_for_lbs replace_cert_for_lbs_id
 ```

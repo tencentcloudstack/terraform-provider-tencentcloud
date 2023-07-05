@@ -13,7 +13,7 @@ Provides a resource to limit CCN bandwidth.
 
 ## Example Usage
 
-Set the upper limit of regional outbound bandwidth
+### Set the upper limit of regional outbound bandwidth
 
 ```hcl
 variable "other_region1" {
@@ -33,7 +33,7 @@ resource "tencentcloud_ccn_bandwidth_limit" "limit1" {
 }
 ```
 
-Set the upper limit between regions
+### Set the upper limit between regions
 
 ```hcl
 variable "other_region1" {

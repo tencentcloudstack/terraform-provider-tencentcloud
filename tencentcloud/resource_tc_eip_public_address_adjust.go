@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_eip_public_address_adjust" "public_address_adjust" {
-  instance_id = "ins-osckfnm7"
-  address_id = "eip-erft45fu"
+  instance_id = "ins-cr2rfq78"
+  address_id  = "eip-erft45fu"
 }
 ```
 */
@@ -34,7 +34,6 @@ func resourceTencentCloudEipPublicAddressAdjust() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "A unique ID that identifies the CVM instance. The unique ID of CVM is in the form:`ins-osckfnm7`.",
 			},
-
 			"address_id": {
 				Optional:    true,
 				ForceNew:    true,
@@ -49,13 +48,15 @@ func resourceTencentCloudEipPublicAddressAdjustCreate(d *schema.ResourceData, me
 	defer logElapsed("resource.tencentcloud_vpc_public_address_adjust.create")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
 	var (
+		logId      = getLogId(contextNil)
+		service    = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request    = vpc.NewAdjustPublicAddressRequest()
 		instanceId string
 		addressId  string
+		taskId     uint64
 	)
+
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
 		request.InstanceId = helper.String(v.(string))
@@ -73,23 +74,23 @@ func resourceTencentCloudEipPublicAddressAdjustCreate(d *schema.ResourceData, me
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		taskId = *result.Response.TaskId
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s operate vpc publicAddressAdjust failed, reason:%+v", logId, err)
 		return err
 	}
 
-	d.SetId(instanceId + FILED_SP + addressId)
-
-	service := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 1*readRetryTimeout, time.Second, service.VpcIpv6AddressStateRefreshFunc(d.Id(), []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{"SUCCESS"}, 1*readRetryTimeout, time.Second, service.VpcIpv6AddressStateRefreshFunc(helper.UInt64ToStr(taskId), []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
 	}
 
+	d.SetId(instanceId + FILED_SP + addressId)
 	return resourceTencentCloudEipPublicAddressAdjustRead(d, meta)
 }
 

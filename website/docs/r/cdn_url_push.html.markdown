@@ -19,7 +19,7 @@ resource "tencentcloud_cdn_url_push" "foo" {
 }
 ```
 
-argument to request new push task with same urls
+### argument to request new push task with same urls
 
 ```hcl
 resource "tencentcloud_cdn_url_push" "foo" {

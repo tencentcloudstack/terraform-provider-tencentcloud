@@ -13,7 +13,7 @@ Use this data source to query detailed information of cynosdb instance_slow_quer
 
 ## Example Usage
 
-Query slow queries of instance
+### Query slow queries of instance
 
 ```hcl
 variable "cynosdb_cluster_id" {
@@ -32,7 +32,7 @@ data "tencentcloud_cynosdb_instance_slow_queries" "instance_slow_queries" {
 }
 ```
 
-Query slow queries by time range
+### Query slow queries by time range
 
 ```hcl
 variable "cynosdb_cluster_id" {
@@ -48,7 +48,7 @@ data "tencentcloud_cynosdb_instance_slow_queries" "instance_slow_queries" {
 }
 ```
 
-Query slow queries by user and db name
+### Query slow queries by user and db name
 
 ```hcl
 variable "cynosdb_cluster_id" {
