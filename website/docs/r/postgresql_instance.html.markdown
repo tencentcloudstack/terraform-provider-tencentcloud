@@ -56,7 +56,7 @@ resource "tencentcloud_postgresql_instance" "foo" {
 }
 ```
 
-Create a multi available zone bucket
+### Create a multi available zone bucket
 
 ```hcl
 variable "availability_zone" {
@@ -111,7 +111,7 @@ resource "tencentcloud_postgresql_instance" "foo" {
 }
 ```
 
-create pgsql with kms key
+### create pgsql with kms key
 
 ```hcl
 resource "tencentcloud_postgresql_instance" "pg" {
@@ -145,7 +145,7 @@ resource "tencentcloud_postgresql_instance" "pg" {
 }
 ```
 
-upgrade kernel version
+### upgrade kernel version
 
 ```hcl
 resource "tencentcloud_postgresql_instance" "test" {

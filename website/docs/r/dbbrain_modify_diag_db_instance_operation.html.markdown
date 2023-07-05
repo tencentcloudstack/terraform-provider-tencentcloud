@@ -23,6 +23,9 @@ resource "tencentcloud_dbbrain_modify_diag_db_instance_operation" "on" {
   instance_ids = ["%s"]
 }
 ```
+
+
+
 ```hcl
 resource "tencentcloud_dbbrain_modify_diag_db_instance_operation" "off" {
   instance_confs {

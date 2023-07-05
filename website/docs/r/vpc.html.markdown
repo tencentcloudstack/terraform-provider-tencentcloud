@@ -26,7 +26,7 @@ resource "tencentcloud_vpc" "foo" {
 }
 ```
 
-Using Assistant CIDR
+### Using Assistant CIDR
 
 ```hcl
 resource "tencentcloud_vpc" "foo" {

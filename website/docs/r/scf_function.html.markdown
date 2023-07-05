@@ -25,7 +25,7 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
-Using CFS config
+### Using CFS config
 
 ```hcl
 resource "tencentcloud_scf_function" "foo" {

@@ -33,7 +33,7 @@ resource "tencentcloud_redis_instance" "redis_instance_test_2" {
 }
 ```
 
-Using multi replica zone set
+### Using multi replica zone set
 
 ```hcl
 data "tencentcloud_availability_zones" "az" {
