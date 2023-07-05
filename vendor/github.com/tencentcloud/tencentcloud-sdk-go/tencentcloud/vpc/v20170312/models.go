@@ -569,7 +569,7 @@ type AllocateAddressesRequestParams struct {
 	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
 
 	// EIP出带宽上限，单位：Mbps。
-	// <ul style="margin:0"><li>已开通标准账户类型白名单的用户，可选值范围取决于EIP计费方式：<ul><li>BANDWIDTH_PACKAGE：1 Mbps 至 2000 Mbps</li>
+	// <ul style="margin:0"><li>已开通标准账户类型白名单的用户，可选值范围取决于EIP计费方式：<ul><li>BANDWIDTH_PACKAGE：1 Mbps 至 1000 Mbps</li>
 	// <li>BANDWIDTH_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li>
 	// <li>BANDWIDTH_PREPAID_BY_MONTH：1 Mbps 至 200 Mbps</li>
 	// <li>TRAFFIC_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li></ul>默认值：1 Mbps。</li>
@@ -582,8 +582,6 @@ type AllocateAddressesRequestParams struct {
 	// EIP类型。默认值：EIP。
 	// <ul style="margin:0"><li>已开通Anycast公网加速白名单的用户，可选值：<ul><li>AnycastEIP：加速IP，可参见 [Anycast 公网加速](https://cloud.tencent.com/document/product/644)</li></ul>注意：仅部分地域支持加速IP。</li></ul>
 	// <ul style="margin:0"><li>已开通精品IP白名单的用户，可选值：<ul><li>HighQualityEIP：精品IP</li></ul>注意：仅部分地域支持精品IP。</li></ul>
-	// </ul>
-	// <ul style="margin:0"><li>已开高防IP白名单的用户，可选值：<ul><li>AntiDDoSEIP：高防IP</li></ul>注意：仅部分地域支持高防IP。</li></ul>
 	AddressType *string `json:"AddressType,omitempty" name:"AddressType"`
 
 	// Anycast发布域。
@@ -630,7 +628,7 @@ type AllocateAddressesRequest struct {
 	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
 
 	// EIP出带宽上限，单位：Mbps。
-	// <ul style="margin:0"><li>已开通标准账户类型白名单的用户，可选值范围取决于EIP计费方式：<ul><li>BANDWIDTH_PACKAGE：1 Mbps 至 2000 Mbps</li>
+	// <ul style="margin:0"><li>已开通标准账户类型白名单的用户，可选值范围取决于EIP计费方式：<ul><li>BANDWIDTH_PACKAGE：1 Mbps 至 1000 Mbps</li>
 	// <li>BANDWIDTH_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li>
 	// <li>BANDWIDTH_PREPAID_BY_MONTH：1 Mbps 至 200 Mbps</li>
 	// <li>TRAFFIC_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li></ul>默认值：1 Mbps。</li>
@@ -643,8 +641,6 @@ type AllocateAddressesRequest struct {
 	// EIP类型。默认值：EIP。
 	// <ul style="margin:0"><li>已开通Anycast公网加速白名单的用户，可选值：<ul><li>AnycastEIP：加速IP，可参见 [Anycast 公网加速](https://cloud.tencent.com/document/product/644)</li></ul>注意：仅部分地域支持加速IP。</li></ul>
 	// <ul style="margin:0"><li>已开通精品IP白名单的用户，可选值：<ul><li>HighQualityEIP：精品IP</li></ul>注意：仅部分地域支持精品IP。</li></ul>
-	// </ul>
-	// <ul style="margin:0"><li>已开高防IP白名单的用户，可选值：<ul><li>AntiDDoSEIP：高防IP</li></ul>注意：仅部分地域支持高防IP。</li></ul>
 	AddressType *string `json:"AddressType,omitempty" name:"AddressType"`
 
 	// Anycast发布域。
@@ -1242,26 +1238,26 @@ func (r *AssociateDhcpIpWithAddressIpResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssociateDirectConnectGatewayNatGatewayRequestParams struct {
-	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// 专线网关ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
 	// NAT网关ID。
 	NatGatewayId *string `json:"NatGatewayId,omitempty" name:"NatGatewayId"`
 
-	// 专线网关ID。
+	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
 	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
 }
 
 type AssociateDirectConnectGatewayNatGatewayRequest struct {
 	*tchttp.BaseRequest
 	
-	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// 专线网关ID。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
 	// NAT网关ID。
 	NatGatewayId *string `json:"NatGatewayId,omitempty" name:"NatGatewayId"`
 
-	// 专线网关ID。
+	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
 	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
 }
 
@@ -4208,7 +4204,7 @@ type CreateNetDetectRequestParams struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
-	// 下一跳类型为CCN，取值云联网ID，形如：ccn-12345678；
+	// 下一跳类型为CCN，取值云云联网ID，形如：ccn-12345678；
 	// 下一跳类型为NONEXTHOP，指定网络探测为无下一跳的网络探测；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
@@ -4247,7 +4243,7 @@ type CreateNetDetectRequest struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
-	// 下一跳类型为CCN，取值云联网ID，形如：ccn-12345678；
+	// 下一跳类型为CCN，取值云云联网ID，形如：ccn-12345678；
 	// 下一跳类型为NONEXTHOP，指定网络探测为无下一跳的网络探测；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
@@ -12447,7 +12443,6 @@ type DescribeNetworkInterfacesRequestParams struct {
 	// <li>eni-type - String -是否必填：否- （过滤条件）按照网卡类型进行过滤。“0”-辅助网卡，“1”-主网卡，“2”：中继网卡。</li>
 	// <li>eni-qos - String -是否必填：否- （过滤条件）按照网卡服务质量进行过滤。“AG”-服务质量为云铜，“AU”-服务质量为云银。</li>
 	// <li>address-ipv6 - String - 是否必填：否 -（过滤条件）内网IPv6地址过滤，支持多ipv6地址查询，如果和address-ip一起使用取交集。</li>
-	// <li>public-address-ip - String - （过滤条件）公网IPv4地址，精确匹配。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -12479,7 +12474,6 @@ type DescribeNetworkInterfacesRequest struct {
 	// <li>eni-type - String -是否必填：否- （过滤条件）按照网卡类型进行过滤。“0”-辅助网卡，“1”-主网卡，“2”：中继网卡。</li>
 	// <li>eni-qos - String -是否必填：否- （过滤条件）按照网卡服务质量进行过滤。“AG”-服务质量为云铜，“AU”-服务质量为云银。</li>
 	// <li>address-ipv6 - String - 是否必填：否 -（过滤条件）内网IPv6地址过滤，支持多ipv6地址查询，如果和address-ip一起使用取交集。</li>
-	// <li>public-address-ip - String - （过滤条件）公网IPv4地址，精确匹配。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -20293,7 +20287,7 @@ type ModifyNetDetectRequestParams struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
-	// 下一跳类型为CCN，取值云联网ID，形如：ccn-12345678；
+	// 下一跳类型为CCN，取值云云联网ID，形如：ccn-12345678；
 	// 下一跳类型为NONEXTHOP，指定网络探测为无下一跳的网络探测；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
@@ -20329,7 +20323,7 @@ type ModifyNetDetectRequest struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
-	// 下一跳类型为CCN，取值云联网ID，形如：ccn-12345678；
+	// 下一跳类型为CCN，取值云云联网ID，形如：ccn-12345678；
 	// 下一跳类型为NONEXTHOP，指定网络探测为无下一跳的网络探测；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
@@ -22037,10 +22031,6 @@ type NatGateway struct {
 	// NAT网关是否被封禁。“NORMAL”：未被封禁，“RESTRICTED”：已被封禁。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RestrictState *string `json:"RestrictState,omitempty" name:"RestrictState"`
-
-	// NAT网关大版本号，传统型=1，标准型=2
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	NatProductVersion *uint64 `json:"NatProductVersion,omitempty" name:"NatProductVersion"`
 }
 
 type NatGatewayAddress struct {
@@ -22127,7 +22117,7 @@ type NetDetect struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
-	// 下一跳类型为CCN，取值云联网ID，形如：ccn-12345678；
+	// 下一跳类型为CCN，取值云云联网ID，形如：ccn-12345678；
 	// 下一跳类型为NONEXTHOP，指定网络探测为无下一跳的网络探测；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
@@ -24436,10 +24426,10 @@ type SnapshotPolicy struct {
 }
 
 type SourceIpTranslationNatRule struct {
-	// 资源ID，如果ResourceType为USERDEFINED，可以为空
+	// 资源ID
 	ResourceId *string `json:"ResourceId,omitempty" name:"ResourceId"`
 
-	// 资源类型，目前包含SUBNET、NETWORKINTERFACE、USERDEFINED
+	// 资源类型，目前包含SUBNET、NETWORKINTERFACE
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceType *string `json:"ResourceType,omitempty" name:"ResourceType"`
 
