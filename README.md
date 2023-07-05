@@ -1,4 +1,21 @@
-# terraform-provider-tencentcloud
+# Terraform Provider For TencentCloud
+
+<div style="text-align: center">
+  <p>
+    <img src=".github/terraform_logo.svg" alt="logo" title="Terraform" height="250">
+    <br>
+    <i>Tencent Infrastructure Automation for Terraform.</i>
+    <br>
+  </p>
+</div>
+
+[![stars](https://img.shields.io/github/stars/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/stars/tencentcloudstack/terraform-provider-tencentcloud)
+[![Forks](https://img.shields.io/github/forks/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/forks/tencentcloudstack/terraform-provider-tencentcloud)
+[![Go Report Card](https://goreportcard.com/badge/github.com/tencentcloudstack/terraform-provider-tencentcloud)](https://goreportcard.com/report/github.com/tencentcloudstack/terraform-provider-tencentcloud)
+[![Releases](https://img.shields.io/github/release/tencentcloudstack/terraform-provider-tencentcloud.svg?style=flat-square)](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/releases)
+[![License](https://img.shields.io/github/license/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/license/tencentcloudstack/terraform-provider-tencentcloud)
+[![Issues](https://img.shields.io/github/issues/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/issues/tencentcloudstack/terraform-provider-tencentcloud)
+
 
 ## Requirements
 
@@ -112,3 +129,5 @@ This will disable the verify steps, so after you update this provider, you won't
 ### Document
 
 Keep in mind that document changes is also needed when resources, data sources, attributes changed in code.
+- Tutorials: [learn.hashicorp.com](https://learn.hashicorp.com/terraform?track=getting-started#getting-started)
+- Documentation: https://registry.terraform.io/providers/tencentcloudstack/tencentcloud/latest/docs
