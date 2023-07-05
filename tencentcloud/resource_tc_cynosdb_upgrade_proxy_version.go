@@ -3,7 +3,7 @@ Provides a resource to create a cynosdb upgrade_proxy_version
 
 Example Usage
 
-Specify `proxy_group_id` modification
+Specify proxy_group_id modification
 ```hcl
 resource "tencentcloud_cynosdb_upgrade_proxy_version" "upgrade_proxy_version" {
   cluster_id        = "cynosdbmysql-bws8h88b"
