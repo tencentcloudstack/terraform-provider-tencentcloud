@@ -22,7 +22,7 @@ resource "tencentcloud_eip_association" "foo" {
 }
 ```
 
-or
+### or
 
 ```hcl
 resource "tencentcloud_eip_association" "bar" {

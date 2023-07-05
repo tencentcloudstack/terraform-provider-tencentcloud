@@ -13,7 +13,7 @@ Provides a COS resource to create a COS bucket and set its attributes.
 
 ## Example Usage
 
-Private Bucket
+### Private Bucket
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -22,7 +22,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
-Creation of multiple available zone bucket
+### Creation of multiple available zone bucket
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -34,7 +34,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
-Using verbose acl
+### Using verbose acl
 
 ```hcl
 resource "tencentcloud_cos_bucket" "with_acl_body" {
@@ -105,7 +105,7 @@ EOF
 }
 ```
 
-Static Website
+### Static Website
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -122,7 +122,7 @@ output "endpoint_test" {
 }
 ```
 
-Using CORS
+### Using CORS
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -139,7 +139,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
-Using object lifecycle
+### Using object lifecycle
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -161,7 +161,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
-Using custom origin domain settings
+### Using custom origin domain settings
 
 ```hcl
 resource "tencentcloud_cos_bucket" "with_origin" {
@@ -175,7 +175,7 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 }
 ```
 
-Using origin-pull settings
+### Using origin-pull settings
 
 ```hcl
 resource "tencentcloud_cos_bucket" "with_origin" {
@@ -197,7 +197,7 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 }
 ```
 
-Using replication
+### Using replication
 
 ```hcl
 resource "tencentcloud_cos_bucket" "replica1" {
@@ -220,7 +220,7 @@ resource "tencentcloud_cos_bucket" "with_replication" {
 }
 ```
 
-Setting log status
+### Setting log status
 
 ```hcl
 resource "tencentcloud_cam_role" "cosLogGrant" {

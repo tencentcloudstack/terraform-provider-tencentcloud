@@ -21,7 +21,7 @@ resource "tencentcloud_cdn_url_purge" "foo" {
 }
 ```
 
-argument to request new purge task with same urls
+### argument to request new purge task with same urls
 
 ```hcl
 resource "tencentcloud_cdn_url_purge" "foo" {

@@ -20,7 +20,7 @@ data "tencentcloud_cbs_storages" "storages" {
 }
 ```
 
-The following snippet shows the new supported query params
+### The following snippet shows the new supported query params
 
 ```hcl
 data "tencentcloud_cbs_storages" "whats_new" {

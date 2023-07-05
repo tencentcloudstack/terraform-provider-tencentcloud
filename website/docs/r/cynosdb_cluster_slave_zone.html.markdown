@@ -13,7 +13,7 @@ Provides a resource to create a cynosdb cluster slave zone.
 
 ## Example Usage
 
-Set a new slave zone for a cynosdb cluster.
+### Set a new slave zone for a cynosdb cluster.
 
 ```hcl
 locals {
@@ -104,7 +104,7 @@ resource "tencentcloud_cynosdb_cluster_slave_zone" "cluster_slave_zone" {
 }
 ```
 
-Update the slave zone with specified value.
+### Update the slave zone with specified value.
 
 ```hcl
 resource "tencentcloud_cynosdb_cluster_slave_zone" "cluster_slave_zone" {

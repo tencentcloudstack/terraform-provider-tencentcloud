@@ -13,7 +13,7 @@ Provides a resource to create a postgresql security_group_config
 
 ## Example Usage
 
-Set security group for the sepcified postgres instance
+### Set security group for the sepcified postgres instance
 
 ```hcl
 resource "tencentcloud_postgresql_security_group_config" "security_group_config" {
@@ -22,7 +22,7 @@ resource "tencentcloud_postgresql_security_group_config" "security_group_config"
 }
 ```
 
-Set security group for the specified readonly group
+### Set security group for the specified readonly group
 
 ```hcl
 resource "tencentcloud_postgresql_readonly_group" "group" {
