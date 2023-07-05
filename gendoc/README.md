@@ -47,9 +47,9 @@ description & example usage & usage description 需要在对应 resource 及 dat
     \n
     Example Usage
     \n
-    Usage1 title
+    Scenario1 title
     \n
-    Description of the Usage1
+    Description of the Scenario1
     \n
     ```hcl
     data "tencentcloud_mysql_instance" "database"{
@@ -58,9 +58,9 @@ description & example usage & usage description 需要在对应 resource 及 dat
     }
     ```
     \n
-    Usage2 title
+    Scenario2 title
     \n
-    Description of the Usage2
+    Description of the Scenario2
     \n
     ```hcl
     data "tencentcloud_mysql_instance" "database"{
@@ -81,15 +81,15 @@ description & example usage & usage description 需要在对应 resource 及 dat
     Example Usage
     \n
     Example Usage 是必须的，在 Example Usage 以下的内容都会填充到文档中。
-    Example Usage 由一个到多个Usage构成。
-    每个Usage 由 Usage title 和 Usage description 构成。
+    Example Usage 由一个到多个Scenario(场景)构成。
+    每个Scenario 由 Scenario title 和 Scenario description 构成。
     \n
     Usage1 title
     \n
     Description of the Usage1
     \n
-    Usage title 是必须的。
-    Usage description 是可选的，可以根据情况填写。
+    Scenario title 是必须的。
+    Scenario description 是可选的，可以根据情况填写。
     */
     package tencentcloud
 
