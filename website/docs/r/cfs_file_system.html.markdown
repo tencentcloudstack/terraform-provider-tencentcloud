@@ -13,7 +13,7 @@ Provides a resource to create a cloud file system(CFS).
 
 ## Example Usage
 
-Standard Nfs CFS
+### Standard Nfs CFS
 
 ```hcl
 resource "tencentcloud_cfs_file_system" "foo" {
@@ -26,7 +26,7 @@ resource "tencentcloud_cfs_file_system" "foo" {
 }
 ```
 
-High-Performance Nfs CFS
+### High-Performance Nfs CFS
 
 ```hcl
 resource "tencentcloud_cfs_file_system" "foo" {
@@ -42,7 +42,7 @@ resource "tencentcloud_cfs_file_system" "foo" {
 }
 ```
 
-Standard Turbo CFS
+### Standard Turbo CFS
 
 ```hcl
 resource "tencentcloud_cfs_file_system" "foo" {
@@ -58,7 +58,7 @@ resource "tencentcloud_cfs_file_system" "foo" {
 }
 ```
 
-High-Performance Turbo CFS
+### High-Performance Turbo CFS
 
 ```hcl
 resource "tencentcloud_cfs_file_system" "foo" {
