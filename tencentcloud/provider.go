@@ -151,6 +151,7 @@ Auto Scaling(AS)
 	tencentcloud_as_scale_in_instances
 	tencentcloud_as_scale_out_instances
 	tencentcloud_as_execute_scaling_policy
+	tencentcloud_as_complete_lifecycle
 
 Content Delivery Network(CDN)
   Data Source
@@ -2390,6 +2391,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_as_scale_in_instances":                          resourceTencentCloudAsScaleInInstances(),
 			"tencentcloud_as_scale_out_instances":                         resourceTencentCloudAsScaleOutInstances(),
 			"tencentcloud_as_execute_scaling_policy":                      resourceTencentCloudAsExecuteScalingPolicy(),
+			"tencentcloud_as_complete_lifecycle":                          resourceTencentCloudAsCompleteLifecycle(),
 			"tencentcloud_mongodb_instance":                               resourceTencentCloudMongodbInstance(),
 			"tencentcloud_mongodb_sharding_instance":                      resourceTencentCloudMongodbShardingInstance(),
 			"tencentcloud_mongodb_instance_account":                       resourceTencentCloudMongodbInstanceAccount(),
