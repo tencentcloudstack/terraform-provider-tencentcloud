@@ -299,14 +299,13 @@ func domainSwitch(ctx context.Context, enable *bool, name *string, meta interfac
 		logId         = getLogId(ctx)
 		enableRequest = css.NewEnableLiveDomainRequest()
 		forbidRequest = css.NewForbidLiveDomainRequest()
-		client        = meta.(*TencentCloudClient).apiV3Conn.UseCssClient()
 	)
 
 	if enable != nil {
 		if *enable {
 			enableRequest.DomainName = name
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := client.EnableLiveDomain(enableRequest)
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseCssClient().EnableLiveDomain(enableRequest)
 				if e != nil {
 					return retryError(e)
 				} else {
@@ -321,7 +320,7 @@ func domainSwitch(ctx context.Context, enable *bool, name *string, meta interfac
 		} else {
 			forbidRequest.DomainName = name
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := client.ForbidLiveDomain(forbidRequest)
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseCssClient().ForbidLiveDomain(forbidRequest)
 				if e != nil {
 					return retryError(e)
 				} else {

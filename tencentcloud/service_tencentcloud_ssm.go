@@ -16,14 +16,16 @@ type SsmService struct {
 }
 
 type SecretInfo struct {
-	secretName  string
-	description string
-	kmsKeyId    string
-	createUin   uint64
-	status      string
-	deleteTime  uint64
-	createTime  uint64
-	resourceId  string
+	secretName       string
+	description      string
+	kmsKeyId         string
+	secretType       int64
+	additionalConfig string
+	createUin        uint64
+	status           string
+	deleteTime       uint64
+	createTime       uint64
+	resourceId       string
 }
 
 type SecretVersionInfo struct {
@@ -101,14 +103,16 @@ func (me *SsmService) DescribeSecretByName(ctx context.Context, secretName strin
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	secret = &SecretInfo{
-		secretName:  *response.Response.SecretName,
-		description: *response.Response.Description,
-		kmsKeyId:    *response.Response.KmsKeyId,
-		createUin:   *response.Response.CreateUin,
-		status:      *response.Response.Status,
-		deleteTime:  *response.Response.DeleteTime,
-		createTime:  *response.Response.CreateTime,
-		resourceId:  fmt.Sprintf("creatorUin/%d/%s", *response.Response.CreateUin, *response.Response.SecretName),
+		secretName:       *response.Response.SecretName,
+		description:      *response.Response.Description,
+		kmsKeyId:         *response.Response.KmsKeyId,
+		secretType:       *response.Response.SecretType,
+		additionalConfig: *response.Response.AdditionalConfig,
+		createUin:        *response.Response.CreateUin,
+		status:           *response.Response.Status,
+		deleteTime:       *response.Response.DeleteTime,
+		createTime:       *response.Response.CreateTime,
+		resourceId:       fmt.Sprintf("creatorUin/%d/%s", *response.Response.CreateUin, *response.Response.SecretName),
 	}
 	return
 }
@@ -174,6 +178,12 @@ func (me *SsmService) CreateSecret(ctx context.Context, param map[string]interfa
 		}
 		if k == "kms_key_id" {
 			request.KmsKeyId = helper.String(v.(string))
+		}
+		if k == "secret_type" {
+			request.SecretType = helper.IntUint64(v.(int))
+		}
+		if k == "additional_config" {
+			request.AdditionalConfig = helper.String(v.(string))
 		}
 		if k == "secret_binary" {
 			request.SecretBinary = helper.String(v.(string))
@@ -336,6 +346,82 @@ func (me *SsmService) DeleteSecret(ctx context.Context, secretName string, recov
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *SsmService) DescribeSecretById(ctx context.Context, secretName string, serviceType uint64) (sshKeyPairSecret *ssm.SecretMetadata, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ssm.NewListSecretsRequest()
+	request.SearchSecretName = &secretName
+	request.SecretType = &serviceType
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	instances := make([]*ssm.SecretMetadata, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSsmClient().ListSecrets(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.SecretMetadatas) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.SecretMetadatas...)
+		if len(response.Response.SecretMetadatas) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	sshKeyPairSecret = instances[0]
+	return
+}
+
+func (me *SsmService) DeleteSsmSshKeyPairSecretById(ctx context.Context, secretName string, cleanSSHKey *bool) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ssm.NewDeleteSecretRequest()
+	request.SecretName = &secretName
+
+	if cleanSSHKey != nil {
+		request.CleanSSHKey = cleanSSHKey
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSsmClient().DeleteSecret(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

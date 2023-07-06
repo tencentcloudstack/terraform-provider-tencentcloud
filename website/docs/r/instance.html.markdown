@@ -75,7 +75,7 @@ resource "tencentcloud_instance" "my_awesome_app" {
 }
 ```
 
-Create CVM instance based on CDH
+### Create CVM instance based on CDH
 
 ```hcl
 variable "availability_zone" {

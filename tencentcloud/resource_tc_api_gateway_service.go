@@ -91,7 +91,7 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				ForceNew:    true,
-				Deprecated:  "It has been deprecated from version 1.18.9.",
+				Deprecated:  "It has been deprecated from version 1.81.9.",
 				Description: "Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.",
 			},
 			"net_type": {

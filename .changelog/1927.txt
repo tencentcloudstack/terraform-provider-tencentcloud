@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_cynosdb_proxy_end_point
+```

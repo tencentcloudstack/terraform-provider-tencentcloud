@@ -2788,3 +2788,65 @@ func (me *CynosdbService) DescribeCynosdbInstanceSlowQueriesByFilter(ctx context
 
 	return
 }
+
+func (me *CynosdbService) DescribeCynosdbProxyEndPointById(ctx context.Context, clusterId, proxyGroupId string) (proxyEndPoint *cynosdb.ProxyGroupInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewDescribeProxiesRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().DescribeProxies(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 {
+		return
+	}
+
+	for _, item := range response.Response.ProxyGroupInfos {
+		if proxyGroupId == *item.ProxyGroup.ProxyGroupId {
+			proxyEndPoint = item
+			break
+		}
+	}
+
+	return
+}
+
+func (me *CynosdbService) DeleteCynosdbProxyEndPointById(ctx context.Context, clusterId, proxyGroupId string) (flowId int64, errRet error) {
+	logId := getLogId(ctx)
+	request := cynosdb.NewCloseProxyRequest()
+	request.ClusterId = &clusterId
+	request.ProxyGroupId = &proxyGroupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCynosdbClient().CloseProxy(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	flowId = *response.Response.FlowId
+
+	return
+}

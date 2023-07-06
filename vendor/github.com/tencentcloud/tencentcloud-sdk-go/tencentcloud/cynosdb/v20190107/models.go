@@ -2144,6 +2144,9 @@ type CreateProxyEndPointResponseParams struct {
 	// 异步任务ID
 	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
+	// 数据库代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -2281,6 +2284,9 @@ type CreateProxyResponseParams struct {
 	// 异步任务ID
 	TaskId *int64 `json:"TaskId,omitempty" name:"TaskId"`
 
+	// 数据库代理组ID
+	ProxyGroupId *string `json:"ProxyGroupId,omitempty" name:"ProxyGroupId"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -2310,8 +2316,6 @@ type CreateResourcePackageRequestParams struct {
 	// china-中国内地通用，overseas-港澳台及海外通用
 	PackageRegion *string `json:"PackageRegion,omitempty" name:"PackageRegion"`
 
-	// 资源包类型
-	// 
 	// 资源包类型：CCU-计算资源包，DISK-存储资源包
 	PackageType *string `json:"PackageType,omitempty" name:"PackageType"`
 
@@ -2342,8 +2346,6 @@ type CreateResourcePackageRequest struct {
 	// china-中国内地通用，overseas-港澳台及海外通用
 	PackageRegion *string `json:"PackageRegion,omitempty" name:"PackageRegion"`
 
-	// 资源包类型
-	// 
 	// 资源包类型：CCU-计算资源包，DISK-存储资源包
 	PackageType *string `json:"PackageType,omitempty" name:"PackageType"`
 
@@ -3154,7 +3156,7 @@ type DbInfo struct {
 	// 数据库状态
 	Status *string `json:"Status,omitempty" name:"Status"`
 
-	// 拍讯规则
+	// 排序规则
 	CollateRule *string `json:"CollateRule,omitempty" name:"CollateRule"`
 
 	// 数据库备注

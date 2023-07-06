@@ -490,7 +490,7 @@ func resourceTencentCloudCynosdbProxyUpdate(d *schema.ResourceData, meta interfa
 			if e != nil {
 				return retryError(e)
 			} else {
-				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, switchProxyRequest.GetAction(), switchProxyRequest.ToJsonString(), result.ToJsonString())
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyProxyDescRequest.GetAction(), modifyProxyDescRequest.ToJsonString(), result.ToJsonString())
 			}
 
 			return nil

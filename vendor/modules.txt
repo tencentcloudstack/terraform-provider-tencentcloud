@@ -127,6 +127,9 @@ github.com/aws/aws-sdk-go/private/protocol/xml/xmlutil
 github.com/aws/aws-sdk-go/service/s3
 github.com/aws/aws-sdk-go/service/sts
 github.com/aws/aws-sdk-go/service/sts/stsiface
+# github.com/beevik/etree v1.2.0
+## explicit; go 1.13
+github.com/beevik/etree
 # github.com/beorn7/perks v1.0.1
 ## explicit; go 1.11
 github.com/beorn7/perks/quantile
@@ -826,7 +829,7 @@ github.com/mitchellh/reflectwalk
 github.com/moricho/tparallel
 github.com/moricho/tparallel/pkg/ssafunc
 github.com/moricho/tparallel/pkg/ssainstr
-# github.com/mozillazg/go-httpheader v0.3.1
+# github.com/mozillazg/go-httpheader v0.4.0
 ## explicit; go 1.11
 github.com/mozillazg/go-httpheader
 # github.com/nakabonne/nestif v0.3.1
@@ -1085,7 +1088,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.663
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.691
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.692
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1098,7 +1101,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.687
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dayu v1.0.335
@@ -1131,7 +1134,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap v1.0.514
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.656
@@ -1185,7 +1188,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.199
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.199
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.691
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.524
@@ -1209,7 +1212,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg v1.0.533
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdcpg/v20211118
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.670
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq v1.0.691
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
@@ -1236,7 +1239,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss/v20180426
-# github.com/tencentyun/cos-go-sdk-v5 v0.7.40
+# github.com/tencentyun/cos-go-sdk-v5 v0.7.42-0.20230629101357-7edd77448a0f
 ## explicit; go 1.12
 github.com/tencentyun/cos-go-sdk-v5
 # github.com/tetafro/godot v1.4.11

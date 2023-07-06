@@ -13,7 +13,7 @@ Provides a COS resource to create a COS bucket and set its attributes.
 
 ## Example Usage
 
-Private Bucket
+### Private Bucket
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -22,7 +22,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
-Creation of multiple available zone bucket
+### Creation of multiple available zone bucket
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -34,45 +34,78 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
-Using verbose acl
+### Using verbose acl
 
 ```hcl
 resource "tencentcloud_cos_bucket" "with_acl_body" {
   bucket = "mycos-1258798060"
-  # NOTE: Granting http://cam.qcloud.com/groups/global/AllUsers `READ` Permission is equivalent to "public-read" acl
+  # NOTE: Specify the acl_body by the priority sequence of permission and user type with the following sequence: `CanonicalUser with READ`, `CanonicalUser with WRITE`, `CanonicalUser with FULL_CONTROL`, `CanonicalUser with WRITE_ACP`, `CanonicalUser with READ_ACP`, then specify the `Group` of permissions same as `CanonicalUser`.
   acl_body = <<EOF
 <AccessControlPolicy>
-    <Owner>
-        <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-    </Owner>
-    <AccessControlList>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
-                <URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
-            </Grantee>
-            <Permission>READ</Permission>
-        </Grant>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
-            </Grantee>
-            <Permission>WRITE</Permission>
-        </Grant>
-        <Grant>
-            <Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
-                <ID>qcs::cam::uin/100000000001:uin/100000000001</ID>
-                <DisplayName>qcs::cam::uin/100000000001:uin/100000000001</DisplayName>
-            </Grantee>
-            <Permission>READ_ACP</Permission>
-        </Grant>
-    </AccessControlList>
+	<Owner>
+		<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+		<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+	</Owner>
+	<AccessControlList>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>READ</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>FULL_CONTROL</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>WRITE_ACP</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>READ_ACP</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>WRITE_ACP</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>READ</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CanonicalUser">
+				<ID>qcs::cam::uin/100022975249:uin/100022975249</ID>
+				<DisplayName>qcs::cam::uin/100022975249:uin/100022975249</DisplayName>
+			</Grantee>
+			<Permission>WRITE</Permission>
+		</Grant>
+		<Grant>
+			<Grantee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="Group">
+				<URI>http://cam.qcloud.com/groups/global/AllUsers</URI>
+			</Grantee>
+			<Permission>FULL_CONTROL</Permission>
+		</Grant>
+	</AccessControlList>
 </AccessControlPolicy>
 EOF
 }
 ```
 
-Static Website
+### Static Website
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -89,7 +122,7 @@ output "endpoint_test" {
 }
 ```
 
-Using CORS
+### Using CORS
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -106,7 +139,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
-Using object lifecycle
+### Using object lifecycle
 
 ```hcl
 resource "tencentcloud_cos_bucket" "mycos" {
@@ -128,7 +161,7 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
-Using custom origin domain settings
+### Using custom origin domain settings
 
 ```hcl
 resource "tencentcloud_cos_bucket" "with_origin" {
@@ -142,7 +175,7 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 }
 ```
 
-Using origin-pull settings
+### Using origin-pull settings
 
 ```hcl
 resource "tencentcloud_cos_bucket" "with_origin" {
@@ -164,7 +197,7 @@ resource "tencentcloud_cos_bucket" "with_origin" {
 }
 ```
 
-Using replication
+### Using replication
 
 ```hcl
 resource "tencentcloud_cos_bucket" "replica1" {
@@ -187,7 +220,7 @@ resource "tencentcloud_cos_bucket" "with_replication" {
 }
 ```
 
-Setting log status
+### Setting log status
 
 ```hcl
 resource "tencentcloud_cam_role" "cosLogGrant" {

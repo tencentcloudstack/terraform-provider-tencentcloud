@@ -111,7 +111,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
-Use Kubelet
+### Use Kubelet
 
 ```hcl
 variable "availability_zone_first" {
@@ -209,7 +209,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
-Use extension addons
+### Use extension addons
 
 ```hcl
 variable "availability_zone_first" {
@@ -297,7 +297,7 @@ resource "tencentcloud_kubernetes_cluster" "cluster_with_addon" {
 }
 ```
 
-Use node pool global config
+### Use node pool global config
 
 ```hcl
 variable "availability_zone" {
@@ -369,7 +369,7 @@ resource "tencentcloud_kubernetes_cluster" "test_node_pool_global_config" {
 }
 ```
 
-Using VPC-CNI network type
+### Using VPC-CNI network type
 
 ```hcl
 variable "availability_zone" {
@@ -427,7 +427,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 ```
 
-Using ops options
+### Using ops options
 
 ```hcl
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {

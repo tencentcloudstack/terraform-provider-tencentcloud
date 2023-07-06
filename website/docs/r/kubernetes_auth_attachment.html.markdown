@@ -80,7 +80,7 @@ resource "tencentcloud_kubernetes_auth_attachment" "test_auth_attach" {
 }
 ```
 
-Use the TKE default issuer and jwks_uri
+### Use the TKE default issuer and jwks_uri
 
 ```hcl
 variable "availability_zone" {
