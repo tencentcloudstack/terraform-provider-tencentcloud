@@ -15,52 +15,51 @@
 package v20190924
 
 import (
-    "context"
-    "errors"
-    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
-    tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
-    "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
+	"context"
+	"errors"
+
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 )
 
 const APIVersion = "2019-09-24"
 
 type Client struct {
-    common.Client
+	common.Client
 }
 
 // Deprecated
 func NewClientWithSecretId(secretId, secretKey, region string) (client *Client, err error) {
-    cpf := profile.NewClientProfile()
-    client = &Client{}
-    client.Init(region).WithSecretId(secretId, secretKey).WithProfile(cpf)
-    return
+	cpf := profile.NewClientProfile()
+	client = &Client{}
+	client.Init(region).WithSecretId(secretId, secretKey).WithProfile(cpf)
+	return
 }
 
 func NewClient(credential common.CredentialIface, region string, clientProfile *profile.ClientProfile) (client *Client, err error) {
-    client = &Client{}
-    client.Init(region).
-        WithCredential(credential).
-        WithProfile(clientProfile)
-    return
+	client = &Client{}
+	client.Init(region).
+		WithCredential(credential).
+		WithProfile(clientProfile)
+	return
 }
 
-
 func NewBatchDeleteImagePersonalRequest() (request *BatchDeleteImagePersonalRequest) {
-    request = &BatchDeleteImagePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "BatchDeleteImagePersonal")
-    
-    
-    return
+	request = &BatchDeleteImagePersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "BatchDeleteImagePersonal")
+
+	return
 }
 
 func NewBatchDeleteImagePersonalResponse() (response *BatchDeleteImagePersonalResponse) {
-    response = &BatchDeleteImagePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &BatchDeleteImagePersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // BatchDeleteImagePersonal
@@ -72,7 +71,7 @@ func NewBatchDeleteImagePersonalResponse() (response *BatchDeleteImagePersonalRe
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) BatchDeleteImagePersonal(request *BatchDeleteImagePersonalRequest) (response *BatchDeleteImagePersonalResponse, err error) {
-    return c.BatchDeleteImagePersonalWithContext(context.Background(), request)
+	return c.BatchDeleteImagePersonalWithContext(context.Background(), request)
 }
 
 // BatchDeleteImagePersonal
@@ -84,37 +83,36 @@ func (c *Client) BatchDeleteImagePersonal(request *BatchDeleteImagePersonalReque
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) BatchDeleteImagePersonalWithContext(ctx context.Context, request *BatchDeleteImagePersonalRequest) (response *BatchDeleteImagePersonalResponse, err error) {
-    if request == nil {
-        request = NewBatchDeleteImagePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("BatchDeleteImagePersonal require credential")
-    }
+	if request == nil {
+		request = NewBatchDeleteImagePersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewBatchDeleteImagePersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("BatchDeleteImagePersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewBatchDeleteImagePersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewBatchDeleteRepositoryPersonalRequest() (request *BatchDeleteRepositoryPersonalRequest) {
-    request = &BatchDeleteRepositoryPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "BatchDeleteRepositoryPersonal")
-    
-    
-    return
+	request = &BatchDeleteRepositoryPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "BatchDeleteRepositoryPersonal")
+
+	return
 }
 
 func NewBatchDeleteRepositoryPersonalResponse() (response *BatchDeleteRepositoryPersonalResponse) {
-    response = &BatchDeleteRepositoryPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &BatchDeleteRepositoryPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // BatchDeleteRepositoryPersonal
@@ -126,7 +124,7 @@ func NewBatchDeleteRepositoryPersonalResponse() (response *BatchDeleteRepository
 //  INVALIDPARAMETER_ERRTOOLARGE = "InvalidParameter.ErrTooLarge"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) BatchDeleteRepositoryPersonal(request *BatchDeleteRepositoryPersonalRequest) (response *BatchDeleteRepositoryPersonalResponse, err error) {
-    return c.BatchDeleteRepositoryPersonalWithContext(context.Background(), request)
+	return c.BatchDeleteRepositoryPersonalWithContext(context.Background(), request)
 }
 
 // BatchDeleteRepositoryPersonal
@@ -138,37 +136,36 @@ func (c *Client) BatchDeleteRepositoryPersonal(request *BatchDeleteRepositoryPer
 //  INVALIDPARAMETER_ERRTOOLARGE = "InvalidParameter.ErrTooLarge"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) BatchDeleteRepositoryPersonalWithContext(ctx context.Context, request *BatchDeleteRepositoryPersonalRequest) (response *BatchDeleteRepositoryPersonalResponse, err error) {
-    if request == nil {
-        request = NewBatchDeleteRepositoryPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("BatchDeleteRepositoryPersonal require credential")
-    }
+	if request == nil {
+		request = NewBatchDeleteRepositoryPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewBatchDeleteRepositoryPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("BatchDeleteRepositoryPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewBatchDeleteRepositoryPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCheckInstanceRequest() (request *CheckInstanceRequest) {
-    request = &CheckInstanceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CheckInstance")
-    
-    
-    return
+	request = &CheckInstanceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CheckInstance")
+
+	return
 }
 
 func NewCheckInstanceResponse() (response *CheckInstanceResponse) {
-    response = &CheckInstanceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CheckInstanceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CheckInstance
@@ -191,7 +188,7 @@ func NewCheckInstanceResponse() (response *CheckInstanceResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CheckInstance(request *CheckInstanceRequest) (response *CheckInstanceResponse, err error) {
-    return c.CheckInstanceWithContext(context.Background(), request)
+	return c.CheckInstanceWithContext(context.Background(), request)
 }
 
 // CheckInstance
@@ -214,37 +211,36 @@ func (c *Client) CheckInstance(request *CheckInstanceRequest) (response *CheckIn
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CheckInstanceWithContext(ctx context.Context, request *CheckInstanceRequest) (response *CheckInstanceResponse, err error) {
-    if request == nil {
-        request = NewCheckInstanceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CheckInstance require credential")
-    }
+	if request == nil {
+		request = NewCheckInstanceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCheckInstanceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CheckInstance require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCheckInstanceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCheckInstanceNameRequest() (request *CheckInstanceNameRequest) {
-    request = &CheckInstanceNameRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CheckInstanceName")
-    
-    
-    return
+	request = &CheckInstanceNameRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CheckInstanceName")
+
+	return
 }
 
 func NewCheckInstanceNameResponse() (response *CheckInstanceNameResponse) {
-    response = &CheckInstanceNameResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CheckInstanceNameResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CheckInstanceName
@@ -267,7 +263,7 @@ func NewCheckInstanceNameResponse() (response *CheckInstanceNameResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CheckInstanceName(request *CheckInstanceNameRequest) (response *CheckInstanceNameResponse, err error) {
-    return c.CheckInstanceNameWithContext(context.Background(), request)
+	return c.CheckInstanceNameWithContext(context.Background(), request)
 }
 
 // CheckInstanceName
@@ -290,37 +286,36 @@ func (c *Client) CheckInstanceName(request *CheckInstanceNameRequest) (response 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CheckInstanceNameWithContext(ctx context.Context, request *CheckInstanceNameRequest) (response *CheckInstanceNameResponse, err error) {
-    if request == nil {
-        request = NewCheckInstanceNameRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CheckInstanceName require credential")
-    }
+	if request == nil {
+		request = NewCheckInstanceNameRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCheckInstanceNameResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CheckInstanceName require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCheckInstanceNameResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateApplicationTriggerPersonalRequest() (request *CreateApplicationTriggerPersonalRequest) {
-    request = &CreateApplicationTriggerPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateApplicationTriggerPersonal")
-    
-    
-    return
+	request = &CreateApplicationTriggerPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateApplicationTriggerPersonal")
+
+	return
 }
 
 func NewCreateApplicationTriggerPersonalResponse() (response *CreateApplicationTriggerPersonalResponse) {
-    response = &CreateApplicationTriggerPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateApplicationTriggerPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateApplicationTriggerPersonal
@@ -335,7 +330,7 @@ func NewCreateApplicationTriggerPersonalResponse() (response *CreateApplicationT
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) CreateApplicationTriggerPersonal(request *CreateApplicationTriggerPersonalRequest) (response *CreateApplicationTriggerPersonalResponse, err error) {
-    return c.CreateApplicationTriggerPersonalWithContext(context.Background(), request)
+	return c.CreateApplicationTriggerPersonalWithContext(context.Background(), request)
 }
 
 // CreateApplicationTriggerPersonal
@@ -350,37 +345,95 @@ func (c *Client) CreateApplicationTriggerPersonal(request *CreateApplicationTrig
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) CreateApplicationTriggerPersonalWithContext(ctx context.Context, request *CreateApplicationTriggerPersonalRequest) (response *CreateApplicationTriggerPersonalResponse, err error) {
-    if request == nil {
-        request = NewCreateApplicationTriggerPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateApplicationTriggerPersonal require credential")
-    }
+	if request == nil {
+		request = NewCreateApplicationTriggerPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateApplicationTriggerPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateApplicationTriggerPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateApplicationTriggerPersonalResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewCreateCustomAccountRequest() (request *CreateCustomAccountRequest) {
+	request = &CreateCustomAccountRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateCustomAccount")
+
+	return
+}
+
+func NewCreateCustomAccountResponse() (response *CreateCustomAccountResponse) {
+	response = &CreateCustomAccountResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+}
+
+// CreateCustomAccount
+// 创建自定义账户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_QUOTAOVERLIMIT = "OperationDenied.QuotaOverLimit"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCustomAccount(request *CreateCustomAccountRequest) (response *CreateCustomAccountResponse, err error) {
+	return c.CreateCustomAccountWithContext(context.Background(), request)
+}
+
+// CreateCustomAccount
+// 创建自定义账户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  OPERATIONDENIED_QUOTAOVERLIMIT = "OperationDenied.QuotaOverLimit"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) CreateCustomAccountWithContext(ctx context.Context, request *CreateCustomAccountRequest) (response *CreateCustomAccountResponse, err error) {
+	if request == nil {
+		request = NewCreateCustomAccountRequest()
+	}
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateCustomAccount require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateCustomAccountResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateImageAccelerationServiceRequest() (request *CreateImageAccelerationServiceRequest) {
-    request = &CreateImageAccelerationServiceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateImageAccelerationService")
-    
-    
-    return
+	request = &CreateImageAccelerationServiceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateImageAccelerationService")
+
+	return
 }
 
 func NewCreateImageAccelerationServiceResponse() (response *CreateImageAccelerationServiceResponse) {
-    response = &CreateImageAccelerationServiceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateImageAccelerationServiceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateImageAccelerationService
@@ -396,7 +449,7 @@ func NewCreateImageAccelerationServiceResponse() (response *CreateImageAccelerat
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateImageAccelerationService(request *CreateImageAccelerationServiceRequest) (response *CreateImageAccelerationServiceResponse, err error) {
-    return c.CreateImageAccelerationServiceWithContext(context.Background(), request)
+	return c.CreateImageAccelerationServiceWithContext(context.Background(), request)
 }
 
 // CreateImageAccelerationService
@@ -412,99 +465,36 @@ func (c *Client) CreateImageAccelerationService(request *CreateImageAcceleration
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateImageAccelerationServiceWithContext(ctx context.Context, request *CreateImageAccelerationServiceRequest) (response *CreateImageAccelerationServiceResponse, err error) {
-    if request == nil {
-        request = NewCreateImageAccelerationServiceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateImageAccelerationService require credential")
-    }
+	if request == nil {
+		request = NewCreateImageAccelerationServiceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateImageAccelerationServiceResponse()
-    err = c.Send(request, response)
-    return
-}
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateImageAccelerationService require credential")
+	}
 
-func NewCreateImageLifecyclePersonalRequest() (request *CreateImageLifecyclePersonalRequest) {
-    request = &CreateImageLifecyclePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateImageLifecyclePersonal")
-    
-    
-    return
-}
+	request.SetContext(ctx)
 
-func NewCreateImageLifecyclePersonalResponse() (response *CreateImageLifecyclePersonalResponse) {
-    response = &CreateImageLifecyclePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// CreateImageLifecyclePersonal
-// 前端与现有逻辑均不再使用，可下线
-//
-// 
-//
-// 用于在个人版中创建清理策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_ERRUNAUTHORIZED = "InternalError.ErrUnauthorized"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
-func (c *Client) CreateImageLifecyclePersonal(request *CreateImageLifecyclePersonalRequest) (response *CreateImageLifecyclePersonalResponse, err error) {
-    return c.CreateImageLifecyclePersonalWithContext(context.Background(), request)
-}
-
-// CreateImageLifecyclePersonal
-// 前端与现有逻辑均不再使用，可下线
-//
-// 
-//
-// 用于在个人版中创建清理策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  INTERNALERROR_ERRUNAUTHORIZED = "InternalError.ErrUnauthorized"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
-func (c *Client) CreateImageLifecyclePersonalWithContext(ctx context.Context, request *CreateImageLifecyclePersonalRequest) (response *CreateImageLifecyclePersonalResponse, err error) {
-    if request == nil {
-        request = NewCreateImageLifecyclePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateImageLifecyclePersonal require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewCreateImageLifecyclePersonalResponse()
-    err = c.Send(request, response)
-    return
+	response = NewCreateImageAccelerationServiceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateImmutableTagRulesRequest() (request *CreateImmutableTagRulesRequest) {
-    request = &CreateImmutableTagRulesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateImmutableTagRules")
-    
-    
-    return
+	request = &CreateImmutableTagRulesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateImmutableTagRules")
+
+	return
 }
 
 func NewCreateImmutableTagRulesResponse() (response *CreateImmutableTagRulesResponse) {
-    response = &CreateImmutableTagRulesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateImmutableTagRulesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateImmutableTagRules
@@ -519,7 +509,7 @@ func NewCreateImmutableTagRulesResponse() (response *CreateImmutableTagRulesResp
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 func (c *Client) CreateImmutableTagRules(request *CreateImmutableTagRulesRequest) (response *CreateImmutableTagRulesResponse, err error) {
-    return c.CreateImmutableTagRulesWithContext(context.Background(), request)
+	return c.CreateImmutableTagRulesWithContext(context.Background(), request)
 }
 
 // CreateImmutableTagRules
@@ -534,37 +524,36 @@ func (c *Client) CreateImmutableTagRules(request *CreateImmutableTagRulesRequest
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 func (c *Client) CreateImmutableTagRulesWithContext(ctx context.Context, request *CreateImmutableTagRulesRequest) (response *CreateImmutableTagRulesResponse, err error) {
-    if request == nil {
-        request = NewCreateImmutableTagRulesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateImmutableTagRules require credential")
-    }
+	if request == nil {
+		request = NewCreateImmutableTagRulesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateImmutableTagRulesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateImmutableTagRules require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateImmutableTagRulesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateInstanceRequest() (request *CreateInstanceRequest) {
-    request = &CreateInstanceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateInstance")
-    
-    
-    return
+	request = &CreateInstanceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateInstance")
+
+	return
 }
 
 func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
-    response = &CreateInstanceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateInstanceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateInstance
@@ -595,7 +584,7 @@ func NewCreateInstanceResponse() (response *CreateInstanceResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *CreateInstanceResponse, err error) {
-    return c.CreateInstanceWithContext(context.Background(), request)
+	return c.CreateInstanceWithContext(context.Background(), request)
 }
 
 // CreateInstance
@@ -626,37 +615,36 @@ func (c *Client) CreateInstance(request *CreateInstanceRequest) (response *Creat
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceWithContext(ctx context.Context, request *CreateInstanceRequest) (response *CreateInstanceResponse, err error) {
-    if request == nil {
-        request = NewCreateInstanceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateInstance require credential")
-    }
+	if request == nil {
+		request = NewCreateInstanceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateInstanceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateInstance require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateInstanceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateInstanceCustomizedDomainRequest() (request *CreateInstanceCustomizedDomainRequest) {
-    request = &CreateInstanceCustomizedDomainRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateInstanceCustomizedDomain")
-    
-    
-    return
+	request = &CreateInstanceCustomizedDomainRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateInstanceCustomizedDomain")
+
+	return
 }
 
 func NewCreateInstanceCustomizedDomainResponse() (response *CreateInstanceCustomizedDomainResponse) {
-    response = &CreateInstanceCustomizedDomainResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateInstanceCustomizedDomainResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateInstanceCustomizedDomain
@@ -678,7 +666,7 @@ func NewCreateInstanceCustomizedDomainResponse() (response *CreateInstanceCustom
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceCustomizedDomain(request *CreateInstanceCustomizedDomainRequest) (response *CreateInstanceCustomizedDomainResponse, err error) {
-    return c.CreateInstanceCustomizedDomainWithContext(context.Background(), request)
+	return c.CreateInstanceCustomizedDomainWithContext(context.Background(), request)
 }
 
 // CreateInstanceCustomizedDomain
@@ -700,37 +688,36 @@ func (c *Client) CreateInstanceCustomizedDomain(request *CreateInstanceCustomize
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceCustomizedDomainWithContext(ctx context.Context, request *CreateInstanceCustomizedDomainRequest) (response *CreateInstanceCustomizedDomainResponse, err error) {
-    if request == nil {
-        request = NewCreateInstanceCustomizedDomainRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateInstanceCustomizedDomain require credential")
-    }
+	if request == nil {
+		request = NewCreateInstanceCustomizedDomainRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateInstanceCustomizedDomainResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateInstanceCustomizedDomain require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateInstanceCustomizedDomainResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateInstanceTokenRequest() (request *CreateInstanceTokenRequest) {
-    request = &CreateInstanceTokenRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateInstanceToken")
-    
-    
-    return
+	request = &CreateInstanceTokenRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateInstanceToken")
+
+	return
 }
 
 func NewCreateInstanceTokenResponse() (response *CreateInstanceTokenResponse) {
-    response = &CreateInstanceTokenResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateInstanceTokenResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateInstanceToken
@@ -746,7 +733,7 @@ func NewCreateInstanceTokenResponse() (response *CreateInstanceTokenResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceToken(request *CreateInstanceTokenRequest) (response *CreateInstanceTokenResponse, err error) {
-    return c.CreateInstanceTokenWithContext(context.Background(), request)
+	return c.CreateInstanceTokenWithContext(context.Background(), request)
 }
 
 // CreateInstanceToken
@@ -762,37 +749,36 @@ func (c *Client) CreateInstanceToken(request *CreateInstanceTokenRequest) (respo
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateInstanceTokenWithContext(ctx context.Context, request *CreateInstanceTokenRequest) (response *CreateInstanceTokenResponse, err error) {
-    if request == nil {
-        request = NewCreateInstanceTokenRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateInstanceToken require credential")
-    }
+	if request == nil {
+		request = NewCreateInstanceTokenRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateInstanceTokenResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateInstanceToken require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateInstanceTokenResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateInternalEndpointDnsRequest() (request *CreateInternalEndpointDnsRequest) {
-    request = &CreateInternalEndpointDnsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateInternalEndpointDns")
-    
-    
-    return
+	request = &CreateInternalEndpointDnsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateInternalEndpointDns")
+
+	return
 }
 
 func NewCreateInternalEndpointDnsResponse() (response *CreateInternalEndpointDnsResponse) {
-    response = &CreateInternalEndpointDnsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateInternalEndpointDnsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateInternalEndpointDns
@@ -818,7 +804,7 @@ func NewCreateInternalEndpointDnsResponse() (response *CreateInternalEndpointDns
 //  UNSUPPORTEDOPERATION_MODIFYPRIVATEZONERECORD = "UnsupportedOperation.ModifyPrivateZoneRecord"
 //  UNSUPPORTEDOPERATION_MODIFYPRIVATEZONEVPC = "UnsupportedOperation.ModifyPrivateZoneVpc"
 func (c *Client) CreateInternalEndpointDns(request *CreateInternalEndpointDnsRequest) (response *CreateInternalEndpointDnsResponse, err error) {
-    return c.CreateInternalEndpointDnsWithContext(context.Background(), request)
+	return c.CreateInternalEndpointDnsWithContext(context.Background(), request)
 }
 
 // CreateInternalEndpointDns
@@ -844,37 +830,36 @@ func (c *Client) CreateInternalEndpointDns(request *CreateInternalEndpointDnsReq
 //  UNSUPPORTEDOPERATION_MODIFYPRIVATEZONERECORD = "UnsupportedOperation.ModifyPrivateZoneRecord"
 //  UNSUPPORTEDOPERATION_MODIFYPRIVATEZONEVPC = "UnsupportedOperation.ModifyPrivateZoneVpc"
 func (c *Client) CreateInternalEndpointDnsWithContext(ctx context.Context, request *CreateInternalEndpointDnsRequest) (response *CreateInternalEndpointDnsResponse, err error) {
-    if request == nil {
-        request = NewCreateInternalEndpointDnsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateInternalEndpointDns require credential")
-    }
+	if request == nil {
+		request = NewCreateInternalEndpointDnsRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateInternalEndpointDnsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateInternalEndpointDns require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateInternalEndpointDnsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateMultipleSecurityPolicyRequest() (request *CreateMultipleSecurityPolicyRequest) {
-    request = &CreateMultipleSecurityPolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateMultipleSecurityPolicy")
-    
-    
-    return
+	request = &CreateMultipleSecurityPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateMultipleSecurityPolicy")
+
+	return
 }
 
 func NewCreateMultipleSecurityPolicyResponse() (response *CreateMultipleSecurityPolicyResponse) {
-    response = &CreateMultipleSecurityPolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateMultipleSecurityPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateMultipleSecurityPolicy
@@ -894,7 +879,7 @@ func NewCreateMultipleSecurityPolicyResponse() (response *CreateMultipleSecurity
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateMultipleSecurityPolicy(request *CreateMultipleSecurityPolicyRequest) (response *CreateMultipleSecurityPolicyResponse, err error) {
-    return c.CreateMultipleSecurityPolicyWithContext(context.Background(), request)
+	return c.CreateMultipleSecurityPolicyWithContext(context.Background(), request)
 }
 
 // CreateMultipleSecurityPolicy
@@ -914,37 +899,36 @@ func (c *Client) CreateMultipleSecurityPolicy(request *CreateMultipleSecurityPol
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateMultipleSecurityPolicyWithContext(ctx context.Context, request *CreateMultipleSecurityPolicyRequest) (response *CreateMultipleSecurityPolicyResponse, err error) {
-    if request == nil {
-        request = NewCreateMultipleSecurityPolicyRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateMultipleSecurityPolicy require credential")
-    }
+	if request == nil {
+		request = NewCreateMultipleSecurityPolicyRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateMultipleSecurityPolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateMultipleSecurityPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateMultipleSecurityPolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateNamespaceRequest() (request *CreateNamespaceRequest) {
-    request = &CreateNamespaceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateNamespace")
-    
-    
-    return
+	request = &CreateNamespaceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateNamespace")
+
+	return
 }
 
 func NewCreateNamespaceResponse() (response *CreateNamespaceResponse) {
-    response = &CreateNamespaceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateNamespaceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateNamespace
@@ -970,7 +954,7 @@ func NewCreateNamespaceResponse() (response *CreateNamespaceResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateNamespace(request *CreateNamespaceRequest) (response *CreateNamespaceResponse, err error) {
-    return c.CreateNamespaceWithContext(context.Background(), request)
+	return c.CreateNamespaceWithContext(context.Background(), request)
 }
 
 // CreateNamespace
@@ -996,37 +980,36 @@ func (c *Client) CreateNamespace(request *CreateNamespaceRequest) (response *Cre
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateNamespaceWithContext(ctx context.Context, request *CreateNamespaceRequest) (response *CreateNamespaceResponse, err error) {
-    if request == nil {
-        request = NewCreateNamespaceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateNamespace require credential")
-    }
+	if request == nil {
+		request = NewCreateNamespaceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateNamespaceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateNamespace require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateNamespaceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateNamespacePersonalRequest() (request *CreateNamespacePersonalRequest) {
-    request = &CreateNamespacePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateNamespacePersonal")
-    
-    
-    return
+	request = &CreateNamespacePersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateNamespacePersonal")
+
+	return
 }
 
 func NewCreateNamespacePersonalResponse() (response *CreateNamespacePersonalResponse) {
-    response = &CreateNamespacePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateNamespacePersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateNamespacePersonal
@@ -1042,7 +1025,7 @@ func NewCreateNamespacePersonalResponse() (response *CreateNamespacePersonalResp
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 //  UNSUPPORTEDOPERATION_ERRNOUSERINITIALIZED = "UnsupportedOperation.ErrNoUserInitialized"
 func (c *Client) CreateNamespacePersonal(request *CreateNamespacePersonalRequest) (response *CreateNamespacePersonalResponse, err error) {
-    return c.CreateNamespacePersonalWithContext(context.Background(), request)
+	return c.CreateNamespacePersonalWithContext(context.Background(), request)
 }
 
 // CreateNamespacePersonal
@@ -1058,37 +1041,36 @@ func (c *Client) CreateNamespacePersonal(request *CreateNamespacePersonalRequest
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 //  UNSUPPORTEDOPERATION_ERRNOUSERINITIALIZED = "UnsupportedOperation.ErrNoUserInitialized"
 func (c *Client) CreateNamespacePersonalWithContext(ctx context.Context, request *CreateNamespacePersonalRequest) (response *CreateNamespacePersonalResponse, err error) {
-    if request == nil {
-        request = NewCreateNamespacePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateNamespacePersonal require credential")
-    }
+	if request == nil {
+		request = NewCreateNamespacePersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateNamespacePersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateNamespacePersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateNamespacePersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateReplicationInstanceRequest() (request *CreateReplicationInstanceRequest) {
-    request = &CreateReplicationInstanceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateReplicationInstance")
-    
-    
-    return
+	request = &CreateReplicationInstanceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateReplicationInstance")
+
+	return
 }
 
 func NewCreateReplicationInstanceResponse() (response *CreateReplicationInstanceResponse) {
-    response = &CreateReplicationInstanceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateReplicationInstanceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateReplicationInstance
@@ -1111,7 +1093,7 @@ func NewCreateReplicationInstanceResponse() (response *CreateReplicationInstance
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateReplicationInstance(request *CreateReplicationInstanceRequest) (response *CreateReplicationInstanceResponse, err error) {
-    return c.CreateReplicationInstanceWithContext(context.Background(), request)
+	return c.CreateReplicationInstanceWithContext(context.Background(), request)
 }
 
 // CreateReplicationInstance
@@ -1134,37 +1116,36 @@ func (c *Client) CreateReplicationInstance(request *CreateReplicationInstanceReq
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateReplicationInstanceWithContext(ctx context.Context, request *CreateReplicationInstanceRequest) (response *CreateReplicationInstanceResponse, err error) {
-    if request == nil {
-        request = NewCreateReplicationInstanceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateReplicationInstance require credential")
-    }
+	if request == nil {
+		request = NewCreateReplicationInstanceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateReplicationInstanceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateReplicationInstance require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateReplicationInstanceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateRepositoryRequest() (request *CreateRepositoryRequest) {
-    request = &CreateRepositoryRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateRepository")
-    
-    
-    return
+	request = &CreateRepositoryRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateRepository")
+
+	return
 }
 
 func NewCreateRepositoryResponse() (response *CreateRepositoryResponse) {
-    response = &CreateRepositoryResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateRepositoryResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateRepository
@@ -1183,7 +1164,7 @@ func NewCreateRepositoryResponse() (response *CreateRepositoryResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateRepository(request *CreateRepositoryRequest) (response *CreateRepositoryResponse, err error) {
-    return c.CreateRepositoryWithContext(context.Background(), request)
+	return c.CreateRepositoryWithContext(context.Background(), request)
 }
 
 // CreateRepository
@@ -1202,37 +1183,36 @@ func (c *Client) CreateRepository(request *CreateRepositoryRequest) (response *C
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateRepositoryWithContext(ctx context.Context, request *CreateRepositoryRequest) (response *CreateRepositoryResponse, err error) {
-    if request == nil {
-        request = NewCreateRepositoryRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateRepository require credential")
-    }
+	if request == nil {
+		request = NewCreateRepositoryRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateRepositoryResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateRepository require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateRepositoryResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateRepositoryPersonalRequest() (request *CreateRepositoryPersonalRequest) {
-    request = &CreateRepositoryPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateRepositoryPersonal")
-    
-    
-    return
+	request = &CreateRepositoryPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateRepositoryPersonal")
+
+	return
 }
 
 func NewCreateRepositoryPersonalResponse() (response *CreateRepositoryPersonalResponse) {
-    response = &CreateRepositoryPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateRepositoryPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateRepositoryPersonal
@@ -1245,7 +1225,7 @@ func NewCreateRepositoryPersonalResponse() (response *CreateRepositoryPersonalRe
 //  LIMITEXCEEDED_ERRREPOMAXLIMIT = "LimitExceeded.ErrRepoMaxLimit"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) CreateRepositoryPersonal(request *CreateRepositoryPersonalRequest) (response *CreateRepositoryPersonalResponse, err error) {
-    return c.CreateRepositoryPersonalWithContext(context.Background(), request)
+	return c.CreateRepositoryPersonalWithContext(context.Background(), request)
 }
 
 // CreateRepositoryPersonal
@@ -1258,37 +1238,36 @@ func (c *Client) CreateRepositoryPersonal(request *CreateRepositoryPersonalReque
 //  LIMITEXCEEDED_ERRREPOMAXLIMIT = "LimitExceeded.ErrRepoMaxLimit"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) CreateRepositoryPersonalWithContext(ctx context.Context, request *CreateRepositoryPersonalRequest) (response *CreateRepositoryPersonalResponse, err error) {
-    if request == nil {
-        request = NewCreateRepositoryPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateRepositoryPersonal require credential")
-    }
+	if request == nil {
+		request = NewCreateRepositoryPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateRepositoryPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateRepositoryPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateRepositoryPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateSecurityPolicyRequest() (request *CreateSecurityPolicyRequest) {
-    request = &CreateSecurityPolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateSecurityPolicy")
-    
-    
-    return
+	request = &CreateSecurityPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateSecurityPolicy")
+
+	return
 }
 
 func NewCreateSecurityPolicyResponse() (response *CreateSecurityPolicyResponse) {
-    response = &CreateSecurityPolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateSecurityPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateSecurityPolicy
@@ -1304,7 +1283,7 @@ func NewCreateSecurityPolicyResponse() (response *CreateSecurityPolicyResponse) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSecurityPolicy(request *CreateSecurityPolicyRequest) (response *CreateSecurityPolicyResponse, err error) {
-    return c.CreateSecurityPolicyWithContext(context.Background(), request)
+	return c.CreateSecurityPolicyWithContext(context.Background(), request)
 }
 
 // CreateSecurityPolicy
@@ -1320,37 +1299,36 @@ func (c *Client) CreateSecurityPolicy(request *CreateSecurityPolicyRequest) (res
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSecurityPolicyWithContext(ctx context.Context, request *CreateSecurityPolicyRequest) (response *CreateSecurityPolicyResponse, err error) {
-    if request == nil {
-        request = NewCreateSecurityPolicyRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateSecurityPolicy require credential")
-    }
+	if request == nil {
+		request = NewCreateSecurityPolicyRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateSecurityPolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateSecurityPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateSecurityPolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateSignatureRequest() (request *CreateSignatureRequest) {
-    request = &CreateSignatureRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateSignature")
-    
-    
-    return
+	request = &CreateSignatureRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateSignature")
+
+	return
 }
 
 func NewCreateSignatureResponse() (response *CreateSignatureResponse) {
-    response = &CreateSignatureResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateSignatureResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateSignature
@@ -1370,7 +1348,7 @@ func NewCreateSignatureResponse() (response *CreateSignatureResponse) {
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSignature(request *CreateSignatureRequest) (response *CreateSignatureResponse, err error) {
-    return c.CreateSignatureWithContext(context.Background(), request)
+	return c.CreateSignatureWithContext(context.Background(), request)
 }
 
 // CreateSignature
@@ -1390,37 +1368,36 @@ func (c *Client) CreateSignature(request *CreateSignatureRequest) (response *Cre
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSignatureWithContext(ctx context.Context, request *CreateSignatureRequest) (response *CreateSignatureResponse, err error) {
-    if request == nil {
-        request = NewCreateSignatureRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateSignature require credential")
-    }
+	if request == nil {
+		request = NewCreateSignatureRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateSignatureResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateSignature require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateSignatureResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateSignaturePolicyRequest() (request *CreateSignaturePolicyRequest) {
-    request = &CreateSignaturePolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateSignaturePolicy")
-    
-    
-    return
+	request = &CreateSignaturePolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateSignaturePolicy")
+
+	return
 }
 
 func NewCreateSignaturePolicyResponse() (response *CreateSignaturePolicyResponse) {
-    response = &CreateSignaturePolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateSignaturePolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateSignaturePolicy
@@ -1431,7 +1408,7 @@ func NewCreateSignaturePolicyResponse() (response *CreateSignaturePolicyResponse
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSignaturePolicy(request *CreateSignaturePolicyRequest) (response *CreateSignaturePolicyResponse, err error) {
-    return c.CreateSignaturePolicyWithContext(context.Background(), request)
+	return c.CreateSignaturePolicyWithContext(context.Background(), request)
 }
 
 // CreateSignaturePolicy
@@ -1442,37 +1419,36 @@ func (c *Client) CreateSignaturePolicy(request *CreateSignaturePolicyRequest) (r
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateSignaturePolicyWithContext(ctx context.Context, request *CreateSignaturePolicyRequest) (response *CreateSignaturePolicyResponse, err error) {
-    if request == nil {
-        request = NewCreateSignaturePolicyRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateSignaturePolicy require credential")
-    }
+	if request == nil {
+		request = NewCreateSignaturePolicyRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateSignaturePolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateSignaturePolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateSignaturePolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateTagRetentionExecutionRequest() (request *CreateTagRetentionExecutionRequest) {
-    request = &CreateTagRetentionExecutionRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateTagRetentionExecution")
-    
-    
-    return
+	request = &CreateTagRetentionExecutionRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateTagRetentionExecution")
+
+	return
 }
 
 func NewCreateTagRetentionExecutionResponse() (response *CreateTagRetentionExecutionResponse) {
-    response = &CreateTagRetentionExecutionResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateTagRetentionExecutionResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateTagRetentionExecution
@@ -1492,7 +1468,7 @@ func NewCreateTagRetentionExecutionResponse() (response *CreateTagRetentionExecu
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateTagRetentionExecution(request *CreateTagRetentionExecutionRequest) (response *CreateTagRetentionExecutionResponse, err error) {
-    return c.CreateTagRetentionExecutionWithContext(context.Background(), request)
+	return c.CreateTagRetentionExecutionWithContext(context.Background(), request)
 }
 
 // CreateTagRetentionExecution
@@ -1512,37 +1488,36 @@ func (c *Client) CreateTagRetentionExecution(request *CreateTagRetentionExecutio
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateTagRetentionExecutionWithContext(ctx context.Context, request *CreateTagRetentionExecutionRequest) (response *CreateTagRetentionExecutionResponse, err error) {
-    if request == nil {
-        request = NewCreateTagRetentionExecutionRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateTagRetentionExecution require credential")
-    }
+	if request == nil {
+		request = NewCreateTagRetentionExecutionRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateTagRetentionExecutionResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateTagRetentionExecution require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateTagRetentionExecutionResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateTagRetentionRuleRequest() (request *CreateTagRetentionRuleRequest) {
-    request = &CreateTagRetentionRuleRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateTagRetentionRule")
-    
-    
-    return
+	request = &CreateTagRetentionRuleRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateTagRetentionRule")
+
+	return
 }
 
 func NewCreateTagRetentionRuleResponse() (response *CreateTagRetentionRuleResponse) {
-    response = &CreateTagRetentionRuleResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateTagRetentionRuleResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateTagRetentionRule
@@ -1563,7 +1538,7 @@ func NewCreateTagRetentionRuleResponse() (response *CreateTagRetentionRuleRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateTagRetentionRule(request *CreateTagRetentionRuleRequest) (response *CreateTagRetentionRuleResponse, err error) {
-    return c.CreateTagRetentionRuleWithContext(context.Background(), request)
+	return c.CreateTagRetentionRuleWithContext(context.Background(), request)
 }
 
 // CreateTagRetentionRule
@@ -1584,37 +1559,36 @@ func (c *Client) CreateTagRetentionRule(request *CreateTagRetentionRuleRequest) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) CreateTagRetentionRuleWithContext(ctx context.Context, request *CreateTagRetentionRuleRequest) (response *CreateTagRetentionRuleResponse, err error) {
-    if request == nil {
-        request = NewCreateTagRetentionRuleRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateTagRetentionRule require credential")
-    }
+	if request == nil {
+		request = NewCreateTagRetentionRuleRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateTagRetentionRuleResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateTagRetentionRule require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateTagRetentionRuleResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateUserPersonalRequest() (request *CreateUserPersonalRequest) {
-    request = &CreateUserPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateUserPersonal")
-    
-    
-    return
+	request = &CreateUserPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateUserPersonal")
+
+	return
 }
 
 func NewCreateUserPersonalResponse() (response *CreateUserPersonalResponse) {
-    response = &CreateUserPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateUserPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateUserPersonal
@@ -1625,7 +1599,7 @@ func NewCreateUserPersonalResponse() (response *CreateUserPersonalResponse) {
 //  INVALIDPARAMETER_ERRUSEREXIST = "InvalidParameter.ErrUserExist"
 //  MISSINGPARAMETER_MISSINGPARAMETER = "MissingParameter.MissingParameter"
 func (c *Client) CreateUserPersonal(request *CreateUserPersonalRequest) (response *CreateUserPersonalResponse, err error) {
-    return c.CreateUserPersonalWithContext(context.Background(), request)
+	return c.CreateUserPersonalWithContext(context.Background(), request)
 }
 
 // CreateUserPersonal
@@ -1636,37 +1610,36 @@ func (c *Client) CreateUserPersonal(request *CreateUserPersonalRequest) (respons
 //  INVALIDPARAMETER_ERRUSEREXIST = "InvalidParameter.ErrUserExist"
 //  MISSINGPARAMETER_MISSINGPARAMETER = "MissingParameter.MissingParameter"
 func (c *Client) CreateUserPersonalWithContext(ctx context.Context, request *CreateUserPersonalRequest) (response *CreateUserPersonalResponse, err error) {
-    if request == nil {
-        request = NewCreateUserPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateUserPersonal require credential")
-    }
+	if request == nil {
+		request = NewCreateUserPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateUserPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateUserPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateUserPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewCreateWebhookTriggerRequest() (request *CreateWebhookTriggerRequest) {
-    request = &CreateWebhookTriggerRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "CreateWebhookTrigger")
-    
-    
-    return
+	request = &CreateWebhookTriggerRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "CreateWebhookTrigger")
+
+	return
 }
 
 func NewCreateWebhookTriggerResponse() (response *CreateWebhookTriggerResponse) {
-    response = &CreateWebhookTriggerResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &CreateWebhookTriggerResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // CreateWebhookTrigger
@@ -1681,7 +1654,7 @@ func NewCreateWebhookTriggerResponse() (response *CreateWebhookTriggerResponse) 
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) CreateWebhookTrigger(request *CreateWebhookTriggerRequest) (response *CreateWebhookTriggerResponse, err error) {
-    return c.CreateWebhookTriggerWithContext(context.Background(), request)
+	return c.CreateWebhookTriggerWithContext(context.Background(), request)
 }
 
 // CreateWebhookTrigger
@@ -1696,37 +1669,36 @@ func (c *Client) CreateWebhookTrigger(request *CreateWebhookTriggerRequest) (res
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) CreateWebhookTriggerWithContext(ctx context.Context, request *CreateWebhookTriggerRequest) (response *CreateWebhookTriggerResponse, err error) {
-    if request == nil {
-        request = NewCreateWebhookTriggerRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("CreateWebhookTrigger require credential")
-    }
+	if request == nil {
+		request = NewCreateWebhookTriggerRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewCreateWebhookTriggerResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("CreateWebhookTrigger require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewCreateWebhookTriggerResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteApplicationTriggerPersonalRequest() (request *DeleteApplicationTriggerPersonalRequest) {
-    request = &DeleteApplicationTriggerPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteApplicationTriggerPersonal")
-    
-    
-    return
+	request = &DeleteApplicationTriggerPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteApplicationTriggerPersonal")
+
+	return
 }
 
 func NewDeleteApplicationTriggerPersonalResponse() (response *DeleteApplicationTriggerPersonalResponse) {
-    response = &DeleteApplicationTriggerPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteApplicationTriggerPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteApplicationTriggerPersonal
@@ -1737,7 +1709,7 @@ func NewDeleteApplicationTriggerPersonalResponse() (response *DeleteApplicationT
 //  RESOURCENOTFOUND_ERRNOTRIGGER = "ResourceNotFound.ErrNoTrigger"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) DeleteApplicationTriggerPersonal(request *DeleteApplicationTriggerPersonalRequest) (response *DeleteApplicationTriggerPersonalResponse, err error) {
-    return c.DeleteApplicationTriggerPersonalWithContext(context.Background(), request)
+	return c.DeleteApplicationTriggerPersonalWithContext(context.Background(), request)
 }
 
 // DeleteApplicationTriggerPersonal
@@ -1748,37 +1720,91 @@ func (c *Client) DeleteApplicationTriggerPersonal(request *DeleteApplicationTrig
 //  RESOURCENOTFOUND_ERRNOTRIGGER = "ResourceNotFound.ErrNoTrigger"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) DeleteApplicationTriggerPersonalWithContext(ctx context.Context, request *DeleteApplicationTriggerPersonalRequest) (response *DeleteApplicationTriggerPersonalResponse, err error) {
-    if request == nil {
-        request = NewDeleteApplicationTriggerPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteApplicationTriggerPersonal require credential")
-    }
+	if request == nil {
+		request = NewDeleteApplicationTriggerPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteApplicationTriggerPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteApplicationTriggerPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteApplicationTriggerPersonalResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDeleteCustomAccountRequest() (request *DeleteCustomAccountRequest) {
+	request = &DeleteCustomAccountRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteCustomAccount")
+
+	return
+}
+
+func NewDeleteCustomAccountResponse() (response *DeleteCustomAccountResponse) {
+	response = &DeleteCustomAccountResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+}
+
+// DeleteCustomAccount
+// 删除自定义账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DeleteCustomAccount(request *DeleteCustomAccountRequest) (response *DeleteCustomAccountResponse, err error) {
+	return c.DeleteCustomAccountWithContext(context.Background(), request)
+}
+
+// DeleteCustomAccount
+// 删除自定义账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) DeleteCustomAccountWithContext(ctx context.Context, request *DeleteCustomAccountRequest) (response *DeleteCustomAccountResponse, err error) {
+	if request == nil {
+		request = NewDeleteCustomAccountRequest()
+	}
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteCustomAccount require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteCustomAccountResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteImageRequest() (request *DeleteImageRequest) {
-    request = &DeleteImageRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteImage")
-    
-    
-    return
+	request = &DeleteImageRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteImage")
+
+	return
 }
 
 func NewDeleteImageResponse() (response *DeleteImageResponse) {
-    response = &DeleteImageResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteImageResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteImage
@@ -1797,7 +1823,7 @@ func NewDeleteImageResponse() (response *DeleteImageResponse) {
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteImage(request *DeleteImageRequest) (response *DeleteImageResponse, err error) {
-    return c.DeleteImageWithContext(context.Background(), request)
+	return c.DeleteImageWithContext(context.Background(), request)
 }
 
 // DeleteImage
@@ -1816,37 +1842,36 @@ func (c *Client) DeleteImage(request *DeleteImageRequest) (response *DeleteImage
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteImageWithContext(ctx context.Context, request *DeleteImageRequest) (response *DeleteImageResponse, err error) {
-    if request == nil {
-        request = NewDeleteImageRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteImage require credential")
-    }
+	if request == nil {
+		request = NewDeleteImageRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteImageResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteImage require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteImageResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteImageAccelerateServiceRequest() (request *DeleteImageAccelerateServiceRequest) {
-    request = &DeleteImageAccelerateServiceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteImageAccelerateService")
-    
-    
-    return
+	request = &DeleteImageAccelerateServiceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteImageAccelerateService")
+
+	return
 }
 
 func NewDeleteImageAccelerateServiceResponse() (response *DeleteImageAccelerateServiceResponse) {
-    response = &DeleteImageAccelerateServiceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteImageAccelerateServiceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteImageAccelerateService
@@ -1861,7 +1886,7 @@ func NewDeleteImageAccelerateServiceResponse() (response *DeleteImageAccelerateS
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteImageAccelerateService(request *DeleteImageAccelerateServiceRequest) (response *DeleteImageAccelerateServiceResponse, err error) {
-    return c.DeleteImageAccelerateServiceWithContext(context.Background(), request)
+	return c.DeleteImageAccelerateServiceWithContext(context.Background(), request)
 }
 
 // DeleteImageAccelerateService
@@ -1876,37 +1901,36 @@ func (c *Client) DeleteImageAccelerateService(request *DeleteImageAccelerateServ
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteImageAccelerateServiceWithContext(ctx context.Context, request *DeleteImageAccelerateServiceRequest) (response *DeleteImageAccelerateServiceResponse, err error) {
-    if request == nil {
-        request = NewDeleteImageAccelerateServiceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteImageAccelerateService require credential")
-    }
+	if request == nil {
+		request = NewDeleteImageAccelerateServiceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteImageAccelerateServiceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteImageAccelerateService require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteImageAccelerateServiceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteImageLifecycleGlobalPersonalRequest() (request *DeleteImageLifecycleGlobalPersonalRequest) {
-    request = &DeleteImageLifecycleGlobalPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteImageLifecycleGlobalPersonal")
-    
-    
-    return
+	request = &DeleteImageLifecycleGlobalPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteImageLifecycleGlobalPersonal")
+
+	return
 }
 
 func NewDeleteImageLifecycleGlobalPersonalResponse() (response *DeleteImageLifecycleGlobalPersonalResponse) {
-    response = &DeleteImageLifecycleGlobalPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteImageLifecycleGlobalPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteImageLifecycleGlobalPersonal
@@ -1915,7 +1939,7 @@ func NewDeleteImageLifecycleGlobalPersonalResponse() (response *DeleteImageLifec
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 func (c *Client) DeleteImageLifecycleGlobalPersonal(request *DeleteImageLifecycleGlobalPersonalRequest) (response *DeleteImageLifecycleGlobalPersonalResponse, err error) {
-    return c.DeleteImageLifecycleGlobalPersonalWithContext(context.Background(), request)
+	return c.DeleteImageLifecycleGlobalPersonalWithContext(context.Background(), request)
 }
 
 // DeleteImageLifecycleGlobalPersonal
@@ -1924,97 +1948,36 @@ func (c *Client) DeleteImageLifecycleGlobalPersonal(request *DeleteImageLifecycl
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 func (c *Client) DeleteImageLifecycleGlobalPersonalWithContext(ctx context.Context, request *DeleteImageLifecycleGlobalPersonalRequest) (response *DeleteImageLifecycleGlobalPersonalResponse, err error) {
-    if request == nil {
-        request = NewDeleteImageLifecycleGlobalPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteImageLifecycleGlobalPersonal require credential")
-    }
+	if request == nil {
+		request = NewDeleteImageLifecycleGlobalPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteImageLifecycleGlobalPersonalResponse()
-    err = c.Send(request, response)
-    return
-}
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteImageLifecycleGlobalPersonal require credential")
+	}
 
-func NewDeleteImageLifecyclePersonalRequest() (request *DeleteImageLifecyclePersonalRequest) {
-    request = &DeleteImageLifecyclePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteImageLifecyclePersonal")
-    
-    
-    return
-}
+	request.SetContext(ctx)
 
-func NewDeleteImageLifecyclePersonalResponse() (response *DeleteImageLifecyclePersonalResponse) {
-    response = &DeleteImageLifecyclePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// DeleteImageLifecyclePersonal
-// 前端与后端目前现有逻辑均不再使用，可下线
-//
-// 
-//
-// 用于在个人版镜像仓库中删除仓库Tag自动清理策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
-func (c *Client) DeleteImageLifecyclePersonal(request *DeleteImageLifecyclePersonalRequest) (response *DeleteImageLifecyclePersonalResponse, err error) {
-    return c.DeleteImageLifecyclePersonalWithContext(context.Background(), request)
-}
-
-// DeleteImageLifecyclePersonal
-// 前端与后端目前现有逻辑均不再使用，可下线
-//
-// 
-//
-// 用于在个人版镜像仓库中删除仓库Tag自动清理策略
-//
-// 可能返回的错误码:
-//  INTERNALERROR = "InternalError"
-//  MISSINGPARAMETER = "MissingParameter"
-//  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
-func (c *Client) DeleteImageLifecyclePersonalWithContext(ctx context.Context, request *DeleteImageLifecyclePersonalRequest) (response *DeleteImageLifecyclePersonalResponse, err error) {
-    if request == nil {
-        request = NewDeleteImageLifecyclePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteImageLifecyclePersonal require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewDeleteImageLifecyclePersonalResponse()
-    err = c.Send(request, response)
-    return
+	response = NewDeleteImageLifecycleGlobalPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteImagePersonalRequest() (request *DeleteImagePersonalRequest) {
-    request = &DeleteImagePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteImagePersonal")
-    
-    
-    return
+	request = &DeleteImagePersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteImagePersonal")
+
+	return
 }
 
 func NewDeleteImagePersonalResponse() (response *DeleteImagePersonalResponse) {
-    response = &DeleteImagePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteImagePersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteImagePersonal
@@ -2026,7 +1989,7 @@ func NewDeleteImagePersonalResponse() (response *DeleteImagePersonalResponse) {
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DeleteImagePersonal(request *DeleteImagePersonalRequest) (response *DeleteImagePersonalResponse, err error) {
-    return c.DeleteImagePersonalWithContext(context.Background(), request)
+	return c.DeleteImagePersonalWithContext(context.Background(), request)
 }
 
 // DeleteImagePersonal
@@ -2038,37 +2001,36 @@ func (c *Client) DeleteImagePersonal(request *DeleteImagePersonalRequest) (respo
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DeleteImagePersonalWithContext(ctx context.Context, request *DeleteImagePersonalRequest) (response *DeleteImagePersonalResponse, err error) {
-    if request == nil {
-        request = NewDeleteImagePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteImagePersonal require credential")
-    }
+	if request == nil {
+		request = NewDeleteImagePersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteImagePersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteImagePersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteImagePersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteImmutableTagRulesRequest() (request *DeleteImmutableTagRulesRequest) {
-    request = &DeleteImmutableTagRulesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteImmutableTagRules")
-    
-    
-    return
+	request = &DeleteImmutableTagRulesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteImmutableTagRules")
+
+	return
 }
 
 func NewDeleteImmutableTagRulesResponse() (response *DeleteImmutableTagRulesResponse) {
-    response = &DeleteImmutableTagRulesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteImmutableTagRulesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteImmutableTagRules
@@ -2081,7 +2043,7 @@ func NewDeleteImmutableTagRulesResponse() (response *DeleteImmutableTagRulesResp
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) DeleteImmutableTagRules(request *DeleteImmutableTagRulesRequest) (response *DeleteImmutableTagRulesResponse, err error) {
-    return c.DeleteImmutableTagRulesWithContext(context.Background(), request)
+	return c.DeleteImmutableTagRulesWithContext(context.Background(), request)
 }
 
 // DeleteImmutableTagRules
@@ -2094,37 +2056,36 @@ func (c *Client) DeleteImmutableTagRules(request *DeleteImmutableTagRulesRequest
 //  INTERNALERROR_UNKNOWN = "InternalError.Unknown"
 //  INVALIDPARAMETER = "InvalidParameter"
 func (c *Client) DeleteImmutableTagRulesWithContext(ctx context.Context, request *DeleteImmutableTagRulesRequest) (response *DeleteImmutableTagRulesResponse, err error) {
-    if request == nil {
-        request = NewDeleteImmutableTagRulesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteImmutableTagRules require credential")
-    }
+	if request == nil {
+		request = NewDeleteImmutableTagRulesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteImmutableTagRulesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteImmutableTagRules require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteImmutableTagRulesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteInstanceRequest() (request *DeleteInstanceRequest) {
-    request = &DeleteInstanceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteInstance")
-    
-    
-    return
+	request = &DeleteInstanceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteInstance")
+
+	return
 }
 
 func NewDeleteInstanceResponse() (response *DeleteInstanceResponse) {
-    response = &DeleteInstanceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteInstanceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteInstance
@@ -2141,7 +2102,7 @@ func NewDeleteInstanceResponse() (response *DeleteInstanceResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteInstance(request *DeleteInstanceRequest) (response *DeleteInstanceResponse, err error) {
-    return c.DeleteInstanceWithContext(context.Background(), request)
+	return c.DeleteInstanceWithContext(context.Background(), request)
 }
 
 // DeleteInstance
@@ -2158,37 +2119,36 @@ func (c *Client) DeleteInstance(request *DeleteInstanceRequest) (response *Delet
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteInstanceWithContext(ctx context.Context, request *DeleteInstanceRequest) (response *DeleteInstanceResponse, err error) {
-    if request == nil {
-        request = NewDeleteInstanceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteInstance require credential")
-    }
+	if request == nil {
+		request = NewDeleteInstanceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteInstanceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteInstance require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteInstanceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteInstanceCustomizedDomainRequest() (request *DeleteInstanceCustomizedDomainRequest) {
-    request = &DeleteInstanceCustomizedDomainRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteInstanceCustomizedDomain")
-    
-    
-    return
+	request = &DeleteInstanceCustomizedDomainRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteInstanceCustomizedDomain")
+
+	return
 }
 
 func NewDeleteInstanceCustomizedDomainResponse() (response *DeleteInstanceCustomizedDomainResponse) {
-    response = &DeleteInstanceCustomizedDomainResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteInstanceCustomizedDomainResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteInstanceCustomizedDomain
@@ -2209,7 +2169,7 @@ func NewDeleteInstanceCustomizedDomainResponse() (response *DeleteInstanceCustom
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteInstanceCustomizedDomain(request *DeleteInstanceCustomizedDomainRequest) (response *DeleteInstanceCustomizedDomainResponse, err error) {
-    return c.DeleteInstanceCustomizedDomainWithContext(context.Background(), request)
+	return c.DeleteInstanceCustomizedDomainWithContext(context.Background(), request)
 }
 
 // DeleteInstanceCustomizedDomain
@@ -2230,37 +2190,36 @@ func (c *Client) DeleteInstanceCustomizedDomain(request *DeleteInstanceCustomize
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteInstanceCustomizedDomainWithContext(ctx context.Context, request *DeleteInstanceCustomizedDomainRequest) (response *DeleteInstanceCustomizedDomainResponse, err error) {
-    if request == nil {
-        request = NewDeleteInstanceCustomizedDomainRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteInstanceCustomizedDomain require credential")
-    }
+	if request == nil {
+		request = NewDeleteInstanceCustomizedDomainRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteInstanceCustomizedDomainResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteInstanceCustomizedDomain require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteInstanceCustomizedDomainResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteInstanceTokenRequest() (request *DeleteInstanceTokenRequest) {
-    request = &DeleteInstanceTokenRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteInstanceToken")
-    
-    
-    return
+	request = &DeleteInstanceTokenRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteInstanceToken")
+
+	return
 }
 
 func NewDeleteInstanceTokenResponse() (response *DeleteInstanceTokenResponse) {
-    response = &DeleteInstanceTokenResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteInstanceTokenResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteInstanceToken
@@ -2275,7 +2234,7 @@ func NewDeleteInstanceTokenResponse() (response *DeleteInstanceTokenResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteInstanceToken(request *DeleteInstanceTokenRequest) (response *DeleteInstanceTokenResponse, err error) {
-    return c.DeleteInstanceTokenWithContext(context.Background(), request)
+	return c.DeleteInstanceTokenWithContext(context.Background(), request)
 }
 
 // DeleteInstanceToken
@@ -2290,37 +2249,36 @@ func (c *Client) DeleteInstanceToken(request *DeleteInstanceTokenRequest) (respo
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteInstanceTokenWithContext(ctx context.Context, request *DeleteInstanceTokenRequest) (response *DeleteInstanceTokenResponse, err error) {
-    if request == nil {
-        request = NewDeleteInstanceTokenRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteInstanceToken require credential")
-    }
+	if request == nil {
+		request = NewDeleteInstanceTokenRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteInstanceTokenResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteInstanceToken require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteInstanceTokenResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteInternalEndpointDnsRequest() (request *DeleteInternalEndpointDnsRequest) {
-    request = &DeleteInternalEndpointDnsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteInternalEndpointDns")
-    
-    
-    return
+	request = &DeleteInternalEndpointDnsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteInternalEndpointDns")
+
+	return
 }
 
 func NewDeleteInternalEndpointDnsResponse() (response *DeleteInternalEndpointDnsResponse) {
-    response = &DeleteInternalEndpointDnsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteInternalEndpointDnsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteInternalEndpointDns
@@ -2342,7 +2300,7 @@ func NewDeleteInternalEndpointDnsResponse() (response *DeleteInternalEndpointDns
 //  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONELIST = "UnsupportedOperation.DescribePrivateZoneList"
 //  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONERECORDLIST = "UnsupportedOperation.DescribePrivateZoneRecordList"
 func (c *Client) DeleteInternalEndpointDns(request *DeleteInternalEndpointDnsRequest) (response *DeleteInternalEndpointDnsResponse, err error) {
-    return c.DeleteInternalEndpointDnsWithContext(context.Background(), request)
+	return c.DeleteInternalEndpointDnsWithContext(context.Background(), request)
 }
 
 // DeleteInternalEndpointDns
@@ -2364,37 +2322,36 @@ func (c *Client) DeleteInternalEndpointDns(request *DeleteInternalEndpointDnsReq
 //  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONELIST = "UnsupportedOperation.DescribePrivateZoneList"
 //  UNSUPPORTEDOPERATION_DESCRIBEPRIVATEZONERECORDLIST = "UnsupportedOperation.DescribePrivateZoneRecordList"
 func (c *Client) DeleteInternalEndpointDnsWithContext(ctx context.Context, request *DeleteInternalEndpointDnsRequest) (response *DeleteInternalEndpointDnsResponse, err error) {
-    if request == nil {
-        request = NewDeleteInternalEndpointDnsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteInternalEndpointDns require credential")
-    }
+	if request == nil {
+		request = NewDeleteInternalEndpointDnsRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteInternalEndpointDnsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteInternalEndpointDns require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteInternalEndpointDnsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteMultipleSecurityPolicyRequest() (request *DeleteMultipleSecurityPolicyRequest) {
-    request = &DeleteMultipleSecurityPolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteMultipleSecurityPolicy")
-    
-    
-    return
+	request = &DeleteMultipleSecurityPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteMultipleSecurityPolicy")
+
+	return
 }
 
 func NewDeleteMultipleSecurityPolicyResponse() (response *DeleteMultipleSecurityPolicyResponse) {
-    response = &DeleteMultipleSecurityPolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteMultipleSecurityPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteMultipleSecurityPolicy
@@ -2409,7 +2366,7 @@ func NewDeleteMultipleSecurityPolicyResponse() (response *DeleteMultipleSecurity
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteMultipleSecurityPolicy(request *DeleteMultipleSecurityPolicyRequest) (response *DeleteMultipleSecurityPolicyResponse, err error) {
-    return c.DeleteMultipleSecurityPolicyWithContext(context.Background(), request)
+	return c.DeleteMultipleSecurityPolicyWithContext(context.Background(), request)
 }
 
 // DeleteMultipleSecurityPolicy
@@ -2424,37 +2381,36 @@ func (c *Client) DeleteMultipleSecurityPolicy(request *DeleteMultipleSecurityPol
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteMultipleSecurityPolicyWithContext(ctx context.Context, request *DeleteMultipleSecurityPolicyRequest) (response *DeleteMultipleSecurityPolicyResponse, err error) {
-    if request == nil {
-        request = NewDeleteMultipleSecurityPolicyRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteMultipleSecurityPolicy require credential")
-    }
+	if request == nil {
+		request = NewDeleteMultipleSecurityPolicyRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteMultipleSecurityPolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteMultipleSecurityPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteMultipleSecurityPolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteNamespaceRequest() (request *DeleteNamespaceRequest) {
-    request = &DeleteNamespaceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteNamespace")
-    
-    
-    return
+	request = &DeleteNamespaceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteNamespace")
+
+	return
 }
 
 func NewDeleteNamespaceResponse() (response *DeleteNamespaceResponse) {
-    response = &DeleteNamespaceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteNamespaceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteNamespace
@@ -2479,7 +2435,7 @@ func NewDeleteNamespaceResponse() (response *DeleteNamespaceResponse) {
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteNamespace(request *DeleteNamespaceRequest) (response *DeleteNamespaceResponse, err error) {
-    return c.DeleteNamespaceWithContext(context.Background(), request)
+	return c.DeleteNamespaceWithContext(context.Background(), request)
 }
 
 // DeleteNamespace
@@ -2504,37 +2460,36 @@ func (c *Client) DeleteNamespace(request *DeleteNamespaceRequest) (response *Del
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteNamespaceWithContext(ctx context.Context, request *DeleteNamespaceRequest) (response *DeleteNamespaceResponse, err error) {
-    if request == nil {
-        request = NewDeleteNamespaceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteNamespace require credential")
-    }
+	if request == nil {
+		request = NewDeleteNamespaceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteNamespaceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteNamespace require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteNamespaceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteNamespacePersonalRequest() (request *DeleteNamespacePersonalRequest) {
-    request = &DeleteNamespacePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteNamespacePersonal")
-    
-    
-    return
+	request = &DeleteNamespacePersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteNamespacePersonal")
+
+	return
 }
 
 func NewDeleteNamespacePersonalResponse() (response *DeleteNamespacePersonalResponse) {
-    response = &DeleteNamespacePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteNamespacePersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteNamespacePersonal
@@ -2547,7 +2502,7 @@ func NewDeleteNamespacePersonalResponse() (response *DeleteNamespacePersonalResp
 //  RESOURCENOTFOUND_ERRNONAMESPACE = "ResourceNotFound.ErrNoNamespace"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) DeleteNamespacePersonal(request *DeleteNamespacePersonalRequest) (response *DeleteNamespacePersonalResponse, err error) {
-    return c.DeleteNamespacePersonalWithContext(context.Background(), request)
+	return c.DeleteNamespacePersonalWithContext(context.Background(), request)
 }
 
 // DeleteNamespacePersonal
@@ -2560,37 +2515,36 @@ func (c *Client) DeleteNamespacePersonal(request *DeleteNamespacePersonalRequest
 //  RESOURCENOTFOUND_ERRNONAMESPACE = "ResourceNotFound.ErrNoNamespace"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) DeleteNamespacePersonalWithContext(ctx context.Context, request *DeleteNamespacePersonalRequest) (response *DeleteNamespacePersonalResponse, err error) {
-    if request == nil {
-        request = NewDeleteNamespacePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteNamespacePersonal require credential")
-    }
+	if request == nil {
+		request = NewDeleteNamespacePersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteNamespacePersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteNamespacePersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteNamespacePersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteReplicationInstanceRequest() (request *DeleteReplicationInstanceRequest) {
-    request = &DeleteReplicationInstanceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteReplicationInstance")
-    
-    
-    return
+	request = &DeleteReplicationInstanceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteReplicationInstance")
+
+	return
 }
 
 func NewDeleteReplicationInstanceResponse() (response *DeleteReplicationInstanceResponse) {
-    response = &DeleteReplicationInstanceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteReplicationInstanceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteReplicationInstance
@@ -2607,7 +2561,7 @@ func NewDeleteReplicationInstanceResponse() (response *DeleteReplicationInstance
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteReplicationInstance(request *DeleteReplicationInstanceRequest) (response *DeleteReplicationInstanceResponse, err error) {
-    return c.DeleteReplicationInstanceWithContext(context.Background(), request)
+	return c.DeleteReplicationInstanceWithContext(context.Background(), request)
 }
 
 // DeleteReplicationInstance
@@ -2624,37 +2578,36 @@ func (c *Client) DeleteReplicationInstance(request *DeleteReplicationInstanceReq
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteReplicationInstanceWithContext(ctx context.Context, request *DeleteReplicationInstanceRequest) (response *DeleteReplicationInstanceResponse, err error) {
-    if request == nil {
-        request = NewDeleteReplicationInstanceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteReplicationInstance require credential")
-    }
+	if request == nil {
+		request = NewDeleteReplicationInstanceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteReplicationInstanceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteReplicationInstance require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteReplicationInstanceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteRepositoryRequest() (request *DeleteRepositoryRequest) {
-    request = &DeleteRepositoryRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteRepository")
-    
-    
-    return
+	request = &DeleteRepositoryRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteRepository")
+
+	return
 }
 
 func NewDeleteRepositoryResponse() (response *DeleteRepositoryResponse) {
-    response = &DeleteRepositoryResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteRepositoryResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteRepository
@@ -2673,7 +2626,7 @@ func NewDeleteRepositoryResponse() (response *DeleteRepositoryResponse) {
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteRepository(request *DeleteRepositoryRequest) (response *DeleteRepositoryResponse, err error) {
-    return c.DeleteRepositoryWithContext(context.Background(), request)
+	return c.DeleteRepositoryWithContext(context.Background(), request)
 }
 
 // DeleteRepository
@@ -2692,37 +2645,36 @@ func (c *Client) DeleteRepository(request *DeleteRepositoryRequest) (response *D
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteRepositoryWithContext(ctx context.Context, request *DeleteRepositoryRequest) (response *DeleteRepositoryResponse, err error) {
-    if request == nil {
-        request = NewDeleteRepositoryRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteRepository require credential")
-    }
+	if request == nil {
+		request = NewDeleteRepositoryRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteRepositoryResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteRepository require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteRepositoryResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteRepositoryPersonalRequest() (request *DeleteRepositoryPersonalRequest) {
-    request = &DeleteRepositoryPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteRepositoryPersonal")
-    
-    
-    return
+	request = &DeleteRepositoryPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteRepositoryPersonal")
+
+	return
 }
 
 func NewDeleteRepositoryPersonalResponse() (response *DeleteRepositoryPersonalResponse) {
-    response = &DeleteRepositoryPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteRepositoryPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteRepositoryPersonal
@@ -2734,7 +2686,7 @@ func NewDeleteRepositoryPersonalResponse() (response *DeleteRepositoryPersonalRe
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DeleteRepositoryPersonal(request *DeleteRepositoryPersonalRequest) (response *DeleteRepositoryPersonalResponse, err error) {
-    return c.DeleteRepositoryPersonalWithContext(context.Background(), request)
+	return c.DeleteRepositoryPersonalWithContext(context.Background(), request)
 }
 
 // DeleteRepositoryPersonal
@@ -2746,37 +2698,36 @@ func (c *Client) DeleteRepositoryPersonal(request *DeleteRepositoryPersonalReque
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DeleteRepositoryPersonalWithContext(ctx context.Context, request *DeleteRepositoryPersonalRequest) (response *DeleteRepositoryPersonalResponse, err error) {
-    if request == nil {
-        request = NewDeleteRepositoryPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteRepositoryPersonal require credential")
-    }
+	if request == nil {
+		request = NewDeleteRepositoryPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteRepositoryPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteRepositoryPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteRepositoryPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteRepositoryTagsRequest() (request *DeleteRepositoryTagsRequest) {
-    request = &DeleteRepositoryTagsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteRepositoryTags")
-    
-    
-    return
+	request = &DeleteRepositoryTagsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteRepositoryTags")
+
+	return
 }
 
 func NewDeleteRepositoryTagsResponse() (response *DeleteRepositoryTagsResponse) {
-    response = &DeleteRepositoryTagsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteRepositoryTagsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteRepositoryTags
@@ -2795,7 +2746,7 @@ func NewDeleteRepositoryTagsResponse() (response *DeleteRepositoryTagsResponse) 
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteRepositoryTags(request *DeleteRepositoryTagsRequest) (response *DeleteRepositoryTagsResponse, err error) {
-    return c.DeleteRepositoryTagsWithContext(context.Background(), request)
+	return c.DeleteRepositoryTagsWithContext(context.Background(), request)
 }
 
 // DeleteRepositoryTags
@@ -2814,43 +2765,42 @@ func (c *Client) DeleteRepositoryTags(request *DeleteRepositoryTagsRequest) (res
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteRepositoryTagsWithContext(ctx context.Context, request *DeleteRepositoryTagsRequest) (response *DeleteRepositoryTagsResponse, err error) {
-    if request == nil {
-        request = NewDeleteRepositoryTagsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteRepositoryTags require credential")
-    }
+	if request == nil {
+		request = NewDeleteRepositoryTagsRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteRepositoryTagsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteRepositoryTags require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteRepositoryTagsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteSecurityPolicyRequest() (request *DeleteSecurityPolicyRequest) {
-    request = &DeleteSecurityPolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteSecurityPolicy")
-    
-    
-    return
+	request = &DeleteSecurityPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteSecurityPolicy")
+
+	return
 }
 
 func NewDeleteSecurityPolicyResponse() (response *DeleteSecurityPolicyResponse) {
-    response = &DeleteSecurityPolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteSecurityPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteSecurityPolicy
 // 删除实例公网访问白名单策略
 //
-// 
+//
 //
 // 注意：当PolicyIndex和CidrBlock同时存在时，CidrBlock优先级更高
 //
@@ -2864,13 +2814,13 @@ func NewDeleteSecurityPolicyResponse() (response *DeleteSecurityPolicyResponse) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteSecurityPolicy(request *DeleteSecurityPolicyRequest) (response *DeleteSecurityPolicyResponse, err error) {
-    return c.DeleteSecurityPolicyWithContext(context.Background(), request)
+	return c.DeleteSecurityPolicyWithContext(context.Background(), request)
 }
 
 // DeleteSecurityPolicy
 // 删除实例公网访问白名单策略
 //
-// 
+//
 //
 // 注意：当PolicyIndex和CidrBlock同时存在时，CidrBlock优先级更高
 //
@@ -2884,37 +2834,36 @@ func (c *Client) DeleteSecurityPolicy(request *DeleteSecurityPolicyRequest) (res
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteSecurityPolicyWithContext(ctx context.Context, request *DeleteSecurityPolicyRequest) (response *DeleteSecurityPolicyResponse, err error) {
-    if request == nil {
-        request = NewDeleteSecurityPolicyRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteSecurityPolicy require credential")
-    }
+	if request == nil {
+		request = NewDeleteSecurityPolicyRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteSecurityPolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteSecurityPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteSecurityPolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteSignaturePolicyRequest() (request *DeleteSignaturePolicyRequest) {
-    request = &DeleteSignaturePolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteSignaturePolicy")
-    
-    
-    return
+	request = &DeleteSignaturePolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteSignaturePolicy")
+
+	return
 }
 
 func NewDeleteSignaturePolicyResponse() (response *DeleteSignaturePolicyResponse) {
-    response = &DeleteSignaturePolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteSignaturePolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteSignaturePolicy
@@ -2938,7 +2887,7 @@ func NewDeleteSignaturePolicyResponse() (response *DeleteSignaturePolicyResponse
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteSignaturePolicy(request *DeleteSignaturePolicyRequest) (response *DeleteSignaturePolicyResponse, err error) {
-    return c.DeleteSignaturePolicyWithContext(context.Background(), request)
+	return c.DeleteSignaturePolicyWithContext(context.Background(), request)
 }
 
 // DeleteSignaturePolicy
@@ -2962,37 +2911,36 @@ func (c *Client) DeleteSignaturePolicy(request *DeleteSignaturePolicyRequest) (r
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteSignaturePolicyWithContext(ctx context.Context, request *DeleteSignaturePolicyRequest) (response *DeleteSignaturePolicyResponse, err error) {
-    if request == nil {
-        request = NewDeleteSignaturePolicyRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteSignaturePolicy require credential")
-    }
+	if request == nil {
+		request = NewDeleteSignaturePolicyRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteSignaturePolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteSignaturePolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteSignaturePolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteTagRetentionRuleRequest() (request *DeleteTagRetentionRuleRequest) {
-    request = &DeleteTagRetentionRuleRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteTagRetentionRule")
-    
-    
-    return
+	request = &DeleteTagRetentionRuleRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteTagRetentionRule")
+
+	return
 }
 
 func NewDeleteTagRetentionRuleResponse() (response *DeleteTagRetentionRuleResponse) {
-    response = &DeleteTagRetentionRuleResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteTagRetentionRuleResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteTagRetentionRule
@@ -3013,7 +2961,7 @@ func NewDeleteTagRetentionRuleResponse() (response *DeleteTagRetentionRuleRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteTagRetentionRule(request *DeleteTagRetentionRuleRequest) (response *DeleteTagRetentionRuleResponse, err error) {
-    return c.DeleteTagRetentionRuleWithContext(context.Background(), request)
+	return c.DeleteTagRetentionRuleWithContext(context.Background(), request)
 }
 
 // DeleteTagRetentionRule
@@ -3034,37 +2982,36 @@ func (c *Client) DeleteTagRetentionRule(request *DeleteTagRetentionRuleRequest) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DeleteTagRetentionRuleWithContext(ctx context.Context, request *DeleteTagRetentionRuleRequest) (response *DeleteTagRetentionRuleResponse, err error) {
-    if request == nil {
-        request = NewDeleteTagRetentionRuleRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteTagRetentionRule require credential")
-    }
+	if request == nil {
+		request = NewDeleteTagRetentionRuleRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteTagRetentionRuleResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteTagRetentionRule require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteTagRetentionRuleResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDeleteWebhookTriggerRequest() (request *DeleteWebhookTriggerRequest) {
-    request = &DeleteWebhookTriggerRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DeleteWebhookTrigger")
-    
-    
-    return
+	request = &DeleteWebhookTriggerRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DeleteWebhookTrigger")
+
+	return
 }
 
 func NewDeleteWebhookTriggerResponse() (response *DeleteWebhookTriggerResponse) {
-    response = &DeleteWebhookTriggerResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DeleteWebhookTriggerResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DeleteWebhookTrigger
@@ -3080,7 +3027,7 @@ func NewDeleteWebhookTriggerResponse() (response *DeleteWebhookTriggerResponse) 
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DeleteWebhookTrigger(request *DeleteWebhookTriggerRequest) (response *DeleteWebhookTriggerResponse, err error) {
-    return c.DeleteWebhookTriggerWithContext(context.Background(), request)
+	return c.DeleteWebhookTriggerWithContext(context.Background(), request)
 }
 
 // DeleteWebhookTrigger
@@ -3096,37 +3043,36 @@ func (c *Client) DeleteWebhookTrigger(request *DeleteWebhookTriggerRequest) (res
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DeleteWebhookTriggerWithContext(ctx context.Context, request *DeleteWebhookTriggerRequest) (response *DeleteWebhookTriggerResponse, err error) {
-    if request == nil {
-        request = NewDeleteWebhookTriggerRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DeleteWebhookTrigger require credential")
-    }
+	if request == nil {
+		request = NewDeleteWebhookTriggerRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDeleteWebhookTriggerResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DeleteWebhookTrigger require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDeleteWebhookTriggerResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeApplicationTriggerLogPersonalRequest() (request *DescribeApplicationTriggerLogPersonalRequest) {
-    request = &DescribeApplicationTriggerLogPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeApplicationTriggerLogPersonal")
-    
-    
-    return
+	request = &DescribeApplicationTriggerLogPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeApplicationTriggerLogPersonal")
+
+	return
 }
 
 func NewDescribeApplicationTriggerLogPersonalResponse() (response *DescribeApplicationTriggerLogPersonalResponse) {
-    response = &DescribeApplicationTriggerLogPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeApplicationTriggerLogPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeApplicationTriggerLogPersonal
@@ -3136,7 +3082,7 @@ func NewDescribeApplicationTriggerLogPersonalResponse() (response *DescribeAppli
 //  INTERNALERROR = "InternalError"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DescribeApplicationTriggerLogPersonal(request *DescribeApplicationTriggerLogPersonalRequest) (response *DescribeApplicationTriggerLogPersonalResponse, err error) {
-    return c.DescribeApplicationTriggerLogPersonalWithContext(context.Background(), request)
+	return c.DescribeApplicationTriggerLogPersonalWithContext(context.Background(), request)
 }
 
 // DescribeApplicationTriggerLogPersonal
@@ -3146,37 +3092,36 @@ func (c *Client) DescribeApplicationTriggerLogPersonal(request *DescribeApplicat
 //  INTERNALERROR = "InternalError"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DescribeApplicationTriggerLogPersonalWithContext(ctx context.Context, request *DescribeApplicationTriggerLogPersonalRequest) (response *DescribeApplicationTriggerLogPersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeApplicationTriggerLogPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeApplicationTriggerLogPersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeApplicationTriggerLogPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeApplicationTriggerLogPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeApplicationTriggerLogPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeApplicationTriggerLogPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeApplicationTriggerPersonalRequest() (request *DescribeApplicationTriggerPersonalRequest) {
-    request = &DescribeApplicationTriggerPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeApplicationTriggerPersonal")
-    
-    
-    return
+	request = &DescribeApplicationTriggerPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeApplicationTriggerPersonal")
+
+	return
 }
 
 func NewDescribeApplicationTriggerPersonalResponse() (response *DescribeApplicationTriggerPersonalResponse) {
-    response = &DescribeApplicationTriggerPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeApplicationTriggerPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeApplicationTriggerPersonal
@@ -3187,7 +3132,7 @@ func NewDescribeApplicationTriggerPersonalResponse() (response *DescribeApplicat
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) DescribeApplicationTriggerPersonal(request *DescribeApplicationTriggerPersonalRequest) (response *DescribeApplicationTriggerPersonalResponse, err error) {
-    return c.DescribeApplicationTriggerPersonalWithContext(context.Background(), request)
+	return c.DescribeApplicationTriggerPersonalWithContext(context.Background(), request)
 }
 
 // DescribeApplicationTriggerPersonal
@@ -3198,37 +3143,36 @@ func (c *Client) DescribeApplicationTriggerPersonal(request *DescribeApplication
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) DescribeApplicationTriggerPersonalWithContext(ctx context.Context, request *DescribeApplicationTriggerPersonalRequest) (response *DescribeApplicationTriggerPersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeApplicationTriggerPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeApplicationTriggerPersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeApplicationTriggerPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeApplicationTriggerPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeApplicationTriggerPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeApplicationTriggerPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeChartDownloadInfoRequest() (request *DescribeChartDownloadInfoRequest) {
-    request = &DescribeChartDownloadInfoRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeChartDownloadInfo")
-    
-    
-    return
+	request = &DescribeChartDownloadInfoRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeChartDownloadInfo")
+
+	return
 }
 
 func NewDescribeChartDownloadInfoResponse() (response *DescribeChartDownloadInfoResponse) {
-    response = &DescribeChartDownloadInfoResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeChartDownloadInfoResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeChartDownloadInfo
@@ -3240,7 +3184,7 @@ func NewDescribeChartDownloadInfoResponse() (response *DescribeChartDownloadInfo
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeChartDownloadInfo(request *DescribeChartDownloadInfoRequest) (response *DescribeChartDownloadInfoResponse, err error) {
-    return c.DescribeChartDownloadInfoWithContext(context.Background(), request)
+	return c.DescribeChartDownloadInfoWithContext(context.Background(), request)
 }
 
 // DescribeChartDownloadInfo
@@ -3252,37 +3196,93 @@ func (c *Client) DescribeChartDownloadInfo(request *DescribeChartDownloadInfoReq
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeChartDownloadInfoWithContext(ctx context.Context, request *DescribeChartDownloadInfoRequest) (response *DescribeChartDownloadInfoResponse, err error) {
-    if request == nil {
-        request = NewDescribeChartDownloadInfoRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeChartDownloadInfo require credential")
-    }
+	if request == nil {
+		request = NewDescribeChartDownloadInfoRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeChartDownloadInfoResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeChartDownloadInfo require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeChartDownloadInfoResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewDescribeCustomAccountsRequest() (request *DescribeCustomAccountsRequest) {
+	request = &DescribeCustomAccountsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeCustomAccounts")
+
+	return
+}
+
+func NewDescribeCustomAccountsResponse() (response *DescribeCustomAccountsResponse) {
+	response = &DescribeCustomAccountsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+}
+
+// DescribeCustomAccounts
+// 查询自定义账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCustomAccounts(request *DescribeCustomAccountsRequest) (response *DescribeCustomAccountsResponse, err error) {
+	return c.DescribeCustomAccountsWithContext(context.Background(), request)
+}
+
+// DescribeCustomAccounts
+// 查询自定义账号
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+//  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+func (c *Client) DescribeCustomAccountsWithContext(ctx context.Context, request *DescribeCustomAccountsRequest) (response *DescribeCustomAccountsResponse, err error) {
+	if request == nil {
+		request = NewDescribeCustomAccountsRequest()
+	}
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeCustomAccounts require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeCustomAccountsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeExternalEndpointStatusRequest() (request *DescribeExternalEndpointStatusRequest) {
-    request = &DescribeExternalEndpointStatusRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeExternalEndpointStatus")
-    
-    
-    return
+	request = &DescribeExternalEndpointStatusRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeExternalEndpointStatus")
+
+	return
 }
 
 func NewDescribeExternalEndpointStatusResponse() (response *DescribeExternalEndpointStatusResponse) {
-    response = &DescribeExternalEndpointStatusResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeExternalEndpointStatusResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeExternalEndpointStatus
@@ -3302,7 +3302,7 @@ func NewDescribeExternalEndpointStatusResponse() (response *DescribeExternalEndp
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeExternalEndpointStatus(request *DescribeExternalEndpointStatusRequest) (response *DescribeExternalEndpointStatusResponse, err error) {
-    return c.DescribeExternalEndpointStatusWithContext(context.Background(), request)
+	return c.DescribeExternalEndpointStatusWithContext(context.Background(), request)
 }
 
 // DescribeExternalEndpointStatus
@@ -3322,37 +3322,36 @@ func (c *Client) DescribeExternalEndpointStatus(request *DescribeExternalEndpoin
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeExternalEndpointStatusWithContext(ctx context.Context, request *DescribeExternalEndpointStatusRequest) (response *DescribeExternalEndpointStatusResponse, err error) {
-    if request == nil {
-        request = NewDescribeExternalEndpointStatusRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeExternalEndpointStatus require credential")
-    }
+	if request == nil {
+		request = NewDescribeExternalEndpointStatusRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeExternalEndpointStatusResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeExternalEndpointStatus require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeExternalEndpointStatusResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeFavorRepositoryPersonalRequest() (request *DescribeFavorRepositoryPersonalRequest) {
-    request = &DescribeFavorRepositoryPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeFavorRepositoryPersonal")
-    
-    
-    return
+	request = &DescribeFavorRepositoryPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeFavorRepositoryPersonal")
+
+	return
 }
 
 func NewDescribeFavorRepositoryPersonalResponse() (response *DescribeFavorRepositoryPersonalResponse) {
-    response = &DescribeFavorRepositoryPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeFavorRepositoryPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeFavorRepositoryPersonal
@@ -3362,7 +3361,7 @@ func NewDescribeFavorRepositoryPersonalResponse() (response *DescribeFavorReposi
 //  INTERNALERROR = "InternalError"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeFavorRepositoryPersonal(request *DescribeFavorRepositoryPersonalRequest) (response *DescribeFavorRepositoryPersonalResponse, err error) {
-    return c.DescribeFavorRepositoryPersonalWithContext(context.Background(), request)
+	return c.DescribeFavorRepositoryPersonalWithContext(context.Background(), request)
 }
 
 // DescribeFavorRepositoryPersonal
@@ -3372,37 +3371,36 @@ func (c *Client) DescribeFavorRepositoryPersonal(request *DescribeFavorRepositor
 //  INTERNALERROR = "InternalError"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeFavorRepositoryPersonalWithContext(ctx context.Context, request *DescribeFavorRepositoryPersonalRequest) (response *DescribeFavorRepositoryPersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeFavorRepositoryPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeFavorRepositoryPersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeFavorRepositoryPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeFavorRepositoryPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeFavorRepositoryPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeFavorRepositoryPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeGCJobsRequest() (request *DescribeGCJobsRequest) {
-    request = &DescribeGCJobsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeGCJobs")
-    
-    
-    return
+	request = &DescribeGCJobsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeGCJobs")
+
+	return
 }
 
 func NewDescribeGCJobsResponse() (response *DescribeGCJobsResponse) {
-    response = &DescribeGCJobsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeGCJobsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeGCJobs
@@ -3418,7 +3416,7 @@ func NewDescribeGCJobsResponse() (response *DescribeGCJobsResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeGCJobs(request *DescribeGCJobsRequest) (response *DescribeGCJobsResponse, err error) {
-    return c.DescribeGCJobsWithContext(context.Background(), request)
+	return c.DescribeGCJobsWithContext(context.Background(), request)
 }
 
 // DescribeGCJobs
@@ -3434,37 +3432,36 @@ func (c *Client) DescribeGCJobs(request *DescribeGCJobsRequest) (response *Descr
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeGCJobsWithContext(ctx context.Context, request *DescribeGCJobsRequest) (response *DescribeGCJobsResponse, err error) {
-    if request == nil {
-        request = NewDescribeGCJobsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeGCJobs require credential")
-    }
+	if request == nil {
+		request = NewDescribeGCJobsRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeGCJobsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeGCJobs require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeGCJobsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeImageAccelerateServiceRequest() (request *DescribeImageAccelerateServiceRequest) {
-    request = &DescribeImageAccelerateServiceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeImageAccelerateService")
-    
-    
-    return
+	request = &DescribeImageAccelerateServiceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeImageAccelerateService")
+
+	return
 }
 
 func NewDescribeImageAccelerateServiceResponse() (response *DescribeImageAccelerateServiceResponse) {
-    response = &DescribeImageAccelerateServiceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeImageAccelerateServiceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeImageAccelerateService
@@ -3479,7 +3476,7 @@ func NewDescribeImageAccelerateServiceResponse() (response *DescribeImageAcceler
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeImageAccelerateService(request *DescribeImageAccelerateServiceRequest) (response *DescribeImageAccelerateServiceResponse, err error) {
-    return c.DescribeImageAccelerateServiceWithContext(context.Background(), request)
+	return c.DescribeImageAccelerateServiceWithContext(context.Background(), request)
 }
 
 // DescribeImageAccelerateService
@@ -3494,37 +3491,36 @@ func (c *Client) DescribeImageAccelerateService(request *DescribeImageAccelerate
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeImageAccelerateServiceWithContext(ctx context.Context, request *DescribeImageAccelerateServiceRequest) (response *DescribeImageAccelerateServiceResponse, err error) {
-    if request == nil {
-        request = NewDescribeImageAccelerateServiceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeImageAccelerateService require credential")
-    }
+	if request == nil {
+		request = NewDescribeImageAccelerateServiceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeImageAccelerateServiceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeImageAccelerateService require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeImageAccelerateServiceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeImageFilterPersonalRequest() (request *DescribeImageFilterPersonalRequest) {
-    request = &DescribeImageFilterPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeImageFilterPersonal")
-    
-    
-    return
+	request = &DescribeImageFilterPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeImageFilterPersonal")
+
+	return
 }
 
 func NewDescribeImageFilterPersonalResponse() (response *DescribeImageFilterPersonalResponse) {
-    response = &DescribeImageFilterPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeImageFilterPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeImageFilterPersonal
@@ -3536,7 +3532,7 @@ func NewDescribeImageFilterPersonalResponse() (response *DescribeImageFilterPers
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DescribeImageFilterPersonal(request *DescribeImageFilterPersonalRequest) (response *DescribeImageFilterPersonalResponse, err error) {
-    return c.DescribeImageFilterPersonalWithContext(context.Background(), request)
+	return c.DescribeImageFilterPersonalWithContext(context.Background(), request)
 }
 
 // DescribeImageFilterPersonal
@@ -3548,37 +3544,36 @@ func (c *Client) DescribeImageFilterPersonal(request *DescribeImageFilterPersona
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DescribeImageFilterPersonalWithContext(ctx context.Context, request *DescribeImageFilterPersonalRequest) (response *DescribeImageFilterPersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeImageFilterPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeImageFilterPersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeImageFilterPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeImageFilterPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeImageFilterPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeImageFilterPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeImageLifecycleGlobalPersonalRequest() (request *DescribeImageLifecycleGlobalPersonalRequest) {
-    request = &DescribeImageLifecycleGlobalPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeImageLifecycleGlobalPersonal")
-    
-    
-    return
+	request = &DescribeImageLifecycleGlobalPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeImageLifecycleGlobalPersonal")
+
+	return
 }
 
 func NewDescribeImageLifecycleGlobalPersonalResponse() (response *DescribeImageLifecycleGlobalPersonalResponse) {
-    response = &DescribeImageLifecycleGlobalPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeImageLifecycleGlobalPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeImageLifecycleGlobalPersonal
@@ -3587,7 +3582,7 @@ func NewDescribeImageLifecycleGlobalPersonalResponse() (response *DescribeImageL
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeImageLifecycleGlobalPersonal(request *DescribeImageLifecycleGlobalPersonalRequest) (response *DescribeImageLifecycleGlobalPersonalResponse, err error) {
-    return c.DescribeImageLifecycleGlobalPersonalWithContext(context.Background(), request)
+	return c.DescribeImageLifecycleGlobalPersonalWithContext(context.Background(), request)
 }
 
 // DescribeImageLifecycleGlobalPersonal
@@ -3596,37 +3591,36 @@ func (c *Client) DescribeImageLifecycleGlobalPersonal(request *DescribeImageLife
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeImageLifecycleGlobalPersonalWithContext(ctx context.Context, request *DescribeImageLifecycleGlobalPersonalRequest) (response *DescribeImageLifecycleGlobalPersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeImageLifecycleGlobalPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeImageLifecycleGlobalPersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeImageLifecycleGlobalPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeImageLifecycleGlobalPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeImageLifecycleGlobalPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeImageLifecycleGlobalPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeImageLifecyclePersonalRequest() (request *DescribeImageLifecyclePersonalRequest) {
-    request = &DescribeImageLifecyclePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeImageLifecyclePersonal")
-    
-    
-    return
+	request = &DescribeImageLifecyclePersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeImageLifecyclePersonal")
+
+	return
 }
 
 func NewDescribeImageLifecyclePersonalResponse() (response *DescribeImageLifecyclePersonalResponse) {
-    response = &DescribeImageLifecyclePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeImageLifecyclePersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeImageLifecyclePersonal
@@ -3636,7 +3630,7 @@ func NewDescribeImageLifecyclePersonalResponse() (response *DescribeImageLifecyc
 //  INTERNALERROR = "InternalError"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeImageLifecyclePersonal(request *DescribeImageLifecyclePersonalRequest) (response *DescribeImageLifecyclePersonalResponse, err error) {
-    return c.DescribeImageLifecyclePersonalWithContext(context.Background(), request)
+	return c.DescribeImageLifecyclePersonalWithContext(context.Background(), request)
 }
 
 // DescribeImageLifecyclePersonal
@@ -3646,37 +3640,36 @@ func (c *Client) DescribeImageLifecyclePersonal(request *DescribeImageLifecycleP
 //  INTERNALERROR = "InternalError"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) DescribeImageLifecyclePersonalWithContext(ctx context.Context, request *DescribeImageLifecyclePersonalRequest) (response *DescribeImageLifecyclePersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeImageLifecyclePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeImageLifecyclePersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeImageLifecyclePersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeImageLifecyclePersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeImageLifecyclePersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeImageLifecyclePersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeImageManifestsRequest() (request *DescribeImageManifestsRequest) {
-    request = &DescribeImageManifestsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeImageManifests")
-    
-    
-    return
+	request = &DescribeImageManifestsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeImageManifests")
+
+	return
 }
 
 func NewDescribeImageManifestsResponse() (response *DescribeImageManifestsResponse) {
-    response = &DescribeImageManifestsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeImageManifestsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeImageManifests
@@ -3696,7 +3689,7 @@ func NewDescribeImageManifestsResponse() (response *DescribeImageManifestsRespon
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeImageManifests(request *DescribeImageManifestsRequest) (response *DescribeImageManifestsResponse, err error) {
-    return c.DescribeImageManifestsWithContext(context.Background(), request)
+	return c.DescribeImageManifestsWithContext(context.Background(), request)
 }
 
 // DescribeImageManifests
@@ -3716,37 +3709,36 @@ func (c *Client) DescribeImageManifests(request *DescribeImageManifestsRequest) 
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeImageManifestsWithContext(ctx context.Context, request *DescribeImageManifestsRequest) (response *DescribeImageManifestsResponse, err error) {
-    if request == nil {
-        request = NewDescribeImageManifestsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeImageManifests require credential")
-    }
+	if request == nil {
+		request = NewDescribeImageManifestsRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeImageManifestsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeImageManifests require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeImageManifestsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeImagePersonalRequest() (request *DescribeImagePersonalRequest) {
-    request = &DescribeImagePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeImagePersonal")
-    
-    
-    return
+	request = &DescribeImagePersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeImagePersonal")
+
+	return
 }
 
 func NewDescribeImagePersonalResponse() (response *DescribeImagePersonalResponse) {
-    response = &DescribeImagePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeImagePersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeImagePersonal
@@ -3758,7 +3750,7 @@ func NewDescribeImagePersonalResponse() (response *DescribeImagePersonalResponse
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DescribeImagePersonal(request *DescribeImagePersonalRequest) (response *DescribeImagePersonalResponse, err error) {
-    return c.DescribeImagePersonalWithContext(context.Background(), request)
+	return c.DescribeImagePersonalWithContext(context.Background(), request)
 }
 
 // DescribeImagePersonal
@@ -3770,37 +3762,36 @@ func (c *Client) DescribeImagePersonal(request *DescribeImagePersonalRequest) (r
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DescribeImagePersonalWithContext(ctx context.Context, request *DescribeImagePersonalRequest) (response *DescribeImagePersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeImagePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeImagePersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeImagePersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeImagePersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeImagePersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeImagePersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeImagesRequest() (request *DescribeImagesRequest) {
-    request = &DescribeImagesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeImages")
-    
-    
-    return
+	request = &DescribeImagesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeImages")
+
+	return
 }
 
 func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
-    response = &DescribeImagesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeImagesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeImages
@@ -3819,7 +3810,7 @@ func NewDescribeImagesResponse() (response *DescribeImagesResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *DescribeImagesResponse, err error) {
-    return c.DescribeImagesWithContext(context.Background(), request)
+	return c.DescribeImagesWithContext(context.Background(), request)
 }
 
 // DescribeImages
@@ -3838,37 +3829,36 @@ func (c *Client) DescribeImages(request *DescribeImagesRequest) (response *Descr
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DescribeImagesWithContext(ctx context.Context, request *DescribeImagesRequest) (response *DescribeImagesResponse, err error) {
-    if request == nil {
-        request = NewDescribeImagesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeImages require credential")
-    }
+	if request == nil {
+		request = NewDescribeImagesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeImagesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeImages require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeImagesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeImmutableTagRulesRequest() (request *DescribeImmutableTagRulesRequest) {
-    request = &DescribeImmutableTagRulesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeImmutableTagRules")
-    
-    
-    return
+	request = &DescribeImmutableTagRulesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeImmutableTagRules")
+
+	return
 }
 
 func NewDescribeImmutableTagRulesResponse() (response *DescribeImmutableTagRulesResponse) {
-    response = &DescribeImmutableTagRulesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeImmutableTagRulesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeImmutableTagRules
@@ -3885,7 +3875,7 @@ func NewDescribeImmutableTagRulesResponse() (response *DescribeImmutableTagRules
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DescribeImmutableTagRules(request *DescribeImmutableTagRulesRequest) (response *DescribeImmutableTagRulesResponse, err error) {
-    return c.DescribeImmutableTagRulesWithContext(context.Background(), request)
+	return c.DescribeImmutableTagRulesWithContext(context.Background(), request)
 }
 
 // DescribeImmutableTagRules
@@ -3902,37 +3892,36 @@ func (c *Client) DescribeImmutableTagRules(request *DescribeImmutableTagRulesReq
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DescribeImmutableTagRulesWithContext(ctx context.Context, request *DescribeImmutableTagRulesRequest) (response *DescribeImmutableTagRulesResponse, err error) {
-    if request == nil {
-        request = NewDescribeImmutableTagRulesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeImmutableTagRules require credential")
-    }
+	if request == nil {
+		request = NewDescribeImmutableTagRulesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeImmutableTagRulesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeImmutableTagRules require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeImmutableTagRulesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeInstanceAllNamespacesRequest() (request *DescribeInstanceAllNamespacesRequest) {
-    request = &DescribeInstanceAllNamespacesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstanceAllNamespaces")
-    
-    
-    return
+	request = &DescribeInstanceAllNamespacesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstanceAllNamespaces")
+
+	return
 }
 
 func NewDescribeInstanceAllNamespacesResponse() (response *DescribeInstanceAllNamespacesResponse) {
-    response = &DescribeInstanceAllNamespacesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeInstanceAllNamespacesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeInstanceAllNamespaces
@@ -3955,7 +3944,7 @@ func NewDescribeInstanceAllNamespacesResponse() (response *DescribeInstanceAllNa
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstanceAllNamespaces(request *DescribeInstanceAllNamespacesRequest) (response *DescribeInstanceAllNamespacesResponse, err error) {
-    return c.DescribeInstanceAllNamespacesWithContext(context.Background(), request)
+	return c.DescribeInstanceAllNamespacesWithContext(context.Background(), request)
 }
 
 // DescribeInstanceAllNamespaces
@@ -3978,37 +3967,36 @@ func (c *Client) DescribeInstanceAllNamespaces(request *DescribeInstanceAllNames
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstanceAllNamespacesWithContext(ctx context.Context, request *DescribeInstanceAllNamespacesRequest) (response *DescribeInstanceAllNamespacesResponse, err error) {
-    if request == nil {
-        request = NewDescribeInstanceAllNamespacesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeInstanceAllNamespaces require credential")
-    }
+	if request == nil {
+		request = NewDescribeInstanceAllNamespacesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeInstanceAllNamespacesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeInstanceAllNamespaces require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeInstanceAllNamespacesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeInstanceCustomizedDomainRequest() (request *DescribeInstanceCustomizedDomainRequest) {
-    request = &DescribeInstanceCustomizedDomainRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstanceCustomizedDomain")
-    
-    
-    return
+	request = &DescribeInstanceCustomizedDomainRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstanceCustomizedDomain")
+
+	return
 }
 
 func NewDescribeInstanceCustomizedDomainResponse() (response *DescribeInstanceCustomizedDomainResponse) {
-    response = &DescribeInstanceCustomizedDomainResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeInstanceCustomizedDomainResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeInstanceCustomizedDomain
@@ -4028,7 +4016,7 @@ func NewDescribeInstanceCustomizedDomainResponse() (response *DescribeInstanceCu
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstanceCustomizedDomain(request *DescribeInstanceCustomizedDomainRequest) (response *DescribeInstanceCustomizedDomainResponse, err error) {
-    return c.DescribeInstanceCustomizedDomainWithContext(context.Background(), request)
+	return c.DescribeInstanceCustomizedDomainWithContext(context.Background(), request)
 }
 
 // DescribeInstanceCustomizedDomain
@@ -4048,37 +4036,36 @@ func (c *Client) DescribeInstanceCustomizedDomain(request *DescribeInstanceCusto
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstanceCustomizedDomainWithContext(ctx context.Context, request *DescribeInstanceCustomizedDomainRequest) (response *DescribeInstanceCustomizedDomainResponse, err error) {
-    if request == nil {
-        request = NewDescribeInstanceCustomizedDomainRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeInstanceCustomizedDomain require credential")
-    }
+	if request == nil {
+		request = NewDescribeInstanceCustomizedDomainRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeInstanceCustomizedDomainResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeInstanceCustomizedDomain require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeInstanceCustomizedDomainResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeInstanceStatusRequest() (request *DescribeInstanceStatusRequest) {
-    request = &DescribeInstanceStatusRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstanceStatus")
-    
-    
-    return
+	request = &DescribeInstanceStatusRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstanceStatus")
+
+	return
 }
 
 func NewDescribeInstanceStatusResponse() (response *DescribeInstanceStatusResponse) {
-    response = &DescribeInstanceStatusResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeInstanceStatusResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeInstanceStatus
@@ -4093,7 +4080,7 @@ func NewDescribeInstanceStatusResponse() (response *DescribeInstanceStatusRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstanceStatus(request *DescribeInstanceStatusRequest) (response *DescribeInstanceStatusResponse, err error) {
-    return c.DescribeInstanceStatusWithContext(context.Background(), request)
+	return c.DescribeInstanceStatusWithContext(context.Background(), request)
 }
 
 // DescribeInstanceStatus
@@ -4108,37 +4095,36 @@ func (c *Client) DescribeInstanceStatus(request *DescribeInstanceStatusRequest) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstanceStatusWithContext(ctx context.Context, request *DescribeInstanceStatusRequest) (response *DescribeInstanceStatusResponse, err error) {
-    if request == nil {
-        request = NewDescribeInstanceStatusRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeInstanceStatus require credential")
-    }
+	if request == nil {
+		request = NewDescribeInstanceStatusRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeInstanceStatusResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeInstanceStatus require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeInstanceStatusResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeInstanceTokenRequest() (request *DescribeInstanceTokenRequest) {
-    request = &DescribeInstanceTokenRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstanceToken")
-    
-    
-    return
+	request = &DescribeInstanceTokenRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstanceToken")
+
+	return
 }
 
 func NewDescribeInstanceTokenResponse() (response *DescribeInstanceTokenResponse) {
-    response = &DescribeInstanceTokenResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeInstanceTokenResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeInstanceToken
@@ -4152,7 +4138,7 @@ func NewDescribeInstanceTokenResponse() (response *DescribeInstanceTokenResponse
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstanceToken(request *DescribeInstanceTokenRequest) (response *DescribeInstanceTokenResponse, err error) {
-    return c.DescribeInstanceTokenWithContext(context.Background(), request)
+	return c.DescribeInstanceTokenWithContext(context.Background(), request)
 }
 
 // DescribeInstanceToken
@@ -4166,37 +4152,36 @@ func (c *Client) DescribeInstanceToken(request *DescribeInstanceTokenRequest) (r
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstanceTokenWithContext(ctx context.Context, request *DescribeInstanceTokenRequest) (response *DescribeInstanceTokenResponse, err error) {
-    if request == nil {
-        request = NewDescribeInstanceTokenRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeInstanceToken require credential")
-    }
+	if request == nil {
+		request = NewDescribeInstanceTokenRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeInstanceTokenResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeInstanceToken require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeInstanceTokenResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeInstancesRequest() (request *DescribeInstancesRequest) {
-    request = &DescribeInstancesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstances")
-    
-    
-    return
+	request = &DescribeInstancesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeInstances")
+
+	return
 }
 
 func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
-    response = &DescribeInstancesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeInstancesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeInstances
@@ -4214,7 +4199,7 @@ func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response *DescribeInstancesResponse, err error) {
-    return c.DescribeInstancesWithContext(context.Background(), request)
+	return c.DescribeInstancesWithContext(context.Background(), request)
 }
 
 // DescribeInstances
@@ -4232,37 +4217,36 @@ func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *DescribeInstancesRequest) (response *DescribeInstancesResponse, err error) {
-    if request == nil {
-        request = NewDescribeInstancesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeInstances require credential")
-    }
+	if request == nil {
+		request = NewDescribeInstancesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeInstancesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeInstances require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeInstancesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeInternalEndpointDnsStatusRequest() (request *DescribeInternalEndpointDnsStatusRequest) {
-    request = &DescribeInternalEndpointDnsStatusRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeInternalEndpointDnsStatus")
-    
-    
-    return
+	request = &DescribeInternalEndpointDnsStatusRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeInternalEndpointDnsStatus")
+
+	return
 }
 
 func NewDescribeInternalEndpointDnsStatusResponse() (response *DescribeInternalEndpointDnsStatusResponse) {
-    response = &DescribeInternalEndpointDnsStatusResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeInternalEndpointDnsStatusResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeInternalEndpointDnsStatus
@@ -4281,7 +4265,7 @@ func NewDescribeInternalEndpointDnsStatusResponse() (response *DescribeInternalE
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInternalEndpointDnsStatus(request *DescribeInternalEndpointDnsStatusRequest) (response *DescribeInternalEndpointDnsStatusResponse, err error) {
-    return c.DescribeInternalEndpointDnsStatusWithContext(context.Background(), request)
+	return c.DescribeInternalEndpointDnsStatusWithContext(context.Background(), request)
 }
 
 // DescribeInternalEndpointDnsStatus
@@ -4300,37 +4284,36 @@ func (c *Client) DescribeInternalEndpointDnsStatus(request *DescribeInternalEndp
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInternalEndpointDnsStatusWithContext(ctx context.Context, request *DescribeInternalEndpointDnsStatusRequest) (response *DescribeInternalEndpointDnsStatusResponse, err error) {
-    if request == nil {
-        request = NewDescribeInternalEndpointDnsStatusRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeInternalEndpointDnsStatus require credential")
-    }
+	if request == nil {
+		request = NewDescribeInternalEndpointDnsStatusRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeInternalEndpointDnsStatusResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeInternalEndpointDnsStatus require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeInternalEndpointDnsStatusResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeInternalEndpointsRequest() (request *DescribeInternalEndpointsRequest) {
-    request = &DescribeInternalEndpointsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeInternalEndpoints")
-    
-    
-    return
+	request = &DescribeInternalEndpointsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeInternalEndpoints")
+
+	return
 }
 
 func NewDescribeInternalEndpointsResponse() (response *DescribeInternalEndpointsResponse) {
-    response = &DescribeInternalEndpointsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeInternalEndpointsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeInternalEndpoints
@@ -4345,7 +4328,7 @@ func NewDescribeInternalEndpointsResponse() (response *DescribeInternalEndpoints
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInternalEndpoints(request *DescribeInternalEndpointsRequest) (response *DescribeInternalEndpointsResponse, err error) {
-    return c.DescribeInternalEndpointsWithContext(context.Background(), request)
+	return c.DescribeInternalEndpointsWithContext(context.Background(), request)
 }
 
 // DescribeInternalEndpoints
@@ -4360,37 +4343,36 @@ func (c *Client) DescribeInternalEndpoints(request *DescribeInternalEndpointsReq
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeInternalEndpointsWithContext(ctx context.Context, request *DescribeInternalEndpointsRequest) (response *DescribeInternalEndpointsResponse, err error) {
-    if request == nil {
-        request = NewDescribeInternalEndpointsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeInternalEndpoints require credential")
-    }
+	if request == nil {
+		request = NewDescribeInternalEndpointsRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeInternalEndpointsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeInternalEndpoints require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeInternalEndpointsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeNamespacePersonalRequest() (request *DescribeNamespacePersonalRequest) {
-    request = &DescribeNamespacePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeNamespacePersonal")
-    
-    
-    return
+	request = &DescribeNamespacePersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeNamespacePersonal")
+
+	return
 }
 
 func NewDescribeNamespacePersonalResponse() (response *DescribeNamespacePersonalResponse) {
-    response = &DescribeNamespacePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeNamespacePersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeNamespacePersonal
@@ -4401,7 +4383,7 @@ func NewDescribeNamespacePersonalResponse() (response *DescribeNamespacePersonal
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) DescribeNamespacePersonal(request *DescribeNamespacePersonalRequest) (response *DescribeNamespacePersonalResponse, err error) {
-    return c.DescribeNamespacePersonalWithContext(context.Background(), request)
+	return c.DescribeNamespacePersonalWithContext(context.Background(), request)
 }
 
 // DescribeNamespacePersonal
@@ -4412,37 +4394,36 @@ func (c *Client) DescribeNamespacePersonal(request *DescribeNamespacePersonalReq
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) DescribeNamespacePersonalWithContext(ctx context.Context, request *DescribeNamespacePersonalRequest) (response *DescribeNamespacePersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeNamespacePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeNamespacePersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeNamespacePersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeNamespacePersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeNamespacePersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeNamespacePersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeNamespacesRequest() (request *DescribeNamespacesRequest) {
-    request = &DescribeNamespacesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeNamespaces")
-    
-    
-    return
+	request = &DescribeNamespacesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeNamespaces")
+
+	return
 }
 
 func NewDescribeNamespacesResponse() (response *DescribeNamespacesResponse) {
-    response = &DescribeNamespacesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeNamespacesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeNamespaces
@@ -4470,7 +4451,7 @@ func NewDescribeNamespacesResponse() (response *DescribeNamespacesResponse) {
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeNamespaces(request *DescribeNamespacesRequest) (response *DescribeNamespacesResponse, err error) {
-    return c.DescribeNamespacesWithContext(context.Background(), request)
+	return c.DescribeNamespacesWithContext(context.Background(), request)
 }
 
 // DescribeNamespaces
@@ -4498,37 +4479,36 @@ func (c *Client) DescribeNamespaces(request *DescribeNamespacesRequest) (respons
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeNamespacesWithContext(ctx context.Context, request *DescribeNamespacesRequest) (response *DescribeNamespacesResponse, err error) {
-    if request == nil {
-        request = NewDescribeNamespacesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeNamespaces require credential")
-    }
+	if request == nil {
+		request = NewDescribeNamespacesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeNamespacesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeNamespaces require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeNamespacesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeRegionsRequest() (request *DescribeRegionsRequest) {
-    request = &DescribeRegionsRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeRegions")
-    
-    
-    return
+	request = &DescribeRegionsRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeRegions")
+
+	return
 }
 
 func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
-    response = &DescribeRegionsResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeRegionsResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeRegions
@@ -4541,7 +4521,7 @@ func NewDescribeRegionsResponse() (response *DescribeRegionsResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *DescribeRegionsResponse, err error) {
-    return c.DescribeRegionsWithContext(context.Background(), request)
+	return c.DescribeRegionsWithContext(context.Background(), request)
 }
 
 // DescribeRegions
@@ -4554,37 +4534,36 @@ func (c *Client) DescribeRegions(request *DescribeRegionsRequest) (response *Des
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRegionsWithContext(ctx context.Context, request *DescribeRegionsRequest) (response *DescribeRegionsResponse, err error) {
-    if request == nil {
-        request = NewDescribeRegionsRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeRegions require credential")
-    }
+	if request == nil {
+		request = NewDescribeRegionsRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeRegionsResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeRegions require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeRegionsResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeReplicationInstanceCreateTasksRequest() (request *DescribeReplicationInstanceCreateTasksRequest) {
-    request = &DescribeReplicationInstanceCreateTasksRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeReplicationInstanceCreateTasks")
-    
-    
-    return
+	request = &DescribeReplicationInstanceCreateTasksRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeReplicationInstanceCreateTasks")
+
+	return
 }
 
 func NewDescribeReplicationInstanceCreateTasksResponse() (response *DescribeReplicationInstanceCreateTasksResponse) {
-    response = &DescribeReplicationInstanceCreateTasksResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeReplicationInstanceCreateTasksResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeReplicationInstanceCreateTasks
@@ -4599,7 +4578,7 @@ func NewDescribeReplicationInstanceCreateTasksResponse() (response *DescribeRepl
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeReplicationInstanceCreateTasks(request *DescribeReplicationInstanceCreateTasksRequest) (response *DescribeReplicationInstanceCreateTasksResponse, err error) {
-    return c.DescribeReplicationInstanceCreateTasksWithContext(context.Background(), request)
+	return c.DescribeReplicationInstanceCreateTasksWithContext(context.Background(), request)
 }
 
 // DescribeReplicationInstanceCreateTasks
@@ -4614,37 +4593,36 @@ func (c *Client) DescribeReplicationInstanceCreateTasks(request *DescribeReplica
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeReplicationInstanceCreateTasksWithContext(ctx context.Context, request *DescribeReplicationInstanceCreateTasksRequest) (response *DescribeReplicationInstanceCreateTasksResponse, err error) {
-    if request == nil {
-        request = NewDescribeReplicationInstanceCreateTasksRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeReplicationInstanceCreateTasks require credential")
-    }
+	if request == nil {
+		request = NewDescribeReplicationInstanceCreateTasksRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeReplicationInstanceCreateTasksResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeReplicationInstanceCreateTasks require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeReplicationInstanceCreateTasksResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeReplicationInstanceSyncStatusRequest() (request *DescribeReplicationInstanceSyncStatusRequest) {
-    request = &DescribeReplicationInstanceSyncStatusRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeReplicationInstanceSyncStatus")
-    
-    
-    return
+	request = &DescribeReplicationInstanceSyncStatusRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeReplicationInstanceSyncStatus")
+
+	return
 }
 
 func NewDescribeReplicationInstanceSyncStatusResponse() (response *DescribeReplicationInstanceSyncStatusResponse) {
-    response = &DescribeReplicationInstanceSyncStatusResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeReplicationInstanceSyncStatusResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeReplicationInstanceSyncStatus
@@ -4659,7 +4637,7 @@ func NewDescribeReplicationInstanceSyncStatusResponse() (response *DescribeRepli
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeReplicationInstanceSyncStatus(request *DescribeReplicationInstanceSyncStatusRequest) (response *DescribeReplicationInstanceSyncStatusResponse, err error) {
-    return c.DescribeReplicationInstanceSyncStatusWithContext(context.Background(), request)
+	return c.DescribeReplicationInstanceSyncStatusWithContext(context.Background(), request)
 }
 
 // DescribeReplicationInstanceSyncStatus
@@ -4674,37 +4652,36 @@ func (c *Client) DescribeReplicationInstanceSyncStatus(request *DescribeReplicat
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeReplicationInstanceSyncStatusWithContext(ctx context.Context, request *DescribeReplicationInstanceSyncStatusRequest) (response *DescribeReplicationInstanceSyncStatusResponse, err error) {
-    if request == nil {
-        request = NewDescribeReplicationInstanceSyncStatusRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeReplicationInstanceSyncStatus require credential")
-    }
+	if request == nil {
+		request = NewDescribeReplicationInstanceSyncStatusRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeReplicationInstanceSyncStatusResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeReplicationInstanceSyncStatus require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeReplicationInstanceSyncStatusResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeReplicationInstancesRequest() (request *DescribeReplicationInstancesRequest) {
-    request = &DescribeReplicationInstancesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeReplicationInstances")
-    
-    
-    return
+	request = &DescribeReplicationInstancesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeReplicationInstances")
+
+	return
 }
 
 func NewDescribeReplicationInstancesResponse() (response *DescribeReplicationInstancesResponse) {
-    response = &DescribeReplicationInstancesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeReplicationInstancesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeReplicationInstances
@@ -4721,7 +4698,7 @@ func NewDescribeReplicationInstancesResponse() (response *DescribeReplicationIns
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeReplicationInstances(request *DescribeReplicationInstancesRequest) (response *DescribeReplicationInstancesResponse, err error) {
-    return c.DescribeReplicationInstancesWithContext(context.Background(), request)
+	return c.DescribeReplicationInstancesWithContext(context.Background(), request)
 }
 
 // DescribeReplicationInstances
@@ -4738,37 +4715,36 @@ func (c *Client) DescribeReplicationInstances(request *DescribeReplicationInstan
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeReplicationInstancesWithContext(ctx context.Context, request *DescribeReplicationInstancesRequest) (response *DescribeReplicationInstancesResponse, err error) {
-    if request == nil {
-        request = NewDescribeReplicationInstancesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeReplicationInstances require credential")
-    }
+	if request == nil {
+		request = NewDescribeReplicationInstancesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeReplicationInstancesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeReplicationInstances require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeReplicationInstancesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeRepositoriesRequest() (request *DescribeRepositoriesRequest) {
-    request = &DescribeRepositoriesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeRepositories")
-    
-    
-    return
+	request = &DescribeRepositoriesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeRepositories")
+
+	return
 }
 
 func NewDescribeRepositoriesResponse() (response *DescribeRepositoriesResponse) {
-    response = &DescribeRepositoriesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeRepositoriesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeRepositories
@@ -4789,7 +4765,7 @@ func NewDescribeRepositoriesResponse() (response *DescribeRepositoriesResponse) 
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRepositories(request *DescribeRepositoriesRequest) (response *DescribeRepositoriesResponse, err error) {
-    return c.DescribeRepositoriesWithContext(context.Background(), request)
+	return c.DescribeRepositoriesWithContext(context.Background(), request)
 }
 
 // DescribeRepositories
@@ -4810,37 +4786,36 @@ func (c *Client) DescribeRepositories(request *DescribeRepositoriesRequest) (res
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRepositoriesWithContext(ctx context.Context, request *DescribeRepositoriesRequest) (response *DescribeRepositoriesResponse, err error) {
-    if request == nil {
-        request = NewDescribeRepositoriesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeRepositories require credential")
-    }
+	if request == nil {
+		request = NewDescribeRepositoriesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeRepositoriesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeRepositories require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeRepositoriesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeRepositoryFilterPersonalRequest() (request *DescribeRepositoryFilterPersonalRequest) {
-    request = &DescribeRepositoryFilterPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeRepositoryFilterPersonal")
-    
-    
-    return
+	request = &DescribeRepositoryFilterPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeRepositoryFilterPersonal")
+
+	return
 }
 
 func NewDescribeRepositoryFilterPersonalResponse() (response *DescribeRepositoryFilterPersonalResponse) {
-    response = &DescribeRepositoryFilterPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeRepositoryFilterPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeRepositoryFilterPersonal
@@ -4851,7 +4826,7 @@ func NewDescribeRepositoryFilterPersonalResponse() (response *DescribeRepository
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) DescribeRepositoryFilterPersonal(request *DescribeRepositoryFilterPersonalRequest) (response *DescribeRepositoryFilterPersonalResponse, err error) {
-    return c.DescribeRepositoryFilterPersonalWithContext(context.Background(), request)
+	return c.DescribeRepositoryFilterPersonalWithContext(context.Background(), request)
 }
 
 // DescribeRepositoryFilterPersonal
@@ -4862,37 +4837,36 @@ func (c *Client) DescribeRepositoryFilterPersonal(request *DescribeRepositoryFil
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) DescribeRepositoryFilterPersonalWithContext(ctx context.Context, request *DescribeRepositoryFilterPersonalRequest) (response *DescribeRepositoryFilterPersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeRepositoryFilterPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeRepositoryFilterPersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeRepositoryFilterPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeRepositoryFilterPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeRepositoryFilterPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeRepositoryFilterPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeRepositoryOwnerPersonalRequest() (request *DescribeRepositoryOwnerPersonalRequest) {
-    request = &DescribeRepositoryOwnerPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeRepositoryOwnerPersonal")
-    
-    
-    return
+	request = &DescribeRepositoryOwnerPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeRepositoryOwnerPersonal")
+
+	return
 }
 
 func NewDescribeRepositoryOwnerPersonalResponse() (response *DescribeRepositoryOwnerPersonalResponse) {
-    response = &DescribeRepositoryOwnerPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeRepositoryOwnerPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeRepositoryOwnerPersonal
@@ -4904,7 +4878,7 @@ func NewDescribeRepositoryOwnerPersonalResponse() (response *DescribeRepositoryO
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRepositoryOwnerPersonal(request *DescribeRepositoryOwnerPersonalRequest) (response *DescribeRepositoryOwnerPersonalResponse, err error) {
-    return c.DescribeRepositoryOwnerPersonalWithContext(context.Background(), request)
+	return c.DescribeRepositoryOwnerPersonalWithContext(context.Background(), request)
 }
 
 // DescribeRepositoryOwnerPersonal
@@ -4916,37 +4890,36 @@ func (c *Client) DescribeRepositoryOwnerPersonal(request *DescribeRepositoryOwne
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeRepositoryOwnerPersonalWithContext(ctx context.Context, request *DescribeRepositoryOwnerPersonalRequest) (response *DescribeRepositoryOwnerPersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeRepositoryOwnerPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeRepositoryOwnerPersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeRepositoryOwnerPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeRepositoryOwnerPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeRepositoryOwnerPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeRepositoryOwnerPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeRepositoryPersonalRequest() (request *DescribeRepositoryPersonalRequest) {
-    request = &DescribeRepositoryPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeRepositoryPersonal")
-    
-    
-    return
+	request = &DescribeRepositoryPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeRepositoryPersonal")
+
+	return
 }
 
 func NewDescribeRepositoryPersonalResponse() (response *DescribeRepositoryPersonalResponse) {
-    response = &DescribeRepositoryPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeRepositoryPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeRepositoryPersonal
@@ -4957,7 +4930,7 @@ func NewDescribeRepositoryPersonalResponse() (response *DescribeRepositoryPerson
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DescribeRepositoryPersonal(request *DescribeRepositoryPersonalRequest) (response *DescribeRepositoryPersonalResponse, err error) {
-    return c.DescribeRepositoryPersonalWithContext(context.Background(), request)
+	return c.DescribeRepositoryPersonalWithContext(context.Background(), request)
 }
 
 // DescribeRepositoryPersonal
@@ -4968,37 +4941,36 @@ func (c *Client) DescribeRepositoryPersonal(request *DescribeRepositoryPersonalR
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) DescribeRepositoryPersonalWithContext(ctx context.Context, request *DescribeRepositoryPersonalRequest) (response *DescribeRepositoryPersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeRepositoryPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeRepositoryPersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeRepositoryPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeRepositoryPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeRepositoryPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeRepositoryPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeSecurityPoliciesRequest() (request *DescribeSecurityPoliciesRequest) {
-    request = &DescribeSecurityPoliciesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeSecurityPolicies")
-    
-    
-    return
+	request = &DescribeSecurityPoliciesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeSecurityPolicies")
+
+	return
 }
 
 func NewDescribeSecurityPoliciesResponse() (response *DescribeSecurityPoliciesResponse) {
-    response = &DescribeSecurityPoliciesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeSecurityPoliciesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeSecurityPolicies
@@ -5019,7 +4991,7 @@ func NewDescribeSecurityPoliciesResponse() (response *DescribeSecurityPoliciesRe
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeSecurityPolicies(request *DescribeSecurityPoliciesRequest) (response *DescribeSecurityPoliciesResponse, err error) {
-    return c.DescribeSecurityPoliciesWithContext(context.Background(), request)
+	return c.DescribeSecurityPoliciesWithContext(context.Background(), request)
 }
 
 // DescribeSecurityPolicies
@@ -5040,37 +5012,36 @@ func (c *Client) DescribeSecurityPolicies(request *DescribeSecurityPoliciesReque
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeSecurityPoliciesWithContext(ctx context.Context, request *DescribeSecurityPoliciesRequest) (response *DescribeSecurityPoliciesResponse, err error) {
-    if request == nil {
-        request = NewDescribeSecurityPoliciesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeSecurityPolicies require credential")
-    }
+	if request == nil {
+		request = NewDescribeSecurityPoliciesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeSecurityPoliciesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeSecurityPolicies require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeSecurityPoliciesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeTagRetentionExecutionRequest() (request *DescribeTagRetentionExecutionRequest) {
-    request = &DescribeTagRetentionExecutionRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeTagRetentionExecution")
-    
-    
-    return
+	request = &DescribeTagRetentionExecutionRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeTagRetentionExecution")
+
+	return
 }
 
 func NewDescribeTagRetentionExecutionResponse() (response *DescribeTagRetentionExecutionResponse) {
-    response = &DescribeTagRetentionExecutionResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeTagRetentionExecutionResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeTagRetentionExecution
@@ -5090,7 +5061,7 @@ func NewDescribeTagRetentionExecutionResponse() (response *DescribeTagRetentionE
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTagRetentionExecution(request *DescribeTagRetentionExecutionRequest) (response *DescribeTagRetentionExecutionResponse, err error) {
-    return c.DescribeTagRetentionExecutionWithContext(context.Background(), request)
+	return c.DescribeTagRetentionExecutionWithContext(context.Background(), request)
 }
 
 // DescribeTagRetentionExecution
@@ -5110,37 +5081,36 @@ func (c *Client) DescribeTagRetentionExecution(request *DescribeTagRetentionExec
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTagRetentionExecutionWithContext(ctx context.Context, request *DescribeTagRetentionExecutionRequest) (response *DescribeTagRetentionExecutionResponse, err error) {
-    if request == nil {
-        request = NewDescribeTagRetentionExecutionRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeTagRetentionExecution require credential")
-    }
+	if request == nil {
+		request = NewDescribeTagRetentionExecutionRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeTagRetentionExecutionResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeTagRetentionExecution require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeTagRetentionExecutionResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeTagRetentionExecutionTaskRequest() (request *DescribeTagRetentionExecutionTaskRequest) {
-    request = &DescribeTagRetentionExecutionTaskRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeTagRetentionExecutionTask")
-    
-    
-    return
+	request = &DescribeTagRetentionExecutionTaskRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeTagRetentionExecutionTask")
+
+	return
 }
 
 func NewDescribeTagRetentionExecutionTaskResponse() (response *DescribeTagRetentionExecutionTaskResponse) {
-    response = &DescribeTagRetentionExecutionTaskResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeTagRetentionExecutionTaskResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeTagRetentionExecutionTask
@@ -5160,7 +5130,7 @@ func NewDescribeTagRetentionExecutionTaskResponse() (response *DescribeTagRetent
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTagRetentionExecutionTask(request *DescribeTagRetentionExecutionTaskRequest) (response *DescribeTagRetentionExecutionTaskResponse, err error) {
-    return c.DescribeTagRetentionExecutionTaskWithContext(context.Background(), request)
+	return c.DescribeTagRetentionExecutionTaskWithContext(context.Background(), request)
 }
 
 // DescribeTagRetentionExecutionTask
@@ -5180,37 +5150,36 @@ func (c *Client) DescribeTagRetentionExecutionTask(request *DescribeTagRetention
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTagRetentionExecutionTaskWithContext(ctx context.Context, request *DescribeTagRetentionExecutionTaskRequest) (response *DescribeTagRetentionExecutionTaskResponse, err error) {
-    if request == nil {
-        request = NewDescribeTagRetentionExecutionTaskRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeTagRetentionExecutionTask require credential")
-    }
+	if request == nil {
+		request = NewDescribeTagRetentionExecutionTaskRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeTagRetentionExecutionTaskResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeTagRetentionExecutionTask require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeTagRetentionExecutionTaskResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeTagRetentionRulesRequest() (request *DescribeTagRetentionRulesRequest) {
-    request = &DescribeTagRetentionRulesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeTagRetentionRules")
-    
-    
-    return
+	request = &DescribeTagRetentionRulesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeTagRetentionRules")
+
+	return
 }
 
 func NewDescribeTagRetentionRulesResponse() (response *DescribeTagRetentionRulesResponse) {
-    response = &DescribeTagRetentionRulesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeTagRetentionRulesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeTagRetentionRules
@@ -5225,6 +5194,7 @@ func NewDescribeTagRetentionRulesResponse() (response *DescribeTagRetentionRules
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -5232,7 +5202,7 @@ func NewDescribeTagRetentionRulesResponse() (response *DescribeTagRetentionRules
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTagRetentionRules(request *DescribeTagRetentionRulesRequest) (response *DescribeTagRetentionRulesResponse, err error) {
-    return c.DescribeTagRetentionRulesWithContext(context.Background(), request)
+	return c.DescribeTagRetentionRulesWithContext(context.Background(), request)
 }
 
 // DescribeTagRetentionRules
@@ -5247,6 +5217,7 @@ func (c *Client) DescribeTagRetentionRules(request *DescribeTagRetentionRulesReq
 //  INTERNALERROR_ERRORCONFLICT = "InternalError.ErrorConflict"
 //  INTERNALERROR_ERROROVERLIMIT = "InternalError.ErrorOverLimit"
 //  INTERNALERROR_ERRORTCRINTERNAL = "InternalError.ErrorTcrInternal"
+//  INTERNALERROR_ERRORTCRUNAUTHORIZED = "InternalError.ErrorTcrUnauthorized"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND = "ResourceNotFound"
@@ -5254,37 +5225,36 @@ func (c *Client) DescribeTagRetentionRules(request *DescribeTagRetentionRulesReq
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeTagRetentionRulesWithContext(ctx context.Context, request *DescribeTagRetentionRulesRequest) (response *DescribeTagRetentionRulesResponse, err error) {
-    if request == nil {
-        request = NewDescribeTagRetentionRulesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeTagRetentionRules require credential")
-    }
+	if request == nil {
+		request = NewDescribeTagRetentionRulesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeTagRetentionRulesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeTagRetentionRules require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeTagRetentionRulesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeUserQuotaPersonalRequest() (request *DescribeUserQuotaPersonalRequest) {
-    request = &DescribeUserQuotaPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeUserQuotaPersonal")
-    
-    
-    return
+	request = &DescribeUserQuotaPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeUserQuotaPersonal")
+
+	return
 }
 
 func NewDescribeUserQuotaPersonalResponse() (response *DescribeUserQuotaPersonalResponse) {
-    response = &DescribeUserQuotaPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeUserQuotaPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeUserQuotaPersonal
@@ -5293,7 +5263,7 @@ func NewDescribeUserQuotaPersonalResponse() (response *DescribeUserQuotaPersonal
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeUserQuotaPersonal(request *DescribeUserQuotaPersonalRequest) (response *DescribeUserQuotaPersonalResponse, err error) {
-    return c.DescribeUserQuotaPersonalWithContext(context.Background(), request)
+	return c.DescribeUserQuotaPersonalWithContext(context.Background(), request)
 }
 
 // DescribeUserQuotaPersonal
@@ -5302,37 +5272,36 @@ func (c *Client) DescribeUserQuotaPersonal(request *DescribeUserQuotaPersonalReq
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeUserQuotaPersonalWithContext(ctx context.Context, request *DescribeUserQuotaPersonalRequest) (response *DescribeUserQuotaPersonalResponse, err error) {
-    if request == nil {
-        request = NewDescribeUserQuotaPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeUserQuotaPersonal require credential")
-    }
+	if request == nil {
+		request = NewDescribeUserQuotaPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeUserQuotaPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeUserQuotaPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeUserQuotaPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeWebhookTriggerRequest() (request *DescribeWebhookTriggerRequest) {
-    request = &DescribeWebhookTriggerRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeWebhookTrigger")
-    
-    
-    return
+	request = &DescribeWebhookTriggerRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeWebhookTrigger")
+
+	return
 }
 
 func NewDescribeWebhookTriggerResponse() (response *DescribeWebhookTriggerResponse) {
-    response = &DescribeWebhookTriggerResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeWebhookTriggerResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeWebhookTrigger
@@ -5348,7 +5317,7 @@ func NewDescribeWebhookTriggerResponse() (response *DescribeWebhookTriggerRespon
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DescribeWebhookTrigger(request *DescribeWebhookTriggerRequest) (response *DescribeWebhookTriggerResponse, err error) {
-    return c.DescribeWebhookTriggerWithContext(context.Background(), request)
+	return c.DescribeWebhookTriggerWithContext(context.Background(), request)
 }
 
 // DescribeWebhookTrigger
@@ -5364,37 +5333,36 @@ func (c *Client) DescribeWebhookTrigger(request *DescribeWebhookTriggerRequest) 
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DescribeWebhookTriggerWithContext(ctx context.Context, request *DescribeWebhookTriggerRequest) (response *DescribeWebhookTriggerResponse, err error) {
-    if request == nil {
-        request = NewDescribeWebhookTriggerRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeWebhookTrigger require credential")
-    }
+	if request == nil {
+		request = NewDescribeWebhookTriggerRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeWebhookTriggerResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeWebhookTrigger require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeWebhookTriggerResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDescribeWebhookTriggerLogRequest() (request *DescribeWebhookTriggerLogRequest) {
-    request = &DescribeWebhookTriggerLogRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DescribeWebhookTriggerLog")
-    
-    
-    return
+	request = &DescribeWebhookTriggerLogRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DescribeWebhookTriggerLog")
+
+	return
 }
 
 func NewDescribeWebhookTriggerLogResponse() (response *DescribeWebhookTriggerLogResponse) {
-    response = &DescribeWebhookTriggerLogResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DescribeWebhookTriggerLogResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DescribeWebhookTriggerLog
@@ -5409,7 +5377,7 @@ func NewDescribeWebhookTriggerLogResponse() (response *DescribeWebhookTriggerLog
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DescribeWebhookTriggerLog(request *DescribeWebhookTriggerLogRequest) (response *DescribeWebhookTriggerLogResponse, err error) {
-    return c.DescribeWebhookTriggerLogWithContext(context.Background(), request)
+	return c.DescribeWebhookTriggerLogWithContext(context.Background(), request)
 }
 
 // DescribeWebhookTriggerLog
@@ -5424,37 +5392,36 @@ func (c *Client) DescribeWebhookTriggerLog(request *DescribeWebhookTriggerLogReq
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) DescribeWebhookTriggerLogWithContext(ctx context.Context, request *DescribeWebhookTriggerLogRequest) (response *DescribeWebhookTriggerLogResponse, err error) {
-    if request == nil {
-        request = NewDescribeWebhookTriggerLogRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DescribeWebhookTriggerLog require credential")
-    }
+	if request == nil {
+		request = NewDescribeWebhookTriggerLogRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDescribeWebhookTriggerLogResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DescribeWebhookTriggerLog require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDescribeWebhookTriggerLogResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDownloadHelmChartRequest() (request *DownloadHelmChartRequest) {
-    request = &DownloadHelmChartRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DownloadHelmChart")
-    
-    
-    return
+	request = &DownloadHelmChartRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DownloadHelmChart")
+
+	return
 }
 
 func NewDownloadHelmChartResponse() (response *DownloadHelmChartResponse) {
-    response = &DownloadHelmChartResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DownloadHelmChartResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DownloadHelmChart
@@ -5466,7 +5433,7 @@ func NewDownloadHelmChartResponse() (response *DownloadHelmChartResponse) {
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DownloadHelmChart(request *DownloadHelmChartRequest) (response *DownloadHelmChartResponse, err error) {
-    return c.DownloadHelmChartWithContext(context.Background(), request)
+	return c.DownloadHelmChartWithContext(context.Background(), request)
 }
 
 // DownloadHelmChart
@@ -5478,37 +5445,36 @@ func (c *Client) DownloadHelmChart(request *DownloadHelmChartRequest) (response 
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DownloadHelmChartWithContext(ctx context.Context, request *DownloadHelmChartRequest) (response *DownloadHelmChartResponse, err error) {
-    if request == nil {
-        request = NewDownloadHelmChartRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DownloadHelmChart require credential")
-    }
+	if request == nil {
+		request = NewDownloadHelmChartRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDownloadHelmChartResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DownloadHelmChart require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDownloadHelmChartResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewDuplicateImagePersonalRequest() (request *DuplicateImagePersonalRequest) {
-    request = &DuplicateImagePersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "DuplicateImagePersonal")
-    
-    
-    return
+	request = &DuplicateImagePersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "DuplicateImagePersonal")
+
+	return
 }
 
 func NewDuplicateImagePersonalResponse() (response *DuplicateImagePersonalResponse) {
-    response = &DuplicateImagePersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &DuplicateImagePersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // DuplicateImagePersonal
@@ -5520,7 +5486,7 @@ func NewDuplicateImagePersonalResponse() (response *DuplicateImagePersonalRespon
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOTAG = "ResourceNotFound.ErrNoTag"
 func (c *Client) DuplicateImagePersonal(request *DuplicateImagePersonalRequest) (response *DuplicateImagePersonalResponse, err error) {
-    return c.DuplicateImagePersonalWithContext(context.Background(), request)
+	return c.DuplicateImagePersonalWithContext(context.Background(), request)
 }
 
 // DuplicateImagePersonal
@@ -5532,37 +5498,36 @@ func (c *Client) DuplicateImagePersonal(request *DuplicateImagePersonalRequest) 
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOTAG = "ResourceNotFound.ErrNoTag"
 func (c *Client) DuplicateImagePersonalWithContext(ctx context.Context, request *DuplicateImagePersonalRequest) (response *DuplicateImagePersonalResponse, err error) {
-    if request == nil {
-        request = NewDuplicateImagePersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("DuplicateImagePersonal require credential")
-    }
+	if request == nil {
+		request = NewDuplicateImagePersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewDuplicateImagePersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("DuplicateImagePersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewDuplicateImagePersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewManageExternalEndpointRequest() (request *ManageExternalEndpointRequest) {
-    request = &ManageExternalEndpointRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ManageExternalEndpoint")
-    
-    
-    return
+	request = &ManageExternalEndpointRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ManageExternalEndpoint")
+
+	return
 }
 
 func NewManageExternalEndpointResponse() (response *ManageExternalEndpointResponse) {
-    response = &ManageExternalEndpointResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ManageExternalEndpointResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ManageExternalEndpoint
@@ -5577,7 +5542,7 @@ func NewManageExternalEndpointResponse() (response *ManageExternalEndpointRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ManageExternalEndpoint(request *ManageExternalEndpointRequest) (response *ManageExternalEndpointResponse, err error) {
-    return c.ManageExternalEndpointWithContext(context.Background(), request)
+	return c.ManageExternalEndpointWithContext(context.Background(), request)
 }
 
 // ManageExternalEndpoint
@@ -5592,37 +5557,36 @@ func (c *Client) ManageExternalEndpoint(request *ManageExternalEndpointRequest) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ManageExternalEndpointWithContext(ctx context.Context, request *ManageExternalEndpointRequest) (response *ManageExternalEndpointResponse, err error) {
-    if request == nil {
-        request = NewManageExternalEndpointRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ManageExternalEndpoint require credential")
-    }
+	if request == nil {
+		request = NewManageExternalEndpointRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewManageExternalEndpointResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ManageExternalEndpoint require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewManageExternalEndpointResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewManageImageLifecycleGlobalPersonalRequest() (request *ManageImageLifecycleGlobalPersonalRequest) {
-    request = &ManageImageLifecycleGlobalPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ManageImageLifecycleGlobalPersonal")
-    
-    
-    return
+	request = &ManageImageLifecycleGlobalPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ManageImageLifecycleGlobalPersonal")
+
+	return
 }
 
 func NewManageImageLifecycleGlobalPersonalResponse() (response *ManageImageLifecycleGlobalPersonalResponse) {
-    response = &ManageImageLifecycleGlobalPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ManageImageLifecycleGlobalPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ManageImageLifecycleGlobalPersonal
@@ -5631,7 +5595,7 @@ func NewManageImageLifecycleGlobalPersonalResponse() (response *ManageImageLifec
 // 可能返回的错误码:
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) ManageImageLifecycleGlobalPersonal(request *ManageImageLifecycleGlobalPersonalRequest) (response *ManageImageLifecycleGlobalPersonalResponse, err error) {
-    return c.ManageImageLifecycleGlobalPersonalWithContext(context.Background(), request)
+	return c.ManageImageLifecycleGlobalPersonalWithContext(context.Background(), request)
 }
 
 // ManageImageLifecycleGlobalPersonal
@@ -5640,37 +5604,36 @@ func (c *Client) ManageImageLifecycleGlobalPersonal(request *ManageImageLifecycl
 // 可能返回的错误码:
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) ManageImageLifecycleGlobalPersonalWithContext(ctx context.Context, request *ManageImageLifecycleGlobalPersonalRequest) (response *ManageImageLifecycleGlobalPersonalResponse, err error) {
-    if request == nil {
-        request = NewManageImageLifecycleGlobalPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ManageImageLifecycleGlobalPersonal require credential")
-    }
+	if request == nil {
+		request = NewManageImageLifecycleGlobalPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewManageImageLifecycleGlobalPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ManageImageLifecycleGlobalPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewManageImageLifecycleGlobalPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewManageInternalEndpointRequest() (request *ManageInternalEndpointRequest) {
-    request = &ManageInternalEndpointRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ManageInternalEndpoint")
-    
-    
-    return
+	request = &ManageInternalEndpointRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ManageInternalEndpoint")
+
+	return
 }
 
 func NewManageInternalEndpointResponse() (response *ManageInternalEndpointResponse) {
-    response = &ManageInternalEndpointResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ManageInternalEndpointResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ManageInternalEndpoint
@@ -5691,7 +5654,7 @@ func NewManageInternalEndpointResponse() (response *ManageInternalEndpointRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ManageInternalEndpoint(request *ManageInternalEndpointRequest) (response *ManageInternalEndpointResponse, err error) {
-    return c.ManageInternalEndpointWithContext(context.Background(), request)
+	return c.ManageInternalEndpointWithContext(context.Background(), request)
 }
 
 // ManageInternalEndpoint
@@ -5712,37 +5675,36 @@ func (c *Client) ManageInternalEndpoint(request *ManageInternalEndpointRequest) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ManageInternalEndpointWithContext(ctx context.Context, request *ManageInternalEndpointRequest) (response *ManageInternalEndpointResponse, err error) {
-    if request == nil {
-        request = NewManageInternalEndpointRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ManageInternalEndpoint require credential")
-    }
+	if request == nil {
+		request = NewManageInternalEndpointRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewManageInternalEndpointResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ManageInternalEndpoint require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewManageInternalEndpointResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewManageReplicationRequest() (request *ManageReplicationRequest) {
-    request = &ManageReplicationRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ManageReplication")
-    
-    
-    return
+	request = &ManageReplicationRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ManageReplication")
+
+	return
 }
 
 func NewManageReplicationResponse() (response *ManageReplicationResponse) {
-    response = &ManageReplicationResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ManageReplicationResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ManageReplication
@@ -5764,7 +5726,7 @@ func NewManageReplicationResponse() (response *ManageReplicationResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ManageReplication(request *ManageReplicationRequest) (response *ManageReplicationResponse, err error) {
-    return c.ManageReplicationWithContext(context.Background(), request)
+	return c.ManageReplicationWithContext(context.Background(), request)
 }
 
 // ManageReplication
@@ -5786,37 +5748,36 @@ func (c *Client) ManageReplication(request *ManageReplicationRequest) (response 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ManageReplicationWithContext(ctx context.Context, request *ManageReplicationRequest) (response *ManageReplicationResponse, err error) {
-    if request == nil {
-        request = NewManageReplicationRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ManageReplication require credential")
-    }
+	if request == nil {
+		request = NewManageReplicationRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewManageReplicationResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ManageReplication require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewManageReplicationResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyApplicationTriggerPersonalRequest() (request *ModifyApplicationTriggerPersonalRequest) {
-    request = &ModifyApplicationTriggerPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyApplicationTriggerPersonal")
-    
-    
-    return
+	request = &ModifyApplicationTriggerPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyApplicationTriggerPersonal")
+
+	return
 }
 
 func NewModifyApplicationTriggerPersonalResponse() (response *ModifyApplicationTriggerPersonalResponse) {
-    response = &ModifyApplicationTriggerPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyApplicationTriggerPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyApplicationTriggerPersonal
@@ -5829,7 +5790,7 @@ func NewModifyApplicationTriggerPersonalResponse() (response *ModifyApplicationT
 //  RESOURCENOTFOUND_ERRNOTRIGGER = "ResourceNotFound.ErrNoTrigger"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) ModifyApplicationTriggerPersonal(request *ModifyApplicationTriggerPersonalRequest) (response *ModifyApplicationTriggerPersonalResponse, err error) {
-    return c.ModifyApplicationTriggerPersonalWithContext(context.Background(), request)
+	return c.ModifyApplicationTriggerPersonalWithContext(context.Background(), request)
 }
 
 // ModifyApplicationTriggerPersonal
@@ -5842,37 +5803,91 @@ func (c *Client) ModifyApplicationTriggerPersonal(request *ModifyApplicationTrig
 //  RESOURCENOTFOUND_ERRNOTRIGGER = "ResourceNotFound.ErrNoTrigger"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) ModifyApplicationTriggerPersonalWithContext(ctx context.Context, request *ModifyApplicationTriggerPersonalRequest) (response *ModifyApplicationTriggerPersonalResponse, err error) {
-    if request == nil {
-        request = NewModifyApplicationTriggerPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyApplicationTriggerPersonal require credential")
-    }
+	if request == nil {
+		request = NewModifyApplicationTriggerPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyApplicationTriggerPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyApplicationTriggerPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyApplicationTriggerPersonalResponse()
+	err = c.Send(request, response)
+	return
+}
+
+func NewModifyCustomAccountRequest() (request *ModifyCustomAccountRequest) {
+	request = &ModifyCustomAccountRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyCustomAccount")
+
+	return
+}
+
+func NewModifyCustomAccountResponse() (response *ModifyCustomAccountResponse) {
+	response = &ModifyCustomAccountResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
+}
+
+// ModifyCustomAccount
+// 更新自定义账户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyCustomAccount(request *ModifyCustomAccountRequest) (response *ModifyCustomAccountResponse, err error) {
+	return c.ModifyCustomAccountWithContext(context.Background(), request)
+}
+
+// ModifyCustomAccount
+// 更新自定义账户
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_DBERROR = "FailedOperation.DbError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  OPERATIONDENIED = "OperationDenied"
+//  UNKNOWNPARAMETER = "UnknownParameter"
+func (c *Client) ModifyCustomAccountWithContext(ctx context.Context, request *ModifyCustomAccountRequest) (response *ModifyCustomAccountResponse, err error) {
+	if request == nil {
+		request = NewModifyCustomAccountRequest()
+	}
+
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyCustomAccount require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyCustomAccountResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyImmutableTagRulesRequest() (request *ModifyImmutableTagRulesRequest) {
-    request = &ModifyImmutableTagRulesRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyImmutableTagRules")
-    
-    
-    return
+	request = &ModifyImmutableTagRulesRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyImmutableTagRules")
+
+	return
 }
 
 func NewModifyImmutableTagRulesResponse() (response *ModifyImmutableTagRulesResponse) {
-    response = &ModifyImmutableTagRulesResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyImmutableTagRulesResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyImmutableTagRules
@@ -5886,7 +5901,7 @@ func NewModifyImmutableTagRulesResponse() (response *ModifyImmutableTagRulesResp
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 func (c *Client) ModifyImmutableTagRules(request *ModifyImmutableTagRulesRequest) (response *ModifyImmutableTagRulesResponse, err error) {
-    return c.ModifyImmutableTagRulesWithContext(context.Background(), request)
+	return c.ModifyImmutableTagRulesWithContext(context.Background(), request)
 }
 
 // ModifyImmutableTagRules
@@ -5900,37 +5915,36 @@ func (c *Client) ModifyImmutableTagRules(request *ModifyImmutableTagRulesRequest
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETER_ERRORTCRINVALIDPARAMETER = "InvalidParameter.ErrorTcrInvalidParameter"
 func (c *Client) ModifyImmutableTagRulesWithContext(ctx context.Context, request *ModifyImmutableTagRulesRequest) (response *ModifyImmutableTagRulesResponse, err error) {
-    if request == nil {
-        request = NewModifyImmutableTagRulesRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyImmutableTagRules require credential")
-    }
+	if request == nil {
+		request = NewModifyImmutableTagRulesRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyImmutableTagRulesResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyImmutableTagRules require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyImmutableTagRulesResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyInstanceRequest() (request *ModifyInstanceRequest) {
-    request = &ModifyInstanceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyInstance")
-    
-    
-    return
+	request = &ModifyInstanceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyInstance")
+
+	return
 }
 
 func NewModifyInstanceResponse() (response *ModifyInstanceResponse) {
-    response = &ModifyInstanceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyInstanceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyInstance
@@ -5948,7 +5962,7 @@ func NewModifyInstanceResponse() (response *ModifyInstanceResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyInstance(request *ModifyInstanceRequest) (response *ModifyInstanceResponse, err error) {
-    return c.ModifyInstanceWithContext(context.Background(), request)
+	return c.ModifyInstanceWithContext(context.Background(), request)
 }
 
 // ModifyInstance
@@ -5966,37 +5980,36 @@ func (c *Client) ModifyInstance(request *ModifyInstanceRequest) (response *Modif
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyInstanceWithContext(ctx context.Context, request *ModifyInstanceRequest) (response *ModifyInstanceResponse, err error) {
-    if request == nil {
-        request = NewModifyInstanceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyInstance require credential")
-    }
+	if request == nil {
+		request = NewModifyInstanceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyInstanceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyInstance require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyInstanceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyInstanceTokenRequest() (request *ModifyInstanceTokenRequest) {
-    request = &ModifyInstanceTokenRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyInstanceToken")
-    
-    
-    return
+	request = &ModifyInstanceTokenRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyInstanceToken")
+
+	return
 }
 
 func NewModifyInstanceTokenResponse() (response *ModifyInstanceTokenResponse) {
-    response = &ModifyInstanceTokenResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyInstanceTokenResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyInstanceToken
@@ -6011,7 +6024,7 @@ func NewModifyInstanceTokenResponse() (response *ModifyInstanceTokenResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyInstanceToken(request *ModifyInstanceTokenRequest) (response *ModifyInstanceTokenResponse, err error) {
-    return c.ModifyInstanceTokenWithContext(context.Background(), request)
+	return c.ModifyInstanceTokenWithContext(context.Background(), request)
 }
 
 // ModifyInstanceToken
@@ -6026,37 +6039,36 @@ func (c *Client) ModifyInstanceToken(request *ModifyInstanceTokenRequest) (respo
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyInstanceTokenWithContext(ctx context.Context, request *ModifyInstanceTokenRequest) (response *ModifyInstanceTokenResponse, err error) {
-    if request == nil {
-        request = NewModifyInstanceTokenRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyInstanceToken require credential")
-    }
+	if request == nil {
+		request = NewModifyInstanceTokenRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyInstanceTokenResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyInstanceToken require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyInstanceTokenResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyNamespaceRequest() (request *ModifyNamespaceRequest) {
-    request = &ModifyNamespaceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyNamespace")
-    
-    
-    return
+	request = &ModifyNamespaceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyNamespace")
+
+	return
 }
 
 func NewModifyNamespaceResponse() (response *ModifyNamespaceResponse) {
-    response = &ModifyNamespaceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyNamespaceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyNamespace
@@ -6076,7 +6088,7 @@ func NewModifyNamespaceResponse() (response *ModifyNamespaceResponse) {
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyNamespace(request *ModifyNamespaceRequest) (response *ModifyNamespaceResponse, err error) {
-    return c.ModifyNamespaceWithContext(context.Background(), request)
+	return c.ModifyNamespaceWithContext(context.Background(), request)
 }
 
 // ModifyNamespace
@@ -6096,37 +6108,36 @@ func (c *Client) ModifyNamespace(request *ModifyNamespaceRequest) (response *Mod
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyNamespaceWithContext(ctx context.Context, request *ModifyNamespaceRequest) (response *ModifyNamespaceResponse, err error) {
-    if request == nil {
-        request = NewModifyNamespaceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyNamespace require credential")
-    }
+	if request == nil {
+		request = NewModifyNamespaceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyNamespaceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyNamespace require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyNamespaceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyRepositoryRequest() (request *ModifyRepositoryRequest) {
-    request = &ModifyRepositoryRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyRepository")
-    
-    
-    return
+	request = &ModifyRepositoryRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyRepository")
+
+	return
 }
 
 func NewModifyRepositoryResponse() (response *ModifyRepositoryResponse) {
-    response = &ModifyRepositoryResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyRepositoryResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyRepository
@@ -6144,7 +6155,7 @@ func NewModifyRepositoryResponse() (response *ModifyRepositoryResponse) {
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyRepository(request *ModifyRepositoryRequest) (response *ModifyRepositoryResponse, err error) {
-    return c.ModifyRepositoryWithContext(context.Background(), request)
+	return c.ModifyRepositoryWithContext(context.Background(), request)
 }
 
 // ModifyRepository
@@ -6162,37 +6173,36 @@ func (c *Client) ModifyRepository(request *ModifyRepositoryRequest) (response *M
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyRepositoryWithContext(ctx context.Context, request *ModifyRepositoryRequest) (response *ModifyRepositoryResponse, err error) {
-    if request == nil {
-        request = NewModifyRepositoryRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyRepository require credential")
-    }
+	if request == nil {
+		request = NewModifyRepositoryRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyRepositoryResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyRepository require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyRepositoryResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyRepositoryAccessPersonalRequest() (request *ModifyRepositoryAccessPersonalRequest) {
-    request = &ModifyRepositoryAccessPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyRepositoryAccessPersonal")
-    
-    
-    return
+	request = &ModifyRepositoryAccessPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyRepositoryAccessPersonal")
+
+	return
 }
 
 func NewModifyRepositoryAccessPersonalResponse() (response *ModifyRepositoryAccessPersonalResponse) {
-    response = &ModifyRepositoryAccessPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyRepositoryAccessPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyRepositoryAccessPersonal
@@ -6204,7 +6214,7 @@ func NewModifyRepositoryAccessPersonalResponse() (response *ModifyRepositoryAcce
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) ModifyRepositoryAccessPersonal(request *ModifyRepositoryAccessPersonalRequest) (response *ModifyRepositoryAccessPersonalResponse, err error) {
-    return c.ModifyRepositoryAccessPersonalWithContext(context.Background(), request)
+	return c.ModifyRepositoryAccessPersonalWithContext(context.Background(), request)
 }
 
 // ModifyRepositoryAccessPersonal
@@ -6216,37 +6226,36 @@ func (c *Client) ModifyRepositoryAccessPersonal(request *ModifyRepositoryAccessP
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) ModifyRepositoryAccessPersonalWithContext(ctx context.Context, request *ModifyRepositoryAccessPersonalRequest) (response *ModifyRepositoryAccessPersonalResponse, err error) {
-    if request == nil {
-        request = NewModifyRepositoryAccessPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyRepositoryAccessPersonal require credential")
-    }
+	if request == nil {
+		request = NewModifyRepositoryAccessPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyRepositoryAccessPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyRepositoryAccessPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyRepositoryAccessPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyRepositoryInfoPersonalRequest() (request *ModifyRepositoryInfoPersonalRequest) {
-    request = &ModifyRepositoryInfoPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyRepositoryInfoPersonal")
-    
-    
-    return
+	request = &ModifyRepositoryInfoPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyRepositoryInfoPersonal")
+
+	return
 }
 
 func NewModifyRepositoryInfoPersonalResponse() (response *ModifyRepositoryInfoPersonalResponse) {
-    response = &ModifyRepositoryInfoPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyRepositoryInfoPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyRepositoryInfoPersonal
@@ -6258,7 +6267,7 @@ func NewModifyRepositoryInfoPersonalResponse() (response *ModifyRepositoryInfoPe
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) ModifyRepositoryInfoPersonal(request *ModifyRepositoryInfoPersonalRequest) (response *ModifyRepositoryInfoPersonalResponse, err error) {
-    return c.ModifyRepositoryInfoPersonalWithContext(context.Background(), request)
+	return c.ModifyRepositoryInfoPersonalWithContext(context.Background(), request)
 }
 
 // ModifyRepositoryInfoPersonal
@@ -6270,37 +6279,36 @@ func (c *Client) ModifyRepositoryInfoPersonal(request *ModifyRepositoryInfoPerso
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOREPO = "ResourceNotFound.ErrNoRepo"
 func (c *Client) ModifyRepositoryInfoPersonalWithContext(ctx context.Context, request *ModifyRepositoryInfoPersonalRequest) (response *ModifyRepositoryInfoPersonalResponse, err error) {
-    if request == nil {
-        request = NewModifyRepositoryInfoPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyRepositoryInfoPersonal require credential")
-    }
+	if request == nil {
+		request = NewModifyRepositoryInfoPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyRepositoryInfoPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyRepositoryInfoPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyRepositoryInfoPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifySecurityPolicyRequest() (request *ModifySecurityPolicyRequest) {
-    request = &ModifySecurityPolicyRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifySecurityPolicy")
-    
-    
-    return
+	request = &ModifySecurityPolicyRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifySecurityPolicy")
+
+	return
 }
 
 func NewModifySecurityPolicyResponse() (response *ModifySecurityPolicyResponse) {
-    response = &ModifySecurityPolicyResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifySecurityPolicyResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifySecurityPolicy
@@ -6315,7 +6323,7 @@ func NewModifySecurityPolicyResponse() (response *ModifySecurityPolicyResponse) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifySecurityPolicy(request *ModifySecurityPolicyRequest) (response *ModifySecurityPolicyResponse, err error) {
-    return c.ModifySecurityPolicyWithContext(context.Background(), request)
+	return c.ModifySecurityPolicyWithContext(context.Background(), request)
 }
 
 // ModifySecurityPolicy
@@ -6330,37 +6338,36 @@ func (c *Client) ModifySecurityPolicy(request *ModifySecurityPolicyRequest) (res
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifySecurityPolicyWithContext(ctx context.Context, request *ModifySecurityPolicyRequest) (response *ModifySecurityPolicyResponse, err error) {
-    if request == nil {
-        request = NewModifySecurityPolicyRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifySecurityPolicy require credential")
-    }
+	if request == nil {
+		request = NewModifySecurityPolicyRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifySecurityPolicyResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifySecurityPolicy require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifySecurityPolicyResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyTagRetentionRuleRequest() (request *ModifyTagRetentionRuleRequest) {
-    request = &ModifyTagRetentionRuleRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyTagRetentionRule")
-    
-    
-    return
+	request = &ModifyTagRetentionRuleRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyTagRetentionRule")
+
+	return
 }
 
 func NewModifyTagRetentionRuleResponse() (response *ModifyTagRetentionRuleResponse) {
-    response = &ModifyTagRetentionRuleResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyTagRetentionRuleResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyTagRetentionRule
@@ -6381,7 +6388,7 @@ func NewModifyTagRetentionRuleResponse() (response *ModifyTagRetentionRuleRespon
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyTagRetentionRule(request *ModifyTagRetentionRuleRequest) (response *ModifyTagRetentionRuleResponse, err error) {
-    return c.ModifyTagRetentionRuleWithContext(context.Background(), request)
+	return c.ModifyTagRetentionRuleWithContext(context.Background(), request)
 }
 
 // ModifyTagRetentionRule
@@ -6402,37 +6409,36 @@ func (c *Client) ModifyTagRetentionRule(request *ModifyTagRetentionRuleRequest) 
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyTagRetentionRuleWithContext(ctx context.Context, request *ModifyTagRetentionRuleRequest) (response *ModifyTagRetentionRuleResponse, err error) {
-    if request == nil {
-        request = NewModifyTagRetentionRuleRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyTagRetentionRule require credential")
-    }
+	if request == nil {
+		request = NewModifyTagRetentionRuleRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyTagRetentionRuleResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyTagRetentionRule require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyTagRetentionRuleResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyUserPasswordPersonalRequest() (request *ModifyUserPasswordPersonalRequest) {
-    request = &ModifyUserPasswordPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyUserPasswordPersonal")
-    
-    
-    return
+	request = &ModifyUserPasswordPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyUserPasswordPersonal")
+
+	return
 }
 
 func NewModifyUserPasswordPersonalResponse() (response *ModifyUserPasswordPersonalResponse) {
-    response = &ModifyUserPasswordPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyUserPasswordPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyUserPasswordPersonal
@@ -6443,7 +6449,7 @@ func NewModifyUserPasswordPersonalResponse() (response *ModifyUserPasswordPerson
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) ModifyUserPasswordPersonal(request *ModifyUserPasswordPersonalRequest) (response *ModifyUserPasswordPersonalResponse, err error) {
-    return c.ModifyUserPasswordPersonalWithContext(context.Background(), request)
+	return c.ModifyUserPasswordPersonalWithContext(context.Background(), request)
 }
 
 // ModifyUserPasswordPersonal
@@ -6454,37 +6460,36 @@ func (c *Client) ModifyUserPasswordPersonal(request *ModifyUserPasswordPersonalR
 //  MISSINGPARAMETER = "MissingParameter"
 //  RESOURCENOTFOUND_ERRNOUSER = "ResourceNotFound.ErrNoUser"
 func (c *Client) ModifyUserPasswordPersonalWithContext(ctx context.Context, request *ModifyUserPasswordPersonalRequest) (response *ModifyUserPasswordPersonalResponse, err error) {
-    if request == nil {
-        request = NewModifyUserPasswordPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyUserPasswordPersonal require credential")
-    }
+	if request == nil {
+		request = NewModifyUserPasswordPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyUserPasswordPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyUserPasswordPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyUserPasswordPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewModifyWebhookTriggerRequest() (request *ModifyWebhookTriggerRequest) {
-    request = &ModifyWebhookTriggerRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ModifyWebhookTrigger")
-    
-    
-    return
+	request = &ModifyWebhookTriggerRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ModifyWebhookTrigger")
+
+	return
 }
 
 func NewModifyWebhookTriggerResponse() (response *ModifyWebhookTriggerResponse) {
-    response = &ModifyWebhookTriggerResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ModifyWebhookTriggerResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ModifyWebhookTrigger
@@ -6499,7 +6504,7 @@ func NewModifyWebhookTriggerResponse() (response *ModifyWebhookTriggerResponse) 
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) ModifyWebhookTrigger(request *ModifyWebhookTriggerRequest) (response *ModifyWebhookTriggerResponse, err error) {
-    return c.ModifyWebhookTriggerWithContext(context.Background(), request)
+	return c.ModifyWebhookTriggerWithContext(context.Background(), request)
 }
 
 // ModifyWebhookTrigger
@@ -6514,37 +6519,36 @@ func (c *Client) ModifyWebhookTrigger(request *ModifyWebhookTriggerRequest) (res
 //  RESOURCENOTFOUND = "ResourceNotFound"
 //  RESOURCENOTFOUND_TCRRESOURCENOTFOUND = "ResourceNotFound.TcrResourceNotFound"
 func (c *Client) ModifyWebhookTriggerWithContext(ctx context.Context, request *ModifyWebhookTriggerRequest) (response *ModifyWebhookTriggerResponse, err error) {
-    if request == nil {
-        request = NewModifyWebhookTriggerRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ModifyWebhookTrigger require credential")
-    }
+	if request == nil {
+		request = NewModifyWebhookTriggerRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewModifyWebhookTriggerResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ModifyWebhookTrigger require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewModifyWebhookTriggerResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewRenewInstanceRequest() (request *RenewInstanceRequest) {
-    request = &RenewInstanceRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "RenewInstance")
-    
-    
-    return
+	request = &RenewInstanceRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "RenewInstance")
+
+	return
 }
 
 func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
-    response = &RenewInstanceResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &RenewInstanceResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // RenewInstance
@@ -6567,7 +6571,7 @@ func NewRenewInstanceResponse() (response *RenewInstanceResponse) {
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) RenewInstance(request *RenewInstanceRequest) (response *RenewInstanceResponse, err error) {
-    return c.RenewInstanceWithContext(context.Background(), request)
+	return c.RenewInstanceWithContext(context.Background(), request)
 }
 
 // RenewInstance
@@ -6590,37 +6594,36 @@ func (c *Client) RenewInstance(request *RenewInstanceRequest) (response *RenewIn
 //  UNKNOWNPARAMETER = "UnknownParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) RenewInstanceWithContext(ctx context.Context, request *RenewInstanceRequest) (response *RenewInstanceResponse, err error) {
-    if request == nil {
-        request = NewRenewInstanceRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("RenewInstance require credential")
-    }
+	if request == nil {
+		request = NewRenewInstanceRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewRenewInstanceResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("RenewInstance require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewRenewInstanceResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewValidateNamespaceExistPersonalRequest() (request *ValidateNamespaceExistPersonalRequest) {
-    request = &ValidateNamespaceExistPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ValidateNamespaceExistPersonal")
-    
-    
-    return
+	request = &ValidateNamespaceExistPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ValidateNamespaceExistPersonal")
+
+	return
 }
 
 func NewValidateNamespaceExistPersonalResponse() (response *ValidateNamespaceExistPersonalResponse) {
-    response = &ValidateNamespaceExistPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ValidateNamespaceExistPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ValidateNamespaceExistPersonal
@@ -6630,7 +6633,7 @@ func NewValidateNamespaceExistPersonalResponse() (response *ValidateNamespaceExi
 //  INTERNALERROR = "InternalError"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) ValidateNamespaceExistPersonal(request *ValidateNamespaceExistPersonalRequest) (response *ValidateNamespaceExistPersonalResponse, err error) {
-    return c.ValidateNamespaceExistPersonalWithContext(context.Background(), request)
+	return c.ValidateNamespaceExistPersonalWithContext(context.Background(), request)
 }
 
 // ValidateNamespaceExistPersonal
@@ -6640,37 +6643,36 @@ func (c *Client) ValidateNamespaceExistPersonal(request *ValidateNamespaceExistP
 //  INTERNALERROR = "InternalError"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) ValidateNamespaceExistPersonalWithContext(ctx context.Context, request *ValidateNamespaceExistPersonalRequest) (response *ValidateNamespaceExistPersonalResponse, err error) {
-    if request == nil {
-        request = NewValidateNamespaceExistPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ValidateNamespaceExistPersonal require credential")
-    }
+	if request == nil {
+		request = NewValidateNamespaceExistPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewValidateNamespaceExistPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ValidateNamespaceExistPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewValidateNamespaceExistPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
 
 func NewValidateRepositoryExistPersonalRequest() (request *ValidateRepositoryExistPersonalRequest) {
-    request = &ValidateRepositoryExistPersonalRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("tcr", APIVersion, "ValidateRepositoryExistPersonal")
-    
-    
-    return
+	request = &ValidateRepositoryExistPersonalRequest{
+		BaseRequest: &tchttp.BaseRequest{},
+	}
+
+	request.Init().WithApiInfo("tcr", APIVersion, "ValidateRepositoryExistPersonal")
+
+	return
 }
 
 func NewValidateRepositoryExistPersonalResponse() (response *ValidateRepositoryExistPersonalResponse) {
-    response = &ValidateRepositoryExistPersonalResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
+	response = &ValidateRepositoryExistPersonalResponse{
+		BaseResponse: &tchttp.BaseResponse{},
+	}
+	return
 }
 
 // ValidateRepositoryExistPersonal
@@ -6681,7 +6683,7 @@ func NewValidateRepositoryExistPersonalResponse() (response *ValidateRepositoryE
 //  INVALIDPARAMETER_ERRNSMISMATCH = "InvalidParameter.ErrNSMisMatch"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) ValidateRepositoryExistPersonal(request *ValidateRepositoryExistPersonalRequest) (response *ValidateRepositoryExistPersonalResponse, err error) {
-    return c.ValidateRepositoryExistPersonalWithContext(context.Background(), request)
+	return c.ValidateRepositoryExistPersonalWithContext(context.Background(), request)
 }
 
 // ValidateRepositoryExistPersonal
@@ -6692,17 +6694,17 @@ func (c *Client) ValidateRepositoryExistPersonal(request *ValidateRepositoryExis
 //  INVALIDPARAMETER_ERRNSMISMATCH = "InvalidParameter.ErrNSMisMatch"
 //  MISSINGPARAMETER = "MissingParameter"
 func (c *Client) ValidateRepositoryExistPersonalWithContext(ctx context.Context, request *ValidateRepositoryExistPersonalRequest) (response *ValidateRepositoryExistPersonalResponse, err error) {
-    if request == nil {
-        request = NewValidateRepositoryExistPersonalRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("ValidateRepositoryExistPersonal require credential")
-    }
+	if request == nil {
+		request = NewValidateRepositoryExistPersonalRequest()
+	}
 
-    request.SetContext(ctx)
-    
-    response = NewValidateRepositoryExistPersonalResponse()
-    err = c.Send(request, response)
-    return
+	if c.GetCredential() == nil {
+		return nil, errors.New("ValidateRepositoryExistPersonal require credential")
+	}
+
+	request.SetContext(ctx)
+
+	response = NewValidateRepositoryExistPersonalResponse()
+	err = c.Send(request, response)
+	return
 }
