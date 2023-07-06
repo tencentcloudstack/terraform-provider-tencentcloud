@@ -3,8 +3,9 @@ Provides a resource to create a sqlserver general_cloud_ro_instance
 
 Example Usage
 
-If `read_only_group_type` is 1:
+If read_only_group_type is 1:
 
+```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
   instance_id          = "mssql-gyg9xycl"
   zone                 = "ap-guangzhou-6"
@@ -24,8 +25,9 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_in
     test-key2 = "test-value2"
   }
 }
+```
 
-If `read_only_group_type` is 2:
+If read_only_group_type is 2:
 
 ```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
@@ -53,7 +55,7 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_in
 }
 ```
 
-If `read_only_group_type` is 3:
+If read_only_group_type is 3:
 
 ```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
