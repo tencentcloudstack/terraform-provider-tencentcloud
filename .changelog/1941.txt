@@ -1,0 +1,15 @@
+```release-note:new-resource
+tencentcloud_cos_object_abort_multipart_upload_operation
+```
+
+```release-note:new-resource
+tencentcloud_cos_object_copy_operation
+```
+
+```release-note:new-resource
+tencentcloud_cos_object_restore_operation
+```
+
+```release-note:new-resource
+tencentcloud_cos_bucket_generate_inventory_immediately_operation
+```
