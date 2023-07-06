@@ -1,6 +1,7 @@
 TEST?=./...
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 PKG_NAME=tencentcloud
+CHANGED_FILES=$$(git diff --name-only master -- $(PKG_NAME))
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PLATFORMS=darwin/amd64 freebsd/386 freebsd/amd64 freebsd/arm linux/386 linux/amd64 linux/arm openbsd/amd64 openbsd/386 solaris/amd64 windows/386 windows/amd64
 GO_VER ?= go
@@ -24,6 +25,11 @@ fmt:
 	@echo "==> Fixing source code with gofmt..."
 	goimports -w ./$(PKG_NAME)
 	gofmt -s -w ./$(PKG_NAME)
+
+fmt-faster:
+	@echo "==> [Faster]Fixing source code with gofmt...\n $(CHANGED_FILES) \n"
+	goimports -w $(CHANGED_FILES)
+	gofmt -s -w $(CHANGED_FILES)
 
 # Currently required by tf-deploy compile
 fmtcheck:
