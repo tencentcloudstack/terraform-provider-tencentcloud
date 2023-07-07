@@ -4,6 +4,13 @@
 
 # Terraform Provider For TencentCloud
 
+[![stars](https://img.shields.io/github/stars/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/stars/tencentcloudstack/terraform-provider-tencentcloud)
+[![Forks](https://img.shields.io/github/forks/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/forks/tencentcloudstack/terraform-provider-tencentcloud)
+[![Go Report Card](https://goreportcard.com/badge/github.com/tencentcloudstack/terraform-provider-tencentcloud)](https://goreportcard.com/report/github.com/tencentcloudstack/terraform-provider-tencentcloud)
+[![Releases](https://img.shields.io/github/release/tencentcloudstack/terraform-provider-tencentcloud.svg?style=flat-square)](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/releases)
+[![License](https://img.shields.io/github/license/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/license/tencentcloudstack/terraform-provider-tencentcloud)
+[![Issues](https://img.shields.io/github/issues/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/issues/tencentcloudstack/terraform-provider-tencentcloud)
+
 <div style="text-align: center">
   <p align="center">
     <a href="https://cloud.tencent.com">
@@ -12,7 +19,6 @@
     <br>
     <i>Tencent Infrastructure Automation for Terraform.</i>
     <br>
-    <br>
   </p>
 </div>
 
@@ -20,13 +26,6 @@
 * [![Documentation](https://img.shields.io/badge/documentation-blue)](https://registry.terraform.io/providers/tencentcloudstack/tencentcloud/latest/docs)
 * [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
 * Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
-
-[![stars](https://img.shields.io/github/stars/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/stars/tencentcloudstack/terraform-provider-tencentcloud)
-[![Forks](https://img.shields.io/github/forks/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/forks/tencentcloudstack/terraform-provider-tencentcloud)
-[![Go Report Card](https://goreportcard.com/badge/github.com/tencentcloudstack/terraform-provider-tencentcloud)](https://goreportcard.com/report/github.com/tencentcloudstack/terraform-provider-tencentcloud)
-[![Releases](https://img.shields.io/github/release/tencentcloudstack/terraform-provider-tencentcloud.svg?style=flat-square)](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/releases)
-[![License](https://img.shields.io/github/license/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/license/tencentcloudstack/terraform-provider-tencentcloud)
-[![Issues](https://img.shields.io/github/issues/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/issues/tencentcloudstack/terraform-provider-tencentcloud)
 
 
 ## Requirements
