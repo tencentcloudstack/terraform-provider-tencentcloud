@@ -225,6 +225,11 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_service_linked_role
 	tencentcloud_cam_user_saml_config
 
+Customer Identity and Access Management(CIAM)
+  Resource
+	tencentcloud_ciam_user_store
+    tencentcloud_ciam_user_group
+
 Cloud Block Storage(CBS)
   Data Source
     tencentcloud_cbs_snapshots
@@ -2442,6 +2447,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_saml_provider":                                   resourceTencentCloudCamSAMLProvider(),
 			"tencentcloud_cam_service_linked_role":                             resourceTencentCloudCamServiceLinkedRole(),
 			"tencentcloud_cam_user_saml_config":                                resourceTencentCloudCamUserSamlConfig(),
+			"tencentcloud_ciam_user_group":                                     resourceTencentCloudCiamUserGroup(),
+			"tencentcloud_ciam_user_store":                                     resourceTencentCloudCiamUserStore(),
 			"tencentcloud_scf_function":                                        resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_function_version":                                resourceTencentCloudScfFunctionVersion(),
 			"tencentcloud_scf_function_event_invoke_config":                    resourceTencentCloudScfFunctionEventInvokeConfig(),
