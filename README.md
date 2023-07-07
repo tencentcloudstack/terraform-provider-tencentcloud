@@ -11,8 +11,8 @@
 [![License](https://img.shields.io/github/license/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/license/tencentcloudstack/terraform-provider-tencentcloud)
 [![Issues](https://img.shields.io/github/issues/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/issues/tencentcloudstack/terraform-provider-tencentcloud)
 
-<div style="text-align: center">
-  <p align="center">
+<div>
+  <p>
     <a href="https://cloud.tencent.com">
         <img src=".github/01_Tcloud_logo_Eng.png" alt="logo" title="Terraform" height="69">
     </a>
