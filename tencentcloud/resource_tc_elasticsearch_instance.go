@@ -3,34 +3,135 @@ Provides an elasticsearch instance resource.
 
 Example Usage
 
+Create a basic version of elasticsearch instance paid by the hour
+
 ```hcl
-resource "tencentcloud_elasticsearch_instance" "foo" {
-  instance_name     = "tf-test"
-  availability_zone = "ap-guangzhou-3"
-  version           = "7.5.1"
-  vpc_id            = var.vpc_id
-  subnet_id         = var.subnet_id
-  password          = "Test12345"
-  license_type      = "basic"
+data "tencentcloud_availability_zones_by_product" "availability_zone" {
+  product = "es"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_es_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  name              = "tf_es_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_elasticsearch_instance" "example" {
+  instance_name       = "tf_example_es"
+  availability_zone   = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  version             = "7.10.1"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  password            = "Test12345"
+  license_type        = "basic"
+  basic_security_type = 2
 
   web_node_type_info {
-    node_num = 1
+    node_num  = 1
     node_type = "ES.S1.MEDIUM4"
   }
 
   node_info_list {
     node_num  = 2
-    node_type = "ES.S1.MEDIUM4"
-    encrypt = false
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
   }
 
   es_acl {
-    black_list = [
-	  "9.9.9.9",
-	  "8.8.8.8",
-  ]
+    # black_list = [
+    #   "9.9.9.9",
+    #   "8.8.8.8",
+    # ]
     white_list = [
-	  "0.0.0.0",
+      "127.0.0.1",
+    ]
+  }
+
+  tags = {
+    test = "test"
+  }
+}
+```
+
+Create a basic version of elasticsearch instance for multi-availability zone deployment
+
+```hcl
+data "tencentcloud_availability_zones_by_product" "availability_zone" {
+  product = "es"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_es_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+  name              = "tf_es_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_subnet" "subnet_multi_zone" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.1.name
+  name              = "tf_es_subnet"
+  cidr_block        = "10.0.2.0/24"
+}
+
+resource "tencentcloud_elasticsearch_instance" "example_multi_zone" {
+  instance_name       = "tf_example_es"
+  availability_zone   = "-"
+  version             = "7.10.1"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = "-"
+  password            = "Test12345"
+  license_type        = "basic"
+  basic_security_type = 2
+  deploy_mode         = 1
+
+  multi_zone_infos {
+    availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.0.name
+    subnet_id = tencentcloud_subnet.subnet.id
+  }
+
+  multi_zone_infos {
+    availability_zone = data.tencentcloud_availability_zones_by_product.availability_zone.zones.1.name
+    subnet_id = tencentcloud_subnet.subnet_multi_zone.id
+  }
+
+  web_node_type_info {
+    node_num  = 1
+    node_type = "ES.S1.MEDIUM4"
+  }
+
+  node_info_list {
+    type = "dedicatedMaster"
+    node_num  = 3
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  node_info_list {
+    type = "hotData"
+    node_num  = 2
+    node_type = "ES.S1.MEDIUM8"
+    encrypt   = false
+  }
+
+  es_acl {
+    # black_list = [
+    #   "9.9.9.9",
+    #   "8.8.8.8",
+    # ]
+    white_list = [
+      "127.0.0.1",
     ]
   }
 
@@ -88,12 +189,12 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:    true,
 				Default:     "-",
 				ForceNew:    true,
-				Description: "Availability zone. When create multi-az es, this parameter must be omitted.",
+				Description: "Availability zone. When create multi-az es, this parameter must be omitted or `-`.",
 			},
 			"version": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Version of the instance. Valid values are `5.6.4`, `6.4.3`, `6.8.2` and `7.5.1`.",
+				Description: "Version of the instance. Valid values are `5.6.4`, `6.4.3`, `6.8.2`, `7.5.1` and `7.10.1`.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -106,13 +207,13 @@ func resourceTencentCloudElasticsearchInstance() *schema.Resource {
 				Optional:    true,
 				Default:     "-",
 				ForceNew:    true,
-				Description: "The ID of a VPC subnetwork. When create multi-az es, this parameter must be omitted.",
+				Description: "The ID of a VPC subnetwork. When create multi-az es, this parameter must be omitted or `-`.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Sensitive:   true,
-				Description: "Password to an instance.",
+				Description: "Password to an instance, the password needs to be 8 to 16 characters, including at least two items ([a-z,A-Z], [0-9] and [-!@#$%&^*+=_:;,.?] special symbols.",
 			},
 			"charge_type": {
 				Type:         schema.TypeString,

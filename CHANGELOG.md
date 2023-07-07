@@ -1,3 +1,16 @@
+## 1.81.12 (July 07, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_ciam_user_group` ([#1946](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1946))
+* **New Resource:** `tencentcloud_ciam_user_store` ([#1946](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1946))
+* **New Resource:** `tencentcloud_cos_bucket_generate_inventory_immediately_operation` ([#1941](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1941))
+* **New Resource:** `tencentcloud_cos_object_abort_multipart_upload_operation` ([#1941](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1941))
+* **New Resource:** `tencentcloud_cos_object_copy_operation` ([#1941](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1941))
+* **New Resource:** `tencentcloud_cos_object_download_operation` ([#1947](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1947))
+* **New Resource:** `tencentcloud_cos_object_restore_operation` ([#1941](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1941))
+* **New Resource:** `tencentcloud_sqlserver_general_cloud_ro_instance` ([#1942](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1942))
+
 ## 1.81.11 (July 05, 2023)
 
 FEATURES:
