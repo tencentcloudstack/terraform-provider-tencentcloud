@@ -82,7 +82,7 @@ resource "tencentcloud_dts_migrate_job_config" "config" {
 }
 ```
 
-Continue the a migration job
+### Continue the a migration job
 
 ```hcl
 resource "tencentcloud_dts_migrate_job_config" "config" {
@@ -91,7 +91,7 @@ resource "tencentcloud_dts_migrate_job_config" "config" {
 }
 ```
 
-Complete a migration job when the status is readyComplete
+### Complete a migration job when the status is readyComplete
 
 ```hcl
 resource "tencentcloud_dts_migrate_job_config" "config" {
@@ -100,7 +100,7 @@ resource "tencentcloud_dts_migrate_job_config" "config" {
 }
 ```
 
-Stop a running migration job
+### Stop a running migration job
 
 ```hcl
 resource "tencentcloud_dts_migrate_job_config" "config" {
@@ -109,7 +109,7 @@ resource "tencentcloud_dts_migrate_job_config" "config" {
 }
 ```
 
-Isolate a stopped/canceled migration job
+### Isolate a stopped/canceled migration job
 
 ```hcl
 resource "tencentcloud_dts_migrate_job_config" "config" {
@@ -118,7 +118,7 @@ resource "tencentcloud_dts_migrate_job_config" "config" {
 }
 ```
 
-Recover a isolated migration job
+### Recover a isolated migration job
 
 ```hcl
 resource "tencentcloud_dts_migrate_job_config" "config" {

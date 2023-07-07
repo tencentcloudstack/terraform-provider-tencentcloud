@@ -108,7 +108,7 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
 }
 ```
 
-Using Spot CVM Instance
+### Using Spot CVM Instance
 
 ```hcl
 resource "tencentcloud_kubernetes_node_pool" "mynodepool" {

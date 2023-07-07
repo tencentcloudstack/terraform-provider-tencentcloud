@@ -13,7 +13,7 @@ Use this resource to create API gateway service.
 
 ## Example Usage
 
-Shared Service
+### Shared Service
 
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {
@@ -32,7 +32,7 @@ resource "tencentcloud_api_gateway_service" "service" {
 }
 ```
 
-Exclusive Service
+### Exclusive Service
 
 ```hcl
 resource "tencentcloud_api_gateway_service" "service" {

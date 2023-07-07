@@ -59,7 +59,7 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 }
 ```
 
-Use Kubelet
+### Use Kubelet
 
 ```hcl
 variable "availability_zone" {

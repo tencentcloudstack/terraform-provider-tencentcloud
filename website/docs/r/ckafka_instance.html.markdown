@@ -15,7 +15,7 @@ Use this resource to create ckafka instance.
 
 ## Example Usage
 
-Basic Instance
+### Basic Instance
 
 ```hcl
 variable "vpc_id" {
@@ -58,7 +58,7 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
 }
 ```
 
-Multi zone Instance
+### Multi zone Instance
 
 ```hcl
 variable "vpc_id" {

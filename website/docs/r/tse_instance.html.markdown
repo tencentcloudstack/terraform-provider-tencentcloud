@@ -13,7 +13,7 @@ Provides a resource to create a tse instance
 
 ## Example Usage
 
-Create zookeeper standard version
+### Create zookeeper standard version
 
 ```hcl
 resource "tencentcloud_tse_instance" "zookeeper_standard" {
@@ -34,7 +34,7 @@ resource "tencentcloud_tse_instance" "zookeeper_standard" {
 }
 ```
 
-Create zookeeper professional version
+### Create zookeeper professional version
 
 ```hcl
 resource "tencentcloud_tse_instance" "zookeeper_professional" {
@@ -68,7 +68,7 @@ resource "tencentcloud_tse_instance" "zookeeper_professional" {
 }
 ```
 
-Create nacos standard version
+### Create nacos standard version
 
 ```hcl
 resource "tencentcloud_tse_instance" "nacos" {
@@ -90,7 +90,7 @@ resource "tencentcloud_tse_instance" "nacos" {
 }
 ```
 
-Create polaris base version
+### Create polaris base version
 
 ```hcl
 resource "tencentcloud_tse_instance" "polaris" {
