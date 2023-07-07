@@ -1,9 +1,37 @@
-# terraform-provider-tencentcloud
+<a href="https://terraform.io">
+   <img src=".github/terraform_logo.svg" alt="Terraform logo" title="Terraform" align="right" height="50">
+</a>
+
+# Terraform Provider For TencentCloud
+
+[![stars](https://img.shields.io/github/stars/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/stars/tencentcloudstack/terraform-provider-tencentcloud)
+[![Forks](https://img.shields.io/github/forks/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/forks/tencentcloudstack/terraform-provider-tencentcloud)
+[![Go Report Card](https://goreportcard.com/badge/github.com/tencentcloudstack/terraform-provider-tencentcloud)](https://goreportcard.com/report/github.com/tencentcloudstack/terraform-provider-tencentcloud)
+[![Releases](https://img.shields.io/github/release/tencentcloudstack/terraform-provider-tencentcloud.svg?style=flat-square)](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/releases)
+[![License](https://img.shields.io/github/license/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/license/tencentcloudstack/terraform-provider-tencentcloud)
+[![Issues](https://img.shields.io/github/issues/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/issues/tencentcloudstack/terraform-provider-tencentcloud)
+
+<div>
+  <p>
+    <a href="https://cloud.tencent.com">
+        <img src=".github/01_Tcloud_logo_Eng.png" alt="logo" title="Terraform" height="69">
+    </a>
+    <br>
+    <i>Tencent Infrastructure Automation for Terraform.</i>
+    <br>
+  </p>
+</div>
+
+* Tutorials: https://www.terraform.io
+* [![Documentation](https://img.shields.io/badge/documentation-blue)](https://registry.terraform.io/providers/tencentcloudstack/tencentcloud/latest/docs)
+* [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
+* Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
+
 
 ## Requirements
 
 * [Terraform](https://www.terraform.io/downloads.html) 0.13.x
-* [Go](https://golang.org/doc/install) 1.13.x (to build the provider plugin)
+* [Go](https://golang.org/doc/install) 1.18.x (to build the provider plugin)
 
 ## Usage
 
@@ -47,7 +75,7 @@ export HTTPS_PROXY=$http_proxy
 
 You can edit your own terraform configuration files. Learn examples from examples directory.
 
-### Terraform it
+### Terraform init
 
 Now you can try your terraform demo:
 
@@ -109,6 +137,6 @@ export TF_SKIP_PROVIDER_VERIFY=1
 
 This will disable the verify steps, so after you update this provider, you won't need to create new resources, but use previously saved state.
 
-### Document
+### License
 
-Keep in mind that document changes is also needed when resources, data sources, attributes changed in code.
+Terraform-Provider-TencentCloud is under the Mozilla Public License 2.0. See the [LICENSE](LICENSE) file for details.
