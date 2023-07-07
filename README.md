@@ -7,7 +7,7 @@
 <div style="text-align: center">
   <p align="center">
     <a href="https://cloud.tencent.com">
-        <img src=".github/01_Tcloud_logo_Eng.png" alt="logo" title="Terraform">
+        <img src=".github/01_Tcloud_logo_Eng.png" alt="logo" title="Terraform" height="69">
     </a>
     <br>
     <i>Tencent Infrastructure Automation for Terraform.</i>
