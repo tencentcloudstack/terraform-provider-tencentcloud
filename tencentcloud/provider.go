@@ -225,6 +225,11 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_service_linked_role
 	tencentcloud_cam_user_saml_config
 
+Customer Identity and Access Management(CIAM)
+  Resource
+	tencentcloud_ciam_user_store
+    tencentcloud_ciam_user_group
+
 Cloud Block Storage(CBS)
   Data Source
     tencentcloud_cbs_snapshots
@@ -358,6 +363,7 @@ Cloud Object Storage(COS)
 	tencentcloud_cos_object_copy_operation
 	tencentcloud_cos_object_restore_operation
 	tencentcloud_cos_bucket_generate_inventory_immediately_operation
+	tencentcloud_cos_object_download_operation
 
 Cloud Virtual Machine(CVM)
   Data Source
@@ -850,6 +856,7 @@ SQLServer
 	tencentcloud_sqlserver_start_xevent
 	tencentcloud_sqlserver_instance_tde
 	tencentcloud_sqlserver_database_tde
+	tencentcloud_sqlserver_general_cloud_ro_instance
 
 SSL Certificates
   Data Source
@@ -2443,6 +2450,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_saml_provider":                                   resourceTencentCloudCamSAMLProvider(),
 			"tencentcloud_cam_service_linked_role":                             resourceTencentCloudCamServiceLinkedRole(),
 			"tencentcloud_cam_user_saml_config":                                resourceTencentCloudCamUserSamlConfig(),
+			"tencentcloud_ciam_user_group":                                     resourceTencentCloudCiamUserGroup(),
+			"tencentcloud_ciam_user_store":                                     resourceTencentCloudCiamUserStore(),
 			"tencentcloud_scf_function":                                        resourceTencentCloudScfFunction(),
 			"tencentcloud_scf_function_version":                                resourceTencentCloudScfFunctionVersion(),
 			"tencentcloud_scf_function_event_invoke_config":                    resourceTencentCloudScfFunctionEventInvokeConfig(),
@@ -2629,6 +2638,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cos_object_copy_operation":                           resourceTencentCloudCosObjectCopyOperation(),
 			"tencentcloud_cos_object_restore_operation":                        resourceTencentCloudCosObjectRestoreOperation(),
 			"tencentcloud_cos_bucket_generate_inventory_immediately_operation": resourceTencentCloudCosBucketGenerateInventoryImmediatelyOperation(),
+			"tencentcloud_cos_object_download_operation":                       resourceTencentCloudCosObjectDownloadOperation(),
 			"tencentcloud_address_template":                                    resourceTencentCloudAddressTemplate(),
 			"tencentcloud_address_template_group":                              resourceTencentCloudAddressTemplateGroup(),
 			"tencentcloud_protocol_template":                                   resourceTencentCloudProtocolTemplate(),
