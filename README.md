@@ -75,7 +75,7 @@ export HTTPS_PROXY=$http_proxy
 
 You can edit your own terraform configuration files. Learn examples from examples directory.
 
-### Terraform it
+### Terraform init
 
 Now you can try your terraform demo:
 
