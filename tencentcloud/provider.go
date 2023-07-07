@@ -912,7 +912,7 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_delete_image_operation
 	tencentcloud_tcr_create_image_signature_operation
 	tencentcloud_tcr_tag_retention_execution_config
-	tencentcloud_tcr_custom_account
+	tencentcloud_tcr_service_account
 
 Video on Demand(VOD)
   Data Source
@@ -2611,7 +2611,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tcr_delete_image_operation":                          resourceTencentCloudTcrDeleteImageOperation(),
 			"tencentcloud_tcr_create_image_signature_operation":                resourceTencentCloudTcrCreateImageSignatureOperation(),
 			"tencentcloud_tcr_tag_retention_execution_config":                  resourceTencentCloudTcrTagRetentionExecutionConfig(),
-			"tencentcloud_tcr_custom_account":                                  resourceTencentCloudTcrCustomAccount(),
+			"tencentcloud_tcr_service_account":                                 resourceTencentCloudTcrServiceAccount(),
 			"tencentcloud_tdmq_instance":                                       resourceTencentCloudTdmqInstance(),
 			"tencentcloud_tdmq_namespace":                                      resourceTencentCloudTdmqNamespace(),
 			"tencentcloud_tdmq_topic":                                          resourceTencentCloudTdmqTopic(),

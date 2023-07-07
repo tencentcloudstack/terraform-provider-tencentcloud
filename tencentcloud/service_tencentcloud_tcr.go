@@ -1788,10 +1788,10 @@ func (me *TCRService) DescribeTcrTagRetentionExecutionsByFilter(ctx context.Cont
 	return
 }
 
-func (me *TCRService) DescribeTcrCustomAccountById(ctx context.Context, registryId string, name string) (CustomAccount *tcr.CustomAccount, errRet error) {
+func (me *TCRService) DescribeTcrServiceAccountById(ctx context.Context, registryId string, name string) (ServiceAccount *tcr.ServiceAccount, errRet error) {
 	logId := getLogId(ctx)
 
-	request := tcr.NewDescribeCustomAccountsRequest()
+	request := tcr.NewDescribeServiceAccountsRequest()
 	request.RegistryId = &registryId
 
 	defer func() {
@@ -1802,34 +1802,35 @@ func (me *TCRService) DescribeTcrCustomAccountById(ctx context.Context, registry
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseTCRClient().DescribeCustomAccounts(request)
+	response, err := me.client.UseTCRClient().DescribeServiceAccounts(request)
 	if err != nil {
 		errRet = err
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if len(response.Response.CustomAccounts) < 1 {
+	if len(response.Response.ServiceAccounts) < 1 {
 		return
 	}
 
 	if name != "" {
-		for _, account := range response.Response.CustomAccounts {
-			if *account.Name == name {
-				CustomAccount = account
+		fullName := TCR_NAME_PREFIX + name
+		for _, account := range response.Response.ServiceAccounts {
+			if *account.Name == fullName {
+				ServiceAccount = account
 				return
 			}
 		}
 	}
 
-	CustomAccount = response.Response.CustomAccounts[0]
+	ServiceAccount = response.Response.ServiceAccounts[0]
 	return
 }
 
-func (me *TCRService) DeleteTcrCustomAccountById(ctx context.Context, registryId string, name string) (errRet error) {
+func (me *TCRService) DeleteTcrServiceAccountById(ctx context.Context, registryId string, name string) (errRet error) {
 	logId := getLogId(ctx)
 
-	request := tcr.NewDeleteCustomAccountRequest()
+	request := tcr.NewDeleteServiceAccountRequest()
 	request.RegistryId = &registryId
 	request.Name = &name
 
@@ -1841,7 +1842,7 @@ func (me *TCRService) DeleteTcrCustomAccountById(ctx context.Context, registryId
 
 	ratelimit.Check(request.GetAction())
 
-	response, err := me.client.UseTCRClient().DeleteCustomAccount(request)
+	response, err := me.client.UseTCRClient().DeleteServiceAccount(request)
 	if err != nil {
 		errRet = err
 		return

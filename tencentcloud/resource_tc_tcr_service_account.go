@@ -1,5 +1,5 @@
 /*
-Provides a resource to create a tcr custom_account
+Provides a resource to create a tcr service_account
 
 Example Usage
 
@@ -64,10 +64,10 @@ resource "tencentcloud_tcr_custom_account" "example" {
 
 Import
 
-tcr custom_account can be imported using the id, e.g.
+tcr service_account can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tcr_custom_account.custom_account custom_account_id
+terraform import tencentcloud_tcr_service_account.service_account registry_id#name
 ```
 */
 package tencentcloud
@@ -84,12 +84,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTcrCustomAccount() *schema.Resource {
+func resourceTencentCloudTcrServiceAccount() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTcrCustomAccountCreate,
-		Read:   resourceTencentCloudTcrCustomAccountRead,
-		Update: resourceTencentCloudTcrCustomAccountUpdate,
-		Delete: resourceTencentCloudTcrCustomAccountDelete,
+		Create: resourceTencentCloudTcrServiceAccountCreate,
+		Read:   resourceTencentCloudTcrServiceAccountRead,
+		Update: resourceTencentCloudTcrServiceAccountUpdate,
+		Delete: resourceTencentCloudTcrServiceAccountDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -103,7 +103,7 @@ func resourceTencentCloudTcrCustomAccount() *schema.Resource {
 			"name": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "custom account name.",
+				Description: "Service account name.",
 			},
 
 			"permissions": {
@@ -123,7 +123,7 @@ func resourceTencentCloudTcrCustomAccount() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Required:    true,
-							Description: "Actions, currently only support: `tcr:PushRepository`, `tcr:PullRepository`. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Actions, currently only support: tcr:PushRepository, tcr:PullRepository. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
@@ -132,32 +132,32 @@ func resourceTencentCloudTcrCustomAccount() *schema.Resource {
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "custom account description.",
+				Description: "Service account description.",
 			},
 
 			"duration": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "expiration date (unit: day), calculated from the current time, priority is higher than `ExpiresAt`.",
+				Description: "expiration date (unit: day), calculated from the current time, priority is higher than ExpiresAt Service account description.",
 			},
 
 			"expires_at": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "custom account expiration time (time stamp, unit: milliseconds).",
+				Description: "Service account expiration time (time stamp, unit: milliseconds).",
 			},
 
 			"disable": {
 				Optional:    true,
 				Type:        schema.TypeBool,
-				Description: "whether to disable custom accounts.",
+				Description: "whether to disable Service accounts.",
 			},
 
 			"password": {
-				Type:        schema.TypeString,
 				Computed:    true,
-				Sensitive:   true,
-				Description: "Password of the account.",
+				Type:        schema.TypeString,
+				Description: "Password of the service account.",
 			},
 
 			"tags": {
@@ -169,16 +169,17 @@ func resourceTencentCloudTcrCustomAccount() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudTcrCustomAccountCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcr_custom_account.create")()
+func resourceTencentCloudTcrServiceAccountCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcr_service_account.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
 	var (
-		request    = tcr.NewCreateCustomAccountRequest()
-		response   = tcr.NewCreateCustomAccountResponse()
+		request    = tcr.NewCreateServiceAccountRequest()
+		response   = tcr.NewCreateServiceAccountResponse()
 		registryId string
+		name       string
 	)
 	if v, ok := d.GetOk("registry_id"); ok {
 		request.RegistryId = helper.String(v.(string))
@@ -187,6 +188,7 @@ func resourceTencentCloudTcrCustomAccountCreate(d *schema.ResourceData, meta int
 
 	if v, ok := d.GetOk("name"); ok {
 		request.Name = helper.String(v.(string))
+		name = v.(string)
 	}
 
 	if v, ok := d.GetOk("permissions"); ok {
@@ -226,7 +228,7 @@ func resourceTencentCloudTcrCustomAccountCreate(d *schema.ResourceData, meta int
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().CreateCustomAccount(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().CreateServiceAccount(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -236,11 +238,14 @@ func resourceTencentCloudTcrCustomAccountCreate(d *schema.ResourceData, meta int
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create tcr CustomAccount failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tcr ServiceAccount failed, reason:%+v", logId, err)
 		return err
 	}
 
-	name := *response.Response.Name
+	if !strings.Contains(*response.Response.Name, name) {
+		return fmt.Errorf("The name[%s] return from response is not equal to the name[%s] of tf code.", *response.Response.Name, name)
+	}
+
 	d.SetId(strings.Join([]string{registryId, name}, FILED_SP))
 
 	pw := response.Response.Password
@@ -258,11 +263,11 @@ func resourceTencentCloudTcrCustomAccountCreate(d *schema.ResourceData, meta int
 		}
 	}
 
-	return resourceTencentCloudTcrCustomAccountRead(d, meta)
+	return resourceTencentCloudTcrServiceAccountRead(d, meta)
 }
 
-func resourceTencentCloudTcrCustomAccountRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcr_custom_account.read")()
+func resourceTencentCloudTcrServiceAccountRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcr_service_account.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -278,26 +283,23 @@ func resourceTencentCloudTcrCustomAccountRead(d *schema.ResourceData, meta inter
 	registryId := idSplit[0]
 	name := idSplit[1]
 
-	CustomAccount, err := service.DescribeTcrCustomAccountById(ctx, registryId, name)
+	ServiceAccount, err := service.DescribeTcrServiceAccountById(ctx, registryId, name)
 	if err != nil {
 		return err
 	}
 
-	if CustomAccount == nil {
+	if ServiceAccount == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `TcrCustomAccount` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `TcrServiceAccount` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
 	_ = d.Set("registry_id", registryId)
+	_ = d.Set("name", name)
 
-	if CustomAccount.Name != nil {
-		_ = d.Set("name", CustomAccount.Name)
-	}
-
-	if CustomAccount.Permissions != nil {
+	if ServiceAccount.Permissions != nil {
 		permissionsList := []interface{}{}
-		for _, permission := range CustomAccount.Permissions {
+		for _, permission := range ServiceAccount.Permissions {
 			permissionsMap := map[string]interface{}{}
 
 			if permission.Resource != nil {
@@ -315,16 +317,16 @@ func resourceTencentCloudTcrCustomAccountRead(d *schema.ResourceData, meta inter
 
 	}
 
-	if CustomAccount.Description != nil {
-		_ = d.Set("description", CustomAccount.Description)
+	if ServiceAccount.Description != nil {
+		_ = d.Set("description", ServiceAccount.Description)
 	}
 
-	if CustomAccount.ExpiresAt != nil {
-		_ = d.Set("expires_at", CustomAccount.ExpiresAt)
+	if ServiceAccount.ExpiresAt != nil {
+		_ = d.Set("expires_at", ServiceAccount.ExpiresAt)
 	}
 
-	if CustomAccount.Disable != nil {
-		_ = d.Set("disable", CustomAccount.Disable)
+	if ServiceAccount.Disable != nil {
+		_ = d.Set("disable", ServiceAccount.Disable)
 	}
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
@@ -338,13 +340,13 @@ func resourceTencentCloudTcrCustomAccountRead(d *schema.ResourceData, meta inter
 	return nil
 }
 
-func resourceTencentCloudTcrCustomAccountUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcr_custom_account.update")()
+func resourceTencentCloudTcrServiceAccountUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcr_service_account.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 
-	request := tcr.NewModifyCustomAccountRequest()
+	request := tcr.NewModifyServiceAccountRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 2 {
@@ -354,25 +356,13 @@ func resourceTencentCloudTcrCustomAccountUpdate(d *schema.ResourceData, meta int
 	name := idSplit[1]
 
 	request.RegistryId = &registryId
-	request.Name = &name
+	request.Name = helper.String(TCR_NAME_PREFIX + name)
 
-	immutableArgs := []string{"registry_id", "name", "permissions", "description", "duration", "expires_at", "disable"}
+	immutableArgs := []string{"registry_id", "name"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
-		}
-	}
-
-	if d.HasChange("registry_id") {
-		if v, ok := d.GetOk("registry_id"); ok {
-			request.RegistryId = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("name") {
-		if v, ok := d.GetOk("name"); ok {
-			request.Name = helper.String(v.(string))
 		}
 	}
 
@@ -423,7 +413,7 @@ func resourceTencentCloudTcrCustomAccountUpdate(d *schema.ResourceData, meta int
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().ModifyCustomAccount(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTCRClient().ModifyServiceAccount(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -432,7 +422,7 @@ func resourceTencentCloudTcrCustomAccountUpdate(d *schema.ResourceData, meta int
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s update tcr CustomAccount failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update tcr ServiceAccount failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -448,11 +438,11 @@ func resourceTencentCloudTcrCustomAccountUpdate(d *schema.ResourceData, meta int
 		}
 	}
 
-	return resourceTencentCloudTcrCustomAccountRead(d, meta)
+	return resourceTencentCloudTcrServiceAccountRead(d, meta)
 }
 
-func resourceTencentCloudTcrCustomAccountDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_tcr_custom_account.delete")()
+func resourceTencentCloudTcrServiceAccountDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tcr_service_account.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -464,9 +454,9 @@ func resourceTencentCloudTcrCustomAccountDelete(d *schema.ResourceData, meta int
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	registryId := idSplit[0]
-	name := idSplit[1]
+	name := TCR_NAME_PREFIX + idSplit[1]
 
-	if err := service.DeleteTcrCustomAccountById(ctx, registryId, name); err != nil {
+	if err := service.DeleteTcrServiceAccountById(ctx, registryId, name); err != nil {
 		return err
 	}
 
