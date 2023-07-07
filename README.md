@@ -2,7 +2,9 @@
 
 <div style="text-align: center">
   <p>
-    <img src=".github/terraform_logo.svg" alt="logo" title="Terraform" height="250">
+    <a href="https://cloud.tencent.com">
+        <img src=".github/01_Tcloud_logo_Eng.png" alt="logo" title="Terraform" height="138">
+    </a>
     <br>
     <i>Tencent Infrastructure Automation for Terraform.</i>
     <br>
@@ -20,7 +22,7 @@
 ## Requirements
 
 * [Terraform](https://www.terraform.io/downloads.html) 0.13.x
-* [Go](https://golang.org/doc/install) 1.13.x (to build the provider plugin)
+* [Go](https://golang.org/doc/install) 1.18.x (to build the provider plugin)
 
 ## Usage
 
@@ -125,9 +127,3 @@ export TF_SKIP_PROVIDER_VERIFY=1
 ```
 
 This will disable the verify steps, so after you update this provider, you won't need to create new resources, but use previously saved state.
-
-### Document
-
-Keep in mind that document changes is also needed when resources, data sources, attributes changed in code.
-- Tutorials: [learn.hashicorp.com](https://learn.hashicorp.com/terraform?track=getting-started#getting-started)
-- Documentation: https://registry.terraform.io/providers/tencentcloudstack/tencentcloud/latest/docs
