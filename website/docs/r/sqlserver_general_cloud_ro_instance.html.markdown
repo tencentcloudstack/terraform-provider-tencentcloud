@@ -13,7 +13,7 @@ Provides a resource to create a sqlserver general_cloud_ro_instance
 
 ## Example Usage
 
-### If read_only_group_type is 1:
+### If read_only_group_type value is 1 - Ship according to one instance and one read-only group:
 
 ```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
@@ -37,7 +37,7 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_in
 }
 ```
 
-### If read_only_group_type is 2:
+### If read_only_group_type value is 2 - Ship after creating a read-only group, all instances are under this read-only group:
 
 ```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
@@ -65,7 +65,7 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_in
 }
 ```
 
-### If read_only_group_type is 3:
+### If read_only_group_type value is 3 - All instances shipped are in the existing Some read-only groups below:
 
 ```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
@@ -98,7 +98,7 @@ The following arguments are supported:
 * `instance_id` - (Required, String) Primary instance ID, in the format: mssql-3l3fgqn7.
 * `machine_type` - (Required, String) The host disk type of the purchased instance, CLOUD_HSSD-enhanced SSD cloud disk for virtual machines, CLOUD_TSSD-extremely fast SSD cloud disk for virtual machines, CLOUD_BSSD-universal SSD cloud disk for virtual machines.
 * `memory` - (Required, Int) Instance memory size, in GB.
-* `read_only_group_type` - (Required, Int) Read-only group type option, 1- Ship according to one instance and one read-only group, 2- Ship after creating a read-only group, all instances are under this read-only group, 3- All instances shipped are in the existing Some read-only groups below.
+* `read_only_group_type` - (Required, Int) Read-only group type option, 1- Ship according to one instance and one read-only group, 2 - Ship after creating a read-only group, all instances are under this read-only group, 3 - All instances shipped are in the existing Some read-only groups below.
 * `storage` - (Required, Int) Instance disk size, in GB.
 * `zone` - (Required, String) Instance Availability Zone, similar to ap-guangzhou-1 (Guangzhou District 1); the instance sales area can be obtained through the interface DescribeZones.
 * `collation` - (Optional, String) System character set collation, default: Chinese_PRC_CI_AS.
