@@ -363,6 +363,7 @@ Cloud Object Storage(COS)
 	tencentcloud_cos_object_copy_operation
 	tencentcloud_cos_object_restore_operation
 	tencentcloud_cos_bucket_generate_inventory_immediately_operation
+	tencentcloud_cos_object_download_operation
 
 Cloud Virtual Machine(CVM)
   Data Source
@@ -2635,6 +2636,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cos_object_copy_operation":                           resourceTencentCloudCosObjectCopyOperation(),
 			"tencentcloud_cos_object_restore_operation":                        resourceTencentCloudCosObjectRestoreOperation(),
 			"tencentcloud_cos_bucket_generate_inventory_immediately_operation": resourceTencentCloudCosBucketGenerateInventoryImmediatelyOperation(),
+			"tencentcloud_cos_object_download_operation":                       resourceTencentCloudCosObjectDownloadOperation(),
 			"tencentcloud_address_template":                                    resourceTencentCloudAddressTemplate(),
 			"tencentcloud_address_template_group":                              resourceTencentCloudAddressTemplateGroup(),
 			"tencentcloud_protocol_template":                                   resourceTencentCloudProtocolTemplate(),
