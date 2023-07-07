@@ -133,3 +133,7 @@ export TF_SKIP_PROVIDER_VERIFY=1
 ```
 
 This will disable the verify steps, so after you update this provider, you won't need to create new resources, but use previously saved state.
+
+### License
+
+Terraform-Provider-TencentCloud is under the Mozilla Public License 2.0. See the [LICENSE](LICENSE) file for details.
