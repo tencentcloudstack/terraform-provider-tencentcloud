@@ -11,6 +11,11 @@
   </p>
 </div>
 
+* Tutorials: https://www.terraform.io
+* [![Documentation](https://img.shields.io/badge/documentation-blue)](https://registry.terraform.io/providers/tencentcloudstack/tencentcloud/latest/docs)
+* [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
+* Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
+
 [![stars](https://img.shields.io/github/stars/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/stars/tencentcloudstack/terraform-provider-tencentcloud)
 [![Forks](https://img.shields.io/github/forks/tencentcloudstack/terraform-provider-tencentcloud)](https://img.shields.io/github/forks/tencentcloudstack/terraform-provider-tencentcloud)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tencentcloudstack/terraform-provider-tencentcloud)](https://goreportcard.com/report/github.com/tencentcloudstack/terraform-provider-tencentcloud)
