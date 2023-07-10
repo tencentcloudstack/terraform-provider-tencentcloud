@@ -21,7 +21,7 @@ variable "example_region" {
 }
 
 variable "example_cluster_cidr" {
-  default = "10.31.0.0/16"
+  default = "10.32.0.0/16"
 }
 
 variable "availability_zone" {
@@ -40,13 +40,11 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   cluster_name            = "tf_example_cluster"
   cluster_desc            = "a tf example cluster for the kms test"
   cluster_max_service_num = 32
-  cluster_internet        = true
-  cluster_version         = "1.24.4"
   cluster_deploy_type     = "MANAGED_CLUSTER"
 }
 
 resource "tencentcloud_kms_key" "example" {
-  alias       = "tf-example-kms-key-ed-%s"
+  alias       = "tf-example-kms-key"
   description = "example of kms key instance"
   key_usage   = "ENCRYPT_DECRYPT"
   is_enabled  = true

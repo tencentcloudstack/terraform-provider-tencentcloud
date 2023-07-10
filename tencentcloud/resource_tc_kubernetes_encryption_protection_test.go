@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudTkeEncryptionProtectionResource_basic(t *testing.T) {
+func TestAccTencentCloudKubernetesEncryptionProtectionResource_basic(t *testing.T) {
 	t.Parallel()
 	rName := acctest.RandString(10)
 	resource.Test(t, resource.TestCase{
@@ -21,7 +21,7 @@ func TestAccTencentCloudTkeEncryptionProtectionResource_basic(t *testing.T) {
 				Config: fmt.Sprintf(testAccTkeEncryptionProtection, rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_kubernetes_encryption_protection.example", "cluster_id", defaultTkeClusterId),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "cluster_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "kms_configuration.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "kms_configuration.0.key_id"),
 					resource.TestCheckResourceAttr("tencentcloud_kubernetes_encryption_protection.example", "kms_configuration.0.kms_region", "ap-guangzhou"),
@@ -39,7 +39,7 @@ variable "example_region" {
 }
 
 variable "example_cluster_cidr" {
-  default = "10.31.0.0/16"
+  default = "10.32.0.0/16"
 }
 
 variable "availability_zone" {
@@ -58,8 +58,6 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   cluster_name            = "tf_example_cluster"
   cluster_desc            = "a tf example cluster for the kms test"
   cluster_max_service_num = 32
-  cluster_internet        = true
-  cluster_version         = "1.24.4"
   cluster_deploy_type     = "MANAGED_CLUSTER"
 }
 
