@@ -1,3 +1,10 @@
+## 1.81.13 (July 10, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_kubernetes_encryption_protection` ([#1949](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1949))
+* **New Resource:** `tencentcloud_tcr_service_account` ([#1943](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1943))
+
 ## 1.81.12 (July 07, 2023)
 
 FEATURES:
