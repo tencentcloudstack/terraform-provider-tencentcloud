@@ -429,6 +429,26 @@ func (r *AddVpcCniSubnetsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type Addon struct {
+	// addon名称
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+
+	// addon的版本
+	AddonVersion *string `json:"AddonVersion,omitempty" name:"AddonVersion"`
+
+	// addon的参数，是一个json格式的base64转码后的字符串
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RawValues *string `json:"RawValues,omitempty" name:"RawValues"`
+
+	// addon的状态
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Phase *string `json:"Phase,omitempty" name:"Phase"`
+
+	// addon失败的原因
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Reason *string `json:"Reason,omitempty" name:"Reason"`
+}
+
 type AppChart struct {
 	// chart名称
 	Name *string `json:"Name,omitempty" name:"Name"`
@@ -1197,6 +1217,9 @@ type ClusterLevelChangeRecord struct {
 	// 变配触发类型：manual 手动,auto 自动
 	TriggerType *string `json:"TriggerType,omitempty" name:"TriggerType"`
 
+	// 创建时间
+	CreatedAt *string `json:"CreatedAt,omitempty" name:"CreatedAt"`
+
 	// 开始时间
 	StartedAt *string `json:"StartedAt,omitempty" name:"StartedAt"`
 
@@ -1519,12 +1542,12 @@ type CreateClusterEndpointRequestParams struct {
 	// 使用的安全组，只有外网访问需要传递（开启外网访问时必传）
 	SecurityGroup *string `json:"SecurityGroup,omitempty" name:"SecurityGroup"`
 
-	// 创建lb参数，只有外网访问需要设置，是一个json格式化后的字符串：{"InternetAccessible":{"InternetChargeType":"TRAFFIC_POSTPAID_BY_HOUR","InternetMaxBandwidthOut":"200"},"VipIsp":"","BandwidthPackageId":""}。
+	// 创建lb参数，只有外网访问需要设置，是一个json格式化后的字符串：{"InternetAccessible":{"InternetChargeType":"TRAFFIC_POSTPAID_BY_HOUR","InternetMaxBandwidthOut":200},"VipIsp":"","BandwidthPackageId":""}。
 	// 各个参数意义：
 	// InternetAccessible.InternetChargeType含义：TRAFFIC_POSTPAID_BY_HOUR按流量按小时后计费;BANDWIDTH_POSTPAID_BY_HOUR 按带宽按小时后计费;InternetAccessible.BANDWIDTH_PACKAGE 按带宽包计费。
 	// InternetMaxBandwidthOut含义：最大出带宽，单位Mbps，范围支持0到2048，默认值10。
-	// VipIsp含义：CMCC | CTCC | CUCC，分别对应 移动 | 电信 | 联通，如果不指定本参数，则默认使用BGP。可通过 DescribeSingleIsp 接口查询一个地域所支持的Isp。如果指定运营商，则网络计费式只能使用按带宽包计费(BANDWIDTH_PACKAGE)。
-	// BandwidthPackageId含义：带宽包ID，指定此参数时，网络计费方式（InternetAccessible.InternetChargeType）只支持按带宽包计费（BANDWIDTH_PACKAGE。
+	// VipIsp含义：CMCC | CTCC | CUCC，分别对应 移动 | 电信 | 联通，如果不指定本参数，则默认使用BGP。可通过 DescribeSingleIsp 接口查询一个地域所支持的Isp。如果指定运营商，则网络计费式只能使用按带宽包计费BANDWIDTH_PACKAGE。
+	// BandwidthPackageId含义：带宽包ID，指定此参数时，网络计费方式InternetAccessible.InternetChargeType只支持按带宽包计费BANDWIDTH_PACKAGE。
 	ExtensiveParameters *string `json:"ExtensiveParameters,omitempty" name:"ExtensiveParameters"`
 }
 
@@ -1546,12 +1569,12 @@ type CreateClusterEndpointRequest struct {
 	// 使用的安全组，只有外网访问需要传递（开启外网访问时必传）
 	SecurityGroup *string `json:"SecurityGroup,omitempty" name:"SecurityGroup"`
 
-	// 创建lb参数，只有外网访问需要设置，是一个json格式化后的字符串：{"InternetAccessible":{"InternetChargeType":"TRAFFIC_POSTPAID_BY_HOUR","InternetMaxBandwidthOut":"200"},"VipIsp":"","BandwidthPackageId":""}。
+	// 创建lb参数，只有外网访问需要设置，是一个json格式化后的字符串：{"InternetAccessible":{"InternetChargeType":"TRAFFIC_POSTPAID_BY_HOUR","InternetMaxBandwidthOut":200},"VipIsp":"","BandwidthPackageId":""}。
 	// 各个参数意义：
 	// InternetAccessible.InternetChargeType含义：TRAFFIC_POSTPAID_BY_HOUR按流量按小时后计费;BANDWIDTH_POSTPAID_BY_HOUR 按带宽按小时后计费;InternetAccessible.BANDWIDTH_PACKAGE 按带宽包计费。
 	// InternetMaxBandwidthOut含义：最大出带宽，单位Mbps，范围支持0到2048，默认值10。
-	// VipIsp含义：CMCC | CTCC | CUCC，分别对应 移动 | 电信 | 联通，如果不指定本参数，则默认使用BGP。可通过 DescribeSingleIsp 接口查询一个地域所支持的Isp。如果指定运营商，则网络计费式只能使用按带宽包计费(BANDWIDTH_PACKAGE)。
-	// BandwidthPackageId含义：带宽包ID，指定此参数时，网络计费方式（InternetAccessible.InternetChargeType）只支持按带宽包计费（BANDWIDTH_PACKAGE。
+	// VipIsp含义：CMCC | CTCC | CUCC，分别对应 移动 | 电信 | 联通，如果不指定本参数，则默认使用BGP。可通过 DescribeSingleIsp 接口查询一个地域所支持的Isp。如果指定运营商，则网络计费式只能使用按带宽包计费BANDWIDTH_PACKAGE。
+	// BandwidthPackageId含义：带宽包ID，指定此参数时，网络计费方式InternetAccessible.InternetChargeType只支持按带宽包计费BANDWIDTH_PACKAGE。
 	ExtensiveParameters *string `json:"ExtensiveParameters,omitempty" name:"ExtensiveParameters"`
 }
 
@@ -3907,6 +3930,9 @@ type CreateTKEEdgeClusterRequestParams struct {
 
 	// 边缘组件镜像仓库前缀
 	RegistryPrefix *string `json:"RegistryPrefix,omitempty" name:"RegistryPrefix"`
+
+	// 集群绑定的云标签
+	TagSpecification *TagSpecification `json:"TagSpecification,omitempty" name:"TagSpecification"`
 }
 
 type CreateTKEEdgeClusterRequest struct {
@@ -3953,6 +3979,9 @@ type CreateTKEEdgeClusterRequest struct {
 
 	// 边缘组件镜像仓库前缀
 	RegistryPrefix *string `json:"RegistryPrefix,omitempty" name:"RegistryPrefix"`
+
+	// 集群绑定的云标签
+	TagSpecification *TagSpecification `json:"TagSpecification,omitempty" name:"TagSpecification"`
 }
 
 func (r *CreateTKEEdgeClusterRequest) ToJsonString() string {
@@ -3981,6 +4010,7 @@ func (r *CreateTKEEdgeClusterRequest) FromJsonString(s string) error {
 	delete(f, "ChargeType")
 	delete(f, "EdgeVersion")
 	delete(f, "RegistryPrefix")
+	delete(f, "TagSpecification")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateTKEEdgeClusterRequest has unknown keys!", "")
 	}
@@ -4066,6 +4096,67 @@ type DataDisk struct {
 	// 挂载设备名或分区名，当且仅当添加已有节点时需要
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	DiskPartition *string `json:"DiskPartition,omitempty" name:"DiskPartition"`
+}
+
+// Predefined struct for user
+type DeleteAddonRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// addon名称
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+}
+
+type DeleteAddonRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// addon名称
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+}
+
+func (r *DeleteAddonRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteAddonRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "AddonName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteAddonRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteAddonResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteAddonResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteAddonResponseParams `json:"Response"`
+}
+
+func (r *DeleteAddonResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteAddonResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -5763,6 +5854,137 @@ func (r *DeleteTKEEdgeClusterResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeAddonRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// addon名称（不传时会返回集群下全部的addon）
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+}
+
+type DescribeAddonRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// addon名称（不传时会返回集群下全部的addon）
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+}
+
+func (r *DescribeAddonRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAddonRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "AddonName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAddonRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAddonResponseParams struct {
+	// addon列表
+	Addons []*Addon `json:"Addons,omitempty" name:"Addons"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeAddonResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAddonResponseParams `json:"Response"`
+}
+
+func (r *DescribeAddonResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAddonResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAddonValuesRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// addon名称
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+}
+
+type DescribeAddonValuesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// addon名称
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+}
+
+func (r *DescribeAddonValuesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAddonValuesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "AddonName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeAddonValuesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeAddonValuesResponseParams struct {
+	// 参数列表，如果addon已安装，会使用已设置的的参数做渲染，是一个json格式的字符串
+	Values *string `json:"Values,omitempty" name:"Values"`
+
+	// addon支持的参数列表，使用默认值，是一个json格式的字符串
+	DefaultValues *string `json:"DefaultValues,omitempty" name:"DefaultValues"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeAddonValuesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeAddonValuesResponseParams `json:"Response"`
+}
+
+func (r *DescribeAddonValuesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeAddonValuesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeAvailableClusterVersionRequestParams struct {
 	// 集群 Id
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
@@ -6497,6 +6719,83 @@ func (r *DescribeClusterEndpointsResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeClusterEndpointsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterInspectionResultsOverviewRequestParams struct {
+	// Array of String	目标集群列表，为空查询用户所有集群
+	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
+
+	// 聚合字段信息，概览结果按照 GroupBy 信息聚合后返回，可选参数：
+	// catalogue.first：按一级分类聚合
+	// catalogue.second：按二级分类聚合
+	GroupBy []*string `json:"GroupBy,omitempty" name:"GroupBy"`
+}
+
+type DescribeClusterInspectionResultsOverviewRequest struct {
+	*tchttp.BaseRequest
+	
+	// Array of String	目标集群列表，为空查询用户所有集群
+	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
+
+	// 聚合字段信息，概览结果按照 GroupBy 信息聚合后返回，可选参数：
+	// catalogue.first：按一级分类聚合
+	// catalogue.second：按二级分类聚合
+	GroupBy []*string `json:"GroupBy,omitempty" name:"GroupBy"`
+}
+
+func (r *DescribeClusterInspectionResultsOverviewRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterInspectionResultsOverviewRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterIds")
+	delete(f, "GroupBy")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeClusterInspectionResultsOverviewRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeClusterInspectionResultsOverviewResponseParams struct {
+	// 诊断结果统计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Statistics []*KubeJarvisStateStatistic `json:"Statistics,omitempty" name:"Statistics"`
+
+	// 诊断结果概览
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Diagnostics []*KubeJarvisStateDiagnosticOverview `json:"Diagnostics,omitempty" name:"Diagnostics"`
+
+	// 集群诊断结果概览
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InspectionOverview []*KubeJarvisStateInspectionOverview `json:"InspectionOverview,omitempty" name:"InspectionOverview"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeClusterInspectionResultsOverviewResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeClusterInspectionResultsOverviewResponseParams `json:"Response"`
+}
+
+func (r *DescribeClusterInspectionResultsOverviewResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeClusterInspectionResultsOverviewResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -8955,6 +9254,66 @@ func (r *DescribeEnableVpcCniProgressResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeEncryptionStatusRequestParams struct {
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+type DescribeEncryptionStatusRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群id
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+func (r *DescribeEncryptionStatusRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEncryptionStatusRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeEncryptionStatusRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeEncryptionStatusResponseParams struct {
+	// 加密状态
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 加密错误信息
+	ErrorMsg *string `json:"ErrorMsg,omitempty" name:"ErrorMsg"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeEncryptionStatusResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeEncryptionStatusResponseParams `json:"Response"`
+}
+
+func (r *DescribeEncryptionStatusResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeEncryptionStatusResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeExistedInstancesRequestParams struct {
 	// 集群 ID，请填写查询集群列表 接口中返回的 ClusterId 字段（仅通过ClusterId获取需要过滤条件中的VPCID。节点状态比较时会使用该地域下所有集群中的节点进行比较。参数不支持同时指定InstanceIds和ClusterId。
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
@@ -10983,6 +11342,9 @@ type DescribeTKEEdgeClusterCredentialResponseParams struct {
 	// 是否部署GridDaemon以支持headless service
 	GridDaemon *string `json:"GridDaemon,omitempty" name:"GridDaemon"`
 
+	// 公网访问kins集群
+	UnitCluster *string `json:"UnitCluster,omitempty" name:"UnitCluster"`
+
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
 }
@@ -11075,7 +11437,7 @@ type DescribeTKEEdgeClustersRequestParams struct {
 	// 最大输出条数，默认20
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 过滤条件,当前只支持按照单个条件ClusterName进行过滤
+	// 过滤条件,当前只支持按照ClusterName和云标签进行过滤,云标签过滤格式Tags:["key1:value1","key2:value2"]
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 }
 
@@ -11092,7 +11454,7 @@ type DescribeTKEEdgeClustersRequest struct {
 	// 最大输出条数，默认20
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 
-	// 过滤条件,当前只支持按照单个条件ClusterName进行过滤
+	// 过滤条件,当前只支持按照ClusterName和云标签进行过滤,云标签过滤格式Tags:["key1:value1","key2:value2"]
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 }
 
@@ -11549,6 +11911,60 @@ func (r *DisableClusterDeletionProtectionResponse) FromJsonString(s string) erro
 }
 
 // Predefined struct for user
+type DisableEncryptionProtectionRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+type DisableEncryptionProtectionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+func (r *DisableEncryptionProtectionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableEncryptionProtectionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DisableEncryptionProtectionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DisableEncryptionProtectionResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DisableEncryptionProtectionResponse struct {
+	*tchttp.BaseResponse
+	Response *DisableEncryptionProtectionResponseParams `json:"Response"`
+}
+
+func (r *DisableEncryptionProtectionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DisableEncryptionProtectionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DisableEventPersistenceRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
@@ -11866,6 +12282,10 @@ type EdgeCluster struct {
 	// 边缘集群组件的版本
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EdgeVersion *string `json:"EdgeVersion,omitempty" name:"EdgeVersion"`
+
+	// 集群绑定的云标签
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TagSpecification *TagSpecification `json:"TagSpecification,omitempty" name:"TagSpecification"`
 }
 
 type EdgeClusterAdvancedSettings struct {
@@ -12217,6 +12637,67 @@ func (r *EnableClusterDeletionProtectionResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *EnableClusterDeletionProtectionResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type EnableEncryptionProtectionRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// kms加密配置
+	KMSConfiguration *KMSConfiguration `json:"KMSConfiguration,omitempty" name:"KMSConfiguration"`
+}
+
+type EnableEncryptionProtectionRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// kms加密配置
+	KMSConfiguration *KMSConfiguration `json:"KMSConfiguration,omitempty" name:"KMSConfiguration"`
+}
+
+func (r *EnableEncryptionProtectionRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableEncryptionProtectionRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "KMSConfiguration")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "EnableEncryptionProtectionRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type EnableEncryptionProtectionResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type EnableEncryptionProtectionResponse struct {
+	*tchttp.BaseResponse
+	Response *EnableEncryptionProtectionResponseParams `json:"Response"`
+}
+
+func (r *EnableEncryptionProtectionResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *EnableEncryptionProtectionResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -13162,6 +13643,81 @@ type ImageRegistryCredential struct {
 }
 
 // Predefined struct for user
+type InstallAddonRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// addon名称
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+
+	// addon版本（不传默认安装最新版本）
+	AddonVersion *string `json:"AddonVersion,omitempty" name:"AddonVersion"`
+
+	// addon的参数，是一个json格式的base64转码后的字符串（addon参数由DescribeAddonValues获取）
+	RawValues *string `json:"RawValues,omitempty" name:"RawValues"`
+}
+
+type InstallAddonRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// addon名称
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+
+	// addon版本（不传默认安装最新版本）
+	AddonVersion *string `json:"AddonVersion,omitempty" name:"AddonVersion"`
+
+	// addon的参数，是一个json格式的base64转码后的字符串（addon参数由DescribeAddonValues获取）
+	RawValues *string `json:"RawValues,omitempty" name:"RawValues"`
+}
+
+func (r *InstallAddonRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InstallAddonRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "AddonName")
+	delete(f, "AddonVersion")
+	delete(f, "RawValues")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "InstallAddonRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type InstallAddonResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type InstallAddonResponse struct {
+	*tchttp.BaseResponse
+	Response *InstallAddonResponseParams `json:"Response"`
+}
+
+func (r *InstallAddonResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *InstallAddonResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type InstallEdgeLogAgentRequestParams struct {
 	// 集群ID
 	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
@@ -13444,12 +14000,324 @@ type InstanceUpgradeProgressItem struct {
 	Detail []*TaskStepInfo `json:"Detail,omitempty" name:"Detail"`
 }
 
+type KMSConfiguration struct {
+	// kms id
+	KeyId *string `json:"KeyId,omitempty" name:"KeyId"`
+
+	// kms 地域
+	KmsRegion *string `json:"KmsRegion,omitempty" name:"KmsRegion"`
+}
+
+type KubeJarvisStateCatalogue struct {
+	// 目录级别，支持参数：
+	// first：一级目录
+	// second：二级目录
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CatalogueLevel *string `json:"CatalogueLevel,omitempty" name:"CatalogueLevel"`
+
+	// 目录名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CatalogueName *string `json:"CatalogueName,omitempty" name:"CatalogueName"`
+}
+
+type KubeJarvisStateDiagnostic struct {
+	// 诊断开始时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 诊断结束时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 诊断目录
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Catalogues []*KubeJarvisStateCatalogue `json:"Catalogues,omitempty" name:"Catalogues"`
+
+	// 诊断类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 诊断名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 诊断描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+
+	// 诊断结果列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Results []*KubeJarvisStateResultsItem `json:"Results,omitempty" name:"Results"`
+
+	// 诊断结果统计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Statistics []*KubeJarvisStateStatistic `json:"Statistics,omitempty" name:"Statistics"`
+}
+
+type KubeJarvisStateDiagnosticOverview struct {
+	// 诊断目录
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Catalogues []*KubeJarvisStateCatalogue `json:"Catalogues,omitempty" name:"Catalogues"`
+
+	// 诊断结果统计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Statistics []*KubeJarvisStateStatistic `json:"Statistics,omitempty" name:"Statistics"`
+}
+
+type KubeJarvisStateInspectionOverview struct {
+	// 集群ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 诊断结果统计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Statistics []*KubeJarvisStateStatistic `json:"Statistics,omitempty" name:"Statistics"`
+
+	// 诊断结果详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Diagnostics []*KubeJarvisStateDiagnosticOverview `json:"Diagnostics,omitempty" name:"Diagnostics"`
+}
+
+type KubeJarvisStateInspectionResult struct {
+	// 集群ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 诊断开始时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 诊断结束时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+
+	// 诊断结果统计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Statistics []*KubeJarvisStateStatistic `json:"Statistics,omitempty" name:"Statistics"`
+
+	// 诊断结果详情
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Diagnostics []*KubeJarvisStateDiagnostic `json:"Diagnostics,omitempty" name:"Diagnostics"`
+
+	// 查询巡检报告相关报错
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Error *string `json:"Error,omitempty" name:"Error"`
+}
+
+type KubeJarvisStateInspectionResultsItem struct {
+	// 巡检结果名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 诊断结果统计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Statistics []*KubeJarvisStateStatistic `json:"Statistics,omitempty" name:"Statistics"`
+}
+
+type KubeJarvisStateResultObjInfo struct {
+	// 对象属性名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PropertyName *string `json:"PropertyName,omitempty" name:"PropertyName"`
+
+	// 对象属性值
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PropertyValue *string `json:"PropertyValue,omitempty" name:"PropertyValue"`
+}
+
+type KubeJarvisStateResultsItem struct {
+	// 诊断结果级别
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Level *string `json:"Level,omitempty" name:"Level"`
+
+	// 诊断对象名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ObjName *string `json:"ObjName,omitempty" name:"ObjName"`
+
+	// 诊断对象信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ObjInfo []*KubeJarvisStateResultObjInfo `json:"ObjInfo,omitempty" name:"ObjInfo"`
+
+	// 诊断项标题
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Title *string `json:"Title,omitempty" name:"Title"`
+
+	// 诊断项描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Desc *string `json:"Desc,omitempty" name:"Desc"`
+
+	// 诊断建议
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Proposal *string `json:"Proposal,omitempty" name:"Proposal"`
+
+	// 诊断建议文档链接
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProposalDocUrl *string `json:"ProposalDocUrl,omitempty" name:"ProposalDocUrl"`
+
+	// 诊断建议文档名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ProposalDocName *string `json:"ProposalDocName,omitempty" name:"ProposalDocName"`
+}
+
+type KubeJarvisStateStatistic struct {
+	// 诊断结果的健康水平
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	HealthyLevel *string `json:"HealthyLevel,omitempty" name:"HealthyLevel"`
+
+	// 诊断结果的统计
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Count *int64 `json:"Count,omitempty" name:"Count"`
+}
+
 type Label struct {
 	// map表中的Name
 	Name *string `json:"Name,omitempty" name:"Name"`
 
 	// map表中的Value
 	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+// Predefined struct for user
+type ListClusterInspectionResultsItemsRequestParams struct {
+	// 目标集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 查询历史结果的开始时间，Unix时间戳
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 查询历史结果的结束时间，默认当前距离开始时间3天，Unix时间戳
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+}
+
+type ListClusterInspectionResultsItemsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 目标集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 查询历史结果的开始时间，Unix时间戳
+	StartTime *string `json:"StartTime,omitempty" name:"StartTime"`
+
+	// 查询历史结果的结束时间，默认当前距离开始时间3天，Unix时间戳
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+}
+
+func (r *ListClusterInspectionResultsItemsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListClusterInspectionResultsItemsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "StartTime")
+	delete(f, "EndTime")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListClusterInspectionResultsItemsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ListClusterInspectionResultsItemsResponseParams struct {
+	// 巡检结果历史列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InspectionResultsItems []*KubeJarvisStateInspectionResultsItem `json:"InspectionResultsItems,omitempty" name:"InspectionResultsItems"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ListClusterInspectionResultsItemsResponse struct {
+	*tchttp.BaseResponse
+	Response *ListClusterInspectionResultsItemsResponseParams `json:"Response"`
+}
+
+func (r *ListClusterInspectionResultsItemsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListClusterInspectionResultsItemsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ListClusterInspectionResultsRequestParams struct {
+	// 目标集群列表，为空查询用户所有集群
+	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
+
+	// 隐藏的字段信息，为了减少无效的字段返回，隐藏字段不会在返回值中返回。可选值：results
+	Hide []*string `json:"Hide,omitempty" name:"Hide"`
+
+	// 指定查询结果的报告名称，默认查询最新的每个集群只查询最新的一条
+	Name *string `json:"Name,omitempty" name:"Name"`
+}
+
+type ListClusterInspectionResultsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 目标集群列表，为空查询用户所有集群
+	ClusterIds []*string `json:"ClusterIds,omitempty" name:"ClusterIds"`
+
+	// 隐藏的字段信息，为了减少无效的字段返回，隐藏字段不会在返回值中返回。可选值：results
+	Hide []*string `json:"Hide,omitempty" name:"Hide"`
+
+	// 指定查询结果的报告名称，默认查询最新的每个集群只查询最新的一条
+	Name *string `json:"Name,omitempty" name:"Name"`
+}
+
+func (r *ListClusterInspectionResultsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListClusterInspectionResultsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterIds")
+	delete(f, "Hide")
+	delete(f, "Name")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ListClusterInspectionResultsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ListClusterInspectionResultsResponseParams struct {
+	// 集群诊断结果列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InspectionResults []*KubeJarvisStateInspectionResult `json:"InspectionResults,omitempty" name:"InspectionResults"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ListClusterInspectionResultsResponse struct {
+	*tchttp.BaseResponse
+	Response *ListClusterInspectionResultsResponseParams `json:"Response"`
+}
+
+func (r *ListClusterInspectionResultsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ListClusterInspectionResultsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 type LivenessOrReadinessProbe struct {
@@ -16917,6 +17785,81 @@ func (r *UninstallLogAgentResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UninstallLogAgentResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateAddonRequestParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// addon名称
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+
+	// addon版本（不传默认不更新）
+	AddonVersion *string `json:"AddonVersion,omitempty" name:"AddonVersion"`
+
+	// addon的参数，是一个json格式的base64转码后的字符串（addon参数由DescribeAddonValues获取）
+	RawValues *string `json:"RawValues,omitempty" name:"RawValues"`
+}
+
+type UpdateAddonRequest struct {
+	*tchttp.BaseRequest
+	
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// addon名称
+	AddonName *string `json:"AddonName,omitempty" name:"AddonName"`
+
+	// addon版本（不传默认不更新）
+	AddonVersion *string `json:"AddonVersion,omitempty" name:"AddonVersion"`
+
+	// addon的参数，是一个json格式的base64转码后的字符串（addon参数由DescribeAddonValues获取）
+	RawValues *string `json:"RawValues,omitempty" name:"RawValues"`
+}
+
+func (r *UpdateAddonRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateAddonRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	delete(f, "AddonName")
+	delete(f, "AddonVersion")
+	delete(f, "RawValues")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateAddonRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateAddonResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type UpdateAddonResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateAddonResponseParams `json:"Response"`
+}
+
+func (r *UpdateAddonResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateAddonResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
