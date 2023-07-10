@@ -2203,3 +2203,84 @@ func (me *TkeService) deleteBackupStorageLocation(ctx context.Context, name stri
 	_, err := me.client.UseTkeClient().DeleteBackupStorageLocation(request)
 	return err
 }
+
+func (me *TkeService) DescribeTkeEncryptionProtectionById(ctx context.Context, clusterId string) (encryptionProtection *tke.DescribeEncryptionStatusResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDescribeEncryptionStatusRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DescribeEncryptionStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	encryptionProtection = response.Response
+	return
+}
+
+func (me *TkeService) DeleteTkeEncryptionProtectionById(ctx context.Context, clusterId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDisableEncryptionProtectionRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTkeClient().DisableEncryptionProtection(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TkeService) TkeEncryptionProtectionStateRefreshFunc(clusterId string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		logId := getLogId(ctx)
+
+		request := tke.NewDescribeEncryptionStatusRequest()
+		request.ClusterId = helper.String(clusterId)
+
+		var errRet error
+		defer func() {
+			if errRet != nil {
+				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+					logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+			}
+		}()
+
+		object, err := me.client.UseTkeClient().DescribeEncryptionStatus(request)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		if err != nil {
+			errRet = err
+			return object, "", err
+		}
+
+		return object, helper.PString(object.Response.Status), nil
+	}
+}
