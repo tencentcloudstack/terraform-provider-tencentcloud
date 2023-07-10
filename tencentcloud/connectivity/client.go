@@ -189,7 +189,7 @@ func (me *TencentCloudClient) NewClientProfile(timeout int) *profile.ClientProfi
 	return cpf
 }
 
-// NewClientProfile returns a new ClientProfile
+// NewClientIntlProfile returns a new ClientProfile
 func (me *TencentCloudClient) NewClientIntlProfile(timeout int) *intlProfile.ClientProfile {
 	cpf := intlProfile.NewClientProfile()
 
@@ -767,7 +767,7 @@ func (me *TencentCloudClient) UseDnsPodClient() *dnspod.Client {
 
 // UsePrivateDnsClient return PrivateDns client for service
 func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
-	if me.dnsPodConn != nil {
+	if me.privateDnsConn != nil {
 		return me.privateDnsConn
 	}
 	cpf := me.NewClientProfile(300)
@@ -779,7 +779,7 @@ func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
 
 // UseDomainClient return Domain client for service
 func (me *TencentCloudClient) UseDomainClient() *domain.Client {
-	if me.dnsPodConn != nil {
+	if me.domainConn != nil {
 		return me.domainConn
 	}
 	cpf := me.NewClientProfile(300)
@@ -1111,7 +1111,7 @@ func (me *TencentCloudClient) UseMpsClient() *mps.Client {
 	return me.mpsConn
 }
 
-// UseTkeClient returns tke client for service
+// UseCwpClient returns tke client for service
 func (me *TencentCloudClient) UseCwpClient() *cwp.Client {
 	if me.cwpConn != nil {
 		return me.cwpConn
