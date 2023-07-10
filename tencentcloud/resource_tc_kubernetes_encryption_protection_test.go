@@ -1,13 +1,16 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudTkeEncryptionProtectionResource_basic(t *testing.T) {
 	t.Parallel()
+	rName := acctest.RandString(10)
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -15,17 +18,15 @@ func TestAccTencentCloudTkeEncryptionProtectionResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTkeEncryptionProtection,
+				Config: fmt.Sprintf(testAccTkeEncryptionProtection, rName),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.encryption_protection", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_kubernetes_encryption_protection.encryption_protection", "id", "cls-cpsqobnp"),
-					resource.TestCheckResourceAttr("tencentcloud_kubernetes_encryption_protection.encryption_protection", "status", "Opened"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_encryption_protection.example", "cluster_id", defaultTkeClusterId),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "kms_configuration.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "kms_configuration.0.key_id"),
+					resource.TestCheckResourceAttr("tencentcloud_kubernetes_encryption_protection.example", "kms_configuration.0.kms_region", "ap-guangzhou"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "status"),
 				),
-			},
-			{
-				ResourceName:      "tencentcloud_kubernetes_encryption_protection.encryption_protection",
-				ImportState:       true,
-				ImportStateVerify: true,
 			},
 		},
 	})
@@ -33,12 +34,47 @@ func TestAccTencentCloudTkeEncryptionProtectionResource_basic(t *testing.T) {
 
 const testAccTkeEncryptionProtection = `
 
-resource "tencentcloud_kubernetes_encryption_protection" "encryption_protection" {
-  cluster_id = "cls-cpsqobnp"
-  k_m_s_configuration {
-		key_id = "my_key_id"
-		kms_region = "ap-guangzhou"
+variable "example_region" {
+  default = "ap-guangzhou"
+}
 
+variable "example_cluster_cidr" {
+  default = "10.31.0.0/16"
+}
+
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+data "tencentcloud_vpc_subnets" "vpc" {
+  is_default        = true
+  availability_zone = var.availability_zone
+}
+
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                  = data.tencentcloud_vpc_subnets.vpc.instance_list.0.vpc_id
+  cluster_cidr            = var.example_cluster_cidr
+  cluster_max_pod_num     = 32
+  cluster_name            = "tf_example_cluster"
+  cluster_desc            = "a tf example cluster for the kms test"
+  cluster_max_service_num = 32
+  cluster_internet        = true
+  cluster_version         = "1.24.4"
+  cluster_deploy_type     = "MANAGED_CLUSTER"
+}
+
+resource "tencentcloud_kms_key" "example" {
+  alias       = "tf-example-%s"
+  description = "example of kms key instance"
+  key_usage   = "ENCRYPT_DECRYPT"
+  is_enabled  = true
+}
+
+resource "tencentcloud_kubernetes_encryption_protection" "example" {
+  cluster_id = tencentcloud_kubernetes_cluster.example.id
+  kms_configuration {
+    key_id     = tencentcloud_kms_key.example.id
+    kms_region = var.example_region
   }
 }
 
