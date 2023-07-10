@@ -69,9 +69,6 @@ func resourceTencentCloudTkeEncryptionProtection() *schema.Resource {
 		Create: resourceTencentCloudTkeEncryptionProtectionCreate,
 		Read:   resourceTencentCloudTkeEncryptionProtectionRead,
 		Delete: resourceTencentCloudTkeEncryptionProtectionDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,

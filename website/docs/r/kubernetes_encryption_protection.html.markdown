@@ -61,14 +61,6 @@ resource "tencentcloud_kubernetes_encryption_protection" "example" {
 }
 ```
 
-### # Import
-
-kubernetes encryption_protection can be imported using the id, e.g.
-
-```hcl
-terraform import tencentcloud_kubernetes_encryption_protection.encryption_protection encryption_protection_id
-```
-
 ## Argument Reference
 
 The following arguments are supported:
