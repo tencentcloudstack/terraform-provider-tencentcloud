@@ -3,7 +3,6 @@ Provides a resource to create a configuration for an AS (Auto scaling) instance.
 
 ~> **NOTE:**  In order to ensure the integrity of customer data, if the cvm instance was destroyed due to shrinking, it will keep the cbs associate with cvm by default. If you want to destroy together, please set `delete_with_instance` to `true`.
 
-
 Example Usage
 
 ```hcl
