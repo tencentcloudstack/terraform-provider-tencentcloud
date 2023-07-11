@@ -11,7 +11,7 @@ variable "example_region" {
 }
 
 variable "example_cluster_cidr" {
-  default = "10.31.0.0/16"
+  default = "10.32.0.0/16"
 }
 
 variable "availability_zone" {
@@ -30,13 +30,11 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   cluster_name            = "tf_example_cluster"
   cluster_desc            = "a tf example cluster for the kms test"
   cluster_max_service_num = 32
-  cluster_internet        = true
-  cluster_version         = "1.24.4"
   cluster_deploy_type     = "MANAGED_CLUSTER"
 }
 
 resource "tencentcloud_kms_key" "example" {
-  alias       = "tf-example-kms-key-ed-%s"
+  alias       = "tf-example-kms-key"
   description = "example of kms key instance"
   key_usage   = "ENCRYPT_DECRYPT"
   is_enabled  = true
@@ -64,11 +62,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudTkeEncryptionProtection() *schema.Resource {
+func resourceTencentCloudKubernetesEncryptionProtection() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTkeEncryptionProtectionCreate,
-		Read:   resourceTencentCloudTkeEncryptionProtectionRead,
-		Delete: resourceTencentCloudTkeEncryptionProtectionDelete,
+		Create: resourceTencentCloudKubernetesEncryptionProtectionCreate,
+		Read:   resourceTencentCloudKubernetesEncryptionProtectionRead,
+		Delete: resourceTencentCloudKubernetesEncryptionProtectionDelete,
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
@@ -107,7 +105,7 @@ func resourceTencentCloudTkeEncryptionProtection() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudTkeEncryptionProtectionCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudKubernetesEncryptionProtectionCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tke_encryption_protection.create")()
 	defer inconsistentCheck(d, meta)()
 
@@ -157,10 +155,10 @@ func resourceTencentCloudTkeEncryptionProtectionCreate(d *schema.ResourceData, m
 		return e
 	}
 
-	return resourceTencentCloudTkeEncryptionProtectionRead(d, meta)
+	return resourceTencentCloudKubernetesEncryptionProtectionRead(d, meta)
 }
 
-func resourceTencentCloudTkeEncryptionProtectionRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudKubernetesEncryptionProtectionRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tke_encryption_protection.read")()
 	defer inconsistentCheck(d, meta)()
 
@@ -190,7 +188,7 @@ func resourceTencentCloudTkeEncryptionProtectionRead(d *schema.ResourceData, met
 	return nil
 }
 
-func resourceTencentCloudTkeEncryptionProtectionDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudKubernetesEncryptionProtectionDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tke_encryption_protection.delete")()
 	defer inconsistentCheck(d, meta)()
 

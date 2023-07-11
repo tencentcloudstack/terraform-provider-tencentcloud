@@ -934,6 +934,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"cluster_version": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:    true,
 			Description: "Version of the cluster. Use `tencentcloud_kubernetes_available_cluster_versions` to get the upgradable cluster version.",
 		},
 		"upgrade_instances_follow_cluster": {
