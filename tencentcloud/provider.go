@@ -151,6 +151,7 @@ Auto Scaling(AS)
 	tencentcloud_as_scale_in_instances
 	tencentcloud_as_scale_out_instances
 	tencentcloud_as_execute_scaling_policy
+	tencentcloud_as_complete_lifecycle
 
 Content Delivery Network(CDN)
   Data Source
@@ -223,6 +224,11 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_role_sso
 	tencentcloud_cam_service_linked_role
 	tencentcloud_cam_user_saml_config
+
+Customer Identity and Access Management(CIAM)
+  Resource
+	tencentcloud_ciam_user_store
+    tencentcloud_ciam_user_group
 
 Cloud Block Storage(CBS)
   Data Source
@@ -353,6 +359,11 @@ Cloud Object Storage(COS)
 	tencentcloud_cos_bucket_domain_certificate_attachment
 	tencentcloud_cos_bucket_inventory
 	tencentcloud_cos_batch
+	tencentcloud_cos_object_abort_multipart_upload_operation
+	tencentcloud_cos_object_copy_operation
+	tencentcloud_cos_object_restore_operation
+	tencentcloud_cos_bucket_generate_inventory_immediately_operation
+	tencentcloud_cos_object_download_operation
 
 Cloud Virtual Machine(CVM)
   Data Source
@@ -541,6 +552,7 @@ Tencent Kubernetes Engine(TKE)
 	tencentcloud_kubernetes_node_pool
 	tencentcloud_kubernetes_serverless_node_pool
     tencentcloud_kubernetes_backup_storage_location
+    tencentcloud_kubernetes_encryption_protection
     tencentcloud_kubernetes_auth_attachment
     tencentcloud_kubernetes_addon_attachment
 	tencentcloud_kubernetes_cluster_endpoint
@@ -846,6 +858,7 @@ SQLServer
 	tencentcloud_sqlserver_start_xevent
 	tencentcloud_sqlserver_instance_tde
 	tencentcloud_sqlserver_database_tde
+	tencentcloud_sqlserver_general_cloud_ro_instance
 
 SSL Certificates
   Data Source
@@ -908,6 +921,7 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_delete_image_operation
 	tencentcloud_tcr_create_image_signature_operation
 	tencentcloud_tcr_tag_retention_execution_config
+	tencentcloud_tcr_service_account
 
 Video on Demand(VOD)
   Data Source

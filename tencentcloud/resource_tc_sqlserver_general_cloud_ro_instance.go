@@ -3,8 +3,9 @@ Provides a resource to create a sqlserver general_cloud_ro_instance
 
 Example Usage
 
-If `read_only_group_type` is 1:
+If read_only_group_type value is 1 - Ship according to one instance and one read-only group:
 
+```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
   instance_id          = "mssql-gyg9xycl"
   zone                 = "ap-guangzhou-6"
@@ -24,8 +25,9 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_in
     test-key2 = "test-value2"
   }
 }
+```
 
-If `read_only_group_type` is 2:
+If read_only_group_type value is 2 - Ship after creating a read-only group, all instances are under this read-only group:
 
 ```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
@@ -53,7 +55,7 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_in
 }
 ```
 
-If `read_only_group_type` is 3:
+If read_only_group_type value is 3 - All instances shipped are in the existing Some read-only groups below:
 
 ```hcl
 resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
@@ -114,7 +116,7 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstance() *schema.Resource {
 				Required:     true,
 				Type:         schema.TypeInt,
 				ValidateFunc: validateIntegerInRange(1, 3),
-				Description:  "Read-only group type option, 1- Ship according to one instance and one read-only group, 2- Ship after creating a read-only group, all instances are under this read-only group, 3- All instances shipped are in the existing Some read-only groups below.",
+				Description:  "Read-only group type option, 1- Ship according to one instance and one read-only group, 2 - Ship after creating a read-only group, all instances are under this read-only group, 3 - All instances shipped are in the existing Some read-only groups below.",
 			},
 			"memory": {
 				Required:    true,

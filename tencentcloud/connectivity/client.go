@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	ciam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331"
+
 	"github.com/tencentyun/cos-go-sdk-v5"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -165,6 +167,7 @@ type TencentCloudClient struct {
 	chdfsConn          *chdfs.Client
 	mdlConn            *mdl.Client
 	apmConn            *apm.Client
+	ciamConn           *ciam.Client
 	tseConn            *tse.Client
 }
 
@@ -186,7 +189,7 @@ func (me *TencentCloudClient) NewClientProfile(timeout int) *profile.ClientProfi
 	return cpf
 }
 
-// NewClientProfile returns a new ClientProfile
+// NewClientIntlProfile returns a new ClientProfile
 func (me *TencentCloudClient) NewClientIntlProfile(timeout int) *intlProfile.ClientProfile {
 	cpf := intlProfile.NewClientProfile()
 
@@ -764,7 +767,7 @@ func (me *TencentCloudClient) UseDnsPodClient() *dnspod.Client {
 
 // UsePrivateDnsClient return PrivateDns client for service
 func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
-	if me.dnsPodConn != nil {
+	if me.privateDnsConn != nil {
 		return me.privateDnsConn
 	}
 	cpf := me.NewClientProfile(300)
@@ -776,7 +779,7 @@ func (me *TencentCloudClient) UsePrivateDnsClient() *privatedns.Client {
 
 // UseDomainClient return Domain client for service
 func (me *TencentCloudClient) UseDomainClient() *domain.Client {
-	if me.dnsPodConn != nil {
+	if me.domainConn != nil {
 		return me.domainConn
 	}
 	cpf := me.NewClientProfile(300)
@@ -1108,7 +1111,7 @@ func (me *TencentCloudClient) UseMpsClient() *mps.Client {
 	return me.mpsConn
 }
 
-// UseTkeClient returns tke client for service
+// UseCwpClient returns tke client for service
 func (me *TencentCloudClient) UseCwpClient() *cwp.Client {
 	if me.cwpConn != nil {
 		return me.cwpConn
@@ -1161,6 +1164,20 @@ func (me *TencentCloudClient) UseApmClient() *apm.Client {
 	me.apmConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.apmConn
+}
+
+// UseCiamClient returns ciam client for service
+func (me *TencentCloudClient) UseCiamClient() *ciam.Client {
+	if me.ciamConn != nil {
+		return me.ciamConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.ciamConn, _ = ciam.NewClient(me.Credential, me.Region, cpf)
+	me.ciamConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ciamConn
 }
 
 // UseTseClient returns tse client for service

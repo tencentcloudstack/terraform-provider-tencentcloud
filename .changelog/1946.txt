@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_ciam_user_store
+```
+
+```release-note:new-resource
+tencentcloud_ciam_user_group
+```

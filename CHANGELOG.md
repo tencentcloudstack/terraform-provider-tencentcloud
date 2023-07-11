@@ -1,3 +1,44 @@
+## 1.81.13 (July 10, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_kubernetes_encryption_protection` ([#1949](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1949))
+* **New Resource:** `tencentcloud_tcr_service_account` ([#1943](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1943))
+
+## 1.81.12 (July 07, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_ciam_user_group` ([#1946](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1946))
+* **New Resource:** `tencentcloud_ciam_user_store` ([#1946](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1946))
+* **New Resource:** `tencentcloud_cos_bucket_generate_inventory_immediately_operation` ([#1941](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1941))
+* **New Resource:** `tencentcloud_cos_object_abort_multipart_upload_operation` ([#1941](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1941))
+* **New Resource:** `tencentcloud_cos_object_copy_operation` ([#1941](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1941))
+* **New Resource:** `tencentcloud_cos_object_download_operation` ([#1947](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1947))
+* **New Resource:** `tencentcloud_cos_object_restore_operation` ([#1941](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1941))
+* **New Resource:** `tencentcloud_sqlserver_general_cloud_ro_instance` ([#1942](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1942))
+
+## 1.81.11 (July 05, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_cos_batchs` ([#1928](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1928))
+* **New Data Source:** `tencentcloud_cos_bucket_inventorys` ([#1928](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1928))
+* **New Data Source:** `tencentcloud_cos_bucket_multipart_uploads` ([#1928](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1928))
+* **New Resource:** `tencentcloud_as_complete_lifecycle` ([#1937](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1937))
+* **New Resource:** `tencentcloud_cos_batch` ([#1928](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1928))
+* **New Resource:** `tencentcloud_cynosdb_proxy_end_point` ([#1927](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1927))
+* **New Resource:** `tencentcloud_ssm_ssh_key_pair_secret` ([#1929](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1929))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_cfs_file_system: support create turbo file system ([#1934](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1934))
+* resource/tencentcloud_ci_media_concat_template: adapt to new cos sdk ([#1928](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1928))
+* resource/tencentcloud_ci_media_transcode_template: adapt to new cos sdk ([#1928](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1928))
+* resource/tencentcloud_ci_media_video_montage_template: adapt to new cos sdk ([#1928](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1928))
+* resource/tencentcloud_cos_bucket: adjust `acl_body` to fit COS AccessControlPolicy sequence ([#1924](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1924))
+* resource/tencentcloud_ssm_secret: support `service_type` and `additional_config` ([#1931](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1931))
+
 ## 1.81.10 (June 30, 2023)
 
 FEATURES:
