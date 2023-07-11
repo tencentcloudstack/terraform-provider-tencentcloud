@@ -27,9 +27,14 @@ fmt:
 	gofmt -s -w ./$(PKG_NAME)
 
 fmt-faster:
-	@echo "==> [Faster]Fixing source code with gofmt...\n $(CHANGED_FILES) \n"
-	goimports -w $(CHANGED_FILES)
-	gofmt -s -w $(CHANGED_FILES)
+	@if [[ -z $(CHANGED_FILES) ]]; then \
+		echo "skip the fmt cause the CHANGED_FILES is null."; \
+		exit 0; \
+	else \
+		@echo "==> [Faster]Fixing source code with gofmt...\n $(CHANGED_FILES) \n"; \
+		goimports -w $(CHANGED_FILES); \
+		gofmt -s -w $(CHANGED_FILES); \
+	fi
 
 # Currently required by tf-deploy compile
 fmtcheck:
@@ -135,6 +140,20 @@ test-build-x86:
 
 doc:
 	cd gendoc && go run ./... && cd ..
+
+doc-faster:
+	@echo "==> [Faster]Generating doc..."
+	@if [ ! -f gendoc/gendoc ]; then \
+		$(MAKE) doc-bin-build; \
+	fi
+	@$(MAKE) doc-with-bin
+
+doc-with-bin:
+	cd gendoc && ./gendoc ./... && cd ..
+
+doc-bin-build:
+	@echo "==> Building gendoc binary..."
+	cd gendoc && go build ./... && cd ..
 
 hooks: tools
 	find .git/hooks -type l -exec rm {} \;
