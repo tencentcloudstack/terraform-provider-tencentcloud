@@ -1590,65 +1590,6 @@ func (me *TCRService) TcrStateRefreshFunc(instanceId string, failStates []string
 	}
 }
 
-// func (me *TCRService) DescribeTcrSignaturePolicyById(ctx context.Context, registryId string, namespaceName string, policyName string) (SignaturePolicy *tcr.TcrNamespaceInfo, errRet error) {
-// 	logId := getLogId(ctx)
-
-// 	request := tcr.NewDescribeNamespacesRequest()
-// 	request.RegistryId = &registryId
-// 	request.NamespaceName = &namespaceName
-
-// 	defer func() {
-// 		if errRet != nil {
-// 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-// 		}
-// 	}()
-
-// 	ratelimit.Check(request.GetAction())
-
-// 	response, err := me.client.UseTCRClient().DescribeNamespaces(request)
-// 	if err != nil {
-// 		errRet = err
-// 		return
-// 	}
-// 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-// 	if response == nil || len(response.Response.NamespaceList) < 1 {
-// 		return
-// 	}
-
-// 	for _, ns := range response.Response.NamespaceList{
-// 		ns.
-// 	}
-
-// 	return
-// }
-
-// func (me *TCRService) DeleteTcrSignaturePolicyById(ctx context.Context, registryId string, name string, namespaceName string) (errRet error) {
-// 	logId := getLogId(ctx)
-
-// 	request := tcr.NewDeleteSignaturePolicyRequest()
-// 	request.RegistryId = &registryId
-// 	request.Name = &name
-// 	request.NamespaceName = &namespaceName
-
-// 	defer func() {
-// 		if errRet != nil {
-// 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
-// 		}
-// 	}()
-
-// 	ratelimit.Check(request.GetAction())
-
-// 	response, err := me.client.UseTCRClient().DeleteSignaturePolicy(request)
-// 	if err != nil {
-// 		errRet = err
-// 		return
-// 	}
-// 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-// 	return
-// }
-
 func (me *TCRService) DescribeTcrReplicationInstanceCreateTasksByFilter(ctx context.Context, param map[string]interface{}) (ret *tcr.DescribeReplicationInstanceCreateTasksResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
@@ -1784,6 +1725,70 @@ func (me *TCRService) DescribeTcrTagRetentionExecutionsByFilter(ctx context.Cont
 
 		offset += limit
 	}
+
+	return
+}
+
+func (me *TCRService) DescribeTcrServiceAccountById(ctx context.Context, registryId string, name string) (ServiceAccount *tcr.ServiceAccount, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDescribeServiceAccountsRequest()
+	request.RegistryId = &registryId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DescribeServiceAccounts(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ServiceAccounts) < 1 {
+		return
+	}
+
+	if name != "" {
+		fullName := TCR_NAME_PREFIX + name
+		for _, account := range response.Response.ServiceAccounts {
+			if *account.Name == fullName {
+				ServiceAccount = account
+				return
+			}
+		}
+	}
+
+	ServiceAccount = response.Response.ServiceAccounts[0]
+	return
+}
+
+func (me *TCRService) DeleteTcrServiceAccountById(ctx context.Context, registryId string, name string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tcr.NewDeleteServiceAccountRequest()
+	request.RegistryId = &registryId
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTCRClient().DeleteServiceAccount(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

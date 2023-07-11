@@ -419,6 +419,114 @@ func (r *CreateApplicationTriggerPersonalResponse) FromJsonString(s string) erro
 }
 
 // Predefined struct for user
+type CreateCustomAccountRequestParams struct {
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 自定义的账户名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 策略列表
+	Permissions []*Permission `json:"Permissions,omitempty" name:"Permissions"`
+
+	// 自定义的账户描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 有效期(单位：天)，从当前时间开始计算，优先级高于ExpiresAt
+	Duration *int64 `json:"Duration,omitempty" name:"Duration"`
+
+	// 自定义的账户过期时间（时间戳，单位:毫秒）
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 是否禁用自定义的账户
+	Disable *bool `json:"Disable,omitempty" name:"Disable"`
+}
+
+type CreateCustomAccountRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 自定义的账户名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 策略列表
+	Permissions []*Permission `json:"Permissions,omitempty" name:"Permissions"`
+
+	// 自定义的账户描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 有效期(单位：天)，从当前时间开始计算，优先级高于ExpiresAt
+	Duration *int64 `json:"Duration,omitempty" name:"Duration"`
+
+	// 自定义的账户过期时间（时间戳，单位:毫秒）
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 是否禁用自定义的账户
+	Disable *bool `json:"Disable,omitempty" name:"Disable"`
+}
+
+func (r *CreateCustomAccountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCustomAccountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "Name")
+	delete(f, "Permissions")
+	delete(f, "Description")
+	delete(f, "Duration")
+	delete(f, "ExpiresAt")
+	delete(f, "Disable")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateCustomAccountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateCustomAccountResponseParams struct {
+	// 自定义用户名（会自动加上前缀tcr$）
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 自定义用户密码，仅展示一次，请注意留存
+	Password *string `json:"Password,omitempty" name:"Password"`
+
+	// 自定义用户失效时间（时间戳）
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 自定义用户创建时间
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateCustomAccountResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateCustomAccountResponseParams `json:"Response"`
+}
+
+func (r *CreateCustomAccountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateCustomAccountResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateImageAccelerationServiceRequestParams struct {
 	// 实例Id
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
@@ -514,74 +622,6 @@ func (r *CreateImageAccelerationServiceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *CreateImageAccelerationServiceResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type CreateImageLifecyclePersonalRequestParams struct {
-	// 仓库名称
-	RepoName *string `json:"RepoName,omitempty" name:"RepoName"`
-
-	// keep_last_days:保留最近几天的数据;keep_last_nums:保留最近多少个
-	Type *string `json:"Type,omitempty" name:"Type"`
-
-	// 策略值
-	Val *int64 `json:"Val,omitempty" name:"Val"`
-}
-
-type CreateImageLifecyclePersonalRequest struct {
-	*tchttp.BaseRequest
-	
-	// 仓库名称
-	RepoName *string `json:"RepoName,omitempty" name:"RepoName"`
-
-	// keep_last_days:保留最近几天的数据;keep_last_nums:保留最近多少个
-	Type *string `json:"Type,omitempty" name:"Type"`
-
-	// 策略值
-	Val *int64 `json:"Val,omitempty" name:"Val"`
-}
-
-func (r *CreateImageLifecyclePersonalRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *CreateImageLifecyclePersonalRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "RepoName")
-	delete(f, "Type")
-	delete(f, "Val")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateImageLifecyclePersonalRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type CreateImageLifecyclePersonalResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-}
-
-type CreateImageLifecyclePersonalResponse struct {
-	*tchttp.BaseResponse
-	Response *CreateImageLifecyclePersonalResponseParams `json:"Response"`
-}
-
-func (r *CreateImageLifecyclePersonalResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *CreateImageLifecyclePersonalResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -743,6 +783,9 @@ type CreateInstanceRequestParams struct {
 
 	// 是否开启Cos桶多AZ特性
 	EnableCosMAZ *bool `json:"EnableCosMAZ,omitempty" name:"EnableCosMAZ"`
+
+	// 是否开启实例删除保护
+	DeletionProtection *bool `json:"DeletionProtection,omitempty" name:"DeletionProtection"`
 }
 
 type CreateInstanceRequest struct {
@@ -768,6 +811,9 @@ type CreateInstanceRequest struct {
 
 	// 是否开启Cos桶多AZ特性
 	EnableCosMAZ *bool `json:"EnableCosMAZ,omitempty" name:"EnableCosMAZ"`
+
+	// 是否开启实例删除保护
+	DeletionProtection *bool `json:"DeletionProtection,omitempty" name:"DeletionProtection"`
 }
 
 func (r *CreateInstanceRequest) ToJsonString() string {
@@ -789,6 +835,7 @@ func (r *CreateInstanceRequest) FromJsonString(s string) error {
 	delete(f, "RegistryChargePrepaid")
 	delete(f, "SyncTag")
 	delete(f, "EnableCosMAZ")
+	delete(f, "DeletionProtection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstanceRequest has unknown keys!", "")
 	}
@@ -1516,6 +1563,114 @@ func (r *CreateSecurityPolicyResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateServiceAccountRequestParams struct {
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 服务级账号名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 策略列表
+	Permissions []*Permission `json:"Permissions,omitempty" name:"Permissions"`
+
+	// 服务级账号描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 有效期(单位：天)，从当前时间开始计算，优先级高于ExpiresAt
+	Duration *int64 `json:"Duration,omitempty" name:"Duration"`
+
+	// 过期时间（时间戳，单位:毫秒）
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 是否禁用服务级账号
+	Disable *bool `json:"Disable,omitempty" name:"Disable"`
+}
+
+type CreateServiceAccountRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 服务级账号名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 策略列表
+	Permissions []*Permission `json:"Permissions,omitempty" name:"Permissions"`
+
+	// 服务级账号描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 有效期(单位：天)，从当前时间开始计算，优先级高于ExpiresAt
+	Duration *int64 `json:"Duration,omitempty" name:"Duration"`
+
+	// 过期时间（时间戳，单位:毫秒）
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 是否禁用服务级账号
+	Disable *bool `json:"Disable,omitempty" name:"Disable"`
+}
+
+func (r *CreateServiceAccountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateServiceAccountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "Name")
+	delete(f, "Permissions")
+	delete(f, "Description")
+	delete(f, "Duration")
+	delete(f, "ExpiresAt")
+	delete(f, "Disable")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateServiceAccountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateServiceAccountResponseParams struct {
+	// 服务级账号名（会自动加上前缀tcr$）
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 服务级账号密码，仅展示一次，请注意留存
+	Password *string `json:"Password,omitempty" name:"Password"`
+
+	// 服务级账号失效时间（时间戳）
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 服务级账号创建时间
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateServiceAccountResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateServiceAccountResponseParams `json:"Response"`
+}
+
+func (r *CreateServiceAccountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateServiceAccountResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateSignaturePolicyRequestParams struct {
 	// 实例 Id
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
@@ -1961,6 +2116,36 @@ func (r *CreateWebhookTriggerResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type CustomAccount struct {
+	// 自定义账户名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 是否禁用
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Disable *bool `json:"Disable,omitempty" name:"Disable"`
+
+	// 过期时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 更新时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
+
+	// 策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Permissions []*Permission `json:"Permissions,omitempty" name:"Permissions"`
+}
+
 type CustomizedDomainInfo struct {
 	// 实例ID
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
@@ -2026,6 +2211,67 @@ func (r *DeleteApplicationTriggerPersonalResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteApplicationTriggerPersonalResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCustomAccountRequestParams struct {
+	// 实例Id	
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 自定义的账户名
+	Name *string `json:"Name,omitempty" name:"Name"`
+}
+
+type DeleteCustomAccountRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id	
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 自定义的账户名
+	Name *string `json:"Name,omitempty" name:"Name"`
+}
+
+func (r *DeleteCustomAccountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCustomAccountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "Name")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteCustomAccountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteCustomAccountResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteCustomAccountResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteCustomAccountResponseParams `json:"Response"`
+}
+
+func (r *DeleteCustomAccountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteCustomAccountResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -2131,60 +2377,6 @@ func (r *DeleteImageLifecycleGlobalPersonalResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteImageLifecycleGlobalPersonalResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type DeleteImageLifecyclePersonalRequestParams struct {
-	// 仓库名称
-	RepoName *string `json:"RepoName,omitempty" name:"RepoName"`
-}
-
-type DeleteImageLifecyclePersonalRequest struct {
-	*tchttp.BaseRequest
-	
-	// 仓库名称
-	RepoName *string `json:"RepoName,omitempty" name:"RepoName"`
-}
-
-func (r *DeleteImageLifecyclePersonalRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *DeleteImageLifecyclePersonalRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "RepoName")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteImageLifecyclePersonalRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type DeleteImageLifecyclePersonalResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-}
-
-type DeleteImageLifecyclePersonalResponse struct {
-	*tchttp.BaseResponse
-	Response *DeleteImageLifecyclePersonalResponseParams `json:"Response"`
-}
-
-func (r *DeleteImageLifecyclePersonalResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *DeleteImageLifecyclePersonalResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3196,6 +3388,67 @@ func (r *DeleteSecurityPolicyResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteServiceAccountRequestParams struct {
+	// 实例Id	
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 服务级账号名
+	Name *string `json:"Name,omitempty" name:"Name"`
+}
+
+type DeleteServiceAccountRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id	
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 服务级账号名
+	Name *string `json:"Name,omitempty" name:"Name"`
+}
+
+func (r *DeleteServiceAccountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteServiceAccountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "Name")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteServiceAccountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteServiceAccountResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteServiceAccountResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteServiceAccountResponseParams `json:"Response"`
+}
+
+func (r *DeleteServiceAccountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteServiceAccountResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteSignaturePolicyRequestParams struct {
 	// 实例ID
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
@@ -3640,6 +3893,102 @@ func (r *DescribeChartDownloadInfoResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeChartDownloadInfoResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCustomAccountsRequestParams struct {
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 列出所有自定义账户
+	All *bool `json:"All,omitempty" name:"All"`
+
+	// 填充策略
+	EmbedPermission *bool `json:"EmbedPermission,omitempty" name:"EmbedPermission"`
+
+	// 过滤条件
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 偏移量,默认0
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 最大输出条数，默认20，最大为100
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+type DescribeCustomAccountsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 列出所有自定义账户
+	All *bool `json:"All,omitempty" name:"All"`
+
+	// 填充策略
+	EmbedPermission *bool `json:"EmbedPermission,omitempty" name:"EmbedPermission"`
+
+	// 过滤条件
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 偏移量,默认0
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 最大输出条数，默认20，最大为100
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeCustomAccountsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCustomAccountsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "All")
+	delete(f, "EmbedPermission")
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCustomAccountsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeCustomAccountsResponseParams struct {
+	// 自定义账户列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CustomAccounts []*CustomAccount `json:"CustomAccounts,omitempty" name:"CustomAccounts"`
+
+	// 自定义账户数量
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeCustomAccountsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeCustomAccountsResponseParams `json:"Response"`
+}
+
+func (r *DescribeCustomAccountsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeCustomAccountsResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -5719,6 +6068,102 @@ func (r *DescribeSecurityPoliciesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeServiceAccountsRequestParams struct {
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 列出所有服务级账号
+	All *bool `json:"All,omitempty" name:"All"`
+
+	// 是否填充策略
+	EmbedPermission *bool `json:"EmbedPermission,omitempty" name:"EmbedPermission"`
+
+	// 过滤条件
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 偏移量,默认0
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 最大输出条数，默认20，最大为100（超出最大值，调整到最大值）
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+type DescribeServiceAccountsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 列出所有服务级账号
+	All *bool `json:"All,omitempty" name:"All"`
+
+	// 是否填充策略
+	EmbedPermission *bool `json:"EmbedPermission,omitempty" name:"EmbedPermission"`
+
+	// 过滤条件
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 偏移量,默认0
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 最大输出条数，默认20，最大为100（超出最大值，调整到最大值）
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeServiceAccountsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeServiceAccountsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "All")
+	delete(f, "EmbedPermission")
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeServiceAccountsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeServiceAccountsResponseParams struct {
+	// 服务级账号列表
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ServiceAccounts []*ServiceAccount `json:"ServiceAccounts,omitempty" name:"ServiceAccounts"`
+
+	// 自定义账户数量
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeServiceAccountsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeServiceAccountsResponseParams `json:"Response"`
+}
+
+func (r *DescribeServiceAccountsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeServiceAccountsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeTagRetentionExecutionRequestParams struct {
 	// 主实例iD
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
@@ -6912,6 +7357,102 @@ func (r *ModifyApplicationTriggerPersonalResponse) FromJsonString(s string) erro
 }
 
 // Predefined struct for user
+type ModifyCustomAccountRequestParams struct {
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 自定义的账户名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 自定义的账户描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 有效期(单位：天)，从当前时间开始计算，优先级高于ExpiresAt
+	Duration *int64 `json:"Duration,omitempty" name:"Duration"`
+
+	// 自定义的账户过期时间（时间戳）
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 是否禁用自定义的账户
+	Disable *bool `json:"Disable,omitempty" name:"Disable"`
+
+	// 策略列表
+	Permissions []*Permission `json:"Permissions,omitempty" name:"Permissions"`
+}
+
+type ModifyCustomAccountRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 自定义的账户名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 自定义的账户描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 有效期(单位：天)，从当前时间开始计算，优先级高于ExpiresAt
+	Duration *int64 `json:"Duration,omitempty" name:"Duration"`
+
+	// 自定义的账户过期时间（时间戳）
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 是否禁用自定义的账户
+	Disable *bool `json:"Disable,omitempty" name:"Disable"`
+
+	// 策略列表
+	Permissions []*Permission `json:"Permissions,omitempty" name:"Permissions"`
+}
+
+func (r *ModifyCustomAccountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCustomAccountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "Name")
+	delete(f, "Description")
+	delete(f, "Duration")
+	delete(f, "ExpiresAt")
+	delete(f, "Disable")
+	delete(f, "Permissions")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyCustomAccountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyCustomAccountResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyCustomAccountResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyCustomAccountResponseParams `json:"Response"`
+}
+
+func (r *ModifyCustomAccountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyCustomAccountResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyImmutableTagRulesRequestParams struct {
 	// 实例 Id
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
@@ -6991,8 +7532,14 @@ type ModifyInstanceRequestParams struct {
 	// 实例ID
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
 
-	// 实例的规格
+	// 实例的规格,
+	// 基础版：basic
+	// 标准版：standard
+	// 高级版：premium
 	RegistryType *string `json:"RegistryType,omitempty" name:"RegistryType"`
+
+	// 实例删除保护，false为关闭
+	DeletionProtection *bool `json:"DeletionProtection,omitempty" name:"DeletionProtection"`
 }
 
 type ModifyInstanceRequest struct {
@@ -7001,8 +7548,14 @@ type ModifyInstanceRequest struct {
 	// 实例ID
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
 
-	// 实例的规格
+	// 实例的规格,
+	// 基础版：basic
+	// 标准版：standard
+	// 高级版：premium
 	RegistryType *string `json:"RegistryType,omitempty" name:"RegistryType"`
+
+	// 实例删除保护，false为关闭
+	DeletionProtection *bool `json:"DeletionProtection,omitempty" name:"DeletionProtection"`
 }
 
 func (r *ModifyInstanceRequest) ToJsonString() string {
@@ -7019,6 +7572,7 @@ func (r *ModifyInstanceRequest) FromJsonString(s string) error {
 	}
 	delete(f, "RegistryId")
 	delete(f, "RegistryType")
+	delete(f, "DeletionProtection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceRequest has unknown keys!", "")
 	}
@@ -7508,6 +8062,102 @@ func (r *ModifySecurityPolicyResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyServiceAccountRequestParams struct {
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 服务级账号名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 服务级账号描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 有效期(单位：天)，从当前时间开始计算，优先级高于ExpiresAt
+	Duration *int64 `json:"Duration,omitempty" name:"Duration"`
+
+	// 过期时间（时间戳，单位:毫秒）
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 是否禁用服务级账号
+	Disable *bool `json:"Disable,omitempty" name:"Disable"`
+
+	// 策略列表
+	Permissions []*Permission `json:"Permissions,omitempty" name:"Permissions"`
+}
+
+type ModifyServiceAccountRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例Id
+	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
+
+	// 服务级账号名
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 服务级账号描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 有效期(单位：天)，从当前时间开始计算，优先级高于ExpiresAt
+	Duration *int64 `json:"Duration,omitempty" name:"Duration"`
+
+	// 过期时间（时间戳，单位:毫秒）
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 是否禁用服务级账号
+	Disable *bool `json:"Disable,omitempty" name:"Disable"`
+
+	// 策略列表
+	Permissions []*Permission `json:"Permissions,omitempty" name:"Permissions"`
+}
+
+func (r *ModifyServiceAccountRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyServiceAccountRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "RegistryId")
+	delete(f, "Name")
+	delete(f, "Description")
+	delete(f, "Duration")
+	delete(f, "ExpiresAt")
+	delete(f, "Disable")
+	delete(f, "Permissions")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyServiceAccountRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyServiceAccountResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyServiceAccountResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyServiceAccountResponseParams `json:"Response"`
+}
+
+func (r *ModifyServiceAccountResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyServiceAccountResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyTagRetentionRuleRequestParams struct {
 	// 主实例iD
 	RegistryId *string `json:"RegistryId,omitempty" name:"RegistryId"`
@@ -7754,6 +8404,16 @@ type PeerReplicationOption struct {
 
 	// 是否开启跨主账号实例同步
 	EnablePeerReplication *bool `json:"EnablePeerReplication,omitempty" name:"EnablePeerReplication"`
+}
+
+type Permission struct {
+	// 资源路径，目前仅支持Namespace
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Resource *string `json:"Resource,omitempty" name:"Resource"`
+
+	// 动作，目前仅支持：tcr:PushRepository、tcr:PullRepository
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Actions []*string `json:"Actions,omitempty" name:"Actions"`
 }
 
 type Region struct {
@@ -8201,6 +8861,36 @@ type SecurityPolicy struct {
 
 	// 安全策略的版本
 	PolicyVersion *string `json:"PolicyVersion,omitempty" name:"PolicyVersion"`
+}
+
+type ServiceAccount struct {
+	// 服务级账号名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 描述
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 是否禁用
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Disable *bool `json:"Disable,omitempty" name:"Disable"`
+
+	// 过期时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ExpiresAt *int64 `json:"ExpiresAt,omitempty" name:"ExpiresAt"`
+
+	// 创建时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CreateTime *string `json:"CreateTime,omitempty" name:"CreateTime"`
+
+	// 更新时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	UpdateTime *string `json:"UpdateTime,omitempty" name:"UpdateTime"`
+
+	// 策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Permissions []*Permission `json:"Permissions,omitempty" name:"Permissions"`
 }
 
 type Tag struct {
