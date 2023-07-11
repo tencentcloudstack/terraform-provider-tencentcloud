@@ -20,8 +20,6 @@ func TestAccTencentCloudNeedFixCynosdbUpgradeProxyVersionResource_basic(t *testi
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_upgrade_proxy_version.upgrade_proxy_version", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_upgrade_proxy_version.upgrade_proxy_version", "cluster_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_upgrade_proxy_version.upgrade_proxy_version", "proxy_group_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_upgrade_proxy_version.upgrade_proxy_version", "src_proxy_version"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_upgrade_proxy_version.upgrade_proxy_version", "dst_proxy_version"),
 				),
 			},
@@ -31,9 +29,7 @@ func TestAccTencentCloudNeedFixCynosdbUpgradeProxyVersionResource_basic(t *testi
 
 const testAccCynosdbUpgradeProxyVersion = `
 resource "tencentcloud_cynosdb_upgrade_proxy_version" "upgrade_proxy_version" {
-  cluster_id        = "cynosdbmysql-bws8h88b"
-  proxy_group_id    = "cynosdbmysql-proxy-laz8hd6c"
-  src_proxy_version = "1.3.5"
+  cluster_id = "cynosdbmysql-bws8h88b"
   dst_proxy_version = "1.3.7"
 }
 `
