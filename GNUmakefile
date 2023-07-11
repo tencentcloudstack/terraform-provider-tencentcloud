@@ -155,7 +155,7 @@ doc-bin-build:
 	@echo "==> Building gendoc binary..."
 	cd gendoc && go build ./... && cd ..
 
-hooks: tools
+hooks:
 	find .git/hooks -type l -exec rm {} \;
 	find .githooks -type f -exec ln -sf ../../{} .git/hooks/ \;
 
