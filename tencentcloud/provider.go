@@ -2502,6 +2502,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_tmp_grafana_config":                          resourceTencentCloudMonitorTmpGrafanaConfig(),
 			"tencentcloud_mongodb_standby_instance":                            resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                              resourceTencentCloudElasticsearchInstance(),
+			"tencentcloud_elasticsearch_security_group":                        resourceTencentCloudElasticsearchSecurityGroup(),
 			"tencentcloud_postgresql_instance":                                 resourceTencentCloudPostgresqlInstance(),
 			"tencentcloud_postgresql_readonly_instance":                        resourceTencentCloudPostgresqlReadonlyInstance(),
 			"tencentcloud_postgresql_readonly_group":                           resourceTencentCloudPostgresqlReadonlyGroup(),

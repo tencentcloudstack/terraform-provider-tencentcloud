@@ -48,19 +48,34 @@ const (
 	FAILEDOPERATION_NOTAUTHENTICATED = "FailedOperation.NotAuthenticated"
 
 	// 不支持在滚动重启扩容计算资源同时扩容磁盘数量。
-	FAILEDOPERATION_UNSUPPORTRESETNODETYPEANDSCALEOUTDISK = "FailedOperation.UnsupportResetNodeTypeAndScaleoutDisk"
+	FAILEDOPERATION_UNSUPPORTEDRESETNODETYPEANDSCALEOUTDISK = "FailedOperation.UnsupportedResetNodeTypeAndScaleOutDisk"
 
-	// 不支持滚动缩容计算资源同时修改磁盘大小。
-	FAILEDOPERATION_UNSUPPORTRESETSCALEDOWNANDMODIFYDISK = "FailedOperation.UnsupportResetScaledownAndModifyDisk"
+	// 不支持在滚动重启缩容计算资源同时修改磁盘大小
+	FAILEDOPERATION_UNSUPPORTEDRESTSCALEDOWNANDMODIFYDISK = "FailedOperation.UnsupportedRestScaleDownAndModifyDisk"
 
 	// 不支持反向调节节点配置和磁盘容量。
-	FAILEDOPERATION_UNSUPPORTREVERSEREGULATIONNODETYPEANDDISK = "FailedOperation.UnsupportReverseRegulationNodeTypeAndDisk"
+	FAILEDOPERATION_UNSUPPORTEDREVERSEREGULATIONNODETYPEANDDISK = "FailedOperation.UnsupportedReverseRegulationNodeTypeAndDisk"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
+
+	// 无效的InstanceId，没有找到对应资源。
+	INVALIDPARAMETER_INVALIDINSTANCEID = "InvalidParameter.InvalidInstanceId"
+
+	// 安全组id列表SecurityGroupIds的取值和预期不符。
+	INVALIDPARAMETER_INVALIDSECURITYGROUPIDS = "InvalidParameter.InvalidSecurityGroupIds"
+
+	// 参数取值错误。
+	INVALIDPARAMETERVALUE = "InvalidParameterValue"
+
+	// 缺少参数错误。
+	MISSINGPARAMETER = "MissingParameter"
+
+	// 请求的次数超过了频率限制。
+	REQUESTLIMITEXCEEDED = "RequestLimitExceeded"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
@@ -80,6 +95,12 @@ const (
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
 
+	// 数据库资源获取失败。
+	RESOURCENOTFOUND_DBINFONOTFOUND = "ResourceNotFound.DBInfoNotFound"
+
+	// 安全组信息获取失败。
+	RESOURCENOTFOUND_SECURITYGROUPNOTFOUND = "ResourceNotFound.SecurityGroupNotFound"
+
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
 
@@ -94,4 +115,7 @@ const (
 
 	// 操作不支持。
 	UNSUPPORTEDOPERATION = "UnsupportedOperation"
+
+	// 不支持该操作，实例状态有误。
+	UNSUPPORTEDOPERATION_STATUSNOTSUPPORT = "UnsupportedOperation.StatusNotSupport"
 )
