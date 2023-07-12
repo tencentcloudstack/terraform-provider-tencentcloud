@@ -106,10 +106,9 @@ lint:
 		./$(PKG_NAME)
 
 tools:
-	GO111MODULE=on go install github.com/bflad/tfproviderlint/cmd/tfproviderlint
-	GO111MODULE=on go install github.com/client9/misspell/cmd/misspell
-	GO111MODULE=on go install github.com/golangci/golangci-lint/cmd/golangci-lint
-	GO111MODULE=on go install github.com/katbyte/terrafmt
+	GO111MODULE=on cd .ci/tools && go install github.com/bflad/tfproviderlint/cmd/tfproviderlint && cd ../..
+	GO111MODULE=on cd .ci/tools && go install github.com/client9/misspell/cmd/misspell && cd ../..
+	GO111MODULE=on cd .ci/tools && go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.45.2 && cd ../..
 
 test-compile:
 	@if [ "$(TEST)" = "./..." ]; then \
@@ -155,9 +154,10 @@ doc-bin-build:
 	@echo "==> Building gendoc binary..."
 	cd gendoc && go build ./... && cd ..
 
-hooks:
-	find .git/hooks -type l -exec rm {} \;
-	find .githooks -type f -exec ln -sf ../../{} .git/hooks/ \;
+hooks: tools
+	@find .git/hooks -type l -exec rm {} \;
+	@find .githooks -type f -exec ln -sf ../../{} .git/hooks/ \;
+	@echo "==> Install hooks done."
 
 website:
 ifeq (,$(wildcard $(GOPATH)/src/$(WEBSITE_REPO)))
