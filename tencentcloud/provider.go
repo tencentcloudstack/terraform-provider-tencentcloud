@@ -502,6 +502,7 @@ Elasticsearch Service(ES)
 
   Resource
     tencentcloud_elasticsearch_instance
+	tencentcloud_elasticsearch_security_group
 
 Global Application Acceleration(GAAP)
   Data Source
