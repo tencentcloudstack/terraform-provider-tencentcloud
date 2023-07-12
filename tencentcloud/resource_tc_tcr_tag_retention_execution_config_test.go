@@ -36,7 +36,7 @@ const testAccTcrTagRetentionRule_manual = testAccTCRInstance_retention + `
 
 resource "tencentcloud_tcr_namespace" "my_ns" {
   instance_id    = tencentcloud_tcr_instance.mytcr_retention.id
-  name           = "tf_test_ns_retention"
+  name           = "tf_test_ns_retention_config"
   is_public      = true
   is_auto_scan   = true
   is_prevent_vul = true
