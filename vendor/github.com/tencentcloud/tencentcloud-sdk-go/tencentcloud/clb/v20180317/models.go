@@ -1288,7 +1288,7 @@ type CreateLoadBalancerRequestParams struct {
 	// 负载均衡实例所属的项目 ID，可以通过 [DescribeProject](https://cloud.tencent.com/document/product/378/4400) 接口获取。不填此参数则视为默认项目。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// 仅适用于公网负载均衡。IP版本，可取值：IPV4、IPV6、IPv6FullChain，默认值 IPV4。说明：取值为IPV6表示为IPV6 NAT64版本；取值为IPv6FullChain，表示为IPv6版本。
+	// 仅适用于公网负载均衡。IP版本，可取值：IPV4、IPV6、IPv6FullChain，不区分大小写，默认值 IPV4。说明：取值为IPV6表示为IPV6 NAT64版本；取值为IPv6FullChain，表示为IPv6版本。
 	AddressIPVersion *string `json:"AddressIPVersion,omitempty" name:"AddressIPVersion"`
 
 	// 创建负载均衡的个数，默认值 1。
@@ -1301,7 +1301,7 @@ type CreateLoadBalancerRequestParams struct {
 	// 仅适用于公网负载均衡。可用区ID，指定可用区以创建负载均衡实例。如：ap-guangzhou-1。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 仅适用于公网负载均衡。负载均衡的网络计费模式。
+	// 仅对内网属性的性能容量型实例和公网属性的所有实例生效。
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitempty" name:"InternetAccessible"`
 
 	// 仅适用于公网负载均衡。CMCC | CTCC | CUCC，分别对应 移动 | 电信 | 联通，如果不指定本参数，则默认使用BGP。可通过 DescribeSingleIsp 接口查询一个地域所支持的Isp。如果指定运营商，则网络计费式只能使用按带宽包计费(BANDWIDTH_PACKAGE)。
@@ -1322,7 +1322,7 @@ type CreateLoadBalancerRequestParams struct {
 
 	// 创建性能容量型实例。
 	// <ul><li>若需要创建性能容量型实例，则此参数必填，且取值为：SLA，表示创建按量计费模式下的默认规格的性能容量型实例。
-	// <ul><li>当您开通了普通规格的性能容量型时，SLA对应超强型1规格。普通规格的性能容量型正在内测中，请提交 [内测申请](https://cloud.tencent.com/apply/p/hf45esx99lf)。</li>
+	// <ul><li>默认为普通规格的性能容量型实例，SLA对应超强型1规格。
 	// <li>当您开通了超大型规格的性能容量型时，SLA对应超强型4规格。超大型规格的性能容量型正在内测中，请提交 [工单申请](https://console.cloud.tencent.com/workorder/category)。</li></ul></li><li>若需要创建共享型实例，则无需填写此参数。</li></ul>
 	SlaType *string `json:"SlaType,omitempty" name:"SlaType"`
 
@@ -1347,6 +1347,9 @@ type CreateLoadBalancerRequestParams struct {
 
 	// Target是否放通来自CLB的流量。开启放通（true）：只验证CLB上的安全组；不开启放通（false）：需同时验证CLB和后端实例上的安全组。
 	LoadBalancerPassToTarget *bool `json:"LoadBalancerPassToTarget,omitempty" name:"LoadBalancerPassToTarget"`
+
+	// 创建域名化负载均衡。
+	DynamicVip *bool `json:"DynamicVip,omitempty" name:"DynamicVip"`
 }
 
 type CreateLoadBalancerRequest struct {
@@ -1372,7 +1375,7 @@ type CreateLoadBalancerRequest struct {
 	// 负载均衡实例所属的项目 ID，可以通过 [DescribeProject](https://cloud.tencent.com/document/product/378/4400) 接口获取。不填此参数则视为默认项目。
 	ProjectId *int64 `json:"ProjectId,omitempty" name:"ProjectId"`
 
-	// 仅适用于公网负载均衡。IP版本，可取值：IPV4、IPV6、IPv6FullChain，默认值 IPV4。说明：取值为IPV6表示为IPV6 NAT64版本；取值为IPv6FullChain，表示为IPv6版本。
+	// 仅适用于公网负载均衡。IP版本，可取值：IPV4、IPV6、IPv6FullChain，不区分大小写，默认值 IPV4。说明：取值为IPV6表示为IPV6 NAT64版本；取值为IPv6FullChain，表示为IPv6版本。
 	AddressIPVersion *string `json:"AddressIPVersion,omitempty" name:"AddressIPVersion"`
 
 	// 创建负载均衡的个数，默认值 1。
@@ -1385,7 +1388,7 @@ type CreateLoadBalancerRequest struct {
 	// 仅适用于公网负载均衡。可用区ID，指定可用区以创建负载均衡实例。如：ap-guangzhou-1。
 	ZoneId *string `json:"ZoneId,omitempty" name:"ZoneId"`
 
-	// 仅适用于公网负载均衡。负载均衡的网络计费模式。
+	// 仅对内网属性的性能容量型实例和公网属性的所有实例生效。
 	InternetAccessible *InternetAccessible `json:"InternetAccessible,omitempty" name:"InternetAccessible"`
 
 	// 仅适用于公网负载均衡。CMCC | CTCC | CUCC，分别对应 移动 | 电信 | 联通，如果不指定本参数，则默认使用BGP。可通过 DescribeSingleIsp 接口查询一个地域所支持的Isp。如果指定运营商，则网络计费式只能使用按带宽包计费(BANDWIDTH_PACKAGE)。
@@ -1406,7 +1409,7 @@ type CreateLoadBalancerRequest struct {
 
 	// 创建性能容量型实例。
 	// <ul><li>若需要创建性能容量型实例，则此参数必填，且取值为：SLA，表示创建按量计费模式下的默认规格的性能容量型实例。
-	// <ul><li>当您开通了普通规格的性能容量型时，SLA对应超强型1规格。普通规格的性能容量型正在内测中，请提交 [内测申请](https://cloud.tencent.com/apply/p/hf45esx99lf)。</li>
+	// <ul><li>默认为普通规格的性能容量型实例，SLA对应超强型1规格。
 	// <li>当您开通了超大型规格的性能容量型时，SLA对应超强型4规格。超大型规格的性能容量型正在内测中，请提交 [工单申请](https://console.cloud.tencent.com/workorder/category)。</li></ul></li><li>若需要创建共享型实例，则无需填写此参数。</li></ul>
 	SlaType *string `json:"SlaType,omitempty" name:"SlaType"`
 
@@ -1431,6 +1434,9 @@ type CreateLoadBalancerRequest struct {
 
 	// Target是否放通来自CLB的流量。开启放通（true）：只验证CLB上的安全组；不开启放通（false）：需同时验证CLB和后端实例上的安全组。
 	LoadBalancerPassToTarget *bool `json:"LoadBalancerPassToTarget,omitempty" name:"LoadBalancerPassToTarget"`
+
+	// 创建域名化负载均衡。
+	DynamicVip *bool `json:"DynamicVip,omitempty" name:"DynamicVip"`
 }
 
 func (r *CreateLoadBalancerRequest) ToJsonString() string {
@@ -1469,6 +1475,7 @@ func (r *CreateLoadBalancerRequest) FromJsonString(s string) error {
 	delete(f, "SlaveZoneId")
 	delete(f, "EipAddressId")
 	delete(f, "LoadBalancerPassToTarget")
+	delete(f, "DynamicVip")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateLoadBalancerRequest has unknown keys!", "")
 	}
@@ -4971,7 +4978,8 @@ type HealthCheck struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TimeOut *int64 `json:"TimeOut,omitempty" name:"TimeOut"`
 
-	// 健康检查探测间隔时间，默认值：5，可选值：5~300，单位：秒。
+	// 健康检查探测间隔时间，默认值：5，IPv4 CLB实例的取值范围为：2-300，IPv6 CLB 实例的取值范围为：5-300。单位：秒。
+	// 说明：部分老旧 IPv4 CLB实例的取值范围为：5-300。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	IntervalTime *int64 `json:"IntervalTime,omitempty" name:"IntervalTime"`
 
@@ -4992,7 +5000,7 @@ type HealthCheck struct {
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HttpCheckPath *string `json:"HttpCheckPath,omitempty" name:"HttpCheckPath"`
 
-	// 健康检查域名（仅适用于HTTP/HTTPS转发规则、TCP监听器的HTTP健康检查方式，当监听器是TCP类型时，该参数为必填项）。
+	// 健康检查域名（仅适用于HTTP/HTTPS监听器和TCP监听器的HTTP健康检查方式。针对TCP监听器，当使用HTTP健康检查方式时，建议该参数配置为必填项）。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	HttpCheckDomain *string `json:"HttpCheckDomain,omitempty" name:"HttpCheckDomain"`
 
@@ -5070,7 +5078,7 @@ type InternetAccessible struct {
 	// 最大出带宽，单位Mbps，仅对公网属性的共享型、性能容量型和独占型 CLB 实例、以及内网属性的性能容量型 CLB 实例生效。
 	// - 对于公网属性的共享型和独占型 CLB 实例，最大出带宽的范围为1Mbps-2048Mbps。
 	// - 对于公网属性和内网属性的性能容量型 CLB实例
-	//   - 当您开通了普通规格的性能容量型时，最大出带宽的范围为1Mbps-10240Mbps。普通规格的性能容量型正在内测中，请提交 [内测申请](https://cloud.tencent.com/apply/p/hf45esx99lf)。
+	//   - 默认为普通规格的性能容量型实例，SLA对应超强型1规格，最大出带宽的范围为1Mbps-10240Mbps。
 	//   - 当您开通了超大型规格的性能容量型时，最大出带宽的范围为1Mbps-61440Mbps。超大型规格的性能容量型正在内测中，请提交 [工单申请](https://console.cloud.tencent.com/workorder/category)。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InternetMaxBandwidthOut *int64 `json:"InternetMaxBandwidthOut,omitempty" name:"InternetMaxBandwidthOut"`
@@ -7500,6 +7508,10 @@ type Resource struct {
 	// 可用资源。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	AvailabilitySet []*ResourceAvailability `json:"AvailabilitySet,omitempty" name:"AvailabilitySet"`
+
+	// 运营商类型信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TypeSet []*TypeInfo `json:"TypeSet,omitempty" name:"TypeSet"`
 }
 
 type ResourceAvailability struct {
@@ -8075,6 +8087,16 @@ type SnatIp struct {
 	Ip *string `json:"Ip,omitempty" name:"Ip"`
 }
 
+type SpecAvailability struct {
+	// 规格类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SpecType *string `json:"SpecType,omitempty" name:"SpecType"`
+
+	// 规格可用性
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Availability *string `json:"Availability,omitempty" name:"Availability"`
+}
+
 type TagInfo struct {
 	// 标签的键
 	TagKey *string `json:"TagKey,omitempty" name:"TagKey"`
@@ -8111,11 +8133,11 @@ type TargetGroupAssociation struct {
 	// 负载均衡ID
 	LoadBalancerId *string `json:"LoadBalancerId,omitempty" name:"LoadBalancerId"`
 
-	// 监听器ID
-	ListenerId *string `json:"ListenerId,omitempty" name:"ListenerId"`
-
 	// 目标组ID
 	TargetGroupId *string `json:"TargetGroupId,omitempty" name:"TargetGroupId"`
+
+	// 监听器ID
+	ListenerId *string `json:"ListenerId,omitempty" name:"ListenerId"`
 
 	// 转发规则ID
 	LocationId *string `json:"LocationId,omitempty" name:"LocationId"`
@@ -8218,6 +8240,8 @@ type TargetHealth struct {
 	HealthStatusDetail *string `json:"HealthStatusDetail,omitempty" name:"HealthStatusDetail"`
 
 	// (**该参数对象即将下线，不推荐使用，请使用HealthStatusDetail获取健康详情**) 当前健康状态的详细信息。如：Alive、Dead、Unknown。Alive状态为健康，Dead状态为异常，Unknown状态包括尚未开始探测、探测中、状态未知。
+	//
+	// Deprecated: HealthStatusDetial is deprecated.
 	HealthStatusDetial *string `json:"HealthStatusDetial,omitempty" name:"HealthStatusDetial"`
 }
 
@@ -8227,6 +8251,16 @@ type TargetRegionInfo struct {
 
 	// Target所属网络，私有网络格式如 vpc-abcd1234，如果是基础网络，则为"0"
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+}
+
+type TypeInfo struct {
+	// 运营商类型
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 规格可用性
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SpecAvailabilitySet []*SpecAvailability `json:"SpecAvailabilitySet,omitempty" name:"SpecAvailabilitySet"`
 }
 
 type ZoneInfo struct {
