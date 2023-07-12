@@ -20,7 +20,7 @@ func TestAccTencentCloudElasticsearchSecurityGroupResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccElasticsearchSecurityGroup,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchSecurityGroupExists("tencentcloud_elasticsearch_security_group.security_group"),
 					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_security_group.security_group", "instance_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_security_group.security_group", "security_group_ids.#"),
@@ -33,7 +33,7 @@ func TestAccTencentCloudElasticsearchSecurityGroupResource_basic(t *testing.T) {
 			},
 			{
 				Config: testAccElasticsearchSecurityGroupUp,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckElasticsearchSecurityGroupExists("tencentcloud_elasticsearch_security_group.security_group"),
 					resource.TestCheckResourceAttrSet("tencentcloud_elasticsearch_security_group.security_group", "instance_id"),
 				),
@@ -111,9 +111,9 @@ func testAccCheckElasticsearchSecurityGroupExists(n string) resource.TestCheckFu
 const testAccElasticsearchSecurityGroup = DefaultEsVariables + `
 
 resource "tencentcloud_elasticsearch_security_group" "security_group" {
-    instance_id        = "es-5wn36he6"
+    instance_id        = var.instance_id
     security_group_ids = [
-        "sg-edmur627",
+        var.security_group_id
     ]
 }
 

@@ -64,7 +64,6 @@ func resourceTencentCloudElasticsearchSecurityGroupCreate(d *schema.ResourceData
 	defer logElapsed("resource.tencentcloud_elasticsearch_security_group.create")()
 	defer inconsistentCheck(d, meta)()
 
-
 	var instanceId string
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
