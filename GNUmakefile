@@ -31,7 +31,7 @@ fmt-faster:
 		echo "skip the fmt cause the CHANGED_FILES is null."; \
 		exit 0; \
 	else \
-		@echo "==> [Faster]Fixing source code with gofmt...\n $(CHANGED_FILES) \n"; \
+		echo "==> [Faster]Fixing source code with gofmt...\n $(CHANGED_FILES) \n"; \
 		goimports -w $(CHANGED_FILES); \
 		gofmt -s -w $(CHANGED_FILES); \
 	fi
