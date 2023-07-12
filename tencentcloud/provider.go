@@ -463,6 +463,7 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_cluster_slave_zone
 	tencentcloud_cynosdb_read_only_instance_exclusive_access
 	tencentcloud_cynosdb_proxy_end_point
+	tencentcloud_cynosdb_upgrade_proxy_version
 
 Direct Connect(DC)
   Data Source
@@ -551,6 +552,7 @@ Tencent Kubernetes Engine(TKE)
 	tencentcloud_kubernetes_node_pool
 	tencentcloud_kubernetes_serverless_node_pool
     tencentcloud_kubernetes_backup_storage_location
+    tencentcloud_kubernetes_encryption_protection
     tencentcloud_kubernetes_auth_attachment
     tencentcloud_kubernetes_addon_attachment
 	tencentcloud_kubernetes_cluster_endpoint
@@ -919,6 +921,7 @@ Tencent Container Registry(TCR)
 	tencentcloud_tcr_delete_image_operation
 	tencentcloud_tcr_create_image_signature_operation
 	tencentcloud_tcr_tag_retention_execution_config
+	tencentcloud_tcr_service_account
 
 Video on Demand(VOD)
   Data Source
@@ -2317,6 +2320,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kubernetes_node_pool":                                resourceTencentCloudKubernetesNodePool(),
 			"tencentcloud_kubernetes_serverless_node_pool":                     resourceTkeServerLessNodePool(),
 			"tencentcloud_kubernetes_backup_storage_location":                  resourceTencentCloudTkeBackupStorageLocation(),
+			"tencentcloud_kubernetes_encryption_protection":                    resourceTencentCloudKubernetesEncryptionProtection(),
 			"tencentcloud_mysql_backup_policy":                                 resourceTencentCloudMysqlBackupPolicy(),
 			"tencentcloud_mysql_account":                                       resourceTencentCloudMysqlAccount(),
 			"tencentcloud_mysql_account_privilege":                             resourceTencentCloudMysqlAccountPrivilege(),
@@ -2583,6 +2587,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_cluster_slave_zone":                          resourceTencentCloudCynosdbClusterSlaveZone(),
 			"tencentcloud_cynosdb_read_only_instance_exclusive_access":         resourceTencentCloudCynosdbReadOnlyInstanceExclusiveAccess(),
 			"tencentcloud_cynosdb_proxy_end_point":                             resourceTencentCloudCynosdbProxyEndPoint(),
+			"tencentcloud_cynosdb_upgrade_proxy_version":                       resourceTencentCloudCynosdbUpgradeProxyVersion(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_template":             resourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_vod_image_sprite_template":                           resourceTencentCloudVodImageSpriteTemplate(),
 			"tencentcloud_vod_procedure_template":                              resourceTencentCloudVodProcedureTemplate(),
@@ -2619,6 +2624,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tcr_delete_image_operation":                          resourceTencentCloudTcrDeleteImageOperation(),
 			"tencentcloud_tcr_create_image_signature_operation":                resourceTencentCloudTcrCreateImageSignatureOperation(),
 			"tencentcloud_tcr_tag_retention_execution_config":                  resourceTencentCloudTcrTagRetentionExecutionConfig(),
+			"tencentcloud_tcr_service_account":                                 resourceTencentCloudTcrServiceAccount(),
 			"tencentcloud_tdmq_instance":                                       resourceTencentCloudTdmqInstance(),
 			"tencentcloud_tdmq_namespace":                                      resourceTencentCloudTdmqNamespace(),
 			"tencentcloud_tdmq_topic":                                          resourceTencentCloudTdmqTopic(),
