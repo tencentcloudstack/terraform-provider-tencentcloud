@@ -37,6 +37,39 @@ resource "tencentcloud_clb_instance" "open_clb" {
 }
 ```
 
+Dynamic Vip Instance
+
+```hcl
+resource "tencentcloud_security_group" "foo" {
+  name = "clb-instance-open-sg"
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name       = "clb-instance-open-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_clb_instance" "clb_open" {
+  network_type              = "OPEN"
+  clb_name                  = "clb-instance-open"
+  project_id                = 0
+  vpc_id                    = tencentcloud_vpc.foo.id
+  target_region_info_region = "ap-guangzhou"
+  target_region_info_vpc_id = tencentcloud_vpc.foo.id
+  security_groups           = [tencentcloud_security_group.foo.id]
+
+  dynamic_vip = true
+
+  tags = {
+    test = "tf"
+  }
+}
+
+output "domain" {
+  value = tencentcloud_clb_instance.clb_open.domain
+}
+```
+
 Default enable
 
 ```hcl
@@ -318,6 +351,16 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Optional:    true,
 				Description: "The id of log topic.",
 			},
+			"dynamic_vip": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "If create dynamic vip CLB instance, `true` or `false`.",
+			},
+			"domain": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Domain name of the CLB instance.",
+			},
 		},
 	}
 }
@@ -459,6 +502,10 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 
 	if v, ok := d.GetOk("load_balancer_pass_to_target"); ok {
 		request.LoadBalancerPassToTarget = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("dynamic_vip"); ok {
+		request.DynamicVip = helper.Bool(v.(bool))
 	}
 
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
@@ -638,6 +685,7 @@ func resourceTencentCloudClbInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("target_region_info_vpc_id", instance.TargetRegionInfo.VpcId)
 	_ = d.Set("project_id", instance.ProjectId)
 	_ = d.Set("security_groups", helper.StringsInterfaces(instance.SecureGroups))
+	_ = d.Set("domain", instance.LoadBalancerDomain)
 
 	if instance.VipIsp != nil {
 		_ = d.Set("vip_isp", instance.VipIsp)
