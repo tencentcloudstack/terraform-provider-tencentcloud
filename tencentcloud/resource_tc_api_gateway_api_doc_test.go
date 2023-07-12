@@ -108,7 +108,7 @@ resource "tencentcloud_api_gateway_api_doc" "test" {
   api_doc_name = "doc_test1"
   service_id   = "service-nxz6yync"
   environment  = "release"
-  api_ids      = ["api-2bntitvw"]
+  api_ids      = ["api-jvqlzolk"]
 }
 `
 
@@ -117,6 +117,6 @@ resource "tencentcloud_api_gateway_api_doc" "test" {
   api_doc_name = "update_doc_name_test"
   service_id   = "service-nxz6yync"
   environment  = "release"
-  api_ids      = ["api-2bntitvw"]
+  api_ids      = ["api-jvqlzolk"]
 }
 `
