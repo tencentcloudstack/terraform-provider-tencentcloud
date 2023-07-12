@@ -105,7 +105,7 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Computed:    true,
-				Description: "The availability zone, such as `ap-guangzhou-1`.",
+				Description: "The availability zone, such as `ap-guangzhou-3`.",
 			},
 			"tags": {
 				Type:        schema.TypeMap,
