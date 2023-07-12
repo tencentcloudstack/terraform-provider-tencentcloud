@@ -47,6 +47,39 @@ resource "tencentcloud_clb_instance" "open_clb" {
 }
 ```
 
+### Dynamic Vip Instance
+
+```hcl
+resource "tencentcloud_security_group" "foo" {
+  name = "clb-instance-open-sg"
+}
+
+resource "tencentcloud_vpc" "foo" {
+  name       = "clb-instance-open-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_clb_instance" "clb_open" {
+  network_type              = "OPEN"
+  clb_name                  = "clb-instance-open"
+  project_id                = 0
+  vpc_id                    = tencentcloud_vpc.foo.id
+  target_region_info_region = "ap-guangzhou"
+  target_region_info_vpc_id = tencentcloud_vpc.foo.id
+  security_groups           = [tencentcloud_security_group.foo.id]
+
+  dynamic_vip = true
+
+  tags = {
+    test = "tf"
+  }
+}
+
+output "domain" {
+  value = tencentcloud_clb_instance.clb_open.domain
+}
+```
+
 ### Default enable
 
 ```hcl
@@ -154,6 +187,7 @@ The following arguments are supported:
 * `network_type` - (Required, String, ForceNew) Type of CLB instance. Valid values: `OPEN` and `INTERNAL`.
 * `address_ip_version` - (Optional, String) IP version, only applicable to open CLB. Valid values are `ipv4`, `ipv6` and `IPv6FullChain`.
 * `bandwidth_package_id` - (Optional, String) Bandwidth package id. If set, the `internet_charge_type` must be `BANDWIDTH_PACKAGE`.
+* `dynamic_vip` - (Optional, Bool) If create dynamic vip CLB instance, `true` or `false`.
 * `internet_bandwidth_max_out` - (Optional, Int) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
 * `internet_charge_type` - (Optional, String) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `load_balancer_pass_to_target` - (Optional, Bool) Whether the target allow flow come from clb. If value is true, only check security group of clb, or check both clb and backend instance security group.
@@ -183,6 +217,7 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `clb_vips` - The virtual service address table of the CLB.
+* `domain` - Domain name of the CLB instance.
 * `vip_isp` - Network operator, only applicable to open CLB. Valid values are `CMCC`(China Mobile), `CTCC`(Telecom), `CUCC`(China Unicom) and `BGP`. If this ISP is specified, network billing method can only use the bandwidth package billing (BANDWIDTH_PACKAGE).
 
 
