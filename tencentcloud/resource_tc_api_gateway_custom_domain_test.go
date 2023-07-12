@@ -113,7 +113,7 @@ func testAccCheckCustomDomainExists(n string) resource.TestCheckFunc {
 
 const testAccCustomDomain = `
 resource "tencentcloud_api_gateway_custom_domain" "foo" {
-	service_id         = "service-7lybgojo"
+	service_id         = "service-nxz6yync"
 	sub_domain         = "tic-test.dnsv1.com"
 	protocol           = "http"
 	net_type           = "OUTER"
@@ -125,7 +125,7 @@ resource "tencentcloud_api_gateway_custom_domain" "foo" {
 
 const testAccCustomDomainUpdate = `
 resource "tencentcloud_api_gateway_custom_domain" "foo" {
-	service_id         = "service-7lybgojo"
+	service_id         = "service-nxz6yync"
 	sub_domain         = "tic-test.dnsv1.com"
 	protocol           = "http"
 	net_type           = "OUTER"
