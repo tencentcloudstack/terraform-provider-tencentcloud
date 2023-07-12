@@ -190,6 +190,7 @@ func TencentMsyqlBasicInfo() map[string]*schema.Schema {
 		"device_type": {
 			Type:        schema.TypeString,
 			Optional:    true,
+			Computed:     true,
 			Description: "Specify device type, available values: `UNIVERSAL` (default), `EXCLUSIVE`, `BASIC`.",
 		},
 		"tags": {

@@ -128,6 +128,9 @@ const (
 	// 该IP已被占用。
 	FAILEDOPERATION_VPCIPINUSEERROR = "FailedOperation.VpcIpInUseError"
 
+	// 子网中不存在该IP
+	FAILEDOPERATION_VPCIPNOTINSUBNETERROR = "FailedOperation.VpcIpNotInSubnetError"
+
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
@@ -469,6 +472,9 @@ const (
 
 	// 不支持修改本地root账号host信息。
 	OPERATIONDENIED_NOTSUPPORTMODIFYLOCALROOTHOSTERROR = "OperationDenied.NotSupportModifyLocalRootHostError"
+
+	// 操作拒绝。
+	OPERATIONDENIED_OPERATIONDENIEDERROR = "OperationDenied.OperationDeniedError"
 
 	// 当前有其他订单正在处于下单过程中，请稍后重试。
 	OPERATIONDENIED_OTHERODERINPROCESS = "OperationDenied.OtherOderInProcess"

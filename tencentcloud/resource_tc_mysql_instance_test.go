@@ -408,7 +408,7 @@ resource "tencentcloud_mysql_instance" "prepaid" {
 
 const testAccMySQLDeviceType = `
 variable "temporary_param_tmpl_id" {
-	default = 16954
+	default = 19656
 }
 
 resource "tencentcloud_mysql_instance" "mysql_exclusive" {
@@ -430,7 +430,7 @@ resource "tencentcloud_mysql_instance" "mysql_exclusive" {
 
 const testAccMySQLDeviceTypeUpdate = `
 variable "temporary_param_tmpl_id" {
-	default = 16954
+	default = 19656
 }
 
 resource "tencentcloud_mysql_instance" "mysql_exclusive" {
