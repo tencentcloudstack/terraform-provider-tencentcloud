@@ -795,8 +795,12 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		request.SnatPro = &snatPro
 	}
 
-	if d.HasChange("snat_ips") {
-		return fmt.Errorf("`snat_ips`")
+	immutableArgs := []string{"snat_ips", "dynamic_vip"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
 	}
 
 	if changed {
