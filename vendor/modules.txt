@@ -1064,7 +1064,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.688
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.699
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.539
@@ -1091,7 +1091,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.663
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.696
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.699
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors

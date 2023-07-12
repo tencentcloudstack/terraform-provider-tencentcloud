@@ -22,6 +22,12 @@ resource "tencentcloud_mysql_readonly_instance" "default" {
   }
 }
 ```
+Import
+
+mysql read-only database instances can be imported using the id, e.g.
+```
+terraform import tencentcloud_mysql_readonly_instance.default cdb-dnqksd9f
+```
 */
 package tencentcloud
 
@@ -70,6 +76,12 @@ func resourceTencentCloudMysqlReadonlyInstance() *schema.Resource {
 		Update: resourceTencentCloudMysqlReadonlyInstanceUpdate,
 		Delete: resourceTencentCloudMysqlReadonlyInstanceDelete,
 
+		Importer: &schema.ResourceImporter{
+			State: helper.ImportWithDefaultValue(map[string]interface{}{
+				"prepaid_period": 1,
+				"force_delete":   false,
+			}),
+		},
 		Schema: readonlyInstanceInfo,
 	}
 }
@@ -309,6 +321,81 @@ func resourceTencentCloudMysqlReadonlyInstanceRead(d *schema.ResourceData, meta 
 	if err != nil {
 		return fmt.Errorf("Fail to get basic info from mysql, reaseon %s", err.Error())
 	}
+
+	mysqlInfo, errRet := mysqlService.DescribeDBInstanceById(ctx, d.Id())
+	if errRet != nil {
+		return fmt.Errorf("Describe mysql instance fails, reaseon %v", errRet.Error())
+	}
+	if mysqlInfo == nil {
+		d.SetId("")
+		return nil
+	}
+	if MysqlDelStates[*mysqlInfo.Status] {
+		mysqlInfo = nil
+		d.SetId("")
+		return nil
+	}
+
+	_ = d.Set("instance_name", *mysqlInfo.InstanceName)
+
+	_ = d.Set("charge_type", MYSQL_CHARGE_TYPE[int(*mysqlInfo.PayType)])
+	_ = d.Set("pay_type", -1)
+	_ = d.Set("period", -1)
+	if int(*mysqlInfo.PayType) == MysqlPayByMonth {
+		tempInt, _ := d.Get("prepaid_period").(int)
+		if tempInt == 0 {
+			_ = d.Set("prepaid_period", 1)
+		}
+	}
+
+	if *mysqlInfo.AutoRenew == MYSQL_RENEW_CLOSE {
+		*mysqlInfo.AutoRenew = MYSQL_RENEW_NOUSE
+	}
+	_ = d.Set("auto_renew_flag", int(*mysqlInfo.AutoRenew))
+	_ = d.Set("mem_size", mysqlInfo.Memory)
+	_ = d.Set("cpu", mysqlInfo.Cpu)
+	_ = d.Set("volume_size", mysqlInfo.Volume)
+	_ = d.Set("vpc_id", mysqlInfo.UniqVpcId)
+	_ = d.Set("subnet_id", mysqlInfo.UniqSubnetId)
+	_ = d.Set("device_type", mysqlInfo.DeviceType)
+
+	securityGroups, err := mysqlService.DescribeDBSecurityGroups(ctx, d.Id())
+	if err != nil {
+		sdkErr, ok := err.(*sdkError.TencentCloudSDKError)
+		if ok {
+			if sdkErr.Code == MysqlInstanceIdNotFound3 {
+				mysqlInfo = nil
+				d.SetId("")
+				return nil
+			}
+		}
+		return err
+	}
+	_ = d.Set("security_groups", securityGroups)
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "cdb", "instanceId", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+
+	if err := d.Set("tags", tags); err != nil {
+		log.Printf("[CRITAL]%s provider set tags fail, reason:%s\n ", logId, err.Error())
+		return nil
+	}
+
+	_ = d.Set("intranet_ip", mysqlInfo.Vip)
+	_ = d.Set("intranet_port", int(*mysqlInfo.Vport))
+
+	if *mysqlInfo.CdbError != 0 {
+		_ = d.Set("locked", 1)
+	} else {
+		_ = d.Set("locked", 0)
+	}
+	_ = d.Set("status", mysqlInfo.Status)
+	_ = d.Set("task_status", mysqlInfo.TaskStatus)
+
 	return nil
 }
 

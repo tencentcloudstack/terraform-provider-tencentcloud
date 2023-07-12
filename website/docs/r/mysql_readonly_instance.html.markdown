@@ -70,3 +70,10 @@ In addition to all arguments above, the following attributes are exported:
 * `task_status` - Indicates which kind of operations is being executed.
 
 
+## Import
+
+mysql read-only database instances can be imported using the id, e.g.
+```
+terraform import tencentcloud_mysql_readonly_instance.default cdb-dnqksd9f
+```
+
