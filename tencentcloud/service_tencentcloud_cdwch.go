@@ -126,7 +126,7 @@ func (me *CdwchService) ScaleUpInstance(ctx context.Context, instanceId, nodeTyp
 	return
 }
 
-func (me *CdwchService) ScaleOutInstance(ctx context.Context, instanceId string, nodeType string, scaleOutCluster string, nodeCount int, userSubnetIPNum int) (errRet error) {
+func (me *CdwchService) ScaleOutInstance(ctx context.Context, instanceId string, nodeType string, scaleOutCluster string, nodeCount int, userSubnetIPNum int, shardIps []*string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := cdwch.NewScaleOutInstanceRequest()
@@ -141,6 +141,9 @@ func (me *CdwchService) ScaleOutInstance(ctx context.Context, instanceId string,
 	request.NodeCount = helper.IntInt64(nodeCount)
 	request.ScaleOutCluster = &scaleOutCluster
 	request.UserSubnetIPNum = helper.IntInt64(userSubnetIPNum)
+	if shardIps != nil {
+		request.ReduceShardInfo = shardIps
+	}
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseCdwchClient().ScaleOutInstance(request)
@@ -152,5 +155,57 @@ func (me *CdwchService) ScaleOutInstance(ctx context.Context, instanceId string,
 	if response.Response.ErrorMsg != nil && *response.Response.ErrorMsg != "" {
 		errRet = fmt.Errorf(*response.Response.ErrorMsg)
 	}
+	return
+}
+
+func (me *CdwchService) DescribeInstanceClusters(ctx context.Context, instanceId string) (clusterInfos []*cdwch.ClusterInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdwch.NewDescribeInstanceClustersRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeInstanceClusters(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	clusterInfos = response.Response.Clusters
+
+	return
+}
+
+func (me *CdwchService) DescribeInstancesNew(ctx context.Context, instanceId string) (instancesList []*cdwch.InstanceInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdwch.NewDescribeInstancesNewRequest()
+	request.SearchInstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeInstancesNew(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	instancesList = response.Response.InstancesList
+
 	return
 }

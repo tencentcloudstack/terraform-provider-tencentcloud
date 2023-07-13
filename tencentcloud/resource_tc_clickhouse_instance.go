@@ -1,76 +1,132 @@
+/*
+Provides a resource to create a clickhouse instance.
+
+Example Usage
+
+```hcl
+resource "tencentcloud_clickhouse_instance" "cdwch_instance" {
+  zone="ap-guangzhou-6"
+  ha_flag=true
+  vpc_id="vpc-xxxxxx"
+  subnet_id="subnet-xxxxxx"
+  product_version="21.8.12.29"
+  data_spec {
+    spec_name="SCH6"
+    count=2
+    disk_size=300
+	scale_out_cluster="default_cluster"
+  }
+  common_spec {
+    spec_name="SCH6"
+    count=3
+    disk_size=300
+  }
+  charge_type="POSTPAID_BY_HOUR"
+  instance_name="tf-test-clickhouse"
+}
+```
+
+PREPAID instance
+
+```hcl
+resource "tencentcloud_clickhouse_instance" "cdwch_instance_prepaid" {
+  zone="ap-guangzhou-6"
+  ha_flag=true
+  vpc_id="vpc-xxxxxx"
+  subnet_id="subnet-xxxxxx"
+  product_version="21.8.12.29"
+  data_spec {
+    spec_name="SCH6"
+    count=2
+    disk_size=300
+	scale_out_cluster="default_cluster"
+  }
+  common_spec {
+    spec_name="SCH6"
+    count=3
+    disk_size=300
+  }
+  charge_type="PREPAID"
+  renew_flag=1
+  time_span=1
+  instance_name="tf-test-clickhouse-prepaid"
+}
+```
+
+Import
+
+Clickhouse instance can be imported using the id, e.g.
+
+```
+$ terraform import tencentcloud_clickhouse_instance.foo cdwch-xxxxxx
+```
+*/
 package tencentcloud
 
 import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 
-	"github.com/hashicorp/terraform-plugin-sdk/helper/resource"
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudClickHoustInstance() *schema.Resource {
+func resourceTencentCloudClickhouseInstance() *schema.Resource {
 	return &schema.Resource{
-		Read:   resourceTencentCloudClickHouseInstanceRead,
-		Create: resourceTencentCloudClickHouseInstanceCreate,
-		Update: resourceTencentCloudClickHouseInstanceUpdate,
-		Delete: resourceTencentCloudClickHouseInstanceDelete,
+		Read:   resourceTencentCloudClickhouseInstanceRead,
+		Create: resourceTencentCloudClickhouseInstanceCreate,
+		Update: resourceTencentCloudClickhouseInstanceUpdate,
+		Delete: resourceTencentCloudClickhouseInstanceDelete,
 
 		Schema: map[string]*schema.Schema{
 			"zone": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Availability zone.",
 			},
 			"ha_flag": {
 				Type:        schema.TypeBool,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Whether it is highly available.",
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Private network.",
 			},
 			"subnet_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Subnet.",
 			},
 			"product_version": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Product version.",
 			},
 			"instance_name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Instance name.",
 			},
 			"charge_type": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
-				Description: "Billing type: `PREPAID` prepaid, `POSTPAID_BY_HOUR` postpaid",
+				Description: "Billing type: `PREPAID` prepaid, `POSTPAID_BY_HOUR` postpaid.",
 			},
 			"renew_flag": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Description: "PREPAID needs to be passed. Whether to renew automatically. 1 means auto renewal is enabled.",
 			},
 			"time_span": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Prepaid needs to be delivered, billing time length, how many months.",
 			},
 			"data_spec": {
@@ -98,6 +154,7 @@ func resourceTencentCloudClickHoustInstance() *schema.Resource {
 						"scale_out_cluster": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "`v_cluster` grouping. Must set when update NodeCount.The new expansion node will be added to the selected v_cluster packet, and the submission synchronization VIP will take effect.",
 						},
 					},
@@ -105,28 +162,28 @@ func resourceTencentCloudClickHoustInstance() *schema.Resource {
 			},
 			"cls_log_set_id": {
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "CLS log set id.",
 			},
 
 			"cos_bucket_name": {
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "COS bucket name.",
 			},
 
 			"mount_disk_type": {
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "Whether it is mounted on a bare disk.",
 			},
 
 			"ha_zk": {
 				Optional:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
 				Description: "Whether ZK is highly available.",
 			},
@@ -157,6 +214,7 @@ func resourceTencentCloudClickHoustInstance() *schema.Resource {
 						"scale_out_cluster": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "`v_cluster` grouping. Must set when update NodeCount.The new expansion node will be added to the selected v_cluster packet, and the submission synchronization VIP will take effect.",
 						},
 					},
@@ -165,6 +223,7 @@ func resourceTencentCloudClickHoustInstance() *schema.Resource {
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
+				Computed:    true,
 				Description: "Tag description list.",
 			},
 			"expire_time": {
@@ -176,7 +235,7 @@ func resourceTencentCloudClickHoustInstance() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudClickHouseInstanceRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clickhouse_instance.read")()
 	defer inconsistentCheck(d, meta)()
 
@@ -188,19 +247,23 @@ func resourceTencentCloudClickHouseInstanceRead(d *schema.ResourceData, meta int
 
 	instanceId := d.Id()
 
-	instanceInfo, err := service.DescribeInstance(ctx, instanceId)
+	instanceInfos, err := service.DescribeInstancesNew(ctx, instanceId)
 	if err != nil {
 		return err
 	}
 
-	if instanceInfo == nil {
+	if len(instanceInfos) == 0 {
 		d.SetId("")
 		log.Printf("[WARN]%s resource clickhouse instance [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-
+	instanceInfo := instanceInfos[0]
 	_ = d.Set("zone", instanceInfo.Zone)
-	_ = d.Set("ha_flag", instanceInfo.HA)
+	haFlag, err := strconv.ParseBool(*instanceInfo.HA)
+	if err != nil {
+		return err
+	}
+	_ = d.Set("ha_flag", haFlag)
 	_ = d.Set("vpc_id", instanceInfo.VpcId)
 	_ = d.Set("subnet_id", instanceInfo.SubnetId)
 	_ = d.Set("product_version", instanceInfo.Version)
@@ -208,6 +271,9 @@ func resourceTencentCloudClickHouseInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("charge_type", *instanceInfo.PayMode)
 	_ = d.Set("renew_flag", instanceInfo.RenewFlag)
 	_ = d.Set("expire_time", instanceInfo.ExpireTime)
+	_ = d.Set("cos_bucket_name", instanceInfo.CosBucketName)
+	_ = d.Set("mount_disk_type", instanceInfo.MountDiskType)
+	_ = d.Set("ha_zk", instanceInfo.HAZk)
 
 	if instanceInfo.MasterSummary != nil {
 		dataSpec := make(map[string]interface{})
@@ -237,7 +303,7 @@ func resourceTencentCloudClickHouseInstanceRead(d *schema.ResourceData, meta int
 	return nil
 }
 
-func resourceTencentCloudClickHouseInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudClickhouseInstanceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cdwch_tmp_instance.create")()
 	defer inconsistentCheck(d, meta)()
 
@@ -371,38 +437,15 @@ func resourceTencentCloudClickHouseInstanceCreate(d *schema.ResourceData, meta i
 
 	d.SetId(instanceId)
 
-	return resourceTencentCloudClickHouseInstanceRead(d, meta)
+	return resourceTencentCloudClickhouseInstanceRead(d, meta)
 }
 
-func resourceTencentCloudClickHouseInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudClickhouseInstanceUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clickhouse_instance.update")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
-	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	instanceInfo, err := service.DescribeInstance(ctx, d.Id())
-	if err != nil {
-		return err
-	}
-
-	if instanceInfo == nil {
-		d.SetId("")
-		log.Printf("[WARN]%s resource clickhouse instance [%s] not found, please check if it has been deleted.\n", logId, d.Id())
-		return nil
-	}
-
-	subnetId := *instanceInfo.SubnetId
-	subnetInfo, has, err := vpcService.DescribeSubnet(ctx, subnetId, nil, "", "")
-	if err != nil {
-		return err
-	}
-
-	if has == 0 {
-		return fmt.Errorf("subnet subnet_id=%s not found", subnetId)
-	}
 
 	if d.HasChange("tags") {
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
@@ -415,93 +458,18 @@ func resourceTencentCloudClickHouseInstanceUpdate(d *schema.ResourceData, meta i
 		}
 	}
 
-	specChangeFlag := false
-	if d.HasChange("data_spec.0.spec_name") {
-		dataSpecName := d.Get("data_spec.0.spec_name").(string)
-		err := service.ScaleUpInstance(ctx, d.Id(), NODE_TYPE_CLICKHOUSE, dataSpecName)
-		if err != nil {
-			return err
-		}
-		specChangeFlag = true
-	}
-	if d.HasChange("data_spec.0.count") {
-		dataSpecCount := d.Get("data_spec.0.count").(int)
-		var scaleOutCluster string
-		if v, ok := d.GetOk("data_spec.0.scale_out_cluster"); ok {
-			scaleOutCluster = v.(string)
-		} else {
-			return fmt.Errorf("Must set scale_out_cluster when update node count.")
-		}
-		err := service.ScaleOutInstance(ctx, d.Id(), NODE_TYPE_CLICKHOUSE, scaleOutCluster, dataSpecCount, int(subnetInfo.availableIpCount))
-		if err != nil {
-			return err
-		}
-		specChangeFlag = true
-	}
-	if d.HasChange("data_spec.0.disk_size") {
-		dataSpecDiskSize := d.Get("data_spec.0.disk_size").(int)
-		err := service.ResizeDisk(ctx, d.Id(), NODE_TYPE_CLICKHOUSE, dataSpecDiskSize)
-		if err != nil {
-			return err
-		}
-		specChangeFlag = true
-	}
+	immutableArgs := []string{"zone", "ha_flag", "vpc_id", "subnet_id", "product_version", "instance_name", "charge_type", "renew_flag", "time_span", "data_spec", "cls_log_set_id", "cos_bucket_name", "mount_disk_type", "ha_zk", "common_spec"}
 
-	if d.HasChange("common_spec.0.spec_name") {
-		commonSpecName := d.Get("common_spec.0.spec_name").(string)
-		err := service.ScaleUpInstance(ctx, d.Id(), NODE_TYPE_ZOOKEEPER, commonSpecName)
-		if err != nil {
-			return err
-		}
-		specChangeFlag = true
-	}
-	if d.HasChange("common_spec.0.count") {
-		commonSpecCount := d.Get("common_spec.0.count").(int)
-		var scaleOutCluster string
-		if v, ok := d.GetOk("common_spec.0.scale_out_cluster"); ok {
-			scaleOutCluster = v.(string)
-		} else {
-			return fmt.Errorf("Must set scale_out_cluster when update node count.")
-		}
-
-		err = service.ScaleOutInstance(ctx, d.Id(), NODE_TYPE_ZOOKEEPER, scaleOutCluster, commonSpecCount, int(subnetInfo.availableIpCount))
-		if err != nil {
-			return err
-		}
-		specChangeFlag = true
-	}
-	if d.HasChange("common_spec.0.disk_size") {
-		commonSpecDiskSize := d.Get("common_spec.0.disk_size").(int)
-		err := service.ResizeDisk(ctx, d.Id(), NODE_TYPE_ZOOKEEPER, commonSpecDiskSize)
-		if err != nil {
-			return err
-		}
-		specChangeFlag = true
-	}
-	if specChangeFlag {
-		changeState := false
-		err := resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
-			instanceInfo, innerErr := service.DescribeInstance(ctx, d.Id())
-			if innerErr != nil {
-				return retryError(innerErr)
-			}
-			if *instanceInfo.Status == "Changing" {
-				changeState = true
-			}
-			if !changeState || *instanceInfo.Status != "Serving" {
-				return resource.RetryableError(fmt.Errorf("Still updating"))
-			}
-			return nil
-		})
-		if err != nil {
-			return err
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
 	}
 
-	return resourceTencentCloudClickHouseInstanceRead(d, meta)
+	return resourceTencentCloudClickhouseInstanceRead(d, meta)
 }
 
-func resourceTencentCloudClickHouseInstanceDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudClickhouseInstanceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_clickhouse_instance.delete")()
 	defer inconsistentCheck(d, meta)()
 
@@ -511,16 +479,35 @@ func resourceTencentCloudClickHouseInstanceDelete(d *schema.ResourceData, meta i
 	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
 	instanceId := d.Id()
 
+	if d.Get("charge_type").(string) == "PREPAID" {
+		if err := service.DestroyInstance(ctx, instanceId); err != nil {
+			return err
+		}
+
+		err := resource.Retry(5*writeRetryTimeout, func() *resource.RetryError {
+			instanceInfo, innerErr := service.DescribeInstance(ctx, instanceId)
+			if innerErr != nil {
+				return retryError(innerErr)
+			}
+			if *instanceInfo.Status != "Isolated" {
+				return resource.RetryableError(fmt.Errorf("Still isolating"))
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+	}
+
 	if err := service.DestroyInstance(ctx, instanceId); err != nil {
 		return err
 	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		instanceInfo, innerErr := service.DescribeInstance(ctx, instanceId)
+		instancesList, innerErr := service.DescribeInstancesNew(ctx, instanceId)
 		if innerErr != nil {
 			return retryError(innerErr)
 		}
-		if *instanceInfo.Status != "Deleted" {
+		if len(instancesList) != 0 {
 			return resource.RetryableError(fmt.Errorf("Still destroying"))
 		}
 		return nil
