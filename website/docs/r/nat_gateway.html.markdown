@@ -14,15 +14,30 @@ Provides a resource to create a NAT gateway.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_nat_gateway" "foo" {
-  name             = "test_nat_gateway"
-  vpc_id           = "vpc-4xxr2cy7"
-  bandwidth        = 100
-  max_concurrent   = 1000000
-  assigned_eip_set = ["1.1.1.1"]
+data "tencentcloud_vpc_instances" "foo" {
+  name = "Default-VPC"
+}
+# Create EIP
+resource "tencentcloud_eip" "eip_dev_dnat" {
+  name = "terraform_nat_test"
+}
+resource "tencentcloud_eip" "new_eip" {
+  name = "terraform_nat_test"
+}
 
+resource "tencentcloud_nat_gateway" "my_nat" {
+  vpc_id         = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
+  name           = "new_name"
+  max_concurrent = 10000000
+  bandwidth      = 1000
+  zone           = "ap-guangzhou-3"
+
+  assigned_eip_set = [
+    tencentcloud_eip.eip_dev_dnat.public_ip,
+    tencentcloud_eip.new_eip.public_ip,
+  ]
   tags = {
-    test = "tf"
+    tf = "test"
   }
 }
 ```
@@ -37,6 +52,7 @@ The following arguments are supported:
 * `bandwidth` - (Optional, Int) The maximum public network output bandwidth of NAT gateway (unit: Mbps). Valid values: `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`. Default is 100.
 * `max_concurrent` - (Optional, Int) The upper limit of concurrent connection of NAT gateway. Valid values: `1000000`, `3000000`, `10000000`. Default is `1000000`.
 * `tags` - (Optional, Map) The available tags within this NAT gateway.
+* `zone` - (Optional, String) The availability zone, such as `ap-guangzhou-3`.
 
 ## Attributes Reference
 

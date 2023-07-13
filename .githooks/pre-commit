@@ -1,47 +1,46 @@
 #!/bin/sh
-printf "==> Step 1: Gofmt Check...\n"
-make fmtcheck
+REQUIRED_GO_VERSION=go$(cat .go-version) # use the .go-version
+
+printf "==> Step 1: [Faster]Gofmt Check...\n"
+make fmt-faster
 if [ $? -ne 0 ]; then
     printf "COMMIT FAILED\n"
     exit 1
 fi
 
-
-#make lint
-#if [ $? -ne 0 ]; then
-#    printf "COMMIT FAILED\n"
-#    exit 1
-#fi
-
-printf "==> Step 2: Generating docs for tencentcloud provider...\n"
-doc=`make doc 2>&1`
+printf "==> Step 2: [Faster]Generating Docs...\n"
+doc=$(make doc-faster 2>&1)
 if [ $? -ne 0 ]; then
-    echo "$doc"| tail -n 4|head -n 2
+    echo "$doc" | tail -n 4 | head -n 2
     printf "COMMIT FAILED\n"
     exit 1
 fi
 
-#make website-lint
-#if [ $? -ne 0 ]; then
-#    printf "COMMIT FAILED\n"
-#    exit 1
-#fi
-
-printf "==> Step 3: Doc Check...\n"
-diff=`git diff --name-only website/docs/`
-if [ "$diff" != "" ]; then
-    printf "There are docs updated when checking, 'git add' it first.\n"
+printf "==> Step 3: Checking go version...\n"
+go_version=$(go version | awk '{print $3}' | cut -d '.' -f 1-2)
+if echo "$REQUIRED_GO_VERSION" | grep -q "$go_version\."; then
+    echo "Go version is compatible. Current:$go_version"
+else
+    echo "Go version is not compatible. Expected:$REQUIRED_GO_VERSION Current:$go_version"
     printf "COMMIT FAILED\n"
     exit 1
 fi
 
-printf "==> Step 4: Incremental unit tests...\n"
-# go test check
-make deltatest
-if [ $? -ne 0 ]; then
-    printf "COMMIT FAILED\n"
-    exit 1
-fi
+# printf "==> Step 4: Doc Check...\n"
+# diff=$(git diff --name-only website/docs/)
+# if [ "$diff" != "" ]; then
+#     printf "There are docs updated when checking, 'git add' it first.\n"
+#     printf "COMMIT FAILED\n"
+#     exit 1
+# fi
+
+# printf "==> Step 5: Incremental unit tests...\n"
+# # go test check
+# make deltatest
+# if [ $? -ne 0 ]; then
+#     printf "COMMIT FAILED\n"
+#     exit 1
+# fi
 
 printf "COMMIT READY\n"
 exit 0

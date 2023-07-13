@@ -1,3 +1,17 @@
+## 1.81.14 (July 12, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_cynosdb_upgrade_proxy_version` ([#1936](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1936))
+* **New Resource:** `tencentcloud_elasticsearch_security_group` ([#1956](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1956))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_clb_instance: support set `dynamic_vip` and export `domain` ([#1954](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1954))
+* resource/tencentcloud_cos_bucket: remove `multi_az` limit ([#1957](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1957))
+* resource/tencentcloud_mysql_readonly_instance: support import ([#1958](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1958))
+* resource/tencentcloud_nat_gateway: support set `zone` ([#1959](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1959))
+
 ## 1.81.13 (July 10, 2023)
 
 FEATURES:

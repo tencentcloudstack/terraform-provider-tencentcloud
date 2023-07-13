@@ -88,9 +88,10 @@ func TestAccTencentCloudClbInstance_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_clb_instance.clb_basic",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_clb_instance.clb_basic",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"dynamic_vip"},
 			},
 		},
 	})
@@ -191,9 +192,10 @@ func TestAccTencentCloudClbInstance_internal(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_clb_instance.clb_internal",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_clb_instance.clb_internal",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"dynamic_vip"},
 			},
 		},
 	})

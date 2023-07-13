@@ -288,13 +288,13 @@ The following arguments are supported:
 * `log_enable` - (Optional, Bool) Indicate the access log of this bucket to be saved or not. Default is `false`. If set `true`, the access log will be saved with `log_target_bucket`. To enable log, the full access of log service must be granted. [Full Access Role Policy](https://intl.cloud.tencent.com/document/product/436/16920).
 * `log_prefix` - (Optional, String) The prefix log name which saves the access log of this bucket per 5 minutes. Eg. `MyLogPrefix/`. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`.
 * `log_target_bucket` - (Optional, String) The target bucket name which saves the access log of this bucket per 5 minutes. The log access file format is `log_target_bucket`/`log_prefix`{YYYY}/{MM}/{DD}/{time}_{random}_{index}.gz. Only valid when `log_enable` is `true`. User must have full access on this bucket.
-* `multi_az` - (Optional, Bool, ForceNew) Indicates whether to create a bucket of multi available zone. NOTE: If set to true, the versioning must enable.
+* `multi_az` - (Optional, Bool, ForceNew) Indicates whether to create a bucket of multi available zone.
 * `origin_domain_rules` - (Optional, List) Bucket Origin Domain settings.
 * `origin_pull_rules` - (Optional, List) Bucket Origin-Pull settings.
 * `replica_role` - (Optional, String) Request initiator identifier, format: `qcs::cam::uin/<owneruin>:uin/<subuin>`. NOTE: only `versioning_enable` is true can configure this argument.
 * `replica_rules` - (Optional, List) List of replica rule. NOTE: only `versioning_enable` is true and `replica_role` set can configure this argument.
 * `tags` - (Optional, Map) The tags of a bucket.
-* `versioning_enable` - (Optional, Bool) Enable bucket versioning.
+* `versioning_enable` - (Optional, Bool) Enable bucket versioning. NOTE: The `multi_az` feature is true for the current bucket, cannot disable version control.
 * `website` - (Optional, List) A website object(documented below).
 
 The `cors_rules` object supports the following:
