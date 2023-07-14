@@ -207,7 +207,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     VPN_IPSEC_ENCRY_ALGORITHM_3DESCBC,
-				Description: "Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`, `AES128GCM128`, `AES192GCM128`, `AES256GCM128`. Default value is `3DES-CBC`.",
+				Description: "Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.",
 			},
 			"ipsec_integrity_algorithm": {
 				Type:        schema.TypeString,
