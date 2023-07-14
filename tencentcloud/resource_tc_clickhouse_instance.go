@@ -14,7 +14,6 @@ resource "tencentcloud_clickhouse_instance" "cdwch_instance" {
     spec_name="SCH6"
     count=2
     disk_size=300
-	scale_out_cluster="default_cluster"
   }
   common_spec {
     spec_name="SCH6"
@@ -39,7 +38,6 @@ resource "tencentcloud_clickhouse_instance" "cdwch_instance_prepaid" {
     spec_name="SCH6"
     count=2
     disk_size=300
-	scale_out_cluster="default_cluster"
   }
   common_spec {
     spec_name="SCH6"
@@ -81,6 +79,9 @@ func resourceTencentCloudClickhouseInstance() *schema.Resource {
 		Create: resourceTencentCloudClickhouseInstanceCreate,
 		Update: resourceTencentCloudClickhouseInstanceUpdate,
 		Delete: resourceTencentCloudClickhouseInstanceDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"zone": {
@@ -151,12 +152,6 @@ func resourceTencentCloudClickhouseInstance() *schema.Resource {
 							Required:    true,
 							Description: "Disk size.",
 						},
-						"scale_out_cluster": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "`v_cluster` grouping. Must set when update NodeCount.The new expansion node will be added to the selected v_cluster packet, and the submission synchronization VIP will take effect.",
-						},
 					},
 				},
 			},
@@ -204,18 +199,12 @@ func resourceTencentCloudClickhouseInstance() *schema.Resource {
 						"count": {
 							Type:        schema.TypeInt,
 							Required:    true,
-							Description: "count.",
+							Description: "Node count. NOTE: Only support value 3.",
 						},
 						"disk_size": {
 							Type:        schema.TypeInt,
 							Required:    true,
 							Description: "Disk size.",
-						},
-						"scale_out_cluster": {
-							Type:        schema.TypeString,
-							Optional:    true,
-							Computed:    true,
-							Description: "`v_cluster` grouping. Must set when update NodeCount.The new expansion node will be added to the selected v_cluster packet, and the submission synchronization VIP will take effect.",
 						},
 					},
 				},
@@ -269,7 +258,9 @@ func resourceTencentCloudClickhouseInstanceRead(d *schema.ResourceData, meta int
 	_ = d.Set("product_version", instanceInfo.Version)
 	_ = d.Set("instance_name", instanceInfo.InstanceName)
 	_ = d.Set("charge_type", *instanceInfo.PayMode)
-	_ = d.Set("renew_flag", instanceInfo.RenewFlag)
+	if *instanceInfo.RenewFlag {
+		_ = d.Set("renew_flag", 1)
+	}
 	_ = d.Set("expire_time", instanceInfo.ExpireTime)
 	_ = d.Set("cos_bucket_name", instanceInfo.CosBucketName)
 	_ = d.Set("mount_disk_type", instanceInfo.MountDiskType)
@@ -412,7 +403,7 @@ func resourceTencentCloudClickhouseInstanceCreate(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := CdwchService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	err = resource.Retry(5*writeRetryTimeout, func() *resource.RetryError {
+	err = resource.Retry(10*writeRetryTimeout, func() *resource.RetryError {
 		instanceInfo, innerErr := service.DescribeInstance(ctx, instanceId)
 		if innerErr != nil {
 			return retryError(innerErr)

@@ -14,10 +14,10 @@ func TestAccTencentCloudClickhouseInstanceResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccClickhouseInstanceBasic,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cdwch_instance.cdwch_instance", "id")),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_clickhouse_instance.cdwch_instance", "id")),
 			},
 			{
-				ResourceName:            "tencentcloud_cdwch_instance.cdwch_instance",
+				ResourceName:            "tencentcloud_clickhouse_instance.cdwch_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"time_span"},
@@ -34,10 +34,10 @@ func TestAccTencentCloudClickhouseInstanceResource_prepaid(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccClickhouseInstancePrepaid,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cdwch_instance.cdwch_instance_prepaid", "id")),
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_clickhouse_instance.cdwch_instance_prepaid", "id")),
 			},
 			{
-				ResourceName:            "tencentcloud_cdwch_instance.cdwch_instance_prepaid",
+				ResourceName:            "tencentcloud_clickhouse_instance.cdwch_instance_prepaid",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"time_span"},
@@ -57,7 +57,6 @@ resource "tencentcloud_clickhouse_instance" "cdwch_instance" {
     spec_name="SCH6"
     count=2
     disk_size=300
-	scale_out_cluster="default_cluster"
   }
   common_spec {
     spec_name="SCH6"
@@ -80,7 +79,6 @@ resource "tencentcloud_clickhouse_instance" "cdwch_instance_prepaid" {
     spec_name="SCH6"
     count=2
     disk_size=300
-	scale_out_cluster="default_cluster"
   }
   common_spec {
     spec_name="SCH6"

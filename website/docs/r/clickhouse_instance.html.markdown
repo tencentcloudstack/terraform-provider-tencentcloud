@@ -21,10 +21,9 @@ resource "tencentcloud_clickhouse_instance" "cdwch_instance" {
   subnet_id       = "subnet-xxxxxx"
   product_version = "21.8.12.29"
   data_spec {
-    spec_name         = "SCH6"
-    count             = 2
-    disk_size         = 300
-    scale_out_cluster = "default_cluster"
+    spec_name = "SCH6"
+    count     = 2
+    disk_size = 300
   }
   common_spec {
     spec_name = "SCH6"
@@ -46,10 +45,9 @@ resource "tencentcloud_clickhouse_instance" "cdwch_instance_prepaid" {
   subnet_id       = "subnet-xxxxxx"
   product_version = "21.8.12.29"
   data_spec {
-    spec_name         = "SCH6"
-    count             = 2
-    disk_size         = 300
-    scale_out_cluster = "default_cluster"
+    spec_name = "SCH6"
+    count     = 2
+    disk_size = 300
   }
   common_spec {
     spec_name = "SCH6"
@@ -86,17 +84,15 @@ The following arguments are supported:
 
 The `common_spec` object supports the following:
 
-* `count` - (Required, Int) count.
+* `count` - (Required, Int) Node count. NOTE: Only support value 3.
 * `disk_size` - (Required, Int) Disk size.
 * `spec_name` - (Required, String) Spec name.
-* `scale_out_cluster` - (Optional, String) `v_cluster` grouping. Must set when update NodeCount.The new expansion node will be added to the selected v_cluster packet, and the submission synchronization VIP will take effect.
 
 The `data_spec` object supports the following:
 
 * `count` - (Required, Int) Data spec count.
 * `disk_size` - (Required, Int) Disk size.
 * `spec_name` - (Required, String) Spec name.
-* `scale_out_cluster` - (Optional, String) `v_cluster` grouping. Must set when update NodeCount.The new expansion node will be added to the selected v_cluster packet, and the submission synchronization VIP will take effect.
 
 ## Attributes Reference
 
