@@ -132,11 +132,10 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				},
 			},
 			"ike_proto_encry_algorithm": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      VPN_IKE_PROPO_ENCRY_ALGORITHM_3DESCBC,
-				ValidateFunc: validateAllowedStringValue(VPN_IKE_PROPO_ENCRY_ALGORITHM),
-				Description:  "Proto encrypt algorithm of the IKE operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     VPN_IKE_PROPO_ENCRY_ALGORITHM_3DESCBC,
+				Description: "Proto encrypt algorithm of the IKE operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.",
 			},
 			"ike_proto_authen_algorithm": {
 				Type:         schema.TypeString,
@@ -211,11 +210,10 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Description: "Version of the IKE operation specification. Default value is `IKEV1`.",
 			},
 			"ipsec_encrypt_algorithm": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      VPN_IPSEC_ENCRY_ALGORITHM_3DESCBC,
-				ValidateFunc: validateAllowedStringValue(VPN_IPSEC_ENCRY_ALGORITHM),
-				Description:  "Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     VPN_IPSEC_ENCRY_ALGORITHM_3DESCBC,
+				Description: "Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.",
 			},
 			"ipsec_integrity_algorithm": {
 				Type:         schema.TypeString,
