@@ -54,7 +54,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -208,7 +207,7 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     VPN_IPSEC_ENCRY_ALGORITHM_3DESCBC,
-				Description: "Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.",
+				Description: "Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`, `AES128GCM128`, `AES192GCM128`, `AES256GCM128`. Default value is `3DES-CBC`.",
 			},
 			"ipsec_integrity_algorithm": {
 				Type:        schema.TypeString,
@@ -898,7 +897,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DeleteVpnConnection(request)
 		if e != nil {
-			if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				if ee.GetCode() == "UnsupportedOperation.InvalidState" {
 					return resource.RetryableError(fmt.Errorf("state is not ready, wait to be `AVAILABLE`."))
 				}
@@ -919,7 +918,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(statRequest)
 		if e != nil {
-			ee, ok := e.(*errors.TencentCloudSDKError)
+			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
 			if !ok {
 				return retryError(e)
 			}
