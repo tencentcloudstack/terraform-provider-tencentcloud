@@ -1070,6 +1070,9 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.539
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch v1.0.698
+## explicit; go 1.14
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs v1.0.627
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719
