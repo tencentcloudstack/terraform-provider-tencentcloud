@@ -11,8 +11,7 @@ description: |-
 
 Provides a resource to create security group rule.
 
-~> **NOTE:** This resource was offline and no longer supported. Please use 'tencentcloud_security_group_lite_rule' instead.
-~> **NOTE:** Single security rule is hardly ordered, use tencentcloud_security_group_lite_rule instead.
+~> **NOTE:** This resource will be offline and no longer supported, beacause single security rule is hardly ordered. Please use 'tencentcloud_security_group_lite_rule' instead.
 
 ## Example Usage
 
