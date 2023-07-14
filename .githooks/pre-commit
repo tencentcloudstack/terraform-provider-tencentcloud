@@ -1,5 +1,5 @@
 #!/bin/sh
-REQUIRED_GO_VERSION=go$(cat .go-version) # use the .go-version
+REQUIRED_GO_VERSION=go1.18.3 #go$(cat .go-version) # use the .go-version
 
 printf "==> Step 1: [Faster]Gofmt Check...\n"
 make fmt-faster
