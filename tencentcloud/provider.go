@@ -1570,6 +1570,10 @@ Tencent Cloud Service Engine(TSE)
   Resource
 	tencentcloud_tse_instance
 
+ClickHouse(CDWCH)
+  Resource
+	tencentcloud_clickhouse_instance
+
 */
 package tencentcloud
 
@@ -2913,6 +2917,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
+			"tencentcloud_clickhouse_instance":                        resourceTencentCloudClickhouseInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
