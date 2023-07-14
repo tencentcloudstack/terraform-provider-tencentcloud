@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudTseGatewayCanaryRulesDataSource_basic -v
@@ -16,7 +17,7 @@ func TestAccTencentCloudTseGatewayCanaryRulesDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTseGatewayCanaryRulesDataSource,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tse_gateway_canary_rules.gateway_canary_rules"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_canary_rules.gateway_canary_rules", "result.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_canary_rules.gateway_canary_rules", "result.0.canary_rule_list.#"),

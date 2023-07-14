@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudNeedFixTseGatewayRoutesDataSource_basic(t *testing.T) {
@@ -15,7 +16,7 @@ func TestAccTencentCloudNeedFixTseGatewayRoutesDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTseGatewayRoutesDataSource,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tse_gateway_routes.gateway_routes"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.#"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.#"),
