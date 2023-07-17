@@ -19,6 +19,10 @@ func TestAccTencentCloudPostgresqlBackupDownloadUrlsDataSource_basic(t *testing.
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				// Config: fmt.Sprintf(testAccPostgresqlBackupDownloadUrlsDataSource, startTime, endTime),
 				Config: testAccPostgresqlBackupDownloadUrlsDataSource,
 				Check: resource.ComposeTestCheckFunc(
@@ -40,7 +44,7 @@ func TestAccTencentCloudPostgresqlBackupDownloadUrlsDataSource_basic(t *testing.
 	})
 }
 
-const testAccPostgresqlBackupDownloadUrlsDataSource = CommonPresetPGSQL + defaultVpcSubnets + `
+const testAccPostgresqlBackupDownloadUrlsDataSource = OperationPresetPGSQL + defaultVpcSubnets + `
 data "tencentcloud_postgresql_log_backups" "log_backups" {
 	min_finish_time = ""
 	max_finish_time = ""
@@ -55,8 +59,8 @@ data "tencentcloud_postgresql_log_backups" "log_backups" {
 data "tencentcloud_postgresql_backup_download_urls" "backup_download_urls" {
   db_instance_id = local.pgsql_id
   backup_type = "LogBackup"
-//   backup_id = data.tencentcloud_postgresql_log_backups.log_backups.log_backup_set.0.id
-  backup_id = "01a57d08-b7f5-584e-b64a-dc2236bb0438"
+  backup_id = data.tencentcloud_postgresql_log_backups.log_backups.log_backup_set.0.id
+//   backup_id = "01a57d08-b7f5-584e-b64a-dc2236bb0438"
   url_expire_time = 12
   backup_download_restriction {
 		restriction_type = "NONE"

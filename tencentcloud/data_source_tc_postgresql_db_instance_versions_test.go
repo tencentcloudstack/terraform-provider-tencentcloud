@@ -10,12 +10,17 @@ func TestAccTencentCloudPostgresqlDbInstanceVersionsDataSource_basic(t *testing.
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlDbInstanceVersionsDataSource,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_db_instance_versions.db_instance_versions", "version_set.#"),
