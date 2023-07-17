@@ -14,28 +14,40 @@ const testAccPostgresqlInstanceOperation_restart = "tencentcloud_postgresql_rest
 func TestAccTencentCloudPostgresqlCommonDbInstanceOperationResource_all(t *testing.T) {
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config:    testAccPostgresqlCommonDbInstanceOperation_restart,
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config: testAccPostgresqlCommonDbInstanceOperation_restart,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlInstanceOperation_restart, "id"),
 					resource.TestCheckResourceAttrSet(testAccPostgresqlInstanceOperation_restart, "db_instance_id"),
 				),
 			},
 			{
-				Config:    testAccPostgresqlCommonDbInstanceOperation_isolate,
-				PreConfig: func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
+				Config: testAccPostgresqlCommonDbInstanceOperation_isolate,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlInstanceOperation_isolate, "id"),
 					resource.TestCheckResourceAttr(testAccPostgresqlInstanceOperation_isolate, "db_instance_id_set.#", "1"),
 				),
 			},
 			{
-				Config:    testAccPostgresqlCommonDbInstanceOperation_disisolate,
-				PreConfig: func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
+				Config: testAccPostgresqlCommonDbInstanceOperation_disisolate,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlInstanceOperation_disisolate, "id"),
 					resource.TestCheckResourceAttr(testAccPostgresqlInstanceOperation_disisolate, "db_instance_id_set.#", "1"),
@@ -50,12 +62,18 @@ func TestAccTencentCloudPostgresqlCommonDbInstanceOperationResource_all(t *testi
 func TestAccTencentCloudPostgresqlCommonDbInstanceOperationResource_renew(t *testing.T) {
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config:    testAccPostgresqlCommonDbInstanceOperation_renew,
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
+				Config: testAccPostgresqlCommonDbInstanceOperation_renew,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlInstanceOperation_renew, "id"),
 					resource.TestCheckResourceAttrSet(testAccPostgresqlInstanceOperation_renew, "db_instance_id"),
