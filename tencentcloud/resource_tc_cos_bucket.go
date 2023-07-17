@@ -462,7 +462,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
-				Description: "Enable bucket versioning.",
+				Description: "Enable bucket versioning. NOTE: The `multi_az` feature is true for the current bucket, cannot disable version control.",
 			},
 			"acceleration_enable": {
 				Type:        schema.TypeBool,
@@ -757,7 +757,7 @@ func resourceTencentCloudCosBucket() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				ForceNew:    true,
-				Description: "Indicates whether to create a bucket of multi available zone. NOTE: If set to true, the versioning must enable.",
+				Description: "Indicates whether to create a bucket of multi available zone.",
 			},
 			"enable_intelligent_tiering": {
 				Type:        schema.TypeBool,
@@ -800,16 +800,12 @@ func resourceTencentCloudCosBucketCreate(d *schema.ResourceData, meta interface{
 	role, roleOk := d.GetOk("replica_role")
 	rule, ruleOk := d.GetOk("replica_rules")
 	versioning := d.Get("versioning_enable").(bool)
-	isMAZ := d.Get("multi_az").(bool)
 
 	if !versioning {
 		if roleOk || role.(string) != "" {
 			return fmt.Errorf("cannot configure role unless versioning enable")
 		} else if ruleOk || len(rule.([]interface{})) > 0 {
 			return fmt.Errorf("cannot configure replica rule unless versioning enable")
-		}
-		if isMAZ {
-			return fmt.Errorf("cannot create MAZ bucket unless versioning enable")
 		}
 	}
 

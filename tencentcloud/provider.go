@@ -502,6 +502,7 @@ Elasticsearch Service(ES)
 
   Resource
     tencentcloud_elasticsearch_instance
+	tencentcloud_elasticsearch_security_group
 
 Global Application Acceleration(GAAP)
   Data Source
@@ -1564,9 +1565,14 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_zookeeper_server_interfaces
 	tencentcloud_tse_nacos_server_interfaces
 	tencentcloud_tse_gateway_nodes
+	tencentcloud_tse_gateway_canary_rules
 
   Resource
 	tencentcloud_tse_instance
+
+ClickHouse(CDWCH)
+  Resource
+	tencentcloud_clickhouse_instance
 
 */
 package tencentcloud
@@ -2185,6 +2191,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_zookeeper_replicas":                    dataSourceTencentCloudTseZookeeperReplicas(),
 			"tencentcloud_tse_zookeeper_server_interfaces":           dataSourceTencentCloudTseZookeeperServerInterfaces(),
 			"tencentcloud_tse_gateway_nodes":                         dataSourceTencentCloudTseGatewayNodes(),
+			"tencentcloud_tse_gateway_routes":                        dataSourceTencentCloudTseGatewayRoutes(),
+			"tencentcloud_tse_gateway_canary_rules":                  dataSourceTencentCloudTseGatewayCanaryRules(),
 			"tencentcloud_lighthouse_modify_instance_bundle":         dataSourceTencentCloudLighthouseModifyInstanceBundle(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
 			"tencentcloud_lighthouse_scene":                          dataSourceTencentCloudLighthouseScene(),
@@ -2503,6 +2511,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_monitor_tmp_grafana_config":                          resourceTencentCloudMonitorTmpGrafanaConfig(),
 			"tencentcloud_mongodb_standby_instance":                            resourceTencentCloudMongodbStandbyInstance(),
 			"tencentcloud_elasticsearch_instance":                              resourceTencentCloudElasticsearchInstance(),
+			"tencentcloud_elasticsearch_security_group":                        resourceTencentCloudElasticsearchSecurityGroup(),
 			"tencentcloud_postgresql_instance":                                 resourceTencentCloudPostgresqlInstance(),
 			"tencentcloud_postgresql_readonly_instance":                        resourceTencentCloudPostgresqlReadonlyInstance(),
 			"tencentcloud_postgresql_readonly_group":                           resourceTencentCloudPostgresqlReadonlyGroup(),
@@ -2908,6 +2917,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
+			"tencentcloud_clickhouse_instance":                        resourceTencentCloudClickhouseInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

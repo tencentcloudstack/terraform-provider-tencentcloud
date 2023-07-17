@@ -28,7 +28,6 @@ resource "tencentcloud_nat_gateway" "example" {
     tencentcloud_eip.eip_example1.public_ip,
     tencentcloud_eip.eip_example2.public_ip,
   ]
-
   tags = {
     tf_tag_key = "tf_tag_value"
   }
@@ -104,6 +103,12 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				MaxItems:    10,
 				Description: "EIP IP address set bound to the gateway. The value of at least 1 and at most 10.",
 			},
+			"zone": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "The availability zone, such as `ap-guangzhou-3`.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -140,6 +145,10 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 			publicIp := eipSet[i].(string)
 			request.PublicIpAddresses = append(request.PublicIpAddresses, &publicIp)
 		}
+	}
+
+	if v, ok := d.GetOk("zone"); ok {
+		request.Zone = helper.String(v.(string))
 	}
 
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
@@ -253,6 +262,7 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("bandwidth", *nat.InternetMaxBandwidthOut)
 	_ = d.Set("created_time", *nat.CreatedTime)
 	_ = d.Set("assigned_eip_set", flattenAddressList((*nat).PublicIpAddressSet))
+	_ = d.Set("zone", *nat.Zone)
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
@@ -271,6 +281,14 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	vpcService := VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+
+	immutableArgs := []string{"zone"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
 
 	d.Partial(true)
 	natGatewayId := d.Id()

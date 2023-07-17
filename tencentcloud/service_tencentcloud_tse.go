@@ -414,3 +414,127 @@ func (me *TseService) DescribeTseGatewayNodesByFilter(ctx context.Context, param
 
 	return
 }
+
+func (me *TseService) DescribeTseGatewayCanaryRulesByFilter(ctx context.Context, param map[string]interface{}) (gatewayCanaryRules *tse.CloudAPIGatewayCanaryRuleList, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewayCanaryRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+	)
+	canaryRules := make([]*tse.CloudNativeAPIGatewayCanaryRule, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayCanaryRules(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response.Result == nil || len(response.Response.Result.CanaryRuleList) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		canaryRules = append(canaryRules, response.Response.Result.CanaryRuleList...)
+		if len(response.Response.Result.CanaryRuleList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	gatewayCanaryRules = &tse.CloudAPIGatewayCanaryRuleList{
+		TotalCount:     &total,
+		CanaryRuleList: canaryRules,
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseGatewayRoutesByFilter(ctx context.Context, param map[string]interface{}) (gatewayRoutes *tse.KongServiceRouteList, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewayRoutesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "ServiceName" {
+			request.ServiceName = v.(*string)
+		}
+		if k == "RouteName" {
+			request.RouteName = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tse.ListFilter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+	)
+	route := make([]*tse.KongRoutePreview, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayRoutes(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response.Result == nil || len(response.Response.Result.RouteList) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		route = append(route, response.Response.Result.RouteList...)
+		if len(response.Response.Result.RouteList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	gatewayRoutes = &tse.KongServiceRouteList{
+		TotalCount: &total,
+		RouteList:  route,
+	}
+
+	return
+}

@@ -28,7 +28,7 @@ func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 					testAccCheckTCRTagRetentionRuleExists("tencentcloud_tcr_tag_retention_rule.my_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "registry_id"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "namespace_name", "tf_test_ns_retention"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "namespace_name", "tf_test_ns_retention_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.#"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.0.key", "nDaysSinceLastPush"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.0.value", "1"),
@@ -46,7 +46,7 @@ func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 					testAccCheckTCRTagRetentionRuleExists("tencentcloud_tcr_tag_retention_rule.my_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "registry_id"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "namespace_name", "tf_test_ns_retention"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "namespace_name", "tf_test_ns_retention_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.#"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.0.key", "nDaysSinceLastPush"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.0.value", "2"),
@@ -152,7 +152,7 @@ const testAccTcrTagRetentionRule = testAccTCRInstance_retention + `
 
 resource "tencentcloud_tcr_namespace" "my_ns" {
   instance_id 	 = tencentcloud_tcr_instance.mytcr_retention.id
-  name			 = "tf_test_ns_retention"
+  name			 = "tf_test_ns_retention_rule"
   is_public		 = true
   is_auto_scan	 = true
   is_prevent_vul = true
@@ -179,7 +179,7 @@ const testAccTcrTagRetentionRule_update = testAccTCRInstance_retention + `
 
 resource "tencentcloud_tcr_namespace" "my_ns" {
   instance_id 	 = tencentcloud_tcr_instance.mytcr_retention.id
-  name			 = "tf_test_ns_retention"
+  name			 = "tf_test_ns_retention_rule"
   is_public		 = true
   is_auto_scan	 = true
   is_prevent_vul = true

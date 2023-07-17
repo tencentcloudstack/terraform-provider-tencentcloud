@@ -1072,3 +1072,21 @@ const (
 )
 
 // End of TSE
+
+// ES
+const (
+	defaultEsInstanceId    = "es-5wn36he6"
+	defaultEsSecurityGroup = "sg-edmur627"
+)
+
+const DefaultEsVariables = `
+variable "instance_id" {
+  default = "` + defaultEsInstanceId + `"
+}
+
+variable "security_group_id" {
+  default = "` + defaultEsSecurityGroup + `"
+}
+`
+
+// End of TSE

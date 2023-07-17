@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_nat_gateway: support set `zone`
+```
