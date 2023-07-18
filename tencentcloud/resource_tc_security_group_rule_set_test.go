@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudSecurityGroupRuleSetResource_basic -v
 func TestAccTencentCloudSecurityGroupRuleSetResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
