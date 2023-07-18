@@ -64,7 +64,7 @@ func testSweepCvmInstance(region string) error {
 func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 	t.Parallel()
 
-	id := "tencentcloud_instance.foo"
+	id := "tencentcloud_instance.cvm_basic"
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
 		IDRefreshName: id,
@@ -104,7 +104,9 @@ func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 }
 
 func TestAccTencentCloudInstanceResource_WithDataDisk(t *testing.T) {
-	id := "tencentcloud_instance.foo"
+	t.Parallel()
+
+	id := "tencentcloud_instance.cvm_data_disks"
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
 		IDRefreshName: id,
@@ -721,7 +723,7 @@ func testAccCheckInstanceDestroy(s *terraform.State) error {
 }
 
 const testAccTencentCloudInstanceBasic = defaultInstanceVariable + `
-resource "tencentcloud_instance" "foo" {
+resource "tencentcloud_instance" "cvm_basic" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
@@ -828,7 +830,7 @@ resource "tencentcloud_instance" "foo" {
 `
 
 const testAccTencentCloudInstanceWithDataDisk = defaultInstanceVariable + `
-resource "tencentcloud_instance" "foo" {
+resource "tencentcloud_instance" "cvm_data_disks" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
