@@ -235,6 +235,11 @@ func resourceTencentCloudMonitorAlarmNotice() *schema.Resource {
 				Computed:    true,
 				Description: "Whether it is the system default notification template 0=No 1=Yes.",
 			},
+			"amp_consumer_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Amp consumer ID.",
+			},
 			"policy_ids": {
 				Type:        schema.TypeSet,
 				Computed:    true,
@@ -439,6 +444,9 @@ func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interfac
 			return err
 		}
 		if err = d.Set("policy_ids", noticesItem.PolicyIds); err != nil {
+			return err
+		}
+		if err = d.Set("amp_consumer_id", noticesItem.AMPConsumerId); err != nil {
 			return err
 		}
 

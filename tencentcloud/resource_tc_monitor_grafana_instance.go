@@ -4,10 +4,26 @@ Provides a resource to create a monitor grafanaInstance
 Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
+variable "availability_zone" {
+  default = "ap-guangzhou-6"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_monitor_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "tf_monitor_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_monitor_grafana_instance" "foo" {
   instance_name         = "test-grafana"
-  vpc_id                = "vpc-2hfyray3"
-  subnet_ids            = ["subnet-rdkj0agk"]
+  vpc_id                = tencentcloud_vpc.vpc.id
+  subnet_ids            = [tencentcloud_subnet.subnet.id]
   grafana_init_password = "1234567890"
   enable_internet = false
 
@@ -21,7 +37,7 @@ Import
 
 monitor grafanaInstance can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_monitor_grafana_instance.grafanaInstance grafanaInstance_id
+$ terraform import tencentcloud_monitor_grafana_instance.foo grafanaInstance_id
 ```
 */
 package tencentcloud
@@ -374,6 +390,24 @@ func resourceTencentCloudMonitorGrafanaInstanceDelete(d *schema.ResourceData, me
 		}
 		if *instance.InstanceStatus == 7 {
 			return resource.NonRetryableError(fmt.Errorf("grafanaInstance status is %v, operate failed.", *instance.InstanceStatus))
+		}
+		return resource.RetryableError(fmt.Errorf("grafanaInstance status is %v, retry...", *instance.InstanceStatus))
+	})
+	if err != nil {
+		return err
+	}
+	
+	if err := service.CleanGrafanaInstanceById(ctx, instanceId); err != nil {
+		return err
+	}
+
+	err = resource.Retry(1*readRetryTimeout, func() *resource.RetryError {
+		instance, errRet := service.DescribeMonitorGrafanaInstance(ctx, instanceId)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if instance == nil {
+			return nil
 		}
 		return resource.RetryableError(fmt.Errorf("grafanaInstance status is %v, retry...", *instance.InstanceStatus))
 	})
