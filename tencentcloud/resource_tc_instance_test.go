@@ -817,7 +817,7 @@ data "tencentcloud_instance_types" "new_type" {
 	memory_size    = 2
   }
 
-resource "tencentcloud_instance" "foo" {
+resource "tencentcloud_instance" "cvm_basic" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
