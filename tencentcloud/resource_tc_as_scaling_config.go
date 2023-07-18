@@ -6,9 +6,14 @@ Provides a resource to create a configuration for an AS (Auto scaling) instance.
 Example Usage
 
 ```hcl
-resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "launch-configuration"
-  image_id           = "img-9qabwvbn"
+data "tencentcloud_images" "example" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "Tencent Linux release 3.2 (Final)"
+}
+
+resource "tencentcloud_as_scaling_config" "example" {
+  configuration_name = "example-launch-configuration"
+  image_id           = data.tencentcloud_images.example.images.0.image_id
   instance_types     = ["SA1.SMALL1"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
