@@ -106,7 +106,7 @@ func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 func TestAccTencentCloudInstanceResource_WithDataDisk(t *testing.T) {
 	t.Parallel()
 
-	id := "tencentcloud_instance.cvm_data_disks"
+	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
 		IDRefreshName: id,
@@ -830,7 +830,7 @@ resource "tencentcloud_instance" "cvm_basic" {
 `
 
 const testAccTencentCloudInstanceWithDataDisk = defaultInstanceVariable + `
-resource "tencentcloud_instance" "cvm_data_disks" {
+resource "tencentcloud_instance" "foo" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
