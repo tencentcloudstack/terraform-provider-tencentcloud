@@ -104,8 +104,6 @@ func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 }
 
 func TestAccTencentCloudInstanceResource_WithDataDisk(t *testing.T) {
-	t.Parallel()
-
 	id := "tencentcloud_instance.foo"
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
