@@ -16,44 +16,86 @@ Provides a resource to create security group rule. This resource is similar with
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_security_group" "sglab_1" {
-  name        = "mysg_1"
-  description = "favourite sg_1"
+resource "tencentcloud_security_group" "base" {
+  name        = "test-set-sg"
+  description = "Testing Rule Set Security"
 }
 
-resource "tencentcloud_security_group_rule_set" "sglab_1" {
-  security_group_id = tencentcloud_security_group.sglab_1.id
+resource "tencentcloud_security_group" "relative" {
+  name        = "for-relative"
+  description = "Used for attach security policy"
+}
+
+resource "tencentcloud_address_template" "foo" {
+  name      = "test-set-aTemp"
+  addresses = ["10.0.0.1", "10.0.1.0/24", "10.0.0.1-10.0.0.100"]
+}
+
+resource "tencentcloud_address_template_group" "foo" {
+  name         = "test-set-atg"
+  template_ids = [tencentcloud_address_template.foo.id]
+}
+
+resource "tencentcloud_security_group_rule_set" "base" {
+  security_group_id = tencentcloud_security_group.base.id
+
   ingress {
-    cidr_block  = "10.0.0.0/16" # Accept IP or CIDR
-    protocol    = "TCP"         # Default is ALL
-    port        = "80"          # Accept port e.g. 80 or PortRange e.g. 8080-8089
     action      = "ACCEPT"
-    description = "favourite sg rule_1"
+    cidr_block  = "10.0.0.0/22"
+    protocol    = "TCP"
+    port        = "80-90"
+    description = "A:Allow Ips and 80-90"
   }
+
   ingress {
+    action      = "ACCEPT"
+    cidr_block  = "10.0.2.1"
+    protocol    = "UDP"
+    port        = "8080"
+    description = "B:Allow UDP 8080"
+  }
+
+  ingress {
+    action      = "ACCEPT"
+    cidr_block  = "10.0.2.1"
+    protocol    = "UDP"
+    port        = "8080"
+    description = "C:Allow UDP 8080"
+  }
+
+  ingress {
+    action      = "ACCEPT"
+    cidr_block  = "172.18.1.2"
+    protocol    = "ALL"
+    port        = "ALL"
+    description = "D:Allow ALL"
+  }
+
+  ingress {
+    action             = "DROP"
     protocol           = "TCP"
     port               = "80"
-    action             = "ACCEPT"
-    source_security_id = tencentcloud_security_group.sglab_3.id
-    description        = "favourite sg rule_2"
+    source_security_id = tencentcloud_security_group.relative.id
+    description        = "E:Block relative"
   }
 
   egress {
-    action              = "ACCEPT"
-    address_template_id = "ipm-xxxxxxxx" # Support address template (group)
-    description         = "Allow address template"
-  }
-  egress {
-    action                 = "ACCEPT"
-    service_template_group = "ppmg-xxxxxxxx" # Support protocol template (group)
-    description            = "Allow protocol template"
-  }
-  egress {
-    cidr_block  = "10.0.0.0/16"
-    protocol    = "TCP"
-    port        = "80"
     action      = "DROP"
-    description = "favourite sg egress rule"
+    cidr_block  = "10.0.0.0/16"
+    protocol    = "ICMP"
+    description = "A:Block ping3"
+  }
+
+  egress {
+    action              = "DROP"
+    address_template_id = tencentcloud_address_template.foo.id
+    description         = "B:Allow template"
+  }
+
+  egress {
+    action                 = "DROP"
+    address_template_group = tencentcloud_address_template_group.foo.id
+    description            = "C:DROP template group"
   }
 }
 ```
