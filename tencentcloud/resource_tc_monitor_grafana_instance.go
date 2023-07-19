@@ -112,6 +112,12 @@ func resourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 				Description: "Control whether grafana could be accessed by internet.",
 			},
 
+			"is_distroy": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Whether to clean up completely, the default is false.",
+			},
+
 			"instance_status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -397,22 +403,25 @@ func resourceTencentCloudMonitorGrafanaInstanceDelete(d *schema.ResourceData, me
 		return err
 	}
 
-	if err := service.CleanGrafanaInstanceById(ctx, instanceId); err != nil {
-		return err
+	if v, ok := d.GetOk("is_distroy"); ok && v.(bool) {
+		if err := service.CleanGrafanaInstanceById(ctx, instanceId); err != nil {
+			return err
+		}
+
+		err = resource.Retry(1*readRetryTimeout, func() *resource.RetryError {
+			instance, errRet := service.DescribeMonitorGrafanaInstance(ctx, instanceId)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			if instance == nil {
+				return nil
+			}
+			return resource.RetryableError(fmt.Errorf("grafanaInstance status is %v, retry...", *instance.InstanceStatus))
+		})
+		if err != nil {
+			return err
+		}
 	}
 
-	err = resource.Retry(1*readRetryTimeout, func() *resource.RetryError {
-		instance, errRet := service.DescribeMonitorGrafanaInstance(ctx, instanceId)
-		if errRet != nil {
-			return retryError(errRet, InternalError)
-		}
-		if instance == nil {
-			return nil
-		}
-		return resource.RetryableError(fmt.Errorf("grafanaInstance status is %v, retry...", *instance.InstanceStatus))
-	})
-	if err != nil {
-		return err
-	}
 	return nil
 }

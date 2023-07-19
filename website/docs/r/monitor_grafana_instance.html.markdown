@@ -50,6 +50,7 @@ The following arguments are supported:
 * `instance_name` - (Required, String) Instance name.
 * `enable_internet` - (Optional, Bool) Control whether grafana could be accessed by internet.
 * `grafana_init_password` - (Optional, String) Grafana server admin password.
+* `is_distroy` - (Optional, Bool) Whether to clean up completely, the default is false.
 * `subnet_ids` - (Optional, Set: [`String`]) Subnet Id array.
 * `tags` - (Optional, Map) Tag description list.
 * `vpc_id` - (Optional, String) Vpc Id.
