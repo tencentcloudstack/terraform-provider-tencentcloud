@@ -29,6 +29,7 @@ import (
 	cbs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs/v20170312"
 	cdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb/v20170320"
 	cdn "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn/v20180606"
+	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
 	cfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cfs/v20190719"
 	chdfs "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112"
 	ckafka "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819"
@@ -169,6 +170,7 @@ type TencentCloudClient struct {
 	apmConn            *apm.Client
 	ciamConn           *ciam.Client
 	tseConn            *tse.Client
+	cdwchConn          *cdwch.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1192,6 +1194,20 @@ func (me *TencentCloudClient) UseTseClient() *tse.Client {
 	me.tseConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.tseConn
+}
+
+// UseCdwchClient returns cdwch client for service
+func (me *TencentCloudClient) UseCdwchClient() *cdwch.Client {
+	if me.cdwchConn != nil {
+		return me.cdwchConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.cdwchConn, _ = cdwch.NewClient(me.Credential, me.Region, cpf)
+	me.cdwchConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.cdwchConn
 }
 
 func getEnvDefault(key string, defVal int) int {

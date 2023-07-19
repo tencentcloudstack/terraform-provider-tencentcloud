@@ -4,10 +4,10 @@ Use this data source to query the list of SQL Server backups.
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_backups" "foo" {
-  instance_id           = "mssql-3cdq7kx5"
-  start_time         = "2020-06-17 00:00:00"
-  end_time			= "2020-06-22 00:00:00"
+data "tencentcloud_sqlserver_backups" "example" {
+  instance_id = "mssql-qelbzgwf"
+  start_time  = "2020-06-17 00:00:00"
+  end_time    = "2020-06-22 00:00:00"
 }
 ```
 */

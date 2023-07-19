@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -12,6 +13,9 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudSqlserverRestoreInstanceResource_basic -v
 func TestAccTencentCloudSqlserverRestoreInstanceResource_basic(t *testing.T) {
+	loc, _ := time.LoadLocation("Asia/Shanghai")
+	startTime := time.Now().AddDate(0, 0, -3).In(loc).Format("2006-01-02 15:04:05")
+	endTime := time.Now().In(loc).Format("2006-01-02 15:04:05")
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -20,7 +24,7 @@ func TestAccTencentCloudSqlserverRestoreInstanceResource_basic(t *testing.T) {
 		Providers:    testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSqlserverRestoreInstance,
+				Config: fmt.Sprintf(testAccSqlserverRestoreInstance, startTime, endTime),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_restore_instance.restore_instance", "id"),
 				),
@@ -68,9 +72,15 @@ func testAccCheckSqlserverRestoreDBDestroy(s *terraform.State) error {
 }
 
 const testAccSqlserverRestoreInstance = `
-resource "tencentcloud_sqlserver_restore_instance" "restore_instance" {
+data "tencentcloud_sqlserver_backups" "example" {
   instance_id = "mssql-qelbzgwf"
-  backup_id   = 3482091273
+  start_time  = "%s"
+  end_time    = "%s"
+}
+
+resource "tencentcloud_sqlserver_restore_instance" "restore_instance" {
+  instance_id = data.tencentcloud_sqlserver_backups.example.instance_id
+  backup_id   = data.tencentcloud_sqlserver_backups.example.list.0.id
   rename_restore {
     old_name = "keep_pubsub_db2"
     new_name = "restore_keep_pubsub_db2"

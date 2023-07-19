@@ -25,6 +25,12 @@ func TestAccTencentCloudSqlserverDatabaseTDEResource_basic(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
+			{
+				Config: testAccSqlserverDatabaseTDEUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_database_tde.database_tde", "id"),
+				),
+			},
 		},
 	})
 }
@@ -34,5 +40,13 @@ resource "tencentcloud_sqlserver_database_tde" "database_tde" {
   instance_id = "mssql-qelbzgwf"
   db_names    = ["keep_tde_db", "keep_tde_db2"]
   encryption  = "enable"
+}
+`
+
+const testAccSqlserverDatabaseTDEUpdate = `
+resource "tencentcloud_sqlserver_database_tde" "database_tde" {
+  instance_id = "mssql-qelbzgwf"
+  db_names    = ["keep_tde_db", "keep_tde_db2"]
+  encryption  = "disable"
 }
 `

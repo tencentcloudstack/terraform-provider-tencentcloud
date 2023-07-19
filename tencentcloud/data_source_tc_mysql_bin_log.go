@@ -230,7 +230,7 @@ func dataSourceTencentCloudMysqlBinLogRead(d *schema.ResourceData, meta interfac
 					remoteInfoMap := map[string]interface{}{}
 
 					if remoteInfo.SubBackupId != nil {
-						remoteInfoMap["sub_backup_id"] = remoteInfo.SubBackupId
+						remoteInfoMap["sub_backup_id"] = []interface{}{remoteInfo.SubBackupId}
 					}
 
 					if remoteInfo.Region != nil {

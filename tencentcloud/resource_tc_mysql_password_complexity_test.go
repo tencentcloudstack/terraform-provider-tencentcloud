@@ -25,16 +25,34 @@ func TestAccTencentCloudMysqlPasswordComplexityResource_basic(t *testing.T) {
 	})
 }
 
-const testAccMysqlPasswordComplexityVar = `
-variable "instance_id" {
-  default = "` + defaultDbBrainInstanceId + `"
-}
-`
+const testAccMysqlPasswordComplexity = `
 
-const testAccMysqlPasswordComplexity = testAccMysqlPasswordComplexityVar + `
+resource "tencentcloud_mysql_instance" "this" {
+	instance_name  = "test-nv"
+	vpc_id         = "vpc-4owdpnwr"
+	subnet_id      = "subnet-ahv6swf2"
+	engine_version = "5.7"
+	root_password  = "password123"
+	availability_zone = "ap-guangzhou-3"
+	mem_size       = 1000
+	volume_size    = 25
+	cpu            = 1
+	intranet_port  = 3306
+	security_groups   = ["sg-ngx2bo7j"]
+  
+	tags = {
+	  createdBy = "terraform"
+	}
+  
+	parameters = {
+	  character_set_server = "gbk"
+	  lower_case_table_names = "0"
+	  max_connections      = "1000"
+	}
+}
 
 resource "tencentcloud_mysql_password_complexity" "password_complexity" {
-	instance_id = var.instance_id
+	instance_id = tencentcloud_mysql_instance.this.id
 	param_list {
 	  name = "validate_password_length"
 	  current_value = "8"

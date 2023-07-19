@@ -91,6 +91,7 @@ The `user_notices` object supports the following:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
+* `amp_consumer_id` - Amp consumer ID.
 * `is_preset` - Whether it is the system default notification template 0=No 1=Yes.
 * `policy_ids` - List of alarm policy IDs bound to the alarm notification template.
 * `updated_at` - Last modified time.

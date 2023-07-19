@@ -1,7 +1,7 @@
 /*
 Provides a resource to create security group rule.
 
-~> **NOTE:** Single security rule is hardly ordered, use tencentcloud_security_group_lite_rule instead.
+~> **NOTE:** This resource will be offline and no longer supported, beacause single security rule is hardly ordered. Please use 'tencentcloud_security_group_lite_rule' instead.
 
 Example Usage
 
@@ -69,9 +69,10 @@ import (
 
 func resourceTencentCloudSecurityGroupRule() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudSecurityGroupRuleCreate,
-		Read:   resourceTencentCloudSecurityGroupRuleRead,
-		Delete: resourceTencentCloudSecurityGroupRuleDelete,
+		DeprecationMessage: "This resource will be offline and no longer supported, beacause single security rule is hardly ordered. Please use 'tencentcloud_security_group_lite_rule' instead.",
+		Create:             resourceTencentCloudSecurityGroupRuleCreate,
+		Read:               resourceTencentCloudSecurityGroupRuleRead,
+		Delete:             resourceTencentCloudSecurityGroupRuleDelete,
 
 		Schema: map[string]*schema.Schema{
 			"security_group_id": {
