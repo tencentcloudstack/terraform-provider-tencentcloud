@@ -93,7 +93,10 @@ func dataSourceTencentCloudMysqlBinLog() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"sub_backup_id": {
-										Type:        schema.TypeInt,
+										Type: schema.TypeSet,
+										Elem: &schema.Schema{
+											Type: schema.TypeInt,
+										},
 										Computed:    true,
 										Description: "The ID of the remote backup subtask.",
 									},
@@ -227,7 +230,7 @@ func dataSourceTencentCloudMysqlBinLogRead(d *schema.ResourceData, meta interfac
 					remoteInfoMap := map[string]interface{}{}
 
 					if remoteInfo.SubBackupId != nil {
-						remoteInfoMap["sub_backup_id"] = remoteInfo.SubBackupId
+						remoteInfoMap["sub_backup_id"] = []interface{}{remoteInfo.SubBackupId}
 					}
 
 					if remoteInfo.Region != nil {
