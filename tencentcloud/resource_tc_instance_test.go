@@ -64,7 +64,7 @@ func testSweepCvmInstance(region string) error {
 func TestAccTencentCloudInstanceResource_Basic(t *testing.T) {
 	t.Parallel()
 
-	id := "tencentcloud_instance.foo"
+	id := "tencentcloud_instance.cvm_basic"
 	resource.Test(t, resource.TestCase{
 		PreCheck:      func() { testAccPreCheck(t) },
 		IDRefreshName: id,
@@ -564,6 +564,31 @@ func TestAccTencentCloudInstanceResource_WithSpotpaid(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstanceResource_DataDiskOrder(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.foo"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceWithDataDiskOrder,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+					resource.TestCheckResourceAttr(id, "data_disks.0.data_disk_size", "100"),
+					resource.TestCheckResourceAttr(id, "data_disks.1.data_disk_size", "50"),
+					resource.TestCheckResourceAttr(id, "data_disks.2.data_disk_size", "70"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudNeedFixInstancePostpaidToPrepaid(t *testing.T) {
 
 	id := "tencentcloud_instance.foo"
@@ -698,6 +723,19 @@ func testAccCheckInstanceDestroy(s *terraform.State) error {
 }
 
 const testAccTencentCloudInstanceBasic = defaultInstanceVariable + `
+resource "tencentcloud_instance" "cvm_basic" {
+  instance_name     = var.instance_name
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = var.cvm_vpc_id
+  subnet_id         = var.cvm_subnet_id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+}
+`
+
+const testAccTencentCloudInstanceWithDataDiskOrder = defaultInstanceVariable + `
 resource "tencentcloud_instance" "foo" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
@@ -707,6 +745,22 @@ resource "tencentcloud_instance" "foo" {
   subnet_id         = var.cvm_subnet_id
   system_disk_type  = "CLOUD_PREMIUM"
   project_id        = 0
+
+  data_disks {
+    data_disk_size         = 100
+    data_disk_type         = "CLOUD_PREMIUM"
+    delete_with_instance   = true
+  }
+  data_disks {
+    data_disk_size         = 50
+    data_disk_type         = "CLOUD_PREMIUM"
+    delete_with_instance   = true
+  }
+  data_disks {
+    data_disk_size         = 70
+    data_disk_type         = "CLOUD_PREMIUM"
+    delete_with_instance   = true
+  }
 }
 `
 
@@ -763,7 +817,7 @@ data "tencentcloud_instance_types" "new_type" {
 	memory_size    = 2
   }
 
-resource "tencentcloud_instance" "foo" {
+resource "tencentcloud_instance" "cvm_basic" {
   instance_name     = var.instance_name
   availability_zone = var.availability_cvm_zone
   image_id          = data.tencentcloud_images.default.images.0.image_id
