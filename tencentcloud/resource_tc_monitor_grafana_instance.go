@@ -25,7 +25,8 @@ resource "tencentcloud_monitor_grafana_instance" "foo" {
   vpc_id                = tencentcloud_vpc.vpc.id
   subnet_ids            = [tencentcloud_subnet.subnet.id]
   grafana_init_password = "1234567890"
-  enable_internet = false
+  enable_internet 		= false
+  is_distroy 			= true
 
   tags = {
     "createdBy" = "test"
