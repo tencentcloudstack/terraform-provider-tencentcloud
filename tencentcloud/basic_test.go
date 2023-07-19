@@ -1032,6 +1032,15 @@ const (
 	defaultCrsGroupId        = "crs-rpl-orfiwmn5"
 )
 
+const DefaultCrsVar = `
+variable "vpc_id" {
+  default = "` + defaultCrsVpcId + `"
+}
+variable "subnet_id" {
+  default = "` + defaultCrsSubnetId + `"
+}
+`
+
 // End of CRS
 
 const (

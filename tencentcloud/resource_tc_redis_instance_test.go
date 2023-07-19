@@ -311,6 +311,31 @@ func TestAccTencentCloudRedisInstance_Cluster(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudRedisInstance_ReplicasNum -v
+func TestAccTencentCloudRedisInstance_ReplicasNum(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccTencentCloudRedisInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccRedisReplicasNum,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_instance_replicas"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_replicas", "redis_replicas_num", "1"),
+				),
+			},
+			{
+				Config: testAccRedisReplicasNumUp,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_instance_replicas"),
+					resource.TestCheckResourceAttr("tencentcloud_redis_instance.redis_instance_replicas", "redis_replicas_num", "2"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -744,3 +769,46 @@ resource "tencentcloud_redis_instance" "redis_instance_test" {
 }
 `
 }
+
+const testAccRedisReplicasNum = DefaultCrsVar + `
+resource "tencentcloud_redis_instance" "redis_instance_replicas" {
+    auto_renew_flag    = 0
+    availability_zone  = "ap-guangzhou-6"
+    charge_type        = "POSTPAID"
+	password           = "test12345789"
+    mem_size           = 4096
+    name               = "terraform_test_replicas"
+    port               = 6379
+    project_id         = 0
+    redis_replicas_num = 1
+    redis_shard_num    = 3
+    replicas_read_only = false
+    security_groups    = [
+        "sg-edmur627",
+    ]
+    subnet_id          = var.subnet_id
+    type_id            = 7
+    vpc_id             = var.vpc_id
+}`
+
+const testAccRedisReplicasNumUp = DefaultCrsVar + `
+resource "tencentcloud_redis_instance" "redis_instance_replicas" {
+    auto_renew_flag    = 0
+    availability_zone  = "ap-guangzhou-6"
+    charge_type        = "POSTPAID"
+	password           = "test12345789"
+    mem_size           = 4096
+    name               = "terraform_test_replicas"
+    port               = 6379
+    project_id         = 0
+    redis_replicas_num = 2
+    redis_shard_num    = 3
+    replicas_read_only = false
+    security_groups    = [
+        "sg-edmur627",
+    ]
+    subnet_id          = var.subnet_id
+    tags               = {}
+    type_id            = 7
+    vpc_id             = var.vpc_id
+}`
