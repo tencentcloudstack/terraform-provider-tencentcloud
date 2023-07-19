@@ -654,6 +654,7 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_reload_balance_proxy_node
 	tencentcloud_mysql_ro_start_replication
 	tencentcloud_mysql_ro_stop_replication
+	tencentcloud_mysql_isolate_instance
 
 Cloud Monitor(Monitor)
   Data Source
