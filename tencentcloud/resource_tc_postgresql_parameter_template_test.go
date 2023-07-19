@@ -51,6 +51,7 @@ func TestAccTencentCloudPostgresqlParameterTemplateResource_basic(t *testing.T) 
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		CheckDestroy: testAccCheckPostgresqlParameterTemplateDestroy,
@@ -58,6 +59,10 @@ func TestAccTencentCloudPostgresqlParameterTemplateResource_basic(t *testing.T) 
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlParameterTemplate,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlParameterTemplateExists("tencentcloud_postgresql_parameter_template.parameter_template"),
 					resource.TestCheckResourceAttrSet("tencentcloud_postgresql_parameter_template.parameter_template", "id"),
@@ -80,6 +85,10 @@ func TestAccTencentCloudPostgresqlParameterTemplateResource_basic(t *testing.T) 
 			},
 			{
 				Config: testAccPostgresqlParameterTemplate_update_desc,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlParameterTemplateExists("tencentcloud_postgresql_parameter_template.parameter_template"),
 					resource.TestCheckResourceAttr("tencentcloud_postgresql_parameter_template.parameter_template", "modify_param_entry_set.#", "2"),
@@ -88,6 +97,10 @@ func TestAccTencentCloudPostgresqlParameterTemplateResource_basic(t *testing.T) 
 			},
 			{
 				Config: testAccPostgresqlParameterTemplate_update_name,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlParameterTemplateExists("tencentcloud_postgresql_parameter_template.parameter_template"),
 					resource.TestCheckResourceAttr("tencentcloud_postgresql_parameter_template.parameter_template", "modify_param_entry_set.#", "2"),
@@ -96,6 +109,10 @@ func TestAccTencentCloudPostgresqlParameterTemplateResource_basic(t *testing.T) 
 			},
 			{
 				Config: testAccPostgresqlParameterTemplate_update_multiple_attr,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlParameterTemplateExists("tencentcloud_postgresql_parameter_template.parameter_template"),
 					resource.TestCheckResourceAttr("tencentcloud_postgresql_parameter_template.parameter_template", "modify_param_entry_set.#", "2"),

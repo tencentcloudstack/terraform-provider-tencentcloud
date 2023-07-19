@@ -91,13 +91,19 @@ func init() {
 func TestAccTencentCloudPostgresqlInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+			testAccStepSetRegion(t, "ap-guangzhou")
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccPostgresqlInstance,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -132,8 +138,11 @@ func TestAccTencentCloudPostgresqlInstanceResource_basic(t *testing.T) {
 				ImportStateVerifyIgnore: []string{"root_password", "spec_code", "public_access_switch", "charset", "backup_plan"},
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccPostgresqlInstanceOpenPublic,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlInstanceOpenPublic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -146,8 +155,11 @@ func TestAccTencentCloudPostgresqlInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccPostgresqlInstanceUpdate,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -170,8 +182,11 @@ func TestAccTencentCloudPostgresqlInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccPostgresqlInstanceUpgradeKernelVersion,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlInstanceUpgradeKernelVersion,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -204,8 +219,11 @@ func TestAccTencentCloudPostgresqlInstanceResource_prepaid(t *testing.T) {
 		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
-				Config:    testAccPostgresqlInstancePrepaid,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY)
+				},
+				Config: testAccPostgresqlInstancePrepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -241,8 +259,11 @@ func TestAccTencentCloudPostgresqlInstanceResource_postpaid_to_prepaid(t *testin
 		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
-				Config:    testAccPostgresqlInstancePostpaid,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY)
+				},
+				Config: testAccPostgresqlInstancePostpaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -252,8 +273,11 @@ func TestAccTencentCloudPostgresqlInstanceResource_postpaid_to_prepaid(t *testin
 				),
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY) },
-				Config:    testAccPostgresqlInstancePostpaid_to_Prepaid,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_PREPAY)
+				},
+				Config: testAccPostgresqlInstancePostpaid_to_Prepaid,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -275,13 +299,19 @@ func TestAccTencentCloudPostgresqlInstanceResource_postpaid_to_prepaid(t *testin
 func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+			testAccStepSetRegion(t, "ap-guangzhou")
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckPostgresqlInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccPostgresqlMAZInstance,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlMAZInstance,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
@@ -298,8 +328,11 @@ func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
 			},
 
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccPostgresqlMAZInstanceUpdate,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlMAZInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckPostgresqlInstanceExists(testPostgresqlInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testPostgresqlInstanceResourceKey, "id"),
