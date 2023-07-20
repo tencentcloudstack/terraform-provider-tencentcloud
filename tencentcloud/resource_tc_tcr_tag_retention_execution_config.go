@@ -1,12 +1,21 @@
 /*
-Provides a resource to create a tcr tag_retention_execution_config
+Provides a resource to configure a tcr tag retention execution.
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_tcr_namespace" "my_ns" {
-  instance_id    = tencentcloud_tcr_instance.mytcr_retention.id
-  name           = "tf_test_ns_retention"
+resource "tencentcloud_tcr_instance" "example" {
+  name          = "tf-example-tcr"
+  instance_type = "basic"
+  delete_bucket = true
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_tcr_namespace" "example" {
+  instance_id    = tencentcloud_tcr_instance.example.id
+  name           = "tf_example_ns_retention"
   is_public      = true
   is_auto_scan   = true
   is_prevent_vul = true
@@ -16,9 +25,9 @@ resource "tencentcloud_tcr_namespace" "my_ns" {
   }
 }
 
-resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
-  registry_id    = tencentcloud_tcr_instance.mytcr_retention.id
-  namespace_name = tencentcloud_tcr_namespace.my_ns.name
+resource "tencentcloud_tcr_tag_retention_rule" "example" {
+  registry_id    = tencentcloud_tcr_instance.example.id
+  namespace_name = tencentcloud_tcr_namespace.example.name
   retention_rule {
     key   = "nDaysSinceLastPush"
     value = 2
@@ -27,9 +36,9 @@ resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
   disabled     = true
 }
 
-resource "tencentcloud_tcr_tag_retention_execution_config" "tag_retention_execution_config" {
-  registry_id  = tencentcloud_tcr_tag_retention_rule.my_rule.registry_id
-  retention_id = tencentcloud_tcr_tag_retention_rule.my_rule.retention_id
+resource "tencentcloud_tcr_tag_retention_execution_config" "example" {
+  registry_id  = tencentcloud_tcr_tag_retention_rule.example.registry_id
+  retention_id = tencentcloud_tcr_tag_retention_rule.example.retention_id
   dry_run      = false
 }
 ```
