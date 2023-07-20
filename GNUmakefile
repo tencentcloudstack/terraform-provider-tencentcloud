@@ -108,7 +108,7 @@ lint:
 tools:
 	GO111MODULE=on cd .ci/tools && go install github.com/bflad/tfproviderlint/cmd/tfproviderlint && cd ../..
 	GO111MODULE=on cd .ci/tools && go install github.com/client9/misspell/cmd/misspell && cd ../..
-	GO111MODULE=on cd .ci/tools && go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.0 && cd ../..
+	GO111MODULE=on cd .ci/tools && go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.45.2 && cd ../..
 
 test-compile:
 	@if [ "$(TEST)" = "./..." ]; then \
