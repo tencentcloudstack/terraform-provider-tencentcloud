@@ -56,7 +56,7 @@ func resourceTencentCloudEip() *schema.Resource {
 				Optional:    true,
 				Default:     EIP_TYPE_EIP,
 				ForceNew:    true,
-				Description: "The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP`. Default is `EIP`.",
+				Description: "The type of eip. Valid value:  `EIP` and `AnycastEIP` and `HighQualityEIP` and `AntiDDoSEIP`. Default is `EIP`.",
 			},
 			"anycast_zone": {
 				Type:        schema.TypeString,
