@@ -131,15 +131,10 @@ data "tencentcloud_security_groups" "sg" {
 	availability_zone = var.default_az
 	is_default = true
   }
-  
-  locals {
-	vpc_id = data.tencentcloud_vpc_subnets.gz3.instance_list.0.vpc_id
-	subnet_id = data.tencentcloud_vpc_subnets.gz3.instance_list.0.subnet_id
-  }
 
   locals {
-	my_vpc_id = tencentcloud_subnet.subnet.vpc_id
-	my_subnet_id = tencentcloud_subnet.subnet.id
+	my_vpc_id = data.tencentcloud_vpc_subnets.gz3.instance_list.0.vpc_id
+	my_subnet_id = data.tencentcloud_vpc_subnets.gz3.instance_list.0.subnet_id
 	my_sg_id = data.tencentcloud_security_groups.sg.security_groups.0.security_group_id
   }
 

@@ -775,6 +775,32 @@ func (me *MonitorService) DeleteMonitorGrafanaInstanceById(ctx context.Context, 
 	return
 }
 
+func (me *MonitorService) CleanGrafanaInstanceById(ctx context.Context, instanceId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := monitor.NewCleanGrafanaInstanceRequest()
+
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "delete object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseMonitorClient().CleanGrafanaInstance(request)
+	if err != nil {
+		errRet = err
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
 func (me *MonitorService) DescribeMonitorGrafanaIntegration(ctx context.Context, integrationId, instanceId string) (grafanaIntegration *monitor.GrafanaIntegrationConfig, errRet error) {
 	var (
 		logId   = getLogId(ctx)

@@ -128,7 +128,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     1,
-				Description: "The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`.",
+				Description: "The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`, Non-multi-AZ does not require `replica_zone_ids`.",
 			},
 			"replica_zone_ids": {
 				Type:        schema.TypeList,
@@ -1151,6 +1151,28 @@ func resourceRedisNodeSetModify(ctx context.Context, service *RedisService, d *s
 		if err != nil {
 			return err
 		}
+		err = service.CheckRedisUpdateOk(ctx, id)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Non-Multi-AZ modification redis_replicas_num
+	if d.HasChange("redis_replicas_num") && len(oz) == 0 && len(nz) == 0 {
+		_, replica := d.GetChange("redis_replicas_num")
+		redisReplicasNum := replica.(int)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err := service.UpgradeInstance(ctx, id, memSize, shardNum, redisReplicasNum, nil)
+			if err != nil {
+				// Upgrade memory will cause instance lock and cannot acknowledge by polling status, wait until lock release
+				return retryError(err, redis.FAILEDOPERATION_UNKNOWN, redis.FAILEDOPERATION_SYSTEMERROR)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
 		err = service.CheckRedisUpdateOk(ctx, id)
 		if err != nil {
 			return err

@@ -124,6 +124,7 @@ resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
   subnet_ids = [var.subnet_id]
   grafana_init_password = "1234567890"
   enable_internet = false
+  is_distroy = true
 
   tags = {
     "createdBy" = "test"
@@ -138,6 +139,7 @@ resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
   subnet_ids = [var.subnet_id]
   grafana_init_password = "1234567890"
   enable_internet = false
+  is_distroy = true
 
   tags = {
     "createdBy" = "test"
