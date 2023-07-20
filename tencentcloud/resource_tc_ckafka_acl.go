@@ -87,7 +87,7 @@ func resourceTencentCloudCkafkaAcl() *schema.Resource {
 			"principal": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     "*",
+				Default:     "User:*",
 				ForceNew:    true,
 				Description: "User list. The default value is `User:*`, means that any user can be accessed, and the current user can only be a user included in the user list. It needs to be prefixed with `User:`. For example: User A passes in `User:A`.",
 			},
