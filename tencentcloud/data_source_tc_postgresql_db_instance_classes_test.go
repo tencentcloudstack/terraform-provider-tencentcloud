@@ -16,6 +16,10 @@ func TestAccTencentCloudPostgresqlDbInstanceClassesDataSource_basic(t *testing.T
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlDbInstanceClassesDataSource,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_postgresql_db_instance_classes.db_instance_classes"),
 					resource.TestCheckResourceAttr("data.tencentcloud_postgresql_db_instance_classes.db_instance_classes", "zone", "ap-guangzhou-7"),

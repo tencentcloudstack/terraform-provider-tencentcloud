@@ -2474,7 +2474,7 @@ func (me *MysqlService) DescribeMysqlSwitchRecordById(ctx context.Context, insta
 
 	var (
 		offset int64 = 0
-		limit  int64 = 20
+		limit  int64 = 200
 	)
 	for {
 		request.Offset = &offset

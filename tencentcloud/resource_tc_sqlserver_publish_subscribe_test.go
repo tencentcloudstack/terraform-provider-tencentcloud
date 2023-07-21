@@ -122,6 +122,7 @@ func testAccUnsubscribePubDB(ctx context.Context, service *SqlserverService, ins
 	}
 }
 
+// go test -i; go test -test.run TestAccTencentCloudSqlserverPublishSubscribeResource -v
 func TestAccTencentCloudSqlserverPublishSubscribeResource(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -213,24 +214,25 @@ func testAccCheckSqlserverPublishSubscribeExists(n string) resource.TestCheckFun
 }
 
 const testAccSqlserverPublishSubscribe_basic = CommonPubSubSQLServer + `
-
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-	publish_instance_id             = local.pub_sqlserver_id
-	subscribe_instance_id           = local.sub_sqlserver_id
-	publish_subscribe_name          = "example"
-	delete_subscribe_db             = false
-	database_tuples {
-		publish_database            = local.sqlserver_pubsub_db
-	}
-}`
+  publish_instance_id    = "mssql-qelbzgwf"
+  subscribe_instance_id  = "mssql-jdk2pwld"
+  publish_subscribe_name = "example"
+  delete_subscribe_db    = false
+  database_tuples {
+    publish_database = local.sqlserver_pubsub_db
+  }
+}
+`
 
 const testAccSqlserverPublishSubscribe_basic_update_name = CommonPubSubSQLServer + `
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-	publish_instance_id             = local.pub_sqlserver_id
-	subscribe_instance_id           = local.sub_sqlserver_id
-	publish_subscribe_name          = "example1"
-	delete_subscribe_db             = false
-	database_tuples {
-		publish_database            = local.sqlserver_pubsub_db
-	}
-}`
+  publish_instance_id    = "mssql-qelbzgwf"
+  subscribe_instance_id  = "mssql-jdk2pwld"
+  publish_subscribe_name = "example1"
+  delete_subscribe_db    = false
+  database_tuples {
+    publish_database = local.sqlserver_pubsub_db
+  }
+}
+`

@@ -12,12 +12,17 @@ func TestAccTencentCloudPostgresqlModifyAccountRemarkOperationResource_basic(t *
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlModifyAccountRemarkOperation,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(TestObjectPgModifyAccountRemark, "id"),
 					resource.TestCheckResourceAttrSet(TestObjectPgModifyAccountRemark, "db_instance_id"),

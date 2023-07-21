@@ -13,12 +13,17 @@ func TestAccTencentCloudNeedFixPostgresqlModifySwitchTimePeriodOperationResource
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlModifySwitchTimePeriodOperation,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(TestObjectPgModifySwitchTimePeriod, "id"),
 					resource.TestCheckResourceAttrSet(TestObjectPgModifySwitchTimePeriod, "db_instance_id"),

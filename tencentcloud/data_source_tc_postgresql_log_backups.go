@@ -181,7 +181,7 @@ func dataSourceTencentCloudPostgresqlLogBackupsRead(d *schema.ResourceData, meta
 			}
 			tmpSet = append(tmpSet, &filter)
 		}
-		paramMap["filters"] = tmpSet
+		paramMap["Filters"] = tmpSet
 	}
 
 	if v, ok := d.GetOk("order_by"); ok {

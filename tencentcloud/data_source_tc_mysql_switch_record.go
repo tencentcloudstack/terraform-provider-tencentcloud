@@ -73,7 +73,7 @@ func dataSourceTencentCloudMysqlSwitchRecordRead(d *schema.ResourceData, meta in
 
 	service := MysqlService{client: meta.(*TencentCloudClient).apiV3Conn}
 	var items []*cdb.DBSwitchInfo
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeMysqlSwitchRecordById(ctx, instanceId)
 		if e != nil {
 			return retryError(e)

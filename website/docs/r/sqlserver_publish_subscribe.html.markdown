@@ -15,12 +15,12 @@ Provides a SQL Server PublishSubscribe resource belongs to SQL Server instance.
 
 ```hcl
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
-  publish_instance_id    = tencentcloud_sqlserver_instance.publish_instance.id
-  subscribe_instance_id  = tencentcloud_sqlserver_instance.subscribe_instance.id
+  publish_instance_id    = "mssql-qelbzgwf"
+  subscribe_instance_id  = "mssql-jdk2pwld"
   publish_subscribe_name = "example"
   delete_subscribe_db    = false
   database_tuples {
-    publish_database = tencentcloud_sqlserver_db.test_publish_subscribe.name
+    publish_database = "sqlserver_pubsub_db"
   }
 }
 ```
