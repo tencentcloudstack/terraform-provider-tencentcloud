@@ -569,7 +569,7 @@ variable "cam_user_basic" {
 
 // TCR Service
 const defaultTCRInstanceName = "keep-tcr-instance-sh"
-const defaultTCRInstanceId = "tcr-800uf6j9"
+const defaultTCRInstanceId = "tcr-aoz8mxoz"
 const defaultTCRNamespace = "keep-tcr-namespace-sh"
 const defaultTCRRepoName = "keep-tcr-repo-sh"
 const defaultTCRSSL = "zjUMifFK"

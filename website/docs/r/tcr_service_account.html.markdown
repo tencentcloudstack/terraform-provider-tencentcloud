@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcr_service_account"
 sidebar_current: "docs-tencentcloud-resource-tcr_service_account"
 description: |-
-  Provides a resource to create a tcr service_account
+  Provides a resource to create a tcr service account.
 ---
 
 # tencentcloud_tcr_service_account
 
-Provides a resource to create a tcr service_account
+Provides a resource to create a tcr service account.
 
 ## Example Usage
 
@@ -103,6 +103,6 @@ In addition to all arguments above, the following attributes are exported:
 tcr service_account can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tcr_service_account.service_account registry_id#name
+terraform import tencentcloud_tcr_service_account.service_account registry_id#account_name
 ```
 

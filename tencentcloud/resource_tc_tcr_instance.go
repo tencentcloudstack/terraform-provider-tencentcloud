@@ -3,21 +3,24 @@ Use this resource to create tcr instance.
 
 Example Usage
 
+Create a basic tcr instance.
+
 ```hcl
-resource "tencentcloud_tcr_instance" "foo" {
-  name              = "example"
+resource "tencentcloud_tcr_instance" "example" {
+  name              = "tf-example-tcr"
   instance_type		= "basic"
 
   tags = {
-    test = "tf"
+    "createdBy" = "terraform"
   }
 }
 ```
 
-Using public network access whitelist
+Create instance with the public network access whitelist.
+
 ```hcl
-resource "tencentcloud_tcr_instance" "foo" {
-  name                  = "example"
+resource "tencentcloud_tcr_instance" "example" {
+  name                  = "tf-example-tcr"
   instance_type		    = "basic"
   open_public_operation = true
   security_policy {
@@ -29,12 +32,11 @@ resource "tencentcloud_tcr_instance" "foo" {
 }
 ```
 
-Create with Replications
+Create instance with Replications.
 
 ```hcl
-
-resource "tencentcloud_tcr_instance" "foo" {
-  name                  = "example"
+resource "tencentcloud_tcr_instance" "example" {
+  name                  = "tf-example-tcr"
   instance_type		    = "premium"
   replications {
     region_id = var.tcr_region_map["ap-guangzhou"] # 1
@@ -73,7 +75,7 @@ Import
 tcr instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_tcr_instance.foo cls-cda1iex1
+$ terraform import tencentcloud_tcr_instance.foo instance_id
 ```
 */
 package tencentcloud
