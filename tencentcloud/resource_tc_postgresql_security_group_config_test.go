@@ -9,7 +9,7 @@ import (
 const TestAccPostgresqlSecurityGroupConfigObject = "tencentcloud_postgresql_security_group_config.security_group_config"
 
 func TestAccTencentCloudPostgresqlSecurityGroupConfigResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccStepSetRegion(t, "ap-guangzhou")
@@ -34,7 +34,7 @@ func TestAccTencentCloudPostgresqlSecurityGroupConfigResource_basic(t *testing.T
 }
 
 func TestAccTencentCloudPostgresqlSecurityGroupConfigResource_ro(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccStepSetRegion(t, "ap-guangzhou")

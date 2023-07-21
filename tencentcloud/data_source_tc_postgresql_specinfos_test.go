@@ -7,7 +7,7 @@ import (
 )
 
 func TestAccTencentCloudPostgresqlSpecinfosDataSource(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccStepSetRegion(t, "ap-guangzhou")

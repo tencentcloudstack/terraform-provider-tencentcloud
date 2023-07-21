@@ -9,7 +9,7 @@ import (
 var testDataPostgresqlInstancesName = "data.tencentcloud_postgresql_instances.id_test"
 
 func TestAccTencentCloudPostgresqlInstancesDataSource(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccStepSetRegion(t, "ap-guangzhou")
