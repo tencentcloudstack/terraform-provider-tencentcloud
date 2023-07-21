@@ -18,8 +18,7 @@ Provides a resource to create a Redis instance and set its attributes.
 ## Example Usage
 
 ```hcl
-data "tencentcloud_redis_zone_config" "zone" {
-}
+data "tencentcloud_redis_zone_config" "zone" {}
 
 resource "tencentcloud_redis_instance" "redis_instance_test_2" {
   availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
@@ -36,13 +35,11 @@ resource "tencentcloud_redis_instance" "redis_instance_test_2" {
 ### Using multi replica zone set
 
 ```hcl
-data "tencentcloud_availability_zones" "az" {
-
-}
-
 variable "redis_replicas_num" {
   default = 3
 }
+
+data "tencentcloud_availability_zones" "az" {}
 
 resource "tencentcloud_redis_instance" "red1" {
   availability_zone  = data.tencentcloud_availability_zones.az.zones[0].name
@@ -63,7 +60,8 @@ resource "tencentcloud_redis_instance" "red1" {
 
   replica_zone_ids = [
     for i in range(var.redis_replicas_num)
-  : data.tencentcloud_availability_zones.az.zones[i % length(data.tencentcloud_availability_zones.az.zones)].id]
+    : data.tencentcloud_availability_zones.az.zones[i % length(data.tencentcloud_availability_zones.az.zones)].id
+  ]
 }
 ```
 
