@@ -1,5 +1,5 @@
 /*
-Provides a resource to create a tcr service_account
+Provides a resource to create a tcr service account.
 
 Example Usage
 
@@ -67,7 +67,7 @@ Import
 tcr service_account can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tcr_service_account.service_account registry_id#name
+terraform import tencentcloud_tcr_service_account.service_account registry_id#account_name
 ```
 */
 package tencentcloud

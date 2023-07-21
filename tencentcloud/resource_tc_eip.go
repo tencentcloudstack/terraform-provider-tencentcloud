@@ -3,12 +3,28 @@ Provides an EIP resource.
 
 Example Usage
 
+Paid by the bandwidth package
 ```hcl
 resource "tencentcloud_eip" "foo" {
   name                 = "awesome_gateway_ip"
   bandwidth_package_id = "bwp-jtvzuky6"
   internet_charge_type = "BANDWIDTH_PACKAGE"
   type                 = "EIP"
+}
+```
+
+AntiDDos Eip
+```
+resource "tencentcloud_eip" "foo" {
+  name                 = "awesome_gateway_ip"
+  bandwidth_package_id = "bwp-4ocyia9s"
+  internet_charge_type = "BANDWIDTH_PACKAGE"
+  type                 = "AntiDDoSEIP"
+  anti_ddos_package_id = "xxxxxxxx"
+
+  tags = {
+    "test" = "test"
+  }
 }
 ```
 
@@ -82,7 +98,6 @@ func resourceTencentCloudEip() *schema.Resource {
 				Computed:    true,
 				Description: "The charge type of eip. Valid values: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR`, `BANDWIDTH_PREPAID_BY_MONTH` and `TRAFFIC_POSTPAID_BY_HOUR`.",
 			},
-
 			"prepaid_period": {
 				Type:         schema.TypeInt,
 				Optional:     true,
@@ -113,6 +128,12 @@ func resourceTencentCloudEip() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "ID of bandwidth package, it will set when `internet_charge_type` is `BANDWIDTH_PACKAGE`.",
+			},
+			"anti_ddos_package_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "ID of anti DDos package, it must set when `type` is `AntiDDoSEIP`.",
 			},
 			// computed
 			"public_ip": {
@@ -181,6 +202,12 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	if v, ok := d.GetOk("bandwidth_package_id"); ok {
 		request.BandwidthPackageId = helper.String(v.(string))
 	}
+	if v, ok := d.GetOk("name"); ok {
+		request.AddressName = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("anti_ddos_package_id"); ok {
+		request.AntiDDoSPackageId = helper.String(v.(string))
+	}
 
 	eipId := ""
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -226,20 +253,6 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	})
 	if err != nil {
 		return err
-	}
-
-	if v, ok := d.GetOk("name"); ok {
-		name := v.(string)
-		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := vpcService.ModifyEipName(ctx, eipId, name)
-			if errRet != nil {
-				return retryError(errRet)
-			}
-			return nil
-		})
-		if err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudEipRead(d, meta)
@@ -297,6 +310,10 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 		_ = d.Set("internet_max_bandwidth_out", eip.Bandwidth)
 	}
 
+	if eip.AntiDDoSPackageId != nil {
+		_ = d.Set("anti_ddos_package_id", eip.AntiDDoSPackageId)
+	}
+
 	if bgp != nil {
 		_ = d.Set("bandwidth_package_id", bgp.BandwidthPackageId)
 	}
@@ -320,6 +337,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 
 	unsupportedUpdateFields := []string{
 		"bandwidth_package_id",
+		"anti_ddos_package_id",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {

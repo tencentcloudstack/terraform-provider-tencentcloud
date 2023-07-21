@@ -13,6 +13,8 @@ Provides an EIP resource.
 
 ## Example Usage
 
+### Paid by the bandwidth package
+
 ```hcl
 resource "tencentcloud_eip" "foo" {
   name                 = "awesome_gateway_ip"
@@ -22,10 +24,27 @@ resource "tencentcloud_eip" "foo" {
 }
 ```
 
+### AntiDDos Eip
+
+```hcl
+resource "tencentcloud_eip" "foo" {
+  name                 = "awesome_gateway_ip"
+  bandwidth_package_id = "bwp-4ocyia9s"
+  internet_charge_type = "BANDWIDTH_PACKAGE"
+  type                 = "AntiDDoSEIP"
+  anti_ddos_package_id = "xxxxxxxx"
+
+  tags = {
+    "test" = "test"
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
 
+* `anti_ddos_package_id` - (Optional, String) ID of anti DDos package, it must set when `type` is `AntiDDoSEIP`.
 * `anycast_zone` - (Optional, String, ForceNew) The zone of anycast. Valid value: `ANYCAST_ZONE_GLOBAL` and `ANYCAST_ZONE_OVERSEAS`.
 * `applicable_for_clb` - (Optional, Bool, **Deprecated**) It has been deprecated from version 1.27.0. Indicates whether the anycast eip can be associated to a CLB.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag.  0 - default state (manual renew); 1 - automatic renew; 2 - explicit no automatic renew. NOTES: Only supported prepaid EIP.

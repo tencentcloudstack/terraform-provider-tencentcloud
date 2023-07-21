@@ -1,11 +1,13 @@
 /*
-Provides a resource to create a tcr webhook_trigger
+Provides a resource to create a tcr webhook trigger
 
 Example Usage
 
+Create a tcr webhook trigger instance
+
 ```hcl
-resource "tencentcloud_tcr_instance" "mytcr_webhooktrigger" {
-  name        = "tf-test-tcr-%s"
+resource "tencentcloud_tcr_instance" "example" {
+  name          = "tf-example-tcr"
   instance_type = "basic"
   delete_bucket = true
 
@@ -14,9 +16,9 @@ resource "tencentcloud_tcr_instance" "mytcr_webhooktrigger" {
   }
 }
 
-resource "tencentcloud_tcr_namespace" "my_ns" {
-	instance_id 	 = tencentcloud_tcr_instance.mytcr_webhooktrigger.id
-	name			 = "tf_test_ns_%s"
+resource "tencentcloud_tcr_namespace" "example" {
+	instance_id 	 = tencentcloud_tcr_instance.example.id
+	name			 = "tf_example_ns_retention"
 	is_public		 = true
 	is_auto_scan	 = true
 	is_prevent_vul = true
@@ -26,19 +28,19 @@ resource "tencentcloud_tcr_namespace" "my_ns" {
 	}
   }
 
-data "tencentcloud_tcr_namespaces" "id_test" {
-	instance_id = tencentcloud_tcr_namespace.my_ns.instance_id
+data "tencentcloud_tcr_namespaces" "example" {
+	instance_id = tencentcloud_tcr_namespace.example.instance_id
   }
 
 locals {
-    ns_id = data.tencentcloud_tcr_namespaces.id_test.namespace_list.0.id
+    ns_id = data.tencentcloud_tcr_namespaces.example.namespace_list.0.id
   }
 
-resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
-  registry_id = tencentcloud_tcr_instance.mytcr_webhooktrigger.id
-  namespace = tencentcloud_tcr_namespace.my_ns.name
+resource "tencentcloud_tcr_webhook_trigger" "example" {
+  registry_id = tencentcloud_tcr_instance.example.id
+  namespace = tencentcloud_tcr_namespace.example.name
   trigger {
-		name = "trigger-%s"
+		name = "trigger-example"
 		targets {
 			address = "http://example.org/post"
 			headers {
@@ -49,7 +51,7 @@ resource "tencentcloud_tcr_webhook_trigger" "my_trigger" {
 		event_types = ["pushImage"]
 		condition = ".*"
 		enabled = true
-		description = "this is trigger description"
+		description = "example for trigger description"
 		namespace_id = local.ns_id
 
   }
@@ -64,7 +66,7 @@ Import
 tcr webhook_trigger can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tcr_webhook_trigger.webhook_trigger webhook_trigger_id
+terraform import tencentcloud_tcr_webhook_trigger.example webhook_trigger_id
 ```
 */
 package tencentcloud

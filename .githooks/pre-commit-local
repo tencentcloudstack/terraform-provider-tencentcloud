@@ -1,0 +1,28 @@
+#!/bin/sh
+REQUIRED_GO_VERSION="1.18" # use the .go-version later
+
+printf "==> Step 1: Gofmt Check...\n"
+make fmt-faster
+if [ $? -ne 0 ]; then
+    printf "COMMIT FAILED\n"
+    exit 1
+fi
+
+printf "==> Step 2: Generating docs...\n"
+doc=$(make doc 2>&1)
+if [ $? -ne 0 ]; then
+    echo "$doc" | tail -n 4 | head -n 2
+    printf "COMMIT FAILED\n"
+    exit 1
+fi
+
+printf "==> Step 2: Generating docs...\n"
+go_version=$(go version | awk '{print $3}')
+if [ $go_version -ne $REQUIRED_GO_VERSION* ]; then
+    echo "Go version is not compatible. Expected $REQUIRED_GO_VERSION.x"
+    printf "COMMIT FAILED\n"
+    exit 1
+fi
+
+printf "COMMIT READY\n"
+exit 0
