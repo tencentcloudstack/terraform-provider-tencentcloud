@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -13,8 +14,8 @@ func TestAccTencentCloudTcrReplicationInstanceCreateTasksDataSource_basic(t *tes
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				// Config: fmt.Sprintf(testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource, "create-tasks-and-sync-status", time.Now().Nanosecond()),
-				Config: testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource,
+				Config: fmt.Sprintf(testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource, defaultTCRInstanceId, "tcr-aoz8mxoz-1-kkircm"),
+				// Config: testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource,
 				PreConfig: func() {
 					testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
@@ -62,8 +63,8 @@ const testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource = `
 //   dst_region_id   = tencentcloud_tcr_manage_replication_operation.my_replica.destination_region_id
 // }
 locals {
-  src_registry_id = "tcr-800uf6j9"
-  dst_registry_id = "tcr-800uf6j9-1-cgeafk"
+  src_registry_id = "%s"
+  dst_registry_id = "%s"
   dst_region_id   = 1
 }
 
