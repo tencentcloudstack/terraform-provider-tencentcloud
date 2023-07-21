@@ -72,7 +72,7 @@ func testAccCheckTseCngwCanaryRuleDestroy(s *terraform.State) error {
 		res, err := service.DescribeTseCngwCanaryRuleById(ctx, gatewayId, serviceId, priority)
 		if err != nil {
 			if sdkErr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkErr.Code == "ResourceNotFound.ResourceNotFound" {
+				if sdkErr.Code == "FailedOperation.FailedOperation" {
 					return nil
 				}
 			}
