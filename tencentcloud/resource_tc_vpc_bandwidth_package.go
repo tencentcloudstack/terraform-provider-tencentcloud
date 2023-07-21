@@ -56,7 +56,7 @@ func resourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 				Description: "Bandwidth package billing type, default: TOP5_POSTPAID_BY_MONTH." +
 					" Optional value: `TOP5_POSTPAID_BY_MONTH`: TOP5 billed by monthly postpaid; `PERCENT95_POSTPAID_BY_MONTH`: 95 billed monthly postpaid;" +
 					" `FIXED_PREPAID_BY_MONTH`: Monthly prepaid billing (Type FIXED_PREPAID_BY_MONTH product API capability is under construction);" +
-					" `BANDWIDTH_POSTPAID_BY_DAY: bandwidth billed by daily postpaid; `ENHANCED95_POSTPAID_BY_MONTH: enhanced 95 billed monthly postpaid.",
+					" `BANDWIDTH_POSTPAID_BY_DAY`: bandwidth billed by daily postpaid; `ENHANCED95_POSTPAID_BY_MONTH`: enhanced 95 billed monthly postpaid.",
 			},
 
 			"bandwidth_package_name": {
