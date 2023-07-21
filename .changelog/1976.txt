@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_monitor_grafana_instance: Deprecated `is_distroy`, use `is_destroy` instead of `is_distroy`
+```
