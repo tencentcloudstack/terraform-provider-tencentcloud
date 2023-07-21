@@ -10,12 +10,17 @@ func TestAccTencentCloudNeedFixPostgresqlDeleteLogBackupOperationResource_basic(
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlDeleteLogBackupOperation,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_postgresql_delete_log_backup_operation.delete_log_backup_operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_postgresql_delete_log_backup_operation.delete_log_backup_operation", "db_instance_id"),

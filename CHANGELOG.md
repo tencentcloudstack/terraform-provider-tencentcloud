@@ -1,3 +1,22 @@
+## 1.81.15 (July 19, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_tse_gateway_canary_rules` ([#1964](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1964))
+* **New Resource:** `tencentcloud_clickhouse_instance` ([#1642](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1642))
+* **New Resource:** `tencentcloud_mysql_isolate_instance` ([#1961](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1961))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_monitor_alarm_notice: Support return field `amp_consumer_id` ([#1971](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1971))
+* resource/tencentcloud_monitor_grafana_instance: Support for cleaning up deactivated instances ([#1971](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1971))
+* resource/tencentcloud_redis_instance: Non-multi-AZ supports modifying the number of replicas ([#1969](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1969))
+* resource/tencentcloud_security_group_rule_set: Optimize `service_template_id` usage issue ([#1970](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1970))
+
+BUG FIXES:
+
+* resource/tencentcloud_instance: fix data-disks order issue ([#1968](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1968))
+
 ## 1.81.14 (July 12, 2023)
 
 FEATURES:

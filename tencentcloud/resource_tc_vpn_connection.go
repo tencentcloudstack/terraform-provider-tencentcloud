@@ -54,7 +54,6 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -132,39 +131,34 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				},
 			},
 			"ike_proto_encry_algorithm": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      VPN_IKE_PROPO_ENCRY_ALGORITHM_3DESCBC,
-				ValidateFunc: validateAllowedStringValue(VPN_IKE_PROPO_ENCRY_ALGORITHM),
-				Description:  "Proto encrypt algorithm of the IKE operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     VPN_IKE_PROPO_ENCRY_ALGORITHM_3DESCBC,
+				Description: "Proto encrypt algorithm of the IKE operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-192`, `AES-CBC-256`, `DES-CBC`, `SM4`, `AES128GCM128`, `AES192GCM128`, `AES256GCM128`,`AES128GCM128`, `AES192GCM128`, `AES256GCM128`. Default value is `3DES-CBC`.",
 			},
 			"ike_proto_authen_algorithm": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      VPN_IKE_PROPO_AUTHEN_ALGORITHM_MD5,
-				ValidateFunc: validateAllowedStringValue(VPN_IKE_PROPO_AUTHEN_ALGORITHM),
-				Description:  "Proto authenticate algorithm of the IKE operation specification. Valid values: `MD5`, `SHA`, `SHA-256`. Default Value is `MD5`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     VPN_IKE_PROPO_AUTHEN_ALGORITHM_MD5,
+				Description: "Proto authenticate algorithm of the IKE operation specification. Valid values: `MD5`, `SHA`, `SHA-256`. Default Value is `MD5`.",
 			},
 			"ike_exchange_mode": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      VPN_IKE_EXCHANGE_MODE_MAIN,
-				ValidateFunc: validateAllowedStringValue(VPN_IKE_EXCHANGE_MODE),
-				Description:  "Exchange mode of the IKE operation specification. Valid values: `AGGRESSIVE`, `MAIN`. Default value is `MAIN`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     VPN_IKE_EXCHANGE_MODE_MAIN,
+				Description: "Exchange mode of the IKE operation specification. Valid values: `AGGRESSIVE`, `MAIN`. Default value is `MAIN`.",
 			},
 			"ike_local_identity": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      VPN_IKE_IDENTITY_ADDRESS,
-				ValidateFunc: validateAllowedStringValue(VPN_IKE_IDENTITY),
-				Description:  "Local identity way of IKE operation specification. Valid values: `ADDRESS`, `FQDN`. Default value is `ADDRESS`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     VPN_IKE_IDENTITY_ADDRESS,
+				Description: "Local identity way of IKE operation specification. Valid values: `ADDRESS`, `FQDN`. Default value is `ADDRESS`.",
 			},
 			"ike_remote_identity": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      VPN_IKE_IDENTITY_ADDRESS,
-				ValidateFunc: validateAllowedStringValue(VPN_IKE_IDENTITY),
-				Description:  "Remote identity way of IKE operation specification. Valid values: `ADDRESS`, `FQDN`. Default value is `ADDRESS`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     VPN_IKE_IDENTITY_ADDRESS,
+				Description: "Remote identity way of IKE operation specification. Valid values: `ADDRESS`, `FQDN`. Default value is `ADDRESS`.",
 			},
 			"ike_local_address": {
 				Type:          schema.TypeString,
@@ -191,11 +185,10 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Description:   "Remote FQDN name of the IKE operation specification.",
 			},
 			"ike_dh_group_name": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      VPN_IKE_DH_GROUP_NAME_GROUP1,
-				ValidateFunc: validateAllowedStringValue(VPN_IKE_DH_GROUP_NAME),
-				Description:  "DH group name of the IKE operation specification. Valid values: `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`. Default value is `GROUP1`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     VPN_IKE_DH_GROUP_NAME_GROUP1,
+				Description: "DH group name of the IKE operation specification. Valid values: `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`. Default value is `GROUP1`.",
 			},
 			"ike_sa_lifetime_seconds": {
 				Type:         schema.TypeInt,
@@ -208,21 +201,19 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "IKEV1",
-				Description: "Version of the IKE operation specification. Default value is `IKEV1`.",
+				Description: "Version of the IKE operation specification, values: `IKEV1`, `IKEV2`. Default value is `IKEV1`.",
 			},
 			"ipsec_encrypt_algorithm": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      VPN_IPSEC_ENCRY_ALGORITHM_3DESCBC,
-				ValidateFunc: validateAllowedStringValue(VPN_IPSEC_ENCRY_ALGORITHM),
-				Description:  "Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-128`, `AES-CBC-256`, `DES-CBC`. Default value is `3DES-CBC`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     VPN_IPSEC_ENCRY_ALGORITHM_3DESCBC,
+				Description: "Encrypt algorithm of the IPSEC operation specification. Valid values: `3DES-CBC`, `AES-CBC-128`, `AES-CBC-192`, `AES-CBC-256`, `DES-CBC`, `SM4`, `NULL`, `AES128GCM128`, `AES192GCM128`, `AES256GCM128`. Default value is `3DES-CBC`.",
 			},
 			"ipsec_integrity_algorithm": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      VPN_IPSEC_INTEGRITY_ALGORITHM_MD5,
-				ValidateFunc: validateAllowedStringValue(VPN_IPSEC_INTEGRITY_ALGORITHM),
-				Description:  "Integrity algorithm of the IPSEC operation specification. Valid values: `SHA1`, `MD5`, `SHA-256`. Default value is `MD5`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     VPN_IPSEC_INTEGRITY_ALGORITHM_MD5,
+				Description: "Integrity algorithm of the IPSEC operation specification. Valid values: `SHA1`, `MD5`, `SHA-256`. Default value is `MD5`.",
 			},
 			"ipsec_sa_lifetime_seconds": {
 				Type:         schema.TypeInt,
@@ -232,11 +223,10 @@ func resourceTencentCloudVpnConnection() *schema.Resource {
 				Description:  "SA lifetime of the IPSEC operation specification, unit is second. Valid value ranges: [180~604800]. Default value is 3600 seconds.",
 			},
 			"ipsec_pfs_dh_group": {
-				Type:         schema.TypeString,
-				Optional:     true,
-				Default:      "NULL",
-				ValidateFunc: validateAllowedStringValue(VPN_IPSEC_PFS_DH_GROUP_NAME),
-				Description:  "PFS DH group. Valid value: `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`, `NULL`. Default value is `NULL`.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "NULL",
+				Description: "PFS DH group. Valid value: `GROUP1`, `GROUP2`, `GROUP5`, `GROUP14`, `GROUP24`, `NULL`. Default value is `NULL`.",
 			},
 			"ipsec_sa_lifetime_traffic": {
 				Type:         schema.TypeInt,
@@ -907,7 +897,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DeleteVpnConnection(request)
 		if e != nil {
-			if ee, ok := e.(*errors.TencentCloudSDKError); ok {
+			if ee, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
 				if ee.GetCode() == "UnsupportedOperation.InvalidState" {
 					return resource.RetryableError(fmt.Errorf("state is not ready, wait to be `AVAILABLE`."))
 				}
@@ -928,7 +918,7 @@ func resourceTencentCloudVpnConnectionDelete(d *schema.ResourceData, meta interf
 	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeVpnConnections(statRequest)
 		if e != nil {
-			ee, ok := e.(*errors.TencentCloudSDKError)
+			ee, ok := e.(*sdkErrors.TencentCloudSDKError)
 			if !ok {
 				return retryError(e)
 			}

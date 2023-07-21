@@ -654,6 +654,7 @@ TencentDB for MySQL(cdb)
 	tencentcloud_mysql_reload_balance_proxy_node
 	tencentcloud_mysql_ro_start_replication
 	tencentcloud_mysql_ro_stop_replication
+	tencentcloud_mysql_isolate_instance
 
 Cloud Monitor(Monitor)
   Data Source
@@ -1565,9 +1566,14 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_zookeeper_server_interfaces
 	tencentcloud_tse_nacos_server_interfaces
 	tencentcloud_tse_gateway_nodes
+	tencentcloud_tse_gateway_canary_rules
 
   Resource
 	tencentcloud_tse_instance
+
+ClickHouse(CDWCH)
+  Resource
+	tencentcloud_clickhouse_instance
 
 */
 package tencentcloud
@@ -2186,6 +2192,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_zookeeper_replicas":                    dataSourceTencentCloudTseZookeeperReplicas(),
 			"tencentcloud_tse_zookeeper_server_interfaces":           dataSourceTencentCloudTseZookeeperServerInterfaces(),
 			"tencentcloud_tse_gateway_nodes":                         dataSourceTencentCloudTseGatewayNodes(),
+			"tencentcloud_tse_gateway_routes":                        dataSourceTencentCloudTseGatewayRoutes(),
+			"tencentcloud_tse_gateway_canary_rules":                  dataSourceTencentCloudTseGatewayCanaryRules(),
 			"tencentcloud_lighthouse_modify_instance_bundle":         dataSourceTencentCloudLighthouseModifyInstanceBundle(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
 			"tencentcloud_lighthouse_scene":                          dataSourceTencentCloudLighthouseScene(),
@@ -2910,6 +2918,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
+			"tencentcloud_clickhouse_instance":                        resourceTencentCloudClickhouseInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

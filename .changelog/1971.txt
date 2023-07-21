@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_monitor_alarm_notice: Support return field `amp_consumer_id`
+```
+
+```release-note:enhancement
+resource/tencentcloud_monitor_grafana_instance: Support for cleaning up deactivated instances
+```

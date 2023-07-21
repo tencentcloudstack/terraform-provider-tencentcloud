@@ -13,24 +13,24 @@ Provides a CVM instance resource.
 
 ~> **NOTE:** You can launch an CVM instance for a VPC network via specifying parameter `vpc_id`. One instance can only belong to one VPC.
 
-~> **NOTE:** At present, 'PREPAID' instance cannot be deleted and must wait it to be outdated and released automatically.
+~> **NOTE:** At present, 'PREPAID' instance cannot be deleted directly and must wait it to be outdated and released automatically.
 
 ## Example Usage
 
 ```hcl
 data "tencentcloud_images" "my_favorite_image" {
-  image_type = ["PUBLIC_IMAGE"]
-  os_name    = "Tencent Linux release 3.2 (Final)"
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
 }
 
 data "tencentcloud_instance_types" "my_favorite_instance_types" {
   filter {
     name   = "instance-family"
-    values = ["S3"]
+    values = ["S1", "S2", "S3", "S4", "S5"]
   }
 
-  cpu_core_count = 1
-  memory_size    = 1
+  cpu_core_count   = 2
+  exclude_sold_out = true
 }
 
 data "tencentcloud_availability_zones" "my_favorite_zones" {
@@ -49,9 +49,9 @@ resource "tencentcloud_subnet" "app" {
   cidr_block        = "10.0.1.0/24"
 }
 
-// Create 2 CVM instances to host awesome_app
-resource "tencentcloud_instance" "my_awesome_app" {
-  instance_name     = "awesome_app"
+// Create a POSTPAID_BY_HOUR CVM instance
+resource "tencentcloud_instance" "cvm_postpaid" {
+  instance_name     = "cvm_postpaid"
   availability_zone = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
   image_id          = data.tencentcloud_images.my_favorite_image.images.0.image_id
   instance_type     = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
@@ -61,7 +61,6 @@ resource "tencentcloud_instance" "my_awesome_app" {
   project_id        = 0
   vpc_id            = tencentcloud_vpc.app.id
   subnet_id         = tencentcloud_subnet.app.id
-  count             = 2
 
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
@@ -73,64 +72,30 @@ resource "tencentcloud_instance" "my_awesome_app" {
     tagKey = "tagValue"
   }
 }
-```
 
-### Create CVM instance based on CDH
-
-```hcl
-variable "availability_zone" {
-  default = "ap-shanghai-4"
-}
-
-resource "tencentcloud_cdh_instance" "foo" {
-  availability_zone                   = var.availability_zone
-  host_type                           = "HM50"
-  charge_type                         = "PREPAID"
-  instance_charge_type_prepaid_period = 1
-  hostname                            = "test"
-  prepaid_renew_flag                  = "DISABLE_NOTIFY_AND_MANUAL_RENEW"
-}
-
-data "tencentcloud_cdh_instances" "list" {
-  availability_zone = var.availability_zone
-  host_id           = tencentcloud_cdh_instance.foo.id
-  hostname          = "test"
-  host_state        = "RUNNING"
-}
-
-resource "tencentcloud_key_pair" "random_key" {
-  key_ids    = ["tf_example_key6"]
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDjd8fTnp7Dcuj4mLaQxf9Zs/ORgUL9fQxRCNKkPgP1paTy1I513maMX126i36Lxxl3+FUB52oVbo/FgwlIfX8hyCnv8MCxqnuSDozf1CD0/wRYHcTWAtgHQHBPCC2nJtod6cVC3kB18KeV4U7zsxmwFeBIxojMOOmcOBuh7+trRw=="
-}
-
-resource "tencentcloud_placement_group" "foo" {
-  name = "test"
-  type = "HOST"
-}
-
-resource "tencentcloud_instance" "foo" {
-  availability_zone  = var.availability_zone
-  instance_name      = "terraform-testing"
-  image_id           = "img-ix05e4px"
-  key_ids            = [tencentcloud_key_pair.random_key.id]
-  placement_group_id = tencentcloud_placement_group.foo.id
-  security_groups    = ["sg-9c3f33xk"]
-  system_disk_type   = "CLOUD_PREMIUM"
-
-  instance_charge_type = "CDHPAID"
-  cdh_instance_type    = "CDH_10C10G"
-  cdh_host_id          = tencentcloud_cdh_instance.foo.id
-
-  vpc_id                     = "vpc-31zmeluu"
-  subnet_id                  = "subnet-aujc02np"
-  allocate_public_ip         = true
-  internet_max_bandwidth_out = 2
-  count                      = 3
-
+// Create a PREPAID CVM instance
+resource "tencentcloud_instance" "cvm_prepaid" {
+  instance_name                           = "cvm_prepaid"
+  availability_zone                       = data.tencentcloud_availability_zones.my_favorite_zones.zones.0.name
+  image_id                                = data.tencentcloud_images.my_favorite_image.images.0.image_id
+  instance_type                           = data.tencentcloud_instance_types.my_favorite_instance_types.instance_types.0.instance_type
+  system_disk_type                        = "CLOUD_PREMIUM"
+  system_disk_size                        = 50
+  hostname                                = "user"
+  project_id                              = 0
+  vpc_id                                  = tencentcloud_vpc.app.id
+  subnet_id                               = tencentcloud_subnet.app.id
+  instance_charge_type                    = "PREPAID"
+  instance_charge_type_prepaid_period     = 1
+  instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
   data_disks {
     data_disk_type = "CLOUD_PREMIUM"
     data_disk_size = 50
     encrypt        = false
+  }
+  force_delete = true
+  tags = {
+    tagKey = "tagValue"
   }
 }
 ```
@@ -158,7 +123,7 @@ The following arguments are supported:
 * `instance_count` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.59.18. Use built-in `count` instead. The number of instances to be purchased. Value range:[1,100]; default value: 1.
 * `instance_name` - (Optional, String) The name of the instance. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.
 * `instance_type` - (Optional, String) The type of the instance.
-* `internet_charge_type` - (Optional, String) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.
+* `internet_charge_type` - (Optional, String) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. If not set, internet charge type are consistent with the cvm charge type by default. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.
 * `internet_max_bandwidth_out` - (Optional, Int) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). This value does not need to be set when `allocate_public_ip` is false.
 * `keep_image_login` - (Optional, Bool) Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifying will cause the instance reset.
 * `key_ids` - (Optional, Set: [`String`]) The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.

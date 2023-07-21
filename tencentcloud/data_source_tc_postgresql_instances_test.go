@@ -11,12 +11,19 @@ var testDataPostgresqlInstancesName = "data.tencentcloud_postgresql_instances.id
 func TestAccTencentCloudPostgresqlInstancesDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
+			testAccPreCheck(t)
+		},
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLBDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTencentCloudDataPostgresqlInstanceBasic,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(testDataPostgresqlInstancesName, "instance_list.#", "1"),
 					resource.TestCheckResourceAttrSet(testDataPostgresqlInstancesName, "instance_list.0.id"),

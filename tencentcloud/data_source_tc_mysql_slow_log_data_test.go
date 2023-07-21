@@ -9,7 +9,7 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudMysqlSlowLogDataDataSource_basic -v
-func TestAccTencentCloudMysqlSlowLogDataDataSource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixMysqlSlowLogDataDataSource_basic(t *testing.T) {
 	t.Parallel()
 
 	startTime := time.Now().AddDate(0, 0, -29).Unix()

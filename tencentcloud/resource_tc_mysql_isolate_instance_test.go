@@ -6,8 +6,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlIsolateInstanceResource_basic -v
 func TestAccTencentCloudMysqlIsolateInstanceResource_basic(t *testing.T) {
-	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -16,12 +17,17 @@ func TestAccTencentCloudMysqlIsolateInstanceResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccMysqlIsolateInstance,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_mysql_isolate_instance.isolate_instance", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_isolate_instance.isolate_instance", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_isolate_instance.isolate_instance", "status", "5"),
+				),
 			},
 			{
-				ResourceName:      "tencentcloud_mysql_isolate_instance.isolate_instance",
-				ImportState:       true,
-				ImportStateVerify: true,
+				Config: testAccMysqlIsolateInstanceUp,
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_mysql_isolate_instance.isolate_instance", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_isolate_instance.isolate_instance", "status", "1"),
+				),
 			},
 		},
 	})
@@ -30,7 +36,17 @@ func TestAccTencentCloudMysqlIsolateInstanceResource_basic(t *testing.T) {
 const testAccMysqlIsolateInstance = `
 
 resource "tencentcloud_mysql_isolate_instance" "isolate_instance" {
-  instance_id = ""
+	instance_id = "cdb-fitq5t9h"
+	operate     = "isolate"
+}
+
+`
+
+const testAccMysqlIsolateInstanceUp = `
+
+resource "tencentcloud_mysql_isolate_instance" "isolate_instance" {
+	instance_id = "cdb-fitq5t9h"
+	operate     = "recover"
 }
 
 `

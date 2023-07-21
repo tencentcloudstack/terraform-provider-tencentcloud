@@ -41,7 +41,7 @@ Import
 MySQL instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_mysql_instance.foo cdb-12345678"
+$ terraform import tencentcloud_mysql_instance.foo cdb-12345678
 ```
 
 */

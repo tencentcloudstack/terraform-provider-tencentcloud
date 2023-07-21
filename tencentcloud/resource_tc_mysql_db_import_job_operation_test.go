@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudMysqlDbImportJobOperationResource_basic -v
 func TestAccTencentCloudMysqlDbImportJobOperationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -54,13 +55,21 @@ resource "tencentcloud_mysql_instance" "this" {
 	}
 }
 
+resource "tencentcloud_cos_bucket_object" "object_content" {
+	bucket       = "terraform-ci-1308919341"
+	key          = "/mysql/mysql.sql"
+	content      = "SELECT NOW(),SYSDATE();"
+	content_type = "binary/octet-stream"
+	acl 		 = "public-read"
+  }
+
 resource "tencentcloud_mysql_db_import_job_operation" "db_import_job" {
 	instance_id = tencentcloud_mysql_instance.this.id
 	user = "root"
 	file_name = "mysql.sql"
 	password = "password123"
 	# db_name = "t_test"
-	cos_url = "https://terraform-ci-1308919341.cos.ap-guangzhou.myqcloud.com/mysql/mysql.sql?q-sign-algorithm=sha1&q-ak=AKIDlchzcM5ppPlbSV7yhstd8narnfMtVzZRQsayiPEzHxN5pb5UDeOL2yrNqwn2Yztr&q-sign-time=1684998880;1685002480&q-key-time=1684998880;1685002480&q-header-list=host&q-url-param-list=&q-signature=b7e6165f971009fc3628eca370b9c784269cb948&x-cos-security-token=bF2h2255ZhdpmBoYFCFme0eH2h2wDJPa75147a141a51a01e7e7c49b25de5baa3r9JfJvPSQ-zrBNd5wWgKPO8slY1_PK34fw-6oxLB6EnUez5quPhZ2bPGjZ9Wmktp3st44c-0zipO4MFoQw5ZQYLuezMrpfgejRtgzcMA6xg9vAjfhYnDEmGLbAirarpWmjNotia7Xgo0sr6hVjz7pcOXhs327895IjQDQrnYMw4CcZYaekjm7sEv51XqK5V5"
-  }
+	cos_url = "https://terraform-ci-1308919341.cos.ap-guangzhou.myqcloud.com${tencentcloud_cos_bucket_object.object_content.key}"
+}
 
 `

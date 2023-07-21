@@ -8,8 +8,7 @@ Provides a resource to create a Redis instance and set its attributes.
 Example Usage
 
 ```hcl
-data "tencentcloud_redis_zone_config" "zone" {
-}
+data "tencentcloud_redis_zone_config" "zone" {}
 
 resource "tencentcloud_redis_instance" "redis_instance_test_2" {
   availability_zone  = data.tencentcloud_redis_zone_config.zone.list[0].zone
@@ -25,13 +24,11 @@ resource "tencentcloud_redis_instance" "redis_instance_test_2" {
 
 Using multi replica zone set
 ```
-data "tencentcloud_availability_zones" "az" {
-
-}
-
 variable "redis_replicas_num" {
   default = 3
 }
+
+data "tencentcloud_availability_zones" "az" {}
 
 resource "tencentcloud_redis_instance" "red1" {
   availability_zone  = data.tencentcloud_availability_zones.az.zones[0].name
@@ -45,14 +42,15 @@ resource "tencentcloud_redis_instance" "red1" {
   security_groups    = [
     "sg-d765yoec",
   ]
-  subnet_id          = "subnet-ie01x91v"
-  type_id            = 6
-  vpc_id             = "vpc-k4lrsafc"
-  password = "a12121312334"
+  subnet_id = "subnet-ie01x91v"
+  type_id   = 6
+  vpc_id    = "vpc-k4lrsafc"
+  password  = "a12121312334"
 
   replica_zone_ids = [
-    for i in range(var.redis_replicas_num)
-    : data.tencentcloud_availability_zones.az.zones[i % length(data.tencentcloud_availability_zones.az.zones)].id ]
+  for i in range(var.redis_replicas_num)
+  : data.tencentcloud_availability_zones.az.zones[i % length(data.tencentcloud_availability_zones.az.zones)].id
+  ]
 }
 ```
 
@@ -128,7 +126,7 @@ func resourceTencentCloudRedisInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     1,
-				Description: "The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`.",
+				Description: "The number of instance copies. This is not required for standalone and master slave versions and must equal to count of `replica_zone_ids`, Non-multi-AZ does not require `replica_zone_ids`.",
 			},
 			"replica_zone_ids": {
 				Type:        schema.TypeList,
@@ -1151,6 +1149,28 @@ func resourceRedisNodeSetModify(ctx context.Context, service *RedisService, d *s
 		if err != nil {
 			return err
 		}
+		err = service.CheckRedisUpdateOk(ctx, id)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Non-Multi-AZ modification redis_replicas_num
+	if d.HasChange("redis_replicas_num") && len(oz) == 0 && len(nz) == 0 {
+		_, replica := d.GetChange("redis_replicas_num")
+		redisReplicasNum := replica.(int)
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			_, err := service.UpgradeInstance(ctx, id, memSize, shardNum, redisReplicasNum, nil)
+			if err != nil {
+				// Upgrade memory will cause instance lock and cannot acknowledge by polling status, wait until lock release
+				return retryError(err, redis.FAILEDOPERATION_UNKNOWN, redis.FAILEDOPERATION_SYSTEMERROR)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
 		err = service.CheckRedisUpdateOk(ctx, id)
 		if err != nil {
 			return err
