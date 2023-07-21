@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudMonitorGrafanaInstance_basic -v
@@ -44,7 +43,7 @@ func TestAccTencentCloudMonitorGrafanaInstance_basic(t *testing.T) {
 				ResourceName:            "tencentcloud_monitor_grafana_instance.grafanaInstance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"grafana_init_password"},
+				ImportStateVerifyIgnore: []string{"grafana_init_password", "is_destroy"},
 			},
 		},
 	})
@@ -124,7 +123,7 @@ resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
   subnet_ids = [var.subnet_id]
   grafana_init_password = "1234567890"
   enable_internet = false
-  is_distroy = true
+  is_destroy = true
 
   tags = {
     "createdBy" = "test"
@@ -139,7 +138,7 @@ resource "tencentcloud_monitor_grafana_instance" "grafanaInstance" {
   subnet_ids = [var.subnet_id]
   grafana_init_password = "1234567890"
   enable_internet = false
-  is_distroy = true
+  is_destroy = true
 
   tags = {
     "createdBy" = "test"

@@ -6,7 +6,7 @@ test:
 	@echo "everything is OK"
 
 ci-lint:
-	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(GOPATH_DIR)/bin v1.45.2
+	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(GOPATH_DIR)/bin v1.50.0
 	$(GOPATH_DIR)/bin/golangci-lint run ./...
 	go install github.com/quasilyte/go-consistent@master
 	$(GOPATH_DIR)/bin/go-consistent . ./internal/... ./nodetag/... ./filters/...

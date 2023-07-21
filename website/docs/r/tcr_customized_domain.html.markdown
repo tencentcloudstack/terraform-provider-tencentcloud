@@ -4,20 +4,30 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tcr_customized_domain"
 sidebar_current: "docs-tencentcloud-resource-tcr_customized_domain"
 description: |-
-  Provides a resource to create a tcr customized_domain
+  Provides a resource to create a tcr customized domain
 ---
 
 # tencentcloud_tcr_customized_domain
 
-Provides a resource to create a tcr customized_domain
+Provides a resource to create a tcr customized domain
 
 ## Example Usage
 
+### Create a tcr customized domain
+
 ```hcl
-resource "tencentcloud_tcr_customized_domain" "my_domain" {
-  registry_id    = local.tcr_id
+resource "tencentcloud_tcr_instance" "example" {
+  name          = "tf-example-tcr"
+  instance_type = "premium"
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_tcr_customized_domain" "example" {
+  registry_id    = tencentcloud_tcr_instance.example.id
   domain_name    = "www.test.com"
-  certificate_id = "%s"
+  certificate_id = "your_cert_id"
   tags = {
     "createdBy" = "terraform"
   }

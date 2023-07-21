@@ -35,6 +35,9 @@ const (
 	// 不支持的地域。
 	FAILEDOPERATION_INVALIDREGION = "FailedOperation.InvalidRegion"
 
+	// 不支持的IP类型。
+	FAILEDOPERATION_IPTYPENOTPERMIT = "FailedOperation.IpTypeNotPermit"
+
 	// 未找到实例的主网卡。
 	FAILEDOPERATION_MASTERENINOTFOUND = "FailedOperation.MasterEniNotFound"
 
@@ -197,8 +200,14 @@ const (
 	// 缺少参数。
 	INVALIDPARAMETERVALUE_EMPTY = "InvalidParameterValue.Empty"
 
+	// IPv6转换实例ID已经存在。
+	INVALIDPARAMETERVALUE_IPV6RULEIDEXISTED = "InvalidParameterValue.IPv6RuleIdExisted"
+
 	// IPv6规则没有更改。
 	INVALIDPARAMETERVALUE_IPV6RULENOTCHANGE = "InvalidParameterValue.IPv6RuleNotChange"
+
+	// 资源格式错误
+	INVALIDPARAMETERVALUE_ILLEGAL = "InvalidParameterValue.Illegal"
 
 	// 该实例的计费方式与其他实例不同。
 	INVALIDPARAMETERVALUE_INCONSISTENTINSTANCEINTERNETCHARGETYPE = "InvalidParameterValue.InconsistentInstanceInternetChargeType"
@@ -250,6 +259,9 @@ const (
 
 	// 该Tag不合法。
 	INVALIDPARAMETERVALUE_INVALIDTAG = "InvalidParameterValue.InvalidTag"
+
+	// 未查询到该IPv6规则。
+	INVALIDPARAMETERVALUE_IP6RULENOTFOUND = "InvalidParameterValue.Ip6RuleNotFound"
 
 	// 未查询到该IPv6翻译器。
 	INVALIDPARAMETERVALUE_IP6TRANSLATORNOTFOUND = "InvalidParameterValue.Ip6TranslatorNotFound"
@@ -478,6 +490,9 @@ const (
 
 	// 带宽包配额超过限制。
 	LIMITEXCEEDED_BANDWIDTHPACKAGEQUOTA = "LimitExceeded.BandwidthPackageQuota"
+
+	// 当前带宽包加入资源上限。
+	LIMITEXCEEDED_BANDWIDTHPACKAGERESOURCEQUOTA = "LimitExceeded.BandwidthPackageResourceQuota"
 
 	// 超过更换IP配额。
 	LIMITEXCEEDED_CHANGEADDRESSQUOTA = "LimitExceeded.ChangeAddressQuota"
@@ -737,6 +752,9 @@ const (
 	// 终端节点服务本身不能是终端节点。
 	UNSUPPORTEDOPERATION_ENDPOINTSERVICE = "UnsupportedOperation.EndPointService"
 
+	// 指定ResourceId对应的流日志已经创建
+	UNSUPPORTEDOPERATION_FLOWLOGINSTANCEEXISTED = "UnsupportedOperation.FlowLogInstanceExisted"
+
 	// 不支持创建流日志：当前弹性网卡绑定的是KO机型。
 	UNSUPPORTEDOPERATION_FLOWLOGSNOTSUPPORTKOINSTANCEENI = "UnsupportedOperation.FlowLogsNotSupportKoInstanceEni"
 
@@ -748,6 +766,9 @@ const (
 
 	// 用户配置的实例和路由表不匹配。
 	UNSUPPORTEDOPERATION_INSTANCEANDRTBNOTMATCH = "UnsupportedOperation.InstanceAndRtbNotMatch"
+
+	// 当前云联网`%(value)s`的CdcId与传入实例的CdcId不一致，不支持关联。
+	UNSUPPORTEDOPERATION_INSTANCECDCIDNOTMATCHCCNCDCID = "UnsupportedOperation.InstanceCdcIdNotMatchCcnCdcId"
 
 	// 指定实例资源不匹配。
 	UNSUPPORTEDOPERATION_INSTANCEMISMATCH = "UnsupportedOperation.InstanceMismatch"
@@ -934,6 +955,9 @@ const (
 
 	// 中继网卡不支持该操作。
 	UNSUPPORTEDOPERATION_SUBENINOTSUPPORTTRUNKING = "UnsupportedOperation.SubEniNotSupportTrunking"
+
+	// 子网不存在。
+	UNSUPPORTEDOPERATION_SUBNETNOTEXISTS = "UnsupportedOperation.SubnetNotExists"
 
 	// 系统路由，禁止操作。
 	UNSUPPORTEDOPERATION_SYSTEMROUTE = "UnsupportedOperation.SystemRoute"

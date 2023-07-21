@@ -36,7 +36,7 @@ resource "tencentcloud_monitor_grafana_instance" "foo" {
   subnet_ids            = [tencentcloud_subnet.subnet.id]
   grafana_init_password = "1234567890"
   enable_internet       = false
-  is_distroy            = true
+  is_destroy            = true
 
   tags = {
     "createdBy" = "test"
@@ -51,7 +51,8 @@ The following arguments are supported:
 * `instance_name` - (Required, String) Instance name.
 * `enable_internet` - (Optional, Bool) Control whether grafana could be accessed by internet.
 * `grafana_init_password` - (Optional, String) Grafana server admin password.
-* `is_distroy` - (Optional, Bool) Whether to clean up completely, the default is false.
+* `is_destroy` - (Optional, Bool) Whether to clean up completely, the default is false.
+* `is_distroy` - (Optional, Bool, **Deprecated**) It has been deprecated from version 1.81.16. Whether to clean up completely, the default is false.
 * `subnet_ids` - (Optional, Set: [`String`]) Subnet Id array.
 * `tags` - (Optional, Map) Tag description list.
 * `vpc_id` - (Optional, String) Vpc Id.

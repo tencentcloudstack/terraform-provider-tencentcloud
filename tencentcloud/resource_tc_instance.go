@@ -252,7 +252,7 @@ func resourceTencentCloudInstance() *schema.Resource {
 					return old == "" || new == ""
 				},
 				ValidateFunc: validateAllowedStringValue(CVM_INTERNET_CHARGE_TYPE),
-				Description:  "Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.",
+				Description:  "Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. If not set, internet charge type are consistent with the cvm charge type by default. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.",
 			},
 			"bandwidth_package_id": {
 				Type:        schema.TypeString,
