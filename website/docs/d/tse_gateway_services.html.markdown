@@ -47,7 +47,7 @@ In addition to all arguments above, the following attributes are exported:
     * `id` - service ID.
     * `name` - service name.
     * `tags` - tag list.
-    * `upstream_info` - upstream infomation.
+    * `upstream_info` - upstream information.
       * `algorithm` - load balance algorithm,default:round-robin,least-connections and consisten_hashing also support.
       * `auto_scaling_cvm_port` - auto scaling group port of cvm.
       * `auto_scaling_group_id` - auto scaling group ID of cvm.

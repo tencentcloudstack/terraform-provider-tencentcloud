@@ -87,7 +87,7 @@ func dataSourceTencentCloudTseGatewayServices() *schema.Resource {
 									"upstream_info": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "upstream infomation.",
+										Description: "upstream information.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"host": {

@@ -1571,6 +1571,8 @@ Tencent Cloud Service Engine(TSE)
 
   Resource
 	tencentcloud_tse_instance
+	tencentcloud_tse_cngw_service
+	tencentcloud_tse_cngw_canary_rule
 
 ClickHouse(CDWCH)
   Resource
@@ -2920,6 +2922,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
+			"tencentcloud_tse_cngw_service":                           resourceTencentCloudTseCngwService(),
+			"tencentcloud_tse_cngw_service_rate_limit":                resourceTencentCloudTseCngwServiceRateLimit(),
+			"tencentcloud_tse_cngw_route":                             resourceTencentCloudTseCngwRoute(),
+			"tencentcloud_tse_cngw_route_rate_limit":                  resourceTencentCloudTseCngwRouteRateLimit(),
+			"tencentcloud_tse_cngw_canary_rule":                       resourceTencentCloudTseCngwCanaryRule(),
 			"tencentcloud_clickhouse_instance":                        resourceTencentCloudClickhouseInstance(),
 		},
 
