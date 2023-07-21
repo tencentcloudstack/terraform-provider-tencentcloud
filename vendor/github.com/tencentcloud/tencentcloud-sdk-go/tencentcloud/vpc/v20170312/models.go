@@ -402,6 +402,9 @@ type Address struct {
 	// EIP绑定的实例类型。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	InstanceType *string `json:"InstanceType,omitempty" name:"InstanceType"`
+
+	// 高防包ID,当EIP类型为高防EIP时，返回EIP绑定的高防包ID.
+	AntiDDoSPackageId *string `json:"AntiDDoSPackageId,omitempty" name:"AntiDDoSPackageId"`
 }
 
 type AddressChargePrepaid struct {
@@ -569,7 +572,7 @@ type AllocateAddressesRequestParams struct {
 	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
 
 	// EIP出带宽上限，单位：Mbps。
-	// <ul style="margin:0"><li>已开通标准账户类型白名单的用户，可选值范围取决于EIP计费方式：<ul><li>BANDWIDTH_PACKAGE：1 Mbps 至 1000 Mbps</li>
+	// <ul style="margin:0"><li>已开通标准账户类型白名单的用户，可选值范围取决于EIP计费方式：<ul><li>BANDWIDTH_PACKAGE：1 Mbps 至 2000 Mbps</li>
 	// <li>BANDWIDTH_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li>
 	// <li>BANDWIDTH_PREPAID_BY_MONTH：1 Mbps 至 200 Mbps</li>
 	// <li>TRAFFIC_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li></ul>默认值：1 Mbps。</li>
@@ -582,6 +585,8 @@ type AllocateAddressesRequestParams struct {
 	// EIP类型。默认值：EIP。
 	// <ul style="margin:0"><li>已开通Anycast公网加速白名单的用户，可选值：<ul><li>AnycastEIP：加速IP，可参见 [Anycast 公网加速](https://cloud.tencent.com/document/product/644)</li></ul>注意：仅部分地域支持加速IP。</li></ul>
 	// <ul style="margin:0"><li>已开通精品IP白名单的用户，可选值：<ul><li>HighQualityEIP：精品IP</li></ul>注意：仅部分地域支持精品IP。</li></ul>
+	// </ul>
+	// <ul style="margin:0"><li>已开高防IP白名单的用户，可选值：<ul><li>AntiDDoSEIP：高防IP</li></ul>注意：仅部分地域支持高防IP。</li></ul>
 	AddressType *string `json:"AddressType,omitempty" name:"AddressType"`
 
 	// Anycast发布域。
@@ -605,6 +610,12 @@ type AllocateAddressesRequestParams struct {
 
 	// 网络出口，默认是：center_egress1
 	Egress *string `json:"Egress,omitempty" name:"Egress"`
+
+	// 高防包ID， 申请高防IP时，该字段必传。
+	AntiDDoSPackageId *string `json:"AntiDDoSPackageId,omitempty" name:"AntiDDoSPackageId"`
+
+	// 保证请求幂等性。从您的客户端生成一个参数值，确保不同请求间该参数值唯一。ClientToken只支持ASCII字符，且不能超过64个字符。
+	ClientToken *string `json:"ClientToken,omitempty" name:"ClientToken"`
 }
 
 type AllocateAddressesRequest struct {
@@ -628,7 +639,7 @@ type AllocateAddressesRequest struct {
 	InternetChargeType *string `json:"InternetChargeType,omitempty" name:"InternetChargeType"`
 
 	// EIP出带宽上限，单位：Mbps。
-	// <ul style="margin:0"><li>已开通标准账户类型白名单的用户，可选值范围取决于EIP计费方式：<ul><li>BANDWIDTH_PACKAGE：1 Mbps 至 1000 Mbps</li>
+	// <ul style="margin:0"><li>已开通标准账户类型白名单的用户，可选值范围取决于EIP计费方式：<ul><li>BANDWIDTH_PACKAGE：1 Mbps 至 2000 Mbps</li>
 	// <li>BANDWIDTH_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li>
 	// <li>BANDWIDTH_PREPAID_BY_MONTH：1 Mbps 至 200 Mbps</li>
 	// <li>TRAFFIC_POSTPAID_BY_HOUR：1 Mbps 至 100 Mbps</li></ul>默认值：1 Mbps。</li>
@@ -641,6 +652,8 @@ type AllocateAddressesRequest struct {
 	// EIP类型。默认值：EIP。
 	// <ul style="margin:0"><li>已开通Anycast公网加速白名单的用户，可选值：<ul><li>AnycastEIP：加速IP，可参见 [Anycast 公网加速](https://cloud.tencent.com/document/product/644)</li></ul>注意：仅部分地域支持加速IP。</li></ul>
 	// <ul style="margin:0"><li>已开通精品IP白名单的用户，可选值：<ul><li>HighQualityEIP：精品IP</li></ul>注意：仅部分地域支持精品IP。</li></ul>
+	// </ul>
+	// <ul style="margin:0"><li>已开高防IP白名单的用户，可选值：<ul><li>AntiDDoSEIP：高防IP</li></ul>注意：仅部分地域支持高防IP。</li></ul>
 	AddressType *string `json:"AddressType,omitempty" name:"AddressType"`
 
 	// Anycast发布域。
@@ -664,6 +677,12 @@ type AllocateAddressesRequest struct {
 
 	// 网络出口，默认是：center_egress1
 	Egress *string `json:"Egress,omitempty" name:"Egress"`
+
+	// 高防包ID， 申请高防IP时，该字段必传。
+	AntiDDoSPackageId *string `json:"AntiDDoSPackageId,omitempty" name:"AntiDDoSPackageId"`
+
+	// 保证请求幂等性。从您的客户端生成一个参数值，确保不同请求间该参数值唯一。ClientToken只支持ASCII字符，且不能超过64个字符。
+	ClientToken *string `json:"ClientToken,omitempty" name:"ClientToken"`
 }
 
 func (r *AllocateAddressesRequest) ToJsonString() string {
@@ -690,6 +709,8 @@ func (r *AllocateAddressesRequest) FromJsonString(s string) error {
 	delete(f, "BandwidthPackageId")
 	delete(f, "AddressName")
 	delete(f, "Egress")
+	delete(f, "AntiDDoSPackageId")
+	delete(f, "ClientToken")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AllocateAddressesRequest has unknown keys!", "")
 	}
@@ -1238,26 +1259,26 @@ func (r *AssociateDhcpIpWithAddressIpResponse) FromJsonString(s string) error {
 
 // Predefined struct for user
 type AssociateDirectConnectGatewayNatGatewayRequestParams struct {
-	// 专线网关ID。
+	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
 	// NAT网关ID。
 	NatGatewayId *string `json:"NatGatewayId,omitempty" name:"NatGatewayId"`
 
-	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// 专线网关ID。
 	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
 }
 
 type AssociateDirectConnectGatewayNatGatewayRequest struct {
 	*tchttp.BaseRequest
 	
-	// 专线网关ID。
+	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
 	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
 
 	// NAT网关ID。
 	NatGatewayId *string `json:"NatGatewayId,omitempty" name:"NatGatewayId"`
 
-	// VPC实例ID。可通过DescribeVpcs接口返回值中的VpcId获取。
+	// 专线网关ID。
 	DirectConnectGatewayId *string `json:"DirectConnectGatewayId,omitempty" name:"DirectConnectGatewayId"`
 }
 
@@ -2480,7 +2501,7 @@ type ClassicLinkInstance struct {
 
 // Predefined struct for user
 type CloneSecurityGroupRequestParams struct {
-	// 安全组实例ID，例如sg-33ocnj9n，可通过DescribeSecurityGroups获取。
+	// 安全组实例ID，例如sg-33ocnj9n，可通过<a href="https://cloud.tencent.com/document/product/215/15808">DescribeSecurityGroups</a>获取。
 	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
 
 	// 安全组名称，可任意命名，但不得超过60个字符。未提供参数时，克隆后的安全组名称和SecurityGroupId对应的安全组名称相同。
@@ -2489,7 +2510,7 @@ type CloneSecurityGroupRequestParams struct {
 	// 安全组备注，最多100个字符。未提供参数时，克隆后的安全组备注和SecurityGroupId对应的安全组备注相同。
 	GroupDescription *string `json:"GroupDescription,omitempty" name:"GroupDescription"`
 
-	// 项目ID，默认0。可在qcloud控制台项目管理页面查询到。
+	// 项目ID，默认0。可在<a href="https://console.cloud.tencent.com/project">qcloud控制台项目管理页面</a>查询到。
 	ProjectId *string `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 源Region,跨地域克隆安全组时，需要传入源安全组所属地域信息，例如：克隆广州的安全组到上海，则这里需要传入广州安全的地域信息：ap-guangzhou。
@@ -2499,7 +2520,7 @@ type CloneSecurityGroupRequestParams struct {
 type CloneSecurityGroupRequest struct {
 	*tchttp.BaseRequest
 	
-	// 安全组实例ID，例如sg-33ocnj9n，可通过DescribeSecurityGroups获取。
+	// 安全组实例ID，例如sg-33ocnj9n，可通过<a href="https://cloud.tencent.com/document/product/215/15808">DescribeSecurityGroups</a>获取。
 	SecurityGroupId *string `json:"SecurityGroupId,omitempty" name:"SecurityGroupId"`
 
 	// 安全组名称，可任意命名，但不得超过60个字符。未提供参数时，克隆后的安全组名称和SecurityGroupId对应的安全组名称相同。
@@ -2508,7 +2529,7 @@ type CloneSecurityGroupRequest struct {
 	// 安全组备注，最多100个字符。未提供参数时，克隆后的安全组备注和SecurityGroupId对应的安全组备注相同。
 	GroupDescription *string `json:"GroupDescription,omitempty" name:"GroupDescription"`
 
-	// 项目ID，默认0。可在qcloud控制台项目管理页面查询到。
+	// 项目ID，默认0。可在<a href="https://console.cloud.tencent.com/project">qcloud控制台项目管理页面</a>查询到。
 	ProjectId *string `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 源Region,跨地域克隆安全组时，需要传入源安全组所属地域信息，例如：克隆广州的安全组到上海，则这里需要传入广州安全的地域信息：ap-guangzhou。
@@ -4204,7 +4225,7 @@ type CreateNetDetectRequestParams struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
-	// 下一跳类型为CCN，取值云云联网ID，形如：ccn-12345678；
+	// 下一跳类型为CCN，取值云联网ID，形如：ccn-12345678；
 	// 下一跳类型为NONEXTHOP，指定网络探测为无下一跳的网络探测；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
@@ -4243,7 +4264,7 @@ type CreateNetDetectRequest struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
-	// 下一跳类型为CCN，取值云云联网ID，形如：ccn-12345678；
+	// 下一跳类型为CCN，取值云联网ID，形如：ccn-12345678；
 	// 下一跳类型为NONEXTHOP，指定网络探测为无下一跳的网络探测；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
@@ -4845,7 +4866,7 @@ type CreateSecurityGroupWithPoliciesRequestParams struct {
 	// 安全组备注，最多100个字符。
 	GroupDescription *string `json:"GroupDescription,omitempty" name:"GroupDescription"`
 
-	// 项目ID，默认0。可在qcloud控制台项目管理页面查询到。
+	// 项目ID，默认0。可在<a href="https://console.cloud.tencent.com/project">qcloud控制台项目管理页面</a>查询到。
 	ProjectId *string `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 安全组规则集合。
@@ -4861,7 +4882,7 @@ type CreateSecurityGroupWithPoliciesRequest struct {
 	// 安全组备注，最多100个字符。
 	GroupDescription *string `json:"GroupDescription,omitempty" name:"GroupDescription"`
 
-	// 项目ID，默认0。可在qcloud控制台项目管理页面查询到。
+	// 项目ID，默认0。可在<a href="https://console.cloud.tencent.com/project">qcloud控制台项目管理页面</a>查询到。
 	ProjectId *string `json:"ProjectId,omitempty" name:"ProjectId"`
 
 	// 安全组规则集合。
@@ -9429,7 +9450,7 @@ type DescribeCcnAttachedInstancesRequestParams struct {
 	// <li>ccn-id - String -（过滤条件）CCN实例ID。</li>
 	// <li>instance-type - String -（过滤条件）关联实例类型。</li>
 	// <li>instance-region - String -（过滤条件）关联实例所属地域。</li>
-	// <li>instance-id - String -（过滤条件）关联实例实例ID。</li>
+	// <li>instance-id - String -（过滤条件）关联实例ID。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 云联网实例ID
@@ -9455,7 +9476,7 @@ type DescribeCcnAttachedInstancesRequest struct {
 	// <li>ccn-id - String -（过滤条件）CCN实例ID。</li>
 	// <li>instance-type - String -（过滤条件）关联实例类型。</li>
 	// <li>instance-region - String -（过滤条件）关联实例所属地域。</li>
-	// <li>instance-id - String -（过滤条件）关联实例实例ID。</li>
+	// <li>instance-id - String -（过滤条件）关联实例ID。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 云联网实例ID
@@ -11585,7 +11606,7 @@ type DescribeNatGatewayDestinationIpPortTranslationNatRulesRequestParams struct 
 	NatGatewayIds []*string `json:"NatGatewayIds,omitempty" name:"NatGatewayIds"`
 
 	// 过滤条件:
-	// 参数不支持同时指定NatGatewayIds和Filters。
+	// 参数不支持同时指定NatGatewayIds和Filters。每次请求的Filters的上限为10，Filter.Values的上限为5
 	// <li> nat-gateway-id，NAT网关的ID，如`nat-0yi4hekt`</li>
 	// <li> vpc-id，私有网络VPC的ID，如`vpc-0yi4hekt`</li>
 	// <li> public-ip-address， 弹性IP，如`139.199.232.238`。</li>
@@ -11609,7 +11630,7 @@ type DescribeNatGatewayDestinationIpPortTranslationNatRulesRequest struct {
 	NatGatewayIds []*string `json:"NatGatewayIds,omitempty" name:"NatGatewayIds"`
 
 	// 过滤条件:
-	// 参数不支持同时指定NatGatewayIds和Filters。
+	// 参数不支持同时指定NatGatewayIds和Filters。每次请求的Filters的上限为10，Filter.Values的上限为5
 	// <li> nat-gateway-id，NAT网关的ID，如`nat-0yi4hekt`</li>
 	// <li> vpc-id，私有网络VPC的ID，如`vpc-0yi4hekt`</li>
 	// <li> public-ip-address， 弹性IP，如`139.199.232.238`。</li>
@@ -11847,10 +11868,10 @@ func (r *DescribeNatGatewaySourceIpTranslationNatRulesResponse) FromJsonString(s
 
 // Predefined struct for user
 type DescribeNatGatewaysRequestParams struct {
-	// NAT网关统一 ID，形如：`nat-123xx454`。
+	// NAT网关统一 ID，形如：`nat-123xx454`。每次请求的实例上限为100。参数不支持同时指定NatGatewayIds和Filters。
 	NatGatewayIds []*string `json:"NatGatewayIds,omitempty" name:"NatGatewayIds"`
 
-	// 过滤条件，参数不支持同时指定NatGatewayIds和Filters。
+	// 过滤条件，参数不支持同时指定NatGatewayIds和Filters。每次请求的Filters的上限为10，Filter.Values的上限为5。
 	// <li>nat-gateway-id - String - （过滤条件）协议端口模板实例ID，形如：`nat-123xx454`。</li>
 	// <li>vpc-id - String - （过滤条件）私有网络 唯一ID，形如：`vpc-123xx454`。</li>
 	// <li>nat-gateway-name - String - （过滤条件）协议端口模板实例ID，形如：`test_nat`。</li>
@@ -11867,10 +11888,10 @@ type DescribeNatGatewaysRequestParams struct {
 type DescribeNatGatewaysRequest struct {
 	*tchttp.BaseRequest
 	
-	// NAT网关统一 ID，形如：`nat-123xx454`。
+	// NAT网关统一 ID，形如：`nat-123xx454`。每次请求的实例上限为100。参数不支持同时指定NatGatewayIds和Filters。
 	NatGatewayIds []*string `json:"NatGatewayIds,omitempty" name:"NatGatewayIds"`
 
-	// 过滤条件，参数不支持同时指定NatGatewayIds和Filters。
+	// 过滤条件，参数不支持同时指定NatGatewayIds和Filters。每次请求的Filters的上限为10，Filter.Values的上限为5。
 	// <li>nat-gateway-id - String - （过滤条件）协议端口模板实例ID，形如：`nat-123xx454`。</li>
 	// <li>vpc-id - String - （过滤条件）私有网络 唯一ID，形如：`vpc-123xx454`。</li>
 	// <li>nat-gateway-name - String - （过滤条件）协议端口模板实例ID，形如：`test_nat`。</li>
@@ -12443,6 +12464,7 @@ type DescribeNetworkInterfacesRequestParams struct {
 	// <li>eni-type - String -是否必填：否- （过滤条件）按照网卡类型进行过滤。“0”-辅助网卡，“1”-主网卡，“2”：中继网卡。</li>
 	// <li>eni-qos - String -是否必填：否- （过滤条件）按照网卡服务质量进行过滤。“AG”-服务质量为云铜，“AU”-服务质量为云银。</li>
 	// <li>address-ipv6 - String - 是否必填：否 -（过滤条件）内网IPv6地址过滤，支持多ipv6地址查询，如果和address-ip一起使用取交集。</li>
+	// <li>public-address-ip - String - （过滤条件）公网IPv4地址，精确匹配。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -12474,6 +12496,7 @@ type DescribeNetworkInterfacesRequest struct {
 	// <li>eni-type - String -是否必填：否- （过滤条件）按照网卡类型进行过滤。“0”-辅助网卡，“1”-主网卡，“2”：中继网卡。</li>
 	// <li>eni-qos - String -是否必填：否- （过滤条件）按照网卡服务质量进行过滤。“AG”-服务质量为云铜，“AU”-服务质量为云银。</li>
 	// <li>address-ipv6 - String - 是否必填：否 -（过滤条件）内网IPv6地址过滤，支持多ipv6地址查询，如果和address-ip一起使用取交集。</li>
+	// <li>public-address-ip - String - （过滤条件）公网IPv4地址，精确匹配。</li>
 	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
 
 	// 偏移量，默认为0。
@@ -13030,7 +13053,7 @@ func (r *DescribeSecurityGroupReferencesResponse) FromJsonString(s string) error
 
 // Predefined struct for user
 type DescribeSecurityGroupsRequestParams struct {
-	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。参数不支持同时指定SecurityGroupIds和Filters。
+	// 安全组实例ID，例如：sg-33ocnj9n。每次请求的实例的上限为100。参数不支持同时指定SecurityGroupIds和Filters。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 
 	// 过滤条件，参数不支持同时指定SecurityGroupIds和Filters。
@@ -13046,12 +13069,18 @@ type DescribeSecurityGroupsRequestParams struct {
 
 	// 返回数量，默认为20，最大值为100。
 	Limit *string `json:"Limit,omitempty" name:"Limit"`
+
+	// 排序字段。支持：`CreatedTime` `UpdateTime`。注意：该字段没有默认值。
+	OrderField *string `json:"OrderField,omitempty" name:"OrderField"`
+
+	// 排序方法。升序：`ASC`，倒序：`DESC`。默认值：`ASC`
+	OrderDirection *string `json:"OrderDirection,omitempty" name:"OrderDirection"`
 }
 
 type DescribeSecurityGroupsRequest struct {
 	*tchttp.BaseRequest
 	
-	// 安全组实例ID，例如：sg-33ocnj9n，可通过DescribeSecurityGroups获取。每次请求的实例的上限为100。参数不支持同时指定SecurityGroupIds和Filters。
+	// 安全组实例ID，例如：sg-33ocnj9n。每次请求的实例的上限为100。参数不支持同时指定SecurityGroupIds和Filters。
 	SecurityGroupIds []*string `json:"SecurityGroupIds,omitempty" name:"SecurityGroupIds"`
 
 	// 过滤条件，参数不支持同时指定SecurityGroupIds和Filters。
@@ -13067,6 +13096,12 @@ type DescribeSecurityGroupsRequest struct {
 
 	// 返回数量，默认为20，最大值为100。
 	Limit *string `json:"Limit,omitempty" name:"Limit"`
+
+	// 排序字段。支持：`CreatedTime` `UpdateTime`。注意：该字段没有默认值。
+	OrderField *string `json:"OrderField,omitempty" name:"OrderField"`
+
+	// 排序方法。升序：`ASC`，倒序：`DESC`。默认值：`ASC`
+	OrderDirection *string `json:"OrderDirection,omitempty" name:"OrderDirection"`
 }
 
 func (r *DescribeSecurityGroupsRequest) ToJsonString() string {
@@ -13085,6 +13120,8 @@ func (r *DescribeSecurityGroupsRequest) FromJsonString(s string) error {
 	delete(f, "Filters")
 	delete(f, "Offset")
 	delete(f, "Limit")
+	delete(f, "OrderField")
+	delete(f, "OrderDirection")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeSecurityGroupsRequest has unknown keys!", "")
 	}
@@ -13459,7 +13496,7 @@ type DescribeSnapshotFilesRequestParams struct {
 	// 业务类型，目前支持安全组：securitygroup。
 	BusinessType *string `json:"BusinessType,omitempty" name:"BusinessType"`
 
-	// 实例Id。
+	// 业务实例Id，和BusinessType对应。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 开始日期，格式%Y-%m-%d %H:%M:%S。
@@ -13481,7 +13518,7 @@ type DescribeSnapshotFilesRequest struct {
 	// 业务类型，目前支持安全组：securitygroup。
 	BusinessType *string `json:"BusinessType,omitempty" name:"BusinessType"`
 
-	// 实例Id。
+	// 业务实例Id，和BusinessType对应。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 开始日期，格式%Y-%m-%d %H:%M:%S。
@@ -14093,13 +14130,13 @@ type DescribeUsedIpAddressRequestParams struct {
 	// 子网实例ID。
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 查询是否占用的ip列表
+	// 查询是否占用的ip列表，ip需要在vpc或子网内。最多允许一次查询100个IP。
 	IpAddresses []*string `json:"IpAddresses,omitempty" name:"IpAddresses"`
 
-	// 偏移量。
+	// 偏移量，默认为0。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 请求对象个数。
+	// 返回数量，默认为20，最大值为100。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 }
 
@@ -14112,13 +14149,13 @@ type DescribeUsedIpAddressRequest struct {
 	// 子网实例ID。
 	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 
-	// 查询是否占用的ip列表
+	// 查询是否占用的ip列表，ip需要在vpc或子网内。最多允许一次查询100个IP。
 	IpAddresses []*string `json:"IpAddresses,omitempty" name:"IpAddresses"`
 
-	// 偏移量。
+	// 偏移量，默认为0。
 	Offset *uint64 `json:"Offset,omitempty" name:"Offset"`
 
-	// 请求对象个数。
+	// 返回数量，默认为20，最大值为100。
 	Limit *uint64 `json:"Limit,omitempty" name:"Limit"`
 }
 
@@ -20287,7 +20324,7 @@ type ModifyNetDetectRequestParams struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
-	// 下一跳类型为CCN，取值云云联网ID，形如：ccn-12345678；
+	// 下一跳类型为CCN，取值云联网ID，形如：ccn-12345678；
 	// 下一跳类型为NONEXTHOP，指定网络探测为无下一跳的网络探测；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
@@ -20323,7 +20360,7 @@ type ModifyNetDetectRequest struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
-	// 下一跳类型为CCN，取值云云联网ID，形如：ccn-12345678；
+	// 下一跳类型为CCN，取值云联网ID，形如：ccn-12345678；
 	// 下一跳类型为NONEXTHOP，指定网络探测为无下一跳的网络探测；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
@@ -21324,6 +21361,9 @@ type ModifyVpcAttributeRequestParams struct {
 
 	// 域名。
 	DomainName *string `json:"DomainName,omitempty" name:"DomainName"`
+
+	// 发布cdc 子网到云联网的开关。true: 发布, false: 不发布。
+	EnableCdcPublish *bool `json:"EnableCdcPublish,omitempty" name:"EnableCdcPublish"`
 }
 
 type ModifyVpcAttributeRequest struct {
@@ -21343,6 +21383,9 @@ type ModifyVpcAttributeRequest struct {
 
 	// 域名。
 	DomainName *string `json:"DomainName,omitempty" name:"DomainName"`
+
+	// 发布cdc 子网到云联网的开关。true: 发布, false: 不发布。
+	EnableCdcPublish *bool `json:"EnableCdcPublish,omitempty" name:"EnableCdcPublish"`
 }
 
 func (r *ModifyVpcAttributeRequest) ToJsonString() string {
@@ -21362,6 +21405,7 @@ func (r *ModifyVpcAttributeRequest) FromJsonString(s string) error {
 	delete(f, "EnableMulticast")
 	delete(f, "DnsServers")
 	delete(f, "DomainName")
+	delete(f, "EnableCdcPublish")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyVpcAttributeRequest has unknown keys!", "")
 	}
@@ -22031,6 +22075,10 @@ type NatGateway struct {
 	// NAT网关是否被封禁。“NORMAL”：未被封禁，“RESTRICTED”：已被封禁。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RestrictState *string `json:"RestrictState,omitempty" name:"RestrictState"`
+
+	// NAT网关大版本号，传统型=1，标准型=2
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NatProductVersion *uint64 `json:"NatProductVersion,omitempty" name:"NatProductVersion"`
 }
 
 type NatGatewayAddress struct {
@@ -22117,7 +22165,7 @@ type NetDetect struct {
 	// 下一跳类型为PEERCONNECTION，取值对等连接ID，形如：pcx-12345678；
 	// 下一跳类型为NAT，取值Nat网关，形如：nat-12345678；
 	// 下一跳类型为NORMAL_CVM，取值云服务器IPv4地址，形如：10.0.0.12；
-	// 下一跳类型为CCN，取值云云联网ID，形如：ccn-12345678；
+	// 下一跳类型为CCN，取值云联网ID，形如：ccn-12345678；
 	// 下一跳类型为NONEXTHOP，指定网络探测为无下一跳的网络探测；
 	NextHopDestination *string `json:"NextHopDestination,omitempty" name:"NextHopDestination"`
 
@@ -24426,10 +24474,10 @@ type SnapshotPolicy struct {
 }
 
 type SourceIpTranslationNatRule struct {
-	// 资源ID
+	// 资源ID，如果ResourceType为USERDEFINED，可以为空
 	ResourceId *string `json:"ResourceId,omitempty" name:"ResourceId"`
 
-	// 资源类型，目前包含SUBNET、NETWORKINTERFACE
+	// 资源类型，目前包含SUBNET、NETWORKINTERFACE、USERDEFINED
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ResourceType *string `json:"ResourceType,omitempty" name:"ResourceType"`
 
