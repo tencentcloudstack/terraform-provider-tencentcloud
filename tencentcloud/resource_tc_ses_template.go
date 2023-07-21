@@ -1,13 +1,15 @@
 /*
-Provides a resource to create a ses template
+Provides a resource to create a ses template.
 
 Example Usage
 
+Create a ses template instance
+
 ```hcl
-resource "tencentcloud_ses_template" "template" {
-  template_name = "sesTemplateName"
+resource "tencentcloud_ses_template" "example" {
+  template_name = "tf_example_ses_temp""
   template_content {
-    text = "This is the content of the test"
+    text = "example for the ses template"
   }
 }
 
@@ -16,7 +18,7 @@ Import
 
 ses template can be imported using the id, e.g.
 ```
-$ terraform import tencentcloud_ses_template.template template_id
+$ terraform import tencentcloud_ses_template.example template_id
 ```
 */
 package tencentcloud
