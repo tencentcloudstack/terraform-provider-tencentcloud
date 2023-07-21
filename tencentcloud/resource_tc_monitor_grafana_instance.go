@@ -26,7 +26,7 @@ resource "tencentcloud_monitor_grafana_instance" "foo" {
   subnet_ids            = [tencentcloud_subnet.subnet.id]
   grafana_init_password = "1234567890"
   enable_internet 		= false
-  is_distroy 			= true
+  is_destroy 			= true
 
   tags = {
     "createdBy" = "test"
@@ -114,6 +114,13 @@ func resourceTencentCloudMonitorGrafanaInstance() *schema.Resource {
 			},
 
 			"is_distroy": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Deprecated:  "It has been deprecated from version 1.81.16.",
+				Description: "Whether to clean up completely, the default is false.",
+			},
+
+			"is_destroy": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "Whether to clean up completely, the default is false.",
@@ -404,12 +411,19 @@ func resourceTencentCloudMonitorGrafanaInstanceDelete(d *schema.ResourceData, me
 		return err
 	}
 
+	claenFlag := false
 	if v, ok := d.GetOk("is_distroy"); ok && v.(bool) {
+		claenFlag = true
+	}
+	if v, ok := d.GetOk("is_destroy"); ok && v.(bool) {
+		claenFlag = true
+	}
+	if claenFlag {
 		if err := service.CleanGrafanaInstanceById(ctx, instanceId); err != nil {
 			return err
 		}
 
-		err = resource.Retry(1*readRetryTimeout, func() *resource.RetryError {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			instance, errRet := service.DescribeMonitorGrafanaInstance(ctx, instanceId)
 			if errRet != nil {
 				return retryError(errRet, InternalError)
