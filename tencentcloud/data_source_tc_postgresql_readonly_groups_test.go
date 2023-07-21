@@ -9,7 +9,7 @@ import (
 const testAccPostgresqlReadonlyGroupsObject = "data.tencentcloud_postgresql_readonly_groups.read_only_groups"
 
 func TestAccTencentCloudPostgresqlReadonlyGroupsDataSource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccStepSetRegion(t, "ap-guangzhou")
