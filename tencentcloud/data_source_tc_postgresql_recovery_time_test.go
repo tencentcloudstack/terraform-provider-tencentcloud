@@ -9,7 +9,7 @@ import (
 const testAccPostgresqlrecoverytimeObject = "data.tencentcloud_postgresql_recovery_time.recovery_time"
 
 func TestAccTencentCloudPostgresqlRecoveryTimeDataSource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccStepSetRegion(t, "ap-guangzhou")

@@ -1,3 +1,16 @@
+## 1.81.16 (July 21, 2023)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_acl: remove `host` limit, update `principal` description ([#1973](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1973))
+* resource/tencentcloud_eip: support create AntiDDoS EIP ([#1977](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1977))
+* resource/tencentcloud_monitor_grafana_instance: Deprecated `is_distroy`, use `is_destroy` instead of `is_distroy` ([#1976](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1976))
+* resource/tencentcloud_vpc_bandwidth_package: support set more `charge_type` ([#1981](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1981))
+
+BUG FIXES:
+
+* resource/tencentcloud_cynosdb_cluster: fix panic error while parameter not found in template ([#1981](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1981))
+
 ## 1.81.15 (July 19, 2023)
 
 FEATURES:

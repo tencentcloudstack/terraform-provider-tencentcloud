@@ -7,7 +7,7 @@ import (
 )
 
 func TestAccTencentCloudPostgresqlBackupDownloadUrlsDataSource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	// loc, _ := time.LoadLocation("Asia/Chongqing")
 	// startTime := time.Now().AddDate(0, 0, -7).In(loc).Format("2006-01-02 15:04:05")
 	// endTime := time.Now().AddDate(0, 0, 1).In(loc).Format("2006-01-02 15:04:05")

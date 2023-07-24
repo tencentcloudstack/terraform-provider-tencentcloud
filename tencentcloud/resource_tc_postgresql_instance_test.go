@@ -89,7 +89,7 @@ func init() {
 }
 
 func TestAccTencentCloudPostgresqlInstanceResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -297,7 +297,7 @@ func TestAccTencentCloudPostgresqlInstanceResource_postpaid_to_prepaid(t *testin
 }
 
 func TestAccTencentCloudPostgresqlInstanceResource_MAZ(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)

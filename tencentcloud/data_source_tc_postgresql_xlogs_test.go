@@ -9,7 +9,7 @@ import (
 )
 
 func TestAccTencentCloudPostgresqlXlogsDataSource(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 
 	startTime := time.Now().AddDate(0, 0, -7).Format("2006-01-02 15:04:05")
 	endTime := time.Now().Format("2006-01-02 15:04:05")

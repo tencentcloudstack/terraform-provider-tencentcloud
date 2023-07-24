@@ -519,7 +519,9 @@ func resourceTencentCloudCynosdbClusterRead(d *schema.ResourceData, meta interfa
 				oldValue := item["old_value"].(string)
 				currentParamItem := make(map[string]string)
 				currentParamItem["name"] = name
-				currentParamItem["current_value"] = *currentParamMap[name].CurrentValue
+				if currentParamMap[name] != nil {
+					currentParamItem["current_value"] = *currentParamMap[name].CurrentValue
+				}
 				if oldValue != "" {
 					currentParamItem["old_value"] = oldValue
 				}

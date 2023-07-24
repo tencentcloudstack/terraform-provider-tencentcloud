@@ -9,7 +9,7 @@ import (
 const TestObjectPgModifyAccountRemark = "tencentcloud_postgresql_modify_account_remark_operation.modify_account_remark_operation"
 
 func TestAccTencentCloudPostgresqlModifyAccountRemarkOperationResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccStepSetRegion(t, "ap-guangzhou")
