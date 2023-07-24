@@ -1,3 +1,11 @@
+data "tencentcloud_ssl_certificates" "ca" {
+  name = tencentcloud_ssl_certificate.ca.name
+}
+
+data "tencentcloud_ssl_certificates" "svr" {
+  type = tencentcloud_ssl_certificate.svr.type
+}
+
 resource "tencentcloud_ssl_certificate" "ca" {
   name = "ssl-ca"
   type = "CA"
@@ -9,12 +17,4 @@ resource "tencentcloud_ssl_certificate" "svr" {
   type = "SVR"
   cert = var.cert
   key  = var.key
-}
-
-data "tencentcloud_ssl_certificates" "ca" {
-  name = tencentcloud_ssl_certificate.ca.name
-}
-
-data "tencentcloud_ssl_certificates" "svr" {
-  type = tencentcloud_ssl_certificate.svr.type
 }

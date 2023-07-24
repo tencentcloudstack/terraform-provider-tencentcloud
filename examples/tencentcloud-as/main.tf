@@ -1,3 +1,12 @@
+data "tencentcloud_as_scaling_groups" "scaling_groups_tags" {
+  tags = tencentcloud_as_scaling_group.scaling_group.tags
+}
+
+data "tencentcloud_images" "example" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 3.2 (Final)"
+}
+
 resource "tencentcloud_vpc" "vpc" {
   name       = "tf-as-vpc"
   cidr_block = "10.2.0.0/16"
@@ -10,10 +19,10 @@ resource "tencentcloud_subnet" "subnet" {
   availability_zone = var.availability_zone
 }
 
-resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "tf-as-configuration"
-  image_id           = "img-9qabwvbn"
-  instance_types     = [var.instance_type]
+resource "tencentcloud_as_scaling_config" "example" {
+  configuration_name = "example-launch-configuration"
+  image_id           = data.tencentcloud_images.example.images.0.image_id
+  instance_types     = ["SA1.SMALL1"]
   project_id         = 0
   system_disk_type   = "CLOUD_PREMIUM"
   system_disk_size   = "50"
@@ -29,16 +38,16 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   password                   = "test123#"
   enhanced_security_service  = false
   enhanced_monitor_service   = false
-  user_data                  = "test"
+  user_data                  = "dGVzdA=="
 
   instance_tags = {
-    tag = "as"
+    tag = "example"
   }
 }
 
 resource "tencentcloud_as_scaling_group" "scaling_group" {
   scaling_group_name   = "tf-as-scaling-group"
-  configuration_id     = tencentcloud_as_scaling_config.launch_configuration.id
+  configuration_id     = tencentcloud_as_scaling_config.example.id
   max_size             = var.max_size
   min_size             = var.min_size
   vpc_id               = tencentcloud_vpc.vpc.id
@@ -94,8 +103,4 @@ resource "tencentcloud_as_notification" "notification" {
   scaling_group_id            = tencentcloud_as_scaling_group.scaling_group.id
   notification_types          = ["SCALE_OUT_FAILED"]
   notification_user_group_ids = ["76955"]
-}
-
-data "tencentcloud_as_scaling_groups" "scaling_groups_tags" {
-  tags = tencentcloud_as_scaling_group.scaling_group.tags
 }

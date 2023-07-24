@@ -8,7 +8,7 @@ Example Usage
 ```hcl
 data "tencentcloud_images" "example" {
   image_type = ["PUBLIC_IMAGE"]
-  os_name    = "Tencent Linux release 3.2 (Final)"
+  os_name    = "TencentOS Server 3.2 (Final)"
 }
 
 resource "tencentcloud_as_scaling_config" "example" {
@@ -33,20 +33,25 @@ resource "tencentcloud_as_scaling_config" "example" {
   user_data                  = "dGVzdA=="
 
   instance_tags = {
-    tag = "as"
+    tag = "example"
   }
 }
 ```
 
 Using SPOT charge type
 ```
-resource "tencentcloud_as_scaling_config" "launch_configuration" {
-  configuration_name = "launch-configuration"
-  image_id           = "img-9qabwvbn"
-  instance_types     = ["SA1.SMALL1"]
+data "tencentcloud_images" "example" {
+  image_type = ["PUBLIC_IMAGE"]
+  os_name    = "TencentOS Server 3.2 (Final)"
+}
+
+resource "tencentcloud_as_scaling_config" "example" {
+  configuration_name   = "launch-configuration"
+  image_id             = data.tencentcloud_images.example.images.0.image_id
+  instance_types       = ["SA1.SMALL1"]
   instance_charge_type = "SPOTPAID"
-  spot_instance_type = "one-time"
-  spot_max_price = "1000"
+  spot_instance_type   = "one-time"
+  spot_max_price       = "1000"
 }
 ```
 
