@@ -25,7 +25,7 @@ data "tencentcloud_mysql_parameter_list" "mysql" {
 
 The following arguments are supported:
 
-* `engine_version` - (Optional, String) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.
+* `engine_version` - (Optional, String) The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0.
 * `mysql_id` - (Optional, String) Instance ID.
 * `result_output_file` - (Optional, String) Used to store results.
 

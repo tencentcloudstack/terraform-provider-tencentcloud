@@ -88,8 +88,8 @@ func dataSourceTencentCloudMysqlParameterList() *schema.Resource {
 			"engine_version": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				ValidateFunc: validateAllowedStringValue([]string{"5.1", "5.5", "5.6", "5.7"}),
-				Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7.",
+				ValidateFunc: validateAllowedStringValue([]string{"5.1", "5.5", "5.6", "5.7", "8.0"}),
+				Description:  "The version number of the database engine to use. Supported versions include 5.5/5.6/5.7/8.0.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,
