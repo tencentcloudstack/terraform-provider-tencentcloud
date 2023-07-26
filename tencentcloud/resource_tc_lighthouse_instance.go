@@ -71,6 +71,15 @@ resource "tencentcloud_lighthouse_instance" "lighthouse" {
 }
 ```
 
+Import
+
+A lighthouse instance can be imported by its instanceId, you can find your instanceId on the API Explorer by using the
+DescribeInstances API. Such as:
+
+```hcl
+terraform import tencentcloud_lighthouse_instance.example instanceId
+```
+
 */
 package tencentcloud
 
@@ -93,6 +102,9 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 		Read:   resourceTencentCloudLighthouseInstanceRead,
 		Delete: resourceTencentCloudLighthouseInstanceDelete,
 		Update: resourceTencentCloudLighthouseInstanceUpdate,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 		Schema: map[string]*schema.Schema{
 			"bundle_id": {
 				Type:        schema.TypeString,
