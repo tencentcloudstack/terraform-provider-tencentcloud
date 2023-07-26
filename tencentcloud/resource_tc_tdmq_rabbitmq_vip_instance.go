@@ -248,9 +248,9 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		return nil
 	}
 
-	//if rabbitmqVipInstance.ClusterInfo.ZoneIds != nil {
-	//	_ = d.Set("zone_ids", rabbitmqVipInstance.ClusterInfo.ZoneIds)
-	//}
+	if rabbitmqVipInstance.ClusterInfo.ZoneIds != nil {
+		_ = d.Set("zone_ids", rabbitmqVipInstance.ClusterInfo.ZoneIds)
+	}
 
 	if rabbitmqVipInstance.ClusterInfo.Vpcs != nil {
 		_ = d.Set("vpc_id", rabbitmqVipInstance.ClusterInfo.Vpcs[0].VpcId)
@@ -287,7 +287,7 @@ func resourceTencentCloudTdmqRabbitmqVipInstanceRead(d *schema.ResourceData, met
 		}
 
 		if result[0].AutoRenewFlag != nil {
-			if *result[0].AutoRenewFlag == 1 {
+			if *result[0].AutoRenewFlag == AutoRenewFlagTrue {
 				_ = d.Set("auto_renew_flag", true)
 			} else {
 				_ = d.Set("auto_renew_flag", false)
