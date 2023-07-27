@@ -166,7 +166,7 @@ resource "tencentcloud_redis_instance" "foo" {
 
 Create a multi-AZ instance
 
-```hcl 
+```hcl
 data "tencentcloud_redis_zone_config" "zone" {
   type_id = 7
   region = "ap-guangzhou"
