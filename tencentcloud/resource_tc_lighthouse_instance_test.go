@@ -63,6 +63,12 @@ func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_lighthouse_instance.instance", "renew_flag", "NOTIFY_AND_MANUAL_RENEW"),
 				),
 			},
+			{
+				ResourceName: "tencentcloud_lighthouse_instance.instance",
+				ImportState:  true,
+				// TODO: Set ImportStateVerify to true after implementing custom StateFunc.
+				ImportStateVerify: false,
+			},
 		},
 	})
 }
