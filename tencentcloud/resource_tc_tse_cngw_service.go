@@ -26,7 +26,6 @@ resource "tencentcloud_tse_cngw_service" "cngw_service" {
     slow_start                  = 20
 
     targets {
-      health = "HEALTHCHECKS_OFF"
       host   = "192.168.0.1"
       port   = 80
       weight = 100
@@ -165,7 +164,6 @@ func resourceTencentCloudTseCngwService() *schema.Resource {
 									},
 									"health": {
 										Type:        schema.TypeString,
-										Optional:    true,
 										Computed:    true,
 										Description: "health.",
 									},
@@ -336,9 +334,6 @@ func resourceTencentCloudTseCngwServiceCreate(d *schema.ResourceData, meta inter
 				}
 				if v, ok := targetsMap["weight"]; ok {
 					kongTarget.Weight = helper.IntInt64(v.(int))
-				}
-				if v, ok := targetsMap["health"]; ok {
-					kongTarget.Health = helper.String(v.(string))
 				}
 				if v, ok := targetsMap["source"]; ok {
 					kongTarget.Source = helper.String(v.(string))
@@ -690,9 +685,6 @@ func resourceTencentCloudTseCngwServiceUpdate(d *schema.ResourceData, meta inter
 				}
 				if v, ok := targetsMap["weight"]; ok {
 					kongTarget.Weight = helper.IntInt64(v.(int))
-				}
-				if v, ok := targetsMap["health"]; ok {
-					kongTarget.Health = helper.String(v.(string))
 				}
 				if v, ok := targetsMap["source"]; ok {
 					kongTarget.Source = helper.String(v.(string))

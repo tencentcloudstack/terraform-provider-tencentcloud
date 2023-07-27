@@ -186,7 +186,6 @@ func resourceTencentCloudTseCngwCanaryRule() *schema.Resource {
 									},
 									"upstream_name": {
 										Type:        schema.TypeString,
-										Optional:    true,
 										Computed:    true,
 										Description: "upstream name, meaningless when used as an input parameter.",
 									},
@@ -289,9 +288,6 @@ func resourceTencentCloudTseCngwCanaryRuleCreate(d *schema.ResourceData, meta in
 				}
 				if v, ok := balancedServiceListMap["service_name"]; ok {
 					cloudNativeAPIGatewayBalancedService.ServiceName = helper.String(v.(string))
-				}
-				if v, ok := balancedServiceListMap["upstream_name"]; ok {
-					cloudNativeAPIGatewayBalancedService.UpstreamName = helper.String(v.(string))
 				}
 				if v, ok := balancedServiceListMap["percent"]; ok {
 					cloudNativeAPIGatewayBalancedService.Percent = helper.Float64(v.(float64))
@@ -544,9 +540,6 @@ func resourceTencentCloudTseCngwCanaryRuleUpdate(d *schema.ResourceData, meta in
 				}
 				if v, ok := balancedServiceListMap["service_name"]; ok {
 					cloudNativeAPIGatewayBalancedService.ServiceName = helper.String(v.(string))
-				}
-				if v, ok := balancedServiceListMap["upstream_name"]; ok {
-					cloudNativeAPIGatewayBalancedService.UpstreamName = helper.String(v.(string))
 				}
 				if v, ok := balancedServiceListMap["percent"]; ok {
 					cloudNativeAPIGatewayBalancedService.Percent = helper.Float64(v.(float64))

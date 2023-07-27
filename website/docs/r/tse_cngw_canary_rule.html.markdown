@@ -85,7 +85,6 @@ The `balanced_service_list` object supports the following:
 * `percent` - (Optional, Float64) percent, 10 is 10%, valid values:0 to 100.
 * `service_id` - (Optional, String) service ID, required when used as an input parameter.
 * `service_name` - (Optional, String) service name, meaningless when used as an input parameter.
-* `upstream_name` - (Optional, String) upstream name, meaningless when used as an input parameter.
 
 The `canary_rule` object supports the following:
 

@@ -210,7 +210,6 @@ resource "tencentcloud_tse_cngw_service" "cngw_service" {
 	  slow_start                  = 20
   
 	  targets {
-		# health = "HEALTHCHECKS_OFF"
 		host   = "192.168.0.1"
 		port   = 80
 		weight = 80

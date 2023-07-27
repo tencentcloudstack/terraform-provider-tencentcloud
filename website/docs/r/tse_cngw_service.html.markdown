@@ -36,7 +36,6 @@ resource "tencentcloud_tse_cngw_service" "cngw_service" {
     slow_start                  = 20
 
     targets {
-      health = "HEALTHCHECKS_OFF"
       host   = "192.168.0.1"
       port   = 80
       weight = 100
@@ -64,7 +63,6 @@ The `targets` object supports the following:
 * `host` - (Required, String) host.
 * `port` - (Required, Int) port.
 * `weight` - (Required, Int) weight.
-* `health` - (Optional, String) health.
 * `source` - (Optional, String) source of target.
 
 The `upstream_info` object supports the following:
