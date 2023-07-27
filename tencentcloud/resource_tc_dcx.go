@@ -34,6 +34,7 @@ resource "tencentcloud_dcx" "static_main" {
   dc_id                 = var.dc_id
   dcg_id                = var.dcg_id
   name                  = "static_main"
+  dc_owner_account      = "xxxxxxxx"
   network_type          = "VPC"
   route_type            = "STATIC"
   vlan                  = 301
