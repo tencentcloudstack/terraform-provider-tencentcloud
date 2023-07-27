@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_redis_connection_config
+```
+
+```release-note:enhancement
+datasource/tencentcloud_mysql_parameter_list: support mysql8.0
+```

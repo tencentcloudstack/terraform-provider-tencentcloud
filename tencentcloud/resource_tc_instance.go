@@ -958,10 +958,14 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 	_ = d.Set("tags", tags)
 
 	//set data_disks
+	var hasDataDisks, isCombineDataDisks bool
 	dataDiskList := make([]map[string]interface{}, 0, len(instance.DataDisks))
 	diskSizeMap := map[string]*uint64{}
 	diskOrderMap := make(map[string]int)
 
+	if _, ok := d.GetOk("data_disks"); ok {
+		hasDataDisks = true
+	}
 	if len(instance.DataDisks) > 0 {
 		var diskIds []*string
 		for i := range instance.DataDisks {
@@ -987,13 +991,16 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 					return resource.RetryableError(fmt.Errorf("data_disk[%d] is expending", i))
 				}
 				diskSizeMap[*disk.DiskId] = disk.DiskSize
-				items := strings.Split(*disk.DiskName, "_")
-				diskOrder := items[len(items)-1]
-				diskOrderInt, err := strconv.Atoi(diskOrder)
-				if err != nil {
-					return resource.NonRetryableError(err)
+				if hasDataDisks {
+					items := strings.Split(*disk.DiskName, "_")
+					diskOrder := items[len(items)-1]
+					diskOrderInt, err := strconv.Atoi(diskOrder)
+					if err != nil {
+						isCombineDataDisks = true
+						continue
+					}
+					diskOrderMap[*disk.DiskId] = diskOrderInt
 				}
-				diskOrderMap[*disk.DiskId] = diskOrderInt
 			}
 			return nil
 		})
@@ -1016,11 +1023,13 @@ func resourceTencentCloudInstanceRead(d *schema.ResourceData, meta interface{}) 
 		dataDisk["throughput_performance"] = disk.ThroughputPerformance
 		dataDiskList = append(dataDiskList, dataDisk)
 	}
-	sort.SliceStable(dataDiskList, func(idx1, idx2 int) bool {
-		dataDiskIdIdx1 := *dataDiskList[idx1]["data_disk_id"].(*string)
-		dataDiskIdIdx2 := *dataDiskList[idx2]["data_disk_id"].(*string)
-		return diskOrderMap[dataDiskIdIdx1] < diskOrderMap[dataDiskIdIdx2]
-	})
+	if hasDataDisks && !isCombineDataDisks {
+		sort.SliceStable(dataDiskList, func(idx1, idx2 int) bool {
+			dataDiskIdIdx1 := *dataDiskList[idx1]["data_disk_id"].(*string)
+			dataDiskIdIdx2 := *dataDiskList[idx2]["data_disk_id"].(*string)
+			return diskOrderMap[dataDiskIdIdx1] < diskOrderMap[dataDiskIdIdx2]
+		})
+	}
 	_ = d.Set("data_disks", dataDiskList)
 
 	if len(instance.PrivateIpAddresses) > 0 {

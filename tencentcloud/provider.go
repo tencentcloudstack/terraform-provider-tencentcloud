@@ -196,6 +196,7 @@ Cloud Kafka(ckafka)
 	tencentcloud_ckafka_consumer_group
 	tencentcloud_ckafka_consumer_group_modify_offset
 	tencentcloud_ckafka_datahub_task
+	tencentcloud_ckafka_route
 
 Cloud Access Management(CAM)
   Data Source
@@ -769,6 +770,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_replicate_attachment
 	tencentcloud_redis_backup_operation
 	tencentcloud_redis_security_group_attachment
+	tencentcloud_redis_connection_config
 
 Serverless Cloud Function(SCF)
   Data Source
@@ -2572,6 +2574,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ckafka_consumer_group":                               resourceTencentCloudCkafkaConsumerGroup(),
 			"tencentcloud_ckafka_consumer_group_modify_offset":                 resourceTencentCloudCkafkaConsumerGroupModifyOffset(),
 			"tencentcloud_ckafka_datahub_task":                                 resourceTencentCloudCkafkaDatahubTask(),
+			"tencentcloud_ckafka_route":                                        resourceTencentCloudCkafkaRoute(),
 			"tencentcloud_audit":                                               resourceTencentCloudAudit(),
 			"tencentcloud_audit_track":                                         resourceTencentCloudAuditTrack(),
 			"tencentcloud_image":                                               resourceTencentCloudImage(),
