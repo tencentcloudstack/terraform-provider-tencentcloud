@@ -770,6 +770,7 @@ TencentDB for Redis(crs)
 	tencentcloud_redis_replicate_attachment
 	tencentcloud_redis_backup_operation
 	tencentcloud_redis_security_group_attachment
+	tencentcloud_redis_connection_config
 
 Serverless Cloud Function(SCF)
   Data Source
