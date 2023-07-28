@@ -64,10 +64,11 @@ func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName: "tencentcloud_lighthouse_instance.instance",
-				ImportState:  true,
-				// TODO: Set ImportStateVerify to true after implementing custom StateFunc.
-				ImportStateVerify: false,
+				ResourceName:      "tencentcloud_lighthouse_instance.instance",
+				ImportState:       true,
+				ImportStateVerify: true,
+				// DescribeInstances API doesn't support containers field
+				ImportStateVerifyIgnore: []string{"containers"},
 			},
 		},
 	})

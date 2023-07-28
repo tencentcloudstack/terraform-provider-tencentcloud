@@ -103,9 +103,6 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 		Delete: resourceTencentCloudLighthouseInstanceDelete,
 		Update: resourceTencentCloudLighthouseInstanceUpdate,
 		Importer: &schema.ResourceImporter{
-			// TODO: Implement a custom StateFunc to override the "containers" field.
-			// The import data currently obtained through resourceTencentCloudLighthouseInstanceRead and instanceId,
-			// doesn't include the contents of the 'containers' field.
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
