@@ -11,12 +11,17 @@ const TestAccPostgresqlBackupDownloadRestrictionObject = "tencentcloud_postgresq
 func TestAccTencentCloudPostgresqlBackupDownloadRestrictionConfigResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlBackupDownloadRestrictionConfig_NONE,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(TestAccPostgresqlBackupDownloadRestrictionObject, "id"),
 					resource.TestCheckResourceAttr(TestAccPostgresqlBackupDownloadRestrictionObject, "restriction_type", "NONE"),
@@ -34,12 +39,17 @@ func TestAccTencentCloudPostgresqlBackupDownloadRestrictionConfigResource_basic(
 func TestAccTencentCloudPostgresqlBackupDownloadRestrictionConfigResource_CUSTOMIZE(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlBackupDownloadRestrictionConfig_CUSTOMIZE_ALLOW,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(TestAccPostgresqlBackupDownloadRestrictionObject, "id"),
 					resource.TestCheckResourceAttr(TestAccPostgresqlBackupDownloadRestrictionObject, "restriction_type", "CUSTOMIZE"),
@@ -51,6 +61,10 @@ func TestAccTencentCloudPostgresqlBackupDownloadRestrictionConfigResource_CUSTOM
 			},
 			{
 				Config: testAccPostgresqlBackupDownloadRestrictionConfig_CUSTOMIZE_DENY,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(TestAccPostgresqlBackupDownloadRestrictionObject, "id"),
 					resource.TestCheckResourceAttr(TestAccPostgresqlBackupDownloadRestrictionObject, "restriction_type", "CUSTOMIZE"),
@@ -72,12 +86,17 @@ func TestAccTencentCloudPostgresqlBackupDownloadRestrictionConfigResource_CUSTOM
 func TestAccTencentCloudPostgresqlBackupDownloadRestrictionConfigResource_INTRANET(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlBackupDownloadRestrictionConfig_INTRANET,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(TestAccPostgresqlBackupDownloadRestrictionObject, "id"),
 					resource.TestCheckResourceAttr(TestAccPostgresqlBackupDownloadRestrictionObject, "restriction_type", "INTRANET"),

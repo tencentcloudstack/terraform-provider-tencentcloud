@@ -197,7 +197,7 @@ func resourceTencentCloudClbListenerRule() *schema.Resource {
 				Optional:     true,
 				Computed:     true,
 				ValidateFunc: validateAllowedStringValue([]string{"HTTP", "HTTPS", "TRPC"}),
-				Description:  "Forwarding protocol between the CLB instance and real server. Valid values: `HTTP`, `HTTPS`, `TRPC`.",
+				Description:  "Forwarding protocol between the CLB instance and real server. Valid values: `HTTP`, `HTTPS`, `TRPC`. The default is `HTTP`.",
 			},
 			//computed
 			"rule_id": {

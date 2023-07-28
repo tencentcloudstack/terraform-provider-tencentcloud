@@ -1,0 +1,8 @@
+```release-note:enhancement
+resource/tencentcloud_vpc_bandwidth_package: support set more `charge_type`
+```
+
+```release-note:bug
+resource/tencentcloud_cynosdb_cluster: fix panic error while parameter not found in template
+```
+

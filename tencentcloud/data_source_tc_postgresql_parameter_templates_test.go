@@ -7,15 +7,20 @@ import (
 )
 
 func TestAccTencentCloudPostgresqlParameterTemplatesDataSource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlParameterTemplatesDataSource,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_postgresql_parameter_templates.parameter_templates"),
 					resource.TestCheckResourceAttr("data.tencentcloud_postgresql_parameter_templates.parameter_templates", "filters.#", "2"),

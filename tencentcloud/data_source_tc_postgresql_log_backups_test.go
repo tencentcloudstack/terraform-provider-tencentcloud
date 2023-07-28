@@ -9,18 +9,23 @@ import (
 )
 
 func TestAccTencentCloudPostgresqlLogBackupsDataSource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	loc, _ := time.LoadLocation("Asia/Chongqing")
 	startTime := time.Now().AddDate(0, 0, -7).In(loc).Format("2006-01-02 15:04:05")
 	endTime := time.Now().AddDate(0, 0, 1).In(loc).Format("2006-01-02 15:04:05")
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: fmt.Sprintf(testAccPostgresqlLogBackupsDataSource, startTime, endTime),
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_postgresql_log_backups.log_backups"),
 					resource.TestCheckResourceAttr("data.tencentcloud_postgresql_log_backups.log_backups", "min_finish_time", startTime),
@@ -47,7 +52,7 @@ func TestAccTencentCloudPostgresqlLogBackupsDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccPostgresqlLogBackupsDataSource = CommonPresetPGSQL + `
+const testAccPostgresqlLogBackupsDataSource = OperationPresetPGSQL + `
 
 data "tencentcloud_postgresql_log_backups" "log_backups" {
   min_finish_time = "%s"

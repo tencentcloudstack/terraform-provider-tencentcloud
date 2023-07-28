@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_tse_gateway_services
+```
+
+```release-note:new-resource
+tencentcloud_tse_cngw_service
+```
+
+```release-note:new-resource
+tencentcloud_tse_cngw_canary_rule
+```

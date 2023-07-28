@@ -7,15 +7,20 @@ import (
 )
 
 func TestAccTencentCloudPostgresqlRebalanceReadonlyGroupOperationResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlRebalanceReadonlyGroupOperation,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_postgresql_rebalance_readonly_group_operation.rebalance_readonly_group_operation", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_postgresql_rebalance_readonly_group_operation.rebalance_readonly_group_operation", "read_only_group_id"),

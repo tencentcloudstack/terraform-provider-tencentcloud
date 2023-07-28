@@ -11,13 +11,14 @@ import (
 const testAccPostgresqlBaseBackupsObject = "data.tencentcloud_postgresql_base_backups.base_backups"
 
 func TestAccTencentCloudPostgresqlBaseBackupsDataSource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	loc, _ := time.LoadLocation("Asia/Chongqing")
 	startTime := time.Now().AddDate(0, 0, -7).In(loc).Format("2006-01-02 15:04:05")
 	endTime := time.Now().AddDate(0, 0, 1).In(loc).Format("2006-01-02 15:04:05")
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
+			testAccStepSetRegion(t, "ap-chengdu")
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{

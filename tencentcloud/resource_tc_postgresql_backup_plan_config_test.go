@@ -9,15 +9,20 @@ import (
 const testAccPostgresqlBackupPlanConfigObject = "tencentcloud_postgresql_backup_plan_config.backup_plan_config"
 
 func TestAccTencentCloudPostgresqlBackupPlanConfigResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresBackupPlanConfig,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testAccPostgresqlBackupPlanConfigObject, "id"),
 					resource.TestCheckResourceAttrSet(testAccPostgresqlBackupPlanConfigObject, "db_instance_id"),

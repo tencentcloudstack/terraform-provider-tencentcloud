@@ -11,12 +11,18 @@ var testPostgresqlReadonlyInstanceResourceKey = "tencentcloud_postgresql_readonl
 func TestAccTencentCloudPostgresqlReadonlyInstanceResource_basic(t *testing.T) {
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccPostgresqlReadonlyInstanceInstance_basic_without_rogroup,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlReadonlyInstanceInstance_basic_without_rogroup,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "master_db_instance_id"),
@@ -35,8 +41,11 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccPostgresqlReadonlyInstanceInstance_basic_update_rogroup,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlReadonlyInstanceInstance_basic_update_rogroup,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "master_db_instance_id"),
@@ -62,12 +71,18 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_basic(t *testing.T) {
 func TestAccTencentCloudPostgresqlReadonlyInstanceResource_update_ro_group(t *testing.T) {
 	// t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheck(t) },
+		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccPostgresqlReadonlyInstanceInstance_with_rogroup,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlReadonlyInstanceInstance_with_rogroup,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "master_db_instance_id"),
@@ -86,8 +101,11 @@ func TestAccTencentCloudPostgresqlReadonlyInstanceResource_update_ro_group(t *te
 				),
 			},
 			{
-				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
-				Config:    testAccPostgresqlReadonlyInstanceInstance_update_rogroup,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
+				Config: testAccPostgresqlReadonlyInstanceInstance_update_rogroup,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "id"),
 					resource.TestCheckResourceAttrSet(testPostgresqlReadonlyInstanceResourceKey, "master_db_instance_id"),

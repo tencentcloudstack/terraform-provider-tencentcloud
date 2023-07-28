@@ -569,7 +569,7 @@ variable "cam_user_basic" {
 
 // TCR Service
 const defaultTCRInstanceName = "keep-tcr-instance-sh"
-const defaultTCRInstanceId = "tcr-800uf6j9"
+const defaultTCRInstanceId = "tcr-aoz8mxoz"
 const defaultTCRNamespace = "keep-tcr-namespace-sh"
 const defaultTCRRepoName = "keep-tcr-repo-sh"
 const defaultTCRSSL = "zjUMifFK"
@@ -1078,7 +1078,14 @@ const (
 	defaultEngineResourceSpec = "spec-qvj6k7t4q"
 	defaultTseVpcId           = "vpc-4owdpnwr"
 	defaultTseSubnetId        = "subnet-dwj7ipnc"
+	defaultTseGatewayId       = "gateway-ddbb709b"
 )
+
+const DefaultTseVar = `
+variable "gateway_id" {
+  default = "` + defaultTseGatewayId + `"
+}
+`
 
 // End of TSE
 

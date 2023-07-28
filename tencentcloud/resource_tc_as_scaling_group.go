@@ -482,10 +482,10 @@ func resourceTencentCloudAsScalingGroupRead(d *schema.ResourceData, meta interfa
 				targetAttributes = append(targetAttributes, targetAttribute)
 			}
 			forwardLoadBalancer := map[string]interface{}{
-				"load_balancer_id":  *v.LoadBalancerId,
-				"listener_id":       *v.ListenerId,
-				"target_attributes": targetAttributes,
-				"rule_id":           *v.LocationId,
+				"load_balancer_id": *v.LoadBalancerId,
+				"listener_id":      *v.ListenerId,
+				"target_attribute": targetAttributes,
+				"rule_id":          *v.LocationId,
 			}
 			forwardLoadBalancers = append(forwardLoadBalancers, forwardLoadBalancer)
 		}

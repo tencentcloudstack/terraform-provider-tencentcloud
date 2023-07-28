@@ -123,7 +123,7 @@ The following arguments are supported:
 * `instance_count` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.59.18. Use built-in `count` instead. The number of instances to be purchased. Value range:[1,100]; default value: 1.
 * `instance_name` - (Optional, String) The name of the instance. The max length of instance_name is 60, and default value is `Terraform-CVM-Instance`.
 * `instance_type` - (Optional, String) The type of the instance.
-* `internet_charge_type` - (Optional, String) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.
+* `internet_charge_type` - (Optional, String) Internet charge type of the instance, Valid values are `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`. If not set, internet charge type are consistent with the cvm charge type by default. This value takes NO Effect when changing and does not need to be set when `allocate_public_ip` is false.
 * `internet_max_bandwidth_out` - (Optional, Int) Maximum outgoing bandwidth to the public network, measured in Mbps (Mega bits per second). This value does not need to be set when `allocate_public_ip` is false.
 * `keep_image_login` - (Optional, Bool) Whether to keep image login or not, default is `false`. When the image type is private or shared or imported, this parameter can be set `true`. Modifying will cause the instance reset.
 * `key_ids` - (Optional, Set: [`String`]) The key pair to use for the instance, it looks like `skey-16jig7tx`. Modifying will cause the instance reset.

@@ -7,15 +7,20 @@ import (
 )
 
 func TestAccTencentCloudPostgresqlZonesDataSource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
+			testAccStepSetRegion(t, "ap-guangzhou")
 			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccPostgresqlZonesDataSource,
+				PreConfig: func() {
+					testAccStepSetRegion(t, "ap-guangzhou")
+					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
+				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_postgresql_zones.zones"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_postgresql_zones.zones", "zone_set.#"),
