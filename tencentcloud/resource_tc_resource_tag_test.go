@@ -23,8 +23,8 @@ func TestAccTencentCloudResourceTag_basic(t *testing.T) {
 				Config: testAccTagResourceTag,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckResourceTagExists("tencentcloud_resource_tag.resource_tag"),
-					resource.TestCheckResourceAttr("tencentcloud_resource_tag.resource_tag", "tag_key", "test_terraform_key"),
-					resource.TestCheckResourceAttr("tencentcloud_resource_tag.resource_tag", "tag_value", "Terraform_value"),
+					resource.TestCheckResourceAttr("tencentcloud_resource_tag.resource_tag", "tag_key", "test_terraform_tagResource_key"),
+					resource.TestCheckResourceAttr("tencentcloud_resource_tag.resource_tag", "tag_value", "Terraform_tag_resource_value"),
 					resource.TestCheckResourceAttr("tencentcloud_resource_tag.resource_tag", "resource", "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4")),
 			},
 			{
@@ -84,8 +84,8 @@ func testAccCheckResourceTagExists(r string) resource.TestCheckFunc {
 const testAccTagResourceTag = `
 
 resource "tencentcloud_resource_tag" "resource_tag" {
-  tag_key = "test_terraform_key"
-  tag_value = "Terraform_value"
+  tag_key = "test_terraform_tagResource_key"
+  tag_value = "Terraform_tag_resource_value"
   resource = "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4"
 }
 
