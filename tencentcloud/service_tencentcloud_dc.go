@@ -195,7 +195,7 @@ getMoreData:
 
 func (me *DcService) CreateDirectConnectTunnel(ctx context.Context, dcId, dcxName, networkType,
 	networkRegion, vpcId, routeType, bgpAuthKey,
-	tencentAddress, customerAddress, dcgId string,
+	tencentAddress, customerAddress, dcgId, dcOwnerAccount string,
 	bgpAsn, vlan, bandwidth int64,
 	routeFilterPrefixes []string) (dcxId string, errRet error) {
 
@@ -211,6 +211,9 @@ func (me *DcService) CreateDirectConnectTunnel(ctx context.Context, dcId, dcxNam
 	request.DirectConnectTunnelName = &dcxName
 	request.NetworkType = &networkType
 	request.NetworkRegion = &networkRegion
+	if dcOwnerAccount != "" {
+		request.DirectConnectOwnerAccount = &dcOwnerAccount
+	}
 	if vpcId != "" {
 		request.VpcId = &vpcId
 	}

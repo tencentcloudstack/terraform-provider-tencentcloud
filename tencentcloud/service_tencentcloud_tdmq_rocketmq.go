@@ -1159,7 +1159,7 @@ func (me *TdmqService) DescribeTdmqRabbitmqVipInstanceByFilter(ctx context.Conte
 	}()
 
 	for k, v := range param {
-		if k == "Filters" {
+		if k == "filters" {
 			request.Filters = v.([]*tdmq.Filter)
 		}
 	}
@@ -1527,6 +1527,59 @@ func (me *TdmqService) DeleteTdmqRabbitmqVirtualHostById(ctx context.Context, in
 	ratelimit.Check(request.GetAction())
 
 	response, err := me.client.UseTdmqClient().DeleteRabbitMQVirtualHost(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRabbitmqVipInstanceById(ctx context.Context, instanceId string) (rabbitmqVipInstance *tdmq.DescribeRabbitMQVipInstanceResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tdmq.NewDescribeRabbitMQVipInstanceRequest()
+	request.ClusterId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeRabbitMQVipInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	rabbitmqVipInstance = response.Response
+	return
+}
+
+func (me *TdmqService) DeleteTdmqRabbitmqVipInstanceById(ctx context.Context, instanceId string) (errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tdmq.NewDeleteRabbitMQVipInstanceRequest()
+	)
+
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DeleteRabbitMQVipInstance(request)
 	if err != nil {
 		errRet = err
 		return

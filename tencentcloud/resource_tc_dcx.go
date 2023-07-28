@@ -34,6 +34,7 @@ resource "tencentcloud_dcx" "static_main" {
   dc_id                 = var.dc_id
   dcg_id                = var.dcg_id
   name                  = "static_main"
+  dc_owner_account      = "xxxxxxxx"
   network_type          = "VPC"
   route_type            = "STATIC"
   vlan                  = 301
@@ -80,6 +81,13 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 				ValidateFunc: validateStringLengthInRange(1, 60),
 				Description:  "Name of the dedicated tunnel.",
 			},
+			"dc_owner_account": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				ForceNew:    true,
+				Computed:    true,
+				Description: "Connection owner, who is the current customer by default. The developer account ID should be entered for shared connections.",
+			},
 			"network_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
@@ -90,7 +98,7 @@ func resourceTencentCloudDcxInstance() *schema.Resource {
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
 				Description: "ID of the VPC or BMVPC.",
 			},
@@ -185,9 +193,10 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 	var (
 		dcId                      = d.Get("dc_id").(string)
 		name                      = d.Get("name").(string)
+		dcOwnerAccount            = ""
 		networkType               = d.Get("network_type").(string)
 		networkRegion             = service.client.Region
-		vpcId                     = d.Get("vpc_id").(string)
+		vpcId                     = ""
 		routeType                 = strings.ToUpper(d.Get("route_type").(string))
 		bgpAsn              int64 = -1
 		bgpAuthKey                = ""
@@ -213,6 +222,14 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 	}
 	if bgpKeyOk {
 		bgpAuthKey = bgpKeyTemp.(string)
+	}
+
+	if temp, ok := d.GetOk("dc_owner_account"); ok {
+		dcOwnerAccount = temp.(string)
+	}
+
+	if temp, ok := d.GetOk("vpc_id"); ok {
+		vpcId = temp.(string)
 	}
 
 	if temp, ok := d.GetOk("tencent_address"); ok {
@@ -242,7 +259,7 @@ func resourceTencentCloudDcxInstanceCreate(d *schema.ResourceData, meta interfac
 	dcxId, err := service.CreateDirectConnectTunnel(ctx, dcId, name, networkType,
 		networkRegion, vpcId, routeType,
 		bgpAuthKey, tencentAddress,
-		customerAddress, dcgId,
+		customerAddress, dcgId, dcOwnerAccount,
 		bgpAsn, vlan,
 		bandwidth, routeFilterPrefixes)
 	if err != nil {
@@ -311,6 +328,7 @@ func resourceTencentCloudDcxInstanceRead(d *schema.ResourceData, meta interface{
 
 		_ = d.Set("state", strings.ToUpper(service.strPt2str(item.State)))
 		_ = d.Set("create_time", service.strPt2str(item.CreatedTime))
+		_ = d.Set("dc_owner_account", service.strPt2str(item.DirectConnectOwnerAccount))
 		return nil
 	})
 	if err != nil {

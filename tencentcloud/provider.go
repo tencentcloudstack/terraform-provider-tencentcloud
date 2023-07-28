@@ -1430,6 +1430,7 @@ TDMQ for RabbitMQ(trabbit)
   Resource
 	tencentcloud_tdmq_rabbitmq_user
 	tencentcloud_tdmq_rabbitmq_virtual_host
+	tencentcloud_tdmq_rabbitmq_vip_instance
 
 
 Cloud Infinite(CI)
@@ -1569,9 +1570,12 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_nacos_server_interfaces
 	tencentcloud_tse_gateway_nodes
 	tencentcloud_tse_gateway_canary_rules
+	tencentcloud_tse_gateway_services
 
   Resource
 	tencentcloud_tse_instance
+	tencentcloud_tse_cngw_service
+	tencentcloud_tse_cngw_canary_rule
 
 ClickHouse(CDWCH)
   Resource
@@ -2196,6 +2200,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_gateway_nodes":                         dataSourceTencentCloudTseGatewayNodes(),
 			"tencentcloud_tse_gateway_routes":                        dataSourceTencentCloudTseGatewayRoutes(),
 			"tencentcloud_tse_gateway_canary_rules":                  dataSourceTencentCloudTseGatewayCanaryRules(),
+			"tencentcloud_tse_gateway_services":                      dataSourceTencentCloudTseGatewayServices(),
 			"tencentcloud_lighthouse_modify_instance_bundle":         dataSourceTencentCloudLighthouseModifyInstanceBundle(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
 			"tencentcloud_lighthouse_scene":                          dataSourceTencentCloudLighthouseScene(),
@@ -2646,6 +2651,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_subscription_attachment":                        resourceTencentCloudTdmqSubscriptionAttachment(),
 			"tencentcloud_tdmq_rabbitmq_user":                                  resourceTencentCloudTdmqRabbitmqUser(),
 			"tencentcloud_tdmq_rabbitmq_virtual_host":                          resourceTencentCloudTdmqRabbitmqVirtualHost(),
+			"tencentcloud_tdmq_rabbitmq_vip_instance":                          resourceTencentCloudTdmqRabbitmqVipInstance(),
 			"tencentcloud_tdmq_send_rocketmq_message":                          resourceTencentCloudTdmqSendRocketmqMessage(),
 			"tencentcloud_cos_bucket_policy":                                   resourceTencentCloudCosBucketPolicy(),
 			"tencentcloud_cos_bucket_domain_certificate_attachment":            resourceTencentCloudCosBucketDomainCertificateAttachment(),
@@ -2921,6 +2927,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_doc":                        resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
+			"tencentcloud_tse_cngw_service":                           resourceTencentCloudTseCngwService(),
+			"tencentcloud_tse_cngw_service_rate_limit":                resourceTencentCloudTseCngwServiceRateLimit(),
+			"tencentcloud_tse_cngw_route":                             resourceTencentCloudTseCngwRoute(),
+			"tencentcloud_tse_cngw_route_rate_limit":                  resourceTencentCloudTseCngwRouteRateLimit(),
+			"tencentcloud_tse_cngw_canary_rule":                       resourceTencentCloudTseCngwCanaryRule(),
 			"tencentcloud_clickhouse_instance":                        resourceTencentCloudClickhouseInstance(),
 		},
 
