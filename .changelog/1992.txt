@@ -1,0 +1,15 @@
+```release-note:enhancement
+data_source/tencentcloud_sqlserver_account_db_attachments: update hcl doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_complete_expansion: update hcl doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_database_tde: update hcl doc
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_renew_db_instance: update hcl doc
+```
