@@ -1,7 +1,7 @@
 /*
 Provides a resource to create a tag resource_tag
 
-# Example Usage
+Example Usage
 
 ```hcl
 
@@ -13,7 +13,7 @@ resource "tencentcloud_resource_tag" "resource_tag" {
 
 ```
 
-# Import
+Import
 
 tag resource_tag can be imported using the id, e.g.
 
