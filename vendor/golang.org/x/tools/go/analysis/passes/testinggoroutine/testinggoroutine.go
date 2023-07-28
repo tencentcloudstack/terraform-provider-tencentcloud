@@ -5,7 +5,6 @@
 package testinggoroutine
 
 import (
-	_ "embed"
 	"go/ast"
 
 	"golang.org/x/tools/go/analysis"
@@ -15,13 +14,23 @@ import (
 	"golang.org/x/tools/internal/typeparams"
 )
 
-//go:embed doc.go
-var doc string
+const Doc = `report calls to (*testing.T).Fatal from goroutines started by a test.
+
+Functions that abruptly terminate a test, such as the Fatal, Fatalf, FailNow, and
+Skip{,f,Now} methods of *testing.T, must be called from the test goroutine itself.
+This checker detects calls to these functions that occur within a goroutine
+started by the test. For example:
+
+func TestFoo(t *testing.T) {
+    go func() {
+        t.Fatal("oops") // error: (*T).Fatal called from non-test goroutine
+    }()
+}
+`
 
 var Analyzer = &analysis.Analyzer{
 	Name:     "testinggoroutine",
-	Doc:      analysisutil.MustExtractDoc(doc, "testinggoroutine"),
-	URL:      "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/testinggoroutine",
+	Doc:      Doc,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 	Run:      run,
 }

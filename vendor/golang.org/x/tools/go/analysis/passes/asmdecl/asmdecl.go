@@ -27,7 +27,6 @@ const Doc = "report mismatches between assembly files and Go declarations"
 var Analyzer = &analysis.Analyzer{
 	Name: "asmdecl",
 	Doc:  Doc,
-	URL:  "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/asmdecl",
 	Run:  run,
 }
 

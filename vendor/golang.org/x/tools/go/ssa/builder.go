@@ -363,7 +363,7 @@ func (b *builder) builtin(fn *Function, obj *types.Builtin, args []ast.Expr, typ
 		}
 
 	case "new":
-		alloc := emitNew(fn, mustDeref(typ), pos)
+		alloc := emitNew(fn, deref(typ), pos)
 		alloc.Comment = "new"
 		return alloc
 
@@ -373,8 +373,10 @@ func (b *builder) builtin(fn *Function, obj *types.Builtin, args []ast.Expr, typ
 		// We must still evaluate the value, though.  (If it
 		// was side-effect free, the whole call would have
 		// been constant-folded.)
-		t, _ := deref(fn.typeOf(args[0]))
-		if at, ok := typeparams.CoreType(t).(*types.Array); ok {
+		//
+		// Type parameters are always non-constant so use Underlying.
+		t := deref(fn.typeOf(args[0])).Underlying()
+		if at, ok := t.(*types.Array); ok {
 			b.expr(fn, args[0]) // for effects only
 			return intConst(at.Len())
 		}
@@ -429,12 +431,12 @@ func (b *builder) addr(fn *Function, e ast.Expr, escaping bool) lvalue {
 		return &address{addr: v, pos: e.Pos(), expr: e}
 
 	case *ast.CompositeLit:
-		typ, _ := deref(fn.typeOf(e))
+		t := deref(fn.typeOf(e))
 		var v *Alloc
 		if escaping {
-			v = emitNew(fn, typ, e.Lbrace)
+			v = emitNew(fn, t, e.Lbrace)
 		} else {
-			v = fn.addLocal(typ, e.Lbrace)
+			v = fn.addLocal(t, e.Lbrace)
 		}
 		v.Comment = "complit"
 		var sb storebuf
@@ -457,7 +459,7 @@ func (b *builder) addr(fn *Function, e ast.Expr, escaping bool) lvalue {
 		wantAddr := true
 		v := b.receiver(fn, e.X, wantAddr, escaping, sel)
 		index := sel.index[len(sel.index)-1]
-		fld := fieldOf(mustDeref(v.Type()), index) // v is an addr.
+		fld := typeparams.CoreType(deref(v.Type())).(*types.Struct).Field(index)
 
 		// Due to the two phases of resolving AssignStmt, a panic from x.f = p()
 		// when x is nil is required to come after the side-effects of
@@ -506,7 +508,7 @@ func (b *builder) addr(fn *Function, e ast.Expr, escaping bool) lvalue {
 			v.setType(et)
 			return fn.emit(v)
 		}
-		return &lazyAddress{addr: emit, t: mustDeref(et), pos: e.Lbrack, expr: e}
+		return &lazyAddress{addr: emit, t: deref(et), pos: e.Lbrack, expr: e}
 
 	case *ast.StarExpr:
 		return &address{addr: b.expr(fn, e.X), pos: e.Star, expr: e}
@@ -552,7 +554,7 @@ func (b *builder) assign(fn *Function, loc lvalue, e ast.Expr, isZero bool, sb *
 		// so if the type of the location is a pointer,
 		// an &-operation is implied.
 		if _, ok := loc.(blank); !ok { // avoid calling blank.typ()
-			if _, ok := deref(loc.typ()); ok {
+			if isPointer(loc.typ()) {
 				ptr := b.addr(fn, e, true).address(fn)
 				// copy address
 				if sb != nil {
@@ -582,7 +584,7 @@ func (b *builder) assign(fn *Function, loc lvalue, e ast.Expr, isZero bool, sb *
 
 				// Subtle: emit debug ref for aggregate types only;
 				// slice and map are handled by store ops in compLit.
-				switch typeparams.CoreType(loc.typ()).(type) {
+				switch loc.typ().Underlying().(type) {
 				case *types.Struct, *types.Array:
 					emitDebugRef(fn, e, addr, true)
 				}
@@ -829,7 +831,7 @@ func (b *builder) expr0(fn *Function, e ast.Expr, tv types.TypeAndValue) Value {
 			// The result is a "bound".
 			obj := sel.obj.(*types.Func)
 			rt := fn.typ(recvType(obj))
-			_, wantAddr := deref(rt)
+			wantAddr := isPointer(rt)
 			escaping := true
 			v := b.receiver(fn, e.X, wantAddr, escaping, sel)
 
@@ -957,7 +959,7 @@ func (b *builder) stmtList(fn *Function, list []ast.Stmt) {
 // escaping is defined as per builder.addr().
 func (b *builder) receiver(fn *Function, e ast.Expr, wantAddr, escaping bool, sel *selection) Value {
 	var v Value
-	if _, eptr := deref(fn.typeOf(e)); wantAddr && !sel.indirect && !eptr {
+	if wantAddr && !sel.indirect && !isPointer(fn.typeOf(e)) {
 		v = b.addr(fn, e, escaping).address(fn)
 	} else {
 		v = b.expr(fn, e)
@@ -966,7 +968,7 @@ func (b *builder) receiver(fn *Function, e ast.Expr, wantAddr, escaping bool, se
 	last := len(sel.index) - 1
 	// The position of implicit selection is the position of the inducing receiver expression.
 	v = emitImplicitSelections(fn, v, sel.index[:last], e.Pos())
-	if _, vptr := deref(v.Type()); !wantAddr && vptr {
+	if !wantAddr && isPointer(v.Type()) {
 		v = emitLoad(fn, v)
 	}
 	return v
@@ -985,7 +987,7 @@ func (b *builder) setCallFunc(fn *Function, e *ast.CallExpr, c *CallCommon) {
 			obj := sel.obj.(*types.Func)
 			recv := recvType(obj)
 
-			_, wantAddr := deref(recv)
+			wantAddr := isPointer(recv)
 			escaping := true
 			v := b.receiver(fn, selector.X, wantAddr, escaping, sel)
 			if types.IsInterface(recv) {
@@ -1251,13 +1253,37 @@ func (b *builder) arrayLen(fn *Function, elts []ast.Expr) int64 {
 // literal has type *T behaves like &T{}.
 // In that case, addr must hold a T, not a *T.
 func (b *builder) compLit(fn *Function, addr Value, e *ast.CompositeLit, isZero bool, sb *storebuf) {
-	typ, _ := deref(fn.typeOf(e)) // type with name [may be type param]
-	switch t := typeparams.CoreType(typ).(type) {
+	typ := deref(fn.typeOf(e))                        // type with name [may be type param]
+	t := deref(typeparams.CoreType(typ)).Underlying() // core type for comp lit case
+	// Computing typ and t is subtle as these handle pointer types.
+	// For example, &T{...} is valid even for maps and slices.
+	// Also typ should refer to T (not *T) while t should be the core type of T.
+	//
+	// To show the ordering to take into account, consider the composite literal
+	// expressions `&T{f: 1}` and `{f: 1}` within the expression `[]S{{f: 1}}` here:
+	//   type N struct{f int}
+	//   func _[T N, S *N]() {
+	//     _ = &T{f: 1}
+	//     _ = []S{{f: 1}}
+	//   }
+	// For `&T{f: 1}`, we compute `typ` and `t` as:
+	//     typeOf(&T{f: 1}) == *T
+	//     deref(*T)        == T (typ)
+	//     CoreType(T)      == N
+	//     deref(N)         == N
+	//     N.Underlying()   == struct{f int} (t)
+	// For `{f: 1}` in `[]S{{f: 1}}`,  we compute `typ` and `t` as:
+	//     typeOf({f: 1})   == S
+	//     deref(S)         == S (typ)
+	//     CoreType(S)      == *N
+	//     deref(*N)        == N
+	//     N.Underlying()   == struct{f int} (t)
+	switch t := t.(type) {
 	case *types.Struct:
 		if !isZero && len(e.Elts) != t.NumFields() {
 			// memclear
-			zt, _ := deref(addr.Type())
-			sb.store(&address{addr, e.Lbrace, nil}, zeroConst(zt))
+			sb.store(&address{addr, e.Lbrace, nil},
+				zeroValue(fn, deref(addr.Type())))
 			isZero = true
 		}
 		for i, e := range e.Elts {
@@ -1301,8 +1327,8 @@ func (b *builder) compLit(fn *Function, addr Value, e *ast.CompositeLit, isZero 
 
 			if !isZero && int64(len(e.Elts)) != at.Len() {
 				// memclear
-				zt, _ := deref(array.Type())
-				sb.store(&address{array, e.Lbrace, nil}, zeroConst(zt))
+				sb.store(&address{array, e.Lbrace, nil},
+					zeroValue(fn, deref(array.Type())))
 			}
 		}
 
@@ -1355,13 +1381,8 @@ func (b *builder) compLit(fn *Function, addr Value, e *ast.CompositeLit, isZero 
 			//	map[*struct{}]bool{{}: true}
 			// An &-operation may be implied:
 			//	map[*struct{}]bool{&struct{}{}: true}
-			wantAddr := false
-			if _, ok := unparen(e.Key).(*ast.CompositeLit); ok {
-				_, wantAddr = deref(t.Key())
-			}
-
 			var key Value
-			if wantAddr {
+			if _, ok := unparen(e.Key).(*ast.CompositeLit); ok && isPointer(t.Key()) {
 				// A CompositeLit never evaluates to a pointer,
 				// so if the type of the location is a pointer,
 				// an &-operation is implied.
@@ -1388,7 +1409,7 @@ func (b *builder) compLit(fn *Function, addr Value, e *ast.CompositeLit, isZero 
 		sb.store(&address{addr: addr, pos: e.Lbrace, expr: e}, m)
 
 	default:
-		panic("unexpected CompositeLit type: " + typ.String())
+		panic("unexpected CompositeLit type: " + t.String())
 	}
 }
 
@@ -1854,14 +1875,15 @@ func (b *builder) rangeIndexed(fn *Function, x Value, tv types.Type, pos token.P
 
 	// Determine number of iterations.
 	var length Value
-	dt, _ := deref(x.Type())
-	if arr, ok := typeparams.CoreType(dt).(*types.Array); ok {
+	if arr, ok := deref(x.Type()).Underlying().(*types.Array); ok {
 		// For array or *array, the number of iterations is
 		// known statically thanks to the type.  We avoid a
 		// data dependence upon x, permitting later dead-code
 		// elimination if x is pure, static unrolling, etc.
 		// Ranging over a nil *array may have >0 iterations.
 		// We still generate code for x, in case it has effects.
+		//
+		// TypeParams do not have constant length. Use underlying instead of core type.
 		length = intConst(arr.Len())
 	} else {
 		// length = len(x).

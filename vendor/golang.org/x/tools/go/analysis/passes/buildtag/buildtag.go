@@ -25,7 +25,6 @@ const Doc = "check //go:build and // +build directives"
 var Analyzer = &analysis.Analyzer{
 	Name: "buildtag",
 	Doc:  Doc,
-	URL:  "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/buildtag",
 	Run:  runBuildTag,
 }
 

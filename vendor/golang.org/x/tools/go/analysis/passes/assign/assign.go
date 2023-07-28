@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// Package assign defines an Analyzer that detects useless assignments.
 package assign
 
 // TODO(adonovan): check also for assignments to struct fields inside
 // methods that are on T instead of *T.
 
 import (
-	_ "embed"
 	"fmt"
 	"go/ast"
 	"go/token"
@@ -21,13 +21,15 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 )
 
-//go:embed doc.go
-var doc string
+const Doc = `check for useless assignments
+
+This checker reports assignments of the form x = x or a[i] = a[i].
+These are almost always useless, and even when they aren't they are
+usually a mistake.`
 
 var Analyzer = &analysis.Analyzer{
 	Name:     "assign",
-	Doc:      analysisutil.MustExtractDoc(doc, "assign"),
-	URL:      "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/assign",
+	Doc:      Doc,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 	Run:      run,
 }

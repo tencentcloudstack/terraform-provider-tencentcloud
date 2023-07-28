@@ -8,7 +8,6 @@ package sigchanyzer
 
 import (
 	"bytes"
-	_ "embed"
 	"go/ast"
 	"go/format"
 	"go/token"
@@ -16,27 +15,23 @@ import (
 
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/passes/inspect"
-	"golang.org/x/tools/go/analysis/passes/internal/analysisutil"
 	"golang.org/x/tools/go/ast/inspector"
 )
 
-//go:embed doc.go
-var doc string
+const Doc = `check for unbuffered channel of os.Signal
+
+This checker reports call expression of the form signal.Notify(c <-chan os.Signal, sig ...os.Signal),
+where c is an unbuffered channel, which can be at risk of missing the signal.`
 
 // Analyzer describes sigchanyzer analysis function detector.
 var Analyzer = &analysis.Analyzer{
 	Name:     "sigchanyzer",
-	Doc:      analysisutil.MustExtractDoc(doc, "sigchanyzer"),
-	URL:      "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/sigchanyzer",
+	Doc:      Doc,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 	Run:      run,
 }
 
 func run(pass *analysis.Pass) (interface{}, error) {
-	if !analysisutil.Imports(pass.Pkg, "os/signal") {
-		return nil, nil // doesn't directly import signal
-	}
-
 	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 
 	nodeFilter := []ast.Node{

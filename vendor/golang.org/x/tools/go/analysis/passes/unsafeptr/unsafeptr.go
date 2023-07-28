@@ -7,7 +7,6 @@
 package unsafeptr
 
 import (
-	_ "embed"
 	"go/ast"
 	"go/token"
 	"go/types"
@@ -18,13 +17,17 @@ import (
 	"golang.org/x/tools/go/ast/inspector"
 )
 
-//go:embed doc.go
-var doc string
+const Doc = `check for invalid conversions of uintptr to unsafe.Pointer
+
+The unsafeptr analyzer reports likely incorrect uses of unsafe.Pointer
+to convert integers to pointers. A conversion from uintptr to
+unsafe.Pointer is invalid if it implies that there is a uintptr-typed
+word in memory that holds a pointer value, because that word will be
+invisible to stack copying and to the garbage collector.`
 
 var Analyzer = &analysis.Analyzer{
 	Name:     "unsafeptr",
-	Doc:      analysisutil.MustExtractDoc(doc, "unsafeptr"),
-	URL:      "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/unsafeptr",
+	Doc:      Doc,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 	Run:      run,
 }

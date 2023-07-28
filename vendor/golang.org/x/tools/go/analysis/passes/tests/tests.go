@@ -2,10 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// Package tests defines an Analyzer that checks for common mistaken
+// usages of tests and examples.
 package tests
 
 import (
-	_ "embed"
 	"fmt"
 	"go/ast"
 	"go/token"
@@ -16,17 +17,22 @@ import (
 	"unicode/utf8"
 
 	"golang.org/x/tools/go/analysis"
-	"golang.org/x/tools/go/analysis/passes/internal/analysisutil"
+	"golang.org/x/tools/internal/analysisinternal"
 	"golang.org/x/tools/internal/typeparams"
 )
 
-//go:embed doc.go
-var doc string
+const Doc = `check for common mistaken usages of tests and examples
+
+The tests checker walks Test, Benchmark and Example functions checking
+malformed names, wrong signatures and examples documenting non-existent
+identifiers.
+
+Please see the documentation for package testing in golang.org/pkg/testing
+for the conventions that are enforced for Tests, Benchmarks, and Examples.`
 
 var Analyzer = &analysis.Analyzer{
 	Name: "tests",
-	Doc:  analysisutil.MustExtractDoc(doc, "tests"),
-	URL:  "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/tests",
+	Doc:  Doc,
 	Run:  run,
 }
 
@@ -67,7 +73,9 @@ func run(pass *analysis.Pass) (interface{}, error) {
 				checkTest(pass, fn, "Test")
 			case strings.HasPrefix(fn.Name.Name, "Benchmark"):
 				checkTest(pass, fn, "Benchmark")
-			case strings.HasPrefix(fn.Name.Name, "Fuzz"):
+			}
+			// run fuzz tests diagnostics only for 1.18 i.e. when analysisinternal.DiagnoseFuzzTests is turned on.
+			if strings.HasPrefix(fn.Name.Name, "Fuzz") && analysisinternal.DiagnoseFuzzTests {
 				checkTest(pass, fn, "Fuzz")
 				checkFuzz(pass, fn)
 			}

@@ -16,13 +16,7 @@ import (
 func Format(f *FileSyntax) []byte {
 	pr := &printer{}
 	pr.file(f)
-
-	// remove trailing blank lines
-	b := pr.Bytes()
-	for len(b) > 0 && b[len(b)-1] == '\n' && (len(b) == 1 || b[len(b)-2] == '\n') {
-		b = b[:len(b)-1]
-	}
-	return b
+	return pr.Bytes()
 }
 
 // A printer collects the state during printing of a file or expression.
@@ -65,11 +59,7 @@ func (p *printer) newline() {
 	}
 
 	p.trim()
-	if b := p.Bytes(); len(b) == 0 || (len(b) >= 2 && b[len(b)-1] == '\n' && b[len(b)-2] == '\n') {
-		// skip the blank line at top of file or after a blank line
-	} else {
-		p.printf("\n")
-	}
+	p.printf("\n")
 	for i := 0; i < p.margin; i++ {
 		p.printf("\t")
 	}

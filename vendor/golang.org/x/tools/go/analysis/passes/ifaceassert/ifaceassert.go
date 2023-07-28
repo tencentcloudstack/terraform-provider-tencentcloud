@@ -2,26 +2,38 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// Package ifaceassert defines an Analyzer that flags
+// impossible interface-interface type assertions.
 package ifaceassert
 
 import (
-	_ "embed"
 	"go/ast"
 	"go/types"
 
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/passes/inspect"
-	"golang.org/x/tools/go/analysis/passes/internal/analysisutil"
 	"golang.org/x/tools/go/ast/inspector"
 )
 
-//go:embed doc.go
-var doc string
+const Doc = `detect impossible interface-to-interface type assertions
+
+This checker flags type assertions v.(T) and corresponding type-switch cases
+in which the static type V of v is an interface that cannot possibly implement
+the target interface T. This occurs when V and T contain methods with the same
+name but different signatures. Example:
+
+	var v interface {
+		Read()
+	}
+	_ = v.(io.Reader)
+
+The Read method in v has a different signature than the Read method in
+io.Reader, so this assertion cannot succeed.
+`
 
 var Analyzer = &analysis.Analyzer{
 	Name:     "ifaceassert",
-	Doc:      analysisutil.MustExtractDoc(doc, "ifaceassert"),
-	URL:      "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/ifaceassert",
+	Doc:      Doc,
 	Requires: []*analysis.Analyzer{inspect.Analyzer},
 	Run:      run,
 }

@@ -382,9 +382,7 @@ func (pkg *Package) SetDebugMode(debug bool) {
 
 // debugInfo reports whether debug info is wanted for this function.
 func (f *Function) debugInfo() bool {
-	// debug info for instantiations follows the debug info of their origin.
-	p := f.declaredPackage()
-	return p != nil && p.debug
+	return f.Pkg != nil && f.Pkg.debug
 }
 
 // addNamedLocal creates a local variable, adds it to function f and
@@ -516,15 +514,15 @@ func (f *Function) relMethod(from *types.Package, recv types.Type) string {
 }
 
 // writeSignature writes to buf the signature sig in declaration syntax.
-func writeSignature(buf *bytes.Buffer, from *types.Package, name string, sig *types.Signature) {
+func writeSignature(buf *bytes.Buffer, from *types.Package, name string, sig *types.Signature, params []*Parameter) {
 	buf.WriteString("func ")
 	if recv := sig.Recv(); recv != nil {
 		buf.WriteString("(")
-		if name := recv.Name(); name != "" {
-			buf.WriteString(name)
+		if n := params[0].Name(); n != "" {
+			buf.WriteString(n)
 			buf.WriteString(" ")
 		}
-		types.WriteType(buf, recv.Type(), types.RelativeTo(from))
+		types.WriteType(buf, params[0].Type(), types.RelativeTo(from))
 		buf.WriteString(") ")
 	}
 	buf.WriteString(name)
@@ -596,10 +594,10 @@ func WriteFunction(buf *bytes.Buffer, f *Function) {
 	if len(f.Locals) > 0 {
 		buf.WriteString("# Locals:\n")
 		for i, l := range f.Locals {
-			fmt.Fprintf(buf, "# % 3d:\t%s %s\n", i, l.Name(), relType(mustDeref(l.Type()), from))
+			fmt.Fprintf(buf, "# % 3d:\t%s %s\n", i, l.Name(), relType(deref(l.Type()), from))
 		}
 	}
-	writeSignature(buf, from, f.Name(), f.Signature)
+	writeSignature(buf, from, f.Name(), f.Signature, f.Params)
 	buf.WriteString(":\n")
 
 	if f.Blocks == nil {

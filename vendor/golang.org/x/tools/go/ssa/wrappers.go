@@ -82,14 +82,12 @@ func makeWrapper(prog *Program, sel *selection, cr *creator) *Function {
 	indices := sel.index
 
 	var v Value = fn.Locals[0] // spilled receiver
-	srdt, ptrRecv := deptr(sel.recv)
-	if ptrRecv {
+	if isPointer(sel.recv) {
 		v = emitLoad(fn, v)
 
 		// For simple indirection wrappers, perform an informative nil-check:
 		// "value method (T).f called using nil *T pointer"
-		_, ptrObj := deptr(recvType(obj))
-		if len(indices) == 1 && !ptrObj {
+		if len(indices) == 1 && !isPointer(recvType(obj)) {
 			var c Call
 			c.Call.Value = &Builtin{
 				name: "ssa:wrapnilchk",
@@ -99,7 +97,7 @@ func makeWrapper(prog *Program, sel *selection, cr *creator) *Function {
 			}
 			c.Call.Args = []Value{
 				v,
-				stringConst(srdt.String()),
+				stringConst(deref(sel.recv).String()),
 				stringConst(sel.obj.Name()),
 			}
 			c.setType(v.Type())
@@ -123,7 +121,7 @@ func makeWrapper(prog *Program, sel *selection, cr *creator) *Function {
 
 	var c Call
 	if r := recvType(obj); !types.IsInterface(r) { // concrete method
-		if _, ptrObj := deptr(r); !ptrObj {
+		if !isPointer(r) {
 			v = emitLoad(fn, v)
 		}
 		callee := prog.originFunc(obj)

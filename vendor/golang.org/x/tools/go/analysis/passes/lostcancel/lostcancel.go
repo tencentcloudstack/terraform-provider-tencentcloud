@@ -2,10 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+// Package lostcancel defines an Analyzer that checks for failure to
+// call a context cancellation function.
 package lostcancel
 
 import (
-	_ "embed"
 	"fmt"
 	"go/ast"
 	"go/types"
@@ -13,18 +14,20 @@ import (
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/passes/ctrlflow"
 	"golang.org/x/tools/go/analysis/passes/inspect"
-	"golang.org/x/tools/go/analysis/passes/internal/analysisutil"
 	"golang.org/x/tools/go/ast/inspector"
 	"golang.org/x/tools/go/cfg"
 )
 
-//go:embed doc.go
-var doc string
+const Doc = `check cancel func returned by context.WithCancel is called
+
+The cancellation function returned by context.WithCancel, WithTimeout,
+and WithDeadline must be called or the new context will remain live
+until its parent context is cancelled.
+(The background context is never cancelled.)`
 
 var Analyzer = &analysis.Analyzer{
 	Name: "lostcancel",
-	Doc:  analysisutil.MustExtractDoc(doc, "lostcancel"),
-	URL:  "https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/lostcancel",
+	Doc:  Doc,
 	Run:  run,
 	Requires: []*analysis.Analyzer{
 		inspect.Analyzer,
@@ -48,7 +51,7 @@ var contextPackage = "context"
 // checkLostCancel analyzes a single named or literal function.
 func run(pass *analysis.Pass) (interface{}, error) {
 	// Fast path: bypass check if file doesn't use context.WithCancel.
-	if !analysisutil.Imports(pass.Pkg, contextPackage) {
+	if !hasImport(pass.Pkg, contextPackage) {
 		return nil, nil
 	}
 
@@ -178,6 +181,15 @@ func runFunc(pass *analysis.Pass, node ast.Node) {
 }
 
 func isCall(n ast.Node) bool { _, ok := n.(*ast.CallExpr); return ok }
+
+func hasImport(pkg *types.Package, path string) bool {
+	for _, imp := range pkg.Imports() {
+		if imp.Path() == path {
+			return true
+		}
+	}
+	return false
+}
 
 // isContextWithCancel reports whether n is one of the qualified identifiers
 // context.With{Cancel,Timeout,Deadline}.

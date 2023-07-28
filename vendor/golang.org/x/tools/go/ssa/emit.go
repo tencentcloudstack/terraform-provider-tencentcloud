@@ -11,6 +11,8 @@ import (
 	"go/ast"
 	"go/token"
 	"go/types"
+
+	"golang.org/x/tools/internal/typeparams"
 )
 
 // emitNew emits to f a new (heap Alloc) instruction allocating an
@@ -27,7 +29,7 @@ func emitNew(f *Function, typ types.Type, pos token.Pos) *Alloc {
 // new temporary, and returns the value so defined.
 func emitLoad(f *Function, addr Value) *UnOp {
 	v := &UnOp{Op: token.MUL, X: addr}
-	v.setType(mustDeref(addr.Type()))
+	v.setType(deref(typeparams.CoreType(addr.Type())))
 	f.emit(v)
 	return v
 }
@@ -370,10 +372,9 @@ func emitTypeCoercion(f *Function, v Value, typ types.Type) Value {
 // emitStore emits to f an instruction to store value val at location
 // addr, applying implicit conversions as required by assignability rules.
 func emitStore(f *Function, addr, val Value, pos token.Pos) *Store {
-	typ := mustDeref(addr.Type())
 	s := &Store{
 		Addr: addr,
-		Val:  emitConv(f, val, typ),
+		Val:  emitConv(f, val, deref(addr.Type())),
 		pos:  pos,
 	}
 	f.emit(s)
@@ -476,8 +477,9 @@ func emitTailCall(f *Function, call *Call) {
 // value of a field.
 func emitImplicitSelections(f *Function, v Value, indices []int, pos token.Pos) Value {
 	for _, index := range indices {
-		if st, vptr := deref(v.Type()); vptr {
-			fld := fieldOf(st, index)
+		fld := typeparams.CoreType(deref(v.Type())).(*types.Struct).Field(index)
+
+		if isPointer(v.Type()) {
 			instr := &FieldAddr{
 				X:     v,
 				Field: index,
@@ -486,11 +488,10 @@ func emitImplicitSelections(f *Function, v Value, indices []int, pos token.Pos) 
 			instr.setType(types.NewPointer(fld.Type()))
 			v = f.emit(instr)
 			// Load the field's value iff indirectly embedded.
-			if _, fldptr := deref(fld.Type()); fldptr {
+			if isPointer(fld.Type()) {
 				v = emitLoad(f, v)
 			}
 		} else {
-			fld := fieldOf(v.Type(), index)
 			instr := &Field{
 				X:     v,
 				Field: index,
@@ -510,8 +511,8 @@ func emitImplicitSelections(f *Function, v Value, indices []int, pos token.Pos) 
 // field's value.
 // Ident id is used for position and debug info.
 func emitFieldSelection(f *Function, v Value, index int, wantAddr bool, id *ast.Ident) Value {
-	if st, vptr := deref(v.Type()); vptr {
-		fld := fieldOf(st, index)
+	fld := typeparams.CoreType(deref(v.Type())).(*types.Struct).Field(index)
+	if isPointer(v.Type()) {
 		instr := &FieldAddr{
 			X:     v,
 			Field: index,
@@ -524,7 +525,6 @@ func emitFieldSelection(f *Function, v Value, index int, wantAddr bool, id *ast.
 			v = emitLoad(f, v)
 		}
 	} else {
-		fld := fieldOf(v.Type(), index)
 		instr := &Field{
 			X:     v,
 			Field: index,
@@ -537,46 +537,15 @@ func emitFieldSelection(f *Function, v Value, index int, wantAddr bool, id *ast.
 	return v
 }
 
-// emitSliceToArray emits to f code to convert a slice value to an array value.
-//
-// Precondition: all types in type set of typ are arrays and convertible to all
-// types in the type set of val.Type().
-func emitSliceToArray(f *Function, val Value, typ types.Type) Value {
-	// Emit the following:
-	// if val == nil && len(typ) == 0 {
-	//    ptr = &[0]T{}
-	// } else {
-	//	  ptr = SliceToArrayPointer(val)
-	// }
-	// v = *ptr
-
-	ptype := types.NewPointer(typ)
-	p := &SliceToArrayPointer{X: val}
-	p.setType(ptype)
-	ptr := f.emit(p)
-
-	nilb := f.newBasicBlock("slicetoarray.nil")
-	nonnilb := f.newBasicBlock("slicetoarray.nonnil")
-	done := f.newBasicBlock("slicetoarray.done")
-
-	cond := emitCompare(f, token.EQL, ptr, zeroConst(ptype), token.NoPos)
-	emitIf(f, cond, nilb, nonnilb)
-	f.currentBlock = nilb
-
-	zero := f.addLocal(typ, token.NoPos)
-	emitJump(f, done)
-	f.currentBlock = nonnilb
-
-	emitJump(f, done)
-	f.currentBlock = done
-
-	phi := &Phi{Edges: []Value{zero, ptr}, Comment: "slicetoarray"}
-	phi.pos = val.Pos()
-	phi.setType(typ)
-	x := f.emit(phi)
-	unOp := &UnOp{Op: token.MUL, X: x}
-	unOp.setType(typ)
-	return f.emit(unOp)
+// zeroValue emits to f code to produce a zero value of type t,
+// and returns it.
+func zeroValue(f *Function, t types.Type) Value {
+	switch t.Underlying().(type) {
+	case *types.Struct, *types.Array:
+		return emitLoad(f, f.addLocal(t, token.NoPos))
+	default:
+		return zeroConst(t)
+	}
 }
 
 // createRecoverBlock emits to f a block of code to return after a
@@ -608,7 +577,7 @@ func createRecoverBlock(f *Function) {
 			T := R.At(i).Type()
 
 			// Return zero value of each result type.
-			results = append(results, zeroConst(T))
+			results = append(results, zeroValue(f, T))
 		}
 	}
 	f.emit(&Return{Results: results})
