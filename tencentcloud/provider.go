@@ -2919,6 +2919,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_app":                        resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                               resourceTencentCloudTseInstance(),
 			"tencentcloud_clickhouse_instance":                        resourceTencentCloudClickhouseInstance(),
+			"tencentcloud_tag":                                        resourceTencentCloudTag(),
+			"tencentcloud_resource_tag":                               resourceTencentCloudResourceTag(),
 		},
 
 		ConfigureFunc: providerConfigure,
