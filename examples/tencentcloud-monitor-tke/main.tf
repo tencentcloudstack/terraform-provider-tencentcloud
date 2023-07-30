@@ -1,19 +1,3 @@
----
-subcategory: "Cloud Monitor(Monitor)"
-layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_monitor_tmp_tke_cluster_agent"
-sidebar_current: "docs-tencentcloud-resource-monitor_tmp_tke_cluster_agent"
-description: |-
-  Provides a resource to create a tmp tke cluster agent
----
-
-# tencentcloud_monitor_tmp_tke_cluster_agent
-
-Provides a resource to create a tmp tke cluster agent
-
-## Example Usage
-
-```hcl
 # create tke
 variable "default_instance_type" {
   default = "SA1.MEDIUM2"
@@ -129,8 +113,8 @@ resource "tencentcloud_kubernetes_cluster" "example" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # key_ids                   = ["skey-11112222"]
-    cam_role_name = "CVM_QcsRole"
-    password      = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    cam_role_name             = "CVM_QcsRole"
+    password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   labels = {
@@ -139,9 +123,14 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   }
 }
 
+
 # create monitor
 variable "zone" {
   default = "ap-guangzhou"
+}
+
+variable "cluster_type" {
+  default = "tke"
 }
 
 variable "availability_zone" {
@@ -160,6 +149,7 @@ resource "tencentcloud_subnet" "subnet" {
   cidr_block        = "10.0.1.0/24"
 }
 
+
 resource "tencentcloud_monitor_tmp_instance" "foo" {
   instance_name       = "tf-tmp-instance"
   vpc_id              = tencentcloud_vpc.vpc.id
@@ -171,64 +161,126 @@ resource "tencentcloud_monitor_tmp_instance" "foo" {
   }
 }
 
+
 # tmp tke bind
 resource "tencentcloud_monitor_tmp_tke_cluster_agent" "tmpClusterAgent" {
   instance_id = tencentcloud_monitor_tmp_instance.foo.id
 
   agents {
     region          = var.zone
-    cluster_type    = "tke"
+    cluster_type    = var.cluster_type
     cluster_id      = tencentcloud_kubernetes_cluster.example.id
     enable_external = false
   }
 }
-```
 
-## Argument Reference
+resource "tencentcloud_monitor_tmp_tke_config" "foo" {
+  instance_id  = tencentcloud_monitor_tmp_instance.foo.id
+  cluster_type = var.cluster_type
+  cluster_id   = tencentcloud_kubernetes_cluster.example.id
 
-The following arguments are supported:
+  raw_jobs {
+    name   = "raw_jobs_001"
+    config = "your config for raw_jobs_001\n"
+  }
 
-* `agents` - (Required, List) agent list.
-* `instance_id` - (Required, String, ForceNew) Instance Id.
+  service_monitors {
+    name   = "kube-system/service-monitor-001" # name with default namespace kube-system
+    config = "apiVersion: monitoring.coreos.com/v1\nkind: ServiceMonitor\nmetadata:\n  name: service-monitor-001\n  namespace: kube-system\n"
+  }
 
-The `agents` object supports the following:
-
-* `cluster_id` - (Required, String) An id identify the cluster, like `cls-xxxxxx`.
-* `cluster_type` - (Required, String) Type of cluster.
-* `enable_external` - (Required, Bool) Whether to enable the public network CLB.
-* `region` - (Required, String) Limitation of region.
-* `external_labels` - (Optional, List) All metrics collected by the cluster will carry these labels.
-* `in_cluster_pod_config` - (Optional, List) Pod configuration for components deployed in the cluster.
-* `not_install_basic_scrape` - (Optional, Bool) Whether to install the default collection configuration.
-* `not_scrape` - (Optional, Bool) Whether to collect indicators, true means drop all indicators, false means collect default indicators.
-
-The `external_labels` object supports the following:
-
-* `name` - (Required, String) Indicator name.
-* `value` - (Optional, String) Index value.
-
-The `in_cluster_pod_config` object supports the following:
-
-* `host_net` - (Required, Bool) Whether to use HostNetWork.
-* `node_selector` - (Optional, List) Specify the pod to run the node.
-* `tolerations` - (Optional, List) Tolerate Stain.
-
-The `node_selector` object supports the following:
-
-* `name` - (Optional, String) The pod configuration name of the component deployed in the cluster.
-* `value` - (Optional, String) Pod configuration values for components deployed in the cluster.
-
-The `tolerations` object supports the following:
-
-* `effect` - (Optional, String) blemish effect to match.
-* `key` - (Optional, String) The taint key to which the tolerance applies.
-* `operator` - (Optional, String) key-value relationship.
-
-## Attributes Reference
-
-In addition to all arguments above, the following attributes are exported:
-
-* `id` - ID of the resource.
+  pod_monitors {
+    name   = "mynamespace/pod-monitor-001" # name with the specified namespace
+    config = "apiVersion: monitoring.coreos.com/v1\nkind: PodMonitor\nmetadata:\n  name: pod-monitor-001\n  namespace: mynamespace\n"
+  }
+}
 
 
+# create monitor template
+resource "tencentcloud_monitor_tmp_tke_template" "foo" {
+  template {
+    name     = "tf-template"
+    level    = "cluster"
+    describe = "template"
+    service_monitors {
+      name   = "tf-ServiceMonitor"
+      config = <<-EOT
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: example-service-monitor
+  namespace: monitoring
+  labels:
+    k8s-app: example-service
+spec:
+  selector:
+    matchLabels:
+      k8s-app: example-service
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+  - port: http-metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: true
+      EOT
+    }
 
+    pod_monitors {
+      name   = "tf-PodMonitors"
+      config = <<-EOT
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: example-pod-monitor
+  namespace: monitoring
+  labels:
+    k8s-app: example-pod
+spec:
+  selector:
+    matchLabels:
+      k8s-app: example-pod
+  namespaceSelector:
+    matchNames:
+      - default
+  podMetricsEndpoints:
+  - port: http-metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: true
+EOT
+    }
+
+    pod_monitors {
+      name   = "tf-RawJobs"
+      config = <<-EOT
+scrape_configs:
+  - job_name: 'example-job'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['example-service.default.svc.cluster.local:8080']
+    metrics_path: /metrics
+    scheme: http
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tls_config:
+      insecure_skip_verify: true
+EOT
+    }
+  }
+}
+
+resource "tencentcloud_monitor_tmp_tke_template_attachment" "temp_attachment" {
+  template_id  = tencentcloud_monitor_tmp_tke_template.foo.id
+
+  targets {
+    region      = var.zone
+    instance_id = tencentcloud_monitor_tmp_instance.foo.id
+  }
+}

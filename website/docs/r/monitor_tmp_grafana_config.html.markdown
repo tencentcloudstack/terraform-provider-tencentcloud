@@ -43,7 +43,7 @@ resource "tencentcloud_monitor_grafana_instance" "foo" {
   }
 }
 
-resource "tencentcloud_monitor_tmp_grafana_config" "tmp_grafana_config" {
+resource "tencentcloud_monitor_tmp_grafana_config" "foo" {
   config = jsonencode(
     {
       server = {
