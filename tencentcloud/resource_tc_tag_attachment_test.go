@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-//go test -i; go test -test.run TestAccTencentCloudTagAttachmentResource_basic -v
+// go test -i; go test -test.run TestAccTencentCloudTagAttachmentResource_basic -v
 func TestAccTencentCloudTagAttachmentResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -95,4 +95,3 @@ resource "tencentcloud_tag_attachment" "tag_attachment" {
 }
 
 `
-
