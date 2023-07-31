@@ -50,7 +50,7 @@ func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.#"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.0.key", "nDaysSinceLastPush"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "retention_rule.0.value", "2"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "cron_setting", "daily"),
+					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "cron_setting", "weekly"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_tag_retention_rule.my_rule", "disabled", "true"),
 				),
 			},
@@ -196,7 +196,7 @@ resource "tencentcloud_tcr_tag_retention_rule" "my_rule" {
 		key = "nDaysSinceLastPush"
 		value = 2
   }
-  cron_setting = "daily"
+  cron_setting = "weekly"
   disabled = true
 }
 

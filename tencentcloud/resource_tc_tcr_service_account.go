@@ -27,7 +27,7 @@ resource "tencentcloud_tcr_namespace" "example" {
   }
 }
 
-resource "tencentcloud_tcr_custom_account" "example" {
+resource "tencentcloud_tcr_service_account" "example" {
   registry_id = tencentcloud_tcr_instance.example.id
   name        = "tf_example_account"
   permissions {
@@ -46,7 +46,7 @@ resource "tencentcloud_tcr_custom_account" "example" {
 With specified expiration time
 
 ```hcl
-resource "tencentcloud_tcr_custom_account" "example" {
+resource "tencentcloud_tcr_service_account" "example" {
   registry_id = tencentcloud_tcr_instance.example.id
   name        = "tf_example_account"
   permissions {
