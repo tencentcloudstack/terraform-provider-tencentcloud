@@ -282,3 +282,125 @@ func (me *TagService) DescribeProjects(ctx context.Context, param map[string]int
 
 	return
 }
+
+func (me *TagService) DescribeTagResourceById(ctx context.Context, tagKey string, tagValue string) (tagRes *tag.Tag, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tag.NewGetTagsRequest()
+	request.TagKeys = []*string{&tagKey}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTagClient().GetTags(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.Tags) < 1 {
+		return
+	}
+	for _, v := range response.Response.Tags {
+		if *v.TagKey == tagKey && *v.TagValue == tagValue {
+			tagRes = v
+		}
+	}
+	return
+}
+
+func (me *TagService) DeleteTagResourceById(ctx context.Context, tagKey string, tagValue string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tag.NewDeleteTagRequest()
+	request.TagKey = &tagKey
+	request.TagValue = &tagValue
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTagClient().DeleteTag(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+func (me *TagService) DescribeTagTagAttachmentById(ctx context.Context, tagKey string, tagValue string, resource string) (resourceTag *tag.ResourceTagMapping, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tag.NewGetResourcesRequest()
+	request.ResourceList = []*string{&resource}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTagClient().GetResources(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil || len(response.Response.ResourceTagMappingList) < 1 {
+		return
+	}
+	for _, resourceTagMap := range response.Response.ResourceTagMappingList {
+		if *resourceTagMap.Resource == resource {
+			for _, v := range resourceTagMap.Tags {
+				if *v.TagKey == tagKey && *v.TagValue == tagValue {
+					resourceTag = &tag.ResourceTagMapping{
+						Resource: &resource,
+						Tags: []*tag.Tag{
+							{TagKey: v.TagKey, TagValue: &tagValue},
+						},
+					}
+				}
+			}
+		}
+	}
+	return
+}
+
+func (me *TagService) DeleteTagTagAttachmentById(ctx context.Context, tagKey string, resource string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tag.NewDeleteResourceTagRequest()
+	request.TagKey = &tagKey
+	request.Resource = &resource
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTagClient().DeleteResourceTag(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
