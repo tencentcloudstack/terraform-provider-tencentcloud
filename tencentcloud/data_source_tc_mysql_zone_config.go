@@ -29,6 +29,11 @@ func TencentMysqlSellType() map[string]*schema.Schema {
 			Computed:    true,
 			Description: "",
 		},
+		"cpu": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "Number of CPU cores.",
+		},
 		"mem_size": {
 			Type:        schema.TypeInt,
 			Computed:    true,
@@ -53,6 +58,16 @@ func TencentMysqlSellType() map[string]*schema.Schema {
 			Type:        schema.TypeInt,
 			Computed:    true,
 			Description: "Queries per second.",
+		},
+		"info": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Application Scenario Description.",
+		},
+		"device_type": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Description: "Instance type, the possible value ranges are: `UNIVERSAL` (universal type), `EXCLUSIVE` (exclusive type), `BASIC` (basic type), `BASIC_V2` (basic type v2).",
 		},
 	}
 }
@@ -292,11 +307,14 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 
 		var showConfigMap = make(map[string]interface{})
 		showConfigMap["cdb_type"] = *sellItem.DeviceType
+		showConfigMap["cpu"] = int(*sellItem.Cpu)
 		showConfigMap["mem_size"] = int(*sellItem.Memory)
 		showConfigMap["max_volume_size"] = int(*sellItem.VolumeMax)
 		showConfigMap["min_volume_size"] = int(*sellItem.VolumeMin)
 		showConfigMap["volume_step"] = int(*sellItem.VolumeStep)
 		showConfigMap["qps"] = int(*sellItem.Iops)
+		showConfigMap["info"] = *sellItem.Info
+		showConfigMap["device_type"] = *sellItem.DeviceType
 		sells = append(sells, showConfigMap)
 
 		zoneConfig["engine_versions"] = engineVersions
