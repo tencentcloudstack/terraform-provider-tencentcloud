@@ -349,7 +349,11 @@ const TkeDeps = TkeExclusiveNetwork + TkeInstanceType + TkeCIDRs + defaultImages
 
 const testAccTkeCluster = TkeDeps + `
 variable "availability_zone" {
-  default = "ap-guangzhou-3"
+  default = "ap-tokyo-1"
+}
+
+variable "env_az" {
+  type = string
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
@@ -372,7 +376,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
-    availability_zone          = var.availability_zone
+    availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
     instance_type              = local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
@@ -421,6 +425,10 @@ variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
+variable "env_az" {
+  type = string
+}
+
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
   cluster_cidr                               = var.tke_cidr_a.0
@@ -439,7 +447,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
-    availability_zone          = var.availability_zone
+    availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
     instance_type              = local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
@@ -492,6 +500,10 @@ variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
+variable "env_az" {
+  type = string
+}
+
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
   cluster_cidr                               = var.tke_cidr_a.0
@@ -507,7 +519,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
-    availability_zone          = var.availability_zone
+    availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
     instance_type              = local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
@@ -556,6 +568,10 @@ variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
+variable "env_az" {
+  type = string
+}
+
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
   cluster_cidr                               = var.tke_cidr_c.0
@@ -571,7 +587,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   worker_config {
     count                      = 1
-    availability_zone          = var.availability_zone
+    availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
     instance_type              = local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
@@ -613,6 +629,10 @@ variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
+variable "env_az" {
+  type = string
+}
+
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
   cluster_cidr                               = var.tke_cidr_c.0
@@ -636,7 +656,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   worker_config {
     count                      = 1
-    availability_zone          = var.availability_zone
+    availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
     instance_type              = local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
