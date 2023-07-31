@@ -12,8 +12,23 @@ resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
     "createdBy" = "terraform"
   }
 }
-
 ```
+
+PrePaid Bandwidth Package
+
+```hcl
+resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
+  network_type           = "BGP"
+  charge_type            = "FIXED_PREPAID_BY_MONTH"
+  bandwidth_package_name = "test-001"
+  time_span              = 3
+  internet_max_bandwidth = 100
+  tags                   = {
+    "createdBy" = "terraform"
+  }
+}
+````
+
 Import
 
 vpc bandwidth_package can be imported using the id, e.g.
