@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_tcr_service_account: update example
+```
+
+```release-note:enhancement
+resource/tencentcloud_tcr_tag_retention_rule: allow `cron_setting` to be modified
+```
