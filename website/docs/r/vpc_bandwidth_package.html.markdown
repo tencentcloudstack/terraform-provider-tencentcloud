@@ -33,6 +33,7 @@ The following arguments are supported:
 * `internet_max_bandwidth` - (Optional, Int) Bandwidth packet speed limit size. Unit: Mbps, -1 means no speed limit.
 * `network_type` - (Optional, String) Bandwidth packet type, default:BGP, optional:- `BGP`: common BGP shared bandwidth package- `HIGH_QUALITY_BGP`: Quality BGP Shared Bandwidth Package.
 * `tags` - (Optional, Map) Tag description list.
+* `time_span` - (Optional, Int) The purchase duration of the prepaid monthly bandwidth package, unit: month, value range: 1~60.
 
 ## Attributes Reference
 
