@@ -27,7 +27,7 @@ func TencentMysqlSellType() map[string]*schema.Schema {
 		"cdb_type": {
 			Type:        schema.TypeString,
 			Computed:    true,
-			Description: "",
+			Description: "Instance type, the possible value ranges are: `UNIVERSAL` (universal type), `EXCLUSIVE` (exclusive type), `BASIC` (basic type), `BASIC_V2` (basic type v2).",
 		},
 		"cpu": {
 			Type:        schema.TypeInt,
@@ -63,11 +63,6 @@ func TencentMysqlSellType() map[string]*schema.Schema {
 			Type:        schema.TypeString,
 			Computed:    true,
 			Description: "Application Scenario Description.",
-		},
-		"device_type": {
-			Type:        schema.TypeString,
-			Computed:    true,
-			Description: "Instance type, the possible value ranges are: `UNIVERSAL` (universal type), `EXCLUSIVE` (exclusive type), `BASIC` (basic type), `BASIC_V2` (basic type v2).",
 		},
 	}
 }
@@ -306,15 +301,30 @@ func dataSourceTencentMysqlZoneConfigRead(d *schema.ResourceData, meta interface
 		engineVersions = append(engineVersions, *sellItem.EngineType)
 
 		var showConfigMap = make(map[string]interface{})
-		showConfigMap["cdb_type"] = *sellItem.DeviceType
-		showConfigMap["cpu"] = int(*sellItem.Cpu)
-		showConfigMap["mem_size"] = int(*sellItem.Memory)
-		showConfigMap["max_volume_size"] = int(*sellItem.VolumeMax)
-		showConfigMap["min_volume_size"] = int(*sellItem.VolumeMin)
-		showConfigMap["volume_step"] = int(*sellItem.VolumeStep)
-		showConfigMap["qps"] = int(*sellItem.Iops)
-		showConfigMap["info"] = *sellItem.Info
-		showConfigMap["device_type"] = *sellItem.DeviceType
+		if sellItem.DeviceType != nil {
+			showConfigMap["cdb_type"] = *sellItem.DeviceType
+		}
+		if sellItem.Cpu != nil {
+			showConfigMap["cpu"] = int(*sellItem.Cpu)
+		}
+		if sellItem.Memory != nil {
+			showConfigMap["mem_size"] = int(*sellItem.Memory)
+		}
+		if sellItem.VolumeMax != nil {
+			showConfigMap["max_volume_size"] = int(*sellItem.VolumeMax)
+		}
+		if sellItem.VolumeMin != nil {
+			showConfigMap["min_volume_size"] = int(*sellItem.VolumeMin)
+		}
+		if sellItem.VolumeStep != nil {
+			showConfigMap["volume_step"] = int(*sellItem.VolumeStep)
+		}
+		if sellItem.Iops != nil {
+			showConfigMap["qps"] = int(*sellItem.Iops)
+		}
+		if sellItem.Info != nil {
+			showConfigMap["info"] = *sellItem.Info
+		}
 		sells = append(sells, showConfigMap)
 
 		zoneConfig["engine_versions"] = engineVersions
