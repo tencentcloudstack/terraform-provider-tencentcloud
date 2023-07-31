@@ -4,7 +4,6 @@ Provides a resource to create a tmp tke template attachment
 Example Usage
 
 ```hcl
-
 # create tke
 variable "default_instance_type" {
   default = "SA1.MEDIUM2"
@@ -120,8 +119,8 @@ resource "tencentcloud_kubernetes_cluster" "example" {
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
     # key_ids                   = ["skey-11112222"]
-    cam_role_name             = "CVM_QcsRole"
-    password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
+    cam_role_name = "CVM_QcsRole"
+    password      = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   labels = {
@@ -140,29 +139,12 @@ variable "cluster_type" {
   default = "tke"
 }
 
-variable "availability_zone" {
-  default = "ap-guangzhou-4"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  cidr_block = "10.0.0.0/16"
-  name       = "tf_monitor_vpc"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  vpc_id            = tencentcloud_vpc.vpc.id
-  availability_zone = var.availability_zone
-  name              = "tf_monitor_subnet"
-  cidr_block        = "10.0.1.0/24"
-}
-
-
 resource "tencentcloud_monitor_tmp_instance" "foo" {
   instance_name       = "tf-tmp-instance"
-  vpc_id              = tencentcloud_vpc.vpc.id
-  subnet_id           = tencentcloud_subnet.subnet.id
+  vpc_id              = local.first_vpc_id
+  subnet_id           = local.first_subnet_id
   data_retention_time = 30
-  zone                = var.availability_zone
+  zone                = var.availability_zone_second
   tags = {
     "createdBy" = "terraform"
   }
@@ -170,7 +152,7 @@ resource "tencentcloud_monitor_tmp_instance" "foo" {
 
 
 # tmp tke bind
-resource "tencentcloud_monitor_tmp_tke_cluster_agent" "tmpClusterAgent" {
+resource "tencentcloud_monitor_tmp_tke_cluster_agent" "foo" {
   instance_id = tencentcloud_monitor_tmp_instance.foo.id
 
   agents {
@@ -262,12 +244,16 @@ EOT
 }
 
 resource "tencentcloud_monitor_tmp_tke_template_attachment" "temp_attachment" {
-  template_id  = tencentcloud_monitor_tmp_tke_template.foo.id
+  template_id = tencentcloud_monitor_tmp_tke_template.foo.id
 
   targets {
-    region      = var.zone
-    instance_id = tencentcloud_monitor_tmp_instance.foo.id
+    cluster_type = var.cluster_type
+    cluster_id   = tencentcloud_kubernetes_cluster.example.id
+    region       = var.zone
+    instance_id  = tencentcloud_monitor_tmp_instance.foo.id
   }
+
+  depends_on = [tencentcloud_monitor_tmp_tke_cluster_agent.foo]
 }
 ```
 */
