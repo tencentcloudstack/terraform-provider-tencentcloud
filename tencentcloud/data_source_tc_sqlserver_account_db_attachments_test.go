@@ -8,7 +8,8 @@ import (
 
 var testDataSqlserverAccountDBAttachmentsName = "data.tencentcloud_sqlserver_account_db_attachments.test"
 
-func TestAccDataSourceTencentCloudSqlserverAccountDBAttachments(t *testing.T) {
+// go test -i; go test -test.run TestAccDataSourceTencentCloudSqlserverAccountDBAttachments_basic -v
+func TestAccDataSourceTencentCloudSqlserverAccountDBAttachments_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },

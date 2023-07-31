@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudEipAssociationWithInstance -v
 func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
 	t.Parallel()
 	id := "tencentcloud_eip_association.foo"
@@ -40,6 +41,7 @@ func TestAccTencentCloudEipAssociationWithInstance(t *testing.T) {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudEipAssociationWithNetworkInterface -v
 func TestAccTencentCloudEipAssociationWithNetworkInterface(t *testing.T) {
 	t.Parallel()
 	id := "tencentcloud_eip_association.foo"

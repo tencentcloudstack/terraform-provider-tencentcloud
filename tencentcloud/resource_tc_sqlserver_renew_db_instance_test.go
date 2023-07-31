@@ -30,24 +30,26 @@ func TestAccTencentCloudSqlserverRenewDBInstanceResource_basic(t *testing.T) {
 }
 
 const testAccSqlserverRenewDBInstance = testAccSqlserverInstanceBasicPrepaid + `
+data "tencentcloud_availability_zones" "zones" {}
+
 resource "tencentcloud_sqlserver_instance" "test" {
-  name                          = "test_sqlserver_instance"
-  availability_zone             = local.az
-  charge_type                   = "PREPAID"
-  period                        = 1
-  vpc_id                        = local.vpc_id
-  subnet_id                     = local.vpc_subnet_id
-  project_id                    = 0
-  memory                        = 2
-  storage                       = 10
-  maintenance_week_set          = [1,2,3]
-  maintenance_start_time        = "09:00"
-  maintenance_time_span         = 3
-  security_groups               = [local.sg]
+  name                   = "test_sqlserver_instance"
+  availability_zone      = data.tencentcloud_availability_zones.zones.zones.0.name
+  charge_type            = "PREPAID"
+  period                 = 1
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.vpc_subnet_id
+  project_id             = 0
+  memory                 = 2
+  storage                = 10
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [local.sg]
 }
 
 resource "tencentcloud_sqlserver_renew_db_instance" "renew_db_instance" {
   instance_id = tencentcloud_sqlserver_instance.test.id
-  period = 1
+  period      = 1
 }
 `

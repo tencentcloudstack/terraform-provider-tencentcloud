@@ -7,7 +7,7 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudSqlserverCompleteExpansionResource_basic -v
-// go test -v -run TestAccTencentCloudSqlserverCompleteExpansionResource_basic -timeout=0 ./tencentcloud/
+// go test -v -run TestAccTencentCloudSqlserverCompleteExpansionResource_basic -timeout=0
 func TestAccTencentCloudSqlserverCompleteExpansionResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
