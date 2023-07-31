@@ -2689,6 +2689,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_ckafka_consumer":                                 resourceTencentCloudClsCkafkaConsumer(),
 			"tencentcloud_cls_cos_recharge":                                    resourceTencentCloudClsCosRecharge(),
 			"tencentcloud_cls_export":                                          resourceTencentCloudClsExport(),
+			"tencentcloud_cls_data_transform":                                  resourceTencentCloudClsDataTransform(),
 			"tencentcloud_lighthouse_instance":                                 resourceTencentCloudLighthouseInstance(),
 			"tencentcloud_tem_environment":                                     resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                                     resourceTencentCloudTemApplication(),

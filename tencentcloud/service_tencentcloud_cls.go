@@ -1148,3 +1148,56 @@ func (me *ClsService) DescribeClsMachineGroupConfigsByFilter(ctx context.Context
 	machineGroupConfigs = response.Response.Configs
 	return
 }
+
+func (me *ClsService) DescribeClsDataTransformById(ctx context.Context, taskId string) (dataTransform *cls.DataTransformTaskInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeDataTransformInfoRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeDataTransformInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DataTransformTaskInfos) < 1 {
+		return
+	}
+
+	dataTransform = response.Response.DataTransformTaskInfos[0]
+	return
+}
+
+func (me *ClsService) DeleteClsDataTransformById(ctx context.Context, taskId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteDataTransformRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteDataTransform(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
