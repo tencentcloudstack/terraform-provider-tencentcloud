@@ -157,6 +157,12 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 		return err
 	}
 
+	fmt.Println(1111111111)
+	fmt.Println(1111111111)
+	fmt.Println(certificateList)
+	fmt.Println(1111111111)
+	fmt.Println(1111111111)
+
 	certificates := make([]map[string]interface{}, 0, len(certificateList))
 	ids := make([]string, 0, len(certificateList))
 	for _, certificate := range certificateList {

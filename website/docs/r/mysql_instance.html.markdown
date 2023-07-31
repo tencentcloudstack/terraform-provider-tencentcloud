@@ -17,6 +17,8 @@ Provides a mysql instance resource to create master database instances.
 
 ## Example Usage
 
+### Create a single node instance
+
 ```hcl
 data "tencentcloud_availability_zones" "zones" {}
 
@@ -44,13 +46,74 @@ resource "tencentcloud_mysql_instance" "example" {
   charge_type       = "POSTPAID"
   root_password     = "PassWord123"
   slave_deploy_mode = 0
-  first_slave_zone  = data.tencentcloud_availability_zones.zones.zones.0.name
-  second_slave_zone = data.tencentcloud_availability_zones.zones.zones.0.name
-  slave_sync_mode   = 1
   availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  slave_sync_mode   = 1
   instance_name     = "tf-example-mysql"
-  mem_size          = 128000
-  volume_size       = 250
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  intranet_port     = 3306
+  security_groups   = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    name = "test"
+  }
+
+  parameters = {
+    character_set_server = "UTF8"
+    max_connections      = "1000"
+  }
+}
+```
+
+### Create a single node instance
+
+```hcl
+resource "tencentcloud_mysql_instance" "example" {
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord123"
+  slave_deploy_mode = 1
+  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  first_slave_zone  = data.tencentcloud_availability_zones.zones.zones.0.name
+  slave_sync_mode   = 1
+  instance_name     = "tf-example-mysql"
+  mem_size          = 4000
+  volume_size       = 200
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  intranet_port     = 3306
+  security_groups   = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    name = "test"
+  }
+
+  parameters = {
+    character_set_server = "UTF8"
+    max_connections      = "1000"
+  }
+}
+```
+
+### Create a three node instance
+
+```hcl
+resource "tencentcloud_mysql_instance" "example" {
+  internet_service  = 1
+  engine_version    = "5.7"
+  charge_type       = "POSTPAID"
+  root_password     = "PassWord123"
+  slave_deploy_mode = 1
+  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  first_slave_zone  = data.tencentcloud_availability_zones.zones.zones.1.name
+  availability_zone = data.tencentcloud_availability_zones.zones.zones.1.name
+  slave_sync_mode   = 1
+  instance_name     = "tf-example-mysql"
+  mem_size          = 4000
+  volume_size       = 200
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
   intranet_port     = 3306

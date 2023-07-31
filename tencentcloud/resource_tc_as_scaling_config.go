@@ -27,7 +27,7 @@ resource "tencentcloud_as_scaling_config" "example" {
   internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
   internet_max_bandwidth_out = 10
   public_ip_assigned         = true
-  password                   = "test123#"
+  password                   = "Test@123#"
   enhanced_security_service  = false
   enhanced_monitor_service   = false
   user_data                  = "dGVzdA=="
@@ -38,7 +38,8 @@ resource "tencentcloud_as_scaling_config" "example" {
 }
 ```
 
-Using SPOT charge type
+Using `SPOTPAID` charge type
+
 ```
 data "tencentcloud_images" "example" {
   image_type = ["PUBLIC_IMAGE"]

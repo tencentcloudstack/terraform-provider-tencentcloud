@@ -15,6 +15,8 @@ Provide a resource to create a Free Certificate.
 
 ## Example Usage
 
+### only support type 2. 2=TrustAsia TLS RSA CA.
+
 ```hcl
 resource "tencentcloud_ssl_free_certificate" "example" {
   dv_auth_method    = "DNS_AUTO"

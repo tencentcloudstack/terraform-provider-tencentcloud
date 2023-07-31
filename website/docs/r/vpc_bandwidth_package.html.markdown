@@ -14,10 +14,10 @@ Provides a resource to create a vpc bandwidth_package
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
+resource "tencentcloud_vpc_bandwidth_package" "example" {
   network_type           = "BGP"
   charge_type            = "TOP5_POSTPAID_BY_MONTH"
-  bandwidth_package_name = "test-001"
+  bandwidth_package_name = "tf-example"
   tags = {
     "createdBy" = "terraform"
   }

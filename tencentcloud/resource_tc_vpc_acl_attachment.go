@@ -4,24 +4,36 @@ Provide a resource to attach an existing subnet to Network ACL.
 Example Usage
 
 ```hcl
-data "tencentcloud_vpc_instances" "id_instances" {
+data "tencentcloud_availability_zones" "zones" {}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
 }
-resource "tencentcloud_vpc_acl" "foo" {
-    vpc_id  = data.tencentcloud_vpc_instances.id_instances.instance_list.0.vpc_id
-    name  	= "test_acl"
-	ingress = [
-		"ACCEPT#192.168.1.0/24#800#TCP",
-		"ACCEPT#192.168.1.0/24#800-900#TCP",
-	]
-	egress = [
-    	"ACCEPT#192.168.1.0/24#800#TCP",
-    	"ACCEPT#192.168.1.0/24#800-900#TCP",
-	]
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  name              = "subnet-example"
+  cidr_block        = "10.0.0.0/16"
+  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+}
+
+resource "tencentcloud_vpc_acl" "example" {
+  vpc_id  = tencentcloud_vpc.vpc.id
+  name    = "tf-example"
+  ingress = [
+    "ACCEPT#192.168.1.0/24#800#TCP",
+    "ACCEPT#192.168.1.0/24#800-900#TCP",
+  ]
+  egress = [
+    "ACCEPT#192.168.1.0/24#800#TCP",
+    "ACCEPT#192.168.1.0/24#800-900#TCP",
+  ]
 }
 
 resource "tencentcloud_vpc_acl_attachment" "attachment"{
-		acl_id = tencentcloud_vpc_acl.foo.id
-		subnet_id = data.tencentcloud_vpc_instances.id_instances.instance_list[0].subnet_ids[0]
+  acl_id = tencentcloud_vpc_acl.example.id
+  subnet_id = tencentcloud_subnet.subnet.id
 }
 ```
 
