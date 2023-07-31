@@ -298,7 +298,7 @@ func resourceTencentCloudTcrTagRetentionRuleUpdate(d *schema.ResourceData, meta 
 		request.CronSetting = helper.String(v.(string))
 	}
 
-	immutableArgs := []string{"registry_id", "namespace_name", "cron_setting"}
+	immutableArgs := []string{"registry_id", "namespace_name"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

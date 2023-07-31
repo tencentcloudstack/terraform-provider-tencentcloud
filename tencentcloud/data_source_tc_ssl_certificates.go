@@ -121,6 +121,35 @@ func dataSourceTencentCloudSslCertificates() *schema.Resource {
 							Computed:    true,
 							Description: "ALL domains included in the SSL certificate. Including the primary domain name.",
 						},
+						"order_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Order ID returned.",
+						},
+						"dv_auths": {
+							Type:        schema.TypeList,
+							Computed:    true,
+							Description: "DV certification information.",
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"dv_auth_key": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "DV authentication key.",
+									},
+									"dv_auth_value": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "DV authentication value.",
+									},
+									"dv_auth_verify_type": {
+										Type:        schema.TypeString,
+										Computed:    true,
+										Description: "DV authentication type.",
+									},
+								},
+							},
+						},
 					},
 				},
 			},
@@ -223,6 +252,22 @@ func dataSourceTencentCloudSslCertificatesRead(d *schema.ResourceData, m interfa
 			m["cert"] = *describeResponse.Response.CertificatePublicKey
 			if describeResponse.Response.CertificatePrivateKey != nil {
 				m["key"] = *describeResponse.Response.CertificatePrivateKey
+			}
+
+			if describeResponse.Response.OrderId != nil {
+				m["order_id"] = *describeResponse.Response.OrderId
+			}
+			if describeResponse.Response.DvAuthDetail != nil && len(describeResponse.Response.DvAuthDetail.DvAuths) != 0 {
+				dvAuths := make([]map[string]string, 0)
+				for _, item := range describeResponse.Response.DvAuthDetail.DvAuths {
+					dvAuth := make(map[string]string)
+					dvAuth["dv_auth_key"] = *item.DvAuthKey
+					dvAuth["dv_auth_value"] = *item.DvAuthValue
+					dvAuth["dv_auth_verify_type"] = *item.DvAuthVerifyType
+					dvAuths = append(dvAuths, dvAuth)
+				}
+
+				m["dv_auths"] = dvAuths
 			}
 		}
 
