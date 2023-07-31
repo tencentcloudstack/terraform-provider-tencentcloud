@@ -3,16 +3,14 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-//go test -i; go test -test.run TestAccTencentCloudTag_basic -v
-func TestAccTencentCloudTag_basic(t *testing.T) {
+//go test -i; go test -test.run TestAccTencentCloudTagInstanceResource_basic -v
+func TestAccTencentCloudTagInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
