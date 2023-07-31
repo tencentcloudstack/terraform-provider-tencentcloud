@@ -4,12 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_tag"
 sidebar_current: "docs-tencentcloud-resource-tag"
 description: |-
-  Provides a resource to create a tag tag
+  Provides a resource to create a tag
 ---
 
 # tencentcloud_tag
 
-Provides a resource to create a tag tag
+Provides a resource to create a tag
 
 ## Example Usage
 

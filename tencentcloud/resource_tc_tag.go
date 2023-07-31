@@ -1,5 +1,5 @@
 /*
-Provides a resource to create a tag tag
+Provides a resource to create a tag
 
 Example Usage
 
