@@ -1,11 +1,11 @@
 /*
-Provides a resource to create a tag resource_tag
+Provides a resource to create a tag attachment
 
 Example Usage
 
 ```hcl
 
-resource "tencentcloud_resource_tag" "resource_tag" {
+resource "tencentcloud_tag_attachment" "attachment" {
   tag_key = "test3"
   tag_value = "Terraform3"
   resource = "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4"
@@ -15,10 +15,10 @@ resource "tencentcloud_resource_tag" "resource_tag" {
 
 Import
 
-tag resource_tag can be imported using the id, e.g.
+tag attachment can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_resource_tag.resource_tag resource_tag_id
+terraform import tencentcloud_tag_attachment.attachment attachment_id
 ```
 */
 package tencentcloud
@@ -35,11 +35,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudResourceTag() *schema.Resource {
+func resourceTencentCloudTagAttachment() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudResourceTagCreate,
-		Read:   resourceTencentCloudResourceTagRead,
-		Delete: resourceTencentCloudResourceTagDelete,
+		Create: resourceTencentCloudTagAttachmentCreate,
+		Read:   resourceTencentCloudTagAttachmentRead,
+		Delete: resourceTencentCloudTagAttachmentDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -68,8 +68,8 @@ func resourceTencentCloudResourceTag() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudResourceTagCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_resource_tag.create")()
+func resourceTencentCloudTagAttachmentCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tag_attachment.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -105,17 +105,17 @@ func resourceTencentCloudResourceTagCreate(d *schema.ResourceData, meta interfac
 		return nil
 	})
 	if err != nil {
-		log.Printf("[CRITAL]%s create tag resourceTag failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create tag tagAttachment failed, reason:%+v", logId, err)
 		return err
 	}
 
 	d.SetId(tagKey + FILED_SP + tagValue + FILED_SP + resourceId)
 
-	return resourceTencentCloudResourceTagRead(d, meta)
+	return resourceTencentCloudTagAttachmentRead(d, meta)
 }
 
-func resourceTencentCloudResourceTagRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_resource_tag.read")()
+func resourceTencentCloudTagAttachmentRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tag_attachment.read")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -132,37 +132,37 @@ func resourceTencentCloudResourceTagRead(d *schema.ResourceData, meta interface{
 	tagValue := idSplit[1]
 	resource := idSplit[2]
 
-	resourceTag, err := service.DescribeResourceTagById(ctx, tagKey, tagValue, resource)
+	tagAttachment, err := service.DescribeTagTagAttachmentById(ctx, tagKey, tagValue, resource)
 	if err != nil {
 		return err
 	}
 
-	if resourceTag == nil {
+	if tagAttachment == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `TagResourceTag` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if len(resourceTag.Tags) < 1 {
+	if len(tagAttachment.Tags) < 1 {
 		log.Printf("[WARN]%s resource `TagResourceTag` [%s] Tags is null, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
-	if resourceTag.Tags[0].TagKey != nil {
-		_ = d.Set("tag_key", resourceTag.Tags[0].TagKey)
+	if tagAttachment.Tags[0].TagKey != nil {
+		_ = d.Set("tag_key", tagAttachment.Tags[0].TagKey)
 	}
 
-	if resourceTag.Tags[0].TagValue != nil {
-		_ = d.Set("tag_value", resourceTag.Tags[0].TagValue)
+	if tagAttachment.Tags[0].TagValue != nil {
+		_ = d.Set("tag_value", tagAttachment.Tags[0].TagValue)
 	}
 
-	if resourceTag.Resource != nil {
-		_ = d.Set("resource", resourceTag.Resource)
+	if tagAttachment.Resource != nil {
+		_ = d.Set("resource", tagAttachment.Resource)
 	}
 
 	return nil
 }
 
-func resourceTencentCloudResourceTagDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_resource_tag.delete")()
+func resourceTencentCloudTagAttachmentDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_tag_attachment.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -176,7 +176,7 @@ func resourceTencentCloudResourceTagDelete(d *schema.ResourceData, meta interfac
 	tagKey := idSplit[0]
 	resource := idSplit[2]
 
-	if err := service.DeleteTagResourceTagById(ctx, tagKey, resource); err != nil {
+	if err := service.DeleteTagTagAttachmentById(ctx, tagKey, resource); err != nil {
 		return err
 	}
 

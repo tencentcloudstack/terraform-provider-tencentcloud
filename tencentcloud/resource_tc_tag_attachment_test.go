@@ -9,42 +9,42 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-//go test -i; go test -test.run TestAccTencentCloudResourceTag_basic -v
-func TestAccTencentCloudResourceTag_basic(t *testing.T) {
+//go test -i; go test -test.run TestAccTencentCloudTagAttachmentResource_basic -v
+func TestAccTencentCloudTagAttachmentResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
 		Providers:    testAccProviders,
-		CheckDestroy: testAccCheckResourceTagDestroy,
+		CheckDestroy: testAccCheckTagAttachmentDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTagResourceTag,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckResourceTagExists("tencentcloud_resource_tag.resource_tag"),
-					resource.TestCheckResourceAttr("tencentcloud_resource_tag.resource_tag", "tag_key", "test_terraform_tagResource_key"),
-					resource.TestCheckResourceAttr("tencentcloud_resource_tag.resource_tag", "tag_value", "Terraform_tag_resource_value"),
-					resource.TestCheckResourceAttr("tencentcloud_resource_tag.resource_tag", "resource", "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4")),
+					testAccCheckTagAttachmentExists("tencentcloud_tag_attachment.tag_attachment"),
+					resource.TestCheckResourceAttr("tencentcloud_tag_attachment.tag_attachment", "tag_key", "test_terraform_tagAttachment_key"),
+					resource.TestCheckResourceAttr("tencentcloud_tag_attachment.tag_attachment", "tag_value", "Terraform_tagAttachment_value"),
+					resource.TestCheckResourceAttr("tencentcloud_tag_attachment.tag_attachment", "resource", "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4")),
 			},
 			{
-				ResourceName:      "tencentcloud_resource_tag.resource_tag",
+				ResourceName:      "tencentcloud_tag_attachment.tag_attachment",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 		},
 	})
 }
-func testAccCheckResourceTagDestroy(s *terraform.State) error {
+func testAccCheckTagAttachmentDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_resource_tag" {
+		if rs.Type != "tencentcloud_tag_attachment" {
 			continue
 		}
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 		service := TagService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		tags, err := service.DescribeResourceTagById(ctx, rs.Primary.Attributes["tag_key"],
+		tags, err := service.DescribeTagTagAttachmentById(ctx, rs.Primary.Attributes["tag_key"],
 			rs.Primary.Attributes["tag_value"], rs.Primary.Attributes["resource"])
 		if err != nil {
 			return err
@@ -52,12 +52,12 @@ func testAccCheckResourceTagDestroy(s *terraform.State) error {
 		if tags == nil {
 			return nil
 		}
-		return fmt.Errorf("delete resourceTag key %s fail, still on server", rs.Primary.Attributes["tag_key"])
+		return fmt.Errorf("delete tagAttachment key %s fail, still on server", rs.Primary.Attributes["tag_key"])
 	}
 	return nil
 }
 
-func testAccCheckResourceTagExists(r string) resource.TestCheckFunc {
+func testAccCheckTagAttachmentExists(r string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		logId := getLogId(contextNil)
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -68,7 +68,7 @@ func testAccCheckResourceTagExists(r string) resource.TestCheckFunc {
 		}
 
 		service := TagService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		res, err := service.DescribeResourceTagById(ctx, rs.Primary.Attributes["tag_key"],
+		res, err := service.DescribeTagTagAttachmentById(ctx, rs.Primary.Attributes["tag_key"],
 			rs.Primary.Attributes["tag_value"], rs.Primary.Attributes["resource"])
 		if err != nil {
 			return err
@@ -77,15 +77,15 @@ func testAccCheckResourceTagExists(r string) resource.TestCheckFunc {
 			return nil
 		}
 
-		return fmt.Errorf("resourceTag %s not found on server", rs.Primary.Attributes["tag_key"])
+		return fmt.Errorf("tagAttachment %s not found on server", rs.Primary.Attributes["tag_key"])
 	}
 }
 
 const testAccTagResourceTag = `
 
-resource "tencentcloud_resource_tag" "resource_tag" {
-  tag_key = "test_terraform_tagResource_key"
-  tag_value = "Terraform_tag_resource_value"
+resource "tencentcloud_tag_attachment" "tag_attachment" {
+  tag_key = "test_terraform_tagAttachment_key"
+  tag_value = "Terraform_tagAttachment_value"
   resource = "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4"
 }
 

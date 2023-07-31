@@ -9,8 +9,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-//go test -i; go test -test.run TestAccTencentCloudTagInstanceResource_basic -v
-func TestAccTencentCloudTagInstanceResource_basic(t *testing.T) {
+//go test -i; go test -test.run TestAccTencentCloudTagResource_basic -v
+func TestAccTencentCloudTagResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -44,7 +44,7 @@ func testAccCheckTagDestroy(s *terraform.State) error {
 		ctx := context.WithValue(context.TODO(), logIdKey, logId)
 		service := TagService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 
-		tags, err := service.DescribeTagById(ctx, rs.Primary.Attributes["tag_key"], rs.Primary.Attributes["tag_value"])
+		tags, err := service.DescribeTagResourceById(ctx, rs.Primary.Attributes["tag_key"], rs.Primary.Attributes["tag_value"])
 		if err != nil {
 			return err
 		}
@@ -67,7 +67,7 @@ func testAccCheckTagExists(r string) resource.TestCheckFunc {
 		}
 
 		service := TagService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-		tags, err := service.DescribeTagById(ctx, rs.Primary.Attributes["tag_key"], rs.Primary.Attributes["tag_value"])
+		tags, err := service.DescribeTagResourceById(ctx, rs.Primary.Attributes["tag_key"], rs.Primary.Attributes["tag_value"])
 		if err != nil {
 			return err
 		}

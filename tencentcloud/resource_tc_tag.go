@@ -36,9 +36,9 @@ import (
 
 func resourceTencentCloudTag() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudTagCreate,
-		Read:   resourceTencentCloudTagRead,
-		Delete: resourceTencentCloudTagDelete,
+		Create: resourceTencentCloudTagResourceCreate,
+		Read:   resourceTencentCloudTagResourceRead,
+		Delete: resourceTencentCloudTagResourceDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -60,7 +60,7 @@ func resourceTencentCloudTag() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudTagCreate(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudTagResourceCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tag.create")()
 	defer inconsistentCheck(d, meta)()
 
@@ -97,10 +97,10 @@ func resourceTencentCloudTagCreate(d *schema.ResourceData, meta interface{}) err
 
 	d.SetId(tagKey + FILED_SP + tagValue)
 
-	return resourceTencentCloudTagRead(d, meta)
+	return resourceTencentCloudTagResourceRead(d, meta)
 }
 
-func resourceTencentCloudTagRead(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudTagResourceRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tag.read")()
 	defer inconsistentCheck(d, meta)()
 
@@ -117,7 +117,7 @@ func resourceTencentCloudTagRead(d *schema.ResourceData, meta interface{}) error
 	tagKey := idSplit[0]
 	tagValue := idSplit[1]
 
-	tagRes, err := service.DescribeTagById(ctx, tagKey, tagValue)
+	tagRes, err := service.DescribeTagResourceById(ctx, tagKey, tagValue)
 	if err != nil {
 		return err
 	}
@@ -139,7 +139,7 @@ func resourceTencentCloudTagRead(d *schema.ResourceData, meta interface{}) error
 	return nil
 }
 
-func resourceTencentCloudTagDelete(d *schema.ResourceData, meta interface{}) error {
+func resourceTencentCloudTagResourceDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_tag.delete")()
 	defer inconsistentCheck(d, meta)()
 
@@ -154,7 +154,7 @@ func resourceTencentCloudTagDelete(d *schema.ResourceData, meta interface{}) err
 	tagKey := idSplit[0]
 	tagValue := idSplit[1]
 
-	if err := service.DeleteTagById(ctx, tagKey, tagValue); err != nil {
+	if err := service.DeleteTagResourceById(ctx, tagKey, tagValue); err != nil {
 		return err
 	}
 

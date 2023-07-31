@@ -1582,8 +1582,9 @@ ClickHouse(CDWCH)
 	tencentcloud_clickhouse_instance
 Tag
   Resource
-	tencentcloud_resource_tag
 	tencentcloud_tag
+	tencentcloud_tag_attachment
+
 */
 package tencentcloud
 
@@ -2267,7 +2268,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_nat_gateway_snat":                                    resourceTencentCloudNatGatewaySnat(),
 			"tencentcloud_nat_refresh_nat_dc_route":                            resourceTencentCloudNatRefreshNatDcRoute(),
 			"tencentcloud_tag":                                                 resourceTencentCloudTag(),
-			"tencentcloud_resource_tag":                                        resourceTencentCloudResourceTag(),
+			"tencentcloud_tag_attachment":                                      resourceTencentCloudTagAttachment(),
 			"tencentcloud_eip":                                                 resourceTencentCloudEip(),
 			"tencentcloud_eip_association":                                     resourceTencentCloudEipAssociation(),
 			"tencentcloud_eip_address_transform":                               resourceTencentCloudEipAddressTransform(),

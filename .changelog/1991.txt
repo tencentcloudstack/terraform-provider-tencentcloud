@@ -3,5 +3,5 @@ tencentcloud_tag
 ```
 
 ```release-note:new-resource
-tencentcloud_resource_tag
+tencentcloud_tag_attachment
 ```

@@ -1,20 +1,20 @@
 ---
 subcategory: "Tag"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_resource_tag"
+page_title: "TencentCloud: tencentcloud_tag_attachment"
 sidebar_current: "docs-tencentcloud-resource-resource_tag"
 description: |-
   Provides a resource to create a tag resource_tag
 ---
 
-# tencentcloud_resource_tag
+# tencentcloud_tag_attachment
 
 Provides a resource to create a tag resource_tag
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_resource_tag" "resource_tag" {
+resource "tencentcloud_tag_attachment" "resource_tag" {
   tag_key   = "test3"
   tag_value = "Terraform3"
   resource  = "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4"
@@ -42,6 +42,6 @@ In addition to all arguments above, the following attributes are exported:
 tag resource_tag can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_resource_tag.resource_tag resource_tag_id
+terraform import tencentcloud_tag_attachment.resource_tag resource_tag_id
 ```
 

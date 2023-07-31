@@ -283,7 +283,7 @@ func (me *TagService) DescribeProjects(ctx context.Context, param map[string]int
 	return
 }
 
-func (me *TagService) DescribeTagById(ctx context.Context, tagKey string, tagValue string) (tagRes *tag.Tag, errRet error) {
+func (me *TagService) DescribeTagResourceById(ctx context.Context, tagKey string, tagValue string) (tagRes *tag.Tag, errRet error) {
 	logId := getLogId(ctx)
 
 	request := tag.NewGetTagsRequest()
@@ -315,7 +315,7 @@ func (me *TagService) DescribeTagById(ctx context.Context, tagKey string, tagVal
 	return
 }
 
-func (me *TagService) DeleteTagById(ctx context.Context, tagKey string, tagValue string) (errRet error) {
+func (me *TagService) DeleteTagResourceById(ctx context.Context, tagKey string, tagValue string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tag.NewDeleteTagRequest()
@@ -339,7 +339,7 @@ func (me *TagService) DeleteTagById(ctx context.Context, tagKey string, tagValue
 
 	return
 }
-func (me *TagService) DescribeResourceTagById(ctx context.Context, tagKey string, tagValue string, resource string) (resourceTag *tag.ResourceTagMapping, errRet error) {
+func (me *TagService) DescribeTagTagAttachmentById(ctx context.Context, tagKey string, tagValue string, resource string) (resourceTag *tag.ResourceTagMapping, errRet error) {
 	logId := getLogId(ctx)
 
 	request := tag.NewGetResourcesRequest()
@@ -380,7 +380,7 @@ func (me *TagService) DescribeResourceTagById(ctx context.Context, tagKey string
 	return
 }
 
-func (me *TagService) DeleteTagResourceTagById(ctx context.Context, tagKey string, resource string) (errRet error) {
+func (me *TagService) DeleteTagTagAttachmentById(ctx context.Context, tagKey string, resource string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := tag.NewDeleteResourceTagRequest()
