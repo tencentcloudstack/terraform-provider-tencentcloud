@@ -51,13 +51,13 @@ resource "tencentcloud_mysql_instance" "example" {
   }
 
   parameters = {
-    character_set_server = "UTF8"
+    character_set_server = "utf8"
     max_connections      = "1000"
   }
 }
 ```
 
-Create a single node instance
+Create a double node instance
 
 ```hcl
 resource "tencentcloud_mysql_instance" "example" {
@@ -82,7 +82,7 @@ resource "tencentcloud_mysql_instance" "example" {
   }
 
   parameters = {
-    character_set_server = "UTF8"
+    character_set_server = "utf8"
     max_connections      = "1000"
   }
 }
@@ -114,7 +114,7 @@ resource "tencentcloud_mysql_instance" "example" {
   }
 
   parameters = {
-    character_set_server = "UTF8"
+    character_set_server = "utf8"
     max_connections      = "1000"
   }
 }
