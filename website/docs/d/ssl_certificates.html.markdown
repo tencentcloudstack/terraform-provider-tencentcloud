@@ -37,10 +37,15 @@ In addition to all arguments above, the following attributes are exported:
   * `cert` - Content of the SSL certificate.
   * `create_time` - Creation time of the SSL certificate.
   * `domain` - Primary domain of the SSL certificate.
+  * `dv_auths` - DV certification information.
+    * `dv_auth_key` - DV authentication key.
+    * `dv_auth_value` - DV authentication value.
+    * `dv_auth_verify_type` - DV authentication type.
   * `end_time` - Ending time of the SSL certificate.
   * `id` - ID of the SSL certificate.
   * `key` - Key of the SSL certificate.
   * `name` - Name of the SSL certificate.
+  * `order_id` - Order ID returned.
   * `product_zh_name` - Certificate authority.
   * `project_id` - Project ID of the SSL certificate.
   * `status` - Status of the SSL certificate.
