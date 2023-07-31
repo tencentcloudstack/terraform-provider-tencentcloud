@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudClsDataTransformResource_basic -v
 func TestAccTencentCloudClsDataTransformResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -28,9 +29,9 @@ func TestAccTencentCloudClsDataTransformResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform", "etl_content"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform", "task_type"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform", "enable_flag"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform", "dst_resources"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform.dst_resources", "topic_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform.dst_resources", "alias")),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform", "dst_resources.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform", "dst_resources.0.topic_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform", "dst_resources.0.alias")),
 			},
 			{
 				ResourceName:      "tencentcloud_cls_data_transform.data_transform",
