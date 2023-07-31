@@ -5,20 +5,104 @@ Provides an eip resource associated with other resource like CVM, ENI and CLB.
 
 Example Usage
 
+Bind elastic public IP By Instance ID
+
 ```hcl
-resource "tencentcloud_eip_association" "foo" {
-  eip_id      = "eip-xxxxxx"
-  instance_id = "ins-xxxxxx"
+data "tencentcloud_availability_zones" "zones" {}
+
+data "tencentcloud_images" "image" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+
+data "tencentcloud_instance_types" "instance_types" {
+  filter {
+    name   = "zone"
+    values = [data.tencentcloud_availability_zones.zones.zones.0.name]
+  }
+
+  filter {
+    name   = "instance-family"
+    values = ["S5"]
+  }
+
+  cpu_core_count   = 2
+  exclude_sold_out = true
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "example-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  name              = "example-vpc"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_eip" "eip" {
+  name                 = "example-eip"
+  internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
+  type                 = "EIP"
+}
+
+resource "tencentcloud_instance" "example" {
+  instance_name            = "example-cvm"
+  availability_zone        = data.tencentcloud_availability_zones.zones.zones.0.name
+  image_id                 = data.tencentcloud_images.image.images.0.image_id
+  instance_type            = data.tencentcloud_instance_types.instance_types.instance_types.0.instance_type
+  system_disk_type         = "CLOUD_PREMIUM"
+  disable_security_service = true
+  disable_monitor_service  = true
+  vpc_id                   = tencentcloud_vpc.vpc.id
+  subnet_id                = tencentcloud_subnet.subnet.id
+}
+
+resource "tencentcloud_eip_association" "example" {
+  eip_id      = tencentcloud_eip.eip.id
+  instance_id = tencentcloud_instance.example.id
 }
 ```
 
-or
+Bind elastic public IP By elastic network card
 
 ```hcl
-resource "tencentcloud_eip_association" "bar" {
-  eip_id               = "eip-xxxxxx"
-  network_interface_id = "eni-xxxxxx"
-  private_ip           = "10.0.1.22"
+data "tencentcloud_availability_zones" "zones" {}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "example-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  name              = "example-vpc"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_eni" "eni" {
+  name        = "example-eni"
+  vpc_id      = tencentcloud_vpc.vpc.id
+  subnet_id   = tencentcloud_subnet.subnet.id
+  description = "eni desc"
+  ipv4_count  = 1
+}
+
+resource "tencentcloud_eip" "eip" {
+  name                 = "example-eip"
+  internet_charge_type = "TRAFFIC_POSTPAID_BY_HOUR"
+  type                 = "EIP"
+}
+
+resource "tencentcloud_eip_association" "example" {
+  eip_id               = tencentcloud_eip.eip.id
+  network_interface_id = tencentcloud_eni.eni.id
+  private_ip           = tencentcloud_eni.eni.ipv4_info[0].ip
 }
 ```
 
@@ -52,7 +136,6 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
 		Schema: map[string]*schema.Schema{
 			"eip_id": {
 				Type:         schema.TypeString,
@@ -101,28 +184,33 @@ func resourceTencentCloudEipAssociation() *schema.Resource {
 
 func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip_association.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	vpcService := VpcService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		vpcService = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		eip        *vpc.Address
+		errRet     error
+	)
 
 	eipId := d.Get("eip_id").(string)
-	var eip *vpc.Address
-	var errRet error
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		eip, errRet = vpcService.DescribeEipById(ctx, eipId)
 		if errRet != nil {
 			return retryError(errRet, InternalError)
 		}
+
 		if eip == nil {
 			return resource.NonRetryableError(fmt.Errorf("eip is not found"))
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
+
 	if *eip.AddressStatus != EIP_STATUS_UNBIND {
 		return fmt.Errorf("eip status is illegal %s", *eip.AddressStatus)
 	}
@@ -130,34 +218,41 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId := v.(string)
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			err := vpcService.AttachEip(ctx, eipId, instanceId)
-			if err != nil {
-				return retryError(err)
+			e := vpcService.AttachEip(ctx, eipId, instanceId)
+			if e != nil {
+				return retryError(e)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
-		associationId := fmt.Sprintf("%v::%v", eipId, instanceId)
-		d.SetId(associationId)
 
+		associationId := fmt.Sprintf("%v::%v", eipId, instanceId)
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			eip, errRet = vpcService.DescribeEipById(ctx, eipId)
 			if errRet != nil {
 				return retryError(errRet)
 			}
+
 			if eip == nil {
 				return resource.NonRetryableError(fmt.Errorf("eip is not found"))
 			}
+
 			if *eip.AddressStatus == EIP_STATUS_BIND {
 				return nil
 			}
+
 			return resource.RetryableError(fmt.Errorf("wait for binding success: %s", *eip.AddressStatus))
 		})
+
 		if err != nil {
 			return err
 		}
+
+		d.SetId(associationId)
 		return resourceTencentCloudEipAssociationRead(d, meta)
 	}
 
@@ -171,47 +266,56 @@ func resourceTencentCloudEipAssociationCreate(d *schema.ResourceData, meta inter
 		networkId = v.(string)
 		request.NetworkInterfaceId = &networkId
 	}
+
 	if v, ok := d.GetOk("private_ip"); ok {
 		needRequest = true
 		privateIp = v.(string)
 		request.PrivateIpAddress = &privateIp
 	}
+
 	if needRequest {
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			ratelimit.Check(request.GetAction())
-			response, err := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateAddress(request)
-			if err != nil {
+			response, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateAddress(request)
+			if e != nil {
 				log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-					logId, request.GetAction(), request.ToJsonString(), err.Error())
-				return retryError(err)
+					logId, request.GetAction(), request.ToJsonString(), e.Error())
+				return retryError(e)
 			}
+
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 			return nil
 		})
+
 		if err != nil {
 			return err
 		}
+
 		id := fmt.Sprintf("%v::%v::%v", eipId, networkId, privateIp)
-		d.SetId(id)
 
 		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			eip, errRet = vpcService.DescribeEipById(ctx, eipId)
 			if errRet != nil {
 				return retryError(errRet)
 			}
+
 			if eip == nil {
 				return resource.NonRetryableError(fmt.Errorf("eip is not found"))
 			}
-			if *eip.AddressStatus == EIP_STATUS_BIND_ENI {
+
+			if *eip.AddressStatus == EIP_STATUS_BIND_ENI || *eip.AddressStatus == EIP_STATUS_BIND {
 				return nil
 			}
+
 			return resource.RetryableError(fmt.Errorf("wait for binding success: %s", *eip.AddressStatus))
 		})
+
 		if err != nil {
 			return err
 		}
 
+		d.SetId(id)
 		return resourceTencentCloudEipAssociationRead(d, meta)
 	}
 
@@ -222,13 +326,13 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 	defer logElapsed("resource.tencentcloud_eip_association.read")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	vpcService := VpcService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		vpcService = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		id         = d.Id()
+	)
 
-	id := d.Id()
 	association, err := parseEipAssociationId(id)
 	if err != nil {
 		return err
@@ -239,11 +343,14 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 		if errRet != nil {
 			return retryError(errRet)
 		}
+
 		if eip == nil {
 			d.SetId("")
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -262,25 +369,28 @@ func resourceTencentCloudEipAssociationRead(d *schema.ResourceData, meta interfa
 
 func resourceTencentCloudEipAssociationDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_eip_association.delete")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	vpcService := VpcService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
 
-	id := d.Id()
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		vpcService = VpcService{client: meta.(*TencentCloudClient).apiV3Conn}
+		id         = d.Id()
+	)
+
 	association, err := parseEipAssociationId(id)
 	if err != nil {
 		return err
 	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		err := vpcService.UnattachEip(ctx, association.EipId)
-		if err != nil {
-			return retryError(err, "DesOperation.MutexTaskRunning")
+		e := vpcService.UnattachEip(ctx, association.EipId)
+		if e != nil {
+			return retryError(e, "DesOperation.MutexTaskRunning")
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}

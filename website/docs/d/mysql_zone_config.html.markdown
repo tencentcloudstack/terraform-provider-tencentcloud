@@ -42,6 +42,9 @@ In addition to all arguments above, the following attributes are exported:
   * `remote_ro_zones` - Zone information about remote ro instance.
   * `second_slave_zones` - Zone information about second slave instance.
   * `sells` - A list of supported instance types for sell:
+    * `cdb_type` - Instance type, the possible value ranges are: `UNIVERSAL` (universal type), `EXCLUSIVE` (exclusive type), `BASIC` (basic type), `BASIC_V2` (basic type v2).
+    * `cpu` - Number of CPU cores.
+    * `info` - Application Scenario Description.
     * `max_volume_size` - Maximum disk size (in GB).
     * `mem_size` - Memory size (in MB).
     * `min_volume_size` - Minimum disk size (in GB).

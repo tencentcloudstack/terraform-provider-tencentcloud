@@ -16,8 +16,14 @@ Provides a COS resource to create a COS bucket and set its attributes.
 ### Private Bucket
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "private_sbucket" {
+  bucket = "private-bucket-${local.app_id}"
   acl    = "private"
 }
 ```
@@ -25,8 +31,14 @@ resource "tencentcloud_cos_bucket" "mycos" {
 ### Creation of multiple available zone bucket
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket            = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "multi_zone_bucket" {
+  bucket            = "multi-zone-bucket-${local.app_id}"
   acl               = "private"
   multi_az          = true
   versioning_enable = true
@@ -37,8 +49,14 @@ resource "tencentcloud_cos_bucket" "mycos" {
 ### Using verbose acl
 
 ```hcl
-resource "tencentcloud_cos_bucket" "with_acl_body" {
-  bucket = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_acl" {
+  bucket = "bucketwith-acl-${local.app_id}"
   # NOTE: Specify the acl_body by the priority sequence of permission and user type with the following sequence: `CanonicalUser with READ`, `CanonicalUser with WRITE`, `CanonicalUser with FULL_CONTROL`, `CanonicalUser with WRITE_ACP`, `CanonicalUser with READ_ACP`, then specify the `Group` of permissions same as `CanonicalUser`.
   acl_body = <<EOF
 <AccessControlPolicy>
@@ -108,8 +126,14 @@ EOF
 ### Static Website
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_static_website" {
+  bucket = "bucket-with-static-website-${local.app_id}"
 
   website {
     index_document = "index.html"
@@ -118,15 +142,21 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 
 output "endpoint_test" {
-  value = tencentcloud_cos_bucket.mycos.website.0.endpoint
+  value = tencentcloud_cos_bucket.bucket_with_static_website.website.0.endpoint
 }
 ```
 
 ### Using CORS
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_cors" {
+  bucket = "bucket-with-cors-${local.app_id}"
   acl    = "public-read-write"
 
   cors_rules {
@@ -142,15 +172,21 @@ resource "tencentcloud_cos_bucket" "mycos" {
 ### Using object lifecycle
 
 ```hcl
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket = "mycos-1258798060"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id = data.tencentcloud_user_info.info.app_id
+}
+
+resource "tencentcloud_cos_bucket" "bucket_with_lifecycle" {
+  bucket = "bucket-with-lifecycle-${local.app_id}"
   acl    = "public-read-write"
 
   lifecycle_rules {
     filter_prefix = "path1/"
 
     transition {
-      date          = "2019-06-01"
+      days          = 30
       storage_class = "STANDARD_IA"
     }
 
@@ -161,112 +197,35 @@ resource "tencentcloud_cos_bucket" "mycos" {
 }
 ```
 
-### Using custom origin domain settings
-
-```hcl
-resource "tencentcloud_cos_bucket" "with_origin" {
-  bucket = "mycos-1258798060"
-  acl    = "private"
-  origin_domain_rules {
-    domain = "abc.example.com"
-    type   = "REST"
-    status = "ENABLE"
-  }
-}
-```
-
-### Using origin-pull settings
-
-```hcl
-resource "tencentcloud_cos_bucket" "with_origin" {
-  bucket = "mycos-1258798060"
-  acl    = "private"
-  origin_pull_rules {
-    priority            = 1
-    sync_back_to_source = false
-    host                = "abc.example.com"
-    prefix              = "/"
-    protocol            = "FOLLOW" // "HTTP" "HTTPS"
-    follow_query_string = true
-    follow_redirection  = true
-    follow_http_headers = ["origin", "host"]
-    custom_http_headers = {
-      "x-custom-header" = "custom_value"
-    }
-  }
-}
-```
-
 ### Using replication
 
 ```hcl
-resource "tencentcloud_cos_bucket" "replica1" {
-  bucket            = "tf-replica-foo-1234567890"
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  app_id    = data.tencentcloud_user_info.info.app_id
+  uin       = data.tencentcloud_user_info.info.uin
+  owner_uin = data.tencentcloud_user_info.info.owner_uin
+  region    = "ap-guangzhou"
+}
+
+resource "tencentcloud_cos_bucket" "bucket_replicate" {
+  bucket            = "bucket-replicate-${local.app_id}"
   acl               = "private"
   versioning_enable = true
 }
 
-resource "tencentcloud_cos_bucket" "with_replication" {
-  bucket            = "tf-bucket-replica-1234567890"
+resource "tencentcloud_cos_bucket" "bucket_with_replication" {
+  bucket            = "bucket-with-replication-${local.app_id}"
   acl               = "private"
   versioning_enable = true
-  replica_role      = "qcs::cam::uin/100000000001:uin/100000000001"
+  replica_role      = "qcs::cam::uin/${local.owner_uin}:uin/${local.uin}"
   replica_rules {
     id                 = "test-rep1"
     status             = "Enabled"
     prefix             = "dist"
-    destination_bucket = "qcs::cos:%s::${tencentcloud_cos_bucket.replica1.bucket}"
+    destination_bucket = "qcs::cos:${local.region}::${tencentcloud_cos_bucket.bucket_replicate.bucket}"
   }
-}
-```
-
-### Setting log status
-
-```hcl
-resource "tencentcloud_cam_role" "cosLogGrant" {
-  name     = "CLS_QcsRole"
-  document = <<EOF
-{
-  "version": "2.0",
-  "statement": [
-    {
-      "action": [
-        "name/sts:AssumeRole"
-      ],
-      "effect": "allow",
-      "principal": {
-        "service": [
-          "cls.cloud.tencent.com"
-        ]
-      }
-    }
-  ]
-}
-EOF
-
-  description = "cos log enable grant"
-}
-
-data "tencentcloud_cam_policies" "cosAccess" {
-  name = "QcloudCOSAccessForCLSRole"
-}
-
-resource "tencentcloud_cam_role_policy_attachment" "cosLogGrant" {
-  role_id   = tencentcloud_cam_role.cosLogGrant.id
-  policy_id = data.tencentcloud_cam_policies.cosAccess.policy_list.0.policy_id
-}
-
-resource "tencentcloud_cos_bucket" "mylog" {
-  bucket = "mylog-1258798060"
-  acl    = "private"
-}
-
-resource "tencentcloud_cos_bucket" "mycos" {
-  bucket            = "mycos-1258798060"
-  acl               = "private"
-  log_enable        = true
-  log_target_bucket = "mylog-1258798060"
-  log_prefix        = "MyLogPrefix"
 }
 ```
 

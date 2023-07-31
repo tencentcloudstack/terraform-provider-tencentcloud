@@ -1,0 +1,3 @@
+```release-note:enhancement
+datasource/tencentcloud_ssl_certificates: Support querying `dv_auths` and `order_id`
+```
