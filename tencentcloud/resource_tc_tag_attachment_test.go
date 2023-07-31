@@ -25,7 +25,7 @@ func TestAccTencentCloudTagAttachmentResource_basic(t *testing.T) {
 					testAccCheckTagAttachmentExists("tencentcloud_tag_attachment.tag_attachment"),
 					resource.TestCheckResourceAttr("tencentcloud_tag_attachment.tag_attachment", "tag_key", "test_terraform_tagAttachment_key"),
 					resource.TestCheckResourceAttr("tencentcloud_tag_attachment.tag_attachment", "tag_value", "Terraform_tagAttachment_value"),
-					resource.TestCheckResourceAttr("tencentcloud_tag_attachment.tag_attachment", "resource", "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4")),
+					resource.TestCheckResourceAttrSet("tencentcloud_tag_attachment.tag_attachment", "resource")),
 			},
 			{
 				ResourceName:      "tencentcloud_tag_attachment.tag_attachment",
@@ -81,12 +81,18 @@ func testAccCheckTagAttachmentExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTagResourceTag = `
+const testAccTagResourceTag = defaultCvmModificationVariable + `
+data "tencentcloud_user_info" "info" {}
+
+locals {
+  uin = data.tencentcloud_user_info.info.uin
+}
 
 resource "tencentcloud_tag_attachment" "tag_attachment" {
   tag_key = "test_terraform_tagAttachment_key"
   tag_value = "Terraform_tagAttachment_value"
-  resource = "qcs::cvm:ap-guangzhou:uin/100020512675:instance/ins-kfrlvcp4"
+  resource = "qcs::cvm:ap-guangzhou:uin/${local.uin}:instance/${var.cvm_id}"
 }
 
 `
+
