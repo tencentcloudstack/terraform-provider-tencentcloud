@@ -702,14 +702,18 @@ variable "ins_type" {
 
 // @deprecated. Avoid using this because it may return diff results
 const TkeInstanceType = `
+variable "default_az" {
+  default = "ap-guangzhou-7"
+}
+
 data "tencentcloud_instance_types" "ins_type" {
-  availability_zone = "` + defaultCvmAZone + `"
+  availability_zone = var.env_az != "" ? var.env_az : var.default_az
   cpu_core_count    = 2
   exclude_sold_out  = true
 }
 
 locals {
-  ins_az = "` + defaultCvmAZone + `"
+  ins_az = var.env_az != "" ? var.env_az : var.default_az
   type1 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i if lookup(i, "instance_charge_type") == "POSTPAID_BY_HOUR"]
   type2 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i]
   final_type = concat(local.type1, local.type2)[0].instance_type
@@ -1106,3 +1110,10 @@ variable "security_group_id" {
 `
 
 // End of TSE
+
+// environment variables for e2e tests
+const (
+	E2ETEST_ENV_AZ    = "TF_VAR_env_az"
+	E2ETEST_ENV_CLUSTER_ID = "TF_VAR_env_default_tke_cluster_id"
+  E2ETEST_ENV_REGION = "TF_VAR_env_region"
+)

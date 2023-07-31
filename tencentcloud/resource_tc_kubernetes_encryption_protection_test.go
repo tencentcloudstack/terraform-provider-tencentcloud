@@ -24,7 +24,7 @@ func TestAccTencentCloudKubernetesEncryptionProtectionResource_basic(t *testing.
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "cluster_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "kms_configuration.#"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "kms_configuration.0.key_id"),
-					resource.TestCheckResourceAttr("tencentcloud_kubernetes_encryption_protection.example", "kms_configuration.0.kms_region", "ap-guangzhou"),
+					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "kms_configuration.0.kms_region"),
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "status"),
 				),
 			},
@@ -46,9 +46,17 @@ variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
+variable "env_az" {
+  type = string
+}
+
+variable "env_region" {
+  type = string
+}
+
 data "tencentcloud_vpc_subnets" "vpc" {
   is_default        = true
-  availability_zone = var.availability_zone
+  availability_zone = var.env_az != "" ? var.env_az : var.availability_zone
 }
 
 resource "tencentcloud_kubernetes_cluster" "example" {
@@ -72,7 +80,7 @@ resource "tencentcloud_kubernetes_encryption_protection" "example" {
   cluster_id = tencentcloud_kubernetes_cluster.example.id
   kms_configuration {
     key_id     = tencentcloud_kms_key.example.id
-    kms_region = var.example_region
+    kms_region = var.env_region != "" ? var.env_region : var.example_region
   }
 }
 

@@ -139,8 +139,12 @@ func testAccCheckTkeAttachExists(n string) resource.TestCheckFunc {
 }
 
 const ClusterAttachmentInstanceType = `
+variable "env_az" {
+  type = string
+}
+
 data "tencentcloud_instance_types" "ins_type" {
-  availability_zone = "ap-guangzhou-3"
+  availability_zone = var.env_az != "" ? var.env_az : "ap-guangzhou-3"
   cpu_core_count    = 2
   memory_size       = 2
   exclude_sold_out  = true

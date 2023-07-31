@@ -1,6 +1,7 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -15,7 +16,7 @@ func TestAccTencentCloudKubernetesClusterAuthenticationOptionsDataSource_basic(t
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccKubernetesClusterAuthenticationOptionsDataSource,
+				Config: fmt.Sprintf(testAccKubernetesClusterAuthenticationOptionsDataSource, defaultTkeClusterId),
 				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_kubernetes_cluster_authentication_options.cluster_authentication_options")),
 			},
 		},
@@ -23,9 +24,12 @@ func TestAccTencentCloudKubernetesClusterAuthenticationOptionsDataSource_basic(t
 }
 
 const testAccKubernetesClusterAuthenticationOptionsDataSource = `
+variable "env_default_tke_cluster_id" {
+  type = string
+}
 
 data "tencentcloud_kubernetes_cluster_authentication_options" "cluster_authentication_options" {
-  cluster_id = "cls-kzilgv5m"
+  cluster_id = var.env_default_tke_cluster_id != "" ? var.env_default_tke_cluster_id : "%s"
 }
 
 `

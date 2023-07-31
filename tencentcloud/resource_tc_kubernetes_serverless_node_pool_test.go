@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -35,9 +34,8 @@ func TestAccTencentCloudKubernetesServerlessNodePoolResource_Basic(t *testing.T)
 	t.Parallel()
 
 	tkeClusterId := defaultTkeClusterId
-	envClusterId := os.Getenv(clusterIdForTkeTestEnvKey)
-	if strings.HasPrefix(envClusterId, "cls-") {
-		tkeClusterId = envClusterId
+	if os.Getenv(E2ETEST_ENV_CLUSTER_ID) != "" {
+		tkeClusterId = os.Getenv(E2ETEST_ENV_CLUSTER_ID)
 	}
 
 	resource.Test(t, resource.TestCase{
@@ -79,10 +77,10 @@ func testServerlessNodePoolSweep(region string) error {
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	tkeClusterId := defaultTkeClusterId
-	envClusterId := os.Getenv(clusterIdForTkeTestEnvKey)
-	if strings.HasPrefix(envClusterId, "cls-") {
-		tkeClusterId = envClusterId
+	if os.Getenv(E2ETEST_ENV_CLUSTER_ID) != "" {
+		tkeClusterId = os.Getenv(E2ETEST_ENV_CLUSTER_ID)
 	}
+
 	log.Printf("testServerlessNodePoolSweep region %s, clusterId %s", region, tkeClusterId)
 
 	cli, err := sharedClientForRegion(region)
@@ -133,9 +131,8 @@ func testAccCheckServerlessNodePoolDestroy(s *terraform.State) error {
 	}
 
 	tkeClusterId := defaultTkeClusterId
-	envClusterId := os.Getenv(clusterIdForTkeTestEnvKey)
-	if strings.HasPrefix(envClusterId, "cls-") {
-		tkeClusterId = envClusterId
+	if os.Getenv(E2ETEST_ENV_CLUSTER_ID) != "" {
+		tkeClusterId = os.Getenv(E2ETEST_ENV_CLUSTER_ID)
 	}
 
 	for _, rs := range s.RootModule().Resources {

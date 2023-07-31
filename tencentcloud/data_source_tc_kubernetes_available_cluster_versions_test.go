@@ -28,7 +28,7 @@ func TestAccTencentCloudKubernetesAvailableClusterVersionsDataSource_basic(t *te
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_kubernetes_available_cluster_versions.ids"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_kubernetes_available_cluster_versions.ids", "clusters.#"),
-					resource.TestCheckResourceAttr("data.tencentcloud_kubernetes_available_cluster_versions.ids", "clusters.0.cluster_id", defaultTkeClusterId),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_kubernetes_available_cluster_versions.ids", "clusters.0.cluster_id"),
 				),
 			},
 		},
@@ -36,9 +36,12 @@ func TestAccTencentCloudKubernetesAvailableClusterVersionsDataSource_basic(t *te
 }
 
 const testAccKubernetesAvailableClusterVersionsDataSource_basic = `
+variable "env_default_tke_cluster_id" {
+  type = string
+}
 
 data "tencentcloud_kubernetes_available_cluster_versions" "id" {
-  cluster_id = "%s"
+  cluster_id = var.env_default_tke_cluster_id != "" ? var.env_default_tke_cluster_id : "%s"
 }
 
 output "versions"{
@@ -48,9 +51,12 @@ output "versions"{
 `
 
 const testAccKubernetesAvailableClusterVersionsDataSource_multiple = `
+variable "env_default_tke_cluster_id" {
+	type = string
+  }
 
 data "tencentcloud_kubernetes_available_cluster_versions" "ids" {
-  cluster_ids = ["%s"]
+  cluster_ids = [var.env_default_tke_cluster_id != "" ? var.env_default_tke_cluster_id : "%s"]
 }
 
 `

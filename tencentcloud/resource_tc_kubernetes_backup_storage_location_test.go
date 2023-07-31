@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"testing"
 	"time"
+	"os"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
@@ -44,6 +45,13 @@ func TestAccTencentCloudKubernetesBackupStorageLocationResource_Basic(t *testing
 		CheckDestroy: testAccCheckBackupStorageLocationDestroy,
 		Steps: []resource.TestStep{
 			{
+				SkipFunc: func() (bool, error) {
+					if os.Getenv(E2ETEST_ENV_REGION)!=""||os.Getenv(E2ETEST_ENV_AZ)!=""{
+						fmt.Printf("[International station]skip TestAccTencentCloudKubernetesBackupStorageLocationResource_Basic, because the international station did not support this feature yet!\n")
+						return true, nil
+					}
+					return false, nil
+				},
 				Config: getTestAccTkeBackupStorageLocationConfig(backupStorageLocationName, backupLocationBucket),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(testTkeBackupStorageLocationResourceKey),
@@ -118,19 +126,28 @@ func getTestAccTkeBackupStorageLocationConfig(name, bucket string) string {
 
 const (
 	testBackupStorageLocationConfigTemplate = `
+
 data "tencentcloud_user_info" "info" {}
+
 locals {
-  app_id = data.tencentcloud_user_info.info.app_id
-  uin = data.tencentcloud_user_info.info.uin
+  app_id    = data.tencentcloud_user_info.info.app_id
+  uin       = data.tencentcloud_user_info.info.uin
   owner_uin = data.tencentcloud_user_info.info.owner_uin
 }
+
+variable "env_region" {
+  type = string
+}
+
 resource "tencentcloud_cos_bucket" "back_up_bucket" {
   bucket = "%s-${local.app_id}"
 }
+
 resource "tencentcloud_kubernetes_backup_storage_location" "test_case_backup_storage_location" {
-  name            = "%s"
-  storage_region  = "ap-guangzhou"
-  bucket          = tencentcloud_cos_bucket.back_up_bucket.bucket
+  name           = "%s"
+  storage_region = var.env_region != "" ? var.env_region : "ap-guangzhou"
+  bucket         = tencentcloud_cos_bucket.back_up_bucket.bucket
 }
+
 `
 )

@@ -29,9 +29,13 @@ variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
+variable "env_az" {
+  type = string
+}
+
 data "tencentcloud_vpc_subnets" "vpc" {
   is_default        = true
-  availability_zone = var.availability_zone
+  availability_zone = var.env_az != "" ? var.env_az : var.availability_zone
 }
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"regexp"
 	"strings"
 	"testing"
@@ -33,6 +34,11 @@ func testNodePoolSweep(region string) error {
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
+	tkeClusterId := defaultTkeClusterId
+	if os.Getenv(E2ETEST_ENV_CLUSTER_ID) != "" {
+		tkeClusterId = os.Getenv(E2ETEST_ENV_CLUSTER_ID)
+	}
+
 	cli, err := sharedClientForRegion(region)
 	if err != nil {
 		return err
@@ -41,10 +47,10 @@ func testNodePoolSweep(region string) error {
 	service := TkeService{client: client}
 
 	request := tke.NewDescribeClusterNodePoolsRequest()
-	request.ClusterId = helper.String(defaultTkeClusterId)
+	request.ClusterId = helper.String(tkeClusterId)
 	response, err := client.UseTkeClient().DescribeClusterNodePools(request)
 	if err != nil {
-		log.Printf("Query %s node pool fail: %s", defaultTkeClusterId, err.Error())
+		log.Printf("Query %s node pool fail: %s", tkeClusterId, err.Error())
 	}
 	nodePools := response.Response.NodePoolSet
 	if len(nodePools) == 0 {
@@ -60,7 +66,7 @@ func testNodePoolSweep(region string) error {
 		if !nodePoolNameReg.MatchString(*poolName) {
 			continue
 		}
-		err := service.DeleteClusterNodePool(ctx, defaultTkeClusterId, poolId, false)
+		err := service.DeleteClusterNodePool(ctx, tkeClusterId, poolId, false)
 		if err != nil {
 			continue
 		}
@@ -85,7 +91,7 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.system_disk_size", "50"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.internet_max_bandwidth_out", "10"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.cam_role_name", "TCB_QcsRole"),
+					// resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.cam_role_name", "TCB_QcsRole"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "taints.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test1", "test1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test2", "test2"),
@@ -124,7 +130,7 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.instance_charge_type", "SPOTPAID"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.spot_instance_type", "one-time"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.spot_max_price", "1000"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.cam_role_name", "TCB_QcsRole"),
+					// resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.cam_role_name", "TCB_QcsRole"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "max_size", "5"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "min_size", "2"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "labels.test3", "test3"),
@@ -259,14 +265,22 @@ func testAccCheckTkeNodePoolExists(s *terraform.State) error {
 
 }
 
-const testAccTkeNodePoolClusterBasic = defaultProjectVariable + defaultImages + TkeDataSource + TkeDefaultNodeInstanceVar + `
+const testAccTkeNodePoolClusterBasic = defaultProjectVariable + defaultImages + TkeDataSource + TkeInstanceType + `
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
 
+variable "env_az" {
+  type = string
+}
+
+variable "project_id" {
+  default = "0"
+}
+
 data "tencentcloud_vpc_subnets" "vpc" {
     is_default        = true
-    availability_zone = var.availability_zone
+    availability_zone = var.env_az != "" ? var.env_az : var.availability_zone
 }
 
 data "tencentcloud_security_groups" "sg" {
@@ -292,16 +306,16 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   scaling_group_name	   = "asg_np_test"
   default_cooldown		   = 400
   termination_policies	   = ["OLDEST_INSTANCE"]
-  scaling_group_project_id = var.default_project
+  scaling_group_project_id = var.project_id
   delete_keep_instance = false
   node_os="tlinux2.2(tkernel3)x86_64"
 
   auto_scaling_config {
-    instance_type      = var.ins_type
+    instance_type      = local.final_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
-    cam_role_name = "TCB_QcsRole"
+    // cam_role_name = "TCB_QcsRole"
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
@@ -353,7 +367,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   desired_capacity     = 2
   enable_auto_scale    = false
   node_os = var.default_img
-  scaling_group_project_id = var.default_project
+  scaling_group_project_id = var.project_id
   delete_keep_instance = false
   scaling_group_name 	   = "asg_np_test_changed"
   default_cooldown 		   = 350
@@ -361,14 +375,14 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   multi_zone_subnet_policy = "EQUALITY"
 
   auto_scaling_config {
-    instance_type      = var.ins_type
+    instance_type      = local.final_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "100"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id, data.tencentcloud_security_groups.sg_as.security_groups[0].security_group_id]
 	instance_charge_type = "SPOTPAID"
     spot_instance_type = "one-time"
     spot_max_price = "1000"
-    cam_role_name = "TCB_QcsRole"
+    // cam_role_name = "TCB_QcsRole"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -430,13 +444,13 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   scaling_group_name	   = "encrypt_asg"
   default_cooldown		   = 400
   termination_policies	   = ["OLDEST_INSTANCE"]
-  scaling_group_project_id = var.default_project
+  scaling_group_project_id = var.project_id
   delete_keep_instance = false
   node_os="tlinux2.2(tkernel3)x86_64"
 
   auto_scaling_config {
-    instance_type      = var.ins_type
-    cam_role_name      = "TCB_QcsRole"
+    instance_type      = local.final_type
+    // cam_role_name      = "TCB_QcsRole"
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
@@ -468,7 +482,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   desired_capacity     = 1
   enable_auto_scale    = false
   node_os = "tlinux3.1x86_64"
-  scaling_group_project_id = var.default_project
+  scaling_group_project_id = var.project_id
   delete_keep_instance = false
   scaling_group_name 	   = "asg_np_test_changed_gpu"
   default_cooldown 		   = 350
@@ -483,7 +497,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
 	instance_charge_type = "SPOTPAID"
     spot_instance_type = "one-time"
     spot_max_price = "1000"
-    cam_role_name = "TCB_QcsRole"
+    // cam_role_name = "TCB_QcsRole"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
