@@ -131,6 +131,12 @@ func resourceTencentCloudCynosdbClusterSlaveZone() *schema.Resource {
 		Read:   resourceTencentCloudCynosdbClusterSlaveZoneRead,
 		Update: resourceTencentCloudCynosdbClusterSlaveZoneUpdate,
 		Delete: resourceTencentCloudCynosdbClusterSlaveZoneDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(600 * time.Second),
+			Read:   schema.DefaultTimeout(600 * time.Second),
+			Update: schema.DefaultTimeout(600 * time.Second),
+			Delete: schema.DefaultTimeout(600 * time.Second),
+		},
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -200,7 +206,7 @@ func resourceTencentCloudCynosdbClusterSlaveZoneCreate(d *schema.ResourceData, m
 	}
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	conf := BuildStateChangeConf([]string{}, []string{CYNOSDB_FLOW_STATUS_SUCCESSFUL}, 30*readRetryTimeout, time.Second, service.CynosdbClusterSlaveZoneStateRefreshFunc(*flowId, []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{CYNOSDB_FLOW_STATUS_SUCCESSFUL}, 3*readRetryTimeout, time.Second, service.CynosdbClusterSlaveZoneStateRefreshFunc(*flowId, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
