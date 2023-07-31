@@ -13,11 +13,23 @@ Provides a resource to create a sqlserver database_tde
 
 ## Example Usage
 
+### Open database tde encryption
+
 ```hcl
-resource "tencentcloud_sqlserver_database_tde" "database_tde" {
+resource "tencentcloud_sqlserver_database_tde" "example" {
   instance_id = "mssql-qelbzgwf"
-  db_names    = ["keep_tde_db", "keep_tde_db2"]
+  db_names    = ["example_db1", "example_db2"]
   encryption  = "enable"
+}
+```
+
+### Close database tde encryption
+
+```hcl
+resource "tencentcloud_sqlserver_database_tde" "example" {
+  instance_id = "mssql-qelbzgwf"
+  db_names    = ["example_db1", "example_db2"]
+  encryption  = "disable"
 }
 ```
 

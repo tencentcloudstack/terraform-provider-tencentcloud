@@ -82,7 +82,7 @@ func resourceTencentCloudCkafkaAcl() *schema.Resource {
 				Optional:    true,
 				Default:     "*",
 				ForceNew:    true,
-				Description: "IP address allowed to access. The default value is `*`, which means that any host can access.",
+				Description: "The default is *, which means that any host can access it. Support filling in IP or network segment, and support `;`separation.",
 			},
 			"principal": {
 				Type:        schema.TypeString,
