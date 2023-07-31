@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -535,6 +536,364 @@ func (me *TseService) DescribeTseGatewayRoutesByFilter(ctx context.Context, para
 		TotalCount: &total,
 		RouteList:  route,
 	}
+
+	return
+}
+
+func (me *TseService) DescribeTseGatewayServicesByFilter(ctx context.Context, param map[string]interface{}) (gatewayServices *tse.KongServices, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewayServicesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tse.ListFilter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+	)
+	services := make([]*tse.KongServicePreview, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayServices(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response.Result == nil || len(response.Response.Result.ServiceList) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		services = append(services, response.Response.Result.ServiceList...)
+		if len(response.Response.Result.ServiceList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	gatewayServices = &tse.KongServices{
+		TotalCount:  &total,
+		ServiceList: services,
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwServiceById(ctx context.Context, gatewayId, name string) (cngwService *tse.KongServiceDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeOneCloudNativeAPIGatewayServiceRequest()
+	request.GatewayId = &gatewayId
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeOneCloudNativeAPIGatewayService(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Result == nil {
+		return
+	}
+
+	cngwService = response.Response.Result
+	return
+}
+
+func (me *TseService) DeleteTseCngwServiceById(ctx context.Context, gatewayId, name string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDeleteCloudNativeAPIGatewayServiceRequest()
+	request.GatewayId = &gatewayId
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteCloudNativeAPIGatewayService(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwServiceRateLimitById(ctx context.Context, gatewayId string, name string) (cngwServiceRateLimit *tse.CloudNativeAPIGatewayRateLimitDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeCloudNativeAPIGatewayServiceRateLimitRequest()
+	request.GatewayId = &gatewayId
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayServiceRateLimit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Result == nil {
+		return
+	}
+
+	cngwServiceRateLimit = response.Response.Result
+
+	log.Printf("[WARN]%s resource `TseCngwServiceRateLimit` [%+v].\n", logId, cngwServiceRateLimit.Policy)
+	return
+}
+
+func (me *TseService) DeleteTseCngwServiceRateLimitById(ctx context.Context, gatewayId string, name string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDeleteCloudNativeAPIGatewayServiceRateLimitRequest()
+	request.GatewayId = &gatewayId
+	request.Name = &name
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteCloudNativeAPIGatewayServiceRateLimit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwRouteById(ctx context.Context, gatewayId string, serviceID string, routeName string) (cngwRoute *tse.KongRoutePreview, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeCloudNativeAPIGatewayRoutesRequest()
+	request.GatewayId = &gatewayId
+	request.RouteName = &routeName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayRoutes(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || response.Response.Result == nil || len(response.Response.Result.RouteList) < 1 {
+		return
+	}
+
+	for _, v := range response.Response.Result.RouteList {
+		if *v.ServiceID == serviceID {
+			cngwRoute = v
+			return
+		}
+	}
+
+	return
+}
+
+func (me *TseService) DeleteTseCngwRouteById(ctx context.Context, gatewayId string, routeName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDeleteCloudNativeAPIGatewayRouteRequest()
+	request.GatewayId = &gatewayId
+	request.Name = &routeName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteCloudNativeAPIGatewayRoute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwRouteRateLimitById(ctx context.Context, gatewayId, routeId string) (cngwRouteRateLimit *tse.CloudNativeAPIGatewayRateLimitDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeCloudNativeAPIGatewayRouteRateLimitRequest()
+	request.GatewayId = &gatewayId
+	request.Id = &routeId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayRouteRateLimit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Result == nil {
+		return
+	}
+
+	cngwRouteRateLimit = response.Response.Result
+	return
+}
+
+func (me *TseService) DeleteTseCngwRouteRateLimitById(ctx context.Context, gatewayId, routeId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDeleteCloudNativeAPIGatewayRouteRateLimitRequest()
+	request.GatewayId = &gatewayId
+	request.Id = &routeId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteCloudNativeAPIGatewayRouteRateLimit(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwCanaryRuleById(ctx context.Context, gatewayId string, serviceId string, priority string) (cngwCanaryRule *tse.CloudNativeAPIGatewayCanaryRule, errRet error) {
+	logId := getLogId(ctx)
+
+	priorityInt64, err := strconv.ParseInt(priority, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+
+	request := tse.NewDescribeCloudNativeAPIGatewayCanaryRulesRequest()
+	request.GatewayId = &gatewayId
+	request.ServiceId = &serviceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayCanaryRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Result == nil || len(response.Response.Result.CanaryRuleList) < 1 {
+		return
+	}
+
+	for _, v := range response.Response.Result.CanaryRuleList {
+		if *v.Priority == priorityInt64 {
+			cngwCanaryRule = v
+			return
+		}
+	}
+
+	return
+}
+
+func (me *TseService) DeleteTseCngwCanaryRuleById(ctx context.Context, gatewayId string, serviceId string, priority string) (errRet error) {
+	logId := getLogId(ctx)
+
+	priorityInt64, err := strconv.ParseInt(priority, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	request := tse.NewDeleteCloudNativeAPIGatewayCanaryRuleRequest()
+	request.GatewayId = &gatewayId
+	request.ServiceId = &serviceId
+	request.Priority = &priorityInt64
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteCloudNativeAPIGatewayCanaryRule(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

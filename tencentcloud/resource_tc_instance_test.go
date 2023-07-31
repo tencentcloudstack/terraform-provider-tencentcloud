@@ -589,6 +589,28 @@ func TestAccTencentCloudInstanceResource_DataDiskOrder(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudInstanceResource_DataDiskByCbs(t *testing.T) {
+	t.Parallel()
+
+	id := "tencentcloud_instance.cvm_add_data_disk_by_cbs"
+	resource.Test(t, resource.TestCase{
+		PreCheck:      func() { testAccPreCheck(t) },
+		IDRefreshName: id,
+		Providers:     testAccProviders,
+		CheckDestroy:  testAccCheckInstanceDestroy,
+		Steps: []resource.TestStep{
+			{
+				PreConfig: func() { testAccStepPreConfigSetTempAKSK(t, ACCOUNT_TYPE_COMMON) },
+				Config:    testAccTencentCloudInstanceAddDataDiskByCbs,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTencentCloudDataSourceID(id),
+					testAccCheckTencentCloudInstanceExists(id),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudNeedFixInstancePostpaidToPrepaid(t *testing.T) {
 
 	id := "tencentcloud_instance.foo"
@@ -761,6 +783,44 @@ resource "tencentcloud_instance" "foo" {
     data_disk_type         = "CLOUD_PREMIUM"
     delete_with_instance   = true
   }
+}
+`
+
+const testAccTencentCloudInstanceAddDataDiskByCbs = defaultInstanceVariable + `
+resource "tencentcloud_instance" "cvm_add_data_disk_by_cbs" {
+  instance_name     = "cvm-add-data-disk-by-cbs"
+  availability_zone = var.availability_cvm_zone
+  image_id          = data.tencentcloud_images.default.images.0.image_id
+  instance_type     = data.tencentcloud_instance_types.default.instance_types.0.instance_type
+  vpc_id            = var.cvm_vpc_id
+  subnet_id         = var.cvm_subnet_id
+  system_disk_type  = "CLOUD_PREMIUM"
+  project_id        = 0
+}
+
+resource "tencentcloud_cbs_storage" "cbs_disk1" {
+	storage_name = "cbs_disk1"
+	storage_type = "CLOUD_SSD"
+	storage_size = 200
+	availability_zone = var.availability_cvm_zone
+	project_id = 0
+	encrypt = false
+}
+resource "tencentcloud_cbs_storage" "cbs_disk2" {
+	storage_name = "cbs_disk2"
+	storage_type = "CLOUD_SSD"
+	storage_size = 100
+	availability_zone = var.availability_cvm_zone
+	project_id = 0
+	encrypt = false
+}
+resource "tencentcloud_cbs_storage_attachment" "attachment_cbs_disk1" {
+	storage_id = tencentcloud_cbs_storage.cbs_disk1.id
+	instance_id = tencentcloud_instance.cvm_add_data_disk_by_cbs.id
+}
+resource "tencentcloud_cbs_storage_attachment" "attachment_cbs_disk2" {
+	storage_id = tencentcloud_cbs_storage.cbs_disk2.id
+	instance_id = tencentcloud_instance.cvm_add_data_disk_by_cbs.id
 }
 `
 

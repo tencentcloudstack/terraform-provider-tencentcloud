@@ -11,7 +11,7 @@ import (
 const testAccPostgresqlBaseBackupObject = "tencentcloud_postgresql_base_backup.base_backup"
 
 func TestAccTencentCloudPostgresqlBaseBackupResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	newExpireTime := time.Now().AddDate(0, 0, +1).Format("2006-01-02 15:04:05")
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {

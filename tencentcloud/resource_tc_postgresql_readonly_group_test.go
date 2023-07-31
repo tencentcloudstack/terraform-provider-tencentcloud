@@ -9,7 +9,7 @@ import (
 var testPostgresqlReadonlyGroupResourceKey = "tencentcloud_postgresql_readonly_group.group"
 
 func TestAccTencentCloudPostgresqlReadonlyGroupResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccStepSetRegion(t, "ap-guangzhou")

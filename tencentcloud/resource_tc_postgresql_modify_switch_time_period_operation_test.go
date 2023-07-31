@@ -10,7 +10,7 @@ const TestObjectPgModifySwitchTimePeriod = "tencentcloud_postgresql_modify_switc
 
 // For now, we only supports updating the minor kernel version immediately, which mean is switch_tag=0
 func TestAccTencentCloudNeedFixPostgresqlModifySwitchTimePeriodOperationResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccStepSetRegion(t, "ap-guangzhou")

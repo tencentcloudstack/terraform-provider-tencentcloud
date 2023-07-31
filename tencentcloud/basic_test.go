@@ -1078,7 +1078,14 @@ const (
 	defaultEngineResourceSpec = "spec-qvj6k7t4q"
 	defaultTseVpcId           = "vpc-4owdpnwr"
 	defaultTseSubnetId        = "subnet-dwj7ipnc"
+	defaultTseGatewayId       = "gateway-ddbb709b"
 )
+
+const DefaultTseVar = `
+variable "gateway_id" {
+  default = "` + defaultTseGatewayId + `"
+}
+`
 
 // End of TSE
 

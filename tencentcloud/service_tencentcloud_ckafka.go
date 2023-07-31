@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -1727,4 +1728,73 @@ func (me *CkafkaService) DescribeCkafkaCkafkaZoneByFilter(ctx context.Context, p
 	ckafkaZone = response.Response.Result
 
 	return
+}
+
+func (me *CkafkaService) DescribeCkafkaRouteById(ctx context.Context, instanceId string, routeId int64) (route *ckafka.Route, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDescribeRouteRequest()
+	request.InstanceId = &instanceId
+	request.RouteId = &routeId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DescribeRoute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil || len(response.Response.Result.Routers) < 1 {
+		return
+	}
+
+	route = response.Response.Result.Routers[0]
+	return
+}
+
+func (me *CkafkaService) DeleteCkafkaRouteById(ctx context.Context, instanceId string, routeId int64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ckafka.NewDeleteRouteRequest()
+	request.InstanceId = &instanceId
+	request.RouteId = &routeId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCkafkaClient().DeleteRoute(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	// response.Response.Result.Data.FlowId
+	return
+}
+
+func (me *CkafkaService) CkafkaRouteStateRefreshFunc(flowId int64, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		request := ckafka.NewDescribeTaskStatusRequest()
+		request.FlowId = helper.Int64(flowId)
+		object, err := me.client.UseCkafkaClient().DescribeTaskStatus(request)
+
+		if err != nil {
+			return nil, "", err
+		}
+		status := strconv.FormatInt(*object.Response.Result.Status, 10)
+		return object, status, nil
+	}
 }

@@ -1,3 +1,35 @@
+## 1.81.17 (July 27, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_tse_gateway_services` ([#1975](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1975))
+* **New Resource:** `tencentcloud_ckafka_route` ([#1983](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1983))
+* **New Resource:** `tencentcloud_redis_connection_config` ([#1982](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1982))
+* **New Resource:** `tencentcloud_tse_cngw_canary_rule` ([#1975](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1975))
+* **New Resource:** `tencentcloud_tse_cngw_service` ([#1975](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1975))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_mysql_parameter_list: support mysql8.0 ([#1982](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1982))
+* resource/tencentcloud_dcx: support set `dc_owner_account` ([#1988](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1988))
+
+BUG FIXES:
+
+* resource/tencentcloud_instance: fix order `data_disks` ([#1985](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1985))
+
+## 1.81.16 (July 21, 2023)
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_acl: remove `host` limit, update `principal` description ([#1973](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1973))
+* resource/tencentcloud_eip: support create AntiDDoS EIP ([#1977](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1977))
+* resource/tencentcloud_monitor_grafana_instance: Deprecated `is_distroy`, use `is_destroy` instead of `is_distroy` ([#1976](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1976))
+* resource/tencentcloud_vpc_bandwidth_package: support set more `charge_type` ([#1981](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1981))
+
+BUG FIXES:
+
+* resource/tencentcloud_cynosdb_cluster: fix panic error while parameter not found in template ([#1981](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1981))
+
 ## 1.81.15 (July 19, 2023)
 
 FEATURES:

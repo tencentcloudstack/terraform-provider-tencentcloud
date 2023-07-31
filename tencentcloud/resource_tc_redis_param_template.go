@@ -16,15 +16,22 @@ resource "tencentcloud_redis_param_template" "param_template" {
 ```
 
 Copy from another template
+
 ```hcl
-resource "tencentcloud_redis_param_template" "param_template" {
-  name = "example-copied"
-  description = "This is an copied redis param template from xxx."
-  template_id = "xxx"
+resource "tencentcloud_redis_param_template" "foo" {
+  name = "tf-template"
+  description = "This is an example redis param template."
+  product_type = 6
   params_override {
 	key = "timeout"
 	value = "7200"
   }
+}
+
+resource "tencentcloud_redis_param_template" "param_template" {
+  name = "tf-template-copied"
+  description = "This is an copied redis param template from tf-template."
+  template_id = tencentcloud_redis_param_template.foo.id
 }
 ```
 

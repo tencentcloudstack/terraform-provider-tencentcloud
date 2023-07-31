@@ -8,7 +8,13 @@ It's more flexible than managing worker config directly with `tencentcloud_kuber
 
 Example Usage
 
+Create a basic cluster with two worker nodes
+
 ```hcl
+variable "default_instance_type" {
+  default = "SA2.2XLARGE16"
+}
+
 variable "availability_zone_first" {
   default = "ap-guangzhou-3"
 }
@@ -17,34 +23,63 @@ variable "availability_zone_second" {
   default = "ap-guangzhou-4"
 }
 
-variable "cluster_cidr" {
+variable "example_cluster_cidr" {
   default = "10.31.0.0/16"
 }
 
-variable "default_instance_type" {
-  default = "SA2.2XLARGE16"
+locals {
+  first_vpc_id     = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
+  first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
+  second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
+  second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
+  sg_id            = tencentcloud_security_group.sg.id
+  image_id         = data.tencentcloud_images.default.image_id
 }
 
-data "tencentcloud_vpc_subnets" "vpc_first" {
+data "tencentcloud_vpc_subnets" "vpc_one" {
   is_default        = true
   availability_zone = var.availability_zone_first
 }
 
-data "tencentcloud_vpc_subnets" "vpc_second" {
+data "tencentcloud_vpc_subnets" "vpc_two" {
   is_default        = true
   availability_zone = var.availability_zone_second
 }
 
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr                               = var.cluster_cidr
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
+resource "tencentcloud_security_group" "sg" {
+  name = "tf-example-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.sg.id
+
+  ingress = [
+    "ACCEPT#10.0.0.0/16#ALL#ALL",
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+
+  egress = [
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+  ]
+}
+
+data "tencentcloud_images" "default" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                          = local.first_vpc_id
+  cluster_cidr                    = var.example_cluster_cidr
+  cluster_max_pod_num             = 32
+  cluster_name                    = "tf_example_cluster"
+  cluster_desc                    = "example for tke cluster"
+  cluster_max_service_num         = 32
+  cluster_internet                = false
+  cluster_internet_security_group = local.sg_id
+  cluster_version                 = "1.22.5"
+  cluster_deploy_type             = "MANAGED_CLUSTER"
 
   worker_config {
     count                      = 1
@@ -55,8 +90,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
-	img_id                     = "img-rkiynh11"
+    subnet_id                  = local.first_subnet_id
+    img_id                     = local.image_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -66,8 +101,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    key_ids                   = "skey-11112222"
+    # key_ids                   = ["skey-11112222"]
+    password = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   worker_config {
@@ -79,7 +114,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_second.instance_list.0.subnet_id
+    subnet_id                  = local.second_subnet_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -89,9 +124,9 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     enhanced_security_service = false
     enhanced_monitor_service  = false
     user_data                 = "dGVzdA=="
+    key_ids                   = ["skey-11112222"]
+    cam_role_name             = "CVM_QcsRole"
     # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    key_ids                   = "skey-11112222"
-	cam_role_name			  = "CVM_QcsRole"
   }
 
   labels = {
@@ -99,11 +134,17 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     "test2" = "test2",
   }
 }
+
 ```
 
 Use Kubelet
 
 ```hcl
+# Create a baisc kubernetes cluster with two nodes.
+variable "default_instance_type" {
+  default = "SA2.2XLARGE16"
+}
+
 variable "availability_zone_first" {
   default = "ap-guangzhou-3"
 }
@@ -112,34 +153,66 @@ variable "availability_zone_second" {
   default = "ap-guangzhou-4"
 }
 
-variable "cluster_cidr" {
+variable "example_cluster_cidr" {
   default = "10.31.0.0/16"
 }
 
-variable "default_instance_type" {
-  default = "SA2.2XLARGE16"
+locals {
+  first_vpc_id     = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.vpc_id
+  first_subnet_id  = data.tencentcloud_vpc_subnets.vpc_one.instance_list.0.subnet_id
+  second_vpc_id    = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.vpc_id
+  second_subnet_id = data.tencentcloud_vpc_subnets.vpc_two.instance_list.0.subnet_id
+  sg_id            = tencentcloud_security_group.sg.id
+  image_id         = data.tencentcloud_images.default.image_id
 }
 
-data "tencentcloud_vpc_subnets" "vpc_first" {
+
+
+data "tencentcloud_vpc_subnets" "vpc_one" {
   is_default        = true
   availability_zone = var.availability_zone_first
 }
 
-data "tencentcloud_vpc_subnets" "vpc_second" {
+data "tencentcloud_vpc_subnets" "vpc_two" {
   is_default        = true
   availability_zone = var.availability_zone_second
 }
 
-resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
-  vpc_id                                     = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.vpc_id
-  cluster_cidr                               = var.cluster_cidr
-  cluster_max_pod_num                        = 32
-  cluster_name                               = "test"
-  cluster_desc                               = "test cluster desc"
-  cluster_max_service_num                    = 32
-  cluster_internet                           = true
-  # managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
-  cluster_deploy_type                        = "MANAGED_CLUSTER"
+resource "tencentcloud_security_group" "sg" {
+  name = "tf-example-sg"
+}
+
+resource "tencentcloud_security_group_lite_rule" "sg_rule" {
+  security_group_id = tencentcloud_security_group.sg.id
+
+  ingress = [
+    "ACCEPT#10.0.0.0/16#ALL#ALL",
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+    "DROP#0.0.0.0/0#ALL#ALL",
+  ]
+
+  egress = [
+    "ACCEPT#172.16.0.0/22#ALL#ALL",
+  ]
+}
+
+
+data "tencentcloud_images" "default" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+
+resource "tencentcloud_kubernetes_cluster" "example" {
+  vpc_id                          = local.first_vpc_id
+  cluster_cidr                    = var.example_cluster_cidr
+  cluster_max_pod_num             = 32
+  cluster_name                    = "tf_example_cluster"
+  cluster_desc                    = "example for tke cluster"
+  cluster_max_service_num         = 32
+  cluster_internet                = false
+  cluster_internet_security_group = local.sg_id
+  cluster_version                 = "1.22.5"
+  cluster_deploy_type             = "MANAGED_CLUSTER"
 
   worker_config {
     count                      = 1
@@ -150,18 +223,22 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_first.instance_list.0.subnet_id
+    subnet_id                  = local.first_subnet_id
+    img_id                     = local.image_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
+      encrypt   = false
     }
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-    key_ids                   = "skey-11112222"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    user_data                  = "dGVzdA=="
+    disaster_recover_group_ids = []
+    security_group_ids         = []
+    key_ids                    = []
+    password                   = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   worker_config {
@@ -173,19 +250,21 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
-    subnet_id                  = data.tencentcloud_vpc_subnets.vpc_second.instance_list.0.subnet_id
+    subnet_id                  = local.second_subnet_id
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
     }
 
-    enhanced_security_service = false
-    enhanced_monitor_service  = false
-    user_data                 = "dGVzdA=="
-    # password                  = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
-	cam_role_name			  = "CVM_QcsRole"
-    key_ids                   = "skey-11112222"
+    enhanced_security_service  = false
+    enhanced_monitor_service   = false
+    user_data                  = "dGVzdA=="
+    disaster_recover_group_ids = []
+    security_group_ids         = []
+    key_ids                    = []
+    cam_role_name              = "CVM_QcsRole"
+    password                   = "ZZXXccvv1212" // Optional, should be set if key_ids not set.
   }
 
   labels = {
@@ -194,7 +273,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 
   extra_args = [
- 	"root-dir=/var/lib/kubelet"
+    "root-dir=/var/lib/kubelet"
   ]
 }
 ```
