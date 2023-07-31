@@ -157,6 +157,86 @@ func resourceTencentCloudCynosdbClusterSlaveZone() *schema.Resource {
 }
 
 func resourceTencentCloudCynosdbClusterSlaveZoneCreate(d *schema.ResourceData, meta interface{}) error {
+	doneChan := make(chan struct{}, 1)
+	rspChan := make(chan error, 1)
+
+	timeout := d.Timeout(schema.TimeoutCreate)
+
+	go func(d *schema.ResourceData, meta interface{}) {
+		e := doResourceTencentCloudCynosdbClusterSlaveZoneCreate(d, meta)
+		doneChan <- struct{}{}
+		rspChan <- e
+	}(d, meta)
+
+	select {
+	case <-doneChan:
+		return <-rspChan
+	case <-time.After(timeout):
+		return fmt.Errorf("Do cynosdb clusterSlaveZone create action timeout, current timeout :[%.3f]s", timeout.Seconds())
+	}
+}
+
+func resourceTencentCloudCynosdbClusterSlaveZoneRead(d *schema.ResourceData, meta interface{}) error {
+	doneChan := make(chan struct{}, 1)
+	rspChan := make(chan error, 1)
+
+	timeout := d.Timeout(schema.TimeoutCreate)
+
+	go func(d *schema.ResourceData, meta interface{}) {
+		e := doResourceTencentCloudCynosdbClusterSlaveZoneRead(d, meta)
+		doneChan <- struct{}{}
+		rspChan <- e
+	}(d, meta)
+
+	select {
+	case <-doneChan:
+		return <-rspChan
+	case <-time.After(timeout):
+		return fmt.Errorf("Do cynosdb clusterSlaveZone read action timeout, current timeout :[%.3f]s", timeout.Seconds())
+	}
+}
+
+func resourceTencentCloudCynosdbClusterSlaveZoneUpdate(d *schema.ResourceData, meta interface{}) error {
+	doneChan := make(chan struct{}, 1)
+	rspChan := make(chan error, 1)
+
+	timeout := d.Timeout(schema.TimeoutCreate)
+
+	go func(d *schema.ResourceData, meta interface{}) {
+		e := doResourceTencentCloudCynosdbClusterSlaveZoneUpdate(d, meta)
+		doneChan <- struct{}{}
+		rspChan <- e
+	}(d, meta)
+
+	select {
+	case <-doneChan:
+		return <-rspChan
+	case <-time.After(timeout):
+		return fmt.Errorf("Do cynosdb clusterSlaveZone update action timeout, current timeout :[%.3f]s", timeout.Seconds())
+	}
+}
+
+func resourceTencentCloudCynosdbClusterSlaveZoneDelete(d *schema.ResourceData, meta interface{}) error {
+	doneChan := make(chan struct{}, 1)
+	rspChan := make(chan error, 1)
+
+	timeout := d.Timeout(schema.TimeoutCreate)
+
+	go func(d *schema.ResourceData, meta interface{}) {
+		e := doResourceTencentCloudCynosdbClusterSlaveZoneDelete(d, meta)
+		doneChan <- struct{}{}
+		rspChan <- e
+	}(d, meta)
+
+	select {
+	case <-doneChan:
+		return <-rspChan
+	case <-time.After(timeout):
+		return fmt.Errorf("Do cynosdb clusterSlaveZone delete action timeout, current timeout :[%.3f]s", timeout.Seconds())
+	}
+}
+
+func doResourceTencentCloudCynosdbClusterSlaveZoneCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cynosdb_cluster_slave_zone.create")()
 	defer inconsistentCheck(d, meta)()
 
@@ -217,7 +297,7 @@ func resourceTencentCloudCynosdbClusterSlaveZoneCreate(d *schema.ResourceData, m
 	return resourceTencentCloudCynosdbClusterSlaveZoneRead(d, meta)
 }
 
-func resourceTencentCloudCynosdbClusterSlaveZoneRead(d *schema.ResourceData, meta interface{}) error {
+func doResourceTencentCloudCynosdbClusterSlaveZoneRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cynosdb_cluster_slave_zone.read")()
 	defer inconsistentCheck(d, meta)()
 
@@ -261,7 +341,7 @@ func resourceTencentCloudCynosdbClusterSlaveZoneRead(d *schema.ResourceData, met
 	return nil
 }
 
-func resourceTencentCloudCynosdbClusterSlaveZoneUpdate(d *schema.ResourceData, meta interface{}) error {
+func doResourceTencentCloudCynosdbClusterSlaveZoneUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cynosdb_cluster_slave_zone.update")()
 	defer inconsistentCheck(d, meta)()
 
@@ -329,7 +409,7 @@ func resourceTencentCloudCynosdbClusterSlaveZoneUpdate(d *schema.ResourceData, m
 	return resourceTencentCloudCynosdbClusterSlaveZoneRead(d, meta)
 }
 
-func resourceTencentCloudCynosdbClusterSlaveZoneDelete(d *schema.ResourceData, meta interface{}) error {
+func doResourceTencentCloudCynosdbClusterSlaveZoneDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_cynosdb_cluster_slave_zone.delete")()
 	defer inconsistentCheck(d, meta)()
 
