@@ -273,7 +273,8 @@ func resourceTencentCloudClbTargetGroupAttachmentDelete(d *schema.ResourceData, 
 				if rule.LocationId != nil {
 					originLocationId = *rule.LocationId
 				}
-				if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP || *rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+				if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP ||
+					*rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *rule.Protocol == CLB_LISTENER_PROTOCOL_QUIC {
 					if originListenerId == ids[1] && originClbId == ids[2] {
 						return resource.RetryableError(
 							fmt.Errorf("rule association target group instance still exist. [targetGroupId=%s, listenerId=%s, cldId=%s]",
