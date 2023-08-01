@@ -223,8 +223,6 @@ func resourceTencentCloudCynosdbClusterSlaveZoneRead(d *schema.ResourceData, met
 	defer logElapsed("resource.tencentcloud_cynosdb_cluster_slave_zone.read")()
 	defer inconsistentCheck(d, meta)()
 
-	// timeout := d.Timeout(schema.TimeoutRead)
-
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
