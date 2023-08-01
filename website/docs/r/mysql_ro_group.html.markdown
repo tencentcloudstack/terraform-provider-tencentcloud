@@ -14,7 +14,7 @@ Provides a resource to create a mysql ro_group
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_ro_group" "ro_group" {
+resource "tencentcloud_mysql_ro_group" "example" {
   instance_id = "cdb-e8i766hx"
   ro_group_id = "cdbrg-f49t0gnj"
   ro_group_info {

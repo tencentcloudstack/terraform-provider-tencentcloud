@@ -14,7 +14,7 @@ Provides a resource to create a mysql ro_group_load_operation
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_mysql_ro_group_load_operation" "ro_group_load_operation" {
+resource "tencentcloud_mysql_ro_group_load_operation" "example" {
   ro_group_id = "cdbrg-bdlvcfpj"
 }
 ```
