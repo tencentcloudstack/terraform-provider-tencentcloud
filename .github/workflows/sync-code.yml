@@ -26,4 +26,6 @@ jobs:
           cd terraform-provider-tencentcloud
           git remote add tgit_origin https://${{ secrets.USERNAME }}:${{ secrets.PASSWORD }}@git.code.tencent.com/tencentcloudstack/terraform-provider-tencentcloud.git
           git fetch --all
-          git push -u -f --tags tgit_origin master:main 
+          for remote in `git branch -r`; do git branch --track ${remote#origin/} $remote; done
+          git push -f --tags tgit_origin master:main
+          git push -f --all tgit_origin
