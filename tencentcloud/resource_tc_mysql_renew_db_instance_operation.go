@@ -4,7 +4,9 @@ Provides a resource to create a mysql renew_db_instance_operation
 Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "cdb"
+}
 
 data "tencentcloud_mysql_rollback_range_time" "example" {
   instance_ids = [tencentcloud_mysql_instance.example.id]
@@ -16,7 +18,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   name              = "subnet-mysql"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"
@@ -34,8 +36,8 @@ resource "tencentcloud_mysql_instance" "example" {
   charge_type       = "PREPAID"
   root_password     = "PassWord123"
   slave_deploy_mode = 1
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
-  first_slave_zone  = data.tencentcloud_availability_zones.zones.zones.1.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
+  first_slave_zone  = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
   slave_sync_mode   = 1
   instance_name     = "tf-example-mysql"
   mem_size          = 4000

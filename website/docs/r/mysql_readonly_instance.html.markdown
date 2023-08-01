@@ -17,7 +17,9 @@ Provides a mysql instance resource to create read-only database instances.
 ## Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "cdb"
+}
 
 resource "tencentcloud_vpc" "vpc" {
   name       = "vpc-mysql"
@@ -25,7 +27,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   name              = "subnet-mysql"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"
@@ -43,7 +45,7 @@ resource "tencentcloud_mysql_instance" "example" {
   charge_type       = "POSTPAID"
   root_password     = "PassWord123"
   slave_deploy_mode = 0
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   slave_sync_mode   = 1
   instance_name     = "tf-example-mysql"
   mem_size          = 4000

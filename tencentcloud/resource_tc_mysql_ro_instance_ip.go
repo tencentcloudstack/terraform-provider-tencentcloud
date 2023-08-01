@@ -4,7 +4,9 @@ Provides a resource to create a mysql ro_instance_ip
 Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "cdb"
+}
 
 resource "tencentcloud_vpc" "vpc" {
   name       = "vpc-mysql"
@@ -12,7 +14,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
   name              = "subnet-mysql"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"

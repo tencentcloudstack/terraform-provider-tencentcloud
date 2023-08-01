@@ -14,7 +14,9 @@ Provides a resource for an AS (Auto scaling) policy.
 ## Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "as"
+}
 
 data "tencentcloud_images" "image" {
   image_type = ["PUBLIC_IMAGE"]
@@ -30,7 +32,7 @@ resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
   name              = "subnet-example"
   cidr_block        = "10.0.0.0/16"
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.0.name
 }
 
 resource "tencentcloud_as_scaling_config" "example" {
