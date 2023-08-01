@@ -44,7 +44,7 @@ EOF
 
 ```hcl
 resource "tencentcloud_cam_role" "boo" {
-  name          = "cam-role-test"
+  name          = "tf_cam_role"
   document      = <<EOF
 {
   "version": "2.0",
@@ -59,7 +59,7 @@ resource "tencentcloud_cam_role" "boo" {
   ]
 }
 EOF
-  description   = "test"
+  description   = "tf_test"
   console_login = true
 }
 ```
