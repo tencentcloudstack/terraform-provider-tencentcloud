@@ -135,58 +135,60 @@ func dataSourceTencentCloudRedisInstanceNodeInfoRead(d *schema.ResourceData, met
 		return err
 	}
 
-	if instanceNodeInfo.ProxyCount != nil {
-		_ = d.Set("proxy_count", instanceNodeInfo.ProxyCount)
-	}
-
-	if instanceNodeInfo.Proxy != nil {
-		tmpList := make([]map[string]interface{}, 0, len(instanceNodeInfo.Proxy))
-		for _, proxyNodes := range instanceNodeInfo.Proxy {
-			proxyNodesMap := map[string]interface{}{}
-
-			if proxyNodes.NodeId != nil {
-				proxyNodesMap["node_id"] = proxyNodes.NodeId
-			}
-
-			if proxyNodes.ZoneId != nil {
-				proxyNodesMap["zone_id"] = proxyNodes.ZoneId
-			}
-
-			tmpList = append(tmpList, proxyNodesMap)
+	if instanceNodeInfo != nil {
+		if instanceNodeInfo.ProxyCount != nil {
+			_ = d.Set("proxy_count", instanceNodeInfo.ProxyCount)
 		}
 
-		_ = d.Set("proxy", tmpList)
-	}
+		if instanceNodeInfo.Proxy != nil {
+			tmpList := make([]map[string]interface{}, 0, len(instanceNodeInfo.Proxy))
+			for _, proxyNodes := range instanceNodeInfo.Proxy {
+				proxyNodesMap := map[string]interface{}{}
 
-	if instanceNodeInfo.RedisCount != nil {
-		_ = d.Set("redis_count", instanceNodeInfo.RedisCount)
-	}
+				if proxyNodes.NodeId != nil {
+					proxyNodesMap["node_id"] = proxyNodes.NodeId
+				}
 
-	if instanceNodeInfo.Redis != nil {
-		tmpList := make([]map[string]interface{}, 0, len(instanceNodeInfo.Redis))
-		for _, redisNodes := range instanceNodeInfo.Redis {
-			redisNodesMap := map[string]interface{}{}
+				if proxyNodes.ZoneId != nil {
+					proxyNodesMap["zone_id"] = proxyNodes.ZoneId
+				}
 
-			if redisNodes.NodeId != nil {
-				redisNodesMap["node_id"] = redisNodes.NodeId
+				tmpList = append(tmpList, proxyNodesMap)
 			}
 
-			if redisNodes.NodeRole != nil {
-				redisNodesMap["node_role"] = redisNodes.NodeRole
-			}
-
-			if redisNodes.ClusterId != nil {
-				redisNodesMap["cluster_id"] = redisNodes.ClusterId
-			}
-
-			if redisNodes.ZoneId != nil {
-				redisNodesMap["zone_id"] = redisNodes.ZoneId
-			}
-
-			tmpList = append(tmpList, redisNodesMap)
+			_ = d.Set("proxy", tmpList)
 		}
 
-		_ = d.Set("redis", tmpList)
+		if instanceNodeInfo.RedisCount != nil {
+			_ = d.Set("redis_count", instanceNodeInfo.RedisCount)
+		}
+
+		if instanceNodeInfo.Redis != nil {
+			tmpList := make([]map[string]interface{}, 0, len(instanceNodeInfo.Redis))
+			for _, redisNodes := range instanceNodeInfo.Redis {
+				redisNodesMap := map[string]interface{}{}
+
+				if redisNodes.NodeId != nil {
+					redisNodesMap["node_id"] = redisNodes.NodeId
+				}
+
+				if redisNodes.NodeRole != nil {
+					redisNodesMap["node_role"] = redisNodes.NodeRole
+				}
+
+				if redisNodes.ClusterId != nil {
+					redisNodesMap["cluster_id"] = redisNodes.ClusterId
+				}
+
+				if redisNodes.ZoneId != nil {
+					redisNodesMap["zone_id"] = redisNodes.ZoneId
+				}
+
+				tmpList = append(tmpList, redisNodesMap)
+			}
+
+			_ = d.Set("redis", tmpList)
+		}
 	}
 
 	d.SetId(instanceId)
