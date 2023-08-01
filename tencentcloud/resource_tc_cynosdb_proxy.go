@@ -132,6 +132,25 @@ func resourceTencentCloudCynosdbProxy() *schema.Resource {
 					},
 				},
 			},
+			"ro_instances": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "Read only instance list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"instance_id": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "instance id.",
+						},
+						"weight": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "weight.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -353,6 +372,18 @@ func resourceTencentCloudCynosdbProxyRead(d *schema.ResourceData, meta interface
 			if proxyGroups.ProxyGroupId != nil {
 				_ = d.Set("proxy_group_id", proxyGroups.ProxyGroupId)
 			}
+		}
+
+		InstanceWeights := proxyGroupRwInfo.ProxyGroupRwInfo.InstanceWeights
+		if InstanceWeights != nil {
+			tmpList := []interface{}{}
+			for _, v := range InstanceWeights {
+				tmpMap := make(map[string]interface{})
+				tmpMap["instance_id"] = v.InstanceId
+				tmpMap["weight"] = v.Weight
+				tmpList = append(tmpList, tmpMap)
+			}
+			_ = d.Set("ro_instances", tmpList)
 		}
 
 		proxyNodes := proxyGroupRwInfo.ProxyNodes

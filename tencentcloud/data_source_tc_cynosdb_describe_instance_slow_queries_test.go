@@ -1,7 +1,9 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -9,6 +11,9 @@ import (
 // go test -i; go test -test.run TestAccTencentCloudCynosdbDescribeInstanceSlowQueriesDataSource_basic -v
 func TestAccTencentCloudCynosdbDescribeInstanceSlowQueriesDataSource_basic(t *testing.T) {
 	t.Parallel()
+	loc, _ := time.LoadLocation("Asia/Chongqing")
+	startTime := time.Now().AddDate(0, 0, -7).In(loc).Format("2006-01-02 15:04:05")
+	endTime := time.Now().In(loc).Format("2006-01-02 15:04:05")
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -16,17 +21,17 @@ func TestAccTencentCloudCynosdbDescribeInstanceSlowQueriesDataSource_basic(t *te
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCynosdbDescribeInstanceSlowQueriesDataSource,
+				Config: fmt.Sprintf(testAccCynosdbDescribeInstanceSlowQueriesDataSource, startTime, endTime),
 				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_describe_instance_slow_queries.describe_instance_slow_queries")),
 			},
 		},
 	})
 }
 
-const testAccCynosdbDescribeInstanceSlowQueriesDataSource = `
+const testAccCynosdbDescribeInstanceSlowQueriesDataSource = CommonCynosdb + `
 data "tencentcloud_cynosdb_describe_instance_slow_queries" "describe_instance_slow_queries" {
-  cluster_id = "cynosdbmysql-bws8h88b"
-  start_time = "2023-06-01 12:00:00"
-  end_time   = "2023-06-19 14:00:00"
+  cluster_id = var.cynosdb_cluster_id
+  start_time = "%s"
+  end_time   = "%s"
 }
 `
