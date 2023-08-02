@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a tdmq rocketmq_vip_instance
 
+~> **NOTE:** The instance cannot be downgraded, Include parameters `node_count`, `spec`, `storage_size`.
+
 ## Example Usage
 
 ```hcl
