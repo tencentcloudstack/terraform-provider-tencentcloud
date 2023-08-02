@@ -465,6 +465,9 @@ TDSQL-C MySQL(CynosDB)
 	tencentcloud_cynosdb_read_only_instance_exclusive_access
 	tencentcloud_cynosdb_proxy_end_point
 	tencentcloud_cynosdb_upgrade_proxy_version
+	tencentcloud_cynosdb_instance_name
+	tencentcloud_cynosdb_switch_cluster_zone
+	tencentcloud_cynosdb_cluster_version
 
 Direct Connect(DC)
   Data Source
@@ -2613,6 +2616,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_cynosdb_read_only_instance_exclusive_access":         resourceTencentCloudCynosdbReadOnlyInstanceExclusiveAccess(),
 			"tencentcloud_cynosdb_proxy_end_point":                             resourceTencentCloudCynosdbProxyEndPoint(),
 			"tencentcloud_cynosdb_upgrade_proxy_version":                       resourceTencentCloudCynosdbUpgradeProxyVersion(),
+			"tencentcloud_cynosdb_instance_name":                               resourceTencentCloudCynosdbInstanceName(),
+			"tencentcloud_cynosdb_switch_cluster_zone":                         resourceTencentCloudCynosdbSwitchClusterZone(),
+			"tencentcloud_cynosdb_cluster_version":                             resourceTencentCloudCynosdbClusterVersion(),
 			"tencentcloud_vod_adaptive_dynamic_streaming_template":             resourceTencentCloudVodAdaptiveDynamicStreamingTemplate(),
 			"tencentcloud_vod_image_sprite_template":                           resourceTencentCloudVodImageSpriteTemplate(),
 			"tencentcloud_vod_procedure_template":                              resourceTencentCloudVodProcedureTemplate(),
