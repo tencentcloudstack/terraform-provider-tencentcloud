@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudCynosdbInstanceNameResource_basic -v
@@ -16,7 +17,7 @@ func TestAccTencentCloudCynosdbInstanceNameResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbInstanceName,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_instance_name.instance_name", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_instance_name.instance_name", "instance_id"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_instance_name.instance_name", "instance_name", "tf-cynosdb-instance-name"),

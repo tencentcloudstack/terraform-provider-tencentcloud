@@ -43,7 +43,7 @@ func resourceTencentCloudCynosdbSwitchClusterZone() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,
-				ForceNew:	 true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Cluster Id.",
 			},

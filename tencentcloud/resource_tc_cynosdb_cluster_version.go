@@ -21,14 +21,15 @@ terraform import tencentcloud_cynosdb_cluster_version.cluster_version cluster_ve
 package tencentcloud
 
 import (
+	"context"
+	"fmt"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	cynosdb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb/v20190107"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"context"
-	"fmt"
 )
 
 func resourceTencentCloudCynosdbClusterVersion() *schema.Resource {

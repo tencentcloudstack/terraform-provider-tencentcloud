@@ -1,8 +1,9 @@
 package tencentcloud
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudCynosdbSwitchClusterZoneResource_basic -v
@@ -16,7 +17,7 @@ func TestAccTencentCloudCynosdbSwitchClusterZoneResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCynosdbSwitchClusterZone,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone", "cluster_id"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone", "zone", "ap-guangzhou-6"),
@@ -29,7 +30,7 @@ func TestAccTencentCloudCynosdbSwitchClusterZoneResource_basic(t *testing.T) {
 			},
 			{
 				Config: testAccCynosdbSwitchClusterZoneUp,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone", "cluster_id"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone", "zone", "ap-guangzhou-4"),
