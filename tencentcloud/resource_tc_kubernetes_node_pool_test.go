@@ -274,13 +274,17 @@ variable "env_az" {
   type = string
 }
 
+variable "env_instance_type" {
+  type = string
+}
+
 variable "project_id" {
   default = "0"
 }
 
 data "tencentcloud_vpc_subnets" "vpc" {
-    is_default        = true
-    availability_zone = var.env_az != "" ? var.env_az : var.availability_zone
+  is_default        = true
+  availability_zone = var.env_az != "" ? var.env_az : var.availability_zone
 }
 
 data "tencentcloud_security_groups" "sg" {
@@ -311,7 +315,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   node_os="tlinux2.2(tkernel3)x86_64"
 
   auto_scaling_config {
-    instance_type      = local.final_type
+    instance_type      = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]
@@ -375,7 +379,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   multi_zone_subnet_policy = "EQUALITY"
 
   auto_scaling_config {
-    instance_type      = local.final_type
+    instance_type      = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "100"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id, data.tencentcloud_security_groups.sg_as.security_groups[0].security_group_id]
@@ -449,8 +453,8 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   node_os="tlinux2.2(tkernel3)x86_64"
 
   auto_scaling_config {
-    instance_type      = local.final_type
-    // cam_role_name      = "TCB_QcsRole"
+    instance_type      = var.env_instance_type != "" ? var.env_instance_type : local.final_type
+    // cam_role_name   = "TCB_QcsRole"
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id]

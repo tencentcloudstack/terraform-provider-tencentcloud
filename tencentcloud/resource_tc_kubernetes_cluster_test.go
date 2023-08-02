@@ -345,16 +345,13 @@ variable "addons_update" {
 }
 `
 
-const TkeDeps = TkeExclusiveNetwork + TkeInstanceType + TkeCIDRs + defaultImages + defaultSecurityGroupData
-
-const testAccTkeCluster = TkeDeps + `
-variable "availability_zone" {
-  default = "ap-tokyo-1"
-}
-
-variable "env_az" {
+const TkeDeps = TkeExclusiveNetwork + TkeInstanceType + TkeCIDRs + defaultImages + defaultSecurityGroupData + `
+variable "env_instance_type" {
   type = string
 }
+`
+
+const testAccTkeCluster = TkeDeps + `
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
@@ -377,7 +374,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   worker_config {
     count                      = 1
     availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
-    instance_type              = local.final_type
+    instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
@@ -448,7 +445,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   worker_config {
     count                      = 1
     availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
-    instance_type              = local.final_type
+    instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
@@ -520,7 +517,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   worker_config {
     count                      = 1
     availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
-    instance_type              = local.final_type
+    instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
@@ -588,7 +585,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   worker_config {
     count                      = 1
     availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
-    instance_type              = local.final_type
+    instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
@@ -657,7 +654,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   worker_config {
     count                      = 1
     availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
-    instance_type              = local.final_type
+    instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"

@@ -152,23 +152,15 @@ data "tencentcloud_instance_types" "ins_type" {
 
 locals {
   type1 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i if lookup(i, "instance_charge_type") == "POSTPAID_BY_HOUR"][0].instance_type
-  type2 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i if lookup(i, "instance_charge_type") == "POSTPAID_BY_HOUR"][1].instance_type
 }
 `
 
 func testAccTkeAttachCluster() string {
 
 	return TkeDataSource + ClusterAttachmentInstanceType + defaultImages + `
-variable "cluster_cidr" {
-  default = "172.16.0.0/16"
-}
-
-data "tencentcloud_vpc_instances" "vpcs" {
-  name = "keep_tke_exclusive_vpc"
-}
 
 data "tencentcloud_vpc_subnets" "sub" {
-  vpc_id        = data.tencentcloud_vpc_instances.vpcs.instance_list.0.vpc_id
+  vpc_id = local.cluster_vpc_id
 }
 
 resource "tencentcloud_instance" "foo_attachment" {
@@ -178,8 +170,8 @@ resource "tencentcloud_instance" "foo_attachment" {
   instance_type     = local.type1
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
-  vpc_id            = data.tencentcloud_vpc_instances.vpcs.instance_list.0.vpc_id
-  subnet_id         =  data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
+  vpc_id            = data.tencentcloud_vpc_subnets.sub.instance_list.0.vpc_id
+  subnet_id         = data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
   tags = data.tencentcloud_kubernetes_clusters.tke.list.0.tags # new added node will passive add tag by cluster
 }
 
