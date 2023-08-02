@@ -39,7 +39,7 @@ resource "tencentcloud_scf_function" "foo" {
   name        = "helloworld-1690968000"
   handler     = "main.do_it"
   runtime     = "Python3.7"
-  description = "helloworld 空白模板函数"
+  description = "helloworld"
   mem_size    = 128
   timeout     = 3
   namespace   = "default"
@@ -340,7 +340,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 						"image_port": {
 							Type:        schema.TypeInt,
 							Optional:    true,
-							Description: "The image type. personal or enterprise.",
+							Description: "Mirror function port setting: `-1` - no port mirror function; `0` - default port, the current default port is 9000.",
 						},
 					},
 				},

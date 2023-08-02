@@ -44,6 +44,28 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
+### Using image config
+
+```hcl
+resource "tencentcloud_scf_function" "foo" {
+  name        = "helloworld-1690968000"
+  handler     = "main.do_it"
+  runtime     = "Python3.7"
+  description = "helloworld"
+  mem_size    = 128
+  timeout     = 3
+  namespace   = "default"
+  l5_enable   = false
+
+  image_config {
+    image_type  = "enterprise"
+    image_uri   = "ingest-tcr-v2.tencentcloudcr.com/ingest-namespace/step3-tencentcloud:latest"
+    registry_id = "tcr-58u9x"
+    image_port  = -1
+  }
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -91,7 +113,7 @@ The `image_config` object supports the following:
 * `args` - (Optional, String) the parameters of command.
 * `command` - (Optional, String) The command of entrypoint.
 * `entry_point` - (Optional, String) The entrypoint of app.
-* `image_port` - (Optional, Int) The image type. personal or enterprise.
+* `image_port` - (Optional, Int) Mirror function port setting: `-1` - no port mirror function; `0` - default port, the current default port is 9000.
 * `registry_id` - (Optional, String) The registry id of TCR. When image type is enterprise, it must be set.
 
 The `layers` object supports the following:
