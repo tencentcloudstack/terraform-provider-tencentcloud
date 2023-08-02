@@ -1425,6 +1425,7 @@ TDMQ for RocketMQ(trocket)
 	tencentcloud_tdmq_rocketmq_group
 	tencentcloud_tdmq_rocketmq_environment_role
 	tencentcloud_tdmq_send_rocketmq_message
+	tencentcloud_tdmq_rocketmq_vip_instance
 
 TDMQ for RabbitMQ(trabbit)
   Resource
@@ -2801,6 +2802,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
+			"tencentcloud_tdmq_rocketmq_vip_instance":                 resourceTencentCloudTdmqRocketmqVipInstance(),
 			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
 			"tencentcloud_dts_sync_config":                            resourceTencentCloudDtsSyncConfig(),
 			"tencentcloud_dts_sync_check_job_operation":               resourceTencentCloudDtsSyncCheckJobOperation(),

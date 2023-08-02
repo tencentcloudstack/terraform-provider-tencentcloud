@@ -13,3 +13,11 @@ const (
 const (
 	AutoRenewFlagTrue = 1
 )
+
+const (
+	RocketMqVipInsRunning   = 0
+	RocketMqVipInsSuccess   = 1
+	RocketMqVipInsIsolating = 2
+	RocketMqVipInsDestroy   = 3
+	RocketMqVipInsUpdate    = 6
+)
