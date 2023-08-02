@@ -136,9 +136,9 @@ func resourceTencentCloudCynosdbClusterSlaveZone() *schema.Resource {
 		Update: resourceTencentCloudCynosdbClusterSlaveZoneUpdate,
 		Delete: resourceTencentCloudCynosdbClusterSlaveZoneDelete,
 		Timeouts: &schema.ResourceTimeout{
-			Create: schema.DefaultTimeout(writeRetryTimeout),
-			Update: schema.DefaultTimeout(3 * writeRetryTimeout),
-			Delete: schema.DefaultTimeout(writeRetryTimeout),
+			Create: schema.DefaultTimeout(300 * time.Second),
+			Update: schema.DefaultTimeout(300 * time.Second),
+			Delete: schema.DefaultTimeout(300 * time.Second),
 		},
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
