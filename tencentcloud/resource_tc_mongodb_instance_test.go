@@ -141,7 +141,7 @@ func TestAccTencentCloudMongodbInstanceResource_multiZone(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudNeedFixMongodbInstanceResourcePrepaid(t *testing.T) {
+func TestAccTencentCloudMongodbInstanceResourcePrepaid(t *testing.T) {
 	// Avoid to set Parallel to make sure EnvVar secure
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
