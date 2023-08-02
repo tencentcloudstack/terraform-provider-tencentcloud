@@ -3,7 +3,6 @@ package tencentcloud
 import (
 	"reflect"
 	"testing"
-	"time"
 
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 
@@ -224,21 +223,4 @@ desc: this is a description`
 	assert.Equalf(t, err1, nil, "")
 	assert.Equalf(t, reflect.TypeOf(yaml1).String(), "map[interface {}]interface {}", "")
 	assert.Equalf(t, yaml1["name"], "test-name", "")
-}
-
-func TestGetRetryTimeout(t *testing.T) {
-	// The default timeout minus the elapsed time is a positive number
-	startTime := time.Now().Add(-5 * time.Second)
-	defaultTimeout := 10 * time.Second
-	expectedTimeout := 5 * time.Second
-
-	timeout := GetRetryTimeout(startTime, defaultTimeout)
-	assert.InDelta(t, expectedTimeout.Seconds(), timeout.Seconds(), 1e-6, "Expected timeout: %v, got: %v", expectedTimeout, timeout)
-
-	// The default timeout minus the elapsed time is a negative number, returning the default value of 10s
-	startTime = time.Now().Add(-15 * time.Second)
-	expectedTimeout = 10 * time.Second
-
-	timeout = GetRetryTimeout(startTime, defaultTimeout)
-	assert.InDelta(t, expectedTimeout.Seconds(), timeout.Seconds(), 1e-6, "Expected timeout: %v, got: %v", expectedTimeout, timeout)
 }

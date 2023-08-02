@@ -163,7 +163,6 @@ func resourceTencentCloudCynosdbClusterSlaveZoneCreate(d *schema.ResourceData, m
 	defer logElapsed("resource.tencentcloud_cynosdb_cluster_slave_zone.create")()
 	defer inconsistentCheck(d, meta)()
 
-	startTime := time.Now()
 	timeout := d.Timeout(schema.TimeoutCreate)
 
 	logId := getLogId(contextNil)
@@ -185,7 +184,7 @@ func resourceTencentCloudCynosdbClusterSlaveZoneCreate(d *schema.ResourceData, m
 		slaveZone = v.(string)
 	}
 
-	err := resource.Retry(GetRetryTimeout(startTime, timeout), func() *resource.RetryError {
+	err := resource.Retry(timeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().AddClusterSlaveZone(request)
 		if e != nil {
 			if sdkErr, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
@@ -212,7 +211,7 @@ func resourceTencentCloudCynosdbClusterSlaveZoneCreate(d *schema.ResourceData, m
 	}
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
-	conf := BuildStateChangeConf([]string{}, []string{CYNOSDB_FLOW_STATUS_SUCCESSFUL}, GetRetryTimeout(startTime, timeout), 3*time.Second, service.CynosdbClusterSlaveZoneStateRefreshFunc(*flowId, []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{CYNOSDB_FLOW_STATUS_SUCCESSFUL}, timeout, 3*time.Second, service.CynosdbClusterSlaveZoneStateRefreshFunc(*flowId, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -271,7 +270,6 @@ func resourceTencentCloudCynosdbClusterSlaveZoneUpdate(d *schema.ResourceData, m
 	defer logElapsed("resource.tencentcloud_cynosdb_cluster_slave_zone.update")()
 	defer inconsistentCheck(d, meta)()
 
-	startTime := time.Now()
 	timeout := d.Timeout(schema.TimeoutUpdate)
 
 	logId := getLogId(contextNil)
@@ -305,7 +303,7 @@ func resourceTencentCloudCynosdbClusterSlaveZoneUpdate(d *schema.ResourceData, m
 	request.OldSlaveZone = helper.String(slaveZone)
 
 	var flowId *int64
-	err := resource.Retry(GetRetryTimeout(startTime, timeout), func() *resource.RetryError {
+	err := resource.Retry(timeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseCynosdbClient().ModifyClusterSlaveZone(request)
 		if e != nil {
 			return retryError(e)
@@ -326,7 +324,7 @@ func resourceTencentCloudCynosdbClusterSlaveZoneUpdate(d *schema.ResourceData, m
 
 	service := CynosdbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	conf := BuildStateChangeConf([]string{}, []string{CYNOSDB_FLOW_STATUS_SUCCESSFUL}, GetRetryTimeout(startTime, timeout), time.Second, service.CynosdbClusterSlaveZoneStateRefreshFunc(*flowId, []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{CYNOSDB_FLOW_STATUS_SUCCESSFUL}, timeout, time.Second, service.CynosdbClusterSlaveZoneStateRefreshFunc(*flowId, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e
@@ -342,7 +340,6 @@ func resourceTencentCloudCynosdbClusterSlaveZoneDelete(d *schema.ResourceData, m
 	defer logElapsed("resource.tencentcloud_cynosdb_cluster_slave_zone.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	startTime := time.Now()
 	timeout := d.Timeout(schema.TimeoutDelete)
 
 	logId := getLogId(contextNil)
@@ -370,7 +367,7 @@ func resourceTencentCloudCynosdbClusterSlaveZoneDelete(d *schema.ResourceData, m
 		return fmt.Errorf("delete [%s] failed, reason: FlowId is null.\n", d.Id())
 	}
 
-	conf := BuildStateChangeConf([]string{}, []string{CYNOSDB_FLOW_STATUS_SUCCESSFUL}, GetRetryTimeout(startTime, timeout), time.Second, service.CynosdbClusterSlaveZoneStateRefreshFunc(*flowId, []string{}))
+	conf := BuildStateChangeConf([]string{}, []string{CYNOSDB_FLOW_STATUS_SUCCESSFUL}, timeout, time.Second, service.CynosdbClusterSlaveZoneStateRefreshFunc(*flowId, []string{}))
 
 	if _, e := conf.WaitForState(); e != nil {
 		return e

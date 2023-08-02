@@ -551,20 +551,6 @@ func Base64ToString(config string) (string, error) {
 	return string(strConfig), nil
 }
 
-func GetRetryTimeout(startTime time.Time, defaultTimeout time.Duration) time.Duration {
-
-	now := time.Now()
-	elapsedTime := now.Sub(startTime)
-	timeout := defaultTimeout - elapsedTime
-	if timeout > 0 {
-		return timeout
-	}
-
-	timeout, _ = time.ParseDuration("10s")
-
-	return timeout
-}
-
 func BuildStateChangeConf(pending, target []string, timeout, delay time.Duration, refresh resource.StateRefreshFunc) *resource.StateChangeConf {
 	return &resource.StateChangeConf{
 		Pending:    pending,
