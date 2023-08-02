@@ -33,6 +33,28 @@ resource "tencentcloud_scf_function" "foo" {
 }
 ```
 
+Using image config
+```hcl
+resource "tencentcloud_scf_function" "foo" {
+  name        = "helloworld-1690968000"
+  handler     = "main.do_it"
+  runtime     = "Python3.7"
+  description = "helloworld 空白模板函数"
+  mem_size    = 128
+  timeout     = 3
+  namespace   = "default"
+  l5_enable   = false
+
+
+  image_config {
+    image_type  = "enterprise"
+    image_uri   = "ingest-tcr-v2.tencentcloudcr.com/ingest-namespace/step3-tencentcloud:latest"
+    registry_id = "tcr-58u9x"
+    image_port  = -1
+  }
+}
+```
+
 Import
 
 SCF function can be imported, e.g.
@@ -314,6 +336,11 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Description: "the parameters of command.",
+						},
+						"image_port": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "The image type. personal or enterprise.",
 						},
 					},
 				},
@@ -665,6 +692,7 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 			entryPoint := value["entry_point"].(string)
 			command := value["command"].(string)
 			args := value["args"].(string)
+			imagePort := int64(value["image_port"].(int))
 
 			config := &scf.ImageConfig{
 				ImageType:  &imageType,
@@ -673,6 +701,7 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 				EntryPoint: &entryPoint,
 				Command:    &command,
 				Args:       &args,
+				ImagePort:  &imagePort,
 			}
 			imageConfigs = append(imageConfigs, config)
 		}
@@ -1020,6 +1049,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 				entryPoint := value["entry_point"].(string)
 				command := value["command"].(string)
 				args := value["args"].(string)
+				imagePort := int64(value["image_port"].(int))
 
 				config := &scf.ImageConfig{
 					ImageType:  &imageType,
@@ -1028,6 +1058,7 @@ func resourceTencentCloudScfFunctionUpdate(d *schema.ResourceData, m interface{}
 					EntryPoint: &entryPoint,
 					Command:    &command,
 					Args:       &args,
+					ImagePort:  &imagePort,
 				}
 				imageConfigs = append(imageConfigs, config)
 			}

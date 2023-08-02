@@ -91,6 +91,7 @@ The `image_config` object supports the following:
 * `args` - (Optional, String) the parameters of command.
 * `command` - (Optional, String) The command of entrypoint.
 * `entry_point` - (Optional, String) The entrypoint of app.
+* `image_port` - (Optional, Int) The image type. personal or enterprise.
 * `registry_id` - (Optional, String) The registry id of TCR. When image type is enterprise, it must be set.
 
 The `layers` object supports the following:
