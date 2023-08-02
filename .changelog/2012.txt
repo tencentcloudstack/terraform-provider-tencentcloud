@@ -1,3 +1,0 @@
-```release-note:bug
-resource/tencentcloud_eni_sg_attachment: fix e2e test
-```
