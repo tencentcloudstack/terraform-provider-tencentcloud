@@ -18,10 +18,6 @@ var (
 	testTkeServerlessNodePoolResourceKey = "tencentcloud_kubernetes_serverless_node_pool.pool_example"
 )
 
-const (
-	clusterIdForTkeTestEnvKey = "TKE_CLUSTER_ID_FOR_SEVER_LESS_NODE_POOL_TEST"
-)
-
 func init() {
 	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_serverless_node_pool
 	resource.AddTestSweepers("tencentcloud_serverless_node_pool", &resource.Sweeper{

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"testing"
 	"time"
-	"os"
 
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
@@ -46,7 +46,7 @@ func TestAccTencentCloudKubernetesBackupStorageLocationResource_Basic(t *testing
 		Steps: []resource.TestStep{
 			{
 				SkipFunc: func() (bool, error) {
-					if os.Getenv(E2ETEST_ENV_REGION)!=""||os.Getenv(E2ETEST_ENV_AZ)!=""{
+					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
 						fmt.Printf("[International station]skip TestAccTencentCloudKubernetesBackupStorageLocationResource_Basic, because the international station did not support this feature yet!\n")
 						return true, nil
 					}
