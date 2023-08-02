@@ -19,8 +19,22 @@ variable "cam_user_basic" {
 }
 
 resource "tencentcloud_cam_policy" "policy_basic" {
-  name        = "tf_cam_attach_user_policy"
-  document    = "{\"version\":\"2.0\",\"statement\":[{\"action\":[\"cos:*\"],\"resource\":[\"*\"],\"effect\":\"allow\"},{\"effect\":\"allow\",\"action\":[\"monitor:*\",\"cam:ListUsersForGroup\",\"cam:ListGroups\",\"cam:GetGroup\"],\"resource\":[\"*\"]}]}"
+  name = "tf_cam_attach_user_policy"
+  document = jsonencode({
+    "version" : "2.0",
+    "statement" : [
+      {
+        "action" : ["cos:*"],
+        "resource" : ["*"],
+        "effect" : "allow",
+      },
+      {
+        "effect" : "allow",
+        "action" : ["monitor:*", "cam:ListUsersForGroup", "cam:ListGroups", "cam:GetGroup"],
+        "resource" : ["*"],
+      }
+    ]
+  })
   description = "tf_test"
 }
 
