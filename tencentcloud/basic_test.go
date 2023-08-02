@@ -706,6 +706,10 @@ variable "default_az" {
   default = "ap-guangzhou-7"
 }
 
+variable "env_az" {
+  type = string
+}
+
 data "tencentcloud_instance_types" "ins_type" {
   availability_zone = var.env_az != "" ? var.env_az : var.default_az
   cpu_core_count    = 2
@@ -1113,7 +1117,8 @@ variable "security_group_id" {
 
 // environment variables for e2e tests
 const (
-	E2ETEST_ENV_AZ    = "TF_VAR_env_az"
+	E2ETEST_ENV_AZ         = "TF_VAR_env_az"
 	E2ETEST_ENV_CLUSTER_ID = "TF_VAR_env_default_tke_cluster_id"
-  E2ETEST_ENV_REGION = "TF_VAR_env_region"
+	E2ETEST_ENV_REGION     = "TF_VAR_env_region"
+	E2ETEST_ENV_INS_TYPE   = "TF_VAR_env_instance_type"
 )
