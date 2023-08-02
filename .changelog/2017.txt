@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_cynosdb_instance_name
+```
+
+```release-note:new-resource
+tencentcloud_cynosdb_switch_cluster_zone
+```
+
+```release-note:new-resource
+tencentcloud_cynosdb_cluster_version
+```
