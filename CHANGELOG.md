@@ -1,3 +1,20 @@
+## 1.81.18 (July 31, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_tag` ([#1991](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1991))
+* **New Resource:** `tencentcloud_tag_attachment` ([#1991](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1991))
+* **New Resource:** `tencentcloud_tdmq_rabbitmq_vip_instance` ([#1984](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1984))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_mysql_zone_config: Support querying `cpu`, `info`, `device_type` ([#1996](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1996))
+* datasource/tencentcloud_ssl_certificates: Support querying `dv_auths` and `order_id` ([#1993](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1993))
+* resource/tencentcloud_eip_association: Optimize the problem while binding EIP timeout. ([#1990](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1990))
+* resource/tencentcloud_tcr_service_account: update example ([#1995](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1995))
+* resource/tencentcloud_tcr_tag_retention_rule: allow `cron_setting` to be modified ([#1995](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1995))
+* resource/tencentcloud_vpc_bandwidth_package: support set `time_span` ([#2001](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2001))
+
 ## 1.81.17 (July 27, 2023)
 
 FEATURES:

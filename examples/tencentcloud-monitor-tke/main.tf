@@ -1,19 +1,4 @@
----
-subcategory: "Cloud Monitor(Monitor)"
-layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_monitor_tmp_tke_global_notification"
-sidebar_current: "docs-tencentcloud-resource-monitor_tmp_tke_global_notification"
-description: |-
-  Provides a resource to create a tmp tke global notification
----
-
-# tencentcloud_monitor_tmp_tke_global_notification
-
-Provides a resource to create a tmp tke global notification
-
-## Example Usage
-
-```hcl
+# create tke
 variable "default_instance_type" {
   default = "SA1.MEDIUM2"
 }
@@ -138,6 +123,7 @@ resource "tencentcloud_kubernetes_cluster" "example" {
   }
 }
 
+
 # create monitor
 variable "zone" {
   default = "ap-guangzhou"
@@ -158,6 +144,7 @@ resource "tencentcloud_monitor_tmp_instance" "foo" {
   }
 }
 
+
 # tmp tke bind
 resource "tencentcloud_monitor_tmp_tke_cluster_agent" "foo" {
   instance_id = tencentcloud_monitor_tmp_instance.foo.id
@@ -170,69 +157,95 @@ resource "tencentcloud_monitor_tmp_tke_cluster_agent" "foo" {
   }
 }
 
-# create record rule
-resource "tencentcloud_monitor_tmp_tke_global_notification" "basic" {
-  instance_id = tencentcloud_monitor_tmp_instance.foo.id
-  notification {
-    enabled = true
-    type    = "webhook"
-    alert_manager {
-      cluster_id   = ""
-      cluster_type = ""
-      url          = ""
+# create monitor template
+resource "tencentcloud_monitor_tmp_tke_template" "foo" {
+  template {
+    name     = "tf-template"
+    level    = "cluster"
+    describe = "template"
+    service_monitors {
+      name   = "tf-ServiceMonitor"
+      config = <<-EOT
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: example-service-monitor
+  namespace: monitoring
+  labels:
+    k8s-app: example-service
+spec:
+  selector:
+    matchLabels:
+      k8s-app: example-service
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+  - port: http-metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: true
+      EOT
     }
-    web_hook              = ""
-    repeat_interval       = "5m"
-    time_range_start      = "00:00:00"
-    time_range_end        = "23:59:59"
-    notify_way            = ["SMS", "EMAIL"]
-    receiver_groups       = []
-    phone_notify_order    = []
-    phone_circle_times    = 0
-    phone_inner_interval  = 0
-    phone_circle_interval = 0
-    phone_arrive_notice   = false
+
+    pod_monitors {
+      name   = "tf-PodMonitors"
+      config = <<-EOT
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: example-pod-monitor
+  namespace: monitoring
+  labels:
+    k8s-app: example-pod
+spec:
+  selector:
+    matchLabels:
+      k8s-app: example-pod
+  namespaceSelector:
+    matchNames:
+      - default
+  podMetricsEndpoints:
+  - port: http-metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: true
+EOT
+    }
+
+    pod_monitors {
+      name   = "tf-RawJobs"
+      config = <<-EOT
+scrape_configs:
+  - job_name: 'example-job'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['example-service.default.svc.cluster.local:8080']
+    metrics_path: /metrics
+    scheme: http
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tls_config:
+      insecure_skip_verify: true
+EOT
+    }
+  }
+}
+
+resource "tencentcloud_monitor_tmp_tke_template_attachment" "temp_attachment" {
+  template_id = tencentcloud_monitor_tmp_tke_template.foo.id
+
+  targets {
+    cluster_type = var.cluster_type
+    cluster_id   = tencentcloud_kubernetes_cluster.example.id
+    region       = var.zone
+    instance_id  = tencentcloud_monitor_tmp_instance.foo.id
   }
 
   depends_on = [tencentcloud_monitor_tmp_tke_cluster_agent.foo]
 }
-```
-
-## Argument Reference
-
-The following arguments are supported:
-
-* `instance_id` - (Required, String) Instance Id.
-* `notification` - (Required, List) Alarm notification channels.
-
-The `alert_manager` object supports the following:
-
-* `url` - (Required, String) Alert manager url.
-* `cluster_id` - (Optional, String) Cluster id.
-* `cluster_type` - (Optional, String) Cluster type.
-
-The `notification` object supports the following:
-
-* `enabled` - (Required, Bool) Alarm notification switch.
-* `type` - (Required, String) Alarm notification type, Valid values: `amp`, `webhook`, `alertmanager`.
-* `alert_manager` - (Optional, List) Alert manager, if Type is `alertmanager`, this field is required.
-* `notify_way` - (Optional, Set) Alarm notification method, Valid values: `SMS`, `EMAIL`, `CALL`, `WECHAT`.
-* `phone_arrive_notice` - (Optional, Bool) Phone Alarm Reach Notification, NotifyWay is `CALL`, and this parameter is used.
-* `phone_circle_interval` - (Optional, Int) Telephone alarm off-wheel interval, NotifyWay is `CALL`, and this parameter is used.
-* `phone_circle_times` - (Optional, Int) Number of phone alerts (user group), NotifyWay is `CALL`, and this parameter is used.
-* `phone_inner_interval` - (Optional, Int) Interval between telephone alarm rounds, NotifyWay is `CALL`, and this parameter is used.
-* `phone_notify_order` - (Optional, Set) Phone alert sequence, NotifyWay is `CALL`, and this parameter is used.
-* `receiver_groups` - (Optional, Set) Alarm receiving group(user group).
-* `repeat_interval` - (Optional, String) Convergence time.
-* `time_range_end` - (Optional, String) Effective end time.
-* `time_range_start` - (Optional, String) Effective start time.
-* `web_hook` - (Optional, String) Web hook, if Type is `webhook`, this field is required.
-
-## Attributes Reference
-
-In addition to all arguments above, the following attributes are exported:
-
-* `id` - ID of the resource.
-
-
-
