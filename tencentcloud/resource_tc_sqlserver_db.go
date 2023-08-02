@@ -34,7 +34,7 @@ resource "tencentcloud_sqlserver_instance" "example" {
 
 resource "tencentcloud_sqlserver_db" "example" {
   instance_id = tencentcloud_sqlserver_instance.example.id
-  name        = "tf-example-db"
+  name        = "tf_example_db"
   charset     = "Chinese_PRC_BIN"
   remark      = "test-remark"
 }
