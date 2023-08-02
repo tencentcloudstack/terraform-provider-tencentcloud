@@ -996,18 +996,20 @@ variable "cynosdb_cluster_security_group_id" {
 
 // TSF
 const (
-	defaultNamespaceId        = "namespace-aemrg36v"
-	defaultTsfApplicationId   = "application-a24x29xv"
-	defaultTsfClustId         = "cluster-vwgj5e6y"
-	defaultTsfGroupId         = "group-yrjkln9v"
-	defaultTsfGateway         = "gw-ins-lvdypq5k"
-	defaultTsfDestNamespaceId = "namespace-aemrg36v"
-	defaultTsfConfigId        = "dcfg-y54wzk3a"
-	defaultTsfApiId           = "api-j03q029a"
-	defaultTsfGWGroupId       = "group-vzd97zpy"
-	defaultTsfFileConfigId    = "dcfg-f-ab6l9x5y"
-	defaultTsfImageId         = "img-7r9vq8wd"
-	defaultTsfGWNamespaceId   = "namespace-vwgo38wy"
+	defaultNamespaceId         = "namespace-aemrg36v"
+	defaultTsfApplicationId    = "application-a24x29xv"
+	defaultTsfClustId          = "cluster-vwgj5e6y"
+	defaultTsfGroupId          = "group-yrjkln9v"
+	defaultTsfGateway          = "gw-ins-lvdypq5k"
+	defaultTsfDestNamespaceId  = "namespace-aemrg36v"
+	defaultTsfConfigId         = "dcfg-y54wzk3a"
+	defaultTsfApiId            = "api-j03q029a"
+	defaultTsfGWGroupId        = "group-vzd97zpy"
+	defaultTsfFileConfigId     = "dcfg-f-ab6l9x5y"
+	defaultTsfImageId          = "img-7r9vq8wd"
+	defaultTsfGWNamespaceId    = "namespace-vwgo38wy"
+	defaultTsfContainerGroupId = "group-y43x5jpa"
+	defaultTsfpodName          = "keep-terraform-7f4874bc5c-w75q4"
 )
 
 // End of TSF
