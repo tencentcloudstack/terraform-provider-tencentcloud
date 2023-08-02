@@ -195,3 +195,10 @@ var SQLSERVER_MIGRATION_STATUS = map[int64]string{
 	SQLSERVER_MIGRATION_COMPLETED:  "completed",
 	SQLSERVER_MIGRATION_TERMINATED: "terminated",
 }
+
+const (
+	CreateDefaultTimeout = 3600
+	ReadDefaultTimeout   = 3600
+	UpdateDefaultTimeout = 3600
+	DeleteDefaultTimeout = 3600
+)
