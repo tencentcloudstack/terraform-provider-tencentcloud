@@ -55,6 +55,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -312,7 +313,7 @@ func resourceTencentCloudTdmqRocketmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	request.InstanceId = &clusterId
 
-	immutableArgs := []string{"name", "zone_ids", "vpc_info", "time_span"}
+	immutableArgs := []string{"zone_ids", "vpc_info", "time_span"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -353,6 +354,9 @@ func resourceTencentCloudTdmqRocketmqVipInstanceUpdate(d *schema.ResourceData, m
 		return err
 	}
 
+	// sleep - fix in the future
+	time.Sleep(20 * time.Second)
+
 	// wait
 	err = resource.Retry(readRetryTimeout*10, func() *resource.RetryError {
 		result, e := service.DescribeTdmqRocketmqVipInstancesByFilter(ctx, clusterId)
@@ -371,6 +375,32 @@ func resourceTencentCloudTdmqRocketmqVipInstanceUpdate(d *schema.ResourceData, m
 
 	if err != nil {
 		log.Printf("[CRITAL]%s update tdmq rocketmqVipInstance failed, reason:%+v", logId, err)
+		return err
+	}
+
+	// update name
+	clusterRequest := tdmq.NewModifyRocketMQClusterRequest()
+	clusterRequest.ClusterId = &clusterId
+	if d.HasChange("name") {
+		if v, ok := d.GetOk("name"); ok {
+			clusterRequest.ClusterName = helper.String(v.(string))
+		}
+	}
+
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseTdmqClient().ModifyRocketMQCluster(clusterRequest)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s update cluster name failed, reason:%+v", logId, err)
 		return err
 	}
 

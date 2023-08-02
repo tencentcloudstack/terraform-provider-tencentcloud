@@ -146,7 +146,7 @@ resource "tencentcloud_subnet" "subnet" {
 }
 
 resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
-  name         = "tx-example"
+  name         = "tx-example-update"
   spec         = "rocket-vip-basic-2"
   node_count   = 3
   storage_size = 600
