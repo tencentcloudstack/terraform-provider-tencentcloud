@@ -352,7 +352,7 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstanceCreate(d *schema.Resourc
 	}
 
 	dealNames = *response.Response.DealNames[0]
-	roInstanceId, err = service.GetInfoFromDeal(ctx, dealNames)
+	roInstanceId, err = service.GetInfoFromDeal(ctx, dealNames, timeout)
 	if err != nil {
 		return err
 	}
@@ -575,7 +575,7 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstanceUpdate(d *schema.Resourc
 			return err
 		}
 
-		_, err = sqlserverService.GetInfoFromDeal(ctx, dealId)
+		_, err = sqlserverService.GetInfoFromDeal(ctx, dealId, timeout)
 		if err != nil {
 			return err
 		}

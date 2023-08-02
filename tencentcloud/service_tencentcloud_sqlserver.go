@@ -844,7 +844,7 @@ func (me *SqlserverService) DescribeAccountDBAttachmentById(ctx context.Context,
 	return
 }
 
-func (me *SqlserverService) GetInfoFromDeal(ctx context.Context, dealId string) (instanceId string, errRet error) {
+func (me *SqlserverService) GetInfoFromDeal(ctx context.Context, dealId string, timeout ...time.Duration) (instanceId string, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewDescribeOrdersRequest()
 	request.DealNames = []*string{&dealId}
@@ -855,7 +855,13 @@ func (me *SqlserverService) GetInfoFromDeal(ctx context.Context, dealId string) 
 	}()
 
 	var flowId int64
-	outErr := resource.Retry(40*readRetryTimeout, func() *resource.RetryError {
+	var retryTimeout time.Duration
+	if timeout != nil {
+		retryTimeout = timeout[0]
+	} else {
+		retryTimeout = readRetryTimeout * 20
+	}
+	outErr := resource.Retry(retryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := me.client.UseSqlserverClient().DescribeOrders(request)
 		if err != nil {

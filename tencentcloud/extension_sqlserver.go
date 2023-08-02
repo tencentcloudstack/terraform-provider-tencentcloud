@@ -197,8 +197,8 @@ var SQLSERVER_MIGRATION_STATUS = map[int64]string{
 }
 
 const (
-	CreateDefaultTimeout = 3600
-	ReadDefaultTimeout   = 3600
-	UpdateDefaultTimeout = 3600
-	DeleteDefaultTimeout = 3600
+	CreateDefaultTimeout = 7200
+	ReadDefaultTimeout   = 7200
+	UpdateDefaultTimeout = 7200
+	DeleteDefaultTimeout = 7200
 )
