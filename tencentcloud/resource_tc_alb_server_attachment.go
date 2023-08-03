@@ -215,7 +215,8 @@ func resourceTencentCloudAlbServerAttachmentRead(d *schema.ResourceData, meta in
 				}
 			}
 		}
-	} else if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
+	} else if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP ||
+		*instance.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *instance.Protocol == CLB_LISTENER_PROTOCOL_QUIC {
 		_ = d.Set("backends", flattenBackendList(instance.Targets))
 	}
 

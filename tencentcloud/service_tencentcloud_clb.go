@@ -900,7 +900,8 @@ func checkHealthCheckPara(ctx context.Context, d *schema.ResourceData, protocol 
 
 	if healthSetFlag {
 		if !(((protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP ||
-			protocol == CLB_LISTENER_PROTOCOL_TCPSSL) && applyType == HEALTH_APPLY_TYPE_LISTENER) ||
+			protocol == CLB_LISTENER_PROTOCOL_TCPSSL || protocol == CLB_LISTENER_PROTOCOL_QUIC) &&
+			applyType == HEALTH_APPLY_TYPE_LISTENER) ||
 			((protocol == CLB_LISTENER_PROTOCOL_HTTP || protocol == CLB_LISTENER_PROTOCOL_HTTPS) &&
 				applyType == HEALTH_APPLY_TYPE_RULE)) {
 			healthSetFlag = false
@@ -1342,7 +1343,8 @@ func (me *ClbService) DescribeAssociateTargetGroups(ctx context.Context, ids []s
 				originLocationId = *rule.LocationId
 			}
 
-			if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP || *rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+			if *rule.Protocol == CLB_LISTENER_PROTOCOL_TCP || *rule.Protocol == CLB_LISTENER_PROTOCOL_UDP ||
+				*rule.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *rule.Protocol == CLB_LISTENER_PROTOCOL_QUIC {
 				if originListenerId == ids[1] && originClbId == ids[2] {
 					return true, nil
 				}
