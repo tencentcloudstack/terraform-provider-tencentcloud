@@ -3,7 +3,7 @@ Provides a resource to create a ses template.
 
 Example Usage
 
-Create a ses test template
+Create a ses text template
 
 ```hcl
 resource "tencentcloud_ses_template" "example" {
