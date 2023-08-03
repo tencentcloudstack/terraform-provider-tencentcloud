@@ -1637,8 +1637,9 @@ func (me *VpcService) DeleteSecurityGroupPolicyByPolicyIndexList(ctx context.Con
 	logId := getLogId(ctx)
 	request := vpc.NewDeleteSecurityGroupPoliciesRequest()
 	request.SecurityGroupId = helper.String(sgId)
+	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
 
-	tmpList := []*vpc.SecurityGroupPolicy{}
+	tmpList := make([]*vpc.SecurityGroupPolicy, 0)
 	for _, v := range policyIndexList {
 		policy := new(vpc.SecurityGroupPolicy)
 		policy.PolicyIndex = v

@@ -353,7 +353,12 @@ func resourceTencentCloudSecurityGroupRuleSetUpdate(d *schema.ResourceData, m in
 					item := v.(map[string]interface{})
 					tmpList = append(tmpList, item["policy_index"].(*int64))
 				}
+
 				e = service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "egress")
+				if e != nil {
+					return e
+				}
+
 				ver += 1
 			}
 
@@ -375,7 +380,12 @@ func resourceTencentCloudSecurityGroupRuleSetUpdate(d *schema.ResourceData, m in
 					item := v.(map[string]interface{})
 					tmpList = append(tmpList, item["policy_index"].(*int64))
 				}
+
 				e = service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "ingress")
+				if e != nil {
+					return e
+				}
+
 				ver += 1
 			}
 		} else {
