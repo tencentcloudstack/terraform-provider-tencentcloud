@@ -1,7 +1,6 @@
 package tencentcloud
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -16,29 +15,29 @@ func TestAccTencentCloudTcrImageManifestsDataSource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrImageManifestsDataSource, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
+				Config: testAccTcrImageManifestsDataSource,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(testTcrImageManifestsObjectName),
 					resource.TestCheckResourceAttrSet(testTcrImageManifestsObjectName, "id"),
-					resource.TestCheckResourceAttr(testTcrImageManifestsObjectName, "registry_id", defaultTCRInstanceId),
-					resource.TestCheckResourceAttr(testTcrImageManifestsObjectName, "namespace_name", defaultTCRNamespace),
-					resource.TestCheckResourceAttr(testTcrImageManifestsObjectName, "repository_name", defaultTCRRepoName),
+					resource.TestCheckResourceAttrSet(testTcrImageManifestsObjectName, "registry_id"),
+					resource.TestCheckResourceAttrSet(testTcrImageManifestsObjectName, "namespace_name"),
+					resource.TestCheckResourceAttrSet(testTcrImageManifestsObjectName, "repository_name"),
 				),
 			},
 		},
 	})
 }
 
-const testAccTcrImageManifestsDataSource = `
+const testAccTcrImageManifestsDataSource = TCRDataSource + `
 
 data "tencentcloud_tcr_image_manifests" "image_manifests" {
-	registry_id = "%s"
-	namespace_name = "%s" 
-	repository_name = "%s"
+	registry_id = local.tcr_id
+	namespace_name = local.tcr_ns_name
+	repository_name = local.tcr_repo
 	image_version = "vv1"
 }
 

@@ -19,7 +19,7 @@ func TestAccTencentCloudTcrServiceAccountResource_basic(t *testing.T) {
 			{
 				Config: testAccTcrServiceAccount,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
@@ -39,7 +39,7 @@ func TestAccTencentCloudTcrServiceAccountResource_basic(t *testing.T) {
 			{
 				Config: fmt.Sprintf(testAccTcrServiceAccount_Update, expireTime),
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(

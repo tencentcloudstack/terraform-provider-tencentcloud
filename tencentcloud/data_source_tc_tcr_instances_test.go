@@ -18,7 +18,7 @@ func TestAccTencentCloudTcrInstancesData(t *testing.T) {
 			{
 				Config: testAccTencentCloudDataTCRInstancesBasic,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -33,4 +33,4 @@ func TestAccTencentCloudTcrInstancesData(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataTCRInstancesBasic = defaultTCRInstanceData
+const testAccTencentCloudDataTCRInstancesBasic = TCRDataSource

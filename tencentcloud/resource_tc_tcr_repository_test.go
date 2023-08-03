@@ -77,7 +77,7 @@ func TestAccTencentCloudTcrRepository_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRRepository_basic,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -98,7 +98,7 @@ func TestAccTencentCloudTcrRepository_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRRepository_basic_update_remark,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -171,7 +171,7 @@ func testAccCheckTCRRepositoryExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTCRRepository_basic = defaultTCRInstanceData + `
+const testAccTCRRepository_basic = TCRDataSource + `
 
 resource "tencentcloud_tcr_repository" "mytcr_repository" {
   instance_id	 = local.tcr_id
@@ -181,7 +181,7 @@ resource "tencentcloud_tcr_repository" "mytcr_repository" {
   description	 = "111111111111111111111111111111111111"
 }`
 
-const testAccTCRRepository_basic_update_remark = defaultTCRInstanceData + `
+const testAccTCRRepository_basic_update_remark = TCRDataSource + `
 resource "tencentcloud_tcr_repository" "mytcr_repository" {
   instance_id 	 = local.tcr_id
   namespace_name = var.tcr_namespace

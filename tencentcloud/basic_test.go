@@ -588,13 +588,31 @@ variable "tcr_repo" {
 }
 `
 
-const defaultTCRInstanceData = defaultTCRInstanceVar + `
+const TCRDataSource = defaultTCRInstanceVar + `
+variable "env_default_tcr_name" {
+  type = string
+}
+
+variable "env_default_tcr_ns" {
+  type = string
+}
+
+variable "env_default_tcr_repo" {
+  type = string
+}
+
+variable "env_tcr_replica_reg_id" {
+  type = string
+}
+
 data "tencentcloud_tcr_instances" "tcr" {
-  name = var.tcr_name
+  name = var.env_default_tcr_name != "" ? var.env_default_tcr_name : var.tcr_name
 }
 
 locals {
-  tcr_id = data.tencentcloud_tcr_instances.tcr.instance_list.0.id
+  tcr_id      = data.tencentcloud_tcr_instances.tcr.instance_list.0.id
+  tcr_ns_name = var.env_default_tcr_ns != "" ? var.env_default_tcr_ns : var.tcr_namespace
+  tcr_repo    = var.env_default_tcr_repo != "" ? var.env_default_tcr_repo : var.tcr_repo
 }
 `
 
@@ -1108,3 +1126,16 @@ variable "security_group_id" {
 `
 
 // End of TSE
+
+// environment variables for e2e tests
+const (
+	E2ETEST_ENV_AZ                 = "TF_VAR_env_az"
+	E2ETEST_ENV_CLUSTER_ID         = "TF_VAR_env_default_tke_cluster_id"
+	E2ETEST_ENV_REGION             = "TF_VAR_env_region"
+	E2ETEST_ENV_INS_TYPE           = "TF_VAR_env_instance_type"
+	E2ETEST_ENV_TCR                = "TF_VAR_env_default_tcr_name"
+	E2ETEST_ENV_TCR_NS             = "TF_VAR_env_default_tcr_ns"
+	E2ETEST_ENV_TCR_REPO           = "TF_VAR_env_default_tcr_repo"
+	E2ETEST_ENV_TCR_REPLICA_REG_ID = "TF_VAR_env_tcr_replica_reg_id"
+  E2ETEST_ENV_SSL_CERT_ID = "TF_VAR_env_default_ssl_id"
+)

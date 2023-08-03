@@ -1,7 +1,6 @@
 package tencentcloud
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -16,15 +15,15 @@ func TestAccTencentCloudTcrTagRetentionExecutionTasksDataSource_basic(t *testing
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrTagRetentionExecutionTasksDataSource, defaultTCRInstanceId),
+				Config: testAccTcrTagRetentionExecutionTasksDataSource,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID(testExecutionTasksObjectName),
 					resource.TestCheckResourceAttrSet(testExecutionTasksObjectName, "id"),
-					resource.TestCheckResourceAttr(testExecutionTasksObjectName, "registry_id", defaultTCRInstanceId),
+					resource.TestCheckResourceAttrSet(testExecutionTasksObjectName, "registry_id"),
 					resource.TestCheckResourceAttr(testExecutionTasksObjectName, "retention_id", "1"),
 					resource.TestCheckResourceAttr(testExecutionTasksObjectName, "execution_id", "1"),
 					resource.TestCheckResourceAttrSet(testExecutionTasksObjectName, "retention_task_list.#"),
@@ -36,10 +35,10 @@ func TestAccTencentCloudTcrTagRetentionExecutionTasksDataSource_basic(t *testing
 	})
 }
 
-const testAccTcrTagRetentionExecutionTasksDataSource = `
+const testAccTcrTagRetentionExecutionTasksDataSource = TCRDataSource + `
 
 data "tencentcloud_tcr_tag_retention_execution_tasks" "tasks" {
-  registry_id = "%s"
+  registry_id = local.tcr_id
   retention_id = 1
   execution_id = 1
 }

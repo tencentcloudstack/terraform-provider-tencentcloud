@@ -17,7 +17,7 @@ func TestAccTencentCloudTcrManageReplicationOperationResource_basic(t *testing.T
 			{
 				Config: fmt.Sprintf(testAccTcrManageReplicationOperation, "sync", time.Now().Nanosecond()),
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
@@ -41,7 +41,7 @@ func TestAccTencentCloudTcrManageReplicationOperationResource_basic(t *testing.T
 	})
 }
 
-const testAccTcrManageReplicationOperation = defaultTCRInstanceData + `
+const testAccTcrManageReplicationOperation = TCRDataSource + `
 
 resource "tencentcloud_tcr_instance" "mytcr_dest" {
 	name        = "tf-test-tcr-%s"

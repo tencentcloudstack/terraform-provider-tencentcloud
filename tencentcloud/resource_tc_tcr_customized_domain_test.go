@@ -59,14 +59,14 @@ func TestAccTencentCloudTcrCustomizedDomainResource_basic(t *testing.T) {
 			{
 				Config: fmt.Sprintf(testAccTcrCustomizedDomain, defaultTCRSSL),
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_customized_domain.my_domain", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tcr_customized_domain.my_domain", "registry_id"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_customized_domain.my_domain", "domain_name", "www.test.com"),
-					resource.TestCheckResourceAttr("tencentcloud_tcr_customized_domain.my_domain", "certificate_id", defaultTCRSSL),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_customized_domain.my_domain", "certificate_id"),
 				),
 			},
 			{
@@ -78,12 +78,16 @@ func TestAccTencentCloudTcrCustomizedDomainResource_basic(t *testing.T) {
 	})
 }
 
-const testAccTcrCustomizedDomain = defaultTCRInstanceData + `
+const testAccTcrCustomizedDomain = TCRDataSource + `
+variable "env_default_ssl_id" {
+  type = string
+}
+
 
 resource "tencentcloud_tcr_customized_domain" "my_domain" {
   registry_id = local.tcr_id
   domain_name = "www.test.com"
-  certificate_id = "%s"
+  certificate_id = var.env_default_ssl_id != "" ? var.env_default_ssl_id : "%s"
   tags = {
     "createdBy" = "terraform"
   }

@@ -1,7 +1,6 @@
 package tencentcloud
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -14,10 +13,9 @@ func TestAccTencentCloudTcrReplicationInstanceCreateTasksDataSource_basic(t *tes
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource, defaultTCRInstanceId, "tcr-aoz8mxoz-1-kkircm"),
-				// Config: testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource,
+				Config: testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
@@ -56,15 +54,15 @@ func TestAccTencentCloudTcrReplicationInstanceCreateTasksDataSource_basic(t *tes
 }
 
 // const testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource = testAccTcrManageReplicationOperation + `
-const testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource = `
+const testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource = TCRDataSource + `
 // locals {
 //   src_registry_id = local.tcr_id
 //   dst_registry_id = tencentcloud_tcr_manage_replication_operation.my_replica.destination_registry_id
 //   dst_region_id   = tencentcloud_tcr_manage_replication_operation.my_replica.destination_region_id
 // }
 locals {
-  src_registry_id = "%s"
-  dst_registry_id = "%s"
+  src_registry_id = local.tcr_id
+  dst_registry_id = var.env_tcr_replica_reg_id != "" ? var.env_tcr_replica_reg_id : "tcr-aoz8mxoz-1-kkircm"
   dst_region_id   = 1
 }
 

@@ -22,7 +22,7 @@ func TestAccTencentCloudTcrWebhookTriggerResource_basic(t *testing.T) {
 			{
 				Config: fmt.Sprintf(testAccTCRWebhookTrigger, "webhooktrigger", "webhooktrigger", "webhooktrigger"),
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
@@ -44,7 +44,7 @@ func TestAccTencentCloudTcrWebhookTriggerResource_basic(t *testing.T) {
 			{
 				Config: fmt.Sprintf(testAccTCRWebhookTrigger_update, "webhooktrigger", "webhooktrigger", "webhooktrigger"),
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(

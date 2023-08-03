@@ -16,7 +16,7 @@ func TestAccTencentCloudTcrTagRetentionExecutionConfigResource_basic(t *testing.
 				// Config: fmt.Sprintf(testAccTcrTagRetentionExecutionConfig, defaultTCRInstanceId),
 				Config: testAccTcrTagRetentionRule_manual,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(

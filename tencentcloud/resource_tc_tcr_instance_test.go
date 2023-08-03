@@ -92,7 +92,7 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRInstance_basic,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -114,7 +114,7 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRInstance_basic_update_remark,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -130,7 +130,7 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRInstance_basic_update_security,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -143,7 +143,7 @@ func TestAccTencentCloudTcrInstanceResource_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRInstance_basic_update_instance_type,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -166,7 +166,7 @@ func TestAccTencentCloudNeedFixTcrInstanceResource_paypaid(t *testing.T) {
 			{
 				Config: testAccTCRInstance_paypaid,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -182,7 +182,7 @@ func TestAccTencentCloudNeedFixTcrInstanceResource_paypaid(t *testing.T) {
 			{
 				Config: testAccTCRInstance_update_paypaid_period,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -215,7 +215,7 @@ func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 			{
 				Config: testAccTCRInstance_replica,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -232,7 +232,7 @@ func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 			{
 				Config: testAccTCRInstance_replica_update,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(

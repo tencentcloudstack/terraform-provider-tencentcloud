@@ -21,7 +21,7 @@ func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 			{
 				Config: testAccTcrTagRetentionRule,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
@@ -39,7 +39,7 @@ func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 			{
 				Config: testAccTcrTagRetentionRule_update,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(

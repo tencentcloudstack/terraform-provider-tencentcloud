@@ -15,7 +15,7 @@ func TestAccTencentCloudTcrDescribeWebhookTriggerLogsDataSource_basic(t *testing
 			{
 				Config: testAccTcrDescribeWebhookTriggerLogsDataSource,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
@@ -39,7 +39,7 @@ func TestAccTencentCloudTcrDescribeWebhookTriggerLogsDataSource_basic(t *testing
 	})
 }
 
-const testAccTcrDescribeWebhookTriggerLogsDataSource = defaultTCRInstanceData + `
+const testAccTcrDescribeWebhookTriggerLogsDataSource = TCRDataSource + `
 
 data "tencentcloud_tcr_webhook_trigger_logs" "my_logs" {
   registry_id = local.tcr_id
