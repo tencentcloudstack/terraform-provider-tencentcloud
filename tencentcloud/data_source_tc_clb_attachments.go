@@ -165,7 +165,8 @@ func dataSourceTencentCloudClbServerAttachmentsRead(d *schema.ResourceData, meta
 					}
 				}
 			}
-		} else if *attachment.Protocol == CLB_LISTENER_PROTOCOL_TCP || *attachment.Protocol == CLB_LISTENER_PROTOCOL_UDP {
+		} else if *attachment.Protocol == CLB_LISTENER_PROTOCOL_TCP || *attachment.Protocol == CLB_LISTENER_PROTOCOL_UDP ||
+			*attachment.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *attachment.Protocol == CLB_LISTENER_PROTOCOL_QUIC {
 			mapping["targets"] = flattenBackendList(attachment.Targets)
 		}
 		attachmentList = append(attachmentList, mapping)

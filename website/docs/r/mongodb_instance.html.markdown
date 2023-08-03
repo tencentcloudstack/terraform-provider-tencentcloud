@@ -18,11 +18,11 @@ resource "tencentcloud_mongodb_instance" "mongodb" {
   instance_name  = "mongodb"
   memory         = 4
   volume         = 100
-  engine_version = "MONGO_3_WT"
-  machine_type   = "GIO"
+  engine_version = "MONGO_36_WT"
+  machine_type   = "HIO10G"
   available_zone = "ap-guangzhou-2"
-  vpc_id         = "vpc-mz3efvbw"
-  subnet_id      = "subnet-lk0svi3p"
+  vpc_id         = "vpc-xxxxxx"
+  subnet_id      = "subnet-xxxxxx"
   project_id     = 0
   password       = "password1234"
 }
@@ -39,7 +39,14 @@ The following arguments are supported:
 * `memory` - (Required, Int) Memory size. The minimum value is 2, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `volume` - (Required, Int) Disk size. The minimum value is 25, and unit is GB. Memory and volume must be upgraded or degraded simultaneously.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag. Valid values are `0`(NOTIFY_AND_MANUAL_RENEW), `1`(NOTIFY_AND_AUTO_RENEW) and `2`(DISABLE_NOTIFY_AND_MANUAL_RENEW). Default value is `0`. Note: only works for PREPAID instance. Only supports`0` and `1` for creation.
+* `availability_zone_list` - (Optional, List: [`String`]) A list of nodes deployed in multiple availability zones. For more information, please use the API DescribeSpecInfo.
+			- Multi-availability zone deployment nodes can only be deployed in 3 different availability zones. It is not supported to deploy most nodes of the cluster in the same availability zone. For example, a 3-node cluster does not support the deployment of 2 nodes in the same zone.
+			- Version 4.2 and above are not supported.
+			- Read-only disaster recovery instances are not supported.
+			- Basic network cannot be selected.
 * `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`. Caution that update operation on this field will delete old instances and create new one with new charge type.
+* `hidden_zone` - (Optional, String) The availability zone to which the Hidden node belongs. This parameter must be configured to deploy instances across availability zones.
+* `node_num` - (Optional, Int) The number of nodes in each replica set. Default value: 3.
 * `password` - (Optional, String) Password of this Mongodb account.
 * `prepaid_period` - (Optional, Int) The tenancy (time unit is month) of the prepaid instance. Valid values are 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24, 36. NOTE: it only works when charge_type is set to `PREPAID`.
 * `project_id` - (Optional, Int) ID of the project which the instance belongs.

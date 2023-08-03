@@ -590,6 +590,10 @@ type CmqSubscription struct {
 	// 推送内容的格式。取值：（1）JSON；（2）SIMPLIFIED，即 raw 格式。如果 protocol 是 queue，则取值必须为 SIMPLIFIED。如果 protocol 是 HTTP，两个值均可以，默认值是 JSON。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	NotifyContentFormat *string `json:"NotifyContentFormat,omitempty" name:"NotifyContentFormat"`
+
+	// 订阅所属的主题名称
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TopicName *string `json:"TopicName,omitempty" name:"TopicName"`
 }
 
 type CmqTopic struct {
@@ -658,6 +662,10 @@ type CmqTopic struct {
 	// 0表示pulsar，1表示rocketmq
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	BrokerType *int64 `json:"BrokerType,omitempty" name:"BrokerType"`
+
+	// 订阅数量
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubscriptionCount *int64 `json:"SubscriptionCount,omitempty" name:"SubscriptionCount"`
 }
 
 type CmqTransactionPolicy struct {
@@ -1988,6 +1996,113 @@ func (r *CreateRocketMQTopicResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateRocketMQVipInstanceRequestParams struct {
+	// 实例名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 实例规格：
+	// 基础型，rocket-vip-basic-1
+	// 标准型，rocket-vip-basic-2
+	// 高阶Ⅰ型，rocket-vip-basic-3
+	// 高阶Ⅱ型，rocket-vip-basic-4
+	Spec *string `json:"Spec,omitempty" name:"Spec"`
+
+	// 节点数量，最小2，最大20
+	NodeCount *int64 `json:"NodeCount,omitempty" name:"NodeCount"`
+
+	// 单节点存储空间，GB为单位，最低200GB
+	StorageSize *int64 `json:"StorageSize,omitempty" name:"StorageSize"`
+
+	// 节点部署的区域ID列表，如广州一区，则是100001，具体可查询腾讯云官网
+	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
+
+	// VPC信息
+	VpcInfo *VpcInfo `json:"VpcInfo,omitempty" name:"VpcInfo"`
+
+	// 购买时长，月为单位
+	TimeSpan *int64 `json:"TimeSpan,omitempty" name:"TimeSpan"`
+}
+
+type CreateRocketMQVipInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例名称
+	Name *string `json:"Name,omitempty" name:"Name"`
+
+	// 实例规格：
+	// 基础型，rocket-vip-basic-1
+	// 标准型，rocket-vip-basic-2
+	// 高阶Ⅰ型，rocket-vip-basic-3
+	// 高阶Ⅱ型，rocket-vip-basic-4
+	Spec *string `json:"Spec,omitempty" name:"Spec"`
+
+	// 节点数量，最小2，最大20
+	NodeCount *int64 `json:"NodeCount,omitempty" name:"NodeCount"`
+
+	// 单节点存储空间，GB为单位，最低200GB
+	StorageSize *int64 `json:"StorageSize,omitempty" name:"StorageSize"`
+
+	// 节点部署的区域ID列表，如广州一区，则是100001，具体可查询腾讯云官网
+	ZoneIds []*string `json:"ZoneIds,omitempty" name:"ZoneIds"`
+
+	// VPC信息
+	VpcInfo *VpcInfo `json:"VpcInfo,omitempty" name:"VpcInfo"`
+
+	// 购买时长，月为单位
+	TimeSpan *int64 `json:"TimeSpan,omitempty" name:"TimeSpan"`
+}
+
+func (r *CreateRocketMQVipInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateRocketMQVipInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Name")
+	delete(f, "Spec")
+	delete(f, "NodeCount")
+	delete(f, "StorageSize")
+	delete(f, "ZoneIds")
+	delete(f, "VpcInfo")
+	delete(f, "TimeSpan")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateRocketMQVipInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateRocketMQVipInstanceResponseParams struct {
+	// 集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateRocketMQVipInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateRocketMQVipInstanceResponseParams `json:"Response"`
+}
+
+func (r *CreateRocketMQVipInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateRocketMQVipInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateRoleRequestParams struct {
 	// 角色名称，不支持中字以及除了短线和下划线外的特殊字符且长度必须大于0且小等于32。
 	RoleName *string `json:"RoleName,omitempty" name:"RoleName"`
@@ -3104,6 +3219,60 @@ func (r *DeleteRocketMQTopicResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DeleteRocketMQVipInstanceRequestParams struct {
+	// 实例的集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+type DeleteRocketMQVipInstanceRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例的集群ID
+	ClusterId *string `json:"ClusterId,omitempty" name:"ClusterId"`
+}
+
+func (r *DeleteRocketMQVipInstanceRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteRocketMQVipInstanceRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "ClusterId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteRocketMQVipInstanceRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteRocketMQVipInstanceResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteRocketMQVipInstanceResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteRocketMQVipInstanceResponseParams `json:"Response"`
+}
+
+func (r *DeleteRocketMQVipInstanceResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteRocketMQVipInstanceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DeleteRolesRequestParams struct {
 	// 角色名称数组。
 	RoleNames []*string `json:"RoleNames,omitempty" name:"RoleNames"`
@@ -4058,6 +4227,13 @@ type DescribeCmqSubscriptionDetailRequestParams struct {
 
 	// 根据SubscriptionName进行模糊搜索
 	SubscriptionName *string `json:"SubscriptionName,omitempty" name:"SubscriptionName"`
+
+	// 队列名称，订阅绑定的endpoint
+	QueueName *string `json:"QueueName,omitempty" name:"QueueName"`
+
+	// 查询类型。取值：（1）topic；（2）queue。
+	// 默认值是topic。如果 queryType 是 topic，则查询主题下的订阅列表；如果 queryType 是 queue，则查询队列绑定的订阅列表。
+	QueryType *string `json:"QueryType,omitempty" name:"QueryType"`
 }
 
 type DescribeCmqSubscriptionDetailRequest struct {
@@ -4074,6 +4250,13 @@ type DescribeCmqSubscriptionDetailRequest struct {
 
 	// 根据SubscriptionName进行模糊搜索
 	SubscriptionName *string `json:"SubscriptionName,omitempty" name:"SubscriptionName"`
+
+	// 队列名称，订阅绑定的endpoint
+	QueueName *string `json:"QueueName,omitempty" name:"QueueName"`
+
+	// 查询类型。取值：（1）topic；（2）queue。
+	// 默认值是topic。如果 queryType 是 topic，则查询主题下的订阅列表；如果 queryType 是 queue，则查询队列绑定的订阅列表。
+	QueryType *string `json:"QueryType,omitempty" name:"QueryType"`
 }
 
 func (r *DescribeCmqSubscriptionDetailRequest) ToJsonString() string {
@@ -4092,6 +4275,8 @@ func (r *DescribeCmqSubscriptionDetailRequest) FromJsonString(s string) error {
 	delete(f, "Offset")
 	delete(f, "Limit")
 	delete(f, "SubscriptionName")
+	delete(f, "QueueName")
+	delete(f, "QueryType")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeCmqSubscriptionDetailRequest has unknown keys!", "")
 	}
@@ -10420,4 +10605,12 @@ type VpcEndpointInfo struct {
 	// OFF/ON/CREATING/DELETING
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	VpcDataStreamEndpointStatus *string `json:"VpcDataStreamEndpointStatus,omitempty" name:"VpcDataStreamEndpointStatus"`
+}
+
+type VpcInfo struct {
+	// vpc信息
+	VpcId *string `json:"VpcId,omitempty" name:"VpcId"`
+
+	// 子网信息
+	SubnetId *string `json:"SubnetId,omitempty" name:"SubnetId"`
 }

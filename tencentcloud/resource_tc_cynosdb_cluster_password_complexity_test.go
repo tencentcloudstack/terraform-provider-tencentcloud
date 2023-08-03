@@ -11,7 +11,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudCynosdbClusterPasswordComplexityResource_basic -v
 func TestAccTencentCloudCynosdbClusterPasswordComplexityResource_basic(t *testing.T) {
-	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

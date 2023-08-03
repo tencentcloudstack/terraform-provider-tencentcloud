@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_role_sso" "foo" {
-	name="test"
+	name="tf_cam_role_sso"
 	identity_url="https://login.microsoftonline.com/.../v2.0"
 	identity_key="..."
 	client_ids=["..."]
