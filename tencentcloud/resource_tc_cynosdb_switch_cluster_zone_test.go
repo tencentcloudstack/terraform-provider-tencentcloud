@@ -24,17 +24,17 @@ func TestAccTencentCloudCynosdbSwitchClusterZoneResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-			{
 				Config: testAccCynosdbSwitchClusterZoneUp,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone", "id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone", "cluster_id"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone", "zone", "ap-guangzhou-4"),
 				),
+			},
+			{
+				ResourceName:      "tencentcloud_cynosdb_switch_cluster_zone.switch_cluster_zone",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
