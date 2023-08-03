@@ -702,18 +702,14 @@ variable "ins_type" {
 
 // @deprecated. Avoid using this because it may return diff results
 const TkeInstanceType = `
-variable "default_az" {
-  default = "ap-guangzhou-7"
-}
 
 data "tencentcloud_instance_types" "ins_type" {
-  availability_zone = var.default_az
+  availability_zone = var.env_az != "" ? var.env_az :  "` + defaultCvmAZone + `"
   cpu_core_count    = 2
   exclude_sold_out  = true
 }
 
 locals {
-  ins_az = var.default_az
   type1 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i if lookup(i, "instance_charge_type") == "POSTPAID_BY_HOUR"]
   type2 = [for i in data.tencentcloud_instance_types.ins_type.instance_types: i]
   final_type = concat(local.type1, local.type2)[0].instance_type

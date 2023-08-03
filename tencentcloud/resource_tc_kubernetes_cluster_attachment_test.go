@@ -167,7 +167,7 @@ resource "tencentcloud_instance" "foo_attachment" {
   instance_name     = "tf-auto-test-1-1"
   availability_zone = data.tencentcloud_vpc_subnets.sub.instance_list.0.availability_zone
   image_id          = var.default_img_id
-  instance_type     = local.type1
+  instance_type     = var.env_instance_type != "" ? var.env_instance_type : local.type1
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
   vpc_id            = data.tencentcloud_vpc_subnets.sub.instance_list.0.vpc_id

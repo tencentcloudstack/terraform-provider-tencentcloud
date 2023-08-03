@@ -162,6 +162,13 @@ func TestAccTencentCloudKubernetesNodePoolResource_DiskEncrypt(t *testing.T) {
 		CheckDestroy: testAccCheckTkeNodePoolDestroy,
 		Steps: []resource.TestStep{
 			{
+				SkipFunc: func() (bool, error) {
+					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
+						fmt.Printf("[International station]skip TestAccTencentCloudKubernetesNodePoolResource_DiskEncrypt, because the international station did not support this feature yet!\n")
+						return true, nil
+					}
+					return false, nil
+				},
 				Config: testAccTkeNodePoolClusterEncrypt,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeNodePoolExists,
@@ -494,7 +501,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   multi_zone_subnet_policy = "EQUALITY"
 
   auto_scaling_config {
-    instance_type      = "GN6S.LARGE20"
+    instance_type      = var.env_instance_type != "" ? var.env_instance_type : "GN6S.LARGE20"
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "100"
     security_group_ids = [data.tencentcloud_security_groups.sg.security_groups[0].security_group_id, data.tencentcloud_security_groups.sg_as.security_groups[0].security_group_id]
