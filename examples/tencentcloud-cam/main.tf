@@ -1,57 +1,12 @@
-resource "tencentcloud_cam_group" "example" {
-  name   = "example"
-  remark = "example"
+terraform {
+  required_providers {
+    tencentcloud = {
+      source = "tencentcloudstack/tencentcloud"
+    }
+  }
 }
-
-resource "tencentcloud_cam_user" "example" {
-  name                = "example"
-  remark              = "example"
-  console_login       = true
-  use_api             = true
-  need_reset_password = true
-  password            = var.password
-  phone_num           = var.phone_num
-  country_code        = var.country_code
-  email               = var.email
-  force_delete        = true
-}
-
-resource "tencentcloud_cam_policy" "example" {
-  name     = "example"
-  document = var.policy_document
-}
-
-resource "tencentcloud_cam_role" "example" {
-  name          = "example"
-  document      = var.role_document
-  description   = "test"
-  console_login = true
-}
-
-resource "tencentcloud_cam_group_membership" "example" {
-  group_id = tencentcloud_cam_group.example.id
-  user_names = [tencentcloud_cam_user.example.name]
-}
-
-resource "tencentcloud_cam_role_policy_attachment" "example" {
-  role_id   = tencentcloud_cam_role.example.id
-  policy_id = tencentcloud_cam_policy.example.id
-}
-
-resource "tencentcloud_cam_user_policy_attachment" "example" {
-  user_name   = tencentcloud_cam_user.example.name
-  policy_id = tencentcloud_cam_policy.example.id
-}
-
-resource "tencentcloud_cam_group_policy_attachment" "example" {
-  group_id  = tencentcloud_cam_group.example.id
-  policy_id = tencentcloud_cam_policy.example.id
-}
-
-resource "tencentcloud_cam_saml_provider" "example" {
-  name        = "example"
-  meta_data   = var.meta_data
-  description = "test"
+provider "tencentcloud" {
+  region = "ap-guangzhou"
 }
 
 data "tencentcloud_cam_users" "users" {
@@ -89,3 +44,78 @@ data "tencentcloud_cam_group_policy_attachments" "group_policy_attachments" {
 data "tencentcloud_cam_saml_providers" "saml_providers" {
   name = tencentcloud_cam_saml_provider.example.id
 }
+
+resource "tencentcloud_cam_group" "example" {
+  name   = "example"
+  remark = "example"
+}
+
+resource "tencentcloud_cam_user" "example" {
+  name                = "example"
+  remark              = "example"
+  console_login       = true
+  use_api             = true
+  need_reset_password = true
+  password            = var.password
+  phone_num           = var.phone_num
+  country_code        = var.country_code
+  email               = var.email
+  force_delete        = true
+}
+
+resource "tencentcloud_cam_policy" "example" {
+  name     = "example"
+  document = var.policy_document
+}
+
+resource "tencentcloud_cam_role" "example" {
+  name          = "example"
+  document      =<<EOF
+{
+  "version": "2.0",
+  "statement": [
+    {
+      "action": [
+        "name/sts:AssumeRole"
+      ],
+      "effect": "allow",
+      "principal": {
+        "qcs": [
+          "qcs::cam::uin/${local.uin}:uin/${local.uin}"
+        ]
+      }
+    }
+  ]
+}
+EOF
+
+  description   = "test"
+  console_login = true
+}
+
+resource "tencentcloud_cam_group_membership" "example" {
+  group_id = tencentcloud_cam_group.example.id
+  user_names = [tencentcloud_cam_user.example.name]
+}
+
+resource "tencentcloud_cam_role_policy_attachment" "example" {
+  role_id   = tencentcloud_cam_role.example.id
+  policy_id = tencentcloud_cam_policy.example.id
+}
+
+resource "tencentcloud_cam_user_policy_attachment" "example" {
+  user_name   = tencentcloud_cam_user.example.name
+  policy_id = tencentcloud_cam_policy.example.id
+}
+
+resource "tencentcloud_cam_group_policy_attachment" "example" {
+  group_id  = tencentcloud_cam_group.example.id
+  policy_id = tencentcloud_cam_policy.example.id
+}
+
+resource "tencentcloud_cam_saml_provider" "example" {
+  name        = "example"
+  meta_data   = var.meta_data
+  description = "test"
+}
+
