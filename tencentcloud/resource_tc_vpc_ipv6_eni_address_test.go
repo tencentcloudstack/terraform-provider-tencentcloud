@@ -17,6 +17,7 @@ func TestAccTencentCloudVpcIpv6EniAddressResource_basic(t *testing.T) {
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
+		//CheckDestroy: testAccCheckVpcIpv6EniAddressDestroy,
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
