@@ -4,7 +4,9 @@ Provides a resource to create a sqlserver renew_db_instance
 Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
 
 resource "tencentcloud_vpc" "vpc" {
   name       = "example-vpc"
@@ -12,7 +14,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   name              = "example-vpc"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"
@@ -25,8 +27,8 @@ resource "tencentcloud_security_group" "security_group" {
 }
 
 resource "tencentcloud_sqlserver_instance" "example" {
-  name                   = "tf_example_sql"
-  availability_zone      = data.tencentcloud_availability_zones.zones.zones.0.name
+  name                   = "tf_example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type            = "PREPAID"
   period                 = 1
   vpc_id                 = tencentcloud_vpc.vpc.id
@@ -43,9 +45,9 @@ resource "tencentcloud_sqlserver_instance" "example" {
   }
 }
 
-resource "tencentcloud_sqlserver_renew_db_instance" "renew_db_instance" {
+resource "tencentcloud_sqlserver_renew_db_instance" "example" {
   instance_id = tencentcloud_sqlserver_instance.example.id
-  period = 1
+  period      = 1
 }
 ```
 

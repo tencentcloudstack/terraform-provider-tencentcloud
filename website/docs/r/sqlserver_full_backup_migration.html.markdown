@@ -14,12 +14,60 @@ Provides a resource to create a sqlserver full_backup_migration
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_full_backup_migration" "my_migration" {
-  instance_id    = "mssql-qelbzgwf"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_sqlserver_instance" "example" {
+  name              = "tf-example"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  project_id        = 0
+  memory            = 16
+  storage           = 40
+}
+
+resource "tencentcloud_sqlserver_db" "example" {
+  instance_id = tencentcloud_sqlserver_instance.example.id
+  name        = "tf_example_db"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "test-remark"
+}
+
+resource "tencentcloud_sqlserver_general_backup" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
+  backup_name = "tf_example_backup"
+  strategy    = 0
+}
+
+data "tencentcloud_sqlserver_backups" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
+  backup_name = tencentcloud_sqlserver_general_backup.example.backup_name
+  start_time  = "2023-07-25 00:00:00"
+  end_time    = "2023-08-04 00:00:00"
+}
+
+resource "tencentcloud_sqlserver_full_backup_migration" "example" {
+  instance_id    = tencentcloud_sqlserver_instance.example.id
   recovery_type  = "FULL"
   upload_type    = "COS_URL"
   migration_name = "migration_test"
-  backup_files   = []
+  backup_files   = [data.tencentcloud_sqlserver_backups.example.list.0.internet_url]
 }
 ```
 
@@ -38,7 +86,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
-
+* `backup_migration_id` - Backup import task ID.
 
 
 ## Import

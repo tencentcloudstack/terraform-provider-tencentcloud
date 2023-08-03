@@ -4,17 +4,45 @@ Provides a SQL Server instance resource to create read-only database instances.
 Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_readonly_instance" "foo" {
-  name = "tf_sqlserver_instance_ro"
-  availability_zone = "ap-guangzhou-4"
-  charge_type = "POSTPAID_BY_HOUR"
-  vpc_id                   = "vpc-xxxxxxxx"
-  subnet_id = "subnet-xxxxxxxx"
-  memory = 2
-  storage = 10
-  master_instance_id = tencentcloud_sqlserver_instance.test.id
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_sqlserver_instance" "example" {
+  name              = "tf-example"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  project_id        = 0
+  memory            = 16
+  storage           = 40
+}
+
+resource "tencentcloud_sqlserver_readonly_instance" "example" {
+  name                = "tf_example"
+  availability_zone   = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type         = "POSTPAID_BY_HOUR"
+  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = tencentcloud_subnet.subnet.id
+  memory              = 4
+  storage             = 20
+  master_instance_id  = tencentcloud_sqlserver_instance.example.id
   readonly_group_type = 1
-  force_upgrade = true
+  force_upgrade       = true
 }
 ```
 

@@ -4,12 +4,60 @@ Provides a resource to create a sqlserver full_backup_migration
 Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_full_backup_migration" "my_migration" {
-  instance_id = "mssql-qelbzgwf"
-  recovery_type = "FULL"
-  upload_type = "COS_URL"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_sqlserver_instance" "example" {
+  name              = "tf-example"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  project_id        = 0
+  memory            = 16
+  storage           = 40
+}
+
+resource "tencentcloud_sqlserver_db" "example" {
+  instance_id = tencentcloud_sqlserver_instance.example.id
+  name        = "tf_example_db"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "test-remark"
+}
+
+resource "tencentcloud_sqlserver_general_backup" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
+  backup_name = "tf_example_backup"
+  strategy    = 0
+}
+
+data "tencentcloud_sqlserver_backups" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
+  backup_name = tencentcloud_sqlserver_general_backup.example.backup_name
+  start_time  = "2023-07-25 00:00:00"
+  end_time    = "2023-08-04 00:00:00"
+}
+
+resource "tencentcloud_sqlserver_full_backup_migration" "example" {
+  instance_id    = tencentcloud_sqlserver_instance.example.id
+  recovery_type  = "FULL"
+  upload_type    = "COS_URL"
   migration_name = "migration_test"
-  backup_files = []
+  backup_files   = [data.tencentcloud_sqlserver_backups.example.list.0.internet_url]
 }
 ```
 
@@ -70,6 +118,11 @@ func resourceTencentCloudSqlserverFullBackupMigration() *schema.Resource {
 				Type:        schema.TypeList,
 				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "If the UploadType is COS_URL, fill in the URL here. If the UploadType is COS_UPLOAD, fill in the name of the backup file here. Only 1 backup file is supported, but a backup file can involve multiple databases.",
+			},
+			"backup_migration_id": {
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "Backup import task ID.",
 			},
 		},
 	}
@@ -164,6 +217,8 @@ func resourceTencentCloudSqlserverFullBackupMigrationRead(d *schema.ResourceData
 		log.Printf("[WARN]%s resource `SqlserverFullBackupMigration` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
+
+	_ = d.Set("backup_migration_id", backupMigrationId)
 
 	if fullBackupMigration.InstanceId != nil {
 		_ = d.Set("instance_id", fullBackupMigration.InstanceId)

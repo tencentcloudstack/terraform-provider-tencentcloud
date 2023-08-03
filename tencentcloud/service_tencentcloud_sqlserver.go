@@ -420,7 +420,7 @@ func (me *SqlserverService) DescribeInstanceSecurityGroups(ctx context.Context, 
 	return
 }
 
-func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instanceId string, startTime string, endTime string) (backupList []*sqlserver.Backup, errRet error) {
+func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instanceId, backupName string, startTime string, endTime string) (backupList []*sqlserver.Backup, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewDescribeBackupsRequest()
 	defer func() {
@@ -430,6 +430,7 @@ func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instan
 	}()
 
 	request.InstanceId = &instanceId
+	request.BackupName = &backupName
 	request.StartTime = &startTime
 	request.EndTime = &endTime
 

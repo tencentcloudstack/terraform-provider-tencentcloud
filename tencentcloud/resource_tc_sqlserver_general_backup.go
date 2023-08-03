@@ -4,10 +4,38 @@ Provides a resource to create a sqlserver general_backup
 Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_general_backup" "general_backup" {
-  strategy = 0
-  instance_id = "mssql-qelbzgwf"
-  backup_name = "create_sqlserver_backup_name"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_sqlserver_instance" "example" {
+  name              = "tf-example"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  project_id        = 0
+  memory            = 16
+  storage           = 40
+}
+
+resource "tencentcloud_sqlserver_general_backup" "example" {
+  instance_id = tencentcloud_sqlserver_instance.example.id
+  backup_name = "tf_example_backup"
+  strategy    = 0
 }
 ```
 
