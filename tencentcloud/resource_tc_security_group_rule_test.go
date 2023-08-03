@@ -336,7 +336,7 @@ resource "tencentcloud_security_group" "foo" {
 
 resource "tencentcloud_address_template" "templateB" {
   name = "testB"
-  addresses = ["1.1.1.1/24", "1.1.1.0-1.1.1.1"]
+  addresses = ["10.0.1.0/24", "10.0.0.1-10.0.0.100"]
 }
 
 resource "tencentcloud_address_template_group" "group"{
