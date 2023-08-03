@@ -176,7 +176,7 @@ func resourceTencentCloudSecurityGroupRuleSet() *schema.Resource {
 		"policy_index": {
 			Type:        schema.TypeInt,
 			Computed:    true,
-			Description: "Security Group Rule Index Number.",
+			Description: "The security group rule index number, whose value dynamically changes with changes in security group rules.",
 		},
 	}
 	return &schema.Resource{
