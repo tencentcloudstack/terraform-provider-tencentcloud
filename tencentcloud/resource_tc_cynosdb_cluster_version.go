@@ -5,17 +5,9 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cynosdb_cluster_version" "cluster_version" {
-  cluster_id = "xxx"
-  cynos_version = "2.0.0"
+  cluster_id    = "cynosdbmysql-bws8h88b"
+  cynos_version = "2.1.10"
 }
-```
-
-Import
-
-cynosdb cluster_version can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_cynosdb_cluster_version.cluster_version cluster_version_id
 ```
 */
 package tencentcloud
@@ -37,9 +29,7 @@ func resourceTencentCloudCynosdbClusterVersion() *schema.Resource {
 		Create: resourceTencentCloudCynosdbClusterVersionCreate,
 		Read:   resourceTencentCloudCynosdbClusterVersionRead,
 		Delete: resourceTencentCloudCynosdbClusterVersionDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"cluster_id": {
 				Required:    true,

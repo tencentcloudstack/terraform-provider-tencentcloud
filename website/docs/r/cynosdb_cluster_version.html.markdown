@@ -15,8 +15,8 @@ Provides a resource to create a cynosdb cluster_version
 
 ```hcl
 resource "tencentcloud_cynosdb_cluster_version" "cluster_version" {
-  cluster_id    = "xxx"
-  cynos_version = "2.0.0"
+  cluster_id    = "cynosdbmysql-bws8h88b"
+  cynos_version = "2.1.10"
 }
 ```
 
@@ -34,12 +34,4 @@ In addition to all arguments above, the following attributes are exported:
 * `id` - ID of the resource.
 
 
-
-## Import
-
-cynosdb cluster_version can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_cynosdb_cluster_version.cluster_version cluster_version_id
-```
 

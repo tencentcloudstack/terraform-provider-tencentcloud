@@ -30,9 +30,8 @@ func TestAccTencentCloudNeedFixCynosdbClusterVersionResource_basic(t *testing.T)
 const testAccCynosdbClusterVersion = `
 
 resource "tencentcloud_cynosdb_cluster_version" "cluster_version" {
-  cluster_id = "xxx"
-  cynos_version = "2.0.0"
-  upgrade_type = "upgradeImmediate"
+	cluster_id    = "cynosdbmysql-bws8h88b"
+	cynos_version = "2.1.10"
 }
 
 `

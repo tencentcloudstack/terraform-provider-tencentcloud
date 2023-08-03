@@ -35,7 +35,7 @@ func TestAccTencentCloudCynosdbInstanceNameResource_basic(t *testing.T) {
 const testAccCynosdbInstanceName = `
 
 resource "tencentcloud_cynosdb_instance_name" "instance_name" {
-	instance_id = "cynosdbmysql-ins-5qgk5xiu"
+	instance_id = "cynosdbmysql-ins-afqx1hy0"
 	instance_name = "tf-cynosdb-instance-name"
 }
 
