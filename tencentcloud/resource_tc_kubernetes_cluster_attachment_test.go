@@ -143,6 +143,10 @@ variable "env_az" {
   type = string
 }
 
+variable "env_instance_type" {
+  type = string
+}
+
 data "tencentcloud_instance_types" "ins_type" {
   availability_zone = var.env_az != "" ? var.env_az : "ap-guangzhou-3"
   cpu_core_count    = 2
@@ -159,19 +163,15 @@ func testAccTkeAttachCluster() string {
 
 	return TkeDataSource + ClusterAttachmentInstanceType + defaultImages + `
 
-data "tencentcloud_vpc_subnets" "sub" {
-  vpc_id = local.cluster_vpc_id
-}
-
 resource "tencentcloud_instance" "foo_attachment" {
   instance_name     = "tf-auto-test-1-1"
   availability_zone = data.tencentcloud_vpc_subnets.sub.instance_list.0.availability_zone
   image_id          = var.default_img_id
-  instance_type     = local.type1
+  instance_type     = var.env_instance_type != "" ? var.env_instance_type : local.type1
   system_disk_type  = "CLOUD_PREMIUM"
   system_disk_size  = 50
-  vpc_id            = data.tencentcloud_vpc_subnets.sub.instance_list.0.vpc_id
-  subnet_id         = data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
+  vpc_id            = local.cluster_vpc_id
+  subnet_id         = local.cluster_subnet_id
   tags = data.tencentcloud_kubernetes_clusters.tke.list.0.tags # new added node will passive add tag by cluster
 }
 

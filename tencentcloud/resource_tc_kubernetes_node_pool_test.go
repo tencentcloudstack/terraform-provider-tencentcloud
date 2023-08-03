@@ -162,6 +162,13 @@ func TestAccTencentCloudKubernetesNodePoolResource_DiskEncrypt(t *testing.T) {
 		CheckDestroy: testAccCheckTkeNodePoolDestroy,
 		Steps: []resource.TestStep{
 			{
+				SkipFunc: func() (bool, error) {
+					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
+						fmt.Printf("[International station]skip TestAccTencentCloudKubernetesNodePoolResource_DiskEncrypt, because the international station did not support this feature yet!\n")
+						return true, nil
+					}
+					return false, nil
+				},
 				Config: testAccTkeNodePoolClusterEncrypt,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeNodePoolExists,
@@ -181,6 +188,13 @@ func TestAccTencentCloudKubernetesNodePoolResource_GPUInstance(t *testing.T) {
 		CheckDestroy: testAccCheckTkeNodePoolDestroy,
 		Steps: []resource.TestStep{
 			{
+				SkipFunc: func() (bool, error) {
+					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
+						fmt.Printf("[International station]skip testAccTkeNodePoolClusterGpu, because the international station did not support this gpu instance!\n")
+						return true, nil
+					}
+					return false, nil
+				},
 				Config: testAccTkeNodePoolClusterGpu,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeNodePoolExists,

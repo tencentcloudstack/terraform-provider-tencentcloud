@@ -6,6 +6,7 @@ import (
 	"log"
 	"testing"
 	"time"
+	"os"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -96,6 +97,13 @@ func TestAccTencentCloudKubernetesScaleWorkerResource(t *testing.T) {
 				),
 			},
 			{
+				SkipFunc: func() (bool, error) {
+					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
+						fmt.Printf("[International station]skip testAccTkeScaleWorkerInstanceGpuInsTypeUpdate, because the international station did not support this gpu instance!\n")
+						return true, nil
+					}
+					return false, nil
+				},
 				Config: testAccTkeScaleWorkerInstanceGpuInsTypeUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeScaleWorkerExists(testTkeScaleWorkerResourceKey),
@@ -204,7 +212,11 @@ func testAccCheckTkeScaleWorkerExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTkeScaleWorkerInstanceBasic = TkeExclusiveNetwork + TkeDataSource + defaultSecurityGroupData
+const testAccTkeScaleWorkerInstanceBasic = defaultImages + TkeExclusiveNetwork + TkeDataSource + defaultSecurityGroupData + `
+variable "env_instance_type" {
+  type = string
+}
+`
 
 const testAccTkeScaleWorkerInstance string = testAccTkeScaleWorkerInstanceBasic + `
 
@@ -223,9 +235,9 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 
   worker_config {
     count                      				= 1
-    availability_zone          				= var.default_az
-    instance_type              				= local.scale_instance_type
-    subnet_id                  				= local.subnet_id
+    availability_zone          				= var.env_az != "" ? var.env_az : var.default_az
+    instance_type              				= var.env_instance_type != "" ? var.env_instance_type : local.scale_instance_type
+    subnet_id                  				= local.cluster_subnet_id
     system_disk_type           				= "CLOUD_SSD"
     system_disk_size           				= 50
     internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"
@@ -261,14 +273,14 @@ resource tencentcloud_kubernetes_scale_worker test_scale {
 
   worker_config {
     count                      				= 1
-    availability_zone          				= var.default_az
+    availability_zone          				= var.env_az != "" ? var.env_az : var.default_az
     instance_type              				= "GN6S.LARGE20"
-    subnet_id                  				= local.subnet_id
+    subnet_id                  				= local.cluster_subnet_id
     system_disk_type           				= "CLOUD_SSD"
     system_disk_size           				= 50
     internet_charge_type       				= "TRAFFIC_POSTPAID_BY_HOUR"
     security_group_ids                      = [local.sg_id]
-	img_id 								    = "img-eb30mz89"
+	img_id 								    = var.env_az != "" ? var.default_img_id : "img-eb30mz89"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"

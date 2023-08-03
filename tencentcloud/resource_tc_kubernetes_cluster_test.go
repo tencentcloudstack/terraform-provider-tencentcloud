@@ -373,7 +373,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
-    availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
+    availability_zone          = var.env_az != "" ? var.env_az : var.default_az
     instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
@@ -418,13 +418,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 `
 
 const testAccTkeClusterUpdateAccess = TkeDeps + `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-variable "env_az" {
-  type = string
-}
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
@@ -444,7 +437,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
-    availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
+    availability_zone          = var.env_az != "" ? var.env_az : var.default_az
     instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
@@ -493,13 +486,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }
 `
 const testAccTkeClusterUpdateLevel = TkeDeps + `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-variable "env_az" {
-  type = string
-}
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
@@ -516,7 +502,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
-    availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
+    availability_zone          = var.env_az != "" ? var.env_az : var.default_az
     instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
@@ -561,13 +547,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 `
 
 const testAccTkeClusterLogsAddons = TkeDeps + testAccTkeExtensionAddons + `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-variable "env_az" {
-  type = string
-}
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
@@ -584,7 +563,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   worker_config {
     count                      = 1
-    availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
+    availability_zone          = var.env_az != "" ? var.env_az : var.default_az
     instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
@@ -622,13 +601,6 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 }`
 
 const testAccTkeClusterLogsAddonsUpdate = TkeDeps + testAccTkeExtensionAddons + `
-variable "availability_zone" {
-  default = "ap-guangzhou-3"
-}
-
-variable "env_az" {
-  type = string
-}
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
@@ -653,7 +625,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 
   worker_config {
     count                      = 1
-    availability_zone          = var.env_az != "" ? var.env_az : var.availability_zone
+    availability_zone          = var.env_az != "" ? var.env_az : var.default_az
     instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
     system_disk_type           = "CLOUD_SSD"
     system_disk_size           = 60
