@@ -18,6 +18,8 @@ func TestAccTencentCloudScfSyncInvokeFunctionResource_basic(t *testing.T) {
 				Config: testAccScfSyncInvokeFunction,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_scf_sync_invoke_function.sync_invoke_function", "function_name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_sync_invoke_function.sync_invoke_function", "qualifier"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_sync_invoke_function.sync_invoke_function", "namespace"),
 				),
 			},
 		},
