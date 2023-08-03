@@ -73,7 +73,7 @@ func TestAccTencentCloudTcrNamespace_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRNamespace_basic,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -94,7 +94,7 @@ func TestAccTencentCloudTcrNamespace_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRNamespace_basic_update_remark,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -170,7 +170,7 @@ func testAccCheckTCRNamespaceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTCRNamespace_basic = defaultTCRInstanceData + `
+const testAccTCRNamespace_basic = TCRDataSource + `
 
 resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
   instance_id 	 = local.tcr_id
@@ -184,7 +184,7 @@ resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
   }
 }`
 
-const testAccTCRNamespace_basic_update_remark = defaultTCRInstanceData + `
+const testAccTCRNamespace_basic_update_remark = TCRDataSource + `
 
 resource "tencentcloud_tcr_namespace" "mytcr_namespace" {
   instance_id 	 = local.tcr_id

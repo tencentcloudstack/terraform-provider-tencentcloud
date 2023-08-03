@@ -16,7 +16,7 @@ func TestAccTencentCloudNeedFixTcrDeleteImageOperationResource_basic(t *testing.
 			{
 				Config: fmt.Sprintf(testAccTcrDeleteImageOperation, defaultTCRInstanceId, defaultTCRNamespace, defaultTCRRepoName),
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(

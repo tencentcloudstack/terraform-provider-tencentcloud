@@ -53,7 +53,7 @@ func TestAccTencentCloudTcrImmutableTagRuleResource_basic(t *testing.T) {
 			{
 				Config: fmt.Sprintf(testAccTcrImmutableTagRule_basic, defaultTCRInstanceId, defaultTCRNamespace),
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
@@ -72,7 +72,7 @@ func TestAccTencentCloudTcrImmutableTagRuleResource_basic(t *testing.T) {
 			{
 				Config: fmt.Sprintf(testAccTcrImmutableTagRule_update, defaultTCRInstanceId, defaultTCRNamespace),
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
@@ -161,7 +161,7 @@ func testAccCheckTcrImmutableTagRuleExists(re string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTcrImmutableTagRule_basic = defaultTCRInstanceData + `
+const testAccTcrImmutableTagRule_basic = TCRDataSource + `
 
 resource "tencentcloud_tcr_immutable_tag_rule" "my_rule" {
   registry_id = "%s"
@@ -180,7 +180,7 @@ resource "tencentcloud_tcr_immutable_tag_rule" "my_rule" {
 
 `
 
-const testAccTcrImmutableTagRule_update = defaultTCRInstanceData + `
+const testAccTcrImmutableTagRule_update = TCRDataSource + `
 
 resource "tencentcloud_tcr_immutable_tag_rule" "my_rule" {
   registry_id = "%s"

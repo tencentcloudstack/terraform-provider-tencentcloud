@@ -59,7 +59,7 @@ func TestAccTencentCloudTcrCustomizedDomainResource_basic(t *testing.T) {
 			{
 				Config: fmt.Sprintf(testAccTcrCustomizedDomain, defaultTCRSSL),
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(
@@ -78,7 +78,7 @@ func TestAccTencentCloudTcrCustomizedDomainResource_basic(t *testing.T) {
 	})
 }
 
-const testAccTcrCustomizedDomain = defaultTCRInstanceData + `
+const testAccTcrCustomizedDomain = TCRDataSource + `
 
 resource "tencentcloud_tcr_customized_domain" "my_domain" {
   registry_id = local.tcr_id

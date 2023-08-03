@@ -20,7 +20,7 @@ func TestAccTencentCloudTcrVPCAttachment_basic(t *testing.T) {
 			{
 				Config: testAccTCRVPCAttachment_basic,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(

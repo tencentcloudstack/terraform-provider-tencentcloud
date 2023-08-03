@@ -17,7 +17,7 @@ func TestAccTencentCloudTcrReplicationInstanceCreateTasksDataSource_basic(t *tes
 				Config: fmt.Sprintf(testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource, defaultTCRInstanceId, "tcr-aoz8mxoz-1-kkircm"),
 				// Config: testAccTcrReplicationInstance_create_tasks_and_sync_status_DataSource,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeTestCheckFunc(

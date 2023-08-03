@@ -588,13 +588,19 @@ variable "tcr_repo" {
 }
 `
 
-const defaultTCRInstanceData = defaultTCRInstanceVar + `
+const TCRDataSource = defaultTCRInstanceVar + `
 data "tencentcloud_tcr_instances" "tcr" {
   name = var.tcr_name
 }
 
+data "data.tencentcloud_tcr_repositories" "repo" {
+  name = var.tcr_repo
+}
+
 locals {
   tcr_id = data.tencentcloud_tcr_instances.tcr.instance_list.0.id
+  ns_name = data.tencentcloud_tcr_repositories.repo.namespace_name
+  tcr_repo = data.tencentcloud_tcr_repositories.repo.namespace_list.0.name
 }
 `
 
@@ -1124,4 +1130,5 @@ const (
 	E2ETEST_ENV_CLUSTER_ID = "TF_VAR_env_default_tke_cluster_id"
 	E2ETEST_ENV_REGION     = "TF_VAR_env_region"
 	E2ETEST_ENV_INS_TYPE   = "TF_VAR_env_instance_type"
+	E2ETEST_ENV_TCR_ID     = "TF_VAR_env_default_tcr_id"
 )

@@ -18,7 +18,7 @@ func TestAccTencentCloudTcrNamespacesData(t *testing.T) {
 			{
 				Config: testAccTencentCloudDataTCRNamespacesBasic,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -31,7 +31,7 @@ func TestAccTencentCloudTcrNamespacesData(t *testing.T) {
 	})
 }
 
-const testAccTencentCloudDataTCRNamespacesBasic = defaultTCRInstanceData + `
+const testAccTencentCloudDataTCRNamespacesBasic = TCRDataSource + `
 data "tencentcloud_tcr_namespaces" "id_test" {
   instance_id = local.tcr_id
 }

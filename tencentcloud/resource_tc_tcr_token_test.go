@@ -81,7 +81,7 @@ func TestAccTencentCloudTcrToken_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRToken_basic,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -103,7 +103,7 @@ func TestAccTencentCloudTcrToken_basic_and_update(t *testing.T) {
 			{
 				Config: testAccTCRToken_basic_update_remark,
 				PreConfig: func() {
-					testAccStepSetRegion(t, "ap-shanghai")
+					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
@@ -173,13 +173,13 @@ func testAccCheckTCRTokenExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTCRToken_basic = defaultTCRInstanceData + `
+const testAccTCRToken_basic = TCRDataSource + `
 resource "tencentcloud_tcr_token" "mytcr_token" {
   instance_id = local.tcr_id
   description       = "test token"
 }`
 
-const testAccTCRToken_basic_update_remark = defaultTCRInstanceData + `
+const testAccTCRToken_basic_update_remark = TCRDataSource + `
 
 resource "tencentcloud_tcr_token" "mytcr_token" {
   instance_id = local.tcr_id
