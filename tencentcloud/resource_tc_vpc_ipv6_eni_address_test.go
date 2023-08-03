@@ -17,7 +17,6 @@ func TestAccTencentCloudVpcIpv6EniAddressResource_basic(t *testing.T) {
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		//CheckDestroy: testAccCheckVpcIpv6EniAddressDestroy,
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
@@ -33,34 +32,6 @@ func TestAccTencentCloudVpcIpv6EniAddressResource_basic(t *testing.T) {
 			},
 		},
 	})
-}
-
-func testAccCheckVpcIpv6EniAddressDestroy(s *terraform.State) error {
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	service := VpcService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "tencentcloud_vpc_ipv6_eni_address" {
-			continue
-		}
-
-		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
-		if len(idSplit) != 3 {
-			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
-		}
-		vpcId := idSplit[0]
-		//networkInterfaceId := idSplit[1]
-		address := idSplit[2]
-
-		ipv6EniAddress, err := service.DescribeVpcIpv6EniAddressById(ctx, vpcId, address)
-		if err != nil {
-			return err
-		}
-		if ipv6EniAddress != nil {
-			return fmt.Errorf("VpcIpv6EniAddress Resource %s still exists", rs.Primary.ID)
-		}
-	}
-	return nil
 }
 
 func testAccCheckVpcIpv6EniAddressExists(r string) resource.TestCheckFunc {
