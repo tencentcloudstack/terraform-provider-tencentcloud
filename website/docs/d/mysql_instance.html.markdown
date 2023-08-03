@@ -66,6 +66,9 @@ In addition to all arguments above, the following attributes are exported:
   * `mysql_id` - Instance ID, such as `cdb-c1nl9rpv`. It is identical to the instance ID displayed in the database console page.
   * `pay_type` - Pay type of instance, `0`: prepaid, `1`: postpaid.
   * `project_id` - Project ID to which the current instance belongs.
+  * `ro_groups` - read-only instance group.
+    * `group_id` - Group ID, such as `cdbrg-pz7vg37p`.
+    * `instance_ids` - ID list of read-only type associated with the current instance.
   * `ro_instance_ids` - ID list of read-only type associated with the current instance.
   * `slave_sync_mode` - Data replication mode. `0` - Async replication; `1` - Semisync replication; `2` - Strongsync replication.
   * `status` - Instance status. Available values: `0` - Creating; `1` - Running; `4` - Isolating; `5` - Isolated.

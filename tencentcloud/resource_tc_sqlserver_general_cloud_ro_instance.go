@@ -87,6 +87,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -100,6 +101,12 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstance() *schema.Resource {
 		Read:   resourceTencentCloudSqlserverGeneralCloudRoInstanceRead,
 		Update: resourceTencentCloudSqlserverGeneralCloudRoInstanceUpdate,
 		Delete: resourceTencentCloudSqlserverGeneralCloudRoInstanceDelete,
+		Timeouts: &schema.ResourceTimeout{
+			Create: schema.DefaultTimeout(CreateDefaultTimeout * time.Second),
+			Read:   schema.DefaultTimeout(ReadDefaultTimeout * time.Second),
+			Update: schema.DefaultTimeout(UpdateDefaultTimeout * time.Second),
+			Delete: schema.DefaultTimeout(DeleteDefaultTimeout * time.Second),
+		},
 
 		Schema: map[string]*schema.Schema{
 			"instance_id": {
@@ -229,6 +236,7 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstanceCreate(d *schema.Resourc
 		service      = SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request      = sqlserver.NewCreateCloudReadOnlyDBInstancesRequest()
 		response     = sqlserver.NewCreateCloudReadOnlyDBInstancesResponse()
+		timeout      = d.Timeout(schema.TimeoutCreate)
 		instanceId   string
 		roInstanceId string
 		dealNames    string
@@ -326,7 +334,7 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstanceCreate(d *schema.Resourc
 
 	request.GoodsNum = helper.IntInt64(1)
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(timeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().CreateCloudReadOnlyDBInstances(request)
 		if e != nil {
 			return retryError(e)
@@ -344,7 +352,7 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstanceCreate(d *schema.Resourc
 	}
 
 	dealNames = *response.Response.DealNames[0]
-	roInstanceId, err = service.GetInfoFromDeal(ctx, dealNames)
+	roInstanceId, err = service.GetInfoFromDeal(ctx, dealNames, timeout)
 	if err != nil {
 		return err
 	}
@@ -516,6 +524,7 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstanceUpdate(d *schema.Resourc
 		client           = meta.(*TencentCloudClient).apiV3Conn
 		sqlserverService = SqlserverService{client: client}
 		request          = sqlserver.NewUpgradeDBInstanceRequest()
+		timeout          = d.Timeout(schema.TimeoutUpdate)
 		dealId           string
 	)
 
@@ -549,7 +558,7 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstanceUpdate(d *schema.Resourc
 			request.Cpu = helper.IntInt64(v.(int))
 		}
 
-		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		err := resource.Retry(timeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseSqlserverClient().UpgradeDBInstance(request)
 			if e != nil {
 				return retryError(e)
@@ -566,7 +575,7 @@ func resourceTencentCloudSqlserverGeneralCloudRoInstanceUpdate(d *schema.Resourc
 			return err
 		}
 
-		_, err = sqlserverService.GetInfoFromDeal(ctx, dealId)
+		_, err = sqlserverService.GetInfoFromDeal(ctx, dealId, timeout)
 		if err != nil {
 			return err
 		}

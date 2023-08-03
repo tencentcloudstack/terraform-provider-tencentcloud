@@ -110,6 +110,10 @@ resource "tencentcloud_cynosdb_cluster_slave_zone" "cluster_slave_zone" {
 resource "tencentcloud_cynosdb_cluster_slave_zone" "cluster_slave_zone" {
   cluster_id = tencentcloud_cynosdb_cluster.instance.id
   slave_zone = var.availability_zone
+
+  timeouts {
+    create = "500s"
+  }
 }
 ```
 

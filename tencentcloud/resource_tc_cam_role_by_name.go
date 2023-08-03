@@ -7,7 +7,7 @@ Create normally
 
 ```hcl
 resource "tencentcloud_cam_role_by_name" "foo" {
-  name          = "cam-role-test"
+  name          = "tf_cam_role"
   document      = <<EOF
 {
   "version": "2.0",

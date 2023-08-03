@@ -25,7 +25,7 @@ func TestAccTencentCloudVpcBandwidthPackageAttachment_basic(t *testing.T) {
 				Config: testAccVpcBandwidthPackageAttachment,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckBandwidthPackageAttachmentExists("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment"),
-					resource.TestCheckResourceAttr("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment", "resource_id", "eip-r2l240dq"),
+					resource.TestCheckResourceAttrSet("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment", "resource_id"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment", "network_type", "BGP"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_bandwidth_package_attachment.bandwidthPackageAttachment", "resource_type", "Address"),
 				),
@@ -103,6 +103,10 @@ func testAccCheckBandwidthPackageAttachmentExists(r string) resource.TestCheckFu
 
 const testAccVpcBandwidthPackageAttachment = `
 
+resource "tencentcloud_eip" "foo" {
+  name = "gateway_eip"
+}
+
 resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
   network_type            = "BGP"
   charge_type             = "TOP5_POSTPAID_BY_MONTH"
@@ -113,7 +117,7 @@ resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
 }
 
 resource "tencentcloud_vpc_bandwidth_package_attachment" "bandwidthPackageAttachment" {
-  resource_id          = "eip-r2l240dq"
+  resource_id          = tencentcloud_eip.foo.id
   bandwidth_package_id  = tencentcloud_vpc_bandwidth_package.bandwidth_package.id
   network_type          = "BGP"
   resource_type         = "Address"

@@ -5,7 +5,7 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cam_policy" "foo" {
-  name        = "cam-policy-test"
+  name        = "tf_cam_policy"
   document    = <<EOF
 {
   "version": "2.0",
@@ -22,7 +22,7 @@ resource "tencentcloud_cam_policy" "foo" {
   ]
 }
 EOF
-  description = "test"
+  description = "tf_test"
 }
 ```
 

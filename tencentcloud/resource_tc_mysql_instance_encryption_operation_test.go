@@ -8,7 +8,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudMysqlInstanceEncryptionOperationResource_basic -v
 func TestAccTencentCloudMysqlInstanceEncryptionOperationResource_basic(t *testing.T) {
-	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)

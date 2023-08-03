@@ -14,11 +14,39 @@ Use this resource to create SQL Server account
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_sqlserver_account" "foo" {
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_sqlserver_instance" "example" {
+  name              = "tf-example"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
+  charge_type       = "POSTPAID_BY_HOUR"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  subnet_id         = tencentcloud_subnet.subnet.id
+  project_id        = 0
+  memory            = 4
+  storage           = 100
+}
+
+resource "tencentcloud_sqlserver_account" "example" {
   instance_id = tencentcloud_sqlserver_instance.example.id
-  name        = "tf_sqlserver_account"
-  password    = "test1233"
-  remark      = "testt"
+  name        = "tf_example_account"
+  password    = "Qwer@234"
+  remark      = "test-remark"
 }
 ```
 
