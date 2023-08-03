@@ -1,13 +1,13 @@
 ---
 subcategory: "Cloud Access Management(CAM)"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_cam_role"
-sidebar_current: "docs-tencentcloud-resource-cam_role"
+page_title: "TencentCloud: tencentcloud_cam_role_by_name"
+sidebar_current: "docs-tencentcloud-resource-cam_role_by_name"
 description: |-
   Provides a resource to create a CAM role.
 ---
 
-# tencentcloud_cam_role
+# tencentcloud_cam_role_by_name
 
 Provides a resource to create a CAM role.
 
@@ -16,27 +16,17 @@ Provides a resource to create a CAM role.
 ### Create normally
 
 ```hcl
-locals {
-  uin = data.tencentcloud_user_info.info.uin
-}
-
-data "tencentcloud_user_info" "info" {}
-
-resource "tencentcloud_cam_role" "foo" {
-  name          = "cam-role-test"
+resource "tencentcloud_cam_role_by_name" "foo" {
+  name          = "tf_cam_role"
   document      = <<EOF
 {
   "version": "2.0",
   "statement": [
     {
-      "action": [
-        "name/sts:AssumeRole"
-      ],
+      "action": ["name/sts:AssumeRole"],
       "effect": "allow",
       "principal": {
-        "qcs": [
-          "qcs::cam::uin/${local.uin}:uin/${local.uin}"
-        ]
+        "qcs": ["qcs::cam::uin/<your-account-id>:uin/<your-account-id>"]
       }
     }
   ]
@@ -53,38 +43,23 @@ EOF
 ### Create with SAML provider
 
 ```hcl
-variable "saml-provider" {
-  default = "example"
-}
-
-locals {
-  uin           = data.tencentcloud_user_info.info.uin
-  saml_provider = var.saml-provider
-}
-
-data "tencentcloud_user_info" "info" {}
-
-resource "tencentcloud_cam_role" "boo" {
-  name          = "tf_cam_role"
+resource "tencentcloud_cam_role_by_name" "boo" {
+  name          = "cam-role-test"
   document      = <<EOF
 {
   "version": "2.0",
   "statement": [
     {
-      "action": [
-        "name/sts:AssumeRole"
-      ],
+      "action": ["name/sts:AssumeRole", "name/sts:AssumeRoleWithWebIdentity"],
       "effect": "allow",
       "principal": {
-        "qcs": [
-          "qcs::cam::uin/${local.uin}:saml-provider/${local.saml_provider}"
-        ]
+        "federated": ["qcs::cam::uin/<your-account-id>:saml-provider/<your-name>"]
       }
     }
   ]
 }
 EOF
-  description   = "tf_test"
+  description   = "test"
   console_login = true
 }
 ```
@@ -110,9 +85,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-CAM role can be imported using the id, e.g.
+CAM role can be imported using the name, e.g.
 
 ```
-$ terraform import tencentcloud_cam_role.foo 4611686018427733635
+$ terraform import tencentcloud_cam_role_by_name.foo cam-role-test
 ```
 

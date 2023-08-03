@@ -15,8 +15,8 @@ Provides a resource to manage CAM user.
 
 ```hcl
 resource "tencentcloud_cam_user" "foo" {
-  name                = "cam-user-test"
-  remark              = "test"
+  name                = "tf_cam_user"
+  remark              = "tf_user_test"
   console_login       = true
   use_api             = true
   need_reset_password = true
@@ -26,7 +26,7 @@ resource "tencentcloud_cam_user" "foo" {
   country_code        = "86"
   force_delete        = true
   tags = {
-    test = "tf-cam-user",
+    test = "tf_cam_user",
   }
 }
 ```

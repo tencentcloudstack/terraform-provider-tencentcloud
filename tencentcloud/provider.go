@@ -213,8 +213,11 @@ Cloud Access Management(CAM)
 
   Resource
     tencentcloud_cam_role
+    tencentcloud_cam_role_by_name
     tencentcloud_cam_role_policy_attachment
+    tencentcloud_cam_role_policy_attachment_by_name
     tencentcloud_cam_policy
+    tencentcloud_cam_policy_by_name
     tencentcloud_cam_user
     tencentcloud_cam_user_policy_attachment
     tencentcloud_cam_group
