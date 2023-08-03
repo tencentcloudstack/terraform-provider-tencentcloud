@@ -1,9 +1,13 @@
 package tencentcloud
 
 import (
+	"context"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccTencentCloudScfProvisionedConcurrencyConfigResource_basic(t *testing.T) {
@@ -12,14 +16,75 @@ func TestAccTencentCloudScfProvisionedConcurrencyConfigResource_basic(t *testing
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		CheckDestroy: testAccCheckScfProvisionedConcurrencyConfigDestroy,
+		Providers:    testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccScfProvisionedConcurrencyConfig,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_provisioned_concurrency_config.provisioned_concurrency_config", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckScfProvisionedConcurrencyConfigExists("tencentcloud_scf_provisioned_concurrency_config.provisioned_concurrency_config"),
+					resource.TestCheckResourceAttrSet("tencentcloud_scf_provisioned_concurrency_config.provisioned_concurrency_config", "function_name")),
 			},
 		},
 	})
+}
+func testAccCheckScfProvisionedConcurrencyConfigDestroy(s *terraform.State) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := ScfService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_scf_provisioned_concurrency_config" {
+			continue
+		}
+
+		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		if len(idSplit) != 3 {
+			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
+		}
+		functionName := idSplit[0]
+		qualifier := idSplit[1]
+		namespace := idSplit[2]
+
+		provisionedConcurrencyConfig, err := service.DescribeScfProvisionedConcurrencyConfigById(ctx, functionName, qualifier, namespace)
+		if err != nil {
+			return err
+		}
+
+		if provisionedConcurrencyConfig != nil {
+			return fmt.Errorf("ScfProvisionedConcurrencyConfig Resource %s still exists", rs.Primary.ID)
+		}
+	}
+	return nil
+}
+
+func testAccCheckScfProvisionedConcurrencyConfigExists(r string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+		rs, ok := s.RootModule().Resources[r]
+		if !ok {
+			return fmt.Errorf("resource %s is not found", r)
+		}
+
+		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		if len(idSplit) != 3 {
+			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
+		}
+		functionName := idSplit[0]
+		qualifier := idSplit[1]
+		namespace := idSplit[2]
+
+		service := ScfService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		provisionedConcurrencyConfig, err := service.DescribeScfProvisionedConcurrencyConfigById(ctx, functionName, qualifier, namespace)
+		if err != nil {
+			return err
+		}
+		if provisionedConcurrencyConfig == nil {
+			return fmt.Errorf("ScfProvisionedConcurrencyConfig Resource %s is not found", rs.Primary.ID)
+		}
+		return nil
+	}
 }
 
 const testAccScfProvisionedConcurrencyConfig = `
