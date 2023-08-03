@@ -173,6 +173,11 @@ func resourceTencentCloudSecurityGroupRuleSet() *schema.Resource {
 			Computed:    true,
 			Description: "Range of the port. The available value can be one, multiple or one segment. E.g. `80`, `80,90` and `80-90`. Default to all ports, and conflicts with `service_template_*`.",
 		},
+		"policy_index": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Description: "The security group rule index number, whose value dynamically changes with changes in security group rules.",
+		},
 	}
 	return &schema.Resource{
 		Create: resourceTencentCloudSecurityGroupRuleSetCreate,
@@ -320,31 +325,83 @@ func resourceTencentCloudSecurityGroupRuleSetUpdate(d *schema.ResourceData, m in
 
 	if needChange {
 		version := d.Get("version").(string)
-		ver, vErr := strconv.ParseInt(version, 10, 64)
+		ver, _ := strconv.ParseInt(version, 10, 64)
+		ver += 1
 		request.SecurityGroupId = helper.String(securityGroupId)
 		request.SecurityGroupPolicySet = &vpc.SecurityGroupPolicySet{}
 		request.SortPolicys = helper.Bool(true)
-		if vErr == nil {
-			nextVer = fmt.Sprintf("%d", ver+1)
-			request.SecurityGroupPolicySet.Version = helper.String(nextVer)
-		}
 
-		if d.HasChange("ingress") {
-			ingressRules := d.Get("ingress").([]interface{})
+		ingressRules := d.Get("ingress").([]interface{})
+		egressRules := d.Get("egress").([]interface{})
+		if len(ingressRules) == 0 && len(egressRules) == 0 {
+			request.SecurityGroupPolicySet.Version = helper.String("0")
+		} else if len(ingressRules) != 0 && len(egressRules) == 0 {
 			request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(ingressRules)
 			if err != nil {
 				return err
 			}
-		}
 
-		if d.HasChange("egress") {
-			egressRules := d.Get("egress").([]interface{})
+			result, e := service.DescribeSecurityGroupPolicies(ctx, securityGroupId)
+			if e != nil {
+				return e
+			}
+
+			if result.Egress != nil {
+				tmpList := []*int64{}
+				egressRulesList := marshalSecurityPolicy(result.Egress)
+				for _, v := range egressRulesList {
+					item := v.(map[string]interface{})
+					tmpList = append(tmpList, item["policy_index"].(*int64))
+				}
+
+				e = service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "egress")
+				if e != nil {
+					return e
+				}
+
+				ver += 1
+			}
+
+		} else if len(ingressRules) == 0 && len(egressRules) != 0 {
+			request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(egressRules)
+			if err != nil {
+				return err
+			}
+
+			result, e := service.DescribeSecurityGroupPolicies(ctx, securityGroupId)
+			if e != nil {
+				return e
+			}
+
+			if result.Ingress != nil {
+				tmpList := []*int64{}
+				ingressRulesList := marshalSecurityPolicy(result.Ingress)
+				for _, v := range ingressRulesList {
+					item := v.(map[string]interface{})
+					tmpList = append(tmpList, item["policy_index"].(*int64))
+				}
+
+				e = service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "ingress")
+				if e != nil {
+					return e
+				}
+
+				ver += 1
+			}
+		} else {
+			request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(ingressRules)
+			if err != nil {
+				return err
+			}
+
 			request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(egressRules)
 			if err != nil {
 				return err
 			}
 		}
 
+		nextVer = fmt.Sprintf("%d", ver)
+		request.SecurityGroupPolicySet.Version = helper.String(nextVer)
 		err = service.ModifySecurityGroupPolicies(ctx, request)
 		if err != nil {
 			return err
@@ -467,7 +524,6 @@ func unmarshalSecurityPolicy(policies []interface{}) (output []*vpc.SecurityGrou
 		if desc != "" {
 			result.PolicyDescription = &desc
 		}
-		//result.PolicyIndex = helper.IntInt64(i)
 
 		output = append(output, result)
 	}
@@ -480,6 +536,9 @@ func marshalSecurityPolicy(policies []*vpc.SecurityGroupPolicy) []interface{} {
 		policy := policies[i]
 		dMap := map[string]interface{}{
 			"action": policy.Action,
+		}
+		if policy.PolicyIndex != nil {
+			dMap["policy_index"] = policy.PolicyIndex
 		}
 		if policy.CidrBlock != nil {
 			dMap["cidr_block"] = policy.CidrBlock
