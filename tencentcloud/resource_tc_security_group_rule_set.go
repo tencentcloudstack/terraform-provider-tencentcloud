@@ -334,7 +334,7 @@ func resourceTencentCloudSecurityGroupRuleSetUpdate(d *schema.ResourceData, m in
 		ingressRules := d.Get("ingress").([]interface{})
 		egressRules := d.Get("egress").([]interface{})
 		if len(ingressRules) == 0 && len(egressRules) == 0 {
-			request.SecurityGroupPolicySet.Version = helper.String("0")
+			ver = 0
 		} else if len(ingressRules) != 0 && len(egressRules) == 0 {
 			request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(ingressRules)
 			if err != nil {
