@@ -6,7 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudNeedFixDcInternetAddressConfigResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixDirectInternetAddressConfigResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
