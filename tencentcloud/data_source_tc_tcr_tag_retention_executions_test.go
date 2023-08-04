@@ -13,7 +13,7 @@ func TestAccTencentCloudTcrTagRetentionExecutionsDataSource_basic(t *testing.T) 
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTcrTagRetentionExecutionsDataSource, 
+				Config: testAccTcrTagRetentionExecutionsDataSource,
 				PreConfig: func() {
 					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
@@ -35,7 +35,7 @@ func TestAccTencentCloudTcrTagRetentionExecutionsDataSource_basic(t *testing.T) 
 	})
 }
 
-const testAccTcrTagRetentionExecutionsDataSource = TCRDataSource+`
+const testAccTcrTagRetentionExecutionsDataSource = TCRDataSource + `
 
 data "tencentcloud_tcr_tag_retention_executions" "tag_retention_executions" {
   registry_id = local.tcr_id

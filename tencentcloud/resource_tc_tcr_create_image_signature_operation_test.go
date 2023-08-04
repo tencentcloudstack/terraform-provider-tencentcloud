@@ -13,7 +13,7 @@ func TestAccTencentCloudTcrImageSignatureOperationResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTcrImageSignatureOperation, 
+				Config: testAccTcrImageSignatureOperation,
 				PreConfig: func() {
 					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
@@ -30,7 +30,7 @@ func TestAccTencentCloudTcrImageSignatureOperationResource_basic(t *testing.T) {
 	})
 }
 
-const testAccTcrImageSignatureOperation = `
+const testAccTcrImageSignatureOperation = TCRDataSource + `
 
 resource "tencentcloud_tcr_create_image_signature_operation" "sign_operation" {
   registry_id = local.tcr_id

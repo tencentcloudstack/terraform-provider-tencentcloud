@@ -605,6 +605,10 @@ variable "env_tcr_replica_reg_id" {
   type = string
 }
 
+variable "env_region" {
+  type = string
+}
+
 data "tencentcloud_tcr_instances" "tcr" {
   name = var.env_default_tcr_name != "" ? var.env_default_tcr_name : var.tcr_name
 }
@@ -1160,5 +1164,5 @@ const (
 	E2ETEST_ENV_TCR_NS             = "TF_VAR_env_default_tcr_ns"
 	E2ETEST_ENV_TCR_REPO           = "TF_VAR_env_default_tcr_repo"
 	E2ETEST_ENV_TCR_REPLICA_REG_ID = "TF_VAR_env_tcr_replica_reg_id"
-  E2ETEST_ENV_SSL_CERT_ID = "TF_VAR_env_default_ssl_id"
+	E2ETEST_ENV_SSL_CERT_ID        = "TF_VAR_env_default_ssl_id"
 )

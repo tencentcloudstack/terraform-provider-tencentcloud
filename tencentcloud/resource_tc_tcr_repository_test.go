@@ -175,7 +175,7 @@ const testAccTCRRepository_basic = TCRDataSource + `
 
 resource "tencentcloud_tcr_repository" "mytcr_repository" {
   instance_id	 = local.tcr_id
-  namespace_name = var.tcr_namespace
+  namespace_name = local.tcr_ns_name
   name 	         = "test"
   brief_desc 	 = "111"
   description	 = "111111111111111111111111111111111111"
@@ -184,7 +184,7 @@ resource "tencentcloud_tcr_repository" "mytcr_repository" {
 const testAccTCRRepository_basic_update_remark = TCRDataSource + `
 resource "tencentcloud_tcr_repository" "mytcr_repository" {
   instance_id 	 = local.tcr_id
-  namespace_name = var.tcr_namespace
+  namespace_name = local.tcr_ns_name
   name			 = "test"
   brief_desc 	 = "2222"
   description	 = "211111111111111111111111111111111111"

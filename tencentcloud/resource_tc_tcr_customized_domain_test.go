@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 
@@ -57,6 +58,13 @@ func TestAccTencentCloudTcrCustomizedDomainResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
+				SkipFunc: func() (bool, error) {
+					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
+						fmt.Printf("[International station]skip TestAccTencentCloudTcrCustomizedDomainResource_basic, because the international station did not support this feature yet!\n")
+						return true, nil
+					}
+					return false, nil
+				},
 				Config: fmt.Sprintf(testAccTcrCustomizedDomain, defaultTCRSSL),
 				PreConfig: func() {
 					// testAccStepSetRegion(t, "ap-shanghai")

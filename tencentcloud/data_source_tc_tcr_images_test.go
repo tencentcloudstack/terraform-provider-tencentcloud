@@ -74,7 +74,7 @@ func TestAccTencentCloudTcrImagesDataSource_exact_version(t *testing.T) {
 					resource.TestCheckResourceAttrSet(testObjectName, "registry_id"),
 					resource.TestCheckResourceAttrSet(testObjectName, "namespace_name"),
 					resource.TestCheckResourceAttrSet(testObjectName, "repository_name"),
-					resource.TestCheckResourceAttr(testObjectName, "image_version", "v1"),
+					resource.TestCheckResourceAttr(testObjectName, "image_version", "vv1"),
 					resource.TestCheckResourceAttr(testObjectName, "exact_match", "true"),
 					resource.TestCheckResourceAttrSet(testObjectName, "image_info_list.#"),
 				),

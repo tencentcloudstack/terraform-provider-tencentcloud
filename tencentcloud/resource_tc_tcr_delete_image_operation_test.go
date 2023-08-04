@@ -30,7 +30,7 @@ func TestAccTencentCloudNeedFixTcrDeleteImageOperationResource_basic(t *testing.
 	})
 }
 
-const testAccTcrDeleteImageOperation = TCRDataSource+`
+const testAccTcrDeleteImageOperation = TCRDataSource + `
 
 resource "tencentcloud_tcr_delete_image_operation" "delete_image_operation" {
   registry_id = local.tcr_id
