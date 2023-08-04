@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -14,6 +15,9 @@ import (
 // go test -i; go test -test.run TestAccTencentCloudSqlserverFullBackupMigrationResource_basic -v
 func TestAccTencentCloudSqlserverFullBackupMigrationResource_basic(t *testing.T) {
 	t.Parallel()
+	loc, _ := time.LoadLocation("Asia/Chongqing")
+	startTime := time.Now().AddDate(0, 0, -3).In(loc).Format("2006-01-02 15:04:05")
+	endTime := time.Now().In(loc).Format("2006-01-02 15:04:05")
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -22,7 +26,7 @@ func TestAccTencentCloudSqlserverFullBackupMigrationResource_basic(t *testing.T)
 		Providers:    testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSqlserverFullBackupMigration,
+				Config: fmt.Sprintf(testAccSqlserverFullBackupMigration, startTime, endTime),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverFullBackupMigrationExists("tencentcloud_sqlserver_full_backup_migration.my_migration"),
 					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_full_backup_migration.my_migration", "instance_id"),
@@ -34,7 +38,7 @@ func TestAccTencentCloudSqlserverFullBackupMigrationResource_basic(t *testing.T)
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccSqlserverFullBackupMigrationUpdate,
+				Config: fmt.Sprintf(testAccSqlserverFullBackupMigrationUpdate, startTime, endTime),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverFullBackupMigrationExists("tencentcloud_sqlserver_full_backup_migration.my_migration"),
 					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_full_backup_migration.my_migration", "instance_id"),
@@ -112,21 +116,147 @@ func testAccCheckSqlserverFullBackupMigrationExists(n string) resource.TestCheck
 }
 
 const testAccSqlserverFullBackupMigration = `
-resource "tencentcloud_sqlserver_full_backup_migration" "my_migration" {
-  instance_id = "mssql-qelbzgwf"
-  recovery_type = "FULL"
-  upload_type = "COS_URL"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+data "tencentcloud_sqlserver_backups" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
+  backup_name = tencentcloud_sqlserver_general_backup.example.backup_name
+  start_time  = "%s"
+  end_time    = "%s"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-example"
+  description = "desc."
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = tencentcloud_vpc.vpc.id
+  subnet_id              = tencentcloud_subnet.subnet.id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_db" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_db"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "test-remark"
+}
+
+resource "tencentcloud_sqlserver_general_backup" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
+  backup_name = "tf_example_backup"
+  strategy    = 0
+}
+
+resource "tencentcloud_sqlserver_full_backup_migration" "example" {
+  instance_id    = tencentcloud_sqlserver_basic_instance.example.id
+  recovery_type  = "FULL"
+  upload_type    = "COS_URL"
   migration_name = "migration_test"
-  backup_files = []
+  backup_files   = [data.tencentcloud_sqlserver_backups.example.list.0.internet_url]
 }
 `
 
 const testAccSqlserverFullBackupMigrationUpdate = `
-resource "tencentcloud_sqlserver_full_backup_migration" "my_migration" {
-  instance_id = "mssql-qelbzgwf"
-  recovery_type = "FULL"
-  upload_type = "COS_URL"
-  migration_name = "migration_test_new"
-  backup_files = []
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+data "tencentcloud_sqlserver_backups" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
+  backup_name = tencentcloud_sqlserver_general_backup.example.backup_name
+  start_time  = "%s"
+  end_time    = "%s"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-example"
+  description = "desc."
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = tencentcloud_vpc.vpc.id
+  subnet_id              = tencentcloud_subnet.subnet.id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_db" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_db"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "test-remark"
+}
+
+resource "tencentcloud_sqlserver_general_backup" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
+  backup_name = "tf_example_backup"
+  strategy    = 0
+}
+
+resource "tencentcloud_sqlserver_full_backup_migration" "example" {
+  instance_id    = tencentcloud_sqlserver_basic_instance.example.id
+  recovery_type  = "FULL"
+  upload_type    = "COS_URL"
+  migration_name = "migration_test_update"
+  backup_files   = [data.tencentcloud_sqlserver_backups.example.list.0.internet_url]
 }
 `

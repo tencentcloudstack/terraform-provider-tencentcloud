@@ -97,37 +97,47 @@ func testAccCheckSqlserverBasicInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverBasicInstanceBasic = defaultSecurityGroupData
-
-const testAccSqlserverBasicInstancePostpaid string = testAccSqlserverBasicInstanceBasic + `
-variable "az" {
-	default = "ap-guangzhou-7"
+const testAccSqlserverBasicInstancePostpaid string = `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
 }
 
-data "tencentcloud_vpc_subnets" "gz" {
-	availability_zone = var.az
-	is_default = true
-  }
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
 
-  locals {
-	vpc_id = data.tencentcloud_vpc_subnets.gz.instance_list.0.vpc_id
-	subnet_id = data.tencentcloud_vpc_subnets.gz.instance_list.0.subnet_id
-  }
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = "10.0.0.0/16"
+  is_multicast      = false
+}
 
-resource "tencentcloud_sqlserver_basic_instance" "test" {
-	name                    = "tf_sqlserver_basic_instance"
-	availability_zone       = var.az
-	charge_type             = "POSTPAID_BY_HOUR"
-	vpc_id                  = local.vpc_id
-	subnet_id               = local.subnet_id
-	security_groups         = [local.sg_id]
-	project_id              = 0
-	memory                  = 4
-	storage                 = 20
-	cpu                     = 2
-	machine_type            = "CLOUD_PREMIUM"
-	maintenance_week_set    = [1,2,3]
-	maintenance_start_time  = "09:00"
-	maintenance_time_span   = 3
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-example"
+  description = "desc."
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = tencentcloud_vpc.vpc.id
+  subnet_id              = tencentcloud_subnet.subnet.id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    "test" = "test"
+  }
 }
 `

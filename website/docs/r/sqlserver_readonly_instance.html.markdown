@@ -86,6 +86,10 @@ The following arguments are supported:
 * `force_upgrade` - (Optional, Bool, ForceNew) Indicate that the master instance upgrade or not. `true` for upgrading the master SQL Server instance to cluster type by force. Default is false. Note: this is not supported with `DUAL`(ha_type), `2017`(engine_version) master SQL Server instance, for it will cause ha_type of the master SQL Server instance change.
 * `period` - (Optional, Int) Purchase instance period in month. The value does not exceed 48.
 * `readonly_group_id` - (Optional, String) ID of the readonly group that this instance belongs to. When `readonly_group_type` set value `3`, it must be set with valid value.
+* `readonly_group_name` - (Optional, String) Required when `readonly_group_type`=2, the name of the newly created read-only group.
+* `readonly_groups_is_offline_delay` - (Optional, Int) Required when `readonly_group_type`=2, whether the newly created read-only group has delay elimination enabled, 1-enabled, 0-disabled. When the delay between the read-only copy and the primary instance exceeds the threshold, it is automatically removed.
+* `readonly_groups_max_delay_time` - (Optional, Int) Required when `readonly_group_type`=2 and `readonly_groups_is_offline_delay`=1, the threshold for delayed elimination of newly created read-only groups.
+* `readonly_groups_min_in_group` - (Optional, Int) When `readonly_group_type`=2 and `readonly_groups_is_offline_delay`=1, it is required. After the newly created read-only group is delayed and removed, at least the number of read-only copies should be retained.
 * `security_groups` - (Optional, Set: [`String`]) Security group bound to the instance.
 * `subnet_id` - (Optional, String) ID of subnet.
 * `tags` - (Optional, Map) The tags of the SQL Server.

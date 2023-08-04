@@ -518,7 +518,7 @@ func (me *SqlserverService) CreateSqlserverReadonlyInstance(ctx context.Context,
 	return
 }
 
-func (me *SqlserverService) DescribeReadonlyGroupListByReadonlyInstanceId(ctx context.Context, instanceId string) (readonlyGroupId string, masterInstanceId string, errRet error) {
+func (me *SqlserverService) DescribeReadonlyGroupListByReadonlyInstanceId(ctx context.Context, instanceId string) (readonlyInstance *sqlserver.DescribeReadOnlyGroupByReadOnlyInstanceResponseParams, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewDescribeReadOnlyGroupByReadOnlyInstanceRequest()
 	request.InstanceId = &instanceId
@@ -538,8 +538,7 @@ func (me *SqlserverService) DescribeReadonlyGroupListByReadonlyInstanceId(ctx co
 		return
 	}
 
-	readonlyGroupId = *response.Response.ReadOnlyGroupId
-	masterInstanceId = *response.Response.MasterInstanceId
+	readonlyInstance = response.Response
 	return
 }
 

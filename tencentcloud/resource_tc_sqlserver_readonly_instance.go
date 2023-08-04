@@ -74,6 +74,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 
 	sqlserver "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328"
 
@@ -110,6 +111,30 @@ func resourceTencentCloudSqlserverReadonlyInstance() *schema.Resource {
 			Optional:    true,
 			Description: "ID of the readonly group that this instance belongs to. When `readonly_group_type` set value `3`, it must be set with valid value.",
 		},
+		"readonly_group_name": {
+			Type:        schema.TypeString,
+			Computed:    true,
+			Optional:    true,
+			Description: "Required when `readonly_group_type`=2, the name of the newly created read-only group.",
+		},
+		"readonly_groups_is_offline_delay": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Optional:    true,
+			Description: "Required when `readonly_group_type`=2, whether the newly created read-only group has delay elimination enabled, 1-enabled, 0-disabled. When the delay between the read-only copy and the primary instance exceeds the threshold, it is automatically removed.",
+		},
+		"readonly_groups_max_delay_time": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Optional:    true,
+			Description: "Required when `readonly_group_type`=2 and `readonly_groups_is_offline_delay`=1, the threshold for delayed elimination of newly created read-only groups.",
+		},
+		"readonly_groups_min_in_group": {
+			Type:        schema.TypeInt,
+			Computed:    true,
+			Optional:    true,
+			Description: "When `readonly_group_type`=2 and `readonly_groups_is_offline_delay`=1, it is required. After the newly created read-only group is delayed and removed, at least the number of read-only copies should be retained.",
+		},
 	}
 
 	basic := TencentSqlServerBasicInfo(true)
@@ -128,7 +153,7 @@ func resourceTencentCloudSqlserverReadonlyInstance() *schema.Resource {
 }
 
 func resourceTencentCloudSqlserverReadonlyInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_mysql_readonly_instance.create")()
+	defer logElapsed("resource.tencentcloud_sqlserver_readonly_instance.create")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
@@ -139,18 +164,19 @@ func resourceTencentCloudSqlserverReadonlyInstanceCreate(d *schema.ResourceData,
 	region := client.Region
 
 	var (
-		name              = d.Get("name").(string)
-		masterInstanceId  = d.Get("master_instance_id").(string)
-		payType           = d.Get("charge_type").(string)
-		readonlyGroupType = d.Get("readonly_group_type").(int)
-		subnetId          = d.Get("subnet_id").(string)
-		vpcId             = d.Get("vpc_id").(string)
-		zone              = d.Get("availability_zone").(string)
-		storage           = d.Get("storage").(int)
-		memory            = d.Get("memory").(int)
-		forceUpgrade      = d.Get("force_upgrade").(bool)
-		readonlyGroupId   = ""
-		securityGroups    = make([]string, 0)
+		name                        = d.Get("name").(string)
+		masterInstanceId            = d.Get("master_instance_id").(string)
+		payType                     = d.Get("charge_type").(string)
+		readonlyGroupType           = d.Get("readonly_group_type").(int)
+		subnetId                    = d.Get("subnet_id").(string)
+		vpcId                       = d.Get("vpc_id").(string)
+		zone                        = d.Get("availability_zone").(string)
+		storage                     = d.Get("storage").(int)
+		memory                      = d.Get("memory").(int)
+		readOnlyGroupIsOfflineDelay = d.Get("readonly_groups_is_offline_delay").(int)
+		forceUpgrade                = d.Get("force_upgrade").(bool)
+		readonlyGroupId             = ""
+		securityGroups              = make([]string, 0)
 	)
 
 	if v, ok := d.GetOk("readonly_group_id"); ok && readonlyGroupType == 3 {
@@ -165,6 +191,22 @@ func resourceTencentCloudSqlserverReadonlyInstanceCreate(d *schema.ResourceData,
 	}
 
 	request := sqlserver.NewCreateReadOnlyDBInstancesRequest()
+
+	if v, ok := d.GetOk("readonly_group_name"); ok && readonlyGroupType == 2 {
+		request.ReadOnlyGroupName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("readonly_groups_is_offline_delay"); ok && readonlyGroupType == 2 {
+		request.ReadOnlyGroupIsOfflineDelay = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("readonly_groups_max_delay_time"); ok && readonlyGroupType == 2 && readOnlyGroupIsOfflineDelay == 1 {
+		request.ReadOnlyGroupMaxDelayTime = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOkExists("readonly_groups_min_in_group"); ok && readonlyGroupType == 2 && readOnlyGroupIsOfflineDelay == 1 {
+		request.ReadOnlyGroupMinInGroup = helper.IntInt64(v.(int))
+	}
 
 	request.InstanceId = &masterInstanceId
 	request.InstanceChargeType = &payType
@@ -251,7 +293,6 @@ func resourceTencentCloudSqlserverReadonlyInstanceRead(d *schema.ResourceData, m
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	var outErr, inErr error
 	instanceId := d.Id()
 	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -259,6 +300,7 @@ func resourceTencentCloudSqlserverReadonlyInstanceRead(d *schema.ResourceData, m
 	if err != nil {
 		return err
 	}
+
 	if !has {
 		d.SetId("")
 		return nil
@@ -268,21 +310,24 @@ func resourceTencentCloudSqlserverReadonlyInstanceRead(d *schema.ResourceData, m
 	_ = d.Set("ha_type", SQLSERVER_HA_TYPE_FLAGS[*instance.HAFlag])
 
 	//readonly group ID
-	readonlyGroupId, masterInstanceId, outErr := sqlserverService.DescribeReadonlyGroupListByReadonlyInstanceId(ctx, instanceId)
-	if outErr != nil {
-		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			readonlyGroupId, masterInstanceId, inErr = sqlserverService.DescribeReadonlyGroupListByReadonlyInstanceId(ctx, instanceId)
-			if inErr != nil {
-				return retryError(inErr)
-			}
-			return nil
-		})
+	readOnlyInstance, err := sqlserverService.DescribeReadonlyGroupListByReadonlyInstanceId(ctx, instanceId)
+
+	if err != nil {
+		return err
 	}
-	if outErr != nil {
-		return outErr
+
+	if readOnlyInstance == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `sqlserver_readonly_instance` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
 	}
-	_ = d.Set("master_instance_id", masterInstanceId)
-	_ = d.Set("readonly_group_id", readonlyGroupId)
+
+	_ = d.Set("master_instance_id", readOnlyInstance.MasterInstanceId)
+	_ = d.Set("readonly_group_id", readOnlyInstance.ReadOnlyGroupId)
+	_ = d.Set("readonly_group_name", readOnlyInstance.ReadOnlyGroupName)
+	_ = d.Set("readonly_groups_is_offline_delay", readOnlyInstance.IsOfflineDelay)
+	_ = d.Set("readonly_groups_max_delay_time", readOnlyInstance.ReadOnlyMaxDelayTime)
+	_ = d.Set("readonly_groups_min_in_group", readOnlyInstance.MinReadOnlyInGroup)
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
@@ -310,7 +355,7 @@ func resourceTencentCloudSqlserverReadonlyInstanceUpdate(d *schema.ResourceData,
 }
 
 func resourceTencentCloudSqlserverReadonlyInstanceDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_sqlserver_instance.delete")()
+	defer logElapsed("resource.tencentcloud_sqlserver_readonly_instance.delete")()
 
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
