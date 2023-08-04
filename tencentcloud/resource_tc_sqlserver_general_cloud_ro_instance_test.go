@@ -25,15 +25,15 @@ func TestAccTencentCloudNeedFixSqlserverGeneralCloudRoInstanceResource_basic(t *
 			{
 				Config: testAccSqlserverGeneralCloudRoInstance,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverRoInstanceExists("tencentcloud_sqlserver_general_cloud_ro_instance.general_cloud_ro_instance"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_ro_instance.general_cloud_ro_instance", "id"),
+					testAccCheckSqlserverRoInstanceExists("tencentcloud_sqlserver_general_cloud_ro_instance.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_ro_instance.example", "id"),
 				),
 			},
 			{
 				Config: testAccSqlserverGeneralCloudRoInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverRoInstanceExists("tencentcloud_sqlserver_general_cloud_ro_instance.general_cloud_ro_instance"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_ro_instance.general_cloud_ro_instance", "id"),
+					testAccCheckSqlserverRoInstanceExists("tencentcloud_sqlserver_general_cloud_ro_instance.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_ro_instance.example", "id"),
 				),
 			},
 		},
@@ -103,27 +103,9 @@ func testAccCheckSqlserverRoInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverGeneralCloudRoInstance = `
+const testAccSqlserverGeneralCloudRoInstance = defaultVpcSubnets + defaultSecurityGroupData + `
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "sqlserver"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
-
-resource "tencentcloud_security_group" "security_group" {
-  name        = "sg-example"
-  description = "desc."
 }
 
 resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
@@ -135,10 +117,10 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
   machine_type         = "CLOUD_HSSD"
   instance_charge_type = "POSTPAID"
   project_id           = 0
-  subnet_id            = tencentcloud_subnet.subnet.id
-  vpc_id               = tencentcloud_vpc.vpc.id
+  vpc_id               = local.vpc_id
+  subnet_id            = local.subnet_id
   db_version           = "2008R2"
-  security_group_list  = [tencentcloud_security_group.security_group.id]
+  security_groups      = [local.sg_id]
   weekly               = [1, 2, 3, 5, 6, 7]
   start_time           = "00:00"
   span                 = 6
@@ -163,9 +145,9 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "example" {
   cpu                              = 2
   machine_type                     = "CLOUD_BSSD"
   instance_charge_type             = "POSTPAID"
-  subnet_id                        = tencentcloud_subnet.subnet.id
-  vpc_id                           = tencentcloud_vpc.vpc.id
-  security_group_list              = [tencentcloud_security_group.security_group.id]
+  vpc_id                           = local.vpc_id
+  subnet_id                        = local.subnet_id
+  security_groups                  = [local.sg_id]
   collation                        = "Chinese_PRC_CI_AS"
   time_zone                        = "China Standard Time"
   resource_tags                    = {
@@ -175,27 +157,9 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "example" {
 }
 `
 
-const testAccSqlserverGeneralCloudRoInstanceUpdate = `
+const testAccSqlserverGeneralCloudRoInstanceUpdate = defaultVpcSubnets + defaultSecurityGroupData + `
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "sqlserver"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
-
-resource "tencentcloud_security_group" "security_group" {
-  name        = "sg-example"
-  description = "desc."
 }
 
 resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
@@ -211,9 +175,9 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
   cpu                              = 4
   machine_type                     = "CLOUD_BSSD"
   instance_charge_type             = "POSTPAID"
-  subnet_id                        = tencentcloud_subnet.subnet.id
-  vpc_id                           = tencentcloud_vpc.vpc.id
-  security_group_list              = [tencentcloud_security_group.security_group.id]
+  vpc_id                           = local.vpc_id
+  subnet_id                        = local.subnet_id
+  security_groups                  = [local.sg_id]
   collation                        = "Chinese_PRC_CI_AS"
   time_zone                        = "China Standard Time"
   resource_tags                    = {

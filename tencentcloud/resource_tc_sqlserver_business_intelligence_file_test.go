@@ -97,27 +97,9 @@ func testAccCheckSqlserverBusinessIntelligenceFileExists(n string) resource.Test
 	}
 }
 
-const testAccSqlserverBusinessIntelligenceFile = `
+const testAccSqlserverBusinessIntelligenceFile = defaultVpcSubnets + defaultSecurityGroupData + `
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "sqlserver"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
-
-resource "tencentcloud_security_group" "security_group" {
-  name        = "sg-example"
-  description = "desc."
 }
 
 resource "tencentcloud_sqlserver_business_intelligence_instance" "example" {
@@ -127,10 +109,10 @@ resource "tencentcloud_sqlserver_business_intelligence_instance" "example" {
   cpu                 = 2
   machine_type        = "CLOUD_PREMIUM"
   project_id          = 0
-  subnet_id           = tencentcloud_subnet.subnet.id
-  vpc_id              = tencentcloud_vpc.vpc.id
+  subnet_id           = local.subnet_id
+  vpc_id              = local.vpc_id
   db_version          = "201603"
-  security_group_list  = [tencentcloud_security_group.security_group.id]
+  security_group_list = [local.sg_id]
   weekly              = [1, 2, 3, 4, 5, 6, 7]
   start_time          = "00:00"
   span                = 6

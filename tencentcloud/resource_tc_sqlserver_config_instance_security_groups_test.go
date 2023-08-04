@@ -18,11 +18,11 @@ func TestAccTencentCloudSqlserverConfigInstanceSecurityGroupsResource_basic(t *t
 			{
 				Config: testAccSqlserverConfigInstanceSecurityGroups,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_config_instance_security_groups.config_instance_security_groups", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_config_instance_security_groups.example", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_sqlserver_config_instance_security_groups.config_instance_security_groups",
+				ResourceName:      "tencentcloud_sqlserver_config_instance_security_groups.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -30,35 +30,17 @@ func TestAccTencentCloudSqlserverConfigInstanceSecurityGroupsResource_basic(t *t
 	})
 }
 
-const testAccSqlserverConfigInstanceSecurityGroups = `
+const testAccSqlserverConfigInstanceSecurityGroups = defaultVpcSubnets + defaultSecurityGroupData + `
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "sqlserver"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
-
-resource "tencentcloud_security_group" "security_group" {
-  name        = "sg-example"
-  description = "desc."
 }
 
 resource "tencentcloud_sqlserver_basic_instance" "example" {
   name                   = "tf-example"
   availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type            = "POSTPAID_BY_HOUR"
-  vpc_id                 = tencentcloud_vpc.vpc.id
-  subnet_id              = tencentcloud_subnet.subnet.id
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
   project_id             = 0
   memory                 = 4
   storage                = 100
@@ -75,6 +57,6 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
 
 resource "tencentcloud_sqlserver_config_instance_security_groups" "config_instance_security_groups" {
   instance_id           = tencentcloud_sqlserver_basic_instance.example.id
-  security_group_id_set = [tencentcloud_security_group.security_group.id]
+  security_group_id_set = [local.sg_id]
 }
 `

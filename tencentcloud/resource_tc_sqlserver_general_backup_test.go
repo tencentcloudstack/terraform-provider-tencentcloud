@@ -22,8 +22,8 @@ func TestAccTencentCloudSqlserverGeneralBackupResource_basic(t *testing.T) {
 			{
 				Config: testAccSqlserverGeneralBackup,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverBackupExists("tencentcloud_sqlserver_general_backup.general_backup"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.general_backup", "instance_id"),
+					testAccCheckSqlserverBackupExists("tencentcloud_sqlserver_general_backup.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.example", "instance_id"),
 				),
 			},
 			{
@@ -34,9 +34,9 @@ func TestAccTencentCloudSqlserverGeneralBackupResource_basic(t *testing.T) {
 			{
 				Config: testAccSqlserverGeneralBackupUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverBackupExists("tencentcloud_sqlserver_general_backup.general_backup"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.general_backup", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.general_backup", "backup_name"),
+					testAccCheckSqlserverBackupExists("tencentcloud_sqlserver_general_backup.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.example", "instance_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.example", "backup_name"),
 				),
 			},
 		},
@@ -121,35 +121,17 @@ func testAccCheckSqlserverBackupExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverGeneralBackup = `
+const testAccSqlserverGeneralBackup = defaultVpcSubnets + defaultSecurityGroupData + `
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "sqlserver"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
-
-resource "tencentcloud_security_group" "security_group" {
-  name        = "sg-example"
-  description = "desc."
 }
 
 resource "tencentcloud_sqlserver_basic_instance" "example" {
   name                   = "tf-example"
   availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type            = "POSTPAID_BY_HOUR"
-  vpc_id                 = tencentcloud_vpc.vpc.id
-  subnet_id              = tencentcloud_subnet.subnet.id
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
   project_id             = 0
   memory                 = 4
   storage                = 100
@@ -158,7 +140,7 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
   maintenance_week_set   = [1, 2, 3]
   maintenance_start_time = "09:00"
   maintenance_time_span  = 3
-  security_groups        = [tencentcloud_security_group.security_group.id]
+  security_groups        = [local.sg_id]
 
   tags = {
     "test" = "test"
@@ -172,35 +154,17 @@ resource "tencentcloud_sqlserver_general_backup" "example" {
 }
 `
 
-const testAccSqlserverGeneralBackupUpdate = `
+const testAccSqlserverGeneralBackupUpdate = defaultVpcSubnets + defaultSecurityGroupData + `
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "sqlserver"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
-
-resource "tencentcloud_security_group" "security_group" {
-  name        = "sg-example"
-  description = "desc."
 }
 
 resource "tencentcloud_sqlserver_basic_instance" "example" {
   name                   = "tf-example"
   availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type            = "POSTPAID_BY_HOUR"
-  vpc_id                 = tencentcloud_vpc.vpc.id
-  subnet_id              = tencentcloud_subnet.subnet.id
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
   project_id             = 0
   memory                 = 4
   storage                = 100
@@ -209,7 +173,7 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
   maintenance_week_set   = [1, 2, 3]
   maintenance_start_time = "09:00"
   maintenance_time_span  = 3
-  security_groups        = [tencentcloud_security_group.security_group.id]
+  security_groups        = [local.sg_id]
 
   tags = {
     "test" = "test"

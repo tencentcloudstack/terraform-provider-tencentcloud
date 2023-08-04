@@ -58,6 +58,9 @@ resource "tencentcloud_sqlserver_readonly_instance" "example" {
   master_instance_id  = tencentcloud_sqlserver_basic_instance.example.id
   readonly_group_type = 1
   force_upgrade       = true
+  tags = {
+    "test" = "test"
+  }
 }
 ```
 

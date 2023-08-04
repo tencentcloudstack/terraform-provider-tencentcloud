@@ -59,7 +59,7 @@ resource "tencentcloud_sqlserver_instance" "example" {
 }
 `
 
-const testAccUpdateNewSqlserverInstance string = `
+const testAccUpdateNewSqlserverInstance string = defaultVpcSubnets + defaultSecurityGroupData + `
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "sqlserver"
 }

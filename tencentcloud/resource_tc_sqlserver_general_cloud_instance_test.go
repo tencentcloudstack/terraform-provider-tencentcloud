@@ -19,8 +19,8 @@ func TestAccTencentCloudSqlserverGeneralCloudInstanceResource_basic(t *testing.T
 			{
 				Config: testAccSqlserverGeneralCloudInstance,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverInstanceExists("tencentcloud_sqlserver_general_cloud_instance.general_cloud_instance"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_instance.general_cloud_instance", "id"),
+					testAccCheckSqlserverInstanceExists("tencentcloud_sqlserver_general_cloud_instance.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_instance.example", "id"),
 				),
 			},
 			{
@@ -32,35 +32,17 @@ func TestAccTencentCloudSqlserverGeneralCloudInstanceResource_basic(t *testing.T
 			{
 				Config: testAccSqlserverGeneralCloudInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverInstanceExists("tencentcloud_sqlserver_general_cloud_instance.general_cloud_instance"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_instance.general_cloud_instance", "id"),
+					testAccCheckSqlserverInstanceExists("tencentcloud_sqlserver_general_cloud_instance.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_instance.example", "id"),
 				),
 			},
 		},
 	})
 }
 
-const testAccSqlserverGeneralCloudInstance = `
+const testAccSqlserverGeneralCloudInstance = defaultVpcSubnets + defaultSecurityGroupData + `
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "sqlserver"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
-
-resource "tencentcloud_security_group" "security_group" {
-  name        = "sg-example"
-  description = "desc."
 }
 
 resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
@@ -72,10 +54,10 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
   machine_type         = "CLOUD_HSSD"
   instance_charge_type = "POSTPAID"
   project_id           = 0
-  subnet_id            = tencentcloud_subnet.subnet.id
-  vpc_id               = tencentcloud_vpc.vpc.id
+  subnet_id            = local.vpc_id
+  vpc_id               = local.subnet_id
   db_version           = "2008R2"
-  security_group_list  = [tencentcloud_security_group.security_group.id]
+  security_group_list  = [local.sg_id]
   weekly               = [1, 2, 3, 5, 6, 7]
   start_time           = "00:00"
   span                 = 6
@@ -93,24 +75,6 @@ data "tencentcloud_availability_zones_by_product" "zones" {
   product = "sqlserver"
 }
 
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
-
-resource "tencentcloud_security_group" "security_group" {
-  name        = "sg-example"
-  description = "desc."
-}
-
 resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
   name                 = "tf_example_update"
   zone                 = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
@@ -120,10 +84,10 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
   machine_type         = "CLOUD_HSSD"
   instance_charge_type = "POSTPAID"
   project_id           = 0
-  subnet_id            = tencentcloud_subnet.subnet.id
-  vpc_id               = tencentcloud_vpc.vpc.id
+  subnet_id            = local.vpc_id
+  vpc_id               = local.subnet_id
   db_version           = "2008R2"
-  security_group_list  = [tencentcloud_security_group.security_group.id]
+  security_group_list  = [local.sg_id]
   weekly               = [1, 2, 3, 5, 6, 7]
   start_time           = "00:00"
   span                 = 6

@@ -10,7 +10,7 @@ import (
 )
 
 var testSqlserverBasicInstanceResourceName = "tencentcloud_sqlserver_basic_instance"
-var testSqlserverBasicInstanceResourceKey = testSqlserverBasicInstanceResourceName + ".test"
+var testSqlserverBasicInstanceResourceKey = testSqlserverBasicInstanceResourceName + ".example"
 
 func TestAccTencentCloudNeedFixSqlserverBasicInstanceResource(t *testing.T) {
 	t.Parallel()
@@ -24,12 +24,12 @@ func TestAccTencentCloudNeedFixSqlserverBasicInstanceResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverBasicInstanceExists(testSqlserverBasicInstanceResourceKey),
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "id"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "name", "tf_sqlserver_basic_instance"),
+					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "name", "tf-example"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "charge_type", "POSTPAID_BY_HOUR"),
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "vpc_id"),
 					resource.TestCheckResourceAttrSet(testSqlserverBasicInstanceResourceKey, "subnet_id"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "memory", "4"),
-					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "storage", "20"),
+					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "storage", "100"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "cpu", "2"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "machine_type", "CLOUD_PREMIUM"),
 					resource.TestCheckResourceAttr(testSqlserverBasicInstanceResourceKey, "project_id", "0"),
@@ -97,35 +97,17 @@ func testAccCheckSqlserverBasicInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverBasicInstancePostpaid string = `
+const testAccSqlserverBasicInstancePostpaid string = defaultVpcSubnets + defaultSecurityGroupData + `
 data "tencentcloud_availability_zones_by_product" "zones" {
   product = "sqlserver"
-}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
-
-resource "tencentcloud_security_group" "security_group" {
-  name        = "sg-example"
-  description = "desc."
 }
 
 resource "tencentcloud_sqlserver_basic_instance" "example" {
   name                   = "tf-example"
   availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type            = "POSTPAID_BY_HOUR"
-  vpc_id                 = tencentcloud_vpc.vpc.id
-  subnet_id              = tencentcloud_subnet.subnet.id
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
   project_id             = 0
   memory                 = 4
   storage                = 100
@@ -134,7 +116,7 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
   maintenance_week_set   = [1, 2, 3]
   maintenance_start_time = "09:00"
   maintenance_time_span  = 3
-  security_groups        = [tencentcloud_security_group.security_group.id]
+  security_groups        = [local.sg_id]
 
   tags = {
     "test" = "test"
