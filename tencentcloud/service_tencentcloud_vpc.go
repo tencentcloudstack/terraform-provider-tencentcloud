@@ -1633,6 +1633,38 @@ func (me *VpcService) DeleteSecurityGroupPolicyByPolicyIndex(ctx context.Context
 
 }
 
+func (me *VpcService) DeleteSecurityGroupPolicyByPolicyIndexList(ctx context.Context, sgId string, policyIndexList []*int64, policyType string) error {
+	logId := getLogId(ctx)
+	request := vpc.NewDeleteSecurityGroupPoliciesRequest()
+	request.SecurityGroupId = helper.String(sgId)
+	request.SecurityGroupPolicySet = new(vpc.SecurityGroupPolicySet)
+
+	tmpList := make([]*vpc.SecurityGroupPolicy, 0)
+	for _, v := range policyIndexList {
+		policy := new(vpc.SecurityGroupPolicy)
+		policy.PolicyIndex = v
+		tmpList = append(tmpList, policy)
+	}
+
+	switch strings.ToLower(policyType) {
+
+	case "ingress":
+		request.SecurityGroupPolicySet.Ingress = tmpList
+
+	case "egress":
+		request.SecurityGroupPolicySet.Egress = tmpList
+	}
+
+	ratelimit.Check(request.GetAction())
+	if _, err := me.client.UseVpcClient().DeleteSecurityGroupPolicies(request); err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%v]",
+			logId, request.GetAction(), request.ToJsonString(), err)
+		return err
+	}
+	return nil
+
+}
+
 // Deprecated: Use ModifySecurityGroupPolicies instead
 func (me *VpcService) ModifySecurityGroupPolicy(ctx context.Context, ruleId string, desc *string) error {
 	logId := getLogId(ctx)

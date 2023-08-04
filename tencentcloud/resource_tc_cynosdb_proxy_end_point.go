@@ -16,6 +16,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 ```
 
 Set `vip` and `vport`
+
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   cluster_id       = "cynosdbmysql-bws8h88b"
@@ -31,6 +32,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 ```
 
 Open connection pool
+
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   cluster_id               = "cynosdbmysql-bws8h88b"
@@ -49,6 +51,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 ```
 
 Close connection pool
+
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   cluster_id               = "cynosdbmysql-bws8h88b"
@@ -65,6 +68,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 ```
 
 if `rw_type` is `READWRITE`
+
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   cluster_id               = "cynosdbmysql-bws8h88b"
@@ -85,6 +89,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 ```
 
 if `rw_type` is `READONLY`
+
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   cluster_id               = "cynosdbmysql-bws8h88b"
@@ -102,6 +107,7 @@ resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
 ```
 
 Comprehensive parameter examples
+
 ```hcl
 resource "tencentcloud_cynosdb_proxy_end_point" "proxy_end_point" {
   cluster_id               = "cynosdbmysql-bws8h88b"
