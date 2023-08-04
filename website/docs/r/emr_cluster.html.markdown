@@ -134,6 +134,7 @@ When TimeUnit is m, the number filled in by this parameter indicates the length 
 				By default, the cluster Master node internet is enabled.
 * `resource_spec` - (Optional, List) Resource specification of EMR instance.
 * `sg_id` - (Optional, String, ForceNew) The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.
+* `tags` - (Optional, Map) Tag description list.
 
 The `resource_spec` object supports the following:
 
