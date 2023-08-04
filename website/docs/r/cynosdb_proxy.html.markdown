@@ -60,5 +60,6 @@ In addition to all arguments above, the following attributes are exported:
 
 * `id` - ID of the resource.
 * `proxy_group_id` - Proxy Group Id.
+* `ro_instances` - Read only instance list.
 
 
