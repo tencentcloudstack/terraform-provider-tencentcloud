@@ -67,7 +67,7 @@ Enable Database Data Change Capture (CDC)
 
 ```hcl
 resource "tencentcloud_sqlserver_config_database_cdc" "example" {
-  instance_id = tencentcloud_sqlserver_instance.example.id
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
   db_name     = tencentcloud_sqlserver_db.example.name
   modify_type = "enable"
 }

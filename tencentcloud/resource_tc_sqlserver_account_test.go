@@ -191,6 +191,11 @@ resource "tencentcloud_subnet" "subnet" {
   is_multicast      = false
 }
 
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-example"
+  description = "desc."
+}
+
 resource "tencentcloud_sqlserver_basic_instance" "example" {
   name                   = "tf-example"
   availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
@@ -236,6 +241,11 @@ resource "tencentcloud_subnet" "subnet" {
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"
   is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "security_group" {
+  name        = "sg-example"
+  description = "desc."
 }
 
 resource "tencentcloud_sqlserver_basic_instance" "example" {
