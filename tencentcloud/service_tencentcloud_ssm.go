@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -422,6 +423,93 @@ func (me *SsmService) DeleteSsmSshKeyPairSecretById(ctx context.Context, secretN
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *SsmService) DeleteSsmProductSecretById(ctx context.Context, secretName string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := ssm.NewDeleteSecretRequest()
+	request.SecretName = &secretName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSsmClient().DeleteSecret(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *SsmService) DescribeAsyncRequestInfo(ctx context.Context, flowID int64) (taskStatus int64, errRet error) {
+	logId := getLogId(ctx)
+
+	request := ssm.NewDescribeAsyncRequestInfoRequest()
+	request.FlowID = helper.Int64(flowID)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSsmClient().DescribeAsyncRequestInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	taskStatus = *response.Response.TaskStatus
+	return
+}
+
+func (me *SsmService) SsmProductSecretStateRefreshFunc(flowId int64, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		taskStatus, err := me.DescribeAsyncRequestInfo(ctx, flowId)
+
+		if err != nil {
+			return nil, "", err
+		}
+
+		return taskStatus, helper.Int64ToStr(taskStatus), nil
+	}
+}
+
+func (me *SsmService) DescribeSsmProductsByFilter(ctx context.Context) (products []*string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ssm.NewDescribeSupportedProductsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	response, err := me.client.UseSsmClient().DescribeSupportedProducts(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	products = response.Response.Products
 
 	return
 }
