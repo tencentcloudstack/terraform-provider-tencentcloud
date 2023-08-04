@@ -614,6 +614,29 @@ locals {
   tcr_ns_name = var.env_default_tcr_ns != "" ? var.env_default_tcr_ns : var.tcr_namespace
   tcr_repo    = var.env_default_tcr_repo != "" ? var.env_default_tcr_repo : var.tcr_repo
 }
+
+variable "tcr_region_map" {
+  default = {
+    "ap-guangzhou"     = 1
+    "ap-shanghai"      = 4
+    "ap-hongkong"      = 5
+    "ap-beijing"       = 8
+    "ap-singapore"     = 9
+    "na-siliconvalley" = 15
+    "ap-chengdu"       = 16
+    "eu-frankfurt"     = 17
+    "ap-seoul"         = 18
+    "ap-chongqing"     = 19
+    "ap-mumbai"        = 21
+    "na-ashburn"       = 22
+    "ap-bangkok"       = 23
+    "eu-moscow"        = 24
+    "ap-tokyo"         = 25
+    "ap-nanjing"       = 33
+    "ap-taipei"        = 39
+    "ap-jakarta"       = 72
+  }
+}
 `
 
 // End of TCR Service

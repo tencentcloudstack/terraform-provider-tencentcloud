@@ -61,32 +61,33 @@ resource "tencentcloud_tcr_namespace" "myns_dest" {
 	}
 }
 
+
 resource "tencentcloud_tcr_manage_replication_operation" "my_replica" {
-  source_registry_id = local.tcr_id
+  source_registry_id      = local.tcr_id
   destination_registry_id = tencentcloud_tcr_instance.mytcr_dest.id
   rule {
-		name = "test_sync_%d"
-		dest_namespace = tencentcloud_tcr_namespace.myns_dest.name
-		override = true
-		filters {
-			type = "name"
-			value = join("/", [var.tcr_namespace, "**"])
-		}
-		filters {
-			type = "tag"
-			value = ""
-		}
-		filters {
-			type = "resource"
-			value = ""
-		}
+    name           = "test_sync_%d"
+    dest_namespace = tencentcloud_tcr_namespace.myns_dest.name
+    override       = true
+    filters {
+      type  = "name"
+      value = join("/", [var.tcr_namespace, "**"])
+    }
+    filters {
+      type  = "tag"
+      value = ""
+    }
+    filters {
+      type  = "resource"
+      value = ""
+    }
   }
-  description = "this is the tcr sync operation"
-  destination_region_id = 4 // "ap-shanghai"
+  description           = "this is the tcr sync operation"
+  destination_region_id = var.env_region != "" ? var.tcr_region_map[var.env_region] : 4 // "ap-shanghai"
   peer_replication_option {
-		peer_registry_uin = ""
-		peer_registry_token = ""
-		enable_peer_replication = false
+    peer_registry_uin       = ""
+    peer_registry_token     = ""
+    enable_peer_replication = false
   }
 }
 
