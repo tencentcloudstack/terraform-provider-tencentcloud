@@ -67,8 +67,17 @@ func TestAccTencentCloudLighthouseInstanceResource_basic(t *testing.T) {
 				ResourceName:      "tencentcloud_lighthouse_instance.instance",
 				ImportState:       true,
 				ImportStateVerify: true,
-				// DescribeInstances API doesn't support containers field
-				ImportStateVerifyIgnore: []string{"containers"},
+				// DescribeInstances API doesn't support the following fields, ignore it.
+				ImportStateVerifyIgnore: []string{
+					"period",
+					"dry_run",
+					"containers",
+					"client_token",
+					"isolate_data_disk",
+					"login_configuration",
+					"permit_default_key_pair_login",
+					"is_update_bundle_id_auto_voucher",
+				},
 			},
 		},
 	})
