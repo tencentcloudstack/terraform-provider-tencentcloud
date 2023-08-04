@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudDcgV3RouteBasic(t *testing.T) {
+func TestAccTencentCloudDirectGatewayV3RouteBasic(t *testing.T) {
 	t.Parallel()
 
 	var rKey = "tencentcloud_dc_gateway_ccn_route.route"

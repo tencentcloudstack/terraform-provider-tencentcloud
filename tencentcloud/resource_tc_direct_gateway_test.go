@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudDcgV3InstancesBasic(t *testing.T) {
+func TestAccTencentCloudDirectGatewayV3InstancesBasic(t *testing.T) {
 	t.Parallel()
 
 	var rKey = "tencentcloud_dc_gateway.ccn_main"

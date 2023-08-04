@@ -28,9 +28,12 @@ func TestAccTencentCloudDcGatewayAttachmentResource_basic(t *testing.T) {
 }
 
 const testAccDcGatewayAttachment = `
-
+resource "tencentcloud_vpc" "example" {
+  name = "tf-vpc"
+  cidr_block = "10.0.0.0/16"
+}
 resource "tencentcloud_dc_gateway_attachment" "dc_gateway_attachment" {
-  vpc_id = "vpc-4h9v4mo3"
+  vpc_id = tencentcloud_vpc.example.id
   nat_gateway_id = "nat-7kanjc6y"
   direct_connect_gateway_id = "dcg-dmbhf7jf"
 }
