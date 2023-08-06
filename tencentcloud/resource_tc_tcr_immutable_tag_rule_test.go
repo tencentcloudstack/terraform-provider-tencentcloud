@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"os"
 	"strings"
 	"testing"
 
@@ -25,9 +26,19 @@ func testSweepTcrImmutableTagRule(r string) error {
 	cli, _ := sharedClientForRegion(r)
 	tcrService := TCRService{client: cli.(*TencentCloudClient).apiV3Conn}
 
+	instanceId := defaultTCRInstanceId
+	if os.Getenv(E2ETEST_ENV_TCR_ID) != "" {
+		instanceId = os.Getenv(E2ETEST_ENV_TCR_ID)
+	}
+
+	namespace := defaultTCRNamespace
+	if os.Getenv(E2ETEST_ENV_TCR_NS) != "" {
+		namespace = os.Getenv(E2ETEST_ENV_TCR_NS)
+	}
+
 	// the non-keep namespace will be removed directly when run sweeper tencentcloud_tcr_namespace
 	// so... only need to care about the rules under the keep namespace
-	rules, err := tcrService.DescribeTcrImmutableTagRuleById(ctx, defaultTCRInstanceId, helper.String(defaultTCRNamespace), nil)
+	rules, err := tcrService.DescribeTcrImmutableTagRuleById(ctx, instanceId, helper.String(namespace), nil)
 	if err != nil {
 		return err
 	}
@@ -35,7 +46,7 @@ func testSweepTcrImmutableTagRule(r string) error {
 	for _, rule := range rules {
 		ruleId := helper.Int64ToStr(*rule.RuleId)
 
-		err = tcrService.DeleteTcrImmutableTagRuleById(ctx, defaultTCRInstanceId, defaultTCRNamespace, ruleId)
+		err = tcrService.DeleteTcrImmutableTagRuleById(ctx, instanceId, namespace, ruleId)
 		if err != nil {
 			continue
 		}

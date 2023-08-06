@@ -1170,6 +1170,7 @@ const (
 	E2ETEST_ENV_CLUSTER_ID         = "TF_VAR_env_default_tke_cluster_id"
 	E2ETEST_ENV_REGION             = "TF_VAR_env_region"
 	E2ETEST_ENV_INS_TYPE           = "TF_VAR_env_instance_type"
+	E2ETEST_ENV_TCR_ID             = "TF_VAR_env_default_tcr_id"
 	E2ETEST_ENV_TCR                = "TF_VAR_env_default_tcr_name"
 	E2ETEST_ENV_TCR_NS             = "TF_VAR_env_default_tcr_ns"
 	E2ETEST_ENV_TCR_REPO           = "TF_VAR_env_default_tcr_repo"

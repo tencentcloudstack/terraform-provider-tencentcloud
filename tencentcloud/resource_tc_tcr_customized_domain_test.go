@@ -24,12 +24,17 @@ func testSweepTcrCustomizedDomain(r string) error {
 	cli, _ := sharedClientForRegion(r)
 	tcrService := TCRService{client: cli.(*TencentCloudClient).apiV3Conn}
 
-	domains, err := tcrService.DescribeTcrCustomizedDomainById(ctx, defaultTCRInstanceId, nil)
+	instanceId := defaultTCRInstanceId
+	if os.Getenv(E2ETEST_ENV_TCR_ID) != "" {
+		instanceId = os.Getenv(E2ETEST_ENV_TCR_ID)
+	}
+
+	domains, err := tcrService.DescribeTcrCustomizedDomainById(ctx, instanceId, nil)
 	if err != nil {
 		return err
 	}
 	if domains == nil {
-		return fmt.Errorf("tcr customize domain instance not exists.")
+		return nil
 	}
 
 	for _, v := range domains {
@@ -37,7 +42,7 @@ func testSweepTcrCustomizedDomain(r string) error {
 
 		if strings.HasPrefix(delName, "test") {
 			err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-				err := tcrService.DeleteTcrCustomizedDomainById(ctx, defaultTCRInstanceId, delName)
+				err := tcrService.DeleteTcrCustomizedDomainById(ctx, instanceId, delName)
 				if err != nil {
 					return retryError(err)
 				}

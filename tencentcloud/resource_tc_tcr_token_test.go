@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -28,9 +29,14 @@ func init() {
 			service := TCRService{client}
 
 			var filters []*tcr.Filter
+			instanceName := defaultTCRInstanceName
+			if os.Getenv(E2ETEST_ENV_TCR) != "" {
+				instanceName = os.Getenv(E2ETEST_ENV_TCR)
+			}
+
 			filters = append(filters, &tcr.Filter{
 				Name:   helper.String("RegistryName"),
-				Values: []*string{helper.String(defaultTCRInstanceName)},
+				Values: []*string{helper.String(instanceName)},
 			})
 
 			instances, err := service.DescribeTCRInstances(ctx, "", filters)
@@ -39,7 +45,7 @@ func init() {
 			}
 
 			if len(instances) == 0 {
-				return fmt.Errorf("instance %s not exist", defaultTCRInstanceName)
+				return nil
 			}
 
 			instanceId := *instances[0].RegistryId
