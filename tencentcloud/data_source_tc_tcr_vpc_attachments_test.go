@@ -31,7 +31,7 @@ func TestAccTencentCloudTcrVPCAttachmentsData(t *testing.T) {
 	})
 }
 
-const defaultTcrVpcSubnets = `
+const defaultTcrVpcSubnets = TCRDataSource + `
 
 data "tencentcloud_vpc_subnets" "sh" {
   availability_zone = var.env_az != "" ? var.env_az : "ap-shanghai-1"

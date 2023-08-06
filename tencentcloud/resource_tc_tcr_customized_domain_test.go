@@ -78,6 +78,13 @@ func TestAccTencentCloudTcrCustomizedDomainResource_basic(t *testing.T) {
 				),
 			},
 			{
+				SkipFunc: func() (bool, error) {
+					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
+						fmt.Printf("[International station]skip TestAccTencentCloudTcrCustomizedDomainResource_basic, because the international station did not support this feature yet!\n")
+						return true, nil
+					}
+					return false, nil
+				},
 				ResourceName:      "tencentcloud_tcr_customized_domain.my_domain",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -88,6 +95,7 @@ func TestAccTencentCloudTcrCustomizedDomainResource_basic(t *testing.T) {
 
 const testAccTcrCustomizedDomain = TCRDataSource + `
 variable "env_default_ssl_id" {
+  default = ""
   type = string
 }
 

@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
@@ -13,13 +14,14 @@ import (
 
 func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 	t.Parallel()
+	randomName := acctest.RandString(10)
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRTagRetentionRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTcrTagRetentionRule,
+				Config: fmt.Sprintf(testAccTcrTagRetentionRule, randomName),
 				PreConfig: func() {
 					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
@@ -37,7 +39,7 @@ func TestAccTencentCloudTcrTagRetentionRuleResource_basic(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccTcrTagRetentionRule_update,
+				Config: fmt.Sprintf(testAccTcrTagRetentionRule_update, randomName),
 				PreConfig: func() {
 					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
@@ -139,7 +141,7 @@ func testAccCheckTCRTagRetentionRuleExists(re string) resource.TestCheckFunc {
 
 const testAccTCRInstance_retention = `
 resource "tencentcloud_tcr_instance" "mytcr_retention" {
-  name        = "tf-test-tcr-retention"
+  name        = "tf-test-tcr-retention-%s"
   instance_type = "basic"
   delete_bucket = true
 

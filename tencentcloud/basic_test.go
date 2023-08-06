@@ -590,22 +590,32 @@ variable "tcr_repo" {
 
 const TCRDataSource = defaultTCRInstanceVar + `
 variable "env_default_tcr_name" {
+  default = ""
   type = string
 }
 
 variable "env_default_tcr_ns" {
+  default = ""
   type = string
 }
 
 variable "env_default_tcr_repo" {
+  default = ""
   type = string
 }
 
 variable "env_tcr_replica_reg_id" {
+  default = ""
   type = string
 }
 
 variable "env_region" {
+  default = ""
+  type = string
+}
+
+variable "env_az" {
+  default = ""
   type = string
 }
 

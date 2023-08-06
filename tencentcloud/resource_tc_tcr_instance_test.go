@@ -7,6 +7,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
+
 	"github.com/stretchr/testify/assert"
 	tcr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tcr/v20190924"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
@@ -207,19 +209,20 @@ func TestAccTencentCloudNeedFixTcrInstanceResource_paypaid(t *testing.T) {
 
 func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 	// t.Parallel()
+	randomName := acctest.RandString(10)
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckTCRInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTCRInstance_replica,
+				Config: fmt.Sprintf(testAccTCRInstance_replica, randomName),
 				PreConfig: func() {
 					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "tfreplicas"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_instance.mytcr_instance", "name"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "replications.#", "2"),
 				),
 			},
@@ -230,13 +233,13 @@ func TestAccTencentCloudTcrInstanceResource_replication(t *testing.T) {
 			//	ImportStateVerifyIgnore: []string{"delete_bucket"},
 			//},
 			{
-				Config: testAccTCRInstance_replica_update,
+				Config: fmt.Sprintf(testAccTCRInstance_replica_update, randomName),
 				PreConfig: func() {
 					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
 				},
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "name", "tfreplicas"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tcr_instance.mytcr_instance", "name"),
 					resource.TestCheckResourceAttr("tencentcloud_tcr_instance.mytcr_instance", "replications.#", "3"),
 				),
 			},
@@ -424,7 +427,7 @@ resource "tencentcloud_tcr_instance" "mytcr_instance_paypaid" {
 
 const testAccTCRInstance_replica = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "tfreplicas"
+  name          = "tf-tcr-replicas-%s"
   instance_type = "premium"
   delete_bucket = true
 
@@ -438,7 +441,7 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
 
 const testAccTCRInstance_replica_update = `
 resource "tencentcloud_tcr_instance" "mytcr_instance" {
-  name        = "tfreplicas"
+  name          = "tf-tcr-replicas-%s"
   instance_type = "premium"
   delete_bucket = true
 

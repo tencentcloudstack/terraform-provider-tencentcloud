@@ -1,20 +1,23 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 func TestAccTencentCloudTcrTagRetentionExecutionConfigResource_basic(t *testing.T) {
 	t.Parallel()
+	randomName := acctest.RandString(10)
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				// Config: fmt.Sprintf(testAccTcrTagRetentionExecutionConfig, defaultTCRInstanceId),
-				Config: testAccTcrTagRetentionRule_manual,
+				Config: fmt.Sprintf(testAccTcrTagRetentionRule_manual, randomName),
 				PreConfig: func() {
 					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
