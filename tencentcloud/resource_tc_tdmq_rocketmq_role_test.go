@@ -11,9 +11,10 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqRoleResource_basic -v
 func TestAccTencentCloudTdmqRocketmqRoleResource_basic(t *testing.T) {
 	t.Parallel()
-	terraformId := "tencentcloud_tdmq_rocketmq_role.role"
+	terraformId := "tencentcloud_tdmq_rocketmq_role.example"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -24,20 +25,20 @@ func TestAccTencentCloudTdmqRocketmqRoleResource_basic(t *testing.T) {
 				Config: testAccTdmqRocketmqRole,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqRoleExists(terraformId),
-					resource.TestCheckResourceAttr(terraformId, "role_name", "test_rocketmq_role"),
-					resource.TestCheckResourceAttr(terraformId, "remark", "test rocketmq role"),
+					resource.TestCheckResourceAttr(terraformId, "role_name", "tf_example"),
+					resource.TestCheckResourceAttr(terraformId, "remark", "remark."),
 				),
 			},
 			{
 				Config: testAccTdmqRocketmqRoleUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqRoleExists(terraformId),
-					resource.TestCheckResourceAttr(terraformId, "role_name", "test_rocketmq_role"),
-					resource.TestCheckResourceAttr(terraformId, "remark", "test rocketmq role update"),
+					resource.TestCheckResourceAttr(terraformId, "role_name", "tf_example"),
+					resource.TestCheckResourceAttr(terraformId, "remark", "remark update."),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_tdmq_rocketmq_role.role",
+				ResourceName:      "tencentcloud_tdmq_rocketmq_role.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -113,27 +114,27 @@ func testAccCheckTdmqRocketmqRoleExists(re string) resource.TestCheckFunc {
 }
 
 const testAccTdmqRocketmqRole = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_role" "role" {
-  role_name = "test_rocketmq_role"
-  remark = "test rocketmq role"
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+resource "tencentcloud_tdmq_rocketmq_role" "example" {
+  cluster_id = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  role_name  = "tf_example"
+  remark     = "remark."
 }
 `
 
 const testAccTdmqRocketmqRoleUpdate = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_role" "role" {
-  role_name = "test_rocketmq_role"
-  remark = "test rocketmq role update"
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+resource "tencentcloud_tdmq_rocketmq_role" "example" {
+  cluster_id = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  role_name  = "tf_example"
+  remark     = "remark update."
 }
 `

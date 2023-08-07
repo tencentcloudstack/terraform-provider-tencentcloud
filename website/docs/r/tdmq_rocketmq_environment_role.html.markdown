@@ -28,8 +28,6 @@ resource "tencentcloud_tdmq_rocketmq_role" "example" {
 resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
   cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
   namespace_name = "tf_example_namespace"
-  ttl            = 65000
-  retention_time = 65000
   remark         = "remark."
 }
 
