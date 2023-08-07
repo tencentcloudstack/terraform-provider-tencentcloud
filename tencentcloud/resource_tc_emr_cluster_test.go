@@ -132,6 +132,7 @@ func TestAccTencentCloudEmrClusterResource(t *testing.T) {
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "placement.project_id", "0"),
 					resource.TestCheckResourceAttrSet(testEmrClusterResourceKey, "instance_id"),
 					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "sg_id", defaultEMRSgId),
+					resource.TestCheckResourceAttr(testEmrClusterResourceKey, "tags.emr-key", "emr-value"),
 				),
 			},
 		},
@@ -242,5 +243,8 @@ resource "tencentcloud_emr_cluster" "emrrrr" {
 	  project_id=0
 	}
 	sg_id=var.sg_id
+	tags = {
+        emr-key = "emr-value"
+    }
   }
 `
