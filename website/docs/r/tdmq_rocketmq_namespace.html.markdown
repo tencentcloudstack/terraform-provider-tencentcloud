@@ -14,17 +14,17 @@ Provides a resource to create a tdmqRocketmq namespace
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-  cluster_name = "test_rocketmq"
-  remark       = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace"
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example_namespace"
   ttl            = 65000
   retention_time = 65000
-  remark         = "test namespace"
+  remark         = "remark."
 }
 ```
 
@@ -34,8 +34,8 @@ The following arguments are supported:
 
 * `cluster_id` - (Required, String) Cluster ID.
 * `namespace_name` - (Required, String) Namespace name, which can contain 3-64 letters, digits, hyphens, and underscores.
-* `retention_time` - (Required, Int) Retention time of persisted messages in milliseconds.
-* `ttl` - (Required, Int) Retention time of unconsumed messages in milliseconds. Value range: 60 seconds-15 days.
+* `retention_time` - (Required, Int, **Deprecated**) It has been deprecated from version 1.81.20. Due to the adjustment of TDMQ products, the creation or modification of this parameter will be ignored. Retention time of persisted messages in milliseconds.
+* `ttl` - (Required, Int, **Deprecated**) It has been deprecated from version 1.81.20. Due to the adjustment of TDMQ products, the creation or modification of this parameter will be ignored. Retention time of unconsumed messages in milliseconds. Value range: 60 seconds-15 days.
 * `remark` - (Optional, String) Remarks (up to 128 characters).
 
 ## Attributes Reference
