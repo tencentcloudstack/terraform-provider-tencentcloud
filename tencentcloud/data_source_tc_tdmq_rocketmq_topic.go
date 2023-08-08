@@ -4,31 +4,29 @@ Use this data source to query detailed information of tdmqRocketmq topic
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+data "tencentcloud_tdmq_rocketmq_topic" "example" {
+  cluster_id   = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_id = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  filter_name  = tencentcloud_tdmq_rocketmq_topic.example.topic_name
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace"
-  ttl = 65000
-  retention_time = 65000
-  remark = "test namespace"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_topic" "topic" {
-  topic_name = "test_rocketmq_topic"
-  namespace_name = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-  type = "Normal"
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  remark = "test rocketmq topic"
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example"
+  remark         = "remark."
 }
 
-data "tencentcloud_tdmq_rocketmq_topic" "topic" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_id = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-  filter_name = tencentcloud_tdmq_rocketmq_topic.topic.topic_name
+resource "tencentcloud_tdmq_rocketmq_topic" "example" {
+  topic_name     = "tf_example"
+  namespace_name = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  type           = "Normal"
+  remark         = "remark."
 }
 ```
 */

@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqClusterDataSource -v
 func TestAccTencentCloudTdmqRocketmqClusterDataSource(t *testing.T) {
 	t.Parallel()
 
@@ -16,8 +17,8 @@ func TestAccTencentCloudTdmqRocketmqClusterDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceRocketmqCluster,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_rocketmq_cluster.cluster"),
-					resource.TestCheckResourceAttr("data.tencentcloud_tdmq_rocketmq_cluster.cluster", "cluster_list.#", "1"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_rocketmq_cluster.example"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tdmq_rocketmq_cluster.example", "name_keyword"),
 				),
 			},
 		},
@@ -25,12 +26,12 @@ func TestAccTencentCloudTdmqRocketmqClusterDataSource(t *testing.T) {
 }
 
 const testAccDataSourceRocketmqCluster = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq_datasource"
-	remark = "test recket mq"
+data "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  name_keyword = tencentcloud_tdmq_rocketmq_cluster.example.cluster_name
 }
 
-data "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-  	name_keyword = "test_rocketmq_datasource"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 `
