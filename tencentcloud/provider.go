@@ -213,8 +213,11 @@ Cloud Access Management(CAM)
 
   Resource
     tencentcloud_cam_role
+    tencentcloud_cam_role_by_name
     tencentcloud_cam_role_policy_attachment
+    tencentcloud_cam_role_policy_attachment_by_name
     tencentcloud_cam_policy
+    tencentcloud_cam_policy_by_name
     tencentcloud_cam_user
     tencentcloud_cam_user_policy_attachment
     tencentcloud_cam_group
@@ -875,12 +878,14 @@ SSL Certificates
 
 Secrets Manager(SSM)
   Data Source
+	tencentcloud_ssm_products
     tencentcloud_ssm_secrets
     tencentcloud_ssm_secret_versions
 
   Resource
     tencentcloud_ssm_secret
     tencentcloud_ssm_secret_version
+	tencentcloud_ssm_product_secret
 	tencentcloud_ssm_ssh_key_pair_secret
 
 TcaplusDB
@@ -1428,6 +1433,7 @@ TDMQ for RocketMQ(trocket)
 	tencentcloud_tdmq_rocketmq_group
 	tencentcloud_tdmq_rocketmq_environment_role
 	tencentcloud_tdmq_send_rocketmq_message
+	tencentcloud_tdmq_rocketmq_vip_instance
 
 TDMQ for RabbitMQ(trabbit)
   Resource
@@ -1583,6 +1589,10 @@ Tencent Cloud Service Engine(TSE)
 ClickHouse(CDWCH)
   Resource
 	tencentcloud_clickhouse_instance
+Tag
+  Resource
+	tencentcloud_tag
+	tencentcloud_tag_attachment
 
 */
 package tencentcloud
@@ -2019,6 +2029,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_protocol_templates":                        dataSourceTencentCloudProtocolTemplates(),
 			"tencentcloud_protocol_template_groups":                  dataSourceTencentCloudProtocolTemplateGroups(),
 			"tencentcloud_kms_keys":                                  dataSourceTencentCloudKmsKeys(),
+			"tencentcloud_ssm_products":                              dataSourceTencentCloudSsmProducts(),
 			"tencentcloud_ssm_secrets":                               dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                       dataSourceTencentCloudSsmSecretVersions(),
 			"tencentcloud_cdh_instances":                             dataSourceTencentCloudCdhInstances(),
@@ -2266,6 +2277,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_nat_gateway":                                         resourceTencentCloudNatGateway(),
 			"tencentcloud_nat_gateway_snat":                                    resourceTencentCloudNatGatewaySnat(),
 			"tencentcloud_nat_refresh_nat_dc_route":                            resourceTencentCloudNatRefreshNatDcRoute(),
+			"tencentcloud_tag":                                                 resourceTencentCloudTag(),
+			"tencentcloud_tag_attachment":                                      resourceTencentCloudTagAttachment(),
 			"tencentcloud_eip":                                                 resourceTencentCloudEip(),
 			"tencentcloud_eip_association":                                     resourceTencentCloudEipAssociation(),
 			"tencentcloud_eip_address_transform":                               resourceTencentCloudEipAddressTransform(),
@@ -2673,6 +2686,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_kms_external_key":                                    resourceTencentCloudKmsExternalKey(),
 			"tencentcloud_ssm_secret":                                          resourceTencentCloudSsmSecret(),
 			"tencentcloud_ssm_ssh_key_pair_secret":                             resourceTencentCloudSsmSshKeyPairSecret(),
+			"tencentcloud_ssm_product_secret":                                  resourceTencentCloudSsmProductSecret(),
 			"tencentcloud_ssm_secret_version":                                  resourceTencentCloudSsmSecretVersion(),
 			"tencentcloud_cdh_instance":                                        resourceTencentCloudCdhInstance(),
 			"tencentcloud_dnspod_domain_instance":                              resourceTencentCloudDnspodDomainInstance(),
@@ -2799,6 +2813,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rocketmq_topic":                        resourceTencentCloudTdmqRocketmqTopic(),
 			"tencentcloud_tdmq_rocketmq_group":                        resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":             resourceTencentCloudTdmqRocketmqEnvironmentRole(),
+			"tencentcloud_tdmq_rocketmq_vip_instance":                 resourceTencentCloudTdmqRocketmqVipInstance(),
 			"tencentcloud_dts_sync_job":                               resourceTencentCloudDtsSyncJob(),
 			"tencentcloud_dts_sync_config":                            resourceTencentCloudDtsSyncConfig(),
 			"tencentcloud_dts_sync_check_job_operation":               resourceTencentCloudDtsSyncCheckJobOperation(),

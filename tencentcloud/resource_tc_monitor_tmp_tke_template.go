@@ -4,14 +4,81 @@ Provides a resource to create a tmp tke template
 Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_tmp_tke_template" "template" {
+resource "tencentcloud_monitor_tmp_tke_template" "foo" {
   template {
-    name = "test"
-    level = "cluster"
+    name     = "tf-template"
+    level    = "cluster"
     describe = "template"
     service_monitors {
-      name = "test"
-      config = "xxxxx"
+      name   = "tf-ServiceMonitor"
+      config = <<-EOT
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: example-service-monitor
+  namespace: monitoring
+  labels:
+    k8s-app: example-service
+spec:
+  selector:
+    matchLabels:
+      k8s-app: example-service
+  namespaceSelector:
+    matchNames:
+      - default
+  endpoints:
+  - port: http-metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: true
+      EOT
+    }
+
+    pod_monitors {
+      name   = "tf-PodMonitors"
+      config = <<-EOT
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: example-pod-monitor
+  namespace: monitoring
+  labels:
+    k8s-app: example-pod
+spec:
+  selector:
+    matchLabels:
+      k8s-app: example-pod
+  namespaceSelector:
+    matchNames:
+      - default
+  podMetricsEndpoints:
+  - port: http-metrics
+    interval: 30s
+    path: /metrics
+    scheme: http
+    bearerTokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tlsConfig:
+      insecureSkipVerify: true
+EOT
+    }
+
+    pod_monitors {
+      name   = "tf-RawJobs"
+      config = <<-EOT
+scrape_configs:
+  - job_name: 'example-job'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['example-service.default.svc.cluster.local:8080']
+    metrics_path: /metrics
+    scheme: http
+    bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+    tls_config:
+      insecure_skip_verify: true
+EOT
     }
   }
 }
@@ -60,11 +127,13 @@ func resourceTencentCloudMonitorTmpTkeTemplate() *schema.Resource {
 						"describe": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "Template description.",
 						},
 						"record_rules": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Effective when Level is instance, A list of aggregation rules in the template.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -89,6 +158,7 @@ func resourceTencentCloudMonitorTmpTkeTemplate() *schema.Resource {
 						"service_monitors": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Effective when Level is a cluster, A list of ServiceMonitor rules in the template.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -113,6 +183,7 @@ func resourceTencentCloudMonitorTmpTkeTemplate() *schema.Resource {
 						"pod_monitors": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Effective when Level is a cluster, A list of PodMonitors rules in the template.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
@@ -137,6 +208,7 @@ func resourceTencentCloudMonitorTmpTkeTemplate() *schema.Resource {
 						"raw_jobs": {
 							Type:        schema.TypeList,
 							Optional:    true,
+							Computed:    true,
 							Description: "Effective when Level is a cluster, A list of RawJobs rules in the template.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{

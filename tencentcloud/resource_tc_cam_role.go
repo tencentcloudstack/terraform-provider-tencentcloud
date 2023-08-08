@@ -6,6 +6,12 @@ Example Usage
 Create normally
 
 ```hcl
+locals {
+  uin = data.tencentcloud_user_info.info.uin
+}
+
+data "tencentcloud_user_info" "info" {}
+
 resource "tencentcloud_cam_role" "foo" {
   name          = "cam-role-test"
   document      = <<EOF
@@ -13,10 +19,14 @@ resource "tencentcloud_cam_role" "foo" {
   "version": "2.0",
   "statement": [
     {
-      "action": ["name/sts:AssumeRole"],
+      "action": [
+        "name/sts:AssumeRole"
+      ],
       "effect": "allow",
       "principal": {
-        "qcs": ["qcs::cam::uin/<your-account-id>:uin/<your-account-id>"]
+        "qcs": [
+          "qcs::cam::uin/${local.uin}:uin/${local.uin}"
+        ]
       }
     }
   ]
@@ -33,23 +43,38 @@ EOF
 Create with SAML provider
 
 ```hcl
+variable "saml-provider" {
+  default = "example"
+}
+
+locals {
+  uin = data.tencentcloud_user_info.info.uin
+  saml_provider = var.saml-provider
+}
+
+data "tencentcloud_user_info" "info" {}
+
 resource "tencentcloud_cam_role" "boo" {
-  name          = "cam-role-test"
+  name          = "tf_cam_role"
   document      = <<EOF
 {
   "version": "2.0",
   "statement": [
     {
-      "action": ["name/sts:AssumeRole", "name/sts:AssumeRoleWithWebIdentity"],
+      "action": [
+        "name/sts:AssumeRole"
+      ],
       "effect": "allow",
       "principal": {
-        "federated": ["qcs::cam::uin/<your-account-id>:saml-provider/<your-name>"]
+        "qcs": [
+          "qcs::cam::uin/${local.uin}:saml-provider/${local.saml_provider}"
+        ]
       }
     }
   ]
 }
 EOF
-  description   = "test"
+  description   = "tf_test"
   console_login = true
 }
 ```

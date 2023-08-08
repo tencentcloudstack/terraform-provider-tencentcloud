@@ -11,7 +11,7 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudTseCngwRouteRateLimitResource_basic -v
-func TestAccTencentCloudTseCngwRouteRateLimitResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixTseCngwRouteRateLimitResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {

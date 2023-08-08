@@ -11,7 +11,7 @@ import (
 )
 
 var testSqlserverAccountDBAttachmentResourceName = "tencentcloud_sqlserver_account_db_attachment"
-var testSqlserverAccountDBAttachmentResourceKey = testSqlserverAccountDBAttachmentResourceName + ".test"
+var testSqlserverAccountDBAttachmentResourceKey = testSqlserverAccountDBAttachmentResourceName + ".example"
 
 func init() {
 	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_sqlserver_account_db_attachment
@@ -55,6 +55,7 @@ func init() {
 }
 
 func TestAccTencentCloudSqlserverAccountDBAttachmentResource(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -65,8 +66,8 @@ func TestAccTencentCloudSqlserverAccountDBAttachmentResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverAccountDBAttachmentExists(testSqlserverAccountDBAttachmentResourceKey),
 					resource.TestCheckResourceAttrSet(testSqlserverAccountDBAttachmentResourceKey, "instance_id"),
-					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "account_name", defaultSQLServerAccount),
-					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "db_name", defaultSQLServerDB),
+					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "account_name", "tf_example_account"),
+					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "db_name", "tf_example_db"),
 					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "privilege", "ReadOnly"),
 				),
 			},
@@ -80,8 +81,8 @@ func TestAccTencentCloudSqlserverAccountDBAttachmentResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverAccountDBAttachmentExists(testSqlserverAccountDBAttachmentResourceKey),
 					resource.TestCheckResourceAttrSet(testSqlserverAccountDBAttachmentResourceKey, "instance_id"),
-					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "account_name", defaultSQLServerAccount),
-					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "db_name", defaultSQLServerDB),
+					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "account_name", "tf_example_account"),
+					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "db_name", "tf_example_db"),
 					resource.TestCheckResourceAttr(testSqlserverAccountDBAttachmentResourceKey, "privilege", "ReadWrite"),
 				),
 			},
@@ -156,20 +157,98 @@ func testAccCheckSqlserverAccountDBAttachmentExists(n string) resource.TestCheck
 	}
 }
 
-const testAccSqlserverAccountDBAttachment string = CommonPresetSQLServerAccount + `
-resource "tencentcloud_sqlserver_account_db_attachment" "test" {
-  instance_id = local.sqlserver_id
-  account_name = local.sqlserver_account # "keep_sqlserver_account"
-  db_name = local.sqlserver_db # "keep_sqlserver_db"
-  privilege = "ReadOnly"
+const testAccSqlserverAccountDBAttachment string = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [local.sg_id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_db" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_db"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "test-remark"
+}
+
+resource "tencentcloud_sqlserver_account" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_account"
+  password    = "Qwer@234"
+  remark      = "test-remark"
+}
+
+resource "tencentcloud_sqlserver_account_db_attachment" "example" {
+  instance_id  = tencentcloud_sqlserver_basic_instance.example.id
+  account_name = tencentcloud_sqlserver_account.example.name
+  db_name      = tencentcloud_sqlserver_db.example.name
+  privilege    = "ReadOnly"
 }
 `
 
-const testAccSqlserverAccountDBAttachmentUpdate string = CommonPresetSQLServerAccount + `
-resource "tencentcloud_sqlserver_account_db_attachment" "test" {
-  instance_id = local.sqlserver_id
-  account_name = local.sqlserver_account
-  db_name = local.sqlserver_db
-  privilege = "ReadWrite"
+const testAccSqlserverAccountDBAttachmentUpdate string = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [local.sg_id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_db" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_db"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "test-remark"
+}
+
+resource "tencentcloud_sqlserver_account" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_account"
+  password    = "Qwer@234"
+  remark      = "test-remark"
+}
+
+resource "tencentcloud_sqlserver_account_db_attachment" "example" {
+  instance_id  = tencentcloud_sqlserver_basic_instance.example.id
+  account_name = tencentcloud_sqlserver_account.example.name
+  db_name      = tencentcloud_sqlserver_db.example.name
+  privilege    = "ReadWrite"
 }
 `

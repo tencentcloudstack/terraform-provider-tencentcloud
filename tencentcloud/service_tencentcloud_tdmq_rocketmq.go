@@ -1589,3 +1589,89 @@ func (me *TdmqService) DeleteTdmqRabbitmqVipInstanceById(ctx context.Context, in
 
 	return
 }
+
+func (me *TdmqService) DescribeTdmqRocketmqVipInstanceById(ctx context.Context, clusterId string) (rocketmqVipInstanceDetail *tdmq.DescribeRocketMQVipInstanceDetailResponseParams, errRet error) {
+	logId := getLogId(ctx)
+	request := tdmq.NewDescribeRocketMQVipInstanceDetailRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeRocketMQVipInstanceDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil {
+		rocketmqVipInstanceDetail = response.Response
+	}
+
+	return
+}
+
+func (me *TdmqService) DescribeTdmqRocketmqVipInstancesByFilter(ctx context.Context, clusterId string) (rocketmqVipInstances *tdmq.RocketMQVipInstance, errRet error) {
+	logId := getLogId(ctx)
+	request := tdmq.NewDescribeRocketMQVipInstancesRequest()
+	request.Filters = []*tdmq.Filter{
+		{
+			Name:   common.StringPtr("InstanceIds"),
+			Values: common.StringPtrs([]string{clusterId}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DescribeRocketMQVipInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if *response.Response.TotalCount == 0 || response.Response.Instances == nil {
+		return
+	}
+
+	rocketmqVipInstances = response.Response.Instances[0]
+	return
+}
+
+func (me *TdmqService) DeleteTdmqRocketmqVipInstanceById(ctx context.Context, clusterId string) (errRet error) {
+	logId := getLogId(ctx)
+	request := tdmq.NewDeleteRocketMQVipInstanceRequest()
+	request.ClusterId = &clusterId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTdmqClient().DeleteRocketMQVipInstance(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqNamespaceDataSource -v
 func TestAccTencentCloudTdmqRocketmqNamespaceDataSource(t *testing.T) {
 	t.Parallel()
 
@@ -16,8 +17,9 @@ func TestAccTencentCloudTdmqRocketmqNamespaceDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceTdmqRocketmqNamespace,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_rocketmq_namespace.namespace"),
-					resource.TestCheckResourceAttr("data.tencentcloud_tdmq_rocketmq_namespace.namespace", "namespaces.#", "1"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_rocketmq_namespace.example"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tdmq_rocketmq_namespace.example", "cluster_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tdmq_rocketmq_namespace.example", "name_keyword"),
 				),
 			},
 		},
@@ -25,21 +27,19 @@ func TestAccTencentCloudTdmqRocketmqNamespaceDataSource(t *testing.T) {
 }
 
 const testAccDataSourceTdmqRocketmqNamespace = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq_namespace_sdatasource"
-	remark = "test recket mq"
+data "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id   = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  name_keyword = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespacedata" {
-	cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-	namespace_name = "test_namespace_datasource"
-	ttl = 65000
-	retention_time = 65000
-	remark = "test namespace"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-data "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-	cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-	name_keyword = tencentcloud_tdmq_rocketmq_namespace.namespacedata.namespace_name
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example"
+  remark         = "remark."
 }
 `

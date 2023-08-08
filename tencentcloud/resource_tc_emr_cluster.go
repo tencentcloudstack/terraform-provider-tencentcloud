@@ -4,46 +4,88 @@ Provide a resource to create a emr cluster.
 Example Usage
 
 ```hcl
-resource "tencentcloud_emr_cluster" "emrrrr" {
-  product_id=4
-  display_strategy="clusterList"
-  vpc_settings={
-    vpc_id="vpc-fuwly8x5"
-    subnet_id:"subnet-d830wfso"
-  }
-  softwares=["hadoop-2.8.4", "zookeeper-3.4.9"]
-  support_ha=0
-  instance_name="emr-test"
-  resource_spec {
-    master_resource_spec {
-      mem_size=8192
-      cpu=4
-      disk_size=100
-      disk_type="CLOUD_PREMIUM"
-      spec="CVM.S2"
-      storage_type=5
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
+
+data "tencentcloud_instance_types" "cvm4c8m" {
+	exclude_sold_out=true
+	cpu_core_count=4
+	memory_size=8
+    filter {
+      name   = "instance-charge-type"
+      values = ["POSTPAID_BY_HOUR"]
     }
-    core_resource_spec {
-      mem_size=8192
-      cpu=4
-      disk_size=100
-      disk_type="CLOUD_PREMIUM"
-      spec="CVM.S2"
-      storage_type=5
-    }
-    master_count=1
-    core_count=2
+    filter {
+    name   = "zone"
+    values = [var.availability_zone]
   }
-  login_settings={
-    password="Tencent@cloud123"
-  }
-  time_span=1
-  time_unit="m"
-  pay_mode=1
-  placement={
-    zone="ap-guangzhou-3"
-    project_id=0
-  }
+}
+
+resource "tencentcloud_vpc" "emr_vpc" {
+  name       = "emr-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "emr_subnet" {
+  availability_zone = var.availability_zone
+  name              = "emr-subnets"
+  vpc_id            = tencentcloud_vpc.emr_vpc.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_security_group" "emr_sg" {
+  name        = "emr-sg"
+  description = "emr sg"
+  project_id  = 0
+}
+
+resource "tencentcloud_emr_cluster" "emr_cluster" {
+	product_id=4
+	display_strategy="clusterList"
+	vpc_settings={
+	  vpc_id=tencentcloud_vpc.emr_vpc.id
+      subnet_id=tencentcloud_subnet.emr_subnet.id
+	}
+	softwares=[
+	  "zookeeper-3.6.1",
+    ]
+	support_ha=0
+	instance_name="emr-cluster-test"
+	resource_spec {
+	  master_resource_spec {
+		mem_size=8192
+		cpu=4
+		disk_size=100
+		disk_type="CLOUD_PREMIUM"
+		spec="CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+		storage_type=5
+		root_size=50
+	  }
+	  core_resource_spec {
+		mem_size=8192
+		cpu=4
+		disk_size=100
+		disk_type="CLOUD_PREMIUM"
+		spec="CVM.${data.tencentcloud_instance_types.cvm4c8m.instance_types.0.family}"
+		storage_type=5
+		root_size=50
+	  }
+	  master_count=1
+	  core_count=2
+	}
+	login_settings={
+	  password="Tencent@cloud123"
+	}
+	time_span=3600
+	time_unit="s"
+	pay_mode=0
+	placement={
+	  zone=var.availability_zone
+	  project_id=0
+	}
+	sg_id=tencentcloud_security_group.emr_sg.id
 }
 ```
 */
@@ -59,6 +101,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudEmrCluster() *schema.Resource {
@@ -209,6 +252,12 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				ForceNew:    true,
 				Description: "The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tag description list.",
+			},
 		},
 	}
 }
@@ -227,6 +276,18 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 	if !hasTimeUnit || !hasTimeSpan || !hasPayMode {
 		return innerErr.New("Time_unit, time_span or pay_mode must be set.")
 	}
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("emr", "emr-instance", tcClient.Region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
+	hasChange := false
 	request := emr.NewScaleOutInstanceRequest()
 	request.TimeUnit = common.StringPtr(timeUnit.(string))
 	request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
@@ -238,15 +299,21 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("resource_spec.0.master_count") {
 		request.MasterCount = common.Uint64Ptr((uint64)(resourceSpec["master_count"].(int)))
+		hasChange = true
 	}
 	if d.HasChange("resource_spec.0.task_count") {
 		request.TaskCount = common.Uint64Ptr((uint64)(resourceSpec["task_count"].(int)))
+		hasChange = true
 	}
 	if d.HasChange("resource_spec.0.core_count") {
 		request.CoreCount = common.Uint64Ptr((uint64)(resourceSpec["core_count"].(int)))
+		hasChange = true
 	}
 	if d.HasChange("extend_fs_field") {
 		return innerErr.New("extend_fs_field not support update.")
+	}
+	if !hasChange {
+		return nil
 	}
 	_, err := emrService.UpdateInstance(ctx, request)
 	if err != nil {
@@ -321,6 +388,15 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 	})
 	if err != nil {
 		return err
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::emr:%s:uin/:emr-instance/%s", region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -416,5 +492,13 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return err
 	}
+
+	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "emr", "emr-instance", region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
 	return nil
 }

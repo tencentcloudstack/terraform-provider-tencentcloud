@@ -4,17 +4,15 @@ Provides a resource to create a tdmqRocketmq namespace
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-  cluster_name = "test_rocketmq"
-  remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace"
-  ttl = 65000
-  retention_time = 65000
-  remark = "test namespace"
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example_namespace"
+  remark         = "remark."
 }
 ```
 Import
@@ -62,13 +60,15 @@ func resourceTencentCloudTdmqRocketmqNamespace() *schema.Resource {
 
 			"ttl": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
+				Deprecated:  "It has been deprecated from version 1.81.20. Due to the adjustment of RocketMQ, the creation or modification of this parameter will be ignored.",
 				Description: "Retention time of unconsumed messages in milliseconds. Value range: 60 seconds-15 days.",
 			},
 
 			"retention_time": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
+				Deprecated:  "It has been deprecated from version 1.81.20. Due to the adjustment of RocketMQ, the creation or modification of this parameter will be ignored.",
 				Description: "Retention time of persisted messages in milliseconds.",
 			},
 
@@ -112,14 +112,6 @@ func resourceTencentCloudTdmqRocketmqNamespaceCreate(d *schema.ResourceData, met
 	if v, ok := d.GetOk("namespace_name"); ok {
 		namespaceName = v.(string)
 		request.NamespaceId = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("ttl"); ok {
-		request.Ttl = helper.IntUint64(v.(int))
-	}
-
-	if v, ok := d.GetOk("retention_time"); ok {
-		request.RetentionTime = helper.IntUint64(v.(int))
 	}
 
 	if v, ok := d.GetOk("remark"); ok {
@@ -175,8 +167,6 @@ func resourceTencentCloudTdmqRocketmqNamespaceRead(d *schema.ResourceData, meta 
 
 	_ = d.Set("cluster_id", clusterId)
 	_ = d.Set("namespace_name", *namespace.NamespaceId)
-	_ = d.Set("ttl", namespace.Ttl)
-	_ = d.Set("retention_time", namespace.RetentionTime)
 	_ = d.Set("remark", namespace.Remark)
 	_ = d.Set("public_endpoint", namespace.PublicEndpoint)
 	_ = d.Set("vpc_endpoint", namespace.VpcEndpoint)
@@ -202,37 +192,18 @@ func resourceTencentCloudTdmqRocketmqNamespaceUpdate(d *schema.ResourceData, met
 	request.NamespaceId = &namespaceName
 	request.ClusterId = &clusterId
 
-	if d.HasChange("cluster_id") {
+	immutableArgs := []string{"cluster_id", "namespace_name"}
 
-		return fmt.Errorf("`cluster_id` do not support change now.")
-
-	}
-
-	if d.HasChange("namespace_name") {
-
-		return fmt.Errorf("`namespace_name` do not support change now.")
-
-	}
-
-	if d.HasChange("ttl") {
-		if v, ok := d.GetOk("ttl"); ok {
-			request.Ttl = helper.IntUint64(v.(int))
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
 		}
-
-	}
-
-	if d.HasChange("retention_time") {
-		if v, ok := d.GetOk("retention_time"); ok {
-			request.RetentionTime = helper.IntUint64(v.(int))
-		}
-
 	}
 
 	if d.HasChange("remark") {
 		if v, ok := d.GetOk("remark"); ok {
 			request.Remark = helper.String(v.(string))
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

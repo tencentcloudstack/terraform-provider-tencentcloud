@@ -10,7 +10,6 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudCynosdbRollBackClusterResource_basic -v
 func TestAccTencentCloudCynosdbRollBackClusterResource_basic(t *testing.T) {
-	t.Parallel()
 
 	loc, _ := time.LoadLocation("Asia/Chongqing")
 	startTime := time.Now().AddDate(0, 0, -1).In(loc).Format("2006-01-02 15:04:05")

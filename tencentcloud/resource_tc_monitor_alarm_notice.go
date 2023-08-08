@@ -4,8 +4,8 @@ Provides a alarm notice resource for monitor.
 Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_alarm_notice" "example" {
-  name                  = "test_alarm_notice_1"
+resource "tencentcloud_monitor_alarm_notice" "foo" {
+  name                  = "tf-alarm_notice"
   notice_type           = "ALL"
   notice_language       = "zh-CN"
 

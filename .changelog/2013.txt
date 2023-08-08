@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_mongodb_instance: support params `node_num`, `availability_zone_list` and `hidden_zone`
+```

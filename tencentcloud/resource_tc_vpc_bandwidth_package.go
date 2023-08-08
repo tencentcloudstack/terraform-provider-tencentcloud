@@ -12,8 +12,23 @@ resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
     "createdBy" = "terraform"
   }
 }
-
 ```
+
+PrePaid Bandwidth Package
+
+```hcl
+resource "tencentcloud_vpc_bandwidth_package" "bandwidth_package" {
+  network_type           = "BGP"
+  charge_type            = "FIXED_PREPAID_BY_MONTH"
+  bandwidth_package_name = "test-001"
+  time_span              = 3
+  internet_max_bandwidth = 100
+  tags                   = {
+    "createdBy" = "terraform"
+  }
+}
+````
+
 Import
 
 vpc bandwidth_package can be imported using the id, e.g.
@@ -76,6 +91,12 @@ func resourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 				Optional:    true,
 				Description: "Tag description list.",
 			},
+
+			"time_span": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "The purchase duration of the prepaid monthly bandwidth package, unit: month, value range: 1~60.",
+			},
 		},
 	}
 }
@@ -115,6 +136,10 @@ func resourceTencentCloudVpcBandwidthPackageCreate(d *schema.ResourceData, meta 
 			}
 			request.Tags = append(request.Tags, &tag)
 		}
+	}
+
+	if v, ok := d.GetOkExists("time_span"); ok {
+		request.TimeSpan = helper.IntUint64(v.(int))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -253,6 +278,10 @@ func resourceTencentCloudVpcBandwidthPackageUpdate(d *schema.ResourceData, meta 
 
 	if d.HasChange("internet_max_bandwidth") {
 		return fmt.Errorf("`internet_max_bandwidth` do not support change now.")
+	}
+
+	if d.HasChange("time_span") {
+		return fmt.Errorf("`time_span` do not support change now.")
 	}
 
 	if d.HasChange("charge_type") {

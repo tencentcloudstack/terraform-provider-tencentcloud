@@ -196,7 +196,7 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				Required:     true,
 				ForceNew:     true,
 				ValidateFunc: validateAllowedStringValue(CLB_LISTENER_PROTOCOL),
-				Description:  "Type of protocol within the listener. Valid values: `TCP`, `UDP`, `HTTP`, `HTTPS` and `TCP_SSL`.",
+				Description:  "Type of protocol within the listener. Valid values: `TCP`, `UDP`, `HTTP`, `HTTPS`, `TCP_SSL` and `QUIC`.",
 			},
 			"health_check_switch": {
 				Type:        schema.TypeBool,
@@ -420,7 +420,8 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 	if v, ok := d.GetOk("target_type"); ok {
 		targetType := v.(string)
 		request.TargetType = &targetType
-	} else if protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL {
+	} else if protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP ||
+		protocol == CLB_LISTENER_PROTOCOL_TCPSSL || protocol == CLB_LISTENER_PROTOCOL_QUIC {
 		targetType := CLB_TARGET_TYPE_NODE
 		request.TargetType = &targetType
 	}
@@ -540,7 +541,8 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 	if instance.SessionExpireTime != nil {
 		_ = d.Set("session_expire_time", instance.SessionExpireTime)
 	}
-	if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL || *instance.Protocol == CLB_LISTENER_PROTOCOL_UDP {
+	if *instance.Protocol == CLB_LISTENER_PROTOCOL_TCP || *instance.Protocol == CLB_LISTENER_PROTOCOL_TCPSSL ||
+		*instance.Protocol == CLB_LISTENER_PROTOCOL_UDP || *instance.Protocol == CLB_LISTENER_PROTOCOL_QUIC {
 		_ = d.Set("scheduler", instance.Scheduler)
 	}
 	_ = d.Set("sni_switch", *instance.SniSwitch > 0)
@@ -638,8 +640,9 @@ func resourceTencentCloudClbListenerUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("scheduler") {
 		changed = true
 		scheduler = d.Get("scheduler").(string)
-		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP || protocol == CLB_LISTENER_PROTOCOL_TCPSSL) {
-			return fmt.Errorf("[CHECK][CLB listener %s][Update] check: Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL or rule of listener HTTP/HTTPS", listenerId)
+		if !(protocol == CLB_LISTENER_PROTOCOL_TCP || protocol == CLB_LISTENER_PROTOCOL_UDP ||
+			protocol == CLB_LISTENER_PROTOCOL_TCPSSL || protocol == CLB_LISTENER_PROTOCOL_QUIC) {
+			return fmt.Errorf("[CHECK][CLB listener %s][Update] check: Scheduler can only be set with listener protocol TCP/UDP/TCP_SSL/QUIC or rule of listener HTTP/HTTPS", listenerId)
 		}
 		if scheduler == CLB_LISTENER_SCHEDULER_IP_HASH {
 			return fmt.Errorf("[CHECK][CLB listener %s][Update] check: Scheduler 'IP_HASH' can only be set with rule of listener HTTP/HTTPS", listenerId)

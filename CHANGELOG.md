@@ -1,3 +1,39 @@
+## 1.81.19 (August 04, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ssm_products` ([#2027](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2027))
+* **New Resource:** `tencentcloud_ssm_product_secret` ([#2027](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2027))
+* **New Resource:** `tencentcloud_tdmq_rocketmq_vip_instance` ([#2011](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2011))
+
+ENHANCEMENTS:
+
+* data_source/tencentcloud_clb_attachments: Optimize the problem display of target parameters ([#2003](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2003))
+* datasource/tencentcloud_mysql_instance: Support query `group_id` ([#2002](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2002))
+* resource/tencentcloud_cynosdb_cluster_slave_zone: Optimize timeout ([#1998](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1998))
+* resource/tencentcloud_cynosdb_proxy: Add return value `ro_instances` ([#2008](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2008))
+* resource/tencentcloud_emr_cluster: support `tags` param ([#2026](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2026))
+* resource/tencentcloud_mongodb_instance: support params `node_num`, `availability_zone_list` and `hidden_zone` ([#2013](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2013))
+* resource/tencentcloud_security_group_rule_set: Optimize Rule Delete Logic ([#2018](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2018))
+* resource/tencentcloud_sqlserver_general_cloud_ro_instance: Support setting timeout ([#2016](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2016))
+
+## 1.81.18 (July 31, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_tag` ([#1991](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1991))
+* **New Resource:** `tencentcloud_tag_attachment` ([#1991](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1991))
+* **New Resource:** `tencentcloud_tdmq_rabbitmq_vip_instance` ([#1984](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1984))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_mysql_zone_config: Support querying `cpu`, `info`, `device_type` ([#1996](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1996))
+* datasource/tencentcloud_ssl_certificates: Support querying `dv_auths` and `order_id` ([#1993](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1993))
+* resource/tencentcloud_eip_association: Optimize the problem while binding EIP timeout. ([#1990](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1990))
+* resource/tencentcloud_tcr_service_account: update example ([#1995](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1995))
+* resource/tencentcloud_tcr_tag_retention_rule: allow `cron_setting` to be modified ([#1995](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1995))
+* resource/tencentcloud_vpc_bandwidth_package: support set `time_span` ([#2001](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2001))
+
 ## 1.81.17 (July 27, 2023)
 
 FEATURES:
