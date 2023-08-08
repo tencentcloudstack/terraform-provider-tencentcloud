@@ -1,24 +1,92 @@
 package tencentcloud
 
 import (
+	"context"
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 	"testing"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudClsScheduledSqlResource_basic -v
 func TestAccTencentCloudClsScheduledSqlResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		CheckDestroy: testAccCheckClsScheduledSqlDestroy,
+		Providers:    testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccClsScheduledSql,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cls_scheduled_sql.scheduled_sql", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClsScheduledSqlExists("tencentcloud_cls_scheduled_sql.scheduled_sql"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_scheduled_sql.scheduled_sql", "src_topic_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_scheduled_sql.scheduled_sql", "name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_scheduled_sql.scheduled_sql", "enable_flag"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_scheduled_sql.scheduled_sql", "dst_resource.#"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_scheduled_sql.scheduled_sql", "scheduled_sql_content"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_scheduled_sql.scheduled_sql", "process_start_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_scheduled_sql.scheduled_sql", "process_type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_scheduled_sql.scheduled_sql", "process_time_window"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_scheduled_sql.scheduled_sql", "process_delay")),
+			},
+			{
+				ResourceName:      "tencentcloud_cls_scheduled_sql.scheduled_sql",
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
+}
+
+func testAccCheckClsScheduledSqlDestroy(s *terraform.State) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	clsService := ClsService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_cls_scheduled_sql" {
+			continue
+		}
+		instance, err := clsService.DescribeClsScheduledSqlById(ctx, rs.Primary.ID)
+		if err != nil {
+			continue
+		}
+		if instance != nil {
+			return fmt.Errorf("[CHECK][CLS ScheduledSql][Destroy] check: CLS ScheduledSql still exists: %s", rs.Primary.ID)
+		}
+	}
+	return nil
+}
+
+func testAccCheckClsScheduledSqlExists(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("[CHECK][CLS ScheduledSql][Exists] check: CLS ScheduledSql %s is not found", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("[CHECK][CLS ScheduledSql][Create] check: CLS ScheduledSql id is not set")
+		}
+		clsService := ClsService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+		}
+		taskRes, err := clsService.DescribeClsScheduledSqlById(ctx, rs.Primary.ID)
+		if err != nil {
+			return err
+		}
+		if taskRes == nil {
+			return fmt.Errorf("[CHECK][CLS ScheduledSql][Exists] id %s is not exist", rs.Primary.ID)
+		}
+		return nil
+	}
 }
 
 const testAccClsScheduledSql = `

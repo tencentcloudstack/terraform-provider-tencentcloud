@@ -1,7 +1,11 @@
 package tencentcloud
 
 import (
+	"context"
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"strings"
 	"testing"
 )
 
@@ -11,11 +15,19 @@ func TestAccTencentCloudClsKafkaRechargeResource_basic(t *testing.T) {
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		CheckDestroy: testAccCheckClsKafkaRechargeDestroy,
+		Providers:    testAccProviders,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccClsKafkaRecharge,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_cls_kafka_recharge.kafka_recharge", "id")),
+				Check: resource.ComposeTestCheckFunc(testAccCheckClsKafkaRechargeExists("tencentcloud_cls_kafka_recharge.kafka_recharge"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_kafka_recharge.kafka_recharge", "topic_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_kafka_recharge.kafka_recharge", "name"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_kafka_recharge.kafka_recharge", "kafka_type"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_kafka_recharge.kafka_recharge", "offset"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_kafka_recharge.kafka_recharge", "user_kafka_topics"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_kafka_recharge.kafka_recharge", "kafka_instance"),
+					resource.TestCheckResourceAttrSet("tencentcloud_cls_kafka_recharge.kafka_recharge", "log_recharge_rule.#")),
 			},
 			{
 				ResourceName:      "tencentcloud_cls_kafka_recharge.kafka_recharge",
@@ -24,6 +36,69 @@ func TestAccTencentCloudClsKafkaRechargeResource_basic(t *testing.T) {
 			},
 		},
 	})
+}
+
+func testAccCheckClsKafkaRechargeDestroy(s *terraform.State) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+	clsService := ClsService{
+		client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+	}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_cls_kafka_recharge" {
+			continue
+		}
+		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		if len(idSplit) != 2 {
+			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
+		}
+		kafkaRechargeId := idSplit[0]
+		kafkaTopic := idSplit[1]
+
+		instance, err := clsService.DescribeClsKafkaRechargeById(ctx, kafkaRechargeId, kafkaTopic)
+		if err != nil {
+			continue
+		}
+		if instance != nil {
+			return fmt.Errorf("[CHECK][CLS KafkaRecharge][Destroy] check: CLS KafkaRecharge still exists: %s", rs.Primary.ID)
+		}
+	}
+	return nil
+}
+
+func testAccCheckClsKafkaRechargeExists(n string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+		rs, ok := s.RootModule().Resources[n]
+		if !ok {
+			return fmt.Errorf("[CHECK][CLS KafkaRecharge][Exists] check: CLS KafkaRecharge %s is not found", n)
+		}
+		if rs.Primary.ID == "" {
+			return fmt.Errorf("[CHECK][CLS dataTransform][Create] check: CLS KafkaRecharge id is not set")
+		}
+		clsService := ClsService{
+			client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn,
+		}
+		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+
+		if len(idSplit) != 2 {
+			return fmt.Errorf("id is broken,%s", rs.Primary.ID)
+		}
+		kafkaRechargeId := idSplit[0]
+		kafkaTopic := idSplit[1]
+
+		instance, err := clsService.DescribeClsKafkaRechargeById(ctx, kafkaRechargeId, kafkaTopic)
+		if err != nil {
+			return err
+		}
+		if instance == nil {
+			return fmt.Errorf("[CHECK][CLS KafkaRecharge][Exists] id %s is not exist", rs.Primary.ID)
+		}
+		return nil
+	}
 }
 
 const testAccClsKafkaRecharge = `
