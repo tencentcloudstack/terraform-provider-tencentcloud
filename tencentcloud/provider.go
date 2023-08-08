@@ -479,12 +479,12 @@ Direct Connect(DC)
 	tencentcloud_dc_public_direct_connect_tunnel_routes
 
   Resource
-	tencentcloud_dc_instance
+	tencentcloud_direct_instance
     tencentcloud_dcx
 	tencentcloud_dcx_extra_config
-	tencentcloud_dc_share_dcx_config
-	tencentcloud_dc_internet_address
-	tencentcloud_dc_internet_address_config
+	tencentcloud_direct_share_dcx_config
+	tencentcloud_direct_internet_address
+	tencentcloud_direct_internet_address_config
 
 Direct Connect Gateway(DCG)
   Data Source
@@ -492,9 +492,9 @@ Direct Connect Gateway(DCG)
     tencentcloud_dc_gateway_instances
 
   Resource
-    tencentcloud_dc_gateway
-    tencentcloud_dc_gateway_ccn_route
-	tencentcloud_dc_gateway_attachment
+    tencentcloud_direct_gateway
+    tencentcloud_direct_gateway_ccn_route
+	tencentcloud_direct_gateway_attachment
 
 Domain
   Data Source
@@ -2291,15 +2291,15 @@ func Provider() *schema.Provider {
 			"tencentcloud_ccn_instances_accept_attach":                         resourceTencentCloudCcnInstancesAcceptAttach(),
 			"tencentcloud_ccn_instances_reject_attach":                         resourceTencentCloudCcnInstancesRejectAttach(),
 			"tencentcloud_ccn_instances_reset_attach":                          resourceTencentCloudCcnInstancesResetAttach(),
-			"tencentcloud_dc_instance":                                         resourceTencentCloudDcInstance(),
+			"tencentcloud_direct_instance":                                     resourceTencentCloudDcInstance(),
 			"tencentcloud_dcx":                                                 resourceTencentCloudDcxInstance(),
 			"tencentcloud_dcx_extra_config":                                    resourceTencentCloudDcxExtraConfig(),
-			"tencentcloud_dc_share_dcx_config":                                 resourceTencentCloudDcShareDcxConfig(),
-			"tencentcloud_dc_internet_address":                                 resourceTencentCloudDcInternetAddress(),
-			"tencentcloud_dc_internet_address_config":                          resourceTencentCloudDcInternetAddressConfig(),
-			"tencentcloud_dc_gateway":                                          resourceTencentCloudDcGatewayInstance(),
-			"tencentcloud_dc_gateway_ccn_route":                                resourceTencentCloudDcGatewayCcnRouteInstance(),
-			"tencentcloud_dc_gateway_attachment":                               resourceTencentCloudDcGatewayAttachment(),
+			"tencentcloud_direct_share_dcx_config":                             resourceTencentCloudDcShareDcxConfig(),
+			"tencentcloud_direct_internet_address":                             resourceTencentCloudDcInternetAddress(),
+			"tencentcloud_direct_internet_address_config":                      resourceTencentCloudDcInternetAddressConfig(),
+			"tencentcloud_direct_gateway":                                      resourceTencentCloudDcGatewayInstance(),
+			"tencentcloud_direct_gateway_ccn_route":                            resourceTencentCloudDcGatewayCcnRouteInstance(),
+			"tencentcloud_direct_gateway_attachment":                           resourceTencentCloudDcGatewayAttachment(),
 			"tencentcloud_vpn_customer_gateway":                                resourceTencentCloudVpnCustomerGateway(),
 			"tencentcloud_vpn_gateway":                                         resourceTencentCloudVpnGateway(),
 			"tencentcloud_vpn_gateway_route":                                   resourceTencentCloudVpnGatewayRoute(),
