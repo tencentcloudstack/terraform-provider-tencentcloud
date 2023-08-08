@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudEbEventBusResource_basic -v
+// go test -i; go test -test.run TestAccTencentCloudEbEventRuleResource_basic -v
 func TestAccTencentCloudEbEventRuleResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -19,7 +19,7 @@ func TestAccTencentCloudEbEventRuleResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckEbEventRuleDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccEbEventBus,
+				Config: testAccEbEventRule,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEbEventRuleExists("tencentcloud_eb_event_rule.event_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eb_event_rule.event_rule", "id"),
@@ -36,7 +36,7 @@ func TestAccTencentCloudEbEventRuleResource_basic(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccEbEventBusUp,
+				Config: testAccEbEventRuleUp,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEbEventRuleExists("tencentcloud_eb_event_rule.event_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eb_event_rule.event_rule", "id"),
