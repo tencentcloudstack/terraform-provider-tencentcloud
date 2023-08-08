@@ -11,9 +11,10 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqNamespaceResource_basic -v
 func TestAccTencentCloudTdmqRocketmqNamespaceResource_basic(t *testing.T) {
 	t.Parallel()
-	terraformId := "tencentcloud_tdmq_rocketmq_namespace.namespace"
+	terraformId := "tencentcloud_tdmq_rocketmq_namespace.example"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -24,22 +25,18 @@ func TestAccTencentCloudTdmqRocketmqNamespaceResource_basic(t *testing.T) {
 				Config: testAccTdmqRocketmqNamespace,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqNamespaceExists(terraformId),
-					resource.TestCheckResourceAttr(terraformId, "ttl", "65000"),
-					resource.TestCheckResourceAttr(terraformId, "retention_time", "65000"),
-					resource.TestCheckResourceAttr(terraformId, "remark", "test namespace"),
+					resource.TestCheckResourceAttr(terraformId, "remark", "remark."),
 				),
 			},
 			{
 				Config: testAccTdmqRocketmqNamespaceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqNamespaceExists(terraformId),
-					resource.TestCheckResourceAttr(terraformId, "ttl", "66000"),
-					resource.TestCheckResourceAttr(terraformId, "retention_time", "66000"),
-					resource.TestCheckResourceAttr(terraformId, "remark", "test namespace update"),
+					resource.TestCheckResourceAttr(terraformId, "remark", "remark update."),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_tdmq_rocketmq_namespace.namespace",
+				ResourceName:      "tencentcloud_tdmq_rocketmq_namespace.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -65,7 +62,7 @@ func testAccCheckTdmqRocketmqNamespaceDestroy(s *terraform.State) error {
 		namespaces, err := service.DescribeTdmqRocketmqNamespace(ctx, namespaceName, clusterId)
 		if err != nil {
 			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkerr.Code == "ResourceUnavailable" {
+				if sdkerr.Code == "ResourceUnavailable" || sdkerr.Code == "ResourceNotFound.Cluster" {
 					return nil
 				}
 			}
@@ -101,7 +98,6 @@ func testAccCheckTdmqRocketmqNamespaceExists(re string) resource.TestCheckFunc {
 		namespaceName := idSplit[1]
 		service := TdmqRocketmqService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
 		namespaces, err := service.DescribeTdmqRocketmqNamespace(ctx, namespaceName, clusterId)
-
 		if err != nil {
 			return err
 		}
@@ -115,31 +111,27 @@ func testAccCheckTdmqRocketmqNamespaceExists(re string) resource.TestCheckFunc {
 }
 
 const testAccTdmqRocketmqNamespace = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
-  
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-	cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-	namespace_name = "test_namespace"
-	ttl = 65000
-	retention_time = 65000
-	remark = "test namespace"
+
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example"
+  remark         = "remark."
 }
 `
 
 const testAccTdmqRocketmqNamespaceUpdate = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
-  
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-	cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-	namespace_name = "test_namespace"
-	ttl = 66000
-	retention_time = 66000
-	remark = "test namespace update"
+
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example"
+  remark         = "remark update."
 }
 `

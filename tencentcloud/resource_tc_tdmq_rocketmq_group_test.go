@@ -11,9 +11,10 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqGroupResource_basic -v
 func TestAccTencentCloudTdmqRocketmqGroupResource_basic(t *testing.T) {
 	t.Parallel()
-	terraformId := "tencentcloud_tdmq_rocketmq_group.group"
+	terraformId := "tencentcloud_tdmq_rocketmq_group.example"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -58,7 +59,7 @@ func testAccCheckTdmqRocketmqGroupDestroy(s *terraform.State) error {
 
 		if err != nil {
 			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkerr.Code == "ResourceUnavailable" {
+				if sdkerr.Code == "ResourceUnavailable" || sdkerr.Code == "ResourceNotFound.Cluster" {
 					return nil
 				}
 			}
@@ -110,25 +111,23 @@ func testAccCheckTdmqRocketmqGroupExists(re string) resource.TestCheckFunc {
 }
 
 const testAccTdmqRocketmqGroup = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace"
-  ttl = 65000
-  retention_time = 65000
-  remark = "test namespace"
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example"
+  remark         = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_group" "group" {
-  group_name = "test_rocketmq_group"
-  namespace = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-  read_enable = true
+resource "tencentcloud_tdmq_rocketmq_group" "example" {
+  group_name       = "tf_example"
+  cluster_id       = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace        = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  read_enable      = true
   broadcast_enable = true
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  remark = "test rocketmq group"
+  remark           = "remark."
 }
 `

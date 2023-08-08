@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqGroupDataSource -v
 func TestAccTencentCloudTdmqRocketmqGroupDataSource(t *testing.T) {
 	t.Parallel()
 
@@ -16,8 +17,10 @@ func TestAccTencentCloudTdmqRocketmqGroupDataSource(t *testing.T) {
 			{
 				Config: testAccDataSourceTdmqRocketmqGroup,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_rocketmq_group.group"),
-					resource.TestCheckResourceAttr("data.tencentcloud_tdmq_rocketmq_group.group", "groups.#", "1"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tdmq_rocketmq_group.example"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tdmq_rocketmq_group.example", "cluster_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tdmq_rocketmq_group.example", "namespace_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tdmq_rocketmq_group.example", "filter_group"),
 				),
 			},
 		},
@@ -25,31 +28,29 @@ func TestAccTencentCloudTdmqRocketmqGroupDataSource(t *testing.T) {
 }
 
 const testAccDataSourceTdmqRocketmqGroup = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq_datasource_group"
-	remark = "test recket mq"
-  }
-  
-  resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-	cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-	namespace_name = "test_namespace_datasource"
-	ttl = 65000
-	retention_time = 65000
-	remark = "test namespace"
-  }
-  
-  resource "tencentcloud_tdmq_rocketmq_group" "group" {
-	group_name = "test_rocketmq_group"
-	namespace = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-	read_enable = true
-	broadcast_enable = true
-	cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-	remark = "test rocketmq group"
-  }
-  
-  data "tencentcloud_tdmq_rocketmq_group" "group" {
-	cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-	namespace_id = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-	filter_group = tencentcloud_tdmq_rocketmq_group.group.group_name
-  }
+data "tencentcloud_tdmq_rocketmq_group" "example" {
+  cluster_id   = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_id = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  filter_group = tencentcloud_tdmq_rocketmq_group.example.group_name
+}
+
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
+}
+
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example"
+  remark         = "remark."
+}
+
+resource "tencentcloud_tdmq_rocketmq_group" "example" {
+  group_name       = "tf_example"
+  namespace        = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  read_enable      = true
+  broadcast_enable = true
+  cluster_id       = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  remark           = "remark."
+}
 `

@@ -11,9 +11,10 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqEnvironmentRoleResource_basic -v
 func TestAccTencentCloudTdmqRocketmqEnvironmentRoleResource_basic(t *testing.T) {
 	t.Parallel()
-	terraformId := "tencentcloud_tdmq_rocketmq_environment_role.environment_role"
+	terraformId := "tencentcloud_tdmq_rocketmq_environment_role.example"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -23,15 +24,15 @@ func TestAccTencentCloudTdmqRocketmqEnvironmentRoleResource_basic(t *testing.T) 
 				Config: testAccTdmqRocketmqEnvironmentRole,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqEnvironmentRoleExists(terraformId),
-					resource.TestCheckResourceAttr(terraformId, "role_name", "test_rocketmq_role"),
-					resource.TestCheckResourceAttr(terraformId, "permissions.#", "1"),
+					resource.TestCheckResourceAttr(terraformId, "role_name", "tf_example_role"),
+					resource.TestCheckResourceAttr(terraformId, "permissions.#", "2"),
 				),
 			},
 			{
 				Config: testAccTdmqRocketmqEnvironmentUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqEnvironmentRoleExists(terraformId),
-					resource.TestCheckResourceAttr(terraformId, "permissions.#", "2"),
+					resource.TestCheckResourceAttr(terraformId, "permissions.#", "1"),
 				),
 			},
 			{
@@ -116,57 +117,53 @@ func testAccCheckTdmqRocketmqEnvironmentRoleExists(re string) resource.TestCheck
 }
 
 const testAccTdmqRocketmqEnvironmentRole = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_role" "role" {
-  role_name = "test_rocketmq_role"
-  remark = "test rocketmq role"
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+resource "tencentcloud_tdmq_rocketmq_role" "example" {
+  role_name  = "tf_example_role"
+  remark     = "remark."
+  cluster_id = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace"
-  ttl = 65000
-  retention_time = 65000
-  remark = "test namespace"
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example_namespace"
+  remark         = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_environment_role" "environment_role" {
-  environment_name = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-  role_name = tencentcloud_tdmq_rocketmq_role.role.role_name
-  permissions = ["produce"]
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+resource "tencentcloud_tdmq_rocketmq_environment_role" "example" {
+  environment_name = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  role_name        = tencentcloud_tdmq_rocketmq_role.example.role_name
+  permissions      = ["produce", "consume"]
+  cluster_id       = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
 }
 `
 
 const testAccTdmqRocketmqEnvironmentUpdate = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_role" "role" {
-  role_name = "test_rocketmq_role"
-  remark = "test rocketmq role"
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+resource "tencentcloud_tdmq_rocketmq_role" "example" {
+  role_name  = "tf_example_role"
+  remark     = "remark."
+  cluster_id = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace"
-  ttl = 65000
-  retention_time = 65000
-  remark = "test namespace"
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example_namespace"
+  remark         = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_environment_role" "environment_role" {
-  environment_name = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-  role_name = tencentcloud_tdmq_rocketmq_role.role.role_name
-  permissions = ["produce", "consume"]
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
+resource "tencentcloud_tdmq_rocketmq_environment_role" "example" {
+  environment_name = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  role_name        = tencentcloud_tdmq_rocketmq_role.example.role_name
+  permissions      = ["produce"]
+  cluster_id       = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
 }
 `
