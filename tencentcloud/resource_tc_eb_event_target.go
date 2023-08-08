@@ -528,18 +528,6 @@ func resourceTencentCloudEbEventTargetUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if d.HasChange("event_bus_id") {
-		if v, ok := d.GetOk("event_bus_id"); ok {
-			request.EventBusId = helper.String(v.(string))
-		}
-	}
-
-	if d.HasChange("rule_id") {
-		if v, ok := d.GetOk("rule_id"); ok {
-			request.RuleId = helper.String(v.(string))
-		}
-	}
-
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseEbClient().UpdateTarget(request)
 		if e != nil {

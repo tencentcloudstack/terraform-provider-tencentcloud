@@ -165,7 +165,7 @@ func resourceTencentCloudEbEventRuleCreate(d *schema.ResourceData, meta interfac
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::eb:%s:uin/:eventRule/%s", region, d.Id())
+		resourceName := fmt.Sprintf("qcs::eb:%s:uin/:ruleid/%s/%s", region, eventBusId, ruleId)
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -226,7 +226,7 @@ func resourceTencentCloudEbEventRuleRead(d *schema.ResourceData, meta interface{
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "eb", "eventRule", tcClient.Region, d.Id())
+	tags, err := tagService.DescribeResourceTags(ctx, "eb", "ruleid", tcClient.Region, eventBusId+"/"+ruleId)
 	if err != nil {
 		return err
 	}
@@ -299,7 +299,7 @@ func resourceTencentCloudEbEventRuleUpdate(d *schema.ResourceData, meta interfac
 		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
 		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("eb", "eventRule", tcClient.Region, d.Id())
+		resourceName := BuildTagResourceName("eb", "ruleid", tcClient.Region, eventBusId+"/"+ruleId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
 		}
