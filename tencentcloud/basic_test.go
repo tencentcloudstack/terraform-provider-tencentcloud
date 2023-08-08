@@ -318,6 +318,10 @@ const defaultAzVariable = `
 variable "default_az" {
   default = "ap-guangzhou-3"
 }
+
+variable "default_az7" {
+  default = "ap-guangzhou-7"
+}
 `
 
 const defaultImages = `

@@ -11,6 +11,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudSqlserverBusinessIntelligenceInstanceResource_basic -v
 func TestAccTencentCloudSqlserverBusinessIntelligenceInstanceResource_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -21,8 +22,8 @@ func TestAccTencentCloudSqlserverBusinessIntelligenceInstanceResource_basic(t *t
 			{
 				Config: testAccSqlserverBusinessIntelligenceInstance,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverBusinessIntelligenceInstanceExists("tencentcloud_sqlserver_business_intelligence_instance.business_intelligence_instance"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_business_intelligence_instance.business_intelligence_instance", "id"),
+					testAccCheckSqlserverBusinessIntelligenceInstanceExists("tencentcloud_sqlserver_business_intelligence_instance.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_business_intelligence_instance.example", "id"),
 				),
 			},
 			{
@@ -33,8 +34,8 @@ func TestAccTencentCloudSqlserverBusinessIntelligenceInstanceResource_basic(t *t
 			{
 				Config: testAccSqlserverBusinessIntelligenceInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverBusinessIntelligenceInstanceExists("tencentcloud_sqlserver_business_intelligence_instance.business_intelligence_instance"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_business_intelligence_instance.business_intelligence_instance", "id"),
+					testAccCheckSqlserverBusinessIntelligenceInstanceExists("tencentcloud_sqlserver_business_intelligence_instance.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_business_intelligence_instance.example", "id"),
 				),
 			},
 		},
@@ -88,40 +89,48 @@ func testAccCheckSqlserverBusinessIntelligenceInstanceExists(n string) resource.
 	}
 }
 
-const testAccSqlserverBusinessIntelligenceInstance = `
-resource "tencentcloud_sqlserver_business_intelligence_instance" "business_intelligence_instance" {
-  zone = "ap-guangzhou-6"
-  memory = 4
-  storage = 20
-  cpu = 2
-  machine_type = "CLOUD_PREMIUM"
-  project_id = 0
-  subnet_id = "subnet-dwj7ipnc"
-  vpc_id = "vpc-4owdpnwr"
-  db_version = "201603"
-  security_group_list = []
-  weekly = [1, 2, 3, 4, 5, 6, 7]
-  start_time = "00:00"
-  span = 6
-  instance_name = "create_db_name"
+const testAccSqlserverBusinessIntelligenceInstance = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_business_intelligence_instance" "example" {
+  zone                = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  memory              = 4
+  storage             = 100
+  cpu                 = 2
+  machine_type        = "CLOUD_PREMIUM"
+  project_id          = 0
+  subnet_id           = local.subnet_id
+  vpc_id              = local.vpc_id
+  db_version          = "201603"
+  security_group_list = [local.sg_id]
+  weekly              = [1, 2, 3, 4, 5, 6, 7]
+  start_time          = "00:00"
+  span                = 6
+  instance_name       = "tf_example"
 }
 `
 
 const testAccSqlserverBusinessIntelligenceInstanceUpdate = `
-resource "tencentcloud_sqlserver_business_intelligence_instance" "business_intelligence_instance" {
-  zone = "ap-guangzhou-6"
-  memory = 4
-  storage = 20
-  cpu = 2
-  machine_type = "CLOUD_PREMIUM"
-  project_id = 0
-  subnet_id = "subnet-dwj7ipnc"
-  vpc_id = "vpc-4owdpnwr"
-  db_version = "201603"
-  security_group_list = []
-  weekly = [1, 2, 3, 4, 5, 6, 7]
-  start_time = "00:00"
-  span = 6
-  instance_name = "update_db_name"
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_business_intelligence_instance" "example" {
+  zone                = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  memory              = 4
+  storage             = 100
+  cpu                 = 2
+  machine_type        = "CLOUD_PREMIUM"
+  project_id          = 0
+  subnet_id           = local.subnet_id
+  vpc_id              = local.vpc_id
+  db_version          = "201603"
+  security_group_list = [local.sg_id]
+  weekly              = [1, 2, 3, 4, 5, 6, 7]
+  start_time          = "00:00"
+  span                = 6
+  instance_name       = "tf_example_update"
 }
 `
