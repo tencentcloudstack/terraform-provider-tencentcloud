@@ -11,8 +11,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-const testDbName = "testAccSqlserverDB"
-
 func init() {
 	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_sqlserver_db
 	resource.AddTestSweepers("tencentcloud_sqlserver_db", &resource.Sweeper{
@@ -90,12 +88,12 @@ func TestAccTencentCloudSqlserverDB_basic_and_update(t *testing.T) {
 			{
 				Config: testAccSqlserverDB_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "name", testDbName),
-					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "charset", "Chinese_PRC_BIN"),
-					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "remark", "testACC-remark"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_db.mysqlserver_db", "create_time"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_db.mysqlserver_db", "status"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_db.mysqlserver_db", "instance_id"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.example", "name", "tf_example_db"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.example", "charset", "Chinese_PRC_BIN"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.example", "remark", "test-remark"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_db.example", "create_time"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_db.example", "status"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_db.example", "instance_id"),
 				),
 				Destroy: false,
 			},
@@ -107,8 +105,8 @@ func TestAccTencentCloudSqlserverDB_basic_and_update(t *testing.T) {
 			{
 				Config: testAccSqlserverDB_basic_update_remark,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					testAccCheckSqlserverDBExists("tencentcloud_sqlserver_db.mysqlserver_db"),
-					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.mysqlserver_db", "remark", "testACC-remark_update"),
+					testAccCheckSqlserverDBExists("tencentcloud_sqlserver_db.example"),
+					resource.TestCheckResourceAttr("tencentcloud_sqlserver_db.example", "remark", "test-remark-update"),
 				),
 			},
 		},
@@ -160,18 +158,70 @@ func testAccCheckSqlserverDBExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverDB_basic = CommonPresetSQLServer + `
-resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
-  instance_id = local.sqlserver_id
-  name        = "` + testDbName + `"
-  charset     = "Chinese_PRC_BIN"
-  remark      = "testACC-remark"
-}`
+const testAccSqlserverDB_basic = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
 
-const testAccSqlserverDB_basic_update_remark = CommonPresetSQLServer + `
-resource "tencentcloud_sqlserver_db" "mysqlserver_db" {
-  instance_id = local.sqlserver_id
-  name        = "` + testDbName + `"
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [local.sg_id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_db" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_db"
   charset     = "Chinese_PRC_BIN"
-  remark      = "testACC-remark_update"
-}`
+  remark      = "test-remark"
+}
+`
+
+const testAccSqlserverDB_basic_update_remark = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [local.sg_id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_db" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_db_update"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "test-remark-update"
+}
+`

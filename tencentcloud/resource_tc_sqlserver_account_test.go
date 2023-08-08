@@ -12,7 +12,7 @@ import (
 )
 
 var testSqlserverAccountResourceName = "tencentcloud_sqlserver_account"
-var testSqlserverAccountResourceKey = testSqlserverAccountResourceName + ".test"
+var testSqlserverAccountResourceKey = testSqlserverAccountResourceName + ".example"
 
 func init() {
 	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_sqlserver_account
@@ -73,8 +73,8 @@ func TestAccTencentCloudSqlserverAccountResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverAccountExists(testSqlserverAccountResourceKey),
 					resource.TestCheckResourceAttrSet(testSqlserverAccountResourceKey, "id"),
-					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "name", "tf_sqlserver_account"),
-					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "password", "testt123"),
+					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "name", "tf_example_account"),
+					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "password", "Qwer@234"),
 					resource.TestCheckResourceAttrSet(testSqlserverAccountResourceKey, "create_time"),
 					resource.TestCheckResourceAttrSet(testSqlserverAccountResourceKey, "update_time"),
 					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "is_admin", "false"),
@@ -93,9 +93,9 @@ func TestAccTencentCloudSqlserverAccountResource(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSqlserverAccountExists(testSqlserverAccountResourceKey),
 					resource.TestCheckResourceAttrSet(testSqlserverAccountResourceKey, "id"),
-					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "name", "tf_sqlserver_account"),
-					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "password", "test1233"),
-					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "remark", "testt"),
+					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "name", "tf_example_db_update"),
+					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "password", "Qwer@234Update"),
+					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "remark", "test-remark-update"),
 					resource.TestCheckResourceAttrSet(testSqlserverAccountResourceKey, "create_time"),
 					resource.TestCheckResourceAttrSet(testSqlserverAccountResourceKey, "update_time"),
 					resource.TestCheckResourceAttr(testSqlserverAccountResourceKey, "is_admin", "false"),
@@ -173,19 +173,70 @@ func testAccCheckSqlserverAccountExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverAccount string = CommonPresetSQLServer + `
-resource "tencentcloud_sqlserver_account" "test" {
-  instance_id = local.sqlserver_id
-  name = "tf_sqlserver_account"
-  password = "testt123"
+const testAccSqlserverAccount string = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [local.sg_id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_account" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_account"
+  password    = "Qwer@234"
+  remark      = "test-remark"
 }
 `
 
-const testAccSqlserverAccountUpdate string = CommonPresetSQLServer + `
-resource "tencentcloud_sqlserver_account" "test" {
-  instance_id = local.sqlserver_id
-  name = "tf_sqlserver_account"
-  password = "test1233"
-  remark = "testt"
+const testAccSqlserverAccountUpdate string = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [local.sg_id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_account" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_account"
+  password    = "Qwer@234Update"
+  remark      = "test-remark-update"
 }
 `

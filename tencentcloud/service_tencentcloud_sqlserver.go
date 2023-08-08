@@ -420,7 +420,7 @@ func (me *SqlserverService) DescribeInstanceSecurityGroups(ctx context.Context, 
 	return
 }
 
-func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instanceId string, startTime string, endTime string) (backupList []*sqlserver.Backup, errRet error) {
+func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instanceId, backupName string, startTime string, endTime string) (backupList []*sqlserver.Backup, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewDescribeBackupsRequest()
 	defer func() {
@@ -430,6 +430,7 @@ func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instan
 	}()
 
 	request.InstanceId = &instanceId
+	request.BackupName = &backupName
 	request.StartTime = &startTime
 	request.EndTime = &endTime
 
@@ -517,7 +518,7 @@ func (me *SqlserverService) CreateSqlserverReadonlyInstance(ctx context.Context,
 	return
 }
 
-func (me *SqlserverService) DescribeReadonlyGroupListByReadonlyInstanceId(ctx context.Context, instanceId string) (readonlyGroupId string, masterInstanceId string, errRet error) {
+func (me *SqlserverService) DescribeReadonlyGroupListByReadonlyInstanceId(ctx context.Context, instanceId string) (readonlyInstance *sqlserver.DescribeReadOnlyGroupByReadOnlyInstanceResponseParams, errRet error) {
 	logId := getLogId(ctx)
 	request := sqlserver.NewDescribeReadOnlyGroupByReadOnlyInstanceRequest()
 	request.InstanceId = &instanceId
@@ -537,8 +538,7 @@ func (me *SqlserverService) DescribeReadonlyGroupListByReadonlyInstanceId(ctx co
 		return
 	}
 
-	readonlyGroupId = *response.Response.ReadOnlyGroupId
-	masterInstanceId = *response.Response.MasterInstanceId
+	readonlyInstance = response.Response
 	return
 }
 

@@ -35,47 +35,55 @@ func TestAccTencentCloudSqlserverCompleteExpansionResource_basic(t *testing.T) {
 	})
 }
 
-const testAccNewSqlserverInstance string = testAccSqlserverBasicInstanceNetwork + `
-resource "tencentcloud_sqlserver_instance" "test" {
-  name                   = "tf_sqlserver_instance"
-  availability_zone      = "ap-guangzhou-7"
+const testAccNewSqlserverInstance string = defaultVpcVariable + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_instance" "example" {
+  name                   = "tf_example_sql"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type            = "POSTPAID_BY_HOUR"
-  vpc_id                 = "vpc-1yg5ua6l"
-  subnet_id              = "subnet-h7av55g8"
-  security_groups        = ["sg-mayqdlt1"]
+  vpc_id                 = var.vpc_id
+  subnet_id              = var.subnet_id
+  security_groups        = [local.sg_id]
   project_id             = 0
   memory                 = 2
   storage                = 20
   maintenance_week_set   = [1, 2, 3]
-  maintenance_start_time = "09:00"
+  maintenance_start_time = "01:00"
   maintenance_time_span  = 3
   tags                   = {
-    "test" = "test"
+    "createBy" = "tfExample"
   }
 }
 `
 
-const testAccUpdateNewSqlserverInstance string = testAccSqlserverBasicInstanceNetwork + `
-resource "tencentcloud_sqlserver_instance" "test" {
-  name                   = "tf_sqlserver_instance"
-  availability_zone      = "ap-guangzhou-7"
+const testAccUpdateNewSqlserverInstance string = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_instance" "example" {
+  name                   = "tf_example_sql"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type            = "POSTPAID_BY_HOUR"
-  vpc_id                 = "vpc-1yg5ua6l"
-  subnet_id              = "subnet-h7av55g8"
-  security_groups        = ["sg-mayqdlt1"]
+  vpc_id                 = var.vpc_id
+  subnet_id              = var.subnet_id
+  security_groups        = [local.sg_id]
   project_id             = 0
-  memory                 = 2
+  memory                 = 4
   storage                = 40
   maintenance_week_set   = [1, 2, 3]
-  maintenance_start_time = "09:00"
+  maintenance_start_time = "01:00"
   maintenance_time_span  = 3
   wait_switch            = 1
   tags                   = {
-    "test" = "test"
+    "createBy" = "tfExample"
   }
 }
 
-resource "tencentcloud_sqlserver_complete_expansion" "complete_expansion" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
+resource "tencentcloud_sqlserver_complete_expansion" "example" {
+  instance_id = tencentcloud_sqlserver_instance.example.id
 }
 `
