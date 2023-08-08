@@ -1589,6 +1589,15 @@ Tag
 	tencentcloud_tag
 	tencentcloud_tag_attachment
 
+EventBridge(EB)
+  Data Source
+	tencentcloud_eb_search
+
+  Resource
+	tencentcloud_eb_event_transform
+	tencentcloud_eb_event_bus
+	tencentcloud_eb_event_rule
+	tencentcloud_eb_event_target
 */
 package tencentcloud
 
@@ -2224,6 +2233,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                              dataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
+			"tencentcloud_eb_search":                                 dataSourceTencentCloudEbSearch(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2944,6 +2954,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_cngw_route_rate_limit":                  resourceTencentCloudTseCngwRouteRateLimit(),
 			"tencentcloud_tse_cngw_canary_rule":                       resourceTencentCloudTseCngwCanaryRule(),
 			"tencentcloud_clickhouse_instance":                        resourceTencentCloudClickhouseInstance(),
+			"tencentcloud_eb_event_transform":                         resourceTencentCloudEbEventTransform(),
+			"tencentcloud_eb_event_bus":                               resourceTencentCloudEbEventBus(),
+			"tencentcloud_eb_event_rule":                              resourceTencentCloudEbEventRule(),
+			"tencentcloud_eb_event_target":                            resourceTencentCloudEbEventTarget(),
 		},
 
 		ConfigureFunc: providerConfigure,

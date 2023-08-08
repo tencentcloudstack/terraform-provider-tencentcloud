@@ -48,6 +48,7 @@ import (
 	dnspod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dnspod/v20210323"
 	domain "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/domain/v20180808"
 	dts "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206"
+	eb "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
 	es "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es/v20180416"
 	gaap "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529"
@@ -171,6 +172,7 @@ type TencentCloudClient struct {
 	ciamConn           *ciam.Client
 	tseConn            *tse.Client
 	cdwchConn          *cdwch.Client
+	ebConn             *eb.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1208,6 +1210,20 @@ func (me *TencentCloudClient) UseCdwchClient() *cdwch.Client {
 	me.cdwchConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.cdwchConn
+}
+
+// UseEbClient returns eb client for service
+func (me *TencentCloudClient) UseEbClient() *eb.Client {
+	if me.ebConn != nil {
+		return me.ebConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.ebConn, _ = eb.NewClient(me.Credential, me.Region, cpf)
+	me.ebConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.ebConn
 }
 
 func getEnvDefault(key string, defVal int) int {
