@@ -4,40 +4,40 @@ Provides a resource to create a cls kafka_recharge
 Example Usage
 
 ```hcl
-resource "tencentcloud_cls_kafka_recharge" "kafka_recharge" {
-  topic_id = "5cd3a17e-fb0b-418c-afd7-77b365397426"
-  name = "test"
-  kafka_type = 0
-  user_kafka_topics = "topic1,topic2"
-  kafka_instance = "CKafka-xxxxxx"
-  server_addr = "test.cls.tencentyun.com:9095"
-  is_encryption_addr = false
-  protocol {
-		protocol = "sasl_plaintext"
-		mechanism = "PLAIN"
-		user_name = "username"
-		password = "xxxxxx"
-
-  }
-  consumer_group_name = "group1"
-  log_recharge_rule {
-		recharge_type = "json_log"
-		encoding_format = 0
-		default_time_switch = true
-		log_regex = "*"
-		un_match_log_switch = true
-		un_match_log_key = "test"
-		un_match_log_time_src = 0
-		default_time_src = 0
-		time_key = "time"
-		time_regex = "*"
-		time_format = "%m/%d/%Y"
-		time_zone = "null"
-		metadata =
-		keys =
-
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "tf-example-logset"
+  tags = {
+    "createdBy" = "terraform"
   }
 }
+resource "tencentcloud_cls_topic" "topic" {
+  topic_name           = "tf-example-topic"
+  logset_id            = tencentcloud_cls_logset.logset.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags                 = {
+    "test" = "test",
+  }
+}
+
+resource "tencentcloud_cls_kafka_recharge" "kafka_recharge" {
+  topic_id = tencentcloud_cls_topic.topic.id
+  name = "tf-example-recharge"
+  kafka_type = 0
+  offset = -2
+  is_encryption_addr =true
+  user_kafka_topics = "recharge"
+  kafka_instance = "ckafka-qzoeaqx8"
+  log_recharge_rule {
+    recharge_type = "json_log"
+    encoding_format = 0
+    default_time_switch = true
+  }
+}
+
 ```
 
 Import
@@ -58,6 +58,7 @@ import (
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
+	"strings"
 )
 
 func resourceTencentCloudClsKafkaRecharge() *schema.Resource {
@@ -85,13 +86,19 @@ func resourceTencentCloudClsKafkaRecharge() *schema.Resource {
 			"kafka_type": {
 				Required:    true,
 				Type:        schema.TypeInt,
-				Description: "kafka recharge type，0 for CKafka，1 fro user define Kafka.",
+				Description: "kafka recharge type, 0 for CKafka, 1 fro user define Kafka.",
 			},
 
 			"user_kafka_topics": {
 				Required:    true,
 				Type:        schema.TypeString,
 				Description: "user need recharge kafka topic list.",
+			},
+
+			"offset": {
+				Required:    true,
+				Type:        schema.TypeInt,
+				Description: "The translation is: -2: Earliest (default) -1: Latest.",
 			},
 
 			"kafka_instance": {
@@ -108,12 +115,14 @@ func resourceTencentCloudClsKafkaRecharge() *schema.Resource {
 
 			"is_encryption_addr": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeBool,
 				Description: "ServerAddr is encryption addr.",
 			},
 
 			"protocol": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "encryption protocol.",
@@ -151,6 +160,7 @@ func resourceTencentCloudClsKafkaRecharge() *schema.Resource {
 
 			"log_recharge_rule": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
 				Description: "log recharge rule.",
@@ -217,7 +227,8 @@ func resourceTencentCloudClsKafkaRecharge() *schema.Resource {
 							Description: "time zone.",
 						},
 						"metadata": {
-							Type: schema.TypeSet,
+							Type:     schema.TypeSet,
+							Computed: true,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -225,7 +236,8 @@ func resourceTencentCloudClsKafkaRecharge() *schema.Resource {
 							Description: "metadata.",
 						},
 						"keys": {
-							Type: schema.TypeSet,
+							Type:     schema.TypeSet,
+							Computed: true,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
 							},
@@ -249,8 +261,10 @@ func resourceTencentCloudClsKafkaRechargeCreate(d *schema.ResourceData, meta int
 		request  = cls.NewCreateKafkaRechargeRequest()
 		response = cls.NewCreateKafkaRechargeResponse()
 		id       string
+		topicId  string
 	)
 	if v, ok := d.GetOk("topic_id"); ok {
+		topicId = v.(string)
 		request.TopicId = helper.String(v.(string))
 	}
 
@@ -266,6 +280,10 @@ func resourceTencentCloudClsKafkaRechargeCreate(d *schema.ResourceData, meta int
 		request.UserKafkaTopics = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOkExists("offset"); ok {
+		request.Offset = helper.IntInt64(v.(int))
+	}
+
 	if v, ok := d.GetOk("kafka_instance"); ok {
 		request.KafkaInstance = helper.String(v.(string))
 	}
@@ -277,7 +295,6 @@ func resourceTencentCloudClsKafkaRechargeCreate(d *schema.ResourceData, meta int
 	if v, ok := d.GetOkExists("is_encryption_addr"); ok {
 		request.IsEncryptionAddr = helper.Bool(v.(bool))
 	}
-
 	if dMap, ok := helper.InterfacesHeadMap(d, "protocol"); ok {
 		kafkaProtocolInfo := cls.KafkaProtocolInfo{}
 		if v, ok := dMap["protocol"]; ok {
@@ -370,7 +387,7 @@ func resourceTencentCloudClsKafkaRechargeCreate(d *schema.ResourceData, meta int
 	}
 
 	id = *response.Response.Id
-	d.SetId(helper.String(id))
+	d.SetId(id + FILED_SP + topicId)
 
 	return resourceTencentCloudClsKafkaRechargeRead(d, meta)
 }
@@ -384,10 +401,14 @@ func resourceTencentCloudClsKafkaRechargeRead(d *schema.ResourceData, meta inter
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	kafkaRechargeId := idSplit[0]
+	kafkaTopic := idSplit[1]
 
-	kafkaRechargeId := d.Id()
-
-	kafkaRecharge, err := service.DescribeClsKafkaRechargeById(ctx, id)
+	kafkaRecharge, err := service.DescribeClsKafkaRechargeById(ctx, kafkaRechargeId, kafkaTopic)
 	if err != nil {
 		return err
 	}
@@ -412,6 +433,10 @@ func resourceTencentCloudClsKafkaRechargeRead(d *schema.ResourceData, meta inter
 
 	if kafkaRecharge.UserKafkaTopics != nil {
 		_ = d.Set("user_kafka_topics", kafkaRecharge.UserKafkaTopics)
+	}
+
+	if kafkaRecharge.Offset != nil {
+		_ = d.Set("offset", kafkaRecharge.Offset)
 	}
 
 	if kafkaRecharge.KafkaInstance != nil {
@@ -527,9 +552,9 @@ func resourceTencentCloudClsKafkaRechargeUpdate(d *schema.ResourceData, meta int
 
 	kafkaRechargeId := d.Id()
 
-	request.Id = &id
+	request.Id = &kafkaRechargeId
 
-	immutableArgs := []string{"topic_id", "name", "kafka_type", "user_kafka_topics", "kafka_instance", "server_addr", "is_encryption_addr", "protocol", "consumer_group_name", "log_recharge_rule"}
+	immutableArgs := []string{"topic_id", "name", "kafka_type", "user_kafka_topics", "offset", "kafka_instance", "server_addr", "is_encryption_addr", "protocol", "consumer_group_name", "log_recharge_rule"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -686,9 +711,14 @@ func resourceTencentCloudClsKafkaRechargeDelete(d *schema.ResourceData, meta int
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
-	kafkaRechargeId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	kafkaRechargeId := idSplit[0]
+	kafkaTopic := idSplit[1]
 
-	if err := service.DeleteClsKafkaRechargeById(ctx, id); err != nil {
+	if err := service.DeleteClsKafkaRechargeById(ctx, kafkaRechargeId, kafkaTopic); err != nil {
 		return err
 	}
 

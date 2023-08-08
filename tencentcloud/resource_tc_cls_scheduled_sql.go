@@ -4,15 +4,33 @@ Provides a resource to create a cls scheduled_sql
 Example Usage
 
 ```hcl
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "tf-example-logset"
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+resource "tencentcloud_cls_topic" "topic" {
+  topic_name           = "tf-example-topic"
+  logset_id            = tencentcloud_cls_logset.logset.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags                 = {
+    "test" = "test",
+  }
+}
 resource "tencentcloud_cls_scheduled_sql" "scheduled_sql" {
-  src_topic_id = "5cd3a17e-fb0b-418c-afd7-77b365397426"
-  name = "task"
+  src_topic_id = tencentcloud_cls_topic.topic.id
+  name = "tf-example-task"
   enable_flag = 1
   dst_resource {
-		topic_id = "5cd3a17e-fb0b-418c-afd7-77b365397426"
-		region = "ap-guangzhou"
-		biz_type = 0
-		metric_name = "test"
+    topic_id = tencentcloud_cls_topic.topic.id
+    region = "ap-guangzhou"
+    biz_type = 0
+    metric_name = "test"
 
   }
   scheduled_sql_content = "xxx"
@@ -45,6 +63,7 @@ import (
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
+	"time"
 )
 
 func resourceTencentCloudClsScheduledSql() *schema.Resource {
@@ -150,6 +169,7 @@ func resourceTencentCloudClsScheduledSql() *schema.Resource {
 
 			"process_end_time": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeInt,
 				Description: "process end timestamp.",
 			},
@@ -255,7 +275,7 @@ func resourceTencentCloudClsScheduledSqlCreate(d *schema.ResourceData, meta inte
 	}
 
 	taskId = *response.Response.TaskId
-	d.SetId(helper.String(taskId))
+	d.SetId(taskId)
 
 	return resourceTencentCloudClsScheduledSqlRead(d, meta)
 }
@@ -272,7 +292,7 @@ func resourceTencentCloudClsScheduledSqlRead(d *schema.ResourceData, meta interf
 
 	scheduledSqlId := d.Id()
 
-	scheduledSql, err := service.DescribeClsScheduledSqlById(ctx, taskId)
+	scheduledSql, err := service.DescribeClsScheduledSqlById(ctx, scheduledSqlId)
 	if err != nil {
 		return err
 	}
@@ -321,8 +341,14 @@ func resourceTencentCloudClsScheduledSqlRead(d *schema.ResourceData, meta interf
 		_ = d.Set("scheduled_sql_content", scheduledSql.ScheduledSqlContent)
 	}
 
+	location, err := time.LoadLocation("Asia/Shanghai")
+	startTime, err := time.ParseInLocation("2006-01-02 15:04:05", *scheduledSql.ProcessStartTime, location)
+	if err != nil {
+		return err
+	}
+
 	if scheduledSql.ProcessStartTime != nil {
-		_ = d.Set("process_start_time", scheduledSql.ProcessStartTime)
+		_ = d.Set("process_start_time", startTime.UnixNano()/int64(time.Millisecond))
 	}
 
 	if scheduledSql.ProcessType != nil {
@@ -345,8 +371,12 @@ func resourceTencentCloudClsScheduledSqlRead(d *schema.ResourceData, meta interf
 		_ = d.Set("src_topic_region", scheduledSql.SrcTopicRegion)
 	}
 
+	endTime, err := time.Parse("2006-01-02 15:04:05", *scheduledSql.ProcessStartTime)
+	if err != nil {
+		return err
+	}
 	if scheduledSql.ProcessEndTime != nil {
-		_ = d.Set("process_end_time", scheduledSql.ProcessEndTime)
+		_ = d.Set("process_end_time", endTime.Unix())
 	}
 
 	if scheduledSql.SyntaxRule != nil {
@@ -366,7 +396,7 @@ func resourceTencentCloudClsScheduledSqlUpdate(d *schema.ResourceData, meta inte
 
 	scheduledSqlId := d.Id()
 
-	request.TaskId = &taskId
+	request.TaskId = &scheduledSqlId
 
 	immutableArgs := []string{"src_topic_id", "name", "enable_flag", "dst_resource", "scheduled_sql_content", "process_start_time", "process_type", "process_period", "process_time_window", "process_delay", "src_topic_region", "process_end_time", "syntax_rule"}
 
@@ -475,8 +505,11 @@ func resourceTencentCloudClsScheduledSqlDelete(d *schema.ResourceData, meta inte
 
 	service := ClsService{client: meta.(*TencentCloudClient).apiV3Conn}
 	scheduledSqlId := d.Id()
-
-	if err := service.DeleteClsScheduledSqlById(ctx, taskId); err != nil {
+	var srcTopicId string
+	if v, ok := d.GetOk("src_topic_id"); ok {
+		srcTopicId = v.(string)
+	}
+	if err := service.DeleteClsScheduledSqlById(ctx, scheduledSqlId, srcTopicId); err != nil {
 		return err
 	}
 

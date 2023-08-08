@@ -27,40 +27,36 @@ func TestAccTencentCloudClsKafkaRechargeResource_basic(t *testing.T) {
 }
 
 const testAccClsKafkaRecharge = `
-
-resource "tencentcloud_cls_kafka_recharge" "kafka_recharge" {
-  topic_id = "5cd3a17e-fb0b-418c-afd7-77b365397426"
-  name = "test"
-  kafka_type = 0
-  user_kafka_topics = "topic1,topic2"
-  kafka_instance = "CKafka-xxxxxx"
-  server_addr = "test.cls.tencentyun.com:9095"
-  is_encryption_addr = false
-  protocol {
-		protocol = "sasl_plaintext"
-		mechanism = "PLAIN"
-		user_name = "username"
-		password = "xxxxxx"
-
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "tf-example-logset1"
+  tags = {
+    "createdBy" = "terraform"
   }
-  consumer_group_name = "group1"
-  log_recharge_rule {
-		recharge_type = "json_log"
-		encoding_format = 0
-		default_time_switch = true
-		log_regex = "*"
-		un_match_log_switch = true
-		un_match_log_key = "test"
-		un_match_log_time_src = 0
-		default_time_src = 0
-		time_key = "time"
-		time_regex = "*"
-		time_format = "%m/%d/%Y"
-		time_zone = "null"
-		metadata = 
-		keys = 
-
+}
+resource "tencentcloud_cls_topic" "topic" {
+  topic_name           = "tf-example-topic"
+  logset_id            = tencentcloud_cls_logset.logset.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags                 = {
+    "test" = "test",
   }
 }
 
+resource "tencentcloud_cls_kafka_recharge" "kafka_recharge" {
+  topic_id = tencentcloud_cls_topic.topic.id
+  name = "tf-example-recharge"
+  kafka_type = 0
+  offset = -2
+  user_kafka_topics = "dasdasd"
+  kafka_instance = "ckafka-qzoeaqx8"
+  log_recharge_rule {
+    recharge_type = "json_log"
+    encoding_format = 0
+    default_time_switch = true
+  }
+}
 `
