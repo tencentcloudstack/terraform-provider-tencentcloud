@@ -76,11 +76,3 @@ In addition to all arguments above, the following attributes are exported:
 
 
 
-## Import
-
-tdmq rocketmq_vip_instance can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tdmq_rocketmq_vip_instance.rocketmq_vip_instance rocketmq_vip_instance_id
-```
-

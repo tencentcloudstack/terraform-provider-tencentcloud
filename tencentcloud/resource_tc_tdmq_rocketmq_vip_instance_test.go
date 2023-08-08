@@ -28,11 +28,6 @@ func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_tdmq_rocketmq_vip_instance.example",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
-			{
 				Config: testAccTdmqRocketmqVipInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqVipInstanceExists("tencentcloud_tdmq_rocketmq_vip_instance.example"),
