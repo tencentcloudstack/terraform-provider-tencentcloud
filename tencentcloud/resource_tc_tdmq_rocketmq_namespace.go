@@ -61,14 +61,14 @@ func resourceTencentCloudTdmqRocketmqNamespace() *schema.Resource {
 			"ttl": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Deprecated:  "It has been deprecated from version 1.81.20. Due to the adjustment of TDMQ products, the creation or modification of this parameter will be ignored.",
+				Deprecated:  "It has been deprecated from version 1.81.20. Due to the adjustment of RocketMQ, the creation or modification of this parameter will be ignored.",
 				Description: "Retention time of unconsumed messages in milliseconds. Value range: 60 seconds-15 days.",
 			},
 
 			"retention_time": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Deprecated:  "It has been deprecated from version 1.81.20. Due to the adjustment of TDMQ products, the creation or modification of this parameter will be ignored.",
+				Deprecated:  "It has been deprecated from version 1.81.20. Due to the adjustment of RocketMQ, the creation or modification of this parameter will be ignored.",
 				Description: "Retention time of persisted messages in milliseconds.",
 			},
 

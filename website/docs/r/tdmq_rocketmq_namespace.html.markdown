@@ -33,8 +33,8 @@ The following arguments are supported:
 * `cluster_id` - (Required, String) Cluster ID.
 * `namespace_name` - (Required, String) Namespace name, which can contain 3-64 letters, digits, hyphens, and underscores.
 * `remark` - (Optional, String) Remarks (up to 128 characters).
-* `retention_time` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.20. Due to the adjustment of TDMQ products, the creation or modification of this parameter will be ignored. Retention time of persisted messages in milliseconds.
-* `ttl` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.20. Due to the adjustment of TDMQ products, the creation or modification of this parameter will be ignored. Retention time of unconsumed messages in milliseconds. Value range: 60 seconds-15 days.
+* `retention_time` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.20. Due to the adjustment of RocketMQ, the creation or modification of this parameter will be ignored. Retention time of persisted messages in milliseconds.
+* `ttl` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.20. Due to the adjustment of RocketMQ, the creation or modification of this parameter will be ignored. Retention time of unconsumed messages in milliseconds. Value range: 60 seconds-15 days.
 
 ## Attributes Reference
 

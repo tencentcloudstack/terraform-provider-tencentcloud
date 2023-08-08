@@ -25,14 +25,14 @@ func TestAccTencentCloudTdmqRocketmqEnvironmentRoleResource_basic(t *testing.T) 
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqEnvironmentRoleExists(terraformId),
 					resource.TestCheckResourceAttr(terraformId, "role_name", "tf_example_role"),
-					resource.TestCheckResourceAttrSet(terraformId, "permissions.#"),
+					resource.TestCheckResourceAttr(terraformId, "permissions.#", "2"),
 				),
 			},
 			{
 				Config: testAccTdmqRocketmqEnvironmentUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqEnvironmentRoleExists(terraformId),
-					resource.TestCheckResourceAttrSet(terraformId, "permissions.#"),
+					resource.TestCheckResourceAttr(terraformId, "permissions.#", "1"),
 				),
 			},
 			{
