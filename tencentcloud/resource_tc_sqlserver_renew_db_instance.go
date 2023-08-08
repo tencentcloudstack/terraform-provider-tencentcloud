@@ -4,48 +4,52 @@ Provides a resource to create a sqlserver renew_db_instance
 Example Usage
 
 ```hcl
-data "tencentcloud_availability_zones" "zones" {}
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
 
 resource "tencentcloud_vpc" "vpc" {
-  name       = "example-vpc"
+  name       = "vpc-example"
   cidr_block = "10.0.0.0/16"
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
-  name              = "example-vpc"
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  name              = "subnet-example"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"
   is_multicast      = false
 }
 
 resource "tencentcloud_security_group" "security_group" {
-  name        = "example-sg"
+  name        = "sg-example"
   description = "desc."
 }
 
-resource "tencentcloud_sqlserver_instance" "example" {
-  name                   = "tf_example_sql"
-  availability_zone      = data.tencentcloud_availability_zones.zones.zones.0.name
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type            = "PREPAID"
-  period                 = 1
   vpc_id                 = tencentcloud_vpc.vpc.id
   subnet_id              = tencentcloud_subnet.subnet.id
-  security_groups        = [tencentcloud_security_group.security_group.id]
   project_id             = 0
-  memory                 = 2
-  storage                = 20
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
   maintenance_week_set   = [1, 2, 3]
-  maintenance_start_time = "01:00"
+  maintenance_start_time = "09:00"
   maintenance_time_span  = 3
-  tags                   = {
-    "createBy" = "tfExample"
+  security_groups        = [tencentcloud_security_group.security_group.id]
+
+  tags = {
+    "test" = "test"
   }
 }
 
-resource "tencentcloud_sqlserver_renew_db_instance" "renew_db_instance" {
-  instance_id = tencentcloud_sqlserver_instance.example.id
-  period = 1
+resource "tencentcloud_sqlserver_renew_db_instance" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  period      = 1
 }
 ```
 

@@ -1,0 +1,11 @@
+```release-note:enhancement
+data_source/tencentcloud_sqlserver_backups: Supports filtering queries by `backup_name` parameter
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_full_backup_migration: return `backup_migration_id` parameter
+```
+
+```release-note:enhancement
+resource/tencentcloud_sqlserver_readonly_instance: Extension creation parameters
+```

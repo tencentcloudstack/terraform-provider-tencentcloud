@@ -13,6 +13,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudSqlserverGeneralBackupResource_basic -v
 func TestAccTencentCloudSqlserverGeneralBackupResource_basic(t *testing.T) {
+	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -21,8 +22,8 @@ func TestAccTencentCloudSqlserverGeneralBackupResource_basic(t *testing.T) {
 			{
 				Config: testAccSqlserverGeneralBackup,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverBackupExists("tencentcloud_sqlserver_general_backup.general_backup"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.general_backup", "instance_id"),
+					testAccCheckSqlserverBackupExists("tencentcloud_sqlserver_general_backup.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.example", "instance_id"),
 				),
 			},
 			{
@@ -33,9 +34,9 @@ func TestAccTencentCloudSqlserverGeneralBackupResource_basic(t *testing.T) {
 			{
 				Config: testAccSqlserverGeneralBackupUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverBackupExists("tencentcloud_sqlserver_general_backup.general_backup"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.general_backup", "instance_id"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.general_backup", "backup_name"),
+					testAccCheckSqlserverBackupExists("tencentcloud_sqlserver_general_backup.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.example", "instance_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_backup.example", "backup_name"),
 				),
 			},
 		},
@@ -120,18 +121,68 @@ func testAccCheckSqlserverBackupExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverGeneralBackup = `
-resource "tencentcloud_sqlserver_general_backup" "general_backup" {
-  strategy = 0
-  instance_id = "mssql-qelbzgwf"
-  backup_name = "create_sqlserver_backup_name"
+const testAccSqlserverGeneralBackup = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [local.sg_id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_general_backup" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  backup_name = "tf_example_backup"
+  strategy    = 0
 }
 `
 
-const testAccSqlserverGeneralBackupUpdate = `
-resource "tencentcloud_sqlserver_general_backup" "general_backup" {
-  strategy = 0
-  instance_id = "mssql-qelbzgwf"
-  backup_name = "update_sqlserver_backup_name"
+const testAccSqlserverGeneralBackupUpdate = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  charge_type            = "POSTPAID_BY_HOUR"
+  vpc_id                 = local.vpc_id
+  subnet_id              = local.subnet_id
+  project_id             = 0
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
+  maintenance_week_set   = [1, 2, 3]
+  maintenance_start_time = "09:00"
+  maintenance_time_span  = 3
+  security_groups        = [local.sg_id]
+
+  tags = {
+    "test" = "test"
+  }
+}
+
+resource "tencentcloud_sqlserver_general_backup" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  backup_name = "tf_example_backup_update"
+  strategy    = 0
 }
 `

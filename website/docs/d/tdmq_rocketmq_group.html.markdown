@@ -14,32 +14,30 @@ Use this data source to query detailed information of tdmqRocketmq group
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-  cluster_name = "test_rocketmq_datasource_group"
-  remark       = "test recket mq"
+data "tencentcloud_tdmq_rocketmq_group" "example" {
+  cluster_id   = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_id = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  filter_group = tencentcloud_tdmq_rocketmq_group.example.group_name
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace_datasource"
-  ttl            = 65000
-  retention_time = 65000
-  remark         = "test namespace"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_group" "group" {
-  group_name       = "test_rocketmq_group"
-  namespace        = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example"
+  remark         = "remark."
+}
+
+resource "tencentcloud_tdmq_rocketmq_group" "example" {
+  group_name       = "tf_example"
+  namespace        = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
   read_enable      = true
   broadcast_enable = true
-  cluster_id       = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  remark           = "test rocketmq group"
-}
-
-data "tencentcloud_tdmq_rocketmq_group" "group" {
-  cluster_id   = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_id = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-  filter_group = tencentcloud_tdmq_rocketmq_group.group.group_name
+  cluster_id       = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  remark           = "remark."
 }
 ```
 

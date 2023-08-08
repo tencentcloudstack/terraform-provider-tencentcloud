@@ -19,8 +19,8 @@ func TestAccTencentCloudSqlserverGeneralCloudInstanceResource_basic(t *testing.T
 			{
 				Config: testAccSqlserverGeneralCloudInstance,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverInstanceExists("tencentcloud_sqlserver_general_cloud_instance.general_cloud_instance"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_instance.general_cloud_instance", "id"),
+					testAccCheckSqlserverInstanceExists("tencentcloud_sqlserver_general_cloud_instance.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_instance.example", "id"),
 				),
 			},
 			{
@@ -32,26 +32,30 @@ func TestAccTencentCloudSqlserverGeneralCloudInstanceResource_basic(t *testing.T
 			{
 				Config: testAccSqlserverGeneralCloudInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverInstanceExists("tencentcloud_sqlserver_general_cloud_instance.general_cloud_instance"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_instance.general_cloud_instance", "id"),
+					testAccCheckSqlserverInstanceExists("tencentcloud_sqlserver_general_cloud_instance.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_instance.example", "id"),
 				),
 			},
 		},
 	})
 }
 
-const testAccSqlserverGeneralCloudInstance = testAccSqlserverBasicInstanceNetwork + `
-resource "tencentcloud_sqlserver_general_cloud_instance" "general_cloud_instance" {
-  name                 = "create_db_instance"
-  zone                 = "ap-guangzhou-6"
+const testAccSqlserverGeneralCloudInstance = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
+  name                 = "tf_example"
+  zone                 = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   memory               = 4
-  storage              = 20
+  storage              = 100
   cpu                  = 2
   machine_type         = "CLOUD_HSSD"
   instance_charge_type = "POSTPAID"
   project_id           = 0
-  subnet_id            = local.subnet_id
-  vpc_id               = local.vpc_id
+  subnet_id            = local.vpc_id
+  vpc_id               = local.subnet_id
   db_version           = "2008R2"
   security_group_list  = [local.sg_id]
   weekly               = [1, 2, 3, 5, 6, 7]
@@ -66,19 +70,23 @@ resource "tencentcloud_sqlserver_general_cloud_instance" "general_cloud_instance
 }
 `
 
-const testAccSqlserverGeneralCloudInstanceUpdate = testAccSqlserverBasicInstanceNetwork + `
-resource "tencentcloud_sqlserver_general_cloud_instance" "general_cloud_instance" {
-  name                 = "update_db_instance"
-  zone                 = "ap-guangzhou-6"
+const testAccSqlserverGeneralCloudInstanceUpdate = `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
+  name                 = "tf_example_update"
+  zone                 = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   memory               = 8
-  storage              = 40
+  storage              = 200
   cpu                  = 4
   machine_type         = "CLOUD_HSSD"
   instance_charge_type = "POSTPAID"
   project_id           = 0
-  subnet_id            = local.subnet_id
-  vpc_id               = local.vpc_id
-  db_version           = "2012SP3"
+  subnet_id            = local.vpc_id
+  vpc_id               = local.subnet_id
+  db_version           = "2008R2"
   security_group_list  = [local.sg_id]
   weekly               = [1, 2, 3, 5, 6, 7]
   start_time           = "00:00"
