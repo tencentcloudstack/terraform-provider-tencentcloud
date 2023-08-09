@@ -260,7 +260,6 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 			"delete_protect": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Computed:    true,
 				Description: "Whether to enable delete protection.",
 			},
 			"bandwidth_package_id": {
