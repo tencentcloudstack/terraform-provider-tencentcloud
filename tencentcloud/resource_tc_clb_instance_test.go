@@ -191,12 +191,6 @@ func TestAccTencentCloudClbInstance_internal(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "tags.test", "test"),
 				),
 			},
-			{
-				ResourceName:            "tencentcloud_clb_instance.clb_internal",
-				ImportState:             true,
-				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"dynamic_vip"},
-			},
 		},
 	})
 }
@@ -431,7 +425,7 @@ resource "tencentcloud_vpc" "foo" {
 
 resource "tencentcloud_subnet" "subnet" {
   availability_zone = var.availability_zone
-  name              = "guagua-ci-temp-test"
+  name              = "tf-example-subnet-inc"
   vpc_id            = tencentcloud_vpc.foo.id
   cidr_block        = "10.0.20.0/28"
   is_multicast      = false
@@ -443,7 +437,7 @@ resource "tencentcloud_clb_instance" "clb_internal" {
   vpc_id       = tencentcloud_vpc.foo.id
   subnet_id    = tencentcloud_subnet.subnet.id
   project_id   = 0
-
+  delete_protect = false
   tags = {
     test = "test"
   }

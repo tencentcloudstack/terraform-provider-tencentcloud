@@ -257,6 +257,12 @@ func resourceTencentCloudClbInstance() *schema.Resource {
 				Computed:    true,
 				Description: "Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 			},
+			"delete_protect": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Whether to enable delete protection.",
+			},
 			"bandwidth_package_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -739,6 +745,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	internet := clb.InternetAccessible{}
 	changed := false
 	isLoadBalancerPassToTgt := false
+	isDeleteProtect := false
 	snatPro := d.Get("snat_pro").(bool)
 
 	if d.HasChange("clb_name") {
@@ -793,6 +800,11 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("snat_pro") {
 		changed = true
 		request.SnatPro = &snatPro
+	}
+	if d.HasChange("delete_protect") {
+		changed = true
+		isDeleteProtect = d.Get("delete_protect").(bool)
+		request.DeleteProtect = &isDeleteProtect
 	}
 
 	immutableArgs := []string{"snat_ips", "dynamic_vip"}
@@ -922,6 +934,7 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteLoadBalancerById(ctx, clbId)
 		if e != nil {
+
 			return retryError(e)
 		}
 		return nil
