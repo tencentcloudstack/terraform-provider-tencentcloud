@@ -86,6 +86,6 @@ In addition to all arguments above, the following attributes are exported:
 SQL Server instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_instance.foo mssql-3cdq7kx5
+$ terraform import tencentcloud_sqlserver_instance.example mssql-3cdq7kx5
 ```
 

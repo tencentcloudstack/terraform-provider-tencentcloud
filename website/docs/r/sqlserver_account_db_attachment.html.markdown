@@ -101,6 +101,6 @@ In addition to all arguments above, the following attributes are exported:
 SQL Server account DB attachment can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_account_db_attachment.foo mssql-3cdq7kx5#tf_sqlserver_account#test111
+$ terraform import tencentcloud_sqlserver_account_db_attachment.example mssql-3cdq7kx5#tf_example_account#tf_example_db
 ```
 

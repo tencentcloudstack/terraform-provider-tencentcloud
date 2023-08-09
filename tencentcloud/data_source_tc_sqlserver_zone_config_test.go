@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccDataSourceTencentCloudSqlserverZoneConfig_basic -v
 func TestAccDataSourceTencentCloudSqlserverZoneConfig_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -35,6 +36,5 @@ func TestAccDataSourceTencentCloudSqlserverZoneConfig_basic(t *testing.T) {
 }
 
 const TestAccDataSourceTencentCloudSqlserverZoneConfig = `
-data "tencentcloud_sqlserver_zone_config" "foo" {
-}
+data "tencentcloud_sqlserver_zone_config" "foo" {}
 `

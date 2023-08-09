@@ -56,7 +56,7 @@ Import
 sqlserver business_intelligence_file can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_business_intelligence_file.business_intelligence_file business_intelligence_file_id
+terraform import tencentcloud_sqlserver_business_intelligence_file.example mssqlbi-fo2dwujt#test.xlsx
 ```
 */
 package tencentcloud

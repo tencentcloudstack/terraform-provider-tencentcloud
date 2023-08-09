@@ -17,14 +17,14 @@ func TestAccTencentCloudSqlserverCrossRegionZoneDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSqlserverCrossRegionZoneDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_cross_region_zone.cross_region_zone")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_cross_region_zone.example")),
 			},
 		},
 	})
 }
 
 const testAccSqlserverCrossRegionZoneDataSource = `
-data "tencentcloud_sqlserver_cross_region_zone" "cross_region_zone" {
+data "tencentcloud_sqlserver_cross_region_zone" "example" {
   instance_id = "mssql-qelbzgwf"
 }
 `

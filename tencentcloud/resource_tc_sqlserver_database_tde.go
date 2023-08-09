@@ -78,7 +78,7 @@ Import
 sqlserver database_tde can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_database_tde.database_tde database_tde_id
+terraform import tencentcloud_sqlserver_database_tde.example mssql-farjz9tz#tf_example_db
 ```
 */
 package tencentcloud

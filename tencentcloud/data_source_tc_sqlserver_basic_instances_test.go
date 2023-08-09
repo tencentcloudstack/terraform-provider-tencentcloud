@@ -8,6 +8,7 @@ import (
 
 var testDataSqlserverBasicInstancesName = "data.tencentcloud_sqlserver_basic_instances.id_test"
 
+// go test -i; go test -test.run TestAccDataSourceTencentCloudSqlserverBasicInstances -v
 func TestAccDataSourceTencentCloudSqlserverBasicInstances(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{

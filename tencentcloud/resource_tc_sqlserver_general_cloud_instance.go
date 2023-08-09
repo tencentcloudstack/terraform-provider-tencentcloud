@@ -56,7 +56,7 @@ Import
 sqlserver general_cloud_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_general_cloud_instance.general_cloud_instance general_cloud_instance_id
+terraform import tencentcloud_sqlserver_general_cloud_instance.example mssql-i9ma6oy7
 ```
 */
 package tencentcloud

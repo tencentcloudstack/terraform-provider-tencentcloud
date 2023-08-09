@@ -47,7 +47,7 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
   }
 }
 
-resource "tencentcloud_sqlserver_instance_tde" "instance_tde" {
+resource "tencentcloud_sqlserver_instance_tde" "example" {
   instance_id             = tencentcloud_sqlserver_basic_instance.example.id
   certificate_attribution = "self"
 }
@@ -58,7 +58,7 @@ Import
 sqlserver instance_tde can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_instance_tde.instance_tde instance_tde_id
+terraform import tencentcloud_sqlserver_instance_tde.example mssql-farjz9tz
 ```
 */
 package tencentcloud

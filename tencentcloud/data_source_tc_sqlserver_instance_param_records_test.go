@@ -17,14 +17,14 @@ func TestAccTencentCloudSqlserverInstanceParamRecordsDataSource_basic(t *testing
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSqlserverInstanceParamRecordsDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_instance_param_records.instance_param_records")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_instance_param_records.example")),
 			},
 		},
 	})
 }
 
 const testAccSqlserverInstanceParamRecordsDataSource = `
-data "tencentcloud_sqlserver_instance_param_records" "instance_param_records" {
+data "tencentcloud_sqlserver_instance_param_records" "example" {
   instance_id = "mssql-qelbzgwf"
 }
 `

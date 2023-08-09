@@ -81,6 +81,6 @@ In addition to all arguments above, the following attributes are exported:
 sqlserver restart_db_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_restart_db_instance.restart_db_instance restart_db_instance_id
+terraform import tencentcloud_sqlserver_restart_db_instance.example mssql-i9ma6oy7
 ```
 

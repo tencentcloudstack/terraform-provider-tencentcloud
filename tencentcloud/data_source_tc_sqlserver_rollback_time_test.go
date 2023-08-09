@@ -17,15 +17,15 @@ func TestAccTencentCloudSqlserverRollbackTimeDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSqlserverRollbackTimeDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_rollback_time.rollback_time")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_rollback_time.example")),
 			},
 		},
 	})
 }
 
 const testAccSqlserverRollbackTimeDataSource = `
-data "tencentcloud_sqlserver_rollback_time" "rollback_time" {
+data "tencentcloud_sqlserver_rollback_time" "example" {
   instance_id = "mssql-qelbzgwf"
-  dbs = ["keep_pubsub_db"]
+  dbs         = ["keep_pubsub_db"]
 }
 `

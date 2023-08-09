@@ -61,7 +61,7 @@ Import
 sqlserver renew_postpaid_db_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_renew_postpaid_db_instance.renew_postpaid_db_instance renew_postpaid_db_instance_id
+terraform import tencentcloud_sqlserver_renew_postpaid_db_instance.example mssql-i9ma6oy7
 ```
 */
 package tencentcloud

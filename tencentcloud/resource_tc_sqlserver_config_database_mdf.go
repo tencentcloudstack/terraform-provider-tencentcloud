@@ -65,7 +65,7 @@ Import
 sqlserver config_database_mdf can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_config_database_mdf.config_database_mdf config_database_mdf_id
+terraform import tencentcloud_sqlserver_config_database_mdf.example mssql-i9ma6oy7#tf_example_db
 ```
 */
 package tencentcloud

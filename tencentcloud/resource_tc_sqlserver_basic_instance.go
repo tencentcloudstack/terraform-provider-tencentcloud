@@ -33,9 +33,9 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
   vpc_id                 = tencentcloud_vpc.vpc.id
   subnet_id              = tencentcloud_subnet.subnet.id
   project_id             = 0
-  memory                 = 2
-  storage                = 20
-  cpu                    = 1
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
   machine_type           = "CLOUD_PREMIUM"
   maintenance_week_set   = [1, 2, 3]
   maintenance_start_time = "09:00"
@@ -52,7 +52,7 @@ Import
 SQL Server basic instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_basic_instance.foo mssql-3cdq7kx5
+$ terraform import tencentcloud_sqlserver_basic_instance.example mssql-3cdq7kx5
 ```
 */
 package tencentcloud
@@ -302,7 +302,7 @@ func resourceTencentCloudSqlserverBasicInstanceCreate(d *schema.ResourceData, me
 
 	var instanceId string
 	var outErr, inErr error
-	outErr = resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(12*writeRetryTimeout, func() *resource.RetryError {
 		instanceId, inErr = sqlserverService.CreateSqlserverBasicInstance(ctx, paramMap, weekSet, voucherIds, securityGroups)
 		if inErr != nil {
 			return retryError(inErr)
@@ -464,7 +464,7 @@ func resourceTencentCloudSqlserverBasicInstanceUpdate(d *schema.ResourceData, me
 				voucherIds = append(voucherIds, id.(string))
 			}
 		}
-		outErr = resource.Retry(5*writeRetryTimeout, func() *resource.RetryError {
+		outErr = resource.Retry(12*writeRetryTimeout, func() *resource.RetryError {
 			inErr = sqlserverService.UpgradeSqlserverBasicInstance(ctx, instanceId, memory, storage, cpu, autoVoucher, voucherIds)
 			if inErr != nil {
 				return retryError(inErr)
@@ -636,11 +636,6 @@ func resourceTencentCLoudSqlserverBasicInstanceDelete(d *schema.ResourceData, me
 		return nil
 	})
 
-	if outErr != nil {
-		return outErr
-	}
-
-	outErr = sqlserverService.RecycleDBInstance(ctx, instanceId)
 	if outErr != nil {
 		return outErr
 	}

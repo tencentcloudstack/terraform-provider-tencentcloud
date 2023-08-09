@@ -78,7 +78,7 @@ Import
 sqlserver config_database_cdc can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_config_database_cdc.config_database_cdc config_database_cdc_id
+terraform import tencentcloud_sqlserver_config_database_cdc.example mssql-i9ma6oy7#tf_example_db
 ```
 */
 package tencentcloud

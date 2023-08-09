@@ -116,6 +116,6 @@ In addition to all arguments above, the following attributes are exported:
 sqlserver config_instance_ro_group can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_config_instance_ro_group.config_instance_ro_group config_instance_ro_group_id
+terraform import tencentcloud_sqlserver_config_instance_ro_group.example mssql-ds1xhnt9#mssqlro-o6dv2ugx#0#0
 ```
 

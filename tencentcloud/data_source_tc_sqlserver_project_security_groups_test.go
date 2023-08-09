@@ -17,14 +17,14 @@ func TestAccTencentCloudSqlserverProjectSecurityGroupsDataSource_basic(t *testin
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSqlserverProjectSecurityGroupsDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_project_security_groups.project_security_groups")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_project_security_groups.example")),
 			},
 		},
 	})
 }
 
 const testAccSqlserverProjectSecurityGroupsDataSource = `
-data "tencentcloud_sqlserver_project_security_groups" "project_security_groups" {
+data "tencentcloud_sqlserver_project_security_groups" "example" {
   project_id = 0
 }
 `

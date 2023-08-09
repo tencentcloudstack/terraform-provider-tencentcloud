@@ -4,10 +4,10 @@ Use this data source to query detailed information of sqlserver slowlogs
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_slowlogs" "slowlogs" {
+data "tencentcloud_sqlserver_slowlogs" "example" {
   instance_id = "mssql-qelbzgwf"
-  start_time = "2020-05-01 00:00:00"
-  end_time = "2023-05-18 00:00:00"
+  start_time  = "2023-08-01 00:00:00"
+  end_time    = "2023-08-07 00:00:00"
 }
 ```
 */

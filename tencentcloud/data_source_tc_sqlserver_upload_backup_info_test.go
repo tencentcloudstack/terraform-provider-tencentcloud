@@ -17,15 +17,15 @@ func TestAccTencentCloudSqlserverUploadBackupInfoDataSource_basic(t *testing.T) 
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSqlserverUploadBackupInfoDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_upload_backup_info.upload_backup_info")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_upload_backup_info.example")),
 			},
 		},
 	})
 }
 
 const testAccSqlserverUploadBackupInfoDataSource = `
-data "tencentcloud_sqlserver_upload_backup_info" "upload_backup_info" {
-  instance_id = "mssql-qelbzgwf"
+data "tencentcloud_sqlserver_upload_backup_info" "example" {
+  instance_id         = "mssql-qelbzgwf"
   backup_migration_id = "mssql-backup-migration-8a0f3eht"
 }
 `

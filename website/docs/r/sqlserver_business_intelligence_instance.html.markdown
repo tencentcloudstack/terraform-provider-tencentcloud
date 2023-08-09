@@ -92,6 +92,6 @@ In addition to all arguments above, the following attributes are exported:
 sqlserver business_intelligence_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_business_intelligence_instance.business_intelligence_instance business_intelligence_instance_id
+terraform import tencentcloud_sqlserver_business_intelligence_instance.example mssqlbi-fo2dwujt
 ```
 

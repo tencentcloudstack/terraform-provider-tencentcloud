@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudSqlserverPublishSubscribeDataSource -v
 func TestAccTencentCloudSqlserverPublishSubscribeDataSource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -16,7 +17,7 @@ func TestAccTencentCloudSqlserverPublishSubscribeDataSource(t *testing.T) {
 			{
 				Config: testAccTencentCloudSqlServerPublishSubscribeDataSourceConfig,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.publish_subscribes", "publish_subscribe_list.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_publish_subscribes.example", "publish_subscribe_list.#"),
 				),
 			},
 		},
@@ -24,8 +25,7 @@ func TestAccTencentCloudSqlserverPublishSubscribeDataSource(t *testing.T) {
 }
 
 const testAccTencentCloudSqlServerPublishSubscribeDataSourceConfig = CommonPresetSQLServer + `
-
-data "tencentcloud_sqlserver_publish_subscribes" "publish_subscribes" {
-	instance_id                     = local.sqlserver_id
+data "tencentcloud_sqlserver_publish_subscribes" "example" {
+  instance_id = local.sqlserver_id
 }
 `
