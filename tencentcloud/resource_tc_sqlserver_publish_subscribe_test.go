@@ -220,8 +220,8 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
   publish_subscribe_name = "example"
   delete_subscribe_db    = false
   database_tuples {
-    publish_database   = local.sqlserver_pubsub_db
-    subscribe_database = local.sqlserver_subsub_db
+    publish_database   = local.sqlserver_pub_db
+    subscribe_database = local.sqlserver_sub_db
   }
 }
 `
@@ -230,11 +230,11 @@ const testAccSqlserverPublishSubscribe_basic_update_name = CommonPubSubSQLServer
 resource "tencentcloud_sqlserver_publish_subscribe" "example" {
   publish_instance_id    = "mssql-qelbzgwf"
   subscribe_instance_id  = "mssql-jdk2pwld"
-  publish_subscribe_name = "example1"
+  publish_subscribe_name = "example_update"
   delete_subscribe_db    = false
   database_tuples {
-    publish_database   = local.sqlserver_pubsub_db
-    subscribe_database = local.sqlserver_subsub_db
+    publish_database   = local.sqlserver_pub_db
+    subscribe_database = local.sqlserver_sub_db
   }
 }
 `
