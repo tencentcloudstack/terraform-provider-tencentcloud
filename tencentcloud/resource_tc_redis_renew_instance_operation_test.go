@@ -10,10 +10,13 @@ import (
 func TestAccTencentCloudRedisRenewInstanceOperationResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
-		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck: func() {
+			testAccPreCheck(t)
+		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
+				PreConfig: func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
 				Config: testAccRedisRenewInstanceOperation(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_renew_instance_operation.renew_instance_operation", "id"),
