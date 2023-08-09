@@ -1158,26 +1158,16 @@ TencentCloud Elastic Microservice(TEM)
 TencentCloud EdgeOne(TEO)
   Data Source
 	tencentcloud_teo_zone_available_plans
-	tencentcloud_teo_bot_managed_rules
-	tencentcloud_teo_bot_portrait_rules
 	tencentcloud_teo_rule_engine_settings
-	tencentcloud_teo_security_policy_regions
-	tencentcloud_teo_waf_rule_groups
-	tencentcloud_teo_zone_ddos_policy
 
   Resource
 	tencentcloud_teo_zone
 	tencentcloud_teo_zone_setting
-	tencentcloud_teo_dns_record
-	tencentcloud_teo_dns_sec
-	tencentcloud_teo_load_balancing
 	tencentcloud_teo_origin_group
 	tencentcloud_teo_rule_engine
 	tencentcloud_teo_rule_engine_priority
 	tencentcloud_teo_application_proxy
 	tencentcloud_teo_application_proxy_rule
-	tencentcloud_teo_ddos_policy
-	tencentcloud_teo_security_policy
 	tencentcloud_teo_custom_error_page
 
 TencentCloud ServiceMesh(TCM)
