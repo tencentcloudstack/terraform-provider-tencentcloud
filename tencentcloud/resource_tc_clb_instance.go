@@ -795,7 +795,7 @@ func resourceTencentCloudClbInstanceUpdate(d *schema.ResourceData, meta interfac
 		request.SnatPro = &snatPro
 	}
 
-	immutableArgs := []string{"snat_ips", "dynamic_vip"}
+	immutableArgs := []string{"snat_ips", "dynamic_vip", "master_zone_id", "slave_zone_id", "project_id", "vpc_id", "subnet_id", "address_ip_version", "bandwidth_package_id", "snat_pro", "zone_id"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
