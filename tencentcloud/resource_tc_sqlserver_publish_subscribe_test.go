@@ -220,7 +220,8 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
   publish_subscribe_name = "example"
   delete_subscribe_db    = false
   database_tuples {
-    publish_database = local.sqlserver_pubsub_db
+    publish_database   = local.sqlserver_pubsub_db
+    subscribe_database = local.sqlserver_subsub_db
   }
 }
 `
@@ -232,7 +233,8 @@ resource "tencentcloud_sqlserver_publish_subscribe" "example" {
   publish_subscribe_name = "example1"
   delete_subscribe_db    = false
   database_tuples {
-    publish_database = local.sqlserver_pubsub_db
+    publish_database   = local.sqlserver_pubsub_db
+    subscribe_database = local.sqlserver_subsub_db
   }
 }
 `

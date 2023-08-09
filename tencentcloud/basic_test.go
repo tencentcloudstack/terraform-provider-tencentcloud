@@ -393,6 +393,7 @@ const defaultPubSQLServerName = "keep-publish-instance"
 const defaultSubSQLServerName = "keep-subscribe-instance"
 const defaultSQLServerDB = "keep_sqlserver_db"
 const defaultSQLServerPubSubDB = "keep_pubsub_db"
+const defaultSQLServerSubSubDB = "keep_subsub_db"
 const defaultSQLServerAccount = "keep_sqlserver_account"
 
 const CommonPresetSQLServer = `
@@ -444,6 +445,7 @@ locals {
   pub_sqlserver_id = data.tencentcloud_sqlserver_instances.pub_sqlserver.instance_list.0.id
   sub_sqlserver_id = data.tencentcloud_sqlserver_instances.sub_sqlserver.instance_list.0.id
   sqlserver_pubsub_db = "` + defaultSQLServerPubSubDB + `"
+  sqlserver_subsub_db = "` + defaultSQLServerSubSubDB + `"
 }
 `
 
