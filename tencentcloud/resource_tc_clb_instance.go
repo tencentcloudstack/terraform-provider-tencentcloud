@@ -647,7 +647,7 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			return err
 		}
 	}
-	if v, ok := d.GetOk("delete_protect"); ok {
+	if v, ok := d.GetOkExists("delete_protect"); ok {
 		isDeleteProect := v.(bool)
 		if isDeleteProect {
 			mRequest := clb.NewModifyLoadBalancerAttributesRequest()
