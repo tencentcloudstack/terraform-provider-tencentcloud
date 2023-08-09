@@ -514,15 +514,15 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   }
 
   event_persistence {
-    enabled       = true
-    log_set_id    = "" # optional
-    log_set_topic = "" # optional
+    enabled    = true
+    log_set_id = "" # optional
+    topic_id   = "" # optional
   }
 
   cluster_audit {
-    enabled       = true
-    log_set_id    = "" # optional
-    log_set_topic = "" # optional
+    enabled    = true
+    log_set_id = "" # optional
+    topic_id   = "" # optional
   }
 }
 ```
