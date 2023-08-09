@@ -342,6 +342,9 @@ func resourceTencentCloudClsScheduledSqlRead(d *schema.ResourceData, meta interf
 	}
 
 	location, err := time.LoadLocation("Asia/Shanghai")
+	if err != nil {
+		return err
+	}
 	startTime, err := time.ParseInLocation("2006-01-02 15:04:05", *scheduledSql.ProcessStartTime, location)
 	if err != nil {
 		return err
