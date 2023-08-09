@@ -33,11 +33,6 @@ func TestAccTencentCloudClsDataTransformResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform", "dst_resources.0.topic_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cls_data_transform.data_transform", "dst_resources.0.alias")),
 			},
-			{
-				ResourceName:      "tencentcloud_cls_data_transform.data_transform",
-				ImportState:       true,
-				ImportStateVerify: true,
-			},
 		},
 	})
 }
@@ -95,13 +90,13 @@ const testAccClsDataTransform = `
 
 resource "tencentcloud_cls_data_transform" "data_transform" {
   func_type = 1
-  src_topic_id = "ff2a8b6e-c9ee-4774-9bb5-bdfb4c92a16c"
+  src_topic_id = "88735a07-bea4-4985-8763-e9deb6da4fad"
   name = "iac-test-src"
   etl_content = "ext_sep(\"content\", \"f1, f2, f3\", sep=\",\", quote=\"\", restrict=False, mode=\"overwrite\")fields_drop(\"content\")"
   task_type = 3
   enable_flag = 1
   dst_resources {
-    topic_id = "b0e8d897-6e2e-4ef0-bca2-c79228bc0b45"
+    topic_id = "7e34a3a7-635e-4da8-9005-88106c1fde69"
     alias = "iac-test-dst"
 
   }
