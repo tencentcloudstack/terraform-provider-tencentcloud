@@ -648,7 +648,33 @@ func resourceTencentCloudClbInstanceCreate(d *schema.ResourceData, meta interfac
 			return err
 		}
 	}
-
+	if v, ok := d.GetOk("delete_protect"); ok {
+		isDeleteProect := v.(bool)
+		if isDeleteProect {
+			mRequest := clb.NewModifyLoadBalancerAttributesRequest()
+			mRequest.LoadBalancerId = helper.String(clbId)
+			mRequest.DeleteProtect = &isDeleteProect
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				mResponse, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().ModifyLoadBalancerAttributes(mRequest)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+						logId, mRequest.GetAction(), mRequest.ToJsonString(), mResponse.ToJsonString())
+					requestId := *mResponse.Response.RequestId
+					retryErr := waitForTaskFinish(requestId, meta.(*TencentCloudClient).apiV3Conn.UseClbClient())
+					if retryErr != nil {
+						return retryError(errors.WithStack(retryErr))
+					}
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s create CLB instance failed, reason:%+v", logId, err)
+				return err
+			}
+		}
+	}
 	return resourceTencentCloudClbInstanceRead(d, meta)
 }
 
