@@ -344,8 +344,8 @@ data "tencentcloud_vpc_instances" "vpc" {
 data "tencentcloud_security_group" "group" {}
 
 data "tencentcloud_subnet" "sub" {
-  vpc_id = local.vpc_id
-  subnet_id = local.vpc_subnet_id
+  vpc_id    = local.vpc_id
+  subnet_id = local.subnet_id
 }
 `
 
@@ -394,7 +394,7 @@ resource "tencentcloud_sqlserver_instance" "test" {
   availability_zone             = local.az
   charge_type                   = "POSTPAID_BY_HOUR"
   vpc_id                        = local.vpc_id
-  subnet_id                     = local.vpc_subnet_id
+  subnet_id                     = local.subnet_id
   project_id                    = 0
   memory                        = 2
   storage                       = 10
