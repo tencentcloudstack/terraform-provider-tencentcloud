@@ -28,6 +28,11 @@ func TestAccTencentCloudTdmqRocketmqVipInstanceResource_basic(t *testing.T) {
 				),
 			},
 			{
+				ResourceName:      "tencentcloud_tdmq_rocketmq_vip_instance.example",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
 				Config: testAccTdmqRocketmqVipInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTdmqRocketmqVipInstanceExists("tencentcloud_tdmq_rocketmq_vip_instance.example"),
@@ -88,21 +93,8 @@ func testAccCheckTdmqRocketmqVipInstanceExists(r string) resource.TestCheckFunc 
 	}
 }
 
-const testAccTdmqRocketmqVipInstance = `
+const testAccTdmqRocketmqVipInstance = defaultVpcSubnets + `
 data "tencentcloud_availability_zones" "zones" {}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.1.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
 
 resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   name         = "tx-example"
@@ -115,9 +107,8 @@ resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   ]
 
   vpc_info {
-    vpc_id    = tencentcloud_vpc.vpc.id
-    subnet_id = tencentcloud_subnet.subnet.id
-
+      vpc_id    = local.vpc_id
+      subnet_id = local.subnet_id
   }
 
   time_span = 1
@@ -126,19 +117,6 @@ resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
 
 const testAccTdmqRocketmqVipInstanceUpdate = `
 data "tencentcloud_availability_zones" "zones" {}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-example"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.1.name
-  name              = "subnet-example"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
 
 resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   name         = "tx-example-update"
@@ -151,9 +129,8 @@ resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   ]
 
   vpc_info {
-    vpc_id    = tencentcloud_vpc.vpc.id
-    subnet_id = tencentcloud_subnet.subnet.id
-
+    vpc_id    = local.vpc_id
+    subnet_id = local.subnet_id
   }
 
   time_span = 1
