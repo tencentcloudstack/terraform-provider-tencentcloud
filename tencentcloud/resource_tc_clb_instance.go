@@ -960,7 +960,6 @@ func resourceTencentCloudClbInstanceDelete(d *schema.ResourceData, meta interfac
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		e := clbService.DeleteLoadBalancerById(ctx, clbId)
 		if e != nil {
-
 			return retryError(e)
 		}
 		return nil
