@@ -344,7 +344,7 @@ func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-				Config: testAccRedisInstancePrepaidBasic(),
+				Config:    testAccRedisInstancePrepaidBasic(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_prepaid_instance_test"),
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_instance.redis_prepaid_instance_test", "ip"),

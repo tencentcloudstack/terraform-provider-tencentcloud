@@ -17,7 +17,7 @@ func TestAccTencentCloudRedisRenewInstanceOperationResource_basic(t *testing.T) 
 		Steps: []resource.TestStep{
 			{
 				PreConfig: func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
-				Config: testAccRedisRenewInstanceOperation(),
+				Config:    testAccRedisRenewInstanceOperation(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_renew_instance_operation.renew_instance_operation", "id"),
 				),
