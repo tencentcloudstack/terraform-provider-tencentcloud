@@ -1,3 +1,22 @@
+## 1.81.19 (August 04, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ssm_products` ([#2027](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2027))
+* **New Resource:** `tencentcloud_ssm_product_secret` ([#2027](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2027))
+* **New Resource:** `tencentcloud_tdmq_rocketmq_vip_instance` ([#2011](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2011))
+
+ENHANCEMENTS:
+
+* data_source/tencentcloud_clb_attachments: Optimize the problem display of target parameters ([#2003](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2003))
+* datasource/tencentcloud_mysql_instance: Support query `group_id` ([#2002](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2002))
+* resource/tencentcloud_cynosdb_cluster_slave_zone: Optimize timeout ([#1998](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/1998))
+* resource/tencentcloud_cynosdb_proxy: Add return value `ro_instances` ([#2008](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2008))
+* resource/tencentcloud_emr_cluster: support `tags` param ([#2026](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2026))
+* resource/tencentcloud_mongodb_instance: support params `node_num`, `availability_zone_list` and `hidden_zone` ([#2013](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2013))
+* resource/tencentcloud_security_group_rule_set: Optimize Rule Delete Logic ([#2018](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2018))
+* resource/tencentcloud_sqlserver_general_cloud_ro_instance: Support setting timeout ([#2016](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2016))
+
 ## 1.81.18 (July 31, 2023)
 
 FEATURES:

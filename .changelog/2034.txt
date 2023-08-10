@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_cls_kafka_recharge
+```
+
+```release-note:new-resource
+tencentcloud_cls_scheduled_sql
+```
+
+```release-note:new-resource
+tencentcloud_cls_data_transform
+```

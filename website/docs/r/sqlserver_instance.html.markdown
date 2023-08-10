@@ -24,7 +24,7 @@ resource "tencentcloud_vpc" "vpc" {
 }
 
 resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   name              = "subnet-example"
   vpc_id            = tencentcloud_vpc.vpc.id
   cidr_block        = "10.0.0.0/16"
@@ -33,12 +33,12 @@ resource "tencentcloud_subnet" "subnet" {
 
 resource "tencentcloud_sqlserver_instance" "example" {
   name              = "tf-example"
-  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.1.name
+  availability_zone = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type       = "POSTPAID_BY_HOUR"
   vpc_id            = tencentcloud_vpc.vpc.id
   subnet_id         = tencentcloud_subnet.subnet.id
   project_id        = 0
-  memory            = 4
+  memory            = 16
   storage           = 100
 }
 ```

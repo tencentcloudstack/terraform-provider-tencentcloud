@@ -33,6 +33,11 @@ func dataSourceTencentCloudSqlserverBackups() *schema.Resource {
 				Required:    true,
 				Description: "Instance ID.",
 			},
+			"backup_name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Filter by backup name, do not filter if left blank.",
+			},
 			"start_time": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -130,11 +135,12 @@ func dataSourceTencentSqlserverBackupsRead(d *schema.ResourceData, meta interfac
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	instanceId := d.Get("instance_id").(string)
+	backupName := d.Get("backup_name").(string)
 	startTime := d.Get("start_time").(string)
 	endTime := d.Get("end_time").(string)
 	sqlserverService := SqlserverService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	backInfoItems, err := sqlserverService.DescribeSqlserverBackups(ctx, instanceId, startTime, endTime)
+	backInfoItems, err := sqlserverService.DescribeSqlserverBackups(ctx, instanceId, backupName, startTime, endTime)
 
 	if err != nil {
 		return fmt.Errorf("api[DescribeBackups]fail, return %s", err.Error())

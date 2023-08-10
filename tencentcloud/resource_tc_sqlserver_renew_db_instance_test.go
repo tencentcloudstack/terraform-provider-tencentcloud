@@ -17,11 +17,11 @@ func TestAccTencentCloudSqlserverRenewDBInstanceResource_basic(t *testing.T) {
 			{
 				Config: testAccSqlserverRenewDBInstance,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_renew_db_instance.renew_db_instance", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_renew_db_instance.example", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_sqlserver_renew_db_instance.renew_db_instance",
+				ResourceName:      "tencentcloud_sqlserver_renew_db_instance.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -29,27 +29,34 @@ func TestAccTencentCloudSqlserverRenewDBInstanceResource_basic(t *testing.T) {
 	})
 }
 
-const testAccSqlserverRenewDBInstance = testAccSqlserverInstanceBasicPrepaid + `
-data "tencentcloud_availability_zones" "zones" {}
+const testAccSqlserverRenewDBInstance = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
 
-resource "tencentcloud_sqlserver_instance" "test" {
-  name                   = "test_sqlserver_instance"
-  availability_zone      = data.tencentcloud_availability_zones.zones.zones.0.name
+resource "tencentcloud_sqlserver_basic_instance" "example" {
+  name                   = "tf-example"
+  availability_zone      = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   charge_type            = "PREPAID"
-  period                 = 1
   vpc_id                 = local.vpc_id
-  subnet_id              = local.vpc_subnet_id
+  subnet_id              = local.subnet_id
   project_id             = 0
-  memory                 = 2
-  storage                = 10
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
+  machine_type           = "CLOUD_PREMIUM"
   maintenance_week_set   = [1, 2, 3]
   maintenance_start_time = "09:00"
   maintenance_time_span  = 3
-  security_groups        = [local.sg]
+  security_groups        = [local.sg_id]
+
+  tags = {
+    "test" = "test"
+  }
 }
 
-resource "tencentcloud_sqlserver_renew_db_instance" "renew_db_instance" {
-  instance_id = tencentcloud_sqlserver_instance.test.id
+resource "tencentcloud_sqlserver_renew_db_instance" "example" {
+  instance_id = tencentcloud_sqlserver_basic_instance.example.id
   period      = 1
 }
 `

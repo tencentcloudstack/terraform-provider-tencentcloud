@@ -1148,3 +1148,161 @@ func (me *ClsService) DescribeClsMachineGroupConfigsByFilter(ctx context.Context
 	machineGroupConfigs = response.Response.Configs
 	return
 }
+
+func (me *ClsService) DescribeClsDataTransformById(ctx context.Context, taskId string) (dataTransform *cls.DataTransformTaskInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeDataTransformInfoRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeDataTransformInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.DataTransformTaskInfos) < 1 {
+		return
+	}
+
+	dataTransform = response.Response.DataTransformTaskInfos[0]
+	return
+}
+
+func (me *ClsService) DeleteClsDataTransformById(ctx context.Context, taskId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteDataTransformRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteDataTransform(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+func (me *ClsService) DescribeClsKafkaRechargeById(ctx context.Context, id string, topic string) (kafkaRecharge *cls.KafkaRechargeInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeKafkaRechargesRequest()
+	request.Id = &id
+	request.TopicId = &topic
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeKafkaRecharges(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Infos) < 1 {
+		return
+	}
+
+	kafkaRecharge = response.Response.Infos[0]
+	return
+}
+
+func (me *ClsService) DeleteClsKafkaRechargeById(ctx context.Context, id string, topic string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteKafkaRechargeRequest()
+	request.Id = &id
+	request.TopicId = &topic
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteKafkaRecharge(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *ClsService) DescribeClsScheduledSqlById(ctx context.Context, taskId string) (scheduledSql *cls.ScheduledSqlTaskInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDescribeScheduledSqlInfoRequest()
+	request.TaskId = &taskId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DescribeScheduledSqlInfo(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ScheduledSqlTaskInfos) < 1 {
+		return
+	}
+
+	scheduledSql = response.Response.ScheduledSqlTaskInfos[0]
+	return
+}
+
+func (me *ClsService) DeleteClsScheduledSqlById(ctx context.Context, taskId string, srcTopicId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := cls.NewDeleteScheduledSqlRequest()
+	request.TaskId = &taskId
+	request.SrcTopicId = &srcTopicId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseClsClient().DeleteScheduledSql(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
