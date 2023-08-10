@@ -346,7 +346,7 @@ func resourceTencentCloudSecurityGroupRuleSetUpdate(d *schema.ResourceData, m in
 				return e
 			}
 
-			if result.Egress != nil {
+			if len(result.Egress) > 0 {
 				tmpList := []*int64{}
 				egressRulesList := marshalSecurityPolicy(result.Egress)
 				for _, v := range egressRulesList {
@@ -373,14 +373,13 @@ func resourceTencentCloudSecurityGroupRuleSetUpdate(d *schema.ResourceData, m in
 				return e
 			}
 
-			if result.Ingress != nil {
+			if len(result.Ingress) > 0 {
 				tmpList := []*int64{}
 				ingressRulesList := marshalSecurityPolicy(result.Ingress)
 				for _, v := range ingressRulesList {
 					item := v.(map[string]interface{})
 					tmpList = append(tmpList, item["policy_index"].(*int64))
 				}
-
 				e = service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "ingress")
 				if e != nil {
 					return e
