@@ -62,7 +62,7 @@ func TestAccTencentCloudVpcIpv6EniAddressResource_basic(t *testing.T) {
 //			if !ok {
 //				return err
 //			}
-//			fmt.Print(ee)
+
 //			if ee.Code == "InvalidParameterValue.BandwidthPackageNotFound" {
 //				return nil
 //			} else {
