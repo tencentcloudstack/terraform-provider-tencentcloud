@@ -142,7 +142,8 @@ func resourceTencentCloudCfsAccessGroupUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("description") {
 		request.DescInfo = helper.String(d.Get("description").(string))
 	}
-
+	id := d.Id()
+	request.PGroupId = &id
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().UpdateCfsPGroup(request)
