@@ -36,11 +36,21 @@ func TestAccTencentCloudTsfPodInstancesDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccTsfPodInstancesDataSource = `
+const testAccTsfPodInstancesDataSourceVar = `
+variable "group_id" {
+	default = "` + defaultTsfContainerGroupId + `"
+}
+
+variable "pod_name" {
+	default = "` + defaultTsfpodName + `"
+}
+`
+
+const testAccTsfPodInstancesDataSource = testAccTsfPodInstancesDataSourceVar + `
 
 data "tencentcloud_tsf_pod_instances" "pod_instances" {
-	group_id = "group-ynd95rea"
-	pod_name_list = ["keep-terraform-6f8f977688-zvphm"]
+	group_id = var.group_id
+	pod_name_list = [var.pod_name]
 }
 
 `

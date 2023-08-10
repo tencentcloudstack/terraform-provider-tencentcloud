@@ -11,9 +11,10 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudTdmqRocketmqTopicResource_basic -v
 func TestAccTencentCloudTdmqRocketmqTopicResource_basic(t *testing.T) {
 	t.Parallel()
-	terraformId := "tencentcloud_tdmq_rocketmq_topic.topic"
+	terraformId := "tencentcloud_tdmq_rocketmq_topic.example"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -57,7 +58,7 @@ func testAccCheckTdmqRocketmqTopicDestroy(s *terraform.State) error {
 
 		if err != nil {
 			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
-				if sdkerr.Code == "ResourceUnavailable" {
+				if sdkerr.Code == "ResourceUnavailable" || sdkerr.Code == "ResourceNotFound.Cluster" {
 					return nil
 				}
 			}
@@ -109,24 +110,22 @@ func testAccCheckTdmqRocketmqTopicExists(re string) resource.TestCheckFunc {
 }
 
 const testAccTdmqRocketmqTopic = `
-resource "tencentcloud_tdmq_rocketmq_cluster" "cluster" {
-	cluster_name = "test_rocketmq"
-	remark = "test recket mq"
+resource "tencentcloud_tdmq_rocketmq_cluster" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_namespace" "namespace" {
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  namespace_name = "test_namespace"
-  ttl = 65000
-  retention_time = 65000
-  remark = "test namespace"
+resource "tencentcloud_tdmq_rocketmq_namespace" "example" {
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  namespace_name = "tf_example_namespace"
+  remark         = "remark."
 }
 
-resource "tencentcloud_tdmq_rocketmq_topic" "topic" {
-  topic_name = "test_rocketmq_topic"
-  namespace_name = tencentcloud_tdmq_rocketmq_namespace.namespace.namespace_name
-  type = "Normal"
-  cluster_id = tencentcloud_tdmq_rocketmq_cluster.cluster.cluster_id
-  remark = "test rocketmq topic"
+resource "tencentcloud_tdmq_rocketmq_topic" "example" {
+  topic_name     = "tf_example"
+  namespace_name = tencentcloud_tdmq_rocketmq_namespace.example.namespace_name
+  cluster_id     = tencentcloud_tdmq_rocketmq_cluster.example.cluster_id
+  type           = "Normal"
+  remark         = "remark."
 }
 `

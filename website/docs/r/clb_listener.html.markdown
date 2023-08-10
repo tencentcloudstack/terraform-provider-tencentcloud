@@ -156,7 +156,7 @@ The following arguments are supported:
 
 * `clb_id` - (Required, String, ForceNew) ID of the CLB.
 * `listener_name` - (Required, String) Name of the CLB listener, and available values can only be Chinese characters, English letters, numbers, underscore and hyphen '-'.
-* `protocol` - (Required, String, ForceNew) Type of protocol within the listener. Valid values: `TCP`, `UDP`, `HTTP`, `HTTPS` and `TCP_SSL`.
+* `protocol` - (Required, String, ForceNew) Type of protocol within the listener. Valid values: `TCP`, `UDP`, `HTTP`, `HTTPS`, `TCP_SSL` and `QUIC`.
 * `certificate_ca_id` - (Optional, String) ID of the client certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when the ssl mode is `MUTUAL`.
 * `certificate_id` - (Optional, String) ID of the server certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.
 * `certificate_ssl_mode` - (Optional, String) Type of certificate. Valid values: `UNIDIRECTIONAL`, `MUTUAL`. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.

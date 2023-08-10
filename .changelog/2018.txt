@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_security_group_rule_set: Optimize Rule Delete Logic
+```

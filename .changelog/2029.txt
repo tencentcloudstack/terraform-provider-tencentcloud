@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_tdmq_rocketmq_namespace: Abandoned parameters: 'ttl', 'retention_time`.
+```
+
+```release-note:enhancement
+resource/tencentcloud_tdmq_rocketmq_vip_instance: Optimize `storage_size` parameter issue
+```

@@ -352,7 +352,7 @@ data "tencentcloud_subnet" "sub" {
 const testAccSqlserverInstance string = testAccSqlserverBasicInstanceNetwork + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance"
-  availability_zone             = var.default_az
+  availability_zone             = var.default_az7
   charge_type                   = "POSTPAID_BY_HOUR"
   vpc_id                        = local.vpc_id
   subnet_id                     = local.subnet_id
@@ -372,7 +372,7 @@ resource "tencentcloud_sqlserver_instance" "test" {
 const testAccSqlserverInstanceUpdate string = testAccSqlserverBasicInstanceNetwork + `
 resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance_update"
-  availability_zone             = var.default_az
+  availability_zone             = var.default_az7
   charge_type                   = "POSTPAID_BY_HOUR"
   vpc_id                        = "vpc-1yg5ua6l"
   subnet_id                     = "subnet-h7av55g8"
@@ -428,7 +428,7 @@ resource "tencentcloud_sqlserver_instance" "test" {
   name                          = "tf_sqlserver_instance_multi"
   engine_version                = "2017"
   charge_type                   = "POSTPAID_BY_HOUR"
-  availability_zone             = var.default_az
+  availability_zone             = var.default_az7
   vpc_id                        = local.vpc_id
   subnet_id                     = local.subnet_id
   security_groups               = [local.sg_id]

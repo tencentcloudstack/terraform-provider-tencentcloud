@@ -75,10 +75,16 @@ func TestAccTencentCloudTsfDeployContainerGroupResource_basic(t *testing.T) {
 	})
 }
 
-const testAccTsfDeployContainerGroup = `
+const testAccTsfDeployContainerGroupVar = `
+variable "group_id" {
+	default = "` + defaultTsfContainerGroupId + `"
+}
+`
+
+const testAccTsfDeployContainerGroup = testAccTsfDeployContainerGroupVar + `
 
 resource "tencentcloud_tsf_deploy_container_group" "deploy_container_group" {
-	group_id          = "group-yqml6w3a"
+	group_id          = var.group_id
 	cpu_request       = "0.25"
 	mem_request       = "640"
 	server            = "ccr.ccs.tencentyun.com"

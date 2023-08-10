@@ -8,7 +8,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudMysqlVerifyRootAccountResource_basic -v
 func TestAccTencentCloudMysqlVerifyRootAccountResource_basic(t *testing.T) {
-	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)

@@ -63,23 +63,23 @@ func TestAccTencentCloudKubernetesClusterEndpointResource(t *testing.T) {
 	})
 }
 
-const testAccTkeClusterEndpointNewSG = `
-data "tencentcloud_security_groups" "new_sg" {
-  name = "keep-tke-ep-sg-fwf8zdkx"
-}
+// const testAccTkeClusterEndpointNewSG = `
+// data "tencentcloud_security_groups" "new_sg" {
+//   name = "keep-tke-ep-sg-fwf8zdkx"
+// }
 
-locals {
-  new_sg = data.tencentcloud_security_groups.new_sg.security_groups.0.security_group_id
-}
+// locals {
+//   new_sg = data.tencentcloud_security_groups.new_sg.security_groups.0.security_group_id
+// }
 
-`
+// `
 
 const testAccTkeClusterEndpointBasicDeps = TkeCIDRs +
 	TkeDataSource +
 	TkeDefaultNodeInstanceVar +
 	defaultImages +
 	defaultSecurityGroupData +
-	testAccTkeClusterEndpointNewSG + `
+	`
 variable "availability_zone" {
   default = "ap-guangzhou-3"
 }
@@ -173,7 +173,7 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
   cluster_id = local.new_cluster_id
   cluster_internet = true
   cluster_intranet = true
-  cluster_internet_security_group = local.new_sg
+  cluster_internet_security_group = local.sg_id2
   cluster_intranet_subnet_id = data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
   extensive_parameters = jsonencode({
     InternetAccessible = {
@@ -192,7 +192,7 @@ resource "tencentcloud_kubernetes_cluster_endpoint" "foo" {
   cluster_id = local.new_cluster_id
   cluster_internet = false
   cluster_intranet = true
-  cluster_internet_security_group = local.new_sg
+  cluster_internet_security_group = local.sg_id2
   cluster_intranet_subnet_id = data.tencentcloud_vpc_subnets.sub.instance_list.0.subnet_id
   depends_on = [
 	tencentcloud_kubernetes_node_pool.np_test

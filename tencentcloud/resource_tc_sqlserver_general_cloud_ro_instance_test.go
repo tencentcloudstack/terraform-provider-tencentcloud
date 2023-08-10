@@ -25,15 +25,15 @@ func TestAccTencentCloudNeedFixSqlserverGeneralCloudRoInstanceResource_basic(t *
 			{
 				Config: testAccSqlserverGeneralCloudRoInstance,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverRoInstanceExists("tencentcloud_sqlserver_general_cloud_ro_instance.general_cloud_ro_instance"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_ro_instance.general_cloud_ro_instance", "id"),
+					testAccCheckSqlserverRoInstanceExists("tencentcloud_sqlserver_general_cloud_ro_instance.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_ro_instance.example", "id"),
 				),
 			},
 			{
 				Config: testAccSqlserverGeneralCloudRoInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSqlserverRoInstanceExists("tencentcloud_sqlserver_general_cloud_ro_instance.general_cloud_ro_instance"),
-					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_ro_instance.general_cloud_ro_instance", "id"),
+					testAccCheckSqlserverRoInstanceExists("tencentcloud_sqlserver_general_cloud_ro_instance.example"),
+					resource.TestCheckResourceAttrSet("tencentcloud_sqlserver_general_cloud_ro_instance.example", "id"),
 				),
 			},
 		},
@@ -103,10 +103,38 @@ func testAccCheckSqlserverRoInstanceExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccSqlserverGeneralCloudRoInstance = `
-resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
-  instance_id                      = "mssql-gyg9xycl"
-  zone                             = "ap-guangzhou-6"
+const testAccSqlserverGeneralCloudRoInstance = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
+  name                 = "tf_example"
+  zone                 = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
+  memory               = 4
+  storage              = 100
+  cpu                  = 2
+  machine_type         = "CLOUD_HSSD"
+  instance_charge_type = "POSTPAID"
+  project_id           = 0
+  vpc_id               = local.vpc_id
+  subnet_id            = local.subnet_id
+  db_version           = "2008R2"
+  security_groups      = [local.sg_id]
+  weekly               = [1, 2, 3, 5, 6, 7]
+  start_time           = "00:00"
+  span                 = 6
+  resource_tags {
+    tag_key   = "test"
+    tag_value = "test"
+  }
+  collation = "Chinese_PRC_CI_AS"
+  time_zone = "China Standard Time"
+}
+
+resource "tencentcloud_sqlserver_general_cloud_ro_instance" "example" {
+  instance_id                      = tencentcloud_sqlserver_general_cloud_instance.example.id
+  zone                             = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   read_only_group_type             = 2
   read_only_group_name             = "test-ro-group"
   read_only_group_is_offline_delay = 1
@@ -117,9 +145,9 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_in
   cpu                              = 2
   machine_type                     = "CLOUD_BSSD"
   instance_charge_type             = "POSTPAID"
-  subnet_id                        = "subnet-dwj7ipnc"
-  vpc_id                           = "vpc-4owdpnwr"
-  security_group_list              = ["sg-7kpsbxdb"]
+  vpc_id                           = local.vpc_id
+  subnet_id                        = local.subnet_id
+  security_groups                  = [local.sg_id]
   collation                        = "Chinese_PRC_CI_AS"
   time_zone                        = "China Standard Time"
   resource_tags                    = {
@@ -129,10 +157,14 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_in
 }
 `
 
-const testAccSqlserverGeneralCloudRoInstanceUpdate = `
-resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_instance" {
-  instance_id                      = "mssql-gyg9xycl"
-  zone                             = "ap-guangzhou-6"
+const testAccSqlserverGeneralCloudRoInstanceUpdate = defaultVpcSubnets + defaultSecurityGroupData + `
+data "tencentcloud_availability_zones_by_product" "zones" {
+  product = "sqlserver"
+}
+
+resource "tencentcloud_sqlserver_general_cloud_instance" "example" {
+  instance_id                      = tencentcloud_sqlserver_general_cloud_instance.example.id
+  zone                             = data.tencentcloud_availability_zones_by_product.zones.zones.4.name
   read_only_group_type             = 2
   read_only_group_name             = "test-ro-group"
   read_only_group_is_offline_delay = 1
@@ -143,9 +175,9 @@ resource "tencentcloud_sqlserver_general_cloud_ro_instance" "general_cloud_ro_in
   cpu                              = 4
   machine_type                     = "CLOUD_BSSD"
   instance_charge_type             = "POSTPAID"
-  subnet_id                        = "subnet-dwj7ipnc"
-  vpc_id                           = "vpc-4owdpnwr"
-  security_group_list              = ["sg-7kpsbxdb"]
+  vpc_id                           = local.vpc_id
+  subnet_id                        = local.subnet_id
+  security_groups                  = [local.sg_id]
   collation                        = "Chinese_PRC_CI_AS"
   time_zone                        = "China Standard Time"
   resource_tags                    = {

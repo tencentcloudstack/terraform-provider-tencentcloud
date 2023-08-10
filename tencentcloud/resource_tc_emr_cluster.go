@@ -101,6 +101,7 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudEmrCluster() *schema.Resource {
@@ -251,6 +252,12 @@ func resourceTencentCloudEmrCluster() *schema.Resource {
 				ForceNew:    true,
 				Description: "The ID of the security group to which the instance belongs, in the form of sg-xxxxxxxx.",
 			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Computed:    true,
+				Description: "Tag description list.",
+			},
 		},
 	}
 }
@@ -269,6 +276,18 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 	if !hasTimeUnit || !hasTimeSpan || !hasPayMode {
 		return innerErr.New("Time_unit, time_span or pay_mode must be set.")
 	}
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("emr", "emr-instance", tcClient.Region, instanceId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
+	hasChange := false
 	request := emr.NewScaleOutInstanceRequest()
 	request.TimeUnit = common.StringPtr(timeUnit.(string))
 	request.TimeSpan = common.Uint64Ptr((uint64)(timeSpan.(int)))
@@ -280,15 +299,21 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 
 	if d.HasChange("resource_spec.0.master_count") {
 		request.MasterCount = common.Uint64Ptr((uint64)(resourceSpec["master_count"].(int)))
+		hasChange = true
 	}
 	if d.HasChange("resource_spec.0.task_count") {
 		request.TaskCount = common.Uint64Ptr((uint64)(resourceSpec["task_count"].(int)))
+		hasChange = true
 	}
 	if d.HasChange("resource_spec.0.core_count") {
 		request.CoreCount = common.Uint64Ptr((uint64)(resourceSpec["core_count"].(int)))
+		hasChange = true
 	}
 	if d.HasChange("extend_fs_field") {
 		return innerErr.New("extend_fs_field not support update.")
+	}
+	if !hasChange {
+		return nil
 	}
 	_, err := emrService.UpdateInstance(ctx, request)
 	if err != nil {
@@ -363,6 +388,15 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 	})
 	if err != nil {
 		return err
+	}
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::emr:%s:uin/:emr-instance/%s", region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -458,5 +492,13 @@ func resourceTencentCloudEmrClusterRead(d *schema.ResourceData, meta interface{}
 	if err != nil {
 		return err
 	}
+
+	tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	region := meta.(*TencentCloudClient).apiV3Conn.Region
+	tags, err := tagService.DescribeResourceTags(ctx, "emr", "emr-instance", region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
 	return nil
 }

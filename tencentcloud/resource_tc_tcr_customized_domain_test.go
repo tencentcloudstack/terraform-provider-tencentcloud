@@ -28,7 +28,7 @@ func testSweepTcrCustomizedDomain(r string) error {
 		return err
 	}
 	if domains == nil {
-		return fmt.Errorf("tcr customize domain instance not exists.")
+		return nil
 	}
 
 	for _, v := range domains {

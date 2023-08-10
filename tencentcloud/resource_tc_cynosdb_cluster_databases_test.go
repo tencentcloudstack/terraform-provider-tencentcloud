@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudCynosdbClusterPasswordComplexityResource_basic -v
+// go test -i; go test -test.run TestAccTencentCloudCynosdbClusterDatabasesResource_basic -v
 func TestAccTencentCloudCynosdbClusterDatabasesResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{

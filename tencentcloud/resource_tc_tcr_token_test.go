@@ -39,7 +39,7 @@ func init() {
 			}
 
 			if len(instances) == 0 {
-				return fmt.Errorf("instance %s not exist", defaultTCRInstanceName)
+				return nil
 			}
 
 			instanceId := *instances[0].RegistryId
