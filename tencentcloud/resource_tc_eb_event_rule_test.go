@@ -8,6 +8,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudEbEventRuleResource_basic -v
@@ -40,7 +41,7 @@ func TestAccTencentCloudEbEventRuleResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckEbEventRuleExists("tencentcloud_eb_event_rule.event_rule"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eb_event_rule.event_rule", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_eb_event_rule.event_rule", "rule_name", "tf-event_rule-test"),
+					resource.TestCheckResourceAttr("tencentcloud_eb_event_rule.event_rule", "rule_name", "tf-event_rule"),
 					resource.TestCheckResourceAttr("tencentcloud_eb_event_rule.event_rule", "description", "event rule"),
 					resource.TestCheckResourceAttr("tencentcloud_eb_event_rule.event_rule", "enable", "false"),
 					resource.TestCheckResourceAttrSet("tencentcloud_eb_event_rule.event_rule", "event_pattern"),
@@ -71,6 +72,9 @@ func testAccCheckEbEventRuleDestroy(s *terraform.State) error {
 
 		rule, err := service.DescribeEbEventRuleById(ctx, eventBusId, ruleId)
 		if err != nil {
+			if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound.Rule" {
+				return nil
+			}
 			return err
 		}
 
@@ -131,7 +135,7 @@ const testAccEbEventRule = testAccEbEventRuleVar + `
 resource "tencentcloud_eb_event_rule" "event_rule" {
   event_bus_id = tencentcloud_eb_event_bus.foo.id
   rule_name    = "tf-event_rule"
-  description  = "event rule"
+  description  = "event rule desc"
   enable       = true
   event_pattern = jsonencode(
     {
@@ -152,7 +156,7 @@ const testAccEbEventRuleUp = testAccEbEventRuleVar + `
 
 resource "tencentcloud_eb_event_rule" "event_rule" {
   event_bus_id = tencentcloud_eb_event_bus.foo.id
-  rule_name    = "tf-event_rule-test"
+  rule_name    = "tf-event_rule"
   description  = "event rule"
   enable       = false
   event_pattern = jsonencode(
