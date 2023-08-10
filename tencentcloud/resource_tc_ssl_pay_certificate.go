@@ -10,34 +10,34 @@ as `Review Cancel`, and then you can click `Request a refund` to refund the fee.
 Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_pay_certificate" "ssl" {
+resource "tencentcloud_ssl_pay_certificate" "example" {
     product_id = 33
     domain_num = 1
-    alias      = "test-ssl"
+    alias      = "ssl desc."
     project_id = 0
     information {
         csr_type              = "online"
-        certificate_domain    = "www.domain.com"
-        organization_name     = "test"
-        organization_division = "test"
-        organization_address  = "test"
+        certificate_domain    = "www.example.com"
+        organization_name     = "Tencent"
+        organization_division = "Qcloud"
+        organization_address  = "广东省深圳市南山区腾讯大厦1000号"
         organization_country  = "CN"
-        organization_city     = "test"
-        organization_region   = "test"
+        organization_city     = "深圳市"
+        organization_region   = "广东省"
         postal_code           = "0755"
         phone_area_code       = "0755"
-        phone_number          = "12345678901"
+        phone_number          = "86013388"
         verify_type           = "DNS"
         admin_first_name      = "test"
         admin_last_name       = "test"
         admin_phone_num       = "12345678901"
         admin_email           = "test@tencent.com"
-        admin_position        = "dev"
+        admin_position        = "developer"
         contact_first_name    = "test"
         contact_last_name     = "test"
         contact_email         = "test@tencent.com"
         contact_number        = "12345678901"
-        contact_position      = "dev"
+        contact_position      = "developer"
     }
 }
 ```

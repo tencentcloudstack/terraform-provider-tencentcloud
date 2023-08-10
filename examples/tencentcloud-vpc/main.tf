@@ -1,31 +1,93 @@
-resource "tencentcloud_vpc" "main" {
-  name       = var.short_name
-  cidr_block = var.vpc_cidr
+data "tencentcloud_availability_zones" "zones" {}
 
-  tags = {
+data "tencentcloud_images" "image" {
+  image_type       = ["PUBLIC_IMAGE"]
+  image_name_regex = "Final"
+}
+
+data "tencentcloud_instance_types" "instance_types" {
+  filter {
+    name   = "zone"
+    values = [data.tencentcloud_availability_zones.zones.zones.0.name]
+  }
+
+  filter {
+    name   = "instance-family"
+    values = ["S5"]
+  }
+
+  cpu_core_count   = 2
+  exclude_sold_out = true
+}
+
+resource "tencentcloud_cls_logset" "logset" {
+  logset_name = "delogsetmo"
+  tags        = {
     "test" = "test"
   }
 }
 
-data "tencentcloud_vpc_instances" "tags_instances" {
-  name = tencentcloud_vpc.main.name
-  tags = tencentcloud_vpc.main.tags
+resource "tencentcloud_cls_topic" "topic" {
+  topic_name           = "topic"
+  logset_id            = tencentcloud_cls_logset.logset.id
+  auto_split           = false
+  max_split_partitions = 20
+  partition_count      = 1
+  period               = 10
+  storage_type         = "hot"
+  tags                 = {
+    "test" = "test",
+  }
 }
 
-data "tencentcloud_vpc_instances" "default" {}
-
-resource "tencentcloud_vpc_acl" "default" {
-  vpc_id  = data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
-  name    = "test_acl_update"
-  ingress = ["ACCEPT#192.168.1.0/24#800#TCP", "ACCEPT#192.168.1.0/24#800-900#TCP",]
-  egress  = ["ACCEPT#192.168.1.0/24#800#TCP", "ACCEPT#192.168.1.0/24#800-900#TCP",]
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-flow-log-vpc"
+  cidr_block = var.vpc_cidr
 }
 
-resource "tencentcloud_vpc_acl_attachment" "example" {
-  acl_id    = tencentcloud_vpc_acl.default.id
-  subnet_id = data.tencentcloud_vpc_instances.default.instance_list[0].subnet_ids[0]
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
+  name              = "vpc-flow-log-subnet"
+  vpc_id            = tencentcloud_vpc.vpc.id
+  cidr_block        = var.subnet_cidr
+  is_multicast      = false
 }
 
-data "tencentcloud_vpc_acls" "default" {
-  name = "test_acl"
+resource "tencentcloud_eni" "example" {
+  name        = "vpc-flow-log-eni"
+  vpc_id      = tencentcloud_vpc.vpc.id
+  subnet_id   = tencentcloud_subnet.subnet.id
+  description = "eni desc"
+  ipv4_count  = 1
+}
+
+resource "tencentcloud_instance" "example" {
+  instance_name            = "ci-test-eni-attach"
+  availability_zone        = data.tencentcloud_availability_zones.zones.zones.0.name
+  image_id                 = data.tencentcloud_images.image.images.0.image_id
+  instance_type            = data.tencentcloud_instance_types.instance_types.instance_types.0.instance_type
+  system_disk_type         = "CLOUD_PREMIUM"
+  disable_security_service = true
+  disable_monitor_service  = true
+  vpc_id                   = tencentcloud_vpc.vpc.id
+  subnet_id                = tencentcloud_subnet.subnet.id
+}
+
+resource "tencentcloud_eni_attachment" "example" {
+  eni_id      = tencentcloud_eni.example.id
+  instance_id = tencentcloud_instance.example.id
+}
+
+resource "tencentcloud_vpc_flow_log" "example" {
+  flow_log_name        = "tf-example-vpc-flow-log"
+  resource_type        = "NETWORKINTERFACE"
+  resource_id          = tencentcloud_eni_attachment.example.eni_id
+  traffic_type         = "ACCEPT"
+  vpc_id               = tencentcloud_vpc.vpc.id
+  flow_log_description = "this is a testing flow log"
+  cloud_log_id         = tencentcloud_cls_topic.topic.id
+  storage_type         = "cls"
+  tags                 = {
+    "testKey" = "testValue"
+  }
 }
