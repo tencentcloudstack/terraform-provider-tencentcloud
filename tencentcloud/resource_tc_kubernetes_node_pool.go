@@ -58,7 +58,6 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = ["sg-24vswocp"]
-
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
@@ -614,7 +613,7 @@ func resourceTencentCloudKubernetesNodePool() *schema.Resource {
 	}
 }
 
-//this function composes every single parameter to an as scale parameter with json string format
+// this function composes every single parameter to an as scale parameter with json string format
 func composeParameterToAsScalingGroupParaSerial(d *schema.ResourceData) (string, error) {
 	var (
 		result string
@@ -664,7 +663,7 @@ func composeParameterToAsScalingGroupParaSerial(d *schema.ResourceData) (string,
 	return result, errRet
 }
 
-//This function is used to specify tke as group launch config, similar to kubernetesAsScalingConfigParaSerial, but less parameter
+// This function is used to specify tke as group launch config, similar to kubernetesAsScalingConfigParaSerial, but less parameter
 func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, meta interface{}) (string, error) {
 	var (
 		result string
@@ -1440,7 +1439,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		taints := GetTkeTaints(d, "taints")
 		tags := helper.GetTags(d, "tags")
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := service.ModifyClusterNodePool(ctx, clusterId, nodePoolId, name, enableAutoScale, minSize, maxSize, nodeOs, nodeOsType, labels, taints, tags)
+			errRet := service.ModifyClusterNodePoolByCommonClient(ctx, clusterId, nodePoolId, name, enableAutoScale, minSize, maxSize, nodeOs, nodeOsType, labels, taints, tags)
 			if errRet != nil {
 				return retryError(errRet)
 			}

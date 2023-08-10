@@ -1275,48 +1275,59 @@ func (me *TkeService) CreateClusterNodePool(ctx context.Context, clusterId, name
 	return
 }
 
-func (me *TkeService) ModifyClusterNodePool(ctx context.Context, clusterId, nodePoolId string, name string, enableAutoScale bool, minSize int64, maxSize int64, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint, tags map[string]string) (errRet error) {
+func (me *TkeService) ModifyClusterNodePoolByCommonClient(ctx context.Context, clusterId, nodePoolId string, name string, enableAutoScale bool, minSize int64, maxSize int64, nodeOs string, nodeOsType string, labels []*tke.Label, taints []*tke.Taint, tags map[string]string) (errRet error) {
 	logId := getLogId(ctx)
-	request := tke.NewModifyClusterNodePoolRequest()
+	action := "ModifyClusterNodePool"
 
 	defer func() {
 		if errRet != nil {
-			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, action, errRet.Error())
 		}
 	}()
-	request.ClusterId = &clusterId
-	request.NodePoolId = &nodePoolId
-	request.Taints = taints
-	request.Labels = labels
-	request.EnableAutoscale = &enableAutoScale
-	//request.DeletionProtection = &deletionProtection
-	request.MaxNodesNum = &maxSize
-	request.MinNodesNum = &minSize
-	request.Name = &name
-	request.OsName = &nodeOs
-	request.OsCustomizeType = &nodeOsType
 
-	if len(labels) > 0 {
-		request.Labels = labels
+	if len(taints) == 0 {
+		log.Printf("[DEBUG]%s taints is empty, so remove all the taints.\n", logId)
+	}
+
+	params := map[string]interface{}{
+		"ClusterId":       clusterId,
+		"NodePoolId":      nodePoolId,
+		"Taints":          taints,
+		"Labels":          labels,
+		"EnableAutoscale": enableAutoScale,
+		"MaxNodesNum":     maxSize,
+		"MinNodesNum":     minSize,
+		"Name":            name,
+		"OsName":          nodeOs,
+		"OsCustomizeType": nodeOsType,
 	}
 
 	if len(tags) > 0 {
+		tagList := []*tke.Tag{}
 		for k, v := range tags {
 			key := k
 			val := v
-			request.Tags = append(request.Tags, &tke.Tag{
+			tagList = append(tagList, &tke.Tag{
 				Key:   &key,
 				Value: &val,
 			})
 		}
+		params["Tags"] = tags
 	}
 
-	ratelimit.Check(request.GetAction())
-	_, err := me.client.UseTkeClient().ModifyClusterNodePool(request)
+	_, err := me.client.SendCustomRequest("tke", tke.APIVersion, action, params)
 	if err != nil {
-		errRet = err
-		return
+		return err
 	}
+
+	// example of response handle:
+	// response := new(tke.ModifyClusterNodePoolResponse)
+	// if err = json.Unmarshal(commonRsp.GetBody(), response); err != nil {
+	// 	return tcerr.NewTencentCloudSDKError("ClientError.ParseJsonError", err.Error(), "")
+	// }
+
+	// response is unnecessary for ModifyClusterNodePool, so skip it
+
 	return
 }
 

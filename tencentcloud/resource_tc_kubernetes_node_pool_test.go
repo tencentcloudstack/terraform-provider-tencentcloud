@@ -328,6 +328,12 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     effect = "PreferNoSchedule"
   }
 
+  taints {
+	key = "test_taint2"
+    value = "taint_value2"
+    effect = "PreferNoSchedule"
+  }
+
   tags = {
     keep-test-np1 = "test1"
     keep-test-np2 = "test2"
@@ -395,12 +401,6 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   labels = {
     "test3" = "test3",
     "test2" = "test2",
-  }
-  
-  taints {
-	key = "test_taint"
-    value = "taint_value"
-    effect = "PreferNoSchedule"
   }
 
   tags = {

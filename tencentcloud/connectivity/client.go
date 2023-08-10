@@ -37,6 +37,7 @@ import (
 	audit "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319"
 	cls "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
+	tchttp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/http"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/profile"
 	cvm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm/v20170312"
 	cwp "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp/v20180228"
@@ -173,6 +174,7 @@ type TencentCloudClient struct {
 	tseConn            *tse.Client
 	cdwchConn          *cdwch.Client
 	ebConn             *eb.Client
+	commonConn         *common.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -209,6 +211,39 @@ func (me *TencentCloudClient) NewClientIntlProfile(timeout int) *intlProfile.Cli
 	cpf.Language = "en-US"
 
 	return cpf
+}
+
+func (me *TencentCloudClient) SendCustomRequest(product, version, action string, params map[string]interface{}) (*tchttp.CommonResponse, error) {
+	request := tchttp.NewCommonRequest(product, version, action)
+	response := tchttp.NewCommonResponse()
+
+	err := request.SetActionParameters(params)
+	if err != nil {
+		return nil, err
+	}
+
+	client := me.UseCommonClient()
+
+	err = client.Send(request, response)
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
+
+// UseCommonClient returns common client
+func (me *TencentCloudClient) UseCommonClient() *common.Client {
+	if me.commonConn != nil {
+		return me.commonConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	me.commonConn = common.NewCommonClient(me.Credential, me.Region, cpf)
+	// me.commonConn, _ =
+	me.commonConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.commonConn
 }
 
 // UseCosClient returns cos client for service
