@@ -1,3 +1,0 @@
-```release-note:bug
-resource/tencentcloud_tag_attachment: Fix unit test
-```
