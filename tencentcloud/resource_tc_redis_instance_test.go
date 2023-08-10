@@ -338,12 +338,13 @@ func TestAccTencentCloudRedisInstance_ReplicasNum(t *testing.T) {
 
 func TestAccTencentCloudRedisInstance_Prepaid(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccTencentCloudRedisInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccRedisInstancePrepaidBasic(),
+				PreConfig: func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccRedisInstancePrepaidBasic(),
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccTencentCloudRedisInstanceExists("tencentcloud_redis_instance.redis_prepaid_instance_test"),
 					resource.TestCheckResourceAttrSet("tencentcloud_redis_instance.redis_prepaid_instance_test", "ip"),
