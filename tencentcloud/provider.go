@@ -1101,8 +1101,11 @@ Cloud Log Service(CLS)
 	tencentcloud_cls_alarm
 	tencentcloud_cls_alarm_notice
 	tencentcloud_cls_ckafka_consumer
+	tencentcloud_cls_kafka_recharge
 	tencentcloud_cls_cos_recharge
 	tencentcloud_cls_export
+	tencentcloud_cls_scheduled_sql
+	tencentcloud_cls_data_transform
 
   Data Source
 	tencentcloud_cls_shipper_tasks
@@ -2693,6 +2696,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_ckafka_consumer":                                 resourceTencentCloudClsCkafkaConsumer(),
 			"tencentcloud_cls_cos_recharge":                                    resourceTencentCloudClsCosRecharge(),
 			"tencentcloud_cls_export":                                          resourceTencentCloudClsExport(),
+			"tencentcloud_cls_data_transform":                                  resourceTencentCloudClsDataTransform(),
 			"tencentcloud_lighthouse_instance":                                 resourceTencentCloudLighthouseInstance(),
 			"tencentcloud_tem_environment":                                     resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                                     resourceTencentCloudTemApplication(),
@@ -2938,6 +2942,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_cngw_route_rate_limit":                  resourceTencentCloudTseCngwRouteRateLimit(),
 			"tencentcloud_tse_cngw_canary_rule":                       resourceTencentCloudTseCngwCanaryRule(),
 			"tencentcloud_clickhouse_instance":                        resourceTencentCloudClickhouseInstance(),
+			"tencentcloud_cls_kafka_recharge":                         resourceTencentCloudClsKafkaRecharge(),
+			"tencentcloud_cls_scheduled_sql":                          resourceTencentCloudClsScheduledSql(),
 		},
 
 		ConfigureFunc: providerConfigure,
