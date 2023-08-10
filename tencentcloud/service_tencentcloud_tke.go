@@ -1312,7 +1312,7 @@ func (me *TkeService) ModifyClusterNodePoolByCommonClient(ctx context.Context, c
 				Value: &val,
 			})
 		}
-		params["Tags"] = tags
+		params["Tags"] = tagList
 	}
 
 	_, err := me.client.SendCustomRequest("tke", tke.APIVersion, action, params)

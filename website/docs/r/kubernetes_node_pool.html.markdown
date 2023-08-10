@@ -67,7 +67,6 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
     security_group_ids = ["sg-24vswocp"]
-
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
