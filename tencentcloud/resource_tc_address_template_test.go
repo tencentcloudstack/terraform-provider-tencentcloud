@@ -19,8 +19,8 @@ func TestAccTencentCloudAddressTemplate_basic_and_update(t *testing.T) {
 			{
 				Config: testAccAddressTemplate_basic,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_address_template.template", "name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_address_template.template", "addresses.#"),
+					resource.TestCheckResourceAttr("tencentcloud_address_template.template", "name", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_address_template.template", "addresses.#", "1"),
 				),
 			},
 			{
@@ -32,8 +32,8 @@ func TestAccTencentCloudAddressTemplate_basic_and_update(t *testing.T) {
 				Config: testAccAddressTemplate_basic_update_remark,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckAddressTemplateExists("tencentcloud_address_template.template"),
-					resource.TestCheckResourceAttrSet("tencentcloud_address_template.template", "name"),
-					resource.TestCheckResourceAttrSet("tencentcloud_address_template.template", "addresses.#"),
+					resource.TestCheckResourceAttr("tencentcloud_address_template.template", "name", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_address_template.template", "addresses.#", "2"),
 				),
 			},
 		},
