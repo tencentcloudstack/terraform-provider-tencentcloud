@@ -4,16 +4,23 @@ Provide a resource to create a tdmq namespace.
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_instance" "foo" {
-  cluster_name = "example"
-  remark = "this is description."
+resource "tencentcloud_tdmq_instance" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
+  tags         = {
+    "createdBy" = "terraform"
+  }
 }
 
-resource "tencentcloud_tdmq_namespace" "bar" {
-  environ_name = "example"
-  msg_ttl = 300
-  cluster_id = "${tencentcloud_tdmq_instance.foo.id}"
-  remark = "this is description."
+resource "tencentcloud_tdmq_namespace" "example" {
+  environ_name = "tf_example"
+  msg_ttl      = 300
+  cluster_id   = tencentcloud_tdmq_instance.example.id
+  retention_policy {
+    time_in_minutes = 60
+    size_in_mb      = 10
+  }
+  remark = "remark."
 }
 ```
 
@@ -30,27 +37,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tdmq "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217"
 )
-
-func RetentionPolicy() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"time_in_minutes": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			Description: "the time of message to retain.",
-		},
-		"size_in_mb": {
-			Type:        schema.TypeInt,
-			Optional:    true,
-			Description: "the size of message to retain.",
-		},
-	}
-}
 
 func resourceTencentCloudTdmqNamespace() *schema.Resource {
 	return &schema.Resource{
@@ -84,9 +77,27 @@ func resourceTencentCloudTdmqNamespace() *schema.Resource {
 				Description: "Description of the namespace.",
 			},
 			"retention_policy": {
-				Type:        schema.TypeMap,
+				Type:        schema.TypeList,
 				Optional:    true,
+				Computed:    true,
+				MaxItems:    1,
 				Description: "The Policy of message to retain. Format like: `{time_in_minutes: Int, size_in_mb: Int}`. `time_in_minutes`: the time of message to retain; `size_in_mb`: the size of message to retain.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"time_in_minutes": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "the time of message to retain.",
+						},
+						"size_in_mb": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "the size of message to retain.",
+						},
+					},
+				},
 			},
 		},
 	}
@@ -125,20 +136,21 @@ func resourceTencentCloudTdmqNamespaceCreate(d *schema.ResourceData, meta interf
 	}
 
 	if temp, ok := d.GetOk("retention_policy"); ok {
-		v := temp.(map[string]interface{})
-		timeInMinutes := int64(v["time_in_minutes"].(int))
-		sizeInMb := int64(v["size_in_mb"].(int))
-
-		retentionPolicy.TimeInMinutes = &timeInMinutes
-		retentionPolicy.SizeInMB = &sizeInMb
+		policy := temp.([]interface{})
+		for _, item := range policy {
+			value := item.(map[string]interface{})
+			timeInMinutes := int64(value["time_in_minutes"].(int))
+			sizeInMB := int64(value["size_in_mb"].(int))
+			retentionPolicy.TimeInMinutes = &timeInMinutes
+			retentionPolicy.SizeInMB = &sizeInMB
+		}
 	}
 	environId, err := tdmqService.CreateTdmqNamespace(ctx, environ_name, msg_ttl, clusterId, remark, retentionPolicy)
 	if err != nil {
 		return err
 	}
 
-	d.SetId(environId)
-
+	d.SetId(strings.Join([]string{environId, clusterId}, FILED_SP))
 	return resourceTencentCloudTdmqNamespaceRead(d, meta)
 }
 
@@ -149,8 +161,12 @@ func resourceTencentCloudTdmqNamespaceRead(d *schema.ResourceData, meta interfac
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	environId := d.Id()
-	clusterId := d.Get("cluster_id").(string)
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+	environId := idSplit[0]
+	clusterId := idSplit[1]
 
 	tdmqService := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
@@ -165,13 +181,16 @@ func resourceTencentCloudTdmqNamespaceRead(d *schema.ResourceData, meta interfac
 		}
 
 		_ = d.Set("environ_name", info.EnvironmentId)
+		_ = d.Set("cluster_id", clusterId)
 		_ = d.Set("msg_ttl", info.MsgTTL)
 		_ = d.Set("remark", info.Remark)
 
+		tmpList := make([]map[string]interface{}, 0)
 		retentionPolicy := make(map[string]interface{}, 2)
 		retentionPolicy["time_in_minutes"] = info.RetentionPolicy.TimeInMinutes
 		retentionPolicy["size_in_mb"] = info.RetentionPolicy.SizeInMB
-		_ = d.Set("retention_policy", retentionPolicy)
+		tmpList = append(tmpList, retentionPolicy)
+		_ = d.Set("retention_policy", tmpList)
 		return nil
 	})
 	if err != nil {
@@ -186,15 +205,19 @@ func resourceTencentCloudTdmqNamespaceUpdate(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	environId := d.Id()
-	clusterId := d.Get("cluster_id").(string)
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+	environId := idSplit[0]
+	clusterId := idSplit[1]
 
 	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	var (
-		msgTtl       uint64
-		remark       string
-		retentPolicy *tdmq.RetentionPolicy
+		msgTtl          uint64
+		remark          string
+		retentionPolicy = new(tdmq.RetentionPolicy)
 	)
 
 	old, now := d.GetChange("msg_ttl")
@@ -213,17 +236,19 @@ func resourceTencentCloudTdmqNamespaceUpdate(d *schema.ResourceData, meta interf
 
 	_, now = d.GetChange("retention_policy")
 	if d.HasChange("retention_policy") {
-		temp := now.(map[string]interface{})
-		time := temp["time_in_minutes"].(int64)
-		size := temp["size_in_mb"].(int64)
-		retentPolicy = &tdmq.RetentionPolicy{
-			TimeInMinutes: &time,
-			SizeInMB:      &size,
+		policy := now.([]interface{})
+
+		for _, item := range policy {
+			value := item.(map[string]interface{})
+			timeInMinutes := int64(value["time_in_minutes"].(int))
+			sizeInMB := int64(value["size_in_mb"].(int))
+			retentionPolicy.TimeInMinutes = &timeInMinutes
+			retentionPolicy.SizeInMB = &sizeInMB
 		}
 	}
 
 	d.Partial(true)
-	if err := service.ModifyTdmqNamespaceAttribute(ctx, environId, msgTtl, remark, clusterId, retentPolicy); err != nil {
+	if err := service.ModifyTdmqNamespaceAttribute(ctx, environId, msgTtl, remark, clusterId, retentionPolicy); err != nil {
 		return err
 	}
 
@@ -237,8 +262,12 @@ func resourceTencentCloudTdmqNamespaceDelete(d *schema.ResourceData, meta interf
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
-	environId := d.Id()
-	clusterId := d.Get("cluster_id").(string)
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", idSplit)
+	}
+	environId := idSplit[0]
+	clusterId := idSplit[1]
 
 	service := TdmqService{client: meta.(*TencentCloudClient).apiV3Conn}
 

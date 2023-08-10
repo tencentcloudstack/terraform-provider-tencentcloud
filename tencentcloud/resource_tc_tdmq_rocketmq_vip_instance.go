@@ -40,14 +40,6 @@ resource "tencentcloud_tdmq_rocketmq_vip_instance" "example" {
   time_span = 1
 }
 ```
-
-Import
-
-tdmq rocketmq_vip_instance can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tdmq_rocketmq_vip_instance.rocketmq_vip_instance rocketmq_vip_instance_id
-```
 */
 package tencentcloud
 
@@ -69,9 +61,7 @@ func resourceTencentCloudTdmqRocketmqVipInstance() *schema.Resource {
 		Read:   resourceTencentCloudTdmqRocketmqVipInstanceRead,
 		Update: resourceTencentCloudTdmqRocketmqVipInstanceUpdate,
 		Delete: resourceTencentCloudTdmqRocketmqVipInstanceDelete,
-		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
-		},
+
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Required:    true,

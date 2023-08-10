@@ -96,26 +96,13 @@ func testAccCheckTdmqRabbitmqVipInstanceDestroy(s *terraform.State) error {
 	return nil
 }
 
-const testAccTdmqRabbitmqVipInstance = `
+const testAccTdmqRabbitmqVipInstance = defaultVpcSubnets + `
 data "tencentcloud_availability_zones" "zones" {}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "rabbitmq-vpc"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
-  name              = "rabbitmq-subnet"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
 
 resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
-  vpc_id                                = tencentcloud_vpc.vpc.id
-  subnet_id                             = tencentcloud_subnet.subnet.id
+  vpc_id                                = local.vpc_id
+  subnet_id                             = local.subnet_id
   cluster_name                          = "tf-example-rabbitmq-vip-instance"
   node_spec                             = "rabbit-vip-basic-1"
   node_num                              = 1
@@ -126,26 +113,13 @@ resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
 }
 `
 
-const testAccTdmqRabbitmqVipInstanceUpdate = `
+const testAccTdmqRabbitmqVipInstanceUpdate = defaultVpcSubnets + `
 data "tencentcloud_availability_zones" "zones" {}
-
-resource "tencentcloud_vpc" "vpc" {
-  name       = "rabbitmq-vpc"
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "tencentcloud_subnet" "subnet" {
-  availability_zone = data.tencentcloud_availability_zones.zones.zones.0.name
-  name              = "rabbitmq-subnet"
-  vpc_id            = tencentcloud_vpc.vpc.id
-  cidr_block        = "10.0.0.0/16"
-  is_multicast      = false
-}
 
 resource "tencentcloud_tdmq_rabbitmq_vip_instance" "example" {
   zone_ids                              = [data.tencentcloud_availability_zones.zones.zones.0.id]
-  vpc_id                                = tencentcloud_vpc.vpc.id
-  subnet_id                             = tencentcloud_subnet.subnet.id
+  vpc_id                                = local.vpc_id
+  subnet_id                             = local.subnet_id
   cluster_name                          = "tf-example-rabbitmq-vip-instance-update"
   node_spec                             = "rabbit-vip-basic-1"
   node_num                              = 1
