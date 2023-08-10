@@ -8,6 +8,7 @@ import (
 
 var testDataSqlserverReadonlyGroupsName = "data.tencentcloud_sqlserver_readonly_groups.test"
 
+// go test -i; go test -test.run TestAccDataSourceTencentCloudSqlserverReadonlyGroups -v
 func TestAccDataSourceTencentCloudSqlserverReadonlyGroups(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -37,6 +38,6 @@ func TestAccDataSourceTencentCloudSqlserverReadonlyGroups(t *testing.T) {
 
 const testAccTencentCloudDataSqlserverReadonlyGroupsBasic = CommonPresetSQLServer + `
 data "tencentcloud_sqlserver_readonly_groups" "test"{
-	master_instance_id = local.sqlserver_id
+  master_instance_id = local.sqlserver_id
 }
 `

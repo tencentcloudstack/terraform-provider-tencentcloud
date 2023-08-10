@@ -8,21 +8,22 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-var testDataSqlserverBackupsName = "data.tencentcloud_sqlserver_backups.test"
+var testDataSqlserverBackupsName = "data.tencentcloud_sqlserver_backups.example"
 
-var now = time.Now().Format("2006-01-02 15:04:05")
-
+// go test -i; go test -test.run TestAccDataSourceTencentCloudSqlserverBackups -v
 func TestAccDataSourceTencentCloudSqlserverBackups(t *testing.T) {
 	t.Parallel()
+	loc, _ := time.LoadLocation("Asia/Chongqing")
+	startTime := time.Now().AddDate(0, 0, -7).In(loc).Format("2006-01-02 15:04:05")
+	endTime := time.Now().AddDate(0, 0, 1).In(loc).Format("2006-01-02 15:04:05")
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckLBDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccTencentCloudDataSqlserverBackupsBasic(),
+				Config: fmt.Sprintf(testAccTencentCloudDataSqlserverBackupsBasic, startTime, endTime),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(testDataSqlserverBackupsName, "end_time", now),
 					resource.TestCheckResourceAttrSet(testDataSqlserverBackupsName, "list.0.start_time"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverBackupsName, "list.0.end_time"),
 					resource.TestCheckResourceAttrSet(testDataSqlserverBackupsName, "list.0.file_name"),
@@ -39,13 +40,10 @@ func TestAccDataSourceTencentCloudSqlserverBackups(t *testing.T) {
 	})
 }
 
-func testAccTencentCloudDataSqlserverBackupsBasic() string {
-	return fmt.Sprintf(`
-%s
-data "tencentcloud_sqlserver_backups" "test"{
-	instance_id = local.sqlserver_id
-	start_time = "2020-06-17 00:00:00"
-	end_time = "%s"
+const testAccTencentCloudDataSqlserverBackupsBasic string = `
+data "tencentcloud_sqlserver_backups" "example" {
+  instance_id = "mssql-qelbzgwf"
+  start_time  = "%s"
+  end_time    = "%s"
 }
-`, CommonPresetSQLServer, now)
-}
+`

@@ -18,16 +18,16 @@ func TestAccTencentCloudSqlserverUploadIncrementalInfoDataSource_basic(t *testin
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSqlserverUploadIncrementalInfoDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_upload_incremental_info.upload_incremental_info")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_upload_incremental_info.example")),
 			},
 		},
 	})
 }
 
 const testAccSqlserverUploadIncrementalInfoDataSource = `
-data "tencentcloud_sqlserver_upload_incremental_info" "upload_incremental_info" {
-  instance_id = "mssql-4tgeyeeh"
-  backup_migration_id = "mssql-backup-migration-83t5u3tv"
+data "tencentcloud_sqlserver_upload_incremental_info" "example" {
+  instance_id              = "mssql-4tgeyeeh"
+  backup_migration_id      = "mssql-backup-migration-83t5u3tv"
   incremental_migration_id = "mssql-incremental-migration-h36gkdxn"
 }
 `

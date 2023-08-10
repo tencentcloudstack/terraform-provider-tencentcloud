@@ -69,7 +69,7 @@ Import
 SQL Server readonly instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_readonly_instance.foo mssqlro-3cdq7kx5
+$ terraform import tencentcloud_sqlserver_readonly_instance.example mssqlro-3cdq7kx5
 ```
 */
 package tencentcloud
@@ -255,7 +255,7 @@ func resourceTencentCloudSqlserverReadonlyInstanceCreate(d *schema.ResourceData,
 	var instanceId string
 	var outErr, inErr error
 
-	outErr = resource.Retry(5*writeRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(12*writeRetryTimeout, func() *resource.RetryError {
 		instanceId, inErr = sqlserverService.CreateSqlserverReadonlyInstance(ctx, request)
 		if inErr != nil {
 			return retryError(inErr)
@@ -269,7 +269,7 @@ func resourceTencentCloudSqlserverReadonlyInstanceCreate(d *schema.ResourceData,
 	d.SetId(instanceId)
 
 	//set name
-	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	outErr = resource.Retry(3*writeRetryTimeout, func() *resource.RetryError {
 		inErr := sqlserverService.ModifySqlserverInstanceName(ctx, instanceId, name)
 		if inErr != nil {
 			return retryError(inErr)
@@ -414,11 +414,6 @@ func resourceTencentCloudSqlserverReadonlyInstanceDelete(d *schema.ResourceData,
 		})
 	}
 
-	if outErr != nil {
-		return outErr
-	}
-
-	outErr = sqlserverService.RecycleDBInstance(ctx, instanceId)
 	if outErr != nil {
 		return outErr
 	}

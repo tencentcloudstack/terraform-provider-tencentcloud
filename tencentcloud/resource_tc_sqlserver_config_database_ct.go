@@ -67,7 +67,7 @@ Import
 sqlserver tencentcloud_sqlserver_config_database_ct can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_config_database_ct.config_database_ct config_database_ct_id
+terraform import tencentcloud_sqlserver_config_database_ct.example mssql-i9ma6oy7#tf_example_db
 ```
 */
 package tencentcloud

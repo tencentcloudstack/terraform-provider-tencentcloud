@@ -32,6 +32,11 @@ func TestAccDataSourceTencentCloudSqlserverAccountDBAttachments_basic(t *testing
 const testAccSQLServerAttachDataDB = "test_db_attachment"
 
 const testAccTencentCloudDataSqlserverAccountDBAttachmentsBasic = CommonPresetSQLServerAccount + `
+data "tencentcloud_sqlserver_account_db_attachments" "test"{
+  instance_id  = local.sqlserver_id
+  account_name = tencentcloud_sqlserver_account_db_attachment.test.account_name
+}
+
 resource "tencentcloud_sqlserver_db" "test" {
   instance_id = local.sqlserver_id
   name        = "` + testAccSQLServerAttachDataDB + `"
@@ -44,9 +49,5 @@ resource "tencentcloud_sqlserver_account_db_attachment" "test" {
   account_name = local.sqlserver_account
   db_name      = tencentcloud_sqlserver_db.test.name
   privilege    = "ReadWrite"
-}
-data "tencentcloud_sqlserver_account_db_attachments" "test"{
-  instance_id  = local.sqlserver_id
-  account_name = tencentcloud_sqlserver_account_db_attachment.test.account_name
 }
 `

@@ -46,7 +46,7 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
   }
 }
 
-resource "tencentcloud_sqlserver_config_instance_security_groups" "config_instance_security_groups" {
+resource "tencentcloud_sqlserver_config_instance_security_groups" "example" {
   instance_id           = tencentcloud_sqlserver_basic_instance.example.id
   security_group_id_set = [tencentcloud_security_group.security_group.id]
 }
@@ -57,7 +57,7 @@ Import
 sqlserver config_instance_security_groups can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_config_instance_security_groups.config_instance_security_groups config_instance_security_groups_id
+terraform import tencentcloud_sqlserver_config_instance_security_groups.example mssql-i9ma6oy7
 ```
 */
 package tencentcloud

@@ -4,8 +4,7 @@ Use this data source to query detailed information of sqlserver datasource_regio
 Example Usage
 
 ```hcl
-data "tencentcloud_sqlserver_regions" "datasource_regions" {
-}
+data "tencentcloud_sqlserver_regions" "example" {}
 ```
 */
 package tencentcloud

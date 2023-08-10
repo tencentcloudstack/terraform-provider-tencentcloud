@@ -26,8 +26,8 @@ func TestAccTencentCloudSqlserverBackupUploadSizeDataSource_basic(t *testing.T) 
 }
 
 const testAccSqlserverBackupUploadSizeDataSource = `
-data "tencentcloud_sqlserver_backup_upload_size" "backup_upload_size" {
-  instance_id = "mssql-4gmc5805"
+data "tencentcloud_sqlserver_backup_upload_size" "example" {
+  instance_id         = "mssql-4gmc5805"
   backup_migration_id = "mssql-backup-migration-9tj0sxnz"
 }
 `

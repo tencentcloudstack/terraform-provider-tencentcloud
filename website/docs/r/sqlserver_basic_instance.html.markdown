@@ -43,9 +43,9 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
   vpc_id                 = tencentcloud_vpc.vpc.id
   subnet_id              = tencentcloud_subnet.subnet.id
   project_id             = 0
-  memory                 = 2
-  storage                = 20
-  cpu                    = 1
+  memory                 = 4
+  storage                = 100
+  cpu                    = 2
   machine_type           = "CLOUD_PREMIUM"
   maintenance_week_set   = [1, 2, 3]
   maintenance_start_time = "09:00"
@@ -99,6 +99,6 @@ In addition to all arguments above, the following attributes are exported:
 SQL Server basic instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_basic_instance.foo mssql-3cdq7kx5
+$ terraform import tencentcloud_sqlserver_basic_instance.example mssql-3cdq7kx5
 ```
 

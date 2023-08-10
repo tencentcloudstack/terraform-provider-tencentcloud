@@ -57,7 +57,7 @@ Import
 sqlserver general_communication can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_general_communication.general_communication general_communication_id
+terraform import tencentcloud_sqlserver_general_communication.example mssql-hlh6yka1
 ```
 */
 package tencentcloud

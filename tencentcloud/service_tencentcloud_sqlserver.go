@@ -430,9 +430,11 @@ func (me *SqlserverService) DescribeSqlserverBackups(ctx context.Context, instan
 	}()
 
 	request.InstanceId = &instanceId
-	request.BackupName = &backupName
 	request.StartTime = &startTime
 	request.EndTime = &endTime
+	if backupName != "" {
+		request.BackupName = &backupName
+	}
 
 	var offset, limit int64 = 0, 20
 
@@ -913,7 +915,7 @@ func (me *SqlserverService) WaitForTaskFinish(ctx context.Context, flowId int64)
 		}
 	}()
 
-	errRet = resource.Retry(4*writeRetryTimeout, func() *resource.RetryError {
+	errRet = resource.Retry(6*writeRetryTimeout, func() *resource.RetryError {
 		taskResponse, err := me.client.UseSqlserverClient().DescribeFlowStatus(request)
 		ratelimit.Check(request.GetAction())
 		if err != nil {

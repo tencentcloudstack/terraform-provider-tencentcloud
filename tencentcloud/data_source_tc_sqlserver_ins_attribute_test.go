@@ -18,8 +18,8 @@ func TestAccTencentCloudSqlserverInsAttributeDataSource_basic(t *testing.T) {
 			{
 				Config: testAccSqlserverDatasourceInsAttributeDataSource,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_ins_attribute.ins_attribute"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_ins_attribute.ins_attribute", "instance_id"),
+					testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_ins_attribute.example"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_ins_attribute.example", "instance_id"),
 				),
 			},
 		},
@@ -27,7 +27,7 @@ func TestAccTencentCloudSqlserverInsAttributeDataSource_basic(t *testing.T) {
 }
 
 const testAccSqlserverDatasourceInsAttributeDataSource = `
-data "tencentcloud_sqlserver_ins_attribute" "ins_attribute" {
+data "tencentcloud_sqlserver_ins_attribute" "example" {
   instance_id = "mssql-gyg9xycl"
 }
 `

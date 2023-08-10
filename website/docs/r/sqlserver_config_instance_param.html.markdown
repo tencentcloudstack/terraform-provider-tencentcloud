@@ -91,6 +91,6 @@ In addition to all arguments above, the following attributes are exported:
 sqlserver config_instance_param can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_config_instance_param.config_instance_param config_instance_param_id
+terraform import tencentcloud_sqlserver_config_instance_param.example config_instance_param
 ```
 

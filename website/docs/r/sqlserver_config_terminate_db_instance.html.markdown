@@ -81,6 +81,6 @@ In addition to all arguments above, the following attributes are exported:
 sqlserver config_terminate_db_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_config_terminate_db_instance.config_terminate_db_instance config_terminate_db_instance_id
+terraform import tencentcloud_sqlserver_config_terminate_db_instance.example mssql-i9ma6oy7
 ```
 

@@ -58,7 +58,7 @@ Import
 sqlserver renew_db_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_renew_db_instance.renew_db_instance renew_db_instance_id
+terraform import tencentcloud_sqlserver_renew_db_instance.example mssql-i9ma6oy7#1
 ```
 */
 package tencentcloud
