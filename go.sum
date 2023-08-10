@@ -808,6 +808,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544 h1:
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544/go.mod h1:c37rIdL3LrJXYwrfp9c8L4MabTqKIZUe1xvnWhN75oc=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.663 h1:onri8SDXzJDoKdPLmHAlhJD5xSrsWU34QoOojETi2Q0=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.663/go.mod h1:XggTRb+tL9pGw3sZD8Ckj21sfFo1a+2vGUkE8gCUzuM=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711 h1:v6ffPkv3kmT6bC0d3JLVVJsh61zdvaLJZ5RHwmKNBHk=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711/go.mod h1:oArXkl0Gm9hpK+mfoIjSGEuG8FLkcOAEeB0LfyIQq/Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.358/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.409/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.414/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
@@ -865,6 +867,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.708 h1:Clf9
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.708/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.709 h1:6/LzThHnNWX0Yt5W492qd553TPIN2+31nLlf1arZjwA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.709/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.711/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.713 h1:PpuFzN1NwyrCt5ioFwLIPHHlRmRdK3bEFhKbF7X1KlI=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.713/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
