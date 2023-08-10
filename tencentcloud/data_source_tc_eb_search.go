@@ -4,25 +4,60 @@ Use this data source to query detailed information of eb eb_search
 Example Usage
 
 ```hcl
-data "tencentcloud_eb_search" "eb_search" {
-  start_time =
-  end_time =
-  event_bus_id = ""
-  group_field = ""
-  filter {
-		key = ""
-		operator = ""
-		value = ""
-		type = ""
-		filters {
-			key = ""
-			operator = ""
-			value = ""
-		}
+resource "tencentcloud_eb_event_bus" "foo" {
+  event_bus_name = "tf-event_bus"
+  description    = "event bus desc"
+  enable_store   = false
+  save_days      = 1
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_eb_put_events" "put_events" {
+  event_list {
+    source = "ckafka.cloud.tencent"
+    data = jsonencode(
+      {
+        "topic" : "test-topic",
+        "Partition" : 1,
+        "offset" : 37,
+        "msgKey" : "test",
+        "msgBody" : "Hello from Ckafka again!"
+      }
+    )
+    type    = "connector:ckafka"
+    subject = "qcs::ckafka:ap-guangzhou:uin/1250000000:ckafkaId/uin/1250000000/ckafka-123456"
+    time    = 1691572461939
 
   }
-  order_fields =
-  order_by = ""
+  event_bus_id = tencentcloud_eb_event_bus.foo.id
+}
+
+data "tencentcloud_eb_search" "eb_search" {
+  start_time   = 1691637288422
+  end_time     = 1691648088422
+  event_bus_id = "eb-jzytzr4e"
+  group_field = "RuleIds"
+  filter {
+  	type = "OR"
+  	filters {
+  		key = "status"
+  		operator = "eq"
+  		value = "1"
+  	}
+  }
+
+  filter {
+  	type = "OR"
+  	filters {
+  		key = "type"
+  		operator = "eq"
+  		value = "connector:ckafka"
+  	}
+  }
+  # order_fields = [""]
+  order_by = "desc"
 }
 ```
 */
@@ -61,9 +96,9 @@ func dataSourceTencentCloudEbSearch() *schema.Resource {
 			},
 
 			"group_field": {
-				Required:    true,
+				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "aggregate field.",
+				Description: "aggregate field, When querying the log index dimension value, you must enter.",
 			},
 
 			"filter": {
@@ -126,13 +161,13 @@ func dataSourceTencentCloudEbSearch() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
-				Description: "sort array.",
+				Description: "sort array, take effect when the log is retrieved.",
 			},
 
 			"order_by": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Sort by, asc from old to new, desc from new to old.",
+				Description: "Sort by, asc from old to new, desc from new to old, take effect when the log is retrieved.",
 			},
 
 			"dimension_values": {
@@ -276,7 +311,7 @@ func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}
 			}
 			tmpSet = append(tmpSet, &logFilter)
 		}
-		paramMap["filter"] = tmpSet
+		paramMap["Filter"] = tmpSet
 	}
 
 	if v, ok := d.GetOk("order_fields"); ok {
@@ -290,25 +325,27 @@ func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}
 
 	service := EbService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var searchResults []*string
-	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		response, e := service.DescribeEbSearchByFilter(ctx, paramMap)
-		if e != nil {
-			return retryError(e)
+	if groupField != "" {
+		var searchResults []*string
+		err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			response, e := service.DescribeEbSearchByFilter(ctx, paramMap)
+			if e != nil {
+				return retryError(e)
+			}
+			searchResults = response
+			return nil
+		})
+		if err != nil {
+			return err
 		}
-		searchResults = response
-		return nil
-	})
-	if err != nil {
-		return err
-	}
 
-	if searchResults != nil {
-		_ = d.Set("dimension_values", searchResults)
+		if searchResults != nil {
+			_ = d.Set("dimension_values", searchResults)
+		}
 	}
 
 	var results []*eb.SearchLogResult
-	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		response, e := service.DescribeEbSearchLogByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
@@ -363,7 +400,7 @@ func dataSourceTencentCloudEbSearchRead(d *schema.ResourceData, meta interface{}
 		_ = d.Set("results", tmpList)
 	}
 
-	d.SetId(helper.DataResourceIdsHash([]string{startTime, endTime, eventBusId, groupField}))
+	d.SetId(helper.DataResourceIdsHash([]string{startTime, endTime, eventBusId}))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), d); e != nil {

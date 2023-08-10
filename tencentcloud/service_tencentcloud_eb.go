@@ -362,3 +362,57 @@ func (me *EbService) DeleteEbEventTransformById(ctx context.Context, eventBusId 
 
 	return
 }
+
+func (me *EbService) DescribeEbBusByFilter(ctx context.Context, param map[string]interface{}) (bus []*eb.EventBus, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewListEventBusesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*eb.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEbClient().ListEventBuses(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.EventBuses) < 1 {
+			break
+		}
+		bus = append(bus, response.Response.EventBuses...)
+		if len(response.Response.EventBuses) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
