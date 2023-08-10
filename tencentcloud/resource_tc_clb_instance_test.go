@@ -69,7 +69,7 @@ func testSweepClbInstance(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudClbInstance_basic(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -97,7 +97,7 @@ func TestAccTencentCloudClbInstance_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbInstance_open(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_open(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -138,7 +138,7 @@ func TestAccTencentCloudClbInstance_open(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbInstance_snat(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_snat(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -159,7 +159,7 @@ func TestAccTencentCloudClbInstance_snat(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbInstance_internal(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_internal(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -214,7 +214,7 @@ func TestAccTencentCloudClbInstance_internal(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbInstance_default_enable(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_default_enable(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -256,7 +256,7 @@ func TestAccTencentCloudClbInstance_default_enable(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbInstance_multiple_instance(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_multiple_instance(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
