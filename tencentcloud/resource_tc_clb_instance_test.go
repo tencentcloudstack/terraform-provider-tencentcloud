@@ -69,7 +69,7 @@ func testSweepClbInstance(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudClbInstance_basic(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_basic(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -97,7 +97,7 @@ func TestAccTencentCloudClbInstance_basic(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbInstance_open(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_open(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -138,7 +138,7 @@ func TestAccTencentCloudClbInstance_open(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbInstance_snat(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_snat(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -159,7 +159,7 @@ func TestAccTencentCloudClbInstance_snat(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbInstance_internal(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_internal(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -192,16 +192,29 @@ func TestAccTencentCloudClbInstance_internal(t *testing.T) {
 				),
 			},
 			{
+				Config: testAccClbInstance_updateRecover,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbInstanceExists("tencentcloud_clb_instance.clb_internal"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "clb_name", InternalClbNameUpdate),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "network_type", "INTERNAL"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "project_id", "0"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_internal", "vpc_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_internal", "subnet_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_instance.clb_internal", "delete_protect"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_instance.clb_internal", "tags.test", "test"),
+				),
+			},
+			{
 				ResourceName:            "tencentcloud_clb_instance.clb_internal",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"dynamic_vip"},
+				ImportStateVerifyIgnore: []string{"dynamic_vip", "delete_protect"},
 			},
 		},
 	})
 }
 
-func TestAccTencentCloudClbInstance_default_enable(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_default_enable(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -243,7 +256,7 @@ func TestAccTencentCloudClbInstance_default_enable(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudClbInstance_multiple_instance(t *testing.T) {
+func TestAccTencentCloudClbInstanceResource_multiple_instance(t *testing.T) {
 	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
@@ -431,7 +444,7 @@ resource "tencentcloud_vpc" "foo" {
 
 resource "tencentcloud_subnet" "subnet" {
   availability_zone = var.availability_zone
-  name              = "guagua-ci-temp-test"
+  name              = "tf-example-subnet-inc"
   vpc_id            = tencentcloud_vpc.foo.id
   cidr_block        = "10.0.20.0/28"
   is_multicast      = false
@@ -443,13 +456,42 @@ resource "tencentcloud_clb_instance" "clb_internal" {
   vpc_id       = tencentcloud_vpc.foo.id
   subnet_id    = tencentcloud_subnet.subnet.id
   project_id   = 0
-
+  delete_protect = true
   tags = {
     test = "test"
   }
 }
 `
+const testAccClbInstance_updateRecover = `
+variable "availability_zone" {
+  default = "ap-guangzhou-3"
+}
 
+resource "tencentcloud_vpc" "foo" {
+  name       = "clb-instance-internal-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  availability_zone = var.availability_zone
+  name              = "tf-example-subnet-inc"
+  vpc_id            = tencentcloud_vpc.foo.id
+  cidr_block        = "10.0.20.0/28"
+  is_multicast      = false
+}
+
+resource "tencentcloud_clb_instance" "clb_internal" {
+  network_type = "INTERNAL"
+  clb_name     = "` + InternalClbNameUpdate + `"
+  vpc_id       = tencentcloud_vpc.foo.id
+  subnet_id    = tencentcloud_subnet.subnet.id
+  project_id   = 0
+  delete_protect = false
+  tags = {
+    test = "test"
+  }
+}
+`
 const testAccClbInstance_update_open = `
 resource "tencentcloud_security_group" "foo" {
   name = "clb-instance-sg"
