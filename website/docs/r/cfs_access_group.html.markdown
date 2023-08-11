@@ -40,6 +40,6 @@ In addition to all arguments above, the following attributes are exported:
 CFS access group can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cfs_access_group.foo pgroup-7nx89k7l
+$ terraform import tencentcloud_cfs_access_group.example pgroup-7nx89k7l
 ```
 
