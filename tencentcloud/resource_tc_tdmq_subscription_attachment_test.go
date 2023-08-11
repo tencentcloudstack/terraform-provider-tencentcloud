@@ -3,6 +3,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"strings"
 	"testing"
 
@@ -23,11 +24,11 @@ func TestAccTencentCloudTdmqSubscriptionAttachmentResource_basic(t *testing.T) {
 			{
 				Config: testAccTdmqSubscriptionAttachment,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_subscription_attachment.subscription_attachment", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_subscription_attachment.example", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_tdmq_subscription_attachment.subscription_attachment",
+				ResourceName:      "tencentcloud_tdmq_subscription_attachment.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -58,6 +59,11 @@ func testAccCheckTdmqSubscriptionAttachmentDestroy(s *terraform.State) error {
 		response, err := service.DescribeTdmqSubscriptionAttachmentById(ctx, environmentId, Topic, subscriptionName, clusterId)
 
 		if err != nil {
+			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkerr.Code == "ResourceNotFound.Cluster" {
+					return nil
+				}
+			}
 			return err
 		}
 
@@ -93,7 +99,7 @@ resource "tencentcloud_tdmq_topic" "example" {
   environ_id        = tencentcloud_tdmq_namespace.example.environ_name
   cluster_id        = tencentcloud_tdmq_instance.example.id
   topic_name        = "tf-example-topic"
-  partitions        = 6
+  partitions        = 1
   pulsar_topic_type = 3
   remark            = "remark."
 }
