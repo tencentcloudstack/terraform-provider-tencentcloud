@@ -4,9 +4,9 @@ Provides a resource to create a CFS access group.
 Example Usage
 
 ```hcl
-resource "tencentcloud_cfs_access_group" "foo" {
-  name        = "test_access_group"
-  description = "test"
+resource "tencentcloud_cfs_access_group" "example" {
+  name        = "tx_example"
+  description = "desc."
 }
 ```
 
