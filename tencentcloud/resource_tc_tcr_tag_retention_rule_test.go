@@ -142,7 +142,7 @@ func testAccCheckTCRTagRetentionRuleExists(re string) resource.TestCheckFunc {
 const testAccTCRInstance_retention = `
 resource "tencentcloud_tcr_instance" "mytcr_retention" {
   name        = "tf-test-tcr-retention-%s"
-  instance_type = "basic"
+  instance_type = "premium"
   delete_bucket = true
 
   tags ={

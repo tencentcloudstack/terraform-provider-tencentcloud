@@ -67,7 +67,7 @@ const testAccTcrServiceAccount = `
 
 resource "tencentcloud_tcr_instance" "example" {
 	name          = "tf-example-tcr-instance"
-	instance_type = "basic"
+	instance_type = "premium"
 	delete_bucket = true
 	tags = {
 	  "createdBy" = "terraform"
@@ -107,7 +107,7 @@ const testAccTcrServiceAccount_Update = `
 
 resource "tencentcloud_tcr_instance" "example" {
 	name          = "tf-example-tcr-instance"
-	instance_type = "basic"
+	instance_type = "premium"
 	delete_bucket = true
 	tags = {
 	  "createdBy" = "terraform"
