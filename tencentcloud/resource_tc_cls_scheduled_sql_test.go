@@ -3,9 +3,10 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"testing"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudClsScheduledSqlResource_basic -v
