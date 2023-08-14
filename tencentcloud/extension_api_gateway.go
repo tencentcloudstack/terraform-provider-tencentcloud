@@ -7,7 +7,7 @@ const (
 )
 
 const (
-	QUOTA     = -1
+	QUOTA     = 0
 	QUOTA_MAX = 5000
 )
 
