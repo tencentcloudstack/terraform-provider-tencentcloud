@@ -315,3 +315,62 @@ func (me *SSLService) checkCertificateType(ctx context.Context, certId string, c
 	}
 
 }
+
+func (me *SslService) DescribeSslManagersByFilter(ctx context.Context, param map[string]interface{}) (managers []*ssl.ManagerInfo, errRet error) {
+	client := me.client.UseSSLCertificateClient()
+	logId := getLogId(ctx)
+	request := ssl.NewDescribeManagersRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CompanyId" {
+			request.CompanyId = v.(*int64)
+		}
+		if k == "ManagerName" {
+			request.ManagerName = v.(*string)
+		}
+		if k == "ManagerMail" {
+			request.ManagerMail = v.(*string)
+		}
+		if k == "Status" {
+			request.Status = v.(*string)
+		}
+		if k == "SearchKey" {
+			request.SearchKey = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := client.DescribeManagers(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Managers) < 1 {
+			break
+		}
+		managers = append(managers, response.Response.Managers...)
+		if len(response.Response.Managers) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

@@ -870,6 +870,7 @@ SQLServer
 SSL Certificates
   Data Source
     tencentcloud_ssl_certificates
+    tencentcloud_ssl_managers
 
   Resource
     tencentcloud_ssl_certificate
@@ -2232,6 +2233,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
 			"tencentcloud_eb_search":                                 dataSourceTencentCloudEbSearch(),
 			"tencentcloud_eb_bus":                                    dataSourceTencentCloudEbBus(),
+			"tencentcloud_ssl_managers":                              dataSourceTencentCloudSslManagers(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
