@@ -876,6 +876,7 @@ SSL Certificates
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
 	tencentcloud_ssl_free_certificate
+    tencentcloud_ssl_revoke_certificate_operation
 
 Secrets Manager(SSM)
   Data Source
@@ -2473,6 +2474,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_certificate":                                     resourceTencentCloudSslCertificate(),
 			"tencentcloud_ssl_pay_certificate":                                 resourceTencentCloudSSLInstance(),
 			"tencentcloud_ssl_free_certificate":                                resourceTencentCloudSSLFreeCertificate(),
+			"tencentcloud_ssl_revoke_certificate_operation":                    resourceTencentCloudSslRevokeCertificateOperation(),
 			"tencentcloud_cam_role":                                            resourceTencentCloudCamRole(),
 			"tencentcloud_cam_role_by_name":                                    resourceTencentCloudCamRoleByName(),
 			"tencentcloud_cam_user":                                            resourceTencentCloudCamUser(),
