@@ -192,7 +192,7 @@ func resourceTencentCloudDayuL7RuleUpdateV2(d *schema.ResourceData, meta interfa
 	extendParams := make(map[string]interface{})
 	extendParams["domain"] = domain
 	extendParams["protocol"] = protocol
-	rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, 0, 10, extendParams)
+	rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, extendParams)
 	if err != nil {
 		return err
 	}
@@ -278,11 +278,9 @@ func resourceTencentCloudDayuL7RuleReadV2(d *schema.ResourceData, meta interface
 	extendParams := make(map[string]interface{})
 	extendParams["domain"] = domain
 	extendParams["protocol"] = protocol
-	offset := 0
-	limit := 10
 	dayuService := DayuService{client: meta.(*TencentCloudClient).apiV3Conn}
 	for {
-		rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, offset, limit, extendParams)
+		rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, extendParams)
 		if err != nil {
 			return err
 		}
@@ -318,7 +316,7 @@ func resourceTencentCloudDayuL7RuleDeleteV2(d *schema.ResourceData, meta interfa
 	extendParams := make(map[string]interface{})
 	extendParams["domain"] = domain
 	extendParams["protocol"] = protocol
-	rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, 0, 10, extendParams)
+	rules, _, err := dayuService.DescribeL7RulesV2(ctx, business, extendParams)
 	if err != nil {
 		return err
 	}

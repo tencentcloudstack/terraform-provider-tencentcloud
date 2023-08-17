@@ -205,16 +205,16 @@ func dataSourceTencentCloudDayuL7RulesReadV2(d *schema.ResourceData, meta interf
 	}
 
 	business := d.Get("business").(string)
-	offset := d.Get("offset").(int)
-	limit := d.Get("limit").(int)
 	domain := d.Get("domain").(string)
 	protocol := d.Get("protocol").(string)
+	ip := d.Get("ip").(string)
 
 	extendParams := make(map[string]interface{})
 	extendParams["domain"] = domain
 	extendParams["protocol"] = protocol
+	extendParams["ip"] = ip
 
-	rules, _, err := service.DescribeL7RulesV2(ctx, business, offset, limit, extendParams)
+	rules, _, err := service.DescribeL7RulesV2(ctx, business, extendParams)
 	if err != nil {
 		return err
 	}
