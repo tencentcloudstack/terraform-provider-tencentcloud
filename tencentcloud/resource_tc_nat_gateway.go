@@ -384,10 +384,14 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 				}
 
 				if len(unassignedRequest.PublicIpAddresses) > 0 {
+					var response *vpc.DisassociateNatGatewayAddressResponseParams
 					err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-						e := vpcService.DisassociateNatGatewayAddress(ctx, unassignedRequest)
+						result, e := vpcService.DisassociateNatGatewayAddress(ctx, unassignedRequest)
 						if e != nil {
 							return retryError(e)
+						}
+						if result != nil && result.Response != nil {
+							response = result.Response
 						}
 						return nil
 					})
@@ -395,9 +399,16 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 						return err
 					}
+
+					if response != nil && response.RequestId != nil {
+						err = vpcService.DescribeVpcTaskResult(ctx, response.RequestId)
+						if err != nil {
+							return err
+						}
+					}
 				}
 			}
-			time.Sleep(3 * time.Minute)
+
 			//Assign new EIP
 			if len(newEipSet) > 0 {
 				assignedRequest := vpc.NewAssociateNatGatewayAddressRequest()
@@ -421,12 +432,16 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					}
 				}
 				if len(assignedRequest.PublicIpAddresses) > 0 {
+					var response *vpc.AssociateNatGatewayAddressResponseParams
 					err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-						_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
+						result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
 						if e != nil {
 							log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 								logId, assignedRequest.GetAction(), assignedRequest.ToJsonString(), e.Error())
 							return retryError(e)
+						}
+						if result != nil && result.Response != nil {
+							response = result.Response
 						}
 						return nil
 					})
@@ -434,18 +449,29 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 						return err
 					}
+
+					if response != nil && response.RequestId != nil {
+						err = vpcService.DescribeVpcTaskResult(ctx, response.RequestId)
+						if err != nil {
+							return err
+						}
+					}
 				}
 			}
-			time.Sleep(3 * time.Minute)
+
 			if backUpOldIp != "" {
 				//disassociate one old ip
+				var response *vpc.DisassociateNatGatewayAddressResponseParams
 				unassignedRequest := vpc.NewDisassociateNatGatewayAddressRequest()
 				unassignedRequest.NatGatewayId = &natGatewayId
 				unassignedRequest.PublicIpAddresses = []*string{&backUpOldIp}
 				err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-					e := vpcService.DisassociateNatGatewayAddress(ctx, unassignedRequest)
+					result, e := vpcService.DisassociateNatGatewayAddress(ctx, unassignedRequest)
 					if e != nil {
 						return retryError(e)
+					}
+					if result != nil && result.Response != nil {
+						response = result.Response
 					}
 					return nil
 				})
@@ -453,24 +479,40 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 					return err
 				}
+				if response != nil && response.RequestId != nil {
+					err = vpcService.DescribeVpcTaskResult(ctx, response.RequestId)
+					if err != nil {
+						return err
+					}
+				}
 			}
 			if backUpNewIp != "" {
 				//associate one new ip
+				var response *vpc.AssociateNatGatewayAddressResponseParams
 				assignedRequest := vpc.NewAssociateNatGatewayAddressRequest()
 				assignedRequest.NatGatewayId = &natGatewayId
 				assignedRequest.PublicIpAddresses = []*string{&backUpNewIp}
 				err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-					_, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().AssociateNatGatewayAddress(assignedRequest)
 					if e != nil {
 						log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 							logId, assignedRequest.GetAction(), assignedRequest.ToJsonString(), e.Error())
 						return retryError(e)
 					}
+					if result != nil && result.Response != nil {
+						response = result.Response
+					}
 					return nil
 				})
 				if err != nil {
 					log.Printf("[CRITAL]%s modify NAT gateway EIP failed, reason:%s\n", logId, err.Error())
 					return err
+				}
+				if response != nil && response.RequestId != nil {
+					err = vpcService.DescribeVpcTaskResult(ctx, response.RequestId)
+					if err != nil {
+						return err
+					}
 				}
 			}
 		}
@@ -493,7 +535,7 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 
 	d.Partial(false)
 
-	return nil
+	return resourceTencentCloudNatGatewayRead(d, meta)
 }
 
 func resourceTencentCloudNatGatewayDelete(d *schema.ResourceData, meta interface{}) error {

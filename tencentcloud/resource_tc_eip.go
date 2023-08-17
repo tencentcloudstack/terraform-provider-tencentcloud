@@ -437,7 +437,7 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		errRet := vpcService.DeleteEip(ctx, eipId)
 		if errRet != nil {
-			return retryError(errRet, "DesOperation.MutexTaskRunning")
+			return retryError(errRet, "DesOperation.MutexTaskRunning", "OperationDenied.MutexTaskRunning")
 		}
 		return nil
 	})
@@ -470,7 +470,7 @@ func resourceTencentCloudEipDelete(d *schema.ResourceData, meta interface{}) err
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			errRet := vpcService.DeleteEip(ctx, eipId)
 			if errRet != nil {
-				return retryError(errRet, "DesOperation.MutexTaskRunning")
+				return retryError(errRet, "DesOperation.MutexTaskRunning", "OperationDenied.MutexTaskRunning")
 			}
 			return nil
 		})
