@@ -43,6 +43,7 @@ func TestAccTencentCloudCcnV3AttachmentBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(keyNameVpngw, "state"),
 					resource.TestCheckResourceAttrSet(keyNameVpngw, "attached_time"),
 					resource.TestCheckResourceAttrSet(keyNameVpngw, "cidr_block.#"),
+					resource.TestCheckResourceAttrSet(keyNameVpngw, "route_ids.#"),
 				),
 			},
 		},
