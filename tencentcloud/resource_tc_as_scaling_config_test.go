@@ -107,6 +107,9 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "public_ip_assigned", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_security_service", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_monitor_service", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.0.host_name", "host-name"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.0.host_name_style", "ORIGINAL"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "user_data", "test"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_tags.tag", "as"),
 				),
@@ -129,6 +132,9 @@ func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_security_service", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "enhanced_monitor_service", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "user_data", "dGVzdA=="),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.0.host_name", "host-name-test"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "host_name_settings.0.host_name_style", "UNIQUE"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_tags.tag", "as"),
 					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.launch_configuration", "instance_tags.test", "update"),
 				),
@@ -252,6 +258,11 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   enhanced_security_service  = false
   enhanced_monitor_service   = false
   user_data                  = "test"
+
+  host_name_settings {
+	host_name       = "host-name"
+	host_name_style = "ORIGINAL"
+  }
   
   instance_tags = {
     tag = "as"
@@ -283,6 +294,11 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
   enhanced_security_service  = true
   enhanced_monitor_service   = true
   user_data                  = "dGVzdA=="
+
+  host_name_settings {
+	host_name       = "host-name-test"
+	host_name_style = "UNIQUE"
+  }
   
   instance_tags = {
     tag  = "as"
