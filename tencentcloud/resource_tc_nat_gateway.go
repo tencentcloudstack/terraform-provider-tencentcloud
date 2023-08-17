@@ -406,9 +406,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						if err != nil {
 							return err
 						}
-					} else {
-						log.Printf("[CRITAL]%s NAT gateway EIP task failed, task id is null\n", logId)
-						return err
 					}
 				}
 			}
@@ -459,9 +456,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 						if err != nil {
 							return err
 						}
-					} else {
-						log.Printf("[CRITAL]%s NAT gateway EIP task failed, task id is null\n", logId)
-						return err
 					}
 				}
 			}
@@ -491,9 +485,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					if err != nil {
 						return err
 					}
-				} else {
-					log.Printf("[CRITAL]%s NAT gateway EIP task failed, task id is null\n", logId)
-					return err
 				}
 			}
 			if backUpNewIp != "" {
@@ -523,9 +514,6 @@ func resourceTencentCloudNatGatewayUpdate(d *schema.ResourceData, meta interface
 					if err != nil {
 						return err
 					}
-				} else {
-					log.Printf("[CRITAL]%s NAT gateway EIP task failed, task id is null\n", logId)
-					return err
 				}
 			}
 		}
