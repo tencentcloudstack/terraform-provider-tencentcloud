@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_tdmq_rocketmq_vip_instance: Cancel import
+```
+
+```release-note:enhancement
+resource/tencentcloud_tdmq_namespace: Update `retention_policy` Parameters
+```

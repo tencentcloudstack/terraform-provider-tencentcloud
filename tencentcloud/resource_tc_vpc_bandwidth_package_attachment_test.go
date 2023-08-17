@@ -56,7 +56,7 @@ func testAccCheckBandwidthPackageAttachmentDestroy(s *terraform.State) error {
 			if !ok {
 				return err
 			}
-			fmt.Print(ee)
+
 			if ee.Code == "InvalidParameterValue.BandwidthPackageNotFound" {
 				return nil
 			} else {

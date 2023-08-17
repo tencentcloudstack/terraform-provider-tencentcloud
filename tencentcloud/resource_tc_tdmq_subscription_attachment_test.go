@@ -6,6 +6,8 @@ import (
 	"strings"
 	"testing"
 
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
@@ -23,11 +25,11 @@ func TestAccTencentCloudTdmqSubscriptionAttachmentResource_basic(t *testing.T) {
 			{
 				Config: testAccTdmqSubscriptionAttachment,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_subscription_attachment.subscription_attachment", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tdmq_subscription_attachment.example", "id"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_tdmq_subscription_attachment.subscription_attachment",
+				ResourceName:      "tencentcloud_tdmq_subscription_attachment.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -58,6 +60,11 @@ func testAccCheckTdmqSubscriptionAttachmentDestroy(s *terraform.State) error {
 		response, err := service.DescribeTdmqSubscriptionAttachmentById(ctx, environmentId, Topic, subscriptionName, clusterId)
 
 		if err != nil {
+			if sdkerr, ok := err.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkerr.Code == "ResourceNotFound.Cluster" {
+					return nil
+				}
+			}
 			return err
 		}
 
@@ -70,12 +77,40 @@ func testAccCheckTdmqSubscriptionAttachmentDestroy(s *terraform.State) error {
 }
 
 const testAccTdmqSubscriptionAttachment = `
-resource "tencentcloud_tdmq_subscription_attachment" "subscription_attachment" {
-  environment_id           = "keep-ns"
-  topic_name               = "keep-topic"
-  subscription_name        = "test-subcription"
-  remark                   = "test"
-  cluster_id               = "pulsar-9n95ax58b9vn"
+resource "tencentcloud_tdmq_instance" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
+  tags         = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_tdmq_namespace" "example" {
+  environ_name = "tf_example"
+  msg_ttl      = 300
+  cluster_id   = tencentcloud_tdmq_instance.example.id
+  retention_policy {
+    time_in_minutes = 60
+    size_in_mb      = 10
+  }
+  remark = "remark."
+}
+
+resource "tencentcloud_tdmq_topic" "example" {
+  environ_id        = tencentcloud_tdmq_namespace.example.environ_name
+  cluster_id        = tencentcloud_tdmq_instance.example.id
+  topic_name        = "tf-example-topic"
+  partitions        = 1
+  pulsar_topic_type = 3
+  remark            = "remark."
+}
+
+resource "tencentcloud_tdmq_subscription_attachment" "example" {
+  environment_id           = tencentcloud_tdmq_namespace.example.environ_name
+  cluster_id               = tencentcloud_tdmq_instance.example.id
+  topic_name               = tencentcloud_tdmq_topic.example.topic_name
+  subscription_name        = "tf-example-subcription"
+  remark                   = "remark."
   auto_create_policy_topic = true
 }
 `

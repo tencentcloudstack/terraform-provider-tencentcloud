@@ -11,7 +11,7 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudSqlserverGeneralBackupResource_basic -v
+// go test -i; go test -test.run TestAccTencentCloudSqlserverGeneralBackupResource_basic -v -timeout=0
 func TestAccTencentCloudSqlserverGeneralBackupResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -27,7 +27,7 @@ func TestAccTencentCloudSqlserverGeneralBackupResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_sqlserver_general_backup.general_backup",
+				ResourceName:      "tencentcloud_sqlserver_general_backup.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -147,8 +147,15 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
   }
 }
 
-resource "tencentcloud_sqlserver_general_backup" "example" {
+resource "tencentcloud_sqlserver_db" "example" {
   instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_db"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "test-remark"
+}
+
+resource "tencentcloud_sqlserver_general_backup" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
   backup_name = "tf_example_backup"
   strategy    = 0
 }
@@ -180,8 +187,15 @@ resource "tencentcloud_sqlserver_basic_instance" "example" {
   }
 }
 
-resource "tencentcloud_sqlserver_general_backup" "example" {
+resource "tencentcloud_sqlserver_db" "example" {
   instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  name        = "tf_example_db"
+  charset     = "Chinese_PRC_BIN"
+  remark      = "test-remark"
+}
+
+resource "tencentcloud_sqlserver_general_backup" "example" {
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
   backup_name = "tf_example_backup_update"
   strategy    = 0
 }

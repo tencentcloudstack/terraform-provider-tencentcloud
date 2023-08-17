@@ -17,13 +17,12 @@ func TestAccTencentCloudSqlserverRegionsDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSqlserverRegionsDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_regions.datasource_regions")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_regions.example")),
 			},
 		},
 	})
 }
 
 const testAccSqlserverRegionsDataSource = `
-data "tencentcloud_sqlserver_regions" "datasource_regions" {
-}
+data "tencentcloud_sqlserver_regions" "example" {}
 `

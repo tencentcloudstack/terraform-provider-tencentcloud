@@ -60,7 +60,7 @@ Import
 SQL Server DB can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_db.foo mssql-3cdq7kx5#db_name
+$ terraform import tencentcloud_sqlserver_db.example mssql-3cdq7kx5#tf_example_db
 ```
 */
 package tencentcloud

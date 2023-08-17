@@ -187,6 +187,7 @@ The following arguments are supported:
 * `network_type` - (Required, String, ForceNew) Type of CLB instance. Valid values: `OPEN` and `INTERNAL`.
 * `address_ip_version` - (Optional, String) IP version, only applicable to open CLB. Valid values are `ipv4`, `ipv6` and `IPv6FullChain`.
 * `bandwidth_package_id` - (Optional, String) Bandwidth package id. If set, the `internet_charge_type` must be `BANDWIDTH_PACKAGE`.
+* `delete_protect` - (Optional, Bool) Whether to enable delete protection.
 * `dynamic_vip` - (Optional, Bool) If create dynamic vip CLB instance, `true` or `false`.
 * `internet_bandwidth_max_out` - (Optional, Int) Max bandwidth out, only applicable to open CLB. Valid value ranges is [1, 2048]. Unit is MB.
 * `internet_charge_type` - (Optional, String) Internet charge type, only applicable to open CLB. Valid values are `TRAFFIC_POSTPAID_BY_HOUR`, `BANDWIDTH_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.

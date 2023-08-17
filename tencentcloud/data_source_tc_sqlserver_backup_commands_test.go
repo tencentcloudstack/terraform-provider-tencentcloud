@@ -18,7 +18,7 @@ func TestAccTencentCloudSqlserverBackupCommands_basic(t *testing.T) {
 			{
 				Config: testAccSqlserverBackupCommands,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_backup_commands.backup_command", "list.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_sqlserver_backup_commands.example", "list.#"),
 				),
 			},
 		},
@@ -26,10 +26,9 @@ func TestAccTencentCloudSqlserverBackupCommands_basic(t *testing.T) {
 }
 
 const testAccSqlserverBackupCommands = `
-data "tencentcloud_sqlserver_backup_commands" "backup_command" {
+data "tencentcloud_sqlserver_backup_commands" "example" {
   backup_file_type = "FULL"
-  data_base_name = "keep-publish-instance"
-  is_recovery = "NO"
-  local_path = ""
+  data_base_name   = "keep-publish-instance"
+  is_recovery      = "NO"
 }
 `

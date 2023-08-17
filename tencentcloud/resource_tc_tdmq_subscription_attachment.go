@@ -4,12 +4,40 @@ Provides a resource to create a tdmq subscription_attachment
 Example Usage
 
 ```hcl
-resource "tencentcloud_tdmq_subscription_attachment" "subscription_attachment" {
-  environment_id           = "keep-ns"
-  topic_name               = "keep-topic"
-  subscription_name        = "test-subcription"
-  remark                   = "test"
-  cluster_id               = "pulsar-9n95ax58b9vn"
+resource "tencentcloud_tdmq_instance" "example" {
+  cluster_name = "tf_example"
+  remark       = "remark."
+  tags         = {
+    "createdBy" = "terraform"
+  }
+}
+
+resource "tencentcloud_tdmq_namespace" "example" {
+  environ_name = "tf_example"
+  msg_ttl      = 300
+  cluster_id   = tencentcloud_tdmq_instance.example.id
+  retention_policy {
+    time_in_minutes = 60
+    size_in_mb      = 10
+  }
+  remark = "remark."
+}
+
+resource "tencentcloud_tdmq_topic" "example" {
+  environ_id        = tencentcloud_tdmq_namespace.example.environ_name
+  cluster_id        = tencentcloud_tdmq_instance.example.id
+  topic_name        = "tf-example-topic"
+  partitions        = 6
+  pulsar_topic_type = 3
+  remark            = "remark."
+}
+
+resource "tencentcloud_tdmq_subscription_attachment" "example" {
+  environment_id           = tencentcloud_tdmq_namespace.example.environ_name
+  cluster_id               = tencentcloud_tdmq_instance.example.id
+  topic_name               = tencentcloud_tdmq_topic.example.topic_name
+  subscription_name        = "tf-example-subcription"
+  remark                   = "remark."
   auto_create_policy_topic = true
 }
 ```

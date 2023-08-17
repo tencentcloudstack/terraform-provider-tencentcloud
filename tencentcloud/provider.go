@@ -1101,8 +1101,11 @@ Cloud Log Service(CLS)
 	tencentcloud_cls_alarm
 	tencentcloud_cls_alarm_notice
 	tencentcloud_cls_ckafka_consumer
+	tencentcloud_cls_kafka_recharge
 	tencentcloud_cls_cos_recharge
 	tencentcloud_cls_export
+	tencentcloud_cls_scheduled_sql
+	tencentcloud_cls_data_transform
 
   Data Source
 	tencentcloud_cls_shipper_tasks
@@ -1158,26 +1161,16 @@ TencentCloud Elastic Microservice(TEM)
 TencentCloud EdgeOne(TEO)
   Data Source
 	tencentcloud_teo_zone_available_plans
-	tencentcloud_teo_bot_managed_rules
-	tencentcloud_teo_bot_portrait_rules
 	tencentcloud_teo_rule_engine_settings
-	tencentcloud_teo_security_policy_regions
-	tencentcloud_teo_waf_rule_groups
-	tencentcloud_teo_zone_ddos_policy
 
   Resource
 	tencentcloud_teo_zone
 	tencentcloud_teo_zone_setting
-	tencentcloud_teo_dns_record
-	tencentcloud_teo_dns_sec
-	tencentcloud_teo_load_balancing
 	tencentcloud_teo_origin_group
 	tencentcloud_teo_rule_engine
 	tencentcloud_teo_rule_engine_priority
 	tencentcloud_teo_application_proxy
 	tencentcloud_teo_application_proxy_rule
-	tencentcloud_teo_ddos_policy
-	tencentcloud_teo_security_policy
 	tencentcloud_teo_custom_error_page
 
 TencentCloud ServiceMesh(TCM)
@@ -1591,6 +1584,16 @@ Tag
 	tencentcloud_tag
 	tencentcloud_tag_attachment
 
+EventBridge(EB)
+  Data Source
+	tencentcloud_eb_bus
+
+  Resource
+	tencentcloud_eb_event_transform
+	tencentcloud_eb_event_bus
+	tencentcloud_eb_event_rule
+	tencentcloud_eb_event_target
+	tencentcloud_eb_put_events
 */
 package tencentcloud
 
@@ -2227,6 +2230,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                              dataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
+			"tencentcloud_eb_search":                                 dataSourceTencentCloudEbSearch(),
+			"tencentcloud_eb_bus":                                    dataSourceTencentCloudEbBus(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2703,6 +2708,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_ckafka_consumer":                                 resourceTencentCloudClsCkafkaConsumer(),
 			"tencentcloud_cls_cos_recharge":                                    resourceTencentCloudClsCosRecharge(),
 			"tencentcloud_cls_export":                                          resourceTencentCloudClsExport(),
+			"tencentcloud_cls_data_transform":                                  resourceTencentCloudClsDataTransform(),
 			"tencentcloud_lighthouse_instance":                                 resourceTencentCloudLighthouseInstance(),
 			"tencentcloud_tem_environment":                                     resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                                     resourceTencentCloudTemApplication(),
@@ -2948,6 +2954,13 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_cngw_route_rate_limit":                  resourceTencentCloudTseCngwRouteRateLimit(),
 			"tencentcloud_tse_cngw_canary_rule":                       resourceTencentCloudTseCngwCanaryRule(),
 			"tencentcloud_clickhouse_instance":                        resourceTencentCloudClickhouseInstance(),
+			"tencentcloud_cls_kafka_recharge":                         resourceTencentCloudClsKafkaRecharge(),
+			"tencentcloud_cls_scheduled_sql":                          resourceTencentCloudClsScheduledSql(),
+			"tencentcloud_eb_event_transform":                         resourceTencentCloudEbEventTransform(),
+			"tencentcloud_eb_event_bus":                               resourceTencentCloudEbEventBus(),
+			"tencentcloud_eb_event_rule":                              resourceTencentCloudEbEventRule(),
+			"tencentcloud_eb_event_target":                            resourceTencentCloudEbEventTarget(),
+			"tencentcloud_eb_put_events":                              resourceTencentCloudEbPutEvents(),
 		},
 
 		ConfigureFunc: providerConfigure,

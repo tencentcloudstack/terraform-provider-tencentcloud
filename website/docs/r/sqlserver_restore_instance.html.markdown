@@ -52,6 +52,6 @@ In addition to all arguments above, the following attributes are exported:
 sqlserver restore_instance can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_restore_instance.restore_instance restore_instance_id
+terraform import tencentcloud_sqlserver_restore_instance.restore_instance mssql-qelbzgwf#3482091273#keep_pubsub_db2#restore_keep_pubsub_db2
 ```
 

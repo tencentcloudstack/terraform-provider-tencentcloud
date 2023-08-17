@@ -4,9 +4,9 @@ Provides a resource to create a CFS access group.
 Example Usage
 
 ```hcl
-resource "tencentcloud_cfs_access_group" "foo" {
-  name        = "test_access_group"
-  description = "test"
+resource "tencentcloud_cfs_access_group" "example" {
+  name        = "tx_example"
+  description = "desc."
 }
 ```
 
@@ -15,7 +15,7 @@ Import
 CFS access group can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_cfs_access_group.foo pgroup-7nx89k7l
+$ terraform import tencentcloud_cfs_access_group.example pgroup-7nx89k7l
 ```
 */
 package tencentcloud
@@ -142,7 +142,8 @@ func resourceTencentCloudCfsAccessGroupUpdate(d *schema.ResourceData, meta inter
 	if d.HasChange("description") {
 		request.DescInfo = helper.String(d.Get("description").(string))
 	}
-
+	id := d.Id()
+	request.PGroupId = &id
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		ratelimit.Check(request.GetAction())
 		response, err := meta.(*TencentCloudClient).apiV3Conn.UseCfsClient().UpdateCfsPGroup(request)

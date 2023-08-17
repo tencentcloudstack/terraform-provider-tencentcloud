@@ -117,6 +117,6 @@ In addition to all arguments above, the following attributes are exported:
 SQL Server readonly instance can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_sqlserver_readonly_instance.foo mssqlro-3cdq7kx5
+$ terraform import tencentcloud_sqlserver_readonly_instance.example mssqlro-3cdq7kx5
 ```
 

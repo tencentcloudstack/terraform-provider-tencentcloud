@@ -3,14 +3,20 @@ Use this data source to query the list of SQL Server accounts.
 
 Example Usage
 
-```hcl
-data "tencentcloud_sqlserver_accounts" "name" {
-  instance_id           = "mssql-3cdq7kx5"
-  name = "myaccount"
-}
+Pull instance account list
 
-data "tencentcloud_sqlserver_accounts" "foo" {
-  instance_id           = "mssql-3cdq7kx5"
+```hcl
+data "tencentcloud_sqlserver_accounts" "example" {
+  instance_id = "mssql-3cdq7kx5"
+}
+```
+
+Pull instance account list Filter by name
+
+```hcl
+data "tencentcloud_sqlserver_accounts" "example" {
+  instance_id = "mssql-3cdq7kx5"
+  name        = "myaccount"
 }
 ```
 */

@@ -17,14 +17,14 @@ func TestAccTencentCloudSqlserverDBCharsetsDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSqlserverDBCharsetsDataSource,
-				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_db_charsets.db_charsets")),
+				Check:  resource.ComposeTestCheckFunc(testAccCheckTencentCloudDataSourceID("data.tencentcloud_sqlserver_db_charsets.example")),
 			},
 		},
 	})
 }
 
 const testAccSqlserverDBCharsetsDataSource = `
-data "tencentcloud_sqlserver_db_charsets" "db_charsets" {
+data "tencentcloud_sqlserver_db_charsets" "example" {
   instance_id = "mssql-qelbzgwf"
 }
 `

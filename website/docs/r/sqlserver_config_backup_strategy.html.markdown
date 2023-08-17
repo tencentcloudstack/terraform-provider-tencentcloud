@@ -138,6 +138,6 @@ In addition to all arguments above, the following attributes are exported:
 sqlserver config_backup_strategy can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_config_backup_strategy.config_backup_strategy config_backup_strategy_id
+terraform import tencentcloud_sqlserver_config_backup_strategy.example mssql-si2823jyl
 ```
 

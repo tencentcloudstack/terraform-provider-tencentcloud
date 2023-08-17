@@ -14,14 +14,13 @@ Provides a resource to create a vpc ipv6_cidr_block
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_vpc" "cidr-block" {
-  name         = "ipv6-cidr-block-for-test"
-  cidr_block   = "10.0.0.0/16"
-  is_multicast = false
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
 }
 
-resource "tencentcloud_vpc_ipv6_cidr_block" "ipv6_cidr_block" {
-  vpc_id = tencentcloud_vpc.cidr-block.id
+resource "tencentcloud_vpc_ipv6_cidr_block" "example" {
+  vpc_id = tencentcloud_vpc.vpc.id
 }
 ```
 

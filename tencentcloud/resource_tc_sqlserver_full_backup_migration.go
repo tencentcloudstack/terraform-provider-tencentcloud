@@ -68,7 +68,7 @@ resource "tencentcloud_sqlserver_general_backup" "example" {
 }
 
 resource "tencentcloud_sqlserver_full_backup_migration" "example" {
-  instance_id    = tencentcloud_sqlserver_basic_instance.example.id
+  instance_id    = tencentcloud_sqlserver_general_backup.example.instance_id
   recovery_type  = "FULL"
   upload_type    = "COS_URL"
   migration_name = "migration_test"
@@ -81,7 +81,7 @@ Import
 sqlserver full_backup_migration can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_full_backup_migration.full_backup_migration full_backup_migration_id
+terraform import tencentcloud_sqlserver_full_backup_migration.example mssql-si2823jyl#mssql-backup-migration-cg0ffgqt
 ```
 */
 package tencentcloud

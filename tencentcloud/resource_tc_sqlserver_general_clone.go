@@ -55,7 +55,7 @@ resource "tencentcloud_sqlserver_db" "example" {
 }
 
 resource "tencentcloud_sqlserver_general_clone" "example" {
-  instance_id = tencentcloud_sqlserver_basic_instance.example.id
+  instance_id = tencentcloud_sqlserver_db.example.instance_id
   old_name    = tencentcloud_sqlserver_db.example.name
   new_name    = "tf_example_db_clone"
 }
@@ -66,7 +66,7 @@ Import
 sqlserver general_communication can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_sqlserver_general_communication.general_communication general_communication_id
+terraform import tencentcloud_sqlserver_general_clone.example mssql-si2823jyl#tf_example_db#tf_example_db_clone
 ```
 */
 package tencentcloud
