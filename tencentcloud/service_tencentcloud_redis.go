@@ -1108,3 +1108,94 @@ func (me *RedisService) DeleteParamTemplate(ctx context.Context, request *redis.
 
 	return
 }
+
+func (me *RedisService) DescribeRedisAccountById(ctx context.Context, instanceId, accountName string) (account *redis.Account, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDescribeInstanceAccountRequest()
+	request.InstanceId = &instanceId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var offset int64 = 0
+	var limit int64 = 50
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseRedisClient().DescribeInstanceAccount(request)
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Accounts) < 1 {
+			break
+		}
+		for _, v := range response.Response.Accounts {
+			if *v.AccountName == accountName {
+				account = v
+				return
+			}
+		}
+		if len(response.Response.Accounts) < int(limit) {
+			break
+		}
+		offset += limit
+	}
+
+	return
+}
+
+func (me *RedisService) DeleteRedisAccountById(ctx context.Context, instanceId, accountName string) (taskId int64, errRet error) {
+	logId := getLogId(ctx)
+
+	request := redis.NewDeleteInstanceAccountRequest()
+	request.InstanceId = &instanceId
+	request.AccountName = &accountName
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRedisClient().DeleteInstanceAccount(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	taskId = *response.Response.TaskId
+
+	return
+}
+
+func (me *RedisService) RedisAccountStateRefreshFunc(instanceId, accountName string, failStates []string) resource.StateRefreshFunc {
+	return func() (interface{}, string, error) {
+		ctx := contextNil
+
+		object, err := me.DescribeRedisAccountById(ctx, instanceId, accountName)
+		if err != nil {
+			return nil, "", err
+		}
+
+		if object == nil {
+			return nil, "", nil
+		}
+
+		return object, helper.PString(helper.String(strconv.FormatInt(*object.Status, 10))), nil
+	}
+}
