@@ -294,14 +294,15 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 		if e != nil {
 			return retryError(e)
 		}
+		routeIds := make([]string, 0)
 		if response != nil && response.Response != nil && len(response.Response.RouteSet) > 0 {
-			routeIds := make([]string, 0)
 			for _, route := range response.Response.RouteSet {
 				routeIds = append(routeIds, *route.RouteId)
 			}
-			_ = d.Set("route_ids", routeIds)
 
 		}
+		_ = d.Set("route_ids", routeIds)
+
 		return nil
 	})
 	if err != nil {
