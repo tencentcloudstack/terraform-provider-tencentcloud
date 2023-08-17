@@ -2536,7 +2536,7 @@ func (me *VpcService) DeleteNatGateway(ctx context.Context, natGatewayId string)
 	return
 }
 
-func (me *VpcService) DisassociateNatGatewayAddress(ctx context.Context, request *vpc.DisassociateNatGatewayAddressRequest) (errRet error) {
+func (me *VpcService) DisassociateNatGatewayAddress(ctx context.Context, request *vpc.DisassociateNatGatewayAddressRequest) (result *vpc.DisassociateNatGatewayAddressResponse, errRet error) {
 	logId := getLogId(ctx)
 	defer func() {
 		if errRet != nil {
@@ -2573,7 +2573,7 @@ func (me *VpcService) DisassociateNatGatewayAddress(ctx context.Context, request
 	}
 
 	if len(candidates) == 0 {
-		return nil
+		return nil, nil
 	}
 
 	request.PublicIpAddresses = candidates
@@ -2589,6 +2589,7 @@ func (me *VpcService) DisassociateNatGatewayAddress(ctx context.Context, request
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	result = response
 	return
 }
 
@@ -2610,7 +2611,7 @@ func (me *VpcService) UnattachEip(ctx context.Context, eipId string) error {
 		request := vpc.NewDisassociateNatGatewayAddressRequest()
 		request.NatGatewayId = eip.InstanceId
 		request.PublicIpAddresses = []*string{eip.AddressIp}
-		err := me.DisassociateNatGatewayAddress(ctx, request)
+		_, err := me.DisassociateNatGatewayAddress(ctx, request)
 		if err != nil {
 			return err
 		}
