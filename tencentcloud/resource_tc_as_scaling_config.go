@@ -290,8 +290,6 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 						"host_name_style": {
 							Type:         schema.TypeString,
 							Optional:     true,
-							ValidateFunc: validateAllowedStringValue(INSTANCE_NAME_STYLE),
-							Default:      INSTANCE_NAME_ORIGINAL,
 							Description:  "The style of the host name of the cloud server, the value range includes `ORIGINAL` and `UNIQUE`, the default is `ORIGINAL`; `ORIGINAL`, the AS directly passes the HostName filled in the input parameter to the CVM, and the CVM may append a sequence to the HostName number, the HostName of the instance in the scaling group will conflict; `UNIQUE`, the HostName filled in as a parameter is equivalent to the host name prefix, AS and CVM will expand it, and the HostName of the instance in the scaling group can be guaranteed to be unique.",
 						},
 					},
