@@ -50,7 +50,7 @@ resource "tencentcloud_mysql_instance" "mysql8" {
 	}
   
 	parameters = {
-	  character_set_server = "utf8"
+	  character_set_server = "utf8mb3"
 	  lower_case_table_names = 0
 	  max_connections = "1000"
 	}

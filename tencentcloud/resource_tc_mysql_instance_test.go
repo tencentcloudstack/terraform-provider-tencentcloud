@@ -310,7 +310,7 @@ func TestAccTencentCloudMysqlInstanceResource_mysql8(t *testing.T) {
 		CheckDestroy: testAccCheckMysqlMasterInstanceDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccMysqlMasterInstance_mysql8("utf8"),
+				Config: testAccMysqlMasterInstance_mysql8("utf8mb3"),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckMysqlMasterInstanceExists("tencentcloud_mysql_instance.mysql8"),
 					resource.TestCheckResourceAttrSet("tencentcloud_mysql_instance.mysql8", "id"),
@@ -327,7 +327,7 @@ func TestAccTencentCloudMysqlInstanceResource_mysql8(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "volume_size", "25"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "intranet_port", "3306"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "tags.createdBy", "terraform"),
-					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.character_set_server", "utf8"),
+					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.character_set_server", "utf8mb3"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.lower_case_table_names", "0"),
 					resource.TestCheckResourceAttr("tencentcloud_mysql_instance.mysql8", "parameters.max_connections", "1000"),
 				),
