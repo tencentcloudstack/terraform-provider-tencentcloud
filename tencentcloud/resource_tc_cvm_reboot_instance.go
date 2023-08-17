@@ -66,7 +66,9 @@ func resourceTencentCloudCvmRebootInstanceCreate(d *schema.ResourceData, meta in
 	request.InstanceIds = []*string{&instanceId}
 
 	if v, _ := d.GetOk("force_reboot"); v != nil {
-		request.ForceReboot = helper.Bool(v.(bool))
+		if _, ok := d.GetOk("stop_type"); !ok {
+			request.ForceReboot = helper.Bool(v.(bool))
+		}
 	}
 
 	if v, ok := d.GetOk("stop_type"); ok {
