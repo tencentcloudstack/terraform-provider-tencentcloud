@@ -26,6 +26,6 @@ const testAccCvmRebootInstance = defaultRebootCvmVariable + `
 
 resource "tencentcloud_cvm_reboot_instance" "reboot_instance" {
   instance_id = var.cvm_id
-  force_reboot = false
+  stop_type = "SOFT_FIRST"
 }
 `
