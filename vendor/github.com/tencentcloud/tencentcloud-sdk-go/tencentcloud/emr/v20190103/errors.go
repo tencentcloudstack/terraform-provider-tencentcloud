@@ -20,8 +20,32 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// 操作失败。
+	FAILEDOPERATION_CHECKIFSUPPORTPODSTRETCH = "FailedOperation.CheckIfSupportPodStretch"
+
 	// 重复的订单，请检查emr控制台。
 	FAILEDOPERATION_DUPLICATEORDERNOTALLOWED = "FailedOperation.DuplicateOrderNotAllowed"
+
+	// 获取cam角色失败。
+	FAILEDOPERATION_GETCAMROLEFAILED = "FailedOperation.GetCamRoleFailed"
+
+	// 调用cam服务失败。
+	FAILEDOPERATION_GETCAMSERVERFAILED = "FailedOperation.GetCamServerFailed"
+
+	// 获取cvm 规格信息失败。
+	FAILEDOPERATION_GETCVMCONFIGQUOTAFAILED = "FailedOperation.GetCvmConfigQuotaFailed"
+
+	// 调用cvm服务失败。
+	FAILEDOPERATION_GETCVMSERVERFAILED = "FailedOperation.GetCvmServerFailed"
+
+	// 调去询价中心服务失败
+	FAILEDOPERATION_GETTRADESERVERFAILED = "FailedOperation.GetTradeServerFailed"
+
+	// 操作失败，不支持pod。
+	FAILEDOPERATION_NOTSUPPORTPOD = "FailedOperation.NotSupportPod"
+
+	// 操作失败。
+	FAILEDOPERATION_REFUNDCVMFAILED = "FailedOperation.RefundCvmFailed"
 
 	// 内部错误。
 	INTERNALERROR = "InternalError"
@@ -56,6 +80,9 @@ const (
 	// 内部服务调用异常。
 	INTERNALERROR_CVMERROR = "InternalError.CvmError"
 
+	// 调用EKS报错。
+	INTERNALERROR_EKSERROR = "InternalError.EKSError"
+
 	// 内部服务调用异常。
 	INTERNALERROR_KMSERROR = "InternalError.KmsError"
 
@@ -86,8 +113,17 @@ const (
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
 
+	// 参数错误。
+	INVALIDPARAMETER_APPIDRESOURCENOTMATCH = "InvalidParameter.AppIdResourceNotMatch"
+
 	// 展示策略错误。
 	INVALIDPARAMETER_DISPLAYSTRATEGYNOTMATCH = "InvalidParameter.DisplayStrategyNotMatch"
+
+	// 参数错误。
+	INVALIDPARAMETER_HALESSMASTERCOUNT = "InvalidParameter.HALessMasterCount"
+
+	// impala查询参数异常。
+	INVALIDPARAMETER_IMPALAQUERYEXCEPTION = "InvalidParameter.ImpalaQueryException"
 
 	// Common节点数量无效。
 	INVALIDPARAMETER_INCORRECTCOMMONCOUNT = "InvalidParameter.IncorrectCommonCount"
@@ -95,8 +131,8 @@ const (
 	// Master节点数量无效。
 	INVALIDPARAMETER_INCORRECTMASTERCOUNT = "InvalidParameter.IncorrectMasterCount"
 
-	// core节点的数量不能超过20。
-	INVALIDPARAMETER_INVAILDCORECOUNT = "InvalidParameter.InvaildCoreCount"
+	// 不合法的AllNodeResourceSpec参数。
+	INVALIDPARAMETER_INVALIDALLNODERESOURCESPEC = "InvalidParameter.InvalidAllNodeResourceSpec"
 
 	// 无效参数，AppId。
 	INVALIDPARAMETER_INVALIDAPPID = "InvalidParameter.InvalidAppId"
@@ -107,17 +143,26 @@ const (
 	// 无效的引导脚本。
 	INVALIDPARAMETER_INVALIDBOOTSTRAPACTION = "InvalidParameter.InvalidBootstrapAction"
 
+	// 无效的ClickHouse集群。
+	INVALIDPARAMETER_INVALIDCLICKHOUSECLUSTER = "InvalidParameter.InvalidClickHouseCluster"
+
 	// 无效的ClientToken。
 	INVALIDPARAMETER_INVALIDCLIENTTOKEN = "InvalidParameter.InvalidClientToken"
 
 	// 无效参数，ClusterId。
 	INVALIDPARAMETER_INVALIDCLUSTERID = "InvalidParameter.InvalidClusterId"
 
+	// 参数错误。
+	INVALIDPARAMETER_INVALIDCOMMONDISKTYPE = "InvalidParameter.InvalidCommonDiskType"
+
 	// 无效的组件。
 	INVALIDPARAMETER_INVALIDCOMPONENT = "InvalidParameter.InvalidComponent"
 
 	// Core节点数量无效。
 	INVALIDPARAMETER_INVALIDCORECOUNT = "InvalidParameter.InvalidCoreCount"
+
+	// CosFileUri参数值无效。
+	INVALIDPARAMETER_INVALIDCOSFILEURI = "InvalidParameter.InvalidCosFileURI"
 
 	// 扩容数量必须大于0。
 	INVALIDPARAMETER_INVALIDCOUNT = "InvalidParameter.InvalidCount"
@@ -127,6 +172,9 @@ const (
 
 	// 错误信息：Invalid PodParameter。
 	INVALIDPARAMETER_INVALIDCUSTOMIZEDPODPARAM = "InvalidParameter.InvalidCustomizedPodParam"
+
+	// DependService和EnableKerberos参数冲突。
+	INVALIDPARAMETER_INVALIDDEPENDSERVICEANDENABLEKERBEROSCONFLICT = "InvalidParameter.InvalidDependServiceAndEnableKerberosConflict"
 
 	// 无效的磁盘大小。
 	INVALIDPARAMETER_INVALIDDISKSIZE = "InvalidParameter.InvalidDiskSize"
@@ -143,11 +191,17 @@ const (
 	// 无效参数，EMR实例不符合要求。
 	INVALIDPARAMETER_INVALIDINSTANCE = "InvalidParameter.InvalidInstance"
 
+	// 不合法的实例计费模式。
+	INVALIDPARAMETER_INVALIDINSTANCECHARGETYPE = "InvalidParameter.InvalidInstanceChargeType"
+
 	// 无效的集群名称。
 	INVALIDPARAMETER_INVALIDINSTANCENAME = "InvalidParameter.InvalidInstanceName"
 
 	// 无效的集群保留策略。
 	INVALIDPARAMETER_INVALIDINSTANCEPOLICY = "InvalidParameter.InvalidInstancePolicy"
+
+	// 无效的机型。
+	INVALIDPARAMETER_INVALIDINSTANCETYPE = "InvalidParameter.InvalidInstanceType"
 
 	// 无效的流程任务。
 	INVALIDPARAMETER_INVALIDJOBFLOW = "InvalidParameter.InvalidJobFlow"
@@ -158,11 +212,20 @@ const (
 	// 无效的登录设置。
 	INVALIDPARAMETER_INVALIDLOGINSETTING = "InvalidParameter.InvalidLoginSetting"
 
+	// 参数错误。
+	INVALIDPARAMETER_INVALIDMASTERDISKTYPE = "InvalidParameter.InvalidMasterDiskType"
+
+	// 无效的元数据库URL。
+	INVALIDPARAMETER_INVALIDMETADATAJDBCURL = "InvalidParameter.InvalidMetaDataJdbcUrl"
+
 	// 无效的元数据表类型。
 	INVALIDPARAMETER_INVALIDMETATYPE = "InvalidParameter.InvalidMetaType"
 
 	// 变配规格无效。
 	INVALIDPARAMETER_INVALIDMODIFYSPEC = "InvalidParameter.InvalidModifySpec"
+
+	// 不合法的节点类型。
+	INVALIDPARAMETER_INVALIDNODEFLAG = "InvalidParameter.InvalidNodeFlag"
 
 	// 无效的NodeType。
 	INVALIDPARAMETER_INVALIDNODETYPE = "InvalidParameter.InvalidNodeType"
@@ -182,14 +245,26 @@ const (
 	// 无效的产品ID。
 	INVALIDPARAMETER_INVALIDPRODUCTID = "InvalidParameter.InvalidProductId"
 
+	// 不合法的产品版本。
+	INVALIDPARAMETER_INVALIDPRODUCTVERSION = "InvalidParameter.InvalidProductVersion"
+
 	// 无效的项目ID。
 	INVALIDPARAMETER_INVALIDPROJECTID = "InvalidParameter.InvalidProjectId"
+
+	// 不合法自动续费标识。
+	INVALIDPARAMETER_INVALIDRENEWFLAG = "InvalidParameter.InvalidRenewFlag"
 
 	// 资源ID无效。
 	INVALIDPARAMETER_INVALIDRESOURCEIDS = "InvalidParameter.InvalidResourceIds"
 
 	// 无效的资源规格。
 	INVALIDPARAMETER_INVALIDRESOURCESPEC = "InvalidParameter.InvalidResourceSpec"
+
+	// 不合法的引导脚本执行参数。
+	INVALIDPARAMETER_INVALIDSCRIPTBOOTSTRAPACTIONCONFIG = "InvalidParameter.InvalidScriptBootstrapActionConfig"
+
+	// 该EMR版本不支持开启安全模式。
+	INVALIDPARAMETER_INVALIDSECURITYSUPPORT = "InvalidParameter.InvalidSecuritySupport"
 
 	// 无效的安全组ID。
 	INVALIDPARAMETER_INVALIDSERCURITYGRPUPID = "InvalidParameter.InvalidSercurityGrpupId"
@@ -221,6 +296,9 @@ const (
 	// 无效的高可用参数。
 	INVALIDPARAMETER_INVALIDSUPPORTHA = "InvalidParameter.InvalidSupportHA"
 
+	// 参数错误。
+	INVALIDPARAMETER_INVALIDTAGSGROUP = "InvalidParameter.InvalidTagsGroup"
+
 	// task的数量不能超过20。
 	INVALIDPARAMETER_INVALIDTASKCOUNT = "InvalidParameter.InvalidTaskCount"
 
@@ -241,6 +319,9 @@ const (
 
 	// 无效的可用区。
 	INVALIDPARAMETER_INVALIDZONE = "InvalidParameter.InvalidZone"
+
+	// 不合法的支持Kerberos标识。
+	INVALIDPARAMETER_KERBEROSSUPPORT = "InvalidParameter.KerberosSupport"
 
 	// 无效参数，不满足必须组件。
 	INVALIDPARAMETER_NOTCONTAINMUSTSELECTSOFTWARE = "InvalidParameter.NotContainMustSelectSoftware"
@@ -275,6 +356,9 @@ const (
 	// 引导脚本数量超过限制。
 	LIMITEXCEEDED_BOOTSTRAPACTIONSNUMLIMITEXCEEDED = "LimitExceeded.BootstrapActionsNumLimitExceeded"
 
+	// 安全组数量超过限制。
+	LIMITEXCEEDED_SECURITYGROUPNUMLIMITEXCEEDED = "LimitExceeded.SecurityGroupNumLimitExceeded"
+
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
@@ -287,8 +371,14 @@ const (
 	// 不支持或售罄的节点规格。
 	RESOURCEINSUFFICIENT_INSTANCEINSUFFICIENT = "ResourceInsufficient.InstanceInsufficient"
 
+	// 资源不存在。
+	RESOURCENOTFOUND_CDBINFONOTFOUND = "ResourceNotFound.CDBInfoNotFound"
+
 	// 无法找到该实例。
 	RESOURCENOTFOUND_CLUSTERNOTFOUND = "ResourceNotFound.ClusterNotFound"
+
+	// 无法找到指定的CVM实例。
+	RESOURCENOTFOUND_CVMINSTANCENOTFOUND = "ResourceNotFound.CvmInstanceNotFound"
 
 	// 无法找到硬件信息。
 	RESOURCENOTFOUND_HARDWAREINFONOTFOUND = "ResourceNotFound.HardwareInfoNotFound"
@@ -311,17 +401,17 @@ const (
 	// 当前资源规格不存在默认规格。
 	RESOURCEUNAVAILABLE_RESOURCESPECNOTDEFAULTSPEC = "ResourceUnavailable.ResourceSpecNotDefaultSpec"
 
-	// 当前资源规格不存在默认规格。
-	RESOURCEUNAVAILABLE_RESOURCESPEC_NOTDEFAULTSPEC = "ResourceUnavailable.ResourceSpec_NotDefaultSpec"
-
 	// 资源售罄。
-	RESOURCESSOLDOUT_ = "ResourcesSoldOut."
+	RESOURCESSOLDOUT = "ResourcesSoldOut"
 
 	// CBS资源售罄。
 	RESOURCESSOLDOUT_CBSSOLDOUT = "ResourcesSoldOut.CbsSoldOut"
 
 	// 云服务器已售罄。
 	RESOURCESSOLDOUT_CVMSOLDOUT = "ResourcesSoldOut.CvmSoldOut"
+
+	// 校验账号操作无权限。
+	UNAUTHORIZEDOPERATION_CHECKCAMAUTH = "UnauthorizedOperation.CheckCamAuth"
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
