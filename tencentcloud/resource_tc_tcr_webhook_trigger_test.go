@@ -149,7 +149,7 @@ func testAccCheckTCRWebhookTriggerExists(re string) resource.TestCheckFunc {
 const testAccTCRInstance_webhooktrigger = `
 resource "tencentcloud_tcr_instance" "mytcr_webhooktrigger" {
   name        = "tf-test-tcr-%s"
-  instance_type = "basic"
+  instance_type = "premium"
   delete_bucket = true
 
   tags ={
