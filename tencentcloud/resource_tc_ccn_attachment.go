@@ -125,6 +125,14 @@ func resourceTencentCloudCcnAttachment() *schema.Resource {
 				},
 				Description: "A network address block of the instance that is attached.",
 			},
+			"route_ids": {
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
+				Description: "Route id list.",
+			},
 		},
 	}
 }
@@ -277,6 +285,30 @@ func resourceTencentCloudCcnAttachmentRead(d *schema.ResourceData, meta interfac
 	if err != nil {
 		return err
 	}
+
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		request := vpc.NewDescribeCcnRoutesRequest()
+		request.CcnId = &ccnId
+
+		response, e := meta.(*TencentCloudClient).apiV3Conn.UseVpcClient().DescribeCcnRoutes(request)
+		if e != nil {
+			return retryError(e)
+		}
+		routeIds := make([]string, 0)
+		if response != nil && response.Response != nil && len(response.Response.RouteSet) > 0 {
+			for _, route := range response.Response.RouteSet {
+				routeIds = append(routeIds, *route.RouteId)
+			}
+
+		}
+		_ = d.Set("route_ids", routeIds)
+
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
