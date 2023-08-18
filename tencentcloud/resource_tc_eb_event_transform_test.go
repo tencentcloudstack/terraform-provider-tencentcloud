@@ -13,7 +13,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudEbEventTransformResource_basic -v
 func TestAccTencentCloudEbEventTransformResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,

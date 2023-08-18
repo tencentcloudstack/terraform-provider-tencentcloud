@@ -1595,6 +1595,7 @@ EventBridge(EB)
 	tencentcloud_eb_event_rule
 	tencentcloud_eb_event_target
 	tencentcloud_eb_put_events
+	tencentcloud_eb_event_connector
 
 Data Lake Compute(DLC)
   Resource
@@ -2967,6 +2968,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_event_rule":                              resourceTencentCloudEbEventRule(),
 			"tencentcloud_eb_event_target":                            resourceTencentCloudEbEventTarget(),
 			"tencentcloud_eb_put_events":                              resourceTencentCloudEbPutEvents(),
+			"tencentcloud_eb_event_connector":                         resourceTencentCloudEbEventConnector(),
 			"tencentcloud_dlc_work_group":                             resourceTencentCloudDlcWorkGroup(),
 			"tencentcloud_dlc_user":                                   resourceTencentCloudDlcUser(),
 			"tencentcloud_wedata_rule_template":                       resourceTencentCloudWedataRuleTemplate(),

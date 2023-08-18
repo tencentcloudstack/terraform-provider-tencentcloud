@@ -416,3 +416,62 @@ func (me *EbService) DescribeEbBusByFilter(ctx context.Context, param map[string
 
 	return
 }
+
+func (me *EbService) DescribeEbEventConnectorById(ctx context.Context, connectionId string, eventBusId string) (eventConnector *eb.Connection, errRet error) {
+	logId := getLogId(ctx)
+
+	request := eb.NewListConnectionsRequest()
+	request.EventBusId = &eventBusId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEbClient().ListConnections(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Connections) < 1 {
+		return
+	}
+
+	for _, v := range response.Response.Connections {
+		if *v.ConnectionId == connectionId {
+			eventConnector = v
+		}
+	}
+
+	return
+}
+
+func (me *EbService) DeleteEbEventConnectorById(ctx context.Context, connectionId string, eventBusId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := eb.NewDeleteConnectionRequest()
+	request.ConnectionId = &connectionId
+	request.EventBusId = &eventBusId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseEbClient().DeleteConnection(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
