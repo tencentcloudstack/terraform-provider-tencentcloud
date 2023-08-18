@@ -1137,7 +1137,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dts/v20211206
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb v1.0.715
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/eb/v20210416
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.287
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr v1.0.725
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/es v1.0.699
