@@ -5,8 +5,8 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_cvm_reboot_instance" "reboot_instance" {
-  instance_id = "ins-xxxxx"
-  force_reboot = false
+  instance_id = "ins-f9jr4bd2"
+  stop_type = "SOFT_FIRST"
 }
 ```
 */
@@ -36,17 +36,20 @@ func resourceTencentCloudCvmRebootInstance() *schema.Resource {
 			},
 
 			"force_reboot": {
-				Optional:    true,
-				ForceNew:    true,
-				Type:        schema.TypeBool,
-				Description: "This parameter has been disused. We recommend using StopType instead. Note that ForceReboot and StopType parameters cannot be specified at the same time. Whether to forcibly restart an instance after a normal restart fails. Valid values are `TRUE` and `FALSE`. Default value: FALSE.",
+				Optional:      true,
+				ForceNew:      true,
+				Type:          schema.TypeBool,
+				ConflictsWith: []string{"stop_type"},
+				Deprecated:    "It has been deprecated from version 1.81.21. Please use `stop_type` instead.",
+				Description:   "This parameter has been disused. We recommend using StopType instead. Note that ForceReboot and StopType parameters cannot be specified at the same time. Whether to forcibly restart an instance after a normal restart fails. Valid values are `TRUE` and `FALSE`. Default value: FALSE.",
 			},
 
 			"stop_type": {
-				Optional:    true,
-				ForceNew:    true,
-				Type:        schema.TypeString,
-				Description: "Shutdown type. Valid values: `SOFT`: soft shutdown; `HARD`: hard shutdown; `SOFT_FIRST`: perform a soft shutdown first, and perform a hard shutdown if the soft shutdown fails. Default value: SOFT.",
+				Optional:      true,
+				ForceNew:      true,
+				Type:          schema.TypeString,
+				ConflictsWith: []string{"force_reboot"},
+				Description:   "Shutdown type. Valid values: `SOFT`: soft shutdown; `HARD`: hard shutdown; `SOFT_FIRST`: perform a soft shutdown first, and perform a hard shutdown if the soft shutdown fails. Default value: SOFT.",
 			},
 		},
 	}
@@ -63,7 +66,9 @@ func resourceTencentCloudCvmRebootInstanceCreate(d *schema.ResourceData, meta in
 	request.InstanceIds = []*string{&instanceId}
 
 	if v, _ := d.GetOk("force_reboot"); v != nil {
-		request.ForceReboot = helper.Bool(v.(bool))
+		if _, ok := d.GetOk("stop_type"); !ok {
+			request.ForceReboot = helper.Bool(v.(bool))
+		}
 	}
 
 	if v, ok := d.GetOk("stop_type"); ok {
