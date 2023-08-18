@@ -1859,7 +1859,7 @@ func (me *DayuService) DescribeL7RulesV2(ctx context.Context, business string, e
 
 	var (
 		offset uint64 = 0
-		limit  uint64 = 100
+		limit  uint64 = 20
 	)
 
 	for {

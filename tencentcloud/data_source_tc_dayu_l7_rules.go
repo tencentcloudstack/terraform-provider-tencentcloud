@@ -194,9 +194,9 @@ func dataSourceTencentCloudDayuL7RulesRead(d *schema.ResourceData, meta interfac
 	list := make([]map[string]interface{}, 0, len(rules))
 	ids := make([]string, 0, len(rules))
 
-	listItem := make(map[string]interface{})
 	for k, rule := range rules {
-		health := healths[k]
+		listItem := make(map[string]interface{})
+
 		listItem["name"] = *rule.RuleName
 		listItem["domain"] = *rule.Domain
 		listItem["ssl_id"] = *rule.SSLId
@@ -217,26 +217,30 @@ func dataSourceTencentCloudDayuL7RulesRead(d *schema.ResourceData, meta interfac
 		}
 		listItem["source_list"] = helper.StringsInterfaces(sourceList)
 
-		if health.Enable != nil {
-			listItem["health_check_switch"] = *health.Enable > 0
-		}
-		if health.Url != nil {
-			listItem["health_check_path"] = *health.Url
-		}
-		if health.StatusCode != nil {
-			listItem["health_check_code"] = int(*health.StatusCode)
-		}
-		if health.Interval != nil {
-			listItem["health_check_interval"] = int(*health.Interval)
-		}
-		if health.KickNum != nil {
-			listItem["health_check_unhealth_num"] = int(*health.KickNum)
-		}
-		if health.AliveNum != nil {
-			listItem["health_check_health_num"] = int(*health.AliveNum)
-		}
-		if health.Method != nil {
-			listItem["health_check_method"] = *health.Method
+		if k < len(healths) {
+			health := healths[k]
+
+			if health.Enable != nil {
+				listItem["health_check_switch"] = *health.Enable > 0
+			}
+			if health.Url != nil {
+				listItem["health_check_path"] = *health.Url
+			}
+			if health.StatusCode != nil {
+				listItem["health_check_code"] = int(*health.StatusCode)
+			}
+			if health.Interval != nil {
+				listItem["health_check_interval"] = int(*health.Interval)
+			}
+			if health.KickNum != nil {
+				listItem["health_check_unhealth_num"] = int(*health.KickNum)
+			}
+			if health.AliveNum != nil {
+				listItem["health_check_health_num"] = int(*health.AliveNum)
+			}
+			if health.Method != nil {
+				listItem["health_check_method"] = *health.Method
+			}
 		}
 		list = append(list, listItem)
 		ids = append(ids, listItem["rule_id"].(string))

@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dayu_l7_rules_v2" "test" {
-    business = "bgpip"
-    offset = 0
-    limit = 10
+  business = "bgpip"
+  domain   = "qq.com"
+  protocol = "https"
 }
 ```
 */
@@ -50,12 +50,14 @@ func dataSourceTencentCloudDayuL7RulesV2() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
+				Deprecated:  "It has been deprecated from version 1.81.21.",
 				Description: "The page start offset, default is `0`.",
 			},
 			"limit": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     10,
+				Deprecated:  "It has been deprecated from version 1.81.21.",
 				Description: "The number of pages, default is `10`.",
 			},
 			"result_output_file": {
