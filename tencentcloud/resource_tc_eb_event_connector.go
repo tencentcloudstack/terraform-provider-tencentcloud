@@ -116,7 +116,7 @@ Import
 eb event_connector can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_eb_event_connector.event_connector event_connector_id
+terraform import tencentcloud_eb_event_connector.event_connector eventBusId#connectionId
 ```
 */
 package tencentcloud
