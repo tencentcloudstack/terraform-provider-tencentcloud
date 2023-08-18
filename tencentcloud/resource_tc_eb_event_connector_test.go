@@ -11,8 +11,9 @@ import (
 	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudEbEventConnectorResource_basic -v
 func TestAccTencentCloudEbEventConnectorResource_basic(t *testing.T) {
-	t.Parallel()
+	// t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -26,11 +27,13 @@ func TestAccTencentCloudEbEventConnectorResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_eb_event_connector.event_connector", "event_bus_id"),
 					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_name", "tf-event-connector"),
 					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "description", "event connector desc"),
-					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "enable", "false"),
-					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "type", "apigw"),
+					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "enable", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "type", "ckafka"),
 					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_description.#", "1"),
-					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_description.0.method", "GET"),
-					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_description.0.protocol", "HTTP"),
+					resource.TestCheckResourceAttrSet("tencentcloud_eb_event_connector.event_connector", "connection_description.0.resource_description"),
+					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_description.0.ckafka_params.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_description.0.ckafka_params.0.offset", "latest"),
+					resource.TestCheckResourceAttr("tencentcloud_eb_event_connector.event_connector", "connection_description.0.ckafka_params.0.topic_name", "dasdasd"),
 				),
 			},
 			{
@@ -62,7 +65,7 @@ func testAccCheckEbEventConnectorDestroy(s *terraform.State) error {
 
 		connector, err := service.DescribeEbEventConnectorById(ctx, connectionId, eventBusId)
 		if err != nil {
-			if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound.Rule" {
+			if err.(*sdkErrors.TencentCloudSDKError).Code == "ResourceNotFound.EventBus" {
 				return nil
 			}
 			return err
@@ -110,6 +113,8 @@ func testAccCheckEbEventConnectorExists(r string) resource.TestCheckFunc {
 
 const testAccEbEventConnector = `
 
+data "tencentcloud_user_info" "foo" {}
+
 resource "tencentcloud_eb_event_bus" "foo" {
   event_bus_name = "tf-event_bus"
   description    = "event bus desc"
@@ -120,29 +125,23 @@ resource "tencentcloud_eb_event_bus" "foo" {
   }
 }
 
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "tf-eb-service"
-  protocol     = "http&https"
-  service_desc = "your nice service"
-  net_type     = ["INNER", "OUTER"]
-  ip_version   = "IPv4"
-}
-
 locals {
-  service_id = tencentcloud_api_gateway_service.service.id
+  ckafka_id = "ckafka-qzoeaqx8"
+  uin = data.tencentcloud_user_info.foo.owner_uin
 }
 
 resource "tencentcloud_eb_event_connector" "event_connector" {
   event_bus_id    = tencentcloud_eb_event_bus.foo.id
   connection_name = "tf-event-connector"
-  description     = "event connector desc1"
-  enable          = false
-  type            = "apigw"
+  description     = "event connector desc"
+  enable          = true
+  type            = "ckafka"
+
   connection_description {
-    resource_description = "qcs::apigw:ap-guangzhou:uin/100022975249:serviceid/${local.service_id}"
-    api_gw_params {
-      protocol = "HTTP"
-      method   = "GET"
+    resource_description = "qcs::ckafka:ap-guangzhou:uin/${local.uin}:ckafkaId/uin/${local.uin}/${local.ckafka_id}"
+    ckafka_params {
+      offset     = "latest"
+      topic_name = "dasdasd"
     }
   }
 }
