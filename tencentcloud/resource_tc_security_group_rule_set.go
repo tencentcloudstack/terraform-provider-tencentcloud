@@ -331,30 +331,32 @@ func resourceTencentCloudSecurityGroupRuleSetUpdate(d *schema.ResourceData, m in
 		request.SecurityGroupPolicySet = &vpc.SecurityGroupPolicySet{}
 		request.SortPolicys = helper.Bool(true)
 
-		ingressRules := d.Get("ingress").([]interface{})
-		egressRules := d.Get("egress").([]interface{})
-		if len(ingressRules) == 0 && len(egressRules) == 0 {
+		oldIngress, newIngress := d.GetChange("ingress")
+		oldEgress, newEgress := d.GetChange("egress")
+
+		oldIngressList := oldIngress.([]interface{})
+		newIngressList := newIngress.([]interface{})
+		oldEgressList := oldEgress.([]interface{})
+		newEgressList := newEgress.([]interface{})
+
+		if len(newIngressList) == 0 && len(newEgressList) == 0 {
 			ver = 0
-		} else if len(ingressRules) != 0 && len(egressRules) == 0 {
-			request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(ingressRules)
+
+		} else if len(newIngressList) != 0 && len(newEgressList) == 0 {
+			request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(newIngressList)
 			if err != nil {
 				return err
 			}
 
-			result, e := service.DescribeSecurityGroupPolicies(ctx, securityGroupId)
-			if e != nil {
-				return e
-			}
-
-			if result.Egress != nil {
-				tmpList := []*int64{}
-				egressRulesList := marshalSecurityPolicy(result.Egress)
-				for _, v := range egressRulesList {
+			if len(oldEgressList) > 0 {
+				tmpList := make([]*int64, 0)
+				for _, v := range oldEgressList {
 					item := v.(map[string]interface{})
-					tmpList = append(tmpList, item["policy_index"].(*int64))
+					policyIndex := int64(item["policy_index"].(int))
+					tmpList = append(tmpList, &policyIndex)
 				}
 
-				e = service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "egress")
+				e := service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "egress")
 				if e != nil {
 					return e
 				}
@@ -362,39 +364,35 @@ func resourceTencentCloudSecurityGroupRuleSetUpdate(d *schema.ResourceData, m in
 				ver += 1
 			}
 
-		} else if len(ingressRules) == 0 && len(egressRules) != 0 {
-			request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(egressRules)
+		} else if len(newIngressList) == 0 && len(newEgressList) != 0 {
+			request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(newEgressList)
 			if err != nil {
 				return err
 			}
 
-			result, e := service.DescribeSecurityGroupPolicies(ctx, securityGroupId)
-			if e != nil {
-				return e
-			}
-
-			if result.Ingress != nil {
-				tmpList := []*int64{}
-				ingressRulesList := marshalSecurityPolicy(result.Ingress)
-				for _, v := range ingressRulesList {
+			if len(oldIngressList) > 0 {
+				tmpList := make([]*int64, 0)
+				for _, v := range oldIngressList {
 					item := v.(map[string]interface{})
-					tmpList = append(tmpList, item["policy_index"].(*int64))
+					policyIndex := int64(item["policy_index"].(int))
+					tmpList = append(tmpList, &policyIndex)
 				}
 
-				e = service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "ingress")
+				e := service.DeleteSecurityGroupPolicyByPolicyIndexList(ctx, securityGroupId, tmpList, "ingress")
 				if e != nil {
 					return e
 				}
 
 				ver += 1
 			}
+
 		} else {
-			request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(ingressRules)
+			request.SecurityGroupPolicySet.Ingress, err = unmarshalSecurityPolicy(newIngressList)
 			if err != nil {
 				return err
 			}
 
-			request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(egressRules)
+			request.SecurityGroupPolicySet.Egress, err = unmarshalSecurityPolicy(newEgressList)
 			if err != nil {
 				return err
 			}

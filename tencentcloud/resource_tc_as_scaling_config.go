@@ -32,6 +32,11 @@ resource "tencentcloud_as_scaling_config" "example" {
   enhanced_monitor_service   = false
   user_data                  = "dGVzdA=="
 
+  host_name_settings {
+	host_name       = "host-name-test"
+	host_name_style = "UNIQUE"
+  }
+
   instance_tags = {
     tag = "example"
   }
@@ -61,7 +66,7 @@ Import
 AutoScaling Configuration can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_as_scaling_config.scaling_config asc-n32ymck2
+$ terraform import tencentcloud_as_scaling_config.example asc-n32ymck2
 ```
 */
 package tencentcloud
@@ -270,6 +275,26 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Optional:    true,
 				Description: "CAM role name authorized to access.",
 			},
+			"host_name_settings": {
+				Type:        schema.TypeList,
+				Optional:    true,
+				MaxItems:    1,
+				Description: "Related settings of the cloud server hostname (HostName).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"host_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The host name of the cloud server; dots (.) and dashes (-) cannot be used as the first and last characters of HostName, and cannot be used consecutively; Windows instances are not supported; other types (Linux, etc.) instances: the character length is [2, 40], it is allowed to support multiple dots, and there is a paragraph between the dots, and each paragraph is allowed to consist of letters (no uppercase and lowercase restrictions), numbers and dashes (-). Pure numbers are not allowed.",
+						},
+						"host_name_style": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The style of the host name of the cloud server, the value range includes `ORIGINAL` and `UNIQUE`, the default is `ORIGINAL`; `ORIGINAL`, the AS directly passes the HostName filled in the input parameter to the CVM, and the CVM may append a sequence to the HostName number, the HostName of the instance in the scaling group will conflict; `UNIQUE`, the HostName filled in as a parameter is equivalent to the host name prefix, AS and CVM will expand it, and the HostName of the instance in the scaling group can be guaranteed to be unique.",
+						},
+					},
+				},
+			},
 			"instance_name_settings": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -472,6 +497,22 @@ func resourceTencentCloudAsScalingConfigCreate(d *schema.ResourceData, meta inte
 		request.CamRoleName = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("host_name_settings"); ok {
+		settings := make([]*as.HostNameSettings, 0, 10)
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			settingsInfo := as.HostNameSettings{}
+			if hostName, ok := dMap["host_name"]; ok {
+				settingsInfo.HostName = helper.String(hostName.(string))
+			}
+			if hostNameStyle, ok := dMap["host_name_style"]; ok {
+				settingsInfo.HostNameStyle = helper.String(hostNameStyle.(string))
+			}
+			settings = append(settings, &settingsInfo)
+		}
+		request.HostNameSettings = settings[0]
+	}
+
 	if v, ok := d.GetOk("instance_name_settings"); ok {
 		settings := make([]*as.InstanceNameSettings, 0, 10)
 		for _, item := range v.([]interface{}) {
@@ -544,6 +585,18 @@ func resourceTencentCloudAsScalingConfigRead(d *schema.ResourceData, meta interf
 		_ = d.Set("disk_type_policy", *config.DiskTypePolicy)
 
 		_ = d.Set("cam_role_name", *config.CamRoleName)
+
+		if config.HostNameSettings != nil {
+			settings := map[string]interface{}{}
+			if config.HostNameSettings.HostName != nil {
+				settings["host_name"] = config.HostNameSettings.HostName
+			}
+			if config.HostNameSettings.HostNameStyle != nil {
+				settings["host_name_style"] = config.HostNameSettings.HostNameStyle
+			}
+			_ = d.Set("host_name_settings", []interface{}{settings})
+		}
+
 		if config.InstanceNameSettings != nil {
 			settings := make([]map[string]interface{}, 0)
 			setting := map[string]interface{}{
@@ -749,6 +802,22 @@ func resourceTencentCloudAsScalingConfigUpdate(d *schema.ResourceData, meta inte
 
 	if v, ok := d.GetOk("cam_role_name"); ok {
 		request.CamRoleName = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("host_name_settings"); ok {
+		settings := make([]*as.HostNameSettings, 0, 10)
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			settingsInfo := as.HostNameSettings{}
+			if hostName, ok := dMap["host_name"]; ok {
+				settingsInfo.HostName = helper.String(hostName.(string))
+			}
+			if hostNameStyle, ok := dMap["host_name_style"]; ok {
+				settingsInfo.HostNameStyle = helper.String(hostNameStyle.(string))
+			}
+			settings = append(settings, &settingsInfo)
+		}
+		request.HostNameSettings = settings[0]
 	}
 
 	if v, ok := d.GetOk("instance_name_settings"); ok {

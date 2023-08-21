@@ -1,5 +1,5 @@
 ```release-note:new-data-source
-tencentcloud_eb_search
+tencentcloud_eb_bus
 ```
 
 ```release-note:new-resource

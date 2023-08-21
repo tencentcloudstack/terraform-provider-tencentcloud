@@ -1,3 +1,48 @@
+## 1.81.21 (August 18, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_dlc_user` ([#2061](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2061))
+* **New Resource:** `tencentcloud_dlc_work_group` ([#2061](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2061))
+* **New Resource:** `tencentcloud_eb_event_connector` ([#2060](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2060))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_as_scaling_config: Support field `host_name` ([#2052](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2052))
+* resource/tencentcloud_ccn_attachment: support `route_ids` fields ([#2053](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2053))
+* resource/tencentcloud_cvm_reboot_instance: Deprecated `force_reboot` ([#2054](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2054))
+* resource/tencentcloud_dayu_l7_rules_v2: fix query results. ([#2062](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2062))
+* resource/tencentcloud_emr_cluster: Update `tags` logic ([#2059](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2059))
+* resource/tencentcloud_eni_sg_attachment: Update Document Description ([#2049](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2049))
+* resource/tencentcloud_nat_gateway: Optimize execution time ([#2058](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2058))
+
+## 1.81.20 (August 11, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_eb_bus` ([#2039](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2039))
+* **New Resource:** `tencentcloud_cls_data_transform` ([#2034](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2034))
+* **New Resource:** `tencentcloud_cls_kafka_recharge` ([#2034](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2034))
+* **New Resource:** `tencentcloud_cls_scheduled_sql` ([#2034](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2034))
+* **New Resource:** `tencentcloud_eb_event_bus` ([#2039](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2039))
+* **New Resource:** `tencentcloud_eb_event_rule` ([#2039](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2039))
+* **New Resource:** `tencentcloud_eb_event_target` ([#2039](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2039))
+* **New Resource:** `tencentcloud_eb_event_transform` ([#2039](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2039))
+
+ENHANCEMENTS:
+
+* data_source/tencentcloud_sqlserver_backups: Supports filtering queries by `backup_name` parameter ([#2023](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2023))
+* resource/tencentcloud_clb_instance: `master_zone_id`, `slave_zone_id`, `project_id`, `vpc_id`, `subnet_id`, `address_ip_version`, `bandwidth_package_id`, `snat_pro`, `zone_id` fields cannot be modified and an error message is displayed ([#2036](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2036))
+* resource/tencentcloud_clb_instance: support param `delete_protect`. ([#2037](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2037))
+* resource/tencentcloud_eni: Update `security_groups` field ([#2047](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2047))
+* resource/tencentcloud_sqlserver_full_backup_migration: return `backup_migration_id` parameter ([#2023](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2023))
+* resource/tencentcloud_sqlserver_publish_subscribe: Update `database_tuples` field ([#2040](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2040))
+* resource/tencentcloud_sqlserver_readonly_instance: Extension creation parameters ([#2023](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2023))
+* resource/tencentcloud_tdmq_namespace: Update `retention_policy` Parameters ([#2033](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2033))
+* resource/tencentcloud_tdmq_rocketmq_namespace: Abandoned parameters: 'ttl', 'retention_time`. ([#2029](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2029))
+* resource/tencentcloud_tdmq_rocketmq_vip_instance: Cancel import ([#2033](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2033))
+* resource/tencentcloud_tdmq_rocketmq_vip_instance: Optimize `storage_size` parameter issue ([#2029](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2029))
+
 ## 1.81.19 (August 04, 2023)
 
 FEATURES:

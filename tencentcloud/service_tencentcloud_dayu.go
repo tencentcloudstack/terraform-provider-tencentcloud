@@ -1827,7 +1827,7 @@ func (me *DayuService) SetSession(ctx context.Context, resourceType string, reso
 	return
 }
 
-func (me *DayuService) DescribeL7RulesV2(ctx context.Context, business string, offset int, limit int, extendParams map[string]interface{}) (rules []*dayu.NewL7RuleEntry, healths []*dayu.L7RuleHealth, errRet error) {
+func (me *DayuService) DescribeL7RulesV2(ctx context.Context, business string, extendParams map[string]interface{}) (rules []*dayu.NewL7RuleEntry, healths []*dayu.L7RuleHealth, errRet error) {
 	logId := getLogId(ctx)
 	request := dayu.NewDescribleNewL7RulesRequest()
 
@@ -1850,32 +1850,46 @@ func (me *DayuService) DescribeL7RulesV2(ctx context.Context, business string, o
 			request.Domain = &domain
 		}
 	}
-	offsetUint64 := uint64(offset)
-	request.Offset = &offsetUint64
-	limitUint64 := uint64(limit)
-	request.Limit = &limitUint64
-	var response *dayu.DescribleNewL7RulesResponse
-	errRet = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		ratelimit.Check(request.GetAction())
-		response, errRet = me.client.UseDayuClient().DescribleNewL7Rules(request)
-
-		if e, ok := errRet.(*sdkError.TencentCloudSDKError); ok {
-			if e.GetCode() == "InternalError.ClusterNotFound" {
-				return nil
-			}
+	if v, ok := extendParams["ip"]; ok {
+		ip := v.(string)
+		if ip != "" {
+			request.Ip = &ip
 		}
-		if errRet != nil {
-			return resource.RetryableError(errRet)
-		}
-		return nil
-	})
-	if errRet != nil {
-		return
 	}
-	rules = response.Response.Rules
-	healths = response.Response.Healths
-	return
 
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseDayuClient().DescribleNewL7Rules(request)
+
+		if err != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), err.Error())
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Rules) < 1 {
+			break
+		}
+
+		rules = append(rules, response.Response.Rules...)
+		healths = append(healths, response.Response.Healths...)
+		if len(response.Response.Rules) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+	return
 }
 
 func (me *DayuService) CreateL7RuleV2(ctx context.Context, business string, resourceId string, resourceIp string, ruleList []interface{}) (errRet error) {
