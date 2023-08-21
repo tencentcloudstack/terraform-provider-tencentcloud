@@ -101,7 +101,6 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	emr "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/emr/v20190103"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
 func resourceTencentCloudEmrCluster() *schema.Resource {
@@ -277,12 +276,9 @@ func resourceTencentCloudEmrClusterUpdate(d *schema.ResourceData, meta interface
 		return innerErr.New("Time_unit, time_span or pay_mode must be set.")
 	}
 	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
 		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("emr", "emr-instance", tcClient.Region, instanceId)
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+		err := emrService.ModifyResourcesTags(ctx, meta.(*TencentCloudClient).apiV3Conn.Region, instanceId, oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		if err != nil {
 			return err
 		}
 	}
@@ -390,14 +386,6 @@ func resourceTencentCloudEmrClusterCreate(d *schema.ResourceData, meta interface
 		return err
 	}
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::emr:%s:uin/:emr-instance/%s", region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
 	return nil
 }
 

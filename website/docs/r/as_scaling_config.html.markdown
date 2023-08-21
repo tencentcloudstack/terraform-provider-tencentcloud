@@ -42,6 +42,11 @@ resource "tencentcloud_as_scaling_config" "example" {
   enhanced_monitor_service   = false
   user_data                  = "dGVzdA=="
 
+  host_name_settings {
+    host_name       = "host-name-test"
+    host_name_style = "UNIQUE"
+  }
+
   instance_tags = {
     tag = "example"
   }
@@ -78,6 +83,7 @@ The following arguments are supported:
 * `disk_type_policy` - (Optional, String) Policy of cloud disk type. Valid values: `ORIGINAL` and `AUTOMATIC`. Default is `ORIGINAL`.
 * `enhanced_monitor_service` - (Optional, Bool) To specify whether to enable cloud monitor service. Default is `TRUE`.
 * `enhanced_security_service` - (Optional, Bool) To specify whether to enable cloud security service. Default is `TRUE`.
+* `host_name_settings` - (Optional, List) Related settings of the cloud server hostname (HostName).
 * `instance_charge_type_prepaid_period` - (Optional, Int) The tenancy (in month) of the prepaid instance, NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.
 * `instance_charge_type_prepaid_renew_flag` - (Optional, String) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, String) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
@@ -104,6 +110,11 @@ The `data_disk` object supports the following:
 * `disk_type` - (Optional, String) Types of disk. Valid values: `CLOUD_PREMIUM` and `CLOUD_SSD`. valid when disk_type_policy is ORIGINAL.
 * `snapshot_id` - (Optional, String) Data disk snapshot ID.
 
+The `host_name_settings` object supports the following:
+
+* `host_name` - (Required, String) The host name of the cloud server; dots (.) and dashes (-) cannot be used as the first and last characters of HostName, and cannot be used consecutively; Windows instances are not supported; other types (Linux, etc.) instances: the character length is [2, 40], it is allowed to support multiple dots, and there is a paragraph between the dots, and each paragraph is allowed to consist of letters (no uppercase and lowercase restrictions), numbers and dashes (-). Pure numbers are not allowed.
+* `host_name_style` - (Optional, String) The style of the host name of the cloud server, the value range includes `ORIGINAL` and `UNIQUE`, the default is `ORIGINAL`; `ORIGINAL`, the AS directly passes the HostName filled in the input parameter to the CVM, and the CVM may append a sequence to the HostName number, the HostName of the instance in the scaling group will conflict; `UNIQUE`, the HostName filled in as a parameter is equivalent to the host name prefix, AS and CVM will expand it, and the HostName of the instance in the scaling group can be guaranteed to be unique.
+
 The `instance_name_settings` object supports the following:
 
 * `instance_name` - (Required, String) CVM instance name.
@@ -123,6 +134,6 @@ In addition to all arguments above, the following attributes are exported:
 AutoScaling Configuration can be imported using the id, e.g.
 
 ```
-$ terraform import tencentcloud_as_scaling_config.scaling_config asc-n32ymck2
+$ terraform import tencentcloud_as_scaling_config.example asc-n32ymck2
 ```
 

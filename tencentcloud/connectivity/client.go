@@ -8,6 +8,9 @@ import (
 	"strconv"
 	"time"
 
+	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
+	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
+
 	ciam "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331"
 
 	"github.com/tencentyun/cos-go-sdk-v5"
@@ -173,6 +176,8 @@ type TencentCloudClient struct {
 	tseConn            *tse.Client
 	cdwchConn          *cdwch.Client
 	ebConn             *eb.Client
+	dlcConn            *dlc.Client
+	wedataConn         *wedata.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1224,6 +1229,34 @@ func (me *TencentCloudClient) UseEbClient() *eb.Client {
 	me.ebConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.ebConn
+}
+
+// UseDlcClient returns eb client for service
+func (me *TencentCloudClient) UseDlcClient() *dlc.Client {
+	if me.dlcConn != nil {
+		return me.dlcConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.dlcConn, _ = dlc.NewClient(me.Credential, me.Region, cpf)
+	me.dlcConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.dlcConn
+}
+
+// UseWedataClient returns eb client for service
+func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
+	if me.wedataConn != nil {
+		return me.wedataConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.wedataConn, _ = wedata.NewClient(me.Credential, me.Region, cpf)
+	me.wedataConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.wedataConn
 }
 
 func getEnvDefault(key string, defVal int) int {

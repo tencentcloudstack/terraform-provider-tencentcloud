@@ -16,8 +16,8 @@ Use this data source to query new dayu layer 7 rules
 ```hcl
 data "tencentcloud_dayu_l7_rules_v2" "test" {
   business = "bgpip"
-  offset   = 0
-  limit    = 10
+  domain   = "qq.com"
+  protocol = "https"
 }
 ```
 
@@ -28,8 +28,8 @@ The following arguments are supported:
 * `business` - (Required, String) Type of the resource that the layer 4 rule works for, valid values are `bgpip`, `bgp`, `bgp-multip` and `net`.
 * `domain` - (Optional, String) Domain of resource.
 * `ip` - (Optional, String) Ip of the resource.
-* `limit` - (Optional, Int) The number of pages, default is `10`.
-* `offset` - (Optional, Int) The page start offset, default is `0`.
+* `limit` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.21. The number of pages, default is `10`.
+* `offset` - (Optional, Int, **Deprecated**) It has been deprecated from version 1.81.21. The page start offset, default is `0`.
 * `protocol` - (Optional, String) Protocol of resource, value range [`http`, `https`].
 * `result_output_file` - (Optional, String) Used to save results.
 

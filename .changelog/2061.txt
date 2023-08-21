@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_dlc_user
+```
+
+```release-note:new-resource
+tencentcloud_dlc_work_group
+```

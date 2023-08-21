@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudCcnV3AttachmentBasic(t *testing.T) {
+func TestAccTencentCloudCcnAttachmentResource(t *testing.T) {
 	t.Parallel()
 	keyName := "tencentcloud_ccn_attachment.attachment"
 	keyNameVpngw := "tencentcloud_ccn_attachment.vpngw_ccn_attachment"
@@ -43,6 +43,7 @@ func TestAccTencentCloudCcnV3AttachmentBasic(t *testing.T) {
 					resource.TestCheckResourceAttrSet(keyNameVpngw, "state"),
 					resource.TestCheckResourceAttrSet(keyNameVpngw, "attached_time"),
 					resource.TestCheckResourceAttrSet(keyNameVpngw, "cidr_block.#"),
+					resource.TestCheckResourceAttrSet(keyNameVpngw, "route_ids.#"),
 				),
 			},
 		},

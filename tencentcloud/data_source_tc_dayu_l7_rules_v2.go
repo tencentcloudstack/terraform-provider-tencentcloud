@@ -5,9 +5,9 @@ Example Usage
 
 ```hcl
 data "tencentcloud_dayu_l7_rules_v2" "test" {
-    business = "bgpip"
-    offset = 0
-    limit = 10
+  business = "bgpip"
+  domain   = "qq.com"
+  protocol = "https"
 }
 ```
 */
@@ -50,12 +50,14 @@ func dataSourceTencentCloudDayuL7RulesV2() *schema.Resource {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     0,
+				Deprecated:  "It has been deprecated from version 1.81.21.",
 				Description: "The page start offset, default is `0`.",
 			},
 			"limit": {
 				Type:        schema.TypeInt,
 				Optional:    true,
 				Default:     10,
+				Deprecated:  "It has been deprecated from version 1.81.21.",
 				Description: "The number of pages, default is `10`.",
 			},
 			"result_output_file": {
@@ -205,16 +207,16 @@ func dataSourceTencentCloudDayuL7RulesReadV2(d *schema.ResourceData, meta interf
 	}
 
 	business := d.Get("business").(string)
-	offset := d.Get("offset").(int)
-	limit := d.Get("limit").(int)
 	domain := d.Get("domain").(string)
 	protocol := d.Get("protocol").(string)
+	ip := d.Get("ip").(string)
 
 	extendParams := make(map[string]interface{})
 	extendParams["domain"] = domain
 	extendParams["protocol"] = protocol
+	extendParams["ip"] = ip
 
-	rules, _, err := service.DescribeL7RulesV2(ctx, business, offset, limit, extendParams)
+	rules, _, err := service.DescribeL7RulesV2(ctx, business, extendParams)
 	if err != nil {
 		return err
 	}
