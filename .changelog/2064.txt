@@ -1,0 +1,19 @@
+```release-note:enhancement
+resource/tencentcloud_api_gateway_api_app: Support `tag`
+```
+
+```release-note:new-resource
+tencentcloud_api_gateway_api_app_attachment
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_api_key: Support input `access_key_id`, `access_key_secret`
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_plugin_attachment: Optimization binding failure blocking issue
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_usage_plan_attachment: Support input `access_key_ids``
+```
