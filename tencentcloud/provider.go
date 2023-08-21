@@ -98,6 +98,8 @@ API GateWay
 	tencentcloud_api_gateway_api_keys
 	tencentcloud_api_gateway_api_docs
 	tencentcloud_api_gateway_api_apps
+	tencentcloud_api_gateway_plugins
+	tencentcloud_api_gateway_upstreams
 
   Resource
   	tencentcloud_api_gateway_api
@@ -114,6 +116,8 @@ API GateWay
 	tencentcloud_api_gateway_plugin_attachment
 	tencentcloud_api_gateway_api_doc
 	tencentcloud_api_gateway_api_app
+	tencentcloud_api_gateway_upstream
+	tencentcloud_api_gateway_api_app_attachment
 
 Cloud Audit(Audit)
   Data Source
@@ -2016,6 +2020,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_apis":                          dataSourceTencentCloudAPIGatewayAPIs(),
 			"tencentcloud_api_gateway_services":                      dataSourceTencentCloudAPIGatewayServices(),
 			"tencentcloud_api_gateway_api_keys":                      dataSourceTencentCloudAPIGatewayAPIKeys(),
+			"tencentcloud_api_gateway_plugins":                       dataSourceTencentCloudAPIGatewayPlugins(),
+			"tencentcloud_api_gateway_upstreams":                     dataSourceTencentCloudAPIGatewayUpstreams(),
 			"tencentcloud_sqlserver_basic_instances":                 dataSourceTencentCloudSqlserverBasicInstances(),
 			"tencentcloud_sqlserver_query_xevent":                    dataSourceTencentCloudSqlserverQueryXevent(),
 			"tencentcloud_sqlserver_ins_attribute":                   dataSourceTencentCloudSqlserverInsAttribute(),

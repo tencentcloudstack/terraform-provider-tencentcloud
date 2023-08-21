@@ -2134,3 +2134,110 @@ func (me *APIGatewayService) DeleteApigatewayUpstreamById(ctx context.Context, u
 
 	return
 }
+
+func (me *APIGatewayService) DescribeAPIGatewayPluginByFilter(ctx context.Context, param map[string]interface{}) (plugin []*apigateway.AvailableApiInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeAllPluginApisRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+		if k == "PluginId" {
+			request.PluginId = v.(*string)
+		}
+		if k == "EnvironmentName" {
+			request.EnvironmentName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseAPIGatewayClient().DescribeAllPluginApis(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.ApiSet) < 1 {
+			break
+		}
+		plugin = append(plugin, response.Response.Result.ApiSet...)
+		if len(response.Response.Result.ApiSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *APIGatewayService) DescribeAPIGatewayUpstreamByFilter(ctx context.Context, param map[string]interface{}) (upstream []*apigateway.BindApiInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeUpstreamBindApisRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "UpstreamId" {
+			request.UpstreamId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*apigateway.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 100
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseAPIGatewayClient().DescribeUpstreamBindApis(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.BindApiSet) < 1 {
+			break
+		}
+		upstream = append(upstream, response.Response.Result.BindApiSet...)
+		if len(response.Response.Result.BindApiSet) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

@@ -6,6 +6,14 @@ tencentcloud_api_gateway_api_app_attachment
 tencentcloud_api_gateway_upstream
 ```
 
+```release-note:new-data-source
+tencentcloud_api_gateway_plugins
+```
+
+```release-note:new-data-source
+tencentcloud_api_gateway_upstreams
+```
+
 ```release-note:enhancement
 resource/tencentcloud_api_gateway_api_app: Support `tag`
 ```
