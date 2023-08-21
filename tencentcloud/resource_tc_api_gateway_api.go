@@ -73,7 +73,7 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Which service this API belongs. Refer to resource `tencentcloud_api_gateway_service`.",
+				Description: "The unique ID of the service where the API is located. Refer to resource `tencentcloud_api_gateway_service`.",
 			},
 			"api_name": {
 				Type:        schema.TypeString,
@@ -85,12 +85,19 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 				Optional:    true,
 				Description: "Custom API description.",
 			},
+			"api_type": {
+				Optional:     true,
+				Type:         schema.TypeString,
+				Default:      API_GATEWAY_API_TYPE_NORMAL,
+				ValidateFunc: validateAllowedStringValue(API_GATEWAY_APT_TYPES),
+				Description:  "API type, supports NORMAL (regular API) and TSF (microservice API), defaults to NORMAL.",
+			},
 			"auth_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      API_GATEWAY_AUTH_TYPE_NONE,
 				ValidateFunc: validateAllowedStringValue(API_GATEWAY_AUTH_TYPES),
-				Description:  "API authentication type. Valid values: `SECRET` (key pair authentication),`NONE` (no authentication). Default value: `NONE`.",
+				Description:  "API authentication type. Support SECRET (Key Pair Authentication), NONE (Authentication Exemption), OAUTH, APP (Application Authentication). The default is NONE.",
 			},
 			"protocol": {
 				Type:         schema.TypeString,
@@ -117,6 +124,35 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 				Default:      "GET",
 				ValidateFunc: validateAllowedStringValue([]string{"GET", "POST", "PUT", "DELETE", "HEAD", "ANY"}),
 				Description:  "Request frontend method configuration. Valid values: `GET`,`POST`,`PUT`,`DELETE`,`HEAD`,`ANY`. Default value: `GET`.",
+			},
+			"constant_parameters": {
+				Optional:    true,
+				Type:        schema.TypeSet,
+				Description: "Constant parameter.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Constant parameter name. This parameter is only used when ServiceType is HTTP.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"desc": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Constant parameter description. This parameter is only used when ServiceType is HTTP.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"position": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Constant parameter position. This parameter is only used when ServiceType is HTTP.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"default_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Default value for constant parameters. This parameter is only used when ServiceType is HTTP.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+					},
+				},
 			},
 			"request_parameters": {
 				Type:        schema.TypeSet,
@@ -158,12 +194,171 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 					},
 				},
 			},
+			"micro_services": {
+				Optional:    true,
+				Type:        schema.TypeSet,
+				Description: "API bound microservice list.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"cluster_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Micro service cluster.",
+						},
+						"namespace_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Microservice namespace.",
+						},
+						"micro_service_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Microservice name.",
+						},
+					},
+				},
+			},
+			"service_tsf_load_balance_conf": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Load balancing configuration for microservices.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"is_load_balance": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Is load balancing enabled.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"method": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Load balancing method.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"session_stick_required": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether to enable session persistence.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"session_stick_timeout": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Session hold timeout.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+					},
+				},
+			},
+			"service_tsf_health_check_conf": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Health check configuration for microservices.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"is_health_check": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether to initiate a health check.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"request_volume_threshold": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Health check threshold.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"sleep_window_in_milliseconds": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Window size.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"error_threshold_percentage": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Threshold percentage.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+					},
+				},
+			},
+			"target_services": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "Target type backend resource information. (Internal testing stage).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"vm_ip": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "vm ip.",
+						},
+						"vpc_id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "vpc id.",
+						},
+						"vm_port": {
+							Type:        schema.TypeInt,
+							Required:    true,
+							Description: "vm port.",
+						},
+						"host_ip": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Host IP of the CVM.",
+						},
+						"docker_ip": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "docker ip.",
+						},
+					},
+				},
+			},
+			"target_services_load_balance_conf": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "Target type load balancing configuration. (Internal testing stage).",
+			},
+			"target_services_health_check_conf": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "Target health check configuration. (Internal testing stage).",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"is_health_check": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether to initiate a health check.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"request_volume_threshold": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Health check threshold.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"sleep_window_in_milliseconds": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Window size.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"error_threshold_percentage": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Threshold percentage.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+					},
+				},
+			},
+			"api_business_type": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "When `auth_type` is OAUTH, this field is valid, NORMAL: Business API, OAUTH: Authorization API.",
+			},
 			"service_config_type": {
 				Type:         schema.TypeString,
 				Optional:     true,
 				Default:      API_GATEWAY_SERVICE_TYPE_HTTP,
 				ValidateFunc: validateAllowedStringValue(API_GATEWAY_SERVICE_TYPES),
-				Description:  "API backend service type. Valid values: `WEBSOCKET`, `HTTP`, `SCF`, `MOCK`. Default value: `HTTP`.",
+				Description:  "The backend service type of the API. Supports HTTP, MOCK, TSF, SCF, WEBSOCKET, COS, TARGET (internal testing).",
 			},
 			"service_config_timeout": {
 				Type:        schema.TypeInt,
@@ -174,7 +369,7 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 			"service_config_product": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Backend type. This parameter takes effect when VPC is enabled. Currently, only `clb` is supported.",
+				Description: "Backend type. Effective when enabling vpc, currently supported types are clb, cvm, and upstream.",
 			},
 			"service_config_vpc_id": {
 				Type:        schema.TypeString,
@@ -184,7 +379,7 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 			"service_config_url": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "API backend service url. This parameter is required when `service_config_type` is `HTTP`.",
+				Description: "The backend service URL of the API. If the ServiceType is HTTP, this parameter must be passed.",
 			},
 			"service_config_path": {
 				Type:        schema.TypeString,
@@ -195,6 +390,41 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "API backend service request method, such as `GET`. If `service_config_type` is `HTTP`, this parameter will be required. The frontend `request_config_method` and backend method `service_config_method` can be different.",
+			},
+			"service_config_upstream_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Only required when binding to VPC channelsNote: This field may return null, indicating that a valid value cannot be obtained.",
+			},
+			"service_config_cos_config": {
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Optional:    true,
+				Description: "API backend COS configuration. If ServiceType is COS, then this parameter must be passed.Note: This field may return null, indicating that a valid value cannot be obtained.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"action": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The API calls the backend COS method, and the optional values for the front-end request method and Action are:GET: GetObjectPUT: PutObjectPOST: PostObject, AppendObjectHEAD: HeadObjectDELETE: DeleteObject.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"bucket_name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The bucket name of the API backend COS.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"authorization": {
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "The API calls the signature switch of the backend COS, which defaults to false.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"path_match_mode": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Path matching mode for API backend COS, optional values:BackEndPath: Backend path matchingFullPath: Full Path MatchingThe default value is: BackEndPathNote: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+					},
+				},
 			},
 			"service_config_scf_function_name": {
 				Type:        schema.TypeString,
@@ -211,10 +441,77 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 				Optional:    true,
 				Description: "SCF function version. This parameter takes effect when `service_config_type` is `SCF`.",
 			},
+			"service_config_scf_function_type": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Scf function type. Effective when the backend type is SCF. Support Event Triggering (EVENT) and HTTP Direct Cloud Function (HTTP).",
+			},
+			"service_config_scf_is_integrated_response": {
+				Optional:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable response integration. Effective when the backend type is SCF.",
+			},
 			"service_config_mock_return_message": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Returned information of API backend mocking. This parameter is required when `service_config_type` is `MOCK`.",
+			},
+			"service_config_websocket_register_function_name": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Scf websocket registration function. It takes effect when the current end type is WEBSOCKET and the backend type is SCF.",
+			},
+			"service_config_websocket_cleanup_function_name": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Scf websocket cleaning function. It takes effect when the current end type is WEBSOCKET and the backend type is SCF.",
+			},
+			"service_config_websocket_transport_function_name": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Scf websocket transfer function. It takes effect when the current end type is WEBSOCKET and the backend type is SCF.",
+			},
+			"service_config_websocket_register_function_namespace": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Scf websocket registers function namespaces. It takes effect when the current end type is WEBSOCKET and the backend type is SCF.",
+			},
+			"service_config_websocket_register_function_qualifier": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Scf websocket transfer function version. It takes effect when the current end type is WEBSOCKET and the backend type is SCF.",
+			},
+			"service_config_websocket_transport_function_namespace": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Scf websocket transfer function namespace. It takes effect when the current end type is WEBSOCKET and the backend type is SCF.",
+			},
+			"service_config_websocket_transport_function_qualifier": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Scf websocket transfer function version. It takes effect when the current end type is WEBSOCKET and the backend type is SCF.",
+			},
+			"service_config_websocket_cleanup_function_namespace": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Scf websocket cleans up the function namespace. It takes effect when the current end type is WEBSOCKET and the backend type is SCF.",
+			},
+			"service_config_websocket_cleanup_function_qualifier": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Scf websocket cleaning function version. It takes effect when the current end type is WEBSOCKET and the backend type is SCF.",
+			},
+			"is_debug_after_charge": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeBool,
+				Description: "Charge after starting debugging. (Cloud Market Reserved Fields).",
+			},
+			"is_delete_response_error_codes": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeBool,
+				Description: "Do you want to delete the custom response configuration error code? If it is not passed or False is passed, it will not be deleted. If True is passed, all custom response configuration error codes for this API will be deleted.",
 			},
 			"response_type": {
 				Type:         schema.TypeString,
@@ -226,11 +523,13 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 			"response_success_example": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Successful response sample of custom response configuration.",
 			},
 			"response_fail_example": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				Computed:    true,
 				Description: "Response failure sample of custom response configuration.",
 			},
 			"response_error_codes": {
@@ -268,6 +567,127 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 					},
 				},
 			},
+			"auth_relation_api_id": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeString,
+				Description: "The unique ID of the associated authorization API takes effect when AuthType is OAUTH and ApiBusinessType is NORMAL. The unique ID of the oauth2.0 authorized API that identifies the business API binding.",
+			},
+			"service_parameters": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				Description: "The backend service parameters of the API.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The backend service parameter name of the API. This parameter is only used when ServiceType is HTTP. The front and rear parameter names can be different.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"position": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The backend service parameter location of the API, such as head. This parameter is only used when ServiceType is HTTP. The parameter positions at the front and rear ends can be configured differently.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"relevant_request_parameter_position": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The location of the front-end parameters corresponding to the backend service parameters of the API, such as head. This parameter is only used when ServiceType is HTTP.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"relevant_request_parameter_name": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The name of the front-end parameter corresponding to the backend service parameter of the API. This parameter is only used when ServiceType is HTTP.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"default_value": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The default value for the backend service parameters of the API. This parameter is only used when ServiceType is HTTP.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"relevant_request_parameter_desc": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Remarks on the backend service parameters of the API. This parameter is only used when ServiceType is HTTP.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+						"relevant_request_parameter_type": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "The backend service parameter type of the API. This parameter is only used when ServiceType is HTTP.Note: This field may return null, indicating that a valid value cannot be obtained.",
+						},
+					},
+				},
+			},
+			"oauth_config": {
+				Optional:    true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Description: "OAuth configuration. Effective when AuthType is OAUTH.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"public_key": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Public key, used to verify user tokens.",
+						},
+						"token_location": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Token passes the position.",
+						},
+						"login_redirect_url": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Redirect address, used to guide users in login operations.",
+						},
+					},
+				},
+			},
+			"target_namespace_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Tsf serverless namespace ID. (In internal testing).",
+			},
+			"user_type": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "User type.",
+			},
+			"is_base64_encoded": {
+				Optional:    true,
+				Computed:    true,
+				Type:        schema.TypeBool,
+				Description: "Whether to enable Base64 encoding will only take effect when the backend is scf.",
+			},
+			"event_bus_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Event bus ID.",
+			},
+			"eiam_app_type": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "EIAM application type.",
+			},
+			"eiam_auth_type": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "The EIAM application authentication type supports AuthenticationOnly, Authentication, and Authorization.",
+			},
+			"eiam_app_id": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "EIAM application ID.",
+			},
+			"token_timeout": {
+				Optional:    true,
+				Type:        schema.TypeInt,
+				Description: "The effective time of the EIAM application token, measured in seconds, defaults to 7200 seconds.",
+			},
+			"owner": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Owner of resources.",
+			},
 			"release_limit": {
 				Type:        schema.TypeInt,
 				Optional:    true,
@@ -285,6 +705,11 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "API QPS value. Enter a positive number to limit the API query rate per second `QPS`.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
 			},
 			// Computed values.
 			"update_time": {
@@ -325,12 +750,35 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		request.ApiDesc = helper.String(object.(string))
 	}
 
+	request.ApiType = helper.String(d.Get("api_type").(string))
 	request.AuthType = helper.String(d.Get("auth_type").(string))
 	request.Protocol = helper.String(d.Get("protocol").(string))
 	request.EnableCORS = helper.Bool(d.Get("enable_cors").(bool))
 	request.RequestConfig =
 		&apigateway.ApiRequestConfig{Path: helper.String(d.Get("request_config_path").(string)),
 			Method: helper.String(d.Get("request_config_method").(string))}
+
+	if v, ok := d.GetOk("constant_parameters"); ok {
+		constantParameters := v.(*schema.Set).List()
+		request.ConstantParameters = make([]*apigateway.ConstantParameter, 0, len(constantParameters))
+		for _, item := range constantParameters {
+			dMap := item.(map[string]interface{})
+			constantParameter := apigateway.ConstantParameter{}
+			if v, ok := dMap["name"]; ok {
+				constantParameter.Name = helper.String(v.(string))
+			}
+			if v, ok := dMap["desc"]; ok {
+				constantParameter.Desc = helper.String(v.(string))
+			}
+			if v, ok := dMap["position"]; ok {
+				constantParameter.Position = helper.String(v.(string))
+			}
+			if v, ok := dMap["default_value"]; ok {
+				constantParameter.DefaultValue = helper.String(v.(string))
+			}
+			request.ConstantParameters = append(request.ConstantParameters, &constantParameter)
+		}
+	}
 
 	if object, ok := d.GetOk("request_parameters"); ok {
 		parameters := object.(*schema.Set).List()
@@ -353,6 +801,111 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	if v, ok := d.GetOk("micro_services"); ok {
+		microServices := v.(*schema.Set).List()
+		request.MicroServices = make([]*apigateway.MicroServiceReq, 0, len(microServices))
+		for _, item := range microServices {
+			dMap := item.(map[string]interface{})
+			microServiceReq := apigateway.MicroServiceReq{}
+			if v, ok := dMap["cluster_id"]; ok {
+				microServiceReq.ClusterId = helper.String(v.(string))
+			}
+			if v, ok := dMap["namespace_id"]; ok {
+				microServiceReq.NamespaceId = helper.String(v.(string))
+			}
+			if v, ok := dMap["micro_service_name"]; ok {
+				microServiceReq.MicroServiceName = helper.String(v.(string))
+			}
+			request.MicroServices = append(request.MicroServices, &microServiceReq)
+		}
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "service_tsf_load_balance_conf"); ok {
+		tsfLoadBalanceConfResp := apigateway.TsfLoadBalanceConfResp{}
+		if v, ok := dMap["is_load_balance"]; ok {
+			tsfLoadBalanceConfResp.IsLoadBalance = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["method"]; ok {
+			tsfLoadBalanceConfResp.Method = helper.String(v.(string))
+		}
+		if v, ok := dMap["session_stick_required"]; ok {
+			tsfLoadBalanceConfResp.SessionStickRequired = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["session_stick_timeout"]; ok {
+			tsfLoadBalanceConfResp.SessionStickTimeout = helper.IntInt64(v.(int))
+		}
+		request.ServiceTsfLoadBalanceConf = &tsfLoadBalanceConfResp
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "service_tsf_health_check_conf"); ok {
+		healthCheckConf := apigateway.HealthCheckConf{}
+		if v, ok := dMap["is_health_check"]; ok {
+			healthCheckConf.IsHealthCheck = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["request_volume_threshold"]; ok {
+			healthCheckConf.RequestVolumeThreshold = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["sleep_window_in_milliseconds"]; ok {
+			healthCheckConf.SleepWindowInMilliseconds = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["error_threshold_percentage"]; ok {
+			healthCheckConf.ErrorThresholdPercentage = helper.IntInt64(v.(int))
+		}
+		request.ServiceTsfHealthCheckConf = &healthCheckConf
+	}
+
+	if v, ok := d.GetOk("target_services"); ok {
+		targetServices := v.(*schema.Set).List()
+		request.TargetServices = make([]*apigateway.TargetServicesReq, 0, len(targetServices))
+		for _, item := range targetServices {
+			dMap := item.(map[string]interface{})
+			targetServicesReq := apigateway.TargetServicesReq{}
+			if v, ok := dMap["vm_ip"]; ok {
+				targetServicesReq.VmIp = helper.String(v.(string))
+			}
+			if v, ok := dMap["vpc_id"]; ok {
+				targetServicesReq.VpcId = helper.String(v.(string))
+			}
+			if v, ok := dMap["vm_port"]; ok {
+				targetServicesReq.VmPort = helper.IntInt64(v.(int))
+			}
+			if v, ok := dMap["host_ip"]; ok {
+				targetServicesReq.HostIp = helper.String(v.(string))
+			}
+			if v, ok := dMap["docker_ip"]; ok {
+				targetServicesReq.DockerIp = helper.String(v.(string))
+			}
+			request.TargetServices = append(request.TargetServices, &targetServicesReq)
+		}
+	}
+
+	if v, ok := d.GetOkExists("target_services_load_balance_conf"); ok {
+		request.TargetServicesLoadBalanceConf = helper.IntInt64(v.(int))
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "target_services_health_check_conf"); ok {
+		healthCheckConf := apigateway.HealthCheckConf{}
+		if v, ok := dMap["is_health_check"]; ok {
+			healthCheckConf.IsHealthCheck = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["request_volume_threshold"]; ok {
+			healthCheckConf.RequestVolumeThreshold = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["sleep_window_in_milliseconds"]; ok {
+			healthCheckConf.SleepWindowInMilliseconds = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["error_threshold_percentage"]; ok {
+			healthCheckConf.ErrorThresholdPercentage = helper.IntInt64(v.(int))
+		}
+		request.TargetServicesHealthCheckConf = &healthCheckConf
+	}
+
+	if *request.AuthType == "OAUTH" {
+		if v, ok := d.GetOk("api_business_type"); ok {
+			request.ApiBusinessType = helper.String(v.(string))
+		}
+	}
+
 	var serviceType = d.Get("service_config_type").(string)
 	request.ServiceType = &serviceType
 	request.ServiceTimeout = helper.IntInt64(d.Get("service_config_timeout").(int))
@@ -365,10 +918,8 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		serviceConfigUrl := d.Get("service_config_url").(string)
 		serviceConfigPath := d.Get("service_config_path").(string)
 		serviceConfigMethod := d.Get("service_config_method").(string)
+		serviceConfigUpstreamId := d.Get("service_config_upstream_id").(string)
 		if serviceConfigProduct != "" {
-			if serviceConfigProduct != "clb" {
-				return fmt.Errorf("`service_config_product` only support `clb` now")
-			}
 			if serviceConfigVpcId == "" {
 				return fmt.Errorf("`service_config_product` need param `service_config_vpc_id`")
 			}
@@ -382,6 +933,9 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		}
 		if serviceConfigVpcId != "" {
 			request.ServiceConfig.UniqVpcId = &serviceConfigVpcId
+		}
+		if serviceConfigUpstreamId != "" {
+			request.ServiceConfig.UpstreamId = &serviceConfigUpstreamId
 		}
 
 		request.ServiceConfig.Url = &serviceConfigUrl
@@ -399,12 +953,62 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		scfFunctionName := d.Get("service_config_scf_function_name").(string)
 		scfFunctionNamespace := d.Get("service_config_scf_function_namespace").(string)
 		scfFunctionQualifier := d.Get("service_config_scf_function_qualifier").(string)
-		if scfFunctionName == "" || scfFunctionNamespace == "" || scfFunctionQualifier == "" {
-			return fmt.Errorf("`service_config_scf_function_name`,`service_config_scf_function_namespace`,`service_config_scf_function_qualifier` is needed if `service_config_type` is `SCF`")
+		scfFunctionType := d.Get("service_config_scf_function_type").(string)
+		scfFunctionIntegratedResponse := d.Get("service_config_scf_is_integrated_response").(bool)
+		if scfFunctionName == "" || scfFunctionNamespace == "" || scfFunctionQualifier == "" || scfFunctionType == "" {
+			return fmt.Errorf("`service_config_scf_function_name`,`service_config_scf_function_namespace`,`service_config_scf_function_qualifier`, `service_config_scf_function_type` is needed if `service_config_type` is `SCF`")
 		}
 		request.ServiceScfFunctionName = &scfFunctionName
 		request.ServiceScfFunctionNamespace = &scfFunctionNamespace
 		request.ServiceScfFunctionQualifier = &scfFunctionQualifier
+		request.ServiceScfFunctionType = &scfFunctionType
+		request.ServiceScfIsIntegratedResponse = &scfFunctionIntegratedResponse
+
+	case API_GATEWAY_SERVICE_TYPE_COS:
+		if dMap, ok := helper.InterfacesHeadMap(d, "service_config_cos_config"); ok {
+			cosConfig := apigateway.ServiceConfig{}.CosConfig
+			if v, ok := dMap["action"]; ok {
+				cosConfig.Action = helper.String(v.(string))
+			}
+			if v, ok := dMap["bucket_name"]; ok {
+				cosConfig.BucketName = helper.String(v.(string))
+			}
+			if v, ok := dMap["authorization"]; ok {
+				cosConfig.Authorization = helper.Bool(v.(bool))
+			}
+			if v, ok := dMap["path_match_mode"]; ok {
+				cosConfig.PathMatchMode = helper.String(v.(string))
+			}
+			request.ServiceConfig.CosConfig = cosConfig
+		}
+	case API_GATEWAY_SERVICE_TYPE_TSF:
+		serviceWebsocketRegisterFunctionName := d.Get("service_config_websocket_register_function_name").(string)
+		serviceWebsocketRegisterFunctionNamespace := d.Get("service_config_websocket_register_function_namespace").(string)
+		serviceWebsocketRegisterFunctionQualifier := d.Get("service_config_websocket_register_function_qualifier").(string)
+		serviceWebsocketCleanupFunctionName := d.Get("service_config_websocket_cleanup_function_name").(string)
+		serviceWebsocketCleanupFunctionNamespace := d.Get("service_config_websocket_cleanup_function_namespace").(string)
+		serviceWebsocketCleanupFunctionQualifier := d.Get("service_config_websocket_cleanup_function_qualifier").(string)
+		serviceWebsocketTransportFunctionName := d.Get("service_config_websocket_transport_function_name").(string)
+		serviceWebsocketTransportFunctionNamespace := d.Get("service_config_websocket_transport_function_namespace").(string)
+		serviceWebsocketTransportFunctionQualifier := d.Get("service_config_websocket_transport_function_qualifier").(string)
+
+		request.ServiceWebsocketRegisterFunctionName = &serviceWebsocketRegisterFunctionName
+		request.ServiceWebsocketRegisterFunctionNamespace = &serviceWebsocketRegisterFunctionNamespace
+		request.ServiceWebsocketRegisterFunctionQualifier = &serviceWebsocketRegisterFunctionQualifier
+		request.ServiceWebsocketCleanupFunctionName = &serviceWebsocketCleanupFunctionName
+		request.ServiceWebsocketCleanupFunctionNamespace = &serviceWebsocketCleanupFunctionNamespace
+		request.ServiceWebsocketCleanupFunctionQualifier = &serviceWebsocketCleanupFunctionQualifier
+		request.ServiceWebsocketTransportFunctionName = &serviceWebsocketTransportFunctionName
+		request.ServiceWebsocketTransportFunctionNamespace = &serviceWebsocketTransportFunctionNamespace
+		request.ServiceWebsocketTransportFunctionQualifier = &serviceWebsocketTransportFunctionQualifier
+	}
+
+	if v, ok := d.GetOkExists("is_debug_after_charge"); ok {
+		request.IsDebugAfterCharge = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("is_delete_response_error_codes"); ok {
+		request.IsDeleteResponseErrorCodes = helper.Bool(v.(bool))
 	}
 
 	request.ResponseType = helper.String(d.Get("response_type").(string))
@@ -416,6 +1020,56 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 	if object, ok := d.GetOk("response_fail_example"); ok {
 		request.ResponseFailExample = helper.String(object.(string))
 	}
+
+	if v, ok := d.GetOk("auth_relation_api_id"); ok {
+		request.AuthRelationApiId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("service_parameters"); ok {
+		serviceParameters := v.(*schema.Set).List()
+		request.ServiceParameters = make([]*apigateway.ServiceParameter, 0, len(serviceParameters))
+		for _, item := range serviceParameters {
+			dMap := item.(map[string]interface{})
+			serviceParameter := apigateway.ServiceParameter{}
+			if v, ok := dMap["name"]; ok {
+				serviceParameter.Name = helper.String(v.(string))
+			}
+			if v, ok := dMap["position"]; ok {
+				serviceParameter.Position = helper.String(v.(string))
+			}
+			if v, ok := dMap["relevant_request_parameter_position"]; ok {
+				serviceParameter.RelevantRequestParameterPosition = helper.String(v.(string))
+			}
+			if v, ok := dMap["relevant_request_parameter_name"]; ok {
+				serviceParameter.RelevantRequestParameterName = helper.String(v.(string))
+			}
+			if v, ok := dMap["default_value"]; ok {
+				serviceParameter.DefaultValue = helper.String(v.(string))
+			}
+			if v, ok := dMap["relevant_request_parameter_desc"]; ok {
+				serviceParameter.RelevantRequestParameterDesc = helper.String(v.(string))
+			}
+			if v, ok := dMap["relevant_request_parameter_type"]; ok {
+				serviceParameter.RelevantRequestParameterType = helper.String(v.(string))
+			}
+			request.ServiceParameters = append(request.ServiceParameters, &serviceParameter)
+		}
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "oauth_config"); ok {
+		oauthConfig := apigateway.OauthConfig{}
+		if v, ok := dMap["public_key"]; ok {
+			oauthConfig.PublicKey = helper.String(v.(string))
+		}
+		if v, ok := dMap["token_location"]; ok {
+			oauthConfig.TokenLocation = helper.String(v.(string))
+		}
+		if v, ok := dMap["login_redirect_url"]; ok {
+			oauthConfig.LoginRedirectUrl = helper.String(v.(string))
+		}
+		request.OauthConfig = &oauthConfig
+	}
+
 	if object, ok := d.GetOk("response_error_codes"); ok {
 		codes := object.(*schema.Set).List()
 		request.ResponseErrorCodes = make([]*apigateway.ResponseErrorCodeReq, 0, len(codes))
@@ -439,6 +1093,46 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 			}
 			request.ResponseErrorCodes = append(request.ResponseErrorCodes, codeReq)
 		}
+	}
+
+	if v, ok := d.GetOk("target_namespace_id"); ok {
+		request.TargetNamespaceId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("user_type"); ok {
+		request.UserType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("is_base64_encoded"); ok {
+		request.IsBase64Encoded = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("event_bus_id"); ok {
+		request.EventBusId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("service_scf_function_type"); ok {
+		request.ServiceScfFunctionType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("eiam_app_type"); ok {
+		request.EIAMAppType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("eiam_auth_type"); ok {
+		request.EIAMAuthType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("eiam_app_id"); ok {
+		request.EIAMAppId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("token_timeout"); ok {
+		request.TokenTimeout = helper.IntInt64(v.(int))
+	}
+
+	if v, ok := d.GetOk("owner"); ok {
+		request.Owner = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("pre_limit"); ok {
@@ -503,6 +1197,15 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::apigateway:%s:uin/:apiId/%s", region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	d.SetId(*response.Response.Result.ApiId)
 
 	return resourceTencentCloudAPIGatewayAPIRead(d, meta)
@@ -544,25 +1247,40 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("service_id", info.ServiceId)
 	_ = d.Set("api_name", info.ApiName)
 	_ = d.Set("api_desc", info.ApiDesc)
+	_ = d.Set("api_type", info.ApiType)
 	_ = d.Set("auth_type", info.AuthType)
 	_ = d.Set("protocol", info.Protocol)
+	_ = d.Set("request_config_path", info.RequestConfig.Path)
+	_ = d.Set("request_config_method", info.RequestConfig.Method)
 	_ = d.Set("enable_cors", info.EnableCORS)
-	_ = d.Set("response_type", info.ResponseType)
-	_ = d.Set("response_success_example", info.ResponseSuccessExample)
-	_ = d.Set("response_fail_example", info.ResponseFailExample)
-	_ = d.Set("service_config_type", info.ServiceType)
-	_ = d.Set("service_config_timeout", info.ServiceTimeout)
-	_ = d.Set("service_config_scf_function_name", info.ServiceScfFunctionName)
-	_ = d.Set("service_config_scf_function_namespace", info.ServiceScfFunctionNamespace)
-	_ = d.Set("service_config_scf_function_qualifier", info.ServiceScfFunctionQualifier)
-	_ = d.Set("service_config_mock_return_message", info.ServiceMockReturnMessage)
-	_ = d.Set("update_time", info.ModifiedTime)
-	_ = d.Set("create_time", info.CreatedTime)
 
-	if info.RequestConfig != nil {
-		_ = d.Set("request_config_path", info.RequestConfig.Path)
-		_ = d.Set("request_config_method", info.RequestConfig.Method)
+	if info.ConstantParameters != nil {
+		constantParametersList := []interface{}{}
+		for _, constantParameters := range info.ConstantParameters {
+			constantParametersMap := map[string]interface{}{}
+
+			if constantParameters.Name != nil {
+				constantParametersMap["name"] = constantParameters.Name
+			}
+
+			if constantParameters.Desc != nil {
+				constantParametersMap["desc"] = constantParameters.Desc
+			}
+
+			if constantParameters.Position != nil {
+				constantParametersMap["position"] = constantParameters.Position
+			}
+
+			if constantParameters.DefaultValue != nil {
+				constantParametersMap["default_value"] = constantParameters.DefaultValue
+			}
+
+			constantParametersList = append(constantParametersList, constantParametersMap)
+		}
+
+		_ = d.Set("constant_parameters", constantParametersList)
 	}
+
 	if info.RequestParameters != nil {
 		list := make([]map[string]interface{}, 0, len(info.RequestParameters))
 		for _, param := range info.RequestParameters {
@@ -578,12 +1296,209 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("request_parameters", list)
 	}
 
+	if info.MicroServices != nil {
+		microServicesList := []interface{}{}
+		for _, microServices := range info.MicroServices {
+			microServicesMap := map[string]interface{}{}
+
+			if microServices.ClusterId != nil {
+				microServicesMap["cluster_id"] = microServices.ClusterId
+			}
+
+			if microServices.NamespaceId != nil {
+				microServicesMap["namespace_id"] = microServices.NamespaceId
+			}
+
+			if microServices.MicroServiceName != nil {
+				microServicesMap["micro_service_name"] = microServices.MicroServiceName
+			}
+
+			microServicesList = append(microServicesList, microServicesMap)
+		}
+
+		_ = d.Set("micro_services", microServicesList)
+
+	}
+
+	if info.ServiceTsfLoadBalanceConf != nil {
+		ServiceTsfLoadBalanceConfMap := map[string]interface{}{}
+
+		if info.ServiceTsfLoadBalanceConf.IsLoadBalance != nil {
+			ServiceTsfLoadBalanceConfMap["is_load_balance"] = info.ServiceTsfLoadBalanceConf.IsLoadBalance
+		}
+
+		if info.ServiceTsfLoadBalanceConf.Method != nil {
+			ServiceTsfLoadBalanceConfMap["method"] = info.ServiceTsfLoadBalanceConf.Method
+		}
+
+		if info.ServiceTsfLoadBalanceConf.SessionStickRequired != nil {
+			ServiceTsfLoadBalanceConfMap["session_stick_required"] = info.ServiceTsfLoadBalanceConf.SessionStickRequired
+		}
+
+		if info.ServiceTsfLoadBalanceConf.SessionStickTimeout != nil {
+			ServiceTsfLoadBalanceConfMap["session_stick_timeout"] = info.ServiceTsfLoadBalanceConf.SessionStickTimeout
+		}
+
+		_ = d.Set("service_tsf_load_balance_conf", []interface{}{ServiceTsfLoadBalanceConfMap})
+	}
+
+	if info.ServiceTsfHealthCheckConf != nil {
+		serviceTsfHealthCheckConfMap := map[string]interface{}{}
+
+		if info.ServiceTsfHealthCheckConf.IsHealthCheck != nil {
+			serviceTsfHealthCheckConfMap["is_health_check"] = info.ServiceTsfHealthCheckConf.IsHealthCheck
+		}
+
+		if info.ServiceTsfHealthCheckConf.RequestVolumeThreshold != nil {
+			serviceTsfHealthCheckConfMap["request_volume_threshold"] = info.ServiceTsfHealthCheckConf.RequestVolumeThreshold
+		}
+
+		if info.ServiceTsfHealthCheckConf.SleepWindowInMilliseconds != nil {
+			serviceTsfHealthCheckConfMap["sleep_window_in_milliseconds"] = info.ServiceTsfHealthCheckConf.SleepWindowInMilliseconds
+		}
+
+		if info.ServiceTsfHealthCheckConf.ErrorThresholdPercentage != nil {
+			serviceTsfHealthCheckConfMap["error_threshold_percentage"] = info.ServiceTsfHealthCheckConf.ErrorThresholdPercentage
+		}
+
+		_ = d.Set("service_tsf_health_check_conf", []interface{}{serviceTsfHealthCheckConfMap})
+	}
+
+	if info.ApiBusinessType != nil {
+		_ = d.Set("api_business_type", info.ApiBusinessType)
+	}
+
+	_ = d.Set("service_config_type", info.ServiceType)
+	_ = d.Set("service_config_timeout", info.ServiceTimeout)
 	if info.ServiceConfig != nil {
-		_ = d.Set("service_config_product", info.ServiceConfig.Product)
-		_ = d.Set("service_config_vpc_id", info.ServiceConfig.UniqVpcId)
-		_ = d.Set("service_config_url", info.ServiceConfig.Url)
-		_ = d.Set("service_config_path", info.ServiceConfig.Path)
-		_ = d.Set("service_config_method", info.ServiceConfig.Method)
+		if info.ServiceConfig.Product != nil {
+			_ = d.Set("service_config_product", info.ServiceConfig.Product)
+		}
+
+		if info.ServiceConfig.UniqVpcId != nil {
+			_ = d.Set("service_config_vpc_id", info.ServiceConfig.UniqVpcId)
+		}
+
+		if info.ServiceConfig.Url != nil {
+			_ = d.Set("service_config_url", info.ServiceConfig.Url)
+		}
+
+		if info.ServiceConfig.Path != nil {
+			_ = d.Set("service_config_path", info.ServiceConfig.Path)
+		}
+
+		if info.ServiceConfig.Method != nil {
+			_ = d.Set("service_config_method", info.ServiceConfig.Method)
+		}
+
+		if info.ServiceConfig.UpstreamId != nil {
+			_ = d.Set("service_config_upstream_id", info.ServiceConfig.UpstreamId)
+		}
+
+		if info.ServiceConfig.CosConfig != nil {
+			cosConfigMap := map[string]interface{}{}
+
+			if info.ServiceConfig.CosConfig.Action != nil {
+				cosConfigMap["action"] = info.ServiceConfig.CosConfig.Action
+			}
+
+			if info.ServiceConfig.CosConfig.BucketName != nil {
+				cosConfigMap["bucket_name"] = info.ServiceConfig.CosConfig.BucketName
+			}
+
+			if info.ServiceConfig.CosConfig.Authorization != nil {
+				cosConfigMap["authorization"] = info.ServiceConfig.CosConfig.Authorization
+			}
+
+			if info.ServiceConfig.CosConfig.PathMatchMode != nil {
+				cosConfigMap["path_match_mode"] = info.ServiceConfig.CosConfig.PathMatchMode
+			}
+
+			_ = d.Set("service_config_cos_config", []interface{}{cosConfigMap})
+		}
+	}
+
+	_ = d.Set("service_config_scf_function_name", info.ServiceScfFunctionName)
+	_ = d.Set("service_config_scf_function_namespace", info.ServiceScfFunctionNamespace)
+	_ = d.Set("service_config_scf_function_qualifier", info.ServiceScfFunctionQualifier)
+	_ = d.Set("service_config_scf_is_integrated_response", info.ServiceScfIsIntegratedResponse)
+	_ = d.Set("service_config_mock_return_message", info.ServiceMockReturnMessage)
+
+	_ = d.Set("service_config_websocket_register_function_name", info.ServiceWebsocketRegisterFunctionName)
+	_ = d.Set("service_config_websocket_cleanup_function_name", info.ServiceWebsocketCleanupFunctionName)
+	_ = d.Set("service_config_websocket_transport_function_name", info.ServiceWebsocketTransportFunctionName)
+	_ = d.Set("service_config_websocket_register_function_namespace", info.ServiceWebsocketRegisterFunctionNamespace)
+	_ = d.Set("service_config_websocket_register_function_qualifier", info.ServiceWebsocketRegisterFunctionQualifier)
+	_ = d.Set("service_config_websocket_transport_function_namespace", info.ServiceWebsocketTransportFunctionNamespace)
+	_ = d.Set("service_config_websocket_transport_function_qualifier", info.ServiceWebsocketTransportFunctionQualifier)
+	_ = d.Set("service_config_websocket_cleanup_function_namespace", info.ServiceWebsocketCleanupFunctionNamespace)
+	_ = d.Set("service_config_websocket_cleanup_function_qualifier", info.ServiceWebsocketCleanupFunctionQualifier)
+
+	_ = d.Set("is_debug_after_charge", info.IsDebugAfterCharge)
+	_ = d.Set("response_type", info.ResponseType)
+	_ = d.Set("response_success_example", info.ResponseSuccessExample)
+	_ = d.Set("response_fail_example", info.ResponseFailExample)
+	_ = d.Set("auth_relation_api_id", info.AuthRelationApiId)
+	_ = d.Set("update_time", info.ModifiedTime)
+	_ = d.Set("create_time", info.CreatedTime)
+
+	if info.RequestConfig != nil {
+		_ = d.Set("request_config_path", info.RequestConfig.Path)
+		_ = d.Set("request_config_method", info.RequestConfig.Method)
+	}
+
+	if info.ServiceParameters != nil {
+		serviceParametersList := []interface{}{}
+		for _, serviceParameters := range info.ServiceParameters {
+			serviceParametersMap := map[string]interface{}{}
+
+			if serviceParameters.Name != nil {
+				serviceParametersMap["name"] = serviceParameters.Name
+			}
+
+			if serviceParameters.Position != nil {
+				serviceParametersMap["position"] = serviceParameters.Position
+			}
+
+			if serviceParameters.RelevantRequestParameterPosition != nil {
+				serviceParametersMap["relevant_request_parameter_position"] = serviceParameters.RelevantRequestParameterPosition
+			}
+
+			if serviceParameters.RelevantRequestParameterName != nil {
+				serviceParametersMap["relevant_request_parameter_name"] = serviceParameters.RelevantRequestParameterName
+			}
+
+			if serviceParameters.DefaultValue != nil {
+				serviceParametersMap["default_value"] = serviceParameters.DefaultValue
+			}
+
+			if serviceParameters.RelevantRequestParameterDesc != nil {
+				serviceParametersMap["relevant_request_parameter_desc"] = serviceParameters.RelevantRequestParameterDesc
+			}
+
+			serviceParametersList = append(serviceParametersList, serviceParametersMap)
+		}
+
+		_ = d.Set("service_parameters", serviceParametersList)
+
+	}
+
+	if info.OauthConfig != nil {
+		oauthConfigMap := map[string]interface{}{}
+
+		if info.OauthConfig.PublicKey != nil {
+			oauthConfigMap["public_key"] = info.OauthConfig.PublicKey
+		}
+
+		if info.OauthConfig.TokenLocation != nil {
+			oauthConfigMap["token_location"] = info.OauthConfig.TokenLocation
+		}
+
+		if info.OauthConfig.LoginRedirectUrl != nil {
+			oauthConfigMap["login_redirect_url"] = info.OauthConfig.LoginRedirectUrl
+		}
+
+		_ = d.Set("oauth_config", []interface{}{oauthConfigMap})
 	}
 
 	if info.ResponseErrorCodes != nil {
@@ -599,6 +1514,8 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 		}
 		_ = d.Set("response_error_codes", list)
 	}
+
+	_ = d.Set("is_base64_encoded", info.IsBase64Encoded)
 
 	environmentList, err := apiGatewayService.DescribeApiEnvironmentStrategyList(ctx, serviceId, []string{}, apiId)
 	if len(environmentList) == 0 {

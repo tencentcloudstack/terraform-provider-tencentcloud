@@ -14,14 +14,14 @@ Provides a resource to create a apiGateway plugin
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_plugin" "plugin" {
-  plugin_name = "terraform-plugin-test"
+resource "tencentcloud_api_gateway_plugin" "example" {
+  plugin_name = "tf-example"
   plugin_type = "IPControl"
   plugin_data = jsonencode({
     "type" : "white_list",
-    "blocks" : "1.1.1.1\n2.2.2.2",
+    "blocks" : "1.1.1.1",
   })
-  description = "terraform test"
+  description = "desc."
 }
 ```
 

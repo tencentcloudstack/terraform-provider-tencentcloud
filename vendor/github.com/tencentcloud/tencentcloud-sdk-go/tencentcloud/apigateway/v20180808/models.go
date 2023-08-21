@@ -134,6 +134,7 @@ type ApiAppInfo struct {
 	ApiAppId *string `json:"ApiAppId,omitempty" name:"ApiAppId"`
 
 	// 应用SECRET
+	// 注意:此字段可能返回null，表示取不到有效值
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApiAppSecret *string `json:"ApiAppSecret,omitempty" name:"ApiAppSecret"`
 
@@ -150,6 +151,7 @@ type ApiAppInfo struct {
 	ModifiedTime *string `json:"ModifiedTime,omitempty" name:"ModifiedTime"`
 
 	// 应用KEY
+	// 注意:此字段可能返回null，表示取不到有效值
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApiAppKey *string `json:"ApiAppKey,omitempty" name:"ApiAppKey"`
 }
@@ -180,7 +182,7 @@ type ApiEnvironmentStrategy struct {
 	EnvironmentStrategySet []*EnvironmentStrategy `json:"EnvironmentStrategySet,omitempty" name:"EnvironmentStrategySet"`
 }
 
-type ApiEnvironmentStrategyStataus struct {
+type ApiEnvironmentStrategyStatus struct {
 	// API绑定的限流策略数量。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
@@ -3863,7 +3865,7 @@ func (r *DescribeApiEnvironmentStrategyRequest) FromJsonString(s string) error {
 type DescribeApiEnvironmentStrategyResponseParams struct {
 	// api绑定策略详情
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *ApiEnvironmentStrategyStataus `json:"Result,omitempty" name:"Result"`
+	Result *ApiEnvironmentStrategyStatus `json:"Result,omitempty" name:"Result"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -4844,7 +4846,7 @@ func (r *DescribeIPStrategysStatusRequest) FromJsonString(s string) error {
 type DescribeIPStrategysStatusResponseParams struct {
 	// 符合条件的策略列表。
 	// 注意：此字段可能返回 null，表示取不到有效值。
-	Result *IPStrategysStatus `json:"Result,omitempty" name:"Result"`
+	Result *IPStrategiesStatus `json:"Result,omitempty" name:"Result"`
 
 	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
@@ -4903,6 +4905,8 @@ type DescribeLogSearchRequestParams struct {
 	// 
 	// 说明：
 	// “:”表示包含，“!=”表示不等于，字段含义见输出参数的LogSet说明
+	//
+	// Deprecated: LogQuerys is deprecated.
 	LogQuerys []*LogQuery `json:"LogQuerys,omitempty" name:"LogQuerys"`
 }
 
@@ -6792,14 +6796,6 @@ func (r *DisableApiKeyResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
-type DocumentSDK struct {
-	// 生成的 document 会存放到 COS 中，此出参返回产生文件的下载链接。
-	DocumentURL *string `json:"DocumentURL,omitempty" name:"DocumentURL"`
-
-	// 生成的 SDK 会存放到 COS 中，此出参返回产生 SDK 文件的下载链接。
-	SdkURL *string `json:"SdkURL,omitempty" name:"SdkURL"`
-}
-
 type DomainSetList struct {
 	// 域名名称。
 	DomainName *string `json:"DomainName,omitempty" name:"DomainName"`
@@ -6944,77 +6940,6 @@ type Filter struct {
 	Values []*string `json:"Values,omitempty" name:"Values"`
 }
 
-// Predefined struct for user
-type GenerateApiDocumentRequestParams struct {
-	// 待创建文档的服务唯一 ID。
-	ServiceId *string `json:"ServiceId,omitempty" name:"ServiceId"`
-
-	// 待创建 SDK 的服务所在环境。
-	GenEnvironment *string `json:"GenEnvironment,omitempty" name:"GenEnvironment"`
-
-	// 待创建 SDK 的语言。当前只支持 Python 和 JavaScript。
-	GenLanguage *string `json:"GenLanguage,omitempty" name:"GenLanguage"`
-}
-
-type GenerateApiDocumentRequest struct {
-	*tchttp.BaseRequest
-	
-	// 待创建文档的服务唯一 ID。
-	ServiceId *string `json:"ServiceId,omitempty" name:"ServiceId"`
-
-	// 待创建 SDK 的服务所在环境。
-	GenEnvironment *string `json:"GenEnvironment,omitempty" name:"GenEnvironment"`
-
-	// 待创建 SDK 的语言。当前只支持 Python 和 JavaScript。
-	GenLanguage *string `json:"GenLanguage,omitempty" name:"GenLanguage"`
-}
-
-func (r *GenerateApiDocumentRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *GenerateApiDocumentRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "ServiceId")
-	delete(f, "GenEnvironment")
-	delete(f, "GenLanguage")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GenerateApiDocumentRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type GenerateApiDocumentResponseParams struct {
-	// api文档&sdk链接。
-	Result *DocumentSDK `json:"Result,omitempty" name:"Result"`
-
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
-}
-
-type GenerateApiDocumentResponse struct {
-	*tchttp.BaseResponse
-	Response *GenerateApiDocumentResponseParams `json:"Response"`
-}
-
-func (r *GenerateApiDocumentResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *GenerateApiDocumentResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
 type HealthCheckConf struct {
 	// 是否开启健康检查。
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -7031,6 +6956,16 @@ type HealthCheckConf struct {
 	// 阈值百分比。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ErrorThresholdPercentage *int64 `json:"ErrorThresholdPercentage,omitempty" name:"ErrorThresholdPercentage"`
+}
+
+type IPStrategiesStatus struct {
+	// 策略数量。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 策略列表。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	StrategySet []*IPStrategy `json:"StrategySet,omitempty" name:"StrategySet"`
 }
 
 type IPStrategy struct {
@@ -7102,16 +7037,6 @@ type IPStrategyApiStatus struct {
 	// 环境绑定API详情。
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	ApiIdStatusSet []*IPStrategyApi `json:"ApiIdStatusSet,omitempty" name:"ApiIdStatusSet"`
-}
-
-type IPStrategysStatus struct {
-	// 策略数量。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
-
-	// 策略列表。
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	StrategySet []*IPStrategy `json:"StrategySet,omitempty" name:"StrategySet"`
 }
 
 // Predefined struct for user

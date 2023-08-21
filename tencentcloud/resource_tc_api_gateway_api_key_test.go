@@ -10,8 +10,10 @@ import (
 )
 
 var testAPIGatewayAPIKeyResourceName = "tencentcloud_api_gateway_api_key"
-var testAPIGatewayAPIKeyResourceKey = testAPIGatewayAPIKeyResourceName + ".test"
+var testAPIGatewayAPIKeyResourceKeyAuto = testAPIGatewayAPIKeyResourceName + ".example_auto"
+var testAPIGatewayAPIKeyResourceKeyManual = testAPIGatewayAPIKeyResourceName + ".example_manual"
 
+// go test -i; go test -test.run TestAccTencentCloudAPIGateWayAPIKeyResource -v
 func TestAccTencentCloudAPIGateWayAPIKeyResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -20,31 +22,66 @@ func TestAccTencentCloudAPIGateWayAPIKeyResource(t *testing.T) {
 		CheckDestroy: testAccCheckAPIGatewayAPIKeyDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAPIGatewayAPIKey,
+				Config: testAccAPIGatewayAPIKeyAuto,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAPIGatewayAPIKeyExists(testAPIGatewayAPIKeyResourceKey),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKey, "secret_name", "my_api_key"),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKey, "status", "on"),
-					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKey, "access_key_secret"),
-					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKey, "modify_time"),
-					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKey, "create_time"),
+					testAccCheckAPIGatewayAPIKeyExists(testAPIGatewayAPIKeyResourceKeyAuto),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKeyAuto, "secret_name", "tf_example_auto"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKeyAuto, "status", "on"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyAuto, "access_key_type"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyAuto, "access_key_id"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyAuto, "access_key_secret"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyAuto, "modify_time"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyAuto, "create_time"),
 				),
 			},
 			{
-				ResourceName:      testAPIGatewayAPIKeyResourceKey,
+				Config: testAccAPIGatewayAPIKeyAutoUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAPIGatewayAPIKeyExists(testAPIGatewayAPIKeyResourceKeyAuto),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKeyAuto, "secret_name", "tf_example_auto"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKeyAuto, "status", "off"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyAuto, "access_key_type"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyAuto, "access_key_id"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyAuto, "access_key_secret"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyAuto, "modify_time"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyAuto, "create_time"),
+				),
+			},
+			{
+				ResourceName:      testAPIGatewayAPIKeyResourceKeyAuto,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccAPIGatewayAPIKeyUpdate,
+				Config: testAccAPIGatewayAPIKeyManual,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckAPIGatewayAPIKeyExists(testAPIGatewayAPIKeyResourceKey),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKey, "secret_name", "my_api_key"),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKey, "status", "off"),
-					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKey, "access_key_secret"),
-					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKey, "modify_time"),
-					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKey, "create_time"),
+					testAccCheckAPIGatewayAPIKeyExists(testAPIGatewayAPIKeyResourceKeyManual),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKeyManual, "secret_name", "tf_example_manual"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKeyManual, "status", "on"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyManual, "access_key_type"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyManual, "access_key_id"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyManual, "access_key_secret"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyManual, "modify_time"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyManual, "create_time"),
 				),
+			},
+			{
+				Config: testAccAPIGatewayAPIKeyManualUpdate,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckAPIGatewayAPIKeyExists(testAPIGatewayAPIKeyResourceKeyManual),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKeyManual, "secret_name", "tf_example_manual"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIKeyResourceKeyManual, "status", "off"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyManual, "access_key_type"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyManual, "access_key_id"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyManual, "access_key_secret"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyManual, "modify_time"),
+					resource.TestCheckResourceAttrSet(testAPIGatewayAPIKeyResourceKeyManual, "create_time"),
+				),
+			},
+			{
+				ResourceName:      testAPIGatewayAPIKeyResourceKeyManual,
+				ImportState:       true,
+				ImportStateVerify: true,
 			},
 		},
 	})
@@ -103,15 +140,34 @@ func testAccCheckAPIGatewayAPIKeyExists(n string) resource.TestCheckFunc {
 	}
 }
 
-const testAccAPIGatewayAPIKey = `
-resource "tencentcloud_api_gateway_api_key" "test" {
-  secret_name = "my_api_key"
+const testAccAPIGatewayAPIKeyAuto = `
+resource "tencentcloud_api_gateway_api_key" "example_auto" {
+  secret_name = "tf_example_auto"
   status      = "on"
 }
 `
-const testAccAPIGatewayAPIKeyUpdate = `
-resource "tencentcloud_api_gateway_api_key" "test" {
-  secret_name = "my_api_key"
+const testAccAPIGatewayAPIKeyAutoUpdate = `
+resource "tencentcloud_api_gateway_api_key" "example_auto" {
+  secret_name = "tf_example_auto"
   status      = "off"
+}
+`
+
+const testAccAPIGatewayAPIKeyManual = `
+resource "tencentcloud_api_gateway_api_key" "example_manual" {
+  secret_name       = "tf_example_manual"
+  status            = "on"
+  access_key_type   = "manual"
+  access_key_id     = "28e287e340507fa147b2c8284dab542f"
+  access_key_secret = "0198a4b8c3105080f4acd9e507599eff"
+}
+`
+const testAccAPIGatewayAPIKeyManualUpdate = `
+resource "tencentcloud_api_gateway_api_key" "example_manual" {
+  secret_name       = "tf_example_manual"
+  status            = "off"
+  access_key_type   = "manual"
+  access_key_id     = "28e287e340507fa147b2c8284dab542f"
+  access_key_secret = "7f276e1cc4fa13cc82edae93c54b6e9b"
 }
 `

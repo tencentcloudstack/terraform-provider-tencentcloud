@@ -11,26 +11,30 @@ description: |-
 
 Use this resource to attach API gateway usage plan to service.
 
+~> **NOTE:** If the `auth_type` parameter of API is not `SECRET`, it cannot be bound access key.
+
 ## Example Usage
 
+### Normal creation
+
 ```hcl
-resource "tencentcloud_api_gateway_usage_plan" "plan" {
-  usage_plan_name         = "my_plan"
-  usage_plan_desc         = "nice plan"
+resource "tencentcloud_api_gateway_usage_plan" "example" {
+  usage_plan_name         = "tf_example"
+  usage_plan_desc         = "desc."
   max_request_num         = 100
   max_request_num_pre_sec = 10
 }
 
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "niceservice"
+resource "tencentcloud_api_gateway_service" "example" {
+  service_name = "tf_example"
   protocol     = "http&https"
-  service_desc = "your nice service"
+  service_desc = "desc."
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
 }
 
-resource "tencentcloud_api_gateway_api" "api" {
-  service_id            = tencentcloud_api_gateway_service.service.id
+resource "tencentcloud_api_gateway_api" "example" {
+  service_id            = tencentcloud_api_gateway_service.example.id
   api_name              = "hello_update"
   api_desc              = "my hello api update"
   auth_type             = "SECRET"
@@ -42,8 +46,8 @@ resource "tencentcloud_api_gateway_api" "api" {
     name          = "email"
     position      = "QUERY"
     type          = "string"
-    desc          = "your email please?"
-    default_value = "tom@qq.com"
+    desc          = "desc."
+    default_value = "test@qq.com"
     required      = true
   }
   service_config_type      = "HTTP"
@@ -55,20 +59,39 @@ resource "tencentcloud_api_gateway_api" "api" {
   response_success_example = "<note>success</note>"
   response_fail_example    = "<note>fail</note>"
   response_error_codes {
-    code           = 10
+    code           = 500
     msg            = "system error"
     desc           = "system error code"
-    converted_code = -10
+    converted_code = 5000
     need_convert   = true
   }
 }
 
-resource "tencentcloud_api_gateway_usage_plan_attachment" "attach_service" {
-  usage_plan_id = tencentcloud_api_gateway_usage_plan.plan.id
-  service_id    = tencentcloud_api_gateway_service.service.id
+resource "tencentcloud_api_gateway_usage_plan_attachment" "example" {
+  usage_plan_id = tencentcloud_api_gateway_usage_plan.example.id
+  service_id    = tencentcloud_api_gateway_service.example.id
   environment   = "release"
   bind_type     = "API"
-  api_id        = tencentcloud_api_gateway_api.api.id
+  api_id        = tencentcloud_api_gateway_api.example.id
+}
+```
+
+### Bind the key to a usage plan
+
+```hcl
+resource "tencentcloud_api_gateway_api_key" "example" {
+  secret_name = "tf_example"
+  status      = "on"
+}
+
+resource "tencentcloud_api_gateway_usage_plan_attachment" "example" {
+  usage_plan_id = tencentcloud_api_gateway_usage_plan.example.id
+  service_id    = tencentcloud_api_gateway_service.example.id
+  environment   = "release"
+  bind_type     = "API"
+  api_id        = tencentcloud_api_gateway_api.example.id
+
+  access_key_ids = [tencentcloud_api_gateway_api_key.example.id]
 }
 ```
 
@@ -79,6 +102,7 @@ The following arguments are supported:
 * `environment` - (Required, String, ForceNew) The environment to be bound. Valid values: `test`, `prepub`, `release`.
 * `service_id` - (Required, String, ForceNew) ID of the service.
 * `usage_plan_id` - (Required, String, ForceNew) ID of the usage plan.
+* `access_key_ids` - (Optional, Set: [`String`], ForceNew) Array of key IDs to be bound.
 * `api_id` - (Optional, String, ForceNew) ID of the API. This parameter will be required when `bind_type` is `API`.
 * `bind_type` - (Optional, String, ForceNew) Binding type. Valid values: `API`, `SERVICE`. Default value is `SERVICE`.
 

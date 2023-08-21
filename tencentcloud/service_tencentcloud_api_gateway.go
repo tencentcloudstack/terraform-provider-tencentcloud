@@ -467,6 +467,31 @@ func (me *APIGatewayService) BindSecretId(ctx context.Context,
 	return
 }
 
+func (me *APIGatewayService) BindSecretIds(ctx context.Context, usagePlanId string, apiKeyIds []string) (errRet error) {
+
+	request := apigateway.NewBindSecretIdsRequest()
+	request.UsagePlanId = &usagePlanId
+	for _, v := range apiKeyIds {
+		request.AccessKeyIds = append(request.AccessKeyIds, &v)
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseAPIGatewayClient().BindSecretIds(request)
+
+	if err != nil {
+		return err
+	}
+	if response.Response.Result == nil {
+		return fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+	}
+
+	if !*response.Response.Result {
+		return fmt.Errorf("bind API key to usage plan fail")
+	}
+
+	return
+}
+
 func flattenOauthConfigMappings(v *apigateway.OauthConfig) map[string]interface{} {
 	if v != nil {
 		return map[string]interface{}{
@@ -693,6 +718,38 @@ func (me *APIGatewayService) DescribeApiUsagePlan(ctx context.Context,
 	}
 }
 
+func (me *APIGatewayService) DescribeApiUsagePlanSecretIds(ctx context.Context,
+	usagePlanId string) (list []*apigateway.UsagePlanBindSecret, errRet error) {
+
+	request := apigateway.NewDescribeUsagePlanSecretIdsRequest()
+	request.UsagePlanId = &usagePlanId
+
+	var limit int64 = 100
+	var offset int64 = 0
+
+	for {
+		request.Limit = &limit
+		request.Offset = &offset
+		ratelimit.Check(request.GetAction())
+		response, err := me.client.UseAPIGatewayClient().DescribeUsagePlanSecretIds(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		if response.Response.Result == nil {
+			errRet = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+			return
+		}
+		if len(response.Response.Result.AccessKeyList) > 0 {
+			list = append(list, response.Response.Result.AccessKeyList...)
+		}
+		if len(response.Response.Result.AccessKeyList) < int(limit) {
+			return
+		}
+		offset += limit
+	}
+}
+
 func (me *APIGatewayService) BindEnvironment(ctx context.Context,
 	serviceId, environment, bindType, usagePlanId, apiId string) (errRet error) {
 
@@ -726,6 +783,33 @@ func (me *APIGatewayService) BindEnvironment(ctx context.Context,
 
 		return nil
 	})
+
+	return
+}
+
+func (me *APIGatewayService) UnBindSecretIds(ctx context.Context, usagePlanId string, accessKeyList []string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewUnBindSecretIdsRequest()
+	request.UsagePlanId = &usagePlanId
+	for _, v := range accessKeyList {
+		request.AccessKeyIds = append(request.AccessKeyIds, &v)
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().UnBindSecretIds(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }
@@ -1915,5 +1999,138 @@ func (me *APIGatewayService) DeleteAPIGatewayAPIAppById(ctx context.Context, api
 
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return
+}
+
+func (me *APIGatewayService) DescribeAPIGatewayApiAppAttachmentById(ctx context.Context, apiAppId, environment, serviceId, apiId string) (apiAppAttachment *apigateway.ApiAppApiInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewDescribeApiAppBindApisStatusRequest()
+	request.ApiAppId = &apiAppId
+	request.Filters = []*apigateway.Filter{
+		{
+			Name:   helper.String("ApiId"),
+			Values: helper.Strings([]string{apiId}),
+		},
+		{
+			Name:   helper.String("ServiceId"),
+			Values: helper.Strings([]string{serviceId}),
+		},
+		{
+			Name:   helper.String("Environment"),
+			Values: helper.Strings([]string{environment}),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DescribeApiAppBindApisStatus(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Result.ApiAppApiSet) < 1 {
+		return
+	}
+
+	apiAppAttachment = response.Response.Result.ApiAppApiSet[0]
+	return
+}
+
+func (me *APIGatewayService) DeleteAPIGatewayApiAppAttachmentById(ctx context.Context, apiAppId, environment, serviceId, apiId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewUnbindApiAppRequest()
+	request.ApiAppId = &apiAppId
+	request.Environment = &environment
+	request.ServiceId = &serviceId
+	request.ApiId = &apiId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().UnbindApiApp(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *APIGatewayService) DescribeApigatewayUpstreamById(ctx context.Context, upstreamId string) (upstreamInfo *apigateway.UpstreamInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewDescribeUpstreamsRequest()
+	request.Filters = []*apigateway.Filter{
+		{
+			Name:   helper.String("UpstreamId"),
+			Values: helper.Strings([]string{upstreamId}),
+		},
+	}
+	request.Limit = helper.Uint64(10)
+	request.Offset = helper.Uint64(0)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DescribeUpstreams(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Result.UpstreamSet) < 1 {
+		return
+	}
+
+	upstreamInfo = response.Response.Result.UpstreamSet[0]
+	return
+}
+
+func (me *APIGatewayService) DeleteApigatewayUpstreamById(ctx context.Context, upstreamId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := apigateway.NewDeleteUpstreamRequest()
+	request.UpstreamId = &upstreamId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DeleteUpstream(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
 	return
 }
