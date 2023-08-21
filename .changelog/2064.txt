@@ -1,9 +1,13 @@
-```release-note:enhancement
-resource/tencentcloud_api_gateway_api_app: Support `tag`
+```release-note:new-resource
+tencentcloud_api_gateway_api_app_attachment
 ```
 
 ```release-note:new-resource
-tencentcloud_api_gateway_api_app_attachment
+tencentcloud_api_gateway_upstream
+```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_api_app: Support `tag`
 ```
 
 ```release-note:enhancement
