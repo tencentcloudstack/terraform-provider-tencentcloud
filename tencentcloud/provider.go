@@ -1601,6 +1601,13 @@ Data Lake Compute(DLC)
   Resource
 	tencentcloud_dlc_work_group
 	tencentcloud_dlc_user
+
+WeData
+  Data Source
+	tencentcloud_wedata_rule_templates
+
+  Resource
+	tencentcloud_wedata_rule_template
 */
 package tencentcloud
 
@@ -2239,6 +2246,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
 			"tencentcloud_eb_search":                                 dataSourceTencentCloudEbSearch(),
 			"tencentcloud_eb_bus":                                    dataSourceTencentCloudEbBus(),
+			"tencentcloud_wedata_rule_templates":                     dataSourceTencentCloudWedataRuleTemplates(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
