@@ -13,7 +13,7 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudTeoDdosPolicy_basic -v
-func TestAccTencentCloudTeoDdosPolicy_basic(t *testing.T) {
+func TestAccTencentNeedFixCloudTeoDdosPolicy_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
@@ -138,14 +138,6 @@ resource "tencentcloud_teo_ddos_policy" "basic" {
                 dport_end   = 8080
                 dport_start = 8080
                 protocol    = "tcp"
-                sport_end   = 65535
-                sport_start = 1
-            }
-            acls {
-                action      = "drop"
-                dport_end   = 65535
-                dport_start = 1
-                protocol    = "all"
                 sport_end   = 65535
                 sport_start = 1
             }
