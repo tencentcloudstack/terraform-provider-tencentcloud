@@ -16,7 +16,16 @@ func TestAccTencentCloudScfTriggerConfigResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccScfTriggerConfig,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "id")),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "id"),
+					resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "enable")),
+					resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "function_name")),
+					resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "trigger_name")),
+					resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "type")),
+					resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "qualifier")),
+					resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "namespace")),
+					resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "trigger_desc")),
+					resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "description")),
+					resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_scf_trigger_config.trigger_config", "custom_argument"))),
 			},
 			{
 				ResourceName:      "tencentcloud_scf_trigger_config.trigger_config",
@@ -36,6 +45,9 @@ resource "tencentcloud_scf_trigger_config" "trigger_config" {
   type          = "timer"
   qualifier     = "$DEFAULT"
   namespace     = "default"
+  trigger_desc = "* 1 2 * * * *"
+  description = "func"
+  custom_argument = "Information"
 }
 
 `
