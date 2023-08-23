@@ -79,7 +79,7 @@ func resourceTencentCloudScfTriggerConfig() *schema.Resource {
 			"qualifier": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "The version of the function, the default is $LATEST, it is recommended to fill in [$DEFAULT] to facilitate the subsequent grayscale release of the version.",
+				Description: "Function version. It defaults to `$LATEST`. It's recommended to use `[$DEFAULT](https://intl.cloud.tencent.com/document/product/583/36149?from_cn_redirect=1#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)` for canary release.",
 			},
 
 			"namespace": {
