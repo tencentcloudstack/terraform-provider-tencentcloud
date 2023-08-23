@@ -1,0 +1,7 @@
+```release-note:new-data-source
+tencentcloud_wedata_rule_templates
+```
+
+```release-note:new-resource
+tencentcloud_wedata_rule_template
+```
