@@ -345,7 +345,7 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Computed:      true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
 			ConflictsWith: []string{"auto_scaling_config.0.security_group_ids"},
-			Description:   "An ordered security groups to which a CVM instance belongs.",
+			Description:   "Ordered security groups to which a CVM instance belongs.",
 		},
 		"enhanced_security_service": {
 			Type:     schema.TypeBool,
