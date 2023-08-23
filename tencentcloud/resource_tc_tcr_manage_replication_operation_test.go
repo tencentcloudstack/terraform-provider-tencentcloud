@@ -10,12 +10,13 @@ import (
 
 func TestAccTencentCloudTcrManageReplicationOperationResource_basic(t *testing.T) {
 	t.Parallel()
+	timestamp := time.Now().Nanosecond()
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: fmt.Sprintf(testAccTcrManageReplicationOperation, "sync", time.Now().Nanosecond()),
+				Config: fmt.Sprintf(testAccTcrManageReplicationOperation, "sync", timestamp, timestamp),
 				PreConfig: func() {
 					// testAccStepSetRegion(t, "ap-shanghai")
 					testAccPreCheckCommon(t, ACCOUNT_TYPE_COMMON)
@@ -44,7 +45,7 @@ func TestAccTencentCloudTcrManageReplicationOperationResource_basic(t *testing.T
 const testAccTcrManageReplicationOperation = TCRDataSource + `
 
 resource "tencentcloud_tcr_instance" "mytcr_dest" {
-	name        = "tf-test-tcr-%s"
+	name        = "tf-test-tcr-%s-%d"
 	instance_type = "premium"
 	delete_bucket = true
   }
