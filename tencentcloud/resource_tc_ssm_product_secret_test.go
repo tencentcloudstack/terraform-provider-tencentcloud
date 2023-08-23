@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudSsmProductSecretResource_basic -v
 func TestAccTencentCloudSsmProductSecretResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -33,7 +34,6 @@ func TestAccTencentCloudSsmProductSecretResource_basic(t *testing.T) {
 }
 
 const testAccSsmProductSecret = `
-
 data "tencentcloud_kms_keys" "kms" {
   key_state = 1
 }
@@ -52,15 +52,17 @@ resource "tencentcloud_ssm_product_secret" "product_secret" {
     privilege_name = "GlobalPrivileges"
     privileges     = ["ALTER ROUTINE"]
   }
-  description         = "for ssm product test"
-  kms_key_id          = data.tencentcloud_kms_keys.kms.key_list.0.key_id
-  status              = "Disabled"
-}
+  description = "for ssm product test"
+  kms_key_id  = data.tencentcloud_kms_keys.kms.key_list.0.key_id
+  status      = "Disabled"
 
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
 `
 
 const testAccSsmProductSecretUpdate = `
-
 data "tencentcloud_kms_keys" "kms" {
   key_state = 1
 }
@@ -79,9 +81,12 @@ resource "tencentcloud_ssm_product_secret" "product_secret" {
     privilege_name = "GlobalPrivileges"
     privileges     = ["ALTER ROUTINE"]
   }
-  description         = "for ssm product"
-  kms_key_id          = data.tencentcloud_kms_keys.kms.key_list.0.key_id
-  status              = "Enabled"
-}
+  description = "for ssm product"
+  kms_key_id  = data.tencentcloud_kms_keys.kms.key_list.0.key_id
+  status      = "Enabled"
 
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
 `
