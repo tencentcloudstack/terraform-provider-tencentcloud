@@ -333,14 +333,16 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"security_group_ids": {
 			Type:          schema.TypeSet,
 			Optional:      true,
+			Computed:true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
-			ConflictsWith: []string{"auto_scaling_config.0.security_group_ids_orderly"},
-			Deprecated:    "This field of order cannot be guaranteed. Use `security_group_ids_orderly` instead.",
+			ConflictsWith: []string{"auto_scaling_config.0.orderly_security_group_ids"},
+			Deprecated:    "This field of order cannot be guaranteed. Use `orderly_security_group_ids` instead.",
 			Description:   "Security groups to which a CVM instance belongs.",
 		},
-		"security_group_ids_orderly": {
+		"orderly_security_group_ids": {
 			Type:          schema.TypeList,
 			Optional:      true,
+			Computed:true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
 			ConflictsWith: []string{"auto_scaling_config.0.security_group_ids"},
 			Description:   "An ordered security groups to which a CVM instance belongs.",
@@ -776,7 +778,7 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
 	}
 
-	if v, ok := dMap["security_group_ids_orderly"]; ok {
+	if v, ok := dMap["orderly_security_group_ids"]; ok {
 		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
 
@@ -927,7 +929,7 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
 	}
 
-	if v, ok := dMap["security_group_ids_orderly"]; ok {
+	if v, ok := dMap["orderly_security_group_ids"]; ok {
 		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
 
@@ -1206,7 +1208,7 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 
 		if launchCfg.SecurityGroupIds != nil {
 			launchConfig["security_group_ids"] = helper.StringsInterfaces(launchCfg.SecurityGroupIds)
-			launchConfig["security_group_ids_orderly"] = helper.StringsInterfaces(launchCfg.SecurityGroupIds)
+			launchConfig["orderly_security_group_ids"] = helper.StringsInterfaces(launchCfg.SecurityGroupIds)
 		}
 
 		enableSecurity := launchCfg.EnhancedService.SecurityService.Enabled

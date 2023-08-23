@@ -201,9 +201,9 @@ The `auto_scaling_config` object supports the following:
 * `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is `0`.
 * `key_ids` - (Optional, List, ForceNew) ID list of keys.
+* `orderly_security_group_ids` - (Optional, List) An ordered security groups to which a CVM instance belongs.
 * `password` - (Optional, String, ForceNew) Password to access.
 * `public_ip_assigned` - (Optional, Bool) Specify whether to assign an Internet IP address.
-* `security_group_ids_orderly` - (Optional, List) An ordered security groups to which a CVM instance belongs.
 * `security_group_ids` - (Optional, Set) Security groups to which a CVM instance belongs.
 * `spot_instance_type` - (Optional, String) Type of spot instance, only support `one-time` now. Note: it only works when instance_charge_type is set to `SPOTPAID`.
 * `spot_max_price` - (Optional, String) Max price of a spot instance, is the format of decimal string, for example "0.50". Note: it only works when instance_charge_type is set to `SPOTPAID`.
