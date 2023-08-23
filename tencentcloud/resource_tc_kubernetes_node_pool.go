@@ -333,16 +333,16 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 		"security_group_ids": {
 			Type:          schema.TypeSet,
 			Optional:      true,
-			Computed:true,
+			Computed:      true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
 			ConflictsWith: []string{"auto_scaling_config.0.orderly_security_group_ids"},
-			Deprecated:    "This field of order cannot be guaranteed. Use `orderly_security_group_ids` instead.",
+			Deprecated:    "The order of elements in this field cannot be guaranteed. Use `orderly_security_group_ids` instead.",
 			Description:   "Security groups to which a CVM instance belongs.",
 		},
 		"orderly_security_group_ids": {
 			Type:          schema.TypeList,
 			Optional:      true,
-			Computed:true,
+			Computed:      true,
 			Elem:          &schema.Schema{Type: schema.TypeString},
 			ConflictsWith: []string{"auto_scaling_config.0.security_group_ids"},
 			Description:   "An ordered security groups to which a CVM instance belongs.",
@@ -775,11 +775,15 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 	}
 
 	if v, ok := dMap["security_group_ids"]; ok {
-		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
+		if list := v.(*schema.Set).List(); len(list) > 0 {
+			request.SecurityGroupIds = helper.InterfacesStringsPoint(list)
+		}
 	}
 
 	if v, ok := dMap["orderly_security_group_ids"]; ok {
-		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.([]interface{}))
+		if list := v.([]interface{}); len(list) > 0 {
+			request.SecurityGroupIds = helper.InterfacesStringsPoint(list)
+		}
 	}
 
 	request.EnhancedService = &as.EnhancedService{}
@@ -925,12 +929,20 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 		request.InternetAccessible.PublicIpAssigned = &publicIpAssigned
 	}
 
-	if v, ok := dMap["security_group_ids"]; ok {
-		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
+	if d.HasChange("auto_scaling_config.0.security_group_ids") {
+		if v, ok := dMap["security_group_ids"]; ok {
+			if list := v.(*schema.Set).List(); len(list) > 0 {
+				request.SecurityGroupIds = helper.InterfacesStringsPoint(list)
+			}
+		}
 	}
 
-	if v, ok := dMap["orderly_security_group_ids"]; ok {
-		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.([]interface{}))
+	if d.HasChange("auto_scaling_config.0.orderly_security_group_ids") {
+		if v, ok := dMap["orderly_security_group_ids"]; ok {
+			if list := v.([]interface{}); len(list) > 0 {
+				request.SecurityGroupIds = helper.InterfacesStringsPoint(list)
+			}
+		}
 	}
 
 	chargeType, ok := dMap["instance_charge_type"].(string)
