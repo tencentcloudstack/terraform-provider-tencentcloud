@@ -38,7 +38,7 @@ The following arguments are supported:
 * `description` - (Optional, String) Trigger description.
 * `enable` - (Optional, String) The trigger is turned on or off, and the parameter passed as OPEN is turned on, and CLOSE is turned off.
 * `namespace` - (Optional, String, ForceNew) function namespace.
-* `qualifier` - (Optional, String) The version of the function, the default is $LATEST, it is recommended to fill in [$DEFAULT] to facilitate the subsequent grayscale release of the version.
+* `qualifier` - (Optional, String) Function version. It defaults to `$LATEST`. It's recommended to use `[$DEFAULT](https://intl.cloud.tencent.com/document/product/583/36149?from_cn_redirect=1#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)` for canary release.
 * `trigger_desc` - (Optional, String) TriggerDesc parameter.
 
 ## Attributes Reference
