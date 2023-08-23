@@ -331,10 +331,19 @@ func composedKubernetesAsScalingConfigPara() map[string]*schema.Schema {
 			Description:   "ID list of keys.",
 		},
 		"security_group_ids": {
-			Type:        schema.TypeSet,
-			Optional:    true,
-			Elem:        &schema.Schema{Type: schema.TypeString},
-			Description: "Security groups to which a CVM instance belongs.",
+			Type:          schema.TypeSet,
+			Optional:      true,
+			Elem:          &schema.Schema{Type: schema.TypeString},
+			ConflictsWith: []string{"auto_scaling_config.0.security_group_ids_orderly"},
+			Deprecated:    "This field of order cannot be guaranteed. Use `security_group_ids_orderly` instead.",
+			Description:   "Security groups to which a CVM instance belongs.",
+		},
+		"security_group_ids_orderly": {
+			Type:          schema.TypeList,
+			Optional:      true,
+			Elem:          &schema.Schema{Type: schema.TypeString},
+			ConflictsWith: []string{"auto_scaling_config.0.security_group_ids"},
+			Description:   "An ordered security groups to which a CVM instance belongs.",
 		},
 		"enhanced_security_service": {
 			Type:     schema.TypeBool,
@@ -767,6 +776,10 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
 	}
 
+	if v, ok := dMap["security_group_ids_orderly"]; ok {
+		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.([]interface{}))
+	}
+
 	request.EnhancedService = &as.EnhancedService{}
 
 	if v, ok := dMap["enhanced_security_service"]; ok {
@@ -912,6 +925,10 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 
 	if v, ok := dMap["security_group_ids"]; ok {
 		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.(*schema.Set).List())
+	}
+
+	if v, ok := dMap["security_group_ids_orderly"]; ok {
+		request.SecurityGroupIds = helper.InterfacesStringsPoint(v.([]interface{}))
 	}
 
 	chargeType, ok := dMap["instance_charge_type"].(string)
@@ -1186,7 +1203,11 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		if v, ok := d.GetOk("auto_scaling_config.0.password"); ok {
 			launchConfig["password"] = v.(string)
 		}
-		launchConfig["security_group_ids"] = helper.StringsInterfaces(launchCfg.SecurityGroupIds)
+
+		if launchCfg.SecurityGroupIds != nil {
+			launchConfig["security_group_ids"] = helper.StringsInterfaces(launchCfg.SecurityGroupIds)
+			launchConfig["security_group_ids_orderly"] = helper.StringsInterfaces(launchCfg.SecurityGroupIds)
+		}
 
 		enableSecurity := launchCfg.EnhancedService.SecurityService.Enabled
 		enableMonitor := launchCfg.EnhancedService.MonitorService.Enabled
