@@ -6,14 +6,14 @@ Example Usage
 Create user defined secret
 
 ```hcl
-resource "tencentcloud_ssm_secret" "foo" {
-  secret_name = "test"
-  description = "user defined secret"
+resource "tencentcloud_ssm_secret" "example" {
+  secret_name             = "tf-example"
+  description             = "desc."
+  is_enabled              = true
   recovery_window_in_days = 0
-  is_enabled = true
 
   tags = {
-    test-tag = "test"
+    createBy = "terraform"
   }
 }
 ```
@@ -21,29 +21,52 @@ resource "tencentcloud_ssm_secret" "foo" {
 Create redis secret
 
 ```hcl
-data "tencentcloud_redis_instances" "instance" {
-  zone = "ap-guangzhou-6"
+data "tencentcloud_redis_zone_config" "zone" {
+  type_id = 8
 }
 
-resource "tencentcloud_ssm_secret" "secret" {
-  secret_name = "for-redis-test"
-  description = "redis secret"
-  is_enabled  = false
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
 
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = data.tencentcloud_redis_zone_config.zone.list[3].zone
+  name              = "subnet-example"
+  cidr_block        = "10.0.0.0/16"
+}
+
+resource "tencentcloud_redis_instance" "example" {
+  availability_zone  = data.tencentcloud_redis_zone_config.zone.list[3].zone
+  type_id            = data.tencentcloud_redis_zone_config.zone.list[3].type_id
+  password           = "Qwer@234"
+  mem_size           = data.tencentcloud_redis_zone_config.zone.list[3].mem_sizes[0]
+  redis_shard_num    = data.tencentcloud_redis_zone_config.zone.list[3].redis_shard_nums[0]
+  redis_replicas_num = data.tencentcloud_redis_zone_config.zone.list[3].redis_replicas_nums[0]
+  name               = "tf_example"
+  port               = 6379
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_id          = tencentcloud_subnet.subnet.id
+}
+
+resource "tencentcloud_ssm_secret" "example" {
+  secret_name       = "tf-example"
+  description       = "redis desc."
+  is_enabled        = true
   secret_type       = 4
   additional_config = jsonencode(
     {
       "Region" : "ap-guangzhou"
       "Privilege" : "r",
-      "InstanceId" : data.tencentcloud_redis_instances.instance.instance_list.0.redis_id
+      "InstanceId" : tencentcloud_redis_instance.example.id
       "ReadonlyPolicy" : ["master"],
       "Remark" : "for tf test"
     }
   )
   tags = {
-    test-tag = "test"
+    createdBy = "terraform"
   }
-
   recovery_window_in_days = 0
 }
 ```
@@ -60,6 +83,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -85,27 +109,10 @@ func resourceTencentCloudSsmSecret() *schema.Resource {
 				Required:    true,
 				Description: "Name of secret which cannot be repeated in the same region. The maximum length is 128 bytes. The name can only contain English letters, numbers, underscore and hyphen '-'. The first character must be a letter or number.",
 			},
-			"is_enabled": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     true,
-				Description: "Specify whether to enable secret. Default value is `true`.",
-			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Description of secret. The maximum is 2048 bytes.",
-			},
-			"recovery_window_in_days": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     0,
-				Description: "Specify the scheduled deletion date. Default value is `0` that means to delete immediately. 1-30 means the number of days reserved, completely deleted after this date.",
-			},
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tags of secret.",
 			},
 			"kms_key_id": {
 				Type:        schema.TypeString,
@@ -120,13 +127,28 @@ func resourceTencentCloudSsmSecret() *schema.Resource {
 				Computed:    true,
 				Description: "Type of secret. `0`: user-defined secret. `4`: redis secret.",
 			},
-
 			"additional_config": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Additional config for specific secret types in JSON string format.",
 			},
-
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of secret.",
+			},
+			"is_enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Specify whether to enable secret. Default value is `true`.",
+			},
+			"recovery_window_in_days": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     0,
+				Description: "Specify the scheduled deletion date. Default value is `0` that means to delete immediately. 1-30 means the number of days reserved, completely deleted after this date.",
+			},
 			"status": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -138,43 +160,56 @@ func resourceTencentCloudSsmSecret() *schema.Resource {
 
 func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssm_secret.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ssmService := SsmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
+
+	var (
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		request       = ssm.NewCreateSecretRequest()
+		response      = ssm.NewCreateSecretResponse()
+		secretInfo    *SecretInfo
+		outErr, inErr error
+		secretName    string
+	)
+
+	if v, ok := d.GetOk("secret_name"); ok {
+		request.SecretName = helper.String(v.(string))
 	}
 
-	param := make(map[string]interface{})
-	param["secret_name"] = d.Get("secret_name").(string)
 	if v, ok := d.GetOk("description"); ok {
-		param["description"] = v.(string)
+		request.Description = helper.String(v.(string))
 	}
-	if v, ok := d.GetOk("kms_key_id"); ok {
-		param["kms_key_id"] = v.(string)
-	}
-	if v, ok := d.GetOkExists("secret_type"); ok {
-		param["secret_type"] = v.(int)
-	}
-	if v, ok := d.GetOk("additional_config"); ok {
-		param["additional_config"] = v.(string)
-	}
-	//use a default version info, after create secret will delete this version
-	//because sdk do not support create secret without version
-	param["secret_string"] = "default"
 
-	var outErr, inErr error
-	var secretName string
+	if v, ok := d.GetOk("kms_key_id"); ok {
+		request.KmsKeyId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("secret_type"); ok {
+		request.SecretType = helper.IntUint64(v.(int))
+	}
+
+	if v, ok := d.GetOk("additional_config"); ok {
+		request.AdditionalConfig = helper.String(v.(string))
+	}
+
+	request.SecretString = helper.String("default")
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		secretName, inErr = ssmService.CreateSecret(ctx, param)
-		if inErr != nil {
-			return retryError(inErr)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseSsmClient().CreateSecret(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
+		response = result
 		return nil
 	})
+
 	if outErr != nil {
 		return outErr
 	}
-	d.SetId(secretName)
+
+	secretName = *response.Response.SecretName
 
 	if isEnabled := d.Get("is_enabled").(bool); !isEnabled {
 		outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -182,21 +217,24 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 			if inErr != nil {
 				return retryError(inErr)
 			}
+
 			return nil
 		})
+
 		if outErr != nil {
 			return outErr
 		}
 	}
 
-	var secretInfo *SecretInfo
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
 		if inErr != nil {
 			return retryError(inErr)
 		}
+
 		return nil
 	})
+
 	if outErr != nil {
 		return outErr
 	}
@@ -209,27 +247,32 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 			return err
 		}
 	}
+
+	d.SetId(secretName)
 	return resourceTencentCloudSsmSecretRead(d, meta)
 }
 
 func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssm_secret.read")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ssmService := SsmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
-	secretName := d.Id()
 
-	var outErr, inErr error
-	var secretInfo *SecretInfo
+	var (
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		secretName    = d.Id()
+		outErr, inErr error
+		secretInfo    *SecretInfo
+	)
+
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
 		if inErr != nil {
 			return retryError(inErr)
 		}
+
 		return nil
 	})
+
 	if outErr != nil {
 		return outErr
 	}
@@ -258,20 +301,22 @@ func resourceTencentCloudSsmSecretRead(d *schema.ResourceData, meta interface{})
 	if err != nil {
 		return err
 	}
+
 	_ = d.Set("tags", tags)
 	return nil
 }
 
 func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssm_secret.update")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ssmService := SsmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		secretName = d.Id()
+	)
 
 	d.Partial(true)
-	secretName := d.Id()
 
 	immutableArgs := []string{
 		"secret_type",
@@ -291,8 +336,10 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 			if e != nil {
 				return retryError(e)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s modify SSM secret description failed, reason:%+v", logId, err)
 			return err
@@ -307,7 +354,6 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 			log.Printf("[CRITAL]%s modify SSM secret status failed, reason:%+v", logId, err)
 			return err
 		}
-
 	}
 
 	if d.HasChange("tags") {
@@ -320,6 +366,7 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 		if err != nil {
 			return err
 		}
+
 		resourceName := BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
 		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
 			return err
@@ -328,19 +375,19 @@ func resourceTencentCloudSsmSecretUpdate(d *schema.ResourceData, meta interface{
 	}
 
 	d.Partial(false)
-
 	return resourceTencentCloudSsmSecretRead(d, meta)
 }
 
 func resourceTencentCloudSsmSecretDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssm_secret.delete")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ssmService := SsmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
 
-	secretName := d.Id()
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		secretName = d.Id()
+	)
+
 	recoveryWindowInDays := d.Get("recovery_window_in_days").(int)
 	isEnabled := d.Get("is_enabled").(bool)
 	if isEnabled {
@@ -349,8 +396,10 @@ func resourceTencentCloudSsmSecretDelete(d *schema.ResourceData, meta interface{
 			if e != nil {
 				return retryError(e)
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s modify SSM secret status failed, reason:%+v", logId, err)
 			return err
@@ -362,8 +411,10 @@ func resourceTencentCloudSsmSecretDelete(d *schema.ResourceData, meta interface{
 		if e != nil {
 			return retryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s delete SSM secret failed, reason:%+v", logId, err)
 		return err
@@ -375,11 +426,14 @@ func resourceTencentCloudSsmSecretDelete(d *schema.ResourceData, meta interface{
 			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
 				return nil
 			}
+
 			return retryError(err)
 		}
+
 		if secretInfo.status == SSM_STATUS_PENDINGDELETE {
 			return nil
 		}
+
 		return resource.RetryableError(fmt.Errorf("delete fail"))
 	})
 }
