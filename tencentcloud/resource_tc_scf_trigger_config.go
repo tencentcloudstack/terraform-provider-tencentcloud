@@ -11,6 +11,9 @@ resource "tencentcloud_scf_trigger_config" "trigger_config" {
   type          = "timer"
   qualifier     = "$DEFAULT"
   namespace     = "default"
+  trigger_desc = "* 1 2 * * * *"
+  description = "func"
+  custom_argument = "Information"
 }
 ```
 
@@ -26,6 +29,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"strings"
@@ -48,70 +52,132 @@ func resourceTencentCloudScfTriggerConfig() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"function_name": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Function name.",
+				Description: "function name.",
 			},
 
 			"trigger_name": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "Trigger name.",
+				Description: "trigger Name.",
 			},
 
 			"type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Trigger Type.",
+				Description: "trigger type.",
 			},
 
 			"enable": {
-				Required:    true,
+				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Initial status of the trigger. Values: `OPEN` (enabled); `CLOSE` disabled).",
+				Description: "The trigger is turned on or off, and the parameter passed as OPEN is turned on, and CLOSE is turned off.",
 			},
 
 			"qualifier": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Function version. It defaults to `$LATEST`. It's recommended to use `[$DEFAULT](https://intl.cloud.tencent.com/document/product/583/36149?from_cn_redirect=1#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)` for canary release.",
+				Description: "The version of the function, the default is $LATEST, it is recommended to fill in [$DEFAULT] to facilitate the subsequent grayscale release of the version.",
 			},
 
 			"namespace": {
 				Optional:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
-				Default:     "default",
-				Description: "Function namespace.",
+				Description: "function namespace.",
 			},
 
 			"trigger_desc": {
 				Optional:    true,
-				Computed:    true,
 				Type:        schema.TypeString,
-				Description: "To update a COS trigger, this field is required. It stores the data {event:cos:ObjectCreated:*} in the JSON format. The data content of this field is in the same format as that of SetTrigger. This field is optional if a scheduled trigger or CMQ trigger is to be deleted.",
+				Description: "TriggerDesc parameter.",
+			},
+
+			"description": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "Trigger description.",
+			},
+
+			"custom_argument": {
+				Optional:    true,
+				Type:        schema.TypeString,
+				Description: "User Additional Information.",
 			},
 		},
 	}
+}
+
+type TriggerDesc struct {
+	Cron string `json:"cron"`
 }
 
 func resourceTencentCloudScfTriggerConfigCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_scf_trigger_config.create")()
 	defer inconsistentCheck(d, meta)()
 
+	logId := getLogId(contextNil)
+
 	var (
+		request      = scf.NewUpdateTriggerRequest()
 		functionName string
 		triggerName  string
 		namespace    string
 	)
-	if v, ok := d.GetOk("function_name"); ok {
-		functionName = v.(string)
-	}
 
-	if v, ok := d.GetOk("namespace"); ok {
-		namespace = v.(string)
+	if v, ok := d.GetOk("function_name"); ok {
+		request.FunctionName = helper.String(v.(string))
+		functionName = *request.FunctionName
 	}
 
 	if v, ok := d.GetOk("trigger_name"); ok {
-		triggerName = v.(string)
+		request.TriggerName = helper.String(v.(string))
+		triggerName = *request.TriggerName
+	}
+
+	if v, ok := d.GetOk("type"); ok {
+		request.Type = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("enable"); ok {
+		request.Enable = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("qualifier"); ok {
+		request.Qualifier = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("namespace"); ok {
+		request.Namespace = helper.String(v.(string))
+		namespace = *request.Namespace
+	}
+
+	if v, ok := d.GetOk("trigger_desc"); ok {
+		request.TriggerDesc = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("description"); ok {
+		request.Description = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("custom_argument"); ok {
+		request.CustomArgument = helper.String(v.(string))
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseScfClient().UpdateTrigger(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s operate scf triggerConfig failed, reason:%+v", logId, err)
+		return err
 	}
 
 	d.SetId(functionName + FILED_SP + namespace + FILED_SP + triggerName)
@@ -173,7 +239,20 @@ func resourceTencentCloudScfTriggerConfigRead(d *schema.ResourceData, meta inter
 	}
 
 	if triggerConfig.TriggerDesc != nil {
-		_ = d.Set("trigger_desc", triggerConfig.TriggerDesc)
+		var triggerDesc TriggerDesc
+		err := json.Unmarshal([]byte(*triggerConfig.TriggerDesc), &triggerDesc)
+		if err != nil {
+			return err
+		}
+		_ = d.Set("trigger_desc", triggerDesc.Cron)
+	}
+
+	if triggerConfig.CustomArgument != nil {
+		_ = d.Set("custom_argument", triggerConfig.CustomArgument)
+	}
+
+	if triggerConfig.CustomArgument != nil {
+		_ = d.Set("description", triggerConfig.Description)
 	}
 
 	return nil
@@ -185,7 +264,7 @@ func resourceTencentCloudScfTriggerConfigUpdate(d *schema.ResourceData, meta int
 
 	logId := getLogId(contextNil)
 
-	request := scf.NewUpdateTriggerStatusRequest()
+	request := scf.NewUpdateTriggerRequest()
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
 	if len(idSplit) != 3 {
@@ -199,12 +278,12 @@ func resourceTencentCloudScfTriggerConfigUpdate(d *schema.ResourceData, meta int
 	request.Namespace = &namespace
 	request.TriggerName = &triggerName
 
-	if v, ok := d.GetOk("enable"); ok {
-		request.Enable = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("type"); ok {
 		request.Type = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("enable"); ok {
+		request.Enable = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("qualifier"); ok {
@@ -215,8 +294,16 @@ func resourceTencentCloudScfTriggerConfigUpdate(d *schema.ResourceData, meta int
 		request.TriggerDesc = helper.String(v.(string))
 	}
 
+	if v, ok := d.GetOk("description"); ok {
+		request.Description = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("custom_argument"); ok {
+		request.CustomArgument = helper.String(v.(string))
+	}
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseScfClient().UpdateTriggerStatus(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseScfClient().UpdateTrigger(request)
 		if e != nil {
 			return retryError(e)
 		} else {

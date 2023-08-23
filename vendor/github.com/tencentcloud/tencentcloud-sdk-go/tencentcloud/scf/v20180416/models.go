@@ -403,7 +403,7 @@ type CreateFunctionRequestParams struct {
 	// 函数的环境变量
 	Environment *Environment `json:"Environment,omitempty" name:"Environment"`
 
-	// 函数运行环境，目前仅支持 Python2.7，Python3.6，Nodejs6.10，Nodejs8.9，Nodejs10.15，Nodejs12.16， Php5， Php7，Go1，Java8 和 CustomRuntime，默认Python2.7
+	// 函数运行环境，目前仅支持 Python2.7，Python3.6，Nodejs6.10，Nodejs8.9，Nodejs10.15，Nodejs12.16， Php5.2， Php7.4，Go1，Java8 和 CustomRuntime，默认Python2.7
 	Runtime *string `json:"Runtime,omitempty" name:"Runtime"`
 
 	// 函数的私有网络配置
@@ -453,6 +453,12 @@ type CreateFunctionRequestParams struct {
 
 	// 是否开启事件追踪，TRUE 为开启，FALSE为关闭
 	TraceEnable *string `json:"TraceEnable,omitempty" name:"TraceEnable"`
+
+	// 是否自动创建cls索引，TRUE 为开启，FALSE为关闭
+	AutoDeployClsTopicIndex *string `json:"AutoDeployClsTopicIndex,omitempty" name:"AutoDeployClsTopicIndex"`
+
+	// 是否自动创建cls主题，TRUE 为开启，FALSE为关闭
+	AutoCreateClsTopic *string `json:"AutoCreateClsTopic,omitempty" name:"AutoCreateClsTopic"`
 
 	// HTTP函数支持的访问协议。当前支持WebSockets协议，值为WS
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
@@ -488,7 +494,7 @@ type CreateFunctionRequest struct {
 	// 函数的环境变量
 	Environment *Environment `json:"Environment,omitempty" name:"Environment"`
 
-	// 函数运行环境，目前仅支持 Python2.7，Python3.6，Nodejs6.10，Nodejs8.9，Nodejs10.15，Nodejs12.16， Php5， Php7，Go1，Java8 和 CustomRuntime，默认Python2.7
+	// 函数运行环境，目前仅支持 Python2.7，Python3.6，Nodejs6.10，Nodejs8.9，Nodejs10.15，Nodejs12.16， Php5.2， Php7.4，Go1，Java8 和 CustomRuntime，默认Python2.7
 	Runtime *string `json:"Runtime,omitempty" name:"Runtime"`
 
 	// 函数的私有网络配置
@@ -538,6 +544,12 @@ type CreateFunctionRequest struct {
 
 	// 是否开启事件追踪，TRUE 为开启，FALSE为关闭
 	TraceEnable *string `json:"TraceEnable,omitempty" name:"TraceEnable"`
+
+	// 是否自动创建cls索引，TRUE 为开启，FALSE为关闭
+	AutoDeployClsTopicIndex *string `json:"AutoDeployClsTopicIndex,omitempty" name:"AutoDeployClsTopicIndex"`
+
+	// 是否自动创建cls主题，TRUE 为开启，FALSE为关闭
+	AutoCreateClsTopic *string `json:"AutoCreateClsTopic,omitempty" name:"AutoCreateClsTopic"`
 
 	// HTTP函数支持的访问协议。当前支持WebSockets协议，值为WS
 	ProtocolType *string `json:"ProtocolType,omitempty" name:"ProtocolType"`
@@ -585,6 +597,8 @@ func (r *CreateFunctionRequest) FromJsonString(s string) error {
 	delete(f, "Tags")
 	delete(f, "AsyncRunEnable")
 	delete(f, "TraceEnable")
+	delete(f, "AutoDeployClsTopicIndex")
+	delete(f, "AutoCreateClsTopic")
 	delete(f, "ProtocolType")
 	delete(f, "ProtocolParams")
 	delete(f, "InstanceConcurrencyConfig")
@@ -623,6 +637,9 @@ type CreateNamespaceRequestParams struct {
 
 	// 命名空间描述
 	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 资源池配置
+	ResourceEnv *NamespaceResourceEnv `json:"ResourceEnv,omitempty" name:"ResourceEnv"`
 }
 
 type CreateNamespaceRequest struct {
@@ -633,6 +650,9 @@ type CreateNamespaceRequest struct {
 
 	// 命名空间描述
 	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 资源池配置
+	ResourceEnv *NamespaceResourceEnv `json:"ResourceEnv,omitempty" name:"ResourceEnv"`
 }
 
 func (r *CreateNamespaceRequest) ToJsonString() string {
@@ -649,6 +669,7 @@ func (r *CreateNamespaceRequest) FromJsonString(s string) error {
 	}
 	delete(f, "Namespace")
 	delete(f, "Description")
+	delete(f, "ResourceEnv")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateNamespaceRequest has unknown keys!", "")
 	}
@@ -2690,6 +2711,35 @@ func (r *InvokeResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type K8SLabel struct {
+	// label的名称
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// label的值
+	Value *string `json:"Value,omitempty" name:"Value"`
+}
+
+type K8SToleration struct {
+	// 匹配的污点名
+	Key *string `json:"Key,omitempty" name:"Key"`
+
+	// 匹配方式，默认值为: Equal
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Operator *string `json:"Operator,omitempty" name:"Operator"`
+
+	// 执行策略
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Effect *string `json:"Effect,omitempty" name:"Effect"`
+
+	// 匹配的污点值，当Operator为Equal时必填
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Value *string `json:"Value,omitempty" name:"Value"`
+
+	// 当污点不被容忍时，Pod还能在节点上运行多久
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TolerationSeconds *uint64 `json:"TolerationSeconds,omitempty" name:"TolerationSeconds"`
+}
+
 type LayerVersionInfo struct {
 	// 版本适用的运行时
 	// 注意：此字段可能返回 null，表示取不到有效值。
@@ -3591,6 +3641,46 @@ type NamespaceLimit struct {
 	MaxMsgTTL *int64 `json:"MaxMsgTTL,omitempty" name:"MaxMsgTTL"`
 }
 
+type NamespaceResourceEnv struct {
+	// 基于TKE集群的资源池
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TKE *NamespaceResourceEnvTKE `json:"TKE,omitempty" name:"TKE"`
+}
+
+type NamespaceResourceEnvTKE struct {
+	// 集群ID
+	ClusterID *string `json:"ClusterID,omitempty" name:"ClusterID"`
+
+	// 子网ID
+	SubnetID *string `json:"SubnetID,omitempty" name:"SubnetID"`
+
+	// 命名空间
+	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
+
+	// 数据存储地址
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	DataPath *string `json:"DataPath,omitempty" name:"DataPath"`
+
+	// node选择器
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	NodeSelector []*K8SLabel `json:"NodeSelector,omitempty" name:"NodeSelector"`
+
+	// 污点容忍
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Tolerations []*K8SToleration `json:"Tolerations,omitempty" name:"Tolerations"`
+
+	// scf组件将占用的节点端口起始号
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Port *uint64 `json:"Port,omitempty" name:"Port"`
+
+	// yaml格式的pod patch内容，例如
+	// metadata:
+	//   labels:
+	//     key: value
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	PodTemplatePatch *string `json:"PodTemplatePatch,omitempty" name:"PodTemplatePatch"`
+}
+
 type NamespaceUsage struct {
 	// 函数数组
 	Functions []*string `json:"Functions,omitempty" name:"Functions"`
@@ -4261,12 +4351,18 @@ type Trigger struct {
 	AvailableStatus *string `json:"AvailableStatus,omitempty" name:"AvailableStatus"`
 
 	// 触发器最小资源ID
+	//
+	// Deprecated: ResourceId is deprecated.
 	ResourceId *string `json:"ResourceId,omitempty" name:"ResourceId"`
 
 	// 触发器和云函数绑定状态
+	//
+	// Deprecated: BindStatus is deprecated.
 	BindStatus *string `json:"BindStatus,omitempty" name:"BindStatus"`
 
 	// 触发器类型，双向表示两侧控制台均可操作，单向表示SCF控制台单向创建
+	//
+	// Deprecated: TriggerAttribute is deprecated.
 	TriggerAttribute *string `json:"TriggerAttribute,omitempty" name:"TriggerAttribute"`
 
 	// 触发器绑定的别名或版本
@@ -4363,12 +4459,18 @@ type TriggerInfo struct {
 	ModTime *string `json:"ModTime,omitempty" name:"ModTime"`
 
 	// 触发器最小资源ID
+	//
+	// Deprecated: ResourceId is deprecated.
 	ResourceId *string `json:"ResourceId,omitempty" name:"ResourceId"`
 
 	// 触发器和云函数绑定状态
+	//
+	// Deprecated: BindStatus is deprecated.
 	BindStatus *string `json:"BindStatus,omitempty" name:"BindStatus"`
 
 	// 触发器类型，双向表示两侧控制台均可操作，单向表示SCF控制台单向创建
+	//
+	// Deprecated: TriggerAttribute is deprecated.
 	TriggerAttribute *string `json:"TriggerAttribute,omitempty" name:"TriggerAttribute"`
 
 	// 客户自定义触发器描述
@@ -4918,6 +5020,116 @@ func (r *UpdateNamespaceResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *UpdateNamespaceResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateTriggerRequestParams struct {
+	// 函数名称
+	FunctionName *string `json:"FunctionName,omitempty" name:"FunctionName"`
+
+	// 触发器名称
+	TriggerName *string `json:"TriggerName,omitempty" name:"TriggerName"`
+
+	// 触发器类型
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 触发器开启或关闭，传参为OPEN为开启，CLOSE为关闭
+	Enable *string `json:"Enable,omitempty" name:"Enable"`
+
+	// 函数的版本，默认为 $LATEST，建议填写 [$DEFAULT](https://cloud.tencent.com/document/product/583/36149#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)方便后续进行版本的灰度发布。
+	Qualifier *string `json:"Qualifier,omitempty" name:"Qualifier"`
+
+	// 函数的命名空间
+	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
+
+	// TriggerDesc参数
+	TriggerDesc *string `json:"TriggerDesc,omitempty" name:"TriggerDesc"`
+
+	// 触发器描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 用户附加信息
+	CustomArgument *string `json:"CustomArgument,omitempty" name:"CustomArgument"`
+}
+
+type UpdateTriggerRequest struct {
+	*tchttp.BaseRequest
+	
+	// 函数名称
+	FunctionName *string `json:"FunctionName,omitempty" name:"FunctionName"`
+
+	// 触发器名称
+	TriggerName *string `json:"TriggerName,omitempty" name:"TriggerName"`
+
+	// 触发器类型
+	Type *string `json:"Type,omitempty" name:"Type"`
+
+	// 触发器开启或关闭，传参为OPEN为开启，CLOSE为关闭
+	Enable *string `json:"Enable,omitempty" name:"Enable"`
+
+	// 函数的版本，默认为 $LATEST，建议填写 [$DEFAULT](https://cloud.tencent.com/document/product/583/36149#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)方便后续进行版本的灰度发布。
+	Qualifier *string `json:"Qualifier,omitempty" name:"Qualifier"`
+
+	// 函数的命名空间
+	Namespace *string `json:"Namespace,omitempty" name:"Namespace"`
+
+	// TriggerDesc参数
+	TriggerDesc *string `json:"TriggerDesc,omitempty" name:"TriggerDesc"`
+
+	// 触发器描述
+	Description *string `json:"Description,omitempty" name:"Description"`
+
+	// 用户附加信息
+	CustomArgument *string `json:"CustomArgument,omitempty" name:"CustomArgument"`
+}
+
+func (r *UpdateTriggerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateTriggerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "FunctionName")
+	delete(f, "TriggerName")
+	delete(f, "Type")
+	delete(f, "Enable")
+	delete(f, "Qualifier")
+	delete(f, "Namespace")
+	delete(f, "TriggerDesc")
+	delete(f, "Description")
+	delete(f, "CustomArgument")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "UpdateTriggerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type UpdateTriggerResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type UpdateTriggerResponse struct {
+	*tchttp.BaseResponse
+	Response *UpdateTriggerResponseParams `json:"Response"`
+}
+
+func (r *UpdateTriggerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *UpdateTriggerResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

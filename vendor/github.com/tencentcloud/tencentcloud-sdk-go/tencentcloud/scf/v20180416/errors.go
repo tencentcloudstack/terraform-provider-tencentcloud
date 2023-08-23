@@ -20,6 +20,9 @@ const (
 	// 操作失败。
 	FAILEDOPERATION = "FailedOperation"
 
+	// 账户余额不足。
+	FAILEDOPERATION_ACCOUNTINSUFFICIENT = "FailedOperation.AccountInsufficient"
+
 	// API网关触发器创建失败。
 	FAILEDOPERATION_APIGATEWAY = "FailedOperation.ApiGateway"
 
@@ -110,6 +113,9 @@ const (
 	// 当前账号或命名空间处于欠费状态，请在可用时重试。
 	FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 
+	// 本地域资源售罄。
+	FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
+
 	// 调用函数失败。
 	FAILEDOPERATION_INVOKEFUNCTION = "FailedOperation.InvokeFunction"
 
@@ -146,6 +152,9 @@ const (
 	// 角色不存在。
 	FAILEDOPERATION_QCSROLENOTFOUND = "FailedOperation.QcsRoleNotFound"
 
+	// 查询失败。
+	FAILEDOPERATION_QUERYERROR = "FailedOperation.QueryError"
+
 	// ReservedExceedTotal 总保留超限。
 	FAILEDOPERATION_RESERVEDEXCEEDTOTAL = "FailedOperation.ReservedExceedTotal"
 
@@ -175,6 +184,9 @@ const (
 
 	// 更新状态操作失败。
 	FAILEDOPERATION_UPDATESTATUS = "FailedOperation.UpdateStatus"
+
+	// 更新触发器出错。
+	FAILEDOPERATION_UPDATETRIGGER = "FailedOperation.UpdateTrigger"
 
 	// 与原状态一致，无需更改。
 	FAILEDOPERATION_UPDATETRIGGERSTATUS = "FailedOperation.UpdateTriggerStatus"
@@ -443,6 +455,9 @@ const (
 	// 参数超出长度限制。
 	INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 
+	// 日志格式不正确。
+	INVALIDPARAMETERVALUE_LOGFORMAT = "InvalidParameterValue.LogFormat"
+
 	// MaxConcurrency 参数传入错误。
 	INVALIDPARAMETERVALUE_MAXCONCURRENCY = "InvalidParameterValue.MaxConcurrency"
 
@@ -569,6 +584,9 @@ const (
 	// Type传入错误。
 	INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
 
+	// VPC不正确。
+	INVALIDPARAMETERVALUE_VPC = "InvalidParameterValue.Vpc"
+
 	// 开启cfs配置的同时必须开启vpc。
 	INVALIDPARAMETERVALUE_VPCNOTSETWHENOPENCFS = "InvalidParameterValue.VpcNotSetWhenOpenCfs"
 
@@ -676,6 +694,9 @@ const (
 
 	// 账号已被隔离。
 	OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+
+	// 账号不存在。
+	OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
@@ -809,6 +830,9 @@ const (
 	// Namespace不可用。
 	RESOURCEUNAVAILABLE_NAMESPACE = "ResourceUnavailable.Namespace"
 
+	// 服务已冻结。
+	RESOURCEUNAVAILABLE_SERVICESUSPENDED = "ResourceUnavailable.ServiceSuspended"
+
 	// 未授权操作。
 	UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
 
@@ -857,6 +881,9 @@ const (
 	// Cdn不支持。
 	UNSUPPORTEDOPERATION_CDN = "UnsupportedOperation.Cdn"
 
+	// 该函数无法复制。
+	UNSUPPORTEDOPERATION_COPYFUNCTION = "UnsupportedOperation.CopyFunction"
+
 	// Cos操作不支持。
 	UNSUPPORTEDOPERATION_COS = "UnsupportedOperation.Cos"
 
@@ -866,11 +893,17 @@ const (
 	// 不支持的地域。
 	UNSUPPORTEDOPERATION_NOTSUPPORTREGION = "UnsupportedOperation.NotSupportRegion"
 
+	// 当前状态无法发布版本。
+	UNSUPPORTEDOPERATION_PUBLISHVERSION = "UnsupportedOperation.PublishVersion"
+
 	// 不支持此地域。
 	UNSUPPORTEDOPERATION_REGION = "UnsupportedOperation.Region"
 
 	// Trigger操作不支持。
 	UNSUPPORTEDOPERATION_TRIGGER = "UnsupportedOperation.Trigger"
+
+	// 更新函数代码失败。
+	UNSUPPORTEDOPERATION_UPDATEFUNCTIONCODE = "UnsupportedOperation.UpdateFunctionCode"
 
 	// 指定的配置暂不支持，请修正后再试。
 	UNSUPPORTEDOPERATION_UPDATEFUNCTIONEVENTINVOKECONFIG = "UnsupportedOperation.UpdateFunctionEventInvokeConfig"
