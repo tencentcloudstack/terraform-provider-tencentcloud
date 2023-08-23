@@ -83,8 +83,9 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 	"log"
+
+	ssm "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm/v20190923"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -226,20 +227,20 @@ func resourceTencentCloudSsmSecretCreate(d *schema.ResourceData, meta interface{
 		}
 	}
 
-	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
-		if inErr != nil {
-			return retryError(inErr)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
+			if inErr != nil {
+				return retryError(inErr)
+			}
+
+			return nil
+		})
+
+		if outErr != nil {
+			return outErr
 		}
 
-		return nil
-	})
-
-	if outErr != nil {
-		return outErr
-	}
-
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tcClient := meta.(*TencentCloudClient).apiV3Conn
 		tagService := &TagService{client: tcClient}
 		resourceName := BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)

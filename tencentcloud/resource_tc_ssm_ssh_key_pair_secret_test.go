@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudSsmSshKeyPairSecretResource_basic -v
 func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -17,19 +18,19 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 			{
 				Config: testAccSsmSshKeyPairSecret,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret", "description", "for tf test"),
-					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret", "status", "Disabled"),
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "description", "desc."),
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "status", "Disabled"),
 				),
 			},
 			{
 				Config: testAccSsmSshKeyPairSecretUpdate,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret", "description", "for test"),
-					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret", "status", "Enabled"),
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "description", "update desc."),
+					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "status", "Enabled"),
 				),
 			},
 			{
-				ResourceName:            "tencentcloud_ssm_ssh_key_pair_secret.ssh_key_pair_secret",
+				ResourceName:            "tencentcloud_ssm_ssh_key_pair_secret.example",
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateVerifyIgnore: []string{"clean_ssh_key"},
@@ -39,31 +40,55 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 }
 
 const testAccSsmSshKeyPairSecret = `
-data "tencentcloud_kms_keys" "kms" {
-  key_state = 1
+resource "tencentcloud_kms_key" "example" {
+  alias                = "tf-example-kms-key-test"
+  description          = "example of kms key"
+  key_rotation_enabled = false
+  is_enabled           = true
+
+  tags = {
+    createdBy = "terraform"
+  }
 }
-resource "tencentcloud_ssm_ssh_key_pair_secret" "ssh_key_pair_secret" {
-  secret_name  = "tf-ssh-key-secret"
-  project_id   = 0
-  description  = "for tf test"
-  kms_key_id   = data.tencentcloud_kms_keys.kms.key_list.0.key_id
-  ssh_key_name = "tf_ssh_test"
-  status       = "Disabled"
+
+resource "tencentcloud_ssm_ssh_key_pair_secret" "example" {
+  secret_name   = "tf-example-ssh-test"
+  project_id    = 0
+  description   = "desc."
+  kms_key_id    = tencentcloud_kms_key.example.id
+  ssh_key_name  = "tf_example_ssh"
+  status        = "Disabled"
   clean_ssh_key = true
+
+  tags = {
+    createdBy = "terraform"
+  }
 }
 `
 
 const testAccSsmSshKeyPairSecretUpdate = `
-data "tencentcloud_kms_keys" "kms" {
-  key_state = 1
+resource "tencentcloud_kms_key" "example" {
+  alias                = "tf-example-kms-key-test"
+  description          = "example of kms key"
+  key_rotation_enabled = false
+  is_enabled           = true
+
+  tags = {
+    createdBy = "terraform"
+  }
 }
-resource "tencentcloud_ssm_ssh_key_pair_secret" "ssh_key_pair_secret" {
-  secret_name  = "tf-ssh-key-secret"
-  project_id   = 0
-  description  = "for test"
-  kms_key_id   = data.tencentcloud_kms_keys.kms.key_list.0.key_id
-  ssh_key_name = "tf_ssh_test"
-  status       = "Enabled"
+
+resource "tencentcloud_ssm_ssh_key_pair_secret" "example" {
+  secret_name   = "tf-example-ssh-test"
+  project_id    = 0
+  description   = "update desc."
+  kms_key_id    = tencentcloud_kms_key.example.id
+  ssh_key_name  = "tf_example_ssh"
+  status        = "Enabled"
   clean_ssh_key = true
+
+  tags = {
+    createdBy = "terraformUpdate"
+  }
 }
 `

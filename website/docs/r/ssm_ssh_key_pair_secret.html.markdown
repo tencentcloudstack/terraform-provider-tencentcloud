@@ -14,21 +14,29 @@ Provides a resource to create a ssm ssh key pair secret
 ## Example Usage
 
 ```hcl
-data "tencentcloud_kms_keys" "kms" {
-  key_state = 1
+resource "tencentcloud_kms_key" "example" {
+  alias                = "tf-example-kms-key"
+  description          = "example of kms key"
+  key_rotation_enabled = false
+  is_enabled           = true
+
+  tags = {
+    createdBy = "terraform"
+  }
 }
 
-resource "tencentcloud_ssm_ssh_key_pair_secret" "ssh_key_pair_secret" {
-  secret_name  = "tf-ssh-key-secret"
-  project_id   = 0
-  description  = "for tf test"
-  kms_key_id   = data.tencentcloud_kms_keys.kms.key_list.0.key_id
-  ssh_key_name = "tf_ssh_test"
-  status       = "Disabled"
-  tags = {
-    "test" = "test"
-  }
+resource "tencentcloud_ssm_ssh_key_pair_secret" "example" {
+  secret_name   = "tf-example"
+  project_id    = 0
+  description   = "desc."
+  kms_key_id    = tencentcloud_kms_key.example.id
+  ssh_key_name  = "tf_example_ssh"
+  status        = "Enabled"
   clean_ssh_key = true
+
+  tags = {
+    createdBy = "terraform"
+  }
 }
 ```
 
@@ -43,6 +51,7 @@ The following arguments are supported:
 * `kms_key_id` - (Optional, String) Specifies a KMS CMK to encrypt the secret.If this parameter is left empty, the CMK created by Secrets Manager by default will be used for encryption.You can also specify a custom KMS CMK created in the same region for encryption.
 * `ssh_key_name` - (Optional, String) Name of the SSH key pair, which only contains digits, letters and underscores and must start with a digit or letter. The maximum length is 25 characters.
 * `status` - (Optional, String) Enable or Disable Secret. Valid values is `Enabled` or `Disabled`. Default is `Enabled`.
+* `tags` - (Optional, Map) Tags of secret.
 
 ## Attributes Reference
 

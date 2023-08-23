@@ -4,21 +4,29 @@ Provides a resource to create a ssm ssh key pair secret
 Example Usage
 
 ```hcl
-data "tencentcloud_kms_keys" "kms" {
-  key_state = 1
+resource "tencentcloud_kms_key" "example" {
+  alias                = "tf-example-kms-key"
+  description          = "example of kms key"
+  key_rotation_enabled = false
+  is_enabled           = true
+
+  tags = {
+    createdBy = "terraform"
+  }
 }
 
-resource "tencentcloud_ssm_ssh_key_pair_secret" "ssh_key_pair_secret" {
-  secret_name  = "tf-ssh-key-secret"
-  project_id   = 0
-  description  = "for tf test"
-  kms_key_id   = data.tencentcloud_kms_keys.kms.key_list.0.key_id
-  ssh_key_name = "tf_ssh_test"
-  status       = "Disabled"
-  tags         = {
-    "test" = "test"
-  }
+resource "tencentcloud_ssm_ssh_key_pair_secret" "example" {
+  secret_name   = "tf-example"
+  project_id    = 0
+  description   = "desc."
+  kms_key_id    = tencentcloud_kms_key.example.id
+  ssh_key_name  = "tf_example_ssh"
+  status        = "Enabled"
   clean_ssh_key = true
+
+  tags = {
+    createdBy = "terraform"
+  }
 }
 ```
 
@@ -59,31 +67,31 @@ func resourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
 				ForceNew:    true,
 				Description: "Secret name, which must be unique in the same region. It can contain 128 bytes of letters, digits, hyphens and underscores and must begin with a letter or digit.",
 			},
-
-			"project_id": {
-				Required:    true,
-				Type:        schema.TypeInt,
-				Description: "ID of the project to which the created SSH key belongs.",
-			},
-
 			"description": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Description, such as what it is used for. It contains up to 2,048 bytes.",
 			},
-
 			"kms_key_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Specifies a KMS CMK to encrypt the secret.If this parameter is left empty, the CMK created by Secrets Manager by default will be used for encryption.You can also specify a custom KMS CMK created in the same region for encryption.",
 			},
-
+			"project_id": {
+				Required:    true,
+				Type:        schema.TypeInt,
+				Description: "ID of the project to which the created SSH key belongs.",
+			},
 			"ssh_key_name": {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "Name of the SSH key pair, which only contains digits, letters and underscores and must start with a digit or letter. The maximum length is 25 characters.",
 			},
-
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tags of secret.",
+			},
 			"status": {
 				Optional:     true,
 				Type:         schema.TypeString,
@@ -91,7 +99,6 @@ func resourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue([]string{"Enabled", "Disabled"}),
 				Description:  "Enable or Disable Secret. Valid values is `Enabled` or `Disabled`. Default is `Enabled`.",
 			},
-
 			"clean_ssh_key": {
 				Optional: true,
 				Type:     schema.TypeBool,
@@ -99,13 +106,11 @@ func resourceTencentCloudSsmSshKeyPairSecret() *schema.Resource {
 					"`True`: deletes SSH key from both the secret and SSH key list in the CVM console. Note that the deletion will fail if the SSH key is already bound to a CVM instance." +
 					"`False`: only deletes the SSH key information in the secret.",
 			},
-
 			"create_time": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "Credential creation time in UNIX timestamp format.",
 			},
-
 			"secret_type": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -119,19 +124,18 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 	defer logElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.create")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
 	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
 		request    = ssm.NewCreateSSHKeyPairSecretRequest()
 		response   = ssm.NewCreateSSHKeyPairSecretResponse()
+		secretInfo *SecretInfo
 		secretName string
 	)
+
 	if v, ok := d.GetOk("secret_name"); ok {
 		request.SecretName = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOkExists("project_id"); ok {
-		request.ProjectId = helper.IntInt64(v.(int))
 	}
 
 	if v, ok := d.GetOk("description"); ok {
@@ -142,19 +146,12 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 		request.KmsKeyId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("ssh_key_name"); ok {
-		request.SSHKeyName = helper.String(v.(string))
+	if v, ok := d.GetOkExists("project_id"); ok {
+		request.ProjectId = helper.IntInt64(v.(int))
 	}
 
-	// Not support yet, because of can not query tags
-	if v := helper.GetTags(d, "tags"); len(v) > 0 {
-		for tagKey, tagValue := range v {
-			tag := ssm.Tag{
-				TagKey:   helper.String(tagKey),
-				TagValue: helper.String(tagValue),
-			}
-			request.Tags = append(request.Tags, &tag)
-		}
+	if v, ok := d.GetOk("ssh_key_name"); ok {
+		request.SSHKeyName = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -164,31 +161,52 @@ func resourceTencentCloudSsmSshKeyPairSecretCreate(d *schema.ResourceData, meta 
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s create ssm sshKeyPairSecret failed, reason:%+v", logId, err)
 		return err
 	}
 
 	secretName = *response.Response.SecretName
-	d.SetId(secretName)
 
 	// update status if disabled
 	if v, ok := d.GetOk("status"); ok {
 		status := v.(string)
 		if status == "Disabled" {
-			logId := getLogId(contextNil)
-			ctx := context.WithValue(context.TODO(), logIdKey, logId)
-			service := SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
-			err := service.DisableSecret(ctx, secretName)
+			err = ssmService.DisableSecret(ctx, secretName)
 			if err != nil {
 				return err
 			}
 		}
 	}
 
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			secretInfo, err = ssmService.DescribeSecretByName(ctx, secretName)
+			if err != nil {
+				return retryError(err)
+			}
+
+			return nil
+		})
+
+		if outErr != nil {
+			return outErr
+		}
+
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		resourceName := BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
+		if err = tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
+	d.SetId(secretName)
 	return resourceTencentCloudSsmSshKeyPairSecretRead(d, meta)
 }
 
@@ -196,13 +214,13 @@ func resourceTencentCloudSsmSshKeyPairSecretRead(d *schema.ResourceData, meta in
 	defer logElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.read")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	secretName := d.Id()
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		secretInfo *SecretInfo
+		secretName = d.Id()
+	)
 
 	sshKeyPairSecret, err := service.DescribeSecretById(ctx, secretName, 2)
 	if err != nil {
@@ -247,6 +265,27 @@ func resourceTencentCloudSsmSshKeyPairSecretRead(d *schema.ResourceData, meta in
 		_ = d.Set("secret_type", sshKeyPairSecret.SecretType)
 	}
 
+	outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		secretInfo, err = service.DescribeSecretByName(ctx, secretName)
+		if err != nil {
+			return retryError(err)
+		}
+
+		return nil
+	})
+
+	if outErr != nil {
+		return outErr
+	}
+
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "ssm", "secret", tcClient.Region, secretInfo.resourceId)
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
 	return nil
 }
 
@@ -254,10 +293,12 @@ func resourceTencentCloudSsmSshKeyPairSecretUpdate(d *schema.ResourceData, meta 
 	defer logElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.update")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	secretName := d.Id()
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		secretName = d.Id()
+	)
 
 	immutableArgs := []string{
 		"project_id",
@@ -278,6 +319,7 @@ func resourceTencentCloudSsmSshKeyPairSecretUpdate(d *schema.ResourceData, meta 
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
+
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 			result, e := meta.(*TencentCloudClient).apiV3Conn.UseSsmClient().UpdateDescription(request)
 			if e != nil {
@@ -285,8 +327,10 @@ func resourceTencentCloudSsmSshKeyPairSecretUpdate(d *schema.ResourceData, meta 
 			} else {
 				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 			}
+
 			return nil
 		})
+
 		if err != nil {
 			log.Printf("[CRITAL]%s update ssm sshKeyPairSecret failed, reason:%+v", logId, err)
 			return err
@@ -312,6 +356,24 @@ func resourceTencentCloudSsmSshKeyPairSecretUpdate(d *schema.ResourceData, meta 
 		}
 	}
 
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+
+		oldValue, newValue := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldValue.(map[string]interface{}), newValue.(map[string]interface{}))
+		secretInfo, err := ssmService.DescribeSecretByName(ctx, secretName)
+		if err != nil {
+			return err
+		}
+
+		resourceName := BuildTagResourceName("ssm", "secret", tcClient.Region, secretInfo.resourceId)
+		if err = tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+
+	}
+
 	return resourceTencentCloudSsmSshKeyPairSecretRead(d, meta)
 }
 
@@ -319,11 +381,12 @@ func resourceTencentCloudSsmSshKeyPairSecretDelete(d *schema.ResourceData, meta 
 	defer logElapsed("resource.tencentcloud_ssm_ssh_key_pair_secret.delete")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
-	secretName := d.Id()
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		service    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		secretName = d.Id()
+	)
 
 	// disable before destroy
 	err := service.DisableSecret(ctx, secretName)
@@ -337,7 +400,7 @@ func resourceTencentCloudSsmSshKeyPairSecretDelete(d *schema.ResourceData, meta 
 		cleanSSHKey = helper.Bool(v.(bool))
 	}
 
-	if err := service.DeleteSsmSshKeyPairSecretById(ctx, secretName, cleanSSHKey); err != nil {
+	if err = service.DeleteSsmSshKeyPairSecretById(ctx, secretName, cleanSSHKey); err != nil {
 		return err
 	}
 
