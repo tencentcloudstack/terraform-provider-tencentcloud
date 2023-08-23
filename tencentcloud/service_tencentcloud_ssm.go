@@ -507,6 +507,7 @@ func (me *SsmService) DescribeSsmProductsByFilter(ctx context.Context) (products
 		errRet = err
 		return
 	}
+
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	products = response.Response.Products
