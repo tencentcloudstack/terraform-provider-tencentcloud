@@ -96,7 +96,7 @@ const (
 
 	defaultProjectId = "1250480"
 
-	defaultTkeOSImageId   = "img-2lr9q49h"
+	defaultTkeOSImageId   = "img-hdt9xxkt"
 	defaultTkeOSImageName = "tlinux2.2(tkernel3)x86_64"
 )
 
@@ -345,8 +345,7 @@ locals {
 
 const defaultSecurityGroupData = fixedTagVariable + `
 data "tencentcloud_security_groups" "internal" {
-  name = "default"
-  tags = var.fixed_tags
+  name = "test_iac_example"
 }
 
 data "tencentcloud_security_groups" "exclusive" {
