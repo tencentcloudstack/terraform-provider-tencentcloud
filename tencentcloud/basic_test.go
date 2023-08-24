@@ -96,7 +96,7 @@ const (
 
 	defaultProjectId = "1250480"
 
-	defaultTkeOSImageId   = "img-hdt9xxkt"
+	defaultTkeOSImageId   = "img-eb30mz89"
 	defaultTkeOSImageName = "tlinux2.2(tkernel3)x86_64"
 )
 

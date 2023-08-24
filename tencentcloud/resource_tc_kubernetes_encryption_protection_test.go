@@ -23,6 +23,7 @@ func TestAccTencentCloudKubernetesEncryptionProtectionResource_basic(t *testing.
 			{
 				SkipFunc: func() (bool, error) {
 					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						fmt.Printf("[International station]skip TestAccTencentCloudKubernetesClusterEndpointResource, because the test station did not support this feature yet!\n")
 						return true, nil
 					}
 					return false, errors.New("need test")

@@ -297,7 +297,7 @@ variable "project_id" {
 }
 
 data "tencentcloud_vpc_subnets" "vpc" {
-  is_default        = true
+  is_default        = false
   availability_zone = var.env_az != "" ? var.env_az : var.availability_zone
 }
 
