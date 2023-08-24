@@ -15,7 +15,7 @@ Provides a resource to create a lighthouse firewall template
 
 ```hcl
 resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
-  template_name = "firewall_template-test"
+  template_name = "firewall-template-test"
   template_rules {
     protocol                  = "TCP"
     port                      = "8080"
@@ -24,7 +24,7 @@ resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
     firewall_rule_description = "test description"
   }
   template_rules {
-    protocol                  = "TCP" s
+    protocol                  = "TCP"
     port                      = "8090"
     cidr_block                = "127.0.0.0/24"
     action                    = "DROP"

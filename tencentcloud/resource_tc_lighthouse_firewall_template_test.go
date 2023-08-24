@@ -30,7 +30,7 @@ func TestAccTencentCloudLighthouseFirewallTemplateResource_basic(t *testing.T) {
 const testAccLighthouseFirewallTemplate = `
 
 resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
-	template_name = "firewall_template-test"s
+	template_name = "firewall-template-test"
 	template_rules {
 		protocol = "TCP"
 		port = "8080"
@@ -39,7 +39,7 @@ resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
 		firewall_rule_description = "test description"
 	}
 	template_rules {
-		protocol = "TCP"s
+		protocol = "TCP"
 		port = "8090"
 		cidr_block = "127.0.0.0/24"
 		action = "DROP"

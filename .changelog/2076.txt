@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_lighthouse_firewall_template
+```
+
+```release-note:enhancement
+resource/tencentcloud_lighthouse_instance: support param `firewall_template_id`
+```
