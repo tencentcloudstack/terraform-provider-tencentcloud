@@ -222,10 +222,6 @@ const testAccTkeScaleWorkerInstance string = testAccTkeScaleWorkerInstanceBasic 
 
 resource tencentcloud_kubernetes_scale_worker test_scale {
   cluster_id = local.cluster_id
-  
-  extra_args = [
- 	"root-dir=/var/lib/kubelet"
-  ]	
 
   labels = {
     "test1" = "test1",
@@ -261,9 +257,9 @@ const testAccTkeScaleWorkerInstanceGpuInsTypeUpdate string = testAccTkeScaleWork
 resource tencentcloud_kubernetes_scale_worker test_scale {
   cluster_id = local.cluster_id
   
-  extra_args = [
- 	"root-dir=/var/lib/kubelet"
-  ]	
+  //extra_args = [
+ 	//"root-dir=/var/lib/kubelet"
+  //]	
 
   labels = {
     "test1" = "test1",
