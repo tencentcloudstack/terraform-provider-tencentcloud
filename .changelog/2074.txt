@@ -1,0 +1,11 @@
+```release-note:deprecation
+resource/tencentcloud_teo_custom_error_page
+```
+
+```release-note:deprecation
+resource/tencentcloud_teo_rule_engine_priority
+```
+
+```release-note:enhancement
+resource/tencentcloud_teo_zone: `cname_speed_up` cannot be modified
+```
