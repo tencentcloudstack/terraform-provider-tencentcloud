@@ -28,7 +28,7 @@ const testAccLighthouseKeyPairAttachment = `
 
 resource "tencentcloud_lighthouse_key_pair_attachment" "key_pair_attachment" {
   key_id = "lhkp-d8zf3jmv"
-  instance_id = "lhins-hwe21u91"
+  instance_id = "lhins-g4bwdjbf"
 }
 
 `

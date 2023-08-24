@@ -4,6 +4,10 @@ Provides a resource to create a lighthouse instance.
 Example Usage
 
 ```hcl
+resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
+  template_name="empty-template"
+}
+
 resource "tencentcloud_lighthouse_instance" "lighthouse" {
   bundle_id    = "bundle2022_gen_01"
   blueprint_id = "lhbp-f1lkcd41"
@@ -68,6 +72,7 @@ resource "tencentcloud_lighthouse_instance" "lighthouse" {
     }
     command = "echo \"hello\""
   }
+  firewall_template_id = tencentcloud_lighthouse_firewall_template.firewall_template.id
 }
 ```
 
@@ -268,6 +273,12 @@ func resourceTencentCloudLighthouseInstance() *schema.Resource {
 					},
 				},
 			},
+			"firewall_template_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Firewall template ID. If this parameter is not specified, the default firewall policy is used.",
+			},
 		},
 	}
 }
@@ -389,6 +400,10 @@ func resourceTencentCloudLighthouseInstanceCreate(d *schema.ResourceData, meta i
 		}
 	}
 
+	if v, ok := d.GetOk("firewall_template_id"); ok {
+		request.FirewallTemplateId = helper.String(v.(string))
+	}
+
 	result, err := meta.(*TencentCloudClient).apiV3Conn.UseLighthouseClient().CreateInstances(request)
 
 	if err != nil {
@@ -408,6 +423,9 @@ func resourceTencentCloudLighthouseInstanceCreate(d *schema.ResourceData, meta i
 		}
 		if instance != nil && (*instance.InstanceState == "RUNNING") {
 			return nil
+		}
+		if instance == nil {
+			return resource.RetryableError(fmt.Errorf("lighthouse instance creating..."))
 		}
 		return resource.RetryableError(fmt.Errorf("lighthouse instance status is %s, retry...", *instance.InstanceState))
 	})

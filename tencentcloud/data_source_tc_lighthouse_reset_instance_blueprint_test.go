@@ -23,7 +23,7 @@ func TestAccTencentCloudLighthouseResetInstanceBlueprintDataSource_basic(t *test
 const testAccLighthouseResetInstanceBlueprintDataSource = `
 
 data "tencentcloud_lighthouse_reset_instance_blueprint" "reset_instance_blueprint" {
-  instance_id = "lhins-hwe21u91"
+  instance_id = "lhins-g4bwdjbf"
   offset = 0
   limit = 20
 }

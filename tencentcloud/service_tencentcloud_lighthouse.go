@@ -1262,3 +1262,85 @@ func (me *LightHouseService) ModifyFirewallRuleDescription(ctx context.Context, 
 
 	return
 }
+
+func (me *LightHouseService) DescribeFirewallTemplateById(ctx context.Context, templateId string) (firewallTemplate *lighthouse.FirewallTemplate, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeFirewallTemplatesRequest()
+	request.TemplateIds = []*string{&templateId}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeFirewallTemplates(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.TemplateSet) < 1 {
+		return
+	}
+
+	firewallTemplate = response.Response.TemplateSet[0]
+	return
+}
+
+func (me *LightHouseService) DeleteFirewallTemplateById(ctx context.Context, templateId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDeleteFirewallTemplateRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DeleteFirewallTemplate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *LightHouseService) DescribeFirewallTemplateRulesById(ctx context.Context, templateId string) (firewallTemplateRules []*lighthouse.FirewallTemplateRuleInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := lighthouse.NewDescribeFirewallTemplateRulesRequest()
+	request.TemplateId = &templateId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseLighthouseClient().DescribeFirewallTemplateRules(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response != nil && response.Response != nil {
+		firewallTemplateRules = response.Response.TemplateRuleSet
+		return
+	}
+
+	return
+}

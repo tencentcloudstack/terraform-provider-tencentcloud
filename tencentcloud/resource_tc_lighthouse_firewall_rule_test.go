@@ -40,7 +40,7 @@ func TestAccTencentCloudLighthouseFirewallRuleResource_basic(t *testing.T) {
 const testAccLighthouseFirewallRule = `
 
 resource "tencentcloud_lighthouse_firewall_rule" "firewall_rule" {
-  instance_id = "lhins-hwe21u91"
+  instance_id = "lhins-g4bwdjbf"
   firewall_rules {
 	protocol = "TCP"
 	port = "80"
@@ -61,7 +61,7 @@ resource "tencentcloud_lighthouse_firewall_rule" "firewall_rule" {
 const testAccLighthouseFirewallRuleUpdate = `
 
 resource "tencentcloud_lighthouse_firewall_rule" "firewall_rule" {
-  instance_id = "lhins-hwe21u91"
+  instance_id = "lhins-g4bwdjbf"
   firewall_rules {
 	protocol = "TCP"
 	port = "80"

@@ -25,6 +25,6 @@ func TestAccTencentCloudLighthouseStopInstanceResource_basic(t *testing.T) {
 
 const testAccLighthouseStopInstance = `
 resource "tencentcloud_lighthouse_stop_instance" "stop_instance" {
-  instance_id = "lhins-hwe21u91"
+  instance_id = "lhins-g4bwdjbf"
 }
 `

@@ -4,14 +4,12 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_css_play_domain_cert_attachment"
 sidebar_current: "docs-tencentcloud-resource-css_play_domain_cert_attachment"
 description: |-
-  Provides a resource to create a css play_domain_cert_attachment.
-This resource is used for binding the play domain and specified certification together.
+  Provides a resource to create a css play_domain_cert_attachment. This resource is used for binding the play domain and specified certification together.
 ---
 
 # tencentcloud_css_play_domain_cert_attachment
 
-Provides a resource to create a css play_domain_cert_attachment.
-This resource is used for binding the play domain and specified certification together.
+Provides a resource to create a css play_domain_cert_attachment. This resource is used for binding the play domain and specified certification together.
 
 ## Example Usage
 

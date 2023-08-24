@@ -22,7 +22,7 @@ func TestAccTencentCloudLighthouseRebootInstanceResource_basic(t *testing.T) {
 const testAccLighthouseRebootInstance = `
 
 resource "tencentcloud_lighthouse_reboot_instance" "reboot_instance" {
-  instance_id = "lhins-hwe21u91"
+  instance_id = "lhins-g4bwdjbf"
 }
 
 `

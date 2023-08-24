@@ -25,7 +25,7 @@ func TestAccTencentCloudLighthouseStartInstanceResource_basic(t *testing.T) {
 const testAccLighthouseStartInstance = `
 
 resource "tencentcloud_lighthouse_start_instance" "start_instance" {
-  instance_id = "lhins-hwe21u91"
+  instance_id = "lhins-g4bwdjbf"
 }
 
 `

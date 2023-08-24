@@ -32,7 +32,7 @@ const testAccLighthouseBlueprint = `
 resource "tencentcloud_lighthouse_blueprint" "blueprint" {
   blueprint_name = "blueprint_name_test"
   description = "blueprint_description_test"
-  instance_id = "lhins-hwe21u91"
+  instance_id = "lhins-g4bwdjbf"
 }
 
 `

@@ -23,6 +23,6 @@ func TestAccTencentCloudLighthouseInstanceDiskNumDataSource_basic(t *testing.T) 
 const testAccLighthouseInstanceDiskNumDataSource = `
 
 data "tencentcloud_lighthouse_instance_disk_num" "instance_disk_num" {
-  instance_ids = ["lhins-hwe21u91"]
+  instance_ids = ["lhins-g4bwdjbf"]
 }
 `
