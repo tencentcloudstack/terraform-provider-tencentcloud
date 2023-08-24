@@ -1,11 +1,27 @@
 /*
 Use this data source to query detailed information of SSM secret version
-Example Usage
-```hcl
 
-data "tencentcloud_ssm_secret_versions" "foo" {
-  secret_name = "test"
-  version_id = "v1"
+Example Usage
+
+```hcl
+data "tencentcloud_ssm_secret_versions" "example" {
+  secret_name = tencentcloud_ssm_secret_version.v1.secret_name
+  version_id  = tencentcloud_ssm_secret_version.v1.version_id
+}
+
+resource "tencentcloud_ssm_secret" "example" {
+  secret_name = "tf-example"
+  description = "desc."
+
+  tags = {
+    createdBy = "terraform"
+  }
+}
+
+resource "tencentcloud_ssm_secret_version" "v1" {
+  secret_name   = tencentcloud_ssm_secret.example.secret_name
+  version_id    = "v1"
+  secret_binary = "MTIzMTIzMTIzMTIzMTIzQQ=="
 }
 ```
 */
@@ -72,22 +88,24 @@ func dataSourceTencentCloudSsmSecretVersions() *schema.Resource {
 func dataSourceTencentCloudSsmSecretVersionsRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("data_source.tencentcloud_ssm_secret_versions.read")()
 
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ssmService := SsmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+	var (
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		secretName    = d.Get("secret_name").(string)
+		outErr, inErr error
+		secretInfo    *SecretInfo
+	)
 
-	secretName := d.Get("secret_name").(string)
-	var outErr, inErr error
-	var secretInfo *SecretInfo
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
 		if inErr != nil {
 			return retryError(inErr)
 		}
+
 		return nil
 	})
+
 	if outErr != nil {
 		sdkErr, ok := outErr.(*sdkError.TencentCloudSDKError)
 		if ok && sdkErr.Code == SSMResourceNotFound {
@@ -99,10 +117,12 @@ func dataSourceTencentCloudSsmSecretVersionsRead(d *schema.ResourceData, meta in
 		log.Printf("[CRITAL]%s read SSM secret failed, reason:%+v", logId, outErr)
 		return outErr
 	}
+
 	if secretInfo.status != SSM_STATUS_ENABLED {
 		log.Printf("[CRITAL]%s read SSM secret version failed, reason: secret status is not Enabled", logId)
 		return nil
 	}
+
 	var secretVersionInfos []*SecretVersionInfo
 	var versionIds []string
 	if v, ok := d.GetOk("version_id"); ok {
@@ -154,8 +174,10 @@ func dataSourceTencentCloudSsmSecretVersionsRead(d *schema.ResourceData, meta in
 		log.Printf("[CRITAL]%s provider set SSM secret version list fail, reason:%+v", logId, e)
 		return e
 	}
+
 	if output, ok := d.GetOk("result_output_file"); ok && output.(string) != "" {
 		return writeToFile(output.(string), secretVersionList)
 	}
+
 	return nil
 }
