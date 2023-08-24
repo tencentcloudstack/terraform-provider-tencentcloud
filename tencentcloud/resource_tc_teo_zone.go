@@ -589,15 +589,7 @@ func resourceTencentCloudTeoZoneUpdate(d *schema.ResourceData, meta interface{})
 	}
 
 	if d.HasChange("cname_speed_up") {
-		if v, ok := d.GetOk("cname_speed_up"); ok {
-			req := teo.NewModifyZoneCnameSpeedUpRequest()
-			req.ZoneId, req.Status = &zoneId, helper.String(v.(string))
-			_, e := meta.(*TencentCloudClient).apiV3Conn.UseTeoClient().ModifyZoneCnameSpeedUp(req)
-			if e != nil {
-				log.Printf("[CRITAL]%s modify zone cname_speed_up failed, reason:%+v", logId, err)
-				return err
-			}
-		}
+		return fmt.Errorf("`cname_speed_up` do not support change now.")
 	}
 
 	if d.HasChange("tags") {

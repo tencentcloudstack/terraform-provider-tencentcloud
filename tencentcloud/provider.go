@@ -1168,10 +1168,8 @@ TencentCloud EdgeOne(TEO)
 	tencentcloud_teo_zone_setting
 	tencentcloud_teo_origin_group
 	tencentcloud_teo_rule_engine
-	tencentcloud_teo_rule_engine_priority
 	tencentcloud_teo_application_proxy
 	tencentcloud_teo_application_proxy_rule
-	tencentcloud_teo_custom_error_page
 
 TencentCloud ServiceMesh(TCM)
   Data Source
@@ -2049,12 +2047,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cdh_instances":                             dataSourceTencentCloudCdhInstances(),
 			"tencentcloud_dayu_eip":                                  dataSourceTencentCloudDayuEip(),
 			"tencentcloud_teo_zone_available_plans":                  dataSourceTencentCloudTeoZoneAvailablePlans(),
-			"tencentcloud_teo_bot_managed_rules":                     dataSourceTencentCloudTeoBotManagedRules(),
-			"tencentcloud_teo_bot_portrait_rules":                    dataSourceTencentCloudTeoBotPortraitRules(),
 			"tencentcloud_teo_rule_engine_settings":                  dataSourceTencentCloudTeoRuleEngineSettings(),
-			"tencentcloud_teo_security_policy_regions":               dataSourceTencentCloudTeoSecurityPolicyRegions(),
-			"tencentcloud_teo_waf_rule_groups":                       dataSourceTencentCloudTeoWafRuleGroups(),
-			"tencentcloud_teo_zone_ddos_policy":                      dataSourceTencentCloudTeoZoneDDoSPolicy(),
 			"tencentcloud_sts_caller_identity":                       dataSourceTencentCloudStsCallerIdentity(),
 			"tencentcloud_dcdb_instances":                            dataSourceTencentCloudDcdbInstances(),
 			"tencentcloud_dcdb_accounts":                             dataSourceTencentCloudDcdbAccounts(),
@@ -2735,19 +2728,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_tem_application_service":                             resourceTencentCloudTemApplicationService(),
 			"tencentcloud_teo_zone":                                            resourceTencentCloudTeoZone(),
 			"tencentcloud_teo_zone_setting":                                    resourceTencentCloudTeoZoneSetting(),
-			"tencentcloud_teo_dns_record":                                      resourceTencentCloudTeoDnsRecord(),
-			"tencentcloud_teo_dns_sec":                                         resourceTencentCloudTeoDnsSec(),
-			"tencentcloud_teo_load_balancing":                                  resourceTencentCloudTeoLoadBalancing(),
 			"tencentcloud_teo_origin_group":                                    resourceTencentCloudTeoOriginGroup(),
 			"tencentcloud_teo_rule_engine":                                     resourceTencentCloudTeoRuleEngine(),
-			"tencentcloud_teo_rule_engine_priority":                            resourceTencentCloudTeoRuleEnginePriority(),
 			"tencentcloud_teo_application_proxy":                               resourceTencentCloudTeoApplicationProxy(),
 			"tencentcloud_teo_application_proxy_rule":                          resourceTencentCloudTeoApplicationProxyRule(),
-			"tencentcloud_teo_ddos_policy":                                     resourceTencentCloudTeoDdosPolicy(),
-			"tencentcloud_teo_security_policy":                                 resourceTencentCloudTeoSecurityPolicy(),
-			"tencentcloud_teo_custom_error_page":                               resourceTencentCloudTeoCustomErrorPage(),
-			// "tencentcloud_teo_host_certificate":                     resourceTencentCloudTeoHostCertificate(),
-			// "tencentcloud_teo_default_certificate":                  resourceTencentCloudTeoDefaultCertificate(),
 			"tencentcloud_tcm_mesh":                                   resourceTencentCloudTcmMesh(),
 			"tencentcloud_tcm_cluster_attachment":                     resourceTencentCloudTcmClusterAttachment(),
 			"tencentcloud_tcm_prometheus_attachment":                  resourceTencentCloudTcmPrometheusAttachment(),
