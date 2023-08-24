@@ -22,7 +22,7 @@ func TestAccTencentCloudCynosdbClusterPasswordComplexityResource_basic(t *testin
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCynosdbClusterPasswordComplexityExists("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "cluster_id", "cynosdbmysql-cgd2gpwr"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "cluster_id", defaultCynosdbClusterId),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "validate_password_length", "8"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "validate_password_mixed_case_count", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "validate_password_special_char_count", "1"),
@@ -41,7 +41,7 @@ func TestAccTencentCloudCynosdbClusterPasswordComplexityResource_basic(t *testin
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckCynosdbClusterPasswordComplexityExists("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "cluster_id", "cynosdbmysql-cgd2gpwr"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "cluster_id", defaultCynosdbClusterId),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "validate_password_length", "10"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "validate_password_mixed_case_count", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_cynosdb_cluster_password_complexity.cluster_password_complexity", "validate_password_special_char_count", "2"),
@@ -104,10 +104,10 @@ func testAccCheckCynosdbClusterPasswordComplexityExists(n string) resource.TestC
 	}
 }
 
-const testAccCynosdbClusterPasswordComplexity = `
+const testAccCynosdbClusterPasswordComplexity = CommonCynosdb + `
 
 resource "tencentcloud_cynosdb_cluster_password_complexity" "cluster_password_complexity" {
-	cluster_id                           = "cynosdbmysql-cgd2gpwr"
+	cluster_id                           = var.cynosdb_cluster_id
 	validate_password_length             = 8
 	validate_password_mixed_case_count   = 1
 	validate_password_special_char_count = 1
@@ -122,10 +122,10 @@ resource "tencentcloud_cynosdb_cluster_password_complexity" "cluster_password_co
 
 `
 
-const testAccCynosdbClusterPasswordComplexityUp = `
+const testAccCynosdbClusterPasswordComplexityUp = CommonCynosdb + `
 
 resource "tencentcloud_cynosdb_cluster_password_complexity" "cluster_password_complexity" {
-	cluster_id                           = "cynosdbmysql-cgd2gpwr"
+	cluster_id                           = var.cynosdb_cluster_id
 	validate_password_length             = 10
 	validate_password_mixed_case_count   = 2
 	validate_password_special_char_count = 2
