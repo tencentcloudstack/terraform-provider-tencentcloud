@@ -1,8 +1,6 @@
 package tencentcloud
 
 import (
-	"fmt"
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -15,13 +13,13 @@ func TestAccTencentCloudKubernetesClusterEndpointResource(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				SkipFunc: func() (bool, error) {
-					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
-						fmt.Printf("[International station]skip TestAccTencentCloudKubernetesClusterEndpointResource, because the international station did not support this feature yet!\n")
-						return true, nil
-					}
-					return false, nil
-				},
+				//SkipFunc: func() (bool, error) {
+				//	if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
+				//		fmt.Printf("[International station]skip TestAccTencentCloudKubernetesClusterEndpointResource, because the international station did not support this feature yet!\n")
+				//		return true, nil
+				//	}
+				//	return false, nil
+				//},
 				Config: testAccTkeClusterEndpointBasic,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTkeExists("tencentcloud_kubernetes_cluster.managed_cluster"),
@@ -38,13 +36,13 @@ func TestAccTencentCloudKubernetesClusterEndpointResource(t *testing.T) {
 				),
 			},
 			{
-				SkipFunc: func() (bool, error) {
-					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
-						fmt.Printf("[International station]skip TestAccTencentCloudKubernetesClusterEndpointResource, because the international station did not support this feature yet!\n")
-						return true, nil
-					}
-					return false, nil
-				},
+				//SkipFunc: func() (bool, error) {
+				//	if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
+				//		fmt.Printf("[International station]skip TestAccTencentCloudKubernetesClusterEndpointResource, because the international station did not support this feature yet!\n")
+				//		return true, nil
+				//	}
+				//	return false, nil
+				//},
 				ResourceName:      "tencentcloud_kubernetes_cluster_endpoint.foo",
 				ImportState:       true,
 				ImportStateVerify: true,
@@ -58,13 +56,13 @@ func TestAccTencentCloudKubernetesClusterEndpointResource(t *testing.T) {
 				},
 			},
 			{
-				SkipFunc: func() (bool, error) {
-					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
-						fmt.Printf("[International station]skip TestAccTencentCloudKubernetesClusterEndpointResource, because the international station did not support this feature yet!\n")
-						return true, nil
-					}
-					return false, nil
-				},
+				//SkipFunc: func() (bool, error) {
+				//	if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
+				//		fmt.Printf("[International station]skip TestAccTencentCloudKubernetesClusterEndpointResource, because the international station did not support this feature yet!\n")
+				//		return true, nil
+				//	}
+				//	return false, nil
+				//},
 				Config: testAccTkeClusterEndpointBasicUpdate,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTkeExists("tencentcloud_kubernetes_cluster.managed_cluster"),
@@ -74,13 +72,13 @@ func TestAccTencentCloudKubernetesClusterEndpointResource(t *testing.T) {
 				),
 			},
 			{
-				SkipFunc: func() (bool, error) {
-					if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
-						fmt.Printf("[International station]skip TestAccTencentCloudKubernetesClusterEndpointResource, because the international station did not support this feature yet!\n")
-						return true, nil
-					}
-					return false, nil
-				},
+				//SkipFunc: func() (bool, error) {
+				//	if os.Getenv(E2ETEST_ENV_REGION) != "" || os.Getenv(E2ETEST_ENV_AZ) != "" {
+				//		fmt.Printf("[International station]skip TestAccTencentCloudKubernetesClusterEndpointResource, because the international station did not support this feature yet!\n")
+				//		return true, nil
+				//	}
+				//	return false, nil
+				//},
 				Config: testAccTkeClusterEndpointBasicUpdate2,
 				Check: resource.ComposeAggregateTestCheckFunc(
 					testAccCheckTkeExists("tencentcloud_kubernetes_cluster.managed_cluster"),

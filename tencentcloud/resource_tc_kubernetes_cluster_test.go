@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -114,6 +116,11 @@ func TestAccTencentCloudKubernetesClusterResourceLogsAddons(t *testing.T) {
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
+				PreConfig: func() {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						fmt.Println("step in test env")
+					}
+				},
 				Config: testAccTkeClusterLogsAddons,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
