@@ -142,6 +142,12 @@ func resourceTencentCloudCatTaskSet() *schema.Resource {
 				Description: "Timer task cron expression.",
 			},
 
+			"operate": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The input is valid when the parameter is modified, `suspend`/`resume`, used to suspend/resume the dial test task.",
+			},
+
 			"status": {
 				Type:        schema.TypeInt,
 				Computed:    true,
@@ -405,6 +411,47 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 	if err != nil {
 		log.Printf("[CRITAL]%s create cat taskSet failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if d.HasChange("operate") {
+		if v, ok := d.GetOk("operate"); ok {
+			operate := v.(string)
+			if operate == "suspend" {
+				requestSuspend := cat.NewSuspendProbeTaskRequest()
+				requestSuspend.TaskIds = append(requestSuspend.TaskIds, &taskId)
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().SuspendProbeTask(requestSuspend)
+					if e != nil {
+						return retryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s Suspend cat task failed, reason:%+v", logId, err)
+					return err
+				}
+			} else if operate == "resume" {
+				requestResume := cat.NewResumeProbeTaskRequest()
+				requestResume.TaskIds = append(requestResume.TaskIds, &taskId)
+				err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+					result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().ResumeProbeTask(requestResume)
+					if e != nil {
+						return retryError(e)
+					} else {
+						log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+					}
+					return nil
+				})
+				if err != nil {
+					log.Printf("[CRITAL]%s Resume cat task failed, reason:%+v", logId, err)
+					return err
+				}
+			} else {
+				return fmt.Errorf("`operate` only allows the input of suspend/resume.")
+			}
+		}
 	}
 
 	if d.HasChange("tags") {
