@@ -99,7 +99,6 @@ func (me *TeoService) DeleteTeoZoneById(ctx context.Context, zoneId string) (err
 	return
 }
 
-
 func (me *TeoService) DescribeTeoOriginGroup(ctx context.Context,
 	zoneId, originGroupId string) (originGroup *teo.OriginGroup, errRet error) {
 	var (
