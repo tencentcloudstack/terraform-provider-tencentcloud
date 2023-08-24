@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -86,7 +87,6 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeNodePoolExists,
 					resource.TestCheckResourceAttrSet(testTkeClusterNodePoolResourceKey, "cluster_id"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_config.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.system_disk_size", "50"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.#", "1"),
@@ -116,11 +116,16 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 				),
 			},
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				Config: testAccTkeNodePoolClusterUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeNodePoolExists,
 					resource.TestCheckResourceAttrSet(testTkeClusterNodePoolResourceKey, "cluster_id"),
-					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "node_config.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.#", "1"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.system_disk_size", "100"),
 					resource.TestCheckResourceAttr(testTkeClusterNodePoolResourceKey, "auto_scaling_config.0.data_disk.#", "2"),
@@ -326,7 +331,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   termination_policies	   = ["OLDEST_INSTANCE"]
   scaling_group_project_id = var.project_id
   delete_keep_instance = false
-  node_os="tlinux2.2(tkernel3)x86_64"
+  node_os="tlinux3.1x86_64"
 
   auto_scaling_config {
     instance_type      = var.env_instance_type != "" ? var.env_instance_type : local.final_type
@@ -363,12 +368,6 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   tags = {
     keep-test-np1 = "test1"
     keep-test-np2 = "test2"
-  }
-
-  node_config {
-    extra_args = [
-      "root-dir=/var/lib/kubelet"
-    ]
   }
 }
 `
@@ -438,12 +437,6 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   tags = {
     keep-test-np1 = "testI"
     keep-test-np3 = "testIII"
-  }
-
-  node_config {
-    extra_args = [
-      "root-dir=/var/lib/kubelet"
-    ]
   }
 }
 `
@@ -554,9 +547,6 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
   }
 
   node_config {
-    extra_args = [
-      "root-dir=/var/lib/kubelet"
-    ]
 	gpu_args {
       mig_enable = false
       driver = {

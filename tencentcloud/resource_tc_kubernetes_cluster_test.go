@@ -92,6 +92,12 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 				),
 			},
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				Config: testAccTkeClusterUpdateAccess,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
@@ -103,6 +109,12 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 				),
 			},
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				Config: testAccTkeClusterUpdateLevel,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),

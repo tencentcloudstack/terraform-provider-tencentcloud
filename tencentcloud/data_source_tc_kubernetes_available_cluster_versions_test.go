@@ -56,7 +56,7 @@ variable "env_default_tke_cluster_id" {
   }
 
 data "tencentcloud_kubernetes_available_cluster_versions" "ids" {
-  cluster_ids = [var.env_default_tke_cluster_id != "" ? var.env_default_tke_cluster_id : "%s"]
+  cluster_id=var.env_default_tke_cluster_id != "" ? var.env_default_tke_cluster_id : "%s"
 }
 
 `
