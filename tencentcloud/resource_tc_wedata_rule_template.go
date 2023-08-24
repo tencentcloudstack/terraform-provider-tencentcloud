@@ -5,15 +5,15 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_wedata_rule_template" "rule_template" {
+  project_id          = "1840731346428280832"
   type                = 2
-  name                = "fo test"
+  name                = "tf-test"
   quality_dim         = 3
   source_object_type  = 2
   description         = "for tf test"
-  source_engine_types = [3]
+  source_engine_types = [2, 4, 16]
   multi_source_flag   = false
-  sql_expression      = "c2VsZWN0ICogZnJvbSBkYg=="
-  project_id          = "1840731346428280832"
+  sql_expression      = base64encode("select * from db")
   where_flag          = false
 }
 ```
@@ -30,8 +30,10 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -49,6 +51,13 @@ func resourceTencentCloudWedataRuleTemplate() *schema.Resource {
 			State: schema.ImportStatePassthrough,
 		},
 		Schema: map[string]*schema.Schema{
+			"project_id": {
+				Required:    true,
+				Type:        schema.TypeString,
+				ForceNew:    true,
+				Description: "Project ID.",
+			},
+
 			"type": {
 				Optional:    true,
 				Type:        schema.TypeInt,
@@ -64,13 +73,13 @@ func resourceTencentCloudWedataRuleTemplate() *schema.Resource {
 			"quality_dim": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Quality inspection dimensions. `1` Accuracy, `2` Uniqueness, `3` Completeness, `4` Consistency, `5` Timeliness, `6` Effectiveness.",
+				Description: "Quality inspection dimensions. `1`: Accuracy, `2`: Uniqueness, `3`: Completeness, `4`: Consistency, `5`: Timeliness, `6`: Effectiveness.",
 			},
 
 			"source_object_type": {
 				Optional:    true,
 				Type:        schema.TypeInt,
-				Description: "Source data object type. `1` Constant `2` Offline table level Offline field level.",
+				Description: "Source data object type. `1`: Constant, `2`: Offline table level, `3`: Offline field level.",
 			},
 
 			"description": {
@@ -85,7 +94,7 @@ func resourceTencentCloudWedataRuleTemplate() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeInt,
 				},
-				Description: "The engine type corresponding to the source.",
+				Description: "The engine type corresponding to the source. `2`: hive,`4`: spark, `16`: dlc.",
 			},
 
 			"multi_source_flag": {
@@ -98,12 +107,6 @@ func resourceTencentCloudWedataRuleTemplate() *schema.Resource {
 				Optional:    true,
 				Type:        schema.TypeString,
 				Description: "SQL Expression.",
-			},
-
-			"project_id": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "Project ID.",
 			},
 
 			"where_flag": {
@@ -125,7 +128,14 @@ func resourceTencentCloudWedataRuleTemplateCreate(d *schema.ResourceData, meta i
 		request        = wedata.NewCreateRuleTemplateRequest()
 		response       = wedata.NewCreateRuleTemplateResponse()
 		ruleTemplateId uint64
+		projectId      string
 	)
+
+	if v, ok := d.GetOk("project_id"); ok {
+		projectId = v.(string)
+		request.ProjectId = helper.String(v.(string))
+	}
+
 	if v, ok := d.GetOkExists("type"); ok {
 		request.Type = helper.IntUint64(v.(int))
 	}
@@ -162,10 +172,6 @@ func resourceTencentCloudWedataRuleTemplateCreate(d *schema.ResourceData, meta i
 		request.SqlExpression = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("project_id"); ok {
-		request.ProjectId = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOkExists("where_flag"); ok {
 		request.WhereFlag = helper.Bool(v.(bool))
 	}
@@ -186,7 +192,7 @@ func resourceTencentCloudWedataRuleTemplateCreate(d *schema.ResourceData, meta i
 	}
 
 	ruleTemplateId = *response.Response.Data
-	d.SetId(helper.UInt64ToStr(ruleTemplateId))
+	d.SetId(projectId + FILED_SP + helper.UInt64ToStr(ruleTemplateId))
 
 	return resourceTencentCloudWedataRuleTemplateRead(d, meta)
 }
@@ -201,9 +207,14 @@ func resourceTencentCloudWedataRuleTemplateRead(d *schema.ResourceData, meta int
 
 	service := WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	ruleTemplateId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	ruleTemplateId := idSplit[1]
 
-	ruleTemplate, err := service.DescribeWedataRuleTemplateById(ctx, ruleTemplateId)
+	ruleTemplate, err := service.DescribeWedataRuleTemplateById(ctx, projectId, ruleTemplateId)
 	if err != nil {
 		return err
 	}
@@ -243,7 +254,7 @@ func resourceTencentCloudWedataRuleTemplateRead(d *schema.ResourceData, meta int
 	}
 
 	if ruleTemplate.SqlExpression != nil {
-		_ = d.Set("sql_expression", ruleTemplate.SqlExpression)
+		_ = d.Set("sql_expression", base64.StdEncoding.EncodeToString([]byte(*ruleTemplate.SqlExpression)))
 	}
 
 	if ruleTemplate.WhereFlag != nil {
@@ -261,53 +272,51 @@ func resourceTencentCloudWedataRuleTemplateUpdate(d *schema.ResourceData, meta i
 
 	request := wedata.NewModifyRuleTemplateRequest()
 
-	ruleTemplateId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	ruleTemplateId := idSplit[1]
 
-	request.TemplateId = helper.StrToUint64Point(ruleTemplateId)
-
-	immutableArgs := []string{
+	needChange := false
+	mutableArgs := []string{
 		"type", "name", "quality_dim", "source_object_type",
 		"description", "source_engine_types", "multi_source_flag",
-		"sql_expression", "project_id", "where_flag",
+		"sql_expression", "where_flag",
 	}
 
-	for _, v := range immutableArgs {
+	for _, v := range mutableArgs {
 		if d.HasChange(v) {
-			return fmt.Errorf("argument `%s` cannot be changed", v)
+			needChange = true
+			break
 		}
 	}
 
-	if d.HasChange("type") {
+	if needChange {
+		request.ProjectId = helper.String(projectId)
+		request.TemplateId = helper.StrToUint64Point(ruleTemplateId)
+
 		if v, ok := d.GetOkExists("type"); ok {
 			request.Type = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("name") {
 		if v, ok := d.GetOk("name"); ok {
 			request.Name = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("quality_dim") {
 		if v, ok := d.GetOkExists("quality_dim"); ok {
 			request.QualityDim = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("source_object_type") {
 		if v, ok := d.GetOkExists("source_object_type"); ok {
 			request.SourceObjectType = helper.IntUint64(v.(int))
 		}
-	}
 
-	if d.HasChange("description") {
 		if v, ok := d.GetOk("description"); ok {
 			request.Description = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("source_engine_types") {
 		if v, ok := d.GetOk("source_engine_types"); ok {
 			sourceEngineTypesSet := v.(*schema.Set).List()
 			for i := range sourceEngineTypesSet {
@@ -315,46 +324,37 @@ func resourceTencentCloudWedataRuleTemplateUpdate(d *schema.ResourceData, meta i
 				request.SourceEngineTypes = append(request.SourceEngineTypes, helper.IntUint64(sourceEngineTypes))
 			}
 		}
-	}
 
-	if d.HasChange("multi_source_flag") {
 		if v, ok := d.GetOkExists("multi_source_flag"); ok {
 			request.MultiSourceFlag = helper.Bool(v.(bool))
 		}
-	}
 
-	if d.HasChange("sql_expression") {
 		if v, ok := d.GetOk("sql_expression"); ok {
 			request.SqlExpression = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("project_id") {
 		if v, ok := d.GetOk("project_id"); ok {
 			request.ProjectId = helper.String(v.(string))
 		}
-	}
 
-	if d.HasChange("where_flag") {
 		if v, ok := d.GetOkExists("where_flag"); ok {
 			request.WhereFlag = helper.Bool(v.(bool))
 		}
-	}
 
-	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().ModifyRuleTemplate(request)
-		if e != nil {
-			return retryError(e)
-		} else {
-			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWedataClient().ModifyRuleTemplate(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update wedata ruleTemplate failed, reason:%+v", logId, err)
+			return err
 		}
-		return nil
-	})
-	if err != nil {
-		log.Printf("[CRITAL]%s update wedata ruleTemplate failed, reason:%+v", logId, err)
-		return err
 	}
-
 	return resourceTencentCloudWedataRuleTemplateRead(d, meta)
 }
 
@@ -366,9 +366,14 @@ func resourceTencentCloudWedataRuleTemplateDelete(d *schema.ResourceData, meta i
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	service := WedataService{client: meta.(*TencentCloudClient).apiV3Conn}
-	ruleTemplateId := d.Id()
+	idSplit := strings.Split(d.Id(), FILED_SP)
+	if len(idSplit) != 2 {
+		return fmt.Errorf("id is broken,%s", d.Id())
+	}
+	projectId := idSplit[0]
+	ruleTemplateId := idSplit[1]
 
-	if err := service.DeleteWedataRuleTemplateById(ctx, ruleTemplateId); err != nil {
+	if err := service.DeleteWedataRuleTemplateById(ctx, projectId, ruleTemplateId); err != nil {
 		return err
 	}
 
