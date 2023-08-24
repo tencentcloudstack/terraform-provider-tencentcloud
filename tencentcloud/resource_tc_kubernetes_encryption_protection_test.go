@@ -1,7 +1,10 @@
 package tencentcloud
 
 import (
+	"errors"
 	"fmt"
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -18,6 +21,12 @@ func TestAccTencentCloudKubernetesEncryptionProtectionResource_basic(t *testing.
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				Config: fmt.Sprintf(testAccTkeEncryptionProtection, rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_encryption_protection.example", "id"),

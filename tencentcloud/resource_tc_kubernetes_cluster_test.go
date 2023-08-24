@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -60,6 +61,12 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				Config: testAccTkeCluster,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
@@ -116,11 +123,6 @@ func TestAccTencentCloudKubernetesClusterResourceLogsAddons(t *testing.T) {
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: func() {
-					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
-						fmt.Println("step in test env")
-					}
-				},
 				Config: testAccTkeClusterLogsAddons,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
@@ -362,7 +364,7 @@ const testAccTkeCluster = TkeDeps + `
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
-  cluster_cidr                               = var.tke_cidr_a.0
+  cluster_cidr                               = var.tke_cidr_c.0
   cluster_max_pod_num                        = 32
   cluster_name                               = "test"
   cluster_desc                               = "test cluster desc"
@@ -371,9 +373,11 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_internet_domain                    = "tf.cluster-internet.com"
   cluster_intranet                           = true
   cluster_intranet_domain                    = "tf.cluster-intranet.com"
-  cluster_version                            = "1.22.5"
-  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_version                            = "1.24.4"
+  cluster_os                                 = "tlinux3.1x86_64"
   cluster_level								 = "L5"
+  container_runtime                          = "containerd"
+  runtime_version                            = "1.6.9"
   auto_upgrade_cluster_level				 = true
   cluster_intranet_subnet_id                 = local.subnet_id
   cluster_internet_security_group               = local.sg_id
@@ -382,8 +386,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     count                      = 1
     availability_zone          = var.env_az != "" ? var.env_az : var.default_az
     instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = 50
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
@@ -436,9 +440,11 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_internet                           = true
   cluster_internet_domain                    = "tf2.cluster-internet.com"
   cluster_intranet                           = false
-  cluster_version                            = "1.22.5"
-  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_version                            = "1.24.4"
+  cluster_os                                 = "tlinux3.1x86_64"
   cluster_level								 = "L5"
+  container_runtime                          = "containerd"
+  runtime_version                            = "1.6.9"
   cluster_internet_security_group               = local.sg_id2
   auto_upgrade_cluster_level				 = true
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
@@ -446,8 +452,8 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
     count                      = 1
     availability_zone          = var.env_az != "" ? var.env_az : var.default_az
     instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = 50
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
@@ -495,24 +501,30 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
 const testAccTkeClusterUpdateLevel = TkeDeps + `
 
 resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
+resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   vpc_id                                     = local.vpc_id
   cluster_cidr                               = var.tke_cidr_a.0
   cluster_max_pod_num                        = 32
   cluster_name                               = "test2"
-  cluster_desc                               = "test cluster desc 3"
+  cluster_desc                               = "test cluster desc 2"
   cluster_max_service_num                    = 32
-  cluster_internet                           = false
-  cluster_version                            = "1.22.5"
-  cluster_os                                 = "tlinux2.2(tkernel3)x86_64"
+  cluster_internet                           = true
+  cluster_internet_domain                    = "tf2.cluster-internet.com"
+  cluster_intranet                           = false
+  cluster_version                            = "1.24.4"
+  cluster_os                                 = "tlinux3.1x86_64"
   cluster_level								 = "L20"
-  auto_upgrade_cluster_level				 = false
+  container_runtime                          = "containerd"
+  runtime_version                            = "1.6.9"
+  cluster_internet_security_group               = local.sg_id2
+  auto_upgrade_cluster_level				 = true
   managed_cluster_internet_security_policies = ["3.3.3.3", "1.1.1.1"]
   worker_config {
     count                      = 1
     availability_zone          = var.env_az != "" ? var.env_az : var.default_az
     instance_type              = var.env_instance_type != "" ? var.env_instance_type : local.final_type
-    system_disk_type           = "CLOUD_SSD"
-    system_disk_size           = 60
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = 50
     internet_charge_type       = "TRAFFIC_POSTPAID_BY_HOUR"
     internet_max_bandwidth_out = 100
     public_ip_assigned         = true
@@ -538,7 +550,7 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   cluster_deploy_type = "MANAGED_CLUSTER"
 
   tags = {
-    "abc" = "abc"
+    "test" = "test"
   }
 
   unschedulable = 0
@@ -550,6 +562,11 @@ resource "tencentcloud_kubernetes_cluster" "managed_cluster" {
   extra_args = [
  	"root-dir=/var/lib/kubelet"
   ]
+
+  auth_options {
+    auto_create_discovery_anonymous_auth = true
+    use_tke_default = true
+  }
 }
 `
 

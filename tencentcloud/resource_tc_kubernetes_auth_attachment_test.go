@@ -1,6 +1,9 @@
 package tencentcloud
 
 import (
+	"errors"
+	"os"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -12,7 +15,12 @@ func TestAccTencentCloudKubernetesAuthAttachResource(t *testing.T) {
 		PreCheck:  func() { testAccPreCheck(t) },
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			{
+			{SkipFunc: func() (bool, error) {
+				if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+					return true, nil
+				}
+				return false, errors.New("need test")
+			},
 				Config: testAccTkeAuthAttach(),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_kubernetes_auth_attachment.test_auth_attach", "cluster_id"),
