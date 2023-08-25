@@ -9,7 +9,7 @@ FEATURES:
 ENHANCEMENTS:
 
 * datasource/tencentcloud_monitor_alarm_notices: Support `amp_consumer_id` field ([#2081](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2081))
-* resource/tencentcloud_kubernetes_node_pool: add `orderly_security_group_ids` field to set the security group orderly. ([#2070](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2070))
+* resource/tencentcloud_kubernetes_node_pool: add `orderly_security_group_ids` field to set the security group orderly and deprecated the `security_group_ids` field. ([#2070](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2070))
 * resource/tencentcloud_lighthouse_instance: support param `firewall_template_id` ([#2076](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2076))
 * resource/tencentcloud_tdmq_rocketmq_environment_role: change `cluster_id`, `environment_name` and `role_name` to `ForceNew` ([#2078](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2078))
 * resource/tencentcloud_tdmq_rocketmq_group: change `cluster_id`, `namespaces` and `group_id` to `ForceNew` ([#2078](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2078))
