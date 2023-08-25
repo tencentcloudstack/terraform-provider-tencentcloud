@@ -776,7 +776,8 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 
 	if v, ok := dMap["security_group_ids"]; ok {
 		if list := v.(*schema.Set).List(); len(list) > 0 {
-			request.SecurityGroupIds = helper.InterfacesStringsPoint(list)
+			errRet = fmt.Errorf("The parameter `security_group_ids` is deprecated because the order of elements in this field cannot be guaranteed, therefore adding security groups is no longer supported. Please use `orderly_security_group_ids` instead.")
+			return result, errRet
 		}
 	}
 
@@ -862,7 +863,7 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 	return result, errRet
 }
 
-func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId string) *as.ModifyLaunchConfigurationAttributesRequest {
+func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId string) (*as.ModifyLaunchConfigurationAttributesRequest, error) {
 	launchConfigRaw := d.Get("auto_scaling_config").([]interface{})
 	dMap := launchConfigRaw[0].(map[string]interface{})
 	request := as.NewModifyLaunchConfigurationAttributesRequest()
@@ -932,7 +933,8 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 	if d.HasChange("auto_scaling_config.0.security_group_ids") {
 		if v, ok := dMap["security_group_ids"]; ok {
 			if list := v.(*schema.Set).List(); len(list) > 0 {
-				request.SecurityGroupIds = helper.InterfacesStringsPoint(list)
+				errRet := fmt.Errorf("The parameter `security_group_ids` is deprecated because the order of elements in this field cannot be guaranteed, therefore changing security groups is no longer supported. Please use `orderly_security_group_ids` instead.")
+				return nil, errRet
 			}
 		}
 	}
@@ -1017,7 +1019,7 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 
 	request.InstanceChargeType = &chargeType
 
-	return request
+	return request, nil
 }
 
 func desiredCapacityOutRange(d *schema.ResourceData) bool {
@@ -1416,7 +1418,10 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		}
 		launchConfigId := *nodePool.LaunchConfigurationId
 		//  change as config here
-		request := composeAsLaunchConfigModifyRequest(d, launchConfigId)
+		request, composeError := composeAsLaunchConfigModifyRequest(d, launchConfigId)
+		if composeError != nil {
+			return composeError
+		}
 		_, err = client.UseAsClient().ModifyLaunchConfigurationAttributes(request)
 		if err != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
