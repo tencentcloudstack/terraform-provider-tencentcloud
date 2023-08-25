@@ -135,6 +135,12 @@ func TestAccTencentCloudKubernetesClusterResourceLogsAddons(t *testing.T) {
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				Config: testAccTkeClusterLogsAddons,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
@@ -147,6 +153,12 @@ func TestAccTencentCloudKubernetesClusterResourceLogsAddons(t *testing.T) {
 				),
 			},
 			{
+				SkipFunc: func() (bool, error) {
+					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+						return true, nil
+					}
+					return false, errors.New("need test")
+				},
 				PreConfig: func() {
 					// do not update so fast
 					time.Sleep(10 * time.Second)
