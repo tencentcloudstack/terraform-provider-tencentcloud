@@ -37,7 +37,6 @@ func testAccDataSourceAlarmNotices() string {
 	return `
 data "tencentcloud_monitor_alarm_notices" "notices" {
   order      = "DESC"
-  name       = "系统预设通知模板"
   notice_ids = ["notice-f2svbu3w"]
 }`
 }
