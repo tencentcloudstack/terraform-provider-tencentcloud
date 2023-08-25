@@ -64,7 +64,7 @@ func testSweepVpnGateway(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudVpnGateway_basic(t *testing.T) {
+func TestAccTencentCloudVpnGatewayResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
