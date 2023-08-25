@@ -776,7 +776,7 @@ func composedKubernetesAsScalingConfigParaSerial(dMap map[string]interface{}, me
 
 	if v, ok := dMap["security_group_ids"]; ok {
 		if list := v.(*schema.Set).List(); len(list) > 0 {
-			errRet = fmt.Errorf("The parameter `security_group_ids` is deprecated because the order of elements in this field cannot be guaranteed, therefore adding security groups is no longer supported. Please use `orderly_security_group_ids` instead.")
+			errRet = fmt.Errorf("The parameter `security_group_ids` had an issue that the actual order of the security group may be inconsistent with the order of your tf code, which will cause your business to be inaccessible. Please use `orderly_security_group_ids` instead.")
 			return result, errRet
 		}
 	}
@@ -933,7 +933,7 @@ func composeAsLaunchConfigModifyRequest(d *schema.ResourceData, launchConfigId s
 	if d.HasChange("auto_scaling_config.0.security_group_ids") {
 		if v, ok := dMap["security_group_ids"]; ok {
 			if list := v.(*schema.Set).List(); len(list) > 0 {
-				errRet := fmt.Errorf("The parameter `security_group_ids` is deprecated because the order of elements in this field cannot be guaranteed, therefore changing security groups is no longer supported. Please use `orderly_security_group_ids` instead.")
+				errRet := fmt.Errorf("The parameter `security_group_ids` had an issue that the actual order of the security group may be inconsistent with the order of your tf code, which will cause your business to be inaccessible. You can check whether the order of your current security groups meets your expectations through the TencentCloud Console, then use `orderly_security_group_ids` field to update them.")
 				return nil, errRet
 			}
 		}
