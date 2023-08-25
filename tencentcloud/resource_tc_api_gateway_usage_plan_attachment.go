@@ -25,7 +25,7 @@ resource "tencentcloud_api_gateway_service" "example" {
 
 resource "tencentcloud_api_gateway_api" "example" {
   service_id            = tencentcloud_api_gateway_service.example.id
-  api_name              = "hello_update"
+  api_name              = "tf_example"
   api_desc              = "my hello api update"
   auth_type             = "SECRET"
   protocol              = "HTTP"

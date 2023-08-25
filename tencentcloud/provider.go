@@ -100,6 +100,8 @@ API GateWay
 	tencentcloud_api_gateway_api_apps
 	tencentcloud_api_gateway_plugins
 	tencentcloud_api_gateway_upstreams
+	tencentcloud_api_gateway_api_usage_plans
+	tencentcloud_api_gateway_api_app_service
 
   Resource
   	tencentcloud_api_gateway_api
@@ -2027,6 +2029,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_keys":                      dataSourceTencentCloudAPIGatewayAPIKeys(),
 			"tencentcloud_api_gateway_plugins":                       dataSourceTencentCloudAPIGatewayPlugins(),
 			"tencentcloud_api_gateway_upstreams":                     dataSourceTencentCloudAPIGatewayUpstreams(),
+			"tencentcloud_api_gateway_api_usage_plans":               dataSourceTencentCloudAPIGatewayApiUsagePlans(),
+			"tencentcloud_api_gateway_api_app_service":               dataSourceTencentCloudAPIGatewayApiAppService(),
 			"tencentcloud_sqlserver_basic_instances":                 dataSourceTencentCloudSqlserverBasicInstances(),
 			"tencentcloud_sqlserver_query_xevent":                    dataSourceTencentCloudSqlserverQueryXevent(),
 			"tencentcloud_sqlserver_ins_attribute":                   dataSourceTencentCloudSqlserverInsAttribute(),
@@ -2658,6 +2662,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_plugin":                                  resourceTencentCloudAPIGatewayPlugin(),
 			"tencentcloud_api_gateway_plugin_attachment":                       resourceTencentCloudAPIGatewayPluginAttachment(),
 			"tencentcloud_api_gateway_upstream":                                resourceTencentCloudAPIGatewayUpstream(),
+			"tencentcloud_api_gateway_api_app_attachment":                      resourceTencentCloudAPIGatewayApiAppAttachment(),
 			"tencentcloud_sqlserver_basic_instance":                            resourceTencentCloudSqlserverBasicInstance(),
 			"tencentcloud_sqlserver_instance_tde":                              resourceTencentCloudSqlserverInstanceTDE(),
 			"tencentcloud_sqlserver_database_tde":                              resourceTencentCloudSqlserverDatabaseTDE(),

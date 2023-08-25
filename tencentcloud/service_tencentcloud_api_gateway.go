@@ -2241,3 +2241,94 @@ func (me *APIGatewayService) DescribeAPIGatewayUpstreamByFilter(ctx context.Cont
 
 	return
 }
+
+func (me *APIGatewayService) DescribeAPIGatewayApiUsagePlanByFilter(ctx context.Context, param map[string]interface{}) (ApiUsagePlan []*apigateway.ApiUsagePlan, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeApiUsagePlanRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseAPIGatewayClient().DescribeApiUsagePlan(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Result.ApiUsagePlanList) < 1 {
+			break
+		}
+
+		ApiUsagePlan = append(ApiUsagePlan, response.Response.Result.ApiUsagePlanList...)
+		if len(response.Response.Result.ApiUsagePlanList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *APIGatewayService) DescribeAPIGatewayApiAppServiceByFilter(ctx context.Context, param map[string]interface{}) (apiAppService *apigateway.DescribeServiceForApiAppResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = apigateway.NewDescribeServiceForApiAppRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ServiceId" {
+			request.ServiceId = v.(*string)
+		}
+		if k == "ApiRegion" {
+			request.ApiRegion = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseAPIGatewayClient().DescribeServiceForApiApp(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	apiAppService = response.Response
+
+	return
+}
