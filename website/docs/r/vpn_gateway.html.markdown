@@ -98,7 +98,6 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
 The following arguments are supported:
 
 * `name` - (Required, String) Name of the VPN gateway. The length of character is limited to 1-60.
-* `zone` - (Required, String, ForceNew) Zone of the VPN gateway.
 * `bandwidth` - (Optional, Int) The maximum public network output bandwidth of VPN gateway (unit: Mbps), the available values include: 5,10,20,50,100,200,500,1000. Default is 5. When charge type is `PREPAID`, bandwidth degradation operation is unsupported.
 * `cdc_id` - (Optional, String) CDC instance ID.
 * `charge_type` - (Optional, String) Charge Type of the VPN gateway. Valid value: `PREPAID`, `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`.
@@ -108,6 +107,7 @@ The following arguments are supported:
 * `tags` - (Optional, Map) A list of tags used to associate different resources.
 * `type` - (Optional, String) Type of gateway instance, Default is `IPSEC`. Valid value: `IPSEC`, `SSL`, `CCN` and `SSL_CCN`.
 * `vpc_id` - (Optional, String, ForceNew) ID of the VPC. Required if vpn gateway is not in `CCN` or `SSL_CCN` type, and doesn't make sense for `CCN` or `SSL_CCN` vpn gateway.
+* `zone` - (Optional, String, ForceNew) Zone of the VPN gateway.
 
 ## Attributes Reference
 
