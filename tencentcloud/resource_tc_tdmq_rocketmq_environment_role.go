@@ -62,12 +62,14 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRole() *schema.Resource {
 			"environment_name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Environment (namespace) name.",
 			},
 
 			"role_name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Role Name.",
 			},
 
@@ -83,6 +85,7 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRole() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Cluster ID (required).",
 			},
 		},
@@ -205,18 +208,6 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRoleUpdate(d *schema.ResourceDat
 	request.RoleName = &roleName
 	request.EnvironmentId = &environmentId
 
-	if d.HasChange("environment_id") {
-
-		return fmt.Errorf("`environment_id` do not support change now.")
-
-	}
-
-	if d.HasChange("role_name") {
-
-		return fmt.Errorf("`role_name` do not support change now.")
-
-	}
-
 	if d.HasChange("permissions") {
 		if v, ok := d.GetOk("permissions"); ok {
 			permissionsSet := v.(*schema.Set).List()
@@ -225,13 +216,6 @@ func resourceTencentCloudTdmqRocketmqEnvironmentRoleUpdate(d *schema.ResourceDat
 				request.Permissions = append(request.Permissions, &permissions)
 			}
 		}
-
-	}
-
-	if d.HasChange("cluster_id") {
-
-		return fmt.Errorf("`cluster_id` do not support change now.")
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
