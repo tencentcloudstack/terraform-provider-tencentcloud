@@ -23,8 +23,8 @@ func TestAccTencentCloudLighthouseStopInstanceResource_basic(t *testing.T) {
 	})
 }
 
-const testAccLighthouseStopInstance = `
+const testAccLighthouseStopInstance = DefaultLighthoustVariables + `
 resource "tencentcloud_lighthouse_stop_instance" "stop_instance" {
-  instance_id = "lhins-g4bwdjbf"
+  instance_id = var.lighthouse_id
 }
 `

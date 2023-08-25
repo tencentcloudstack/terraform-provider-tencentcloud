@@ -20,9 +20,9 @@ func TestAccTencentCloudLighthouseInstanceDiskNumDataSource_basic(t *testing.T) 
 	})
 }
 
-const testAccLighthouseInstanceDiskNumDataSource = `
+const testAccLighthouseInstanceDiskNumDataSource = DefaultLighthoustVariables + `
 
 data "tencentcloud_lighthouse_instance_disk_num" "instance_disk_num" {
-  instance_ids = ["lhins-g4bwdjbf"]
+  instance_ids = [var.lighthouse_id]
 }
 `

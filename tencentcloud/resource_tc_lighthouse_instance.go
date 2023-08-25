@@ -424,7 +424,7 @@ func resourceTencentCloudLighthouseInstanceCreate(d *schema.ResourceData, meta i
 		if instance != nil && (*instance.InstanceState == "RUNNING") {
 			return nil
 		}
-		if instance == nil {
+		if instance == nil || instance.InstanceState == nil {
 			return resource.RetryableError(fmt.Errorf("lighthouse instance creating..."))
 		}
 		return resource.RetryableError(fmt.Errorf("lighthouse instance status is %s, retry...", *instance.InstanceState))
@@ -491,6 +491,15 @@ func resourceTencentCloudLighthouseInstanceUpdate(d *schema.ResourceData, meta i
 	var (
 		request = lighthouse.NewModifyInstancesAttributeRequest()
 	)
+
+	immutableArgs := []string{"firewall_template_id"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	id := d.Id()
 
 	request.InstanceIds = append(request.InstanceIds, helper.String(id))
