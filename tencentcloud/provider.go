@@ -1130,6 +1130,7 @@ TencentCloud Lighthouse(Lighthouse)
 	tencentcloud_lighthouse_disk
 	tencentcloud_lighthouse_renew_disk
 	tencentcloud_lighthouse_renew_instance
+	tencentcloud_lighthouse_firewall_template
 
   Data Source
 	tencentcloud_lighthouse_firewall_rules_template
@@ -2718,6 +2719,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_export":                                          resourceTencentCloudClsExport(),
 			"tencentcloud_cls_data_transform":                                  resourceTencentCloudClsDataTransform(),
 			"tencentcloud_lighthouse_instance":                                 resourceTencentCloudLighthouseInstance(),
+			"tencentcloud_lighthouse_firewall_template":                        resourceTencentCloudLighthouseFirewallTemplate(),
 			"tencentcloud_tem_environment":                                     resourceTencentCloudTemEnvironment(),
 			"tencentcloud_tem_application":                                     resourceTencentCloudTemApplication(),
 			"tencentcloud_tem_workload":                                        resourceTencentCloudTemWorkload(),

@@ -71,6 +71,10 @@ const testAccLighthouseInstance = `
 data "tencentcloud_lighthouse_bundle" "bundle" {
 }
 
+resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
+  template_name="empty-template"
+}
+
 resource "tencentcloud_lighthouse_instance" "instance" {
   bundle_id    = data.tencentcloud_lighthouse_bundle.bundle.bundle_set.0.bundle_id
   blueprint_id = "lhbp-f1lkcd41"
@@ -135,11 +139,16 @@ resource "tencentcloud_lighthouse_instance" "instance" {
     }
     command = "echo \"hello\""
   }
+  firewall_template_id = tencentcloud_lighthouse_firewall_template.firewall_template.id
 }
 `
 
 const testAccLighthouseInstance_update = `
 data "tencentcloud_lighthouse_bundle" "bundle" {
+}
+
+resource "tencentcloud_lighthouse_firewall_template" "firewall_template" {
+  template_name="empty-template"
 }
 
 resource "tencentcloud_lighthouse_instance" "instance" {
@@ -207,5 +216,6 @@ resource "tencentcloud_lighthouse_instance" "instance" {
     }
     command = "echo \"hello\""
   }
+  firewall_template_id = tencentcloud_lighthouse_firewall_template.firewall_template.id
 }
 `

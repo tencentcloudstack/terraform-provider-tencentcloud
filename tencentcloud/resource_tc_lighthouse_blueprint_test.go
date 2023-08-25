@@ -27,12 +27,12 @@ func TestAccTencentCloudLighthouseBlueprintResource_basic(t *testing.T) {
 	})
 }
 
-const testAccLighthouseBlueprint = `
+const testAccLighthouseBlueprint = DefaultLighthoustVariables + `
 
 resource "tencentcloud_lighthouse_blueprint" "blueprint" {
   blueprint_name = "blueprint_name_test"
   description = "blueprint_description_test"
-  instance_id = "lhins-hwe21u91"
+  instance_id = var.lighthouse_id
 }
 
 `
