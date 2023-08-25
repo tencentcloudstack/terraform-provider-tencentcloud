@@ -768,6 +768,7 @@ func resourceTencentCloudVpnConnectionUpdate(d *schema.ResourceData, meta interf
 		"ike_remote_fqdn_name":       false,
 		"ike_sa_lifetime_seconds":    false,
 		"ike_dh_group_name":          false,
+		"ike_version":                false,
 	}
 	ikeChangeFlag := false
 	for key := range ikeChangeKeySet {
