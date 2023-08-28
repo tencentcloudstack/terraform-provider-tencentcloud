@@ -32,6 +32,7 @@ func TestAccTencentCloudVpnConnectionResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_dh_group_name", "GROUP1"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_exchange_mode", "MAIN"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_sa_lifetime_seconds", "86400"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_version", "IKEV1"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_encrypt_algorithm", "3DES-CBC"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_integrity_algorithm", "MD5"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_sa_lifetime_seconds", "3600"),
@@ -65,6 +66,7 @@ func TestAccTencentCloudVpnConnectionResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_dh_group_name", "GROUP2"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_exchange_mode", "AGGRESSIVE"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_sa_lifetime_seconds", "86401"),
+					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ike_version", "IKEV2"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_encrypt_algorithm", "3DES-CBC"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_integrity_algorithm", "SHA1"),
 					resource.TestCheckResourceAttr("tencentcloud_vpn_connection.connection", "ipsec_pfs_dh_group", "NULL"),
@@ -241,6 +243,7 @@ resource "tencentcloud_vpn_connection" "connection" {
   ike_remote_address         = tencentcloud_vpn_customer_gateway.cgw.public_ip_address
   ike_dh_group_name          = "GROUP1"
   ike_sa_lifetime_seconds    = 86400
+  ike_version                = "IKEV1"
   ipsec_encrypt_algorithm    = "3DES-CBC"
   ipsec_integrity_algorithm  = "MD5"
   ipsec_sa_lifetime_seconds  = 3600
@@ -297,6 +300,7 @@ resource "tencentcloud_vpn_connection" "connection" {
   ike_remote_identity        = "ADDRESS"
   ike_remote_address         = tencentcloud_vpn_customer_gateway.cgw.public_ip_address
   ike_dh_group_name          = "GROUP2"
+  ike_version                = "IKEV2"
   ike_sa_lifetime_seconds    = 86401
   ipsec_encrypt_algorithm    = "3DES-CBC"
   ipsec_integrity_algorithm  = "SHA1"
@@ -354,6 +358,7 @@ resource "tencentcloud_vpn_connection" "connection" {
   ike_remote_address         = tencentcloud_vpn_customer_gateway.cgw.public_ip_address
   ike_dh_group_name          = "GROUP2"
   ike_sa_lifetime_seconds    = 86401
+  ike_version                = "IKEV2"
   ipsec_encrypt_algorithm    = "3DES-CBC"
   ipsec_integrity_algorithm  = "SHA1"
   ipsec_sa_lifetime_seconds  = 7200

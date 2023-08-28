@@ -1200,7 +1200,7 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
 		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
 		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::apigateway:%s:uin/:apiId/%s", region, d.Id())
+		resourceName := fmt.Sprintf("qcs::apigw:%s:uin/:api/%s", region, d.Id())
 		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
 			return err
 		}
@@ -1442,11 +1442,6 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("update_time", info.ModifiedTime)
 	_ = d.Set("create_time", info.CreatedTime)
 
-	if info.RequestConfig != nil {
-		_ = d.Set("request_config_path", info.RequestConfig.Path)
-		_ = d.Set("request_config_method", info.RequestConfig.Method)
-	}
-
 	if info.ServiceParameters != nil {
 		serviceParametersList := []interface{}{}
 		for _, serviceParameters := range info.ServiceParameters {
@@ -1557,6 +1552,15 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("test_limit", testLimit)
 	_ = d.Set("release_limit", releaseLimit)
 
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tags, err := tagService.DescribeResourceTags(ctx, "apigw", "api", tcClient.Region, apiId)
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -1572,11 +1576,11 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 		apiId             = d.Id()
 		serviceId         = d.Get("service_id").(string)
 		err               error
-
-		releaseLimit int
-		preLimit     int
-		testLimit    int
+		releaseLimit      int
+		preLimit          int
+		testLimit         int
 	)
+
 	d.Partial(true)
 	request.ServiceId = &serviceId
 	request.ApiId = &apiId
@@ -1760,6 +1764,18 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 		}
 
 	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("apigw", "api", tcClient.Region, apiId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
+	}
+
 	d.Partial(false)
 	return resourceTencentCloudAPIGatewayAPIRead(d, meta)
 }
@@ -1776,6 +1792,7 @@ func resourceTencentCloudAPIGatewayAPIDelete(d *schema.ResourceData, meta interf
 		limitNumber       int64 = QUOTA
 		err               error
 	)
+
 	for _, v := range API_GATEWAY_SERVICE_ENVS {
 		_, err = apiGatewayService.ModifyApiEnvironmentStrategy(ctx, serviceId, limitNumber, v, []string{apiId})
 		if err != nil {

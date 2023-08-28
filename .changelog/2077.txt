@@ -23,6 +23,10 @@ tencentcloud_api_gateway_api_app_service
 ```
 
 ```release-note:enhancement
+resource/tencentcloud_api_gateway_api: Support Some new fields
+```
+
+```release-note:enhancement
 resource/tencentcloud_api_gateway_api_app: Support `tag`
 ```
 

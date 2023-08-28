@@ -4,12 +4,14 @@ layout: "tencentcloud"
 page_title: "TencentCloud: tencentcloud_lighthouse_firewall_rule"
 sidebar_current: "docs-tencentcloud-resource-lighthouse_firewall_rule"
 description: |-
-  Provides a resource to create a lighthouse firewall_rule
+  Provides a resource to create a lighthouse firewall rule
 ---
 
 # tencentcloud_lighthouse_firewall_rule
 
-Provides a resource to create a lighthouse firewall_rule
+Provides a resource to create a lighthouse firewall rule
+
+~> **NOTE:**  Use an empty template to clean up the default rules before using this resource manage firewall rules.
 
 ## Example Usage
 

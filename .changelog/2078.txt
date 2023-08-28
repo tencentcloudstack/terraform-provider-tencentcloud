@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_tdmq_rocketmq_group: change `cluster_id`, `namespaces` and `group_id` to `ForceNew`
+```
+
+```release-note:enhancement
+resource/tencentcloud_tdmq_rocketmq_environment_role: change `cluster_id`, `environment_name` and `role_name` to `ForceNew`
+```

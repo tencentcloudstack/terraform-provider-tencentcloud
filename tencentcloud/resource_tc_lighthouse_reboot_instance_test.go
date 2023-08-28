@@ -19,10 +19,10 @@ func TestAccTencentCloudLighthouseRebootInstanceResource_basic(t *testing.T) {
 	})
 }
 
-const testAccLighthouseRebootInstance = `
+const testAccLighthouseRebootInstance = DefaultLighthoustVariables + `
 
 resource "tencentcloud_lighthouse_reboot_instance" "reboot_instance" {
-  instance_id = "lhins-hwe21u91"
+  instance_id = var.lighthouse_id
 }
 
 `

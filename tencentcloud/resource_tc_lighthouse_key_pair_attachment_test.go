@@ -24,11 +24,11 @@ func TestAccTencentCloudLighthouseKeyPairAttachmentResource_basic(t *testing.T) 
 	})
 }
 
-const testAccLighthouseKeyPairAttachment = `
+const testAccLighthouseKeyPairAttachment = DefaultLighthoustVariables + `
 
 resource "tencentcloud_lighthouse_key_pair_attachment" "key_pair_attachment" {
   key_id = "lhkp-d8zf3jmv"
-  instance_id = "lhins-hwe21u91"
+  instance_id = var.lighthouse_id
 }
 
 `
