@@ -165,7 +165,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) ID of VPC network.
 * `default_cooldown` - (Optional, Int) Seconds of scaling group cool down. Default value is `300`.
 * `delete_keep_instance` - (Optional, Bool) Indicate to keep the CVM instance when delete the node pool. Default is `true`.
-* `desired_capacity` - (Optional, Int) Desired capacity ot the node. If `enable_auto_scale` is set `true`, this will be a computed parameter.
+* `desired_capacity` - (Optional, Int) Desired capacity of the node. If `enable_auto_scale` is set `true`, this will be a computed parameter.
 * `enable_auto_scale` - (Optional, Bool) Indicate whether to enable auto scaling or not.
 * `labels` - (Optional, Map) Labels of kubernetes node pool created nodes. The label key name does not exceed 63 characters, only supports English, numbers,'/','-', and does not allow beginning with ('/').
 * `multi_zone_subnet_policy` - (Optional, String) Multi-availability zone/subnet policy. Valid values: PRIORITY and EQUALITY. Default value: PRIORITY.
