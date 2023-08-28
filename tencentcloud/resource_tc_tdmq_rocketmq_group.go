@@ -57,12 +57,14 @@ func resourceTencentCloudTdmqRocketmqGroup() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"group_name": {
 				Type:        schema.TypeString,
+				ForceNew:    true,
 				Required:    true,
 				Description: "Group name (8-64 characters).",
 			},
 
 			"namespace": {
 				Type:        schema.TypeString,
+				ForceNew:    true,
 				Required:    true,
 				Description: "Namespace. Currently, only one namespace is supported.",
 			},
@@ -82,6 +84,7 @@ func resourceTencentCloudTdmqRocketmqGroup() *schema.Resource {
 			"cluster_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Cluster ID.",
 			},
 
@@ -185,7 +188,6 @@ func resourceTencentCloudTdmqRocketmqGroupCreate(d *schema.ResourceData, meta in
 	}
 
 	if v, ok := d.GetOk("remark"); ok {
-
 		request.Remark = helper.String(v.(string))
 	}
 
@@ -276,43 +278,22 @@ func resourceTencentCloudTdmqRocketmqGroupUpdate(d *schema.ResourceData, meta in
 	request.NamespaceId = &namespaceId
 	request.GroupId = &groupId
 
-	if d.HasChange("group_id") {
-
-		return fmt.Errorf("`group_id` do not support change now.")
-
-	}
-
-	if d.HasChange("namespaces") {
-
-		return fmt.Errorf("`namespaces` do not support change now.")
-
-	}
-
 	if d.HasChange("read_enable") {
 		if v, ok := d.GetOk("read_enable"); ok {
 			request.ReadEnable = helper.Bool(v.(bool))
 		}
-
 	}
 
 	if d.HasChange("broadcast_enable") {
 		if v, ok := d.GetOk("broadcast_enable"); ok {
 			request.BroadcastEnable = helper.Bool(v.(bool))
 		}
-
-	}
-
-	if d.HasChange("cluster_id") {
-
-		return fmt.Errorf("`cluster_id` do not support change now.")
-
 	}
 
 	if d.HasChange("remark") {
 		if v, ok := d.GetOk("remark"); ok {
 			request.Remark = helper.String(v.(string))
 		}
-
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {

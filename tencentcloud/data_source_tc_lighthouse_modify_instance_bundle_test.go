@@ -20,10 +20,10 @@ func TestAccTencentCloudLighthouseModifyInstanceBundleDataSource_basic(t *testin
 	})
 }
 
-const testAccLighthouseModifyInstanceBundleDataSource = `
+const testAccLighthouseModifyInstanceBundleDataSource = DefaultLighthoustVariables + `
 
 data "tencentcloud_lighthouse_modify_instance_bundle" "modify_instance_bundle" {
-  instance_id = "lhins-hwe21u91"
+  instance_id = var.lighthouse_id
   filters {
 	name = "bundle-id"
 	values = ["bundle_gen_mc_med2_02"]

@@ -205,8 +205,9 @@ func resourceTencentCloudVpnGateway() *schema.Resource {
 			},
 			"zone": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				ForceNew:    true,
+				Computed:    true,
 				Description: "Zone of the VPN gateway.",
 			},
 			"tags": {
@@ -234,8 +235,12 @@ func resourceTencentCloudVpnGatewayCreate(d *schema.ResourceData, meta interface
 	bandwidth := d.Get("bandwidth").(int)
 	bandwidth64 := uint64(bandwidth)
 	request.InternetMaxBandwidthOut = &bandwidth64
-	request.Zone = helper.String(d.Get("zone").(string))
 	chargeType := d.Get("charge_type").(string)
+
+	if v, ok := d.GetOk("zone"); ok {
+		request.Zone = helper.String(v.(string))
+	}
+
 	//only support change renew_flag when charge type is pre-paid
 	if chargeType == VPN_CHARGE_TYPE_PREPAID {
 		var preChargePara vpc.InstanceChargePrepaid

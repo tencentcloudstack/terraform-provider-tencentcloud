@@ -206,15 +206,38 @@ func resourceTencentCloudCynosdbParamTemplateRead(d *schema.ResourceData, meta i
 		_ = d.Set("db_mode", paramTemplate.DbMode)
 	}
 
-	if paramTemplate.Items != nil {
-		paramInfoSetList := []interface{}{}
-		for _, paramInfoSet := range paramTemplate.Items {
-			paramInfoSetList = append(paramInfoSetList, map[string]interface{}{
-				"param_name":    *paramInfoSet.ParamName,
-				"current_value": *paramInfoSet.CurrentValue,
-			})
+	params := make([]string, 0)
+	if v, ok := d.GetOk("param_list"); ok {
+		for _, item := range v.(*schema.Set).List() {
+			if item != nil {
+				dMap := item.(map[string]interface{})
+				if v, ok := dMap["param_name"]; ok {
+					params = append(params, v.(string))
+				}
+			}
 		}
-		_ = d.Set("param_list", paramInfoSetList)
+	}
+
+	if paramTemplate.Items != nil {
+		if len(params) > 0 {
+			paramInfoSetList := make([]map[string]interface{}, 0, len(params))
+			for _, param := range params {
+				for _, paramList := range paramTemplate.Items {
+					if *paramList.ParamName == param {
+						paramListMap := map[string]interface{}{}
+						if paramList.ParamName != nil {
+							paramListMap["param_name"] = paramList.ParamName
+						}
+						if paramList.CurrentValue != nil {
+							paramListMap["current_value"] = paramList.CurrentValue
+						}
+						paramInfoSetList = append(paramInfoSetList, paramListMap)
+						break
+					}
+				}
+			}
+			_ = d.Set("param_list", paramInfoSetList)
+		}
 	}
 
 	return nil

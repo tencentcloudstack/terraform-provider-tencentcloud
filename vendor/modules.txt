@@ -1094,7 +1094,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.726
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.730
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
@@ -1149,7 +1149,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/gaap/v20180529
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms v1.0.563
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/kms/v20190118
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.656
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse v1.0.729
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/lighthouse/v20200324
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/live v1.0.535
@@ -1230,7 +1230,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tdmq/v20200217
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem v1.0.578
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.529
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo v1.0.730
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke v1.0.691

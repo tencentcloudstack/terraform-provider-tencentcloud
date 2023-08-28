@@ -19,9 +19,9 @@ func TestAccTencentCloudLighthouseInstanceVncUrlDataSource_basic(t *testing.T) {
 	})
 }
 
-const testAccLighthouseInstanceVncUrlDataSource = `
+const testAccLighthouseInstanceVncUrlDataSource = DefaultLighthoustVariables + `
 
 data "tencentcloud_lighthouse_instance_vnc_url" "instance_vnc_url" {
-  instance_id = "lhins-hwe21u91"
+  instance_id = var.lighthouse_id
 }
 `

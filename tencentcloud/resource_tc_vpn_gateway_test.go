@@ -64,7 +64,7 @@ func testSweepVpnGateway(region string) error {
 	return nil
 }
 
-func TestAccTencentCloudVpnGateway_basic(t *testing.T) {
+func TestAccTencentCloudVpnGatewayResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -206,7 +206,6 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
   name      = "terraform_test"
   vpc_id    = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
   bandwidth = 10
-  zone      = "ap-guangzhou-3"
 
   tags = {
     test = "tf"
@@ -222,7 +221,6 @@ resource "tencentcloud_vpn_gateway" "my_cgw" {
   name      = "terraform_update"
   vpc_id    = data.tencentcloud_vpc_instances.foo.instance_list.0.vpc_id
   bandwidth = 5
-  zone      = "ap-guangzhou-3"
 
   tags = {
     test = "test"
@@ -235,7 +233,6 @@ const testAccCcnVpnGatewayConfig = `
 resource "tencentcloud_vpn_gateway" "my_ccn_cgw" {
   name      = "terraform_ccn_vpngw_test"
   bandwidth = 5
-  zone      = "ap-guangzhou-3"
   type      = "CCN"
 
   tags = {

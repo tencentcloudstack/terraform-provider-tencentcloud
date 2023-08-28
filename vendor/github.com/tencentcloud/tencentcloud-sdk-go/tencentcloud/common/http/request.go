@@ -3,6 +3,7 @@ package common
 import (
 	"context"
 	"io"
+
 	//"log"
 	"math/rand"
 	"net/url"
@@ -265,7 +266,7 @@ func CompleteCommonParams(request Request, region string, requestClient string) 
 	params["Action"] = request.GetAction()
 	params["Timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
 	params["Nonce"] = strconv.Itoa(rand.Int())
-	params["RequestClient"] = "SDK_GO_1.0.726"
+	params["RequestClient"] = "SDK_GO_1.0.730"
 	if requestClient != "" {
 		params["RequestClient"] += ": " + requestClient
 	}

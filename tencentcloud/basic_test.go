@@ -820,7 +820,6 @@ locals {
 const (
 	defaultZoneName    = "tf-teo-t.xyz"
 	defaultZoneId      = "zone-2a1u0y616jz6"
-	defaultPolicyId    = "11581"
 	applicationProxyId = "sid-2f8xqhmf32dt"
 )
 
@@ -1054,11 +1053,11 @@ variable "subnet_id" {
 // End of CRS
 
 const (
-	defaultLighthouseInstanceId   = "lhins-hwe21u91"
+	defaultLighthouseInstanceId   = "lhins-g4bwdjbf"
 	defaultLighthoustDiskId       = "lhdisk-do4p4hz6"
 	defaultLighthouseBackupDiskId = "lhdisk-cwodsc4q"
 	defaultLighthouseBackUpId     = "lhbak-bpum3ygx"
-	defaultLighthouseSnapshotId   = "lhsnap-9jaw9m17"
+	defaultLighthouseSnapshotId   = "lhsnap-o2mvsvk3"
 )
 
 const DefaultLighthoustVariables = `

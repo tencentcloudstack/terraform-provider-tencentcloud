@@ -149,6 +149,56 @@ func (c *Client) ApplyDiskBackupWithContext(ctx context.Context, request *ApplyD
     return
 }
 
+func NewApplyFirewallTemplateRequest() (request *ApplyFirewallTemplateRequest) {
+    request = &ApplyFirewallTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "ApplyFirewallTemplate")
+    
+    
+    return
+}
+
+func NewApplyFirewallTemplateResponse() (response *ApplyFirewallTemplateResponse) {
+    response = &ApplyFirewallTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ApplyFirewallTemplate
+// 本接口 (ApplyFirewallTemplate) 用于应用防火墙模板到多个实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCEUNAVAILABLE_CANNOTAPPLYEMPTYFIREWALLTEMPLATE = "ResourceUnavailable.CannotApplyEmptyFirewallTemplate"
+func (c *Client) ApplyFirewallTemplate(request *ApplyFirewallTemplateRequest) (response *ApplyFirewallTemplateResponse, err error) {
+    return c.ApplyFirewallTemplateWithContext(context.Background(), request)
+}
+
+// ApplyFirewallTemplate
+// 本接口 (ApplyFirewallTemplate) 用于应用防火墙模板到多个实例。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCEUNAVAILABLE_CANNOTAPPLYEMPTYFIREWALLTEMPLATE = "ResourceUnavailable.CannotApplyEmptyFirewallTemplate"
+func (c *Client) ApplyFirewallTemplateWithContext(ctx context.Context, request *ApplyFirewallTemplateRequest) (response *ApplyFirewallTemplateResponse, err error) {
+    if request == nil {
+        request = NewApplyFirewallTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ApplyFirewallTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewApplyFirewallTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewApplyInstanceSnapshotRequest() (request *ApplyInstanceSnapshotRequest) {
     request = &ApplyInstanceSnapshotRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -172,7 +222,7 @@ func NewApplyInstanceSnapshotResponse() (response *ApplyInstanceSnapshotResponse
 //
 // <li>仅支持回滚到原系统盘。</li>
 //
-// <li>用于回滚的快照必须处于 NORMAL 状态。快照状态可以通 DescribeSnapshots 接口查询，见输出参数中 SnapshotState 字段解释。</li>
+// <li>用于回滚的快照必须处于 NORMAL 状态。快照状态可以通过 DescribeSnapshots 接口查询，见输出参数中 SnapshotState 字段解释。</li>
 //
 // <li>回滚快照时，实例的状态必须为 STOPPED 或 RUNNING，可通过 DescribeInstances 接口查询实例状态。处于 RUNNING 状态的实例会强制关机，然后回滚快照。</li>
 //
@@ -206,7 +256,7 @@ func (c *Client) ApplyInstanceSnapshot(request *ApplyInstanceSnapshotRequest) (r
 //
 // <li>仅支持回滚到原系统盘。</li>
 //
-// <li>用于回滚的快照必须处于 NORMAL 状态。快照状态可以通 DescribeSnapshots 接口查询，见输出参数中 SnapshotState 字段解释。</li>
+// <li>用于回滚的快照必须处于 NORMAL 状态。快照状态可以通过 DescribeSnapshots 接口查询，见输出参数中 SnapshotState 字段解释。</li>
 //
 // <li>回滚快照时，实例的状态必须为 STOPPED 或 RUNNING，可通过 DescribeInstances 接口查询实例状态。处于 RUNNING 状态的实例会强制关机，然后回滚快照。</li>
 //
@@ -526,6 +576,7 @@ func NewCreateBlueprintResponse() (response *CreateBlueprintResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEBLUEPRINTFAILED = "FailedOperation.CreateBlueprintFailed"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_UNABLETOCREATEBLUEPRINT = "FailedOperation.UnableToCreateBlueprint"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -545,6 +596,7 @@ func (c *Client) CreateBlueprint(request *CreateBlueprintRequest) (response *Cre
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEBLUEPRINTFAILED = "FailedOperation.CreateBlueprintFailed"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_UNABLETOCREATEBLUEPRINT = "FailedOperation.UnableToCreateBlueprint"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -666,6 +718,7 @@ func NewCreateDisksResponse() (response *CreateDisksResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEDISKSFAILED = "FailedOperation.CreateDisksFailed"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  INVALIDPARAMETERVALUE_DISKINSTANCEZONENOTMATCH = "InvalidParameterValue.DiskInstanceZoneNotMatch"
 //  INVALIDPARAMETERVALUE_INVALIDDISKTYPE = "InvalidParameterValue.InvalidDiskType"
 //  INVALIDPARAMETERVALUE_INVALIDZONE = "InvalidParameterValue.InvalidZone"
@@ -686,6 +739,7 @@ func (c *Client) CreateDisks(request *CreateDisksRequest) (response *CreateDisks
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_CREATEDISKSFAILED = "FailedOperation.CreateDisksFailed"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  INVALIDPARAMETERVALUE_DISKINSTANCEZONENOTMATCH = "InvalidParameterValue.DiskInstanceZoneNotMatch"
 //  INVALIDPARAMETERVALUE_INVALIDDISKTYPE = "InvalidParameterValue.InvalidDiskType"
 //  INVALIDPARAMETERVALUE_INVALIDZONE = "InvalidParameterValue.InvalidZone"
@@ -831,6 +885,112 @@ func (c *Client) CreateFirewallRulesWithContext(ctx context.Context, request *Cr
     return
 }
 
+func NewCreateFirewallTemplateRequest() (request *CreateFirewallTemplateRequest) {
+    request = &CreateFirewallTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "CreateFirewallTemplate")
+    
+    
+    return
+}
+
+func NewCreateFirewallTemplateResponse() (response *CreateFirewallTemplateResponse) {
+    response = &CreateFirewallTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateFirewallTemplate
+// 本接口 (CreateFirewallTemplate) 用于创建防火墙模板。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) CreateFirewallTemplate(request *CreateFirewallTemplateRequest) (response *CreateFirewallTemplateResponse, err error) {
+    return c.CreateFirewallTemplateWithContext(context.Background(), request)
+}
+
+// CreateFirewallTemplate
+// 本接口 (CreateFirewallTemplate) 用于创建防火墙模板。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) CreateFirewallTemplateWithContext(ctx context.Context, request *CreateFirewallTemplateRequest) (response *CreateFirewallTemplateResponse, err error) {
+    if request == nil {
+        request = NewCreateFirewallTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateFirewallTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateFirewallTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewCreateFirewallTemplateRulesRequest() (request *CreateFirewallTemplateRulesRequest) {
+    request = &CreateFirewallTemplateRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "CreateFirewallTemplateRules")
+    
+    
+    return
+}
+
+func NewCreateFirewallTemplateRulesResponse() (response *CreateFirewallTemplateRulesResponse) {
+    response = &CreateFirewallTemplateRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// CreateFirewallTemplateRules
+// 本接口 (CreateFirewallTemplateRules) 用于创建防火墙模板规则。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+//  LIMITEXCEEDED_FIREWALLTEMPLATERULEQUOTALIMITEXCEEDED = "LimitExceeded.FirewallTemplateRuleQuotaLimitExceeded"
+func (c *Client) CreateFirewallTemplateRules(request *CreateFirewallTemplateRulesRequest) (response *CreateFirewallTemplateRulesResponse, err error) {
+    return c.CreateFirewallTemplateRulesWithContext(context.Background(), request)
+}
+
+// CreateFirewallTemplateRules
+// 本接口 (CreateFirewallTemplateRules) 用于创建防火墙模板规则。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+//  LIMITEXCEEDED_FIREWALLTEMPLATERULEQUOTALIMITEXCEEDED = "LimitExceeded.FirewallTemplateRuleQuotaLimitExceeded"
+func (c *Client) CreateFirewallTemplateRulesWithContext(ctx context.Context, request *CreateFirewallTemplateRulesRequest) (response *CreateFirewallTemplateRulesResponse, err error) {
+    if request == nil {
+        request = NewCreateFirewallTemplateRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("CreateFirewallTemplateRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewCreateFirewallTemplateRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewCreateInstanceSnapshotRequest() (request *CreateInstanceSnapshotRequest) {
     request = &CreateInstanceSnapshotRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -934,6 +1094,7 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
 //  AUTHFAILURE_INVALIDREGION = "AuthFailure.InvalidRegion"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CREATEINSTANCESFAILED = "FailedOperation.CreateInstancesFailed"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_UNABLETOCREATEINSTANCES = "FailedOperation.UnableToCreateInstances"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_INVALIDACTIONNOTFOUND = "InternalError.InvalidActionNotFound"
@@ -943,6 +1104,7 @@ func NewCreateInstancesResponse() (response *CreateInstancesResponse) {
 //  INVALIDPARAMETERVALUE_BLUEPRINTID = "InvalidParameterValue.BlueprintId"
 //  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
 //  INVALIDPARAMETERVALUE_BUNDLEANDBLUEPRINTNOTMATCH = "InvalidParameterValue.BundleAndBlueprintNotMatch"
+//  INVALIDPARAMETERVALUE_BUNDLENOTSUPPORTBLUEPRINTPLATFORM = "InvalidParameterValue.BundleNotSupportBlueprintPlatform"
 //  INVALIDPARAMETERVALUE_CLIENTTOKENTOOLONG = "InvalidParameterValue.ClientTokenTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCENAMETOOLONG = "InvalidParameterValue.InstanceNameTooLong"
 //  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
@@ -972,6 +1134,7 @@ func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *Cre
 //  AUTHFAILURE_INVALIDREGION = "AuthFailure.InvalidRegion"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_CREATEINSTANCESFAILED = "FailedOperation.CreateInstancesFailed"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_UNABLETOCREATEINSTANCES = "FailedOperation.UnableToCreateInstances"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_INVALIDACTIONNOTFOUND = "InternalError.InvalidActionNotFound"
@@ -981,6 +1144,7 @@ func (c *Client) CreateInstances(request *CreateInstancesRequest) (response *Cre
 //  INVALIDPARAMETERVALUE_BLUEPRINTID = "InvalidParameterValue.BlueprintId"
 //  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
 //  INVALIDPARAMETERVALUE_BUNDLEANDBLUEPRINTNOTMATCH = "InvalidParameterValue.BundleAndBlueprintNotMatch"
+//  INVALIDPARAMETERVALUE_BUNDLENOTSUPPORTBLUEPRINTPLATFORM = "InvalidParameterValue.BundleNotSupportBlueprintPlatform"
 //  INVALIDPARAMETERVALUE_CLIENTTOKENTOOLONG = "InvalidParameterValue.ClientTokenTooLong"
 //  INVALIDPARAMETERVALUE_INSTANCENAMETOOLONG = "InvalidParameterValue.InstanceNameTooLong"
 //  INVALIDPARAMETERVALUE_INVALIDBLUEPRINTID = "InvalidParameterValue.InvalidBlueprintId"
@@ -1325,6 +1489,102 @@ func (c *Client) DeleteFirewallRulesWithContext(ctx context.Context, request *De
     return
 }
 
+func NewDeleteFirewallTemplateRequest() (request *DeleteFirewallTemplateRequest) {
+    request = &DeleteFirewallTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DeleteFirewallTemplate")
+    
+    
+    return
+}
+
+func NewDeleteFirewallTemplateResponse() (response *DeleteFirewallTemplateResponse) {
+    response = &DeleteFirewallTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteFirewallTemplate
+// 本接口 (DeleteFirewallTemplate) 用于删除防火墙模板。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteFirewallTemplate(request *DeleteFirewallTemplateRequest) (response *DeleteFirewallTemplateResponse, err error) {
+    return c.DeleteFirewallTemplateWithContext(context.Background(), request)
+}
+
+// DeleteFirewallTemplate
+// 本接口 (DeleteFirewallTemplate) 用于删除防火墙模板。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteFirewallTemplateWithContext(ctx context.Context, request *DeleteFirewallTemplateRequest) (response *DeleteFirewallTemplateResponse, err error) {
+    if request == nil {
+        request = NewDeleteFirewallTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteFirewallTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteFirewallTemplateResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDeleteFirewallTemplateRulesRequest() (request *DeleteFirewallTemplateRulesRequest) {
+    request = &DeleteFirewallTemplateRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DeleteFirewallTemplateRules")
+    
+    
+    return
+}
+
+func NewDeleteFirewallTemplateRulesResponse() (response *DeleteFirewallTemplateRulesResponse) {
+    response = &DeleteFirewallTemplateRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteFirewallTemplateRules
+// 本接口 (DeleteFirewallTemplateRules) 用于删除防火墙模板规则。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteFirewallTemplateRules(request *DeleteFirewallTemplateRulesRequest) (response *DeleteFirewallTemplateRulesResponse, err error) {
+    return c.DeleteFirewallTemplateRulesWithContext(context.Background(), request)
+}
+
+// DeleteFirewallTemplateRules
+// 本接口 (DeleteFirewallTemplateRules) 用于删除防火墙模板规则。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DeleteFirewallTemplateRulesWithContext(ctx context.Context, request *DeleteFirewallTemplateRulesRequest) (response *DeleteFirewallTemplateRulesResponse, err error) {
+    if request == nil {
+        request = NewDeleteFirewallTemplateRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteFirewallTemplateRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteFirewallTemplateRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteKeyPairsRequest() (request *DeleteKeyPairsRequest) {
     request = &DeleteKeyPairsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -1479,6 +1739,7 @@ func NewDescribeAllScenesResponse() (response *DescribeAllScenesResponse) {
 // 本接口(DescribeAllScenes)用于查询全地域使用场景列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeAllScenes(request *DescribeAllScenesRequest) (response *DescribeAllScenesResponse, err error) {
     return c.DescribeAllScenesWithContext(context.Background(), request)
@@ -1488,6 +1749,7 @@ func (c *Client) DescribeAllScenes(request *DescribeAllScenesRequest) (response 
 // 本接口(DescribeAllScenes)用于查询全地域使用场景列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  INTERNALERROR = "InternalError"
 func (c *Client) DescribeAllScenesWithContext(ctx context.Context, request *DescribeAllScenesRequest) (response *DescribeAllScenesResponse, err error) {
     if request == nil {
@@ -1837,6 +2099,7 @@ func NewDescribeCcnAttachedInstancesResponse() (response *DescribeCcnAttachedIns
 // 本接口 (DescribeCcnAttachedInstances) 用于查询云联网关联的实例信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
@@ -1852,6 +2115,7 @@ func (c *Client) DescribeCcnAttachedInstances(request *DescribeCcnAttachedInstan
 // 本接口 (DescribeCcnAttachedInstances) 用于查询云联网关联的实例信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
@@ -2005,6 +2269,7 @@ func NewDescribeDiskConfigsResponse() (response *DescribeDiskConfigsResponse) {
 // 本接口（DescribeDiskConfigs）用于查询云硬盘配置。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 //  INVALIDPARAMETERVALUE_INVALIDZONE = "InvalidParameterValue.InvalidZone"
@@ -2018,6 +2283,7 @@ func (c *Client) DescribeDiskConfigs(request *DescribeDiskConfigsRequest) (respo
 // 本接口（DescribeDiskConfigs）用于查询云硬盘配置。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 //  INVALIDPARAMETERVALUE_INVALIDZONE = "InvalidParameterValue.InvalidZone"
@@ -2301,6 +2567,310 @@ func (c *Client) DescribeDisksReturnableWithContext(ctx context.Context, request
     return
 }
 
+func NewDescribeDockerActivitiesRequest() (request *DescribeDockerActivitiesRequest) {
+    request = &DescribeDockerActivitiesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeDockerActivities")
+    
+    
+    return
+}
+
+func NewDescribeDockerActivitiesResponse() (response *DescribeDockerActivitiesResponse) {
+    response = &DescribeDockerActivitiesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDockerActivities
+// 查询实例内的Docker活动列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_FIELDSCOMPARE = "InvalidParameterValue.FieldsCompare"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) DescribeDockerActivities(request *DescribeDockerActivitiesRequest) (response *DescribeDockerActivitiesResponse, err error) {
+    return c.DescribeDockerActivitiesWithContext(context.Background(), request)
+}
+
+// DescribeDockerActivities
+// 查询实例内的Docker活动列表。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_FIELDSCOMPARE = "InvalidParameterValue.FieldsCompare"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) DescribeDockerActivitiesWithContext(ctx context.Context, request *DescribeDockerActivitiesRequest) (response *DescribeDockerActivitiesResponse, err error) {
+    if request == nil {
+        request = NewDescribeDockerActivitiesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDockerActivities require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDockerActivitiesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDockerContainerConfigurationRequest() (request *DescribeDockerContainerConfigurationRequest) {
+    request = &DescribeDockerContainerConfigurationRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeDockerContainerConfiguration")
+    
+    
+    return
+}
+
+func NewDescribeDockerContainerConfigurationResponse() (response *DescribeDockerContainerConfigurationResponse) {
+    response = &DescribeDockerContainerConfigurationResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDockerContainerConfiguration
+// 查询实例内的Docker容器配置信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DOCKERCONTAINERSLISTTOOLARGE = "FailedOperation.DockerContainersListTooLarge"
+//  FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
+//  FAILEDOPERATION_TATINVOCATIONNOTFINISHED = "FailedOperation.TATInvocationNotFinished"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) DescribeDockerContainerConfiguration(request *DescribeDockerContainerConfigurationRequest) (response *DescribeDockerContainerConfigurationResponse, err error) {
+    return c.DescribeDockerContainerConfigurationWithContext(context.Background(), request)
+}
+
+// DescribeDockerContainerConfiguration
+// 查询实例内的Docker容器配置信息
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DOCKERCONTAINERSLISTTOOLARGE = "FailedOperation.DockerContainersListTooLarge"
+//  FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
+//  FAILEDOPERATION_TATINVOCATIONNOTFINISHED = "FailedOperation.TATInvocationNotFinished"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) DescribeDockerContainerConfigurationWithContext(ctx context.Context, request *DescribeDockerContainerConfigurationRequest) (response *DescribeDockerContainerConfigurationResponse, err error) {
+    if request == nil {
+        request = NewDescribeDockerContainerConfigurationRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDockerContainerConfiguration require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDockerContainerConfigurationResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDockerContainerDetailRequest() (request *DescribeDockerContainerDetailRequest) {
+    request = &DescribeDockerContainerDetailRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeDockerContainerDetail")
+    
+    
+    return
+}
+
+func NewDescribeDockerContainerDetailResponse() (response *DescribeDockerContainerDetailResponse) {
+    response = &DescribeDockerContainerDetailResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDockerContainerDetail
+// 查询实例内的Docker容器详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DOCKERCONTAINERSLISTTOOLARGE = "FailedOperation.DockerContainersListTooLarge"
+//  FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
+//  FAILEDOPERATION_TATINVOCATIONNOTFINISHED = "FailedOperation.TATInvocationNotFinished"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) DescribeDockerContainerDetail(request *DescribeDockerContainerDetailRequest) (response *DescribeDockerContainerDetailResponse, err error) {
+    return c.DescribeDockerContainerDetailWithContext(context.Background(), request)
+}
+
+// DescribeDockerContainerDetail
+// 查询实例内的Docker容器详情
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DOCKERCONTAINERSLISTTOOLARGE = "FailedOperation.DockerContainersListTooLarge"
+//  FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
+//  FAILEDOPERATION_TATINVOCATIONNOTFINISHED = "FailedOperation.TATInvocationNotFinished"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) DescribeDockerContainerDetailWithContext(ctx context.Context, request *DescribeDockerContainerDetailRequest) (response *DescribeDockerContainerDetailResponse, err error) {
+    if request == nil {
+        request = NewDescribeDockerContainerDetailRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDockerContainerDetail require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDockerContainerDetailResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeDockerContainersRequest() (request *DescribeDockerContainersRequest) {
+    request = &DescribeDockerContainersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeDockerContainers")
+    
+    
+    return
+}
+
+func NewDescribeDockerContainersResponse() (response *DescribeDockerContainersResponse) {
+    response = &DescribeDockerContainersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDockerContainers
+// 查询实例内的容器列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DOCKERCONTAINERSLISTTOOLARGE = "FailedOperation.DockerContainersListTooLarge"
+//  FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
+//  FAILEDOPERATION_TATINVOCATIONNOTFINISHED = "FailedOperation.TATInvocationNotFinished"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) DescribeDockerContainers(request *DescribeDockerContainersRequest) (response *DescribeDockerContainersResponse, err error) {
+    return c.DescribeDockerContainersWithContext(context.Background(), request)
+}
+
+// DescribeDockerContainers
+// 查询实例内的容器列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DOCKERCONTAINERSLISTTOOLARGE = "FailedOperation.DockerContainersListTooLarge"
+//  FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
+//  FAILEDOPERATION_TATINVOCATIONNOTFINISHED = "FailedOperation.TATInvocationNotFinished"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNAUTHORIZEDOPERATION_INVALIDTOKEN = "UnauthorizedOperation.InvalidToken"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) DescribeDockerContainersWithContext(ctx context.Context, request *DescribeDockerContainersRequest) (response *DescribeDockerContainersResponse, err error) {
+    if request == nil {
+        request = NewDescribeDockerContainersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDockerContainers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDockerContainersResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeFirewallRulesRequest() (request *DescribeFirewallRulesRequest) {
     request = &DescribeFirewallRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2409,6 +2979,254 @@ func (c *Client) DescribeFirewallRulesTemplateWithContext(ctx context.Context, r
     return
 }
 
+func NewDescribeFirewallTemplateApplyRecordsRequest() (request *DescribeFirewallTemplateApplyRecordsRequest) {
+    request = &DescribeFirewallTemplateApplyRecordsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeFirewallTemplateApplyRecords")
+    
+    
+    return
+}
+
+func NewDescribeFirewallTemplateApplyRecordsResponse() (response *DescribeFirewallTemplateApplyRecordsResponse) {
+    response = &DescribeFirewallTemplateApplyRecordsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeFirewallTemplateApplyRecords
+// 本接口 (DescribeFirewallTemplateApplyRecords) 用于查询防火墙模板应用记录列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeFirewallTemplateApplyRecords(request *DescribeFirewallTemplateApplyRecordsRequest) (response *DescribeFirewallTemplateApplyRecordsResponse, err error) {
+    return c.DescribeFirewallTemplateApplyRecordsWithContext(context.Background(), request)
+}
+
+// DescribeFirewallTemplateApplyRecords
+// 本接口 (DescribeFirewallTemplateApplyRecords) 用于查询防火墙模板应用记录列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeFirewallTemplateApplyRecordsWithContext(ctx context.Context, request *DescribeFirewallTemplateApplyRecordsRequest) (response *DescribeFirewallTemplateApplyRecordsResponse, err error) {
+    if request == nil {
+        request = NewDescribeFirewallTemplateApplyRecordsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeFirewallTemplateApplyRecords require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeFirewallTemplateApplyRecordsResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeFirewallTemplateQuotaRequest() (request *DescribeFirewallTemplateQuotaRequest) {
+    request = &DescribeFirewallTemplateQuotaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeFirewallTemplateQuota")
+    
+    
+    return
+}
+
+func NewDescribeFirewallTemplateQuotaResponse() (response *DescribeFirewallTemplateQuotaResponse) {
+    response = &DescribeFirewallTemplateQuotaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeFirewallTemplateQuota
+// 本接口 (DescribeFirewallTemplateQuota) 用于查询防火墙模板配额。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) DescribeFirewallTemplateQuota(request *DescribeFirewallTemplateQuotaRequest) (response *DescribeFirewallTemplateQuotaResponse, err error) {
+    return c.DescribeFirewallTemplateQuotaWithContext(context.Background(), request)
+}
+
+// DescribeFirewallTemplateQuota
+// 本接口 (DescribeFirewallTemplateQuota) 用于查询防火墙模板配额。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) DescribeFirewallTemplateQuotaWithContext(ctx context.Context, request *DescribeFirewallTemplateQuotaRequest) (response *DescribeFirewallTemplateQuotaResponse, err error) {
+    if request == nil {
+        request = NewDescribeFirewallTemplateQuotaRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeFirewallTemplateQuota require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeFirewallTemplateQuotaResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeFirewallTemplateRuleQuotaRequest() (request *DescribeFirewallTemplateRuleQuotaRequest) {
+    request = &DescribeFirewallTemplateRuleQuotaRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeFirewallTemplateRuleQuota")
+    
+    
+    return
+}
+
+func NewDescribeFirewallTemplateRuleQuotaResponse() (response *DescribeFirewallTemplateRuleQuotaResponse) {
+    response = &DescribeFirewallTemplateRuleQuotaResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeFirewallTemplateRuleQuota
+// 本接口 (DescribeFirewallTemplateRuleQuota) 用于查询防火墙模板规则配额。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) DescribeFirewallTemplateRuleQuota(request *DescribeFirewallTemplateRuleQuotaRequest) (response *DescribeFirewallTemplateRuleQuotaResponse, err error) {
+    return c.DescribeFirewallTemplateRuleQuotaWithContext(context.Background(), request)
+}
+
+// DescribeFirewallTemplateRuleQuota
+// 本接口 (DescribeFirewallTemplateRuleQuota) 用于查询防火墙模板规则配额。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+//  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+func (c *Client) DescribeFirewallTemplateRuleQuotaWithContext(ctx context.Context, request *DescribeFirewallTemplateRuleQuotaRequest) (response *DescribeFirewallTemplateRuleQuotaResponse, err error) {
+    if request == nil {
+        request = NewDescribeFirewallTemplateRuleQuotaRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeFirewallTemplateRuleQuota require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeFirewallTemplateRuleQuotaResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeFirewallTemplateRulesRequest() (request *DescribeFirewallTemplateRulesRequest) {
+    request = &DescribeFirewallTemplateRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeFirewallTemplateRules")
+    
+    
+    return
+}
+
+func NewDescribeFirewallTemplateRulesResponse() (response *DescribeFirewallTemplateRulesResponse) {
+    response = &DescribeFirewallTemplateRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeFirewallTemplateRules
+// 本接口 (DescribeFirewallTemplateRules) 用于查询防火墙模板规则列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+func (c *Client) DescribeFirewallTemplateRules(request *DescribeFirewallTemplateRulesRequest) (response *DescribeFirewallTemplateRulesResponse, err error) {
+    return c.DescribeFirewallTemplateRulesWithContext(context.Background(), request)
+}
+
+// DescribeFirewallTemplateRules
+// 本接口 (DescribeFirewallTemplateRules) 用于查询防火墙模板规则列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  RESOURCENOTFOUND_FIREWALLTEMPLATENOTFOUND = "ResourceNotFound.FirewallTemplateNotFound"
+func (c *Client) DescribeFirewallTemplateRulesWithContext(ctx context.Context, request *DescribeFirewallTemplateRulesRequest) (response *DescribeFirewallTemplateRulesResponse, err error) {
+    if request == nil {
+        request = NewDescribeFirewallTemplateRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeFirewallTemplateRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeFirewallTemplateRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewDescribeFirewallTemplatesRequest() (request *DescribeFirewallTemplatesRequest) {
+    request = &DescribeFirewallTemplatesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "DescribeFirewallTemplates")
+    
+    
+    return
+}
+
+func NewDescribeFirewallTemplatesResponse() (response *DescribeFirewallTemplatesResponse) {
+    response = &DescribeFirewallTemplatesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeFirewallTemplates
+// 本接口 (DescribeFirewallTemplates) 用于查询防火墙模板列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeFirewallTemplates(request *DescribeFirewallTemplatesRequest) (response *DescribeFirewallTemplatesResponse, err error) {
+    return c.DescribeFirewallTemplatesWithContext(context.Background(), request)
+}
+
+// DescribeFirewallTemplates
+// 本接口 (DescribeFirewallTemplates) 用于查询防火墙模板列表。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) DescribeFirewallTemplatesWithContext(ctx context.Context, request *DescribeFirewallTemplatesRequest) (response *DescribeFirewallTemplatesResponse, err error) {
+    if request == nil {
+        request = NewDescribeFirewallTemplatesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeFirewallTemplates require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeFirewallTemplatesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeGeneralResourceQuotasRequest() (request *DescribeGeneralResourceQuotasRequest) {
     request = &DescribeGeneralResourceQuotasRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2485,6 +3303,7 @@ func NewDescribeInstanceLoginKeyPairAttributeResponse() (response *DescribeInsta
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
+//  UNSUPPORTEDOPERATION_OPERATIONOFFLINE = "UnsupportedOperation.OperationOffline"
 func (c *Client) DescribeInstanceLoginKeyPairAttribute(request *DescribeInstanceLoginKeyPairAttributeRequest) (response *DescribeInstanceLoginKeyPairAttributeResponse, err error) {
     return c.DescribeInstanceLoginKeyPairAttributeWithContext(context.Background(), request)
 }
@@ -2495,6 +3314,7 @@ func (c *Client) DescribeInstanceLoginKeyPairAttribute(request *DescribeInstance
 // 可能返回的错误码:
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
+//  UNSUPPORTEDOPERATION_OPERATIONOFFLINE = "UnsupportedOperation.OperationOffline"
 func (c *Client) DescribeInstanceLoginKeyPairAttributeWithContext(ctx context.Context, request *DescribeInstanceLoginKeyPairAttributeRequest) (response *DescribeInstanceLoginKeyPairAttributeResponse, err error) {
     if request == nil {
         request = NewDescribeInstanceLoginKeyPairAttributeRequest()
@@ -2681,6 +3501,7 @@ func NewDescribeInstancesResponse() (response *DescribeInstancesResponse) {
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
 func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response *DescribeInstancesResponse, err error) {
     return c.DescribeInstancesWithContext(context.Background(), request)
 }
@@ -2721,6 +3542,7 @@ func (c *Client) DescribeInstances(request *DescribeInstancesRequest) (response 
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
+//  UNAUTHORIZEDOPERATION_TOKENINVALID = "UnauthorizedOperation.TokenInvalid"
 func (c *Client) DescribeInstancesWithContext(ctx context.Context, request *DescribeInstancesRequest) (response *DescribeInstancesResponse, err error) {
     if request == nil {
         request = NewDescribeInstancesRequest()
@@ -3079,6 +3901,7 @@ func NewDescribeModifyInstanceBundlesResponse() (response *DescribeModifyInstanc
 // 本接口（DescribeModifyInstanceBundles）用于查询实例可变更套餐列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_DESCRIBEINSTANCESMODIFICATIONERROR = "FailedOperation.DescribeInstancesModificationError"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
@@ -3115,6 +3938,7 @@ func (c *Client) DescribeModifyInstanceBundles(request *DescribeModifyInstanceBu
 // 本接口（DescribeModifyInstanceBundles）用于查询实例可变更套餐列表。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_DESCRIBEINSTANCESMODIFICATIONERROR = "FailedOperation.DescribeInstancesModificationError"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
@@ -3453,6 +4277,7 @@ func NewDescribeSnapshotsDeniedActionsResponse() (response *DescribeSnapshotsDen
 // 本接口（DescribeSnapshotsDeniedActions）用于查询一个或多个快照的操作限制列表信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
@@ -3467,6 +4292,7 @@ func (c *Client) DescribeSnapshotsDeniedActions(request *DescribeSnapshotsDenied
 // 本接口（DescribeSnapshotsDeniedActions）用于查询一个或多个快照的操作限制列表信息。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
@@ -3562,7 +4388,7 @@ func NewDetachCcnResponse() (response *DetachCcnResponse) {
 }
 
 // DetachCcn
-// 本接口 (AttachCcn) 用于解除与云联网的关联。
+// 本接口 (DetachCcn) 用于解除与云联网的关联。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -3575,7 +4401,7 @@ func (c *Client) DetachCcn(request *DetachCcnRequest) (response *DetachCcnRespon
 }
 
 // DetachCcn
-// 本接口 (AttachCcn) 用于解除与云联网的关联。
+// 本接口 (DetachCcn) 用于解除与云联网的关联。
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -3911,6 +4737,7 @@ func NewInquirePriceCreateDisksResponse() (response *InquirePriceCreateDisksResp
 // 本接口（InquirePriceCreateDisks）用于新购云硬盘询价。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
@@ -3925,6 +4752,7 @@ func (c *Client) InquirePriceCreateDisks(request *InquirePriceCreateDisksRequest
 // 本接口（InquirePriceCreateDisks）用于新购云硬盘询价。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  FAILEDOPERATION_TRADEGETPRICEFAILED = "FailedOperation.TradeGetPriceFailed"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
@@ -4409,6 +5237,7 @@ func NewModifyDiskBackupsAttributeResponse() (response *ModifyDiskBackupsAttribu
 // 本接口 (ModifyDiskBackupsAttribute) 用于修改云硬盘备份点属性。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_ONLYALLOWMODIFYONEATTRIBUTE = "InvalidParameter.OnlyAllowModifyOneAttribute"
 //  INVALIDPARAMETERVALUE_DISKBACKUPIDMALFORMED = "InvalidParameterValue.DiskBackupIdMalformed"
 //  RESOURCENOTFOUND_DISKBACKUPIDNOTFOUND = "ResourceNotFound.DiskBackupIdNotFound"
 //  RESOURCENOTFOUND_DISKBACKUPNOTFOUND = "ResourceNotFound.DiskBackupNotFound"
@@ -4421,6 +5250,7 @@ func (c *Client) ModifyDiskBackupsAttribute(request *ModifyDiskBackupsAttributeR
 // 本接口 (ModifyDiskBackupsAttribute) 用于修改云硬盘备份点属性。
 //
 // 可能返回的错误码:
+//  INVALIDPARAMETER_ONLYALLOWMODIFYONEATTRIBUTE = "InvalidParameter.OnlyAllowModifyOneAttribute"
 //  INVALIDPARAMETERVALUE_DISKBACKUPIDMALFORMED = "InvalidParameterValue.DiskBackupIdMalformed"
 //  RESOURCENOTFOUND_DISKBACKUPIDNOTFOUND = "ResourceNotFound.DiskBackupIdNotFound"
 //  RESOURCENOTFOUND_DISKBACKUPNOTFOUND = "ResourceNotFound.DiskBackupNotFound"
@@ -4463,6 +5293,7 @@ func NewModifyDisksAttributeResponse() (response *ModifyDisksAttributeResponse) 
 // 本接口(ModifyDisksAttribute)用于修改云硬盘属性。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_MODIFYRESOURCESATTRIBUTEFAILED = "FailedOperation.ModifyResourcesAttributeFailed"
 //  INTERNALERROR_TRADECALLBILLINGGATEWAYFAILED = "InternalError.TradeCallBillingGatewayFailed"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
@@ -4479,6 +5310,7 @@ func (c *Client) ModifyDisksAttribute(request *ModifyDisksAttributeRequest) (res
 // 本接口(ModifyDisksAttribute)用于修改云硬盘属性。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_MODIFYRESOURCESATTRIBUTEFAILED = "FailedOperation.ModifyResourcesAttributeFailed"
 //  INTERNALERROR_TRADECALLBILLINGGATEWAYFAILED = "InternalError.TradeCallBillingGatewayFailed"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  INVALIDPARAMETERVALUE_INVALIDDISKIDMALFORMED = "InvalidParameterValue.InvalidDiskIdMalformed"
@@ -4559,6 +5391,86 @@ func (c *Client) ModifyDisksRenewFlagWithContext(ctx context.Context, request *M
     request.SetContext(ctx)
     
     response = NewModifyDisksRenewFlagResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyDockerContainerRequest() (request *ModifyDockerContainerRequest) {
+    request = &ModifyDockerContainerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "ModifyDockerContainer")
+    
+    
+    return
+}
+
+func NewModifyDockerContainerResponse() (response *ModifyDockerContainerResponse) {
+    response = &ModifyDockerContainerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyDockerContainer
+// 修改实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重建情况。
+//
+// 请注意：本接口会重新创建并运行实例内的Docker容器。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DOCKERCONTAINERSLISTTOOLARGE = "FailedOperation.DockerContainersListTooLarge"
+//  FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
+//  FAILEDOPERATION_TATINVOCATIONNOTFINISHED = "FailedOperation.TATInvocationNotFinished"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) ModifyDockerContainer(request *ModifyDockerContainerRequest) (response *ModifyDockerContainerResponse, err error) {
+    return c.ModifyDockerContainerWithContext(context.Background(), request)
+}
+
+// ModifyDockerContainer
+// 修改实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重建情况。
+//
+// 请注意：本接口会重新创建并运行实例内的Docker容器。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION_DOCKERCONTAINERSLISTTOOLARGE = "FailedOperation.DockerContainersListTooLarge"
+//  FAILEDOPERATION_DOCKEROPERATIONFAILED = "FailedOperation.DockerOperationFailed"
+//  FAILEDOPERATION_TATINVOCATIONNOTFINISHED = "FailedOperation.TATInvocationNotFinished"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) ModifyDockerContainerWithContext(ctx context.Context, request *ModifyDockerContainerRequest) (response *ModifyDockerContainerResponse, err error) {
+    if request == nil {
+        request = NewModifyDockerContainerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyDockerContainer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyDockerContainerResponse()
     err = c.Send(request, response)
     return
 }
@@ -4705,6 +5617,7 @@ func NewModifyFirewallRulesResponse() (response *ModifyFirewallRulesResponse) {
 // * FirewallRuleDescription 字段长度不得超过 64。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_FIREWALLRULESOPERATIONFAILED = "FailedOperation.FirewallRulesOperationFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
@@ -4748,6 +5661,7 @@ func (c *Client) ModifyFirewallRules(request *ModifyFirewallRulesRequest) (respo
 // * FirewallRuleDescription 字段长度不得超过 64。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_FIREWALLRULESOPERATIONFAILED = "FailedOperation.FirewallRulesOperationFailed"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
 //  INTERNALERROR_REQUESTERROR = "InternalError.RequestError"
@@ -4773,6 +5687,54 @@ func (c *Client) ModifyFirewallRulesWithContext(ctx context.Context, request *Mo
     request.SetContext(ctx)
     
     response = NewModifyFirewallRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewModifyFirewallTemplateRequest() (request *ModifyFirewallTemplateRequest) {
+    request = &ModifyFirewallTemplateRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "ModifyFirewallTemplate")
+    
+    
+    return
+}
+
+func NewModifyFirewallTemplateResponse() (response *ModifyFirewallTemplateResponse) {
+    response = &ModifyFirewallTemplateResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ModifyFirewallTemplate
+// 本接口 (ModifyFirewallTemplate) 用于修改防火墙模板。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) ModifyFirewallTemplate(request *ModifyFirewallTemplateRequest) (response *ModifyFirewallTemplateResponse, err error) {
+    return c.ModifyFirewallTemplateWithContext(context.Background(), request)
+}
+
+// ModifyFirewallTemplate
+// 本接口 (ModifyFirewallTemplate) 用于修改防火墙模板。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) ModifyFirewallTemplateWithContext(ctx context.Context, request *ModifyFirewallTemplateRequest) (response *ModifyFirewallTemplateResponse, err error) {
+    if request == nil {
+        request = NewModifyFirewallTemplateRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ModifyFirewallTemplate require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewModifyFirewallTemplateResponse()
     err = c.Send(request, response)
     return
 }
@@ -4900,6 +5862,7 @@ func NewModifyInstancesBundleResponse() (response *ModifyInstancesBundleResponse
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_MODIFYINSTANCESBUNDLEFAILED = "FailedOperation.ModifyInstancesBundleFailed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
@@ -4929,6 +5892,7 @@ func (c *Client) ModifyInstancesBundle(request *ModifyInstancesBundleRequest) (r
 //  AUTHFAILURE = "AuthFailure"
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_MODIFYINSTANCESBUNDLEFAILED = "FailedOperation.ModifyInstancesBundleFailed"
 //  INTERNALERROR = "InternalError"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
@@ -4991,6 +5955,7 @@ func NewModifyInstancesLoginKeyPairAttributeResponse() (response *ModifyInstance
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_OPERATIONOFFLINE = "UnsupportedOperation.OperationOffline"
 func (c *Client) ModifyInstancesLoginKeyPairAttribute(request *ModifyInstancesLoginKeyPairAttributeRequest) (response *ModifyInstancesLoginKeyPairAttributeResponse, err error) {
     return c.ModifyInstancesLoginKeyPairAttributeWithContext(context.Background(), request)
 }
@@ -5011,6 +5976,7 @@ func (c *Client) ModifyInstancesLoginKeyPairAttribute(request *ModifyInstancesLo
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
 //  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
 //  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+//  UNSUPPORTEDOPERATION_OPERATIONOFFLINE = "UnsupportedOperation.OperationOffline"
 func (c *Client) ModifyInstancesLoginKeyPairAttributeWithContext(ctx context.Context, request *ModifyInstancesLoginKeyPairAttributeRequest) (response *ModifyInstancesLoginKeyPairAttributeResponse, err error) {
     if request == nil {
         request = NewModifyInstancesLoginKeyPairAttributeRequest()
@@ -5055,7 +6021,9 @@ func NewModifyInstancesRenewFlagResponse() (response *ModifyInstancesRenewFlagRe
 // * 支持批量操作。每次请求批量实例的上限为100。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
+//  FAILEDOPERATION_TRADECALLBILLINGGATEWAYFAILED = "FailedOperation.TradeCallBillingGatewayFailed"
 //  INTERNALERROR_TRADECALLBILLINGGATEWAYFAILED = "InternalError.TradeCallBillingGatewayFailed"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -5080,7 +6048,9 @@ func (c *Client) ModifyInstancesRenewFlag(request *ModifyInstancesRenewFlagReque
 // * 支持批量操作。每次请求批量实例的上限为100。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_REQUESTERROR = "FailedOperation.RequestError"
+//  FAILEDOPERATION_TRADECALLBILLINGGATEWAYFAILED = "FailedOperation.TradeCallBillingGatewayFailed"
 //  INTERNALERROR_TRADECALLBILLINGGATEWAYFAILED = "InternalError.TradeCallBillingGatewayFailed"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
@@ -5259,6 +6229,148 @@ func (c *Client) RebootInstancesWithContext(ctx context.Context, request *Reboot
     return
 }
 
+func NewRemoveDockerContainersRequest() (request *RemoveDockerContainersRequest) {
+    request = &RemoveDockerContainersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "RemoveDockerContainers")
+    
+    
+    return
+}
+
+func NewRemoveDockerContainersResponse() (response *RemoveDockerContainersResponse) {
+    response = &RemoveDockerContainersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// RemoveDockerContainers
+// 删除实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询删除情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) RemoveDockerContainers(request *RemoveDockerContainersRequest) (response *RemoveDockerContainersResponse, err error) {
+    return c.RemoveDockerContainersWithContext(context.Background(), request)
+}
+
+// RemoveDockerContainers
+// 删除实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询删除情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) RemoveDockerContainersWithContext(ctx context.Context, request *RemoveDockerContainersRequest) (response *RemoveDockerContainersResponse, err error) {
+    if request == nil {
+        request = NewRemoveDockerContainersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RemoveDockerContainers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRemoveDockerContainersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRenameDockerContainerRequest() (request *RenameDockerContainerRequest) {
+    request = &RenameDockerContainerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "RenameDockerContainer")
+    
+    
+    return
+}
+
+func NewRenameDockerContainerResponse() (response *RenameDockerContainerResponse) {
+    response = &RenameDockerContainerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// RenameDockerContainer
+// 重命名实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重命名情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) RenameDockerContainer(request *RenameDockerContainerRequest) (response *RenameDockerContainerResponse, err error) {
+    return c.RenameDockerContainerWithContext(context.Background(), request)
+}
+
+// RenameDockerContainer
+// 重命名实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重命名情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) RenameDockerContainerWithContext(ctx context.Context, request *RenameDockerContainerRequest) (response *RenameDockerContainerResponse, err error) {
+    if request == nil {
+        request = NewRenameDockerContainerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RenameDockerContainer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRenameDockerContainerResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewRenewDisksRequest() (request *RenewDisksRequest) {
     request = &RenewDisksRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5289,6 +6401,7 @@ func NewRenewDisksResponse() (response *RenewDisksResponse) {
 // 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。云硬盘操作结果可以通过调用 [DescribeDisks](https://cloud.tencent.com/document/product/1207/66093) 接口查询，如果云硬盘的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_RENEWRESOURCESFAILED = "FailedOperation.RenewResourcesFailed"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_INVALIDCURINSTANCEDEADLINE = "InvalidParameterValue.InvalidCurInstanceDeadline"
@@ -5314,6 +6427,7 @@ func (c *Client) RenewDisks(request *RenewDisksRequest) (response *RenewDisksRes
 // 本接口为异步接口，请求发送成功后会返回一个 RequestId，此时操作并未立即完成。云硬盘操作结果可以通过调用 [DescribeDisks](https://cloud.tencent.com/document/product/1207/66093) 接口查询，如果云硬盘的最新操作状态（LatestOperationState）为“SUCCESS”，则代表操作成功。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_RENEWRESOURCESFAILED = "FailedOperation.RenewResourcesFailed"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_INVALIDCURINSTANCEDEADLINE = "InvalidParameterValue.InvalidCurInstanceDeadline"
@@ -5368,6 +6482,7 @@ func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_RENEWRESOURCESFAILED = "FailedOperation.RenewResourcesFailed"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 //  INVALIDPARAMETER_INVALIDFILTERINVALIDKEY = "InvalidParameter.InvalidFilterInvalidKey"
@@ -5385,6 +6500,7 @@ func NewRenewInstancesResponse() (response *RenewInstancesResponse) {
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  UNSUPPORTEDOPERATION_DISKLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskLatestOperationUnfinished"
 //  UNSUPPORTEDOPERATION_INVALIDDISKSTATE = "UnsupportedOperation.InvalidDiskState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
 func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *RenewInstancesResponse, err error) {
     return c.RenewInstancesWithContext(context.Background(), request)
 }
@@ -5400,6 +6516,7 @@ func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *Renew
 //
 // 可能返回的错误码:
 //  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
 //  FAILEDOPERATION_RENEWRESOURCESFAILED = "FailedOperation.RenewResourcesFailed"
 //  INVALIDPARAMETER_INVALIDFILTER = "InvalidParameter.InvalidFilter"
 //  INVALIDPARAMETER_INVALIDFILTERINVALIDKEY = "InvalidParameter.InvalidFilterInvalidKey"
@@ -5417,6 +6534,7 @@ func (c *Client) RenewInstances(request *RenewInstancesRequest) (response *Renew
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
 //  UNSUPPORTEDOPERATION_DISKLATESTOPERATIONUNFINISHED = "UnsupportedOperation.DiskLatestOperationUnfinished"
 //  UNSUPPORTEDOPERATION_INVALIDDISKSTATE = "UnsupportedOperation.InvalidDiskState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
 func (c *Client) RenewInstancesWithContext(ctx context.Context, request *RenewInstancesRequest) (response *RenewInstancesResponse, err error) {
     if request == nil {
         request = NewRenewInstancesRequest()
@@ -5429,6 +6547,122 @@ func (c *Client) RenewInstancesWithContext(ctx context.Context, request *RenewIn
     request.SetContext(ctx)
     
     response = NewRenewInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewReplaceFirewallTemplateRuleRequest() (request *ReplaceFirewallTemplateRuleRequest) {
+    request = &ReplaceFirewallTemplateRuleRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "ReplaceFirewallTemplateRule")
+    
+    
+    return
+}
+
+func NewReplaceFirewallTemplateRuleResponse() (response *ReplaceFirewallTemplateRuleResponse) {
+    response = &ReplaceFirewallTemplateRuleResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ReplaceFirewallTemplateRule
+// 本接口 (ReplaceFirewallTemplateRules) 用于替换防火墙模板规则。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+func (c *Client) ReplaceFirewallTemplateRule(request *ReplaceFirewallTemplateRuleRequest) (response *ReplaceFirewallTemplateRuleResponse, err error) {
+    return c.ReplaceFirewallTemplateRuleWithContext(context.Background(), request)
+}
+
+// ReplaceFirewallTemplateRule
+// 本接口 (ReplaceFirewallTemplateRules) 用于替换防火墙模板规则。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INVALIDPARAMETERVALUE_DUPLICATEDFIREWALLTEMPLATERULE = "InvalidParameterValue.DuplicatedFirewallTemplateRule"
+func (c *Client) ReplaceFirewallTemplateRuleWithContext(ctx context.Context, request *ReplaceFirewallTemplateRuleRequest) (response *ReplaceFirewallTemplateRuleResponse, err error) {
+    if request == nil {
+        request = NewReplaceFirewallTemplateRuleRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ReplaceFirewallTemplateRule require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewReplaceFirewallTemplateRuleResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRerunDockerContainerRequest() (request *RerunDockerContainerRequest) {
+    request = &RerunDockerContainerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "RerunDockerContainer")
+    
+    
+    return
+}
+
+func NewRerunDockerContainerResponse() (response *RerunDockerContainerResponse) {
+    response = &RerunDockerContainerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// RerunDockerContainer
+// 重新创建并运行实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重建情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) RerunDockerContainer(request *RerunDockerContainerRequest) (response *RerunDockerContainerResponse, err error) {
+    return c.RerunDockerContainerWithContext(context.Background(), request)
+}
+
+// RerunDockerContainer
+// 重新创建并运行实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重建情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) RerunDockerContainerWithContext(ctx context.Context, request *RerunDockerContainerRequest) (response *RerunDockerContainerResponse, err error) {
+    if request == nil {
+        request = NewRerunDockerContainerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RerunDockerContainer require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRerunDockerContainerResponse()
     err = c.Send(request, response)
     return
 }
@@ -5493,6 +6727,54 @@ func (c *Client) ResetAttachCcnWithContext(ctx context.Context, request *ResetAt
     return
 }
 
+func NewResetFirewallTemplateRulesRequest() (request *ResetFirewallTemplateRulesRequest) {
+    request = &ResetFirewallTemplateRulesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "ResetFirewallTemplateRules")
+    
+    
+    return
+}
+
+func NewResetFirewallTemplateRulesResponse() (response *ResetFirewallTemplateRulesResponse) {
+    response = &ResetFirewallTemplateRulesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// ResetFirewallTemplateRules
+// 本接口 (ResetFirewallTemplateRules) 用于重置防火墙模板下所有规则。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) ResetFirewallTemplateRules(request *ResetFirewallTemplateRulesRequest) (response *ResetFirewallTemplateRulesResponse, err error) {
+    return c.ResetFirewallTemplateRulesWithContext(context.Background(), request)
+}
+
+// ResetFirewallTemplateRules
+// 本接口 (ResetFirewallTemplateRules) 用于重置防火墙模板下所有规则。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+func (c *Client) ResetFirewallTemplateRulesWithContext(ctx context.Context, request *ResetFirewallTemplateRulesRequest) (response *ResetFirewallTemplateRulesResponse, err error) {
+    if request == nil {
+        request = NewResetFirewallTemplateRulesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("ResetFirewallTemplateRules require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewResetFirewallTemplateRulesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewResetInstanceRequest() (request *ResetInstanceRequest) {
     request = &ResetInstanceRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5534,6 +6816,8 @@ func NewResetInstanceResponse() (response *ResetInstanceResponse) {
 //  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERCOMBINATION = "InvalidParameterValue.InvalidParameterCombination"
+//  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_NOTALLOWTOCHANGEPLATFORMTYPE = "InvalidParameterValue.NotAllowToChangePlatformType"
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
@@ -5543,6 +6827,7 @@ func NewResetInstanceResponse() (response *ResetInstanceResponse) {
 //  RESOURCENOTFOUND_BLUEPRINTIDNOTFOUND = "ResourceNotFound.BlueprintIdNotFound"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCEUNAVAILABLE_BLUEPRINTUNAVAILABLE = "ResourceUnavailable.BlueprintUnavailable"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
@@ -5576,6 +6861,8 @@ func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetIn
 //  INVALIDPARAMETERVALUE_BLUEPRINTIDMALFORMED = "InvalidParameterValue.BlueprintIdMalformed"
 //  INVALIDPARAMETERVALUE_DUPLICATED = "InvalidParameterValue.Duplicated"
 //  INVALIDPARAMETERVALUE_INSTANCEIDMALFORMED = "InvalidParameterValue.InstanceIdMalformed"
+//  INVALIDPARAMETERVALUE_INVALIDPARAMETERCOMBINATION = "InvalidParameterValue.InvalidParameterCombination"
+//  INVALIDPARAMETERVALUE_INVALIDPASSWORD = "InvalidParameterValue.InvalidPassword"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
 //  INVALIDPARAMETERVALUE_NOTALLOWTOCHANGEPLATFORMTYPE = "InvalidParameterValue.NotAllowToChangePlatformType"
 //  INVALIDPARAMETERVALUE_OUTOFRANGE = "InvalidParameterValue.OutOfRange"
@@ -5585,6 +6872,7 @@ func (c *Client) ResetInstance(request *ResetInstanceRequest) (response *ResetIn
 //  RESOURCENOTFOUND_BLUEPRINTIDNOTFOUND = "ResourceNotFound.BlueprintIdNotFound"
 //  RESOURCENOTFOUND_INSTANCEIDNOTFOUND = "ResourceNotFound.InstanceIdNotFound"
 //  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_KEYPAIRNOTFOUND = "ResourceNotFound.KeyPairNotFound"
 //  RESOURCEUNAVAILABLE_BLUEPRINTUNAVAILABLE = "ResourceUnavailable.BlueprintUnavailable"
 //  UNAUTHORIZEDOPERATION_MFANOTFOUND = "UnauthorizedOperation.MFANotFound"
 //  UNAUTHORIZEDOPERATION_NOPERMISSION = "UnauthorizedOperation.NoPermission"
@@ -5639,6 +6927,7 @@ func NewResetInstancesPasswordResponse() (response *ResetInstancesPasswordRespon
 // 注意：强制关机的效果等同于关闭物理计算机的电源开关。强制关机可能会导致数据丢失或文件系统损坏。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -5676,6 +6965,7 @@ func (c *Client) ResetInstancesPassword(request *ResetInstancesPasswordRequest) 
 // 注意：强制关机的效果等同于关闭物理计算机的电源开关。强制关机可能会导致数据丢失或文件系统损坏。
 //
 // 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_DESCRIBEINSTANCESTATUS = "FailedOperation.DescribeInstanceStatus"
 //  FAILEDOPERATION_INSTANCEOPERATIONFAILED = "FailedOperation.InstanceOperationFailed"
 //  INTERNALERROR_DESCRIBEINSTANCESTATUS = "InternalError.DescribeInstanceStatus"
@@ -5707,6 +6997,220 @@ func (c *Client) ResetInstancesPasswordWithContext(ctx context.Context, request 
     request.SetContext(ctx)
     
     response = NewResetInstancesPasswordResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRestartDockerContainersRequest() (request *RestartDockerContainersRequest) {
+    request = &RestartDockerContainersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "RestartDockerContainers")
+    
+    
+    return
+}
+
+func NewRestartDockerContainersResponse() (response *RestartDockerContainersResponse) {
+    response = &RestartDockerContainersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// RestartDockerContainers
+// 重启实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重启情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) RestartDockerContainers(request *RestartDockerContainersRequest) (response *RestartDockerContainersResponse, err error) {
+    return c.RestartDockerContainersWithContext(context.Background(), request)
+}
+
+// RestartDockerContainers
+// 重启实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询重启情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) RestartDockerContainersWithContext(ctx context.Context, request *RestartDockerContainersRequest) (response *RestartDockerContainersResponse, err error) {
+    if request == nil {
+        request = NewRestartDockerContainersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RestartDockerContainers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRestartDockerContainersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewRunDockerContainersRequest() (request *RunDockerContainersRequest) {
+    request = &RunDockerContainersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "RunDockerContainers")
+    
+    
+    return
+}
+
+func NewRunDockerContainersResponse() (response *RunDockerContainersResponse) {
+    response = &RunDockerContainersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// RunDockerContainers
+// 创建并运行多个Docker容器，之后可以通过返回的ActivityIds调用DescribeDockerActivities接口查询创建情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) RunDockerContainers(request *RunDockerContainersRequest) (response *RunDockerContainersResponse, err error) {
+    return c.RunDockerContainersWithContext(context.Background(), request)
+}
+
+// RunDockerContainers
+// 创建并运行多个Docker容器，之后可以通过返回的ActivityIds调用DescribeDockerActivities接口查询创建情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLARGE = "InvalidParameterValue.TooLarge"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) RunDockerContainersWithContext(ctx context.Context, request *RunDockerContainersRequest) (response *RunDockerContainersResponse, err error) {
+    if request == nil {
+        request = NewRunDockerContainersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("RunDockerContainers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewRunDockerContainersResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStartDockerContainersRequest() (request *StartDockerContainersRequest) {
+    request = &StartDockerContainersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "StartDockerContainers")
+    
+    
+    return
+}
+
+func NewStartDockerContainersResponse() (response *StartDockerContainersResponse) {
+    response = &StartDockerContainersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// StartDockerContainers
+// 启动实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询启动情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) StartDockerContainers(request *StartDockerContainersRequest) (response *StartDockerContainersResponse, err error) {
+    return c.StartDockerContainersWithContext(context.Background(), request)
+}
+
+// StartDockerContainers
+// 启动实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询启动情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) StartDockerContainersWithContext(ctx context.Context, request *StartDockerContainersRequest) (response *StartDockerContainersResponse, err error) {
+    if request == nil {
+        request = NewStartDockerContainersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StartDockerContainers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStartDockerContainersResponse()
     err = c.Send(request, response)
     return
 }
@@ -5801,6 +7305,78 @@ func (c *Client) StartInstancesWithContext(ctx context.Context, request *StartIn
     request.SetContext(ctx)
     
     response = NewStartInstancesResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewStopDockerContainersRequest() (request *StopDockerContainersRequest) {
+    request = &StopDockerContainersRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("lighthouse", APIVersion, "StopDockerContainers")
+    
+    
+    return
+}
+
+func NewStopDockerContainersResponse() (response *StopDockerContainersResponse) {
+    response = &StopDockerContainersResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// StopDockerContainers
+// 停止实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询停止情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) StopDockerContainers(request *StopDockerContainersRequest) (response *StopDockerContainersResponse, err error) {
+    return c.StopDockerContainersWithContext(context.Background(), request)
+}
+
+// StopDockerContainers
+// 停止实例内的Docker容器，之后可以通过返回的ActivityId调用DescribeDockerActivities接口查询停止情况。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+//  RESOURCENOTFOUND_INSTANCENOTFOUND = "ResourceNotFound.InstanceNotFound"
+//  RESOURCENOTFOUND_ROLENOTFOUND = "ResourceNotFound.RoleNotFound"
+//  RESOURCEUNAVAILABLE_BLUEPRINTINVALID = "ResourceUnavailable.BlueprintInvalid"
+//  RESOURCEUNAVAILABLE_DOCKERUNAVAILABLE = "ResourceUnavailable.DockerUnavailable"
+//  RESOURCEUNAVAILABLE_TATAGENTUNAVAILABLE = "ResourceUnavailable.TATAgentUnavailable"
+//  RESOURCEUNAVAILABLE_TATSERVICEERROR = "ResourceUnavailable.TATServiceError"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_INVALIDINSTANCESTATE = "UnsupportedOperation.InvalidInstanceState"
+//  UNSUPPORTEDOPERATION_LATESTOPERATIONUNFINISHED = "UnsupportedOperation.LatestOperationUnfinished"
+func (c *Client) StopDockerContainersWithContext(ctx context.Context, request *StopDockerContainersRequest) (response *StopDockerContainersResponse, err error) {
+    if request == nil {
+        request = NewStopDockerContainersRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("StopDockerContainers require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewStopDockerContainersResponse()
     err = c.Send(request, response)
     return
 }
