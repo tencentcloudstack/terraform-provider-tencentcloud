@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -99,7 +100,7 @@ func (me *TseService) CheckTseInstanceStatusById(ctx context.Context, instanceId
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create mariadb fail, reason:%s\n ", logId, err.Error())
+		log.Printf("[CRITAL]%s %s instance fail, reason:%s\n ", logId, operate, err.Error())
 		errRet = err
 		return
 	}
@@ -894,6 +895,122 @@ func (me *TseService) DeleteTseCngwCanaryRuleById(ctx context.Context, gatewayId
 		return
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwGatewayById(ctx context.Context, gatewayId string) (cngwGateway *tse.DescribeCloudNativeAPIGatewayResult, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeCloudNativeAPIGatewayRequest()
+	request.GatewayId = &gatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeCloudNativeAPIGateway(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.Result == nil {
+		return
+	}
+
+	cngwGateway = response.Response.Result
+	return
+}
+
+func (me *TseService) DeleteTseCngwGatewayById(ctx context.Context, gatewayId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDeleteCloudNativeAPIGatewayRequest()
+	request.GatewayId = &gatewayId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteCloudNativeAPIGateway(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *TseService) CheckTseNativeAPIGatewayStatusById(ctx context.Context, gatewayId, operate string) (errRet error) {
+	logId := getLogId(ctx)
+
+	err := resource.Retry(7*readRetryTimeout, func() *resource.RetryError {
+		gateway, e := me.DescribeTseCngwGatewayById(ctx, gatewayId)
+		if e != nil && operate != "delete" {
+			return resource.NonRetryableError(e)
+		}
+
+		if operate == "create" {
+			if gateway == nil {
+				return resource.NonRetryableError(fmt.Errorf("gateway %s not exists", gatewayId))
+			}
+
+			if *gateway.Status == "Creating" {
+				return resource.RetryableError(fmt.Errorf("create gateway status is %v,start retrying ...", *gateway.Status))
+			}
+			if *gateway.Status == "Running" {
+				return nil
+			}
+		}
+
+		if operate == "update" {
+			if gateway == nil {
+				return resource.NonRetryableError(fmt.Errorf("gateway %s not exists", gatewayId))
+			}
+
+			if *gateway.Status == "Modifying" {
+				return resource.RetryableError(fmt.Errorf("update gateway status is %v,start retrying ...", *gateway.Status))
+			}
+			if *gateway.Status == "Running" {
+				return nil
+			}
+		}
+
+		if operate == "delete" {
+			if e != nil {
+				if sdkErr, ok := e.(*sdkError.TencentCloudSDKError); ok {
+					if sdkErr.Code == "ResourceNotFound.InstanceNotFound" {
+						return nil
+					}
+				}
+			}
+			if gateway == nil {
+				return nil
+			}
+
+			if *gateway.Status == "Deleting" {
+				return resource.RetryableError(fmt.Errorf("delete gateway status is %v,start retrying ...", *gateway.Status))
+			}
+		}
+		return resource.NonRetryableError(fmt.Errorf("gateway status is %v,we won't wait for it finish", *gateway.Status))
+	})
+
+	if err != nil {
+		log.Printf("[CRITAL]%s %s gateway fail, reason:%s\n ", logId, operate, err.Error())
+		errRet = err
+		return
+	}
 
 	return
 }

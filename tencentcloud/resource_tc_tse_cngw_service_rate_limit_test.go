@@ -99,42 +99,23 @@ func testAccCheckTseCngwServiceRateLimitExists(r string) resource.TestCheckFunc 
 const testAccTseCngwServiceRateLimit = DefaultTseVar + `
 
 resource "tencentcloud_tse_cngw_service_rate_limit" "cngw_service_rate_limit" {
-  gateway_id = var.gateway_id
-  name = "451a9920-e67a-4519-af41-fccac0e72005"
-  limit_detail {
-		enabled = true
-		qps_thresholds {
-			unit = "second"
-			max = 50
-		}
-		limit_by = "ip"
-		response_type = "default"
-		hide_client_headers = false
-		is_delay = false
-		path = "/test"
-		header = "auth"
-		external_redis {
-			redis_host = ""
-			redis_password = ""
-			redis_port = 
-			redis_timeout = 
-		}
-		policy = "redis"
-		rate_limit_response {
-			body = ""
-			headers {
-				key = ""
-				value = ""
-			}
-			http_status = 
-		}
-		rate_limit_response_url = ""
-		line_up_time = 
+    gateway_id = "gateway-ddbb709b"
+    name       = "terraform-test"
 
-  }
-  tags = {
-    "createdBy" = "terraform"
-  }
+    limit_detail {
+        enabled             = true
+        hide_client_headers = true
+        is_delay            = true
+        limit_by            = "ip"
+        line_up_time        = 11
+        policy              = "redis"
+        response_type       = "default"
+
+        qps_thresholds {
+            max  = 14
+            unit = "second"
+        }
+    }
 }
 
 `
