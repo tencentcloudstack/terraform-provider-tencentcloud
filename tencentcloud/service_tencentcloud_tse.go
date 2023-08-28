@@ -7,9 +7,9 @@ import (
 	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
-	sdkError "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -1011,6 +1011,67 @@ func (me *TseService) CheckTseNativeAPIGatewayStatusById(ctx context.Context, ga
 		errRet = err
 		return
 	}
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwGroupById(ctx context.Context, gatewayId string, groupId string) (cngwGroup *tse.NativeGatewayServerGroup, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeNativeGatewayServerGroupsRequest()
+	request.GatewayId = &gatewayId
+	request.Filters = append(
+		request.Filters,
+		&tse.Filter{
+			Name:   helper.String("GroupId"),
+			Values: []*string{&groupId},
+		},
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeNativeGatewayServerGroups(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.Result == nil || len(response.Response.Result.GatewayGroupList) < 1 {
+		return
+	}
+
+	cngwGroup = response.Response.Result.GatewayGroupList[0]
+	return
+}
+
+func (me *TseService) DeleteTseCngwGroupById(ctx context.Context, gatewayId string, groupId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDeleteNativeGatewayServerGroupRequest()
+	request.GatewayId = &gatewayId
+	request.GroupId = &groupId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteNativeGatewayServerGroup(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 	return
 }

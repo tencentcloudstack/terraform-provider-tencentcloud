@@ -2982,7 +2982,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_doc":                                 resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                                 resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                                        resourceTencentCloudTseInstance(),
-			"tencentcloud_tse_cngw_gateway":									resourceTencentCloudTseCngwGateway(),
+			"tencentcloud_tse_cngw_gateway":                                    resourceTencentCloudTseCngwGateway(),
 			"tencentcloud_tse_cngw_service":                                    resourceTencentCloudTseCngwService(),
 			"tencentcloud_tse_cngw_service_rate_limit":                         resourceTencentCloudTseCngwServiceRateLimit(),
 			"tencentcloud_tse_cngw_route":                                      resourceTencentCloudTseCngwRoute(),
