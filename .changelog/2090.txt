@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_kubernetes_cluster: fix DiffSuppressFunc would ignore docker_graph_path defaults when computing diffs
+```
