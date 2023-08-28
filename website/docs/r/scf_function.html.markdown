@@ -48,9 +48,7 @@ resource "tencentcloud_scf_function" "foo" {
 
 The following arguments are supported:
 
-* `handler` - (Required, String) Handler of the SCF function. The format of name is `<filename>.<method_name>`, and it supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
 * `name` - (Required, String, ForceNew) Name of the SCF function. Name supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
-* `runtime` - (Required, String) Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.
 * `cfs_config` - (Optional, List) List of CFS configurations.
 * `cls_logset_id` - (Optional, String) cls logset id of the SCF function.
 * `cls_topic_id` - (Optional, String) cls topic id of the SCF function.
@@ -62,12 +60,14 @@ The following arguments are supported:
 * `enable_public_net` - (Optional, Bool) Indicates whether public net config enabled. Default `false`. NOTE: only `vpc_id` specified can disable public net config.
 * `environment` - (Optional, Map) Environment of the SCF function.
 * `func_type` - (Optional, String) Function type. The default value is Event. Enter Event if you need to create a trigger function. Enter HTTP if you need to create an HTTP function service.
+* `handler` - (Optional, String) Handler of the SCF function. The format of name is `<filename>.<method_name>`, and it supports 26 English letters, numbers, connectors, and underscores, it should start with a letter. The last character cannot be `-` or `_`. Available length is 2-60.
 * `image_config` - (Optional, List) Image of the SCF function, conflict with ``.
 * `l5_enable` - (Optional, Bool) Enable L5 for SCF function, default is `false`.
 * `layers` - (Optional, List) The list of association layers.
 * `mem_size` - (Optional, Int) Memory size of the SCF function, unit is MB. The default is `128`MB. The ladder is 128M.
 * `namespace` - (Optional, String, ForceNew) Namespace of the SCF function, default is `default`.
 * `role` - (Optional, String) Role of the SCF function.
+* `runtime` - (Optional, String) Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.
 * `subnet_id` - (Optional, String) Subnet ID of the SCF function.
 * `tags` - (Optional, Map) Tags of the SCF function.
 * `timeout` - (Optional, Int) Timeout of the SCF function, unit is second. Default `3`. Available value is 1-900.
