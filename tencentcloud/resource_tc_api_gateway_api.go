@@ -4,18 +4,17 @@ Use this resource to create API of API gateway.
 Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "ck"
+resource "tencentcloud_api_gateway_service" "example" {
+  service_name = "tf-example"
   protocol     = "http&https"
-  service_desc = "your nice service"
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
 }
 
 resource "tencentcloud_api_gateway_api" "api" {
-  service_id            = tencentcloud_api_gateway_service.service.id
-  api_name              = "hello"
-  api_desc              = "my hello api"
+  service_id            = tencentcloud_api_gateway_service.example.id
+  api_name              = "tf-example"
+  api_desc              = "desc."
   auth_type             = "NONE"
   protocol              = "HTTP"
   enable_cors           = true
@@ -39,12 +38,16 @@ resource "tencentcloud_api_gateway_api" "api" {
   response_success_example = "success"
   response_fail_example    = "fail"
   response_error_codes {
-    code           = 100
+    code           = 500
     msg            = "system error"
     desc           = "system error code"
-    converted_code = -100
+    converted_code = 5000
     need_convert   = true
   }
+
+  release_limit    = 500
+  pre_limit        = 500
+  test_limit       = 500
 }
 ```
 */
@@ -706,11 +709,6 @@ func resourceTencentCloudAPIGatewayAPI() *schema.Resource {
 				Computed:    true,
 				Description: "API QPS value. Enter a positive number to limit the API query rate per second `QPS`.",
 			},
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 			// Computed values.
 			"update_time": {
 				Type:        schema.TypeString,
@@ -1197,15 +1195,6 @@ func resourceTencentCloudAPIGatewayAPICreate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::apigw:%s:uin/:api/%s", region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
-
 	d.SetId(*response.Response.Result.ApiId)
 
 	return resourceTencentCloudAPIGatewayAPIRead(d, meta)
@@ -1552,15 +1541,6 @@ func resourceTencentCloudAPIGatewayAPIRead(d *schema.ResourceData, meta interfac
 	_ = d.Set("test_limit", testLimit)
 	_ = d.Set("release_limit", releaseLimit)
 
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-	tags, err := tagService.DescribeResourceTags(ctx, "apigw", "api", tcClient.Region, apiId)
-	if err != nil {
-		return err
-	}
-
-	_ = d.Set("tags", tags)
-
 	return nil
 }
 
@@ -1581,6 +1561,14 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 		testLimit         int
 	)
 
+	immutableArgs := []string{"target_services"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument `%s` cannot be changed", v)
+		}
+	}
+
 	d.Partial(true)
 	request.ServiceId = &serviceId
 	request.ApiId = &apiId
@@ -1589,12 +1577,35 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 		request.ApiDesc = helper.String(object.(string))
 	}
 
+	request.ApiType = helper.String(d.Get("api_type").(string))
 	request.AuthType = helper.String(d.Get("auth_type").(string))
 	request.Protocol = helper.String(d.Get("protocol").(string))
 	request.EnableCORS = helper.Bool(d.Get("enable_cors").(bool))
 	request.RequestConfig = &apigateway.RequestConfig{
 		Path:   helper.String(d.Get("request_config_path").(string)),
 		Method: helper.String(d.Get("request_config_method").(string)),
+	}
+
+	if v, ok := d.GetOk("constant_parameters"); ok {
+		constantParameters := v.(*schema.Set).List()
+		request.ConstantParameters = make([]*apigateway.ConstantParameter, 0, len(constantParameters))
+		for _, item := range constantParameters {
+			dMap := item.(map[string]interface{})
+			constantParameter := apigateway.ConstantParameter{}
+			if v, ok := dMap["name"]; ok {
+				constantParameter.Name = helper.String(v.(string))
+			}
+			if v, ok := dMap["desc"]; ok {
+				constantParameter.Desc = helper.String(v.(string))
+			}
+			if v, ok := dMap["position"]; ok {
+				constantParameter.Position = helper.String(v.(string))
+			}
+			if v, ok := dMap["default_value"]; ok {
+				constantParameter.DefaultValue = helper.String(v.(string))
+			}
+			request.ConstantParameters = append(request.ConstantParameters, &constantParameter)
+		}
 	}
 
 	if object, ok := d.GetOk("request_parameters"); ok {
@@ -1617,6 +1628,86 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
+	if v, ok := d.GetOk("micro_services"); ok {
+		microServices := v.(*schema.Set).List()
+		request.MicroServices = make([]*apigateway.MicroServiceReq, 0, len(microServices))
+		for _, item := range microServices {
+			dMap := item.(map[string]interface{})
+			microServiceReq := apigateway.MicroServiceReq{}
+			if v, ok := dMap["cluster_id"]; ok {
+				microServiceReq.ClusterId = helper.String(v.(string))
+			}
+			if v, ok := dMap["namespace_id"]; ok {
+				microServiceReq.NamespaceId = helper.String(v.(string))
+			}
+			if v, ok := dMap["micro_service_name"]; ok {
+				microServiceReq.MicroServiceName = helper.String(v.(string))
+			}
+			request.MicroServices = append(request.MicroServices, &microServiceReq)
+		}
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "service_tsf_load_balance_conf"); ok {
+		tsfLoadBalanceConfResp := apigateway.TsfLoadBalanceConfResp{}
+		if v, ok := dMap["is_load_balance"]; ok {
+			tsfLoadBalanceConfResp.IsLoadBalance = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["method"]; ok {
+			tsfLoadBalanceConfResp.Method = helper.String(v.(string))
+		}
+		if v, ok := dMap["session_stick_required"]; ok {
+			tsfLoadBalanceConfResp.SessionStickRequired = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["session_stick_timeout"]; ok {
+			tsfLoadBalanceConfResp.SessionStickTimeout = helper.IntInt64(v.(int))
+		}
+		request.ServiceTsfLoadBalanceConf = &tsfLoadBalanceConfResp
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "service_tsf_health_check_conf"); ok {
+		healthCheckConf := apigateway.HealthCheckConf{}
+		if v, ok := dMap["is_health_check"]; ok {
+			healthCheckConf.IsHealthCheck = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["request_volume_threshold"]; ok {
+			healthCheckConf.RequestVolumeThreshold = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["sleep_window_in_milliseconds"]; ok {
+			healthCheckConf.SleepWindowInMilliseconds = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["error_threshold_percentage"]; ok {
+			healthCheckConf.ErrorThresholdPercentage = helper.IntInt64(v.(int))
+		}
+		request.ServiceTsfHealthCheckConf = &healthCheckConf
+	}
+
+	if v, ok := d.GetOkExists("target_services_load_balance_conf"); ok {
+		request.TargetServicesLoadBalanceConf = helper.IntInt64(v.(int))
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "target_services_health_check_conf"); ok {
+		healthCheckConf := apigateway.HealthCheckConf{}
+		if v, ok := dMap["is_health_check"]; ok {
+			healthCheckConf.IsHealthCheck = helper.Bool(v.(bool))
+		}
+		if v, ok := dMap["request_volume_threshold"]; ok {
+			healthCheckConf.RequestVolumeThreshold = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["sleep_window_in_milliseconds"]; ok {
+			healthCheckConf.SleepWindowInMilliseconds = helper.IntInt64(v.(int))
+		}
+		if v, ok := dMap["error_threshold_percentage"]; ok {
+			healthCheckConf.ErrorThresholdPercentage = helper.IntInt64(v.(int))
+		}
+		request.TargetServicesHealthCheckConf = &healthCheckConf
+	}
+
+	if *request.AuthType == "OAUTH" {
+		if v, ok := d.GetOk("api_business_type"); ok {
+			request.ApiBusinessType = helper.String(v.(string))
+		}
+	}
+
 	var serviceType = d.Get("service_config_type").(string)
 	request.ServiceType = &serviceType
 	request.ServiceTimeout = helper.IntInt64(d.Get("service_config_timeout").(int))
@@ -1628,6 +1719,7 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 		serviceConfigUrl := d.Get("service_config_url").(string)
 		serviceConfigPath := d.Get("service_config_path").(string)
 		serviceConfigMethod := d.Get("service_config_method").(string)
+		serviceConfigUpstreamId := d.Get("service_config_upstream_id").(string)
 		if serviceConfigProduct != "" {
 			if serviceConfigProduct != "clb" {
 				return fmt.Errorf("`service_config_product` only support `clb` now")
@@ -1646,6 +1738,9 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 		if serviceConfigVpcId != "" {
 			request.ServiceConfig.UniqVpcId = &serviceConfigVpcId
 		}
+		if serviceConfigUpstreamId != "" {
+			request.ServiceConfig.UpstreamId = &serviceConfigUpstreamId
+		}
 		request.ServiceConfig.Url = &serviceConfigUrl
 		request.ServiceConfig.Path = &serviceConfigPath
 		request.ServiceConfig.Method = &serviceConfigMethod
@@ -1661,12 +1756,62 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 		scfFunctionName := d.Get("service_config_scf_function_name").(string)
 		scfFunctionNamespace := d.Get("service_config_scf_function_namespace").(string)
 		scfFunctionQualifier := d.Get("service_config_scf_function_qualifier").(string)
-		if scfFunctionName == "" || scfFunctionNamespace == "" || scfFunctionQualifier == "" {
-			return fmt.Errorf("`service_config_scf_function_name`,`service_config_scf_function_namespace`,`service_config_scf_function_qualifier` is needed if `service_config_type` is `SCF`")
+		scfFunctionType := d.Get("service_config_scf_function_type").(string)
+		scfFunctionIntegratedResponse := d.Get("service_config_scf_is_integrated_response").(bool)
+		if scfFunctionName == "" || scfFunctionNamespace == "" || scfFunctionQualifier == "" || scfFunctionType == "" {
+			return fmt.Errorf("`service_config_scf_function_name`,`service_config_scf_function_namespace`,`service_config_scf_function_qualifier`, `service_config_scf_function_type` is needed if `service_config_type` is `SCF`")
 		}
 		request.ServiceScfFunctionName = &scfFunctionName
 		request.ServiceScfFunctionNamespace = &scfFunctionNamespace
 		request.ServiceScfFunctionQualifier = &scfFunctionQualifier
+		request.ServiceScfFunctionType = &scfFunctionType
+		request.ServiceScfIsIntegratedResponse = &scfFunctionIntegratedResponse
+
+	case API_GATEWAY_SERVICE_TYPE_COS:
+		if dMap, ok := helper.InterfacesHeadMap(d, "service_config_cos_config"); ok {
+			cosConfig := apigateway.ServiceConfig{}.CosConfig
+			if v, ok := dMap["action"]; ok {
+				cosConfig.Action = helper.String(v.(string))
+			}
+			if v, ok := dMap["bucket_name"]; ok {
+				cosConfig.BucketName = helper.String(v.(string))
+			}
+			if v, ok := dMap["authorization"]; ok {
+				cosConfig.Authorization = helper.Bool(v.(bool))
+			}
+			if v, ok := dMap["path_match_mode"]; ok {
+				cosConfig.PathMatchMode = helper.String(v.(string))
+			}
+			request.ServiceConfig.CosConfig = cosConfig
+		}
+	case API_GATEWAY_SERVICE_TYPE_TSF:
+		serviceWebsocketRegisterFunctionName := d.Get("service_config_websocket_register_function_name").(string)
+		serviceWebsocketRegisterFunctionNamespace := d.Get("service_config_websocket_register_function_namespace").(string)
+		serviceWebsocketRegisterFunctionQualifier := d.Get("service_config_websocket_register_function_qualifier").(string)
+		serviceWebsocketCleanupFunctionName := d.Get("service_config_websocket_cleanup_function_name").(string)
+		serviceWebsocketCleanupFunctionNamespace := d.Get("service_config_websocket_cleanup_function_namespace").(string)
+		serviceWebsocketCleanupFunctionQualifier := d.Get("service_config_websocket_cleanup_function_qualifier").(string)
+		serviceWebsocketTransportFunctionName := d.Get("service_config_websocket_transport_function_name").(string)
+		serviceWebsocketTransportFunctionNamespace := d.Get("service_config_websocket_transport_function_namespace").(string)
+		serviceWebsocketTransportFunctionQualifier := d.Get("service_config_websocket_transport_function_qualifier").(string)
+
+		request.ServiceWebsocketRegisterFunctionName = &serviceWebsocketRegisterFunctionName
+		request.ServiceWebsocketRegisterFunctionNamespace = &serviceWebsocketRegisterFunctionNamespace
+		request.ServiceWebsocketRegisterFunctionQualifier = &serviceWebsocketRegisterFunctionQualifier
+		request.ServiceWebsocketCleanupFunctionName = &serviceWebsocketCleanupFunctionName
+		request.ServiceWebsocketCleanupFunctionNamespace = &serviceWebsocketCleanupFunctionNamespace
+		request.ServiceWebsocketCleanupFunctionQualifier = &serviceWebsocketCleanupFunctionQualifier
+		request.ServiceWebsocketTransportFunctionName = &serviceWebsocketTransportFunctionName
+		request.ServiceWebsocketTransportFunctionNamespace = &serviceWebsocketTransportFunctionNamespace
+		request.ServiceWebsocketTransportFunctionQualifier = &serviceWebsocketTransportFunctionQualifier
+	}
+
+	if v, ok := d.GetOkExists("is_debug_after_charge"); ok {
+		request.IsDebugAfterCharge = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOkExists("is_delete_response_error_codes"); ok {
+		request.IsDeleteResponseErrorCodes = helper.Bool(v.(bool))
 	}
 
 	request.ResponseType = helper.String(d.Get("response_type").(string))
@@ -1677,6 +1822,83 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 
 	if object, ok := d.GetOk("response_fail_example"); ok {
 		request.ResponseFailExample = helper.String(object.(string))
+	}
+
+	if v, ok := d.GetOk("auth_relation_api_id"); ok {
+		request.AuthRelationApiId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("service_parameters"); ok {
+		serviceParameters := v.(*schema.Set).List()
+		request.ServiceParameters = make([]*apigateway.ServiceParameter, 0, len(serviceParameters))
+		for _, item := range serviceParameters {
+			dMap := item.(map[string]interface{})
+			serviceParameter := apigateway.ServiceParameter{}
+			if v, ok := dMap["name"]; ok {
+				serviceParameter.Name = helper.String(v.(string))
+			}
+			if v, ok := dMap["position"]; ok {
+				serviceParameter.Position = helper.String(v.(string))
+			}
+			if v, ok := dMap["relevant_request_parameter_position"]; ok {
+				serviceParameter.RelevantRequestParameterPosition = helper.String(v.(string))
+			}
+			if v, ok := dMap["relevant_request_parameter_name"]; ok {
+				serviceParameter.RelevantRequestParameterName = helper.String(v.(string))
+			}
+			if v, ok := dMap["default_value"]; ok {
+				serviceParameter.DefaultValue = helper.String(v.(string))
+			}
+			if v, ok := dMap["relevant_request_parameter_desc"]; ok {
+				serviceParameter.RelevantRequestParameterDesc = helper.String(v.(string))
+			}
+			if v, ok := dMap["relevant_request_parameter_type"]; ok {
+				serviceParameter.RelevantRequestParameterType = helper.String(v.(string))
+			}
+			request.ServiceParameters = append(request.ServiceParameters, &serviceParameter)
+		}
+	}
+
+	if dMap, ok := helper.InterfacesHeadMap(d, "oauth_config"); ok {
+		oauthConfig := apigateway.OauthConfig{}
+		if v, ok := dMap["public_key"]; ok {
+			oauthConfig.PublicKey = helper.String(v.(string))
+		}
+		if v, ok := dMap["token_location"]; ok {
+			oauthConfig.TokenLocation = helper.String(v.(string))
+		}
+		if v, ok := dMap["login_redirect_url"]; ok {
+			oauthConfig.LoginRedirectUrl = helper.String(v.(string))
+		}
+		request.OauthConfig = &oauthConfig
+	}
+
+	if v, ok := d.GetOkExists("is_base64_encoded"); ok {
+		request.IsBase64Encoded = helper.Bool(v.(bool))
+	}
+
+	if v, ok := d.GetOk("event_bus_id"); ok {
+		request.EventBusId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("service_scf_function_type"); ok {
+		request.ServiceScfFunctionType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("eiam_app_type"); ok {
+		request.EIAMAppType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("eiam_auth_type"); ok {
+		request.EIAMAuthType = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("eiam_app_id"); ok {
+		request.EIAMAppId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOkExists("token_timeout"); ok {
+		request.TokenTimeout = helper.IntInt64(v.(int))
 	}
 
 	oldInterface, newInterface := d.GetChange("response_error_codes")
@@ -1763,17 +1985,6 @@ func resourceTencentCloudAPIGatewayAPIUpdate(d *schema.ResourceData, meta interf
 			}
 		}
 
-	}
-
-	if d.HasChange("tags") {
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("apigw", "api", tcClient.Region, apiId)
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
 	}
 
 	d.Partial(false)

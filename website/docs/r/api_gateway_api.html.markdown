@@ -14,18 +14,17 @@ Use this resource to create API of API gateway.
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "ck"
+resource "tencentcloud_api_gateway_service" "example" {
+  service_name = "tf-example"
   protocol     = "http&https"
-  service_desc = "your nice service"
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
 }
 
 resource "tencentcloud_api_gateway_api" "api" {
-  service_id            = tencentcloud_api_gateway_service.service.id
-  api_name              = "hello"
-  api_desc              = "my hello api"
+  service_id            = tencentcloud_api_gateway_service.example.id
+  api_name              = "tf-example"
+  api_desc              = "desc."
   auth_type             = "NONE"
   protocol              = "HTTP"
   enable_cors           = true
@@ -49,12 +48,16 @@ resource "tencentcloud_api_gateway_api" "api" {
   response_success_example = "success"
   response_fail_example    = "fail"
   response_error_codes {
-    code           = 100
+    code           = 500
     msg            = "system error"
     desc           = "system error code"
-    converted_code = -100
+    converted_code = 5000
     need_convert   = true
   }
+
+  release_limit = 500
+  pre_limit     = 500
+  test_limit    = 500
 }
 ```
 
@@ -118,7 +121,6 @@ The following arguments are supported:
 * `service_parameters` - (Optional, List) The backend service parameters of the API.
 * `service_tsf_health_check_conf` - (Optional, List) Health check configuration for microservices.
 * `service_tsf_load_balance_conf` - (Optional, List) Load balancing configuration for microservices.
-* `tags` - (Optional, Map) Tag description list.
 * `target_namespace_id` - (Optional, String) Tsf serverless namespace ID. (In internal testing).
 * `target_services_health_check_conf` - (Optional, List) Target health check configuration. (Internal testing stage).
 * `target_services_load_balance_conf` - (Optional, Int) Target type load balancing configuration. (Internal testing stage).

@@ -12,7 +12,8 @@ import (
 var testAPIGatewayAPIResourceName = "tencentcloud_api_gateway_api"
 var testAPIGatewayAPIResourceKey = testAPIGatewayAPIResourceName + ".api"
 
-func TestAccTencentCloudAPIGateWayAPIResource(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudAPIGateWayAPIResource_basic -v
+func TestAccTencentCloudAPIGateWayAPIResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
