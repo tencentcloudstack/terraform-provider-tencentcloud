@@ -321,7 +321,7 @@ func (me *TdmqRocketmqService) DescribeTdmqRocketmqGroup(ctx context.Context, cl
 
 	var offset uint64 = 0
 	var pageSize uint64 = 100
-	result = make([]*tdmqRocketmq.RocketMQGroup, 0)
+	tmpResult := make([]*tdmqRocketmq.RocketMQGroup, 0)
 
 	for {
 		request.Offset = &offset
@@ -334,17 +334,27 @@ func (me *TdmqRocketmqService) DescribeTdmqRocketmqGroup(ctx context.Context, cl
 			errRet = err
 			return
 		}
+
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
 		if response == nil || len(response.Response.Groups) < 1 {
 			break
 		}
-		result = append(result, response.Response.Groups...)
+
+		tmpResult = append(tmpResult, response.Response.Groups...)
 		if len(response.Response.Groups) < int(pageSize) {
 			break
 		}
+
 		offset += pageSize
+	}
+
+	for _, item := range tmpResult {
+		if *item.Name == groupId {
+			result = append(result, item)
+			return
+		}
 	}
 
 	return
