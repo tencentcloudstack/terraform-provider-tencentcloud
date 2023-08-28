@@ -60,7 +60,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/mitchellh/go-homedir"
+	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -198,7 +202,26 @@ func resourceTencentCloudSslCertificateCreate(d *schema.ResourceData, m interfac
 	)
 
 	request := ssl.NewUploadCertificateRequest()
-	request.CertificatePublicKey = helper.String(d.Get("cert").(string))
+
+	cert := d.Get("cert").(string)
+	// 进一步判断它是证书正文还是证书文件路径
+	if filepath.IsAbs(cert) {
+		path, err := homedir.Expand(cert)
+		if err != nil {
+			return fmt.Errorf("cert file (%s) homedir expand error: %s", path, err.Error())
+		}
+		file, err := os.Open(path)
+		if err != nil {
+			return fmt.Errorf("cert file (%s) open error: %s", path, err.Error())
+		}
+		defer file.Close()
+		body, err := ioutil.ReadAll(file)
+		if err != nil {
+			return fmt.Errorf("cert file (%s) read error: %s", path, err.Error())
+		}
+		cert = string(body)
+	}
+	request.CertificatePublicKey = helper.String(cert)
 	request.CertificateType = helper.String(d.Get("type").(string))
 	request.ProjectId = helper.Uint64(uint64(d.Get("project_id").(int)))
 	request.Alias = helper.String(d.Get("name").(string))
