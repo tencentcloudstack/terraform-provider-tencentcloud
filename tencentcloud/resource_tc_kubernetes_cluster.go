@@ -2522,6 +2522,8 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 	if temp, ok := d.GetOk("docker_graph_path"); ok {
 		iAdvanced.DockerGraphPath = temp.(string)
+	} else {
+		iAdvanced.DockerGraphPath = "/var/lib/docker"
 	}
 	if temp, ok := d.GetOk("mount_target"); ok {
 		iAdvanced.MountTarget = temp.(string)
