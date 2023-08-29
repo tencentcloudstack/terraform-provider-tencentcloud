@@ -475,3 +475,57 @@ func (me *EbService) DeleteEbEventConnectorById(ctx context.Context, connectionI
 
 	return
 }
+
+func (me *EbService) DescribeEbEventRulesByFilter(ctx context.Context, param map[string]interface{}) (eventRules []*eb.Rule, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = eb.NewListRulesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "EventBusId" {
+			request.EventBusId = v.(*string)
+		}
+		if k == "OrderBy" {
+			request.OrderBy = v.(*string)
+		}
+		if k == "Order" {
+			request.Order = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseEbClient().ListRules(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Rules) < 1 {
+			break
+		}
+		eventRules = append(eventRules, response.Response.Rules...)
+		if len(response.Response.Rules) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
