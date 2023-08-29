@@ -404,3 +404,39 @@ func (me *KmsService) DeleteImportKeyMaterial(ctx context.Context, keyId string)
 
 	return nil
 }
+
+func (me *KmsService) DescribeKmsPublicKeyByFilter(ctx context.Context, param map[string]interface{}) (publicKey *kms.GetPublicKeyResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = kms.NewGetPublicKeyRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "KeyId" {
+			request.KeyId = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseKmsClient().GetPublicKey(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	publicKey = response.Response
+	return
+}
