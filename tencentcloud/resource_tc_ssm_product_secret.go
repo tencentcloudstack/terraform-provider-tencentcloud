@@ -379,6 +379,7 @@ func resourceTencentCloudSsmProductSecretRead(d *schema.ResourceData, meta inter
 		logId      = getLogId(contextNil)
 		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
 		service    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		secretInfo *SecretInfo
 		secretName = d.Id()
 	)
 
@@ -436,9 +437,22 @@ func resourceTencentCloudSsmProductSecretRead(d *schema.ResourceData, meta inter
 		_ = d.Set("secret_type", productSecret.SecretType)
 	}
 
+	outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		secretInfo, err = service.DescribeSecretByName(ctx, secretName)
+		if err != nil {
+			return retryError(err)
+		}
+
+		return nil
+	})
+
+	if outErr != nil {
+		return outErr
+	}
+
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "ssm", "secret", tcClient.Region, *productSecret.ResourceID)
+	tags, err := tagService.DescribeResourceTags(ctx, "ssm", "secret", tcClient.Region, secretInfo.resourceId)
 	if err != nil {
 		return err
 	}
