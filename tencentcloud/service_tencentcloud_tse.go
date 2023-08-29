@@ -1075,3 +1075,119 @@ func (me *TseService) DeleteTseCngwGroupById(ctx context.Context, gatewayId stri
 
 	return
 }
+
+func (me *TseService) DescribeTseGatewaysByFilter(ctx context.Context, param map[string]interface{}) (gateways *tse.ListCloudNativeAPIGatewayResult, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewaysRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Filters" {
+			request.Filters = v.([]*tse.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+	)
+	gateway := make([]*tse.DescribeCloudNativeAPIGatewayResult, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGateways(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.GatewayList) < 1 {
+			break
+		}
+		total = *response.Response.Result.TotalCount
+		gateway = append(gateway, response.Response.Result.GatewayList...)
+		if len(response.Response.Result.GatewayList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	gateways = &tse.ListCloudNativeAPIGatewayResult{
+		TotalCount:  &total,
+		GatewayList: gateway,
+	}
+
+	return
+}
+func (me *TseService) DescribeTseGroupsByFilter(ctx context.Context, param map[string]interface{}) (groups *tse.NativeGatewayServerGroups, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeNativeGatewayServerGroupsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tse.Filter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+		total  uint64
+	)
+	group := make([]*tse.NativeGatewayServerGroup, 0)
+
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeNativeGatewayServerGroups(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.GatewayGroupList) < 1 {
+			break
+		}
+
+		total = *response.Response.Result.TotalCount
+		group = append(group, response.Response.Result.GatewayGroupList...)
+		if len(response.Response.Result.GatewayGroupList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	groups = &tse.NativeGatewayServerGroups{
+		TotalCount:       &total,
+		GatewayGroupList: group,
+	}
+
+	return
+}
