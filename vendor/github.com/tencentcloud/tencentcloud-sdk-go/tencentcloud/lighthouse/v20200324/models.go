@@ -82,6 +82,70 @@ func (r *ApplyDiskBackupResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ApplyFirewallTemplateRequestParams struct {
+	// 模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 应用防火墙模板的实例列表。
+	ApplyInstances []*InstanceIdentifier `json:"ApplyInstances,omitempty" name:"ApplyInstances"`
+}
+
+type ApplyFirewallTemplateRequest struct {
+	*tchttp.BaseRequest
+	
+	// 模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 应用防火墙模板的实例列表。
+	ApplyInstances []*InstanceIdentifier `json:"ApplyInstances,omitempty" name:"ApplyInstances"`
+}
+
+func (r *ApplyFirewallTemplateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ApplyFirewallTemplateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "ApplyInstances")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ApplyFirewallTemplateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ApplyFirewallTemplateResponseParams struct {
+	// 任务ID。
+	TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ApplyFirewallTemplateResponse struct {
+	*tchttp.BaseResponse
+	Response *ApplyFirewallTemplateResponseParams `json:"Response"`
+}
+
+func (r *ApplyFirewallTemplateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ApplyFirewallTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ApplyInstanceSnapshotRequestParams struct {
 	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -345,7 +409,7 @@ func (r *AttachDisksResponse) FromJsonString(s string) error {
 }
 
 type AutoMountConfiguration struct {
-	// 待挂载的实例ID。指定的实例必须处于“运行中”状态。
+	// 待挂载的实例ID。指定的实例必须与指定的数据盘处于同一可用区，实例状态必须处于“运行中”状态，且实例必须支持[自动化助手](https://cloud.tencent.com/document/product/1340/50752)。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
 
 	// 实例内的挂载点。仅Linux操作系统的实例可传入该参数, 不传则默认挂载在“/data/disk”路径下。
@@ -457,13 +521,13 @@ type Bundle struct {
 
 	// 系统盘类型。
 	// 取值范围： 
-	// <li> LOCAL_BASIC：本地硬盘</li><li> LOCAL_SSD：本地 SSD 硬盘</li><li> CLOUD_BASIC：普通云硬盘</li><li> CLOUD_SSD：SSD 云硬盘</li><li> CLOUD_PREMIUM：高性能云硬盘</li>
+	// <li> CLOUD_SSD：SSD 云硬盘</li><li> CLOUD_PREMIUM：高性能云硬盘</li>
 	SystemDiskType *string `json:"SystemDiskType,omitempty" name:"SystemDiskType"`
 
-	// 系统盘大小。
+	// 系统盘大小。单位GB。
 	SystemDiskSize *int64 `json:"SystemDiskSize,omitempty" name:"SystemDiskSize"`
 
-	// 每月网络流量，单位 Gb。
+	// 每月网络流量，单位 GB。
 	MonthlyTraffic *int64 `json:"MonthlyTraffic,omitempty" name:"MonthlyTraffic"`
 
 	// 是否支持 Linux/Unix 平台。
@@ -883,6 +947,134 @@ func (r *CreateFirewallRulesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type CreateFirewallTemplateRequestParams struct {
+	// 模板名称。
+	TemplateName *string `json:"TemplateName,omitempty" name:"TemplateName"`
+
+	// 防火墙规则列表。
+	TemplateRules []*FirewallRule `json:"TemplateRules,omitempty" name:"TemplateRules"`
+}
+
+type CreateFirewallTemplateRequest struct {
+	*tchttp.BaseRequest
+	
+	// 模板名称。
+	TemplateName *string `json:"TemplateName,omitempty" name:"TemplateName"`
+
+	// 防火墙规则列表。
+	TemplateRules []*FirewallRule `json:"TemplateRules,omitempty" name:"TemplateRules"`
+}
+
+func (r *CreateFirewallTemplateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateFirewallTemplateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateName")
+	delete(f, "TemplateRules")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateFirewallTemplateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateFirewallTemplateResponseParams struct {
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateFirewallTemplateResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateFirewallTemplateResponseParams `json:"Response"`
+}
+
+func (r *CreateFirewallTemplateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateFirewallTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateFirewallTemplateRulesRequestParams struct {
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 防火墙模板规则列表。
+	TemplateRules []*FirewallRule `json:"TemplateRules,omitempty" name:"TemplateRules"`
+}
+
+type CreateFirewallTemplateRulesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 防火墙模板规则列表。
+	TemplateRules []*FirewallRule `json:"TemplateRules,omitempty" name:"TemplateRules"`
+}
+
+func (r *CreateFirewallTemplateRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateFirewallTemplateRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "TemplateRules")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateFirewallTemplateRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type CreateFirewallTemplateRulesResponseParams struct {
+	// 规则ID列表。
+	TemplateRuleIdSet []*string `json:"TemplateRuleIdSet,omitempty" name:"TemplateRuleIdSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type CreateFirewallTemplateRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *CreateFirewallTemplateRulesResponseParams `json:"Response"`
+}
+
+func (r *CreateFirewallTemplateRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *CreateFirewallTemplateRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type CreateInstanceSnapshotRequestParams struct {
 	// 需要创建快照的实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -984,6 +1176,9 @@ type CreateInstancesRequestParams struct {
 
 	// 是否自动使用代金券。默认不使用。
 	AutoVoucher *bool `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 防火墙模版ID。若不指定该参数，则使用默认防火墙策略。
+	FirewallTemplateId *string `json:"FirewallTemplateId,omitempty" name:"FirewallTemplateId"`
 }
 
 type CreateInstancesRequest struct {
@@ -1025,6 +1220,9 @@ type CreateInstancesRequest struct {
 
 	// 是否自动使用代金券。默认不使用。
 	AutoVoucher *bool `json:"AutoVoucher,omitempty" name:"AutoVoucher"`
+
+	// 防火墙模版ID。若不指定该参数，则使用默认防火墙策略。
+	FirewallTemplateId *string `json:"FirewallTemplateId,omitempty" name:"FirewallTemplateId"`
 }
 
 func (r *CreateInstancesRequest) ToJsonString() string {
@@ -1050,6 +1248,7 @@ func (r *CreateInstancesRequest) FromJsonString(s string) error {
 	delete(f, "LoginConfiguration")
 	delete(f, "Containers")
 	delete(f, "AutoVoucher")
+	delete(f, "FirewallTemplateId")
 	if len(f) > 0 {
 		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "CreateInstancesRequest has unknown keys!", "")
 	}
@@ -1334,6 +1533,121 @@ func (r *DeleteFirewallRulesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DeleteFirewallRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteFirewallTemplateRequestParams struct {
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+}
+
+type DeleteFirewallTemplateRequest struct {
+	*tchttp.BaseRequest
+	
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+}
+
+func (r *DeleteFirewallTemplateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteFirewallTemplateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteFirewallTemplateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteFirewallTemplateResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteFirewallTemplateResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteFirewallTemplateResponseParams `json:"Response"`
+}
+
+func (r *DeleteFirewallTemplateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteFirewallTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteFirewallTemplateRulesRequestParams struct {
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 防火墙模板规则ID列表。
+	TemplateRuleIds []*string `json:"TemplateRuleIds,omitempty" name:"TemplateRuleIds"`
+}
+
+type DeleteFirewallTemplateRulesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 防火墙模板规则ID列表。
+	TemplateRuleIds []*string `json:"TemplateRuleIds,omitempty" name:"TemplateRuleIds"`
+}
+
+func (r *DeleteFirewallTemplateRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteFirewallTemplateRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "TemplateRuleIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DeleteFirewallTemplateRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DeleteFirewallTemplateRulesResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DeleteFirewallTemplateRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *DeleteFirewallTemplateRulesResponseParams `json:"Response"`
+}
+
+func (r *DeleteFirewallTemplateRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DeleteFirewallTemplateRulesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -1791,15 +2105,15 @@ type DescribeBundlesRequestParams struct {
 	// 类型：String
 	// 必选：否
 	// <li>support-platform-type</li>按照【系统类型】进行过滤。
-	// 取值： LINUX_UNIX（Linux/Unix系统）；WINDOWS（Windows 系统）
+	// 取值： LINUX_UNIX(Linux/Unix系统) ;WINDOWS(Windows 系统)
 	// 类型：String
 	// 必选：否
 	// <li>bundle-type</li>按照 【套餐类型进行过滤】。
-	// 取值：GENERAL_BUNDLE (通用型套餐); STORAGE_BUNDLE(存储型套餐);ENTERPRISE_BUNDLE( 企业型套餐);EXCLUSIVE_BUNDLE(专属型套餐);BEFAST_BUNDLE(蜂驰型套餐);
+	// 取值：GENERAL_BUNDLE (通用型套餐); STORAGE_BUNDLE(存储型套餐);ENTERPRISE_BUNDLE( 企业型套餐);EXCLUSIVE_BUNDLE(专属型套餐);BEFAST_BUNDLE(蜂驰型套餐);STARTER_BUNDLE(入门型套餐);CAREFREE_BUNDLE(无忧型套餐);
 	// 类型：String
 	// 必选：否
 	// <li>bundle-state</li>按照【套餐状态】进行过滤。
-	// 取值: ‘ONLINE’(在线); ‘OFFLINE’(下线);
+	// 取值: ONLINE(在线); OFFLINE(下线);
 	// 类型：String
 	// 必选：否
 	// 每次请求的 Filters 的上限为 10，Filter.Values 的上限为 5。参数不支持同时指定 BundleIds 和 Filters。
@@ -1826,15 +2140,15 @@ type DescribeBundlesRequest struct {
 	// 类型：String
 	// 必选：否
 	// <li>support-platform-type</li>按照【系统类型】进行过滤。
-	// 取值： LINUX_UNIX（Linux/Unix系统）；WINDOWS（Windows 系统）
+	// 取值： LINUX_UNIX(Linux/Unix系统) ;WINDOWS(Windows 系统)
 	// 类型：String
 	// 必选：否
 	// <li>bundle-type</li>按照 【套餐类型进行过滤】。
-	// 取值：GENERAL_BUNDLE (通用型套餐); STORAGE_BUNDLE(存储型套餐);ENTERPRISE_BUNDLE( 企业型套餐);EXCLUSIVE_BUNDLE(专属型套餐);BEFAST_BUNDLE(蜂驰型套餐);
+	// 取值：GENERAL_BUNDLE (通用型套餐); STORAGE_BUNDLE(存储型套餐);ENTERPRISE_BUNDLE( 企业型套餐);EXCLUSIVE_BUNDLE(专属型套餐);BEFAST_BUNDLE(蜂驰型套餐);STARTER_BUNDLE(入门型套餐);CAREFREE_BUNDLE(无忧型套餐);
 	// 类型：String
 	// 必选：否
 	// <li>bundle-state</li>按照【套餐状态】进行过滤。
-	// 取值: ‘ONLINE’(在线); ‘OFFLINE’(下线);
+	// 取值: ONLINE(在线); OFFLINE(下线);
 	// 类型：String
 	// 必选：否
 	// 每次请求的 Filters 的上限为 10，Filter.Values 的上限为 5。参数不支持同时指定 BundleIds 和 Filters。
@@ -2536,6 +2850,331 @@ func (r *DescribeDisksReturnableResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeDockerActivitiesRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// Docker活动ID列表。
+	ActivityIds []*string `json:"ActivityIds,omitempty" name:"ActivityIds"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 活动创建时间的起始值，时间戳秒数。
+	CreatedTimeBegin *int64 `json:"CreatedTimeBegin,omitempty" name:"CreatedTimeBegin"`
+
+	// 活动创建时间的结束值，时间戳秒数。
+	CreatedTimeEnd *int64 `json:"CreatedTimeEnd,omitempty" name:"CreatedTimeEnd"`
+}
+
+type DescribeDockerActivitiesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// Docker活动ID列表。
+	ActivityIds []*string `json:"ActivityIds,omitempty" name:"ActivityIds"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 活动创建时间的起始值，时间戳秒数。
+	CreatedTimeBegin *int64 `json:"CreatedTimeBegin,omitempty" name:"CreatedTimeBegin"`
+
+	// 活动创建时间的结束值，时间戳秒数。
+	CreatedTimeEnd *int64 `json:"CreatedTimeEnd,omitempty" name:"CreatedTimeEnd"`
+}
+
+func (r *DescribeDockerActivitiesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDockerActivitiesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ActivityIds")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	delete(f, "CreatedTimeBegin")
+	delete(f, "CreatedTimeEnd")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDockerActivitiesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDockerActivitiesResponseParams struct {
+	// 总数量。
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// Docker活动列表。
+	DockerActivitySet []*DockerActivity `json:"DockerActivitySet,omitempty" name:"DockerActivitySet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeDockerActivitiesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDockerActivitiesResponseParams `json:"Response"`
+}
+
+func (r *DescribeDockerActivitiesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDockerActivitiesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDockerContainerConfigurationRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID。
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+}
+
+type DescribeDockerContainerConfigurationRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID。
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+}
+
+func (r *DescribeDockerContainerConfigurationRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDockerContainerConfigurationRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ContainerId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDockerContainerConfigurationRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDockerContainerConfigurationResponseParams struct {
+	// Docker容器配置信息。
+	ContainerConfiguration *DockerContainerConfiguration `json:"ContainerConfiguration,omitempty" name:"ContainerConfiguration"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeDockerContainerConfigurationResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDockerContainerConfigurationResponseParams `json:"Response"`
+}
+
+func (r *DescribeDockerContainerConfigurationResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDockerContainerConfigurationResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDockerContainerDetailRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID。
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+}
+
+type DescribeDockerContainerDetailRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID。
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+}
+
+func (r *DescribeDockerContainerDetailRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDockerContainerDetailRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ContainerId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDockerContainerDetailRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDockerContainerDetailResponseParams struct {
+	// Docker容器详情，json字符串base64编码。
+	ContainerDetail *string `json:"ContainerDetail,omitempty" name:"ContainerDetail"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeDockerContainerDetailResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDockerContainerDetailResponseParams `json:"Response"`
+}
+
+func (r *DescribeDockerContainerDetailResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDockerContainerDetailResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDockerContainersRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 过滤器列表。
+	// <li>container-id</li>按照【容器ID】进行过滤。
+	// 类型：String
+	// 必选：否
+	// <li>container-name</li>按照【容器名称】进行过滤。
+	// 类型：String
+	// 必选：否
+	// 每次请求的 Filters 的上限为 10，Filter.Values 的上限为 5。参数不支持同时指定 ContainerIds 和 Filters。
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+}
+
+type DescribeDockerContainersRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 过滤器列表。
+	// <li>container-id</li>按照【容器ID】进行过滤。
+	// 类型：String
+	// 必选：否
+	// <li>container-name</li>按照【容器名称】进行过滤。
+	// 类型：String
+	// 必选：否
+	// 每次请求的 Filters 的上限为 10，Filter.Values 的上限为 5。参数不支持同时指定 ContainerIds 和 Filters。
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+}
+
+func (r *DescribeDockerContainersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDockerContainersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ContainerIds")
+	delete(f, "Limit")
+	delete(f, "Offset")
+	delete(f, "Filters")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDockerContainersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDockerContainersResponseParams struct {
+	// 总数量。
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 容器列表。
+	DockerContainerSet []*DockerContainer `json:"DockerContainerSet,omitempty" name:"DockerContainerSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeDockerContainersResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDockerContainersResponseParams `json:"Response"`
+}
+
+func (r *DescribeDockerContainersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDockerContainersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeFirewallRulesRequestParams struct {
 	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -2666,6 +3305,369 @@ func (r *DescribeFirewallRulesTemplateResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *DescribeFirewallRulesTemplateResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeFirewallTemplateApplyRecordsRequestParams struct {
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 应用任务ID列表。
+	TaskIds []*string `json:"TaskIds,omitempty" name:"TaskIds"`
+}
+
+type DescribeFirewallTemplateApplyRecordsRequest struct {
+	*tchttp.BaseRequest
+	
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 应用任务ID列表。
+	TaskIds []*string `json:"TaskIds,omitempty" name:"TaskIds"`
+}
+
+func (r *DescribeFirewallTemplateApplyRecordsRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeFirewallTemplateApplyRecordsRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "TaskIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeFirewallTemplateApplyRecordsRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeFirewallTemplateApplyRecordsResponseParams struct {
+	// 防火墙模板应用记录列表。
+	ApplyRecordSet []*FirewallTemplateApplyRecord `json:"ApplyRecordSet,omitempty" name:"ApplyRecordSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeFirewallTemplateApplyRecordsResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeFirewallTemplateApplyRecordsResponseParams `json:"Response"`
+}
+
+func (r *DescribeFirewallTemplateApplyRecordsResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeFirewallTemplateApplyRecordsResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeFirewallTemplateQuotaRequestParams struct {
+
+}
+
+type DescribeFirewallTemplateQuotaRequest struct {
+	*tchttp.BaseRequest
+	
+}
+
+func (r *DescribeFirewallTemplateQuotaRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeFirewallTemplateQuotaRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeFirewallTemplateQuotaRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeFirewallTemplateQuotaResponseParams struct {
+	// 当前可用配额。
+	Available *int64 `json:"Available,omitempty" name:"Available"`
+
+	// 总配额。
+	Total *int64 `json:"Total,omitempty" name:"Total"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeFirewallTemplateQuotaResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeFirewallTemplateQuotaResponseParams `json:"Response"`
+}
+
+func (r *DescribeFirewallTemplateQuotaResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeFirewallTemplateQuotaResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeFirewallTemplateRuleQuotaRequestParams struct {
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+}
+
+type DescribeFirewallTemplateRuleQuotaRequest struct {
+	*tchttp.BaseRequest
+	
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+}
+
+func (r *DescribeFirewallTemplateRuleQuotaRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeFirewallTemplateRuleQuotaRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeFirewallTemplateRuleQuotaRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeFirewallTemplateRuleQuotaResponseParams struct {
+	// 当前可用配额。
+	Available *int64 `json:"Available,omitempty" name:"Available"`
+
+	// 总配额。
+	Total *int64 `json:"Total,omitempty" name:"Total"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeFirewallTemplateRuleQuotaResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeFirewallTemplateRuleQuotaResponseParams `json:"Response"`
+}
+
+func (r *DescribeFirewallTemplateRuleQuotaResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeFirewallTemplateRuleQuotaResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeFirewallTemplateRulesRequestParams struct {
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 防火墙模板规则ID列表。
+	TemplateRuleIds []*string `json:"TemplateRuleIds,omitempty" name:"TemplateRuleIds"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+type DescribeFirewallTemplateRulesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 防火墙模板规则ID列表。
+	TemplateRuleIds []*string `json:"TemplateRuleIds,omitempty" name:"TemplateRuleIds"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeFirewallTemplateRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeFirewallTemplateRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "TemplateRuleIds")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeFirewallTemplateRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeFirewallTemplateRulesResponseParams struct {
+	// 防火墙模板规则总数量。
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 防火墙模板规则信息列表。
+	TemplateRuleSet []*FirewallTemplateRuleInfo `json:"TemplateRuleSet,omitempty" name:"TemplateRuleSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeFirewallTemplateRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeFirewallTemplateRulesResponseParams `json:"Response"`
+}
+
+func (r *DescribeFirewallTemplateRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeFirewallTemplateRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeFirewallTemplatesRequestParams struct {
+	// 防火墙模板ID列表。
+	TemplateIds []*string `json:"TemplateIds,omitempty" name:"TemplateIds"`
+
+	// 过滤器列表。
+	// <li>template-id</li>按照【防火墙模版所属的ID】进行过滤。
+	// 类型：String
+	// 必选：否
+	// <li>template-name</li>按照【防火墙模版所属的名称】进行过滤。
+	// 类型：String
+	// 必选：否
+	// <li>template-type</li>按照【防火墙模版的类型】进行过滤。
+	// 类型：String
+	// 必选：否
+	// 每次请求的 Filters 的上限为 10，Filter.Values 的上限为 100。参数不支持同时指定 TemplateIds 和 Filters。
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+type DescribeFirewallTemplatesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 防火墙模板ID列表。
+	TemplateIds []*string `json:"TemplateIds,omitempty" name:"TemplateIds"`
+
+	// 过滤器列表。
+	// <li>template-id</li>按照【防火墙模版所属的ID】进行过滤。
+	// 类型：String
+	// 必选：否
+	// <li>template-name</li>按照【防火墙模版所属的名称】进行过滤。
+	// 类型：String
+	// 必选：否
+	// <li>template-type</li>按照【防火墙模版的类型】进行过滤。
+	// 类型：String
+	// 必选：否
+	// 每次请求的 Filters 的上限为 10，Filter.Values 的上限为 100。参数不支持同时指定 TemplateIds 和 Filters。
+	Filters []*Filter `json:"Filters,omitempty" name:"Filters"`
+
+	// 偏移量，默认为 0。
+	Offset *int64 `json:"Offset,omitempty" name:"Offset"`
+
+	// 返回数量，默认为 20，最大值为 100。
+	Limit *int64 `json:"Limit,omitempty" name:"Limit"`
+}
+
+func (r *DescribeFirewallTemplatesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeFirewallTemplatesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateIds")
+	delete(f, "Filters")
+	delete(f, "Offset")
+	delete(f, "Limit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeFirewallTemplatesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeFirewallTemplatesResponseParams struct {
+	// 模板总数量。
+	TotalCount *int64 `json:"TotalCount,omitempty" name:"TotalCount"`
+
+	// 防火墙模板列表。
+	TemplateSet []*FirewallTemplate `json:"TemplateSet,omitempty" name:"TemplateSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type DescribeFirewallTemplatesResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeFirewallTemplatesResponseParams `json:"Response"`
+}
+
+func (r *DescribeFirewallTemplatesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeFirewallTemplatesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -4374,6 +5376,63 @@ type DiskReturnable struct {
 	ReturnFailMessage *string `json:"ReturnFailMessage,omitempty" name:"ReturnFailMessage"`
 }
 
+type DockerActivity struct {
+	// 活动ID。
+	ActivityId *string `json:"ActivityId,omitempty" name:"ActivityId"`
+
+	// 活动名称。
+	ActivityName *string `json:"ActivityName,omitempty" name:"ActivityName"`
+
+	// 活动状态。取值范围： 
+	// <li>INIT：表示初始化，活动尚未执行</li>
+	// <li>OPERATING：表示活动执行中</li>
+	// <li>SUCCESS：表示活动执行成功</li>
+	// <li>FAILED：表示活动执行失败</li>
+	ActivityState *string `json:"ActivityState,omitempty" name:"ActivityState"`
+
+	// 活动执行的命令输出，以base64编码。
+	ActivityCommandOutput *string `json:"ActivityCommandOutput,omitempty" name:"ActivityCommandOutput"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+
+	// 创建时间。按照 ISO8601 标准表示，并且使用 UTC 时间。
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+
+	// 结束时间。按照 ISO8601 标准表示，并且使用 UTC 时间。
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	EndTime *string `json:"EndTime,omitempty" name:"EndTime"`
+}
+
+type DockerContainer struct {
+	// 容器ID
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+
+	// 容器名称
+	ContainerName *string `json:"ContainerName,omitempty" name:"ContainerName"`
+
+	// 容器镜像地址
+	ContainerImage *string `json:"ContainerImage,omitempty" name:"ContainerImage"`
+
+	// 容器Command
+	Command *string `json:"Command,omitempty" name:"Command"`
+
+	// 容器状态描述
+	Status *string `json:"Status,omitempty" name:"Status"`
+
+	// 容器状态，和docker的容器状态保持一致，当前取值有：created, restarting, running, removing, paused, exited, or dead
+	State *string `json:"State,omitempty" name:"State"`
+
+	// 容器端口主机端口映射列表
+	PublishPortSet []*DockerContainerPublishPort `json:"PublishPortSet,omitempty" name:"PublishPortSet"`
+
+	// 容器挂载本地卷列表
+	VolumeSet []*DockerContainerVolume `json:"VolumeSet,omitempty" name:"VolumeSet"`
+
+	// 创建时间。按照 ISO8601 标准表示，并且使用 UTC 时间。
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+}
+
 type DockerContainerConfiguration struct {
 	// 容器镜像地址
 	ContainerImage *string `json:"ContainerImage,omitempty" name:"ContainerImage"`
@@ -4392,6 +5451,9 @@ type DockerContainerConfiguration struct {
 
 	// 运行的命令
 	Command *string `json:"Command,omitempty" name:"Command"`
+
+	// 容器重启策略
+	RestartPolicy *string `json:"RestartPolicy,omitempty" name:"RestartPolicy"`
 }
 
 type DockerContainerPublishPort struct {
@@ -4461,6 +5523,76 @@ type FirewallRuleInfo struct {
 
 	// 防火墙规则描述。
 	FirewallRuleDescription *string `json:"FirewallRuleDescription,omitempty" name:"FirewallRuleDescription"`
+}
+
+type FirewallTemplate struct {
+	// 模板Id。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 模板名称。
+	TemplateName *string `json:"TemplateName,omitempty" name:"TemplateName"`
+
+	// 模板类型。
+	TemplateType *string `json:"TemplateType,omitempty" name:"TemplateType"`
+
+	// 模板状态。
+	TemplateState *string `json:"TemplateState,omitempty" name:"TemplateState"`
+
+	// 模板创建时间。
+	CreatedTime *string `json:"CreatedTime,omitempty" name:"CreatedTime"`
+}
+
+type FirewallTemplateApplyRecord struct {
+	// 任务ID。
+	TaskId *string `json:"TaskId,omitempty" name:"TaskId"`
+
+	// 应用模板的时间。
+	ApplyTime *string `json:"ApplyTime,omitempty" name:"ApplyTime"`
+
+	// 模板规则列表。
+	TemplateRuleSet []*FirewallTemplateRule `json:"TemplateRuleSet,omitempty" name:"TemplateRuleSet"`
+
+	// 应用模板的执行状态。
+	ApplyState *string `json:"ApplyState,omitempty" name:"ApplyState"`
+
+	// 应用成功的实例数量。
+	SuccessCount *int64 `json:"SuccessCount,omitempty" name:"SuccessCount"`
+
+	// 应用失败的实例数量。
+	FailedCount *int64 `json:"FailedCount,omitempty" name:"FailedCount"`
+
+	// 正在应用中的实例数量。
+	RunningCount *int64 `json:"RunningCount,omitempty" name:"RunningCount"`
+
+	// 应用模板的执行细节。
+	ApplyDetailSet []*FirewallTemplateApplyRecordDetail `json:"ApplyDetailSet,omitempty" name:"ApplyDetailSet"`
+}
+
+type FirewallTemplateApplyRecordDetail struct {
+	// 实例标识信息。
+	Instance *InstanceIdentifier `json:"Instance,omitempty" name:"Instance"`
+
+	// 防火墙模板应用状态。
+	ApplyState *string `json:"ApplyState,omitempty" name:"ApplyState"`
+
+	// 防火墙模板应用错误信息。
+	ErrorMessage *string `json:"ErrorMessage,omitempty" name:"ErrorMessage"`
+}
+
+type FirewallTemplateRule struct {
+	// 防火墙模板规则ID。
+	TemplateRuleId *string `json:"TemplateRuleId,omitempty" name:"TemplateRuleId"`
+
+	// 防火墙规则。
+	FirewallRule *FirewallRule `json:"FirewallRule,omitempty" name:"FirewallRule"`
+}
+
+type FirewallTemplateRuleInfo struct {
+	// 防火墙模板规则ID。
+	TemplateRuleId *string `json:"TemplateRuleId,omitempty" name:"TemplateRuleId"`
+
+	// 防火墙规则信息。
+	FirewallRuleInfo *FirewallRuleInfo `json:"FirewallRuleInfo,omitempty" name:"FirewallRuleInfo"`
 }
 
 type GeneralResourceQuota struct {
@@ -5029,6 +6161,14 @@ type InstanceDeniedActions struct {
 	DeniedActions []*DeniedAction `json:"DeniedActions,omitempty" name:"DeniedActions"`
 }
 
+type InstanceIdentifier struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 实例地域。
+	Region *string `json:"Region,omitempty" name:"Region"`
+}
+
 type InstancePrice struct {
 	// 套餐单价原价。
 	OriginalBundlePrice *float64 `json:"OriginalBundlePrice,omitempty" name:"OriginalBundlePrice"`
@@ -5245,13 +6385,13 @@ type LoginConfiguration struct {
 	// <li>"NO"代表选择自定义密码，这时要指定Password字段。</li>
 	AutoGeneratePassword *string `json:"AutoGeneratePassword,omitempty" name:"AutoGeneratePassword"`
 
-	// 实例登录密码。具体按照操作系统的复杂度要求。
-	// WINDOWS 实例密码必须 12-30 位，不能以“/”开头且不包括用户名，至少包含以下字符中的三种不同字符
-	// <li>小写字母：[a-z]</li>
-	// <li>大写字母：[A-Z]</li>
-	// <li>数字： 0-9</li>
-	// <li>特殊字符：()`~!@#$%^&*-+=_|{}[]:;' <>,.?/</li>
+	// 实例登录密码。具体按照操作系统的复杂度要求。 
+	// `LINUX_UNIX` 实例密码必须 8-30 位，推荐使用 12 位以上密码，不能包含空格, 不能以“/”开头，至少包含以下字符中的三种不同字符，字符种类：<br><li>小写字母：[a-z]<br><li>大写字母：[A-Z]<br><li>数字：0-9<br><li>特殊字符： ()\`\~!@#$%^&\*-+=\_|{}[]:;' <>,.?/</li>
+	// `WINDOWS` 实例密码必须 12-30 位，不能包含空格, 不能以“/”开头且不包括用户名，至少包含以下字符中的三种不同字符<br><li>小写字母：[a-z]<br><li>大写字母：[A-Z]<br><li>数字： 0-9<br><li>特殊字符：()\`~!@#$%^&\*-+=\_|{}[]:;' <>,.?/
 	Password *string `json:"Password,omitempty" name:"Password"`
+
+	// 密钥ID列表，最多同时指定5个密钥。关联密钥后，就可以通过对应的私钥来访问实例。密钥与密码不能同时指定，同时WINDOWS操作系统不支持指定密钥。密钥ID列表可以通过[DescribeKeyPairs](https://cloud.tencent.com/document/product/1207/55540)接口获取。
+	KeyIds []*string `json:"KeyIds,omitempty" name:"KeyIds"`
 }
 
 type LoginSettings struct {
@@ -5529,6 +6669,117 @@ func (r *ModifyDisksRenewFlagResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyDockerContainerRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID。
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+
+	// 环境变量列表
+	Envs []*ContainerEnv `json:"Envs,omitempty" name:"Envs"`
+
+	// 容器端口主机端口映射列表
+	PublishPorts []*DockerContainerPublishPort `json:"PublishPorts,omitempty" name:"PublishPorts"`
+
+	// 容器加载本地卷列表
+	Volumes []*DockerContainerVolume `json:"Volumes,omitempty" name:"Volumes"`
+
+	// 运行的命令
+	Command *string `json:"Command,omitempty" name:"Command"`
+
+	// 容器重启策略，对应docker "--restart"参数。
+	// 
+	// 枚举值:
+	// no: 不自动重启。默认策略。
+	// on-failure[:max-retries]: 当容器退出码非0时重启容器。使用max-retries限制重启次数，比如on-failure:10，限制最多重启10次。
+	// always: 只要容器退出就重启。
+	// unless-stopped: 始终重新启动容器，包括在守护进程启动时，除非容器在 Docker 守护进程停止之前进入停止状态。
+	RestartPolicy *string `json:"RestartPolicy,omitempty" name:"RestartPolicy"`
+}
+
+type ModifyDockerContainerRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID。
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+
+	// 环境变量列表
+	Envs []*ContainerEnv `json:"Envs,omitempty" name:"Envs"`
+
+	// 容器端口主机端口映射列表
+	PublishPorts []*DockerContainerPublishPort `json:"PublishPorts,omitempty" name:"PublishPorts"`
+
+	// 容器加载本地卷列表
+	Volumes []*DockerContainerVolume `json:"Volumes,omitempty" name:"Volumes"`
+
+	// 运行的命令
+	Command *string `json:"Command,omitempty" name:"Command"`
+
+	// 容器重启策略，对应docker "--restart"参数。
+	// 
+	// 枚举值:
+	// no: 不自动重启。默认策略。
+	// on-failure[:max-retries]: 当容器退出码非0时重启容器。使用max-retries限制重启次数，比如on-failure:10，限制最多重启10次。
+	// always: 只要容器退出就重启。
+	// unless-stopped: 始终重新启动容器，包括在守护进程启动时，除非容器在 Docker 守护进程停止之前进入停止状态。
+	RestartPolicy *string `json:"RestartPolicy,omitempty" name:"RestartPolicy"`
+}
+
+func (r *ModifyDockerContainerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDockerContainerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ContainerId")
+	delete(f, "Envs")
+	delete(f, "PublishPorts")
+	delete(f, "Volumes")
+	delete(f, "Command")
+	delete(f, "RestartPolicy")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyDockerContainerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyDockerContainerResponseParams struct {
+	// Docker活动ID。
+	DockerActivityId *string `json:"DockerActivityId,omitempty" name:"DockerActivityId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyDockerContainerResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyDockerContainerResponseParams `json:"Response"`
+}
+
+func (r *ModifyDockerContainerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyDockerContainerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyFirewallRuleDescriptionRequestParams struct {
 	// 实例 ID。
 	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
@@ -5661,6 +6912,67 @@ func (r *ModifyFirewallRulesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ModifyFirewallRulesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyFirewallTemplateRequestParams struct {
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 模板名称。
+	TemplateName *string `json:"TemplateName,omitempty" name:"TemplateName"`
+}
+
+type ModifyFirewallTemplateRequest struct {
+	*tchttp.BaseRequest
+	
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 模板名称。
+	TemplateName *string `json:"TemplateName,omitempty" name:"TemplateName"`
+}
+
+func (r *ModifyFirewallTemplateRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyFirewallTemplateRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "TemplateName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyFirewallTemplateRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyFirewallTemplateResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ModifyFirewallTemplateResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyFirewallTemplateResponseParams `json:"Response"`
+}
+
+func (r *ModifyFirewallTemplateResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyFirewallTemplateResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6075,6 +7387,141 @@ type RegionInfo struct {
 	IsChinaMainland *bool `json:"IsChinaMainland,omitempty" name:"IsChinaMainland"`
 }
 
+// Predefined struct for user
+type RemoveDockerContainersRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+}
+
+type RemoveDockerContainersRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+}
+
+func (r *RemoveDockerContainersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RemoveDockerContainersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ContainerIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RemoveDockerContainersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RemoveDockerContainersResponseParams struct {
+	// Docker活动ID。
+	DockerActivityId *string `json:"DockerActivityId,omitempty" name:"DockerActivityId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type RemoveDockerContainersResponse struct {
+	*tchttp.BaseResponse
+	Response *RemoveDockerContainersResponseParams `json:"Response"`
+}
+
+func (r *RemoveDockerContainersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RemoveDockerContainersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RenameDockerContainerRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID。
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+
+	// 容器新的名称。
+	ContainerName *string `json:"ContainerName,omitempty" name:"ContainerName"`
+}
+
+type RenameDockerContainerRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID。
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+
+	// 容器新的名称。
+	ContainerName *string `json:"ContainerName,omitempty" name:"ContainerName"`
+}
+
+func (r *RenameDockerContainerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RenameDockerContainerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ContainerId")
+	delete(f, "ContainerName")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RenameDockerContainerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RenameDockerContainerResponseParams struct {
+	// Docker活动ID。
+	DockerActivityId *string `json:"DockerActivityId,omitempty" name:"DockerActivityId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type RenameDockerContainerResponse struct {
+	*tchttp.BaseResponse
+	Response *RenameDockerContainerResponseParams `json:"Response"`
+}
+
+func (r *RenameDockerContainerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RenameDockerContainerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
 type RenewDiskChargePrepaid struct {
 	// 续费周期。
 	Period *int64 `json:"Period,omitempty" name:"Period"`
@@ -6249,6 +7696,145 @@ func (r *RenewInstancesResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ReplaceFirewallTemplateRuleRequestParams struct {
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 防火墙模板规则ID。
+	TemplateRuleId *string `json:"TemplateRuleId,omitempty" name:"TemplateRuleId"`
+
+	// 替换后的防火墙模板规则。
+	TemplateRule *FirewallRule `json:"TemplateRule,omitempty" name:"TemplateRule"`
+}
+
+type ReplaceFirewallTemplateRuleRequest struct {
+	*tchttp.BaseRequest
+	
+	// 防火墙模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 防火墙模板规则ID。
+	TemplateRuleId *string `json:"TemplateRuleId,omitempty" name:"TemplateRuleId"`
+
+	// 替换后的防火墙模板规则。
+	TemplateRule *FirewallRule `json:"TemplateRule,omitempty" name:"TemplateRule"`
+}
+
+func (r *ReplaceFirewallTemplateRuleRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ReplaceFirewallTemplateRuleRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "TemplateRuleId")
+	delete(f, "TemplateRule")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ReplaceFirewallTemplateRuleRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ReplaceFirewallTemplateRuleResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ReplaceFirewallTemplateRuleResponse struct {
+	*tchttp.BaseResponse
+	Response *ReplaceFirewallTemplateRuleResponseParams `json:"Response"`
+}
+
+func (r *ReplaceFirewallTemplateRuleResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ReplaceFirewallTemplateRuleResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RerunDockerContainerRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 重新创建的容器配置。
+	ContainerConfiguration *DockerContainerConfiguration `json:"ContainerConfiguration,omitempty" name:"ContainerConfiguration"`
+
+	// 容器ID。
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+}
+
+type RerunDockerContainerRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 重新创建的容器配置。
+	ContainerConfiguration *DockerContainerConfiguration `json:"ContainerConfiguration,omitempty" name:"ContainerConfiguration"`
+
+	// 容器ID。
+	ContainerId *string `json:"ContainerId,omitempty" name:"ContainerId"`
+}
+
+func (r *RerunDockerContainerRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RerunDockerContainerRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ContainerConfiguration")
+	delete(f, "ContainerId")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RerunDockerContainerRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RerunDockerContainerResponseParams struct {
+	// Docker活动ID。
+	DockerActivityId *string `json:"DockerActivityId,omitempty" name:"DockerActivityId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type RerunDockerContainerResponse struct {
+	*tchttp.BaseResponse
+	Response *RerunDockerContainerResponseParams `json:"Response"`
+}
+
+func (r *RerunDockerContainerResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RerunDockerContainerResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ResetAttachCcnRequestParams struct {
 	// 云联网实例ID。
 	CcnId *string `json:"CcnId,omitempty" name:"CcnId"`
@@ -6299,6 +7885,70 @@ func (r *ResetAttachCcnResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ResetAttachCcnResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ResetFirewallTemplateRulesRequestParams struct {
+	// 模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 重置后的防火墙模板规则列表。
+	TemplateRules []*FirewallRule `json:"TemplateRules,omitempty" name:"TemplateRules"`
+}
+
+type ResetFirewallTemplateRulesRequest struct {
+	*tchttp.BaseRequest
+	
+	// 模板ID。
+	TemplateId *string `json:"TemplateId,omitempty" name:"TemplateId"`
+
+	// 重置后的防火墙模板规则列表。
+	TemplateRules []*FirewallRule `json:"TemplateRules,omitempty" name:"TemplateRules"`
+}
+
+func (r *ResetFirewallTemplateRulesRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ResetFirewallTemplateRulesRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "TemplateId")
+	delete(f, "TemplateRules")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ResetFirewallTemplateRulesRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ResetFirewallTemplateRulesResponseParams struct {
+	// 重置后的规则ID列表。
+	TemplateRuleIdSet []*string `json:"TemplateRuleIdSet,omitempty" name:"TemplateRuleIdSet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type ResetFirewallTemplateRulesResponse struct {
+	*tchttp.BaseResponse
+	Response *ResetFirewallTemplateRulesResponseParams `json:"Response"`
+}
+
+func (r *ResetFirewallTemplateRulesResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ResetFirewallTemplateRulesResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6380,7 +8030,7 @@ type ResetInstancesPasswordRequestParams struct {
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 
 	// 实例登录密码。不同操作系统类型密码复杂度限制不一样，具体如下：
-	// `LINUX_UNIX` 实例密码必须 8-30 位，推荐使用 12 位以上密码，不能以“/”开头，至少包含以下字符中的三种不同字符，字符种类：<br><li>小写字母：[a-z]<br><li>大写字母：[A-Z]<br><li>数字：0-9<br><li>特殊字符： ()\`~!@#$%^&\*-+=\_|{}[]:;'<>,.?/</li>
+	// `LINUX_UNIX` 实例密码必须 8-30 位，推荐使用 12 位以上密码，不能以“/”开头，至少包含以下字符中的三种不同字符，字符种类：<br><li>小写字母：[a-z]<br><li>大写字母：[A-Z]<br><li>数字：0-9<br><li>特殊字符： ()\`\~!@#$%^&\*-+=\_|{}[]:;' <>,.?/</li>
 	// `WINDOWS` 实例密码必须 12-30 位，不能以“/”开头且不包括用户名，至少包含以下字符中的三种不同字符<br><li>小写字母：[a-z]<br><li>大写字母：[A-Z]<br><li>数字： 0-9<br><li>特殊字符：()\`~!@#$%^&\*-+=\_|{}[]:;' <>,.?/<br><li>如果实例即包含 `LINUX_UNIX` 实例又包含 `WINDOWS` 实例，则密码复杂度限制按照 `WINDOWS` 实例的限制。
 	Password *string `json:"Password,omitempty" name:"Password"`
 
@@ -6395,7 +8045,7 @@ type ResetInstancesPasswordRequest struct {
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
 
 	// 实例登录密码。不同操作系统类型密码复杂度限制不一样，具体如下：
-	// `LINUX_UNIX` 实例密码必须 8-30 位，推荐使用 12 位以上密码，不能以“/”开头，至少包含以下字符中的三种不同字符，字符种类：<br><li>小写字母：[a-z]<br><li>大写字母：[A-Z]<br><li>数字：0-9<br><li>特殊字符： ()\`~!@#$%^&\*-+=\_|{}[]:;'<>,.?/</li>
+	// `LINUX_UNIX` 实例密码必须 8-30 位，推荐使用 12 位以上密码，不能以“/”开头，至少包含以下字符中的三种不同字符，字符种类：<br><li>小写字母：[a-z]<br><li>大写字母：[A-Z]<br><li>数字：0-9<br><li>特殊字符： ()\`\~!@#$%^&\*-+=\_|{}[]:;' <>,.?/</li>
 	// `WINDOWS` 实例密码必须 12-30 位，不能以“/”开头且不包括用户名，至少包含以下字符中的三种不同字符<br><li>小写字母：[a-z]<br><li>大写字母：[A-Z]<br><li>数字： 0-9<br><li>特殊字符：()\`~!@#$%^&\*-+=\_|{}[]:;' <>,.?/<br><li>如果实例即包含 `LINUX_UNIX` 实例又包含 `WINDOWS` 实例，则密码复杂度限制按照 `WINDOWS` 实例的限制。
 	Password *string `json:"Password,omitempty" name:"Password"`
 
@@ -6443,6 +8093,134 @@ func (r *ResetInstancesPasswordResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *ResetInstancesPasswordResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RestartDockerContainersRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+}
+
+type RestartDockerContainersRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+}
+
+func (r *RestartDockerContainersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RestartDockerContainersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ContainerIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RestartDockerContainersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RestartDockerContainersResponseParams struct {
+	// Docker活动ID。
+	DockerActivityId *string `json:"DockerActivityId,omitempty" name:"DockerActivityId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type RestartDockerContainersResponse struct {
+	*tchttp.BaseResponse
+	Response *RestartDockerContainersResponseParams `json:"Response"`
+}
+
+func (r *RestartDockerContainersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RestartDockerContainersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RunDockerContainersRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 要创建的容器列表。
+	Containers []*DockerContainerConfiguration `json:"Containers,omitempty" name:"Containers"`
+}
+
+type RunDockerContainersRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 要创建的容器列表。
+	Containers []*DockerContainerConfiguration `json:"Containers,omitempty" name:"Containers"`
+}
+
+func (r *RunDockerContainersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RunDockerContainersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Containers")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "RunDockerContainersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type RunDockerContainersResponseParams struct {
+	// Docker活动ID列表。
+	DockerActivitySet []*string `json:"DockerActivitySet,omitempty" name:"DockerActivitySet"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type RunDockerContainersResponse struct {
+	*tchttp.BaseResponse
+	Response *RunDockerContainersResponseParams `json:"Response"`
+}
+
+func (r *RunDockerContainersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *RunDockerContainersResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -6552,6 +8330,70 @@ type SoftwareDetail struct {
 }
 
 // Predefined struct for user
+type StartDockerContainersRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+}
+
+type StartDockerContainersRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+}
+
+func (r *StartDockerContainersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StartDockerContainersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ContainerIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "StartDockerContainersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StartDockerContainersResponseParams struct {
+	// Docker活动ID。
+	DockerActivityId *string `json:"DockerActivityId,omitempty" name:"DockerActivityId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type StartDockerContainersResponse struct {
+	*tchttp.BaseResponse
+	Response *StartDockerContainersResponseParams `json:"Response"`
+}
+
+func (r *StartDockerContainersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StartDockerContainersResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type StartInstancesRequestParams struct {
 	// 实例 ID 列表。每次请求批量实例的上限为 100。可通过[DescribeInstances](https://cloud.tencent.com/document/api/1207/47573)接口返回值中的InstanceId获取。
 	InstanceIds []*string `json:"InstanceIds,omitempty" name:"InstanceIds"`
@@ -6602,6 +8444,70 @@ func (r *StartInstancesResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *StartInstancesResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StopDockerContainersRequestParams struct {
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+}
+
+type StopDockerContainersRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID。
+	InstanceId *string `json:"InstanceId,omitempty" name:"InstanceId"`
+
+	// 容器ID列表。
+	ContainerIds []*string `json:"ContainerIds,omitempty" name:"ContainerIds"`
+}
+
+func (r *StopDockerContainersRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StopDockerContainersRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "ContainerIds")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "StopDockerContainersRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type StopDockerContainersResponseParams struct {
+	// Docker活动ID。
+	DockerActivityId *string `json:"DockerActivityId,omitempty" name:"DockerActivityId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitempty" name:"RequestId"`
+}
+
+type StopDockerContainersResponse struct {
+	*tchttp.BaseResponse
+	Response *StopDockerContainersResponseParams `json:"Response"`
+}
+
+func (r *StopDockerContainersResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *StopDockerContainersResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 

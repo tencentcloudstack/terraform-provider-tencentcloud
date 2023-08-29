@@ -1,3 +1,25 @@
+## 1.81.22 (August 25, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_wedata_rule_templates` ([#2067](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2067))
+* **New Resource:** `tencentcloud_lighthouse_firewall_template` ([#2076](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2076))
+* **New Resource:** `tencentcloud_wedata_rule_template` ([#2067](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2067))
+
+ENHANCEMENTS:
+
+* datasource/tencentcloud_monitor_alarm_notices: Support `amp_consumer_id` field ([#2081](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2081))
+* resource/tencentcloud_kubernetes_node_pool: add `orderly_security_group_ids` field to set the security group orderly and deprecated the `security_group_ids` field. ([#2070](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2070))
+* resource/tencentcloud_lighthouse_instance: support param `firewall_template_id` ([#2076](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2076))
+* resource/tencentcloud_tdmq_rocketmq_environment_role: change `cluster_id`, `environment_name` and `role_name` to `ForceNew` ([#2078](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2078))
+* resource/tencentcloud_tdmq_rocketmq_group: change `cluster_id`, `namespaces` and `group_id` to `ForceNew` ([#2078](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2078))
+* resource/tencentcloud_teo_zone: `cname_speed_up` cannot be modified ([#2074](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2074))
+* resource/tencentcloud_vpn_gateway: change `zone` to `optional` ([#2080](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2080))
+
+BUG FIXES:
+
+* resource/tencentcloud_vpn_connection: support change `ike_version` ([#2082](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2082))
+
 ## 1.81.21 (August 18, 2023)
 
 FEATURES:

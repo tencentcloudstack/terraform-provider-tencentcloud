@@ -40,9 +40,9 @@ resource "tencentcloud_tdmq_rocketmq_group" "example" {
 The following arguments are supported:
 
 * `broadcast_enable` - (Required, Bool) Whether to enable broadcast consumption.
-* `cluster_id` - (Required, String) Cluster ID.
-* `group_name` - (Required, String) Group name (8-64 characters).
-* `namespace` - (Required, String) Namespace. Currently, only one namespace is supported.
+* `cluster_id` - (Required, String, ForceNew) Cluster ID.
+* `group_name` - (Required, String, ForceNew) Group name (8-64 characters).
+* `namespace` - (Required, String, ForceNew) Namespace. Currently, only one namespace is supported.
 * `read_enable` - (Required, Bool) Whether to enable consumption.
 * `remark` - (Optional, String) Remarks (up to 128 characters).
 

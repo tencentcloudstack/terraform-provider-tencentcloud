@@ -43,10 +43,10 @@ resource "tencentcloud_tdmq_rocketmq_environment_role" "example" {
 
 The following arguments are supported:
 
-* `cluster_id` - (Required, String) Cluster ID (required).
-* `environment_name` - (Required, String) Environment (namespace) name.
+* `cluster_id` - (Required, String, ForceNew) Cluster ID (required).
+* `environment_name` - (Required, String, ForceNew) Environment (namespace) name.
 * `permissions` - (Required, Set: [`String`]) Permissions, which is a non-empty string array of `produce` and `consume` at the most.
-* `role_name` - (Required, String) Role Name.
+* `role_name` - (Required, String, ForceNew) Role Name.
 
 ## Attributes Reference
 

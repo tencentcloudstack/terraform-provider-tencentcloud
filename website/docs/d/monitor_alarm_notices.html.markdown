@@ -43,6 +43,7 @@ The following arguments are supported:
 In addition to all arguments above, the following attributes are exported:
 
 * `alarm_notice` - Alarm notification template list.
+  * `amp_consumer_id` - AMP consumer ID.
   * `cls_notices` - A maximum of one alarm notification can be pushed to the CLS service.
     * `enable` - Start-stop status, can not be transmitted, default enabled. 0= Disabled, 1= enabled.
     * `log_set_id` - Log collection Id.
