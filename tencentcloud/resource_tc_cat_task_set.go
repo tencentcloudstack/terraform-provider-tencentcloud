@@ -385,16 +385,48 @@ func resourceTencentCloudCatTaskSetUpdate(d *schema.ResourceData, meta interface
 		}
 	}
 
-	if d.HasChange("batch_tasks") {
-		return fmt.Errorf("`batch_tasks` do not support change now.")
-	}
-
 	if d.HasChange("task_type") {
 		return fmt.Errorf("`task_type` do not support change now.")
 	}
 
 	if d.HasChange("task_category") {
 		return fmt.Errorf("`task_category` do not support change now.")
+	}
+
+	if d.HasChange("batch_tasks") {
+		oldInterface, newInterface := d.GetChange("batch_tasks")
+		oldMap := make(map[string]interface{})
+		newMap := make(map[string]interface{})
+		for _, item := range oldInterface.([]interface{}) {
+			oldMap = item.(map[string]interface{})
+		}
+		for _, item := range newInterface.([]interface{}) {
+			newMap = item.(map[string]interface{})
+		}
+		replace, _ := diffTags(oldMap, newMap)
+
+		if _, ok := replace["target_address"]; ok {
+			return fmt.Errorf("`target_address` do not support change now.")
+		}
+
+		if v, ok := replace["name"]; ok {
+			requestTaskAttributes := cat.NewUpdateProbeTaskAttributesRequest()
+			requestTaskAttributes.TaskId = &taskId
+			requestTaskAttributes.Name = &v
+			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseCatClient().UpdateProbeTaskAttributes(requestTaskAttributes)
+				if e != nil {
+					return retryError(e)
+				} else {
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+				}
+				return nil
+			})
+			if err != nil {
+				log.Printf("[CRITAL]%s Suspend cat task failed, reason:%+v", logId, err)
+				return err
+			}
+		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
