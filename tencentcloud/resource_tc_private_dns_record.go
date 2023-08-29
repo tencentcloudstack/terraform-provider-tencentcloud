@@ -154,7 +154,7 @@ func resourceTencentCloudDPrivateDnsRecordRead(d *schema.ResourceData, meta inte
 	zoneId := idSplit[0]
 	recordId := idSplit[1]
 
-	records, err := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, "")
+	records, err := service.DescribePrivateDnsRecordByFilter(ctx, zoneId, nil)
 	if err != nil {
 		return err
 	}

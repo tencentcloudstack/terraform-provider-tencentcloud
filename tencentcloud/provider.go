@@ -1094,6 +1094,8 @@ PrivateDNS
   Resource
     tencentcloud_private_dns_zone
 	tencentcloud_private_dns_record
+  Data Source
+    tencentcloud_private_dns_records
 
 Cloud Log Service(CLS)
   Resource
@@ -2255,6 +2257,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_bus":                                    dataSourceTencentCloudEbBus(),
 			"tencentcloud_eb_event_rules":                            dataSourceTencentCloudEbEventRules(),
 			"tencentcloud_wedata_rule_templates":                     dataSourceTencentCloudWedataRuleTemplates(),
+			"tencentcloud_private_dns_records":                       dataSourceTencentCloudPrivateDnsRecords(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
