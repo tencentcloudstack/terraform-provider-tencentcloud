@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudCatTaskSet_basic -v
 func TestAccTencentCloudCatTaskSet_basic(t *testing.T) {
 	t.Parallel()
 
