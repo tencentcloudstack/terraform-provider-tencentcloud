@@ -417,25 +417,25 @@ func resourceTencentCloudTseCngwRouteRead(d *schema.ResourceData, meta interface
 		_ = d.Set("destination_ports", cngwRoute.DestinationPorts)
 	}
 
-	// if cngwRoute.Headers != nil {
-	// 	headersList := []interface{}{}
-	// 	for _, headers := range cngwRoute.Headers {
-	// 		headersMap := map[string]interface{}{}
+	if cngwRoute.Headers != nil {
+		headersList := []interface{}{}
+		for _, headers := range cngwRoute.Headers {
+			headersMap := map[string]interface{}{}
 
-	// 		if cngwRoute.Headers.Key != nil {
-	// 			headersMap["key"] = cngwRoute.Headers.Key
-	// 		}
+			if headers.Key != nil {
+				headersMap["key"] = headers.Key
+			}
 
-	// 		if cngwRoute.Headers.Value != nil {
-	// 			headersMap["value"] = cngwRoute.Headers.Value
-	// 		}
+			if headers.Value != nil {
+				headersMap["value"] = headers.Value
+			}
 
-	// 		headersList = append(headersList, headersMap)
-	// 	}
+			headersList = append(headersList, headersMap)
+		}
 
-	// 	_ = d.Set("headers", headersList)
+		_ = d.Set("headers", headersList)
 
-	// }
+	}
 
 	if cngwRoute.ID != nil {
 		_ = d.Set("route_id", cngwRoute.ID)

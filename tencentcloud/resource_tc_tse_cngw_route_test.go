@@ -30,9 +30,9 @@ func TestAccTencentCloudTseCngwRouteResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "hosts.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "https_redirect_status_code", "426"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "paths.#", "1"),
-					// resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.#", "1"),
-					// resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.0.key", "req"),
-					// resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.0.value", "terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.0.key", "req"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.0.value", "terraform"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "preserve_host", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "protocols.#", "2"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "route_name", "terraform-route"),
@@ -123,10 +123,10 @@ resource "tencentcloud_tse_cngw_route" "cngw_route" {
   paths = [
     "/user",
   ]
-  #headers {
-  #	key = "req"
-  #	value = "terraform"
-  #}
+  headers {
+  	key = "req"
+  	value = "terraform"
+  }
   preserve_host = false
   protocols = [
     "http",
