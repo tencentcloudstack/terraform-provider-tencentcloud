@@ -1,14 +1,17 @@
 package tencentcloud
 
 import (
+	"fmt"
 	"testing"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
 // go test -i; go test -test.run TestAccTencentCloudSsmSshKeyPairSecretResource_basic -v
 func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 	t.Parallel()
+	rName := fmt.Sprintf("tf-testacc-kms-key-%s", acctest.RandString(13))
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -16,14 +19,14 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccSsmSshKeyPairSecret,
+				Config: fmt.Sprintf(testAccSsmSshKeyPairSecret, rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "description", "desc."),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "status", "Disabled"),
 				),
 			},
 			{
-				Config: testAccSsmSshKeyPairSecretUpdate,
+				Config: fmt.Sprintf(testAccSsmSshKeyPairSecretUpdate, rName),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "description", "update desc."),
 					resource.TestCheckResourceAttr("tencentcloud_ssm_ssh_key_pair_secret.example", "status", "Enabled"),
@@ -41,7 +44,7 @@ func TestAccTencentCloudSsmSshKeyPairSecretResource_basic(t *testing.T) {
 
 const testAccSsmSshKeyPairSecret = `
 resource "tencentcloud_kms_key" "example" {
-  alias                = "tf-example-kms-key-test"
+  alias                = "%s"
   description          = "example of kms key"
   key_rotation_enabled = false
   is_enabled           = true
@@ -68,7 +71,7 @@ resource "tencentcloud_ssm_ssh_key_pair_secret" "example" {
 
 const testAccSsmSshKeyPairSecretUpdate = `
 resource "tencentcloud_kms_key" "example" {
-  alias                = "tf-example-kms-key-test"
+  alias                = "%s"
   description          = "example of kms key"
   key_rotation_enabled = false
   is_enabled           = true
