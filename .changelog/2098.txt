@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_clickhouse_backup
+```
+
+```release-note:new-resource
+tencentcloud_clickhouse_backup_strategy
+```
