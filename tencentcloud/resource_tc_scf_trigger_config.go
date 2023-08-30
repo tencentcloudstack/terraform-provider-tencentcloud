@@ -1,23 +1,25 @@
 /*
 Provides a resource to create a scf trigger_config
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_scf_trigger_config" "trigger_config" {
-  enable        = "OPEN"
-  function_name = "keep-1676351130"
-  trigger_name  = "SCF-timer-1685540160"
-  type          = "timer"
-  qualifier     = "$DEFAULT"
-  namespace     = "default"
-  trigger_desc = "* 1 2 * * * *"
-  description = "func"
-  custom_argument = "Information"
-}
+
+	resource "tencentcloud_scf_trigger_config" "trigger_config" {
+	  enable        = "OPEN"
+	  function_name = "keep-1676351130"
+	  trigger_name  = "SCF-timer-1685540160"
+	  type          = "timer"
+	  qualifier     = "$DEFAULT"
+	  namespace     = "default"
+	  trigger_desc = "* 1 2 * * * *"
+	  description = "func"
+	  custom_argument = "Information"
+	}
+
 ```
 
-Import
+# Import
 
 scf trigger_config can be imported using the id, e.g.
 
@@ -54,26 +56,26 @@ func resourceTencentCloudScfTriggerConfig() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "function name.",
+				Description: "Function name.",
 			},
 
 			"trigger_name": {
 				Required:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "trigger Name.",
+				Description: "Trigger Name.",
 			},
 
 			"type": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "trigger type.",
+				Description: "Trigger type.",
 			},
 
 			"enable": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "The trigger is turned on or off, and the parameter passed as OPEN is turned on, and CLOSE is turned off.",
+				Description: "Status of trigger. Values: OPEN (enabled); CLOSE disabled).",
 			},
 
 			"qualifier": {
@@ -86,7 +88,7 @@ func resourceTencentCloudScfTriggerConfig() *schema.Resource {
 				Optional:    true,
 				ForceNew:    true,
 				Type:        schema.TypeString,
-				Description: "function namespace.",
+				Description: "Function namespace.",
 			},
 
 			"trigger_desc": {
