@@ -2965,6 +2965,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_disk":                                     resourceTencentCloudLighthouseDisk(),
 			"tencentcloud_lighthouse_renew_disk":                               resourceTencentCloudLighthouseRenewDisk(),
 			"tencentcloud_lighthouse_renew_instance":                           resourceTencentCloudLighthouseRenewInstance(),
+			"tencentcloud_clickhouse_backup":                                   resourceTencentCloudClickhouseBackup(),
+			"tencentcloud_clickhouse_backup_strategy":                          resourceTencentCloudClickhouseBackupStrategy(),
 			"tencentcloud_api_gateway_api_doc":                                 resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                                 resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                                        resourceTencentCloudTseInstance(),
