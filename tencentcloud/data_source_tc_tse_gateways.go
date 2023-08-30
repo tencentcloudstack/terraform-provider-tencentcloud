@@ -6,8 +6,8 @@ Example Usage
 ```hcl
 data "tencentcloud_tse_gateways" "gateways" {
   filters {
-	name = "Region"
-	values =
+    name   = "GatewayId"
+    values = ["gateway-ddbb709b"]
   }
 }
 ```
@@ -16,6 +16,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -74,7 +75,7 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"status": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "status of gateway. May return values: - Creating - CreateFailed - Running - Modifying - UpdatingSpec - UpdateFailed - Deleting - DeleteFailed - Isolating.",
+										Description: "status of gateway. May return values: `Creating`, `CreateFailed`, `Running`, `Modifying`, `UpdatingSpec`, `UpdateFailed`, `Deleting`, `DeleteFailed`, `Isolating`.",
 									},
 									"name": {
 										Type:        schema.TypeString,
@@ -89,7 +90,7 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"gateway_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "gateway version. Reference value:- 2.4.1- 2.5.1.",
+										Description: "gateway version. Reference value: `2.4.1`, `2.5.1`.",
 									},
 									"node_config": {
 										Type:        schema.TypeList,
@@ -166,12 +167,12 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"trade_type": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "trade type.- 0: postpaid- 1: Prepaid.",
+										Description: "trade type. `0`: postpaid, `1`: Prepaid.",
 									},
 									"feature_version": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "product version.- TRIAL- STANDARD (default value)- PROFESSIONAL.",
+										Description: "product version. `TRIAL`, `STANDARD`(default value), `PROFESSIONAL`.",
 									},
 									"internet_max_bandwidth_out": {
 										Type:        schema.TypeInt,
@@ -181,7 +182,7 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"auto_renew_flag": {
 										Type:        schema.TypeInt,
 										Computed:    true,
-										Description: "auto renew flag- 0 ,default status- 1 ,auto renew- 2 ,auto not renew.",
+										Description: "auto renew flag, `0`: default status, `1`: auto renew, `2`: auto not renew.",
 									},
 									"cur_deadline": {
 										Type:        schema.TypeString,
@@ -211,7 +212,7 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"internet_pay_mode": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "trade type of internet.- BANDWIDTH- TRAFFIC.",
+										Description: "trade type of internet. `BANDWIDTH`, `TRAFFIC`.",
 									},
 									"gateway_minor_version": {
 										Type:        schema.TypeString,
@@ -473,7 +474,7 @@ func dataSourceTencentCloudTseGatewaysRead(d *schema.ResourceData, meta interfac
 			listCloudNativeAPIGatewayResultMap["gateway_list"] = gatewayListList
 		}
 
-		_ = d.Set("result", listCloudNativeAPIGatewayResultMap)
+		_ = d.Set("result", []interface{}{listCloudNativeAPIGatewayResultMap})
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

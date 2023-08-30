@@ -32,7 +32,6 @@ func TestAccTencentCloudTseCngwServiceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "protocol", "http"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "retries", "5"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_service.cngw_service", "service_id"),
-					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "tags.created", "terraform"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "timeout", "60000"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "upstream_type", "IPList"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "upstream_info.#", "1"),
@@ -66,7 +65,6 @@ func TestAccTencentCloudTseCngwServiceResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "protocol", "http"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "retries", "5"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_service.cngw_service", "service_id"),
-					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "tags.created", "terraform"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "timeout", "6000"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "upstream_type", "IPList"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service.cngw_service", "upstream_info.#", "1"),
@@ -160,9 +158,6 @@ resource "tencentcloud_tse_cngw_service" "cngw_service" {
 	path       = "/test"
 	protocol   = "http"
 	retries    = 5
-	tags = {
-	  "created" = "terraform"
-	}
 	timeout       = 60000
 	upstream_type = "IPList"
   
@@ -194,9 +189,6 @@ resource "tencentcloud_tse_cngw_service" "cngw_service" {
 	path       = "/test-1"
 	protocol   = "http"
 	retries    = 5
-	tags = {
-	  "created" = "terraform"
-	}
 	timeout       = 6000
 	upstream_type = "IPList"
   

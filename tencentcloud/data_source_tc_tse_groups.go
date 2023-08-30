@@ -5,10 +5,10 @@ Example Usage
 
 ```hcl
 data "tencentcloud_tse_groups" "groups" {
-  gateway_id = ""
+  gateway_id = "gateway-ddbb709b"
   filters {
-	name = "GroupId"
-	values =
+    name   = "GroupId"
+    values = ["group-013c0d8e"]
   }
 }
 ```
@@ -17,6 +17,7 @@ package tencentcloud
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
@@ -589,7 +590,7 @@ func dataSourceTencentCloudTseGroupsRead(d *schema.ResourceData, meta interface{
 			nativeGatewayServerGroupsMap["gateway_group_list"] = gatewayGroupListList
 		}
 
-		_ = d.Set("result", nativeGatewayServerGroupsMap)
+		_ = d.Set("result", []interface{}{nativeGatewayServerGroupsMap})
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))

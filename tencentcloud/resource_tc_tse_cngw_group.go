@@ -4,37 +4,60 @@ Provides a resource to create a tse cngw_group
 Example Usage
 
 ```hcl
-resource "tencentcloud_tse_cngw_group" "cngw_group" {
-  gateway_id = ""
-  name = ""
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_tse_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "tf_tse_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_tse_cngw_gateway" "cngw_gateway" {
+  description                = "terraform test1"
+  enable_cls                 = true
+  engine_region              = "ap-guangzhou"
+  feature_version            = "STANDARD"
+  gateway_version            = "2.5.1"
+  ingress_class_name         = "tse-nginx-ingress"
+  internet_max_bandwidth_out = 0
+  name                       = "terraform-gateway1"
+  trade_type                 = 0
+  type                       = "kong"
+
   node_config {
-		specification = ""
-		number =
-
+    number        = 2
+    specification = "1c2g"
   }
-  subnet_id = ""
-  description = ""
-  internet_max_bandwidth_out =
-  internet_config {
-		internet_address_version = ""
-		internet_pay_mode = ""
-		internet_max_bandwidth_out =
-		description = ""
-		sla_type = ""
-		multi_zone_flag =
-		master_zone_id = ""
-		slave_zone_id = ""
 
+  vpc_config {
+    subnet_id = tencentcloud_subnet.subnet.id
+    vpc_id    = tencentcloud_vpc.vpc.id
+  }
+
+  tags = {
+    "createdBy" = "terraform"
   }
 }
-```
 
-Import
+resource "tencentcloud_tse_cngw_group" "cngw_group" {
+  description = "terraform desc"
+  gateway_id  = tencentcloud_tse_cngw_gateway.cngw_gateway.id
+  name        = "terraform-group"
+  subnet_id   = tencentcloud_subnet.subnet.id
 
-tse cngw_group can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tse_cngw_group.cngw_group cngw_group_id
+  node_config {
+    number        = 2
+    specification = "1c2g"
+  }
+}
 ```
 */
 package tencentcloud
@@ -171,6 +194,7 @@ func resourceTencentCloudTseCngwGroupCreate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	var (
 		request   = tse.NewCreateNativeGatewayServerGroupRequest()
@@ -256,6 +280,11 @@ func resourceTencentCloudTseCngwGroupCreate(d *schema.ResourceData, meta interfa
 
 	groupId = *response.Response.Result.GroupId
 	d.SetId(gatewayId + FILED_SP + groupId)
+
+	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	if err := service.CheckTseNativeAPIGatewayGroupStatusById(ctx, gatewayId, groupId, "create"); err != nil {
+		return err
+	}
 
 	return resourceTencentCloudTseCngwGroupRead(d, meta)
 }
@@ -368,6 +397,7 @@ func resourceTencentCloudTseCngwGroupUpdate(d *schema.ResourceData, meta interfa
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 
 	request := tse.NewModifyNativeGatewayServerGroupRequest()
 
@@ -415,6 +445,11 @@ func resourceTencentCloudTseCngwGroupUpdate(d *schema.ResourceData, meta interfa
 		return err
 	}
 
+	service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
+	if err := service.CheckTseNativeAPIGatewayGroupStatusById(ctx, gatewayId, groupId, "update"); err != nil {
+		return err
+	}
+
 	return resourceTencentCloudTseCngwGroupRead(d, meta)
 }
 
@@ -434,6 +469,9 @@ func resourceTencentCloudTseCngwGroupDelete(d *schema.ResourceData, meta interfa
 	groupId := idSplit[1]
 
 	if err := service.DeleteTseCngwGroupById(ctx, gatewayId, groupId); err != nil {
+		return err
+	}
+	if err := service.CheckTseNativeAPIGatewayGroupStatusById(ctx, gatewayId, groupId, "delete"); err != nil {
 		return err
 	}
 

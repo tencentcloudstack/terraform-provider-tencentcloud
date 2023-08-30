@@ -4,50 +4,48 @@ Provides a resource to create a tse cngw_gateway
 Example Usage
 
 ```hcl
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_tse_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "tf_tse_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
 resource "tencentcloud_tse_cngw_gateway" "cngw_gateway" {
-  name = "test"
-  type = "kong"
-  gateway_version = "2.4.1"
+  description                = "terraform test1"
+  enable_cls                 = true
+  engine_region              = "ap-guangzhou"
+  feature_version            = "STANDARD"
+  gateway_version            = "2.5.1"
+  ingress_class_name         = "tse-nginx-ingress"
+  internet_max_bandwidth_out = 0
+  name                       = "terraform-gateway1"
+  trade_type                 = 0
+  type                       = "kong"
+
   node_config {
-		specification = ""
-		number =
-
+    number        = 2
+    specification = "1c2g"
   }
+
   vpc_config {
-		vpc_id = "vpc-xxxxxx"
-		subnet_id = "subnet-xxxxxx"
-
+    subnet_id = tencentcloud_subnet.subnet.id
+    vpc_id    = tencentcloud_vpc.vpc.id
   }
-  description = "for test"
-  enable_cls = false
-  feature_version = ""
-  internet_max_bandwidth_out =
-  engine_region = "ap-guangzhou"
-  ingress_class_name = ""
-  trade_type =
-  internet_config {
-		internet_address_version = ""
-		internet_pay_mode = ""
-		internet_max_bandwidth_out =
-		description = ""
-		sla_type = ""
-		multi_zone_flag =
-		master_zone_id = ""
-		slave_zone_id = ""
 
-  }
   tags = {
     "createdBy" = "terraform"
   }
 }
-```
-
-Import
-
-tse cngw_gateway can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_tse_cngw_gateway.cngw_gateway cngw_gateway_id
 ```
 */
 package tencentcloud
@@ -88,7 +86,7 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 			"gateway_version": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "gateway vwersion. Reference value：- 2.4.1- 2.5.1.",
+				Description: "gateway vwersion. Reference value: `2.4.1`, `2.5.1`.",
 			},
 
 			"node_config": {
@@ -463,44 +461,6 @@ func resourceTencentCloudTseCngwGatewayRead(d *schema.ResourceData, meta interfa
 	if cngwGateway.TradeType != nil {
 		_ = d.Set("trade_type", cngwGateway.TradeType)
 	}
-
-	// if cngwGateway.InternetConfig != nil {
-	// 	internetConfigMap := map[string]interface{}{}
-
-	// 	if cngwGateway.InternetConfig.InternetAddressVersion != nil {
-	// 		internetConfigMap["internet_address_version"] = cngwGateway.InternetConfig.InternetAddressVersion
-	// 	}
-
-	// 	if cngwGateway.InternetConfig.InternetPayMode != nil {
-	// 		internetConfigMap["internet_pay_mode"] = cngwGateway.InternetConfig.InternetPayMode
-	// 	}
-
-	// 	if cngwGateway.InternetConfig.InternetMaxBandwidthOut != nil {
-	// 		internetConfigMap["internet_max_bandwidth_out"] = cngwGateway.InternetConfig.InternetMaxBandwidthOut
-	// 	}
-
-	// 	if cngwGateway.InternetConfig.Description != nil {
-	// 		internetConfigMap["description"] = cngwGateway.InternetConfig.Description
-	// 	}
-
-	// 	if cngwGateway.InternetConfig.SlaType != nil {
-	// 		internetConfigMap["sla_type"] = cngwGateway.InternetConfig.SlaType
-	// 	}
-
-	// 	if cngwGateway.InternetConfig.MultiZoneFlag != nil {
-	// 		internetConfigMap["multi_zone_flag"] = cngwGateway.InternetConfig.MultiZoneFlag
-	// 	}
-
-	// 	if cngwGateway.InternetConfig.MasterZoneId != nil {
-	// 		internetConfigMap["master_zone_id"] = cngwGateway.InternetConfig.MasterZoneId
-	// 	}
-
-	// 	if cngwGateway.InternetConfig.SlaveZoneId != nil {
-	// 		internetConfigMap["slave_zone_id"] = cngwGateway.InternetConfig.SlaveZoneId
-	// 	}
-
-	// 	_ = d.Set("internet_config", []interface{}{internetConfigMap})
-	// }
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}

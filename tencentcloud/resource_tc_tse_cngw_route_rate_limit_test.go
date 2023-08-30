@@ -11,7 +11,7 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudTseCngwRouteRateLimitResource_basic -v
-func TestAccTencentCloudNeedFixTseCngwRouteRateLimitResource_basic(t *testing.T) {
+func TestAccTencentCloudTseCngwRouteRateLimitResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -26,6 +26,18 @@ func TestAccTencentCloudNeedFixTseCngwRouteRateLimitResource_basic(t *testing.T)
 					testAccCheckTseCngwRouteRateLimitExists("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "gateway_id", defaultTseGatewayId),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.enabled", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.header", "req"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.hide_client_headers", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.is_delay", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.limit_by", "header"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.line_up_time", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.policy", "redis"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.response_type", "default"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.qps_thresholds.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.qps_thresholds.0.max", "10"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route_rate_limit.cngw_route_rate_limit", "limit_detail.0.qps_thresholds.0.unit", "minute"),
 				),
 			},
 			{
@@ -58,7 +70,7 @@ func testAccCheckTseCngwRouteRateLimitDestroy(s *terraform.State) error {
 			return err
 		}
 
-		if res != nil {
+		if res != nil && res.Enabled != nil {
 			return fmt.Errorf("tse cngwRouteRateLimit %s still exists", rs.Primary.ID)
 		}
 	}
@@ -99,42 +111,24 @@ func testAccCheckTseCngwRouteRateLimitExists(r string) resource.TestCheckFunc {
 const testAccTseCngwRouteRateLimit = `
 
 resource "tencentcloud_tse_cngw_route_rate_limit" "cngw_route_rate_limit" {
-  gateway_id = "gateway-xxxxxx"
-  route_id = "gateway-xxxxxx"
-  limit_detail {
-		enabled = true
-		qps_thresholds {
-			unit = "second"
-			max = 50
-		}
-		limit_by = "ip"
-		response_type = "default"
-		hide_client_headers = false
-		is_delay = false
-		path = "/test"
-		header = "auth"
-		external_redis {
-			redis_host = ""
-			redis_password = ""
-			redis_port = 
-			redis_timeout = 
-		}
-		policy = "redis"
-		rate_limit_response {
-			body = ""
-			headers {
-				key = ""
-				value = ""
-			}
-			http_status = 
-		}
-		rate_limit_response_url = ""
-		line_up_time = 
+    gateway_id = "gateway-ddbb709b"
+    route_id   = "17e8ba6a-e136-454b-9cfa-3e541ffd01dd"
 
-  }
-  tags = {
-    "createdBy" = "terraform"
-  }
+    limit_detail {
+        enabled             = true
+        header              = "req"
+        hide_client_headers = true
+        is_delay            = true
+        limit_by            = "header"
+        line_up_time        = 10
+        policy              = "redis"
+        response_type       = "default"
+
+        qps_thresholds {
+            max  = 10
+            unit = "minute"
+        }
+    }
 }
 
 `
