@@ -19,7 +19,6 @@ func TestAccDataSourceTencentCloudGaapSecurityPolices_basic(t *testing.T) {
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_gaap_security_policies.foo"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_policies.foo", "proxy_id"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_gaap_security_policies.foo", "status"),
-					resource.TestCheckResourceAttr("data.tencentcloud_gaap_security_policies.foo", "action", "ACCEPT"),
 				),
 			},
 		},

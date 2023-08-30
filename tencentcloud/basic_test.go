@@ -90,7 +90,7 @@ const (
 	defaultGaapRealserverIp1        = "119.29.29.35"
 	defaultGaapRealserverIpId2      = "rs-5qfe73i1"
 	defaultGaapRealserverIp2        = "1.1.1.5"
-	defaultHttpsDomainCertificateId = "cert-6pdgefdf"
+	defaultHttpsDomainCertificateId = "cert-bo76n5ix"
 
 	defaultSecurityGroup = "sg-ijato2x1"
 
