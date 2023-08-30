@@ -1578,6 +1578,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_groups
 	tencentcloud_tse_gateways
 	tencentcloud_tse_gateway_nodes
+	tencentcloud_tse_gateway_routes
 	tencentcloud_tse_gateway_canary_rules
 	tencentcloud_tse_gateway_services
 
