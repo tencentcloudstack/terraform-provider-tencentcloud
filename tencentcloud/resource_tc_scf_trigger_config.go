@@ -87,12 +87,14 @@ func resourceTencentCloudScfTriggerConfig() *schema.Resource {
 			"namespace": {
 				Optional:    true,
 				ForceNew:    true,
+				Default:     "default",
 				Type:        schema.TypeString,
 				Description: "Function namespace.",
 			},
 
 			"trigger_desc": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "TriggerDesc parameter.",
 			},
