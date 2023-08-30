@@ -1,0 +1,3 @@
+```release-note:enhancement
+resource/tencentcloud_scf_function: support `handler` and `runtime` optional
+```
