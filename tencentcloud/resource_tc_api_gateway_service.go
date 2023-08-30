@@ -121,7 +121,13 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Exclusive instance ID.",
+			},
+			"uniq_vpc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "VPC ID.",
 			},
 			"release_limit": {
 				Type:        schema.TypeInt,
@@ -254,6 +260,7 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 		netTypes          = helper.InterfacesStrings(d.Get("net_type").(*schema.Set).List())
 		serviceId         string
 		instanceId        string
+		vpcId             string
 		err               error
 
 		releaseLimit int
@@ -263,6 +270,10 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
+	}
+
+	if v, ok := d.GetOk("uniq_vpc_id"); ok {
+		vpcId = v.(string)
 	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -275,7 +286,9 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 			"",
 			"",
 			instanceId,
-			netTypes)
+			vpcId,
+			netTypes,
+		)
 
 		if err != nil {
 			if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {

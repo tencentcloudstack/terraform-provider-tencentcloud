@@ -535,7 +535,8 @@ func (me *APIGatewayService) CreateService(ctx context.Context,
 	ipVersion,
 	setServerName,
 	appidType,
-	instanceId string,
+	instanceId,
+	vpcId string,
 	netTypes []string) (serviceId string, errRet error) {
 
 	request := apigateway.NewCreateServiceRequest()
@@ -555,6 +556,9 @@ func (me *APIGatewayService) CreateService(ctx context.Context,
 	}
 	if instanceId != "" {
 		request.InstanceId = &instanceId
+	}
+	if vpcId != "" {
+		request.UniqVpcId = &vpcId
 	}
 	request.NetTypes = helper.Strings(netTypes)
 
