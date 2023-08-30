@@ -15,12 +15,15 @@ Provides a resource to create a scf trigger_config
 
 ```hcl
 resource "tencentcloud_scf_trigger_config" "trigger_config" {
-  enable        = "OPEN"
-  function_name = "keep-1676351130"
-  trigger_name  = "SCF-timer-1685540160"
-  type          = "timer"
-  qualifier     = "$DEFAULT"
-  namespace     = "default"
+  enable          = "OPEN"
+  function_name   = "keep-1676351130"
+  trigger_name    = "SCF-timer-1685540160"
+  type            = "timer"
+  qualifier       = "$DEFAULT"
+  namespace       = "default"
+  trigger_desc    = "* 1 2 * * * *"
+  description     = "func"
+  custom_argument = "Information"
 }
 ```
 
@@ -28,13 +31,15 @@ resource "tencentcloud_scf_trigger_config" "trigger_config" {
 
 The following arguments are supported:
 
-* `enable` - (Required, String) Initial status of the trigger. Values: `OPEN` (enabled); `CLOSE` disabled).
-* `function_name` - (Required, String) Function name.
-* `trigger_name` - (Required, String) Trigger name.
-* `type` - (Required, String) Trigger Type.
-* `namespace` - (Optional, String) Function namespace.
+* `function_name` - (Required, String, ForceNew) Function name.
+* `trigger_name` - (Required, String, ForceNew) Trigger Name.
+* `type` - (Required, String) Trigger type.
+* `custom_argument` - (Optional, String) User Additional Information.
+* `description` - (Optional, String) Trigger description.
+* `enable` - (Optional, String) Status of trigger. Values: OPEN (enabled); CLOSE disabled).
+* `namespace` - (Optional, String, ForceNew) Function namespace.
 * `qualifier` - (Optional, String) Function version. It defaults to `$LATEST`. It's recommended to use `[$DEFAULT](https://intl.cloud.tencent.com/document/product/583/36149?from_cn_redirect=1#.E9.BB.98.E8.AE.A4.E5.88.AB.E5.90.8D)` for canary release.
-* `trigger_desc` - (Optional, String) To update a COS trigger, this field is required. It stores the data {event:cos:ObjectCreated:*} in the JSON format. The data content of this field is in the same format as that of SetTrigger. This field is optional if a scheduled trigger or CMQ trigger is to be deleted.
+* `trigger_desc` - (Optional, String) TriggerDesc parameter.
 
 ## Attributes Reference
 

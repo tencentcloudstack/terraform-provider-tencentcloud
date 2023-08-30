@@ -71,7 +71,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.533
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.657
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.542
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.664
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.729
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.529
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.689
