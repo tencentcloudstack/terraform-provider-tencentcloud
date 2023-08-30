@@ -40,7 +40,7 @@ The `filters` object supports the following:
 
 In addition to all arguments above, the following attributes are exported:
 
-* `result` - groups infomation.
+* `result` - groups information.
   * `gateway_group_list` - group list of gateway.
     * `binding_strategy` - associated strategy informationNote: This field may return null, indicating that a valid value is not available.
       * `config` - auto scaling configurationNote: This field may return null, indicating that a valid value is not available.

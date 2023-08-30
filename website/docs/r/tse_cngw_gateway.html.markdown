@@ -66,7 +66,7 @@ The following arguments are supported:
 * `name` - (Required, String) gateway name, supports up to 60 characters.
 * `node_config` - (Required, List) gateway node configration.
 * `type` - (Required, String) gateway type,currently only supports kong.
-* `vpc_config` - (Required, List) vpc infomation.
+* `vpc_config` - (Required, List) vpc information.
 * `description` - (Optional, String) description information, up to 120 characters.
 * `enable_cls` - (Optional, Bool) whether to enable CLS log. Default value: fasle.
 * `engine_region` - (Optional, String) engine region of gateway.

@@ -65,12 +65,12 @@ In addition to all arguments above, the following attributes are exported:
       * `specification` - specification, 1c2g|2c4g|4c8g|8c16g.
     * `public_ip_addresses` - addresses of public internet.
     * `status` - status of gateway. May return values: `Creating`, `CreateFailed`, `Running`, `Modifying`, `UpdatingSpec`, `UpdateFailed`, `Deleting`, `DeleteFailed`, `Isolating`.
-    * `tags` - tags infomation of gatewayNote: This field may return null, indicating that a valid value is not available.
+    * `tags` - tags information of gatewayNote: This field may return null, indicating that a valid value is not available.
       * `tag_key` - tag key.
       * `tag_value` - tag value.
     * `trade_type` - trade type. `0`: postpaid, `1`: Prepaid.
     * `type` - gateway type.
-    * `vpc_config` - vpc infomation.
+    * `vpc_config` - vpc information.
       * `subnet_id` - subnet ID. Assign an IP address to the engine in the VPC subnet.
       * `vpc_id` - subnet ID. Assign an IP address to the engine in the VPC subnet.
   * `total_count` - total count.

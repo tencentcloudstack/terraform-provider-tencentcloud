@@ -114,7 +114,7 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 				Required:    true,
 				Type:        schema.TypeList,
 				MaxItems:    1,
-				Description: "vpc infomation.",
+				Description: "vpc information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"vpc_id": {

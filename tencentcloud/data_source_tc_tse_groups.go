@@ -60,7 +60,7 @@ func dataSourceTencentCloudTseGroups() *schema.Resource {
 			"result": {
 				Computed:    true,
 				Type:        schema.TypeList,
-				Description: "groups infomation.",
+				Description: "groups information.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"total_count": {

@@ -114,7 +114,7 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"vpc_config": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "vpc infomation.",
+										Description: "vpc information.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"vpc_id": {
@@ -143,7 +143,7 @@ func dataSourceTencentCloudTseGateways() *schema.Resource {
 									"tags": {
 										Type:        schema.TypeList,
 										Computed:    true,
-										Description: "tags infomation of gatewayNote: This field may return null, indicating that a valid value is not available.",
+										Description: "tags information of gatewayNote: This field may return null, indicating that a valid value is not available.",
 										Elem: &schema.Resource{
 											Schema: map[string]*schema.Schema{
 												"tag_key": {
