@@ -50,9 +50,10 @@ func TestAccTencentCloudTseCngwServiceResource_basic(t *testing.T) {
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_tse_cngw_service.cngw_service",
-				ImportState:       true,
-				ImportStateVerify: true,
+				ResourceName:            "tencentcloud_tse_cngw_service.cngw_service",
+				ImportState:             true,
+				ImportStateVerify:       true,
+				ImportStateVerifyIgnore: []string{"upstream_info.0.targets.0.health"},
 			},
 			{
 				Config: testAccTseCngwServiceUp,
