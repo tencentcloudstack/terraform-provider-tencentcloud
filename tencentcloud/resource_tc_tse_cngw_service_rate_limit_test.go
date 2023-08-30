@@ -71,7 +71,7 @@ func testAccCheckTseCngwServiceRateLimitDestroy(s *terraform.State) error {
 			return err
 		}
 
-		if !IsNil(res) {
+		if res != nil && res.Enabled != nil {
 			return fmt.Errorf("tse cngwServiceRateLimit %s still exists", rs.Primary.ID)
 		}
 	}
