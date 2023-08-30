@@ -15,10 +15,6 @@ tencentcloud_tse_cngw_gateway
 ```
 
 ```release-note:new-resource
-tencentcloud_tse_cngw_group
-```
-
-```release-note:new-resource
 tencentcloud_tse_cngw_service_rate_limit
 ```
 

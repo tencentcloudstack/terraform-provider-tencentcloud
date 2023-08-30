@@ -12,7 +12,7 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudTseCngwGroupResource_basic -v
-func TestAccTencentCloudTseCngwGroupResource_basic(t *testing.T) {
+func TestAccTencentCloudNeedFixTseCngwGroupResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
