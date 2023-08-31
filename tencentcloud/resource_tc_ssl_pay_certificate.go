@@ -57,6 +57,7 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -166,67 +167,56 @@ func resourceTencentCloudSSLInstance() *schema.Resource {
 						"certificate_domain": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Domain name for binding certificate.",
 						},
 						"organization_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Company name.",
 						},
 						"organization_division": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Department name.",
 						},
 						"organization_address": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Company address.",
 						},
 						"organization_country": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Country name, such as China: CN.",
 						},
 						"organization_city": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Company city.",
 						},
 						"organization_region": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "The province where the company is located.",
 						},
 						"postal_code": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Company postal code.",
 						},
 						"phone_area_code": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Company landline area code.",
 						},
 						"phone_number": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Company landline number.",
 						},
 						"verify_type": {
 							Type:         schema.TypeString,
 							Required:     true,
-							ForceNew:     true,
 							ValidateFunc: validateAllowedStringValue(VerifyType),
 							Description: "Certificate verification method. Valid values: `DNS_AUTO`, `DNS`, `FILE`. " +
 								"`DNS_AUTO` means automatic DNS verification, this verification type is only supported for " +
@@ -236,81 +226,68 @@ func resourceTencentCloudSSLInstance() *schema.Resource {
 						"admin_first_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "The first name of the administrator.",
 						},
 						"admin_last_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "The last name of the administrator.",
 						},
 						"admin_phone_num": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Manager mobile phone number.",
 						},
 						"admin_email": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "The administrator's email address.",
 						},
 						"admin_position": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Manager position.",
 						},
 						"contact_first_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Contact first name.",
 						},
 						"contact_last_name": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Contact last name.",
 						},
 						"contact_email": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Contact email address.",
 						},
 						"contact_number": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Contact phone number.",
 						},
 						"contact_position": {
 							Type:        schema.TypeString,
 							Required:    true,
-							ForceNew:    true,
 							Description: "Contact position.",
 						},
 						"csr_content": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
 							Description: "CSR content uploaded.",
 						},
 						"domain_list": {
 							Type:        schema.TypeSet,
 							Computed:    true,
 							Optional:    true,
-							ForceNew:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Array of uploaded domain names, multi-domain certificates can be uploaded.",
 						},
 						"key_password": {
 							Type:        schema.TypeString,
 							Optional:    true,
-							ForceNew:    true,
 							Description: "Private key password.",
 						},
 					},
@@ -559,14 +536,17 @@ func resourceTencentCloudSSLInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("project_id", projectId)
 	_ = d.Set("alias", response.Response.Alias)
 	_ = d.Set("certificate_id", response.Response.CertificateId)
-	_ = d.Set("order_id", response.Response.OrderId)
+	if response.Response.OrderId != nil && *response.Response.OrderId != "" {
+		log.Println("Set Set ", *response.Response.OrderId)
+		_ = d.Set("order_id", response.Response.Status)
+	}
 	if response.Response.Status != nil {
 		_ = d.Set("status", response.Response.Status)
 	}
 	if response.Response.SubmittedData != nil {
 		setSubmitInfo(d, response.Response.SubmittedData)
 	}
-	if response.Response.DvAuthDetail != nil && len(response.Response.DvAuthDetail.DvAuths) != 0 {
+	if response.Response.DvAuthDetail != nil && response.Response.DvAuthDetail.DvAuths != nil && len(response.Response.DvAuthDetail.DvAuths) != 0 {
 		dvAuths := make([]map[string]string, 0)
 		for _, item := range response.Response.DvAuthDetail.DvAuths {
 			dvAuth := make(map[string]string)
@@ -647,7 +627,7 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("information") {
 		//查询证书是否提交
 		describeRequest := ssl.NewDescribeCertificateDetailRequest()
-		describeRequest.CertificateId = &id
+		describeRequest.CertificateId = &ids[0]
 		outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 			describeResponse, inErr := sslService.DescribeCertificateDetail(ctx, describeRequest)
 			if inErr != nil {
@@ -802,10 +782,9 @@ func setSubmitInfo(d *schema.ResourceData, info *ssl.SubmittedData) {
 		"contact_position":      info.ContactPosition,
 		"csr_content":           info.CsrContent,
 		"certificate_domain":    info.CertificateDomain,
-		"domain_list":           info.DomainList,
 		"key_password":          info.KeyPassword,
 	}
-	if info.DomainList != nil || (len(info.DomainList) == 1 && *info.DomainList[0] == "") {
+	if info.DomainList != nil && len(info.DomainList) > 0 && *info.DomainList[0] != "" {
 		infos[0]["domain_list"] = info.DomainList
 	}
 	_ = d.Set("information", infos)
