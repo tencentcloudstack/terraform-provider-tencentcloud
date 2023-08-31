@@ -1,7 +1,23 @@
+```release-note:new-data-source
+tencentcloud_clickhouse_backup_jobs
+```
+
+```release-note:new-data-source
+tencentcloud_clickhouse_backup_job_detail
+```
+
 ```release-note:new-resource
 tencentcloud_clickhouse_backup
 ```
 
 ```release-note:new-resource
 tencentcloud_clickhouse_backup_strategy
+```
+
+```release-note:new-resource
+tencentcloud_clickhouse_recover_backup_job
+```
+
+```release-note:new-resource
+tencentcloud_clickhouse_delete_backup_data
 ```

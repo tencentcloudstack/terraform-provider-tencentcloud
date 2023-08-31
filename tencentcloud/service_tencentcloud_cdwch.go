@@ -9,6 +9,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	cdwch "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
+	clickhouse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdwch/v20200915"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
@@ -312,4 +313,58 @@ func (me *CdwchService) CreateBackUpSchedule(ctx context.Context, instanceId str
 	}
 
 	return nil
+}
+
+func (me *CdwchService) DescribeClickhouseBackupJobsByFilter(ctx context.Context, param map[string]interface{}) (backupJobs []*clickhouse.BackUpJobDisplay, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdwch.NewDescribeBackUpJobRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "instance_id" {
+			request.InstanceId = v.(*string)
+		}
+		if k == "begin_time" {
+			request.BeginTime = v.(*string)
+		}
+		if k == "end_time" {
+			request.EndTime = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.PageNum = &offset
+		request.PageSize = &limit
+		response, err := me.client.UseCdwchClient().DescribeBackUpJob(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.BackUpJobs) < 1 {
+			break
+		}
+		backupJobs = append(backupJobs, response.Response.BackUpJobs...)
+		if len(response.Response.BackUpJobs) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
 }
