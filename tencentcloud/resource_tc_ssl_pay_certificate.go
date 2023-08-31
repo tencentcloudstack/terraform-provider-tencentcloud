@@ -57,7 +57,6 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
@@ -536,10 +535,8 @@ func resourceTencentCloudSSLInstanceRead(d *schema.ResourceData, meta interface{
 	_ = d.Set("project_id", projectId)
 	_ = d.Set("alias", response.Response.Alias)
 	_ = d.Set("certificate_id", response.Response.CertificateId)
-	if response.Response.OrderId != nil && *response.Response.OrderId != "" {
-		log.Println("Set Set ", *response.Response.OrderId)
-		_ = d.Set("order_id", response.Response.Status)
-	}
+	_ = d.Set("order_id", response.Response.OrderId)
+
 	if response.Response.Status != nil {
 		_ = d.Set("status", response.Response.Status)
 	}
