@@ -13,23 +13,56 @@ Provide a resource to create a Private Dns Zone.
 
 ## Example Usage
 
+### Create a basic Private Dns Zone
+
 ```hcl
-resource "tencentcloud_private_dns_zone" "foo" {
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-example"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_private_dns_zone" "example" {
   domain = "domain.com"
-  tags {
-    "created_by" : "terraform"
-  }
+  remark = "remark."
+
   vpc_set {
     region      = "ap-guangzhou"
-    uniq_vpc_id = "vpc-xxxxx"
+    uniq_vpc_id = tencentcloud_vpc.vpc.id
   }
-  remark             = "test"
-  dns_forward_status = "DISABLED"
-  account_vpc_set {
-    uin         = "454xxxxxxx"
+
+  dns_forward_status   = "DISABLED"
+  cname_speedup_status = "ENABLED"
+
+  tags = {
+    createdBy : "terraform"
+  }
+}
+```
+
+### Create a Private Dns Zone domain and bind associated accounts'VPC
+
+```hcl
+resource "tencentcloud_private_dns_zone" "example" {
+  domain = "domain.com"
+  remark = "remark."
+
+  vpc_set {
     region      = "ap-guangzhou"
-    uniq_vpc_id = "vpc-xxxxx"
-    vpc_name    = "test-redis"
+    uniq_vpc_id = tencentcloud_vpc.vpc.id
+  }
+
+  account_vpc_set {
+    uin         = "123456789"
+    uniq_vpc_id = "vpc-adsebmya"
+    region      = "ap-guangzhou"
+    vpc_name    = "vpc-name"
+  }
+
+  dns_forward_status   = "DISABLED"
+  cname_speedup_status = "ENABLED"
+
+  tags = {
+    createdBy : "terraform"
   }
 }
 ```
@@ -40,6 +73,7 @@ The following arguments are supported:
 
 * `domain` - (Required, String) Domain name, which must be in the format of standard TLD.
 * `account_vpc_set` - (Optional, List) List of authorized accounts' VPCs to associate with the private domain.
+* `cname_speedup_status` - (Optional, String) CNAME acceleration: ENABLED, DISABLED, Default value is ENABLED.
 * `dns_forward_status` - (Optional, String) Whether to enable subdomain recursive DNS. Valid values: ENABLED, DISABLED. Default value: DISABLED.
 * `remark` - (Optional, String) Remarks.
 * `tag_set` - (Optional, List, **Deprecated**) It has been deprecated from version 1.72.4. Use `tags` instead. Tags the private domain when it is created.

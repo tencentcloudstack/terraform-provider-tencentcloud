@@ -6,6 +6,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudPrivateDnsZone_basic -v
 func TestAccTencentCloudPrivateDnsZone_basic(t *testing.T) {
 	t.Parallel()
 
@@ -16,11 +17,11 @@ func TestAccTencentCloudPrivateDnsZone_basic(t *testing.T) {
 			{
 				Config: testAccPrivateDnsZone_basic,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr("tencentcloud_private_dns_zone.zone", "domain", "domain.com"),
+					resource.TestCheckResourceAttr("tencentcloud_private_dns_zone.example", "domain", "domain.com"),
 				),
 			},
 			{
-				ResourceName:      "tencentcloud_private_dns_zone.zone",
+				ResourceName:      "tencentcloud_private_dns_zone.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -29,20 +30,20 @@ func TestAccTencentCloudPrivateDnsZone_basic(t *testing.T) {
 }
 
 const testAccPrivateDnsZone_basic = defaultInstanceVariable + `
-resource "tencentcloud_private_dns_zone" "zone" {
-  dns_forward_status = "DISABLED"
-  domain             = "domain.com"
-  remark             = "test_zone"
+resource "tencentcloud_private_dns_zone" "example" {
+  domain = "domain.com"
+  remark = "remark."
+
   vpc_set {
     region      = "ap-guangzhou"
     uniq_vpc_id = var.cvm_vpc_id
   }
-  vpc_set {
-    region      = "ap-guangzhou"
-    uniq_vpc_id = var.vpc_id
-  }
+
+  dns_forward_status   = "DISABLED"
+  cname_speedup_status = "ENABLED"
+
   tags = {
-    "created-by" : "terraform",
+    createdBy : "terraform"
   }
 }
 `

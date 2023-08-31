@@ -38,8 +38,17 @@ const (
 	// 私有域创建失败。
 	FAILEDOPERATION_CREATEZONEFAILED = "FailedOperation.CreateZoneFailed"
 
+	// 数据异常。
+	FAILEDOPERATION_DATAERROR = "FailedOperation.DataError"
+
 	// 当前私有域已关联 VPC，如需清空解析记录请先解除 VPC 关联。
 	FAILEDOPERATION_DELETELASTBINDVPCRECORDFAILED = "FailedOperation.DeleteLastBindVpcRecordFailed"
+
+	// 记录删除失败。
+	FAILEDOPERATION_DELETERECORDFAILED = "FailedOperation.DeleteRecordFailed"
+
+	// 删除终端节点失败。
+	FAILEDOPERATION_DELETEVPCENDPOINTFAILED = "FailedOperation.DeleteVpcEndPointFailed"
 
 	// 解析域删除失败。
 	FAILEDOPERATION_DELETEZONEFAILED = "FailedOperation.DeleteZoneFailed"
@@ -50,6 +59,9 @@ const (
 	// 私有域修改失败。
 	FAILEDOPERATION_MODIFYZONEFAILED = "FailedOperation.ModifyZoneFailed"
 
+	// 记录更新失败
+	FAILEDOPERATION_UPDATERECORDFAILED = "FailedOperation.UpdateRecordFailed"
+
 	// 内部错误。
 	INTERNALERROR = "InternalError"
 
@@ -58,6 +70,15 @@ const (
 
 	// 参数错误。
 	INVALIDPARAMETER = "InvalidParameter"
+
+	// 已经存在绑定的账号。
+	INVALIDPARAMETER_ACCOUNTEXIST = "InvalidParameter.AccountExist"
+
+	// 终端节点已经绑定了转发规则。
+	INVALIDPARAMETER_ENDPOINTBINDFORWARDRULE = "InvalidParameter.EndPointBindForwardRule"
+
+	// 终端节点不存在。
+	INVALIDPARAMETER_ENDPOINTNOTEXISTS = "InvalidParameter.EndPointNotExists"
 
 	// 非法CIDR。
 	INVALIDPARAMETER_ILLEGALCIDR = "InvalidParameter.IllegalCidr"
@@ -82,6 +103,9 @@ const (
 
 	// MX 必须为5-50之间且为5的倍数。
 	INVALIDPARAMETER_INVALIDMX = "InvalidParameter.InvalidMX"
+
+	// 该记录类型不支持 MX 优先级设置
+	INVALIDPARAMETER_MXNOTSUPPORTED = "InvalidParameter.MXNotSupported"
 
 	// AAAA记录负载均衡数量超过50。
 	INVALIDPARAMETER_RECORDAAAACOUNTEXCEED = "InvalidParameter.RecordAAAACountExceed"
@@ -134,8 +158,20 @@ const (
 	// 参数取值错误。
 	INVALIDPARAMETERVALUE = "InvalidParameterValue"
 
+	// ttl的值必须是1-86400之间。
+	INVALIDPARAMETERVALUE_ILLEGALTTLVALUE = "InvalidParameterValue.IllegalTTLValue"
+
+	// 内部保留域名，不支持创建。
+	INVALIDPARAMETERVALUE_RESERVEDDOMAIN = "InvalidParameterValue.ReservedDomain"
+
 	// 超过配额限制。
 	LIMITEXCEEDED = "LimitExceeded"
+
+	// 超过自定义TLD额度。
+	LIMITEXCEEDED_TLDOUTOFLIMIT = "LimitExceeded.TldOutOfLimit"
+
+	// 使用自定义TLD的私有域超过总额度。
+	LIMITEXCEEDED_TLDOUTOFRANGE = "LimitExceeded.TldOutOfRange"
 
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
@@ -149,8 +185,14 @@ const (
 	// 资源被占用。
 	RESOURCEINUSE = "ResourceInUse"
 
+	// 当前私有域已转发至其他DNS服务。
+	RESOURCEINUSE_ZONEBINDFORWARDRULE = "ResourceInUse.ZoneBindForwardRule"
+
 	// 资源不足。
 	RESOURCEINSUFFICIENT = "ResourceInsufficient"
+
+	// 余额不足。
+	RESOURCEINSUFFICIENT_BALANCE = "ResourceInsufficient.Balance"
 
 	// 资源不存在。
 	RESOURCENOTFOUND = "ResourceNotFound"
@@ -160,6 +202,9 @@ const (
 
 	// 资源不可用。
 	RESOURCEUNAVAILABLE = "ResourceUnavailable"
+
+	// TLD增值包已过期。
+	RESOURCEUNAVAILABLE_TLDPACKAGEEXPIRED = "ResourceUnavailable.TldPackageExpired"
 
 	// 资源售罄。
 	RESOURCESSOLDOUT = "ResourcesSoldOut"
@@ -181,4 +226,13 @@ const (
 
 	// 账号未绑定。
 	UNSUPPORTEDOPERATION_ACCOUNTNOTBOUND = "UnsupportedOperation.AccountNotBound"
+
+	// 存在绑定的VPC资源。
+	UNSUPPORTEDOPERATION_EXISTBOUNDVPC = "UnsupportedOperation.ExistBoundVpc"
+
+	// 接口调用超过限频。
+	UNSUPPORTEDOPERATION_FREQUENCYLIMIT = "UnsupportedOperation.FrequencyLimit"
+
+	// 不支持设置子域名递归解析。
+	UNSUPPORTEDOPERATION_NOTSUPPORTDNSFORWARD = "UnsupportedOperation.NotSupportDnsForward"
 )
