@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
@@ -20,7 +19,7 @@ type PrivateDnsService struct {
 
 // ////////api
 func (me *PrivateDnsService) DescribePrivateDnsRecordByFilter(ctx context.Context, zoneId string,
-	recordId string) (recordInfos []*privatedns.PrivateZoneRecord, errRet error) {
+	filterList []*privatedns.Filter) (recordInfos []*privatedns.PrivateZoneRecord, errRet error) {
 	logId := getLogId(ctx)
 	request := privatedns.NewDescribePrivateZoneRecordListRequest()
 	defer func() {
@@ -35,14 +34,9 @@ func (me *PrivateDnsService) DescribePrivateDnsRecordByFilter(ctx context.Contex
 		total  int64 = -1
 	)
 	request.ZoneId = &zoneId
-	request.Filters = make([]*privatedns.Filter, 0)
 
-	if recordId != "" {
-		filter := privatedns.Filter{
-			Name:   helper.String("RecordId"),
-			Values: []*string{&recordId},
-		}
-		request.Filters = append(request.Filters, &filter)
+	if filterList != nil {
+		request.Filters = filterList
 	}
 
 getMoreData:
