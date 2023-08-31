@@ -41,3 +41,7 @@ resource/tencentcloud_api_gateway_plugin_attachment: Optimization binding failur
 ```release-note:enhancement
 resource/tencentcloud_api_gateway_usage_plan_attachment: Support input `access_key_ids``
 ```
+
+```release-note:enhancement
+resource/tencentcloud_api_gateway_service: Support input `uniq_vpc_id``
+```
