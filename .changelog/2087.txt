@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_tdmq_rocketmq_group: Fix the issue of inconsistent return values.
+```
