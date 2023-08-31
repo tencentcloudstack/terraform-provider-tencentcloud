@@ -1585,8 +1585,16 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_cngw_canary_rule
 
 ClickHouse(CDWCH)
+  Data Source
+	tencentcloud_clickhouse_backup_jobs
+	tencentcloud_clickhouse_backup_job_detail
+
   Resource
 	tencentcloud_clickhouse_instance
+	tencentcloud_clickhouse_backup
+	tencentcloud_clickhouse_backup_strategy
+	tencentcloud_clickhouse_recover_backup_job
+	tencentcloud_clickhouse_delete_backup_data
 
 Tag
   Resource
@@ -2250,6 +2258,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_instance_blueprint":             dataSourceTencentCloudLighthouseInstanceBlueprint(),
 			"tencentcloud_lighthouse_disk_config":                    dataSourceTencentCloudLighthouseDiskConfig(),
 			"tencentcloud_lighthouse_disks":                          dataSourceTencentCloudLighthouseInstanceDisks(),
+			"tencentcloud_clickhouse_backup_jobs":                    dataSourceTencentCloudClickhouseBackupJobs(),
+			"tencentcloud_clickhouse_backup_job_detail":              dataSourceTencentCloudClickhouseBackupJobDetail(),
 			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                              dataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
@@ -2965,6 +2975,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_disk":                                     resourceTencentCloudLighthouseDisk(),
 			"tencentcloud_lighthouse_renew_disk":                               resourceTencentCloudLighthouseRenewDisk(),
 			"tencentcloud_lighthouse_renew_instance":                           resourceTencentCloudLighthouseRenewInstance(),
+			"tencentcloud_clickhouse_backup":                                   resourceTencentCloudClickhouseBackup(),
+			"tencentcloud_clickhouse_backup_strategy":                          resourceTencentCloudClickhouseBackupStrategy(),
+			"tencentcloud_clickhouse_recover_backup_job":                       resourceTencentCloudClickhouseRecoverBackupJob(),
+			"tencentcloud_clickhouse_delete_backup_data":                       resourceTencentCloudClickhouseDeleteBackupData(),
 			"tencentcloud_api_gateway_api_doc":                                 resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                                 resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                                        resourceTencentCloudTseInstance(),
