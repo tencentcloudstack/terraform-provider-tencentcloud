@@ -1,25 +1,43 @@
 /*
 Provide a resource to create a SSM secret version.
+
+-> **Note:** A maximum of 10 versions can be supported under one credential. Only new versions can be added to credentials in the enabled and disabled states.
+
 Example Usage
+
+Text type credential information plaintext
+
 ```hcl
-resource "tencentcloud_ssm_secret" "foo" {
-  secret_name = "test"
-  description = "test secret"
+resource "tencentcloud_ssm_secret" "example" {
+  secret_name             = "tf-example"
+  description             = "desc."
   recovery_window_in_days = 0
-  is_enabled = true
+  is_enabled              = true
 
   tags = {
-    test-tag = "test"
+    createdBy = "terraform"
   }
 }
 
 resource "tencentcloud_ssm_secret_version" "v1" {
-  secret_name = tencentcloud_ssm_secret.foo.secret_name
-  version_id = "v1"
+  secret_name   = tencentcloud_ssm_secret.example.secret_name
+  version_id    = "v1"
+  secret_string = "this is secret string"
+}
+```
+
+Binary credential information, encoded using base64
+
+```hcl
+resource "tencentcloud_ssm_secret_version" "v2" {
+  secret_name   = tencentcloud_ssm_secret.example.secret_name
+  version_id    = "v2"
   secret_binary = "MTIzMTIzMTIzMTIzMTIzQQ=="
 }
 ```
+
 Import
+
 SSM secret version can be imported using the secretName#versionId, e.g.
 ```
 $ terraform import tencentcloud_ssm_secret_version.v1 test#v1
@@ -79,11 +97,14 @@ func resourceTencentCloudSsmSecretVersion() *schema.Resource {
 
 func resourceTencentCloudSsmSecretVersionCreate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssm_secret_version.create")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ssmService := SsmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	var (
+		logId                 = getLogId(contextNil)
+		ctx                   = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService            = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		outErr, inErr         error
+		secretName, versionId string
+	)
 
 	param := make(map[string]interface{})
 	param["secret_name"] = d.Get("secret_name").(string)
@@ -91,34 +112,38 @@ func resourceTencentCloudSsmSecretVersionCreate(d *schema.ResourceData, meta int
 	if v, ok := d.GetOk("secret_binary"); ok {
 		param["secret_binary"] = v.(string)
 	}
+
 	if v, ok := d.GetOk("secret_string"); ok {
 		param["secret_string"] = v.(string)
 	}
 
-	var outErr, inErr error
-	var secretName, versionId string
 	outErr = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		secretName, versionId, inErr = ssmService.PutSecretValue(ctx, param)
 		if inErr != nil {
 			return retryError(inErr)
 		}
+
 		return nil
 	})
+
 	if outErr != nil {
 		return outErr
 	}
-	d.SetId(strings.Join([]string{secretName, versionId}, FILED_SP))
 
+	d.SetId(strings.Join([]string{secretName, versionId}, FILED_SP))
 	return resourceTencentCloudSsmSecretVersionRead(d, meta)
 }
 
 func resourceTencentCloudSsmSecretVersionRead(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssm_secret_version.read")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ssmService := SsmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	var (
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		outErr, inErr error
+		secretInfo    *SecretInfo
+	)
 
 	ids := strings.Split(d.Id(), FILED_SP)
 	if len(ids) != 2 {
@@ -127,15 +152,15 @@ func resourceTencentCloudSsmSecretVersionRead(d *schema.ResourceData, meta inter
 	secretName := ids[0]
 	versionId := ids[1]
 
-	var outErr, inErr error
-	var secretInfo *SecretInfo
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
 		if inErr != nil {
 			return retryError(inErr)
 		}
+
 		return nil
 	})
+
 	if outErr != nil {
 		return outErr
 	}
@@ -146,8 +171,10 @@ func resourceTencentCloudSsmSecretVersionRead(d *schema.ResourceData, meta inter
 		if inErr != nil {
 			return retryError(inErr)
 		}
+
 		return nil
 	})
+
 	if outErr != nil {
 		return outErr
 	}
@@ -159,6 +186,7 @@ func resourceTencentCloudSsmSecretVersionRead(d *schema.ResourceData, meta inter
 			break
 		}
 	}
+
 	if !hasVersionId {
 		d.SetId("")
 		return nil
@@ -171,11 +199,14 @@ func resourceTencentCloudSsmSecretVersionRead(d *schema.ResourceData, meta inter
 			if inErr != nil {
 				return retryError(inErr)
 			}
+
 			return nil
 		})
+
 		if outErr != nil {
 			return outErr
 		}
+
 		_ = d.Set("secret_name", secretVersionInfo.secretName)
 		_ = d.Set("version_id", secretVersionInfo.versionId)
 		_ = d.Set("secret_binary", secretVersionInfo.secretBinary)
@@ -187,11 +218,14 @@ func resourceTencentCloudSsmSecretVersionRead(d *schema.ResourceData, meta inter
 
 func resourceTencentCloudSsmSecretVersionUpdate(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssm_secret_version.update")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ssmService := SsmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	var (
+		logId         = getLogId(contextNil)
+		ctx           = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService    = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		outErr, inErr error
+		secretInfo    *SecretInfo
+	)
 
 	ids := strings.Split(d.Id(), FILED_SP)
 	if len(ids) != 2 {
@@ -200,15 +234,15 @@ func resourceTencentCloudSsmSecretVersionUpdate(d *schema.ResourceData, meta int
 	secretName := ids[0]
 	versionId := ids[1]
 
-	var outErr, inErr error
-	var secretInfo *SecretInfo
 	outErr = resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		secretInfo, inErr = ssmService.DescribeSecretByName(ctx, secretName)
 		if inErr != nil {
 			return retryError(inErr)
 		}
+
 		return nil
 	})
+
 	if outErr != nil {
 		return outErr
 	}
@@ -222,6 +256,7 @@ func resourceTencentCloudSsmSecretVersionUpdate(d *schema.ResourceData, meta int
 		if v, ok := d.GetOk("secret_binary"); ok {
 			param["secret_binary"] = v.(string)
 		}
+
 		if v, ok := d.GetOk("secret_string"); ok {
 			param["secret_string"] = v.(string)
 		}
@@ -232,8 +267,10 @@ func resourceTencentCloudSsmSecretVersionUpdate(d *schema.ResourceData, meta int
 				if e != nil {
 					return retryError(e)
 				}
+
 				return nil
 			})
+
 			if err != nil {
 				log.Printf("[CRITAL]%s modify SSM secret content failed, reason:%+v", logId, err)
 				return err
@@ -248,11 +285,13 @@ func resourceTencentCloudSsmSecretVersionUpdate(d *schema.ResourceData, meta int
 
 func resourceTencentCloudSsmSecretVersionDelete(d *schema.ResourceData, meta interface{}) error {
 	defer logElapsed("resource.tencentcloud_ssm_secret_version.delete")()
-	logId := getLogId(contextNil)
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	ssmService := SsmService{
-		client: meta.(*TencentCloudClient).apiV3Conn,
-	}
+
+	var (
+		logId      = getLogId(contextNil)
+		ctx        = context.WithValue(context.TODO(), logIdKey, logId)
+		ssmService = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+	)
+
 	ids := strings.Split(d.Id(), FILED_SP)
 	if len(ids) != 2 {
 		return fmt.Errorf("SSM secret version id can't read, id is borken, id is %s", d.Id())
@@ -265,8 +304,10 @@ func resourceTencentCloudSsmSecretVersionDelete(d *schema.ResourceData, meta int
 		if e != nil {
 			return retryError(e)
 		}
+
 		return nil
 	})
+
 	if err != nil {
 		log.Printf("[CRITAL]%s delete SSM secret version failed, reason:%+v", logId, err)
 		return err
@@ -278,6 +319,7 @@ func resourceTencentCloudSsmSecretVersionDelete(d *schema.ResourceData, meta int
 			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok && sdkError.Code == "ResourceNotFound" {
 				return nil
 			}
+
 			return retryError(err)
 		}
 

@@ -542,6 +542,7 @@ Global Application Acceleration(GAAP)
 Key Management Service(KMS)
   Data Source
     tencentcloud_kms_keys
+    tencentcloud_kms_public_key
 
   Resource
     tencentcloud_kms_key
@@ -2053,6 +2054,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_protocol_templates":                        dataSourceTencentCloudProtocolTemplates(),
 			"tencentcloud_protocol_template_groups":                  dataSourceTencentCloudProtocolTemplateGroups(),
 			"tencentcloud_kms_keys":                                  dataSourceTencentCloudKmsKeys(),
+			"tencentcloud_kms_public_key":                            dataSourceTencentCloudKmsPublicKey(),
 			"tencentcloud_ssm_products":                              dataSourceTencentCloudSsmProducts(),
 			"tencentcloud_ssm_secrets":                               dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                       dataSourceTencentCloudSsmSecretVersions(),

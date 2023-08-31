@@ -62,32 +62,32 @@ func init() {
 	})
 }
 
+// go test -i; go test -test.run TestAccTencentCloudSsmSecret_basic -v
 func TestAccTencentCloudSsmSecret_basic(t *testing.T) {
 	t.Parallel()
-	resourceName := "tencentcloud_ssm_secret.secret"
-
+	resourceName := "tencentcloud_ssm_secret.example"
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckSsmSecretDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccTencentCloudSsmSecret_basicConfig,
+				Config: TestAccTencentCloudSsmSecretBasic,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSsmSecretExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "secret_name", "unit-test"),
+					resource.TestCheckResourceAttr(resourceName, "secret_name", "tf-example"),
 					resource.TestCheckResourceAttr(resourceName, "is_enabled", "false"),
-					resource.TestCheckResourceAttr(resourceName, "description", "test secret"),
+					resource.TestCheckResourceAttr(resourceName, "description", "desc."),
 					resource.TestCheckResourceAttrSet(resourceName, "kms_key_id"),
 					resource.TestCheckResourceAttrSet(resourceName, "status"),
 				),
 			},
 			{
-				Config: TestAccTencentCloudSsmSecret_modifyConfig,
+				Config: TestAccTencentCloudSsmSecretBasicUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckSsmSecretExists(resourceName),
 					resource.TestCheckResourceAttr(resourceName, "is_enabled", "true"),
-					resource.TestCheckResourceAttr(resourceName, "description", "test description modify"),
+					resource.TestCheckResourceAttr(resourceName, "description", "update desc."),
 				),
 			},
 			{
@@ -154,26 +154,26 @@ func testAccCheckSsmSecretExists(name string) resource.TestCheckFunc {
 	}
 }
 
-const TestAccTencentCloudSsmSecret_basicConfig = `
-resource "tencentcloud_ssm_secret" "secret" {
-  secret_name = "unit-test"
-  description = "test secret"
-  is_enabled = false
+const TestAccTencentCloudSsmSecretBasic = `
+resource "tencentcloud_ssm_secret" "example" {
+  secret_name = "tf-example"
+  description = "desc."
+  is_enabled  = false
 
   tags = {
-    test-tag = "test"
+    createBy = "terraform"
   }
 }
 `
 
-const TestAccTencentCloudSsmSecret_modifyConfig = `
-resource "tencentcloud_ssm_secret" "secret" {
-  secret_name = "unit-test"
-  description = "test description modify"
-  is_enabled = true
+const TestAccTencentCloudSsmSecretBasicUpdate = `
+resource "tencentcloud_ssm_secret" "example" {
+  secret_name = "tf-example"
+  description = "update desc."
+  is_enabled  = true
 
   tags = {
-    test-tag = "test"
+    createBy = "terraform"
   }
 }
 `
