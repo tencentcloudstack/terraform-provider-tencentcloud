@@ -160,6 +160,8 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
+var importFlag = false
+
 // merge `instance_type` to `backup_instance_types` as param `instance_types`
 func getNodePoolInstanceTypes(d *schema.ResourceData) []*string {
 	configParas := d.Get("auto_scaling_config").([]interface{})
@@ -440,7 +442,7 @@ func resourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Description: "Available values for retry policies include `IMMEDIATE_RETRY` and `INCREMENTAL_INTERVALS`.",
 				Default:     SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
 				ValidateFunc: validateAllowedStringValue([]string{SCALING_GROUP_RETRY_POLICY_IMMEDIATE_RETRY,
-					SCALING_GROUP_RETRY_POLICY_INCREMENTAL_INTERVALS}),
+					SCALING_GROUP_RETRY_POLICY_INCREMENTAL_INTERVALS, SCALING_GROUP_RETRY_POLICY_NO_RETRY}),
 			},
 			"vpc_id": {
 				Type:        schema.TypeString,
@@ -531,11 +533,12 @@ func resourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Default:     true,
 				Description: "Indicate to keep the CVM instance when delete the node pool. Default is `true`.",
 			},
-			//"deletion_protection": {
-			//	Type:        schema.TypeBool,
-			//	Optional:    true,
-			//	Description: "Indicates whether the node pool deletion protection is enabled.",
-			//},
+			"deletion_protection": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Computed:    true,
+				Description: "Indicates whether the node pool deletion protection is enabled.",
+			},
 			"node_os": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -543,9 +546,17 @@ func resourceTencentCloudKubernetesNodePool() *schema.Resource {
 				Description: "Operating system of the cluster. Please refer to [TencentCloud Documentation](https://www.tencentcloud.com/document/product/457/46750?lang=en&pg=#list-of-public-images-supported-by-tke) for available values. Default is 'tlinux2.4x86_64'. This parameter will only affect new nodes, not including the existing nodes.",
 			},
 			"node_os_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Default:     "GENERAL",
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "GENERAL",
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					if v, ok := d.GetOk("node_os"); ok {
+						if strings.Contains(v.(string), "img-") {
+							return true
+						}
+					}
+					return false
+				},
 				Description: "The image version of the node. Valida values are `DOCKER_CUSTOMIZE` and `GENERAL`. Default is `GENERAL`. This parameter will only affect new nodes, not including the existing nodes.",
 			},
 			// asg pass through arguments
@@ -619,7 +630,16 @@ func resourceTencentCloudKubernetesNodePool() *schema.Resource {
 			},
 		},
 		Importer: &schema.ResourceImporter{
-			State: schema.ImportStatePassthrough,
+			//State: schema.ImportStatePassthrough,
+			StateContext: func(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+				importFlag = true
+				err := resourceKubernetesNodePoolRead(d, m)
+				if err != nil {
+					return nil, fmt.Errorf("failed to import resource")
+				}
+
+				return []*schema.ResourceData{d}, nil
+			},
 		},
 		//compare to console, miss cam_role and running_version and lock_initial_node and security_proof
 	}
@@ -1105,6 +1125,9 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 	_ = d.Set("node_count", AutoscalingAddedTotal+ManuallyAddedTotal)
 	_ = d.Set("auto_scaling_group_id", nodePool.AutoscalingGroupId)
 	_ = d.Set("launch_config_id", nodePool.LaunchConfigurationId)
+	if _, ok := d.GetOkExists("unschedulable"); !ok && importFlag {
+		_ = d.Set("unschedulable", nodePool.Unschedulable)
+	}
 	//set not force new parameters
 	if nodePool.MaxNodesNum != nil {
 		_ = d.Set("max_size", nodePool.MaxNodesNum)
@@ -1118,11 +1141,16 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 	if nodePool.AutoscalingGroupStatus != nil {
 		_ = d.Set("enable_auto_scale", *nodePool.AutoscalingGroupStatus == "enabled")
 	}
-	if nodePool.NodePoolOs != nil {
-		_ = d.Set("node_os", nodePool.NodePoolOs)
-	}
-	if nodePool.OsCustomizeType != nil {
-		_ = d.Set("node_os_type", nodePool.OsCustomizeType)
+	//修复自定义镜像返回信息的不一致
+	if nodePool.ImageId != nil && *nodePool.ImageId != "" {
+		_ = d.Set("node_os", nodePool.ImageId)
+	} else {
+		if nodePool.NodePoolOs != nil {
+			_ = d.Set("node_os", nodePool.NodePoolOs)
+		}
+		if nodePool.OsCustomizeType != nil {
+			_ = d.Set("node_os_type", nodePool.OsCustomizeType)
+		}
 	}
 
 	if tags := nodePool.Tags; tags != nil {
@@ -1134,9 +1162,9 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("tags", tagMap)
 	}
 
-	//if nodePool.DeletionProtection != nil {
-	//	_ = d.Set("deletion_protection", nodePool.DeletionProtection)
-	//}
+	if nodePool.DeletionProtection != nil {
+		_ = d.Set("deletion_protection", nodePool.DeletionProtection)
+	}
 
 	//set composed struct
 	lables := make(map[string]interface{}, len(nodePool.Labels))
@@ -1254,6 +1282,104 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		}
 	}
 
+	nodeConfig := make(map[string]interface{})
+	nodeConfigs := make([]interface{}, 0, 1)
+	if nodePool.DataDisks != nil && len(nodePool.DataDisks) > 0 {
+		dataDisks := make([]interface{}, 0, len(nodePool.DataDisks))
+		for i := range nodePool.DataDisks {
+			item := nodePool.DataDisks[i]
+			disk := make(map[string]interface{})
+			disk["disk_type"] = helper.PString(item.DiskType)
+			disk["disk_size"] = helper.PInt64(item.DiskSize)
+			disk["file_system"] = helper.PString(item.FileSystem)
+			disk["auto_format_and_mount"] = helper.PBool(item.AutoFormatAndMount)
+			disk["mount_target"] = helper.PString(item.MountTarget)
+			disk["disk_partition"] = helper.PString(item.MountTarget)
+			dataDisks = append(dataDisks, disk)
+		}
+		nodeConfig["data_disk"] = dataDisks
+	}
+
+	if helper.PInt64(nodePool.DesiredPodNum) != 0 {
+		nodeConfig["desired_pod_num"] = helper.PInt64(nodePool.DesiredPodNum)
+	}
+
+	if helper.PInt64(nodePool.Unschedulable) != 0 {
+		nodeConfig["is_schedule"] = false
+	} else {
+		nodeConfig["is_schedule"] = true
+	}
+
+	if helper.PString(nodePool.DockerGraphPath) != "" {
+		nodeConfig["docker_graph_path"] = helper.PString(nodePool.DockerGraphPath)
+	} else {
+		nodeConfig["docker_graph_path"] = "/var/lib/docker"
+	}
+
+	if importFlag {
+		if nodePool.ExtraArgs != nil && len(nodePool.ExtraArgs.Kubelet) > 0 {
+			extraArgs := make([]string, 0)
+			for i := range nodePool.ExtraArgs.Kubelet {
+				extraArgs = append(extraArgs, helper.PString(nodePool.ExtraArgs.Kubelet[i]))
+			}
+			nodeConfig["extra_args"] = extraArgs
+		}
+
+		if helper.PString(nodePool.UserScript) != "" {
+			nodeConfig["user_data"] = helper.PString(nodePool.UserScript)
+		}
+
+		if nodePool.GPUArgs != nil {
+			setting := nodePool.GPUArgs
+			var driverEmptyFlag, cudaEmptyFlag, cudnnEmptyFlag, customDriverEmptyFlag bool
+			gpuArgs := map[string]interface{}{
+				"mig_enable": helper.PBool(setting.MIGEnable),
+			}
+
+			if !isDriverEmpty(setting.Driver) {
+				driverEmptyFlag = true
+				driver := map[string]interface{}{
+					"version": helper.PString(setting.Driver.Version),
+					"name":    helper.PString(setting.Driver.Name),
+				}
+				gpuArgs["driver"] = driver
+			}
+
+			if !isCUDAEmpty(setting.CUDA) {
+				cudaEmptyFlag = true
+				cuda := map[string]interface{}{
+					"version": helper.PString(setting.CUDA.Version),
+					"name":    helper.PString(setting.CUDA.Name),
+				}
+				gpuArgs["cuda"] = cuda
+			}
+
+			if !isCUDNNEmpty(setting.CUDNN) {
+				cudnnEmptyFlag = true
+				cudnn := map[string]interface{}{
+					"version":  helper.PString(setting.CUDNN.Version),
+					"name":     helper.PString(setting.CUDNN.Name),
+					"doc_name": helper.PString(setting.CUDNN.DocName),
+					"dev_name": helper.PString(setting.CUDNN.DevName),
+				}
+				gpuArgs["cudnn"] = cudnn
+			}
+
+			if !isCustomDriverEmpty(setting.CustomDriver) {
+				customDriverEmptyFlag = true
+				customDriver := map[string]interface{}{
+					"address": helper.PString(setting.CustomDriver.Address),
+				}
+				gpuArgs["custom_driver"] = customDriver
+			}
+			if driverEmptyFlag || cudaEmptyFlag || cudnnEmptyFlag || customDriverEmptyFlag {
+				nodeConfig["gpu_args"] = []map[string]interface{}{gpuArgs}
+			}
+		}
+		nodeConfigs = append(nodeConfigs, nodeConfig)
+		_ = d.Set("node_config", nodeConfigs)
+	}
+
 	// Relative scaling group status
 	asg, hasAsg, err := asService.DescribeAutoScalingGroupById(ctx, *nodePool.AutoscalingGroupId)
 	if err != nil {
@@ -1279,11 +1405,22 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		_ = d.Set("vpc_id", asg.VpcId)
 		_ = d.Set("retry_policy", asg.RetryPolicy)
 		_ = d.Set("subnet_ids", helper.StringsInterfaces(asg.SubnetIdSet))
-
+		if v, ok := d.GetOk("scaling_mode"); ok {
+			if asg.ServiceSettings != nil && asg.ServiceSettings.ScalingMode != nil {
+				_ = d.Set("scaling_mode", helper.PString(asg.ServiceSettings.ScalingMode))
+			} else {
+				_ = d.Set("scaling_mode", v.(string))
+			}
+		}
 		// If not check, the diff between computed and default empty value leads to force replacement
 		if _, ok := d.GetOk("multi_zone_subnet_policy"); ok {
 			_ = d.Set("multi_zone_subnet_policy", asg.MultiZoneSubnetPolicy)
 		}
+	}
+	if v, ok := d.GetOkExists("delete_keep_instance"); ok {
+		_ = d.Set("delete_keep_instance", v.(bool))
+	} else {
+		_ = d.Set("delete_keep_instance", true)
 	}
 
 	taints := make([]map[string]interface{}, len(nodePool.Taints))
@@ -1296,6 +1433,7 @@ func resourceKubernetesNodePoolRead(d *schema.ResourceData, meta interface{}) er
 		taints[i] = taint
 	}
 	_ = d.Set("taints", taints)
+	_ = d.Set("import_flag", false)
 
 	return nil
 }
@@ -1345,12 +1483,16 @@ func resourceKubernetesNodePoolCreate(d *schema.ResourceData, meta interface{}) 
 
 	nodeOs := d.Get("node_os").(string)
 	nodeOsType := d.Get("node_os_type").(string)
+	//自定镜像不能指定节点操作系统类型
+	if strings.Contains(nodeOs, "img-") {
+		nodeOsType = ""
+	}
 
-	//deletionProtection := d.Get("deletion_protection").(bool)
+	deletionProtection := d.Get("deletion_protection").(bool)
 
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	nodePoolId, err := service.CreateClusterNodePool(ctx, clusterId, name, groupParaStr, configParaStr, enableAutoScale, nodeOs, nodeOsType, labels, taints, iAdvanced)
+	nodePoolId, err := service.CreateClusterNodePool(ctx, clusterId, name, groupParaStr, configParaStr, enableAutoScale, nodeOs, nodeOsType, labels, taints, iAdvanced, deletionProtection)
 	if err != nil {
 		return err
 	}
@@ -1464,7 +1606,7 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		"name",
 		"labels",
 		"taints",
-		//"deletion_protection",
+		"deletion_protection",
 		"enable_auto_scale",
 		"node_os_type",
 		"node_os",
@@ -1472,15 +1614,19 @@ func resourceKubernetesNodePoolUpdate(d *schema.ResourceData, meta interface{}) 
 		maxSize := int64(d.Get("max_size").(int))
 		minSize := int64(d.Get("min_size").(int))
 		enableAutoScale := d.Get("enable_auto_scale").(bool)
-		//deletionProtection := d.Get("deletion_protection").(bool)
+		deletionProtection := d.Get("deletion_protection").(bool)
 		name := d.Get("name").(string)
-		nodeOs := d.Get("node_os").(string)
-		nodeOsType := d.Get("node_os_type").(string)
 		labels := GetTkeLabels(d, "labels")
 		taints := GetTkeTaints(d, "taints")
 		tags := helper.GetTags(d, "tags")
+		nodeOs := d.Get("node_os").(string)
+		nodeOsType := d.Get("node_os_type").(string)
+		//自定镜像不能指定节点操作系统类型
+		if strings.Contains(nodeOs, "img-") {
+			nodeOsType = ""
+		}
 		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			errRet := service.ModifyClusterNodePool(ctx, clusterId, nodePoolId, name, enableAutoScale, minSize, maxSize, nodeOs, nodeOsType, labels, taints, tags)
+			errRet := service.ModifyClusterNodePool(ctx, clusterId, nodePoolId, name, enableAutoScale, minSize, maxSize, nodeOs, nodeOsType, labels, taints, tags, deletionProtection)
 			if errRet != nil {
 				return retryError(errRet)
 			}
@@ -1594,7 +1740,7 @@ func resourceKubernetesNodePoolDelete(d *schema.ResourceData, meta interface{}) 
 		service            = TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 		items              = strings.Split(d.Id(), FILED_SP)
 		deleteKeepInstance = d.Get("delete_keep_instance").(bool)
-		//deletionProtection = d.Get("deletion_protection").(bool)
+		deletionProtection = d.Get("deletion_protection").(bool)
 	)
 	if len(items) != 2 {
 		return fmt.Errorf("resource_tc_kubernetes_node_pool id  is broken")
@@ -1602,9 +1748,9 @@ func resourceKubernetesNodePoolDelete(d *schema.ResourceData, meta interface{}) 
 	clusterId := items[0]
 	nodePoolId := items[1]
 
-	//if deletionProtection {
-	//	return fmt.Errorf("deletion protection was enabled, please set `deletion_protection` to `false` and apply first")
-	//}
+	if deletionProtection {
+		return fmt.Errorf("deletion protection was enabled, please set `deletion_protection` to `false` and apply first")
+	}
 
 	//delete as group
 	hasDelete := false
@@ -1648,4 +1794,20 @@ func resourceKubernetesNodePoolDelete(d *schema.ResourceData, meta interface{}) 
 	})
 
 	return err
+}
+
+func isCUDNNEmpty(cudnn *tke.CUDNN) bool {
+	return cudnn == nil || (helper.PString(cudnn.Version) == "" && helper.PString(cudnn.Name) == "" && helper.PString(cudnn.DocName) == "" && helper.PString(cudnn.DevName) == "")
+}
+
+func isCUDAEmpty(cuda *tke.DriverVersion) bool {
+	return cuda == nil || (helper.PString(cuda.Version) == "" && helper.PString(cuda.Name) == "")
+}
+
+func isDriverEmpty(driver *tke.DriverVersion) bool {
+	return driver == nil || (helper.PString(driver.Version) == "" && helper.PString(driver.Name) == "")
+}
+
+func isCustomDriverEmpty(customDriver *tke.CustomDriver) bool {
+	return customDriver == nil || helper.PString(customDriver.Address) == ""
 }
