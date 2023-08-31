@@ -232,6 +232,7 @@ func resourceTencentCloudAPIGatewayAPIAppUpdate(d *schema.ResourceData, meta int
 
 	var (
 		logId    = getLogId(contextNil)
+		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
 		request  = apiGateway.NewModifyApiAppRequest()
 		apiAppId = d.Id()
 		err      error
@@ -264,6 +265,17 @@ func resourceTencentCloudAPIGatewayAPIAppUpdate(d *schema.ResourceData, meta int
 	if err != nil {
 		log.Printf("[CRITAL]%s update api_app failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("apigateway", "apiAppId", tcClient.Region, apiAppId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudAPIGatewayAPIAppRead(d, meta)
