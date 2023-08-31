@@ -11,9 +11,10 @@ import (
 
 var (
 	testAPIGatewayUsagePlanResourceName = "tencentcloud_api_gateway_usage_plan"
-	testAPIGatewayUsagePlanResourceKey  = testAPIGatewayUsagePlanResourceName + ".plan"
+	testAPIGatewayUsagePlanResourceKey  = testAPIGatewayUsagePlanResourceName + ".example"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudAPIGateWayUsagePlanResource -v
 func TestAccTencentCloudAPIGateWayUsagePlanResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -25,8 +26,8 @@ func TestAccTencentCloudAPIGateWayUsagePlanResource(t *testing.T) {
 				Config: testAccAPIGatewayUsagePlan,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAPIGatewayUsagePlanExists(testAPIGatewayUsagePlanResourceKey),
-					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "usage_plan_name", "my_plan"),
-					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "usage_plan_desc", "nice plan"),
+					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "usage_plan_name", "tf_example"),
+					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "usage_plan_desc", "desc."),
 					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "max_request_num", "100"),
 					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "max_request_num_pre_sec", "10"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayUsagePlanResourceKey, "create_time"),
@@ -41,9 +42,9 @@ func TestAccTencentCloudAPIGateWayUsagePlanResource(t *testing.T) {
 				Config: testAccAPIGatewayUsagePlanUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAPIGatewayUsagePlanExists(testAPIGatewayUsagePlanResourceKey),
-					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "usage_plan_name", "my_plan_update"),
-					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "usage_plan_desc", "nice plan update"),
-					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "max_request_num", "10"),
+					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "usage_plan_name", "tf_example_update"),
+					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "usage_plan_desc", "update desc."),
+					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "max_request_num", "1000"),
 					resource.TestCheckResourceAttr(testAPIGatewayUsagePlanResourceKey, "max_request_num_pre_sec", "100"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayUsagePlanResourceKey, "create_time"),
 					resource.TestCheckResourceAttrSet(testAPIGatewayUsagePlanResourceKey, "modify_time"),
@@ -107,18 +108,18 @@ func testAccCheckAPIGatewayUsagePlanExists(n string) resource.TestCheckFunc {
 }
 
 const testAccAPIGatewayUsagePlan = `
-	resource "tencentcloud_api_gateway_usage_plan" "plan" {
-  		usage_plan_name         = "my_plan"
-  		usage_plan_desc         = "nice plan"
-  		max_request_num         = 100
-  		max_request_num_pre_sec = 10
-	}
+resource "tencentcloud_api_gateway_usage_plan" "example" {
+  usage_plan_name         = "tf_example"
+  usage_plan_desc         = "desc."
+  max_request_num         = 100
+  max_request_num_pre_sec = 10
+}
 `
 const testAccAPIGatewayUsagePlanUpdate = `
-	resource "tencentcloud_api_gateway_usage_plan" "plan" {
-		usage_plan_name         = "my_plan_update"
-		usage_plan_desc         = "nice plan update"
-		max_request_num         = 10
-		max_request_num_pre_sec = 100
-	}
+resource "tencentcloud_api_gateway_usage_plan" "example" {
+  usage_plan_name         = "tf_example_update"
+  usage_plan_desc         = "update desc."
+  max_request_num         = 1000
+  max_request_num_pre_sec = 100
+}
 `

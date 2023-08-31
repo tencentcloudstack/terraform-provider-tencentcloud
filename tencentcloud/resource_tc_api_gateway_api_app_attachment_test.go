@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudApiGatewayPluginAttachmentResource_basic -v
-func TestAccTencentCloudApiGatewayPluginAttachmentResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudAPIGatewayApiAppAttachmentResource_basic -v
+func TestAccTencentCloudAPIGatewayApiAppAttachmentResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -16,13 +16,11 @@ func TestAccTencentCloudApiGatewayPluginAttachmentResource_basic(t *testing.T) {
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccApiGatewayPluginAttachment,
-				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_api_gateway_plugin_attachment.example", "id"),
-				),
+				Config: testAccAPIGatewayApiAppAttachment,
+				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_api_gateway_api_app_attachment.example", "id")),
 			},
 			{
-				ResourceName:      "tencentcloud_api_gateway_plugin_attachment.example",
+				ResourceName:      "tencentcloud_api_gateway_api_app_attachment.example",
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -30,15 +28,10 @@ func TestAccTencentCloudApiGatewayPluginAttachmentResource_basic(t *testing.T) {
 	})
 }
 
-const testAccApiGatewayPluginAttachment = `
-resource "tencentcloud_api_gateway_plugin" "example" {
-  plugin_name = "tf-example"
-  plugin_type = "IPControl"
-  plugin_data = jsonencode({
-    "type" : "white_list",
-    "blocks" : "1.1.1.1",
-  })
-  description = "desc."
+const testAccAPIGatewayApiAppAttachment = `
+resource "tencentcloud_api_gateway_api_app" "example" {
+  api_app_name = "tf_example"
+  api_app_desc = "app desc."
 }
 
 resource "tencentcloud_api_gateway_service" "example" {
@@ -86,16 +79,10 @@ resource "tencentcloud_api_gateway_api" "example" {
   }
 }
 
-resource "tencentcloud_api_gateway_service_release" "example" {
-  service_id       = tencentcloud_api_gateway_api.example.service_id
-  environment_name = "release"
-  release_desc     = "desc."
-}
-
-resource "tencentcloud_api_gateway_plugin_attachment" "example" {
-  plugin_id        = tencentcloud_api_gateway_plugin.example.id
-  service_id       = tencentcloud_api_gateway_service_release.example.service_id
-  api_id           = tencentcloud_api_gateway_api.example.id
-  environment_name = "release"
+resource "tencentcloud_api_gateway_api_app_attachment" "example" {
+  api_app_id  = tencentcloud_api_gateway_api_app.example.id
+  environment = "test"
+  service_id  = tencentcloud_api_gateway_service.example.id
+  api_id      = tencentcloud_api_gateway_api.example.id
 }
 `

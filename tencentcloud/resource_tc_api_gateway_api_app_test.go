@@ -12,7 +12,7 @@ import (
 )
 
 var testAPIGatewayAPIAppResourceName = "tencentcloud_api_gateway_api_app"
-var testAPIGatewayAPIAppResourceKey = testAPIGatewayAPIAppResourceName + ".test"
+var testAPIGatewayAPIAppResourceKey = testAPIGatewayAPIAppResourceName + ".example"
 
 // go test -i; go test -test.run TestAccTencentCloudAPIGateWayAPIAppResource_basic -v
 func TestAccTencentCloudAPIGateWayAPIAppResource_basic(t *testing.T) {
@@ -26,8 +26,8 @@ func TestAccTencentCloudAPIGateWayAPIAppResource_basic(t *testing.T) {
 				Config: testAccAPIGatewayAPIApp,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAPIGatewayAPIAppExists(testAPIGatewayAPIAppResourceKey),
-					resource.TestCheckResourceAttrSet(testAPIGatewayAPIAppResourceKey, "api_app_name"),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIAppResourceKey, "api_app_desc", "app desc"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIAppResourceKey, "api_app_name", "tf_example"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIAppResourceKey, "api_app_desc", "app desc."),
 				),
 			},
 			{
@@ -39,8 +39,8 @@ func TestAccTencentCloudAPIGateWayAPIAppResource_basic(t *testing.T) {
 				Config: testAccAPIGatewayAPIAppUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAPIGatewayAPIAppExists(testAPIGatewayAPIAppResourceKey),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIAppResourceKey, "api_app_name", "update_app_name_test"),
-					resource.TestCheckResourceAttr(testAPIGatewayAPIAppResourceKey, "api_app_desc", "update app desc"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIAppResourceKey, "api_app_name", "tf_example_update"),
+					resource.TestCheckResourceAttr(testAPIGatewayAPIAppResourceKey, "api_app_desc", "update app desc."),
 				),
 			},
 		},
@@ -107,15 +107,23 @@ func testAccCheckAPIGatewayAPIAppExists(r string) resource.TestCheckFunc {
 }
 
 const testAccAPIGatewayAPIApp = `
-resource "tencentcloud_api_gateway_api_app" "test" {
-  api_app_name = "create_app_test"
-  api_app_desc = "app desc"
+resource "tencentcloud_api_gateway_api_app" "example" {
+  api_app_name = "tf_example"
+  api_app_desc = "app desc."
+
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 `
 
 const testAccAPIGatewayAPIAppUpdate = `
-resource "tencentcloud_api_gateway_api_app" "test" {
-  api_app_name = "update_app_name_test"
-  api_app_desc = "update app desc"
+resource "tencentcloud_api_gateway_api_app" "example" {
+  api_app_name = "tf_example_update"
+  api_app_desc = "update app desc."
+
+  tags = {
+    "createdBy" = "terraform"
+  }
 }
 `

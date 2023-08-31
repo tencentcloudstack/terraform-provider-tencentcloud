@@ -1,27 +1,22 @@
 ---
 subcategory: "API GateWay"
 layout: "tencentcloud"
-page_title: "TencentCloud: tencentcloud_api_gateway_plugin_attachment"
-sidebar_current: "docs-tencentcloud-resource-api_gateway_plugin_attachment"
+page_title: "TencentCloud: tencentcloud_api_gateway_api_app_attachment"
+sidebar_current: "docs-tencentcloud-resource-api_gateway_api_app_attachment"
 description: |-
-  Provides a resource to create a apiGateway plugin_attachment
+  Provides a resource to create a apigateway api_app_attachment
 ---
 
-# tencentcloud_api_gateway_plugin_attachment
+# tencentcloud_api_gateway_api_app_attachment
 
-Provides a resource to create a apiGateway plugin_attachment
+Provides a resource to create a apigateway api_app_attachment
 
 ## Example Usage
 
 ```hcl
-resource "tencentcloud_api_gateway_plugin" "example" {
-  plugin_name = "tf-example"
-  plugin_type = "IPControl"
-  plugin_data = jsonencode({
-    "type" : "white_list",
-    "blocks" : "1.1.1.1",
-  })
-  description = "desc."
+resource "tencentcloud_api_gateway_api_app" "example" {
+  api_app_name = "tf_example"
+  api_app_desc = "app desc."
 }
 
 resource "tencentcloud_api_gateway_service" "example" {
@@ -69,17 +64,11 @@ resource "tencentcloud_api_gateway_api" "example" {
   }
 }
 
-resource "tencentcloud_api_gateway_service_release" "example" {
-  service_id       = tencentcloud_api_gateway_api.example.service_id
-  environment_name = "release"
-  release_desc     = "desc."
-}
-
-resource "tencentcloud_api_gateway_plugin_attachment" "example" {
-  plugin_id        = tencentcloud_api_gateway_plugin.example.id
-  service_id       = tencentcloud_api_gateway_service_release.example.service_id
-  api_id           = tencentcloud_api_gateway_api.example.id
-  environment_name = "release"
+resource "tencentcloud_api_gateway_api_app_attachment" "example" {
+  api_app_id  = tencentcloud_api_gateway_api_app.example.id
+  environment = "test"
+  service_id  = tencentcloud_api_gateway_service.example.id
+  api_id      = tencentcloud_api_gateway_api.example.id
 }
 ```
 
@@ -87,10 +76,10 @@ resource "tencentcloud_api_gateway_plugin_attachment" "example" {
 
 The following arguments are supported:
 
-* `api_id` - (Required, String, ForceNew) Id of API.
-* `environment_name` - (Required, String, ForceNew) Name of Environment.
-* `plugin_id` - (Required, String, ForceNew) Id of Plugin.
-* `service_id` - (Required, String, ForceNew) Id of Service.
+* `api_app_id` - (Required, String, ForceNew) The unique ID of the application to be bound.
+* `api_id` - (Required, String, ForceNew) The unique ID of the API to be bound.
+* `environment` - (Required, String, ForceNew) The environment to be bound.
+* `service_id` - (Required, String, ForceNew) The unique ID of the service to be bound.
 
 ## Attributes Reference
 
@@ -102,9 +91,9 @@ In addition to all arguments above, the following attributes are exported:
 
 ## Import
 
-apiGateway plugin_attachment can be imported using the id, e.g.
+apigateway api_app_attachment can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_api_gateway_plugin_attachment.example plugin-hnqntalp#service-q3f533ja#release#api-62ud9woa
+terraform import tencentcloud_api_gateway_api_app_attachment.example app-f2dxx0lv#test#service-h0trno8e#api-grsomg0w
 ```
 

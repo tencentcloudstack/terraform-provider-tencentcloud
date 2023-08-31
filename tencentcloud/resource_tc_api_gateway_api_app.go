@@ -3,17 +3,41 @@ Provides a resource to create a APIGateway ApiApp
 
 Example Usage
 
+Create a basic apigateway api_app
+
 ```hcl
-resource "tencentcloud_api_gateway_api_app" "my_api_app" {
-  api_app_name = "app_test1"
+resource "tencentcloud_api_gateway_api_app" "example" {
+  api_app_name = "tf_example"
   api_app_desc = "app desc."
 }
+```
+
+Bind Tag
+
+```hcl
+resource "tencentcloud_api_gateway_api_app" "example" {
+  api_app_name = "tf_example"
+  api_app_desc = "app desc."
+
+  tags = {
+    "createdBy" = "terraform"
+  }
+}
+```
+
+Import
+
+apigateway api_app can be imported using the id, e.g.
+
+```
+terraform import tencentcloud_api_gateway_api_app.example app-poe0pyex
 ```
 */
 package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -42,6 +66,11 @@ func resourceTencentCloudAPIGatewayAPIApp() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Description: "App description.",
+			},
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
 			},
 			"api_app_id": {
 				Type:        schema.TypeString,
@@ -78,6 +107,7 @@ func resourceTencentCloudAPIGatewayAPIAppCreate(d *schema.ResourceData, meta int
 
 	var (
 		logId    = getLogId(contextNil)
+		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
 		request  = apiGateway.NewCreateApiAppRequest()
 		response *apiGateway.CreateApiAppResponse
 		apiAppId string
@@ -100,6 +130,7 @@ func resourceTencentCloudAPIGatewayAPIAppCreate(d *schema.ResourceData, meta int
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
 				logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+
 		response = result
 		return nil
 	})
@@ -110,6 +141,16 @@ func resourceTencentCloudAPIGatewayAPIAppCreate(d *schema.ResourceData, meta int
 	}
 
 	apiAppId = *response.Response.Result.ApiAppId
+
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::apigateway:%s:uin/:apiAppId/%s", region, apiAppId)
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
+
 	d.SetId(apiAppId)
 	return resourceTencentCloudAPIGatewayAPIAppRead(d, meta)
 }
@@ -173,6 +214,15 @@ func resourceTencentCloudAPIGatewayAPIAppRead(d *schema.ResourceData, meta inter
 		}
 	}
 
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+	tags, err := tagService.DescribeResourceTags(ctx, "apigateway", "apiAppId", tcClient.Region, apiAppId)
+	if err != nil {
+		return err
+	}
+
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -182,6 +232,7 @@ func resourceTencentCloudAPIGatewayAPIAppUpdate(d *schema.ResourceData, meta int
 
 	var (
 		logId    = getLogId(contextNil)
+		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
 		request  = apiGateway.NewModifyApiAppRequest()
 		apiAppId = d.Id()
 		err      error
@@ -214,6 +265,17 @@ func resourceTencentCloudAPIGatewayAPIAppUpdate(d *schema.ResourceData, meta int
 	if err != nil {
 		log.Printf("[CRITAL]%s update api_app failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("apigateway", "apiAppId", tcClient.Region, apiAppId)
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudAPIGatewayAPIAppRead(d, meta)

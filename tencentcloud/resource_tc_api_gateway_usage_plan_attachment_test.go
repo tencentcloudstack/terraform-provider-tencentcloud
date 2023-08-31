@@ -12,8 +12,9 @@ import (
 )
 
 var testAPIGatewayUsagePlanAttachmentResourceName = "tencentcloud_api_gateway_usage_plan_attachment"
-var testAPIGatewayUsagePlanAttachmentResourceKey = testAPIGatewayUsagePlanAttachmentResourceName + ".attach_service"
+var testAPIGatewayUsagePlanAttachmentResourceKey = testAPIGatewayUsagePlanAttachmentResourceName + ".example"
 
+// go test -i; go test -test.run TestAccTencentCloudAPIGateWayUsagePlanAttachmentResource -v
 func TestAccTencentCloudAPIGateWayUsagePlanAttachmentResource(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -42,7 +43,7 @@ func TestAccTencentCloudAPIGateWayUsagePlanAttachmentResource(t *testing.T) {
 
 func base(ctx context.Context, rs *terraform.ResourceState) (plans []*apigateway.ApiUsagePlan, err error) {
 	ids := strings.Split(rs.Primary.ID, FILED_SP)
-	if len(ids) != 5 {
+	if len(ids) != 6 {
 		return nil, fmt.Errorf("id is broken, id is %s", rs.Primary.ID)
 	}
 
@@ -52,8 +53,9 @@ func base(ctx context.Context, rs *terraform.ResourceState) (plans []*apigateway
 		environment = ids[2]
 		bindType    = ids[3]
 		apiId       = ids[4]
-		outErr      error
-		has         bool
+		//accessKeysStr = ids[5]
+		outErr error
+		has    bool
 	)
 
 	if usagePlanId == "" || serviceId == "" || environment == "" || bindType == "" {
@@ -127,6 +129,7 @@ func testAccCheckAPIGatewayUsagePlanAttachmentDestroy(s *terraform.State) error 
 			environment = ids[2]
 			bindType    = ids[3]
 			apiId       = ids[4]
+			//accessKeysStr = ids[5]
 		)
 
 		for _, plan := range plans {
@@ -184,59 +187,69 @@ func testAccCheckAPIGatewayUsagePlanAttachmentExists(n string) resource.TestChec
 }
 
 const testAccAPIGatewayUsagePlanAttachment = `
-resource "tencentcloud_api_gateway_usage_plan" "plan" {
-	usage_plan_name         = "my_plan"
-	usage_plan_desc         = "nice plan"
-	max_request_num         = 100
-	max_request_num_pre_sec = 10
-}
-	
-resource "tencentcloud_api_gateway_service" "service" {
-  	service_name = "niceservice"
-  	protocol     = "http&https"
-  	net_type     = ["INNER", "OUTER"]
-  	ip_version   = "IPv4"
+resource "tencentcloud_api_gateway_usage_plan" "example" {
+  usage_plan_name         = "tf_example"
+  usage_plan_desc         = "desc."
+  max_request_num         = 100
+  max_request_num_pre_sec = 10
 }
 
-resource "tencentcloud_api_gateway_api" "api" {
-    service_id            = tencentcloud_api_gateway_service.service.id
-    api_name              = "hello_update"
-    api_desc              = "my hello api update"
-    auth_type             = "SECRET"
-    protocol              = "HTTP"
-    enable_cors           = true
-    request_config_path   = "/user/info"
-    request_config_method = "POST"
-    request_parameters {
-    	name          = "email"
-        position      = "QUERY"
-        type          = "string"
-        desc          = "your email please?"
-        default_value = "tom@qq.com"
-        required      = true
-    }
-    service_config_type      = "HTTP"
-    service_config_timeout   = 10
-    service_config_url       = "http://www.tencent.com"
-    service_config_path      = "/user"
-    service_config_method    = "POST"
-    response_type            = "XML"
-    response_success_example = "<note>success</note>"
-    response_fail_example    = "<note>fail</note>"
-    response_error_codes {
-    	code           = 10
-        msg            = "system error"
-       	desc           = "system error code"
-       	converted_code = 10
-        need_convert   = true
-    }
+resource "tencentcloud_api_gateway_service" "example" {
+  service_name = "tf_example"
+  protocol     = "http&https"
+  service_desc = "desc."
+  net_type     = ["INNER", "OUTER"]
+  ip_version   = "IPv4"
 }
 
-resource "tencentcloud_api_gateway_usage_plan_attachment" "attach_service" {
-	usage_plan_id  = tencentcloud_api_gateway_usage_plan.plan.id
-  	service_id     = tencentcloud_api_gateway_service.service.id 
-	environment    = "release"
-	bind_type      = "API"
-   	api_id         = tencentcloud_api_gateway_api.api.id 
+resource "tencentcloud_api_gateway_api" "example" {
+  service_id            = tencentcloud_api_gateway_service.example.id
+  api_name              = "hello_update"
+  api_desc              = "my hello api update"
+  auth_type             = "SECRET"
+  protocol              = "HTTP"
+  enable_cors           = true
+  request_config_path   = "/user/info"
+  request_config_method = "POST"
+  request_parameters {
+    name          = "email"
+    position      = "QUERY"
+    type          = "string"
+    desc          = "desc."
+    default_value = "test@qq.com"
+    required      = true
+  }
+  service_config_type      = "HTTP"
+  service_config_timeout   = 10
+  service_config_url       = "http://www.tencent.com"
+  service_config_path      = "/user"
+  service_config_method    = "POST"
+  response_type            = "XML"
+  response_success_example = "<note>success</note>"
+  response_fail_example    = "<note>fail</note>"
+  response_error_codes {
+    code           = 500
+    msg            = "system error"
+    desc           = "system error code"
+    converted_code = 5000
+    need_convert   = true
+  }
+}
+
+resource "tencentcloud_api_gateway_api_key" "example" {
+  secret_name = "tf_example"
+  status      = "on"
+}
+
+resource "tencentcloud_api_gateway_usage_plan_attachment" "example" {
+  usage_plan_id = tencentcloud_api_gateway_usage_plan.example.id
+  service_id    = tencentcloud_api_gateway_service.example.id
+  environment   = "release"
+  bind_type     = "API"
+  api_id        = tencentcloud_api_gateway_api.example.id
+
+  access_key_ids = [
+    tencentcloud_api_gateway_api_key.example.id,
+  ]
 }
 `

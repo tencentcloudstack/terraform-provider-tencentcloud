@@ -1,20 +1,30 @@
 /*
 Use this resource to create API gateway service.
 
+~> **NOTE:** After setting `uniq_vpc_id`, it cannot be modified.
+
 Example Usage
 
 Shared Service
+
 ```hcl
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "niceservice"
+resource "tencentcloud_vpc" "vpc" {
+  name       = "example-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_api_gateway_service" "example" {
+  service_name = "tf-example"
   protocol     = "http&https"
-  service_desc = "your nice service"
+  service_desc = "desc."
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
-  tags         = {
-    test-key1 = "test-value1"
-    test-key2 = "test-value2"
+  uniq_vpc_id  = tencentcloud_vpc.vpc.id
+
+  tags = {
+    createdBy = "terraform"
   }
+
   release_limit = 500
   pre_limit     = 500
   test_limit    = 500
@@ -22,17 +32,21 @@ resource "tencentcloud_api_gateway_service" "service" {
 ```
 
 Exclusive Service
+
 ```hcl
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "service"
+resource "tencentcloud_api_gateway_service" "example" {
+  service_name = "tf-example"
   protocol     = "http&https"
-  service_desc = "your nice service"
+  service_desc = "desc."
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
-  tags         = {
-    test-key1 = "test-value1"
+  uniq_vpc_id  = tencentcloud_vpc.vpc.id
+  instance_id  = "instance-rc6fcv4e"
+
+  tags = {
+    createdBy = "terraform"
   }
-  instance_id   = "instance-rc6fcv4e"
+
   release_limit = 500
   pre_limit     = 500
   test_limit    = 500
@@ -121,7 +135,13 @@ func resourceTencentCloudAPIGatewayService() *schema.Resource {
 			"instance_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
+				ForceNew:    true,
 				Description: "Exclusive instance ID.",
+			},
+			"uniq_vpc_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "VPC ID.",
 			},
 			"release_limit": {
 				Type:        schema.TypeInt,
@@ -254,6 +274,7 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 		netTypes          = helper.InterfacesStrings(d.Get("net_type").(*schema.Set).List())
 		serviceId         string
 		instanceId        string
+		vpcId             string
 		err               error
 
 		releaseLimit int
@@ -263,6 +284,10 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 
 	if v, ok := d.GetOk("instance_id"); ok {
 		instanceId = v.(string)
+	}
+
+	if v, ok := d.GetOk("uniq_vpc_id"); ok {
+		vpcId = v.(string)
 	}
 
 	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -275,7 +300,9 @@ func resourceTencentCloudAPIGatewayServiceCreate(d *schema.ResourceData, meta in
 			"",
 			"",
 			instanceId,
-			netTypes)
+			vpcId,
+			netTypes,
+		)
 
 		if err != nil {
 			if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
@@ -455,6 +482,7 @@ func resourceTencentCloudAPIGatewayServiceRead(d *schema.ResourceData, meta inte
 	_ = d.Set("ip_version", info.Response.IpVersion)
 	_ = d.Set("net_type", info.Response.NetTypes)
 	_ = d.Set("instance_id", info.Response.InstanceId)
+	_ = d.Set("uniq_vpc_id", info.Response.UniqVpcId)
 	_ = d.Set("internal_sub_domain", info.Response.InternalSubDomain)
 	_ = d.Set("outer_sub_domain", info.Response.OuterSubDomain)
 	_ = d.Set("inner_http_port", info.Response.InnerHttpPort)

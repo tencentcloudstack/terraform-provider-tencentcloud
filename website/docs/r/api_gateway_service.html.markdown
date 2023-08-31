@@ -11,21 +11,30 @@ description: |-
 
 Use this resource to create API gateway service.
 
+~> **NOTE:** After setting `uniq_vpc_id`, it cannot be modified.
+
 ## Example Usage
 
 ### Shared Service
 
 ```hcl
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "niceservice"
+resource "tencentcloud_vpc" "vpc" {
+  name       = "example-vpc"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_api_gateway_service" "example" {
+  service_name = "tf-example"
   protocol     = "http&https"
-  service_desc = "your nice service"
+  service_desc = "desc."
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
+  uniq_vpc_id  = tencentcloud_vpc.vpc.id
+
   tags = {
-    test-key1 = "test-value1"
-    test-key2 = "test-value2"
+    createdBy = "terraform"
   }
+
   release_limit = 500
   pre_limit     = 500
   test_limit    = 500
@@ -35,16 +44,19 @@ resource "tencentcloud_api_gateway_service" "service" {
 ### Exclusive Service
 
 ```hcl
-resource "tencentcloud_api_gateway_service" "service" {
-  service_name = "service"
+resource "tencentcloud_api_gateway_service" "example" {
+  service_name = "tf-example"
   protocol     = "http&https"
-  service_desc = "your nice service"
+  service_desc = "desc."
   net_type     = ["INNER", "OUTER"]
   ip_version   = "IPv4"
+  uniq_vpc_id  = tencentcloud_vpc.vpc.id
+  instance_id  = "instance-rc6fcv4e"
+
   tags = {
-    test-key1 = "test-value1"
+    createdBy = "terraform"
   }
-  instance_id   = "instance-rc6fcv4e"
+
   release_limit = 500
   pre_limit     = 500
   test_limit    = 500
@@ -59,13 +71,14 @@ The following arguments are supported:
 * `protocol` - (Required, String) Service frontend request type. Valid values: `http`, `https`, `http&https`.
 * `service_name` - (Required, String) Custom service name.
 * `exclusive_set_name` - (Optional, String, ForceNew, **Deprecated**) It has been deprecated from version 1.81.9. Self-deployed cluster name, which is used to specify the self-deployed cluster where the service is to be created.
-* `instance_id` - (Optional, String) Exclusive instance ID.
+* `instance_id` - (Optional, String, ForceNew) Exclusive instance ID.
 * `ip_version` - (Optional, String, ForceNew) IP version number. Valid values: `IPv4`, `IPv6`. Default value: `IPv4`.
 * `pre_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 * `release_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
 * `service_desc` - (Optional, String) Custom service description.
 * `tags` - (Optional, Map) Tag description list.
 * `test_limit` - (Optional, Int) API QPS value. Enter a positive number to limit the API query rate per second `QPS`.
+* `uniq_vpc_id` - (Optional, String) VPC ID.
 
 ## Attributes Reference
 

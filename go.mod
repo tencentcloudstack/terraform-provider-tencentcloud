@@ -26,7 +26,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go-intl-en v3.0.646+incompatible
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/antiddos v1.0.358
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/api v1.0.285
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.691
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway v1.0.736
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.655
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409

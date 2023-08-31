@@ -3,13 +3,26 @@ Use this resource to create API gateway access key.
 
 Example Usage
 
+Automatically generate key for API gateway access key.
+
 ```hcl
-resource "tencentcloud_api_gateway_api_key" "test" {
-  secret_name = "my_api_key"
+resource "tencentcloud_api_gateway_api_key" "example_auto" {
+  secret_name = "tf_example_auto"
   status      = "on"
 }
 ```
 
+Manually generate a secret key for API gateway access key.
+
+```hcl
+resource "tencentcloud_api_gateway_api_key" "example_manual" {
+  secret_name       = "tf_example_manual"
+  status            = "on"
+  access_key_type   = "manual"
+  access_key_id     = "28e287e340507fa147b2c8284dab542f"
+  access_key_secret = "0198a4b8c3105080f4acd9e507599eff"
+}
+```
 Import
 
 API gateway access key can be imported using the id, e.g.
@@ -23,6 +36,9 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -38,7 +54,6 @@ func resourceTencentCloudAPIGatewayAPIKey() *schema.Resource {
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
-
 		Schema: map[string]*schema.Schema{
 			"secret_name": {
 				Type:        schema.TypeString,
@@ -53,12 +68,28 @@ func resourceTencentCloudAPIGatewayAPIKey() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue(API_GATEWAY_KEYS),
 				Description:  "Key status. Valid values: `on`, `off`.",
 			},
-			// Computed values.
-			"access_key_secret": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Created API key.",
+			"access_key_type": {
+				Optional:     true,
+				Default:      API_GATEWAY_KEY_TYPE_AUTO,
+				ValidateFunc: validateAllowedStringValue(API_GATEWAY_KEYS_TYPE),
+				Type:         schema.TypeString,
+				Description:  "Key type, supports both auto and manual (custom keys), defaults to auto.",
 			},
+			"access_key_id": {
+				Optional:     true,
+				Computed:     true,
+				Type:         schema.TypeString,
+				ValidateFunc: validateStringLengthInRange(5, 50),
+				Description:  "User defined key ID, required when access_key_type is manual. The length is 5-50 characters, consisting of letters, numbers, and English underscores.",
+			},
+			"access_key_secret": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validateStringLengthInRange(10, 50),
+				Description:  "The user-defined key must be passed when the access_key_type is manual. The length is 10-50 characters, consisting of letters, numbers, and English underscores.",
+			},
+			// Computed values.
 			"modify_time": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -80,37 +111,59 @@ func resourceTencentCloudAPIGatewayAPIKeyCreate(d *schema.ResourceData, meta int
 		logId             = getLogId(contextNil)
 		ctx               = context.WithValue(context.TODO(), logIdKey, logId)
 		apiGatewayService = APIGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
-		secretName        = d.Get("secret_name").(string)
-		statusStr         = d.Get("status").(string)
+		request           = apigateway.NewCreateApiKeyRequest()
+		response          = apigateway.NewCreateApiKeyResponse()
+		statusStr         string
+		accessKeyType     string
 		accessKeyId       string
-		err               error
+		accessKeySecret   string
 	)
 
-	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		accessKeyId, err = apiGatewayService.CreateApiKey(ctx, secretName)
-		if err != nil {
-			return retryError(err)
-		}
-		return nil
-	})
-	if err != nil {
-		return err
+	if v, ok := d.GetOk("secret_name"); ok {
+		request.SecretName = helper.String(v.(string))
 	}
 
-	d.SetId(accessKeyId)
+	if v, ok := d.GetOk("status"); ok {
+		statusStr = v.(string)
+	}
 
-	//wait API key create ok
-	if err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-		_, has, inErr := apiGatewayService.DescribeApiKey(ctx, accessKeyId)
-		if inErr != nil {
-			return retryError(inErr, InternalError)
+	if v, ok := d.GetOk("access_key_type"); ok {
+		request.AccessKeyType = helper.String(v.(string))
+		accessKeyType = v.(string)
+	}
+
+	if accessKeyType == API_GATEWAY_KEY_TYPE_MANUAL {
+		if v, ok := d.GetOk("access_key_id"); ok {
+			accessKeyId = v.(string)
 		}
-		if !has {
-			return resource.RetryableError(fmt.Errorf("accessKeyId %s not found on server", accessKeyId))
+
+		if v, ok := d.GetOk("access_key_secret"); ok {
+			accessKeySecret = v.(string)
 		}
+
+		if accessKeyId == "" || accessKeySecret == "" {
+			errRet := fmt.Errorf("`access_key_id`, `access_key_secret` required when access_key_type is `manual`")
+			return errRet
+		}
+
+		request.AccessKeyId = &accessKeyId
+		request.AccessKeySecret = &accessKeySecret
+	}
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseAPIGatewayClient().CreateApiKey(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+
+		response = result
 		return nil
+	})
 
-	}); err != nil {
+	if err != nil {
+		log.Printf("[CRITAL]%s create apigateway apiKey failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -125,6 +178,9 @@ func resourceTencentCloudAPIGatewayAPIKeyCreate(d *schema.ResourceData, meta int
 			return err
 		}
 	}
+
+	d.SetId(*response.Response.Result.AccessKeyId)
+
 	return resourceTencentCloudAPIGatewayAPIKeyRead(d, meta)
 }
 
@@ -159,6 +215,8 @@ func resourceTencentCloudAPIGatewayAPIKeyRead(d *schema.ResourceData, meta inter
 
 	_ = d.Set("secret_name", apiKey.SecretName)
 	_ = d.Set("status", API_GATEWAY_KEY_INT2STRS[*apiKey.Status])
+	_ = d.Set("access_key_type", apiKey.AccessKeyType)
+	_ = d.Set("access_key_id", apiKey.AccessKeyId)
 	_ = d.Set("access_key_secret", apiKey.AccessKeySecret)
 	_ = d.Set("modify_time", apiKey.ModifiedTime)
 	_ = d.Set("create_time", apiKey.CreatedTime)
@@ -172,9 +230,45 @@ func resourceTencentCloudAPIGatewayAPIKeyUpdate(d *schema.ResourceData, meta int
 	var (
 		logId             = getLogId(contextNil)
 		ctx               = context.WithValue(context.TODO(), logIdKey, logId)
+		request           = apigateway.NewUpdateApiKeyRequest()
 		apiGatewayService = APIGatewayService{client: meta.(*TencentCloudClient).apiV3Conn}
 		accessKeyId       = d.Id()
 	)
+
+	immutableFields := []string{"access_key_id", "access_key_type"}
+	for _, f := range immutableFields {
+		if d.HasChange(f) {
+			return fmt.Errorf("cannot update argument `%s`", f)
+		}
+	}
+
+	if d.HasChange("access_key_secret") {
+		if d.Get("access_key_type") == API_GATEWAY_KEY_TYPE_AUTO {
+			errRet := fmt.Errorf("`access_key_id`, `access_key_secret` updated when access_key_type is `auto`")
+			return errRet
+		}
+
+		request.AccessKeyId = &accessKeyId
+		if v, ok := d.GetOk("access_key_secret"); ok {
+			request.AccessKeySecret = helper.String(v.(string))
+		}
+
+		err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseAPIGatewayClient().UpdateApiKey(request)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+			}
+
+			return nil
+		})
+
+		if err != nil {
+			log.Printf("[CRITAL]%s update apigateway apiKey failed, reason:%+v", logId, err)
+			return err
+		}
+	}
 
 	if d.HasChange("status") {
 		var (

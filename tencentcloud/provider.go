@@ -98,6 +98,10 @@ API GateWay
 	tencentcloud_api_gateway_api_keys
 	tencentcloud_api_gateway_api_docs
 	tencentcloud_api_gateway_api_apps
+	tencentcloud_api_gateway_plugins
+	tencentcloud_api_gateway_upstreams
+	tencentcloud_api_gateway_api_usage_plans
+	tencentcloud_api_gateway_api_app_service
 
   Resource
   	tencentcloud_api_gateway_api
@@ -114,6 +118,8 @@ API GateWay
 	tencentcloud_api_gateway_plugin_attachment
 	tencentcloud_api_gateway_api_doc
 	tencentcloud_api_gateway_api_app
+	tencentcloud_api_gateway_upstream
+	tencentcloud_api_gateway_api_app_attachment
 
 Cloud Audit(Audit)
   Data Source
@@ -2024,6 +2030,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_apis":                          dataSourceTencentCloudAPIGatewayAPIs(),
 			"tencentcloud_api_gateway_services":                      dataSourceTencentCloudAPIGatewayServices(),
 			"tencentcloud_api_gateway_api_keys":                      dataSourceTencentCloudAPIGatewayAPIKeys(),
+			"tencentcloud_api_gateway_plugins":                       dataSourceTencentCloudAPIGatewayPlugins(),
+			"tencentcloud_api_gateway_upstreams":                     dataSourceTencentCloudAPIGatewayUpstreams(),
+			"tencentcloud_api_gateway_api_usage_plans":               dataSourceTencentCloudAPIGatewayApiUsagePlans(),
+			"tencentcloud_api_gateway_api_app_service":               dataSourceTencentCloudAPIGatewayApiAppService(),
 			"tencentcloud_sqlserver_basic_instances":                 dataSourceTencentCloudSqlserverBasicInstances(),
 			"tencentcloud_sqlserver_query_xevent":                    dataSourceTencentCloudSqlserverQueryXevent(),
 			"tencentcloud_sqlserver_ins_attribute":                   dataSourceTencentCloudSqlserverInsAttribute(),
@@ -2654,8 +2664,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_key":                                 resourceTencentCloudAPIGatewayAPIKey(),
 			"tencentcloud_api_gateway_api_key_attachment":                      resourceTencentCloudAPIGatewayAPIKeyAttachment(),
 			"tencentcloud_api_gateway_service_release":                         resourceTencentCloudAPIGatewayServiceRelease(),
-			"tencentcloud_api_gateway_plugin":                                  resourceTencentCloudApiGatewayPlugin(),
-			"tencentcloud_api_gateway_plugin_attachment":                       resourceTencentCloudApiGatewayPluginAttachment(),
+			"tencentcloud_api_gateway_plugin":                                  resourceTencentCloudAPIGatewayPlugin(),
+			"tencentcloud_api_gateway_plugin_attachment":                       resourceTencentCloudAPIGatewayPluginAttachment(),
+			"tencentcloud_api_gateway_upstream":                                resourceTencentCloudAPIGatewayUpstream(),
+			"tencentcloud_api_gateway_api_app_attachment":                      resourceTencentCloudAPIGatewayApiAppAttachment(),
 			"tencentcloud_sqlserver_basic_instance":                            resourceTencentCloudSqlserverBasicInstance(),
 			"tencentcloud_sqlserver_instance_tde":                              resourceTencentCloudSqlserverInstanceTDE(),
 			"tencentcloud_sqlserver_database_tde":                              resourceTencentCloudSqlserverDatabaseTDE(),
