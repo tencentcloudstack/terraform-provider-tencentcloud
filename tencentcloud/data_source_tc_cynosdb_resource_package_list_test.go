@@ -11,12 +11,13 @@ func TestAccTencentCloudCynosdbResourcePackageListDataSource_basic(t *testing.T)
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY)
+			testAccPreCheck(t)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCynosdbResourcePackageListDataSource,
+				PreConfig: func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
+				Config:    testAccCynosdbResourcePackageListDataSource,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cynosdb_resource_package_list.resource_package_list"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cynosdb_resource_package_list.resource_package_list", "resource_package_list.#"),
