@@ -1,0 +1,15 @@
+```release-note:enhancement
+data_source/tencentcloud_ssm_secrets: Support `secret_type`, `product_name`, Update return value
+```
+
+```release-note:enhancement
+resource/tencentcloud_ssm_product_secret: Support `tags`, Update return value
+```
+
+```release-note:enhancement
+resource/tencentcloud_ssm_secret: Support `tags`
+```
+
+```release-note:enhancement
+resource/tencentcloud_ssm_ssh_key_pair_secret: Support `tags`
+```

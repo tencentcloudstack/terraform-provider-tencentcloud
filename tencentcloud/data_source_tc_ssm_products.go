@@ -22,14 +22,11 @@ func dataSourceTencentCloudSsmProducts() *schema.Resource {
 		Read: dataSourceTencentCloudSsmProductsRead,
 		Schema: map[string]*schema.Schema{
 			"products": {
-				Computed: true,
-				Type:     schema.TypeSet,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
+				Computed:    true,
+				Type:        schema.TypeSet,
+				Elem:        &schema.Schema{Type: schema.TypeString},
 				Description: "List of supported services.",
 			},
-
 			"result_output_file": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -43,22 +40,23 @@ func dataSourceTencentCloudSsmProductsRead(d *schema.ResourceData, meta interfac
 	defer logElapsed("data_source.tencentcloud_ssm_products.read")()
 	defer inconsistentCheck(d, meta)()
 
-	logId := getLogId(contextNil)
-
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
-	service := SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
-
-	var products []*string
+	var (
+		logId    = getLogId(contextNil)
+		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
+		service  = SsmService{client: meta.(*TencentCloudClient).apiV3Conn}
+		products []*string
+	)
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSsmProductsByFilter(ctx)
 		if e != nil {
 			return retryError(e)
 		}
+
 		products = result
 		return nil
 	})
+
 	if err != nil {
 		return err
 	}
@@ -66,14 +64,14 @@ func dataSourceTencentCloudSsmProductsRead(d *schema.ResourceData, meta interfac
 	if products != nil {
 		_ = d.Set("products", products)
 	}
-	ids := helper.StrListToStr(products)
 
-	d.SetId(ids)
+	d.SetId(helper.StrListToStr(products))
 	output, ok := d.GetOk("result_output_file")
 	if ok && output.(string) != "" {
 		if e := writeToFile(output.(string), products); e != nil {
 			return e
 		}
 	}
+
 	return nil
 }

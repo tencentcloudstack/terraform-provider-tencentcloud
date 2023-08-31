@@ -6,9 +6,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudSsmSecretVersionsDataSource -v
 func TestAccTencentCloudSsmSecretVersionsDataSource(t *testing.T) {
 	t.Parallel()
-	dataSourceName := "data.tencentcloud_ssm_secret_versions.secret_version"
+	dataSourceName := "data.tencentcloud_ssm_secret_versions.example"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:  func() { testAccPreCheck(t) },
@@ -27,23 +28,23 @@ func TestAccTencentCloudSsmSecretVersionsDataSource(t *testing.T) {
 }
 
 const TestAccTencentCloudSsmSecretVersionsDataSourceConfig = `
-resource "tencentcloud_ssm_secret" "secret" {
-  secret_name = "unit-test-ver-data"
-  description = "test secret"
+data "tencentcloud_ssm_secret_versions" "example" {
+  secret_name = tencentcloud_ssm_secret_version.v1.secret_name
+  version_id  = tencentcloud_ssm_secret_version.v1.version_id
+}
+
+resource "tencentcloud_ssm_secret" "example" {
+  secret_name = "tf-example-ssm-unit-test"
+  description = "desc."
 
   tags = {
-    test-tag = "test"
+    createdBy = "terraform"
   }
 }
 
 resource "tencentcloud_ssm_secret_version" "v1" {
-  secret_name = tencentcloud_ssm_secret.secret.secret_name
-  version_id = "v1"
+  secret_name   = tencentcloud_ssm_secret.example.secret_name
+  version_id    = "v1"
   secret_binary = "MTIzMTIzMTIzMTIzMTIzQQ=="
-}
-
-data "tencentcloud_ssm_secret_versions" "secret_version" {
-  secret_name = tencentcloud_ssm_secret_version.v1.secret_name
-  version_id = tencentcloud_ssm_secret_version.v1.version_id
 }
 `

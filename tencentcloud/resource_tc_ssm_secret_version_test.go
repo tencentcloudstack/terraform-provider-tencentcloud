@@ -11,9 +11,11 @@ import (
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
+// go test -i; go test -test.run TestAccTencentCloudSsmSecretVersion_basic -v
 func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
 	t.Parallel()
-	resourceName := "tencentcloud_ssm_secret_version.v1"
+	resourceV1Name := "tencentcloud_ssm_secret_version.v1"
+	resourceV2Name := "tencentcloud_ssm_secret_version.v2"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -21,25 +23,30 @@ func TestAccTencentCloudSsmSecretVersion_basic(t *testing.T) {
 		CheckDestroy: testAccCheckSsmSecretVersionDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: TestAccTencentCloudSsmSecretVersion_basicConfig,
+				Config: TestAccTencentCloudSsmSecretVersionBinaryConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSsmSecretVersionExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "secret_name", "unit-test-for-version"),
-					resource.TestCheckResourceAttr(resourceName, "version_id", "v1"),
-					resource.TestCheckResourceAttr(resourceName, "secret_binary", "MTIzMTIzMTIzMTIzMTIzQQ=="),
+					testAccCheckSsmSecretVersionExists(resourceV1Name),
+					resource.TestCheckResourceAttr(resourceV1Name, "secret_name", "tf-example-secret"),
+					resource.TestCheckResourceAttr(resourceV1Name, "version_id", "v1"),
+					resource.TestCheckResourceAttr(resourceV1Name, "secret_binary", "MTIzMTIzMTIzMTIzMTIzQQ=="),
 				),
 			},
 			{
-				Config: TestAccTencentCloudSsmSecretVersion_secretStringConfig,
+				ResourceName:      resourceV1Name,
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+			{
+				Config: TestAccTencentCloudSsmSecretVersionStringConfig,
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckSsmSecretVersionExists(resourceName),
-					resource.TestCheckResourceAttr(resourceName, "secret_name", "unit-test-for-version"),
-					resource.TestCheckResourceAttr(resourceName, "version_id", "v1"),
-					resource.TestCheckResourceAttr(resourceName, "secret_string", "123456"),
+					testAccCheckSsmSecretVersionExists(resourceV2Name),
+					resource.TestCheckResourceAttr(resourceV2Name, "secret_name", "tf-example-secret"),
+					resource.TestCheckResourceAttr(resourceV2Name, "version_id", "v2"),
+					resource.TestCheckResourceAttr(resourceV2Name, "secret_string", "this is secret string"),
 				),
 			},
 			{
-				ResourceName:      resourceName,
+				ResourceName:      resourceV2Name,
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
@@ -116,36 +123,40 @@ func testAccCheckSsmSecretVersionExists(name string) resource.TestCheckFunc {
 	}
 }
 
-const TestAccTencentCloudSsmSecretVersion_basicConfig = `
-resource "tencentcloud_ssm_secret" "secret" {
-  secret_name = "unit-test-for-version"
-  description = "test secret"
+const TestAccTencentCloudSsmSecretVersionBinaryConfig = `
+resource "tencentcloud_ssm_secret" "example" {
+  secret_name             = "tf-example-secret"
+  description             = "desc."
+  recovery_window_in_days = 0
+  is_enabled              = true
 
   tags = {
-    test-tag = "test"
+    createdBy = "terraform"
   }
 }
 
 resource "tencentcloud_ssm_secret_version" "v1" {
-  secret_name = tencentcloud_ssm_secret.secret.secret_name
-  version_id = "v1"
+  secret_name   = tencentcloud_ssm_secret.example.secret_name
+  version_id    = "v1"
   secret_binary = "MTIzMTIzMTIzMTIzMTIzQQ=="
 }
 `
 
-const TestAccTencentCloudSsmSecretVersion_secretStringConfig = `
-resource "tencentcloud_ssm_secret" "secret" {
-  secret_name = "unit-test-for-version"
-  description = "test secret"
+const TestAccTencentCloudSsmSecretVersionStringConfig = `
+resource "tencentcloud_ssm_secret" "example" {
+  secret_name             = "tf-example-secret"
+  description             = "desc."
+  recovery_window_in_days = 0
+  is_enabled              = true
 
   tags = {
-    test-tag = "test"
+    createdBy = "terraform"
   }
 }
 
-resource "tencentcloud_ssm_secret_version" "v1" {
-  secret_name = tencentcloud_ssm_secret.secret.secret_name
-  version_id = "v1"
-  secret_string = "123456"
+resource "tencentcloud_ssm_secret_version" "v2" {
+  secret_name   = tencentcloud_ssm_secret.example.secret_name
+  version_id    = "v2"
+  secret_string = "this is secret string"
 }
 `
