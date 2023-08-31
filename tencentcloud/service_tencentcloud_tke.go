@@ -33,6 +33,7 @@ type ClusterBasicSetting struct {
 	ProjectId               int64
 	ClusterNodeNum          int64
 	ClusterStatus           string
+	SubnetId                string
 	Tags                    map[string]string
 }
 
@@ -510,6 +511,9 @@ func (me *TkeService) CreateCluster(ctx context.Context,
 		request.ClusterBasicSettings.AutoUpgradeClusterLevel = &tke.AutoUpgradeClusterLevel{
 			IsAutoUpgrade: basic.AutoUpgradeClusterLevel,
 		}
+	}
+	if basic.SubnetId != "" {
+		request.ClusterBasicSettings.SubnetId = &basic.SubnetId
 	}
 	for k, v := range tags {
 		if len(request.ClusterBasicSettings.TagSpecification) == 0 {

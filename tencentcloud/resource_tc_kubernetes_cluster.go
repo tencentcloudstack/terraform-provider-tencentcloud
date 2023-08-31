@@ -1248,6 +1248,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Description: "Operating system of the cluster, the available values include: '" + strings.Join(TKE_CLUSTER_OS, "','") +
 				"'. Default is '" + TKE_CLUSTER_OS_LINUX24 + "'.",
 		},
+		"cluster_subnet_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Description: "Subnet ID of the cluster, such as: subnet-b3p7d7q5.",
+		},
+
 		"cluster_os_type": {
 			Type:         schema.TypeString,
 			ForceNew:     true,
@@ -1373,7 +1379,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 			Optional:     true,
 			Default:      "GR",
 			ValidateFunc: validateAllowedStringValue(TKE_CLUSTER_NETWORK_TYPE),
-			Description:  "Cluster network type, GR or VPC-CNI. Default is GR.",
+			Description:  "Cluster network type, the available values include: 'GR' and 'VPC-CNI' and 'CiliumOverlay'. Default is GR.",
 		},
 		"enable_customized_pod_cidr": {
 			Type: schema.TypeBool,
@@ -2312,7 +2318,7 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 	}
 
 	basic.ClusterOsType = d.Get("cluster_os_type").(string)
-
+	basic.SubnetId = d.Get("cluster_subnet_id").(string)
 	basic.ClusterVersion = d.Get("cluster_version").(string)
 	if v, ok := d.GetOk("cluster_name"); ok {
 		basic.ClusterName = v.(string)
@@ -2401,6 +2407,10 @@ func resourceTencentCloudTkeClusterCreate(d *schema.ResourceData, meta interface
 
 		if math.Pow(2, float64(32-bitNumber)) <= float64(cidrSet.MaxNodePodNum) {
 			return fmt.Errorf("`cluster_cidr` Network segment range is too small, can not cover cluster_max_service_num")
+		}
+
+		if advanced.NetworkType == TKE_CLUSTER_NETWORK_TYPE_CILIUM_OVERLAY && d.Get("cluster_subnet_id").(string) == "" {
+			return fmt.Errorf("`cluster_subnet_id` must be set ")
 		}
 	}
 
@@ -2961,6 +2971,10 @@ func resourceTencentCloudTkeClusterUpdate(d *schema.ResourceData, meta interface
 	tkeService := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
 	region := client.Region
 	d.Partial(true)
+
+	if d.HasChange("cluster_subnet_id") {
+		return fmt.Errorf("argument cluster_subnet_id cannot be changed")
+	}
 
 	if d.HasChange("tags") {
 		oldTags, newTags := d.GetChange("tags")
