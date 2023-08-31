@@ -1593,6 +1593,7 @@ Tag
 EventBridge(EB)
   Data Source
 	tencentcloud_eb_bus
+	tencentcloud_eb_event_rules
 
   Resource
 	tencentcloud_eb_event_transform
@@ -2250,6 +2251,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
 			"tencentcloud_eb_search":                                 dataSourceTencentCloudEbSearch(),
 			"tencentcloud_eb_bus":                                    dataSourceTencentCloudEbBus(),
+			"tencentcloud_eb_event_rules":                            dataSourceTencentCloudEbEventRules(),
 			"tencentcloud_wedata_rule_templates":                     dataSourceTencentCloudWedataRuleTemplates(),
 		},
 

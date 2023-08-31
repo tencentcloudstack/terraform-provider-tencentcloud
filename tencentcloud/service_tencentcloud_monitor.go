@@ -1056,9 +1056,8 @@ func (me *MonitorService) DescribeTkeTmpAlertPolicy(ctx context.Context, instanc
 	}()
 	request.InstanceId = &instanceId
 	request.Filters = append(request.Filters, &monitor.Filter{
-		Type:  helper.String("="),
-		Key:   helper.String("ID"),
-		Value: &tmpAlertPolicyId,
+		Name:   helper.String("ID"),
+		Values: []*string{&tmpAlertPolicyId},
 	})
 
 	response, err := me.client.UseMonitorClient().DescribePrometheusAlertPolicy(request)
@@ -1302,9 +1301,8 @@ func (me *MonitorService) DescribeTmpTkeTemplateById(ctx context.Context, templa
 	request.Filters = append(
 		request.Filters,
 		&monitor.Filter{
-			Type:  helper.String("="),
-			Key:   helper.String("ID"),
-			Value: &templateId,
+			Name:   helper.String("ID"),
+			Values: []*string{&templateId},
 		},
 	)
 	ratelimit.Check(request.GetAction())
@@ -1420,9 +1418,8 @@ func (me *MonitorService) DescribePrometheusRecordRuleByName(ctx context.Context
 	if name != "" {
 		request.Filters = []*monitor.Filter{
 			{
-				Type:  helper.String("="),
-				Key:   helper.String("Name"),
-				Value: &name,
+				Name:   helper.String("Name"),
+				Values: []*string{&name},
 			},
 		}
 	}

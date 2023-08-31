@@ -100,6 +100,7 @@ func NewCopyFunctionResponse() (response *CopyFunctionResponse) {
 //  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
 //  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
 //  UNAUTHORIZEDOPERATION_REGION = "UnauthorizedOperation.Region"
+//  UNSUPPORTEDOPERATION_COPYFUNCTION = "UnsupportedOperation.CopyFunction"
 //  UNSUPPORTEDOPERATION_REGION = "UnsupportedOperation.Region"
 func (c *Client) CopyFunction(request *CopyFunctionRequest) (response *CopyFunctionResponse, err error) {
     return c.CopyFunctionWithContext(context.Background(), request)
@@ -142,6 +143,7 @@ func (c *Client) CopyFunction(request *CopyFunctionRequest) (response *CopyFunct
 //  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
 //  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
 //  UNAUTHORIZEDOPERATION_REGION = "UnauthorizedOperation.Region"
+//  UNSUPPORTEDOPERATION_COPYFUNCTION = "UnsupportedOperation.CopyFunction"
 //  UNSUPPORTEDOPERATION_REGION = "UnsupportedOperation.Region"
 func (c *Client) CopyFunctionWithContext(ctx context.Context, request *CopyFunctionRequest) (response *CopyFunctionResponse, err error) {
     if request == nil {
@@ -190,6 +192,7 @@ func NewCreateAliasResponse() (response *CreateAliasResponse) {
 //  INVALIDPARAMETERVALUE_ADDITIONALVERSIONWEIGHTS = "InvalidParameterValue.AdditionalVersionWeights"
 //  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
 //  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
 //  INVALIDPARAMETERVALUE_ROUTINGCONFIG = "InvalidParameterValue.RoutingConfig"
 //  LIMITEXCEEDED_ALIAS = "LimitExceeded.Alias"
 //  RESOURCEINUSE = "ResourceInUse"
@@ -215,6 +218,7 @@ func (c *Client) CreateAlias(request *CreateAliasRequest) (response *CreateAlias
 //  INVALIDPARAMETERVALUE_ADDITIONALVERSIONWEIGHTS = "InvalidParameterValue.AdditionalVersionWeights"
 //  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
 //  INVALIDPARAMETERVALUE_NAME = "InvalidParameterValue.Name"
+//  INVALIDPARAMETERVALUE_NAMESPACE = "InvalidParameterValue.Namespace"
 //  INVALIDPARAMETERVALUE_ROUTINGCONFIG = "InvalidParameterValue.RoutingConfig"
 //  LIMITEXCEEDED_ALIAS = "LimitExceeded.Alias"
 //  RESOURCEINUSE = "ResourceInUse"
@@ -262,12 +266,14 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCOUNTINSUFFICIENT = "FailedOperation.AccountInsufficient"
 //  FAILEDOPERATION_APMCONFIGINSTANCEID = "FailedOperation.ApmConfigInstanceId"
 //  FAILEDOPERATION_CALLNETDEPLOYFAILED = "FailedOperation.CallNetDeployFailed"
 //  FAILEDOPERATION_CALLROLEFAILED = "FailedOperation.CallRoleFailed"
 //  FAILEDOPERATION_CLSSERVICEUNREGISTERED = "FailedOperation.ClsServiceUnregistered"
 //  FAILEDOPERATION_CREATEFUNCTION = "FailedOperation.CreateFunction"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+//  FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
 //  FAILEDOPERATION_NAMESPACE = "FailedOperation.Namespace"
 //  FAILEDOPERATION_OPENSERVICE = "FailedOperation.OpenService"
 //  FAILEDOPERATION_QCSROLENOTFOUND = "FailedOperation.QcsRoleNotFound"
@@ -335,6 +341,7 @@ func NewCreateFunctionResponse() (response *CreateFunctionResponse) {
 //  INVALIDPARAMETERVALUE_TEMPCOSOBJECTNAME = "InvalidParameterValue.TempCosObjectName"
 //  INVALIDPARAMETERVALUE_TRACEENABLE = "InvalidParameterValue.TraceEnable"
 //  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  INVALIDPARAMETERVALUE_VPC = "InvalidParameterValue.Vpc"
 //  INVALIDPARAMETERVALUE_VPCNOTSETWHENOPENCFS = "InvalidParameterValue.VpcNotSetWhenOpenCfs"
 //  INVALIDPARAMETERVALUE_WEBSOCKETSPARAMS = "InvalidParameterValue.WebSocketsParams"
 //  INVALIDPARAMETERVALUE_ZIPFILE = "InvalidParameterValue.ZipFile"
@@ -384,12 +391,14 @@ func (c *Client) CreateFunction(request *CreateFunctionRequest) (response *Creat
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCOUNTINSUFFICIENT = "FailedOperation.AccountInsufficient"
 //  FAILEDOPERATION_APMCONFIGINSTANCEID = "FailedOperation.ApmConfigInstanceId"
 //  FAILEDOPERATION_CALLNETDEPLOYFAILED = "FailedOperation.CallNetDeployFailed"
 //  FAILEDOPERATION_CALLROLEFAILED = "FailedOperation.CallRoleFailed"
 //  FAILEDOPERATION_CLSSERVICEUNREGISTERED = "FailedOperation.ClsServiceUnregistered"
 //  FAILEDOPERATION_CREATEFUNCTION = "FailedOperation.CreateFunction"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
+//  FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
 //  FAILEDOPERATION_NAMESPACE = "FailedOperation.Namespace"
 //  FAILEDOPERATION_OPENSERVICE = "FailedOperation.OpenService"
 //  FAILEDOPERATION_QCSROLENOTFOUND = "FailedOperation.QcsRoleNotFound"
@@ -457,6 +466,7 @@ func (c *Client) CreateFunction(request *CreateFunctionRequest) (response *Creat
 //  INVALIDPARAMETERVALUE_TEMPCOSOBJECTNAME = "InvalidParameterValue.TempCosObjectName"
 //  INVALIDPARAMETERVALUE_TRACEENABLE = "InvalidParameterValue.TraceEnable"
 //  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  INVALIDPARAMETERVALUE_VPC = "InvalidParameterValue.Vpc"
 //  INVALIDPARAMETERVALUE_VPCNOTSETWHENOPENCFS = "InvalidParameterValue.VpcNotSetWhenOpenCfs"
 //  INVALIDPARAMETERVALUE_WEBSOCKETSPARAMS = "InvalidParameterValue.WebSocketsParams"
 //  INVALIDPARAMETERVALUE_ZIPFILE = "InvalidParameterValue.ZipFile"
@@ -628,6 +638,7 @@ func NewCreateTriggerResponse() (response *CreateTriggerResponse) {
 //  INVALIDPARAMETERVALUE_COS = "InvalidParameterValue.Cos"
 //  INVALIDPARAMETERVALUE_COSNOTIFYRULECONFLICT = "InvalidParameterValue.CosNotifyRuleConflict"
 //  INVALIDPARAMETERVALUE_CUSTOMARGUMENT = "InvalidParameterValue.CustomArgument"
+//  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
 //  INVALIDPARAMETERVALUE_ENABLE = "InvalidParameterValue.Enable"
 //  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
 //  INVALIDPARAMETERVALUE_SECRETINFO = "InvalidParameterValue.SecretInfo"
@@ -689,6 +700,7 @@ func (c *Client) CreateTrigger(request *CreateTriggerRequest) (response *CreateT
 //  INVALIDPARAMETERVALUE_COS = "InvalidParameterValue.Cos"
 //  INVALIDPARAMETERVALUE_COSNOTIFYRULECONFLICT = "InvalidParameterValue.CosNotifyRuleConflict"
 //  INVALIDPARAMETERVALUE_CUSTOMARGUMENT = "InvalidParameterValue.CustomArgument"
+//  INVALIDPARAMETERVALUE_DESCRIPTION = "InvalidParameterValue.Description"
 //  INVALIDPARAMETERVALUE_ENABLE = "InvalidParameterValue.Enable"
 //  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
 //  INVALIDPARAMETERVALUE_SECRETINFO = "InvalidParameterValue.SecretInfo"
@@ -1677,6 +1689,7 @@ func NewGetFunctionLogsResponse() (response *GetFunctionLogsResponse) {
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHFAILURE = "FailedOperation.AuthFailure"
+//  FAILEDOPERATION_QUERYERROR = "FailedOperation.QueryError"
 //  FAILEDOPERATION_TOPICNOTEXIST = "FailedOperation.TopicNotExist"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ES = "InternalError.ES"
@@ -1711,6 +1724,7 @@ func (c *Client) GetFunctionLogs(request *GetFunctionLogsRequest) (response *Get
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
 //  FAILEDOPERATION_AUTHFAILURE = "FailedOperation.AuthFailure"
+//  FAILEDOPERATION_QUERYERROR = "FailedOperation.QueryError"
 //  FAILEDOPERATION_TOPICNOTEXIST = "FailedOperation.TopicNotExist"
 //  INTERNALERROR = "InternalError"
 //  INTERNALERROR_ES = "InternalError.ES"
@@ -1909,6 +1923,7 @@ func NewGetRequestStatusResponse() (response *GetRequestStatusResponse) {
 //  INVALIDPARAMETERVALUE_STARTTIME = "InvalidParameterValue.StartTime"
 //  INVALIDPARAMETERVALUE_STARTTIMEORENDTIME = "InvalidParameterValue.StartTimeOrEndTime"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
 //  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
 func (c *Client) GetRequestStatus(request *GetRequestStatusRequest) (response *GetRequestStatusResponse, err error) {
@@ -1933,6 +1948,7 @@ func (c *Client) GetRequestStatus(request *GetRequestStatusRequest) (response *G
 //  INVALIDPARAMETERVALUE_STARTTIME = "InvalidParameterValue.StartTime"
 //  INVALIDPARAMETERVALUE_STARTTIMEORENDTIME = "InvalidParameterValue.StartTimeOrEndTime"
 //  OPERATIONDENIED_ACCOUNTISOLATE = "OperationDenied.AccountIsolate"
+//  OPERATIONDENIED_ACCOUNTNOTEXISTS = "OperationDenied.AccountNotExists"
 //  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
 //  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
 func (c *Client) GetRequestStatusWithContext(ctx context.Context, request *GetRequestStatusRequest) (response *GetRequestStatusResponse, err error) {
@@ -2118,6 +2134,7 @@ func NewInvokeFunctionResponse() (response *InvokeFunctionResponse) {
 //  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
 //  RESOURCENOTFOUND_QUALIFIER = "ResourceNotFound.Qualifier"
 //  RESOURCEUNAVAILABLE_INSUFFICIENTBALANCE = "ResourceUnavailable.InsufficientBalance"
+//  RESOURCEUNAVAILABLE_SERVICESUSPENDED = "ResourceUnavailable.ServiceSuspended"
 //  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
 func (c *Client) InvokeFunction(request *InvokeFunctionRequest) (response *InvokeFunctionResponse, err error) {
     return c.InvokeFunctionWithContext(context.Background(), request)
@@ -2142,6 +2159,7 @@ func (c *Client) InvokeFunction(request *InvokeFunctionRequest) (response *Invok
 //  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
 //  RESOURCENOTFOUND_QUALIFIER = "ResourceNotFound.Qualifier"
 //  RESOURCEUNAVAILABLE_INSUFFICIENTBALANCE = "ResourceUnavailable.InsufficientBalance"
+//  RESOURCEUNAVAILABLE_SERVICESUSPENDED = "ResourceUnavailable.ServiceSuspended"
 //  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
 func (c *Client) InvokeFunctionWithContext(ctx context.Context, request *InvokeFunctionRequest) (response *InvokeFunctionResponse, err error) {
     if request == nil {
@@ -2772,6 +2790,7 @@ func NewPublishVersionResponse() (response *PublishVersionResponse) {
 //  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
 //  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_PUBLISHVERSION = "UnsupportedOperation.PublishVersion"
 func (c *Client) PublishVersion(request *PublishVersionRequest) (response *PublishVersionResponse, err error) {
     return c.PublishVersionWithContext(context.Background(), request)
 }
@@ -2795,6 +2814,7 @@ func (c *Client) PublishVersion(request *PublishVersionRequest) (response *Publi
 //  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
 //  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_PUBLISHVERSION = "UnsupportedOperation.PublishVersion"
 func (c *Client) PublishVersionWithContext(ctx context.Context, request *PublishVersionRequest) (response *PublishVersionResponse, err error) {
     if request == nil {
         request = NewPublishVersionRequest()
@@ -3102,6 +3122,7 @@ func NewTerminateAsyncEventResponse() (response *TerminateAsyncEventResponse) {
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ASYNCEVENTSTATUS = "FailedOperation.AsyncEventStatus"
+//  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
 //  RESOURCENOTFOUND_ASYNCEVENT = "ResourceNotFound.AsyncEvent"
 //  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
 //  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
@@ -3114,6 +3135,7 @@ func (c *Client) TerminateAsyncEvent(request *TerminateAsyncEventRequest) (respo
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION_ASYNCEVENTSTATUS = "FailedOperation.AsyncEventStatus"
+//  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
 //  RESOURCENOTFOUND_ASYNCEVENT = "ResourceNotFound.AsyncEvent"
 //  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
 //  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
@@ -3279,6 +3301,7 @@ func NewUpdateFunctionCodeResponse() (response *UpdateFunctionCodeResponse) {
 //  UNAUTHORIZEDOPERATION_TEMPCOSAPPID = "UnauthorizedOperation.TempCosAppid"
 //  UNAUTHORIZEDOPERATION_UPDATEFUNCTIONCODE = "UnauthorizedOperation.UpdateFunctionCode"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UPDATEFUNCTIONCODE = "UnsupportedOperation.UpdateFunctionCode"
 func (c *Client) UpdateFunctionCode(request *UpdateFunctionCodeRequest) (response *UpdateFunctionCodeResponse, err error) {
     return c.UpdateFunctionCodeWithContext(context.Background(), request)
 }
@@ -3331,6 +3354,7 @@ func (c *Client) UpdateFunctionCode(request *UpdateFunctionCodeRequest) (respons
 //  UNAUTHORIZEDOPERATION_TEMPCOSAPPID = "UnauthorizedOperation.TempCosAppid"
 //  UNAUTHORIZEDOPERATION_UPDATEFUNCTIONCODE = "UnauthorizedOperation.UpdateFunctionCode"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
+//  UNSUPPORTEDOPERATION_UPDATEFUNCTIONCODE = "UnsupportedOperation.UpdateFunctionCode"
 func (c *Client) UpdateFunctionCodeWithContext(ctx context.Context, request *UpdateFunctionCodeRequest) (response *UpdateFunctionCodeResponse, err error) {
     if request == nil {
         request = NewUpdateFunctionCodeRequest()
@@ -3370,11 +3394,13 @@ func NewUpdateFunctionConfigurationResponse() (response *UpdateFunctionConfigura
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCOUNTINSUFFICIENT = "FailedOperation.AccountInsufficient"
 //  FAILEDOPERATION_APMCONFIGINSTANCEID = "FailedOperation.ApmConfigInstanceId"
 //  FAILEDOPERATION_CLSSERVICEUNREGISTERED = "FailedOperation.ClsServiceUnregistered"
 //  FAILEDOPERATION_DEBUGMODEUPDATETIMEOUTFAIL = "FailedOperation.DebugModeUpdateTimeOutFail"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
 //  FAILEDOPERATION_OPENSERVICE = "FailedOperation.OpenService"
 //  FAILEDOPERATION_QCSROLENOTFOUND = "FailedOperation.QcsRoleNotFound"
 //  FAILEDOPERATION_RESERVEDINPROGRESS = "FailedOperation.ReservedInProgress"
@@ -3406,6 +3432,7 @@ func NewUpdateFunctionConfigurationResponse() (response *UpdateFunctionConfigura
 //  INVALIDPARAMETERVALUE_L5ENABLE = "InvalidParameterValue.L5Enable"
 //  INVALIDPARAMETERVALUE_LAYERS = "InvalidParameterValue.Layers"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_LOGFORMAT = "InvalidParameterValue.LogFormat"
 //  INVALIDPARAMETERVALUE_MAXCONCURRENCY = "InvalidParameterValue.MaxConcurrency"
 //  INVALIDPARAMETERVALUE_MEMORY = "InvalidParameterValue.Memory"
 //  INVALIDPARAMETERVALUE_MEMORYSIZE = "InvalidParameterValue.MemorySize"
@@ -3416,6 +3443,7 @@ func NewUpdateFunctionConfigurationResponse() (response *UpdateFunctionConfigura
 //  INVALIDPARAMETERVALUE_RUNTIME = "InvalidParameterValue.Runtime"
 //  INVALIDPARAMETERVALUE_SYSTEMENVIRONMENT = "InvalidParameterValue.SystemEnvironment"
 //  INVALIDPARAMETERVALUE_TRACEENABLE = "InvalidParameterValue.TraceEnable"
+//  INVALIDPARAMETERVALUE_VPC = "InvalidParameterValue.Vpc"
 //  INVALIDPARAMETERVALUE_WEBSOCKETSPARAMS = "InvalidParameterValue.WebSocketsParams"
 //  LIMITEXCEEDED_EIP = "LimitExceeded.Eip"
 //  LIMITEXCEEDED_INITTIMEOUT = "LimitExceeded.InitTimeout"
@@ -3423,6 +3451,7 @@ func NewUpdateFunctionConfigurationResponse() (response *UpdateFunctionConfigura
 //  LIMITEXCEEDED_MEMORY = "LimitExceeded.Memory"
 //  LIMITEXCEEDED_TIMEOUT = "LimitExceeded.Timeout"
 //  RESOURCENOTFOUND_CFSPROTOCOLERROR = "ResourceNotFound.CfsProtocolError"
+//  RESOURCENOTFOUND_CFSSTATUSERROR = "ResourceNotFound.CfsStatusError"
 //  RESOURCENOTFOUND_CFSVPCNOTMATCH = "ResourceNotFound.CfsVpcNotMatch"
 //  RESOURCENOTFOUND_CMQ = "ResourceNotFound.Cmq"
 //  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
@@ -3447,11 +3476,13 @@ func (c *Client) UpdateFunctionConfiguration(request *UpdateFunctionConfiguratio
 //
 // 可能返回的错误码:
 //  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_ACCOUNTINSUFFICIENT = "FailedOperation.AccountInsufficient"
 //  FAILEDOPERATION_APMCONFIGINSTANCEID = "FailedOperation.ApmConfigInstanceId"
 //  FAILEDOPERATION_CLSSERVICEUNREGISTERED = "FailedOperation.ClsServiceUnregistered"
 //  FAILEDOPERATION_DEBUGMODEUPDATETIMEOUTFAIL = "FailedOperation.DebugModeUpdateTimeOutFail"
 //  FAILEDOPERATION_INSTANCENOTFOUND = "FailedOperation.InstanceNotFound"
 //  FAILEDOPERATION_INSUFFICIENTBALANCE = "FailedOperation.InsufficientBalance"
+//  FAILEDOPERATION_INSUFFICIENTRESOURCES = "FailedOperation.InsufficientResources"
 //  FAILEDOPERATION_OPENSERVICE = "FailedOperation.OpenService"
 //  FAILEDOPERATION_QCSROLENOTFOUND = "FailedOperation.QcsRoleNotFound"
 //  FAILEDOPERATION_RESERVEDINPROGRESS = "FailedOperation.ReservedInProgress"
@@ -3483,6 +3514,7 @@ func (c *Client) UpdateFunctionConfiguration(request *UpdateFunctionConfiguratio
 //  INVALIDPARAMETERVALUE_L5ENABLE = "InvalidParameterValue.L5Enable"
 //  INVALIDPARAMETERVALUE_LAYERS = "InvalidParameterValue.Layers"
 //  INVALIDPARAMETERVALUE_LIMITEXCEEDED = "InvalidParameterValue.LimitExceeded"
+//  INVALIDPARAMETERVALUE_LOGFORMAT = "InvalidParameterValue.LogFormat"
 //  INVALIDPARAMETERVALUE_MAXCONCURRENCY = "InvalidParameterValue.MaxConcurrency"
 //  INVALIDPARAMETERVALUE_MEMORY = "InvalidParameterValue.Memory"
 //  INVALIDPARAMETERVALUE_MEMORYSIZE = "InvalidParameterValue.MemorySize"
@@ -3493,6 +3525,7 @@ func (c *Client) UpdateFunctionConfiguration(request *UpdateFunctionConfiguratio
 //  INVALIDPARAMETERVALUE_RUNTIME = "InvalidParameterValue.Runtime"
 //  INVALIDPARAMETERVALUE_SYSTEMENVIRONMENT = "InvalidParameterValue.SystemEnvironment"
 //  INVALIDPARAMETERVALUE_TRACEENABLE = "InvalidParameterValue.TraceEnable"
+//  INVALIDPARAMETERVALUE_VPC = "InvalidParameterValue.Vpc"
 //  INVALIDPARAMETERVALUE_WEBSOCKETSPARAMS = "InvalidParameterValue.WebSocketsParams"
 //  LIMITEXCEEDED_EIP = "LimitExceeded.Eip"
 //  LIMITEXCEEDED_INITTIMEOUT = "LimitExceeded.InitTimeout"
@@ -3500,6 +3533,7 @@ func (c *Client) UpdateFunctionConfiguration(request *UpdateFunctionConfiguratio
 //  LIMITEXCEEDED_MEMORY = "LimitExceeded.Memory"
 //  LIMITEXCEEDED_TIMEOUT = "LimitExceeded.Timeout"
 //  RESOURCENOTFOUND_CFSPROTOCOLERROR = "ResourceNotFound.CfsProtocolError"
+//  RESOURCENOTFOUND_CFSSTATUSERROR = "ResourceNotFound.CfsStatusError"
 //  RESOURCENOTFOUND_CFSVPCNOTMATCH = "ResourceNotFound.CfsVpcNotMatch"
 //  RESOURCENOTFOUND_CMQ = "ResourceNotFound.Cmq"
 //  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
@@ -3663,6 +3697,148 @@ func (c *Client) UpdateNamespaceWithContext(ctx context.Context, request *Update
     request.SetContext(ctx)
     
     response = NewUpdateNamespaceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateTriggerRequest() (request *UpdateTriggerRequest) {
+    request = &UpdateTriggerRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("scf", APIVersion, "UpdateTrigger")
+    
+    
+    return
+}
+
+func NewUpdateTriggerResponse() (response *UpdateTriggerResponse) {
+    response = &UpdateTriggerResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateTrigger
+// 支持触发器配置更新。
+//
+// 默认接口请求频率限制：20次/秒
+//
+// 
+//
+// 注意：目前只支持timer触发器和ckafka触发器更新！
+//
+// 
+//
+// timer触发器和ckafka触发器支持更新字段有：Enable、TriggerDesc、Description、CustomArgument。
+//
+// 
+//
+// timer触发器TriggerDesc支持5段式和7段式的更新。
+//
+// 
+//
+// ckafka触发器TriggerDesc支持Retry、MaxMsgNum、TimeOut参数更新，不传值表示原值不变，传值不能为空。
+//
+// 
+//
+// Enable 触发器开启或关闭，传参为OPEN为开启，CLOSE为关闭。不传值表示原值不变，传值不能为空。
+//
+// 
+//
+// Description 触发器描述，不传值保持原值不变，传值为空则为空。
+//
+// 
+//
+// CustomArgument 触发器用户附加信息（注意：只有timer触发器展示），不传值保持原值不变，传值为空则为空。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATETRIGGER = "FailedOperation.CreateTrigger"
+//  FAILEDOPERATION_UPDATETRIGGER = "FailedOperation.UpdateTrigger"
+//  INTERNALERROR_CMQ = "InternalError.Cmq"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+//  INVALIDPARAMETERVALUE_ENABLE = "InvalidParameterValue.Enable"
+//  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
+//  INVALIDPARAMETERVALUE_TRIGGERDESC = "InvalidParameterValue.TriggerDesc"
+//  INVALIDPARAMETERVALUE_TRIGGERNAME = "InvalidParameterValue.TriggerName"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
+//  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+//  RESOURCENOTFOUND_QUALIFIER = "ResourceNotFound.Qualifier"
+//  RESOURCENOTFOUND_TRIGGER = "ResourceNotFound.Trigger"
+//  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
+func (c *Client) UpdateTrigger(request *UpdateTriggerRequest) (response *UpdateTriggerResponse, err error) {
+    return c.UpdateTriggerWithContext(context.Background(), request)
+}
+
+// UpdateTrigger
+// 支持触发器配置更新。
+//
+// 默认接口请求频率限制：20次/秒
+//
+// 
+//
+// 注意：目前只支持timer触发器和ckafka触发器更新！
+//
+// 
+//
+// timer触发器和ckafka触发器支持更新字段有：Enable、TriggerDesc、Description、CustomArgument。
+//
+// 
+//
+// timer触发器TriggerDesc支持5段式和7段式的更新。
+//
+// 
+//
+// ckafka触发器TriggerDesc支持Retry、MaxMsgNum、TimeOut参数更新，不传值表示原值不变，传值不能为空。
+//
+// 
+//
+// Enable 触发器开启或关闭，传参为OPEN为开启，CLOSE为关闭。不传值表示原值不变，传值不能为空。
+//
+// 
+//
+// Description 触发器描述，不传值保持原值不变，传值为空则为空。
+//
+// 
+//
+// CustomArgument 触发器用户附加信息（注意：只有timer触发器展示），不传值保持原值不变，传值为空则为空。
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CREATETRIGGER = "FailedOperation.CreateTrigger"
+//  FAILEDOPERATION_UPDATETRIGGER = "FailedOperation.UpdateTrigger"
+//  INTERNALERROR_CMQ = "InternalError.Cmq"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  INVALIDPARAMETERVALUE_ACTION = "InvalidParameterValue.Action"
+//  INVALIDPARAMETERVALUE_ENABLE = "InvalidParameterValue.Enable"
+//  INVALIDPARAMETERVALUE_FUNCTIONNAME = "InvalidParameterValue.FunctionName"
+//  INVALIDPARAMETERVALUE_TRIGGERDESC = "InvalidParameterValue.TriggerDesc"
+//  INVALIDPARAMETERVALUE_TRIGGERNAME = "InvalidParameterValue.TriggerName"
+//  INVALIDPARAMETERVALUE_TYPE = "InvalidParameterValue.Type"
+//  RESOURCENOTFOUND = "ResourceNotFound"
+//  RESOURCENOTFOUND_FUNCTION = "ResourceNotFound.Function"
+//  RESOURCENOTFOUND_FUNCTIONNAME = "ResourceNotFound.FunctionName"
+//  RESOURCENOTFOUND_NAMESPACE = "ResourceNotFound.Namespace"
+//  RESOURCENOTFOUND_QUALIFIER = "ResourceNotFound.Qualifier"
+//  RESOURCENOTFOUND_TRIGGER = "ResourceNotFound.Trigger"
+//  UNAUTHORIZEDOPERATION_CAM = "UnauthorizedOperation.CAM"
+func (c *Client) UpdateTriggerWithContext(ctx context.Context, request *UpdateTriggerRequest) (response *UpdateTriggerResponse, err error) {
+    if request == nil {
+        request = NewUpdateTriggerRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateTrigger require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateTriggerResponse()
     err = c.Send(request, response)
     return
 }

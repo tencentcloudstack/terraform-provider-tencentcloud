@@ -119,7 +119,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 			},
 			"handler": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 				ValidateFunc: helper.ComposeValidateFunc(
 					validateStringLengthInRange(2, 60),
 					scfFunctionValidate(true),
@@ -162,7 +162,7 @@ func resourceTencentCloudScfFunction() *schema.Resource {
 			},
 			"runtime": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "Runtime of the SCF function, only supports `Python2.7`, `Python3.6`, `Nodejs6.10`, `Nodejs8.9`, `Nodejs10.15`, `PHP5`, `PHP7`, `Golang1`, and `Java8`.",
 			},
 			"vpc_id": {
@@ -528,14 +528,18 @@ func resourceTencentCloudScfFunctionCreate(d *schema.ResourceData, m interface{}
 	var functionInfo scfFunctionInfo
 
 	functionInfo.name = d.Get("name").(string)
-	functionInfo.handler = helper.String(d.Get("handler").(string))
 	functionInfo.desc = helper.String(d.Get("description").(string))
 	functionInfo.memSize = helper.Int(d.Get("mem_size").(int))
 	functionInfo.timeout = helper.Int(d.Get("timeout").(int))
 	functionInfo.environment = helper.GetTags(d, "environment")
-	functionInfo.runtime = helper.String(d.Get("runtime").(string))
 	functionInfo.namespace = helper.String(d.Get("namespace").(string))
 
+	if raw, ok := d.GetOk("handler"); ok {
+		functionInfo.handler = helper.String(raw.(string))
+	}
+	if raw, ok := d.GetOk("runtime"); ok {
+		functionInfo.runtime = helper.String(raw.(string))
+	}
 	if raw, ok := d.GetOk("vpc_id"); ok {
 		functionInfo.vpcId = helper.String(raw.(string))
 	}
