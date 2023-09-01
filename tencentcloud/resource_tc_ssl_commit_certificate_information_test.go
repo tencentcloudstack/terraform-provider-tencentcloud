@@ -23,10 +23,10 @@ func TestAccTencentCloudSslCommitCertificateInformationResource_basic(t *testing
 
 const testAccSslCommitCertificateInformation = `
 
-resource "tencentcloud_ssl_pay_certificate" "ssl" {
+resource "tencentcloud_ssl_pay_certificate" "example" {
   product_id = 33
   domain_num = 1
-  alias      = "test-ssl-update"
+  alias      = "example-ssl-update"
   project_id = 0
   wait_commit_flag = true
   information {
@@ -54,9 +54,9 @@ resource "tencentcloud_ssl_pay_certificate" "ssl" {
     contact_position      = "dev"
   }
 }
-resource "tencentcloud_ssl_commit_certificate_information" "commit_certificate_information" {
+resource "tencentcloud_ssl_commit_certificate_information" "example" {
   product_id = 33
-  certificate_id           = tencentcloud_ssl_pay_certificate.ssl.certificate_id
+  certificate_id           = tencentcloud_ssl_pay_certificate.example.certificate_id
 }
 
 `

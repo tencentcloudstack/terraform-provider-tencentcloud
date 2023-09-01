@@ -7,7 +7,7 @@ and belonging items can be updated. The Destroy operation will only cancel the c
 certificate and refund the fee. If you need a refund, you need to check the current certificate status in the console
 as `Review Cancel`, and then you can click `Request a refund` to refund the fee.
 
-# Example Usage
+Example Usage
 
 ```hcl
 
@@ -44,7 +44,7 @@ as `Review Cancel`, and then you can click `Request a refund` to refund the fee.
 
 ```
 
-# Import
+Import
 
 payment SSL instance can be imported, e.g.
 
@@ -279,7 +279,6 @@ func resourceTencentCloudSSLInstance() *schema.Resource {
 						},
 						"domain_list": {
 							Type:        schema.TypeSet,
-							Computed:    true,
 							Optional:    true,
 							Elem:        &schema.Schema{Type: schema.TypeString},
 							Description: "Array of uploaded domain names, multi-domain certificates can be uploaded.",
@@ -552,7 +551,6 @@ func resourceTencentCloudSSLInstanceRead(d *schema.ResourceData, meta interface{
 			dvAuth["dv_auth_verify_type"] = *item.DvAuthVerifyType
 			dvAuths = append(dvAuths, dvAuth)
 		}
-
 		_ = d.Set("dv_auths", dvAuths)
 	}
 
