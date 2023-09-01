@@ -4,34 +4,56 @@ Provides a alarm notice resource for monitor.
 Example Usage
 
 ```hcl
-resource "tencentcloud_monitor_alarm_notice" "foo" {
-  name                  = "tf-alarm_notice"
-  notice_type           = "ALL"
-  notice_language       = "zh-CN"
-
-  user_notices    {
-      receiver_type              = "USER"
-      start_time                 = 0
-      end_time                   = 1
-      notice_way                 = ["SMS","EMAIL"]
-      user_ids                   = [10001]
-      group_ids                  = []
-      phone_order                = [10001]
-      phone_circle_times         = 2
-      phone_circle_interval      = 50
-      phone_inner_interval       = 60
-      need_phone_arrive_notice   = 1
-      phone_call_type            = "CIRCLE"
-      weekday                    =[1,2,3,4,5,6,7]
-  }
+resource "tencentcloud_monitor_alarm_notice" "example" {
+  name            = "test_alarm_notice"
+  notice_language = "zh-CN"
+  notice_type     = "ALL"
 
   url_notices {
-      url    = "https://www.mytest.com/validate"
-      end_time =  0
-      start_time = 1
-      weekday = [1,2,3,4,5,6,7]
+    end_time   = 86399
+    is_valid = 0
+    start_time = 0
+    url        = "https://www.mytest.com/validate"
+    weekday    = [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+    ]
   }
 
+  user_notices {
+    end_time                 = 86399
+    group_ids                = []
+    need_phone_arrive_notice = 1
+    notice_way               = [
+      "EMAIL",
+      "SMS",
+    ]
+    phone_call_type       = "CIRCLE"
+    phone_circle_interval = 180
+    phone_circle_times    = 2
+    phone_inner_interval  = 180
+    phone_order           = []
+    receiver_type         = "USER"
+    start_time            = 0
+    user_ids              = [
+      11082189,
+      11082190,
+    ]
+    weekday = [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+    ]
+  }
 }
 ```
 
@@ -170,6 +192,17 @@ func resourceTencentCloudMonitorAlarmNotice() *schema.Resource {
 							Type:        schema.TypeString,
 							Required:    true,
 							Description: "Callback URL (limited to 256 characters).",
+						},
+						"is_valid": {
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Computed:    true,
+							Description: "If passed verification `0` is no, `1` is yes. Default `0`.",
+						},
+						"validation_code": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Verification code.",
 						},
 						"start_time": {
 							Type:        schema.TypeInt,
@@ -347,6 +380,14 @@ func resourceTencentMonitorAlarmNoticeCreate(d *schema.ResourceData, meta interf
 			urlNotice := monitor.URLNotice{}
 			urlNotice.URL = helper.String(m["url"].(string))
 
+			if m["is_valid"] != nil {
+				urlNotice.IsValid = helper.IntInt64(m["is_valid"].(int))
+			}
+
+			if m["validation_code"] != "" {
+				urlNotice.ValidationCode = helper.String(m["validation_code"].(string))
+			}
+
 			if m["start_time"] != nil {
 				urlNotice.StartTime = helper.IntInt64(m["start_time"].(int))
 			}
@@ -472,10 +513,12 @@ func resourceTencentMonitorAlarmNoticeRead(d *schema.ResourceData, meta interfac
 		urlNoticesItems := make([]interface{}, 0, 100)
 		for _, urlNotice := range noticesItem.URLNotices {
 			urlNoticesItems = append(urlNoticesItems, map[string]interface{}{
-				"url":        urlNotice.URL,
-				"start_time": urlNotice.StartTime,
-				"end_time":   urlNotice.EndTime,
-				"weekday":    urlNotice.Weekday,
+				"url":             urlNotice.URL,
+				"is_valid":        urlNotice.IsValid,
+				"validation_code": urlNotice.ValidationCode,
+				"start_time":      urlNotice.StartTime,
+				"end_time":        urlNotice.EndTime,
+				"weekday":         urlNotice.Weekday,
 			})
 		}
 
@@ -602,6 +645,14 @@ func resourceTencentMonitorAlarmNoticeUpdate(d *schema.ResourceData, meta interf
 			m := item.(map[string]interface{})
 			urlNotice := monitor.URLNotice{}
 			urlNotice.URL = helper.String(m["url"].(string))
+
+			if m["is_valid"] != nil {
+				urlNotice.IsValid = helper.IntInt64(m["is_valid"].(int))
+			}
+
+			if m["validation_code"] != "" {
+				urlNotice.ValidationCode = helper.String(m["validation_code"].(string))
+			}
 
 			if m["start_time"] != nil {
 				urlNotice.StartTime = helper.IntInt64(m["start_time"].(int))
