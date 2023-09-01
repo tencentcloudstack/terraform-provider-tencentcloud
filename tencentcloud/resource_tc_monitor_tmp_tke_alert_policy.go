@@ -755,6 +755,7 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 	}
 
 	instanceId := ids[0]
+	policyId := ids[1]
 
 	request.InstanceId = &instanceId
 
@@ -762,11 +763,10 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 		return fmt.Errorf("`instance_id` do not support change now.")
 	}
 
-	if d.HasChange("alert_rule") {
-		return fmt.Errorf("`alert_rule` do not support change now.")
-	}
 	if dMap, ok := helper.InterfacesHeadMap(d, "alert_rule"); ok {
 		prometheusAlertPolicyItem := monitor.PrometheusAlertPolicyItem{}
+		prometheusAlertPolicyItem.Id = &policyId
+
 		if v, ok := dMap["name"]; ok {
 			prometheusAlertPolicyItem.Name = helper.String(v.(string))
 		}
@@ -802,14 +802,24 @@ func resourceTencentCloudTkeTmpAlertPolicyUpdate(d *schema.ResourceData, meta in
 						prometheusAlertRule.Annotations = append(prometheusAlertRule.Annotations, &label)
 					}
 				}
+				if v, ok := RulesMap["labels"]; ok {
+					for _, item := range v.([]interface{}) {
+						labelsMap := item.(map[string]interface{})
+						label := monitor.Label{}
+						if v, ok := labelsMap["name"]; ok {
+							label.Name = helper.String(v.(string))
+						}
+						if v, ok := labelsMap["value"]; ok {
+							label.Value = helper.String(v.(string))
+						}
+						prometheusAlertRule.Labels = append(prometheusAlertRule.Labels, &label)
+					}
+				}
 				if v, ok := RulesMap["rule_state"]; ok {
 					prometheusAlertRule.RuleState = helper.IntInt64(v.(int))
 				}
 				prometheusAlertPolicyItem.Rules = append(prometheusAlertPolicyItem.Rules, &prometheusAlertRule)
 			}
-		}
-		if v, ok := dMap["id"]; ok {
-			prometheusAlertPolicyItem.Id = helper.String(v.(string))
 		}
 		if v, ok := dMap["template_id"]; ok {
 			prometheusAlertPolicyItem.TemplateId = helper.String(v.(string))
