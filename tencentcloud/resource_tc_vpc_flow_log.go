@@ -169,7 +169,7 @@ func resourceTencentCloudVpcFlowLog() *schema.Resource {
 			"cloud_log_id": {
 				Optional:    true,
 				Type:        schema.TypeString,
-				Description: "Specify flow log storage id.",
+				Description: "Specify flow log storage id, just set cls topic id.",
 			},
 			"storage_type": {
 				Optional:    true,

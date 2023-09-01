@@ -57,7 +57,7 @@ The following arguments are supported:
 
 * `name` - (Required, String) Instance name.
 * `node_count` - (Required, Int) Number of nodes, minimum 2, maximum 20.
-* `spec` - (Required, String) Instance specification:Basic type, rocket-vip-basic-1Standard type, rocket-vip-basic-2Advanced Type I, rocket-vip-basic-3Advanced Type II, rocket-vip-basic-4.
+* `spec` - (Required, String) Instance specification: Basic type: `rocket-vip-basic-1`, Standard type: `rocket-vip-basic-2`, Advanced Type I: `rocket-vip-basic-3`, Advanced Type II: `rocket-vip-basic-4`.
 * `storage_size` - (Required, Int) Single node storage space, in GB, minimum 200GB.
 * `time_span` - (Required, Int) Purchase period, in months.
 * `vpc_info` - (Required, List) VPC information.

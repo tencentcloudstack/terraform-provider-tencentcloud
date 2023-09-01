@@ -63,10 +63,10 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
   multi_zone_subnet_policy = "EQUALITY"
 
   auto_scaling_config {
-    instance_type      = var.default_instance_type
-    system_disk_type   = "CLOUD_PREMIUM"
-    system_disk_size   = "50"
-    security_group_ids = ["sg-24vswocp"]
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = "50"
+    orderly_security_group_ids = ["sg-24vswocp"]
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
@@ -124,13 +124,13 @@ resource "tencentcloud_kubernetes_node_pool" "mynodepool" {
   multi_zone_subnet_policy = "EQUALITY"
 
   auto_scaling_config {
-    instance_type        = var.default_instance_type
-    system_disk_type     = "CLOUD_PREMIUM"
-    system_disk_size     = "50"
-    security_group_ids   = ["sg-24vswocp"]
-    instance_charge_type = "SPOTPAID"
-    spot_instance_type   = "one-time"
-    spot_max_price       = "1000"
+    instance_type              = var.default_instance_type
+    system_disk_type           = "CLOUD_PREMIUM"
+    system_disk_size           = "50"
+    orderly_security_group_ids = ["sg-24vswocp", "sg-3qntci2v", "sg-7y1t2wax"]
+    instance_charge_type       = "SPOTPAID"
+    spot_instance_type         = "one-time"
+    spot_max_price             = "1000"
 
     data_disk {
       disk_type = "CLOUD_PREMIUM"
