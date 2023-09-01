@@ -71,7 +71,7 @@ func resourceTencentCloudTdmqRocketmqVipInstance() *schema.Resource {
 			"spec": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Instance specification:Basic type, rocket-vip-basic-1Standard type, rocket-vip-basic-2Advanced Type I, rocket-vip-basic-3Advanced Type II, rocket-vip-basic-4.",
+				Description: "Instance specification: Basic type: `rocket-vip-basic-1`, Standard type: `rocket-vip-basic-2`, Advanced Type I: `rocket-vip-basic-3`, Advanced Type II: `rocket-vip-basic-4`.",
 			},
 			"node_count": {
 				Required:     true,

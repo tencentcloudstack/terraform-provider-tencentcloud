@@ -121,7 +121,7 @@ The following arguments are supported:
 * `resource_id` - (Required, String) Specify resource unique Id of `resource_type` configured.
 * `resource_type` - (Required, String) Specify resource type. NOTE: Only support `NETWORKINTERFACE` for now. Values: `VPC`, `SUBNET`, `NETWORKINTERFACE`, `CCN`, `NAT`, `DCG`.
 * `traffic_type` - (Required, String) Specify log traffic type, values: `ACCEPT`, `REJECT`, `ALL`.
-* `cloud_log_id` - (Optional, String) Specify flow log storage id.
+* `cloud_log_id` - (Optional, String) Specify flow log storage id, just set cls topic id.
 * `cloud_log_region` - (Optional, String) Specify flow log storage region, default using current.
 * `flow_log_description` - (Optional, String) Specify flow Log description.
 * `flow_log_storage` - (Optional, List) Specify consumer detail, required while `storage_type` is `ckafka`.
