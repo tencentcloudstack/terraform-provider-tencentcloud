@@ -15,7 +15,9 @@ func TestAccTencentCloudSslCommitCertificateInformationResource_basic(t *testing
 		Steps: []resource.TestStep{
 			{
 				Config: testAccSslCommitCertificateInformation,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_commit_certificate_information.commit_certificate_information", "id")),
+				Check: resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_ssl_commit_certificate_information.example", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_ssl_commit_certificate_information.example", "product_id", "33"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ssl_commit_certificate_information.example", "certificate_id")),
 			},
 		},
 	})
