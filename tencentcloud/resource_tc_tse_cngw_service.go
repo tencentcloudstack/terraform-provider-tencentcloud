@@ -286,6 +286,13 @@ func resourceTencentCloudTseCngwService() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "service id.",
 			},
+
+			"tags": {
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "Tag description list.",
+				Deprecated:  "Deprecate ineffective tags",
+			},
 		},
 	}
 }
@@ -424,6 +431,16 @@ func resourceTencentCloudTseCngwServiceCreate(d *schema.ResourceData, meta inter
 	}
 
 	d.SetId(gatewayId + FILED_SP + name)
+
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
+		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region := meta.(*TencentCloudClient).apiV3Conn.Region
+		resourceName := fmt.Sprintf("qcs::tse:%s:uin/:cngw_service/%s", region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
+			return err
+		}
+	}
 
 	return resourceTencentCloudTseCngwServiceRead(d, meta)
 }
@@ -597,6 +614,14 @@ func resourceTencentCloudTseCngwServiceRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("service_id", cngwService.ID)
 	}
 
+	tcClient := meta.(*TencentCloudClient).apiV3Conn
+	tagService := &TagService{client: tcClient}
+	tags, err := tagService.DescribeResourceTags(ctx, "tse", "cngw_service", tcClient.Region, d.Id())
+	if err != nil {
+		return err
+	}
+	_ = d.Set("tags", tags)
+
 	return nil
 }
 
@@ -752,6 +777,17 @@ func resourceTencentCloudTseCngwServiceUpdate(d *schema.ResourceData, meta inter
 	if err != nil {
 		log.Printf("[CRITAL]%s update tse cngwService failed, reason:%+v", logId, err)
 		return err
+	}
+
+	if d.HasChange("tags") {
+		tcClient := meta.(*TencentCloudClient).apiV3Conn
+		tagService := &TagService{client: tcClient}
+		oldTags, newTags := d.GetChange("tags")
+		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
+		resourceName := BuildTagResourceName("tse", "cngw_service", tcClient.Region, d.Id())
+		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
+			return err
+		}
 	}
 
 	return resourceTencentCloudTseCngwServiceRead(d, meta)

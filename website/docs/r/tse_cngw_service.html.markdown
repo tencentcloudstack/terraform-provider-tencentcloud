@@ -88,6 +88,7 @@ The following arguments are supported:
 * `timeout` - (Required, Int) time out, unit:ms.
 * `upstream_info` - (Required, List) service config information.
 * `upstream_type` - (Required, String) service type. Reference value:`Kubernetes`, `Registry`, `IPList`, `HostIP`, `Scf`.
+* `tags` - (Optional, Map, **Deprecated**) Deprecate ineffective tags Tag description list.
 
 The `targets` object supports the following:
 

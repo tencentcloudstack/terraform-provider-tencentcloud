@@ -27,5 +27,5 @@ tencentcloud_tse_cngw_route_rate_limit
 ```
 
 ```release-note:enhancement
-resource/tencentcloud_tse_cngw_service: Remove tags that don't work
+resource/tencentcloud_tse_cngw_service: Deprecate ineffective tags
 ```
