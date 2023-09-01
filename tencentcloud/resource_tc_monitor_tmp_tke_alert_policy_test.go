@@ -87,6 +87,37 @@ func TestAccTencentCloudMonitorTmpTkeAlertPolicy_basic(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
+			{
+				Config: testTmpTkeAlertPolicyUp_basic,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTmpTkeAlertPolicyExists("tencentcloud_monitor_tmp_tke_alert_policy.basic"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.cluster_id", ""),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.id", ""),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.name", "alert_rule-update"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.0.enabled", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.0.phone_arrive_notice", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.0.phone_circle_interval", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.0.phone_circle_times", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.0.phone_inner_interval", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.0.repeat_interval", ""),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.0.time_range_end", ""),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.0.time_range_start", ""),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.0.type", "amp"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.notification.0.web_hook", ""),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.rules.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.rules.0.describe", ""),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.rules.0.for", "3m"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.rules.0.labels.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.rules.0.labels.0.name", "severity"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.rules.0.labels.0.value", "warning"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.rules.0.name", "rules-update"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.rules.0.rule", "(count(kube_node_status_allocatable_cpu_cores) by (cluster) -1)   / count(kube_node_status_allocatable_cpu_cores) by (cluster)"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.rules.0.rule_state", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_monitor_tmp_tke_alert_policy.basic", "alert_rule.0.rules.0.template", "集群{{ $labels.cluster }}内Pod申请的CPU过载，当前CPU申请占比{{ $value | humanizePercentage }}"),
+				),
+			},
 		},
 	})
 }
@@ -167,6 +198,31 @@ resource "tencentcloud_monitor_tmp_tke_alert_policy" "basic" {
       rule = "(count(kube_node_status_allocatable_cpu_cores) by (cluster) -1)   / count(kube_node_status_allocatable_cpu_cores) by (cluster)"
       template = "集群{{ $labels.cluster }}内Pod申请的CPU过载，当前CPU申请占比{{ $value | humanizePercentage }}"
       for = "5m"
+      labels {
+        name  = "severity"
+        value = "warning"
+      }
+    }
+    notification {
+      type = "amp"
+      enabled = true
+      alert_manager {
+		url	= "xxx"
+	  }
+    }
+  }
+}`
+
+const testTmpTkeAlertPolicyUp_basic = testTmpTkeAlertPolicyVar + `
+resource "tencentcloud_monitor_tmp_tke_alert_policy" "basic" {
+  instance_id = var.prometheus_id
+  alert_rule {
+    name = "alert_rule-update"
+    rules {
+      name = "rules-update"
+      rule = "(count(kube_node_status_allocatable_cpu_cores) by (cluster) -1)   / count(kube_node_status_allocatable_cpu_cores) by (cluster)"
+      template = "集群{{ $labels.cluster }}内Pod申请的CPU过载，当前CPU申请占比{{ $value | humanizePercentage }}"
+      for = "3m"
       labels {
         name  = "severity"
         value = "warning"
