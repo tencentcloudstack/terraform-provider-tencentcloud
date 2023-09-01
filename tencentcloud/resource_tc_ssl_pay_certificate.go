@@ -144,7 +144,7 @@ func resourceTencentCloudSSLInstance() *schema.Resource {
 			"wait_commit_flag": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "No information submitted yet.",
+				Description: "If `wait_commit_flag` is set to true, info will not be submitted temporarily, false opposite.",
 			},
 			// ssl information
 			"information": {
@@ -640,7 +640,7 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 			}
 
 			if *describeResponse.Response.Status != SSL_STATUS_TO_BE_COMMIT {
-				err := fmt.Errorf("certificate is not available, status is %d", *describeResponse.Response.Status)
+				err := fmt.Errorf("the certificate cannot be modified, status is %d", *describeResponse.Response.Status)
 				return resource.RetryableError(err)
 			}
 			return nil
