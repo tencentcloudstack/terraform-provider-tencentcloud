@@ -1575,7 +1575,10 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_zookeeper_replicas
 	tencentcloud_tse_zookeeper_server_interfaces
 	tencentcloud_tse_nacos_server_interfaces
+	tencentcloud_tse_groups
+	tencentcloud_tse_gateways
 	tencentcloud_tse_gateway_nodes
+	tencentcloud_tse_gateway_routes
 	tencentcloud_tse_gateway_canary_rules
 	tencentcloud_tse_gateway_services
 
@@ -1583,6 +1586,10 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_instance
 	tencentcloud_tse_cngw_service
 	tencentcloud_tse_cngw_canary_rule
+	tencentcloud_tse_cngw_gateway
+	tencentcloud_tse_cngw_service_rate_limit
+	tencentcloud_tse_cngw_route
+	tencentcloud_tse_cngw_route_rate_limit
 
 ClickHouse(CDWCH)
   Data Source
@@ -2242,6 +2249,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_nacos_server_interfaces":               dataSourceTencentCloudTseNacosServerInterfaces(),
 			"tencentcloud_tse_zookeeper_replicas":                    dataSourceTencentCloudTseZookeeperReplicas(),
 			"tencentcloud_tse_zookeeper_server_interfaces":           dataSourceTencentCloudTseZookeeperServerInterfaces(),
+			"tencentcloud_tse_groups":                                dataSourceTencentCloudTseGroups(),
+			"tencentcloud_tse_gateways":                              dataSourceTencentCloudTseGateways(),
 			"tencentcloud_tse_gateway_nodes":                         dataSourceTencentCloudTseGatewayNodes(),
 			"tencentcloud_tse_gateway_routes":                        dataSourceTencentCloudTseGatewayRoutes(),
 			"tencentcloud_tse_gateway_canary_rules":                  dataSourceTencentCloudTseGatewayCanaryRules(),
@@ -2982,6 +2991,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_api_gateway_api_doc":                                 resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                                 resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                                        resourceTencentCloudTseInstance(),
+			"tencentcloud_tse_cngw_gateway":                                    resourceTencentCloudTseCngwGateway(),
+			"tencentcloud_tse_cngw_group":                                      resourceTencentCloudTseCngwGroup(),
 			"tencentcloud_tse_cngw_service":                                    resourceTencentCloudTseCngwService(),
 			"tencentcloud_tse_cngw_service_rate_limit":                         resourceTencentCloudTseCngwServiceRateLimit(),
 			"tencentcloud_tse_cngw_route":                                      resourceTencentCloudTseCngwRoute(),

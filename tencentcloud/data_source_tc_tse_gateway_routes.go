@@ -283,17 +283,22 @@ func dataSourceTencentCloudTseGatewayRoutesRead(d *schema.ResourceData, meta int
 				}
 
 				if routeList.Headers != nil {
-					headersMap := map[string]interface{}{}
+					headersList := []interface{}{}
+					for _, headers := range routeList.Headers {
+						headersMap := map[string]interface{}{}
 
-					if routeList.Headers.Key != nil {
-						headersMap["key"] = routeList.Headers.Key
+						if headers.Key != nil {
+							headersMap["key"] = headers.Key
+						}
+
+						if headers.Value != nil {
+							headersMap["value"] = headers.Value
+						}
+
+						headersList = append(headersList, headersMap)
 					}
 
-					if routeList.Headers.Value != nil {
-						headersMap["value"] = routeList.Headers.Value
-					}
-
-					routeListMap["headers"] = []interface{}{headersMap}
+					routeListMap["headers"] = headersList
 				}
 
 				routeListList = append(routeListList, routeListMap)

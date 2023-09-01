@@ -6,7 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccTencentCloudNeedFixTseGatewayRoutesDataSource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTseGatewayRoutesDataSource_basic -v
+func TestAccTencentCloudTseGatewayRoutesDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -19,23 +20,23 @@ func TestAccTencentCloudNeedFixTseGatewayRoutesDataSource_basic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_tse_gateway_routes.gateway_routes"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.name"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.methods.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.paths.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.hosts.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.protocols.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.preserveHost"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.https_redirect_status_code"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.strip_path"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.created_time"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.destination_ports"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.service_name"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.service_id"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.headers.#"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.headers.0.key"),
-					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.RouteList.0.headers.0.value"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.name"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.methods.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.paths.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.hosts.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.protocols.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.preserve_host"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.https_redirect_status_code"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.strip_path"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.created_time"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.destination_ports.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.service_name"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.service_id"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.headers.#"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.headers.0.key"),
+					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.route_list.0.headers.0.value"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_tse_gateway_routes.gateway_routes", "result.0.total_count"),
 				),
 			},

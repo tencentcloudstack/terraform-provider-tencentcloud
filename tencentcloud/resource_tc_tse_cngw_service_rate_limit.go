@@ -4,44 +4,88 @@ Provides a resource to create a tse cngw_service_rate_limit
 Example Usage
 
 ```hcl
-resource "tencentcloud_tse_cngw_service_rate_limit" "cngw_service_rate_limit" {
-  gateway_id = "gateway-xxxxxx"
-  name = "451a9920-e67a-4519-af41-fccac0e72005"
-  limit_detail {
-		enabled = true
-		qps_thresholds {
-			unit = "second"
-			max = 50
-		}
-		limit_by = "ip"
-		response_type = "default"
-		hide_client_headers = false
-		is_delay = false
-		path = "/test"
-		header = "auth"
-		external_redis {
-			redis_host = ""
-			redis_password = ""
-			redis_port =
-			redis_timeout =
-		}
-		policy = "redis"
-		rate_limit_response {
-			body = ""
-			headers {
-				key = ""
-				value = ""
-			}
-			http_status =
-		}
-		rate_limit_response_url = ""
-		line_up_time =
+variable "availability_zone" {
+  default = "ap-guangzhou-4"
+}
 
+resource "tencentcloud_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+  name       = "tf_tse_vpc"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  availability_zone = var.availability_zone
+  name              = "tf_tse_subnet"
+  cidr_block        = "10.0.1.0/24"
+}
+
+resource "tencentcloud_tse_cngw_gateway" "cngw_gateway" {
+  description                = "terraform test1"
+  enable_cls                 = true
+  engine_region              = "ap-guangzhou"
+  feature_version            = "STANDARD"
+  gateway_version            = "2.5.1"
+  ingress_class_name         = "tse-nginx-ingress"
+  internet_max_bandwidth_out = 0
+  name                       = "terraform-gateway1"
+  trade_type                 = 0
+  type                       = "kong"
+
+  node_config {
+    number        = 2
+    specification = "1c2g"
   }
+
+  vpc_config {
+    subnet_id = tencentcloud_subnet.subnet.id
+    vpc_id    = tencentcloud_vpc.vpc.id
+  }
+
   tags = {
     "createdBy" = "terraform"
   }
 }
+
+resource "tencentcloud_tse_cngw_service" "cngw_service" {
+  gateway_id    = tencentcloud_tse_cngw_gateway.cngw_gateway.id
+  name          = "terraform-test"
+  path          = "/test"
+  protocol      = "http"
+  retries       = 5
+  timeout       = 60000
+  upstream_type = "HostIP"
+
+  upstream_info {
+    algorithm             = "round-robin"
+    auto_scaling_cvm_port = 0
+    host                  = "arunma.cn"
+    port                  = 8012
+    slow_start            = 0
+  }
+}
+
+resource "tencentcloud_tse_cngw_service_rate_limit" "cngw_service_rate_limit" {
+    gateway_id = tencentcloud_tse_cngw_gateway.cngw_gateway.id
+    name       = tencentcloud_tse_cngw_service.cngw_service.name
+
+    limit_detail {
+        enabled             = true
+        header              = "req"
+        hide_client_headers = true
+        is_delay            = true
+        limit_by            = "header"
+        line_up_time        = 15
+        policy              = "redis"
+        response_type       = "default"
+
+        qps_thresholds {
+            max  = 100
+            unit = "hour"
+        }
+    }
+}
+
 ```
 
 Import
@@ -49,7 +93,7 @@ Import
 tse cngw_service_rate_limit can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit cngw_service_rate_limit_id
+terraform import tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit gatewayId#name
 ```
 */
 package tencentcloud
@@ -236,12 +280,6 @@ func resourceTencentCloudTseCngwServiceRateLimit() *schema.Resource {
 					},
 				},
 			},
-
-			"tags": {
-				Type:        schema.TypeMap,
-				Optional:    true,
-				Description: "Tag description list.",
-			},
 		},
 	}
 }
@@ -370,16 +408,6 @@ func resourceTencentCloudTseCngwServiceRateLimitCreate(d *schema.ResourceData, m
 
 	d.SetId(gatewayId + FILED_SP + name)
 
-	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-	if tags := helper.GetTags(d, "tags"); len(tags) > 0 {
-		tagService := TagService{client: meta.(*TencentCloudClient).apiV3Conn}
-		region := meta.(*TencentCloudClient).apiV3Conn.Region
-		resourceName := fmt.Sprintf("qcs::tse:%s:uin/:cngw_service_limit/%s", region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, tags, nil); err != nil {
-			return err
-		}
-	}
-
 	return resourceTencentCloudTseCngwServiceRateLimitRead(d, meta)
 }
 
@@ -436,7 +464,7 @@ func resourceTencentCloudTseCngwServiceRateLimitRead(d *schema.ResourceData, met
 				qpsThresholdsList = append(qpsThresholdsList, qpsThresholdsMap)
 			}
 
-			limitDetailMap["qps_thresholds"] = []interface{}{qpsThresholdsList}
+			limitDetailMap["qps_thresholds"] = qpsThresholdsList
 		}
 
 		if cngwServiceRateLimit.LimitBy != nil {
@@ -512,7 +540,7 @@ func resourceTencentCloudTseCngwServiceRateLimitRead(d *schema.ResourceData, met
 					headersList = append(headersList, headersMap)
 				}
 
-				rateLimitResponseMap["headers"] = []interface{}{headersList}
+				rateLimitResponseMap["headers"] = headersList
 			}
 
 			if cngwServiceRateLimit.RateLimitResponse.HttpStatus != nil {
@@ -535,14 +563,6 @@ func resourceTencentCloudTseCngwServiceRateLimitRead(d *schema.ResourceData, met
 			return err
 		}
 	}
-
-	tcClient := meta.(*TencentCloudClient).apiV3Conn
-	tagService := &TagService{client: tcClient}
-	tags, err := tagService.DescribeResourceTags(ctx, "tse", "cngw_service_limit", tcClient.Region, d.Id())
-	if err != nil {
-		return err
-	}
-	_ = d.Set("tags", tags)
 
 	return nil
 }
@@ -674,18 +694,6 @@ func resourceTencentCloudTseCngwServiceRateLimitUpdate(d *schema.ResourceData, m
 	if err != nil {
 		log.Printf("[CRITAL]%s update tse cngwServiceRateLimit failed, reason:%+v", logId, err)
 		return err
-	}
-
-	if d.HasChange("tags") {
-		ctx := context.WithValue(context.TODO(), logIdKey, logId)
-		tcClient := meta.(*TencentCloudClient).apiV3Conn
-		tagService := &TagService{client: tcClient}
-		oldTags, newTags := d.GetChange("tags")
-		replaceTags, deleteTags := diffTags(oldTags.(map[string]interface{}), newTags.(map[string]interface{}))
-		resourceName := BuildTagResourceName("tse", "cngw_service_limit", tcClient.Region, d.Id())
-		if err := tagService.ModifyTags(ctx, resourceName, replaceTags, deleteTags); err != nil {
-			return err
-		}
 	}
 
 	return resourceTencentCloudTseCngwServiceRateLimitRead(d, meta)

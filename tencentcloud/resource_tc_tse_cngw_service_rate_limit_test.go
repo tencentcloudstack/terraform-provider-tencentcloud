@@ -11,7 +11,7 @@ import (
 )
 
 // go test -i; go test -test.run TestAccTencentCloudTseCngwServiceRateLimitResource_basic -v
-func TestAccTencentCloudNeedFixTseCngwServiceRateLimitResource_basic(t *testing.T) {
+func TestAccTencentCloudTseCngwServiceRateLimitResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -26,6 +26,19 @@ func TestAccTencentCloudNeedFixTseCngwServiceRateLimitResource_basic(t *testing.
 					testAccCheckTseCngwServiceRateLimitExists("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "gateway_id", defaultTseGatewayId),
+					// resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "name", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.enabled", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.header", "req"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.hide_client_headers", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.is_delay", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.limit_by", "header"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.line_up_time", "15"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.policy", "redis"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.response_type", "default"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.qps_thresholds.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.qps_thresholds.0.max", "100"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_service_rate_limit.cngw_service_rate_limit", "limit_detail.0.qps_thresholds.0.unit", "hour"),
 				),
 			},
 			{
@@ -58,7 +71,7 @@ func testAccCheckTseCngwServiceRateLimitDestroy(s *terraform.State) error {
 			return err
 		}
 
-		if res != nil {
+		if res != nil && res.Enabled != nil {
 			return fmt.Errorf("tse cngwServiceRateLimit %s still exists", rs.Primary.ID)
 		}
 	}
@@ -99,42 +112,24 @@ func testAccCheckTseCngwServiceRateLimitExists(r string) resource.TestCheckFunc 
 const testAccTseCngwServiceRateLimit = DefaultTseVar + `
 
 resource "tencentcloud_tse_cngw_service_rate_limit" "cngw_service_rate_limit" {
-  gateway_id = var.gateway_id
-  name = "451a9920-e67a-4519-af41-fccac0e72005"
-  limit_detail {
-		enabled = true
-		qps_thresholds {
-			unit = "second"
-			max = 50
-		}
-		limit_by = "ip"
-		response_type = "default"
-		hide_client_headers = false
-		is_delay = false
-		path = "/test"
-		header = "auth"
-		external_redis {
-			redis_host = ""
-			redis_password = ""
-			redis_port = 
-			redis_timeout = 
-		}
-		policy = "redis"
-		rate_limit_response {
-			body = ""
-			headers {
-				key = ""
-				value = ""
-			}
-			http_status = 
-		}
-		rate_limit_response_url = ""
-		line_up_time = 
+    gateway_id = var.gateway_id
+    name       = "b6017eaf-2363-481e-9e93-8d65aaf498cd"
 
-  }
-  tags = {
-    "createdBy" = "terraform"
-  }
+    limit_detail {
+        enabled             = true
+        header              = "req"
+        hide_client_headers = true
+        is_delay            = true
+        limit_by            = "header"
+        line_up_time        = 15
+        policy              = "redis"
+        response_type       = "default"
+
+        qps_thresholds {
+            max  = 100
+            unit = "hour"
+        }
+    }
 }
 
 `

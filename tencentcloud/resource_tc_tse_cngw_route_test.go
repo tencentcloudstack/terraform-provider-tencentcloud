@@ -1,22 +1,44 @@
 package tencentcloud
 
 import (
+	"context"
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudNeedFixTseCngwRouteResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudTseCngwRouteResource_basic -v
+func TestAccTencentCloudTseCngwRouteResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
 		},
-		Providers: testAccProviders,
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckTseCngwRouteDestroy,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTseCngwRoute,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_route.cngw_route", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTseCngwRouteExists("tencentcloud_tse_cngw_route.cngw_route"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_route.cngw_route", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "gateway_id", defaultTseGatewayId),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "force_https", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "hosts.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "https_redirect_status_code", "426"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "paths.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.0.key", "req"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.0.value", "terraform"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "preserve_host", "false"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "protocols.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "route_name", "terraform-route"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "service_id", "b6017eaf-2363-481e-9e93-8d65aaf498cd"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "strip_path", "true"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_tse_cngw_route.cngw_route",
@@ -27,29 +49,91 @@ func TestAccTencentCloudNeedFixTseCngwRouteResource_basic(t *testing.T) {
 	})
 }
 
-const testAccTseCngwRoute = `
+func testAccCheckTseCngwRouteDestroy(s *terraform.State) error {
+	logId := getLogId(contextNil)
+	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	service := TseService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "tencentcloud_tse_cngw_route" {
+			continue
+		}
 
-resource "tencentcloud_tse_cngw_route" "cngw_route" {
-  gateway_id = "gateway-xxxxxx"
-  service_i_d = "451a9920-e67a-4519-af41-fccac0e72005"
-  route_name = "routeA"
-  methods = 
-  hosts = 
-  paths = 
-  protocols = 
-  preserve_host = true
-  https_redirect_status_code = 302
-  strip_path = true
-  force_https = 
-  destination_ports = 
-  headers {
-		key = "token"
-		value = "xxxxxx"
+		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		if len(idSplit) != 3 {
+			return fmt.Errorf("invalid ID %s", rs.Primary.ID)
+		}
+		gatewayId := idSplit[0]
+		serviceID := idSplit[1]
+		routeName := idSplit[2]
 
-  }
-  tags = {
-    "createdBy" = "terraform"
-  }
+		res, err := service.DescribeTseCngwRouteById(ctx, gatewayId, serviceID, routeName)
+		if err != nil {
+			return err
+		}
+
+		if res != nil {
+			return fmt.Errorf("tse cngwRoute %s still exists", rs.Primary.ID)
+		}
+	}
+	return nil
 }
 
+func testAccCheckTseCngwRouteExists(r string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		logId := getLogId(contextNil)
+		ctx := context.WithValue(context.TODO(), logIdKey, logId)
+
+		rs, ok := s.RootModule().Resources[r]
+		if !ok {
+			return fmt.Errorf("resource %s is not found", r)
+		}
+
+		idSplit := strings.Split(rs.Primary.ID, FILED_SP)
+		if len(idSplit) != 3 {
+			return fmt.Errorf("invalid ID %s", rs.Primary.ID)
+		}
+		gatewayId := idSplit[0]
+		serviceID := idSplit[1]
+		routeName := idSplit[2]
+
+		service := TseService{client: testAccProvider.Meta().(*TencentCloudClient).apiV3Conn}
+		res, err := service.DescribeTseCngwRouteById(ctx, gatewayId, serviceID, routeName)
+		if err != nil {
+			return err
+		}
+
+		if res == nil {
+			return fmt.Errorf("tse cngwRoute %s is not found", rs.Primary.ID)
+		}
+
+		return nil
+	}
+}
+
+const testAccTseCngwRoute = DefaultTseVar + `
+
+resource "tencentcloud_tse_cngw_route" "cngw_route" {
+  destination_ports = []
+  force_https       = false
+  gateway_id        = var.gateway_id
+  hosts = [
+    "192.168.0.1:9090",
+  ]
+  https_redirect_status_code = 426
+  paths = [
+    "/user",
+  ]
+  headers {
+  	key = "req"
+  	value = "terraform"
+  }
+  preserve_host = false
+  protocols = [
+    "http",
+    "https",
+  ]
+  route_name = "terraform-route"
+  service_id = "b6017eaf-2363-481e-9e93-8d65aaf498cd"
+  strip_path = true
+}
 `
