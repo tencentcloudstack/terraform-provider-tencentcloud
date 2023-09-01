@@ -91,10 +91,10 @@ func (me *CatService) DeleteCatTaskSetById(ctx context.Context, taskId string) (
 	return
 }
 
-func (me *CatService) DescribeCatNodeByFilter(ctx context.Context, param map[string]interface{}) (node []*cat.NodeDefine, errRet error) {
+func (me *CatService) DescribeCatNodeByFilter(ctx context.Context, param map[string]interface{}) (node []*cat.NodeDefineExt, errRet error) {
 	var (
 		logId   = getLogId(ctx)
-		request = cat.NewDescribeProbeNodesRequest()
+		request = cat.NewDescribeNodesRequest()
 	)
 
 	defer func() {
@@ -128,7 +128,7 @@ func (me *CatService) DescribeCatNodeByFilter(ctx context.Context, param map[str
 	}
 
 	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCatClient().DescribeProbeNodes(request)
+	response, err := me.client.UseCatClient().DescribeNodes(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
 			logId, request.GetAction(), request.ToJsonString(), err.Error())

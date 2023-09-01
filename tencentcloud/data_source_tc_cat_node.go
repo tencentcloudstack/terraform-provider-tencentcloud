@@ -113,6 +113,11 @@ func dataSourceTencentCloudCatNode() *schema.Resource {
 							Computed:    true,
 							Description: "Node status: 1=running, 2=offline.",
 						},
+						"task_types": {
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "The task types supported by the node. `1`: page performance, `2`: file upload, `3`: file download, `4`: port performance, `5`: network quality, `6`: audio and video experience.",
+						},
 					},
 				},
 			},
@@ -156,7 +161,7 @@ func dataSourceTencentCloudCatNodeRead(d *schema.ResourceData, meta interface{})
 
 	catService := CatService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var nodeSets []*cat.NodeDefine
+	var nodeSets []*cat.NodeDefineExt
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		results, e := catService.DescribeCatNodeByFilter(ctx, paramMap)
 		if e != nil {
@@ -202,8 +207,11 @@ func dataSourceTencentCloudCatNodeRead(d *schema.ResourceData, meta interface{})
 			if nodeSet.CodeType != nil {
 				nodeSetMap["code_type"] = nodeSet.CodeType
 			}
-			if nodeSet.NodeDefineStatus != nil {
-				nodeSetMap["node_define_status"] = nodeSet.NodeDefineStatus
+			// if nodeSet.NodeDefineStatus != nil {
+			// 	nodeSetMap["node_define_status"] = nodeSet.NodeDefineStatus
+			// }
+			if nodeSet.TaskTypes != nil {
+				nodeSetMap["task_types"] = nodeSet.TaskTypes
 			}
 			ids = append(ids, *nodeSet.Name)
 			nodeSetList = append(nodeSetList, nodeSetMap)

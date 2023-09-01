@@ -28,19 +28,19 @@ func dataSourceTencentCloudCatMetricData() *schema.Resource {
 		Read: dataSourceTencentCloudCatMetricDataRead,
 		Schema: map[string]*schema.Schema{
 			"analyze_task_type": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Analysis of task type, supported types: `AnalyzeTaskType_Network`: network quality, `AnalyzeTaskType_Browse`: page performance, `AnalyzeTaskType_Transport`: port performance, `AnalyzeTaskType_UploadDownload`: file transport, `AnalyzeTaskType_MediaStream`: audiovisual experience.",
 			},
 
 			"metric_type": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Metric type, metrics queries are passed with gauge by default.",
 			},
 
 			"field": {
-				Optional:    true,
+				Required:    true,
 				Type:        schema.TypeString,
 				Description: "Detailed fields of metrics, specified metrics can be passed or aggregate metrics, such as avg(ping_time) means entire delay.",
 			},
