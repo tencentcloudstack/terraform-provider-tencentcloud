@@ -1,0 +1,7 @@
+```release-note:enhancement
+resource/tencentcloud_ssl_pay_certificate: support parameter 'wait_commit_flag'.
+```
+
+```release-note:new-resource
+tencentcloud_ssl_commit_certificate_information
+```
