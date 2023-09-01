@@ -41,8 +41,6 @@ resource "tencentcloud_ssl_commit_certificate_information" "example" {
 }
 ```
 
-ssl commit_certificate_information can be imported using the id, e.g.
-
 */
 package tencentcloud
 
