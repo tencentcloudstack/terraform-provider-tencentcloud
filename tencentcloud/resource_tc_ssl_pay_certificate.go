@@ -39,6 +39,7 @@ resource "tencentcloud_ssl_pay_certificate" "example" {
         contact_number        = "12345678901"
         contact_position      = "developer"
     }
+}
 ```
 
 Import
