@@ -1,3 +1,55 @@
+## 1.81.23 (September 1, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_api_gateway_api_app_service` ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* **New Data Source:** `tencentcloud_api_gateway_api_usage_plans` ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* **New Data Source:** `tencentcloud_api_gateway_plugins` ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* **New Data Source:** `tencentcloud_api_gateway_upstreams` ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* **New Data Source:** `tencentcloud_clickhouse_backup_job_detail` ([#2098](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2098))
+* **New Data Source:** `tencentcloud_clickhouse_backup_jobs` ([#2098](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2098))
+* **New Data Source:** `tencentcloud_eb_event_rules` ([#2094](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2094))
+* **New Data Source:** `tencentcloud_kms_public_key` ([#2093](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2093))
+* **New Data Source:** `tencentcloud_private_dns_records` ([#2095](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2095))
+* **New Data Source:** `tencentcloud_tse_gateway_routes` ([#2096](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2096))
+* **New Data Source:** `tencentcloud_tse_gateways` ([#2096](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2096))
+* **New Data Source:** `tencentcloud_tse_groups` ([#2096](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2096))
+* **New Resource:** `tencentcloud_api_gateway_api_app_attachment` ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* **New Resource:** `tencentcloud_api_gateway_upstream` ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* **New Resource:** `tencentcloud_clickhouse_backup` ([#2098](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2098))
+* **New Resource:** `tencentcloud_clickhouse_backup_strategy` ([#2098](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2098))
+* **New Resource:** `tencentcloud_clickhouse_delete_backup_data` ([#2098](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2098))
+* **New Resource:** `tencentcloud_clickhouse_recover_backup_job` ([#2098](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2098))
+* **New Resource:** `tencentcloud_tse_cngw_gateway` ([#2096](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2096))
+* **New Resource:** `tencentcloud_tse_cngw_route` ([#2096](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2096))
+* **New Resource:** `tencentcloud_tse_cngw_route_rate_limit` ([#2096](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2096))
+* **New Resource:** `tencentcloud_tse_cngw_service_rate_limit` ([#2096](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2096))
+
+ENHANCEMENTS:
+
+* data_source/tencentcloud_ssm_secrets: Support `secret_type`, `product_name`, Update return value ([#2075](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2075))
+* resource/tencentcloud_api_gateway_api: Support Some new fields ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* resource/tencentcloud_api_gateway_api_app: Support `tag` ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* resource/tencentcloud_api_gateway_api_key: Support input `access_key_id`, `access_key_secret` ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* resource/tencentcloud_api_gateway_plugin_attachment: Optimization binding failure blocking issue ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* resource/tencentcloud_api_gateway_service: Support input `uniq_vpc_id`` ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* resource/tencentcloud_api_gateway_usage_plan_attachment: Support input `access_key_ids`` ([#2077](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2077))
+* resource/tencentcloud_kubernetes_cluster: support for cluster configuration of CiliumOverlay network ([#2099](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2099))
+* resource/tencentcloud_monitor_alarm_notice: support set 'is_valid' and 'validation_code'. ([#2102](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2102))
+* resource/tencentcloud_private_dns_zone: support input 'cname_speedup_status'. ([#2101](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2101))
+* resource/tencentcloud_scf_function: support `handler` and `runtime` optional ([#2091](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2091))
+* resource/tencentcloud_scf_trigger_config: support new para, update api UpdateTrigger ([#2071](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2071))
+* resource/tencentcloud_ssm_product_secret: Support `tags`, Update return value ([#2075](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2075))
+* resource/tencentcloud_ssm_secret: Support `tags` ([#2075](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2075))
+* resource/tencentcloud_ssm_ssh_key_pair_secret: Support `tags` ([#2075](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2075))
+* resource/tencentcloud_tke_tmp_alert_policy: support modify 'alert_rule'. ([#2103](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2103))
+* resource/tencentcloud_tse_cngw_service: Deprecate ineffective tags ([#2096](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2096))
+
+BUG FIXES:
+
+* resource/tencentcloud_kubernetes_cluster: fix DiffSuppressFunc would ignore docker_graph_path defaults when computing diffs ([#2090](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2090))
+* resource/tencentcloud_tdmq_rocketmq_group: Fix the issue of inconsistent return values. ([#2087](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2087))
+
 ## 1.81.22 (August 25, 2023)
 
 FEATURES:
