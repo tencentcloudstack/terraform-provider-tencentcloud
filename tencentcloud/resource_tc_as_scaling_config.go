@@ -201,7 +201,7 @@ func resourceTencentCloudAsScalingConfig() *schema.Resource {
 				Optional:     true,
 				Default:      INTERNET_CHARGE_TYPE_TRAFFIC_POSTPAID_BY_HOUR,
 				ValidateFunc: validateAllowedStringValue(INTERNET_CHARGE_ALLOW_TYPE),
-				Description:  "Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
+				Description:  "Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.",
 			},
 			"internet_max_bandwidth_out": {
 				Type:        schema.TypeInt,
