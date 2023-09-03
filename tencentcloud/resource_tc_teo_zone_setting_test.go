@@ -80,6 +80,57 @@ func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
+			{
+				Config: testAccTeoZoneSettingUp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckZoneSettingExists("tencentcloud_teo_zone_setting.basic"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "zone_id", defaultZoneId),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", " cache.0.cache.#", "0"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.follow_origin.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.follow_origin.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.no_cache.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache.0.no_cache.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_key.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_key.0.full_url_cache", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_key.0.ignore_case", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_key.0.query_string.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_key.0.query_string.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_prefresh.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "cache_prefresh.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "client_ip_header.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "client_ip_header.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "compression.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "compression.0.algorithms.#", "2"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "compression.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "force_redirect.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "force_redirect.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "https.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "https.0.hsts.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "https.0.hsts.0.include_sub_domains", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "https.0.hsts.0.preload", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "https.0.hsts.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "https.0.http2", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "https.0.ocsp_stapling", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "ipv6.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "ipv6.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "max_age.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "max_age.0.follow_origin", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "offline_cache.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "offline_cache.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "origin.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "origin.0.origin_pull_protocol", "follow"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "post_max_size.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "post_max_size.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "quic.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "quic.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "smart_routing.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "upstream_http2.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "upstream_http2.0.switch", "off"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "web_socket.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "web_socket.0.switch", "off"),
+				),
+			},
 		},
 	})
 }
@@ -205,6 +256,96 @@ resource "tencentcloud_teo_zone_setting" "basic" {
   web_socket {
     switch  = "off"
     timeout = 30
+  }
+}
+
+`
+
+const testAccTeoZoneSettingUp = testAccTeoZoneSettingVar + `
+
+resource "tencentcloud_teo_zone_setting" "basic" {
+  zone_id = var.zone_id
+
+  cache {
+    follow_origin {
+      switch = "off"
+    }
+
+    no_cache {
+      switch = "off"
+    }
+  }
+
+  cache_key {
+    full_url_cache = "off"
+    ignore_case    = "off"
+
+    query_string {
+      switch = "off"
+    }
+  }
+
+  cache_prefresh {
+    switch  = "off"
+  }
+
+  client_ip_header {
+    switch = "off"
+  }
+
+  compression {
+    switch = "off"
+  }
+
+  force_redirect {
+    switch               = "off"
+  }
+
+  https {
+    http2         = "off"
+    ocsp_stapling = "off"
+    tls_version   = [
+      "TLSv1.2",
+      "TLSv1.3",
+    ]
+
+    hsts {
+      include_sub_domains = "off"
+      preload             = "off"
+      switch              = "off"
+    }
+  }
+
+  max_age {
+    follow_origin = "off"
+  }
+
+  offline_cache {
+    switch = "off"
+  }
+
+  origin {
+    origin_pull_protocol = "follow"
+  }
+
+  post_max_size {
+    switch   = "off"
+  }
+
+  quic {
+    switch = "off"
+  }
+
+  smart_routing {
+    switch = "off"
+  }
+
+  upstream_http2 {
+    switch = "off"
+  }
+
+  web_socket {
+    switch  = "off"
   }
 }
 
