@@ -81,7 +81,7 @@ func TestAccTencentCloudTeoZoneSetting_basic(t *testing.T) {
 				ImportStateVerify: true,
 			},
 			{
-				Config: testAccTeoZoneSetting,
+				Config: testAccTeoZoneSettingUp,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckZoneSettingExists("tencentcloud_teo_zone_setting.basic"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_zone_setting.basic", "zone_id", defaultZoneId),
