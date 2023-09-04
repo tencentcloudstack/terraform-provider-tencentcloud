@@ -882,6 +882,7 @@ SSL Certificates
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
 	tencentcloud_ssl_free_certificate
+	tencentcloud_ssl_commit_certificate_information
 
 Secrets Manager(SSM)
   Data Source
@@ -3010,6 +3011,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
 			"tencentcloud_dlc_user":                                            resourceTencentCloudDlcUser(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
+			"tencentcloud_ssl_commit_certificate_information":                  resourceTencentCloudSslCommitCertificateInformation(),
 		},
 
 		ConfigureFunc: providerConfigure,
