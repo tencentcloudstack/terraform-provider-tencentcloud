@@ -165,7 +165,7 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) ID of VPC network.
 * `default_cooldown` - (Optional, Int) Seconds of scaling group cool down. Default value is `300`.
 * `delete_keep_instance` - (Optional, Bool) Indicate to keep the CVM instance when delete the node pool. Default is `true`.
-* `desired_capacity` - (Optional, Int) Desired capacity ot the node. If `enable_auto_scale` is set `true`, this will be a computed parameter.
+* `desired_capacity` - (Optional, Int) Desired capacity of the node. If `enable_auto_scale` is set `true`, this will be a computed parameter.
 * `enable_auto_scale` - (Optional, Bool) Indicate whether to enable auto scaling or not.
 * `labels` - (Optional, Map) Labels of kubernetes node pool created nodes. The label key name does not exceed 63 characters, only supports English, numbers,'/','-', and does not allow beginning with ('/').
 * `multi_zone_subnet_policy` - (Optional, String) Multi-availability zone/subnet policy. Valid values: PRIORITY and EQUALITY. Default value: PRIORITY.
@@ -198,7 +198,7 @@ The `auto_scaling_config` object supports the following:
 * `instance_charge_type_prepaid_renew_flag` - (Optional, String) Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.
 * `instance_charge_type` - (Optional, String) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
 * `instance_name` - (Optional, String) Instance name, no more than 60 characters. For usage, refer to `InstanceNameSettings` in https://www.tencentcloud.com/document/product/377/31001.
-* `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+* `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid value: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is `0`.
 * `key_ids` - (Optional, List, ForceNew) ID list of keys.
 * `orderly_security_group_ids` - (Optional, List) Ordered security groups to which a CVM instance belongs.

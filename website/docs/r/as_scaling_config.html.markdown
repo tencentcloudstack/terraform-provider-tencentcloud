@@ -89,7 +89,7 @@ The following arguments are supported:
 * `instance_charge_type` - (Optional, String) Charge type of instance. Valid values are `PREPAID`, `POSTPAID_BY_HOUR`, `SPOTPAID`. The default is `POSTPAID_BY_HOUR`. NOTE: `SPOTPAID` instance must set `spot_instance_type` and `spot_max_price` at the same time.
 * `instance_name_settings` - (Optional, List) Settings of CVM instance names.
 * `instance_tags` - (Optional, Map) A list of tags used to associate different resources.
-* `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
+* `internet_charge_type` - (Optional, String) Charge types for network traffic. Valid values: `BANDWIDTH_PREPAID`, `TRAFFIC_POSTPAID_BY_HOUR` and `BANDWIDTH_PACKAGE`.
 * `internet_max_bandwidth_out` - (Optional, Int) Max bandwidth of Internet access in Mbps. Default is `0`.
 * `keep_image_login` - (Optional, Bool) Specify whether to keep original settings of a CVM image. And it can't be used with password or key_ids together.
 * `key_ids` - (Optional, List: [`String`]) ID list of keys.
