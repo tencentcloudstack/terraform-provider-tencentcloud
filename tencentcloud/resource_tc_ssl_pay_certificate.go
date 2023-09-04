@@ -9,42 +9,44 @@ as `Review Cancel`, and then you can click `Request a refund` to refund the fee,
 times, you need to use the wait_commit_flag field. Please refer to the field remarks for usage. Otherwise, it will be considered
 as a one-time submission and no further modifications will be provided.
 
-Example Usage
+# Example Usage
 
 ```hcl
-resource "tencentcloud_ssl_pay_certificate" "example" {
-    product_id = 33
-    domain_num = 1
-    alias      = "ssl desc."
-    project_id = 0
-    information {
-        csr_type              = "online"
-        certificate_domain    = "www.example.com"
-        organization_name     = "Tencent"
-        organization_division = "Qcloud"
-        organization_address  = "广东省深圳市南山区腾讯大厦1000号"
-        organization_country  = "CN"
-        organization_city     = "深圳市"
-        organization_region   = "广东省"
-        postal_code           = "0755"
-        phone_area_code       = "0755"
-        phone_number          = "86013388"
-        verify_type           = "DNS"
-        admin_first_name      = "test"
-        admin_last_name       = "test"
-        admin_phone_num       = "12345678901"
-        admin_email           = "test@tencent.com"
-        admin_position        = "developer"
-        contact_first_name    = "test"
-        contact_last_name     = "test"
-        contact_email         = "test@tencent.com"
-        contact_number        = "12345678901"
-        contact_position      = "developer"
-    }
-}
+
+	resource "tencentcloud_ssl_pay_certificate" "example" {
+	    product_id = 33
+	    domain_num = 1
+	    alias      = "ssl desc."
+	    project_id = 0
+	    information {
+	        csr_type              = "online"
+	        certificate_domain    = "www.example.com"
+	        organization_name     = "Tencent"
+	        organization_division = "Qcloud"
+	        organization_address  = "广东省深圳市南山区腾讯大厦1000号"
+	        organization_country  = "CN"
+	        organization_city     = "深圳市"
+	        organization_region   = "广东省"
+	        postal_code           = "0755"
+	        phone_area_code       = "0755"
+	        phone_number          = "86013388"
+	        verify_type           = "DNS"
+	        admin_first_name      = "test"
+	        admin_last_name       = "test"
+	        admin_phone_num       = "12345678901"
+	        admin_email           = "test@tencent.com"
+	        admin_position        = "developer"
+	        contact_first_name    = "test"
+	        contact_last_name     = "test"
+	        contact_email         = "test@tencent.com"
+	        contact_number        = "12345678901"
+	        contact_position      = "developer"
+	    }
+	}
+
 ```
 
-Import
+# Import
 
 payment SSL instance can be imported, e.g.
 
@@ -620,34 +622,27 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	}
 	if d.HasChange("information") {
-		//查询证书是否提交
 		describeRequest := ssl.NewDescribeCertificateDetailRequest()
 		describeRequest.CertificateId = &ids[0]
-		outErr := resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			describeResponse, inErr := sslService.DescribeCertificateDetail(ctx, describeRequest)
-			if inErr != nil {
-				return retryError(inErr)
-			}
-			if describeResponse == nil || describeResponse.Response == nil {
-				err := fmt.Errorf("TencentCloud SDK %s return empty response", describeRequest.GetAction())
-				return retryError(err)
-			}
-			if describeResponse.Response.Status == nil {
-				err := fmt.Errorf("api[%s] certificate status is nil", describeRequest.GetAction())
-				return resource.NonRetryableError(err)
-			}
 
-			if *describeResponse.Response.Status != SSL_STATUS_TO_BE_COMMIT {
-				err := fmt.Errorf("the certificate cannot be modified, status is %d", *describeResponse.Response.Status)
-				return resource.RetryableError(err)
-			}
-			return nil
-		})
-		if outErr != nil {
-			return outErr
+		describeResponse, err := sslService.DescribeCertificateDetail(ctx, describeRequest)
+		if err != nil {
+			return err
 		}
-		//证书为待提交状态
-		//修改信息
+		if describeResponse == nil || describeResponse.Response == nil {
+			err := fmt.Errorf("TencentCloud SDK %s return empty response", describeRequest.GetAction())
+			return err
+		}
+		if describeResponse.Response.Status == nil {
+			err := fmt.Errorf("api[%s] certificate status is nil", describeRequest.GetAction())
+			return err
+		}
+
+		if *describeResponse.Response.Status != SSL_STATUS_TO_BE_COMMIT {
+			err := fmt.Errorf("the certificate cannot be modified, status is %d", *describeResponse.Response.Status)
+			return err
+		}
+
 		infoRequest := getSubmitInfoRequest(d)
 		infoRequest.CertificateId = helper.String(ids[0])
 		if err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
