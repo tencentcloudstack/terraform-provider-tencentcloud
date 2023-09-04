@@ -9,44 +9,43 @@ as `Review Cancel`, and then you can click `Request a refund` to refund the fee,
 times, you need to use the wait_commit_flag field. Please refer to the field remarks for usage. Otherwise, it will be considered
 as a one-time submission and no further modifications will be provided.
 
-# Example Usage
+Example Usage
 
 ```hcl
-
-	resource "tencentcloud_ssl_pay_certificate" "example" {
-	    product_id = 33
-	    domain_num = 1
-	    alias      = "ssl desc."
-	    project_id = 0
-	    information {
-	        csr_type              = "online"
-	        certificate_domain    = "www.example.com"
-	        organization_name     = "Tencent"
-	        organization_division = "Qcloud"
-	        organization_address  = "广东省深圳市南山区腾讯大厦1000号"
-	        organization_country  = "CN"
-	        organization_city     = "深圳市"
-	        organization_region   = "广东省"
-	        postal_code           = "0755"
-	        phone_area_code       = "0755"
-	        phone_number          = "86013388"
-	        verify_type           = "DNS"
-	        admin_first_name      = "test"
-	        admin_last_name       = "test"
-	        admin_phone_num       = "12345678901"
-	        admin_email           = "test@tencent.com"
-	        admin_position        = "developer"
-	        contact_first_name    = "test"
-	        contact_last_name     = "test"
-	        contact_email         = "test@tencent.com"
-	        contact_number        = "12345678901"
-	        contact_position      = "developer"
-	    }
-	}
+resource "tencentcloud_ssl_pay_certificate" "example" {
+    product_id = 33
+    domain_num = 1
+    alias      = "ssl desc."
+    project_id = 0
+    information {
+        csr_type              = "online"
+        certificate_domain    = "www.example.com"
+        organization_name     = "Tencent"
+        organization_division = "Qcloud"
+        organization_address  = "广东省深圳市南山区腾讯大厦1000号"
+        organization_country  = "CN"
+        organization_city     = "深圳市"
+        organization_region   = "广东省"
+        postal_code           = "0755"
+        phone_area_code       = "0755"
+        phone_number          = "86013388"
+        verify_type           = "DNS"
+        admin_first_name      = "test"
+        admin_last_name       = "test"
+        admin_phone_num       = "12345678901"
+        admin_email           = "test@tencent.com"
+        admin_position        = "developer"
+        contact_first_name    = "test"
+        contact_last_name     = "test"
+        contact_email         = "test@tencent.com"
+        contact_number        = "12345678901"
+        contact_position      = "developer"
+    }
+}
 
 ```
 
-# Import
+Import
 
 payment SSL instance can be imported, e.g.
 
