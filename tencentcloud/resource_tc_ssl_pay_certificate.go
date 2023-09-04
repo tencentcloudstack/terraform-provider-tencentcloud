@@ -434,8 +434,8 @@ func resourceTencentCloudSSLInstanceCreate(d *schema.ResourceData, meta interfac
 		return err
 	}
 
-	// (不填或填false)false: 则保持以前的规则
-	// 				true : 暂时不提交
+	//If left blank or set to false, the previous rule will be maintained.
+	//If set to true, it will not be submitted temporarily.
 	if waitCommit := d.Get("wait_commit_flag").(bool); !waitCommit {
 		commitInfoRequest := ssl.NewCommitCertificateInformationRequest()
 		commitInfoRequest.CertificateId = helper.String(certificateId)
