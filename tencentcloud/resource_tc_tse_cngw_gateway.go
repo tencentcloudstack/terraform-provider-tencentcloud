@@ -145,6 +145,7 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 
 			"feature_version": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "product version. Reference value: `TRIAL`, `STANDARD`(default value), `PROFESSIONAL`.",
 			},
@@ -157,12 +158,14 @@ func resourceTencentCloudTseCngwGateway() *schema.Resource {
 
 			"engine_region": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "engine region of gateway.",
 			},
 
 			"ingress_class_name": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "ingress class name.",
 			},
@@ -486,7 +489,7 @@ func resourceTencentCloudTseCngwGatewayUpdate(d *schema.ResourceData, meta inter
 
 	request.GatewayId = &gatewayId
 
-	immutableArgs := []string{"type", "gateway_version", "node_config", "vpc_config", "feature_version", "internet_max_bandwidth_out", "engine_region", "ingress_class_name", "trade_type", "internet_config"}
+	immutableArgs := []string{"type", "gateway_version", "vpc_config", "feature_version", "internet_max_bandwidth_out", "engine_region", "ingress_class_name", "trade_type", "internet_config"}
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
 			return fmt.Errorf("argument `%s` cannot be changed", v)
@@ -532,6 +535,60 @@ func resourceTencentCloudTseCngwGatewayUpdate(d *schema.ResourceData, meta inter
 
 		service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
 		if err := service.CheckTseNativeAPIGatewayStatusById(ctx, gatewayId, "update"); err != nil {
+			return err
+		}
+	}
+
+	if d.HasChange("node_config") {
+		// Get the default group id
+		paramMap := make(map[string]interface{})
+		paramMap["GatewayId"] = &gatewayId
+		service := TseService{client: meta.(*TencentCloudClient).apiV3Conn}
+		cngwGroup, err := service.DescribeTseGroupsByFilter(ctx, paramMap)
+		if err != nil {
+			return err
+		}
+		if len(cngwGroup.GatewayGroupList) < 1 {
+			return fmt.Errorf("[WARN]%s resource `TseCngwGroup` [%s] not found, please check if it has been deleted.\n", logId, gatewayId)
+		}
+		groupId := ""
+		for _, v := range cngwGroup.GatewayGroupList {
+			if *v.IsFirstGroup == 1 {
+				groupId = *v.GroupId
+				break
+			}
+		}
+
+		nodeConfigRequest := tse.NewUpdateCloudNativeAPIGatewaySpecRequest()
+		nodeConfigRequest.GatewayId = &gatewayId
+		nodeConfigRequest.GroupId = &groupId
+
+		if dMap, ok := helper.InterfacesHeadMap(d, "node_config"); ok {
+			cloudNativeAPIGatewayNodeConfig := tse.CloudNativeAPIGatewayNodeConfig{}
+			if v, ok := dMap["specification"]; ok {
+				cloudNativeAPIGatewayNodeConfig.Specification = helper.String(v.(string))
+			}
+			if v, ok := dMap["number"]; ok {
+				cloudNativeAPIGatewayNodeConfig.Number = helper.IntInt64(v.(int))
+			}
+			nodeConfigRequest.NodeConfig = &cloudNativeAPIGatewayNodeConfig
+		}
+
+		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseTseClient().UpdateCloudNativeAPIGatewaySpec(nodeConfigRequest)
+			if e != nil {
+				return retryError(e)
+			} else {
+				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, nodeConfigRequest.GetAction(), nodeConfigRequest.ToJsonString(), result.ToJsonString())
+			}
+			return nil
+		})
+		if err != nil {
+			log.Printf("[CRITAL]%s update tse cngwGateway failed, reason:%+v", logId, err)
+			return err
+		}
+
+		if err := service.CheckTseNativeAPIGatewayGroupStatusById(ctx, gatewayId, groupId, "update"); err != nil {
 			return err
 		}
 	}

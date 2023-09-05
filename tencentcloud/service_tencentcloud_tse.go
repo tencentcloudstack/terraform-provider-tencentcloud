@@ -1217,7 +1217,7 @@ func (me *TseService) CheckTseNativeAPIGatewayGroupStatusById(ctx context.Contex
 				return resource.NonRetryableError(fmt.Errorf("group %s not exists", groupId))
 			}
 
-			if *gateway.Status == "Modifying" {
+			if *gateway.Status == "Modifying" || *gateway.Status == "UpdatingSpec" {
 				return resource.RetryableError(fmt.Errorf("update group status is %v,start retrying ...", *gateway.Status))
 			}
 			if *gateway.Status == "Running" {
