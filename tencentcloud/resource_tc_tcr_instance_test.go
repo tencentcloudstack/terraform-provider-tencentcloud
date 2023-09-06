@@ -452,7 +452,7 @@ resource "tencentcloud_tcr_instance" "mytcr_instance" {
     region_id = 8 # ap-beijing
   }
   replications {
-    region_id = 16 #ap-chengdu
+    region_id = 9 #ap-singapore
     syn_tag = true
   }
 }`
