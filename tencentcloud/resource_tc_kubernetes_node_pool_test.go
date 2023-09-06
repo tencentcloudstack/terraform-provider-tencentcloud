@@ -469,7 +469,6 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     data_disk {
       disk_type = "CLOUD_PREMIUM"
       disk_size = 50
-      encrypt   = true
     }
     public_ip_assigned         = false
     password                   = "test123#"
