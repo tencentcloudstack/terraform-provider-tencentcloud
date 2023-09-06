@@ -1,3 +1,14 @@
+## 1.81.24 (September 6, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_kms_get_parameters_for_import` ([#2109](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2109))
+* **New Resource:** `tencentcloud_ssl_commit_certificate_information` ([#2105](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2105))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ssl_pay_certificate: support parameter 'wait_commit_flag'. ([#2105](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2105))
+
 ## 1.81.23 (September 1, 2023)
 
 FEATURES:
