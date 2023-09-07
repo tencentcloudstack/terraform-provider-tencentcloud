@@ -11,7 +11,8 @@ func TestAccTencentCloudSesSendTasksDataSource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
-			testAccPreCheck(t)
+			testAccStepSetRegion(t, "ap-hongkong")
+			testAccPreCheckBusiness(t, ACCOUNT_TYPE_SES)
 		},
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
