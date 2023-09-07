@@ -44,6 +44,31 @@ func resourceTencentCloudSesDomain() *schema.Resource {
 				ForceNew:    true,
 				Description: "Your sender domain. You are advised to use a third-level domain, for example, mail.qcloud.com.",
 			},
+
+			"attributes": {
+				Computed:    true,
+				Type:        schema.TypeList,
+				Description: "DNS configuration details.",
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Record Type CNAME | A | TXT | MX.",
+						},
+						"send_domain": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Domain name.",
+						},
+						"expected_value": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Values that need to be configured.",
+						},
+					},
+				},
+			},
 		},
 	}
 }
@@ -95,18 +120,41 @@ func resourceTencentCloudSesDomainRead(d *schema.ResourceData, meta interface{})
 
 	emailIdentity := d.Id()
 
-	domain, err := service.DescribeSesDomain(ctx, emailIdentity)
+	attributes, err := service.DescribeSesDomain(ctx, emailIdentity)
 
 	if err != nil {
 		return err
 	}
 
-	if domain == nil {
+	if attributes == nil {
 		d.SetId("")
 		return fmt.Errorf("resource `domain` %s does not exist", emailIdentity)
 	}
 
 	_ = d.Set("email_identity", emailIdentity)
+
+	if attributes != nil {
+		attributesList := make([]interface{}, 0, len(attributes))
+		for _, v := range attributes {
+			attributesMap := map[string]interface{}{}
+
+			if v.Type != nil {
+				attributesMap["type"] = v.Type
+			}
+
+			if v.SendDomain != nil {
+				attributesMap["send_domain"] = v.SendDomain
+			}
+
+			if v.ExpectedValue != nil {
+				attributesMap["expected_value"] = v.ExpectedValue
+			}
+
+			attributesList = append(attributesList, attributesMap)
+		}
+
+		_ = d.Set("attributes", attributesList)
+	}
 
 	return nil
 }

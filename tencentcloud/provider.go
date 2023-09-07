@@ -1193,10 +1193,22 @@ TencentCloud ServiceMesh(TCM)
 	tencentcloud_tcm_access_log_config
 
 Simple Email Service(SES)
+  Data Source
+	tencentcloud_ses_receivers
+	tencentcloud_ses_send_tasks
+	tencentcloud_ses_email_identities
+	tencentcloud_ses_black_email_address
+	tencentcloud_ses_statistics_report
+	tencentcloud_ses_send_email_status
+
   Resource
 	tencentcloud_ses_domain
 	tencentcloud_ses_template
 	tencentcloud_ses_email_address
+	tencentcloud_ses_receiver
+	tencentcloud_ses_send_email
+	tencentcloud_ses_batch_send_email
+	tencentcloud_ses_verify_domain
 
 Security Token Service(STS)
   Data Source
@@ -2278,6 +2290,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_event_rules":                            dataSourceTencentCloudEbEventRules(),
 			"tencentcloud_wedata_rule_templates":                     dataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_private_dns_records":                       dataSourceTencentCloudPrivateDnsRecords(),
+			"tencentcloud_ses_receivers":                             dataSourceTencentCloudSesReceivers(),
+			"tencentcloud_ses_send_tasks":                            dataSourceTencentCloudSesSendTasks(),
+			"tencentcloud_ses_email_identities":                      dataSourceTencentCloudSesEmailIdentities(),
+			"tencentcloud_ses_black_email_address":                   dataSourceTencentCloudSesBlackEmailAddress(),
+			"tencentcloud_ses_statistics_report":                     dataSourceTencentCloudSesStatisticsReport(),
+			"tencentcloud_ses_send_email_status":                     dataSourceTencentCloudSesSendEmailStatus(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2781,6 +2799,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_domain":                                          resourceTencentCloudSesDomain(),
 			"tencentcloud_ses_template":                                        resourceTencentCloudSesTemplate(),
 			"tencentcloud_ses_email_address":                                   resourceTencentCloudSesEmailAddress(),
+			"tencentcloud_ses_receiver":                                        resourceTencentCloudSesReceiver(),
+			"tencentcloud_ses_send_email":                                      resourceTencentCloudSesSendEmail(),
+			"tencentcloud_ses_batch_send_email":                                resourceTencentCloudSesBatchSendEmail(),
+			"tencentcloud_ses_verify_domain":                                   resourceTencentCloudSesVerifyDomain(),
 			"tencentcloud_sms_sign":                                            resourceTencentCloudSmsSign(),
 			"tencentcloud_sms_template":                                        resourceTencentCloudSmsTemplate(),
 			"tencentcloud_dcdb_account":                                        resourceTencentCloudDcdbAccount(),
