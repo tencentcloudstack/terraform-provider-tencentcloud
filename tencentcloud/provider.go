@@ -1634,6 +1634,10 @@ WeData
 
   Resource
 	tencentcloud_wedata_rule_template
+
+Waf
+  Resource
+    tencentcloud_waf_custom_rule
 */
 package tencentcloud
 
