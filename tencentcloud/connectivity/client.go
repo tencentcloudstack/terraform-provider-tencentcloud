@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"time"
 
+	waf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf/v20180125"
+
 	dlc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/dlc/v20210125"
 	wedata "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata/v20210820"
 
@@ -178,6 +180,7 @@ type TencentCloudClient struct {
 	ebConn             *eb.Client
 	dlcConn            *dlc.Client
 	wedataConn         *wedata.Client
+	wafConn            *waf.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1257,6 +1260,19 @@ func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
 	me.wedataConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.wedataConn
+}
+
+func (me *TencentCloudClient) UseWafClient() *waf.Client {
+	if me.wafConn != nil {
+		return me.wafConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.wafConn, _ = waf.NewClient(me.Credential, me.Region, cpf)
+	me.wafConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.wafConn
 }
 
 func getEnvDefault(key string, defVal int) int {
