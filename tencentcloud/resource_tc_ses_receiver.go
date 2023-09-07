@@ -35,14 +35,6 @@ resource "tencentcloud_ses_receiver" "receiver" {
   }
 }
 ```
-
-Import
-
-ses receiver can be imported using the id, e.g.
-
-```
-terraform import tencentcloud_ses_receiver.receiver receiver_id
-```
 */
 package tencentcloud
 
