@@ -543,6 +543,7 @@ Key Management Service(KMS)
   Data Source
     tencentcloud_kms_keys
     tencentcloud_kms_public_key
+    tencentcloud_kms_get_parameters_for_import
 
   Resource
     tencentcloud_kms_key
@@ -2073,6 +2074,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_protocol_template_groups":                  dataSourceTencentCloudProtocolTemplateGroups(),
 			"tencentcloud_kms_keys":                                  dataSourceTencentCloudKmsKeys(),
 			"tencentcloud_kms_public_key":                            dataSourceTencentCloudKmsPublicKey(),
+			"tencentcloud_kms_get_parameters_for_import":             dataSourceTencentCloudKmsGetParametersForImport(),
 			"tencentcloud_ssm_products":                              dataSourceTencentCloudSsmProducts(),
 			"tencentcloud_ssm_secrets":                               dataSourceTencentCloudSsmSecrets(),
 			"tencentcloud_ssm_secret_versions":                       dataSourceTencentCloudSsmSecretVersions(),
