@@ -234,6 +234,7 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_role_sso
 	tencentcloud_cam_service_linked_role
 	tencentcloud_cam_user_saml_config
+	tencentcloud_cam_mfa_flag
 
 Customer Identity and Access Management(CIAM)
   Resource
@@ -3036,6 +3037,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_user":                                            resourceTencentCloudDlcUser(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_ssl_commit_certificate_information":                  resourceTencentCloudSslCommitCertificateInformation(),
+			"tencentcloud_cam_mfa_flag":                                        resourceTencentCloudCamMfaFlag(),
 		},
 
 		ConfigureFunc: providerConfigure,

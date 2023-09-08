@@ -1355,3 +1355,32 @@ func (me *CamService) DeleteCamUserSamlConfigById(ctx context.Context) (errRet e
 
 	return
 }
+
+func (me *CamService) DescribeCamMfaFlagById(ctx context.Context) (loginFlag *cam.LoginActionFlag, actionFlag *cam.LoginActionFlag, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cam.NewDescribeSafeAuthFlagRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCamClient().DescribeSafeAuthFlag(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.ActionFlag == nil && response.Response.LoginFlag == nil {
+		return
+	}
+
+	loginFlag = response.Response.LoginFlag
+	actionFlag = response.Response.ActionFlag
+	return
+}
