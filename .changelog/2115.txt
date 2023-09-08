@@ -1,3 +1,6 @@
 ```release-note:new-resource
 tencentcloud_cam_mfa_flag
 ```
+```release-note:enhancement
+resource/tencentcloud_tcr_service_account: Supports `csr_type` modification
+```

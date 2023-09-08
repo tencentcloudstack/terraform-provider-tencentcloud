@@ -56,7 +56,6 @@ func resourceTencentCloudCamMfaFlag() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"op_uin": {
 				Required:    true,
-				ForceNew:    true,
 				Type:        schema.TypeInt,
 				Description: "Operate uin.",
 			},
