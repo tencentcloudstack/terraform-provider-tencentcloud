@@ -1,34 +1,33 @@
 /*
-Provides a resource to create a waf custom_rule
+Provides a resource to create a waf custom_white_rule
 
 Example Usage
 
 ```hcl
-resource "tencentcloud_waf_custom_rule" "example" {
+resource "tencentcloud_waf_custom_white_rule" "example" {
   name        = "tf-example"
-  sort_id     = "50"
-  redirect    = "/"
+  sort_id     = "30"
   expire_time = "0"
 
   strategies {
     field        = "IP"
     compare_func = "ipmatch"
-    content      = "2.2.2.2"
+    content      = "1.1.1.1"
     arg          = ""
   }
 
-  status      = "1"
-  domain      = "test.com"
-  action_type = "1"
+  status = "1"
+  domain = "test.com"
+  bypass = "geoip,cc,owasp"
 }
 ```
 
 Import
 
-waf custom_rule can be imported using the id, e.g.
+waf custom_white_rule can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_waf_custom_rule.example test.com#1100310609
+terraform import tencentcloud_waf_custom_white_rule.example test.com#1100310837
 ```
 */
 package tencentcloud
@@ -46,12 +45,12 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudWafCustomRule() *schema.Resource {
+func resourceTencentCloudWafCustomWhiteRule() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudWafCustomRuleCreate,
-		Read:   resourceTencentCloudWafCustomRuleRead,
-		Update: resourceTencentCloudWafCustomRuleUpdate,
-		Delete: resourceTencentCloudWafCustomRuleDelete,
+		Create: resourceTencentCloudWafCustomWhiteRuleCreate,
+		Read:   resourceTencentCloudWafCustomWhiteRuleRead,
+		Update: resourceTencentCloudWafCustomWhiteRuleUpdate,
+		Delete: resourceTencentCloudWafCustomWhiteRuleDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -64,12 +63,7 @@ func resourceTencentCloudWafCustomRule() *schema.Resource {
 			"sort_id": {
 				Required:    true,
 				Type:        schema.TypeString,
-				Description: "Priority, value range 0-100.",
-			},
-			"redirect": {
-				Optional:    true,
-				Type:        schema.TypeString,
-				Description: "If the action is a redirect, it represents the redirect address; Other situations can be left blank.",
+				Description: "Priority, value range 1-100, The smaller the number, the higher the execution priority of this rule.",
 			},
 			"expire_time": {
 				Required:    true,
@@ -110,17 +104,16 @@ func resourceTencentCloudWafCustomRule() *schema.Resource {
 				Type:        schema.TypeString,
 				Description: "Domain name that needs to add policy.",
 			},
-			"action_type": {
-				Required:     true,
-				Type:         schema.TypeString,
-				ValidateFunc: validateAllowedStringValue(CUSTOM_RULE_ACTION_TYPE),
-				Description:  "Action type, 1 represents blocking, 2 represents captcha, 3 represents observation, and 4 represents redirection.",
+			"bypass": {
+				Required:    true,
+				Type:        schema.TypeString,
+				Description: "Details of bypass.",
 			},
 			"status": {
 				Optional:     true,
 				Type:         schema.TypeString,
-				ValidateFunc: validateAllowedStringValue(CUSTOM_RULE_STATUS),
-				Default:      CUSTOM_RULE_STATUS_1,
+				ValidateFunc: validateAllowedStringValue(CUSTOM_WHITE_RULE_STATUS),
+				Default:      CUSTOM_WHITE_RULE_STATUS_1,
 				Description:  "The status of the switch, 1 is on, 0 is off, default 1.",
 			},
 			"rule_id": {
@@ -132,15 +125,15 @@ func resourceTencentCloudWafCustomRule() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudWafCustomRuleCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_waf_custom_rule.create")()
+func resourceTencentCloudWafCustomWhiteRuleCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_waf_custom_white_rule.create")()
 	defer inconsistentCheck(d, meta)()
 
 	var (
 		logId         = getLogId(contextNil)
-		request       = waf.NewAddCustomRuleRequest()
-		response      = waf.NewAddCustomRuleResponse()
-		statusRequest = waf.NewModifyCustomRuleStatusRequest()
+		request       = waf.NewAddCustomWhiteRuleRequest()
+		response      = waf.NewAddCustomWhiteRuleResponse()
+		statusRequest = waf.NewModifyCustomWhiteRuleStatusRequest()
 		domain        string
 		ruleIdStr     string
 		status        string
@@ -154,10 +147,6 @@ func resourceTencentCloudWafCustomRuleCreate(d *schema.ResourceData, meta interf
 		request.SortId = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("redirect"); ok {
-		request.Redirect = helper.String(v.(string))
-	}
-
 	if v, ok := d.GetOk("expire_time"); ok {
 		request.ExpireTime = helper.String(v.(string))
 	}
@@ -169,19 +158,15 @@ func resourceTencentCloudWafCustomRuleCreate(d *schema.ResourceData, meta interf
 			if v, ok := dMap["field"]; ok {
 				strategy.Field = helper.String(v.(string))
 			}
-
 			if v, ok := dMap["compare_func"]; ok {
 				strategy.CompareFunc = helper.String(v.(string))
 			}
-
 			if v, ok := dMap["content"]; ok {
 				strategy.Content = helper.String(v.(string))
 			}
-
 			if v, ok := dMap["arg"]; ok {
 				strategy.Arg = helper.String(v.(string))
 			}
-
 			request.Strategies = append(request.Strategies, &strategy)
 		}
 	}
@@ -191,12 +176,12 @@ func resourceTencentCloudWafCustomRuleCreate(d *schema.ResourceData, meta interf
 		domain = v.(string)
 	}
 
-	if v, ok := d.GetOk("action_type"); ok {
-		request.ActionType = helper.String(v.(string))
+	if v, ok := d.GetOk("bypass"); ok {
+		request.Bypass = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().AddCustomRule(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().AddCustomWhiteRule(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -208,24 +193,23 @@ func resourceTencentCloudWafCustomRuleCreate(d *schema.ResourceData, meta interf
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s create waf CustomRule failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s create waf CustomWhiteRule failed, reason:%+v", logId, err)
 		return err
 	}
 
 	ruleId := *response.Response.RuleId
-	ruleIdStr = strconv.FormatInt(ruleId, 10)
+	ruleIdStr = strconv.FormatUint(ruleId, 10)
 
 	if v, ok := d.GetOk("status"); ok {
 		status = v.(string)
 	}
 
-	if status == CUSTOM_RULE_STATUS_0 {
+	if status == CUSTOM_WHITE_RULE_STATUS_0 {
 		statusRequest.Domain = &domain
-		tmpRuleId := uint64(ruleId)
-		statusRequest.RuleId = &tmpRuleId
-		statusRequest.Status = helper.IntUint64(CUSTOM_RULE_STATUS_0_INT)
+		statusRequest.RuleId = &ruleId
+		statusRequest.Status = helper.IntUint64(CUSTOM_WHITE_RULE_STATUS_0_INT)
 		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyCustomRuleStatus(statusRequest)
+			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyCustomWhiteRuleStatus(statusRequest)
 			if e != nil {
 				return retryError(e)
 			} else {
@@ -236,17 +220,17 @@ func resourceTencentCloudWafCustomRuleCreate(d *schema.ResourceData, meta interf
 		})
 
 		if err != nil {
-			log.Printf("[CRITAL]%s modify waf CustomRule status failed, reason:%+v", logId, err)
+			log.Printf("[CRITAL]%s modify waf CustomWhiteRule status failed, reason:%+v", logId, err)
 			return err
 		}
 	}
 
 	d.SetId(strings.Join([]string{domain, ruleIdStr}, FILED_SP))
-	return resourceTencentCloudWafCustomRuleRead(d, meta)
+	return resourceTencentCloudWafCustomWhiteRuleRead(d, meta)
 }
 
-func resourceTencentCloudWafCustomRuleRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_waf_custom_rule.read")()
+func resourceTencentCloudWafCustomWhiteRuleRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_waf_custom_white_rule.read")()
 	defer inconsistentCheck(d, meta)()
 
 	var (
@@ -263,36 +247,32 @@ func resourceTencentCloudWafCustomRuleRead(d *schema.ResourceData, meta interfac
 	domain := idSplit[0]
 	ruleId := idSplit[1]
 
-	customRule, err := service.DescribeWafCustomRuleById(ctx, domain, ruleId)
+	customWhiteRule, err := service.DescribeWafCustomWhiteRuleById(ctx, domain, ruleId)
 	if err != nil {
 		return err
 	}
 
-	if customRule == nil {
+	if customWhiteRule == nil {
 		d.SetId("")
-		log.Printf("[WARN]%s resource `WafCustomRule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		log.Printf("[WARN]%s resource `WafCustomWhiteRule` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
-	if customRule.Name != nil {
-		_ = d.Set("name", customRule.Name)
+	if customWhiteRule.Name != nil {
+		_ = d.Set("name", customWhiteRule.Name)
 	}
 
-	if customRule.SortId != nil {
-		_ = d.Set("sort_id", customRule.SortId)
+	if customWhiteRule.SortId != nil {
+		_ = d.Set("sort_id", customWhiteRule.SortId)
 	}
 
-	if customRule.Redirect != nil {
-		_ = d.Set("redirect", customRule.Redirect)
+	if customWhiteRule.ExpireTime != nil {
+		_ = d.Set("expire_time", customWhiteRule.ExpireTime)
 	}
 
-	if customRule.ExpireTime != nil {
-		_ = d.Set("expire_time", customRule.ExpireTime)
-	}
-
-	if customRule.Strategies != nil {
+	if customWhiteRule.Strategies != nil {
 		strategiesList := []interface{}{}
-		for _, strategies := range customRule.Strategies {
+		for _, strategies := range customWhiteRule.Strategies {
 			strategiesMap := map[string]interface{}{}
 
 			if strategies.Field != nil {
@@ -320,29 +300,29 @@ func resourceTencentCloudWafCustomRuleRead(d *schema.ResourceData, meta interfac
 
 	_ = d.Set("domain", domain)
 
-	if customRule.ActionType != nil {
-		_ = d.Set("action_type", customRule.ActionType)
+	if customWhiteRule.Bypass != nil {
+		_ = d.Set("bypass", customWhiteRule.Bypass)
 	}
 
-	if customRule.Status != nil {
-		_ = d.Set("status", customRule.Status)
+	if customWhiteRule.Status != nil {
+		_ = d.Set("status", customWhiteRule.Status)
 	}
 
-	if customRule.RuleId != nil {
-		_ = d.Set("rule_id", customRule.RuleId)
+	if customWhiteRule.RuleId != nil {
+		_ = d.Set("rule_id", customWhiteRule.RuleId)
 	}
 
 	return nil
 }
 
-func resourceTencentCloudWafCustomRuleUpdate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_waf_custom_rule.update")()
+func resourceTencentCloudWafCustomWhiteRuleUpdate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_waf_custom_white_rule.update")()
 	defer inconsistentCheck(d, meta)()
 
 	var (
 		logId         = getLogId(contextNil)
-		request       = waf.NewModifyCustomRuleRequest()
-		statusRequest = waf.NewModifyCustomRuleStatusRequest()
+		request       = waf.NewModifyCustomWhiteRuleRequest()
+		statusRequest = waf.NewModifyCustomWhiteRuleStatusRequest()
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
@@ -370,24 +350,18 @@ func resourceTencentCloudWafCustomRuleUpdate(d *schema.ResourceData, meta interf
 		request.RuleName = helper.String(v.(string))
 	}
 
-	if v, ok := d.GetOk("action_type"); ok {
-		request.RuleAction = helper.String(v.(string))
-	}
-
-	if v, ok := d.GetOk("redirect"); ok {
-		request.Redirect = helper.String(v.(string))
+	if v, ok := d.GetOk("bypass"); ok {
+		request.Bypass = helper.String(v.(string))
 	}
 
 	if v, ok := d.GetOk("sort_id"); ok {
-		sortIdInt, _ := strconv.ParseInt(v.(string), 10, 64)
-		sortIdUInt := uint64(sortIdInt)
-		request.SortId = &sortIdUInt
+		tmpSortId, _ := strconv.ParseInt(v.(string), 10, 64)
+		request.SortId = helper.Int64Uint64(tmpSortId)
 	}
 
 	if v, ok := d.GetOk("expire_time"); ok {
-		expireTimeInt, _ := strconv.ParseInt(v.(string), 10, 64)
-		expireTimeUInt := uint64(expireTimeInt)
-		request.ExpireTime = &expireTimeUInt
+		tmpExpireTime, _ := strconv.ParseInt(v.(string), 10, 64)
+		request.ExpireTime = helper.Int64Uint64(tmpExpireTime)
 	}
 
 	if v, ok := d.GetOk("strategies"); ok {
@@ -397,21 +371,25 @@ func resourceTencentCloudWafCustomRuleUpdate(d *schema.ResourceData, meta interf
 			if v, ok := dMap["field"]; ok {
 				strategy.Field = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["compare_func"]; ok {
 				strategy.CompareFunc = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["content"]; ok {
 				strategy.Content = helper.String(v.(string))
 			}
+
 			if v, ok := dMap["arg"]; ok {
 				strategy.Arg = helper.String(v.(string))
 			}
+
 			request.Strategies = append(request.Strategies, &strategy)
 		}
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyCustomRule(request)
+		result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyCustomWhiteRule(request)
 		if e != nil {
 			return retryError(e)
 		} else {
@@ -422,7 +400,7 @@ func resourceTencentCloudWafCustomRuleUpdate(d *schema.ResourceData, meta interf
 	})
 
 	if err != nil {
-		log.Printf("[CRITAL]%s update waf CustomRule failed, reason:%+v", logId, err)
+		log.Printf("[CRITAL]%s update waf CustomWhiteRule failed, reason:%+v", logId, err)
 		return err
 	}
 
@@ -431,14 +409,14 @@ func resourceTencentCloudWafCustomRuleUpdate(d *schema.ResourceData, meta interf
 			status := v.(string)
 			statusRequest.Domain = &domain
 			statusRequest.RuleId = &ruleIdUInt
-			if status == CUSTOM_RULE_STATUS_0 {
-				statusRequest.Status = helper.IntUint64(CUSTOM_RULE_STATUS_0_INT)
+			if status == CUSTOM_WHITE_RULE_STATUS_0 {
+				statusRequest.Status = helper.IntUint64(CUSTOM_WHITE_RULE_STATUS_0_INT)
 			} else {
-				statusRequest.Status = helper.IntUint64(CUSTOM_RULE_STATUS_1_INT)
+				statusRequest.Status = helper.IntUint64(CUSTOM_WHITE_RULE_STATUS_1_INT)
 			}
 
 			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyCustomRuleStatus(statusRequest)
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyCustomWhiteRuleStatus(statusRequest)
 				if e != nil {
 					return retryError(e)
 				} else {
@@ -455,11 +433,11 @@ func resourceTencentCloudWafCustomRuleUpdate(d *schema.ResourceData, meta interf
 		}
 	}
 
-	return resourceTencentCloudWafCustomRuleRead(d, meta)
+	return resourceTencentCloudWafCustomWhiteRuleRead(d, meta)
 }
 
-func resourceTencentCloudWafCustomRuleDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_waf_custom_rule.delete")()
+func resourceTencentCloudWafCustomWhiteRuleDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_waf_custom_white_rule.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	var (
@@ -476,7 +454,7 @@ func resourceTencentCloudWafCustomRuleDelete(d *schema.ResourceData, meta interf
 	domain := idSplit[0]
 	ruleId := idSplit[1]
 
-	if err := service.DeleteWafCustomRuleById(ctx, domain, ruleId); err != nil {
+	if err := service.DeleteWafCustomWhiteRuleById(ctx, domain, ruleId); err != nil {
 		return err
 	}
 

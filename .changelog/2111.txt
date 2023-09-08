@@ -1,3 +1,7 @@
 ```release-note:new-resource
 tencentcloud_waf_custom_rule
 ```
+
+```release-note:new-resource
+tencentcloud_waf_custom_white_rule
+```

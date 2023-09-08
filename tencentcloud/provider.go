@@ -1638,6 +1638,7 @@ WeData
 Waf
   Resource
     tencentcloud_waf_custom_rule
+    tencentcloud_waf_custom_white_rule
 */
 package tencentcloud
 
@@ -3019,6 +3020,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_ssl_commit_certificate_information":                  resourceTencentCloudSslCommitCertificateInformation(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
+			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
 		},
 
 		ConfigureFunc: providerConfigure,
