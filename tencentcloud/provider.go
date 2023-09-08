@@ -1194,11 +1194,22 @@ TencentCloud ServiceMesh(TCM)
 	tencentcloud_tcm_tracing_config
 	tencentcloud_tcm_access_log_config
 
-Simple Email Service(SES)
+  Data Source
+	tencentcloud_ses_receivers
+	tencentcloud_ses_send_tasks
+	tencentcloud_ses_email_identities
+	tencentcloud_ses_black_email_address
+	tencentcloud_ses_statistics_report
+	tencentcloud_ses_send_email_status
+
   Resource
 	tencentcloud_ses_domain
 	tencentcloud_ses_template
 	tencentcloud_ses_email_address
+	tencentcloud_ses_receiver
+	tencentcloud_ses_send_email
+	tencentcloud_ses_batch_send_email
+	tencentcloud_ses_verify_domain
 
 Security Token Service(STS)
   Data Source
