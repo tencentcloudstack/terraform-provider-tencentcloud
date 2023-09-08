@@ -159,7 +159,6 @@ func resourceTencentCloudSSLInstance() *schema.Resource {
 							Type:         schema.TypeString,
 							Optional:     true,
 							Default:      CsrTypeOnline,
-							ForceNew:     true,
 							ValidateFunc: validateAllowedStringValue(CsrTypeArr),
 							Description: "CSR generation method. Valid values: `online`, `parse`. " +
 								"`online` means online generation, `parse` means manual upload.",
