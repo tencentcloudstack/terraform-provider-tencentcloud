@@ -1194,6 +1194,7 @@ TencentCloud ServiceMesh(TCM)
 	tencentcloud_tcm_tracing_config
 	tencentcloud_tcm_access_log_config
 
+Simple Email Service(SES)
   Data Source
 	tencentcloud_ses_receivers
 	tencentcloud_ses_send_tasks
