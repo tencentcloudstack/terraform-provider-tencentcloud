@@ -1356,11 +1356,11 @@ func (me *CamService) DeleteCamUserSamlConfigById(ctx context.Context) (errRet e
 	return
 }
 
-func (me *CamService) DescribeCamMfaFlagById(ctx context.Context, id string) (loginFlag *cam.LoginActionFlag, actionFlag *cam.LoginActionFlag, errRet error) {
+func (me *CamService) DescribeCamMfaFlagById(ctx context.Context, id uint64) (loginFlag *cam.LoginActionFlag, actionFlag *cam.LoginActionFlag, errRet error) {
 	logId := getLogId(ctx)
 
 	request := cam.NewDescribeSafeAuthFlagCollRequest()
-
+	request.SubUin = &id
 	defer func() {
 		if errRet != nil {
 			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
