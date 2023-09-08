@@ -57,8 +57,8 @@ The following arguments are supported:
 
 The `data` object supports the following:
 
-* `email` - (Required, String) Recipient email addresses.
-* `template_data` - (Optional, String) Variable parameters in the template, please use json.dump to format the JSON object as a string type. The object is a set of key-value pairs, where each key represents a variable in the template, and the variables in the template are represented by {{key}}, and the corresponding values will be replaced with {{value}} when sent.Note: Parameter values cannot be complex data such as HTML. The total length of TemplateData (the entire JSON structure) should be less than 800 bytes.
+* `email` - (Required, String, ForceNew) Recipient email addresses.
+* `template_data` - (Optional, String, ForceNew) Variable parameters in the template, please use json.dump to format the JSON object as a string type. The object is a set of key-value pairs, where each key represents a variable in the template, and the variables in the template are represented by {{key}}, and the corresponding values will be replaced with {{value}} when sent.Note: Parameter values cannot be complex data such as HTML. The total length of TemplateData (the entire JSON structure) should be less than 800 bytes.
 
 ## Attributes Reference
 
