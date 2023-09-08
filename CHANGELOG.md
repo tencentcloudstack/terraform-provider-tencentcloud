@@ -1,3 +1,24 @@
+## 1.81.25 (September 8, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_ses_black_email_address` ([#2112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2112))
+* **New Data Source:** `tencentcloud_ses_email_identities` ([#2112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2112))
+* **New Data Source:** `tencentcloud_ses_receivers` ([#2112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2112))
+* **New Data Source:** `tencentcloud_ses_send_email_status` ([#2112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2112))
+* **New Data Source:** `tencentcloud_ses_send_tasks` ([#2112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2112))
+* **New Data Source:** `tencentcloud_ses_statistics_report` ([#2112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2112))
+* **New Resource:** `tencentcloud_cam_mfa_flag` ([#2115](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2115))
+* **New Resource:** `tencentcloud_ses_batch_send_email` ([#2112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2112))
+* **New Resource:** `tencentcloud_ses_receiver` ([#2112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2112))
+* **New Resource:** `tencentcloud_ses_send_email` ([#2112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2112))
+* **New Resource:** `tencentcloud_ses_verify_domain` ([#2112](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2112))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ssl_pay_certificate: Supports `csr_type` modification ([#2115](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2115))
+* resource/tencentcloud_tcr_service_account: update the description of the `permissions.actions` field. ([#2116](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2116))
+
 ## 1.81.24 (September 6, 2023)
 
 FEATURES:
