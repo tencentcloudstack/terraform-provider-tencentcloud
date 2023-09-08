@@ -34,21 +34,21 @@ resource "tencentcloud_cam_mfa_flag" "mfa_flag" {
 
 The following arguments are supported:
 
-* `op_uin` - (Required, Int) operate uin.
-* `action_flag` - (Optional, List) action flag setting.
-* `login_flag` - (Optional, List) login flag setting.
+* `op_uin` - (Required, Int) Operate uin.
+* `action_flag` - (Optional, List) Action flag setting.
+* `login_flag` - (Optional, List) Login flag setting.
 
 The `action_flag` object supports the following:
 
-* `phone` - (Optional, Int) phone.
-* `stoken` - (Optional, Int) soft token.
-* `wechat` - (Optional, Int) wechat.
+* `phone` - (Optional, Int) Phone.
+* `stoken` - (Optional, Int) Soft token.
+* `wechat` - (Optional, Int) Wechat.
 
 The `login_flag` object supports the following:
 
-* `phone` - (Optional, Int) phone.
-* `stoken` - (Optional, Int) soft token.
-* `wechat` - (Optional, Int) wechat.
+* `phone` - (Optional, Int) Phone.
+* `stoken` - (Optional, Int) Soft token.
+* `wechat` - (Optional, Int) Wechat.
 
 ## Attributes Reference
 
