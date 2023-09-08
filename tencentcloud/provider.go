@@ -234,7 +234,6 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_role_sso
 	tencentcloud_cam_service_linked_role
 	tencentcloud_cam_user_saml_config
-	tencentcloud_cam_mfa_flag
 
 Customer Identity and Access Management(CIAM)
   Resource
@@ -1195,22 +1194,10 @@ TencentCloud ServiceMesh(TCM)
 	tencentcloud_tcm_access_log_config
 
 Simple Email Service(SES)
-  Data Source
-	tencentcloud_ses_receivers
-	tencentcloud_ses_send_tasks
-	tencentcloud_ses_email_identities
-	tencentcloud_ses_black_email_address
-	tencentcloud_ses_statistics_report
-	tencentcloud_ses_send_email_status
-
   Resource
 	tencentcloud_ses_domain
 	tencentcloud_ses_template
 	tencentcloud_ses_email_address
-	tencentcloud_ses_receiver
-	tencentcloud_ses_send_email
-	tencentcloud_ses_batch_send_email
-	tencentcloud_ses_verify_domain
 
 Security Token Service(STS)
   Data Source
@@ -1961,6 +1948,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_user_policy_attachments":               dataSourceTencentCloudCamUserPolicyAttachments(),
 			"tencentcloud_cam_group_policy_attachments":              dataSourceTencentCloudCamGroupPolicyAttachments(),
 			"tencentcloud_cam_saml_providers":                        dataSourceTencentCloudCamSAMLProviders(),
+			"tencentcloud_cam_mfa_flag":                              resourceTencentCloudCamMfaFlag(),
 			"tencentcloud_user_info":                                 datasourceTencentCloudUserInfo(),
 			"tencentcloud_cdn_domains":                               dataSourceTencentCloudCdnDomains(),
 			"tencentcloud_cdn_domain_verifier":                       dataSourceTencentCloudCdnDomainVerifyRecord(),
@@ -3037,7 +3025,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_user":                                            resourceTencentCloudDlcUser(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
 			"tencentcloud_ssl_commit_certificate_information":                  resourceTencentCloudSslCommitCertificateInformation(),
-			"tencentcloud_cam_mfa_flag":                                        resourceTencentCloudCamMfaFlag(),
 		},
 
 		ConfigureFunc: providerConfigure,
