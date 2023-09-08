@@ -1948,7 +1948,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_user_policy_attachments":               dataSourceTencentCloudCamUserPolicyAttachments(),
 			"tencentcloud_cam_group_policy_attachments":              dataSourceTencentCloudCamGroupPolicyAttachments(),
 			"tencentcloud_cam_saml_providers":                        dataSourceTencentCloudCamSAMLProviders(),
-			"tencentcloud_cam_mfa_flag":                              resourceTencentCloudCamMfaFlag(),
 			"tencentcloud_user_info":                                 datasourceTencentCloudUserInfo(),
 			"tencentcloud_cdn_domains":                               dataSourceTencentCloudCdnDomains(),
 			"tencentcloud_cdn_domain_verifier":                       dataSourceTencentCloudCdnDomainVerifyRecord(),
