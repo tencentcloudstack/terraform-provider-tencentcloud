@@ -123,7 +123,7 @@ func resourceTencentCloudTcrServiceAccount() *schema.Resource {
 								Type: schema.TypeString,
 							},
 							Required:    true,
-							Description: "Actions, currently only support: tcr:PushRepository, tcr:PullRepository. Note: This field may return null, indicating that no valid value can be obtained.",
+							Description: "Actions, currently support: `tcr:PushRepository`, `tcr:PullRepository`, `tcr:CreateRepository`, `tcr:CreateHelmChart`, `tcr:DescribeHelmCharts`. Note: This field may return null, indicating that no valid value can be obtained.",
 						},
 					},
 				},
