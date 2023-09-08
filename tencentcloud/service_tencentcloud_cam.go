@@ -1376,7 +1376,7 @@ func (me *CamService) DescribeCamMfaFlagById(ctx context.Context) (loginFlag *ca
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-	if response.Response.ActionFlag == nil && response.Response.LoginFlag == nil {
+	if response == nil || response.Response == nil || response.Response.ActionFlag == nil && response.Response.LoginFlag == nil {
 		return
 	}
 
