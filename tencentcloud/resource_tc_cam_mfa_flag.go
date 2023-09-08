@@ -34,6 +34,7 @@ package tencentcloud
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -134,10 +135,11 @@ func resourceTencentCloudCamMfaFlagRead(d *schema.ResourceData, meta interface{}
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
+	upUin := d.Id()
 
 	service := CamService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	loginFlag, actionFlag, err := service.DescribeCamMfaFlagById(ctx)
+	loginFlag, actionFlag, err := service.DescribeCamMfaFlagById(ctx, upUin)
 	if err != nil {
 		return err
 	}
@@ -198,6 +200,14 @@ func resourceTencentCloudCamMfaFlagUpdate(d *schema.ResourceData, meta interface
 		return err
 	}
 	request.OpUin = common.Uint64Ptr(uint64(uin))
+
+	immutableArgs := []string{"op_uin"}
+
+	for _, v := range immutableArgs {
+		if d.HasChange(v) {
+			return fmt.Errorf("argument '&s cannot be changed", v)
+		}
+	}
 
 	if d.HasChange("login_flag") {
 		if dMap, ok := helper.InterfacesHeadMap(d, "login_flag"); ok {
