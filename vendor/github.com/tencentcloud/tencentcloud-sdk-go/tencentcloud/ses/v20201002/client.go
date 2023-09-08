@@ -483,6 +483,7 @@ func NewCreateReceiverDetailWithDataResponse() (response *CreateReceiverDetailWi
 //  INVALIDPARAMETERVALUE_TEMPLATEDATALENLIMIT = "InvalidParameterValue.TemplateDataLenLimit"
 //  LIMITEXCEEDED_RECEIVERDETAILCOUNTLIMIT = "LimitExceeded.ReceiverDetailCountLimit"
 //  LIMITEXCEEDED_RECEIVERDETAILREQUESTLIMIT = "LimitExceeded.ReceiverDetailRequestLimit"
+//  MISSINGPARAMETER_EMAILSNECESSARY = "MissingParameter.EmailsNecessary"
 //  OPERATIONDENIED_RECEIVERISOPERATING = "OperationDenied.ReceiverIsOperating"
 //  OPERATIONDENIED_RECEIVERNOTEXIST = "OperationDenied.ReceiverNotExist"
 func (c *Client) CreateReceiverDetailWithData(request *CreateReceiverDetailWithDataRequest) (response *CreateReceiverDetailWithDataResponse, err error) {
@@ -501,6 +502,7 @@ func (c *Client) CreateReceiverDetailWithData(request *CreateReceiverDetailWithD
 //  INVALIDPARAMETERVALUE_TEMPLATEDATALENLIMIT = "InvalidParameterValue.TemplateDataLenLimit"
 //  LIMITEXCEEDED_RECEIVERDETAILCOUNTLIMIT = "LimitExceeded.ReceiverDetailCountLimit"
 //  LIMITEXCEEDED_RECEIVERDETAILREQUESTLIMIT = "LimitExceeded.ReceiverDetailRequestLimit"
+//  MISSINGPARAMETER_EMAILSNECESSARY = "MissingParameter.EmailsNecessary"
 //  OPERATIONDENIED_RECEIVERISOPERATING = "OperationDenied.ReceiverIsOperating"
 //  OPERATIONDENIED_RECEIVERNOTEXIST = "OperationDenied.ReceiverNotExist"
 func (c *Client) CreateReceiverDetailWithDataWithContext(ctx context.Context, request *CreateReceiverDetailWithDataRequest) (response *CreateReceiverDetailWithDataResponse, err error) {
@@ -1627,6 +1629,60 @@ func (c *Client) UpdateEmailIdentityWithContext(ctx context.Context, request *Up
     request.SetContext(ctx)
     
     response = NewUpdateEmailIdentityResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewUpdateEmailSmtpPassWordRequest() (request *UpdateEmailSmtpPassWordRequest) {
+    request = &UpdateEmailSmtpPassWordRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ses", APIVersion, "UpdateEmailSmtpPassWord")
+    
+    
+    return
+}
+
+func NewUpdateEmailSmtpPassWordResponse() (response *UpdateEmailSmtpPassWordResponse) {
+    response = &UpdateEmailSmtpPassWordResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// UpdateEmailSmtpPassWord
+// 设置邮箱的smtp密码。若要通过smtp发送邮件，必须为邮箱设置smtp密码。初始时，邮箱没有设置smtp密码，不能使用smtp的方式发送邮件。设置smtp密码后，可以修改密码。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDSMTPPASSWORD = "InvalidParameterValue.InvalidSmtpPassWord"
+//  INVALIDPARAMETERVALUE_NOSUCHSENDER = "InvalidParameterValue.NoSuchSender"
+//  OPERATIONDENIED_REPEATPASSWORD = "OperationDenied.RepeatPassWord"
+func (c *Client) UpdateEmailSmtpPassWord(request *UpdateEmailSmtpPassWordRequest) (response *UpdateEmailSmtpPassWordResponse, err error) {
+    return c.UpdateEmailSmtpPassWordWithContext(context.Background(), request)
+}
+
+// UpdateEmailSmtpPassWord
+// 设置邮箱的smtp密码。若要通过smtp发送邮件，必须为邮箱设置smtp密码。初始时，邮箱没有设置smtp密码，不能使用smtp的方式发送邮件。设置smtp密码后，可以修改密码。
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETERVALUE_INVALIDSMTPPASSWORD = "InvalidParameterValue.InvalidSmtpPassWord"
+//  INVALIDPARAMETERVALUE_NOSUCHSENDER = "InvalidParameterValue.NoSuchSender"
+//  OPERATIONDENIED_REPEATPASSWORD = "OperationDenied.RepeatPassWord"
+func (c *Client) UpdateEmailSmtpPassWordWithContext(ctx context.Context, request *UpdateEmailSmtpPassWordRequest) (response *UpdateEmailSmtpPassWordResponse, err error) {
+    if request == nil {
+        request = NewUpdateEmailSmtpPassWordRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("UpdateEmailSmtpPassWord require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewUpdateEmailSmtpPassWordResponse()
     err = c.Send(request, response)
     return
 }
