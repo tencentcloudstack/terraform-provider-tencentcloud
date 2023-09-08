@@ -5,3 +5,11 @@ tencentcloud_waf_custom_rule
 ```release-note:new-resource
 tencentcloud_waf_custom_white_rule
 ```
+
+```release-note:new-data-source
+tencentcloud_waf_ciphers
+```
+
+```release-note:new-data-source
+tencentcloud_waf_tls_versions
+```

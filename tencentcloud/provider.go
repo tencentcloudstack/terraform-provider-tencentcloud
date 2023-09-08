@@ -1636,6 +1636,10 @@ WeData
 	tencentcloud_wedata_rule_template
 
 Waf
+  Data Source
+    tencentcloud_waf_ciphers
+    tencentcloud_waf_tls_versions
+
   Resource
     tencentcloud_waf_custom_rule
     tencentcloud_waf_custom_white_rule
@@ -2285,6 +2289,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_event_rules":                            dataSourceTencentCloudEbEventRules(),
 			"tencentcloud_wedata_rule_templates":                     dataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_private_dns_records":                       dataSourceTencentCloudPrivateDnsRecords(),
+			"tencentcloud_waf_ciphers":                               dataSourceTencentCloudWafCiphers(),
+			"tencentcloud_waf_tls_versions":                          dataSourceTencentCloudWafTlsVersions(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{

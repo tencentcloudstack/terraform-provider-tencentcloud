@@ -145,3 +145,63 @@ func (me *WafService) DeleteWafCustomWhiteRuleById(ctx context.Context, domain, 
 
 	return
 }
+
+func (me *WafService) DescribeWafCiphersByFilter(ctx context.Context) (ciphers []*waf.TLSCiphers, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribeCiphersDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeCiphersDetail(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.Ciphers) < 1 {
+		return
+	}
+
+	ciphers = response.Response.Ciphers
+	return
+}
+
+func (me *WafService) DescribeWafTlsVersionsByFilter(ctx context.Context) (tlsVersions []*waf.TLSVersion, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribeTlsVersionRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeTlsVersion(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || len(response.Response.TLS) < 1 {
+		return
+	}
+
+	tlsVersions = response.Response.TLS
+	return
+}
