@@ -106,7 +106,7 @@ func dataSourceTencentCloudRumScores() *schema.Resource {
 						"page_error": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The number of exception which happend on page.",
+							Description: "The number of exception which happened on page.",
 						},
 						"static_num": {
 							Type:        schema.TypeString,
