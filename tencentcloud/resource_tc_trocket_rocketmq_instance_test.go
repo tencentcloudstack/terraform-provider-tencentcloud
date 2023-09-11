@@ -31,8 +31,8 @@ resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance" {
   name = "test"
   sku_code = "experiment_500"
   remark = "test"
-  vpc_id = "vpc-qmvl8z4f"
-  subnet_id = "subnet-ncef9v74"
+  vpc_id = "vpc-3a9fo1k9"
+  subnet_id = "subnet-8nby1yxg"
   tags = {
     tag_key = "rocketmq"
     tag_value = "5.x"
