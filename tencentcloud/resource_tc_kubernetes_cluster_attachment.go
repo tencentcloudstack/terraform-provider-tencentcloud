@@ -355,31 +355,37 @@ func tkeGetInstanceAdvancedPara(dMap map[string]interface{}, meta interface{}) (
 	}
 
 	if v, ok := dMap["data_disk"]; ok {
-
 		dataDisks := v.([]interface{})
-		setting.DataDisks = make([]*tke.DataDisk, 0, len(dataDisks))
+		setting.DataDisks = make([]*tke.DataDisk, len(dataDisks))
+		for i, d := range dataDisks {
+			value := d.(map[string]interface{})
+			var diskType, fileSystem, mountTarget, diskPartition string
+			if v, ok := value["disk_type"].(string); ok {
+				diskType = v
+			}
+			if v, ok := value["file_system"].(string); ok {
+				fileSystem = v
+			}
+			if v, ok := value["mount_target"].(string); ok {
+				mountTarget = v
+			}
+			if v, ok := value["disk_partition"].(string); ok {
+				diskPartition = v
+			}
 
-		for _, d := range dataDisks {
-			var (
-				value              = d.(map[string]interface{})
-				diskType           = value["disk_type"].(string)
-				diskSize           = int64(value["disk_size"].(int))
-				fileSystem         = value["file_system"].(string)
-				autoFormatAndMount = value["auto_format_and_mount"].(bool)
-				mountTarget        = value["mount_target"].(string)
-				diskPartition      = value["disk_partition"].(string)
-				dataDisk           = tke.DataDisk{
-					DiskType:           &diskType,
-					FileSystem:         &fileSystem,
-					AutoFormatAndMount: &autoFormatAndMount,
-					MountTarget:        &mountTarget,
-					DiskPartition:      &diskPartition,
-				}
-			)
+			diskSize := int64(value["disk_size"].(int))
+			autoFormatAndMount := value["auto_format_and_mount"].(bool)
+			dataDisk := &tke.DataDisk{
+				DiskType:           &diskType,
+				FileSystem:         &fileSystem,
+				AutoFormatAndMount: &autoFormatAndMount,
+				MountTarget:        &mountTarget,
+				DiskPartition:      &diskPartition,
+			}
 			if diskSize > 0 {
 				dataDisk.DiskSize = &diskSize
 			}
-			setting.DataDisks = append(setting.DataDisks, &dataDisk)
+			setting.DataDisks[i] = dataDisk
 		}
 	}
 	if v, ok := dMap["is_schedule"]; ok {
