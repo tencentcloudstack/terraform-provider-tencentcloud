@@ -381,6 +381,54 @@ func (c *Client) DescribeBackUpScheduleWithContext(ctx context.Context, request 
     return
 }
 
+func NewDescribeBackUpTablesRequest() (request *DescribeBackUpTablesRequest) {
+    request = &DescribeBackUpTablesRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("cdwch", APIVersion, "DescribeBackUpTables")
+    
+    
+    return
+}
+
+func NewDescribeBackUpTablesResponse() (response *DescribeBackUpTablesResponse) {
+    response = &DescribeBackUpTablesResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeBackUpTables
+// 获取可备份表信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeBackUpTables(request *DescribeBackUpTablesRequest) (response *DescribeBackUpTablesResponse, err error) {
+    return c.DescribeBackUpTablesWithContext(context.Background(), request)
+}
+
+// DescribeBackUpTables
+// 获取可备份表信息
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribeBackUpTablesWithContext(ctx context.Context, request *DescribeBackUpTablesRequest) (response *DescribeBackUpTablesResponse, err error) {
+    if request == nil {
+        request = NewDescribeBackUpTablesRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeBackUpTables require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeBackUpTablesResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeCkSqlApisRequest() (request *DescribeCkSqlApisRequest) {
     request = &DescribeCkSqlApisRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -976,7 +1024,7 @@ func NewModifyUserNewPrivilegeResponse() (response *ModifyUserNewPrivilegeRespon
 }
 
 // ModifyUserNewPrivilege
-// 针对ck账号的权限做管控（新版）
+// 针对集群账号的权限做管控（新版）
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
@@ -985,7 +1033,7 @@ func (c *Client) ModifyUserNewPrivilege(request *ModifyUserNewPrivilegeRequest) 
 }
 
 // ModifyUserNewPrivilege
-// 针对ck账号的权限做管控（新版）
+// 针对集群账号的权限做管控（新版）
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
