@@ -205,3 +205,109 @@ func (me *WafService) DescribeWafTlsVersionsByFilter(ctx context.Context) (tlsVe
 	tlsVersions = response.Response.TLS
 	return
 }
+
+func (me *WafService) DescribeDomainsById(ctx context.Context, instanceID, domain string) (domainInfo *waf.DomainInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeDomainsRequest()
+	request.Offset = common.Uint64Ptr(0)
+	request.Limit = common.Uint64Ptr(20)
+	request.Filters = []*waf.FiltersItemNew{
+		{
+			Name:       common.StringPtr("InstanceId"),
+			Values:     common.StringPtrs([]string{instanceID}),
+			ExactMatch: common.BoolPtr(true),
+		},
+		{
+			Name:       common.StringPtr("Domain"),
+			Values:     common.StringPtrs([]string{domain}),
+			ExactMatch: common.BoolPtr(true),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeDomains(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Domains) < 1 {
+		return
+	}
+
+	domainInfo = response.Response.Domains[0]
+	return
+}
+
+func (me *WafService) DescribeWafClbDomainById(ctx context.Context, instanceID, domain, domainId string) (clbDomainInfo *waf.ClbDomainsInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeDomainDetailsClbRequest()
+	request.InstanceId = &instanceID
+	request.Domain = &domain
+	request.DomainId = &domainId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeDomainDetailsClb(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.DomainsClbPartInfo == nil {
+		return
+	}
+
+	clbDomainInfo = response.Response.DomainsClbPartInfo
+	return
+}
+
+func (me *WafService) DeleteWafClbDomainById(ctx context.Context, instanceID, domain, domainId string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDeleteHostRequest()
+	request.HostsDel = []*waf.HostDel{
+		{
+			Domain:     common.StringPtr(domain),
+			InstanceID: common.StringPtr(instanceID),
+			DomainId:   common.StringPtr(domainId),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DeleteHost(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
