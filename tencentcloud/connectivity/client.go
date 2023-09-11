@@ -85,6 +85,7 @@ import (
 	tem "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tem/v20210701"
 	teo "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/teo/v20220901"
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
+	trocket "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/trocket/v20230308"
 	tse "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tse/v20201207"
 	tsf "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326"
 	vod "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717"
@@ -178,6 +179,7 @@ type TencentCloudClient struct {
 	ebConn             *eb.Client
 	dlcConn            *dlc.Client
 	wedataConn         *wedata.Client
+	trocketConn        *trocket.Client
 }
 
 // NewClientProfile returns a new ClientProfile
@@ -1257,6 +1259,20 @@ func (me *TencentCloudClient) UseWedataClient() *wedata.Client {
 	me.wedataConn.WithHttpTransport(&LogRoundTripper{})
 
 	return me.wedataConn
+}
+
+// UseTrocketClient returns trocket client for service
+func (me *TencentCloudClient) UseTrocketClient() *trocket.Client {
+	if me.trocketConn != nil {
+		return me.trocketConn
+	}
+
+	cpf := me.NewClientProfile(300)
+	cpf.Language = "zh-CN"
+	me.trocketConn, _ = trocket.NewClient(me.Credential, me.Region, cpf)
+	me.trocketConn.WithHttpTransport(&LogRoundTripper{})
+
+	return me.trocketConn
 }
 
 func getEnvDefault(key string, defVal int) int {
