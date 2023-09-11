@@ -3,6 +3,7 @@ package common
 import (
 	"context"
 	"io"
+
 	//"log"
 	"math/rand"
 	"net/url"
@@ -265,11 +266,7 @@ func CompleteCommonParams(request Request, region string, requestClient string) 
 	params["Action"] = request.GetAction()
 	params["Timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
 	params["Nonce"] = strconv.Itoa(rand.Int())
-<<<<<<< HEAD
-	params["RequestClient"] = "SDK_GO_1.0.744"
-=======
 	params["RequestClient"] = "SDK_GO_1.0.745"
->>>>>>> 8ae40cf6e (support clickhouse account)
 	if requestClient != "" {
 		params["RequestClient"] += ": " + requestClient
 	}
