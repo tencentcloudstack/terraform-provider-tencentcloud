@@ -1,0 +1,11 @@
+```release-note:new-data-source
+tencentcloud_clickhouse_backup_tables
+```
+
+```release-note:new-resource
+tencentcloud_clickhouse_account
+```
+
+```release-note:new-resource
+tencentcloud_clickhouse_account_permission
+```

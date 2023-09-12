@@ -24,9 +24,9 @@ func TestAccTencentCloudClickhouseBackupResource_basic(t *testing.T) {
 	})
 }
 
-const testAccClickhouseBackup = `
+const testAccClickhouseBackup = DefaultClickhouseVariables + `
 resource "tencentcloud_clickhouse_backup" "backup" {
-	instance_id = "cdwch-pcap78rz"
+	instance_id = var.instance_id
 	cos_bucket_name = "keep-export-image-1308726196"
 }
 `

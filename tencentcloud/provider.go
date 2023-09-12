@@ -1611,6 +1611,7 @@ ClickHouse(CDWCH)
   Data Source
 	tencentcloud_clickhouse_backup_jobs
 	tencentcloud_clickhouse_backup_job_detail
+	tencentcloud_clickhouse_backup_tables
 
   Resource
 	tencentcloud_clickhouse_instance
@@ -1618,6 +1619,8 @@ ClickHouse(CDWCH)
 	tencentcloud_clickhouse_backup_strategy
 	tencentcloud_clickhouse_recover_backup_job
 	tencentcloud_clickhouse_delete_backup_data
+	tencentcloud_clickhouse_account
+	tencentcloud_clickhouse_account_permission
 
 Tag
   Resource
@@ -2286,6 +2289,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_disks":                          dataSourceTencentCloudLighthouseInstanceDisks(),
 			"tencentcloud_clickhouse_backup_jobs":                    dataSourceTencentCloudClickhouseBackupJobs(),
 			"tencentcloud_clickhouse_backup_job_detail":              dataSourceTencentCloudClickhouseBackupJobDetail(),
+			"tencentcloud_clickhouse_backup_tables":                  dataSourceTencentCloudClickhouseBackupTables(),
 			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                              dataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
@@ -3017,6 +3021,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_backup_strategy":                          resourceTencentCloudClickhouseBackupStrategy(),
 			"tencentcloud_clickhouse_recover_backup_job":                       resourceTencentCloudClickhouseRecoverBackupJob(),
 			"tencentcloud_clickhouse_delete_backup_data":                       resourceTencentCloudClickhouseDeleteBackupData(),
+			"tencentcloud_clickhouse_account":                                  resourceTencentCloudClickhouseAccount(),
+			"tencentcloud_clickhouse_account_permission":                       resourceTencentCloudClickhouseAccountPermission(),
 			"tencentcloud_api_gateway_api_doc":                                 resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                                 resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                                        resourceTencentCloudTseInstance(),
