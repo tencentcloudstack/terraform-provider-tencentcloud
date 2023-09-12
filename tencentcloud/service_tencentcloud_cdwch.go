@@ -393,6 +393,10 @@ func (me *CdwchService) DescribeClickhouseAccountByUserName(ctx context.Context,
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if response.Response == nil || response.Response.ReturnData == nil {
+		errRet = fmt.Errorf("DescribeCkSqlApis response is null")
+		return
+	}
 	accounts = make([]*AccountInfo, 0)
 	err = json.Unmarshal([]byte(*response.Response.ReturnData), &accounts)
 	if err != nil {
@@ -484,6 +488,10 @@ func (me *CdwchService) DescribeCdwchAccountPermission(ctx context.Context, inst
 	}
 	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
+	if response.Response == nil || response.Response.ReturnData == nil {
+		errRet = fmt.Errorf("DescribeCkSqlApis response is null")
+		return
+	}
 	returnDate := *response.Response.ReturnData
 	userNewPrivilege = &cdwch.ModifyUserNewPrivilegeRequestParams{}
 	err = json.Unmarshal([]byte(returnDate), userNewPrivilege)
