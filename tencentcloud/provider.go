@@ -233,6 +233,7 @@ Cloud Access Management(CAM)
 	tencentcloud_cam_oidc_sso
 	tencentcloud_cam_role_sso
 	tencentcloud_cam_service_linked_role
+	tencentcloud_cam_mfa_flag
 	tencentcloud_cam_user_saml_config
 
 Customer Identity and Access Management(CIAM)
@@ -1194,10 +1195,22 @@ TencentCloud ServiceMesh(TCM)
 	tencentcloud_tcm_access_log_config
 
 Simple Email Service(SES)
+  Data Source
+	tencentcloud_ses_receivers
+	tencentcloud_ses_send_tasks
+	tencentcloud_ses_email_identities
+	tencentcloud_ses_black_email_address
+	tencentcloud_ses_statistics_report
+	tencentcloud_ses_send_email_status
+
   Resource
 	tencentcloud_ses_domain
 	tencentcloud_ses_template
 	tencentcloud_ses_email_address
+	tencentcloud_ses_receiver
+	tencentcloud_ses_send_email
+	tencentcloud_ses_batch_send_email
+	tencentcloud_ses_verify_domain
 
 Security Token Service(STS)
   Data Source
@@ -1434,6 +1447,7 @@ TDMQ for RocketMQ(trocket)
 	tencentcloud_tdmq_rocketmq_environment_role
 	tencentcloud_tdmq_send_rocketmq_message
 	tencentcloud_tdmq_rocketmq_vip_instance
+	tencentcloud_trocket_rocketmq_instance
 
 TDMQ for RabbitMQ(trabbit)
   Resource
@@ -1597,6 +1611,7 @@ ClickHouse(CDWCH)
   Data Source
 	tencentcloud_clickhouse_backup_jobs
 	tencentcloud_clickhouse_backup_job_detail
+	tencentcloud_clickhouse_backup_tables
 
   Resource
 	tencentcloud_clickhouse_instance
@@ -1604,6 +1619,8 @@ ClickHouse(CDWCH)
 	tencentcloud_clickhouse_backup_strategy
 	tencentcloud_clickhouse_recover_backup_job
 	tencentcloud_clickhouse_delete_backup_data
+	tencentcloud_clickhouse_account
+	tencentcloud_clickhouse_account_permission
 
 Tag
   Resource
@@ -2283,6 +2300,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_lighthouse_disks":                          dataSourceTencentCloudLighthouseInstanceDisks(),
 			"tencentcloud_clickhouse_backup_jobs":                    dataSourceTencentCloudClickhouseBackupJobs(),
 			"tencentcloud_clickhouse_backup_job_detail":              dataSourceTencentCloudClickhouseBackupJobDetail(),
+			"tencentcloud_clickhouse_backup_tables":                  dataSourceTencentCloudClickhouseBackupTables(),
 			"tencentcloud_cls_shipper_tasks":                         dataSourceTencentCloudClsShipperTasks(),
 			"tencentcloud_cls_machines":                              dataSourceTencentCloudClsMachines(),
 			"tencentcloud_cls_machine_group_configs":                 dataSourceTencentCloudClsMachineGroupConfigs(),
@@ -2293,6 +2311,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_private_dns_records":                       dataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_waf_ciphers":                               dataSourceTencentCloudWafCiphers(),
 			"tencentcloud_waf_tls_versions":                          dataSourceTencentCloudWafTlsVersions(),
+			"tencentcloud_ses_receivers":                             dataSourceTencentCloudSesReceivers(),
+			"tencentcloud_ses_send_tasks":                            dataSourceTencentCloudSesSendTasks(),
+			"tencentcloud_ses_email_identities":                      dataSourceTencentCloudSesEmailIdentities(),
+			"tencentcloud_ses_black_email_address":                   dataSourceTencentCloudSesBlackEmailAddress(),
+			"tencentcloud_ses_statistics_report":                     dataSourceTencentCloudSesStatisticsReport(),
+			"tencentcloud_ses_send_email_status":                     dataSourceTencentCloudSesSendEmailStatus(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
@@ -2547,6 +2571,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_cam_group_membership":                                resourceTencentCloudCamGroupMembership(),
 			"tencentcloud_cam_saml_provider":                                   resourceTencentCloudCamSAMLProvider(),
 			"tencentcloud_cam_service_linked_role":                             resourceTencentCloudCamServiceLinkedRole(),
+			"tencentcloud_cam_mfa_flag":                                        resourceTencentCloudCamMfaFlag(),
 			"tencentcloud_cam_user_saml_config":                                resourceTencentCloudCamUserSamlConfig(),
 			"tencentcloud_ciam_user_group":                                     resourceTencentCloudCiamUserGroup(),
 			"tencentcloud_ciam_user_store":                                     resourceTencentCloudCiamUserStore(),
@@ -2796,6 +2821,10 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_domain":                                          resourceTencentCloudSesDomain(),
 			"tencentcloud_ses_template":                                        resourceTencentCloudSesTemplate(),
 			"tencentcloud_ses_email_address":                                   resourceTencentCloudSesEmailAddress(),
+			"tencentcloud_ses_receiver":                                        resourceTencentCloudSesReceiver(),
+			"tencentcloud_ses_send_email":                                      resourceTencentCloudSesSendEmail(),
+			"tencentcloud_ses_batch_send_email":                                resourceTencentCloudSesBatchSendEmail(),
+			"tencentcloud_ses_verify_domain":                                   resourceTencentCloudSesVerifyDomain(),
 			"tencentcloud_sms_sign":                                            resourceTencentCloudSmsSign(),
 			"tencentcloud_sms_template":                                        resourceTencentCloudSmsTemplate(),
 			"tencentcloud_dcdb_account":                                        resourceTencentCloudDcdbAccount(),
@@ -2871,6 +2900,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tdmq_rocketmq_group":                                 resourceTencentCloudTdmqRocketmqGroup(),
 			"tencentcloud_tdmq_rocketmq_environment_role":                      resourceTencentCloudTdmqRocketmqEnvironmentRole(),
 			"tencentcloud_tdmq_rocketmq_vip_instance":                          resourceTencentCloudTdmqRocketmqVipInstance(),
+			"tencentcloud_trocket_rocketmq_instance":                           resourceTencentCloudTrocketRocketmqInstance(),
 			"tencentcloud_dts_sync_job":                                        resourceTencentCloudDtsSyncJob(),
 			"tencentcloud_dts_sync_config":                                     resourceTencentCloudDtsSyncConfig(),
 			"tencentcloud_dts_sync_check_job_operation":                        resourceTencentCloudDtsSyncCheckJobOperation(),
@@ -3004,6 +3034,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_clickhouse_backup_strategy":                          resourceTencentCloudClickhouseBackupStrategy(),
 			"tencentcloud_clickhouse_recover_backup_job":                       resourceTencentCloudClickhouseRecoverBackupJob(),
 			"tencentcloud_clickhouse_delete_backup_data":                       resourceTencentCloudClickhouseDeleteBackupData(),
+			"tencentcloud_clickhouse_account":                                  resourceTencentCloudClickhouseAccount(),
+			"tencentcloud_clickhouse_account_permission":                       resourceTencentCloudClickhouseAccountPermission(),
 			"tencentcloud_api_gateway_api_doc":                                 resourceTencentCloudAPIGatewayAPIDoc(),
 			"tencentcloud_api_gateway_api_app":                                 resourceTencentCloudAPIGatewayAPIApp(),
 			"tencentcloud_tse_instance":                                        resourceTencentCloudTseInstance(),

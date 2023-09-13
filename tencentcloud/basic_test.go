@@ -1115,3 +1115,14 @@ variable "security_group_id" {
 `
 
 // End of TSE
+
+// Clickhouse
+const DefaultClickhouseInstanceId = "cdwch-pcap78rz"
+
+const DefaultClickhouseVariables = `
+variable "instance_id" {
+  default = "` + DefaultClickhouseInstanceId + `"
+}
+`
+
+// End of Clickhouse

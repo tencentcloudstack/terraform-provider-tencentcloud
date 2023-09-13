@@ -19,14 +19,14 @@ func TestAccTencentCloudClickhouseBackupJobDetailDataSource_basic(t *testing.T) 
 	})
 }
 
-const testAccClickhouseBackupJobDetailDataSource = `
+const testAccClickhouseBackupJobDetailDataSource = DefaultClickhouseVariables + `
 resource "tencentcloud_clickhouse_backup" "backup" {
-	instance_id = "cdwch-pcap78rz"
+	instance_id = var.instance_id
 	cos_bucket_name = "keep-export-image-1308726196"
 }
 
 data "tencentcloud_clickhouse_backup_job_detail" "backup_job_detail" {
-	instance_id = "cdwch-pcap78rz"
+	instance_id = var.instance_id
 	back_up_job_id = 7679
 }
 `

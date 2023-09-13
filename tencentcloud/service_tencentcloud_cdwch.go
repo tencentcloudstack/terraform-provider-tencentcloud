@@ -2,6 +2,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -364,6 +365,168 @@ func (me *CdwchService) DescribeClickhouseBackupJobsByFilter(ctx context.Context
 		}
 
 		offset += limit
+	}
+
+	return
+}
+
+func (me *CdwchService) DescribeClickhouseAccountByUserName(ctx context.Context, instanceId, userName string) (accounts []*AccountInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := clickhouse.NewDescribeCkSqlApisRequest()
+	request.InstanceId = helper.String(instanceId)
+	request.UserName = helper.String(userName)
+	request.ApiType = helper.String(DESCRIBE_CK_SQL_APIS_GET_SYSTEM_USERS)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeCkSqlApis(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.ReturnData == nil {
+		errRet = fmt.Errorf("DescribeCkSqlApis response is null")
+		return
+	}
+	accounts = make([]*AccountInfo, 0)
+	err = json.Unmarshal([]byte(*response.Response.ReturnData), &accounts)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *CdwchService) DescribeCkSqlApis(ctx context.Context, instanceId, cluster, userName, apiType string) error {
+	logId := getLogId(ctx)
+
+	request := clickhouse.NewDescribeCkSqlApisRequest()
+	request.InstanceId = helper.String(instanceId)
+	request.UserName = helper.String(userName)
+	request.ApiType = helper.String(apiType)
+	if cluster != "" {
+		request.Cluster = helper.String(cluster)
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeCkSqlApis(request)
+	if err != nil {
+		return err
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	return nil
+}
+
+func (me *CdwchService) ActionAlterCkUser(ctx context.Context, apiType string, userInfo map[string]interface{}) error {
+	logId := getLogId(ctx)
+
+	request := clickhouse.NewActionAlterCkUserRequest()
+	ckUserAlterInfo := clickhouse.CkUserAlterInfo{}
+	if v, ok := userInfo["instance_id"]; ok {
+		ckUserAlterInfo.InstanceId = helper.String(v.(string))
+	}
+	if v, ok := userInfo["user_name"]; ok {
+		ckUserAlterInfo.UserName = helper.String(v.(string))
+	}
+	if v, ok := userInfo["password"]; ok {
+		ckUserAlterInfo.PassWord = helper.String(v.(string))
+	}
+	if v, ok := userInfo["describe"]; ok {
+		ckUserAlterInfo.Describe = helper.String(v.(string))
+	}
+
+	request.UserInfo = &ckUserAlterInfo
+	request.ApiType = helper.String(apiType)
+
+	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := me.client.UseCdwchClient().ActionAlterCkUser(request)
+		if e != nil {
+			return retryError(e)
+		} else {
+			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("[CRITAL]%s operate clickhouse account failed, reason:%+v", logId, err)
+		return err
+	}
+	return nil
+}
+
+func (me *CdwchService) DescribeCdwchAccountPermission(ctx context.Context, instanceId, cluster, username string) (userNewPrivilege *cdwch.ModifyUserNewPrivilegeRequestParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := cdwch.NewDescribeCkSqlApisRequest()
+	request.InstanceId = &instanceId
+	request.Cluster = &cluster
+	request.UserName = &username
+	request.ApiType = helper.String("GetUserClusterNewPrivileges")
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeCkSqlApis(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response == nil || response.Response.ReturnData == nil {
+		errRet = fmt.Errorf("DescribeCkSqlApis response is null")
+		return
+	}
+	returnDate := *response.Response.ReturnData
+	userNewPrivilege = &cdwch.ModifyUserNewPrivilegeRequestParams{}
+	err = json.Unmarshal([]byte(returnDate), userNewPrivilege)
+	if err != nil {
+		errRet = err
+		return
+	}
+	return
+}
+
+func (me *CdwchService) DescribeClickhouseBackupTablesByFilter(ctx context.Context, instanceId string) (backupTables []*clickhouse.BackupTableContent, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cdwch.NewDescribeBackUpTablesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.InstanceId = &instanceId
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseCdwchClient().DescribeBackUpTables(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response != nil {
+		backupTables = response.Response.AvailableTables
 	}
 
 	return

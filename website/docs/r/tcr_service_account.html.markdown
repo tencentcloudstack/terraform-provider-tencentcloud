@@ -87,7 +87,7 @@ The following arguments are supported:
 
 The `permissions` object supports the following:
 
-* `actions` - (Required, Set) Actions, currently only support: tcr:PushRepository, tcr:PullRepository. Note: This field may return null, indicating that no valid value can be obtained.
+* `actions` - (Required, Set) Actions, currently support: `tcr:PushRepository`, `tcr:PullRepository`, `tcr:CreateRepository`, `tcr:CreateHelmChart`, `tcr:DescribeHelmCharts`. Note: This field may return null, indicating that no valid value can be obtained.
 * `resource` - (Required, String) resource path, currently only supports Namespace. Note: This field may return null, indicating that no valid value can be obtained.
 
 ## Attributes Reference

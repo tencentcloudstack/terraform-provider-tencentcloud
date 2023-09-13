@@ -95,7 +95,7 @@ The `information` object supports the following:
 * `postal_code` - (Required, String) Company postal code.
 * `verify_type` - (Required, String) Certificate verification method. Valid values: `DNS_AUTO`, `DNS`, `FILE`. `DNS_AUTO` means automatic DNS verification, this verification type is only supported for domain names resolved by Tencent Cloud and the resolution status is normal, `DNS` means manual DNS verification, `FILE` means file verification.
 * `csr_content` - (Optional, String) CSR content uploaded.
-* `csr_type` - (Optional, String, ForceNew) CSR generation method. Valid values: `online`, `parse`. `online` means online generation, `parse` means manual upload.
+* `csr_type` - (Optional, String) CSR generation method. Valid values: `online`, `parse`. `online` means online generation, `parse` means manual upload.
 * `domain_list` - (Optional, Set) Array of uploaded domain names, multi-domain certificates can be uploaded.
 * `key_password` - (Optional, String) Private key password.
 
