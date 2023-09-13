@@ -210,7 +210,7 @@ The `auto_scaling_config` object supports the following:
 * `system_disk_size` - (Optional, Int) Volume of system disk in GB. Default is `50`.
 * `system_disk_type` - (Optional, String) Type of a CVM disk. Valid value: `CLOUD_PREMIUM` and `CLOUD_SSD`. Default is `CLOUD_PREMIUM`.
 
-The `data_disk` object supports the following:
+The `data_disk` object of `node_config` supports the following:
 
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
 * `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount. NOTE: this argument doesn't support setting in node pool, or will leads to mount error.
@@ -219,7 +219,7 @@ The `data_disk` object supports the following:
 * `file_system` - (Optional, String, ForceNew) File system, e.g. `ext3/ext4/xfs`.
 * `mount_target` - (Optional, String, ForceNew) Mount target.
 
-The `data_disk` object supports the following:
+The `data_disk` object of `auto_scaling_config` supports the following:
 
 * `delete_with_instance` - (Optional, Bool) Indicates whether the disk remove after instance terminated. Default is `false`.
 * `disk_size` - (Optional, Int) Volume of disk in GB. Default is `0`.
