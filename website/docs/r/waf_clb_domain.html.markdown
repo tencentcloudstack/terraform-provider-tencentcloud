@@ -90,7 +90,7 @@ The following arguments are supported:
 * `engine` - (Optional, Int) Protection Status: 10: Rule Observation&&AI Off Mode, 11: Rule Observation&&AI Observation Mode, 12: Rule Observation&&AI Interception Mode, 20: Rule Interception&&AI Off Mode, 21: Rule Interception&&AI Observation Mode, 22: Rule Interception&&AI Interception Mode, Default 20.
 * `flow_mode` - (Optional, Int) WAF traffic mode, 1 cleaning mode, 0 mirroring mode.
 * `ip_headers` - (Optional, List: [`String`]) When is_cdn=3, this parameter needs to be filled in to indicate a custom headerNote: This field may return null, indicating that a valid value cannot be obtained.
-* `is_cdn` - (Optional, Int) Whether a proxy has been enabled before WAF, 1 represents deployment, and 0 represents no deployment.
+* `is_cdn` - (Optional, Int) Whether a proxy has been enabled before WAF, 0 no deployment, 1 deployment and use first IP in X-Forwarded-For as client IP, 2 deployment and use remote_addr as client IP, 3 deployment and use values of custom headers as client IP.
 * `status` - (Optional, Int) Binding status between waf and LB, 0:not bind, 1:binding.
 
 The `load_balancer_set` object supports the following:

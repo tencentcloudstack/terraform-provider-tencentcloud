@@ -1644,6 +1644,7 @@ Waf
     tencentcloud_waf_custom_rule
     tencentcloud_waf_custom_white_rule
     tencentcloud_waf_clb_domain
+    tencentcloud_waf_saas_domain
 */
 package tencentcloud
 
@@ -3029,6 +3030,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
 			"tencentcloud_waf_clb_domain":                                      resourceTencentCloudWafClbDomain(),
+			"tencentcloud_waf_saas_domain":                                     resourceTencentCloudWafSaasDomain(),
 		},
 
 		ConfigureFunc: providerConfigure,

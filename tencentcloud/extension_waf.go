@@ -131,3 +131,186 @@ var ALB_TYPES = []string{
 const (
 	DescribeHostLimitSuccess = "Success"
 )
+
+const (
+	CERT_TYPE_0 = 0
+	CERT_TYPE_1 = 1
+	CERT_TYPE_2 = 2
+)
+
+var CERT_TYPES = []int{
+	CERT_TYPE_0,
+	CERT_TYPE_1,
+	CERT_TYPE_2,
+}
+
+const (
+	UPSTREAM_SCHEME_HTTP  = "http"
+	UPSTREAM_SCHEME_HTTPS = "https"
+)
+
+var UPSTREAM_SCHEMES = []string{
+	UPSTREAM_SCHEME_HTTP,
+	UPSTREAM_SCHEME_HTTPS,
+}
+
+const (
+	IS_GRAY_0 = 0
+	IS_GRAY_1 = 1
+)
+
+var IS_GRAY_STATUS = []int{
+	IS_GRAY_0,
+	IS_GRAY_1,
+}
+
+const (
+	UP_STREAM_TYPE_0 = 0
+	UP_STREAM_TYPE_1 = 1
+)
+
+var UP_STREAM_TYPES = []int{
+	UP_STREAM_TYPE_0,
+	UP_STREAM_TYPE_1,
+}
+
+const (
+	IS_HTTP2_0 = 0
+	IS_HTTP2_1 = 1
+)
+
+var IS_HTTP2_STATUS = []int{
+	IS_HTTP2_0,
+	IS_HTTP2_1,
+}
+
+const (
+	IS_WEBSOCKET_0 = 0
+	IS_WEBSOCKET_1 = 1
+)
+
+var IS_WEBSOCKET_STATUS = []int{
+	IS_WEBSOCKET_0,
+	IS_WEBSOCKET_1,
+}
+
+const (
+	LOAD_BALANCE_0 = "0"
+	LOAD_BALANCE_1 = "1"
+	LOAD_BALANCE_2 = "2"
+)
+
+var LOAD_BALANCE_STATUS = []string{
+	LOAD_BALANCE_0,
+	LOAD_BALANCE_1,
+	LOAD_BALANCE_2,
+}
+
+const (
+	HTTPS_REWRITE_0 = 0
+	HTTPS_REWRITE_1 = 1
+)
+
+var HTTPS_REWRITE_STATUS = []int{
+	HTTPS_REWRITE_0,
+	HTTPS_REWRITE_1,
+}
+
+const (
+	ANYCAST_0 = 0
+	ANYCAST_1 = 1
+)
+
+var ANYCAST_STATUS = []int{
+	ANYCAST_0,
+	ANYCAST_1,
+}
+
+const (
+	ACTIVE_CHECK_0 = 0
+	ACTIVE_CHECK_1 = 1
+)
+
+var ACTIVE_CHECK_STATUS = []int{
+	ACTIVE_CHECK_0,
+	ACTIVE_CHECK_1,
+}
+
+const (
+	CIPHER_TEMPLATE_1 = 1
+	CIPHER_TEMPLATE_2 = 2
+	CIPHER_TEMPLATE_3 = 3
+)
+
+var CIPHER_TEMPLATES = []int{
+	CIPHER_TEMPLATE_1,
+	CIPHER_TEMPLATE_2,
+	CIPHER_TEMPLATE_3,
+}
+
+const (
+	PROXY_READ_TIMEOUT = 300
+	PROXY_SEND_TIMEOUT = 300
+)
+
+const (
+	SNI_TYPE_0 = 0
+	SNI_TYPE_1 = 1
+	SNI_TYPE_2 = 2
+	SNI_TYPE_3 = 3
+)
+
+var SNI_TYPES = []int{
+	SNI_TYPE_0,
+	SNI_TYPE_1,
+	SNI_TYPE_2,
+	SNI_TYPE_3,
+}
+
+const (
+	XFF_RESET_0 = 0
+	XFF_RESET_1 = 1
+)
+
+var XFF_RESET_STATUS = []int{
+	XFF_RESET_0,
+	XFF_RESET_1,
+}
+
+const (
+	DescribeDomainVerifyResultSUCCESS = 0
+)
+
+const (
+	IPV6_STATUS_0 = 0
+	IPV6_STATUS_1 = 1
+)
+
+var IPV6_STATUS = []int{
+	IPV6_STATUS_0,
+	IPV6_STATUS_1,
+}
+
+const (
+	SAAS_DOMAIN_STATUS_0 = 0
+	SAAS_DOMAIN_STATUS_1 = 1
+)
+
+var SAAS_DOMAIN_STATUS = []int{
+	SAAS_DOMAIN_STATUS_0,
+	SAAS_DOMAIN_STATUS_1,
+}
+
+const (
+	TLS_VERSION_STATUS_3 = 3
+)
+
+const (
+	IS_KEEP_ALIVE_0 = "0"
+	IS_KEEP_ALIVE_1 = "1"
+)
+
+var IS_KEEP_ALIVE_STATUS = []string{
+	IS_KEEP_ALIVE_0,
+	IS_KEEP_ALIVE_1,
+}

@@ -129,7 +129,7 @@ func resourceTencentCloudWafClbDomain() *schema.Resource {
 				Optional:     true,
 				Default:      ISCDN_0,
 				ValidateFunc: validateAllowedIntValue(ISCDN_STSTUS),
-				Description:  "Whether a proxy has been enabled before WAF, 1 represents deployment, and 0 represents no deployment.",
+				Description:  "Whether a proxy has been enabled before WAF, 0 no deployment, 1 deployment and use first IP in X-Forwarded-For as client IP, 2 deployment and use remote_addr as client IP, 3 deployment and use values of custom headers as client IP.",
 			},
 			"load_balancer_set": {
 				Type:        schema.TypeList,

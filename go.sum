@@ -888,6 +888,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.737 h1:Y/mD
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.737/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.740 h1://37uH+ch95/M5ZlDy3+chvNkvDYgcKEwGpdSeV0lV8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.740/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.746 h1:HR4eaIyJhb4sDK8G9W/EuX+ZTgV7mKsd4t4/y5I3mtU=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.746/go.mod h1:7sCQWVkxcsR38nffDW057DRGk8mUjK1Ing/EFOK8s8Y=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624 h1:nEZqsoqt1pEoaP9JjkHQy3/H00suCfzlHW1qOm2nYD8=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624/go.mod h1:+TXSVyeKwt1IhZRqKPbTREteBcP+K07Q846/ilNzLWA=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589 h1:LZihgirMH0vsaGScYexxwY0fTss9vHaSZs/YOQUVESg=
@@ -1002,6 +1004,8 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.706 h1:qJUOUJ0
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.706/go.mod h1:VWt0lgvRxyTJKjzadc8T+PM+/M7kfQZdNtYHQ7wQsBU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.740 h1:oqGhnGKhnN/F5fB0/nOiELJrim8lGg0sGDJb88uMR24=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.740/go.mod h1:Lq9CaWSS13mD/PljZW2EnuuhWi7uGnjv86qkxhmA1Wo=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.746 h1:vGnjdiR2Z4SKOxtofGLW1hDaGuJUehYUCrjyiB6GC+Y=
+github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.746/go.mod h1:ZlnUAU5TCtNV9nERC0QFYxflVoTTKYiVmTSgFrqMoh4=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.725 h1:ETqP+erlPnDK1zafCmyDYNkZLcY+dAG3143Ihk5vFHk=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wedata v1.0.725/go.mod h1:YPB08jHrJ3GJJ09ZTEBLnMvI+lqQEtu17jJjyfq8+sU=
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/wss v1.0.199 h1:hMBLtiJPnZ9GvA677cTB6ELBR6B68wCR2QY1sNoGQc4=

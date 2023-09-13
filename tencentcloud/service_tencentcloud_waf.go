@@ -311,3 +311,61 @@ func (me *WafService) DeleteWafClbDomainById(ctx context.Context, instanceID, do
 
 	return
 }
+
+func (me *WafService) DescribeWafSaasDomainById(ctx context.Context, instanceID, domain, domainId string) (saasDomain *waf.DomainsPartInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeDomainDetailsSaasRequest()
+	request.InstanceId = &instanceID
+	request.Domain = &domain
+	request.DomainId = &domainId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeDomainDetailsSaas(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.DomainsPartInfo == nil {
+		return
+	}
+
+	saasDomain = response.Response.DomainsPartInfo
+	return
+}
+
+func (me *WafService) DeleteWafSaasDomainById(ctx context.Context, instanceID, domain string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDeleteSpartaProtectionRequest()
+	request.InstanceID = common.StringPtr(instanceID)
+	request.Domains = common.StringPtrs([]string{domain})
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DeleteSpartaProtection(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}

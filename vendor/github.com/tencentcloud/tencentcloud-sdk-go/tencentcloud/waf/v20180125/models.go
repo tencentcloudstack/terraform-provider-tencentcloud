@@ -619,60 +619,6 @@ func (r *AddDomainWhiteRuleResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
-type AddSpartaProtectionAutoRequestParams struct {
-	// 域名
-	Domain *string `json:"Domain,omitnil" name:"Domain"`
-}
-
-type AddSpartaProtectionAutoRequest struct {
-	*tchttp.BaseRequest
-	
-	// 域名
-	Domain *string `json:"Domain,omitnil" name:"Domain"`
-}
-
-func (r *AddSpartaProtectionAutoRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *AddSpartaProtectionAutoRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "Domain")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddSpartaProtectionAutoRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type AddSpartaProtectionAutoResponseParams struct {
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
-}
-
-type AddSpartaProtectionAutoResponse struct {
-	*tchttp.BaseResponse
-	Response *AddSpartaProtectionAutoResponseParams `json:"Response"`
-}
-
-func (r *AddSpartaProtectionAutoResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *AddSpartaProtectionAutoResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
 type AddSpartaProtectionRequestParams struct {
 	// 需要防御的域名
 	Domain *string `json:"Domain,omitnil" name:"Domain"`
@@ -954,63 +900,6 @@ func (r *AddSpartaProtectionResponse) ToJsonString() string {
 // FromJsonString It is highly **NOT** recommended to use this function
 // because it has no param check, nor strict type check
 func (r *AddSpartaProtectionResponse) FromJsonString(s string) error {
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type AddSpartaProtectionsAutoRequestParams struct {
-	// 多域名
-	Domain *string `json:"Domain,omitnil" name:"Domain"`
-}
-
-type AddSpartaProtectionsAutoRequest struct {
-	*tchttp.BaseRequest
-	
-	// 多域名
-	Domain *string `json:"Domain,omitnil" name:"Domain"`
-}
-
-func (r *AddSpartaProtectionsAutoRequest) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *AddSpartaProtectionsAutoRequest) FromJsonString(s string) error {
-	f := make(map[string]interface{})
-	if err := json.Unmarshal([]byte(s), &f); err != nil {
-		return err
-	}
-	delete(f, "Domain")
-	if len(f) > 0 {
-		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "AddSpartaProtectionsAutoRequest has unknown keys!", "")
-	}
-	return json.Unmarshal([]byte(s), &r)
-}
-
-// Predefined struct for user
-type AddSpartaProtectionsAutoResponseParams struct {
-	// 失败原因
-	FailedInfos []*FailedInfo `json:"FailedInfos,omitnil" name:"FailedInfos"`
-
-	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
-	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
-}
-
-type AddSpartaProtectionsAutoResponse struct {
-	*tchttp.BaseResponse
-	Response *AddSpartaProtectionsAutoResponseParams `json:"Response"`
-}
-
-func (r *AddSpartaProtectionsAutoResponse) ToJsonString() string {
-    b, _ := json.Marshal(r)
-    return string(b)
-}
-
-// FromJsonString It is highly **NOT** recommended to use this function
-// because it has no param check, nor strict type check
-func (r *AddSpartaProtectionsAutoResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
@@ -3942,6 +3831,73 @@ func (r *DescribeDomainDetailsSaasResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type DescribeDomainVerifyResultRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil" name:"Domain"`
+
+	// 实例id
+	InstanceID *string `json:"InstanceID,omitnil" name:"InstanceID"`
+}
+
+type DescribeDomainVerifyResultRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil" name:"Domain"`
+
+	// 实例id
+	InstanceID *string `json:"InstanceID,omitnil" name:"InstanceID"`
+}
+
+func (r *DescribeDomainVerifyResultRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDomainVerifyResultRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "InstanceID")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "DescribeDomainVerifyResultRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type DescribeDomainVerifyResultResponseParams struct {
+	// 结果描述；如果可以添加返回空字符串
+	Msg *string `json:"Msg,omitnil" name:"Msg"`
+
+	// 检验状态：0表示可以添加，大于0为不能添加
+	VerifyCode *int64 `json:"VerifyCode,omitnil" name:"VerifyCode"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type DescribeDomainVerifyResultResponse struct {
+	*tchttp.BaseResponse
+	Response *DescribeDomainVerifyResultResponseParams `json:"Response"`
+}
+
+func (r *DescribeDomainVerifyResultResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *DescribeDomainVerifyResultResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type DescribeDomainWhiteRulesRequestParams struct {
 	// 需要查询的域名
 	Domain *string `json:"Domain,omitnil" name:"Domain"`
@@ -6089,16 +6045,6 @@ type ExportAccessInfo struct {
 	CreateTime *string `json:"CreateTime,omitnil" name:"CreateTime"`
 }
 
-type FailedInfo struct {
-	// 域名
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Domain *string `json:"Domain,omitnil" name:"Domain"`
-
-	// 失败信息
-	// 注意：此字段可能返回 null，表示取不到有效值。
-	Message *string `json:"Message,omitnil" name:"Message"`
-}
-
 type FiltersItemNew struct {
 	// 字段名
 	Name *string `json:"Name,omitnil" name:"Name"`
@@ -6168,6 +6114,70 @@ type FraudPkg struct {
 	// 续费标志
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	RenewFlag *uint64 `json:"RenewFlag,omitnil" name:"RenewFlag"`
+}
+
+// Predefined struct for user
+type FreshAntiFakeUrlRequestParams struct {
+	// 域名
+	Domain *string `json:"Domain,omitnil" name:"Domain"`
+
+	// Id
+	Id *uint64 `json:"Id,omitnil" name:"Id"`
+}
+
+type FreshAntiFakeUrlRequest struct {
+	*tchttp.BaseRequest
+	
+	// 域名
+	Domain *string `json:"Domain,omitnil" name:"Domain"`
+
+	// Id
+	Id *uint64 `json:"Id,omitnil" name:"Id"`
+}
+
+func (r *FreshAntiFakeUrlRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *FreshAntiFakeUrlRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Domain")
+	delete(f, "Id")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "FreshAntiFakeUrlRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type FreshAntiFakeUrlResponseParams struct {
+	// 结果成功与否
+	Result *string `json:"Result,omitnil" name:"Result"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type FreshAntiFakeUrlResponse struct {
+	*tchttp.BaseResponse
+	Response *FreshAntiFakeUrlResponseParams `json:"Response"`
+}
+
+func (r *FreshAntiFakeUrlResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *FreshAntiFakeUrlResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
 }
 
 // Predefined struct for user
@@ -9447,18 +9457,67 @@ type SpartaProtectionPort struct {
 
 type Strategy struct {
 	// 匹配字段
+	//  
+	// 有以下枚举值：
+	// IP-来源IP
+	// 	IPV6-来源IPv6
+	// 	Referer-Referer
+	// 	URL-请求路径
+	// UserAgent-UserAgent
+	// 	HTTP_METHOD-HTTP请求方法
+	// 	QUERY_STRING-请求字符串
+	// 	GET-GET参数值
+	// 	GET_PARAMS_NAMES-GET参数名
+	// 	POST-POST参数值
+	// 	GET_POST_NAMES-POST参数名
+	// 	POST_BODY-完整BODY
+	// 	COOKIE-Cookie
+	// 	GET_COOKIES_NAMES-Cookie参数名
+	// 	ARGS_COOKIE-Cookie参数值
+	// 	GET_HEADERS_NAMES-Header参数名
+	// 	ARGS_HEADER-Header参数值
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Field *string `json:"Field,omitnil" name:"Field"`
 
-	// 逻辑符号
+	// 逻辑符号 
+	// 
+	// 有以下枚举值：
+	// empty - 内容为空
+	//   	null - 不存在
+	//   	eq - 等于
+	//   	neq - 不等于
+	//   	contains - 包含
+	//  	ncontains - 不包含
+	//   	strprefix - 前缀匹配
+	//   	strsuffix - 后缀匹配
+	//   	len_eq - 长度等于
+	//   	len_gt - 长度大于
+	//   	len_lt - 长度小于
+	//   	ipmatch - 属于
+	//  	ipnmatch - 不属于
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CompareFunc *string `json:"CompareFunc,omitnil" name:"CompareFunc"`
 
 	// 匹配内容
+	// 
+	// 目前 只有匹配字段为COOKIE-Cookie时，才不需要输入 匹配内容
+	// 其他都需要
+	// 
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Content *string `json:"Content,omitnil" name:"Content"`
 
 	// 匹配参数
+	// 
+	// 目前 只有匹配字段为以下4个时，匹配参数才能选择，否则置灰无法选择	
+	// 
+	// GET-GET参数值
+	// 	POST-POST参数值
+	// 	ARGS_COOKIE-Cookie参数值
+	// 	ARGS_HEADER-Header参数值
+	// 
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Arg *string `json:"Arg,omitnil" name:"Arg"`
 }

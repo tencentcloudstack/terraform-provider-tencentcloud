@@ -355,6 +355,7 @@ func NewAddSpartaProtectionResponse() (response *AddSpartaProtectionResponse) {
 //  INVALIDPARAMETER_PORTPARAMETERERR = "InvalidParameter.PortParameterErr"
 //  INVALIDPARAMETER_PROTECTIONDOMAINPARAMETERERR = "InvalidParameter.ProtectionDomainParameterErr"
 //  INVALIDPARAMETER_TLSPARAMETERERR = "InvalidParameter.TLSParameterErr"
+//  INVALIDPARAMETER_UNAUTHORIZEDOPERATIONPARAMETERERR = "InvalidParameter.UnauthorizedOperationParameterErr"
 //  INVALIDPARAMETER_UPSTREAMPARAMETERERR = "InvalidParameter.UpstreamParameterErr"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -385,6 +386,7 @@ func (c *Client) AddSpartaProtection(request *AddSpartaProtectionRequest) (respo
 //  INVALIDPARAMETER_PORTPARAMETERERR = "InvalidParameter.PortParameterErr"
 //  INVALIDPARAMETER_PROTECTIONDOMAINPARAMETERERR = "InvalidParameter.ProtectionDomainParameterErr"
 //  INVALIDPARAMETER_TLSPARAMETERERR = "InvalidParameter.TLSParameterErr"
+//  INVALIDPARAMETER_UNAUTHORIZEDOPERATIONPARAMETERERR = "InvalidParameter.UnauthorizedOperationParameterErr"
 //  INVALIDPARAMETER_UPSTREAMPARAMETERERR = "InvalidParameter.UpstreamParameterErr"
 //  INVALIDPARAMETERVALUE = "InvalidParameterValue"
 //  LIMITEXCEEDED = "LimitExceeded"
@@ -409,104 +411,6 @@ func (c *Client) AddSpartaProtectionWithContext(ctx context.Context, request *Ad
     request.SetContext(ctx)
     
     response = NewAddSpartaProtectionResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewAddSpartaProtectionAutoRequest() (request *AddSpartaProtectionAutoRequest) {
-    request = &AddSpartaProtectionAutoRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("waf", APIVersion, "AddSpartaProtectionAuto")
-    
-    
-    return
-}
-
-func NewAddSpartaProtectionAutoResponse() (response *AddSpartaProtectionAutoResponse) {
-    response = &AddSpartaProtectionAutoResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// AddSpartaProtectionAuto
-// 一键接入
-//
-// 可能返回的错误码:
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-func (c *Client) AddSpartaProtectionAuto(request *AddSpartaProtectionAutoRequest) (response *AddSpartaProtectionAutoResponse, err error) {
-    return c.AddSpartaProtectionAutoWithContext(context.Background(), request)
-}
-
-// AddSpartaProtectionAuto
-// 一键接入
-//
-// 可能返回的错误码:
-//  RESOURCEINUSE = "ResourceInUse"
-//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
-func (c *Client) AddSpartaProtectionAutoWithContext(ctx context.Context, request *AddSpartaProtectionAutoRequest) (response *AddSpartaProtectionAutoResponse, err error) {
-    if request == nil {
-        request = NewAddSpartaProtectionAutoRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("AddSpartaProtectionAuto require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewAddSpartaProtectionAutoResponse()
-    err = c.Send(request, response)
-    return
-}
-
-func NewAddSpartaProtectionsAutoRequest() (request *AddSpartaProtectionsAutoRequest) {
-    request = &AddSpartaProtectionsAutoRequest{
-        BaseRequest: &tchttp.BaseRequest{},
-    }
-    
-    request.Init().WithApiInfo("waf", APIVersion, "AddSpartaProtectionsAuto")
-    
-    
-    return
-}
-
-func NewAddSpartaProtectionsAutoResponse() (response *AddSpartaProtectionsAutoResponse) {
-    response = &AddSpartaProtectionsAutoResponse{
-        BaseResponse: &tchttp.BaseResponse{},
-    }
-    return
-}
-
-// AddSpartaProtectionsAuto
-// 批量添加域名
-//
-// 可能返回的错误码:
-//  INVALIDPARAMETER_UNKNOWNACTION = "InvalidParameter.UnknownAction"
-func (c *Client) AddSpartaProtectionsAuto(request *AddSpartaProtectionsAutoRequest) (response *AddSpartaProtectionsAutoResponse, err error) {
-    return c.AddSpartaProtectionsAutoWithContext(context.Background(), request)
-}
-
-// AddSpartaProtectionsAuto
-// 批量添加域名
-//
-// 可能返回的错误码:
-//  INVALIDPARAMETER_UNKNOWNACTION = "InvalidParameter.UnknownAction"
-func (c *Client) AddSpartaProtectionsAutoWithContext(ctx context.Context, request *AddSpartaProtectionsAutoRequest) (response *AddSpartaProtectionsAutoResponse, err error) {
-    if request == nil {
-        request = NewAddSpartaProtectionsAutoRequest()
-    }
-    
-    if c.GetCredential() == nil {
-        return nil, errors.New("AddSpartaProtectionsAuto require credential")
-    }
-
-    request.SetContext(ctx)
-    
-    response = NewAddSpartaProtectionsAutoResponse()
     err = c.Send(request, response)
     return
 }
@@ -2695,6 +2599,66 @@ func (c *Client) DescribeDomainDetailsSaasWithContext(ctx context.Context, reque
     return
 }
 
+func NewDescribeDomainVerifyResultRequest() (request *DescribeDomainVerifyResultRequest) {
+    request = &DescribeDomainVerifyResultRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribeDomainVerifyResult")
+    
+    
+    return
+}
+
+func NewDescribeDomainVerifyResultResponse() (response *DescribeDomainVerifyResultResponse) {
+    response = &DescribeDomainVerifyResultResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribeDomainVerifyResult
+// 获取添加域名操作的结果
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) DescribeDomainVerifyResult(request *DescribeDomainVerifyResultRequest) (response *DescribeDomainVerifyResultResponse, err error) {
+    return c.DescribeDomainVerifyResultWithContext(context.Background(), request)
+}
+
+// DescribeDomainVerifyResult
+// 获取添加域名操作的结果
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETER_INVALIDCERTIFICATE = "InvalidParameter.InvalidCertificate"
+//  INVALIDPARAMETER_QUERYCERTBYSSLIDFAILED = "InvalidParameter.QueryCertBySSLIDFailed"
+//  INVALIDPARAMETERVALUE = "InvalidParameterValue"
+//  RESOURCEINUSE = "ResourceInUse"
+func (c *Client) DescribeDomainVerifyResultWithContext(ctx context.Context, request *DescribeDomainVerifyResultRequest) (response *DescribeDomainVerifyResultResponse, err error) {
+    if request == nil {
+        request = NewDescribeDomainVerifyResultRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribeDomainVerifyResult require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribeDomainVerifyResultResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeDomainWhiteRulesRequest() (request *DescribeDomainWhiteRulesRequest) {
     request = &DescribeDomainWhiteRulesRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -2947,6 +2911,7 @@ func NewDescribeFlowTrendResponse() (response *DescribeFlowTrendResponse) {
 //  INVALIDPARAMETER_UNKNOWNACTION = "InvalidParameter.UnknownAction"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
 func (c *Client) DescribeFlowTrend(request *DescribeFlowTrendRequest) (response *DescribeFlowTrendResponse, err error) {
     return c.DescribeFlowTrendWithContext(context.Background(), request)
 }
@@ -2961,6 +2926,7 @@ func (c *Client) DescribeFlowTrend(request *DescribeFlowTrendRequest) (response 
 //  INVALIDPARAMETER_UNKNOWNACTION = "InvalidParameter.UnknownAction"
 //  LIMITEXCEEDED = "LimitExceeded"
 //  OPERATIONDENIED = "OperationDenied"
+//  UNSUPPORTEDOPERATION_INVALIDREQUEST = "UnsupportedOperation.InvalidRequest"
 func (c *Client) DescribeFlowTrendWithContext(ctx context.Context, request *DescribeFlowTrendRequest) (response *DescribeFlowTrendResponse, err error) {
     if request == nil {
         request = NewDescribeFlowTrendRequest()
@@ -3352,6 +3318,7 @@ func NewDescribeIpHitItemsResponse() (response *DescribeIpHitItemsResponse) {
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeIpHitItems(request *DescribeIpHitItemsRequest) (response *DescribeIpHitItemsResponse, err error) {
     return c.DescribeIpHitItemsWithContext(context.Background(), request)
@@ -3362,6 +3329,7 @@ func (c *Client) DescribeIpHitItems(request *DescribeIpHitItemsRequest) (respons
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) DescribeIpHitItemsWithContext(ctx context.Context, request *DescribeIpHitItemsRequest) (response *DescribeIpHitItemsResponse, err error) {
     if request == nil {
@@ -4349,6 +4317,54 @@ func (c *Client) DescribeWafThreatenIntelligenceWithContext(ctx context.Context,
     return
 }
 
+func NewFreshAntiFakeUrlRequest() (request *FreshAntiFakeUrlRequest) {
+    request = &FreshAntiFakeUrlRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "FreshAntiFakeUrl")
+    
+    
+    return
+}
+
+func NewFreshAntiFakeUrlResponse() (response *FreshAntiFakeUrlResponse) {
+    response = &FreshAntiFakeUrlResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// FreshAntiFakeUrl
+// 刷新防篡改url
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) FreshAntiFakeUrl(request *FreshAntiFakeUrlRequest) (response *FreshAntiFakeUrlResponse, err error) {
+    return c.FreshAntiFakeUrlWithContext(context.Background(), request)
+}
+
+// FreshAntiFakeUrl
+// 刷新防篡改url
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) FreshAntiFakeUrlWithContext(ctx context.Context, request *FreshAntiFakeUrlRequest) (response *FreshAntiFakeUrlResponse, err error) {
+    if request == nil {
+        request = NewFreshAntiFakeUrlRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("FreshAntiFakeUrl require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewFreshAntiFakeUrlResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewGetAttackDownloadRecordsRequest() (request *GetAttackDownloadRecordsRequest) {
     request = &GetAttackDownloadRecordsRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -5104,6 +5120,7 @@ func NewModifyCustomWhiteRuleResponse() (response *ModifyCustomWhiteRuleResponse
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyCustomWhiteRule(request *ModifyCustomWhiteRuleRequest) (response *ModifyCustomWhiteRuleResponse, err error) {
@@ -5115,6 +5132,7 @@ func (c *Client) ModifyCustomWhiteRule(request *ModifyCustomWhiteRuleRequest) (r
 //
 // 可能返回的错误码:
 //  INTERNALERROR = "InternalError"
+//  INTERNALERROR_DBERR = "InternalError.DBErr"
 //  INVALIDPARAMETER = "InvalidParameter"
 //  UNSUPPORTEDOPERATION = "UnsupportedOperation"
 func (c *Client) ModifyCustomWhiteRuleWithContext(ctx context.Context, request *ModifyCustomWhiteRuleRequest) (response *ModifyCustomWhiteRuleResponse, err error) {
