@@ -3153,6 +3153,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_cfw_nat_firewall_switch":                             resourceTencentCloudCfwNatFirewallSwitch(),
 			"tencentcloud_cfw_vpc_firewall_switch":                             resourceTencentCloudCfwVpcFirewallSwitch(),
 			"tencentcloud_cfw_edge_firewall_switch":                            resourceTencentCloudCfwEdgeFirewallSwitch(),
+			"tencentcloud_ssl_check_certificate_chain":                         resourceTencentCloudSslCheckCertificateChain(),
+			"tencentcloud_ssl_complete_certificate":                            resourceTencentCloudSslCompleteCertificate(),
 		},
 
 		ConfigureFunc: providerConfigure,
