@@ -1,3 +1,12 @@
+## 1.81.26 (September 13, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_clickhouse_backup_tables` ([#2120](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2120))
+* **New Resource:** `tencentcloud_clickhouse_account` ([#2120](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2120))
+* **New Resource:** `tencentcloud_clickhouse_account_permission` ([#2120](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2120))
+* **New Resource:** `tencentcloud_trocket_rocketmq_instance` ([#2119](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2119))
+
 ## 1.81.25 (September 8, 2023)
 
 FEATURES:
