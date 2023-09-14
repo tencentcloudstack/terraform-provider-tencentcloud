@@ -45,6 +45,26 @@ func TestAccTencentCloudTseCngwRouteResource_basic(t *testing.T) {
 				ImportState:       true,
 				ImportStateVerify: true,
 			},
+			{
+				Config: testAccTseCngwRouteUp,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckTseCngwRouteExists("tencentcloud_tse_cngw_route.cngw_route"),
+					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_route.cngw_route", "id"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "gateway_id", defaultTseGatewayId),
+					// resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "force_https", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "hosts.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "https_redirect_status_code", "301"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "paths.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.0.key", "req"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "headers.0.value", "terraform1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "preserve_host", "true"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "protocols.#", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "route_name", "terraform-route"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "service_id", "b6017eaf-2363-481e-9e93-8d65aaf498cd"),
+					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "strip_path", "false"),
+				),
+			},
 		},
 	})
 }
@@ -135,5 +155,32 @@ resource "tencentcloud_tse_cngw_route" "cngw_route" {
   route_name = "terraform-route"
   service_id = "b6017eaf-2363-481e-9e93-8d65aaf498cd"
   strip_path = true
+}
+`
+
+const testAccTseCngwRouteUp = DefaultTseVar + `
+
+resource "tencentcloud_tse_cngw_route" "cngw_route" {
+  destination_ports = []
+  force_https       = false
+  gateway_id        = var.gateway_id
+  hosts = [
+    "192.168.0.1:9091",
+  ]
+  https_redirect_status_code = 301
+  paths = [
+    "/user1",
+  ]
+  headers {
+  	key = "req"
+  	value = "terraform1"
+  }
+  preserve_host = true
+  protocols = [
+    "http",
+  ]
+  route_name = "terraform-route"
+  service_id = "b6017eaf-2363-481e-9e93-8d65aaf498cd"
+  strip_path = false
 }
 `

@@ -476,7 +476,7 @@ func resourceTencentCloudTseCngwRouteUpdate(d *schema.ResourceData, meta interfa
 	request.RouteName = &routeName
 	request.RouteID = cngwRoute.ID
 
-	immutableArgs := []string{"gateway_id", "service_id", "route_name"}
+	immutableArgs := []string{"gateway_id", "service_id", "route_name", "force_https"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -494,33 +494,27 @@ func resourceTencentCloudTseCngwRouteUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if d.HasChange("hosts") {
-		if v, ok := d.GetOk("hosts"); ok {
-			hostsSet := v.(*schema.Set).List()
-			for i := range hostsSet {
-				hosts := hostsSet[i].(string)
-				request.Hosts = append(request.Hosts, &hosts)
-			}
+	if v, ok := d.GetOk("hosts"); ok {
+		hostsSet := v.(*schema.Set).List()
+		for i := range hostsSet {
+			hosts := hostsSet[i].(string)
+			request.Hosts = append(request.Hosts, &hosts)
 		}
 	}
 
-	if d.HasChange("paths") {
-		if v, ok := d.GetOk("paths"); ok {
-			pathsSet := v.(*schema.Set).List()
-			for i := range pathsSet {
-				paths := pathsSet[i].(string)
-				request.Paths = append(request.Paths, &paths)
-			}
+	if v, ok := d.GetOk("paths"); ok {
+		pathsSet := v.(*schema.Set).List()
+		for i := range pathsSet {
+			paths := pathsSet[i].(string)
+			request.Paths = append(request.Paths, &paths)
 		}
 	}
 
-	if d.HasChange("protocols") {
-		if v, ok := d.GetOk("protocols"); ok {
-			protocolsSet := v.(*schema.Set).List()
-			for i := range protocolsSet {
-				protocols := protocolsSet[i].(string)
-				request.Protocols = append(request.Protocols, &protocols)
-			}
+	if v, ok := d.GetOk("protocols"); ok {
+		protocolsSet := v.(*schema.Set).List()
+		for i := range protocolsSet {
+			protocols := protocolsSet[i].(string)
+			request.Protocols = append(request.Protocols, &protocols)
 		}
 	}
 
@@ -542,11 +536,11 @@ func resourceTencentCloudTseCngwRouteUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if d.HasChange("force_https") {
-		if v, ok := d.GetOkExists("force_https"); ok {
-			request.ForceHttps = helper.Bool(v.(bool))
-		}
-	}
+	// if d.HasChange("force_https") {
+	// 	if v, ok := d.GetOkExists("force_https"); ok {
+	// 		request.ForceHttps = helper.Bool(v.(bool))
+	// 	}
+	// }
 
 	if d.HasChange("destination_ports") {
 		if v, ok := d.GetOk("destination_ports"); ok {
