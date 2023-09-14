@@ -43,11 +43,11 @@ func TestAccTencentCloudTseCngwGatewayResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_gateway.cngw_gateway", "tags.createdBy", "terraform"),
 				),
 			},
-			// {
-			// 	ResourceName:      "tencentcloud_tse_cngw_gateway.cngw_gateway",
-			// 	ImportState:       true,
-			// 	ImportStateVerify: true,
-			// },
+			{
+				ResourceName:      "tencentcloud_tse_cngw_gateway.cngw_gateway",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 			{
 				Config: testAccTseCngwGatewayUp,
 				Check: resource.ComposeTestCheckFunc(
