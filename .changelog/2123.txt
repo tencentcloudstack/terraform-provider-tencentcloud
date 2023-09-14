@@ -1,0 +1,7 @@
+```release-note:new-resource
+tencentcloud_trocket_rocketmq_topic
+```
+
+```release-note:new-resource
+tencentcloud_trocket_rocketmq_consumer_group
+```
