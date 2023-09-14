@@ -136,6 +136,27 @@ resource "tencentcloud_clb_listener" "TCPSSL_listener" {
   target_type                = "TARGETGROUP"
 }
 ```
+
+Port Range Listener
+
+```hcl
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-listener-test"
+}
+
+resource "tencentcloud_clb_listener" "listener_basic" {
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  port                = 1
+  end_port            = 6
+  protocol            = "TCP"
+  listener_name       = "listener_basic"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  target_type         = "NODE"
+}
+```
+
 Import
 
 CLB listener can be imported using the id (version >= 1.47.0), e.g.
@@ -357,6 +378,13 @@ func resourceTencentCloudClbListener() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue([]string{CLB_TARGET_TYPE_NODE, CLB_TARGET_TYPE_TARGETGROUP}),
 				Description:  "Backend target type. Valid values: `NODE`, `TARGETGROUP`. `NODE` means to bind ordinary nodes, `TARGETGROUP` means to bind target group. NOTES: TCP/UDP/TCP_SSL listener must configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.",
 			},
+			"end_port": {
+				Type:        schema.TypeInt,
+				ForceNew:    true,
+				Computed:    true,
+				Optional:    true,
+				Description: "This parameter is used to specify the end port and is required when creating a port range listener. Only one member can be passed in when inputting the `Ports` parameter, which is used to specify the start port. If you want to try the port range feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).",
+			},
 			//computed
 			"listener_id": {
 				Type:        schema.TypeString,
@@ -452,6 +480,10 @@ func resourceTencentCloudClbListenerCreate(d *schema.ResourceData, meta interfac
 			request.SniSwitch = &vvv
 		}
 	}
+	if v, ok := d.GetOkExists("end_port"); ok {
+		request.EndPort = helper.IntUint64(v.(int))
+	}
+
 	var response *clb.CreateListenerResponse
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 		result, e := meta.(*TencentCloudClient).apiV3Conn.UseClbClient().CreateListener(request)
@@ -604,6 +636,10 @@ func resourceTencentCloudClbListenerRead(d *schema.ResourceData, meta interface{
 		if instance.Certificate.CertCaId != nil {
 			_ = d.Set("certificate_ca_id", instance.Certificate.CertCaId)
 		}
+	}
+
+	if instance.EndPort != nil {
+		_ = d.Set("end_port", instance.EndPort)
 	}
 
 	return nil
