@@ -43,8 +43,8 @@ The following arguments are supported:
 
 * `consume_enable` - (Required, Bool) Whether to enable consumption.
 * `consume_message_orderly` - (Required, Bool) `true`: Sequential delivery, `false`: Concurrent delivery.
-* `consumer_group` - (Required, String) Name of consumer group.
-* `instance_id` - (Required, String) Instance ID.
+* `consumer_group` - (Required, String, ForceNew) Name of consumer group.
+* `instance_id` - (Required, String, ForceNew) Instance ID.
 * `max_retry_times` - (Required, Int) Max retry times.
 * `remark` - (Optional, String) remark.
 

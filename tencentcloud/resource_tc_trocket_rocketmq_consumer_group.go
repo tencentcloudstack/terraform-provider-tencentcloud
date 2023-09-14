@@ -62,12 +62,14 @@ func resourceTencentCloudTrocketRocketmqConsumerGroup() *schema.Resource {
 			"instance_id": {
 				Required:    true,
 				Type:        schema.TypeString,
+				ForceNew:    true,
 				Description: "Instance ID.",
 			},
 
 			"consumer_group": {
 				Required:    true,
 				Type:        schema.TypeString,
+				ForceNew:    true,
 				Description: "Name of consumer group.",
 			},
 
