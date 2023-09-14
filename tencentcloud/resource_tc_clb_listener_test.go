@@ -40,6 +40,36 @@ func TestAccTencentCloudClbListener_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudClbListenerResource_PortRange(t *testing.T) {
+	t.Parallel()
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckClbListenerDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccClbListener_portRange,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbListenerExists("tencentcloud_clb_listener.listener_port_range"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_listener.listener_port_range", "clb_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_port_range", "protocol", "TCP"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_port_range", "listener_name", "listener_port_range"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_port_range", "session_expire_time", "30"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_port_range", "port", "1"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_port_range", "end_port", "6"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_listener.listener_port_range", "scheduler", "WRR"),
+				),
+			},
+			{
+				ResourceName:      "tencentcloud_clb_listener.listener_port_range",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudClbListener_tcp_basic(t *testing.T) {
 	t.Parallel()
 
@@ -439,6 +469,24 @@ resource "tencentcloud_clb_listener" "listener_basic" {
   session_expire_time = 30
   scheduler           = "WRR"
   target_type         = "TARGETGROUP"
+}
+`
+
+const testAccClbListener_portRange = `
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-listener-port-range"
+}
+
+resource "tencentcloud_clb_listener" "listener_port_range" {
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  port                = 1
+  end_port            = 6
+  protocol            = "TCP"
+  listener_name       = "listener_port_range"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  target_type         = "NODE"
 }
 `
 
