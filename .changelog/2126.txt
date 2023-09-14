@@ -1,5 +1,5 @@
 ```release-note:enhancement
-resource/tencentcloud_tke_tmp_alert_policy: Support modifying `node_config`.
+resource/tencentcloud_tse_cngw_gateway: Support modifying `node_config`.
 ```
 
 ```release-note:new-resource
