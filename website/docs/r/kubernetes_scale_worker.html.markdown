@@ -125,7 +125,7 @@ The following arguments are supported:
 * `mount_target` - (Optional, String, ForceNew) Mount target. Default is not mounting.
 * `unschedulable` - (Optional, Int, ForceNew) Sets whether the joining node participates in the schedule. Default is '0'. Participate in scheduling.
 
-The `data_disk` object of `worker_config` supports the following:
+The `data_disk` object supports the following:
 
 * `auto_format_and_mount` - (Optional, Bool, ForceNew) Indicate whether to auto format and mount or not. Default is `false`.
 * `disk_partition` - (Optional, String, ForceNew) The name of the device or partition to mount.

@@ -1656,6 +1656,10 @@ Waf
   Data Source
     tencentcloud_waf_ciphers
     tencentcloud_waf_tls_versions
+    tencentcloud_waf_domains
+    tencentcloud_waf_find_domains
+    tencentcloud_waf_ports
+    tencentcloud_waf_user_domains
 
   Resource
     tencentcloud_waf_custom_rule
@@ -2311,6 +2315,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_private_dns_records":                       dataSourceTencentCloudPrivateDnsRecords(),
 			"tencentcloud_waf_ciphers":                               dataSourceTencentCloudWafCiphers(),
 			"tencentcloud_waf_tls_versions":                          dataSourceTencentCloudWafTlsVersions(),
+			"tencentcloud_waf_domains":                               dataSourceTencentCloudWafDomains(),
+			"tencentcloud_waf_find_domains":                          dataSourceTencentCloudWafFindDomains(),
+			"tencentcloud_waf_waf_infos":                             dataSourceTencentCloudWafWafInfos(),
+			"tencentcloud_waf_ports":                                 dataSourceTencentCloudWafPorts(),
+			"tencentcloud_waf_user_domains":                          dataSourceTencentCloudWafUserDomains(),
 			"tencentcloud_ses_receivers":                             dataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                            dataSourceTencentCloudSesSendTasks(),
 			"tencentcloud_ses_email_identities":                      dataSourceTencentCloudSesEmailIdentities(),

@@ -314,3 +314,8 @@ var IS_KEEP_ALIVE_STATUS = []string{
 	IS_KEEP_ALIVE_0,
 	IS_KEEP_ALIVE_1,
 }
+
+const (
+	ORDER_ASC  = "asc"
+	ORDER_DESC = "desc"
+)

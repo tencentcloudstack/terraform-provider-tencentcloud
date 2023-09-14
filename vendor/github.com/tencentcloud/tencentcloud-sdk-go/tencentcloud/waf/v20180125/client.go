@@ -3569,6 +3569,54 @@ func (c *Client) DescribePolicyStatusWithContext(ctx context.Context, request *D
     return
 }
 
+func NewDescribePortsRequest() (request *DescribePortsRequest) {
+    request = &DescribePortsRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "DescribePorts")
+    
+    
+    return
+}
+
+func NewDescribePortsResponse() (response *DescribePortsResponse) {
+    response = &DescribePortsResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DescribePorts
+// 获取非标端口列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribePorts(request *DescribePortsRequest) (response *DescribePortsResponse, err error) {
+    return c.DescribePortsWithContext(context.Background(), request)
+}
+
+// DescribePorts
+// 获取非标端口列表
+//
+// 可能返回的错误码:
+//  INTERNALERROR = "InternalError"
+func (c *Client) DescribePortsWithContext(ctx context.Context, request *DescribePortsRequest) (response *DescribePortsResponse, err error) {
+    if request == nil {
+        request = NewDescribePortsRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DescribePorts require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDescribePortsResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDescribeRuleLimitRequest() (request *DescribeRuleLimitRequest) {
     request = &DescribeRuleLimitRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4539,6 +4587,68 @@ func (c *Client) GetAttackTotalCountWithContext(ctx context.Context, request *Ge
     request.SetContext(ctx)
     
     response = NewGetAttackTotalCountResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewGetInstanceQpsLimitRequest() (request *GetInstanceQpsLimitRequest) {
+    request = &GetInstanceQpsLimitRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("waf", APIVersion, "GetInstanceQpsLimit")
+    
+    
+    return
+}
+
+func NewGetInstanceQpsLimitResponse() (response *GetInstanceQpsLimitResponse) {
+    response = &GetInstanceQpsLimitResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// GetInstanceQpsLimit
+// 获取套餐实例的弹性qps上限
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSDBOPERATIONFAILED = "FailedOperation.CLSDBOperationFailed"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWNERR = "InternalError.UnknownErr"
+//  INVALIDPARAMETER_LOGICERR = "InvalidParameter.LogicErr"
+//  INVALIDPARAMETER_SQLSYNTAXERR = "InvalidParameter.SQLSyntaxErr"
+//  INVALIDPARAMETER_TYPEMISMATCH = "InvalidParameter.TypeMismatch"
+func (c *Client) GetInstanceQpsLimit(request *GetInstanceQpsLimitRequest) (response *GetInstanceQpsLimitResponse, err error) {
+    return c.GetInstanceQpsLimitWithContext(context.Background(), request)
+}
+
+// GetInstanceQpsLimit
+// 获取套餐实例的弹性qps上限
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  FAILEDOPERATION_CLSDBOPERATIONFAILED = "FailedOperation.CLSDBOperationFailed"
+//  FAILEDOPERATION_CLSINTERNALERROR = "FailedOperation.CLSInternalError"
+//  INTERNALERROR = "InternalError"
+//  INTERNALERROR_UNKNOWNERR = "InternalError.UnknownErr"
+//  INVALIDPARAMETER_LOGICERR = "InvalidParameter.LogicErr"
+//  INVALIDPARAMETER_SQLSYNTAXERR = "InvalidParameter.SQLSyntaxErr"
+//  INVALIDPARAMETER_TYPEMISMATCH = "InvalidParameter.TypeMismatch"
+func (c *Client) GetInstanceQpsLimitWithContext(ctx context.Context, request *GetInstanceQpsLimitRequest) (response *GetInstanceQpsLimitResponse, err error) {
+    if request == nil {
+        request = NewGetInstanceQpsLimitRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("GetInstanceQpsLimit require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewGetInstanceQpsLimitResponse()
     err = c.Send(request, response)
     return
 }
