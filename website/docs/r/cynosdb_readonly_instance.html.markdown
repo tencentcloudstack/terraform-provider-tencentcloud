@@ -47,6 +47,8 @@ The following arguments are supported:
 * `instance_maintain_start_time` - (Optional, Int) Offset time from 00:00, unit in second. For example, 03:00am should be `10800`. `10800` by default.
 * `instance_maintain_weekdays` - (Optional, Set: [`String`]) Weekdays for maintenance. `["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]` by default.
 * `instance_memory_size` - (Optional, Int) Memory capacity of read-write type instance, unit in GB. Required while creating normal cluster. Note: modification of this field will take effect immediately, if want to upgrade on maintenance window, please upgrade from console.
+* `subnet_id` - (Optional, String) ID of the subnet within this VPC.
+* `vpc_id` - (Optional, String) ID of the VPC.
 
 ## Attributes Reference
 
