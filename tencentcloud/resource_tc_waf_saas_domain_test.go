@@ -39,7 +39,7 @@ func TestAccTencentCloudNeedFixWafSaasDomainResource_basic(t *testing.T) {
 const testAccWafSaasDomain = `
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.qcloudwaf.com"
+  domain          = "tf.example.com"
   is_cdn          = 3
   cert_type       = 2
   ssl_id          = "3a6B5y8v"
@@ -94,7 +94,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
 const testAccWafSaasDomainUpdate = `
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.qcloudwaf.com"
+  domain          = "tf.example.com"
   is_cdn          = 3
   cert_type       = 2
   ssl_id          = "3a6B5y8v"

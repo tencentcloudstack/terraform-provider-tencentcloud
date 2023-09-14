@@ -10,7 +10,7 @@ Create a basic waf saas domain
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id = "waf_2kxtlbky01b3wceb"
-  domain      = "tf.qcloudwaf.com"
+  domain      = "tf.example.com"
   src_list    = [
     "1.1.1.1"
   ]
@@ -29,7 +29,7 @@ Create a load balancing strategy is weighted polling saas domain
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id = "waf_2kxtlbky01b3wceb"
-  domain      = "tf.qcloudwaf.com"
+  domain      = "tf.example.com"
   src_list    = [
     "1.1.1.1",
     "2.2.2.2"
@@ -54,7 +54,7 @@ If upstream_type is 1
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.qcloudwaf.com"
+  domain          = "tf.example.com"
   upstream_type   = 1
   upstream_domain = "test.com"
 
@@ -72,7 +72,7 @@ Create a waf saas domain with set Http&Https
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.qcloudwaf.com"
+  domain          = "tf.example.com"
   is_cdn          = 3
   cert_type       = 2
   ssl_id          = "3a6B5y8v"
@@ -115,7 +115,7 @@ Create a complete waf saas domain
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.qcloudwaf.com"
+  domain          = "tf.example.com"
   is_cdn          = 3
   cert_type       = 2
   ssl_id          = "3a6B5y8v"
@@ -172,7 +172,7 @@ Import
 waf saas_domain can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_waf_saas_domain.example waf_2kxtlbky01b3wceb#tf.qcloudwaf.com#9647c91da0aa5f5aaa49d0ca40e2af24
+terraform import tencentcloud_waf_saas_domain.example waf_2kxtlbky01b3wceb#tf.example.com#9647c91da0aa5f5aaa49d0ca40e2af24
 ```
 */
 package tencentcloud

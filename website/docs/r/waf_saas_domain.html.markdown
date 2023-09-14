@@ -20,7 +20,7 @@ Create a basic waf saas domain
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id = "waf_2kxtlbky01b3wceb"
-  domain      = "tf.qcloudwaf.com"
+  domain      = "tf.example.com"
   src_list = [
     "1.1.1.1"
   ]
@@ -39,7 +39,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id = "waf_2kxtlbky01b3wceb"
-  domain      = "tf.qcloudwaf.com"
+  domain      = "tf.example.com"
   src_list = [
     "1.1.1.1",
     "2.2.2.2"
@@ -64,7 +64,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.qcloudwaf.com"
+  domain          = "tf.example.com"
   upstream_type   = 1
   upstream_domain = "test.com"
 
@@ -82,7 +82,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.qcloudwaf.com"
+  domain          = "tf.example.com"
   is_cdn          = 3
   cert_type       = 2
   ssl_id          = "3a6B5y8v"
@@ -125,7 +125,7 @@ resource "tencentcloud_waf_saas_domain" "example" {
 ```hcl
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.qcloudwaf.com"
+  domain          = "tf.example.com"
   is_cdn          = 3
   cert_type       = 2
   ssl_id          = "3a6B5y8v"
@@ -234,6 +234,6 @@ In addition to all arguments above, the following attributes are exported:
 waf saas_domain can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_waf_saas_domain.example waf_2kxtlbky01b3wceb#tf.qcloudwaf.com#9647c91da0aa5f5aaa49d0ca40e2af24
+terraform import tencentcloud_waf_saas_domain.example waf_2kxtlbky01b3wceb#tf.example.com#9647c91da0aa5f5aaa49d0ca40e2af24
 ```
 
