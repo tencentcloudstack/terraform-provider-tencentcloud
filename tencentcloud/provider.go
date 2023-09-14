@@ -1378,11 +1378,16 @@ Real User Monitoring(RUM)
 	tencentcloud_rum_static_url
 	tencentcloud_rum_taw_area
 	tencentcloud_rum_web_vitals_page
+	tencentcloud_rum_log_export
+	tencentcloud_rum_log_export_list
   Resource
 	tencentcloud_rum_project
 	tencentcloud_rum_taw_instance
 	tencentcloud_rum_whitelist
 	tencentcloud_rum_offline_log_config_attachment
+	tencentcloud_rum_instance_status_attachment
+	tencentcloud_rum_project_status_attachment
+	tencentcloud_rum_release_file
 
 Cloud Streaming Services(CSS)
   Resource
@@ -3127,6 +3132,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_rum_taw_instance":                                    resourceTencentCloudRumTawInstance(),
 			"tencentcloud_rum_whitelist":                                       resourceTencentCloudRumWhitelist(),
 			"tencentcloud_rum_offline_log_config_attachment":                   resourceTencentCloudRumOfflineLogConfigAttachment(),
+			"tencentcloud_rum_instance_status_attachment":                      resourceTencentCloudRumInstanceStatusAttachment(),
+			"tencentcloud_rum_project_status_attachment":                       resourceTencentCloudRumProjectStatusAttachment(),
+			"tencentcloud_rum_release_file":                                    resourceTencentCloudRumReleaseFile(),
 			"tencentcloud_tdmq_rocketmq_cluster":                               resourceTencentCloudTdmqRocketmqCluster(),
 			"tencentcloud_tdmq_rocketmq_namespace":                             resourceTencentCloudTdmqRocketmqNamespace(),
 			"tencentcloud_tdmq_rocketmq_role":                                  resourceTencentCloudTdmqRocketmqRole(),

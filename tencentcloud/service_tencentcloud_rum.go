@@ -2134,3 +2134,225 @@ func (me *RumService) DescribeRumTawAreaByFilter(ctx context.Context, param map[
 
 	return
 }
+
+func (me *RumService) DescribeRumInstanceStatusAttachmentById(ctx context.Context, instanceId string) (instanceStatusAttachment *rum.RumInstanceInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := rum.NewDescribeTawInstancesRequest()
+	request.Filters = append(
+		request.Filters,
+		&rum.Filter{
+			Name:   helper.String("InstanceId"),
+			Values: []*string{&instanceId},
+		},
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRumClient().DescribeTawInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.InstanceSet) < 1 {
+		return
+	}
+
+	instanceStatusAttachment = response.Response.InstanceSet[0]
+	return
+}
+
+func (me *RumService) DescribeRumProjectStatusAttachmentById(ctx context.Context, projectId string) (projectStatusAttachment *rum.RumProject, errRet error) {
+	logId := getLogId(ctx)
+
+	request := rum.NewDescribeProjectsRequest()
+	request.Filters = append(
+		request.Filters,
+		&rum.Filter{
+			Name:   helper.String("ID"),
+			Values: []*string{&projectId},
+		},
+	)
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+
+	request.Offset = &offset
+	request.Limit = &limit
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRumClient().DescribeProjects(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.ProjectSet) < 1 {
+		return
+	}
+
+	projectStatusAttachment = response.Response.ProjectSet[0]
+	return
+}
+
+func (me *RumService) DescribeRumReleaseFileById(ctx context.Context, projectID, releaseFileId int64) (releaseFile *rum.ReleaseFile, errRet error) {
+	logId := getLogId(ctx)
+
+	request := rum.NewDescribeReleaseFilesRequest()
+	request.ProjectID = &projectID
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRumClient().DescribeReleaseFiles(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Files) < 1 {
+		return
+	}
+
+	for _, v := range response.Response.Files {
+		if *v.ID == releaseFileId {
+			releaseFile = v
+			return
+		}
+	}
+
+	return
+}
+
+func (me *RumService) DeleteRumReleaseFileById(ctx context.Context, releaseFileId int64) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := rum.NewDeleteReleaseFileRequest()
+	request.ID = &releaseFileId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseRumClient().DeleteReleaseFile(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
+
+func (me *RumService) DescribeRumLogExportByFilter(ctx context.Context, param map[string]interface{}) (logExport *string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeRumLogExportRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Name" {
+			request.Name = v.(*string)
+		}
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+		if k == "Query" {
+			request.Query = v.(*string)
+		}
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+		if k == "ProjectId" {
+			request.ID = v.(*int64)
+		}
+		if k == "Fields" {
+			request.Fields = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRumClient().DescribeRumLogExport(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	logExport = response.Response.Result
+
+	return
+}
+
+func (me *RumService) DescribeRumLogExportListByFilter(ctx context.Context, param map[string]interface{}) (logExportList *string, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = rum.NewDescribeRumLogExportsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "ProjectId" {
+			request.ID = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseRumClient().DescribeRumLogExports(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil || response.Response == nil {
+		return
+	}
+
+	logExportList = response.Response.Result
+
+	return
+}

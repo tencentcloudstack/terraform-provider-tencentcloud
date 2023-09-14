@@ -42,7 +42,7 @@ In addition to all arguments above, the following attributes are exported:
   * `api_num` - The number of all request api.
   * `create_time` - Project record created time.
   * `page_duration` - The duration of page load.
-  * `page_error` - The number of exception which happend on page.
+  * `page_error` - The number of exception which happened on page.
   * `page_pv` - Pv.
   * `page_uv` - User view.
   * `project_id` - Project ID.
