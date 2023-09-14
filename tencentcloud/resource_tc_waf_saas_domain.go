@@ -925,9 +925,9 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("cert_type", saasDomain.CertType)
 	}
 
-	//if saasDomain.Cert != nil {
-	//	_ = d.Set("cert", saasDomain.Cert)
-	//}
+	if saasDomain.Cert != nil {
+		_ = d.Set("cert", saasDomain.Cert)
+	}
 
 	if saasDomain.PrivateKey != nil {
 		_ = d.Set("private_key", saasDomain.PrivateKey)
