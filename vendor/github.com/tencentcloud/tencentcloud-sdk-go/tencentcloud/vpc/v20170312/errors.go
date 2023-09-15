@@ -194,6 +194,9 @@ const (
 	// 参数值存在重复。
 	INVALIDPARAMETERVALUE_DUPLICATEPARA = "InvalidParameterValue.DuplicatePara"
 
+	// 本端地域和端地域重复。
+	INVALIDPARAMETERVALUE_DUPLICATEREGION = "InvalidParameterValue.DuplicateRegion"
+
 	// 值超过上限。
 	INVALIDPARAMETERVALUE_EIPBRANDWIDTHOUTINVALID = "InvalidParameterValue.EIPBrandWidthOutInvalid"
 
@@ -395,13 +398,13 @@ const (
 	// 标签没有分配配额。
 	INVALIDPARAMETERVALUE_TAGNOTALLOCATEDQUOTA = "InvalidParameterValue.TagNotAllocatedQuota"
 
-	// 该标签和值不存在。
+	// 该标签不存在。
 	INVALIDPARAMETERVALUE_TAGNOTEXISTED = "InvalidParameterValue.TagNotExisted"
 
 	// 不支持的标签。
 	INVALIDPARAMETERVALUE_TAGNOTSUPPORTTAG = "InvalidParameterValue.TagNotSupportTag"
 
-	// '标签资源格式错误。
+	// 标签资源格式错误。
 	INVALIDPARAMETERVALUE_TAGRESOURCEFORMATERROR = "InvalidParameterValue.TagResourceFormatError"
 
 	// 标签时间戳超配。
@@ -412,6 +415,9 @@ const (
 
 	// 无效参数值。参数值太长。
 	INVALIDPARAMETERVALUE_TOOLONG = "InvalidParameterValue.TooLong"
+
+	// 流量包ID格式错误。
+	INVALIDPARAMETERVALUE_TRAFFICPACKAGEID = "InvalidParameterValue.TrafficPackageId"
 
 	// 该流量包ID不合法。
 	INVALIDPARAMETERVALUE_TRAFFICPACKAGEIDMALFORMED = "InvalidParameterValue.TrafficPackageIdMalformed"
@@ -557,6 +563,12 @@ const (
 	// 流量包配额超过限制。
 	LIMITEXCEEDED_TRAFFICPACKAGEQUOTA = "LimitExceeded.TrafficPackageQuota"
 
+	// 有效的对等个数超过配额上限。
+	LIMITEXCEEDED_VPCPEERAVALIMITEXCEEDED = "LimitExceeded.VpcPeerAvaLimitExceeded"
+
+	// 可创建的对等连接个数超过总上限。
+	LIMITEXCEEDED_VPCPEERTOTALLIMITEXCEEDED = "LimitExceeded.VpcPeerTotalLimitExceeded"
+
 	// 缺少参数错误。
 	MISSINGPARAMETER = "MissingParameter"
 
@@ -610,6 +622,9 @@ const (
 
 	// 主IP不支持指定操作。
 	UNAUTHORIZEDOPERATION_PRIMARYIP = "UnauthorizedOperation.PrimaryIp"
+
+	// 对等连接本端VPC与对端VPC存在CIDR冲突,或一端与已建立的对等连接某一端冲突。
+	UNAUTHORIZEDOPERATION_VPCPEERCIDRCONFLICT = "UnauthorizedOperation.VpcPeerCidrConflict"
 
 	// 未知参数错误。
 	UNKNOWNPARAMETER = "UnknownParameter"
@@ -761,6 +776,12 @@ const (
 	// 不支持创建流日志：当前弹性网卡未绑定实例。
 	UNSUPPORTEDOPERATION_FLOWLOGSNOTSUPPORTNULLINSTANCEENI = "UnsupportedOperation.FlowLogsNotSupportNullInstanceEni"
 
+	// 指定的客户令牌已经被使用。
+	UNSUPPORTEDOPERATION_IDEMPOTENTPARAMETERMISMATCH = "UnsupportedOperation.IdempotentParameterMismatch"
+
+	// 先前的幂等请求仍在处理中，请稍后重试。
+	UNSUPPORTEDOPERATION_IDEMPOTENTPROCESSING = "UnsupportedOperation.IdempotentProcessing"
+
 	// 该种类型地址不支持此操作。
 	UNSUPPORTEDOPERATION_INCORRECTADDRESSRESOURCETYPE = "UnsupportedOperation.IncorrectAddressResourceType"
 
@@ -821,6 +842,9 @@ const (
 	// 账户不支持修改公网IP的该属性。
 	UNSUPPORTEDOPERATION_MODIFYADDRESSATTRIBUTE = "UnsupportedOperation.ModifyAddressAttribute"
 
+	// VPC实例内部有账号纬度的IPv6白名单，不支持关联多云联网。
+	UNSUPPORTEDOPERATION_MULTIPLEVPCNOTSUPPORTATTACHACCOUNTHASIPV6 = "UnsupportedOperation.MultipleVpcNotSupportAttachAccountHasIpv6"
+
 	// 资源互斥操作任务正在执行。
 	UNSUPPORTEDOPERATION_MUTEXOPERATIONTASKRUNNING = "UnsupportedOperation.MutexOperationTaskRunning"
 
@@ -865,6 +889,9 @@ const (
 
 	// 不支持删除默认路由表。
 	UNSUPPORTEDOPERATION_NOTSUPPORTDELETEDEFAULTROUTETABLE = "UnsupportedOperation.NotSupportDeleteDefaultRouteTable"
+
+	// 公有云到黑石的对等连接不支持删除。
+	UNSUPPORTEDOPERATION_NOTSUPPORTDELETEVPCBMPEER = "UnsupportedOperation.NotSupportDeleteVpcBmPeer"
 
 	// 该地址类型不支持释放操作。
 	UNSUPPORTEDOPERATION_NOTSUPPORTEDADDRESSIPSCHARGETYPE = "UnsupportedOperation.NotSupportedAddressIpsChargeType"
@@ -922,6 +949,12 @@ const (
 
 	// 路由表绑定了子网。
 	UNSUPPORTEDOPERATION_ROUTETABLEHASSUBNETRULE = "UnsupportedOperation.RouteTableHasSubnetRule"
+
+	// SslVpnClientIds：`vpnc-20f9b3d7` 证书状态已启用或Client证书状态不可用，不支持启用证书。
+	UNSUPPORTEDOPERATION_SSLCLIENTCERTALREADYENABLEORCERTABNORMAL = "UnsupportedOperation.SSLClientCertAlreadyEnableOrCertAbnormal"
+
+	// SSL客户端状态不可用，不支持下载
+	UNSUPPORTEDOPERATION_SSLCLIENTCERTDISABLEUNSUPPORTEDDOWNLOADSSLCLIENTCERT = "UnsupportedOperation.SSLClientCertDisableUnsupportedDownloadSSLClientCert"
 
 	// 实例已关联快照策略。
 	UNSUPPORTEDOPERATION_SNAPSHOTATTACHED = "UnsupportedOperation.SnapshotAttached"
@@ -1009,6 +1042,18 @@ const (
 
 	// 资源不属于同一个VPC。
 	UNSUPPORTEDOPERATION_VPCMISMATCH = "UnsupportedOperation.VpcMismatch"
+
+	// 对等连接已存在。
+	UNSUPPORTEDOPERATION_VPCPEERALREADYEXIST = "UnsupportedOperation.VpcPeerAlreadyExist"
+
+	// VPC网段存在CIDR冲突。
+	UNSUPPORTEDOPERATION_VPCPEERCIDRCONFLICT = "UnsupportedOperation.VpcPeerCidrConflict"
+
+	// 对等连接状态错误。
+	UNSUPPORTEDOPERATION_VPCPEERINVALIDSTATECHANGE = "UnsupportedOperation.VpcPeerInvalidStateChange"
+
+	// 该账不能发起操作。
+	UNSUPPORTEDOPERATION_VPCPEERPURVIEWERROR = "UnsupportedOperation.VpcPeerPurviewError"
 
 	// 当前通道为非可用状态，不支持该操作。
 	UNSUPPORTEDOPERATION_VPNCONNINVALIDSTATE = "UnsupportedOperation.VpnConnInvalidState"
