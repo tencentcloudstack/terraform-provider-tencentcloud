@@ -245,6 +245,7 @@ func resourceTencentCloudTseCngwService() *schema.Resource {
 						"algorithm": {
 							Type:        schema.TypeString,
 							Optional:    true,
+							Computed:    true,
 							Description: "load balance algorithm,default: `round-robin`, `least-connections` and `consisten_hashing` also support.",
 						},
 						"auto_scaling_group_id": {

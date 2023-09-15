@@ -77,7 +77,6 @@ resource "tencentcloud_tse_cngw_service" "cngw_service" {
 
 resource "tencentcloud_tse_cngw_route" "cngw_route" {
   destination_ports = []
-  force_https       = false
   gateway_id        = tencentcloud_tse_cngw_gateway.cngw_gateway.id
   hosts = [
     "192.168.0.1:9090",
@@ -108,7 +107,7 @@ The following arguments are supported:
 * `gateway_id` - (Required, String) gateway ID.
 * `service_id` - (Required, String) ID of the service which the route belongs to.
 * `destination_ports` - (Optional, Set: [`Int`]) destination port for Layer 4 matching.
-* `force_https` - (Optional, Bool) whether to enable forced HTTPS, no longer use.
+* `force_https` - (Optional, Bool, **Deprecated**) This field has been deprecated and will be deleted in subsequent versions. whether to enable forced HTTPS, no longer use.
 * `headers` - (Optional, List) the headers of route.
 * `hosts` - (Optional, Set: [`String`]) host list.
 * `https_redirect_status_code` - (Optional, Int) https redirection status code.

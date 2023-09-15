@@ -1605,6 +1605,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_cngw_service
 	tencentcloud_tse_cngw_canary_rule
 	tencentcloud_tse_cngw_gateway
+	tencentcloud_tse_cngw_group
 	tencentcloud_tse_cngw_service_rate_limit
 	tencentcloud_tse_cngw_route
 	tencentcloud_tse_cngw_route_rate_limit

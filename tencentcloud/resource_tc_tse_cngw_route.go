@@ -67,7 +67,6 @@ resource "tencentcloud_tse_cngw_service" "cngw_service" {
 
 resource "tencentcloud_tse_cngw_route" "cngw_route" {
   destination_ports = []
-  force_https       = false
   gateway_id        = tencentcloud_tse_cngw_gateway.cngw_gateway.id
   hosts = [
     "192.168.0.1:9090",
@@ -191,6 +190,7 @@ func resourceTencentCloudTseCngwRoute() *schema.Resource {
 			"force_https": {
 				Optional:    true,
 				Type:        schema.TypeBool,
+				Deprecated:  "This field has been deprecated and will be deleted in subsequent versions.",
 				Description: "whether to enable forced HTTPS, no longer use.",
 			},
 
@@ -476,7 +476,7 @@ func resourceTencentCloudTseCngwRouteUpdate(d *schema.ResourceData, meta interfa
 	request.RouteName = &routeName
 	request.RouteID = cngwRoute.ID
 
-	immutableArgs := []string{"gateway_id", "service_id", "route_name"}
+	immutableArgs := []string{"gateway_id", "service_id", "route_name", "force_https"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
@@ -494,33 +494,27 @@ func resourceTencentCloudTseCngwRouteUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	if d.HasChange("hosts") {
-		if v, ok := d.GetOk("hosts"); ok {
-			hostsSet := v.(*schema.Set).List()
-			for i := range hostsSet {
-				hosts := hostsSet[i].(string)
-				request.Hosts = append(request.Hosts, &hosts)
-			}
+	if v, ok := d.GetOk("hosts"); ok {
+		hostsSet := v.(*schema.Set).List()
+		for i := range hostsSet {
+			hosts := hostsSet[i].(string)
+			request.Hosts = append(request.Hosts, &hosts)
 		}
 	}
 
-	if d.HasChange("paths") {
-		if v, ok := d.GetOk("paths"); ok {
-			pathsSet := v.(*schema.Set).List()
-			for i := range pathsSet {
-				paths := pathsSet[i].(string)
-				request.Paths = append(request.Paths, &paths)
-			}
+	if v, ok := d.GetOk("paths"); ok {
+		pathsSet := v.(*schema.Set).List()
+		for i := range pathsSet {
+			paths := pathsSet[i].(string)
+			request.Paths = append(request.Paths, &paths)
 		}
 	}
 
-	if d.HasChange("protocols") {
-		if v, ok := d.GetOk("protocols"); ok {
-			protocolsSet := v.(*schema.Set).List()
-			for i := range protocolsSet {
-				protocols := protocolsSet[i].(string)
-				request.Protocols = append(request.Protocols, &protocols)
-			}
+	if v, ok := d.GetOk("protocols"); ok {
+		protocolsSet := v.(*schema.Set).List()
+		for i := range protocolsSet {
+			protocols := protocolsSet[i].(string)
+			request.Protocols = append(request.Protocols, &protocols)
 		}
 	}
 
