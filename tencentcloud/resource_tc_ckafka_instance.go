@@ -50,7 +50,7 @@ resource "tencentcloud_ckafka_instance" "kafka_instance_prepaid" {
 
 resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
   instance_name      = "ckafka-instance-postpaid"
-  zone_id            = 100007
+  zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
   vpc_id             = var.vpc_id
   subnet_id          = var.subnet_id
   msg_retention_time = 1300
@@ -381,42 +381,6 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Deprecated:  "It has been deprecated from version 1.81.6. If set public network value, it will cause error.",
 				Description: "Bandwidth of the public network.",
 			},
-			//"dynamic_disk_config": {
-			//	Type:     schema.TypeList,
-			//	Optional: true,
-			//	MaxItems: 1,
-			//	Computed: true,
-			//	Elem: &schema.Resource{
-			//		Schema: map[string]*schema.Schema{
-			//			"enable": {
-			//				Type:     schema.TypeInt,
-			//				Optional: true,
-			//				Computed: true,
-			//				Description: "Whether to the dynamic disk expansion configuration is enabled." +
-			//					"0: disabled; 1: enabled.",
-			//			},
-			//			"disk_quota_percentage": {
-			//				Type:        schema.TypeInt,
-			//				Optional:    true,
-			//				Computed:    true,
-			//				Description: "Disk quota threshold (in percentage) for triggering the automatic disk expansion event.",
-			//			},
-			//			"step_forward_percentage": {
-			//				Type:        schema.TypeInt,
-			//				Optional:    true,
-			//				Computed:    true,
-			//				Description: "Percentage of dynamic disk expansion each time.",
-			//			},
-			//			"max_disk_space": {
-			//				Type:        schema.TypeInt,
-			//				Optional:    true,
-			//				Computed:    true,
-			//				Description: "Max scale disk size, in GB.",
-			//			},
-			//		},
-			//	},
-			//	Description: "Dynamic disk expansion policy configuration.",
-			//},
 			"max_message_byte": {
 				Type:         schema.TypeInt,
 				Optional:     true,

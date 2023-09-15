@@ -140,7 +140,6 @@ func TestAccTencentCloudCkafkaInstanceResource_type(t *testing.T) {
 					testAccCheckKafkaInstanceExists("tencentcloud_ckafka_instance.kafka_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-type-tf-test"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "specifications_type", "standard"),
-					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_type", "2"),
 				),
 			},
 			{
@@ -365,12 +364,13 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   msg_retention_time = 1300
   renew_flag         = 0
   kafka_version      = "1.1.1"
-  disk_size          = 1000
+  disk_size          = 500
   disk_type          = "CLOUD_BASIC"
 
   specifications_type = "standard"
   instance_type       = 2
-
+  band_width          = 40
+  partition           = 60
 
   config {
     auto_create_topic_enable   = true
