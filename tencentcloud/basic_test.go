@@ -180,8 +180,8 @@ data "tencentcloud_instance_types" "default" {
 // ckafka
 const (
 	defaultKafkaInstanceId = "ckafka-vv7wpvae"
-	defaultKafkaVpcId      = "vpc-68vi2d3h"
-	defaultKafkaSubnetId   = "subnet-ob6clqwk"
+	defaultKafkaVpcId      = "vpc-njbzmzyd"
+	defaultKafkaSubnetId   = "subnet-2txtpql8"
 )
 
 const defaultKafkaVariable = `
