@@ -879,7 +879,7 @@ SQLServer
 SSL Certificates
   Data Source
     tencentcloud_ssl_certificates
-
+    tencentcloud_ssl_describe_certificate
   Resource
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
@@ -2014,6 +2014,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_certificates":                         dataSourceTencentCloudGaapCertificates(),
 			"tencentcloud_gaap_domain_error_pages":                   dataSourceTencentCloudGaapDomainErrorPageInfoList(),
 			"tencentcloud_ssl_certificates":                          dataSourceTencentCloudSslCertificates(),
+			"tencentcloud_ssl_describe_certificate":                  dataSourceTencentCloudSslDescribeCertificate(),
 			"tencentcloud_cam_roles":                                 dataSourceTencentCloudCamRoles(),
 			"tencentcloud_cam_users":                                 dataSourceTencentCloudCamUsers(),
 			"tencentcloud_cam_groups":                                dataSourceTencentCloudCamGroups(),

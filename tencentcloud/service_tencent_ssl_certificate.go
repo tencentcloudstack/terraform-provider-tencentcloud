@@ -377,3 +377,35 @@ func (me *SSLService) getCertificateStatus(ctx context.Context, certificateId st
 
 	return *describeResponse.Response.Status, nil
 }
+func (me *SslService) DescribeSslDescribeCertificateByID(ctx context.Context, certificateId string) (describeCertificate *ssl.DescribeCertificateResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ssl.NewDescribeCertificateRequest()
+	)
+	request.CertificateId = &certificateId
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseSSLCertificateClient().DescribeCertificate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		errRet = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+		return
+	}
+	if response.Response == nil {
+		errRet = fmt.Errorf("disable API CertificateByID fail")
+		return
+	}
+	describeCertificate = response.Response
+	return
+}
