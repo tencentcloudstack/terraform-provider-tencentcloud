@@ -365,6 +365,13 @@ func (me *CynosdbService) DescribeInstanceById(ctx context.Context, instanceId s
 	}
 
 	instanceInfo = response.Response.Detail
+
+	if instanceInfo.VpcId != nil {
+		instanceInfo.VpcId = instances[0].VpcId
+	}
+	if instanceInfo.SubnetId != nil {
+		instanceInfo.SubnetId = instances[0].SubnetId
+	}
 	return
 }
 

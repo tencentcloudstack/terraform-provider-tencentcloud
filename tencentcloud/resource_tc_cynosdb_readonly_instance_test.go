@@ -30,6 +30,8 @@ func TestAccTencentCloudCynosdbReadonlyInstanceResource(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_readonly_instance.foo", "instance_memory_size"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_readonly_instance.foo", "instance_status"),
 					resource.TestCheckResourceAttrSet("tencentcloud_cynosdb_readonly_instance.foo", "instance_storage_size"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_readonly_instance.foo", "vpc_id", "vpc-4owdpnwr"),
+					resource.TestCheckResourceAttr("tencentcloud_cynosdb_readonly_instance.foo", "subnet_id", "subnet-m4qpx38w"),
 				),
 			},
 			{
@@ -102,7 +104,13 @@ func testAccCheckCynosdbReadonlyInstanceExists(n string) resource.TestCheckFunc 
 	}
 }
 
-const testAccCynosdbReadonlyInstance = testAccCynosdbBasic + `
+const readonlyInstanceVar = `
+variable "readonly_subnet" {
+  default = "subnet-m4qpx38w"
+}
+`
+
+const testAccCynosdbReadonlyInstance = testAccCynosdbBasic + readonlyInstanceVar + `
 resource "tencentcloud_cynosdb_cluster" "foo" {
   available_zone               = var.availability_zone
   vpc_id                       = var.my_vpc
@@ -148,6 +156,8 @@ resource "tencentcloud_cynosdb_readonly_instance" "foo" {
   force_delete         = true
   instance_cpu_core    = 1
   instance_memory_size = 2
+  vpc_id               = var.my_vpc
+  subnet_id            = var.readonly_subnet
 
   instance_maintain_duration   = 3600
   instance_maintain_start_time = 10800
