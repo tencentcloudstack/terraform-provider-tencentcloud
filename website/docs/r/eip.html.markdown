@@ -40,6 +40,19 @@ resource "tencentcloud_eip" "foo" {
 }
 ```
 
+### Eip With Network Egress
+
+```hcl
+resource "tencentcloud_eip" "foo" {
+  name                       = "egress_eip"
+  egress                     = "center_egress2"
+  internet_charge_type       = "BANDWIDTH_PACKAGE"
+  internet_service_provider  = "CMCC"
+  internet_max_bandwidth_out = 1
+  type                       = "EIP"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -49,6 +62,7 @@ The following arguments are supported:
 * `applicable_for_clb` - (Optional, Bool, **Deprecated**) It has been deprecated from version 1.27.0. Indicates whether the anycast eip can be associated to a CLB.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag.  0 - default state (manual renew); 1 - automatic renew; 2 - explicit no automatic renew. NOTES: Only supported prepaid EIP.
 * `bandwidth_package_id` - (Optional, String) ID of bandwidth package, it will set when `internet_charge_type` is `BANDWIDTH_PACKAGE`.
+* `egress` - (Optional, String) Network egress. It defaults to `center_egress1`. If you want to try the egress feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).
 * `internet_charge_type` - (Optional, String) The charge type of eip. Valid values: `BANDWIDTH_PACKAGE`, `BANDWIDTH_POSTPAID_BY_HOUR`, `BANDWIDTH_PREPAID_BY_MONTH` and `TRAFFIC_POSTPAID_BY_HOUR`.
 * `internet_max_bandwidth_out` - (Optional, Int) The bandwidth limit of EIP, unit is Mbps.
 * `internet_service_provider` - (Optional, String, ForceNew) Internet service provider of eip. Valid value: `BGP`, `CMCC`, `CTCC` and `CUCC`.
