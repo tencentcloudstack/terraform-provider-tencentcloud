@@ -121,7 +121,7 @@ func TestAccTencentCloudCkafkaInstanceResource_maz(t *testing.T) {
 				ResourceName:            "tencentcloud_ckafka_instance.kafka_instance",
 				ImportState:             true,
 				ImportStateVerify:       true,
-				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_types"},
+				ImportStateVerifyIgnore: []string{"period", "max_message_byte", "charge_type"},
 			},
 		},
 	})
