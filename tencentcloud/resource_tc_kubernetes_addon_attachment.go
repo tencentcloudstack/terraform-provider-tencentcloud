@@ -48,7 +48,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
     "global.hosts[0].domain=${local.tcr_name}-vpc.tencentcloudcr.com",                 #Corresponds to the dockerServer in the imagePullSecretsCrs above
     "global.hosts[0].ip=${local.end_point}",                                           #input InternalEndpoint of tcr instance, you can get it from data source `tencentcloud_tcr_instances`
     "global.hosts[0].disabled=false",                                                  #disabled this host config or not
-    "global.hosts[1].domain=${local.tcr_name}-tencentcloudcr.com",
+    "global.hosts[1].domain=${local.tcr_name}.tencentcloudcr.com",
     "global.hosts[1].ip=${local.end_point}",
     "global.hosts[1].disabled=false",
   ]
