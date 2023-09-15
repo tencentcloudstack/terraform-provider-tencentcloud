@@ -101,7 +101,7 @@ func TestAccTencentCloudCkafkaInstanceResource_postpaid(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCkafkaInstanceMAZResource(t *testing.T) {
+func TestAccTencentCloudCkafkaInstanceResource_maz(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
@@ -127,7 +127,7 @@ func TestAccTencentCloudCkafkaInstanceMAZResource(t *testing.T) {
 	})
 }
 
-func TestAccTencentCloudCkafkaInstanceTypeResource(t *testing.T) {
+func TestAccTencentCloudCkafkaInstanceResource_type(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PREPAY) },
