@@ -33,11 +33,11 @@ func TestAccTencentCloudSesReceiverResource_basic(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_ses_receiver.receiver", "data.0.template_data", "{\"name\":\"xxx\",\"age\":\"xx\"}"),
 				),
 			},
-			// {
-			// 	ResourceName:      "tencentcloud_ses_receiver.receiver",
-			// 	ImportState:       true,
-			// 	ImportStateVerify: true,
-			// },
+			{
+				ResourceName:      "tencentcloud_ses_receiver.receiver",
+				ImportState:       true,
+				ImportStateVerify: true,
+			},
 		},
 	})
 }
