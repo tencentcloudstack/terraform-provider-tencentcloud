@@ -150,6 +150,26 @@ resource "tencentcloud_clb_listener" "TCPSSL_listener" {
 }
 ```
 
+### Port Range Listener
+
+```hcl
+resource "tencentcloud_clb_instance" "clb_basic" {
+  network_type = "OPEN"
+  clb_name     = "tf-listener-test"
+}
+
+resource "tencentcloud_clb_listener" "listener_basic" {
+  clb_id              = tencentcloud_clb_instance.clb_basic.id
+  port                = 1
+  end_port            = 6
+  protocol            = "TCP"
+  listener_name       = "listener_basic"
+  session_expire_time = 30
+  scheduler           = "WRR"
+  target_type         = "NODE"
+}
+```
+
 ## Argument Reference
 
 The following arguments are supported:
@@ -160,6 +180,7 @@ The following arguments are supported:
 * `certificate_ca_id` - (Optional, String) ID of the client certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when the ssl mode is `MUTUAL`.
 * `certificate_id` - (Optional, String) ID of the server certificate. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.
 * `certificate_ssl_mode` - (Optional, String) Type of certificate. Valid values: `UNIDIRECTIONAL`, `MUTUAL`. NOTES: Only supports listeners of `HTTPS` and `TCP_SSL` protocol and must be set when it is available.
+* `end_port` - (Optional, Int, ForceNew) This parameter is used to specify the end port and is required when creating a port range listener. Only one member can be passed in when inputting the `Ports` parameter, which is used to specify the start port. If you want to try the port range feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).
 * `health_check_context_type` - (Optional, String) Health check protocol. When the value of `health_check_type` of the health check protocol is `CUSTOM`, this field is required, which represents the input format of the health check. Valid values: `HEX`, `TEXT`.
 * `health_check_health_num` - (Optional, Int) Health threshold of health check, and the default is `3`. If a success result is returned for the health check for 3 consecutive times, the backend CVM is identified as healthy. The value range is 2-10. NOTES: TCP/UDP/TCP_SSL listener allows direct configuration, HTTP/HTTPS listener needs to be configured in tencentcloud_clb_listener_rule.
 * `health_check_http_code` - (Optional, Int) HTTP health check code of TCP listener, Valid value ranges: [1~31]. When the value of `health_check_type` of the health check protocol is `HTTP`, this field is required. Valid values: `1`, `2`, `4`, `8`, `16`. `1` means http_1xx, `2` means http_2xx, `4` means http_3xx, `8` means http_4xx, `16` means http_5xx.If you want multiple return codes to indicate health, need to add the corresponding values.
