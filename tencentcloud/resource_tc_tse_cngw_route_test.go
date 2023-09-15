@@ -26,7 +26,6 @@ func TestAccTencentCloudTseCngwRouteResource_basic(t *testing.T) {
 					testAccCheckTseCngwRouteExists("tencentcloud_tse_cngw_route.cngw_route"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_route.cngw_route", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "gateway_id", defaultTseGatewayId),
-					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "force_https", "false"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "hosts.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "https_redirect_status_code", "426"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "paths.#", "1"),
@@ -51,7 +50,6 @@ func TestAccTencentCloudTseCngwRouteResource_basic(t *testing.T) {
 					testAccCheckTseCngwRouteExists("tencentcloud_tse_cngw_route.cngw_route"),
 					resource.TestCheckResourceAttrSet("tencentcloud_tse_cngw_route.cngw_route", "id"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "gateway_id", defaultTseGatewayId),
-					// resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "force_https", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "hosts.#", "1"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "https_redirect_status_code", "301"),
 					resource.TestCheckResourceAttr("tencentcloud_tse_cngw_route.cngw_route", "paths.#", "1"),
@@ -134,7 +132,6 @@ const testAccTseCngwRoute = DefaultTseVar + `
 
 resource "tencentcloud_tse_cngw_route" "cngw_route" {
   destination_ports = []
-  force_https       = false
   gateway_id        = var.gateway_id
   hosts = [
     "192.168.0.1:9090",
@@ -162,7 +159,6 @@ const testAccTseCngwRouteUp = DefaultTseVar + `
 
 resource "tencentcloud_tse_cngw_route" "cngw_route" {
   destination_ports = []
-  force_https       = false
   gateway_id        = var.gateway_id
   hosts = [
     "192.168.0.1:9091",

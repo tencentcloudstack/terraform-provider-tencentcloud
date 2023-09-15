@@ -67,7 +67,6 @@ resource "tencentcloud_tse_cngw_service" "cngw_service" {
 
 resource "tencentcloud_tse_cngw_route" "cngw_route" {
   destination_ports = []
-  force_https       = false
   gateway_id        = tencentcloud_tse_cngw_gateway.cngw_gateway.id
   hosts = [
     "192.168.0.1:9090",
@@ -191,6 +190,7 @@ func resourceTencentCloudTseCngwRoute() *schema.Resource {
 			"force_https": {
 				Optional:    true,
 				Type:        schema.TypeBool,
+				Deprecated:  "This field has been deprecated and will be deleted in subsequent versions.",
 				Description: "whether to enable forced HTTPS, no longer use.",
 			},
 
@@ -536,11 +536,11 @@ func resourceTencentCloudTseCngwRouteUpdate(d *schema.ResourceData, meta interfa
 		}
 	}
 
-	// if d.HasChange("force_https") {
-	// 	if v, ok := d.GetOkExists("force_https"); ok {
-	// 		request.ForceHttps = helper.Bool(v.(bool))
-	// 	}
-	// }
+	if d.HasChange("force_https") {
+		if v, ok := d.GetOkExists("force_https"); ok {
+			request.ForceHttps = helper.Bool(v.(bool))
+		}
+	}
 
 	if d.HasChange("destination_ports") {
 		if v, ok := d.GetOk("destination_ports"); ok {
