@@ -364,6 +364,10 @@ func (me *CynosdbService) DescribeInstanceById(ctx context.Context, instanceId s
 		return
 	}
 
+	if response == nil || response.Response == nil {
+		return
+	}
+
 	instanceInfo = response.Response.Detail
 
 	if instanceInfo.VpcId != nil {
