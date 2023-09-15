@@ -436,45 +436,9 @@ func resourceTencentCloudSSLInstanceCreate(d *schema.ResourceData, meta interfac
 	//If left blank or set to false, the previous rule will be maintained.
 	//If set to true, it will not be submitted temporarily.
 	if waitCommit := d.Get("wait_commit_flag").(bool); !waitCommit {
-		commitInfoRequest := ssl.NewCommitCertificateInformationRequest()
-		commitInfoRequest.CertificateId = helper.String(certificateId)
-		if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-			if err = sslService.CommitCertificateInformation(ctx, commitInfoRequest); err != nil {
-				if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
-					code := sdkError.GetCode()
-					if code == InvalidParam || code == CertificateNotFound || code == CertificateInvalid {
-						return resource.NonRetryableError(sdkError)
-					}
-				}
-				return retryError(err)
-			}
-			return nil
-		}); err != nil {
-			return err
-		}
 
-		if IsContainProductId(productId, GEOTRUST_OV_EV_TYPE) {
-			confirmLetter := d.Get("confirm_letter").(string)
-			uploadConfirmLetterRequest := ssl.NewUploadConfirmLetterRequest()
-			uploadConfirmLetterRequest.CertificateId = helper.String(certificateId)
-			uploadConfirmLetterRequest.ConfirmLetter = helper.String(confirmLetter)
-			if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				if err = sslService.UploadConfirmLetter(ctx, uploadConfirmLetterRequest); err != nil {
-					if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
-						code := sdkError.GetCode()
-						if code == InvalidParam || code == CertificateNotFound {
-							return resource.NonRetryableError(sdkError)
-						}
-					}
-					return retryError(err)
-				}
-				return nil
-			}); err != nil {
-				return err
-			}
-		}
 	}
-	return resourceTencentCloudSSLInstanceRead(d, meta)
+	return resourceTencentCloudSSLInstanceUpdate(d, meta)
 }
 
 func resourceTencentCloudSSLInstanceRead(d *schema.ResourceData, meta interface{}) error {
@@ -571,11 +535,15 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 	if len(ids) != 4 {
 		return fmt.Errorf("ids param is error. id:  %s", id)
 	}
-
+	certificateId := ids[0]
+	productId, err := strconv.ParseInt(ids[1], 10, 64)
+	if err != nil {
+		return err
+	}
 	d.Partial(true)
 	if d.HasChange("alias") {
 		aliasRequest := ssl.NewModifyCertificateAliasRequest()
-		aliasRequest.CertificateId = helper.String(ids[0])
+		aliasRequest.CertificateId = helper.String(certificateId)
 		_, alias := d.GetChange("alias")
 		aliasRequest.Alias = helper.String(alias.(string))
 
@@ -598,7 +566,7 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 	if d.HasChange("project_id") {
 		projectRequest := ssl.NewModifyCertificateProjectRequest()
 		projectRequest.CertificateIdList = []*string{
-			helper.String(ids[0]),
+			helper.String(certificateId),
 		}
 		_, projectId := d.GetChange("project_id")
 		projectRequest.ProjectId = helper.Uint64(uint64(projectId.(int)))
@@ -620,25 +588,30 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 
 	}
 	if d.HasChange("information") {
-		describeRequest := ssl.NewDescribeCertificateDetailRequest()
-		describeRequest.CertificateId = &ids[0]
 
-		describeResponse, err := sslService.DescribeCertificateDetail(ctx, describeRequest)
+		status, err := getCertificateStatus(ctx, sslService, certificateId)
 		if err != nil {
 			return err
 		}
-		if describeResponse == nil || describeResponse.Response == nil {
-			err := fmt.Errorf("TencentCloud SDK %s return empty response", describeRequest.GetAction())
+		if status == SSL_STATUS_CANCELING {
+			err := fmt.Errorf("status[%v] order cancelling···, please try again later certificateId[%s]", status, certificateId)
 			return err
 		}
-		if describeResponse.Response.Status == nil {
-			err := fmt.Errorf("api[%s] certificate status is nil", describeRequest.GetAction())
-			return err
-		}
-
-		if *describeResponse.Response.Status != SSL_STATUS_TO_BE_COMMIT {
-			err := fmt.Errorf("the certificate cannot be modified, status is %d", *describeResponse.Response.Status)
-			return err
+		if status != SSL_STATUS_PENDING_SUB {
+			if _, ok := SslCanCancelStatus[status]; ok {
+				err := cancelAudit(ctx, sslService, certificateId)
+				if err != nil {
+					return err
+				}
+			}
+			if status == SSL_STATUS_CANCELED {
+				err := resubmit(ctx, sslService, certificateId)
+				if err != nil {
+					return err
+				}
+			} else {
+				//
+			}
 		}
 
 		infoRequest := getSubmitInfoRequest(d)
@@ -656,6 +629,44 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 			return nil
 		}); err != nil {
 			return err
+		}
+
+		commitInfoRequest := ssl.NewCommitCertificateInformationRequest()
+		commitInfoRequest.CertificateId = helper.String(ids[0])
+		if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+			if err = sslService.CommitCertificateInformation(ctx, commitInfoRequest); err != nil {
+				if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
+					code := sdkError.GetCode()
+					if code == InvalidParam || code == CertificateNotFound || code == CertificateInvalid {
+						return resource.NonRetryableError(sdkError)
+					}
+				}
+				return retryError(err)
+			}
+			return nil
+		}); err != nil {
+			return err
+		}
+
+		if IsContainProductId(productId, GEOTRUST_OV_EV_TYPE) {
+			confirmLetter := d.Get("confirm_letter").(string)
+			uploadConfirmLetterRequest := ssl.NewUploadConfirmLetterRequest()
+			uploadConfirmLetterRequest.CertificateId = helper.String(certificateId)
+			uploadConfirmLetterRequest.ConfirmLetter = helper.String(confirmLetter)
+			if err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+				if err = sslService.UploadConfirmLetter(ctx, uploadConfirmLetterRequest); err != nil {
+					if sdkError, ok := err.(*errors.TencentCloudSDKError); ok {
+						code := sdkError.GetCode()
+						if code == InvalidParam || code == CertificateNotFound {
+							return resource.NonRetryableError(sdkError)
+						}
+					}
+					return retryError(err)
+				}
+				return nil
+			}); err != nil {
+				return err
+			}
 		}
 	}
 	d.Partial(false)
@@ -776,4 +787,35 @@ func setSubmitInfo(d *schema.ResourceData, info *ssl.SubmittedData) {
 		infos[0]["domain_list"] = info.DomainList
 	}
 	_ = d.Set("information", infos)
+}
+func getCertificateStatus(ctx context.Context, sslService SSLService, certificateId string) (uint64, error) {
+	describeRequest := ssl.NewDescribeCertificateDetailRequest()
+	describeRequest.CertificateId = &certificateId
+
+	describeResponse, err := sslService.DescribeCertificateDetail(ctx, describeRequest)
+	if err != nil {
+		return -1, err
+	}
+	if describeResponse == nil || describeResponse.Response == nil {
+		err := fmt.Errorf("TencentCloud SDK %s return empty response", describeRequest.GetAction())
+		return -1, err
+	}
+	if describeResponse.Response.Status == nil {
+		err := fmt.Errorf("api[%s] certificate status is nil", describeRequest.GetAction())
+		return -1, err
+	}
+
+	return *describeResponse.Response.Status, nil
+}
+
+func cancelAudit(ctx context.Context, sslService SSLService, certificateId string) (err error) {
+
+	//取消
+	err = fmt.Errorf("status[%v] when canceling an order, please continue your operation"+
+		" later because it requires CA agency review certificateId[%s]", status, certificateId)
+	return
+}
+func resubmit(ctx context.Context, sslService SSLService, certificateId string) error {
+	//retry resubmit
+	return nil
 }
