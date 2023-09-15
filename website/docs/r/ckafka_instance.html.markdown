@@ -61,7 +61,7 @@ resource "tencentcloud_ckafka_instance" "kafka_instance_prepaid" {
 
 resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
   instance_name      = "ckafka-instance-postpaid"
-  zone_id            = 100007
+  zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
   vpc_id             = var.vpc_id
   subnet_id          = var.subnet_id
   msg_retention_time = 1300
