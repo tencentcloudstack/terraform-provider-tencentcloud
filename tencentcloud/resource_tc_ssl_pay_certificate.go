@@ -589,7 +589,7 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 	}
 	if d.HasChange("information") {
 
-		status, err := getCertificateStatus(ctx, sslService, certificateId)
+		status, err := sslService.retryGetCertificateStatus(ctx, certificateId)
 		if err != nil {
 			return err
 		}
@@ -597,6 +597,7 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 			err := fmt.Errorf("status[%v] order cancelling···, please try again later certificateId[%s]", status, certificateId)
 			return err
 		}
+
 		if status != SSL_STATUS_PENDING_SUB {
 			if _, ok := SslCanCancelStatus[status]; ok {
 				err := cancelAudit(ctx, sslService, certificateId)
@@ -610,7 +611,8 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 					return err
 				}
 			} else {
-				//
+				err := fmt.Errorf("status[%v] Information cannot be modified in this status certificateId[%s]", status, certificateId)
+				return err
 			}
 		}
 
@@ -788,34 +790,21 @@ func setSubmitInfo(d *schema.ResourceData, info *ssl.SubmittedData) {
 	}
 	_ = d.Set("information", infos)
 }
-func getCertificateStatus(ctx context.Context, sslService SSLService, certificateId string) (uint64, error) {
-	describeRequest := ssl.NewDescribeCertificateDetailRequest()
-	describeRequest.CertificateId = &certificateId
-
-	describeResponse, err := sslService.DescribeCertificateDetail(ctx, describeRequest)
-	if err != nil {
-		return -1, err
-	}
-	if describeResponse == nil || describeResponse.Response == nil {
-		err := fmt.Errorf("TencentCloud SDK %s return empty response", describeRequest.GetAction())
-		return -1, err
-	}
-	if describeResponse.Response.Status == nil {
-		err := fmt.Errorf("api[%s] certificate status is nil", describeRequest.GetAction())
-		return -1, err
-	}
-
-	return *describeResponse.Response.Status, nil
-}
 
 func cancelAudit(ctx context.Context, sslService SSLService, certificateId string) (err error) {
+	request := ssl.NewCancelAuditCertificateRequest()
+	request.CertificateId = &certificateId
 
-	//取消
-	err = fmt.Errorf("status[%v] when canceling an order, please continue your operation"+
-		" later because it requires CA agency review certificateId[%s]", status, certificateId)
+	err = sslService.CancelAuditCertificate(ctx, request)
 	return
 }
 func resubmit(ctx context.Context, sslService SSLService, certificateId string) error {
-	//retry resubmit
+	request := ssl.NewModifyCertificateResubmitRequest()
+	request.CertificateId = &certificateId
+
+	err := sslService.ModifyCertificateResubmit(ctx, request)
+	if err != nil {
+		return err
+	}
 	return nil
 }
