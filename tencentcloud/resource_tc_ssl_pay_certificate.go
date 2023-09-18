@@ -64,6 +64,7 @@ import (
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"log"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -534,10 +535,11 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 
 		if status != SSL_STATUS_PENDING_SUB {
 			if _, ok := SslCanCancelStatus[status]; ok {
-				err := cancelAudit(ctx, sslService, certificateId)
+				code, err := cancelAudit(ctx, sslService, certificateId)
 				if err != nil {
 					return err
 				}
+				status = code
 			}
 			if status == SSL_STATUS_CANCELED {
 				err := resubmit(ctx, sslService, certificateId)
@@ -725,13 +727,13 @@ func setSubmitInfo(d *schema.ResourceData, info *ssl.SubmittedData) {
 	_ = d.Set("information", infos)
 }
 
-func cancelAudit(ctx context.Context, sslService SSLService, certificateId string) error {
+func cancelAudit(ctx context.Context, sslService SSLService, certificateId string) (uint64, error) {
 	request := ssl.NewCancelAuditCertificateRequest()
 	request.CertificateId = &certificateId
 
 	err := sslService.CancelAuditCertificate(ctx, request)
 	if err != nil {
-		return err
+		return math.MaxUint64, err
 	}
 
 	maxRetry := 3
@@ -744,14 +746,14 @@ func cancelAudit(ctx context.Context, sslService SSLService, certificateId strin
 		if status == SSL_STATUS_CANCELED {
 			log.Printf("[cancelAudit] cancellation is currently completed, retry num[%d], status[%d], certificateId[%s]",
 				i, status, certificateId)
-			return nil
+			return status, nil
 		}
 		log.Printf("[cancelAudit] cancellation is currently incomplete, retry num[%d], status[%d], certificateId[%s]",
 			i, status, certificateId)
 	}
 
 	err = fmt.Errorf("TencentCloud SDK %s CancelAudit···, since canceling an order requires a process, please try again later.", request.GetAction())
-	return err
+	return math.MaxUint64, err
 }
 func resubmit(ctx context.Context, sslService SSLService, certificateId string) error {
 	request := ssl.NewModifyCertificateResubmitRequest()

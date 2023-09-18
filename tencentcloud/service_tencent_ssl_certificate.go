@@ -8,6 +8,7 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 	"log"
+	"math"
 )
 
 type SSLService struct {
@@ -362,15 +363,15 @@ func (me *SSLService) getCertificateStatus(ctx context.Context, certificateId st
 
 	describeResponse, err := me.DescribeCertificateDetail(ctx, describeRequest)
 	if err != nil {
-		return -1, err
+		return math.MaxUint64, err
 	}
 	if describeResponse == nil || describeResponse.Response == nil {
 		err := fmt.Errorf("TencentCloud SDK %s return empty response", describeRequest.GetAction())
-		return -1, err
+		return math.MaxUint64, err
 	}
 	if describeResponse.Response.Status == nil {
 		err := fmt.Errorf("api[%s] certificate status is nil", describeRequest.GetAction())
-		return -1, err
+		return math.MaxUint64, err
 	}
 
 	return *describeResponse.Response.Status, nil
