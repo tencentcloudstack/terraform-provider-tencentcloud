@@ -3,12 +3,13 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"math"
+
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
-	"log"
-	"math"
 )
 
 type SSLService struct {

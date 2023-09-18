@@ -58,15 +58,16 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"log"
+	"math"
+	"strconv"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-	"log"
-	"math"
-	"strconv"
-	"strings"
 )
 
 func resourceTencentCloudSSLInstance() *schema.Resource {
