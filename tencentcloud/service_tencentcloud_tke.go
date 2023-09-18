@@ -50,6 +50,8 @@ type ClusterAdvancedSettings struct {
 	IsNonStaticIpMode       bool
 	DeletionProtection      bool
 	KubeProxyMode           string
+	Property                string
+	OsCustomizeType         string
 }
 
 type ClusterExtraArgs struct {
@@ -127,6 +129,81 @@ func (me *TkeService) DescribeClusterInstances(ctx context.Context, id string) (
 	}()
 
 	request.ClusterId = &id
+	masters = make([]InstanceInfo, 0, 100)
+	workers = make([]InstanceInfo, 0, 100)
+	var offset int64 = 0
+	var limit int64 = 20
+	var has = map[string]bool{}
+	var total int64 = -1
+
+getMoreData:
+	if total >= 0 && offset >= total {
+		return
+	}
+	request.Limit = &limit
+	request.Offset = &offset
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseTkeClient().DescribeClusterInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if total < 0 {
+		total = int64(*response.Response.TotalCount)
+	}
+
+	if len(response.Response.InstanceSet) > 0 {
+		offset += limit
+	} else {
+		// get empty set, we're done
+		return
+	}
+
+	for _, item := range response.Response.InstanceSet {
+		if has[*item.InstanceId] {
+			errRet = fmt.Errorf("get repeated instance_id[%s] when doing DescribeClusterInstances", *item.InstanceId)
+			return
+		}
+		has[*item.InstanceId] = true
+		instanceInfo := InstanceInfo{
+			InstanceId:               *item.InstanceId,
+			InstanceRole:             *item.InstanceRole,
+			InstanceState:            *item.InstanceState,
+			FailedReason:             *item.FailedReason,
+			InstanceAdvancedSettings: item.InstanceAdvancedSettings,
+		}
+		if item.CreatedTime != nil {
+			instanceInfo.CreatedTime = *item.CreatedTime
+		}
+		if item.NodePoolId != nil {
+			instanceInfo.NodePoolId = *item.NodePoolId
+		}
+		if item.LanIP != nil {
+			instanceInfo.LanIp = *item.LanIP
+		}
+		if instanceInfo.InstanceRole == TKE_ROLE_WORKER {
+			workers = append(workers, instanceInfo)
+		} else {
+			masters = append(masters, instanceInfo)
+		}
+	}
+	goto getMoreData
+
+}
+
+func (me *TkeService) DescribeClusterInstancesByRole(ctx context.Context, id, role string) (masters []InstanceInfo, workers []InstanceInfo, errRet error) {
+	logId := getLogId(ctx)
+	request := tke.NewDescribeClusterInstancesRequest()
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	request.ClusterId = &id
+	request.InstanceRole = &role
 	masters = make([]InstanceInfo, 0, 100)
 	workers = make([]InstanceInfo, 0, 100)
 	var offset int64 = 0
@@ -315,14 +392,21 @@ func (me *TkeService) DescribeCluster(ctx context.Context, id string) (
 	clusterInfo.VpcId = *cluster.ClusterNetworkSettings.VpcId
 	clusterInfo.ClusterNodeNum = int64(*cluster.ClusterNodeNum)
 
-	clusterInfo.IgnoreClusterCidrConflict = *cluster.ClusterNetworkSettings.IgnoreClusterCIDRConflict
-	clusterInfo.ClusterCidr = *cluster.ClusterNetworkSettings.ClusterCIDR
-	clusterInfo.MaxClusterServiceNum = int64(*cluster.ClusterNetworkSettings.MaxClusterServiceNum)
-
-	clusterInfo.MaxNodePodNum = int64(*cluster.ClusterNetworkSettings.MaxNodePodNum)
 	clusterInfo.DeployType = strings.ToUpper(*cluster.ClusterType)
 	clusterInfo.Ipvs = *cluster.ClusterNetworkSettings.Ipvs
-
+	clusterInfo.Property = helper.PString(cluster.Property)
+	clusterInfo.OsCustomizeType = helper.PString(cluster.OsCustomizeType)
+	clusterInfo.ContainerRuntime = helper.PString(cluster.ContainerRuntime)
+	clusterInfo.DeletionProtection = helper.PBool(cluster.DeletionProtection)
+	clusterInfo.RuntimeVersion = helper.PString(cluster.RuntimeVersion)
+	if cluster.ClusterNetworkSettings != nil {
+		clusterInfo.KubeProxyMode = helper.PString(cluster.ClusterNetworkSettings.KubeProxyMode)
+		clusterInfo.IgnoreClusterCidrConflict = helper.PBool(cluster.ClusterNetworkSettings.IgnoreClusterCIDRConflict)
+		clusterInfo.ClusterCidr = helper.PString(cluster.ClusterNetworkSettings.ClusterCIDR)
+		clusterInfo.MaxClusterServiceNum = int64(helper.PUint64(cluster.ClusterNetworkSettings.MaxClusterServiceNum))
+		clusterInfo.MaxNodePodNum = int64(helper.PUint64(cluster.ClusterNetworkSettings.MaxNodePodNum))
+		clusterInfo.ServiceCIDR = helper.PString(cluster.ClusterNetworkSettings.ServiceCIDR)
+	}
 	if len(cluster.TagSpecification) > 0 {
 		clusterInfo.Tags = make(map[string]string)
 		for _, tag := range cluster.TagSpecification[0].Tags {
@@ -892,6 +976,30 @@ func (me *TkeService) DescribeClusterEndpointStatus(ctx context.Context, id stri
 	status = *response.Response.Status
 	message = status
 	return
+}
+func (me *TkeService) DescribeClusterEndpoints(ctx context.Context, id string) (response tke.DescribeClusterEndpointsResponseParams, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tke.NewDescribeClusterEndpointsRequest()
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, reason[%s]\n", logId, request.GetAction(), errRet.Error())
+		}
+	}()
+	request.ClusterId = &id
+	ratelimit.Check(request.GetAction())
+
+	resp, err := me.client.UseTkeClient().DescribeClusterEndpoints(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	if resp.Response == nil {
+		errRet = fmt.Errorf("sdk DescribeClusterEndpoints return empty")
+		return
+	}
+
+	return *resp.Response, errRet
 }
 
 func (me *TkeService) DeleteClusterEndpoint(ctx context.Context, id string, isInternet bool) (errRet error) {

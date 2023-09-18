@@ -788,6 +788,7 @@ package tencentcloud
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math"
@@ -803,6 +804,8 @@ import (
 	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
+
+var importClsFlag = false
 
 func tkeCvmState() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
@@ -913,10 +916,16 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. The default is `POSTPAID_BY_HOUR`. Note: TencentCloud International only supports `POSTPAID_BY_HOUR`, `PREPAID` instance will not terminated after cluster deleted, and may not allow to delete before expired.",
 		},
 		"instance_charge_type_prepaid_period": {
-			Type:         schema.TypeInt,
-			Optional:     true,
-			ForceNew:     true,
-			Default:      1,
+			Type:     schema.TypeInt,
+			Optional: true,
+			ForceNew: true,
+			Default:  1,
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+				if v, exist := d.GetOk("instance_charge_type"); exist && v.(string) == CVM_CHARGE_TYPE_PREPAID {
+					return old == "-1"
+				}
+				return true
+			},
 			ValidateFunc: validateAllowedIntValue(CVM_PREPAID_PERIOD),
 			Description:  "The tenancy (time unit is month) of the prepaid instance. NOTE: it only works when instance_charge_type is set to `PREPAID`. Valid values are `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`, `9`, `10`, `11`, `12`, `24`, `36`.",
 		},
@@ -926,7 +935,13 @@ func TkeCvmCreateInfo() map[string]*schema.Schema {
 			ForceNew:     true,
 			Default:      CVM_PREPAID_RENEW_FLAG_NOTIFY_AND_MANUAL_RENEW,
 			ValidateFunc: validateAllowedStringValue(CVM_PREPAID_RENEW_FLAG),
-			Description:  "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+				if v, exist := d.GetOk("instance_charge_type"); exist && v.(string) == CVM_CHARGE_TYPE_PREPAID {
+					return false
+				}
+				return true
+			},
+			Description: "Auto renewal flag. Valid values: `NOTIFY_AND_AUTO_RENEW`: notify upon expiration and renew automatically, `NOTIFY_AND_MANUAL_RENEW`: notify upon expiration but do not renew automatically, `DISABLE_NOTIFY_AND_MANUAL_RENEW`: neither notify upon expiration nor renew automatically. Default value: `NOTIFY_AND_MANUAL_RENEW`. If this parameter is specified as `NOTIFY_AND_AUTO_RENEW`, the instance will be automatically renewed on a monthly basis if the account balance is sufficient. NOTE: it only works when instance_charge_type is set to `PREPAID`.",
 		},
 		"subnet_id": {
 			Type:         schema.TypeString,
@@ -1303,8 +1318,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"cluster_as_enabled": {
 			Type:        schema.TypeBool,
 			ForceNew:    true,
-			Optional:    true,
-			Default:     false,
+			Computed:    true,
 			Deprecated:  "This argument is deprecated because the TKE auto-scaling group was no longer available.",
 			Description: "Indicates whether to enable cluster node auto scaling. Default is false.",
 		},
@@ -1397,8 +1411,7 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		"is_non_static_ip_mode": {
 			Type:        schema.TypeBool,
 			ForceNew:    true,
-			Optional:    true,
-			Default:     false,
+			Computed:    true,
 			Description: "Indicates whether non-static ip mode is enabled. Default is false.",
 		},
 		"deletion_protection": {
@@ -1595,6 +1608,12 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 					return
 				}
 				return
+			},
+			DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+				if old == "" {
+					return true
+				}
+				return false
 			},
 		},
 		"master_config": {
@@ -1858,6 +1877,18 @@ func resourceTencentCloudTkeCluster() *schema.Resource {
 		Read:   resourceTencentCloudTkeClusterRead,
 		Update: resourceTencentCloudTkeClusterUpdate,
 		Delete: resourceTencentCloudTkeClusterDelete,
+		Importer: &schema.ResourceImporter{
+			//State: schema.ImportStatePassthrough,
+			StateContext: func(ctx context.Context, d *schema.ResourceData, m interface{}) ([]*schema.ResourceData, error) {
+				importClsFlag = true
+				err := resourceTencentCloudTkeClusterRead(d, m)
+				if err != nil {
+					return nil, fmt.Errorf("failed to import resource")
+				}
+
+				return []*schema.ResourceData{d}, nil
+			},
+		},
 		Schema: schemaBody,
 	}
 }
@@ -2751,6 +2782,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	service := TkeService{client: meta.(*TencentCloudClient).apiV3Conn}
+	cvmService := CvmService{client: meta.(*TencentCloudClient).apiV3Conn}
 
 	info, has, err := service.DescribeCluster(ctx, d.Id())
 	if err != nil {
@@ -2771,7 +2803,6 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		d.SetId("")
 		return nil
 	}
-
 	// 兼容旧的 cluster_os 的 key, 由于 cluster_os有默认值，所以不大可能为空
 	oldOs := d.Get("cluster_os").(string)
 	newOs := tkeToShowClusterOs(info.ClusterOs)
@@ -2796,47 +2827,190 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("cluster_node_num", info.ClusterNodeNum)
 	_ = d.Set("tags", info.Tags)
 
-	if _, ok := d.GetOk("cluster_level"); ok {
+	if _, ok := d.GetOk("cluster_level"); ok || (importClsFlag && !ok) {
 		_ = d.Set("cluster_level", info.ClusterLevel)
+	}
+	if _, ok := d.GetOk("deletion_protection"); !ok && importClsFlag {
+		_ = d.Set("deletion_protection", info.DeletionProtection)
+	}
+	if _, ok := d.GetOk("runtime_version"); !ok && importClsFlag {
+		_ = d.Set("runtime_version", info.RuntimeVersion)
+	}
+
+	var data map[string]interface{}
+	err = json.Unmarshal([]byte(info.Property), &data)
+	if err != nil {
+		fmt.Errorf("error:%v", err)
+		return nil
+	}
+
+	if _, ok := d.GetOk("master_config"); !ok && importClsFlag && info.DeployType == TKE_DEPLOY_TYPE_INDEPENDENT {
+		var masters []InstanceInfo
+		var errRet error
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			masters, _, errRet = service.DescribeClusterInstancesByRole(ctx, d.Id(), "MASTER_OR_ETCD")
+			if e, ok := errRet.(*errors.TencentCloudSDKError); ok {
+				if e.GetCode() == "InternalError.ClusterNotFound" {
+					return nil
+				}
+			}
+			if errRet != nil {
+				return resource.RetryableError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		var instances []*cvm.Instance
+		instanceIds := make([]*string, 0)
+		for _, instance := range masters {
+			instanceIds = append(instanceIds, helper.String(instance.InstanceId))
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			instances, errRet = cvmService.DescribeInstanceByFilter(ctx, instanceIds, nil)
+			if errRet != nil {
+				return retryError(errRet, InternalError)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		instanceList := make([]interface{}, 0, len(instances))
+		for _, instance := range instances {
+			mapping := map[string]interface{}{
+				"count":                      1,
+				"instance_type":              helper.PString(instance.InstanceType),
+				"subnet_id":                  helper.PString(instance.VirtualPrivateCloud.SubnetId),
+				"availability_zone":          helper.PString(instance.Placement.Zone),
+				"instance_name":              helper.PString(instance.InstanceName),
+				"instance_charge_type":       helper.PString(instance.InstanceChargeType),
+				"system_disk_type":           helper.PString(instance.SystemDisk.DiskType),
+				"system_disk_size":           helper.PInt64(instance.SystemDisk.DiskSize),
+				"internet_charge_type":       helper.PString(instance.InternetAccessible.InternetChargeType),
+				"bandwidth_package_id":       helper.PString(instance.InternetAccessible.BandwidthPackageId),
+				"internet_max_bandwidth_out": helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut),
+				"security_group_ids":         helper.StringsInterfaces(instance.SecurityGroupIds),
+				"img_id":                     helper.PString(instance.ImageId),
+			}
+
+			if helper.PString(instance.InstanceChargeType) == "PREPAID" {
+				mapping["instance_charge_type_prepaid_period"] = 1
+			} else {
+				mapping["instance_charge_type_prepaid_period"] = -1
+			}
+			if instance.RenewFlag != nil && helper.PString(instance.InstanceChargeType) == "PREPAID" {
+				mapping["instance_charge_type_prepaid_renew_flag"] = helper.PString(instance.RenewFlag)
+			} else {
+				mapping["instance_charge_type_prepaid_renew_flag"] = ""
+			}
+			if helper.PInt64(instance.InternetAccessible.InternetMaxBandwidthOut) > 0 {
+				mapping["public_ip_assigned"] = true
+			}
+
+			if instance.CamRoleName != nil {
+				mapping["cam_role_name"] = instance.CamRoleName
+			}
+			if instance.LoginSettings != nil {
+				if instance.LoginSettings.KeyIds != nil && len(instance.LoginSettings.KeyIds) > 0 {
+					mapping["key_ids"] = helper.StringsInterfaces(instance.LoginSettings.KeyIds)
+				}
+				if instance.LoginSettings.Password != nil {
+					mapping["password"] = helper.PString(instance.LoginSettings.Password)
+				}
+			}
+			if instance.DisasterRecoverGroupId != nil && helper.PString(instance.DisasterRecoverGroupId) != "" {
+				mapping["disaster_recover_group_ids"] = []string{helper.PString(instance.DisasterRecoverGroupId)}
+			}
+			if instance.HpcClusterId != nil {
+				mapping["hpc_cluster_id"] = helper.PString(instance.HpcClusterId)
+			}
+
+			dataDisks := make([]interface{}, 0, len(instance.DataDisks))
+			for _, v := range instance.DataDisks {
+				dataDisk := map[string]interface{}{
+					"disk_type":   helper.PString(v.DiskType),
+					"disk_size":   helper.PInt64(v.DiskSize),
+					"snapshot_id": helper.PString(v.DiskId),
+					"encrypt":     helper.PBool(v.Encrypt),
+					"kms_key_id":  helper.PString(v.KmsKeyId),
+				}
+				dataDisks = append(dataDisks, dataDisk)
+			}
+
+			mapping["data_disk"] = dataDisks
+			instanceList = append(instanceList, mapping)
+		}
+		if _, exist := d.GetOk("master_config"); !exist && importClsFlag {
+			_ = d.Set("master_config", instanceList)
+		}
+	}
+
+	if _, ok := d.GetOk("network_type"); !ok && importClsFlag {
+		networkType, _ := data["NetworkType"].(string)
+		_ = d.Set("network_type", networkType)
+	}
+
+	if _, ok := d.GetOk("node_name_type"); !ok && importClsFlag {
+		nodeNameType, _ := data["NodeNameType"].(string)
+		_ = d.Set("node_name_type", nodeNameType)
+	}
+
+	if _, ok := d.GetOk("enable_customized_pod_cidr"); !ok && importClsFlag {
+		enableCustomizedPodCIDR, _ := data["EnableCustomizedPodCIDR"].(bool)
+		_ = d.Set("enable_customized_pod_cidr", enableCustomizedPodCIDR)
+	}
+
+	if _, ok := d.GetOk("base_pod_num"); !ok && importClsFlag {
+		basePodNumber, _ := data["BasePodNumber"].(int)
+		_ = d.Set("base_pod_num", basePodNumber)
+	}
+
+	if _, ok := d.GetOk("is_non_static_ip_mode"); !ok && importClsFlag {
+		isNonStaticIpMode, _ := data["IsNonStaticIpMode"].(int)
+		_ = d.Set("is_non_static_ip_mode", isNonStaticIpMode)
+	}
+
+	if _, ok := d.GetOk("cluster_os_type"); !ok && importClsFlag {
+		_ = d.Set("cluster_os_type", info.OsCustomizeType)
+	}
+
+	if _, ok := d.GetOk("container_runtime"); !ok && importClsFlag {
+		_ = d.Set("container_runtime", info.ContainerRuntime)
+	}
+
+	if _, ok := d.GetOk("kube_proxy_mode"); !ok && importClsFlag {
+		_ = d.Set("kube_proxy_mode", info.KubeProxyMode)
+	}
+
+	if _, ok := d.GetOk("service_cidr"); !ok && importClsFlag {
+		_ = d.Set("service_cidr", info.ServiceCIDR)
+	}
+
+	if _, ok := d.GetOk("upgrade_instances_follow_cluster"); !ok && importClsFlag {
+		_ = d.Set("upgrade_instances_follow_cluster", false)
 	}
 
 	if _, ok := d.GetOkExists("auto_upgrade_cluster_level"); ok {
 		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
+	} else if importClsFlag {
+		_ = d.Set("auto_upgrade_cluster_level", info.AutoUpgradeClusterLevel)
+		importClsFlag = false
 	}
 
-	config, err := service.DescribeClusterConfig(ctx, d.Id(), true)
+	err = checkClusterEndpointStatus(ctx, &service, d, false)
 	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			config, err = service.DescribeClusterConfig(ctx, d.Id(), true)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
+		return fmt.Errorf("get internet failed, %s", err.Error())
 	}
 
+	err = checkClusterEndpointStatus(ctx, &service, d, true)
 	if err != nil {
-		return nil
+		return fmt.Errorf("get intranet failed, %s\n", err.Error())
 	}
-
-	_ = d.Set("kube_config", config)
-
-	intranetConfig, err := service.DescribeClusterConfig(ctx, d.Id(), false)
-	if err != nil {
-		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
-			intranetConfig, err = service.DescribeClusterConfig(ctx, d.Id(), false)
-			if err != nil {
-				return retryError(err)
-			}
-			return nil
-		})
-	}
-
-	if err != nil {
-		return nil
-	}
-
-	_ = d.Set("kube_config_intranet", intranetConfig)
 
 	_, workers, err := service.DescribeClusterInstances(ctx, d.Id())
 	if err != nil {
@@ -2855,7 +3029,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 		})
 	}
 	if err != nil {
-		return err
+		return fmt.Errorf("get worker instances failed, %s", err.Error())
 	}
 
 	workerInstancesList := make([]map[string]interface{}, 0, len(workers))
@@ -2956,6 +3130,7 @@ func resourceTencentCloudTkeClusterRead(d *schema.ResourceData, meta interface{}
 
 		_ = d.Set("node_pool_global_config", []map[string]interface{}{temp})
 	}
+
 	return nil
 }
 
@@ -3397,4 +3572,77 @@ func resourceTkeGetAddonsDiffs(o, n []interface{}) (adds, removes, changes []int
 
 	changes = fullIndexedKeeps.Difference(fullIndexedOlds).List()
 	return
+}
+
+func checkClusterEndpointStatus(ctx context.Context, service *TkeService, d *schema.ResourceData, isInternet bool) (err error) {
+	var status, message, config string
+	var response tke.DescribeClusterEndpointsResponseParams
+	var isOpened bool
+	var errRet error
+	err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+		status, message, errRet = service.DescribeClusterEndpointStatus(ctx, d.Id(), isInternet)
+		if errRet != nil {
+			return retryError(errRet, InternalError)
+		}
+		if status == TkeInternetStatusCreating || status == TkeInternetStatusDeleting {
+			return resource.RetryableError(
+				fmt.Errorf("%s create cluster internet endpoint status still is %s", d.Id(), status))
+		}
+		return nil
+	})
+	if err != nil {
+		return err
+	}
+	if status == TkeInternetStatusNotfound || status == TkeInternetStatusDeleted {
+		isOpened = false
+	}
+	if status == TkeInternetStatusCreated {
+		isOpened = true
+	}
+	if isInternet {
+		_ = d.Set("cluster_internet", isOpened)
+	} else {
+		_ = d.Set("cluster_intranet", isOpened)
+	}
+
+	if isOpened {
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			config, errRet = service.DescribeClusterConfig(ctx, d.Id(), isInternet)
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		err = resource.Retry(readRetryTimeout, func() *resource.RetryError {
+			response, errRet = service.DescribeClusterEndpoints(ctx, d.Id())
+			if errRet != nil {
+				return retryError(errRet)
+			}
+			return nil
+		})
+		if err != nil {
+			return err
+		}
+
+		if isInternet {
+			_ = d.Set("kube_config", config)
+			_ = d.Set("cluster_internet_domain", helper.PString(response.ClusterExternalDomain))
+			_ = d.Set("cluster_internet_security_group", helper.PString(response.SecurityGroup))
+		} else {
+			_ = d.Set("kube_config_intranet", config)
+			_ = d.Set("cluster_intranet_domain", helper.PString(response.ClusterIntranetDomain))
+		}
+
+	} else {
+		if isInternet {
+			_ = d.Set("kube_config", "")
+		} else {
+			_ = d.Set("kube_config_intranet", "")
+		}
+	}
+	return nil
 }
