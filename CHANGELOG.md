@@ -9,6 +9,7 @@ FEATURES:
 ENHANCEMENTS:
 
 * resource/tencentcloud_ckafka_instance: support create postpaid instance ([#2130](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2130))
+* resource/tencentcloud_eip: support set network egress ([#2129](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2129))
 * resource/tencentcloud_clb_listener: support create port range listener ([#2127](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2127))
 * resource/tencentcloud_cynosdb_readonly_instance: Support `vpc_id`, `subnet_id` fields. ([#2125](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2125))
 * resource/tencentcloud_ses_receiver: Support import. ([#2124](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2124))
