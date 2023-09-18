@@ -140,6 +140,7 @@ func TestAccTencentCloudCkafkaInstanceResource_type(t *testing.T) {
 					testAccCheckKafkaInstanceExists("tencentcloud_ckafka_instance.kafka_instance"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_name", "ckafka-instance-type-tf-test"),
 					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "specifications_type", "standard"),
+					resource.TestCheckResourceAttr("tencentcloud_ckafka_instance.kafka_instance", "instance_type", "2"),
 				),
 			},
 			{
@@ -354,23 +355,32 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
 }
 `
 
-const testAccKafkaInstanceType = defaultKafkaVariable + `
+const testAccKafkaInstanceType = `
+resource "tencentcloud_vpc" "vpc" {
+  name       = "tmp"
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "tencentcloud_subnet" "subnet" {
+  vpc_id            = tencentcloud_vpc.vpc.id
+  name              = "subnet-example"
+  cidr_block        = "10.0.0.0/16"
+  availability_zone = "ap-guangzhou-7"
+}
+
 resource "tencentcloud_ckafka_instance" "kafka_instance" {
   instance_name      = "ckafka-instance-type-tf-test"
   zone_id            = 100007
-  period             = 1
-  vpc_id             = var.vpc_id
-  subnet_id          = var.subnet_id
+  vpc_id             = tencentcloud_vpc.vpc.id
+  subnet_id          = tencentcloud_subnet.subnet.id
   msg_retention_time = 1300
-  renew_flag         = 0
   kafka_version      = "1.1.1"
-  disk_size          = 500
-  disk_type          = "CLOUD_BASIC"
-
   specifications_type = "standard"
   instance_type       = 2
-  band_width          = 40
-  partition           = 60
+  disk_size          = 1000
+  disk_type          = "CLOUD_BASIC"
+  band_width         = 100
+  charge_type        = "POSTPAID_BY_HOUR"
 
   config {
     auto_create_topic_enable   = true
