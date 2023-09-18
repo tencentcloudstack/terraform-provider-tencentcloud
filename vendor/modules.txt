@@ -1198,7 +1198,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms/v20210111
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.689
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver/v20180328
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.737
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.750
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.691

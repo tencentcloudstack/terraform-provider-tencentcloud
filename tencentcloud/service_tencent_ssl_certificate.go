@@ -353,9 +353,7 @@ func (me *SSLService) CancelAuditCertificate(ctx context.Context, request *ssl.C
 		err = fmt.Errorf("TencentCloud SDK %s CancelAudit failed", request.GetAction())
 		return err
 	}
-	status, err := me.getCertificateStatus(ctx, *request.CertificateId)
 
-	err = fmt.Errorf("TencentCloud SDK %s CancelAudit···, since canceling an order requires a process, please try again later.", request.GetAction())
 	return
 }
 func (me *SSLService) getCertificateStatus(ctx context.Context, certificateId string) (uint64, error) {
