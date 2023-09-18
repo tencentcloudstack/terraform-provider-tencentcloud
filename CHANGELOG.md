@@ -1,3 +1,19 @@
+## 1.81.27 (September 18, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_trocket_rocketmq_consumer_group` ([#2123](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2123))
+* **New Resource:** `tencentcloud_trocket_rocketmq_topic` ([#2123](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2123))
+* **New Resource:** `tencentcloud_tse_cngw_group` ([#2126](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2126))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_ckafka_instance: support create postpaid instance ([#2130](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2130))
+* resource/tencentcloud_clb_listener: support create port range listener ([#2127](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2127))
+* resource/tencentcloud_cynosdb_readonly_instance: Support `vpc_id`, `subnet_id` fields. ([#2125](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2125))
+* resource/tencentcloud_ses_receiver: Support import. ([#2124](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2124))
+* resource/tencentcloud_tse_cngw_gateway: Support modifying `node_config`. ([#2126](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2126))
+
 ## 1.81.26 (September 13, 2023)
 
 FEATURES:
