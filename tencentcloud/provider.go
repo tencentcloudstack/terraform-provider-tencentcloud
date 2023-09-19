@@ -1668,6 +1668,8 @@ Waf
     tencentcloud_waf_custom_white_rule
     tencentcloud_waf_clb_domain
     tencentcloud_waf_saas_domain
+    tencentcloud_waf_clb_instance
+    tencentcloud_waf_saas_instance
 */
 package tencentcloud
 
@@ -3076,6 +3078,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
 			"tencentcloud_waf_clb_domain":                                      resourceTencentCloudWafClbDomain(),
 			"tencentcloud_waf_saas_domain":                                     resourceTencentCloudWafSaasDomain(),
+			"tencentcloud_waf_clb_instance":                                    resourceTencentCloudWafClbInstance(),
+			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,

@@ -14,6 +14,14 @@ tencentcloud_waf_clb_domain
 tencentcloud_waf_saas_domain
 ```
 
+```release-note:new-resource
+tencentcloud_waf_clb_instance
+```
+
+```release-note:new-resource
+tencentcloud_waf_saas_instance
+```
+
 ```release-note:new-data-source
 tencentcloud_waf_ciphers
 ```

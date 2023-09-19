@@ -598,3 +598,41 @@ func (me *WafService) DescribeWafUserDomainsByFilter(ctx context.Context) (userD
 	userDomains = response.Response.UsersInfo
 	return
 }
+
+func (me *WafService) DescribeWafInstanceById(ctx context.Context, instanceId string) (instance *waf.InstanceInfo, errRet error) {
+	logId := getLogId(ctx)
+
+	request := waf.NewDescribeInstancesRequest()
+	request.Offset = common.Uint64Ptr(1)
+	request.Limit = common.Uint64Ptr(20)
+	request.Filters = []*waf.FiltersItemNew{
+		{
+			Name:       common.StringPtr("InstanceId"),
+			Values:     common.StringPtrs([]string{instanceId}),
+			ExactMatch: common.BoolPtr(true),
+		},
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeInstances(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if len(response.Response.Instances) < 1 {
+		return
+	}
+
+	instance = response.Response.Instances[0]
+	return
+}

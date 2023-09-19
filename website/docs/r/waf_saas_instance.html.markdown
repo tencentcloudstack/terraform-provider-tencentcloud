@@ -1,0 +1,86 @@
+---
+subcategory: "Waf"
+layout: "tencentcloud"
+page_title: "TencentCloud: tencentcloud_waf_saas_instance"
+sidebar_current: "docs-tencentcloud-resource-waf_saas_instance"
+description: |-
+  Provides a resource to create a waf saas instance
+---
+
+# tencentcloud_waf_saas_instance
+
+Provides a resource to create a waf saas instance
+
+## Example Usage
+
+### Create a basic waf premium saas instance
+
+```hcl
+resource "tencentcloud_waf_saas_instance" "example" {
+  goods_category = "premium_saas"
+  instance_name  = "tf-example-saas-waf"
+}
+```
+
+### Create a complete waf ultimate_saas instance(Chinese Mainland)
+
+```hcl
+resource "tencentcloud_waf_saas_instance" "example" {
+  goods_category   = "ultimate_saas"
+  instance_name    = "tf-example-saas-waf"
+  time_span        = 1
+  time_unit        = "m"
+  auto_renew_flag  = 1
+  elastic_mode     = 1
+  is_cn_mainland   = 1
+  real_region      = "gz"
+  domain_pkg_count = 3
+  qps_pkg_count    = 3
+}
+```
+
+### Create a complete waf ultimate_saas instance(Non Chinese Mainland)
+
+```hcl
+resource "tencentcloud_waf_saas_instance" "example" {
+  goods_category   = "ultimate_saas"
+  instance_name    = "tf-example-saas-waf"
+  time_span        = 1
+  time_unit        = "m"
+  auto_renew_flag  = 1
+  elastic_mode     = 1
+  is_cn_mainland   = 0
+  real_region      = "sg"
+  domain_pkg_count = 3
+  qps_pkg_count    = 3
+}
+```
+
+## Argument Reference
+
+The following arguments are supported:
+
+* `goods_category` - (Required, String) Billing order parameters. support premium_saas, enterprise_saas, ultimate_saas.
+* `auto_renew_flag` - (Optional, Int) Auto renew flag, 1: enable, 0: disable.
+* `domain_pkg_count` - (Optional, Int) Domain extension package count.
+* `elastic_mode` - (Optional, Int) Is elastic billing enabled, 1: enable, 0: disable.
+* `instance_name` - (Optional, String) Waf instance name.
+* `is_cn_mainland` - (Optional, Int) Chinese Mainland or not, 1: Chinese Mainland, 0: Non Chinese Mainland.
+* `qps_pkg_count` - (Optional, Int) QPS extension package count.
+* `real_region` - (Optional, String) region. If `is_cn_mainland` is 1, support: gz, sh, bj, cd (Means: GuangZhou, ShangHai, BeiJing, ChengDu); If `is_cn_mainland` is 0, support: hk, sg, th, kr, in, de, ca, use, sao, usw, jkt (Means: HongKong, Singapore, Bandkok, Seoul, Mumbai, Frankfurt, Toronto, Virginia, SaoPaulo, SiliconValley, Jakarta).
+* `time_span` - (Optional, Int) Time interval.
+* `time_unit` - (Optional, String) Time unit, support d, m, y. d: day, m: month, y: year.
+
+## Attributes Reference
+
+In addition to all arguments above, the following attributes are exported:
+
+* `id` - ID of the resource.
+* `api_security` - waf instance api security status.
+* `begin_time` - waf instance start time.
+* `edition` - waf instance edition, clb or saas.
+* `instance_id` - waf instance id.
+* `status` - waf instance status.
+* `valid_time` - waf instance valid time.
+
+

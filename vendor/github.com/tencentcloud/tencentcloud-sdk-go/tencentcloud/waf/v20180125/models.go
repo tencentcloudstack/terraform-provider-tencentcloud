@@ -1186,6 +1186,10 @@ type ClbDomainsInfo struct {
 	// cdc类型会增加集群信息
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	CdcClusters *string `json:"CdcClusters,omitnil" name:"CdcClusters"`
+
+	// 云类型:public:公有云；private:私有云;hybrid:混合云
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CloudType *string `json:"CloudType,omitnil" name:"CloudType"`
 }
 
 type ClbHostResult struct {
@@ -1377,6 +1381,14 @@ func (r *CreateHostResponse) ToJsonString() string {
 // because it has no param check, nor strict type check
 func (r *CreateHostResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
+}
+
+type DealData struct {
+	// 订单号列表，元素个数与请求包的goods数组的元素个数一致，商品详情与订单按顺序对应
+	DealNames []*string `json:"DealNames,omitnil" name:"DealNames"`
+
+	// 大订单号，一个大订单号下可以有多个子订单，说明是同一次下单[{},{}]
+	BigDealId *string `json:"BigDealId,omitnil" name:"BigDealId"`
 }
 
 // Predefined struct for user
@@ -6272,6 +6284,75 @@ func (r *FreshAntiFakeUrlResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type GenerateDealsAndPayNewRequestParams struct {
+	// 计费下单入参
+	Goods []*GoodNews `json:"Goods,omitnil" name:"Goods"`
+}
+
+type GenerateDealsAndPayNewRequest struct {
+	*tchttp.BaseRequest
+	
+	// 计费下单入参
+	Goods []*GoodNews `json:"Goods,omitnil" name:"Goods"`
+}
+
+func (r *GenerateDealsAndPayNewRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GenerateDealsAndPayNewRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "Goods")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "GenerateDealsAndPayNewRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type GenerateDealsAndPayNewResponseParams struct {
+	// 计费下单响应结构体
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Data *DealData `json:"Data,omitnil" name:"Data"`
+
+	// 1:成功，0:失败
+	Status *int64 `json:"Status,omitnil" name:"Status"`
+
+	// 返回message
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	ReturnMessage *string `json:"ReturnMessage,omitnil" name:"ReturnMessage"`
+
+	// 购买的实例ID
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type GenerateDealsAndPayNewResponse struct {
+	*tchttp.BaseResponse
+	Response *GenerateDealsAndPayNewResponseParams `json:"Response"`
+}
+
+func (r *GenerateDealsAndPayNewResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *GenerateDealsAndPayNewResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type GetAttackDownloadRecordsRequestParams struct {
 
 }
@@ -6551,6 +6632,124 @@ func (r *GetInstanceQpsLimitResponse) FromJsonString(s string) error {
 	return json.Unmarshal([]byte(s), &r)
 }
 
+type GoodNews struct {
+	// 商品数量
+	GoodsNum *int64 `json:"GoodsNum,omitnil" name:"GoodsNum"`
+
+	// 商品明细
+	GoodsDetail *GoodsDetailNew `json:"GoodsDetail,omitnil" name:"GoodsDetail"`
+
+	// 订单类型ID，用来唯一标识一个业务的一种场景（总共三种场景：新购、配置变更、续费）
+	// 高级版: 102375(新购),102376(续费),102377(变配)
+	// 企业版 : 102378(新购),102379(续费),102380(变配)
+	// 旗舰版 : 102369(新购),102370(续费),102371(变配)
+	// 域名包 : 102372(新购),102373(续费),102374(变配)
+	// 业务扩展包 : 101040(新购),101041(续费),101042(变配)
+	// 
+	// 高级版-CLB: 新购 101198  续费 101199 变配 101200
+	// 企业版-CLB 101204(新购),101205(续费),101206(变配)
+	// 旗舰版-CLB : 101201(新购),101202(续费),101203(变配)
+	// 域名包-CLB: 101207(新购),101208(续费),101209(变配)
+	// 业务扩展包-CLB: 101210(新购),101211(续费),101212(变配)
+	// 
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	GoodsCategoryId *int64 `json:"GoodsCategoryId,omitnil" name:"GoodsCategoryId"`
+
+	// 购买waf实例区域ID
+	// 1 表示购买大陆资源;
+	// 9表示购买非中国大陆资源
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RegionId *int64 `json:"RegionId,omitnil" name:"RegionId"`
+}
+
+type GoodsDetailNew struct {
+	// 时间间隔
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeSpan *int64 `json:"TimeSpan,omitnil" name:"TimeSpan"`
+
+	// 单位，支持购买d、m、y 即（日、月、年）
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	TimeUnit *string `json:"TimeUnit,omitnil" name:"TimeUnit"`
+
+	// 子产品标签,。新购，续费必传，变配时放在oldConfig newConfig里面
+	// 
+	// Saas 高级版 ：sp_wsm_waf_premium
+	// Saas企业版 ：sp_wsm_waf_enterprise
+	// Saas旗舰版 ：sp_wsm_waf_ultimate
+	// Saas 业务扩展包：sp_wsm_waf_qpsep
+	// Saas 域名扩展包：sp_wsm_waf_domain
+	// 
+	// 高级版-CLB:sp_wsm_waf_premium_clb
+	// 企业版-CLB : sp_wsm_waf_enterprise_clb
+	// 旗舰版-CLB:sp_wsm_waf_ultimate_clb
+	//  业务扩展包-CLB：sp_wsm_waf_qpsep_clb
+	// 域名扩展包-CLB：sp_wsm_waf_domain_clb
+	// 
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	SubProductCode *string `json:"SubProductCode,omitnil" name:"SubProductCode"`
+
+	// 业务产品申请的pid（对应一个定价公式），通过pid计费查询到定价模型
+	// 高级版 ：1000827
+	// 企业版 ：1000830
+	// 旗舰版 ：1000832
+	// 域名包 : 1000834
+	// 业务扩展包 : 1000481
+	// 高级版-CLB:1001150
+	// 企业版-CLB : 1001152
+	// 旗舰版-CLB:1001154
+	// 域名包-CLB: 1001156
+	// 业务扩展包-CLB : 1001160
+	// 
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	Pid *int64 `json:"Pid,omitnil" name:"Pid"`
+
+	// waf实例名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceName *string `json:"InstanceName,omitnil" name:"InstanceName"`
+
+	// 1:自动续费，0:不自动续费
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	AutoRenewFlag *int64 `json:"AutoRenewFlag,omitnil" name:"AutoRenewFlag"`
+
+	// waf购买的实际地域信息
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	RealRegion *int64 `json:"RealRegion,omitnil" name:"RealRegion"`
+
+	// 计费细项标签数组
+	// Saas 高级版  sv_wsm_waf_package_premium 
+	// Saas 企业版  sv_wsm_waf_package_enterprise
+	// Saas 旗舰版  sv_wsm_waf_package_ultimate 
+	// Saas 非中国大陆高级版  sv_wsm_waf_package_premium_intl
+	// Saas 非中国大陆企业版   sv_wsm_waf_package_enterprise_intl
+	// Saas 非中国大陆旗舰版  sv_wsm_waf_package_ultimate _intl
+	// Saas 业务扩展包  sv_wsm_waf_qps_ep
+	// Saas 域名扩展包  sv_wsm_waf_domain
+	// 
+	// 高级版CLB   sv_wsm_waf_package_premium_clb
+	// 企业版CLB  sv_wsm_waf_package_enterprise_clb
+	// 旗舰版CLB   sv_wsm_waf_package_ultimate_clb
+	// 非中国大陆高级版 CLB sv_wsm_waf_package_premium_clb_intl
+	// 非中国大陆企业版CLB   sv_wsm_waf_package_premium_clb_intl
+	// 非中国大陆旗舰版CLB  sv_wsm_waf_package_ultimate_clb _intl
+	// 业务扩展包CLB sv_wsm_waf_qps_ep_clb
+	// 域名扩展包CLB  sv_wsm_waf_domain_clb
+	// 
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LabelTypes []*string `json:"LabelTypes,omitnil" name:"LabelTypes"`
+
+	// 计费细项标签数量，一般和SvLabelType一一对应
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LabelCounts []*int64 `json:"LabelCounts,omitnil" name:"LabelCounts"`
+
+	// 变配使用，实例到期时间
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CurDeadline *string `json:"CurDeadline,omitnil" name:"CurDeadline"`
+
+	// 对存在的实例购买bot 或api 安全
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+}
+
 type HostDel struct {
 	// 域名
 	Domain *string `json:"Domain,omitnil" name:"Domain"`
@@ -6572,7 +6771,7 @@ type HostRecord struct {
 	// 主域名，入参时为空
 	MainDomain *string `json:"MainDomain,omitnil" name:"MainDomain"`
 
-	// waf模式，同saas waf保持一致
+	// 规则引擎防护模式，0 观察模式，1拦截模式
 	Mode *uint64 `json:"Mode,omitnil" name:"Mode"`
 
 	// waf和LD的绑定，0：没有绑定，1：绑定
@@ -6581,7 +6780,7 @@ type HostRecord struct {
 	// 域名状态，0：正常，1：未检测到流量，2：即将过期，3：过期
 	State *uint64 `json:"State,omitnil" name:"State"`
 
-	// 使用的规则，同saas waf保持一致
+	// 规则引擎和AI引擎防护模式联合状态,10规则引擎观察&&AI引擎关闭模式 11规则引擎观察&&AI引擎观察模式 12规则引擎观察&&AI引擎拦截模式 20规则引擎拦截&&AI引擎关闭模式 21规则引擎拦截&&AI引擎观察模式 22规则引擎拦截&&AI引擎拦截模式
 	Engine *uint64 `json:"Engine,omitnil" name:"Engine"`
 
 	// 是否开启代理，0：不开启，1：开启
@@ -6621,6 +6820,10 @@ type HostRecord struct {
 	// 规则引擎类型， 1: menshen,   2:tiga
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	EngineType *int64 `json:"EngineType,omitnil" name:"EngineType"`
+
+	// 云类型:public:公有云；private:私有云;hybrid:混合云
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CloudType *string `json:"CloudType,omitnil" name:"CloudType"`
 }
 
 type HostStatus struct {
@@ -6836,6 +7039,10 @@ type LoadBalancer struct {
 	// 负载均衡的网络类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LoadBalancerType *string `json:"LoadBalancerType,omitnil" name:"LoadBalancerType"`
+
+	// 负载均衡的域名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LoadBalancerDomain *string `json:"LoadBalancerDomain,omitnil" name:"LoadBalancerDomain"`
 }
 
 type LoadBalancerPackageNew struct {
@@ -6882,6 +7089,10 @@ type LoadBalancerPackageNew struct {
 	// CLB类型
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	LoadBalancerType *string `json:"LoadBalancerType,omitnil" name:"LoadBalancerType"`
+
+	// 负载均衡器的域名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	LoadBalancerDomain *string `json:"LoadBalancerDomain,omitnil" name:"LoadBalancerDomain"`
 }
 
 type LogHistogramInfo struct {
@@ -8386,6 +8597,260 @@ func (r *ModifyHostStatusResponse) FromJsonString(s string) error {
 }
 
 // Predefined struct for user
+type ModifyInstanceElasticModeRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+
+	// 弹性计费开关
+	Mode *int64 `json:"Mode,omitnil" name:"Mode"`
+}
+
+type ModifyInstanceElasticModeRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+
+	// 弹性计费开关
+	Mode *int64 `json:"Mode,omitnil" name:"Mode"`
+}
+
+func (r *ModifyInstanceElasticModeRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceElasticModeRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "Mode")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceElasticModeRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceElasticModeResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type ModifyInstanceElasticModeResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyInstanceElasticModeResponseParams `json:"Response"`
+}
+
+func (r *ModifyInstanceElasticModeResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceElasticModeResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceNameRequestParams struct {
+	// 新名称
+	InstanceName *string `json:"InstanceName,omitnil" name:"InstanceName"`
+
+	// 实例id
+	InstanceID *string `json:"InstanceID,omitnil" name:"InstanceID"`
+
+	// 版本
+	Edition *string `json:"Edition,omitnil" name:"Edition"`
+}
+
+type ModifyInstanceNameRequest struct {
+	*tchttp.BaseRequest
+	
+	// 新名称
+	InstanceName *string `json:"InstanceName,omitnil" name:"InstanceName"`
+
+	// 实例id
+	InstanceID *string `json:"InstanceID,omitnil" name:"InstanceID"`
+
+	// 版本
+	Edition *string `json:"Edition,omitnil" name:"Edition"`
+}
+
+func (r *ModifyInstanceNameRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceNameRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceName")
+	delete(f, "InstanceID")
+	delete(f, "Edition")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceNameRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceNameResponseParams struct {
+	// 修改状态：0为成功
+	ModifyCode *int64 `json:"ModifyCode,omitnil" name:"ModifyCode"`
+
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type ModifyInstanceNameResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyInstanceNameResponseParams `json:"Response"`
+}
+
+func (r *ModifyInstanceNameResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceNameResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceQpsLimitRequestParams struct {
+	// 套餐实例id
+	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+
+	// qps上限
+	QpsLimit *int64 `json:"QpsLimit,omitnil" name:"QpsLimit"`
+}
+
+type ModifyInstanceQpsLimitRequest struct {
+	*tchttp.BaseRequest
+	
+	// 套餐实例id
+	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+
+	// qps上限
+	QpsLimit *int64 `json:"QpsLimit,omitnil" name:"QpsLimit"`
+}
+
+func (r *ModifyInstanceQpsLimitRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceQpsLimitRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "QpsLimit")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceQpsLimitRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceQpsLimitResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type ModifyInstanceQpsLimitResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyInstanceQpsLimitResponseParams `json:"Response"`
+}
+
+func (r *ModifyInstanceQpsLimitResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceQpsLimitResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceRenewFlagRequestParams struct {
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+
+	// 续费开关
+	RenewFlag *int64 `json:"RenewFlag,omitnil" name:"RenewFlag"`
+}
+
+type ModifyInstanceRenewFlagRequest struct {
+	*tchttp.BaseRequest
+	
+	// 实例ID
+	InstanceId *string `json:"InstanceId,omitnil" name:"InstanceId"`
+
+	// 续费开关
+	RenewFlag *int64 `json:"RenewFlag,omitnil" name:"RenewFlag"`
+}
+
+func (r *ModifyInstanceRenewFlagRequest) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceRenewFlagRequest) FromJsonString(s string) error {
+	f := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(s), &f); err != nil {
+		return err
+	}
+	delete(f, "InstanceId")
+	delete(f, "RenewFlag")
+	if len(f) > 0 {
+		return tcerr.NewTencentCloudSDKError("ClientError.BuildRequestError", "ModifyInstanceRenewFlagRequest has unknown keys!", "")
+	}
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
+type ModifyInstanceRenewFlagResponseParams struct {
+	// 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+	RequestId *string `json:"RequestId,omitnil" name:"RequestId"`
+}
+
+type ModifyInstanceRenewFlagResponse struct {
+	*tchttp.BaseResponse
+	Response *ModifyInstanceRenewFlagResponseParams `json:"Response"`
+}
+
+func (r *ModifyInstanceRenewFlagResponse) ToJsonString() string {
+    b, _ := json.Marshal(r)
+    return string(b)
+}
+
+// FromJsonString It is highly **NOT** recommended to use this function
+// because it has no param check, nor strict type check
+func (r *ModifyInstanceRenewFlagResponse) FromJsonString(s string) error {
+	return json.Unmarshal([]byte(s), &r)
+}
+
+// Predefined struct for user
 type ModifyProtectionStatusRequestParams struct {
 	// 域名
 	Domain *string `json:"Domain,omitnil" name:"Domain"`
@@ -8630,7 +9095,7 @@ type ModifySpartaProtectionRequestParams struct {
 	// IsCdn=3时，需要填此参数，表示自定义header
 	IpHeaders []*string `json:"IpHeaders,omitnil" name:"IpHeaders"`
 
-	// 0:关闭xff重置；1:开启xff重置
+	// 0:关闭xff重置；1:开启xff重置，只有在IsCdn=0时可以开启
 	XFFReset *int64 `json:"XFFReset,omitnil" name:"XFFReset"`
 }
 
@@ -8733,7 +9198,7 @@ type ModifySpartaProtectionRequest struct {
 	// IsCdn=3时，需要填此参数，表示自定义header
 	IpHeaders []*string `json:"IpHeaders,omitnil" name:"IpHeaders"`
 
-	// 0:关闭xff重置；1:开启xff重置
+	// 0:关闭xff重置；1:开启xff重置，只有在IsCdn=0时可以开启
 	XFFReset *int64 `json:"XFFReset,omitnil" name:"XFFReset"`
 }
 
@@ -9687,13 +10152,18 @@ type Strategy struct {
 }
 
 type StrategyForAntiInfoLeak struct {
-	// 匹配字段
+	// 匹配条件，returncode（响应码）、keywords（关键字）、information（敏感信息）
 	Field *string `json:"Field,omitnil" name:"Field"`
 
-	// 逻辑符号
+	// 逻辑符号，固定取值为contains
 	CompareFunc *string `json:"CompareFunc,omitnil" name:"CompareFunc"`
 
-	// 匹配内容
+	// 匹配内容。
+	// 以下三个对应Field为information时可取的匹配内容：
+	// idcard（身份证）、phone（手机号）、bankcard（银行卡）。
+	// 以下为对应Field为returncode时可取的匹配内容：
+	// 400（状态码400）、403（状态码403）、404（状态码404）、4xx（其它4xx状态码）、500（状态码500）、501（状态码501）、502（状态码502）、504（状态码504）、5xx（其它5xx状态码）。
+	// 当对应Field为keywords时由用户自己输入匹配内容。
 	Content *string `json:"Content,omitnil" name:"Content"`
 }
 
@@ -10182,6 +10652,10 @@ type UserDomainInfo struct {
 	// 指定域名是否写cls的开关 1:写 0:不写
 	// 注意：此字段可能返回 null，表示取不到有效值。
 	Cls *uint64 `json:"Cls,omitnil" name:"Cls"`
+
+	// 标记是否是混合云接入。hybrid表示混合云接入域名
+	// 注意：此字段可能返回 null，表示取不到有效值。
+	CloudType *string `json:"CloudType,omitnil" name:"CloudType"`
 }
 
 type VipInfo struct {
