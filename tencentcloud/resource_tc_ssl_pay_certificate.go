@@ -5,9 +5,7 @@ Provide a resource to create a payment SSL.
 currently, it does not support re-issuing certificates, revoking certificates, and deleting certificates; the certificate remarks
 and belonging items can be updated. The Destroy operation will only cancel the certificate order, and will not delete the
 certificate and refund the fee. If you need a refund, you need to check the current certificate status in the console
-as `Review Cancel`, and then you can click `Request a refund` to refund the fee, If you want to modify the information multiple
-times, you need to use the wait_commit_flag field. Please refer to the field remarks for usage. Otherwise, it will be considered
-as a one-time submission and no further modifications will be provided.
+as `Review Cancel`, and then you can click `Request a refund` to refund the fee.
 
 Example Usage
 
@@ -142,11 +140,6 @@ func resourceTencentCloudSSLInstance() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The base64-encoded certificate confirmation file should be in jpg, jpeg, png, pdf, and the size should be between 1kb and 1.4M. Note: it only works when product_id is set to 8, 9 or 10.",
-			},
-			"wait_commit_flag": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "If `wait_commit_flag` is set to true, info will not be submitted temporarily, false opposite.",
 			},
 			// ssl information
 			"information": {
