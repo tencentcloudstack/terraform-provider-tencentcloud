@@ -39,6 +39,8 @@ import (
 	"log"
 	"strings"
 
+	vpc "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
@@ -190,28 +192,77 @@ func resourceTencentCloudVpcACLRead(d *schema.ResourceData, meta interface{}) er
 	_ = d.Set("name", info.NetworkAclName)
 	egressList := make([]string, 0, len(info.EgressEntries))
 	for i := range info.EgressEntries {
-		if info.EgressEntries[i].Port == nil || *info.EgressEntries[i].Port == "" {
+		// remove default rule
+		if CheckIfDefaultRule(info.EgressEntries[i]) {
 			continue
 		}
+
+		var (
+			action    string
+			cidrBlock string
+			port      string
+			protocol  string
+		)
+
+		if info.EgressEntries[i].Action != nil {
+			action = *info.EgressEntries[i].Action
+		}
+		if info.EgressEntries[i].CidrBlock != nil {
+			cidrBlock = *info.EgressEntries[i].CidrBlock
+		}
+		if info.EgressEntries[i].Port == nil || *info.EgressEntries[i].Port == "" {
+			port = "ALL"
+		} else {
+			port = *info.EgressEntries[i].Port
+		}
+		if info.EgressEntries[i].Protocol != nil {
+			protocol = *info.EgressEntries[i].Protocol
+		}
+
 		result := strings.Join([]string{
-			*info.EgressEntries[i].Action,
-			*info.EgressEntries[i].CidrBlock,
-			*info.EgressEntries[i].Port,
-			*info.EgressEntries[i].Protocol,
+			action,
+			cidrBlock,
+			port,
+			protocol,
 		}, FILED_SP)
+
 		egressList = append(egressList, strings.ToUpper(result))
 	}
 
 	ingressList := make([]string, 0, len(info.IngressEntries))
 	for i := range info.IngressEntries {
-		if info.IngressEntries[i].Port == nil || *info.IngressEntries[i].Port == "" {
+		// remove default rule
+		if CheckIfDefaultRule(info.IngressEntries[i]) {
 			continue
 		}
+
+		var (
+			action    string
+			cidrBlock string
+			port      string
+			protocol  string
+		)
+
+		if info.IngressEntries[i].Action != nil {
+			action = *info.IngressEntries[i].Action
+		}
+		if info.IngressEntries[i].CidrBlock != nil {
+			cidrBlock = *info.IngressEntries[i].CidrBlock
+		}
+		if info.IngressEntries[i].Port == nil || *info.IngressEntries[i].Port == "" {
+			port = "ALL"
+		} else {
+			port = *info.IngressEntries[i].Port
+		}
+		if info.IngressEntries[i].Protocol != nil {
+			protocol = *info.IngressEntries[i].Protocol
+		}
+
 		result := strings.Join([]string{
-			*info.IngressEntries[i].Action,
-			*info.IngressEntries[i].CidrBlock,
-			*info.IngressEntries[i].Port,
-			*info.IngressEntries[i].Protocol,
+			action,
+			cidrBlock,
+			port,
+			protocol,
 		}, FILED_SP)
 		ingressList = append(ingressList, strings.ToUpper(result))
 	}
@@ -349,4 +400,20 @@ func resourceTencentCloudVpcACLDelete(d *schema.ResourceData, meta interface{}) 
 		return fmt.Errorf("[CRITAL]%s delete network ACL : %s  failed\n", logId, id)
 	}
 	return nil
+}
+
+func CheckIfDefaultRule(aclEntry *vpc.NetworkAclEntry) bool {
+	// remove default ipv6 rule
+	if aclEntry.Protocol != nil && *aclEntry.Protocol == "all" &&
+		aclEntry.Ipv6CidrBlock != nil && *aclEntry.Ipv6CidrBlock == "::/0" &&
+		aclEntry.Action != nil && *aclEntry.Action == "Accept" {
+		return true
+	}
+	// remove default cidr rule
+	if aclEntry.Protocol != nil && *aclEntry.Protocol == "all" &&
+		aclEntry.CidrBlock != nil && *aclEntry.CidrBlock == "0.0.0.0/0" &&
+		aclEntry.Action != nil && *aclEntry.Action == "Drop" {
+		return true
+	}
+	return false
 }
