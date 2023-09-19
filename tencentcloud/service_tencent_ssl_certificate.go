@@ -477,3 +477,51 @@ func checkResult(num int, result *ssl.DescribeCertificateBindResourceTaskDetailR
 		len(result.TKE) < num && len(result.APIGATEWAY) < num &&
 		len(result.TCB) < num && len(result.TEO) < num
 }
+
+func (me *SslService) DescribeSslDescribeCompaniesByFilter(ctx context.Context, param map[string]interface{}) (describeCompanies []*ssl.CompanyInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ssl.NewDescribeCompaniesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "CompanyId" {
+			request.CompanyId = v.(*int64)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSSLCertificateClient().DescribeCompanies(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || response.Response == nil || len(response.Response.Companies) < 1 {
+			break
+		}
+		describeCompanies = append(describeCompanies, response.Response.Companies...)
+		if len(response.Response.Companies) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}

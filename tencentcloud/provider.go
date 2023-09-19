@@ -2016,6 +2016,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_gaap_domain_error_pages":                            dataSourceTencentCloudGaapDomainErrorPageInfoList(),
 			"tencentcloud_ssl_certificates":                                   dataSourceTencentCloudSslCertificates(),
 			"tencentcloud_ssl_describe_certificate":                           dataSourceTencentCloudSslDescribeCertificate(),
+			"tencentcloud_ssl_describe_companies":                             dataSourceTencentCloudSslDescribeCompanies(),
 			"tencentcloud_ssl_describe_certificate_bind_resource_task_detail": dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail(),
 			"tencentcloud_cam_roles":                                          dataSourceTencentCloudCamRoles(),
 			"tencentcloud_cam_users":                                          dataSourceTencentCloudCamUsers(),
