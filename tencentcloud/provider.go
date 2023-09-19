@@ -2017,6 +2017,8 @@ func Provider() *schema.Provider {
 			"tencentcloud_ssl_certificates":                                   dataSourceTencentCloudSslCertificates(),
 			"tencentcloud_ssl_describe_certificate":                           dataSourceTencentCloudSslDescribeCertificate(),
 			"tencentcloud_ssl_describe_companies":                             dataSourceTencentCloudSslDescribeCompanies(),
+			"tencentcloud_ssl_describe_host_api_gateway_instance_list":        dataSourceTencentCloudSslDescribeHostApiGatewayInstanceList(),
+			"tencentcloud_ssl_describe_host_cdn_instance_list":                dataSourceTencentCloudSslDescribeHostCdnInstanceList(),
 			"tencentcloud_ssl_describe_certificate_bind_resource_task_detail": dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail(),
 			"tencentcloud_cam_roles":                                          dataSourceTencentCloudCamRoles(),
 			"tencentcloud_cam_users":                                          dataSourceTencentCloudCamUsers(),
