@@ -16,7 +16,7 @@ func TestAccTencentCloudTrocketRocketmqInstanceResource_basic(t *testing.T) {
 				Config: testAccTrocketRocketmqInstance,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "name", "test"),
+					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "name", "rocketmq-instance"),
 					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "sku_code", "experiment_500"),
 					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "remark", "remark"),
 					resource.TestCheckResourceAttrSet("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "vpc_end_point"),
@@ -28,7 +28,7 @@ func TestAccTencentCloudTrocketRocketmqInstanceResource_basic(t *testing.T) {
 				Config: testAccTrocketRocketmqInstanceUpdate,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "name", "test-update"),
+					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "name", "rocketmq-instance-update"),
 					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "sku_code", "experiment_500"),
 					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "remark", "remark update"),
 					resource.TestCheckResourceAttrSet("tencentcloud_trocket_rocketmq_instance.rocketmq_instance", "vpc_end_point"),
@@ -55,7 +55,7 @@ func TestAccTencentCloudTrocketRocketmqInstanceResource_enablePublic(t *testing.
 				Config: testAccTrocketRocketmqInstancePublic,
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrSet("tencentcloud_trocket_rocketmq_instance.rocketmq_instance_public", "id"),
-					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance_public", "name", "test-public"),
+					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance_public", "name", "rocketmq-enable-public-instance"),
 					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance_public", "enable_public", "true"),
 					resource.TestCheckResourceAttr("tencentcloud_trocket_rocketmq_instance.rocketmq_instance_public", "bandwidth", "1"),
 					resource.TestCheckResourceAttrSet("tencentcloud_trocket_rocketmq_instance.rocketmq_instance_public", "public_end_point"),
@@ -74,7 +74,7 @@ func TestAccTencentCloudTrocketRocketmqInstanceResource_enablePublic(t *testing.
 const testAccTrocketRocketmqInstance = `
 resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance" {
   instance_type = "EXPERIMENT"
-  name = "test"
+  name = "rocketmq-instance"
   sku_code = "experiment_500"
   remark = "remark"
   vpc_id = "vpc-3a9fo1k9"
@@ -83,15 +83,13 @@ resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance" {
     tag_key = "rocketmq"
     tag_value = "5.x"
   }
-  enable_public = true
-  bandwidth = 1
 }
 `
 
 const testAccTrocketRocketmqInstanceUpdate = `
 resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance" {
   instance_type = "EXPERIMENT"
-  name = "test-update"
+  name = "rocketmq-instance-update"
   sku_code = "experiment_500"
   remark = "remark update"
   vpc_id = "vpc-3a9fo1k9"
@@ -100,15 +98,13 @@ resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance" {
     tag_key = "rocketmq"
     tag_value = "5.x.x"
   }
-  enable_public = true
-  bandwidth = 1
 }
 `
 
 const testAccTrocketRocketmqInstancePublic = `
 resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance_public" {
   instance_type = "EXPERIMENT"
-  name = "test-public"
+  name = "rocketmq-enable-public-instance"
   sku_code = "experiment_500"
   remark = "remark"
   vpc_id = "vpc-3a9fo1k9"

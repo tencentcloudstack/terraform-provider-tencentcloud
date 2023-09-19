@@ -11,7 +11,7 @@ resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance" {
   instance_type = "EXPERIMENT"
   name = "rocketmq-instance"
   sku_code = "experiment_500"
-  remark = "test"
+  remark = "remark"
   vpc_id = "vpc-xxxxxx"
   subnet_id = "subnet-xxxxxx"
   tags = {
@@ -23,11 +23,11 @@ resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance" {
 
 Enable Public Instance
 ```hcl
-resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_enable_public_instance" {
+resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance_public" {
   instance_type = "EXPERIMENT"
   name = "rocketmq-enable-public-instance"
   sku_code = "experiment_500"
-  remark = "test"
+  remark = "remark"
   vpc_id = "vpc-xxxxxx"
   subnet_id = "subnet-xxxxxx"
   tags = {
