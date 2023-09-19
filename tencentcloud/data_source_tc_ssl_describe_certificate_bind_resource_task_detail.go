@@ -49,7 +49,7 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail() *schem
 				Description: "Query the data of the regional list, CLB, TKE, WAF, Apigateway, TCB support regional inquiries, other resource types do not support.",
 			},
 
-			"c_l_b": {
+			"clb": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Related CLB resource detailsNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -221,7 +221,7 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail() *schem
 				},
 			},
 
-			"c_d_n": {
+			"cdn": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Related CDN resource detailsNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -265,7 +265,7 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail() *schem
 				},
 			},
 
-			"w_a_f": {
+			"waf": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Related WAF resource detailsNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -309,7 +309,7 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail() *schem
 				},
 			},
 
-			"d_d_o_s": {
+			"ddos": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Related DDOS resource detailsNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -358,7 +358,7 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail() *schem
 				},
 			},
 
-			"l_i_v_e": {
+			"live": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Related live resource detailsNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -397,7 +397,7 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail() *schem
 				},
 			},
 
-			"v_o_d": {
+			"vod": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Related VOD resource detailsNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -431,7 +431,7 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail() *schem
 				},
 			},
 
-			"t_k_e": {
+			"tke": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Related TKE resource detailsNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -551,7 +551,7 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail() *schem
 				},
 			},
 
-			"a_p_i_g_a_t_e_w_a_y": {
+			"apigateway": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Related ApIgateway Resources DetailsNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -605,7 +605,7 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail() *schem
 				},
 			},
 
-			"t_c_b": {
+			"tcb": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Related TCB resource detailsNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -754,7 +754,7 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetail() *schem
 				},
 			},
 
-			"t_e_o": {
+			"teo": {
 				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "Related Teo resource detailsNote: This field may return NULL, indicating that the valid value cannot be obtained.",
@@ -826,9 +826,10 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 	logId := getLogId(contextNil)
 
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
-
+	var taskId string
 	paramMap := make(map[string]interface{})
 	if v, ok := d.GetOk("task_id"); ok {
+		taskId = v.(string)
 		paramMap["TaskId"] = helper.String(v.(string))
 	}
 
@@ -844,25 +845,24 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 
 	service := SslService{client: meta.(*TencentCloudClient).apiV3Conn}
 
-	var cLB []*ssl.ClbInstanceList
+	var describeRes *ssl.DescribeCertificateBindResourceTaskDetailResponseParams
 
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeSslDescribeCertificateBindResourceTaskDetailByFilter(ctx, paramMap)
 		if e != nil {
 			return retryError(e)
 		}
-		cLB = result
+		describeRes = result
 		return nil
 	})
 	if err != nil {
 		return err
 	}
 
-	ids := make([]string, 0, len(cLB))
-	tmpList := make([]map[string]interface{}, 0, len(cLB))
+	tmpList := make([]map[string]interface{}, 0, 10)
 
-	if cLB != nil {
-		for _, clbInstanceList := range cLB {
+	if describeRes.CLB != nil {
+		for _, clbInstanceList := range describeRes.CLB {
 			clbInstanceListMap := map[string]interface{}{}
 
 			if clbInstanceList.Region != nil {
@@ -994,15 +994,14 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 				clbInstanceListMap["total_count"] = clbInstanceList.TotalCount
 			}
 
-			ids = append(ids, *clbInstanceList.TaskId)
 			tmpList = append(tmpList, clbInstanceListMap)
 		}
 
-		_ = d.Set("c_l_b", tmpList)
+		_ = d.Set("clb", tmpList)
 	}
 
-	if cDN != nil {
-		for _, cdnInstanceList := range cDN {
+	if describeRes.CDN != nil {
+		for _, cdnInstanceList := range describeRes.CDN {
 			cdnInstanceListMap := map[string]interface{}{}
 
 			if cdnInstanceList.TotalCount != nil {
@@ -1036,15 +1035,14 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 				cdnInstanceListMap["instance_list"] = []interface{}{instanceListList}
 			}
 
-			ids = append(ids, *cdnInstanceList.TaskId)
 			tmpList = append(tmpList, cdnInstanceListMap)
 		}
 
-		_ = d.Set("c_d_n", tmpList)
+		_ = d.Set("cdn", tmpList)
 	}
 
-	if wAF != nil {
-		for _, wafInstanceList := range wAF {
+	if describeRes.WAF != nil {
+		for _, wafInstanceList := range describeRes.WAF {
 			wafInstanceListMap := map[string]interface{}{}
 
 			if wafInstanceList.Region != nil {
@@ -1078,15 +1076,14 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 				wafInstanceListMap["total_count"] = wafInstanceList.TotalCount
 			}
 
-			ids = append(ids, *wafInstanceList.TaskId)
 			tmpList = append(tmpList, wafInstanceListMap)
 		}
 
-		_ = d.Set("w_a_f", tmpList)
+		_ = d.Set("waf", tmpList)
 	}
 
-	if dDOS != nil {
-		for _, ddosInstanceList := range dDOS {
+	if describeRes.DDOS != nil {
+		for _, ddosInstanceList := range describeRes.DDOS {
 			ddosInstanceListMap := map[string]interface{}{}
 
 			if ddosInstanceList.TotalCount != nil {
@@ -1124,15 +1121,14 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 				ddosInstanceListMap["instance_list"] = []interface{}{instanceListList}
 			}
 
-			ids = append(ids, *ddosInstanceList.TaskId)
 			tmpList = append(tmpList, ddosInstanceListMap)
 		}
 
-		_ = d.Set("d_d_o_s", tmpList)
+		_ = d.Set("ddos", tmpList)
 	}
 
-	if lIVE != nil {
-		for _, liveInstanceList := range lIVE {
+	if describeRes.LIVE != nil {
+		for _, liveInstanceList := range describeRes.LIVE {
 			liveInstanceListMap := map[string]interface{}{}
 
 			if liveInstanceList.TotalCount != nil {
@@ -1162,15 +1158,14 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 				liveInstanceListMap["instance_list"] = []interface{}{instanceListList}
 			}
 
-			ids = append(ids, *liveInstanceList.TaskId)
 			tmpList = append(tmpList, liveInstanceListMap)
 		}
 
-		_ = d.Set("l_i_v_e", tmpList)
+		_ = d.Set("live", tmpList)
 	}
 
-	if vOD != nil {
-		for _, vODInstanceList := range vOD {
+	if describeRes.VOD != nil {
+		for _, vODInstanceList := range describeRes.VOD {
 			vODInstanceListMap := map[string]interface{}{}
 
 			if vODInstanceList.InstanceList != nil {
@@ -1196,15 +1191,14 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 				vODInstanceListMap["total_count"] = vODInstanceList.TotalCount
 			}
 
-			ids = append(ids, *vODInstanceList.TaskId)
 			tmpList = append(tmpList, vODInstanceListMap)
 		}
 
-		_ = d.Set("v_o_d", tmpList)
+		_ = d.Set("vod", tmpList)
 	}
 
-	if tKE != nil {
-		for _, tkeInstanceList := range tKE {
+	if describeRes.TKE != nil {
+		for _, tkeInstanceList := range describeRes.TKE {
 			tkeInstanceListMap := map[string]interface{}{}
 
 			if tkeInstanceList.Region != nil {
@@ -1303,15 +1297,14 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 				tkeInstanceListMap["total_count"] = tkeInstanceList.TotalCount
 			}
 
-			ids = append(ids, *tkeInstanceList.TaskId)
 			tmpList = append(tmpList, tkeInstanceListMap)
 		}
 
-		_ = d.Set("t_k_e", tmpList)
+		_ = d.Set("tke", tmpList)
 	}
 
-	if aPIGATEWAY != nil {
-		for _, apiGatewayInstanceList := range aPIGATEWAY {
+	if describeRes.APIGATEWAY != nil {
+		for _, apiGatewayInstanceList := range describeRes.APIGATEWAY {
 			apiGatewayInstanceListMap := map[string]interface{}{}
 
 			if apiGatewayInstanceList.Region != nil {
@@ -1353,15 +1346,14 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 				apiGatewayInstanceListMap["total_count"] = apiGatewayInstanceList.TotalCount
 			}
 
-			ids = append(ids, *apiGatewayInstanceList.TaskId)
 			tmpList = append(tmpList, apiGatewayInstanceListMap)
 		}
 
-		_ = d.Set("a_p_i_g_a_t_e_w_a_y", tmpList)
+		_ = d.Set("apigateway", tmpList)
 	}
 
-	if tCB != nil {
-		for _, tCBInstanceList := range tCB {
+	if describeRes.TCB != nil {
+		for _, tCBInstanceList := range describeRes.TCB {
 			tCBInstanceListMap := map[string]interface{}{}
 
 			if tCBInstanceList.Region != nil {
@@ -1483,15 +1475,14 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 				tCBInstanceListMap["environments"] = []interface{}{environmentsList}
 			}
 
-			ids = append(ids, *tCBInstanceList.TaskId)
 			tmpList = append(tmpList, tCBInstanceListMap)
 		}
 
-		_ = d.Set("t_c_b", tmpList)
+		_ = d.Set("tcb", tmpList)
 	}
 
-	if tEO != nil {
-		for _, teoInstanceList := range tEO {
+	if describeRes.TEO != nil {
+		for _, teoInstanceList := range describeRes.TEO {
 			teoInstanceListMap := map[string]interface{}{}
 
 			if teoInstanceList.InstanceList != nil {
@@ -1525,22 +1516,21 @@ func dataSourceTencentCloudSslDescribeCertificateBindResourceTaskDetailRead(d *s
 				teoInstanceListMap["total_count"] = teoInstanceList.TotalCount
 			}
 
-			ids = append(ids, *teoInstanceList.TaskId)
 			tmpList = append(tmpList, teoInstanceListMap)
 		}
 
-		_ = d.Set("t_e_o", tmpList)
+		_ = d.Set("teo", tmpList)
 	}
 
-	if status != nil {
-		_ = d.Set("status", status)
+	if describeRes.Status != nil {
+		_ = d.Set("status", describeRes.Status)
 	}
 
-	if cacheTime != nil {
-		_ = d.Set("cache_time", cacheTime)
+	if describeRes.CacheTime != nil {
+		_ = d.Set("cache_time", describeRes.CacheTime)
 	}
 
-	d.SetId(helper.DataResourceIdsHash(ids))
+	d.SetId(taskId)
 	output3, ok := d.GetOk("result_output_file")
 	if ok && output3.(string) != "" {
 		if e := writeToFile(output3.(string), tmpList); e != nil {

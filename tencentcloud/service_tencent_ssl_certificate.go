@@ -409,7 +409,7 @@ func (me *SslService) DescribeSslDescribeCertificateByID(ctx context.Context, ce
 	describeCertificate = response.Response
 	return
 }
-func (me *SslService) DescribeSslDescribeCertificateBindResourceTaskDetailByFilter(ctx context.Context, param map[string]interface{}) (describeCertificateBindResourceTaskDetail []*ssl.ClbInstanceList, errRet error) {
+func (me *SslService) DescribeSslDescribeCertificateBindResourceTaskDetailByFilter(ctx context.Context, param map[string]interface{}) (describeCertificateBindResourceTaskDetail *ssl.DescribeCertificateBindResourceTaskDetailResponseParams, errRet error) {
 	var (
 		logId   = getLogId(ctx)
 		request = ssl.NewDescribeCertificateBindResourceTaskDetailRequest()
@@ -435,30 +435,45 @@ func (me *SslService) DescribeSslDescribeCertificateBindResourceTaskDetailByFilt
 
 	ratelimit.Check(request.GetAction())
 
-	var (
-		offset int64 = 0
-		limit  int64 = 20
-	)
+	var offset, limit = 0, 20
+
 	for {
-		request.Offset = &offset
-		request.Limit = &limit
-		response, err := me.client.UseSslClient().DescribeCertificateBindResourceTaskDetail(request)
+		request.Offset = helper.String(helper.IntToStr(offset))
+		request.Limit = helper.String(helper.IntToStr(limit))
+		response, err := me.client.UseSSLCertificateClient().DescribeCertificateBindResourceTaskDetail(request)
 		if err != nil {
 			errRet = err
 			return
 		}
 		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
 
-		if response == nil || len(response.Response.CLB) < 1 {
+		if response == nil || response.Response == nil || checkResult(1, response.Response) {
 			break
 		}
-		describeCertificateBindResourceTaskDetail = append(describeCertificateBindResourceTaskDetail, response.Response.CLB...)
-		if len(response.Response.CLB) < int(limit) {
+
+		describeCertificateBindResourceTaskDetail.CLB = append(describeCertificateBindResourceTaskDetail.CLB, response.Response.CLB...)
+		describeCertificateBindResourceTaskDetail.CDN = append(describeCertificateBindResourceTaskDetail.CDN, response.Response.CDN...)
+		describeCertificateBindResourceTaskDetail.WAF = append(describeCertificateBindResourceTaskDetail.WAF, response.Response.WAF...)
+		describeCertificateBindResourceTaskDetail.DDOS = append(describeCertificateBindResourceTaskDetail.DDOS, response.Response.DDOS...)
+		describeCertificateBindResourceTaskDetail.LIVE = append(describeCertificateBindResourceTaskDetail.LIVE, response.Response.LIVE...)
+		describeCertificateBindResourceTaskDetail.VOD = append(describeCertificateBindResourceTaskDetail.VOD, response.Response.VOD...)
+		describeCertificateBindResourceTaskDetail.TKE = append(describeCertificateBindResourceTaskDetail.TKE, response.Response.TKE...)
+		describeCertificateBindResourceTaskDetail.APIGATEWAY = append(describeCertificateBindResourceTaskDetail.APIGATEWAY, response.Response.APIGATEWAY...)
+		describeCertificateBindResourceTaskDetail.TCB = append(describeCertificateBindResourceTaskDetail.TCB, response.Response.TCB...)
+		describeCertificateBindResourceTaskDetail.TEO = append(describeCertificateBindResourceTaskDetail.TEO, response.Response.TEO...)
+
+		if checkResult(limit, response.Response) {
 			break
 		}
 
 		offset += limit
 	}
-
 	return
+}
+func checkResult(num int, result *ssl.DescribeCertificateBindResourceTaskDetailResponseParams) bool {
+	return len(result.CLB) < num && len(result.CDN) < num &&
+		len(result.WAF) < num && len(result.DDOS) < num &&
+		len(result.LIVE) < num && len(result.VOD) < num &&
+		len(result.TKE) < num && len(result.APIGATEWAY) < num &&
+		len(result.TCB) < num && len(result.TEO) < num
 }
