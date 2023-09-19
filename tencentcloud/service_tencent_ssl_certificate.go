@@ -409,3 +409,56 @@ func (me *SslService) DescribeSslDescribeCertificateByID(ctx context.Context, ce
 	describeCertificate = response.Response
 	return
 }
+func (me *SslService) DescribeSslDescribeCertificateBindResourceTaskDetailByFilter(ctx context.Context, param map[string]interface{}) (describeCertificateBindResourceTaskDetail []*ssl.ClbInstanceList, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = ssl.NewDescribeCertificateBindResourceTaskDetailRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "TaskId" {
+			request.TaskId = v.(*string)
+		}
+		if k == "ResourceTypes" {
+			request.ResourceTypes = v.([]*string)
+		}
+		if k == "Regions" {
+			request.Regions = v.([]*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSslClient().DescribeCertificateBindResourceTaskDetail(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.CLB) < 1 {
+			break
+		}
+		describeCertificateBindResourceTaskDetail = append(describeCertificateBindResourceTaskDetail, response.Response.CLB...)
+		if len(response.Response.CLB) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
