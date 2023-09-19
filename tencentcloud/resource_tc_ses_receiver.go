@@ -35,6 +35,12 @@ resource "tencentcloud_ses_receiver" "receiver" {
   }
 }
 ```
+Import
+
+ses email_address can be imported using the id, e.g.
+```
+$ terraform import tencentcloud_ses_receiver.receiver receiverId
+```
 */
 package tencentcloud
 
@@ -232,24 +238,28 @@ func resourceTencentCloudSesReceiverRead(d *schema.ResourceData, meta interface{
 		_ = d.Set("desc", receiver.Desc)
 	}
 
-	// if receiver.Data != nil {
-	// 	dataList := []interface{}{}
-	// 	for _, data := range receiver.Data {
-	// 		dataMap := map[string]interface{}{}
+	receiverData, err := service.DescribeSesReceiverDetailById(ctx, receiverId)
+	if err != nil {
+		return err
+	}
+	if receiverData != nil {
+		dataList := []interface{}{}
+		for _, data := range receiverData {
+			dataMap := map[string]interface{}{}
 
-	// 		if data.Email != nil {
-	// 			dataMap["email"] = data.Email
-	// 		}
+			if data.Email != nil {
+				dataMap["email"] = data.Email
+			}
 
-	// 		if data.TemplateData != nil {
-	// 			dataMap["template_data"] = data.TemplateData
-	// 		}
+			if data.TemplateData != nil {
+				dataMap["template_data"] = data.TemplateData
+			}
 
-	// 		dataList = append(dataList, dataMap)
-	// 	}
+			dataList = append(dataList, dataMap)
+		}
 
-	// 	_ = d.Set("data", dataList)
-	// }
+		_ = d.Set("data", dataList)
+	}
 
 	return nil
 }

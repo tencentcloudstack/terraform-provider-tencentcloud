@@ -67,6 +67,18 @@ func resourceTencentCloudCynosdbReadonlyInstance() *schema.Resource {
 			Default:     false,
 			Description: "Indicate whether to delete readonly instance directly or not. Default is false. If set true, instance will be deleted instead of staying recycle bin. Note: works for both `PREPAID` and `POSTPAID_BY_HOUR` cluster.",
 		},
+		"vpc_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "ID of the VPC.",
+		},
+		"subnet_id": {
+			Type:        schema.TypeString,
+			Optional:    true,
+			Computed:    true,
+			Description: "ID of the subnet within this VPC.",
+		},
 	}
 	basic := TencentCynosdbInstanceBaseInfo()
 	delete(basic, "instance_id")
@@ -107,6 +119,14 @@ func resourceTencentCloudCynosdbReadonlyInstanceCreate(d *schema.ResourceData, m
 	request.Cpu = helper.IntInt64(d.Get("instance_cpu_core").(int))
 	request.Memory = helper.IntInt64(d.Get("instance_memory_size").(int))
 	request.ReadOnlyCount = helper.Int64(1)
+
+	// vpc
+	if v, ok := d.GetOk("vpc_id"); ok {
+		request.VpcId = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("subnet_id"); ok {
+		request.SubnetId = helper.String(v.(string))
+	}
 
 	var response *cynosdb.AddInstancesResponse
 	var err error
@@ -175,6 +195,12 @@ func resourceTencentCloudCynosdbReadonlyInstanceRead(d *schema.ResourceData, met
 	_ = d.Set("instance_name", instance.InstanceName)
 	_ = d.Set("instance_status", instance.Status)
 	_ = d.Set("instance_storage_size", instance.Storage)
+	if instance.VpcId != nil {
+		_ = d.Set("vpc_id", instance.VpcId)
+	}
+	if instance.SubnetId != nil {
+		_ = d.Set("subnet_id", instance.SubnetId)
+	}
 
 	maintain, err := cynosdbService.DescribeMaintainPeriod(ctx, id)
 	if err != nil {
@@ -243,6 +269,10 @@ func resourceTencentCloudCynosdbReadonlyInstanceUpdate(d *schema.ResourceData, m
 			return err
 		}
 
+	}
+
+	if d.HasChange("vpc_id") || d.HasChange("subnet_id") {
+		return fmt.Errorf("`vpc_id`, `subnet_id` do not support change now.")
 	}
 
 	d.Partial(false)

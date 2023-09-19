@@ -31,8 +31,8 @@ data "tencentcloud_availability_zones_by_product" "gz" {
   product = "ckafka"
 }
 
-resource "tencentcloud_ckafka_instance" "kafka_instance" {
-  instance_name      = "ckafka-instance-type-tf-test"
+resource "tencentcloud_ckafka_instance" "kafka_instance_prepaid" {
+  instance_name      = "ckafka-instance-prepaid"
   zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
   period             = 1
   vpc_id             = var.vpc_id
@@ -40,11 +40,37 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   msg_retention_time = 1300
   renew_flag         = 0
   kafka_version      = "2.4.1"
-  disk_size          = 1000
+  disk_size          = 200
   disk_type          = "CLOUD_BASIC"
+  band_width         = 20
+  partition          = 400
 
   specifications_type = "standard"
   instance_type       = 2
+
+  config {
+    auto_create_topic_enable   = true
+    default_num_partitions     = 3
+    default_replication_factor = 3
+  }
+
+  dynamic_retention_config {
+    enable = 1
+  }
+}
+
+resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
+  instance_name      = "ckafka-instance-postpaid"
+  zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
+  vpc_id             = var.vpc_id
+  subnet_id          = var.subnet_id
+  msg_retention_time = 1300
+  kafka_version      = "1.1.1"
+  disk_size          = 200
+  band_width         = 20
+  disk_type          = "CLOUD_BASIC"
+  partition          = 400
+  charge_type        = "POSTPAID_BY_HOUR"
 
   config {
     auto_create_topic_enable   = true
@@ -115,6 +141,7 @@ The following arguments are supported:
 * `instance_name` - (Required, String) Instance name.
 * `zone_id` - (Required, Int) Available zone id.
 * `band_width` - (Optional, Int) Instance bandwidth in MBps.
+* `charge_type` - (Optional, String, ForceNew) The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `PREPAID`.
 * `config` - (Optional, List) Instance configuration.
 * `disk_size` - (Optional, Int) Disk Size. Its interval varies with bandwidth, and the input must be within the interval, which can be viewed through the control. If it is not within the interval, the plan will cause a change when first created.
 * `disk_type` - (Optional, String) Type of disk.

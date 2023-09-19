@@ -20,8 +20,8 @@ data "tencentcloud_availability_zones_by_product" "gz" {
   product = "ckafka"
 }
 
-resource "tencentcloud_ckafka_instance" "kafka_instance" {
-  instance_name      = "ckafka-instance-type-tf-test"
+resource "tencentcloud_ckafka_instance" "kafka_instance_prepaid" {
+  instance_name      = "ckafka-instance-prepaid"
   zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
   period             = 1
   vpc_id             = var.vpc_id
@@ -29,11 +29,37 @@ resource "tencentcloud_ckafka_instance" "kafka_instance" {
   msg_retention_time = 1300
   renew_flag         = 0
   kafka_version      = "2.4.1"
-  disk_size          = 1000
+  disk_size          = 200
   disk_type          = "CLOUD_BASIC"
+  band_width = 20
+  partition = 400
 
   specifications_type = "standard"
   instance_type       = 2
+
+  config {
+    auto_create_topic_enable   = true
+    default_num_partitions     = 3
+    default_replication_factor = 3
+  }
+
+  dynamic_retention_config {
+    enable = 1
+  }
+}
+
+resource "tencentcloud_ckafka_instance" "kafka_instance_postpaid" {
+  instance_name      = "ckafka-instance-postpaid"
+  zone_id            = data.tencentcloud_availability_zones_by_product.gz.zones.0.id
+  vpc_id             = var.vpc_id
+  subnet_id          = var.subnet_id
+  msg_retention_time = 1300
+  kafka_version      = "1.1.1"
+  disk_size          = 200
+  band_width         = 20
+  disk_type          = "CLOUD_BASIC"
+  partition          = 400
+  charge_type        = "POSTPAID_BY_HOUR"
 
   config {
     auto_create_topic_enable   = true
@@ -111,6 +137,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"reflect"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -157,6 +185,14 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Default:      "profession",
 				ValidateFunc: validateAllowedStringValue([]string{"standard", "profession"}),
 				Description:  "Specifications type of instance. Allowed values are `standard`, `profession`. Default is `profession`.",
+			},
+			"charge_type": {
+				Type:         schema.TypeString,
+				Optional:     true,
+				ForceNew:     true,
+				Default:      CKAFKA_CHARGE_TYPE_PREPAID,
+				ValidateFunc: validateAllowedStringValue([]string{CKAFKA_CHARGE_TYPE_POSTPAID, CKAFKA_CHARGE_TYPE_PREPAID}),
+				Description:  "The charge type of instance. Valid values are `PREPAID` and `POSTPAID_BY_HOUR`. Default value is `PREPAID`.",
 			},
 			"period": {
 				Type:        schema.TypeInt,
@@ -345,42 +381,6 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 				Deprecated:  "It has been deprecated from version 1.81.6. If set public network value, it will cause error.",
 				Description: "Bandwidth of the public network.",
 			},
-			//"dynamic_disk_config": {
-			//	Type:     schema.TypeList,
-			//	Optional: true,
-			//	MaxItems: 1,
-			//	Computed: true,
-			//	Elem: &schema.Resource{
-			//		Schema: map[string]*schema.Schema{
-			//			"enable": {
-			//				Type:     schema.TypeInt,
-			//				Optional: true,
-			//				Computed: true,
-			//				Description: "Whether to the dynamic disk expansion configuration is enabled." +
-			//					"0: disabled; 1: enabled.",
-			//			},
-			//			"disk_quota_percentage": {
-			//				Type:        schema.TypeInt,
-			//				Optional:    true,
-			//				Computed:    true,
-			//				Description: "Disk quota threshold (in percentage) for triggering the automatic disk expansion event.",
-			//			},
-			//			"step_forward_percentage": {
-			//				Type:        schema.TypeInt,
-			//				Optional:    true,
-			//				Computed:    true,
-			//				Description: "Percentage of dynamic disk expansion each time.",
-			//			},
-			//			"max_disk_space": {
-			//				Type:        schema.TypeInt,
-			//				Optional:    true,
-			//				Computed:    true,
-			//				Description: "Max scale disk size, in GB.",
-			//			},
-			//		},
-			//	},
-			//	Description: "Dynamic disk expansion policy configuration.",
-			//},
 			"max_message_byte": {
 				Type:         schema.TypeInt,
 				Optional:     true,
@@ -402,68 +402,59 @@ func resourceTencentCloudCkafkaInstance() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ckafka_instance.create")()
-	var (
-		logId   = getLogId(contextNil)
-		service = CkafkaService{
-			client: meta.(*TencentCloudClient).apiV3Conn,
-		}
-		request  = ckafka.NewCreateInstancePreRequest()
-		response = ckafka.NewCreateInstancePreResponse()
-		ctx      = context.WithValue(context.TODO(), logIdKey, logId)
-	)
+func ckafkaRequestSetParams(request interface{}, d *schema.ResourceData) {
+	values := reflect.ValueOf(request).Elem()
+
 	instanceName := d.Get("instance_name").(string)
-	request.InstanceName = &instanceName
+	zoneId := d.Get("zone_id").(int)
+	values.FieldByName("InstanceName").Set(reflect.ValueOf(helper.String(instanceName)))
+	values.FieldByName("ZoneId").Set(reflect.ValueOf(helper.IntInt64(zoneId)))
 
-	zoneId := int64(d.Get("zone_id").(int))
-	request.ZoneId = &zoneId
-
-	period := int64(d.Get("period").(int))
-	request.Period = helper.String(fmt.Sprintf("%dm", period))
-	request.InstanceType = helper.IntInt64(1)
-
-	if v, ok := d.GetOkExists("instance_type"); ok {
-		request.InstanceType = helper.IntInt64(v.(int))
+	requestType := reflect.TypeOf(request)
+	if strings.Contains(requestType.String(), "CreateInstancePreRequest") {
+		if v, ok := d.GetOk("period"); ok {
+			period := int64(v.(int))
+			values.FieldByName("Period").Set(reflect.ValueOf(helper.String(fmt.Sprintf("%dm", period))))
+		}
+		if v, ok := d.GetOk("renew_flag"); ok {
+			values.FieldByName("RenewFlag").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
+		}
 	}
 
+	instanceType := helper.IntInt64(1)
+	if v, ok := d.GetOkExists("instance_type"); ok {
+		instanceType = helper.IntInt64(v.(int))
+	}
+	values.FieldByName("InstanceType").Set(reflect.ValueOf(instanceType))
+
 	if v, ok := d.GetOk("specifications_type"); ok {
-		request.SpecificationsType = helper.String(v.(string))
+		values.FieldByName("SpecificationsType").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	if v, ok := d.GetOk("vpc_id"); ok {
-		vpcId := v.(string)
-		request.VpcId = helper.String(vpcId)
+		values.FieldByName("VpcId").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	if v, ok := d.GetOk("subnet_id"); ok {
-		subnetId := v.(string)
-		request.SubnetId = helper.String(subnetId)
-	}
-
-	if v, ok := d.GetOk("renew_flag"); ok {
-		renewFlag := int64(v.(int))
-		request.RenewFlag = helper.Int64(renewFlag)
+		values.FieldByName("SubnetId").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	if v, ok := d.GetOk("kafka_version"); ok {
-		kafkaVersion := v.(string)
-		request.KafkaVersion = helper.String(kafkaVersion)
+		values.FieldByName("KafkaVersion").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	if v, ok := d.GetOk("disk_size"); ok {
-		diskSize := int64(v.(int))
-		request.DiskSize = helper.Int64(diskSize)
+		values.FieldByName("DiskSize").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
+
 	}
 
 	if v, ok := d.GetOk("band_width"); ok {
-		bandWidth := int64(v.(int))
-		request.BandWidth = helper.Int64(bandWidth)
+		values.FieldByName("BandWidth").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
 	}
 
 	if v, ok := d.GetOk("partition"); ok {
-		partition := int64(v.(int))
-		request.Partition = helper.Int64(partition)
+		values.FieldByName("Partition").Set(reflect.ValueOf(helper.Int64(int64(v.(int)))))
+
 	}
 
 	if v, ok := d.GetOk("tags"); ok {
@@ -476,33 +467,85 @@ func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta inter
 			}
 			tagSet = append(tagSet, &tagInfo)
 		}
-		request.Tags = tagSet
+		values.FieldByName("Tags").Set(reflect.ValueOf(tagSet))
 	}
 
 	if v, ok := d.GetOk("disk_type"); ok {
-		diskType := v.(string)
-		request.DiskType = helper.String(diskType)
+		values.FieldByName("DiskType").Set(reflect.ValueOf(helper.String(v.(string))))
 	}
 
 	if flag := d.Get("multi_zone_flag").(bool); flag {
-		request.MultiZoneFlag = helper.Bool(flag)
+		values.FieldByName("MultiZoneFlag").Set(reflect.ValueOf(helper.Bool(flag)))
+
 		ids := d.Get("zone_ids").(*schema.Set).List()
+		zoneIds := make([]*int64, 0)
 		for _, v := range ids {
-			request.ZoneIds = append(request.ZoneIds, helper.IntInt64(v.(int)))
+			zoneIds = append(zoneIds, helper.IntInt64(v.(int)))
 		}
+		values.FieldByName("ZoneIds").Set(reflect.ValueOf(zoneIds))
 	}
+}
 
-	result, err := service.client.UseCkafkaClient().CreateInstancePre(request)
-	response = result
-
+func createCkafkaInstancePostPaid(ctx context.Context, d *schema.ResourceData, meta interface{}) (instanceId *string, err error) {
+	logId := getLogId(ctx)
+	request := ckafka.NewCreatePostPaidInstanceRequest()
+	ckafkaRequestSetParams(request, d)
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCkafkaClient().CreatePostPaidInstance(request)
 	if err != nil {
 		log.Printf("[CRITAL]%s create ckafka instance failed, reason:%s\n", logId, err.Error())
-		return err
+		return
 	}
+	if response.Response == nil || response.Response.Result.Data == nil {
+		err = fmt.Errorf("CreatePostPaidInstance response is nil")
+		return
+	}
+	instanceId = response.Response.Result.Data.InstanceId
+	return
+}
+func createCkafkaInstancePrePaid(ctx context.Context, d *schema.ResourceData, meta interface{}) (instanceId *string, err error) {
+	logId := getLogId(ctx)
+	request := ckafka.NewCreateInstancePreRequest()
+	ckafkaRequestSetParams(request, d)
+	response, err := meta.(*TencentCloudClient).apiV3Conn.UseCkafkaClient().CreateInstancePre(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s create ckafka instance failed, reason:%s\n", logId, err.Error())
+		return
+	}
+	if response.Response == nil || response.Response.Result.Data == nil {
+		err = fmt.Errorf("CreateInstancePre response is nil")
+		return
+	}
+	instanceId = response.Response.Result.Data.InstanceId
+	return
+}
 
-	instanceId := response.Response.Result.Data.InstanceId
+func resourceTencentCloudCkafkaInstanceCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ckafka_instance.create")()
+	var (
+		instanceId *string
+		createErr  error
+		logId      = getLogId(contextNil)
+		service    = CkafkaService{
+			client: meta.(*TencentCloudClient).apiV3Conn,
+		}
+		ctx = context.WithValue(context.TODO(), logIdKey, logId)
+	)
 
-	err = resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
+	chargeType := d.Get("charge_type").(string)
+	if chargeType == CKAFKA_CHARGE_TYPE_POSTPAID {
+		instanceId, createErr = createCkafkaInstancePostPaid(ctx, d, meta)
+	} else if chargeType == CKAFKA_CHARGE_TYPE_PREPAID {
+		instanceId, createErr = createCkafkaInstancePrePaid(ctx, d, meta)
+	} else {
+		return fmt.Errorf("invalid `charge_type` value")
+	}
+	if createErr != nil {
+		return createErr
+	}
+	if instanceId == nil {
+		return fmt.Errorf("instanceId is nil")
+	}
+	err := resource.Retry(5*readRetryTimeout, func() *resource.RetryError {
 		has, ready, err := service.CheckCkafkaInstanceReady(ctx, *instanceId)
 		if err != nil {
 			return resource.NonRetryableError(err)
@@ -673,11 +716,6 @@ func resourceTencentCloudCkafkaInstanceRead(d *schema.ResourceData, meta interfa
 
 	_ = d.Set("instance_name", info.InstanceName)
 	_ = d.Set("zone_id", info.ZoneId)
-	// calculate period
-	//createTime := *info.CreateTime
-	//expireTime := *info.ExpireTime
-	//period := (expireTime - createTime) / (3600 * 24 * 31)
-	//_ = d.Set("period", &period)
 	_ = d.Set("vpc_id", info.VpcId)
 	_ = d.Set("subnet_id", info.SubnetId)
 	_ = d.Set("renew_flag", info.RenewFlag)
@@ -866,30 +904,6 @@ func resourceTencentCloudCkafkaInstanceUpdate(d *schema.ResourceData, meta inter
 		}
 	}
 
-	//if d.HasChange("dynamic_disk_config") {
-	//	if v, ok := d.GetOk("dynamic_disk_config"); ok {
-	//		dynamic := make([]*ckafka.DynamicDiskConfig, 0, 10)
-	//		for _, item := range v.([]interface{}) {
-	//			dMap := item.(map[string]interface{})
-	//			dynamicInfo := ckafka.DynamicDiskConfig{}
-	//			if enable, ok := dMap["enable"]; ok {
-	//				dynamicInfo.Enable = helper.Int64(int64(enable.(int)))
-	//			}
-	//			if stepForwardPercentage, ok := dMap["step_forward_percentage"]; ok {
-	//				dynamicInfo.StepForwardPercentage = helper.Int64(int64(stepForwardPercentage.(int)))
-	//			}
-	//			if diskQuotaPercentage, ok := dMap["disk_quota_percentage"]; ok {
-	//				dynamicInfo.DiskQuotaPercentage = helper.Int64(int64(diskQuotaPercentage.(int)))
-	//			}
-	//			if maxDiskSpace, ok := dMap["max_disk_space"]; ok {
-	//				dynamicInfo.MaxDiskSpace = helper.Int64(int64(maxDiskSpace.(int)))
-	//			}
-	//			dynamic = append(dynamic, &dynamicInfo)
-	//		}
-	//		request.DynamicDiskConfig = dynamic[0]
-	//	}
-	//}
-
 	if d.HasChange("max_message_byte") {
 		if v, ok := d.GetOkExists("max_message_byte"); ok {
 			request.MaxMessageByte = helper.Uint64(uint64(v.(int)))
@@ -962,14 +976,28 @@ func resourceTencentCLoudCkafkaInstanceDelete(d *schema.ResourceData, meta inter
 		service = CkafkaService{
 			client: meta.(*TencentCloudClient).apiV3Conn,
 		}
-		request = ckafka.NewDeleteInstancePreRequest()
 	)
 	instanceId := d.Id()
-	request.InstanceId = &instanceId
+	chargeType := d.Get("charge_type").(string)
+
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-		_, err := service.client.UseCkafkaClient().DeleteInstancePre(request)
-		if err != nil {
-			return retryError(err, "UnsupportedOperation")
+		if chargeType == CKAFKA_CHARGE_TYPE_POSTPAID {
+			request := ckafka.NewDeleteInstancePostRequest()
+			request.InstanceId = &instanceId
+			_, err := service.client.UseCkafkaClient().DeleteInstancePost(request)
+			if err != nil {
+				return retryError(err, "UnsupportedOperation")
+			}
+
+		} else if chargeType == CKAFKA_CHARGE_TYPE_PREPAID {
+			request := ckafka.NewDeleteInstancePreRequest()
+			request.InstanceId = &instanceId
+			_, err := service.client.UseCkafkaClient().DeleteInstancePre(request)
+			if err != nil {
+				return retryError(err, "UnsupportedOperation")
+			}
+		} else {
+			return resource.NonRetryableError(fmt.Errorf("invalid `charge_type` value"))
 		}
 		return nil
 	})

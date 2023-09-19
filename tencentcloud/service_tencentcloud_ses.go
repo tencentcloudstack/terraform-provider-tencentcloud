@@ -536,7 +536,11 @@ func (me *SesService) DescribeSesSendEmailStatusByFilter(ctx context.Context, pa
 func (me *SesService) DescribeSesReceiverById(ctx context.Context, receiverId string) (Receiver *ses.ReceiverData, errRet error) {
 	logId := getLogId(ctx)
 
-	id, _ := strconv.Atoi(receiverId)
+	id, err := strconv.Atoi(receiverId)
+	if err != nil {
+		errRet = fmt.Errorf("[ERROR]%s id data type error: %v", logId, receiverId)
+		return
+	}
 
 	request := ses.NewListReceiversRequest()
 
@@ -572,6 +576,54 @@ func (me *SesService) DescribeSesReceiverById(ctx context.Context, receiverId st
 			}
 		}
 
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	return
+}
+
+func (me *SesService) DescribeSesReceiverDetailById(ctx context.Context, receiverId string) (receiverDetail []*ses.ReceiverDetail, errRet error) {
+	logId := getLogId(ctx)
+
+	id, err := strconv.Atoi(receiverId)
+	if err != nil {
+		errRet = fmt.Errorf("[ERROR]%s id data type error: %v", logId, receiverId)
+		return
+	}
+
+	request := ses.NewListReceiverDetailsRequest()
+	request.ReceiverId = helper.IntUint64(id)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset uint64 = 0
+		limit  uint64 = 20
+	)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseSesClient().ListReceiverDetails(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data) < 1 {
+			break
+		}
+		receiverDetail = append(receiverDetail, response.Response.Data...)
 		if len(response.Response.Data) < int(limit) {
 			break
 		}

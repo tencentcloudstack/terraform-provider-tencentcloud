@@ -1082,7 +1082,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/chdfs/v20201112
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam v1.0.695
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ciam/v20220331
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.706
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka v1.0.748
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ckafka/v20190819
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.693
@@ -1189,7 +1189,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum/v20210622
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf v1.0.729
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/scf/v20180416
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.743
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.748
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses/v20201002
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
@@ -1249,7 +1249,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tsf/v20180326
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod v1.0.199
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vod/v20180717
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.706
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc v1.0.749
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/vpc/v20170312
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.751

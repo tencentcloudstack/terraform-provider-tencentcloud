@@ -28,6 +28,18 @@ resource "tencentcloud_eip" "foo" {
 }
 ```
 
+Eip With Network Egress
+```
+resource "tencentcloud_eip" "foo" {
+  name                       = "egress_eip"
+  egress                     = "center_egress2"
+  internet_charge_type       = "BANDWIDTH_PACKAGE"
+  internet_service_provider  = "CMCC"
+  internet_max_bandwidth_out = 1
+  type                       = "EIP"
+}
+```
+
 Import
 
 EIP can be imported using the id, e.g.
@@ -129,6 +141,12 @@ func resourceTencentCloudEip() *schema.Resource {
 				Computed:    true,
 				Description: "ID of bandwidth package, it will set when `internet_charge_type` is `BANDWIDTH_PACKAGE`.",
 			},
+			"egress": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				Description: "Network egress. It defaults to `center_egress1`. If you want to try the egress feature, please [submit a ticket](https://console.cloud.tencent.com/workorder/category).",
+			},
 			"anti_ddos_package_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -204,6 +222,9 @@ func resourceTencentCloudEipCreate(d *schema.ResourceData, meta interface{}) err
 	}
 	if v, ok := d.GetOk("name"); ok {
 		request.AddressName = helper.String(v.(string))
+	}
+	if v, ok := d.GetOk("egress"); ok {
+		request.Egress = helper.String(v.(string))
 	}
 	if v, ok := d.GetOk("anti_ddos_package_id"); ok {
 		request.AntiDDoSPackageId = helper.String(v.(string))
@@ -310,6 +331,10 @@ func resourceTencentCloudEipRead(d *schema.ResourceData, meta interface{}) error
 		_ = d.Set("internet_max_bandwidth_out", eip.Bandwidth)
 	}
 
+	if eip.Egress != nil {
+		_ = d.Set("egress", eip.Egress)
+	}
+
 	if eip.AntiDDoSPackageId != nil {
 		_ = d.Set("anti_ddos_package_id", eip.AntiDDoSPackageId)
 	}
@@ -338,6 +363,7 @@ func resourceTencentCloudEipUpdate(d *schema.ResourceData, meta interface{}) err
 	unsupportedUpdateFields := []string{
 		"bandwidth_package_id",
 		"anti_ddos_package_id",
+		"egress",
 	}
 	for _, field := range unsupportedUpdateFields {
 		if d.HasChange(field) {

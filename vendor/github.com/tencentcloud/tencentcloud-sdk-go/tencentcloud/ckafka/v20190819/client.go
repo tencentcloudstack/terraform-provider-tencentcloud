@@ -1963,6 +1963,80 @@ func (c *Client) DeleteGroupWithContext(ctx context.Context, request *DeleteGrou
     return
 }
 
+func NewDeleteInstancePostRequest() (request *DeleteInstancePostRequest) {
+    request = &DeleteInstancePostRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "DeleteInstancePost")
+    
+    
+    return
+}
+
+func NewDeleteInstancePostResponse() (response *DeleteInstancePostResponse) {
+    response = &DeleteInstancePostResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// DeleteInstancePost
+// 删除后付费实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) DeleteInstancePost(request *DeleteInstancePostRequest) (response *DeleteInstancePostResponse, err error) {
+    return c.DeleteInstancePostWithContext(context.Background(), request)
+}
+
+// DeleteInstancePost
+// 删除后付费实例
+//
+// 可能返回的错误码:
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_REPETITIONVALUE = "InvalidParameterValue.RepetitionValue"
+//  INVALIDPARAMETERVALUE_SUBNETIDINVALID = "InvalidParameterValue.SubnetIdInvalid"
+//  INVALIDPARAMETERVALUE_SUBNETNOTBELONGTOZONE = "InvalidParameterValue.SubnetNotBelongToZone"
+//  INVALIDPARAMETERVALUE_VPCIDINVALID = "InvalidParameterValue.VpcIdInvalid"
+//  INVALIDPARAMETERVALUE_WRONGACTION = "InvalidParameterValue.WrongAction"
+//  INVALIDPARAMETERVALUE_ZONENOTSUPPORT = "InvalidParameterValue.ZoneNotSupport"
+//  RESOURCEUNAVAILABLE = "ResourceUnavailable"
+//  UNAUTHORIZEDOPERATION = "UnauthorizedOperation"
+//  UNSUPPORTEDOPERATION_BATCHDELINSTANCELIMIT = "UnsupportedOperation.BatchDelInstanceLimit"
+//  UNSUPPORTEDOPERATION_OSSREJECT = "UnsupportedOperation.OssReject"
+func (c *Client) DeleteInstancePostWithContext(ctx context.Context, request *DeleteInstancePostRequest) (response *DeleteInstancePostResponse, err error) {
+    if request == nil {
+        request = NewDeleteInstancePostRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("DeleteInstancePost require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewDeleteInstancePostResponse()
+    err = c.Send(request, response)
+    return
+}
+
 func NewDeleteInstancePreRequest() (request *DeleteInstancePreRequest) {
     request = &DeleteInstancePreRequest{
         BaseRequest: &tchttp.BaseRequest{},
@@ -4683,6 +4757,64 @@ func (c *Client) InquireCkafkaPriceWithContext(ctx context.Context, request *Inq
     request.SetContext(ctx)
     
     response = NewInquireCkafkaPriceResponse()
+    err = c.Send(request, response)
+    return
+}
+
+func NewInstanceScalingDownRequest() (request *InstanceScalingDownRequest) {
+    request = &InstanceScalingDownRequest{
+        BaseRequest: &tchttp.BaseRequest{},
+    }
+    
+    request.Init().WithApiInfo("ckafka", APIVersion, "InstanceScalingDown")
+    
+    
+    return
+}
+
+func NewInstanceScalingDownResponse() (response *InstanceScalingDownResponse) {
+    response = &InstanceScalingDownResponse{
+        BaseResponse: &tchttp.BaseResponse{},
+    }
+    return
+}
+
+// InstanceScalingDown
+// 按量实例缩容
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+func (c *Client) InstanceScalingDown(request *InstanceScalingDownRequest) (response *InstanceScalingDownResponse, err error) {
+    return c.InstanceScalingDownWithContext(context.Background(), request)
+}
+
+// InstanceScalingDown
+// 按量实例缩容
+//
+// 可能返回的错误码:
+//  AUTHFAILURE = "AuthFailure"
+//  FAILEDOPERATION = "FailedOperation"
+//  INTERNALERROR = "InternalError"
+//  INVALIDPARAMETER = "InvalidParameter"
+//  INVALIDPARAMETERVALUE_INSTANCENOTEXIST = "InvalidParameterValue.InstanceNotExist"
+//  INVALIDPARAMETERVALUE_NOTALLOWEDEMPTY = "InvalidParameterValue.NotAllowedEmpty"
+func (c *Client) InstanceScalingDownWithContext(ctx context.Context, request *InstanceScalingDownRequest) (response *InstanceScalingDownResponse, err error) {
+    if request == nil {
+        request = NewInstanceScalingDownRequest()
+    }
+    
+    if c.GetCredential() == nil {
+        return nil, errors.New("InstanceScalingDown require credential")
+    }
+
+    request.SetContext(ctx)
+    
+    response = NewInstanceScalingDownResponse()
     err = c.Send(request, response)
     return
 }
