@@ -1,20 +1,41 @@
 /*
 Provides a resource to create a rocketmq 5.x instance
 
+~> **NOTE:** It only support create postpaid rocketmq 5.x instance.
+
 Example Usage
 
+Basic Instance
 ```hcl
 resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance" {
   instance_type = "EXPERIMENT"
-  name = "test"
+  name = "rocketmq-instance"
   sku_code = "experiment_500"
-  remark = "test"
+  remark = "remark"
   vpc_id = "vpc-xxxxxx"
   subnet_id = "subnet-xxxxxx"
   tags = {
     tag_key = "rocketmq"
     tag_value = "5.x"
   }
+}
+```
+
+Enable Public Instance
+```hcl
+resource "tencentcloud_trocket_rocketmq_instance" "rocketmq_instance_public" {
+  instance_type = "EXPERIMENT"
+  name = "rocketmq-enable-public-instance"
+  sku_code = "experiment_500"
+  remark = "remark"
+  vpc_id = "vpc-xxxxxx"
+  subnet_id = "subnet-xxxxxx"
+  tags = {
+    tag_key = "rocketmq"
+    tag_value = "5.x"
+  }
+  enable_public = true
+  bandwidth = 1
 }
 ```
 
@@ -97,14 +118,14 @@ func resourceTencentCloudTrocketRocketmqInstance() *schema.Resource {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeBool,
-				Description: "Whether to enable the public network.",
+				Description: "Whether to enable the public network. Must set `bandwidth` when `enable_public` equal true.",
 			},
 
 			"bandwidth": {
 				Optional:    true,
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Public network bandwidth.",
+				Description: "Public network bandwidth. `bandwidth` must be greater than zero when `enable_public` equal true.",
 			},
 
 			"ip_rules": {
@@ -139,6 +160,18 @@ func resourceTencentCloudTrocketRocketmqInstance() *schema.Resource {
 				Type:        schema.TypeInt,
 				Description: "Message retention time in hours.",
 			},
+
+			"public_end_point": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Public network access address.",
+			},
+
+			"vpc_end_point": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "VPC access address.",
+			},
 		},
 	}
 }
@@ -150,9 +183,11 @@ func resourceTencentCloudTrocketRocketmqInstanceCreate(d *schema.ResourceData, m
 	logId := getLogId(contextNil)
 	ctx := context.WithValue(context.TODO(), logIdKey, logId)
 	var (
-		request    = trocket.NewCreateInstanceRequest()
-		response   = trocket.NewCreateInstanceResponse()
-		instanceId string
+		request      = trocket.NewCreateInstanceRequest()
+		response     = trocket.NewCreateInstanceResponse()
+		instanceId   string
+		enablePublic bool
+		bandwidth    int
 	)
 	if v, ok := d.GetOk("instance_type"); ok {
 		request.InstanceType = helper.String(v.(string))
@@ -178,13 +213,18 @@ func resourceTencentCloudTrocketRocketmqInstanceCreate(d *schema.ResourceData, m
 	request.VpcList = []*trocket.VpcInfo{&vpcInfo}
 
 	if v, ok := d.GetOkExists("enable_public"); ok {
-		request.EnablePublic = helper.Bool(v.(bool))
+		enablePublic = v.(bool)
+		request.EnablePublic = helper.Bool(enablePublic)
 	}
 
 	if v, ok := d.GetOkExists("bandwidth"); ok {
-		request.Bandwidth = helper.IntInt64(v.(int))
+		bandwidth = v.(int)
+		request.Bandwidth = helper.IntInt64(bandwidth)
 	}
 
+	if enablePublic && bandwidth <= 0 {
+		return fmt.Errorf("`bandwidth` must be greater than zero when `enable_public` equal true.")
+	}
 	if v, ok := d.GetOk("ip_rules"); ok {
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
@@ -281,40 +321,43 @@ func resourceTencentCloudTrocketRocketmqInstanceRead(d *schema.ResourceData, met
 		_ = d.Set("remark", rocketmqInstance.Remark)
 	}
 
-	if len(rocketmqInstance.EndpointList) != 0 {
-		endpoint := rocketmqInstance.EndpointList[0]
-		if endpoint.VpcId != nil {
-			_ = d.Set("vpc_id", endpoint.VpcId)
+	var enablePublic bool
+	for _, endpoint := range rocketmqInstance.EndpointList {
+		endpointType := endpoint.Type
+		if endpointType == nil {
+			continue
 		}
-
-		if endpoint.SubnetId != nil {
-			_ = d.Set("subnet_id", endpoint.SubnetId)
-		}
-
-		if len(endpoint.IpRules) != 0 {
-			ipRuleList := make([]interface{}, 0)
-			for _, ipRule := range endpoint.IpRules {
-				ipRuleMap := make(map[string]interface{})
-				ipRuleMap["ip"] = ipRule.Ip
-				ipRuleMap["allow"] = ipRule.Allow
-				ipRuleMap["remark"] = ipRule.Remark
-				ipRuleList = append(ipRuleList, ipRuleMap)
+		if *endpointType == ENDPOINT_TYPE_PUBLIC {
+			enablePublic = true
+			if len(endpoint.IpRules) != 0 {
+				ipRuleList := make([]interface{}, 0)
+				for _, ipRule := range endpoint.IpRules {
+					ipRuleMap := make(map[string]interface{})
+					ipRuleMap["ip"] = ipRule.Ip
+					ipRuleMap["allow"] = ipRule.Allow
+					ipRuleMap["remark"] = ipRule.Remark
+					ipRuleList = append(ipRuleList, ipRuleMap)
+				}
+				_ = d.Set("ip_rules", ipRuleList)
 			}
-			_ = d.Set("ip_rules", ipRuleList)
-		}
-		if endpoint.Bandwidth != nil {
-			_ = d.Set("bandwidth", endpoint.Bandwidth)
-		}
-
-		if endpoint.Type != nil {
-			if *endpoint.Type == "PUBLIC" {
-				_ = d.Set("enable_public", true)
-			} else {
-				_ = d.Set("enable_public", true)
+			if endpoint.Bandwidth != nil {
+				_ = d.Set("bandwidth", endpoint.Bandwidth)
 			}
+			_ = d.Set("public_end_point", endpoint.EndpointUrl)
+		}
+		if *endpointType == ENDPOINT_TYPE_VPC {
+			if endpoint.VpcId != nil {
+				_ = d.Set("vpc_id", endpoint.VpcId)
+			}
+
+			if endpoint.SubnetId != nil {
+				_ = d.Set("subnet_id", endpoint.SubnetId)
+			}
+			_ = d.Set("vpc_end_point", endpoint.EndpointUrl)
 		}
 
 	}
+	_ = d.Set("enable_public", enablePublic)
 
 	if rocketmqInstance.MessageRetention != nil {
 		_ = d.Set("message_retention", rocketmqInstance.MessageRetention)
