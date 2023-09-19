@@ -351,7 +351,7 @@ func (me *SSLService) CancelAuditCertificate(ctx context.Context, request *ssl.C
 		err = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
 		return
 	}
-	if *response.Response.Result != true {
+	if !*response.Response.Result {
 		err = fmt.Errorf("TencentCloud SDK %s CancelAudit failed", request.GetAction())
 		return err
 	}
