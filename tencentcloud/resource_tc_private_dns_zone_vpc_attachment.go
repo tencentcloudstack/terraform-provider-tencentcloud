@@ -53,16 +53,8 @@ Import
 
 PrivateDns zone_vpc_attachment can be imported using the id, e.g.
 
-Add Vpc Set
-
 ```
-terraform import tencentcloud_private_dns_zone_vpc_attachment.example zone-6t11lof0#vpc_set#vpc-jdx11z0t#ap-guangzhou#
-```
-
-Add Account Vpc Set
-
-```
-terraform import tencentcloud_private_dns_zone_vpc_attachment.example zone-980faacc#account_vpc_set#vpc-axrsmmrv#ap-guangzhou#100022770164
+terraform import tencentcloud_private_dns_zone_vpc_attachment.example zone-6t11lof0#vpc-jdx11z0t
 ```
 */
 package tencentcloud
@@ -155,10 +147,7 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 		logId     = getLogId(contextNil)
 		request   = privatedns.NewAddSpecifyPrivateZoneVpcRequest()
 		zoneId    string
-		vpcType   string
 		uniqVpcId string
-		region    string
-		uin       string
 	)
 
 	if v, ok := d.GetOk("zone_id"); ok {
@@ -167,7 +156,6 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 	}
 
 	if v, ok := d.GetOk("vpc_set"); ok {
-		vpcType = ADD_VPC_SET
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			vpcInfo := new(privatedns.VpcInfo)
@@ -178,7 +166,6 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 
 			if v, ok := dMap["region"]; ok {
 				vpcInfo.Region = helper.String(v.(string))
-				region = v.(string)
 			}
 
 			request.VpcSet = append(request.VpcSet, vpcInfo)
@@ -186,7 +173,6 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 	}
 
 	if v, ok := d.GetOk("account_vpc_set"); ok {
-		vpcType = ADD_ACCOUNT_VPC_SET
 		for _, item := range v.([]interface{}) {
 			dMap := item.(map[string]interface{})
 			accountVpcInfo := new(privatedns.AccountVpcInfo)
@@ -197,12 +183,10 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 
 			if v, ok := dMap["region"]; ok {
 				accountVpcInfo.Region = helper.String(v.(string))
-				region = v.(string)
 			}
 
 			if v, ok := dMap["uin"]; ok {
 				accountVpcInfo.Uin = helper.String(v.(string))
-				uin = v.(string)
 			}
 
 			request.AccountVpcSet = append(request.AccountVpcSet, accountVpcInfo)
@@ -225,7 +209,7 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentCreate(d *schema.ResourceDat
 		return err
 	}
 
-	d.SetId(strings.Join([]string{zoneId, vpcType, uniqVpcId, region, uin}, FILED_SP))
+	d.SetId(strings.Join([]string{zoneId, uniqVpcId}, FILED_SP))
 
 	return resourceTencentCloudPrivateDnsZoneVpcAttachmentRead(d, meta)
 }
@@ -241,15 +225,12 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentRead(d *schema.ResourceData,
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 5 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
 
 	zoneId := idSplit[0]
-	vpcType := idSplit[1]
-	uniqVpcId := idSplit[2]
-	region := idSplit[3]
-	uin := idSplit[4]
+	uniqVpcId := idSplit[1]
 
 	ZoneVpcAttachment, err := service.DescribePrivateDnsZoneVpcAttachmentById(ctx, zoneId)
 	if err != nil {
@@ -266,39 +247,37 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentRead(d *schema.ResourceData,
 		_ = d.Set("zone_id", ZoneVpcAttachment.ZoneId)
 	}
 
-	if vpcType == ADD_VPC_SET {
-		if ZoneVpcAttachment.VpcSet != nil {
-			vpcSetList := []interface{}{}
-			for _, vpcSet := range ZoneVpcAttachment.VpcSet {
-				vpcSetMap := map[string]interface{}{}
+	if ZoneVpcAttachment.VpcSet != nil {
+		vpcSetList := []interface{}{}
+		for _, vpcSet := range ZoneVpcAttachment.VpcSet {
+			vpcSetMap := map[string]interface{}{}
 
-				if *vpcSet.UniqVpcId == uniqVpcId && *vpcSet.Region == region {
-					vpcSetMap["uniq_vpc_id"] = *vpcSet.UniqVpcId
-					vpcSetMap["region"] = *vpcSet.Region
-					vpcSetList = append(vpcSetList, vpcSetMap)
-					break
-				}
+			if *vpcSet.UniqVpcId == uniqVpcId {
+				vpcSetMap["uniq_vpc_id"] = *vpcSet.UniqVpcId
+				vpcSetMap["region"] = *vpcSet.Region
+				vpcSetList = append(vpcSetList, vpcSetMap)
+				break
 			}
-
-			_ = d.Set("vpc_set", vpcSetList)
 		}
-	} else {
-		if ZoneVpcAttachment.AccountVpcSet != nil {
-			accountVpcSetList := []interface{}{}
-			for _, accountVpcSet := range ZoneVpcAttachment.AccountVpcSet {
-				accountVpcSetMap := map[string]interface{}{}
 
-				if *accountVpcSet.UniqVpcId == uniqVpcId && *accountVpcSet.Region == region && *accountVpcSet.Uin == uin {
-					accountVpcSetMap["uniq_vpc_id"] = *accountVpcSet.UniqVpcId
-					accountVpcSetMap["region"] = *accountVpcSet.Region
-					accountVpcSetMap["uin"] = *accountVpcSet.Uin
-					accountVpcSetList = append(accountVpcSetList, accountVpcSetMap)
-					break
-				}
+		_ = d.Set("vpc_set", vpcSetList)
+	}
+
+	if ZoneVpcAttachment.AccountVpcSet != nil {
+		accountVpcSetList := []interface{}{}
+		for _, accountVpcSet := range ZoneVpcAttachment.AccountVpcSet {
+			accountVpcSetMap := map[string]interface{}{}
+
+			if *accountVpcSet.UniqVpcId == uniqVpcId {
+				accountVpcSetMap["uniq_vpc_id"] = *accountVpcSet.UniqVpcId
+				accountVpcSetMap["region"] = *accountVpcSet.Region
+				accountVpcSetMap["uin"] = *accountVpcSet.Uin
+				accountVpcSetList = append(accountVpcSetList, accountVpcSetMap)
+				break
 			}
-
-			_ = d.Set("account_vpc_set", accountVpcSetList)
 		}
+
+		_ = d.Set("account_vpc_set", accountVpcSetList)
 	}
 
 	return nil
@@ -312,20 +291,50 @@ func resourceTencentCloudPrivateDnsZoneVpcAttachmentDelete(d *schema.ResourceDat
 		logId   = getLogId(contextNil)
 		ctx     = context.WithValue(context.TODO(), logIdKey, logId)
 		service = PrivateDnsService{client: meta.(*TencentCloudClient).apiV3Conn}
+		region  string
+		uin     string
 	)
 
 	idSplit := strings.Split(d.Id(), FILED_SP)
-	if len(idSplit) != 5 {
+	if len(idSplit) != 2 {
 		return fmt.Errorf("id is broken,%s", idSplit)
 	}
 
 	zoneId := idSplit[0]
-	vpcType := idSplit[1]
-	uniqVpcId := idSplit[2]
-	region := idSplit[3]
-	uin := idSplit[4]
+	uniqVpcId := idSplit[1]
 
-	if err := service.DeletePrivateDnsZoneVpcAttachmentById(ctx, zoneId, vpcType, uniqVpcId, region, uin); err != nil {
+	// get vpc detail
+	ZoneVpcAttachment, err := service.DescribePrivateDnsZoneVpcAttachmentById(ctx, zoneId)
+	if err != nil {
+		return err
+	}
+
+	if ZoneVpcAttachment == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `PrivateDnsZoneVpcAttachment` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
+	if ZoneVpcAttachment.VpcSet != nil {
+		for _, vpcSet := range ZoneVpcAttachment.VpcSet {
+			if *vpcSet.UniqVpcId == uniqVpcId {
+				region = *vpcSet.Region
+				break
+			}
+		}
+	}
+
+	if ZoneVpcAttachment.AccountVpcSet != nil {
+		for _, accountVpcSet := range ZoneVpcAttachment.AccountVpcSet {
+			if *accountVpcSet.UniqVpcId == uniqVpcId {
+				region = *accountVpcSet.Region
+				uin = *accountVpcSet.Uin
+				break
+			}
+		}
+	}
+
+	if err = service.DeletePrivateDnsZoneVpcAttachmentById(ctx, zoneId, uniqVpcId, region, uin); err != nil {
 		return err
 	}
 

@@ -109,12 +109,12 @@ func (me *PrivateDnsService) DescribePrivateDnsZoneVpcAttachmentById(ctx context
 	return
 }
 
-func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.Context, zoneId, vpcType, uniqVpcId, region, uin string) (errRet error) {
+func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.Context, zoneId, uniqVpcId, region, uin string) (errRet error) {
 	logId := getLogId(ctx)
 
 	request := privatedns.NewDeleteSpecifyPrivateZoneVpcRequest()
 	request.ZoneId = &zoneId
-	if vpcType == ADD_VPC_SET {
+	if uin == "" {
 		request.VpcSet = []*privatedns.VpcInfo{
 			{
 				UniqVpcId: common.StringPtr(uniqVpcId),
