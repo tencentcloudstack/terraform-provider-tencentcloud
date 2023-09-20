@@ -536,3 +536,8 @@ var SAAS_REAL_REGION_NON_MAINLAND_ID_MAP = map[string]int{
 }
 
 var SAAS_REAL_REGIONS = append(SAAS_REAL_REGION_MAINLAND, SAAS_REAL_REGION_NON_MAINLAND...)
+
+const (
+	EDITION_SAAS = "sparta-waf"
+	EDITION_CLB  = "clb-waf"
+)

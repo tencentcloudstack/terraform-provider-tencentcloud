@@ -299,15 +299,16 @@ func resourceTencentCloudWafClbInstanceCreate(d *schema.ResourceData, meta inter
 	if v, ok := d.GetOkExists("elastic_mode"); ok {
 		elasticMode := v.(int)
 		if elasticMode == ELASTIC_MODE_1 {
-			modifyInstanceElasticModeRequest := waf.NewModifyInstanceElasticModeRequest()
-			modifyInstanceElasticModeRequest.InstanceId = &instanceId
-			modifyInstanceElasticModeRequest.Mode = helper.IntInt64(elasticMode)
+			newSwitchElasticModeRequest := waf.NewSwitchElasticModeRequest()
+			newSwitchElasticModeRequest.InstanceID = &instanceId
+			newSwitchElasticModeRequest.Mode = helper.IntInt64(elasticMode)
+			newSwitchElasticModeRequest.Edition = helper.String(EDITION_CLB)
 			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyInstanceElasticMode(modifyInstanceElasticModeRequest)
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().SwitchElasticMode(newSwitchElasticModeRequest)
 				if e != nil {
 					return retryError(e)
 				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyInstanceElasticModeRequest.GetAction(), modifyInstanceElasticModeRequest.ToJsonString(), result.ToJsonString())
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, newSwitchElasticModeRequest.GetAction(), newSwitchElasticModeRequest.ToJsonString(), result.ToJsonString())
 				}
 
 				return nil
@@ -397,11 +398,11 @@ func resourceTencentCloudWafClbInstanceUpdate(d *schema.ResourceData, meta inter
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId                            = getLogId(contextNil)
-		modifyInstanceNameRequest        = waf.NewModifyInstanceNameRequest()
-		modifyInstanceRenewFlagRequest   = waf.NewModifyInstanceRenewFlagRequest()
-		modifyInstanceElasticModeRequest = waf.NewModifyInstanceElasticModeRequest()
-		instanceId                       = d.Id()
+		logId                          = getLogId(contextNil)
+		modifyInstanceNameRequest      = waf.NewModifyInstanceNameRequest()
+		modifyInstanceRenewFlagRequest = waf.NewModifyInstanceRenewFlagRequest()
+		newSwitchElasticModeRequest    = waf.NewSwitchElasticModeRequest()
+		instanceId                     = d.Id()
 	)
 
 	immutableArgs := []string{"goods_category", "time_span", "time_unit", "is_cn_mainland", "domain_pkg_count", "qps_pkg_count"}
@@ -416,7 +417,7 @@ func resourceTencentCloudWafClbInstanceUpdate(d *schema.ResourceData, meta inter
 		if v, ok := d.GetOkExists("instance_name"); ok {
 			modifyInstanceNameRequest.InstanceID = &instanceId
 			modifyInstanceNameRequest.InstanceName = helper.String(v.(string))
-			modifyInstanceNameRequest.Edition = helper.String("clb-waf")
+			modifyInstanceNameRequest.Edition = helper.String(EDITION_CLB)
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyInstanceName(modifyInstanceNameRequest)
 				if e != nil {
@@ -459,14 +460,15 @@ func resourceTencentCloudWafClbInstanceUpdate(d *schema.ResourceData, meta inter
 
 	if d.HasChange("elastic_mode") {
 		if v, ok := d.GetOkExists("elastic_mode"); ok {
-			modifyInstanceElasticModeRequest.InstanceId = &instanceId
-			modifyInstanceElasticModeRequest.Mode = helper.IntInt64(v.(int))
+			newSwitchElasticModeRequest.InstanceID = &instanceId
+			newSwitchElasticModeRequest.Mode = helper.IntInt64(v.(int))
+			newSwitchElasticModeRequest.Edition = helper.String(EDITION_CLB)
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyInstanceElasticMode(modifyInstanceElasticModeRequest)
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().SwitchElasticMode(newSwitchElasticModeRequest)
 				if e != nil {
 					return retryError(e)
 				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyInstanceElasticModeRequest.GetAction(), modifyInstanceElasticModeRequest.ToJsonString(), result.ToJsonString())
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, newSwitchElasticModeRequest.GetAction(), newSwitchElasticModeRequest.ToJsonString(), result.ToJsonString())
 				}
 
 				return nil

@@ -117,7 +117,7 @@ func resourceTencentCloudWafSaasInstance() *schema.Resource {
 			"real_region": {
 				Optional:     true,
 				Type:         schema.TypeString,
-				Default:      SAAS_REAL_REGION_NON_MAINLAND_HK,
+				Default:      SAAS_REAL_REGION_MAINLAND_GZ,
 				ValidateFunc: validateAllowedStringValue(SAAS_REAL_REGIONS),
 				Description:  "region. If `is_cn_mainland` is 1, support: gz, sh, bj, cd (Means: GuangZhou, ShangHai, BeiJing, ChengDu); If `is_cn_mainland` is 0, support: hk, sg, th, kr, in, de, ca, use, sao, usw, jkt (Means: HongKong, Singapore, Bandkok, Seoul, Mumbai, Frankfurt, Toronto, Virginia, SaoPaulo, SiliconValley, Jakarta).",
 			},
@@ -193,7 +193,7 @@ func resourceTencentCloudWafSaasInstanceCreate(d *schema.ResourceData, meta inte
 		goodsCategoryId := int64(WAF_CATEGORY_ID_SAAS[goodsCategory])
 		subProductCode := SUB_PRODUCT_CODE_SAAS[goodsCategory]
 		labelTypes := LABEL_TYPES_SAAS[goodsCategory]
-		pid := int64(PID_CLB[goodsCategory])
+		pid := int64(PID_SAAS[goodsCategory])
 		labelCounts := int64(1)
 
 		instanceGood.GoodsCategoryId = &goodsCategoryId
@@ -345,15 +345,16 @@ func resourceTencentCloudWafSaasInstanceCreate(d *schema.ResourceData, meta inte
 	if v, ok := d.GetOkExists("elastic_mode"); ok {
 		elasticMode := v.(int)
 		if elasticMode == ELASTIC_MODE_1 {
-			modifyInstanceElasticModeRequest := waf.NewModifyInstanceElasticModeRequest()
-			modifyInstanceElasticModeRequest.InstanceId = &instanceId
-			modifyInstanceElasticModeRequest.Mode = helper.IntInt64(elasticMode)
+			newSwitchElasticModeRequest := waf.NewSwitchElasticModeRequest()
+			newSwitchElasticModeRequest.InstanceID = &instanceId
+			newSwitchElasticModeRequest.Mode = helper.IntInt64(elasticMode)
+			newSwitchElasticModeRequest.Edition = helper.String(EDITION_SAAS)
 			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyInstanceElasticMode(modifyInstanceElasticModeRequest)
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().SwitchElasticMode(newSwitchElasticModeRequest)
 				if e != nil {
 					return retryError(e)
 				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyInstanceElasticModeRequest.GetAction(), modifyInstanceElasticModeRequest.ToJsonString(), result.ToJsonString())
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, newSwitchElasticModeRequest.GetAction(), newSwitchElasticModeRequest.ToJsonString(), result.ToJsonString())
 				}
 
 				return nil
@@ -366,7 +367,7 @@ func resourceTencentCloudWafSaasInstanceCreate(d *schema.ResourceData, meta inte
 		}
 	}
 
-	return resourceTencentCloudWafClbInstanceRead(d, meta)
+	return resourceTencentCloudWafSaasInstanceRead(d, meta)
 }
 
 func resourceTencentCloudWafSaasInstanceRead(d *schema.ResourceData, meta interface{}) error {
@@ -416,7 +417,8 @@ func resourceTencentCloudWafSaasInstanceRead(d *schema.ResourceData, meta interf
 	}
 
 	if instanceInfo.QPS != nil {
-		_ = d.Set("qps_pkg_count", instanceInfo.QPS.Count)
+		qpsCount := *instanceInfo.QPS.Count / 1000
+		_ = d.Set("qps_pkg_count", qpsCount)
 	}
 
 	if instanceInfo.Edition != nil {
@@ -447,11 +449,11 @@ func resourceTencentCloudWafSaasInstanceUpdate(d *schema.ResourceData, meta inte
 	defer inconsistentCheck(d, meta)()
 
 	var (
-		logId                            = getLogId(contextNil)
-		modifyInstanceNameRequest        = waf.NewModifyInstanceNameRequest()
-		modifyInstanceRenewFlagRequest   = waf.NewModifyInstanceRenewFlagRequest()
-		modifyInstanceElasticModeRequest = waf.NewModifyInstanceElasticModeRequest()
-		instanceId                       = d.Id()
+		logId                          = getLogId(contextNil)
+		modifyInstanceNameRequest      = waf.NewModifyInstanceNameRequest()
+		modifyInstanceRenewFlagRequest = waf.NewModifyInstanceRenewFlagRequest()
+		newSwitchElasticModeRequest    = waf.NewSwitchElasticModeRequest()
+		instanceId                     = d.Id()
 	)
 
 	immutableArgs := []string{"goods_category", "time_span", "time_unit", "is_cn_mainland", "domain_pkg_count", "qps_pkg_count"}
@@ -466,7 +468,7 @@ func resourceTencentCloudWafSaasInstanceUpdate(d *schema.ResourceData, meta inte
 		if v, ok := d.GetOkExists("instance_name"); ok {
 			modifyInstanceNameRequest.InstanceID = &instanceId
 			modifyInstanceNameRequest.InstanceName = helper.String(v.(string))
-			modifyInstanceNameRequest.Edition = helper.String("sparta-waf")
+			modifyInstanceNameRequest.Edition = helper.String(EDITION_SAAS)
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
 				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyInstanceName(modifyInstanceNameRequest)
 				if e != nil {
@@ -509,14 +511,15 @@ func resourceTencentCloudWafSaasInstanceUpdate(d *schema.ResourceData, meta inte
 
 	if d.HasChange("elastic_mode") {
 		if v, ok := d.GetOkExists("elastic_mode"); ok {
-			modifyInstanceElasticModeRequest.InstanceId = &instanceId
-			modifyInstanceElasticModeRequest.Mode = helper.IntInt64(v.(int))
+			newSwitchElasticModeRequest.InstanceID = &instanceId
+			newSwitchElasticModeRequest.Mode = helper.IntInt64(v.(int))
+			newSwitchElasticModeRequest.Edition = helper.String(EDITION_SAAS)
 			err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyInstanceElasticMode(modifyInstanceElasticModeRequest)
+				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().SwitchElasticMode(newSwitchElasticModeRequest)
 				if e != nil {
 					return retryError(e)
 				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyInstanceElasticModeRequest.GetAction(), modifyInstanceElasticModeRequest.ToJsonString(), result.ToJsonString())
+					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, newSwitchElasticModeRequest.GetAction(), newSwitchElasticModeRequest.ToJsonString(), result.ToJsonString())
 				}
 
 				return nil
