@@ -73,7 +73,13 @@ func (me *TrocketService) TrocketRocketmqInstanceStateRefreshFunc(instanceId str
 		if err != nil {
 			return nil, "", err
 		}
-
+		if *object.InstanceStatus == "RUNNING" {
+			for _, endpoint := range object.EndpointList {
+				if *endpoint.Status != "OPEN" {
+					return object, "PROCESSING", nil
+				}
+			}
+		}
 		return object, helper.PString(object.InstanceStatus), nil
 	}
 }
