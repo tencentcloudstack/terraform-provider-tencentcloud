@@ -90,7 +90,7 @@ func (me *TrocketService) DescribeTrocketRocketmqTopicById(ctx context.Context, 
 	request := trocket.NewDescribeTopicListRequest()
 	request.InstanceId = &instanceId
 	filter := &trocket.Filter{
-		Name:   helper.String("Topic"),
+		Name:   helper.String("TopicName"),
 		Values: []*string{&topic},
 	}
 	request.Filters = []*trocket.Filter{filter}
