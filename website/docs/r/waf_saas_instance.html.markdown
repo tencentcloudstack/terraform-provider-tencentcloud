@@ -11,7 +11,7 @@ description: |-
 
 Provides a resource to create a waf saas instance
 
-~> **NOTE:** Before creating, please ensure that the account region and `is_cn_mainland` are consistent.
+~> **NOTE:** Region only supports `ap-guangzhou` and `ap-seoul`.
 
 ## Example Usage
 
@@ -24,7 +24,7 @@ resource "tencentcloud_waf_saas_instance" "example" {
 }
 ```
 
-### Create a complete waf ultimate_saas instance(Chinese Mainland)
+### Create a complete waf ultimate_saas instance
 
 ```hcl
 resource "tencentcloud_waf_saas_instance" "example" {
@@ -34,25 +34,7 @@ resource "tencentcloud_waf_saas_instance" "example" {
   time_unit        = "m"
   auto_renew_flag  = 1
   elastic_mode     = 1
-  is_cn_mainland   = 1
   real_region      = "gz"
-  domain_pkg_count = 3
-  qps_pkg_count    = 3
-}
-```
-
-### Create a complete waf ultimate_saas instance(Non Chinese Mainland)
-
-```hcl
-resource "tencentcloud_waf_saas_instance" "example" {
-  goods_category   = "ultimate_saas"
-  instance_name    = "tf-example-saas-waf"
-  time_span        = 1
-  time_unit        = "m"
-  auto_renew_flag  = 1
-  elastic_mode     = 1
-  is_cn_mainland   = 0
-  real_region      = "sg"
   domain_pkg_count = 3
   qps_pkg_count    = 3
 }
@@ -67,9 +49,8 @@ The following arguments are supported:
 * `domain_pkg_count` - (Optional, Int) Domain extension package count.
 * `elastic_mode` - (Optional, Int) Is elastic billing enabled, 1: enable, 0: disable.
 * `instance_name` - (Optional, String) Waf instance name.
-* `is_cn_mainland` - (Optional, Int) Chinese Mainland or not, 1: Chinese Mainland, 0: Non Chinese Mainland.
 * `qps_pkg_count` - (Optional, Int) QPS extension package count.
-* `real_region` - (Optional, String) region. If `is_cn_mainland` is 1, support: gz, sh, bj, cd (Means: GuangZhou, ShangHai, BeiJing, ChengDu); If `is_cn_mainland` is 0, support: hk, sg, th, kr, in, de, ca, use, sao, usw, jkt (Means: HongKong, Singapore, Bandkok, Seoul, Mumbai, Frankfurt, Toronto, Virginia, SaoPaulo, SiliconValley, Jakarta).
+* `real_region` - (Optional, String) region. If Region is `ap-guangzhou`, support: gz, sh, bj, cd (Means: GuangZhou, ShangHai, BeiJing, ChengDu); If Region is `ap-seoul`, support: hk, sg, th, kr, in, de, ca, use, sao, usw, jkt (Means: HongKong, Singapore, Bandkok, Seoul, Mumbai, Frankfurt, Toronto, Virginia, SaoPaulo, SiliconValley, Jakarta).
 * `time_span` - (Optional, Int) Time interval.
 * `time_unit` - (Optional, String) Time unit, support d, m, y. d: day, m: month, y: year.
 

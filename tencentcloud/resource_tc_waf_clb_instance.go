@@ -1,7 +1,7 @@
 /*
 Provides a resource to create a waf clb instance
 
-~> **NOTE:** Before creating, please ensure that the account region and `is_cn_mainland` are consistent.
+~> **NOTE:** Region only supports `ap-guangzhou` and `ap-seoul`.
 
 Example Usage
 
@@ -24,7 +24,6 @@ resource "tencentcloud_waf_clb_instance" "example" {
   time_unit        = "m"
   auto_renew_flag  = 1
   elastic_mode     = 1
-  is_cn_mainland   = 1
   domain_pkg_count = 3
   qps_pkg_count    = 3
 }
@@ -91,13 +90,6 @@ func resourceTencentCloudWafClbInstance() *schema.Resource {
 				ValidateFunc: validateAllowedIntValue(ELASTIC_MODE),
 				Description:  "Is elastic billing enabled, 1: enable, 0: disable.",
 			},
-			"is_cn_mainland": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      MAINLAND_1,
-				ValidateFunc: validateAllowedIntValue(MAINLAND),
-				Description:  "Chinese Mainland or not, 1: Chinese Mainland, 0: Non Chinese Mainland.",
-			},
 			"domain_pkg_count": {
 				Optional:     true,
 				Type:         schema.TypeInt,
@@ -153,9 +145,21 @@ func resourceTencentCloudWafClbInstanceCreate(d *schema.ResourceData, meta inter
 		logId        = getLogId(contextNil)
 		request      = waf.NewGenerateDealsAndPayNewRequest()
 		response     = waf.NewGenerateDealsAndPayNewResponse()
+		client       = meta.(*TencentCloudClient).apiV3Conn
 		instanceId   string
 		mainlandMode int
 	)
+
+	region := client.Region
+	if region == REGION_GZ {
+		mainlandMode = REGION_ID_MAINLAND
+
+	} else if region == REGION_KR {
+		mainlandMode = REGION_ID_NON_MAINLAND
+
+	} else {
+		return fmt.Errorf("Region only supports `ap-guangzhou` and `ap-seoul`.")
+	}
 
 	goods := []*waf.GoodNews{}
 
@@ -194,15 +198,7 @@ func resourceTencentCloudWafClbInstanceCreate(d *schema.ResourceData, meta inter
 		instanceGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
 	}
 
-	if v, ok := d.GetOkExists("is_cn_mainland"); ok {
-		mainlandMode = v.(int)
-		if mainlandMode == MAINLAND_1 {
-			instanceGood.RegionId = helper.IntInt64(REGION_ID_MAINLAND)
-		} else {
-			instanceGood.RegionId = helper.IntInt64(REGION_ID_NON_MAINLAND)
-		}
-	}
-
+	instanceGood.RegionId = helper.IntInt64(mainlandMode)
 	instanceGood.GoodsDetail = instanceGoodDetail
 	goods = append(goods, instanceGood)
 
@@ -229,12 +225,7 @@ func resourceTencentCloudWafClbInstanceCreate(d *schema.ResourceData, meta inter
 			domainPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
 		}
 
-		if mainlandMode == MAINLAND_1 {
-			domainPkgGood.RegionId = helper.IntInt64(REGION_ID_MAINLAND)
-		} else {
-			domainPkgGood.RegionId = helper.IntInt64(REGION_ID_NON_MAINLAND)
-		}
-
+		domainPkgGood.RegionId = helper.IntInt64(mainlandMode)
 		domainPkgGood.GoodsDetail = domainPkgGoodDetail
 		goods = append(goods, domainPkgGood)
 	}
@@ -262,12 +253,7 @@ func resourceTencentCloudWafClbInstanceCreate(d *schema.ResourceData, meta inter
 			qpsPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
 		}
 
-		if mainlandMode == MAINLAND_1 {
-			qpsPkgGood.RegionId = helper.IntInt64(REGION_ID_MAINLAND)
-		} else {
-			qpsPkgGood.RegionId = helper.IntInt64(REGION_ID_NON_MAINLAND)
-		}
-
+		qpsPkgGood.RegionId = helper.IntInt64(mainlandMode)
 		qpsPkgGood.GoodsDetail = qpsPkgGoodDetail
 		goods = append(goods, qpsPkgGood)
 	}
@@ -408,7 +394,7 @@ func resourceTencentCloudWafClbInstanceUpdate(d *schema.ResourceData, meta inter
 		instanceId                     = d.Id()
 	)
 
-	immutableArgs := []string{"goods_category", "time_span", "time_unit", "is_cn_mainland", "domain_pkg_count", "qps_pkg_count"}
+	immutableArgs := []string{"goods_category", "time_span", "time_unit", "domain_pkg_count", "qps_pkg_count"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {

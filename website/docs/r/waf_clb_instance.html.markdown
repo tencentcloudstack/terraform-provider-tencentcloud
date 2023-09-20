@@ -11,7 +11,7 @@ description: |-
 
 Provides a resource to create a waf clb instance
 
-~> **NOTE:** Before creating, please ensure that the account region and `is_cn_mainland` are consistent.
+~> **NOTE:** Region only supports `ap-guangzhou` and `ap-seoul`.
 
 ## Example Usage
 
@@ -34,7 +34,6 @@ resource "tencentcloud_waf_clb_instance" "example" {
   time_unit        = "m"
   auto_renew_flag  = 1
   elastic_mode     = 1
-  is_cn_mainland   = 1
   domain_pkg_count = 3
   qps_pkg_count    = 3
 }
@@ -49,7 +48,6 @@ The following arguments are supported:
 * `domain_pkg_count` - (Optional, Int) Domain extension package count.
 * `elastic_mode` - (Optional, Int) Is elastic billing enabled, 1: enable, 0: disable.
 * `instance_name` - (Optional, String) Waf instance name.
-* `is_cn_mainland` - (Optional, Int) Chinese Mainland or not, 1: Chinese Mainland, 0: Non Chinese Mainland.
 * `qps_pkg_count` - (Optional, Int) QPS extension package count.
 * `time_span` - (Optional, Int) Time interval.
 * `time_unit` - (Optional, String) Time unit, support d, m, y. d: day, m: month, y: year.

@@ -1,7 +1,7 @@
 /*
 Provides a resource to create a waf saas instance
 
-~> **NOTE:** Before creating, please ensure that the account region and `is_cn_mainland` are consistent.
+~> **NOTE:** Region only supports `ap-guangzhou` and `ap-seoul`.
 
 Example Usage
 
@@ -14,7 +14,7 @@ resource "tencentcloud_waf_saas_instance" "example" {
 }
 ```
 
-Create a complete waf ultimate_saas instance(Chinese Mainland)
+Create a complete waf ultimate_saas instance
 
 ```hcl
 resource "tencentcloud_waf_saas_instance" "example" {
@@ -24,25 +24,7 @@ resource "tencentcloud_waf_saas_instance" "example" {
   time_unit        = "m"
   auto_renew_flag  = 1
   elastic_mode     = 1
-  is_cn_mainland   = 1
   real_region      = "gz"
-  domain_pkg_count = 3
-  qps_pkg_count    = 3
-}
-```
-
-Create a complete waf ultimate_saas instance(Non Chinese Mainland)
-
-```hcl
-resource "tencentcloud_waf_saas_instance" "example" {
-  goods_category   = "ultimate_saas"
-  instance_name    = "tf-example-saas-waf"
-  time_span        = 1
-  time_unit        = "m"
-  auto_renew_flag  = 1
-  elastic_mode     = 1
-  is_cn_mainland   = 0
-  real_region      = "sg"
   domain_pkg_count = 3
   qps_pkg_count    = 3
 }
@@ -109,19 +91,12 @@ func resourceTencentCloudWafSaasInstance() *schema.Resource {
 				ValidateFunc: validateAllowedIntValue(ELASTIC_MODE),
 				Description:  "Is elastic billing enabled, 1: enable, 0: disable.",
 			},
-			"is_cn_mainland": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				Default:      MAINLAND_1,
-				ValidateFunc: validateAllowedIntValue(MAINLAND),
-				Description:  "Chinese Mainland or not, 1: Chinese Mainland, 0: Non Chinese Mainland.",
-			},
 			"real_region": {
 				Optional:     true,
 				Type:         schema.TypeString,
 				Default:      SAAS_REAL_REGION_MAINLAND_GZ,
 				ValidateFunc: validateAllowedStringValue(SAAS_REAL_REGIONS),
-				Description:  "region. If `is_cn_mainland` is 1, support: gz, sh, bj, cd (Means: GuangZhou, ShangHai, BeiJing, ChengDu); If `is_cn_mainland` is 0, support: hk, sg, th, kr, in, de, ca, use, sao, usw, jkt (Means: HongKong, Singapore, Bandkok, Seoul, Mumbai, Frankfurt, Toronto, Virginia, SaoPaulo, SiliconValley, Jakarta).",
+				Description:  "region. If Region is `ap-guangzhou`, support: gz, sh, bj, cd (Means: GuangZhou, ShangHai, BeiJing, ChengDu); If Region is `ap-seoul`, support: hk, sg, th, kr, in, de, ca, use, sao, usw, jkt (Means: HongKong, Singapore, Bandkok, Seoul, Mumbai, Frankfurt, Toronto, Virginia, SaoPaulo, SiliconValley, Jakarta).",
 			},
 			"domain_pkg_count": {
 				Optional:     true,
@@ -178,11 +153,23 @@ func resourceTencentCloudWafSaasInstanceCreate(d *schema.ResourceData, meta inte
 		logId         = getLogId(contextNil)
 		request       = waf.NewGenerateDealsAndPayNewRequest()
 		response      = waf.NewGenerateDealsAndPayNewResponse()
+		client        = meta.(*TencentCloudClient).apiV3Conn
 		instanceId    string
 		mainlandMode  int
-		readRegion    string
+		realRegion    string
 		realRegionInt int64
 	)
+
+	region := client.Region
+	if region == REGION_GZ {
+		mainlandMode = REGION_ID_MAINLAND
+
+	} else if region == REGION_KR {
+		mainlandMode = REGION_ID_NON_MAINLAND
+
+	} else {
+		return fmt.Errorf("Region only supports `ap-guangzhou` and `ap-seoul`.")
+	}
 
 	goods := []*waf.GoodNews{}
 
@@ -222,29 +209,26 @@ func resourceTencentCloudWafSaasInstanceCreate(d *schema.ResourceData, meta inte
 	}
 
 	if v, ok := d.GetOk("real_region"); ok {
-		readRegion = v.(string)
+		realRegion = v.(string)
 	}
 
-	if v, ok := d.GetOkExists("is_cn_mainland"); ok {
-		mainlandMode = v.(int)
-		if mainlandMode == MAINLAND_1 {
-			if !IsContains(SAAS_REAL_REGION_MAINLAND, readRegion) {
-				return fmt.Errorf("If `is_cn_mainland` is 1, parameter `real_region` is not legal")
-			}
-
-			instanceGood.RegionId = helper.IntInt64(REGION_ID_MAINLAND)
-			realRegionInt = int64(SAAS_REAL_REGION_MAINLAND_ID_MAP[readRegion])
-			instanceGoodDetail.RealRegion = &realRegionInt
-
-		} else {
-			if !IsContains(SAAS_REAL_REGION_NON_MAINLAND, readRegion) {
-				return fmt.Errorf("If `is_cn_mainland` is 0, parameter `real_region` is not legal")
-			}
-
-			instanceGood.RegionId = helper.IntInt64(REGION_ID_NON_MAINLAND)
-			realRegionInt = int64(SAAS_REAL_REGION_NON_MAINLAND_ID_MAP[readRegion])
-			instanceGoodDetail.RealRegion = &realRegionInt
+	if mainlandMode == REGION_ID_MAINLAND {
+		if !IsContains(SAAS_REAL_REGION_MAINLAND, realRegion) {
+			return fmt.Errorf("If Region is `ap-guangzhou`, parameter `real_region` is not legal")
 		}
+
+		instanceGood.RegionId = helper.IntInt64(mainlandMode)
+		realRegionInt = int64(SAAS_REAL_REGION_MAINLAND_ID_MAP[realRegion])
+		instanceGoodDetail.RealRegion = &realRegionInt
+
+	} else {
+		if !IsContains(SAAS_REAL_REGION_NON_MAINLAND, realRegion) {
+			return fmt.Errorf("If Region is `ap-seoul`, parameter `real_region` is not legal")
+		}
+
+		instanceGood.RegionId = helper.IntInt64(mainlandMode)
+		realRegionInt = int64(SAAS_REAL_REGION_NON_MAINLAND_ID_MAP[realRegion])
+		instanceGoodDetail.RealRegion = &realRegionInt
 	}
 
 	instanceGood.GoodsDetail = instanceGoodDetail
@@ -273,12 +257,7 @@ func resourceTencentCloudWafSaasInstanceCreate(d *schema.ResourceData, meta inte
 			domainPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
 		}
 
-		if mainlandMode == MAINLAND_1 {
-			domainPkgGood.RegionId = helper.IntInt64(REGION_ID_MAINLAND)
-		} else {
-			domainPkgGood.RegionId = helper.IntInt64(REGION_ID_NON_MAINLAND)
-		}
-
+		domainPkgGood.RegionId = helper.IntInt64(mainlandMode)
 		domainPkgGoodDetail.RealRegion = &realRegionInt
 		domainPkgGood.GoodsDetail = domainPkgGoodDetail
 		goods = append(goods, &domainPkgGood)
@@ -307,12 +286,7 @@ func resourceTencentCloudWafSaasInstanceCreate(d *schema.ResourceData, meta inte
 			qpsPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
 		}
 
-		if mainlandMode == MAINLAND_1 {
-			qpsPkgGood.RegionId = helper.IntInt64(REGION_ID_MAINLAND)
-		} else {
-			qpsPkgGood.RegionId = helper.IntInt64(REGION_ID_NON_MAINLAND)
-		}
-
+		qpsPkgGood.RegionId = helper.IntInt64(mainlandMode)
 		qpsPkgGoodDetail.RealRegion = &realRegionInt
 		qpsPkgGood.GoodsDetail = qpsPkgGoodDetail
 		goods = append(goods, &qpsPkgGood)
@@ -458,7 +432,7 @@ func resourceTencentCloudWafSaasInstanceUpdate(d *schema.ResourceData, meta inte
 		instanceId                     = d.Id()
 	)
 
-	immutableArgs := []string{"goods_category", "time_span", "time_unit", "is_cn_mainland", "domain_pkg_count", "qps_pkg_count"}
+	immutableArgs := []string{"goods_category", "time_span", "time_unit", "domain_pkg_count", "qps_pkg_count"}
 
 	for _, v := range immutableArgs {
 		if d.HasChange(v) {
