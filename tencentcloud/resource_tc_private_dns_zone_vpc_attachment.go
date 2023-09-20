@@ -8,11 +8,28 @@ Example Usage
 Append VPC associated with private dns zone
 
 ```hcl
+resource "tencentcloud_private_dns_zone" "example" {
+  domain = "domain.com"
+  remark = "remark."
+
+  dns_forward_status   = "DISABLED"
+  cname_speedup_status = "ENABLED"
+
+  tags = {
+    createdBy : "terraform"
+  }
+}
+
+resource "tencentcloud_vpc" "vpc" {
+  name       = "vpc-mysql"
+  cidr_block = "10.0.0.0/16"
+}
+
 resource "tencentcloud_private_dns_zone_vpc_attachment" "example" {
-  zone_id = "zone-6t11lof0"
+  zone_id = tencentcloud_private_dns_zone.example.id
 
   vpc_set {
-    uniq_vpc_id = "vpc-jdx11z0t"
+    uniq_vpc_id = tencentcloud_vpc.vpc.id
     region      = "ap-guangzhou"
   }
 }
@@ -22,7 +39,7 @@ Add VPC information for associated accounts in the private dns zone
 
 ```hcl
 resource "tencentcloud_private_dns_zone_vpc_attachment" "example" {
-  zone_id = "zone-6t11lof0"
+  zone_id = tencentcloud_private_dns_zone.example.id
 
   account_vpc_set {
     uniq_vpc_id = "vpc-82znjzn3"
