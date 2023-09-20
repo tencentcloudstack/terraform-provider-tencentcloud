@@ -19,3 +19,8 @@ var CNAME_SPEEDUP_STATUS = []string{
 	CNAME_SPEEDUP_STATUS_ENABLED,
 	CNAME_SPEEDUP_STATUS_DISABLED,
 }
+
+const (
+	ADD_VPC_SET         = "vpc_set"
+	ADD_ACCOUNT_VPC_SET = "account_vpc_set"
+)
