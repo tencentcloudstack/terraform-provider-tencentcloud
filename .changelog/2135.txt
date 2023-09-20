@@ -1,0 +1,3 @@
+```release-note:bug
+resource/tencentcloud_vpc_acl: Fix vpc acl entry inconsistent problem while port is `ALL`.
+```

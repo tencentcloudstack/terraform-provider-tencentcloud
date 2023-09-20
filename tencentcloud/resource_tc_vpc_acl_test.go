@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccTencentCloudVpcAcl_basic(t *testing.T) {
+func TestAccTencentCloudVpcAclResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -33,7 +33,7 @@ func TestAccTencentCloudVpcAcl_basic(t *testing.T) {
 		},
 	})
 }
-func TestAccTencentCloudVpcAclRulesUpdate(t *testing.T) {
+func TestAccTencentCloudVpcAclRulesResource_Update(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -87,6 +87,15 @@ func TestAccTencentCloudVpcAclRulesUpdate(t *testing.T) {
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "name", "test_acl_update"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "egress.0", "ACCEPT#192.168.1.0/24#800#TCP"),
 					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "egress.1", "ACCEPT#192.168.1.0/24#800-900#TCP"),
+				),
+			},
+			{
+				Config: testAccVpcACLConfigAllRules,
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckVpcACLExists("tencentcloud_vpc_acl.foo"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "name", "test_acl_update"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "ingress.0", "ACCEPT#0.0.0.0/0#ALL#ALL"),
+					resource.TestCheckResourceAttr("tencentcloud_vpc_acl.foo", "egress.0", "ACCEPT#0.0.0.0/0#ALL#ALL"),
 				),
 			},
 		},
@@ -221,4 +230,20 @@ resource "tencentcloud_vpc_acl" "foo" {
 		"ACCEPT#192.168.1.0/24#800-900#TCP",
 	]
 } 
+`
+const testAccVpcACLConfigAllRules = `
+data "tencentcloud_vpc_instances" "default" {
+  is_default = true
+}
+
+resource "tencentcloud_vpc_acl" "foo" {
+  vpc_id  = data.tencentcloud_vpc_instances.default.instance_list.0.vpc_id
+  name    = "test_acl_update"
+  ingress = [
+    "ACCEPT#0.0.0.0/0#ALL#ALL"
+  ]
+  egress  = [
+    "ACCEPT#0.0.0.0/0#ALL#ALL"
+  ]
+}
 `
