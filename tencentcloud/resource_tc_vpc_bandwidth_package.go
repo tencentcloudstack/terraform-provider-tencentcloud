@@ -62,7 +62,7 @@ func resourceTencentCloudVpcBandwidthPackage() *schema.Resource {
 			"network_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "Bandwidth packet type, default:BGP, optional:- `BGP`: common BGP shared bandwidth package- `HIGH_QUALITY_BGP`: Quality BGP Shared Bandwidth Package.",
+				Description: "Bandwidth packet type, default:BGP, optional:- `BGP`: common BGP shared bandwidth package- `HIGH_QUALITY_BGP`: High Quality BGP Shared Bandwidth Package.",
 			},
 
 			"charge_type": {

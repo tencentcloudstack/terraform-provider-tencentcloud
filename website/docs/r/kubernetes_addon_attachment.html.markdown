@@ -50,7 +50,7 @@ resource "tencentcloud_kubernetes_addon_attachment" "addon_tcr" {
     "global.imagePullSecretsCrs[1].type=docker",
     "global.imagePullSecretsCrs[1].dockerUsername=${local.user_name}",                 #refer to previous description
     "global.imagePullSecretsCrs[1].dockerPassword=${local.token}",                     #refer to previous description
-    "global.imagePullSecretsCrs[1].dockerServer=${local.tcr_name}-tencentcloudcr.com", #invalid format as: `${tcr_name}.tencentcloudcr.com`
+    "global.imagePullSecretsCrs[1].dockerServer=${local.tcr_name}.tencentcloudcr.com", #invalid format as: `${tcr_name}.tencentcloudcr.com`
     "global.cluster.region=gz",
     "global.cluster.longregion=ap-guangzhou",
     # Specify global hosts(optional), the numbers of hosts must be matched with the numbers of imagePullSecretsCrs
