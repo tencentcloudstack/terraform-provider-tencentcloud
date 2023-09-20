@@ -21,7 +21,7 @@ resource "tencentcloud_private_dns_zone" "example" {
 }
 
 resource "tencentcloud_vpc" "vpc" {
-  name       = "vpc-mysql"
+  name       = "vpc-example"
   cidr_block = "10.0.0.0/16"
 }
 
