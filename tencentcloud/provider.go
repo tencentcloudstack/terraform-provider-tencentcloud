@@ -1097,6 +1097,7 @@ PrivateDNS
   Resource
     tencentcloud_private_dns_zone
 	tencentcloud_private_dns_record
+	tencentcloud_private_dns_zone_vpc_attachment
   Data Source
     tencentcloud_private_dns_records
 
