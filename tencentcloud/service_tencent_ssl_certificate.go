@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 	"log"
-
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
+	"math"
 
 	ssl "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl/v20191205"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
+	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
 )
 
@@ -314,4 +314,66 @@ func (me *SSLService) checkCertificateType(ctx context.Context, certId string, c
 		return false, nil
 	}
 
+}
+func (me *SSLService) ModifyCertificateResubmit(ctx context.Context, request *ssl.ModifyCertificateResubmitRequest) (err error) {
+	logId := getLogId(ctx)
+	client := me.client.UseSSLCertificateClient()
+	ratelimit.Check(request.GetAction())
+
+	response, err := client.ModifyCertificateResubmit(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	if response == nil || response.Response == nil || response.Response.CertificateId == nil {
+		err = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+		return
+	}
+	if *response.Response.CertificateId != *request.CertificateId {
+		err = fmt.Errorf("TencentCloud SDK %s eertificates are inconsistent, request[%s], response[%s]",
+			request.GetAction(), *request.CertificateId, *response.Response.CertificateId)
+		return
+	}
+	return
+}
+func (me *SSLService) CancelAuditCertificate(ctx context.Context, request *ssl.CancelAuditCertificateRequest) (err error) {
+	logId := getLogId(ctx)
+	client := me.client.UseSSLCertificateClient()
+
+	response, err := client.CancelAuditCertificate(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		return
+	}
+	if response == nil || response.Response == nil || response.Response.Result == nil {
+		err = fmt.Errorf("TencentCloud SDK %s return empty response", request.GetAction())
+		return
+	}
+	if !*response.Response.Result {
+		err = fmt.Errorf("TencentCloud SDK %s CancelAudit failed", request.GetAction())
+		return err
+	}
+
+	return
+}
+func (me *SSLService) getCertificateStatus(ctx context.Context, certificateId string) (uint64, error) {
+	describeRequest := ssl.NewDescribeCertificateDetailRequest()
+	describeRequest.CertificateId = &certificateId
+
+	describeResponse, err := me.DescribeCertificateDetail(ctx, describeRequest)
+	if err != nil {
+		return math.MaxUint64, err
+	}
+	if describeResponse == nil || describeResponse.Response == nil {
+		err := fmt.Errorf("TencentCloud SDK %s return empty response", describeRequest.GetAction())
+		return math.MaxUint64, err
+	}
+	if describeResponse.Response.Status == nil {
+		err := fmt.Errorf("api[%s] certificate status is nil", describeRequest.GetAction())
+		return math.MaxUint64, err
+	}
+
+	return *describeResponse.Response.Status, nil
 }
