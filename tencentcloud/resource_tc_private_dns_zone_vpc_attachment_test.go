@@ -61,4 +61,5 @@ resource "tencentcloud_private_dns_zone_vpc_attachment" "example2" {
     region      = "ap-guangzhou"
     uin         = "100022770164"
   }
-}`
+}
+`

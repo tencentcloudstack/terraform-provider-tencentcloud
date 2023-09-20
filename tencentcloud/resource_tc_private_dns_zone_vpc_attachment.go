@@ -36,8 +36,16 @@ Import
 
 PrivateDns zone_vpc_attachment can be imported using the id, e.g.
 
+Add Vpc Set
+
 ```
-terraform import tencentcloud_private_dns_zone_vpc_attachment.example zone_vpc_attachment_id
+terraform import tencentcloud_private_dns_zone_vpc_attachment.example zone-6t11lof0#vpc_set#vpc-jdx11z0t#ap-guangzhou#
+```
+
+Add Account Vpc Set
+
+```
+terraform import tencentcloud_private_dns_zone_vpc_attachment.example zone-980faacc#account_vpc_set#vpc-axrsmmrv#ap-guangzhou#100022770164
 ```
 */
 package tencentcloud
