@@ -44,6 +44,10 @@ const (
 	InvalidParameterValue = "InvalidParameterValue"
 	CertificateInvalid    = "FailedOperation.CertificateInvalid"
 )
+const SSL_ERR_CANCELING = `
+	Updating information, which may take  some time. Please retry terraform apply in a few minutes and be patient.
+	For more information, please refer to the documentation: 
+	https://registry.terraform.io/providers/tencentcloudstack/tencentcloud/latest/docs/resources/ssl_pay_certificate.`
 
 var CsrTypeArr = []string{
 	CsrTypeOnline,

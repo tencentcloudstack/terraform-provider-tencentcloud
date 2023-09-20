@@ -16,6 +16,11 @@ currently, it does not support re-issuing certificates, revoking certificates, a
 and belonging items can be updated. The Destroy operation will only cancel the certificate order, and will not delete the
 certificate and refund the fee. If you need a refund, you need to check the current certificate status in the console
 as `Review Cancel`, and then you can click `Request a refund` to refund the fee.
+f you attempt to update the information of a certificate that has already entered the validation stage, we will automatically roll
+back your certificate, which may initiate the order submission process again (order cancellation -> cancellation in progress (wa-
+iting for CA callback) -> reinitiation of order). This process may take some time, and TF will prompt "Updating information, which
+may take some time. Please refer to the documentation and retry terraform apply later, please be patient." If this process takes
+too long, you can contact Tencent Cloud support.
 
 ## Example Usage
 

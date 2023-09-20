@@ -6,6 +6,11 @@ currently, it does not support re-issuing certificates, revoking certificates, a
 and belonging items can be updated. The Destroy operation will only cancel the certificate order, and will not delete the
 certificate and refund the fee. If you need a refund, you need to check the current certificate status in the console
 as `Review Cancel`, and then you can click `Request a refund` to refund the fee.
+If you attempt to update the information of a certificate that has already entered the validation stage, we will automatically roll
+back your certificate, which may initiate the order submission process again (order cancellation -> cancellation in progress (wa-
+iting for CA callback) -> reinitiation of order). This process may take some time, and TF will prompt "Updating information, which
+may take some time. Please refer to the documentation and retry terraform apply later, please be patient." If this process takes
+too long, you can contact Tencent Cloud support.
 
 Example Usage
 
@@ -523,7 +528,7 @@ func resourceTencentCloudSSLInstanceUpdate(d *schema.ResourceData, meta interfac
 			return err
 		}
 		if status == SSL_STATUS_CANCELING {
-			err := fmt.Errorf("status[%v] order cancelling···, please try again later certificateId[%s]", status, certificateId)
+			err := fmt.Errorf("%s \n\tcertificateId[%s], status[%v]", SSL_ERR_CANCELING, certificateId, status)
 			return err
 		}
 
@@ -746,7 +751,7 @@ func cancelAudit(ctx context.Context, sslService SSLService, certificateId strin
 			i, status, certificateId)
 	}
 
-	err = fmt.Errorf("TencentCloud SDK %s CancelAudit···, since canceling an order requires a process, please try again later.", request.GetAction())
+	err = fmt.Errorf("TencentCloud SDK %s %s", request.GetAction(), SSL_ERR_CANCELING)
 	return math.MaxUint64, err
 }
 func resubmit(ctx context.Context, sslService SSLService, certificateId string) error {
