@@ -1097,6 +1097,7 @@ PrivateDNS
   Resource
     tencentcloud_private_dns_zone
 	tencentcloud_private_dns_record
+	tencentcloud_private_dns_zone_vpc_attachment
   Data Source
     tencentcloud_private_dns_records
 
@@ -2773,6 +2774,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_record":                                       resourceTencentCloudDnspodRecord(),
 			"tencentcloud_private_dns_zone":                                    resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                  resourceTencentCloudPrivateDnsRecord(),
+			"tencentcloud_private_dns_zone_vpc_attachment":                     resourceTencentCloudPrivateDnsZoneVpcAttachment(),
 			"tencentcloud_cls_logset":                                          resourceTencentCloudClsLogset(),
 			"tencentcloud_cls_topic":                                           resourceTencentCloudClsTopic(),
 			"tencentcloud_cls_config":                                          resourceTencentCloudClsConfig(),

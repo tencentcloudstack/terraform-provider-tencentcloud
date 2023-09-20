@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
-
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common"
 	privatedns "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns/v20201028"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/connectivity"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/ratelimit"
@@ -76,4 +76,76 @@ getMoreData:
 
 	recordInfos = append(recordInfos, response.Response.RecordSet...)
 	goto getMoreData
+}
+
+func (me *PrivateDnsService) DescribePrivateDnsZoneVpcAttachmentById(ctx context.Context, zoneId string) (ZoneVpcAttachment *privatedns.PrivateZone, errRet error) {
+	logId := getLogId(ctx)
+
+	request := privatedns.NewDescribePrivateZoneRequest()
+	request.ZoneId = &zoneId
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePrivateDnsClient().DescribePrivateZone(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response.Response.PrivateZone == nil {
+		return
+	}
+
+	ZoneVpcAttachment = response.Response.PrivateZone
+
+	return
+}
+
+func (me *PrivateDnsService) DeletePrivateDnsZoneVpcAttachmentById(ctx context.Context, zoneId, uniqVpcId, region, uin string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := privatedns.NewDeleteSpecifyPrivateZoneVpcRequest()
+	request.ZoneId = &zoneId
+	if uin == "" {
+		request.VpcSet = []*privatedns.VpcInfo{
+			{
+				UniqVpcId: common.StringPtr(uniqVpcId),
+				Region:    common.StringPtr(region),
+			},
+		}
+	} else {
+		request.AccountVpcSet = []*privatedns.AccountVpcInfo{
+			{
+				UniqVpcId: common.StringPtr(uniqVpcId),
+				Region:    common.StringPtr(region),
+				Uin:       common.StringPtr(uin),
+			},
+		}
+	}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UsePrivateDnsClient().DeleteSpecifyPrivateZoneVpc(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
 }
