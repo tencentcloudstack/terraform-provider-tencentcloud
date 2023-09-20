@@ -1,8 +1,6 @@
 /*
 Use this resource to create ckafka instance.
 
-~> **NOTE:** It only support create prepaid ckafka instance.
-
 Example Usage
 
 Basic Instance
