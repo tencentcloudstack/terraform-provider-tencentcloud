@@ -1,6 +1,8 @@
 /*
 Provides a resource to create a waf clb instance
 
+~> **NOTE:** Before creating, please ensure that the account region and `is_cn_mainland` are consistent.
+
 Example Usage
 
 Create a basic waf premium clb instance
@@ -367,7 +369,8 @@ func resourceTencentCloudWafClbInstanceRead(d *schema.ResourceData, meta interfa
 	}
 
 	if instanceInfo.QPS != nil {
-		_ = d.Set("qps_pkg_count", instanceInfo.QPS.Count)
+		qpsCount := *instanceInfo.QPS.Count / 1000
+		_ = d.Set("qps_pkg_count", qpsCount)
 	}
 
 	if instanceInfo.Edition != nil {

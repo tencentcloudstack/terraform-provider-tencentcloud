@@ -11,6 +11,8 @@ description: |-
 
 Provides a resource to create a waf clb instance
 
+~> **NOTE:** Before creating, please ensure that the account region and `is_cn_mainland` are consistent.
+
 ## Example Usage
 
 ### Create a basic waf premium clb instance
