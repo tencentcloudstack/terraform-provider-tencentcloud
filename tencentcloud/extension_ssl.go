@@ -45,8 +45,8 @@ const (
 	CertificateInvalid    = "FailedOperation.CertificateInvalid"
 )
 const SSL_ERR_CANCELING = `
-	The update of the information field is still ongoing, please retry the "terraform apply" later and then check whether
-	the update process is complete. For more information, please refer to the documentation:
+	The update of the information field is still ongoing. Please retry the "terraform apply" later and then check whether the update process is complete. 
+	For more information, please refer to the documentation: 
 	https://registry.terraform.io/providers/tencentcloudstack/tencentcloud/latest/docs/resources/ssl_pay_certificate.`
 
 var CsrTypeArr = []string{
