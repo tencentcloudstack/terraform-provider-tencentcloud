@@ -1,3 +1,15 @@
+## 1.81.28 (September 20, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_private_dns_zone_vpc_attachment` ([#2136](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2136))
+
+BUG FIXES:
+
+* resource/tencentcloud_tdmq_rocketmq_group: Fix certificate import issue ([#2133](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2133))
+* resource/tencentcloud_trocket_rocketmq_instance: fix `enable_public` read problem ([#2134](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2134))
+* resource/tencentcloud_vpc_acl: Fix vpc acl entry inconsistent problem while port is `ALL`. ([#2135](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2135))
+
 ## 1.81.27 (September 18, 2023)
 
 FEATURES:

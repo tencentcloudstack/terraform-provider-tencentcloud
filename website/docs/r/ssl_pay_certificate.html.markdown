@@ -15,9 +15,10 @@ Provide a resource to create a payment SSL.
 currently, it does not support re-issuing certificates, revoking certificates, and deleting certificates; the certificate remarks
 and belonging items can be updated. The Destroy operation will only cancel the certificate order, and will not delete the
 certificate and refund the fee. If you need a refund, you need to check the current certificate status in the console
-as `Review Cancel`, and then you can click `Request a refund` to refund the fee, If you want to modify the information multiple
-times, you need to use the wait_commit_flag field. Please refer to the field remarks for usage. Otherwise, it will be considered
-as a one-time submission and no further modifications will be provided.
+as `Review Cancel`, and then you can click `Request a refund` to refund the fee. To update the information of a certificate,
+we will automatically roll back your certificate if this certificate is already in the validation stage. This process may take
+some time because the CA callback is time-consuming. Please be patient and follow the prompt message. Or, feel free to contact
+Tencent Cloud Support.
 
 ## Example Usage
 
@@ -66,7 +67,6 @@ The following arguments are supported:
 * `dv_auths` - (Optional, List) DV certification information.
 * `project_id` - (Optional, Int) The ID of project.
 * `time_span` - (Optional, Int) Certificate period, currently only supports 1 year certificate purchase.
-* `wait_commit_flag` - (Optional, Bool) If `wait_commit_flag` is set to true, info will not be submitted temporarily, false opposite.
 
 The `dv_auths` object supports the following:
 

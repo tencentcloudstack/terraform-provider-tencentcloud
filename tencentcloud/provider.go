@@ -884,7 +884,6 @@ SSL Certificates
     tencentcloud_ssl_certificate
     tencentcloud_ssl_pay_certificate
 	tencentcloud_ssl_free_certificate
-	tencentcloud_ssl_commit_certificate_information
 
 Secrets Manager(SSM)
   Data Source
@@ -1097,6 +1096,7 @@ PrivateDNS
   Resource
     tencentcloud_private_dns_zone
 	tencentcloud_private_dns_record
+	tencentcloud_private_dns_zone_vpc_attachment
   Data Source
     tencentcloud_private_dns_records
 
@@ -2797,6 +2797,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_dnspod_record":                                       resourceTencentCloudDnspodRecord(),
 			"tencentcloud_private_dns_zone":                                    resourceTencentCloudPrivateDnsZone(),
 			"tencentcloud_private_dns_record":                                  resourceTencentCloudPrivateDnsRecord(),
+			"tencentcloud_private_dns_zone_vpc_attachment":                     resourceTencentCloudPrivateDnsZoneVpcAttachment(),
 			"tencentcloud_cls_logset":                                          resourceTencentCloudClsLogset(),
 			"tencentcloud_cls_topic":                                           resourceTencentCloudClsTopic(),
 			"tencentcloud_cls_config":                                          resourceTencentCloudClsConfig(),
@@ -3074,7 +3075,6 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
 			"tencentcloud_dlc_user":                                            resourceTencentCloudDlcUser(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
-			"tencentcloud_ssl_commit_certificate_information":                  resourceTencentCloudSslCommitCertificateInformation(),
 			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
 			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
 			"tencentcloud_waf_clb_domain":                                      resourceTencentCloudWafClbDomain(),

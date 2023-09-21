@@ -42,7 +42,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/clb v1.0.693
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit v1.0.544
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.752
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.753
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cvm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cwp v1.0.589
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cynosdb v1.0.692
@@ -67,7 +67,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/mps v1.0.584
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/organization v1.0.540
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/postgres v1.0.676
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.736
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/privatedns v1.0.751
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/pts v1.0.533
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/redis v1.0.657
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/rum v1.0.542
@@ -75,7 +75,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ses v1.0.748
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sms v1.0.486
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sqlserver v1.0.689
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.737
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssl v1.0.750
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/ssm v1.0.691
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/sts v1.0.524
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tag v1.0.677
@@ -100,7 +100,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 )
 
-require github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.752
+require github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/waf v1.0.753
 
 require (
 	4d63.com/gocheckcompilerdirectives v1.2.1 // indirect

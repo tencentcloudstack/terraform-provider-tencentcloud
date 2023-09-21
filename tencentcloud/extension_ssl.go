@@ -3,9 +3,22 @@ package tencentcloud
 const (
 	SSL_MODULE_TYPE = "ssl"
 	SSL_WITH_CERT   = "1"
+)
 
-	SSL_STATUS_AVAILABLE    = 1
-	SSL_STATUS_TO_BE_COMMIT = 5
+const (
+	SSL_STATUS_PENDING = iota
+	SSL_STATUS_AVAILABLE
+	SSL_STATUS_REJECTED
+	SSL_STATUS_EXPIRED
+	SSL_STATUS_DNS_ADDED
+	SSL_STATUS_PENDING_SUB
+	SSL_STATUS_CANCELING
+	SSL_STATUS_CANCELED
+	SSL_STATUS_DATA_PENDING
+	SSL_STATUS_REVOKING
+	SSL_STATUS_REVOKED
+	SSL_STATUS_REISSUING
+	SSL_STATUS_REVOCATION_PENDING
 )
 
 const (
@@ -31,6 +44,10 @@ const (
 	InvalidParameterValue = "InvalidParameterValue"
 	CertificateInvalid    = "FailedOperation.CertificateInvalid"
 )
+const SSL_ERR_CANCELING = `
+	The update of the information field is still ongoing. Please retry the "terraform apply" later and then check whether the update process is complete. 
+	For more information, please refer to the documentation: 
+	https://registry.terraform.io/providers/tencentcloudstack/tencentcloud/latest/docs/resources/ssl_pay_certificate.`
 
 var CsrTypeArr = []string{
 	CsrTypeOnline,
@@ -46,6 +63,12 @@ var VerifyType = []string{
 var SSL_CERT_TYPE = []string{
 	SSL_CERT_TYPE_SERVER,
 	SSL_CERT_TYPE_CA,
+}
+
+var SslCanCancelStatus = map[uint64]struct{}{
+	SSL_STATUS_PENDING:      {},
+	SSL_STATUS_DNS_ADDED:    {},
+	SSL_STATUS_DATA_PENDING: {},
 }
 var DNSPOD_OV_EV_TYPE = []int64{51, 52, 53}
 var GEOTRUST_OV_EV_TYPE = []int64{8, 9, 10}
