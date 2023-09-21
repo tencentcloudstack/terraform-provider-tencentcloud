@@ -1663,6 +1663,11 @@ Waf
     tencentcloud_waf_find_domains
     tencentcloud_waf_ports
     tencentcloud_waf_user_domains
+    tencentcloud_waf_attack_log_histogram
+    tencentcloud_waf_attack_log_list
+    tencentcloud_waf_attack_overview
+    tencentcloud_waf_attack_total_count
+    tencentcloud_waf_peak_points
 
   Resource
     tencentcloud_waf_custom_rule
@@ -2325,6 +2330,11 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_waf_infos":                             dataSourceTencentCloudWafWafInfos(),
 			"tencentcloud_waf_ports":                                 dataSourceTencentCloudWafPorts(),
 			"tencentcloud_waf_user_domains":                          dataSourceTencentCloudWafUserDomains(),
+			"tencentcloud_waf_attack_log_histogram":                  dataSourceTencentCloudWafAttackLogHistogram(),
+			"tencentcloud_waf_attack_log_list":                       dataSourceTencentCloudWafAttackLogList(),
+			"tencentcloud_waf_attack_overview":                       dataSourceTencentCloudWafAttackOverview(),
+			"tencentcloud_waf_attack_total_count":                    dataSourceTencentCloudWafAttackTotalCount(),
+			"tencentcloud_waf_peak_points":                           dataSourceTencentCloudWafPeakPoints(),
 			"tencentcloud_ses_receivers":                             dataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                            dataSourceTencentCloudSesSendTasks(),
 			"tencentcloud_ses_email_identities":                      dataSourceTencentCloudSesEmailIdentities(),

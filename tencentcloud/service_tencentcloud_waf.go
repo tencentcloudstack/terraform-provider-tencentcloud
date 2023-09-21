@@ -636,3 +636,272 @@ func (me *WafService) DescribeWafInstanceById(ctx context.Context, instanceId st
 	instance = response.Response.Instances[0]
 	return
 }
+
+func (me *WafService) DescribeWafAttackLogHistogramByFilter(ctx context.Context, param map[string]interface{}) (AttackLogHistogram *waf.GetAttackHistogramResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewGetAttackHistogramRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+
+		if k == "QueryString" {
+			request.QueryString = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().GetAttackHistogram(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	AttackLogHistogram = response.Response
+	return
+}
+
+func (me *WafService) DescribeWafAttackLogListByFilter(ctx context.Context, param map[string]interface{}) (AttackLogList []*waf.AttackLogInfo, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewSearchAttackLogRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+
+		if k == "Count" {
+			request.Count = v.(*int64)
+		}
+
+		if k == "QueryString" {
+			request.QueryString = v.(*string)
+		}
+
+		if k == "Sort" {
+			request.Sort = v.(*string)
+		}
+
+		if k == "Page" {
+			request.Page = v.(*int64)
+		}
+	}
+
+	request.Context = common.StringPtr("")
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().SearchAttackLog(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	AttackLogList = response.Response.Data
+	return
+}
+
+func (me *WafService) DescribeWafAttackOverviewByFilter(ctx context.Context, param map[string]interface{}) (AttackOverview *waf.DescribeAttackOverviewResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribeAttackOverviewRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FromTime" {
+			request.FromTime = v.(*string)
+		}
+
+		if k == "ToTime" {
+			request.ToTime = v.(*string)
+		}
+
+		if k == "Appid" {
+			request.Appid = v.(*uint64)
+		}
+
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+
+		if k == "Edition" {
+			request.Edition = v.(*string)
+		}
+
+		if k == "InstanceID" {
+			request.InstanceID = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribeAttackOverview(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	AttackOverview = response.Response
+	return
+}
+
+func (me *WafService) DescribeWafAttackTotalCountByFilter(ctx context.Context, param map[string]interface{}) (AttackTotalCount *waf.GetAttackTotalCountResponseParams, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewGetAttackTotalCountRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "StartTime" {
+			request.StartTime = v.(*string)
+		}
+
+		if k == "EndTime" {
+			request.EndTime = v.(*string)
+		}
+
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+
+		if k == "QueryString" {
+			request.QueryString = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().GetAttackTotalCount(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	AttackTotalCount = response.Response
+	return
+}
+
+func (me *WafService) DescribeWafPeakPointsByFilter(ctx context.Context, param map[string]interface{}) (PeakPoints []*waf.PeakPointsItem, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = waf.NewDescribePeakPointsRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "FromTime" {
+			request.FromTime = v.(*string)
+		}
+
+		if k == "ToTime" {
+			request.ToTime = v.(*string)
+		}
+
+		if k == "Domain" {
+			request.Domain = v.(*string)
+		}
+
+		if k == "Edition" {
+			request.Edition = v.(*string)
+		}
+
+		if k == "InstanceID" {
+			request.InstanceID = v.(*string)
+		}
+
+		if k == "MetricName" {
+			request.MetricName = v.(*string)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseWafClient().DescribePeakPoints(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	if response == nil {
+		return
+	}
+
+	PeakPoints = response.Response.Points
+	return
+}
