@@ -130,7 +130,7 @@ resource "tencentcloud_kubernetes_node_pool" "np_test" {
     instance_type      = var.ins_type
     system_disk_type   = "CLOUD_PREMIUM"
     system_disk_size   = "50"
-    security_group_ids = [local.sg_id]
+    orderly_security_group_ids = [local.sg_id]
 
     cam_role_name = "TCB_QcsRole"
     data_disk {

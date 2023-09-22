@@ -3,9 +3,11 @@ package tencentcloud
 import (
 	"context"
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 )
 
 const defaultAddonName = "cos"
@@ -30,10 +32,17 @@ func init() {
 				return fmt.Errorf("no persistent cluster")
 			}
 
-			clusterId := cls[0].ClusterId
-
-			if err = service.DeleteExtensionAddon(ctx, clusterId, defaultAddonName); err != nil {
-				return err
+			for _, c := range cls {
+				clusterId := c.ClusterId
+				if err = service.DeleteExtensionAddon(ctx, clusterId, defaultAddonName); err != nil {
+					if e, ok := err.(*errors.TencentCloudSDKError); ok {
+						// suppress the not found error when cos doesn't exist
+						if strings.Contains(e.GetMessage(), "application cos not found") {
+							continue
+						}
+					}
+					return err
+				}
 			}
 
 			return nil
