@@ -8,11 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	tke "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/tke/v20180525"
 )
 
 const (
@@ -24,7 +21,7 @@ const (
 
 func init() {
 	// go test -v ./tencentcloud -sweep=ap-guangzhou -sweep-run=tencentcloud_backup_storage_location
-	resource.AddTestSweepers("testBackupStorageLocationSweep", &resource.Sweeper{
+	resource.AddTestSweepers("tencentcloud_backup_storage_location", &resource.Sweeper{
 		Name: "tencentcloud_backup_storage_location",
 		F:    testBackupStorageLocationSweep,
 	})
@@ -69,23 +66,19 @@ func testBackupStorageLocationSweep(region string) error {
 	client := cli.(*TencentCloudClient).apiV3Conn
 	service := TkeService{client: client}
 
-	randomNum := rand.Intn(100)
-	backupStorageLocationName := fmt.Sprintf(backupStorageLocationNameTemplate, randomNum)
-	backupLocationBucket := fmt.Sprintf(backupLocationBucketTemplate, randomNum)
-
-	// create backup storage location
-	request := tke.NewCreateBackupStorageLocationRequest()
-	request.Name = helper.String(backupStorageLocationName)
-	request.StorageRegion = helper.String(region)
-	request.Bucket = helper.String(backupLocationBucket)
-	if err := service.createBackupStorageLocation(ctx, request); err != nil {
-		return fmt.Errorf("error creating backup storage location: %s", err)
+	// delete all backup storage location
+	locations, err := service.describeBackupStorageLocations(ctx, []string{})
+	if err != nil {
+		return err
 	}
 
-	// delete backup storage location
-	if err := service.deleteBackupStorageLocation(ctx, backupStorageLocationName); err != nil {
-		return fmt.Errorf("error deleting backup storage location: %s", err)
+	for _, l := range locations {
+		deleteLocation := l.Name
+		if err = service.deleteBackupStorageLocation(ctx, *deleteLocation); err != nil {
+			return fmt.Errorf("error deleting backup storage location: %s", err)
+		}
 	}
+
 	return nil
 }
 

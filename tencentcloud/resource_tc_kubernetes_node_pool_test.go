@@ -27,7 +27,7 @@ func init() {
 	})
 }
 
-var nodePoolNameReg = regexp.MustCompile("^(mynodepool|np)")
+var nodePoolNameReg = regexp.MustCompile("^(mynodepool|np|gpu)")
 
 func testNodePoolSweep(region string) error {
 	logId := getLogId(contextNil)
