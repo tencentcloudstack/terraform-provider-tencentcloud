@@ -30,7 +30,7 @@ require (
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.624
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
-	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.733
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.754
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdb v1.0.699
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cdn v1.0.539

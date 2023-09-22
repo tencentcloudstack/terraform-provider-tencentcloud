@@ -1058,7 +1058,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam/v20190116
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.733
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat v1.0.754
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.591
