@@ -1655,6 +1655,28 @@ WeData
 
   Resource
 	tencentcloud_wedata_rule_template
+
+Waf
+  Data Source
+    tencentcloud_waf_ciphers
+    tencentcloud_waf_tls_versions
+    tencentcloud_waf_domains
+    tencentcloud_waf_find_domains
+    tencentcloud_waf_ports
+    tencentcloud_waf_user_domains
+    tencentcloud_waf_attack_log_histogram
+    tencentcloud_waf_attack_log_list
+    tencentcloud_waf_attack_overview
+    tencentcloud_waf_attack_total_count
+    tencentcloud_waf_peak_points
+
+  Resource
+    tencentcloud_waf_custom_rule
+    tencentcloud_waf_custom_white_rule
+    tencentcloud_waf_clb_domain
+    tencentcloud_waf_saas_domain
+    tencentcloud_waf_clb_instance
+    tencentcloud_waf_saas_instance
 */
 package tencentcloud
 
@@ -2302,6 +2324,18 @@ func Provider() *schema.Provider {
 			"tencentcloud_eb_event_rules":                            dataSourceTencentCloudEbEventRules(),
 			"tencentcloud_wedata_rule_templates":                     dataSourceTencentCloudWedataRuleTemplates(),
 			"tencentcloud_private_dns_records":                       dataSourceTencentCloudPrivateDnsRecords(),
+			"tencentcloud_waf_ciphers":                               dataSourceTencentCloudWafCiphers(),
+			"tencentcloud_waf_tls_versions":                          dataSourceTencentCloudWafTlsVersions(),
+			"tencentcloud_waf_domains":                               dataSourceTencentCloudWafDomains(),
+			"tencentcloud_waf_find_domains":                          dataSourceTencentCloudWafFindDomains(),
+			"tencentcloud_waf_waf_infos":                             dataSourceTencentCloudWafWafInfos(),
+			"tencentcloud_waf_ports":                                 dataSourceTencentCloudWafPorts(),
+			"tencentcloud_waf_user_domains":                          dataSourceTencentCloudWafUserDomains(),
+			"tencentcloud_waf_attack_log_histogram":                  dataSourceTencentCloudWafAttackLogHistogram(),
+			"tencentcloud_waf_attack_log_list":                       dataSourceTencentCloudWafAttackLogList(),
+			"tencentcloud_waf_attack_overview":                       dataSourceTencentCloudWafAttackOverview(),
+			"tencentcloud_waf_attack_total_count":                    dataSourceTencentCloudWafAttackTotalCount(),
+			"tencentcloud_waf_peak_points":                           dataSourceTencentCloudWafPeakPoints(),
 			"tencentcloud_ses_receivers":                             dataSourceTencentCloudSesReceivers(),
 			"tencentcloud_ses_send_tasks":                            dataSourceTencentCloudSesSendTasks(),
 			"tencentcloud_ses_email_identities":                      dataSourceTencentCloudSesEmailIdentities(),
@@ -3053,6 +3087,12 @@ func Provider() *schema.Provider {
 			"tencentcloud_dlc_work_group":                                      resourceTencentCloudDlcWorkGroup(),
 			"tencentcloud_dlc_user":                                            resourceTencentCloudDlcUser(),
 			"tencentcloud_wedata_rule_template":                                resourceTencentCloudWedataRuleTemplate(),
+			"tencentcloud_waf_custom_rule":                                     resourceTencentCloudWafCustomRule(),
+			"tencentcloud_waf_custom_white_rule":                               resourceTencentCloudWafCustomWhiteRule(),
+			"tencentcloud_waf_clb_domain":                                      resourceTencentCloudWafClbDomain(),
+			"tencentcloud_waf_saas_domain":                                     resourceTencentCloudWafSaasDomain(),
+			"tencentcloud_waf_clb_instance":                                    resourceTencentCloudWafClbInstance(),
+			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
 		},
 
 		ConfigureFunc: providerConfigure,
