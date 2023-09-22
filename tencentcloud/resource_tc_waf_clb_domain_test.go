@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixWafClbDomainResource_basic -v
-func TestAccTencentCloudNeedFixWafClbDomainResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudWafClbDomainResource_basic -v
+func TestAccTencentCloudWafClbDomainResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -39,7 +39,7 @@ func TestAccTencentCloudNeedFixWafClbDomainResource_basic(t *testing.T) {
 const testAccWafClbDomain = `
 resource "tencentcloud_waf_clb_domain" "example" {
   instance_id = "waf_2kxtlbky00b2v1fn"
-  domain      = "test.com"
+  domain      = "xxx.com"
   is_cdn      = 3
   status      = 1
   engine      = 21
@@ -74,7 +74,7 @@ resource "tencentcloud_waf_clb_domain" "example" {
 const testAccWafClbDomainUpdate = `
 resource "tencentcloud_waf_clb_domain" "example" {
   instance_id = "waf_2kxtlbky00b2v1fn"
-  domain      = "test.com"
+  domain      = "xxx.com"
   is_cdn      = 0
   status      = 1
   engine      = 12

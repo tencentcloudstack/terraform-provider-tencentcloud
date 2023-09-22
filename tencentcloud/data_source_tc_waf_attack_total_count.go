@@ -66,7 +66,7 @@ func dataSourceTencentCloudWafAttackTotalCount() *schema.Resource {
 			"total_count": {
 				Computed:    true,
 				Type:        schema.TypeInt,
-				Description: "Total number of attacks",
+				Description: "Total number of attacks.",
 			},
 			"result_output_file": {
 				Type:        schema.TypeString,

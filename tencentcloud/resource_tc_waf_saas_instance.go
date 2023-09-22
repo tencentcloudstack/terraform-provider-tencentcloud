@@ -25,8 +25,6 @@ resource "tencentcloud_waf_saas_instance" "example" {
   auto_renew_flag  = 1
   elastic_mode     = 1
   real_region      = "gz"
-  domain_pkg_count = 3
-  qps_pkg_count    = 3
 }
 ```
 */
@@ -98,18 +96,18 @@ func resourceTencentCloudWafSaasInstance() *schema.Resource {
 				ValidateFunc: validateAllowedStringValue(SAAS_REAL_REGIONS),
 				Description:  "region. If Region is `ap-guangzhou`, support: gz, sh, bj, cd (Means: GuangZhou, ShangHai, BeiJing, ChengDu); If Region is `ap-seoul`, support: hk, sg, th, kr, in, de, ca, use, sao, usw, jkt (Means: HongKong, Singapore, Bandkok, Seoul, Mumbai, Frankfurt, Toronto, Virginia, SaoPaulo, SiliconValley, Jakarta).",
 			},
-			"domain_pkg_count": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				ValidateFunc: validateIntegerMin(1),
-				Description:  "Domain extension package count.",
-			},
-			"qps_pkg_count": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				ValidateFunc: validateIntegerMin(1),
-				Description:  "QPS extension package count.",
-			},
+			//"domain_pkg_count": {
+			//	Optional:     true,
+			//	Type:         schema.TypeInt,
+			//	ValidateFunc: validateIntegerMin(1),
+			//	Description:  "Domain extension package count.",
+			//},
+			//"qps_pkg_count": {
+			//	Optional:     true,
+			//	Type:         schema.TypeInt,
+			//	ValidateFunc: validateIntegerMin(1),
+			//	Description:  "QPS extension package count.",
+			//},
 			// computed
 			"instance_id": {
 				Computed:    true,
@@ -235,62 +233,62 @@ func resourceTencentCloudWafSaasInstanceCreate(d *schema.ResourceData, meta inte
 	goods = append(goods, &instanceGood)
 
 	// make domain pkg
-	if v, ok := d.GetOkExists("domain_pkg_count"); ok {
-		domainPkgGood := waf.GoodNews{}
-		domainPkgGoodDetail := new(waf.GoodsDetailNew)
-		domainPkgGood.GoodsCategoryId = helper.IntInt64(DOMIAN_CATEGORY_ID_SAAS)
-		domainPkgGood.GoodsNum = helper.IntInt64(1)
-		domainPkgGoodDetail.SubProductCode = helper.String(DOMAIN_SUB_PRODUCT_CODE_SAAS)
-		domainPkgGoodDetail.Pid = helper.IntInt64(DOMAIN_PID_SAAS)
-		domainPkgGoodDetail.LabelTypes = helper.Strings([]string{DOMAIN_LABEL_TYPE_SAAS})
-		domainPkgGoodDetail.LabelCounts = []*int64{helper.IntInt64(v.(int))}
-
-		if v, ok := d.GetOkExists("time_span"); ok {
-			domainPkgGoodDetail.TimeSpan = helper.IntInt64(v.(int))
-		}
-
-		if v, ok := d.GetOk("time_unit"); ok {
-			domainPkgGoodDetail.TimeUnit = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOkExists("auto_renew_flag"); ok {
-			domainPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
-		}
-
-		domainPkgGood.RegionId = helper.IntInt64(mainlandMode)
-		domainPkgGoodDetail.RealRegion = &realRegionInt
-		domainPkgGood.GoodsDetail = domainPkgGoodDetail
-		goods = append(goods, &domainPkgGood)
-	}
-
-	// make qps pkg
-	if v, ok := d.GetOkExists("qps_pkg_count"); ok {
-		qpsPkgGood := waf.GoodNews{}
-		qpsPkgGoodDetail := new(waf.GoodsDetailNew)
-		qpsPkgGood.GoodsCategoryId = helper.IntInt64(QPS_CATEGORY_ID_SAAS)
-		qpsPkgGood.GoodsNum = helper.IntInt64(1)
-		qpsPkgGoodDetail.SubProductCode = helper.String(QPS_SUB_PRODUCT_CODE_SAAS)
-		qpsPkgGoodDetail.Pid = helper.IntInt64(QPS_PID_SAAS)
-		qpsPkgGoodDetail.LabelTypes = helper.Strings([]string{QPS_LABEL_TYPE_SAAS})
-		qpsPkgGoodDetail.LabelCounts = []*int64{helper.IntInt64(v.(int) * 1000)}
-
-		if v, ok := d.GetOkExists("time_span"); ok {
-			qpsPkgGoodDetail.TimeSpan = helper.IntInt64(v.(int))
-		}
-
-		if v, ok := d.GetOk("time_unit"); ok {
-			qpsPkgGoodDetail.TimeUnit = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOkExists("auto_renew_flag"); ok {
-			qpsPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
-		}
-
-		qpsPkgGood.RegionId = helper.IntInt64(mainlandMode)
-		qpsPkgGoodDetail.RealRegion = &realRegionInt
-		qpsPkgGood.GoodsDetail = qpsPkgGoodDetail
-		goods = append(goods, &qpsPkgGood)
-	}
+	//if v, ok := d.GetOkExists("domain_pkg_count"); ok {
+	//	domainPkgGood := waf.GoodNews{}
+	//	domainPkgGoodDetail := new(waf.GoodsDetailNew)
+	//	domainPkgGood.GoodsCategoryId = helper.IntInt64(DOMIAN_CATEGORY_ID_SAAS)
+	//	domainPkgGood.GoodsNum = helper.IntInt64(1)
+	//	domainPkgGoodDetail.SubProductCode = helper.String(DOMAIN_SUB_PRODUCT_CODE_SAAS)
+	//	domainPkgGoodDetail.Pid = helper.IntInt64(DOMAIN_PID_SAAS)
+	//	domainPkgGoodDetail.LabelTypes = helper.Strings([]string{DOMAIN_LABEL_TYPE_SAAS})
+	//	domainPkgGoodDetail.LabelCounts = []*int64{helper.IntInt64(v.(int))}
+	//
+	//	if v, ok := d.GetOkExists("time_span"); ok {
+	//		domainPkgGoodDetail.TimeSpan = helper.IntInt64(v.(int))
+	//	}
+	//
+	//	if v, ok := d.GetOk("time_unit"); ok {
+	//		domainPkgGoodDetail.TimeUnit = helper.String(v.(string))
+	//	}
+	//
+	//	if v, ok := d.GetOkExists("auto_renew_flag"); ok {
+	//		domainPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
+	//	}
+	//
+	//	domainPkgGood.RegionId = helper.IntInt64(mainlandMode)
+	//	domainPkgGoodDetail.RealRegion = &realRegionInt
+	//	domainPkgGood.GoodsDetail = domainPkgGoodDetail
+	//	goods = append(goods, &domainPkgGood)
+	//}
+	//
+	//// make qps pkg
+	//if v, ok := d.GetOkExists("qps_pkg_count"); ok {
+	//	qpsPkgGood := waf.GoodNews{}
+	//	qpsPkgGoodDetail := new(waf.GoodsDetailNew)
+	//	qpsPkgGood.GoodsCategoryId = helper.IntInt64(QPS_CATEGORY_ID_SAAS)
+	//	qpsPkgGood.GoodsNum = helper.IntInt64(1)
+	//	qpsPkgGoodDetail.SubProductCode = helper.String(QPS_SUB_PRODUCT_CODE_SAAS)
+	//	qpsPkgGoodDetail.Pid = helper.IntInt64(QPS_PID_SAAS)
+	//	qpsPkgGoodDetail.LabelTypes = helper.Strings([]string{QPS_LABEL_TYPE_SAAS})
+	//	qpsPkgGoodDetail.LabelCounts = []*int64{helper.IntInt64(v.(int) * 1000)}
+	//
+	//	if v, ok := d.GetOkExists("time_span"); ok {
+	//		qpsPkgGoodDetail.TimeSpan = helper.IntInt64(v.(int))
+	//	}
+	//
+	//	if v, ok := d.GetOk("time_unit"); ok {
+	//		qpsPkgGoodDetail.TimeUnit = helper.String(v.(string))
+	//	}
+	//
+	//	if v, ok := d.GetOkExists("auto_renew_flag"); ok {
+	//		qpsPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
+	//	}
+	//
+	//	qpsPkgGood.RegionId = helper.IntInt64(mainlandMode)
+	//	qpsPkgGoodDetail.RealRegion = &realRegionInt
+	//	qpsPkgGood.GoodsDetail = qpsPkgGoodDetail
+	//	goods = append(goods, &qpsPkgGood)
+	//}
 
 	request.Goods = goods
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -388,14 +386,14 @@ func resourceTencentCloudWafSaasInstanceRead(d *schema.ResourceData, meta interf
 		_ = d.Set("real_region", instanceInfo.Region)
 	}
 
-	if instanceInfo.DomainPkg != nil {
-		_ = d.Set("domain_pkg_count", instanceInfo.DomainPkg.Count)
-	}
-
-	if instanceInfo.QPS != nil {
-		qpsCount := *instanceInfo.QPS.Count / 1000
-		_ = d.Set("qps_pkg_count", qpsCount)
-	}
+	//if instanceInfo.DomainPkg != nil {
+	//	_ = d.Set("domain_pkg_count", instanceInfo.DomainPkg.Count)
+	//}
+	//
+	//if instanceInfo.QPS != nil {
+	//	qpsCount := *instanceInfo.QPS.Count / 1000
+	//	_ = d.Set("qps_pkg_count", qpsCount)
+	//}
 
 	if instanceInfo.Edition != nil {
 		_ = d.Set("edition", instanceInfo.Edition)

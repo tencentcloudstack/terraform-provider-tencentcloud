@@ -173,7 +173,6 @@ resource "tencentcloud_waf_saas_domain" "example" {
   xff_reset          = 1
   bot_status         = 1
   api_safe_status    = 1
-  ipv6_status        = 1
 }
 ```
 
@@ -194,7 +193,6 @@ The following arguments are supported:
 * `https_rewrite` - (Optional, Int) Whether redirect to https, 1 will redirect and 0 will not.
 * `https_upstream_port` - (Optional, String) Upstream port for https, When listen ports has https port and UpstreamScheme is HTTP, the current field needs to be filled.
 * `ip_headers` - (Optional, List: [`String`]) When is_cdn=3, this parameter needs to be filled in to indicate a custom header.
-* `ipv6_status` - (Optional, Int) Whether to enable ipv6, 1 enable, 0 disable.
 * `is_cdn` - (Optional, Int) Whether a proxy has been enabled before WAF, 0 no deployment, 1 deployment and use first IP in X-Forwarded-For as client IP, 2 deployment and use remote_addr as client IP, 3 deployment and use values of custom headers as client IP.
 * `is_http2` - (Optional, Int) Whether enable HTTP2, Enabling HTTP2 requires HTTPS support, 1 means enabled, 0 does not.
 * `is_keep_alive` - (Optional, String) Whether to enable keep-alive, 0 disable, 1 enable.

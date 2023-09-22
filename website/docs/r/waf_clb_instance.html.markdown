@@ -28,14 +28,12 @@ resource "tencentcloud_waf_clb_instance" "example" {
 
 ```hcl
 resource "tencentcloud_waf_clb_instance" "example" {
-  goods_category   = "ultimate_clb"
-  instance_name    = "tf-example-clb-waf"
-  time_span        = 1
-  time_unit        = "m"
-  auto_renew_flag  = 1
-  elastic_mode     = 1
-  domain_pkg_count = 3
-  qps_pkg_count    = 3
+  goods_category  = "ultimate_clb"
+  instance_name   = "tf-example-clb-waf"
+  time_span       = 1
+  time_unit       = "m"
+  auto_renew_flag = 1
+  elastic_mode    = 1
 }
 ```
 
@@ -45,10 +43,8 @@ The following arguments are supported:
 
 * `goods_category` - (Required, String) Billing order parameters. support: premium_clb, enterprise_clb, ultimate_clb.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, 1: enable, 0: disable.
-* `domain_pkg_count` - (Optional, Int) Domain extension package count.
 * `elastic_mode` - (Optional, Int) Is elastic billing enabled, 1: enable, 0: disable.
 * `instance_name` - (Optional, String) Waf instance name.
-* `qps_pkg_count` - (Optional, Int) QPS extension package count.
 * `time_span` - (Optional, Int) Time interval.
 * `time_unit` - (Optional, String) Time unit, support d, m, y. d: day, m: month, y: year.
 

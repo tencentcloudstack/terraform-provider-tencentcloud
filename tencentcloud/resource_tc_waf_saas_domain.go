@@ -163,7 +163,6 @@ resource "tencentcloud_waf_saas_domain" "example" {
   xff_reset          = 1
   bot_status         = 1
   api_safe_status    = 1
-  ipv6_status        = 1
 }
 ```
 
@@ -422,13 +421,13 @@ func resourceTencentCloudWafSaasDomain() *schema.Resource {
 				ValidateFunc: validateAllowedIntValue(API_SAFE_STATUS),
 				Description:  "Whether to enable api safe, 1 enable, 0 disable.",
 			},
-			"ipv6_status": {
-				Type:         schema.TypeInt,
-				Optional:     true,
-				Default:      IPV6_STATUS_0,
-				ValidateFunc: validateAllowedIntValue(IPV6_STATUS),
-				Description:  "Whether to enable ipv6, 1 enable, 0 disable.",
-			},
+			//"ipv6_status": {
+			//	Type:         schema.TypeInt,
+			//	Optional:     true,
+			//	Default:      IPV6_STATUS_0,
+			//	ValidateFunc: validateAllowedIntValue(IPV6_STATUS),
+			//	Description:  "Whether to enable ipv6, 1 enable, 0 disable.",
+			//},
 			//"status": {
 			//	Type:         schema.TypeInt,
 			//	Optional:     true,
@@ -461,8 +460,8 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 		loadBalance   string
 		botStatus     uint64
 		apiSafeStatus uint64
-		ipv6Status    int64
-		isCdn         int
+		//ipv6Status    int64
+		isCdn int
 	)
 
 	if v, ok := d.GetOk("instance_id"); ok {
@@ -760,6 +759,24 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 
 	d.SetId(strings.Join([]string{instanceID, domain, domainId}, FILED_SP))
 
+	// wait domain state
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := service.DescribeDomainsById(ctx, instanceID, domain)
+		if e != nil {
+			return retryError(e)
+		}
+
+		if *result.State == 0 || *result.State == 1 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("domain is still in state %d", *result.State))
+	})
+
+	if err != nil {
+		return err
+	}
+
 	// set bot
 	if v, ok := d.GetOkExists("bot_status"); ok {
 		tmpBotStatus := v.(int)
@@ -821,34 +838,34 @@ func resourceTencentCloudWafSaasDomainCreate(d *schema.ResourceData, meta interf
 	}
 
 	// set ipv6
-	if v, ok := d.GetOkExists("ipv6_status"); ok {
-		tmpIpv6Status := v.(int)
-
-		if tmpIpv6Status != IPV6_STATUS_0 {
-			ipv6Status = int64(tmpIpv6Status)
-			modifyDomainIpv6StatusRequest := waf.NewModifyDomainIpv6StatusRequest()
-			modifyDomainIpv6StatusRequest.Domain = &domain
-			modifyDomainIpv6StatusRequest.DomainId = &domainId
-			modifyDomainIpv6StatusRequest.InstanceId = &instanceID
-			modifyDomainIpv6StatusRequest.Status = &ipv6Status
-
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyDomainIpv6Status(modifyDomainIpv6StatusRequest)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainIpv6StatusRequest.GetAction(), modifyDomainIpv6StatusRequest.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s modify waf saasDomain ipv6_status failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-	}
+	//if v, ok := d.GetOkExists("ipv6_status"); ok {
+	//	tmpIpv6Status := v.(int)
+	//
+	//	if tmpIpv6Status != IPV6_STATUS_0 {
+	//		ipv6Status = int64(IPV6_ON)
+	//		modifyDomainIpv6StatusRequest := waf.NewModifyDomainIpv6StatusRequest()
+	//		modifyDomainIpv6StatusRequest.Domain = &domain
+	//		modifyDomainIpv6StatusRequest.DomainId = &domainId
+	//		modifyDomainIpv6StatusRequest.InstanceId = &instanceID
+	//		modifyDomainIpv6StatusRequest.Status = &ipv6Status
+	//
+	//		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	//			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyDomainIpv6Status(modifyDomainIpv6StatusRequest)
+	//			if e != nil {
+	//				return retryError(e)
+	//			} else {
+	//				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainIpv6StatusRequest.GetAction(), modifyDomainIpv6StatusRequest.ToJsonString(), result.ToJsonString())
+	//			}
+	//
+	//			return nil
+	//		})
+	//
+	//		if err != nil {
+	//			log.Printf("[CRITAL]%s modify waf saasDomain ipv6_status failed, reason:%+v", logId, err)
+	//			return err
+	//		}
+	//	}
+	//}
 
 	//// set waf status
 	//if v, ok := d.GetOkExists("status"); ok {
@@ -914,6 +931,17 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 	if saasDomain == nil {
 		d.SetId("")
 		log.Printf("[WARN]%s resource `WafSaasDomain` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
+		return nil
+	}
+
+	domainInfo, err := service.DescribeDomainsById(ctx, instanceID, domain)
+	if err != nil {
+		return err
+	}
+
+	if domainInfo == nil {
+		d.SetId("")
+		log.Printf("[WARN]%s resource `DescribeDomains` [%s] not found, please check if it has been deleted.\n", logId, d.Id())
 		return nil
 	}
 
@@ -1069,6 +1097,18 @@ func resourceTencentCloudWafSaasDomainRead(d *schema.ResourceData, meta interfac
 		_ = d.Set("xff_reset", saasDomain.XFFReset)
 	}
 
+	if domainInfo.BotStatus != nil {
+		_ = d.Set("bot_status", domainInfo.BotStatus)
+	}
+
+	if domainInfo.ApiStatus != nil {
+		_ = d.Set("api_safe_status", domainInfo.ApiStatus)
+	}
+
+	//if domainInfo.Ipv6Status != nil {
+	//	_ = d.Set("ipv6_status", domainInfo.Ipv6Status)
+	//}
+
 	return nil
 }
 
@@ -1083,9 +1123,9 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 		request       = waf.NewModifySpartaProtectionRequest()
 		botStatus     uint64
 		apiSafeStatus uint64
-		ipv6Status    int64
-		loadBalance   string
-		isCdn         int
+		//ipv6Status    int64
+		loadBalance string
+		isCdn       int
 	)
 
 	immutableArgs := []string{"instance_id", "domain"}
@@ -1358,13 +1398,7 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 		}
 
 		// check ports
-		fmt.Println(1111111111)
-		fmt.Println(portsList)
-		fmt.Println(tmpPortsList)
-		fmt.Println(1111111111)
 		resPort := checkPorts(portsList, tmpPortsList)
-		fmt.Println(resPort)
-		fmt.Println(1111111111)
 
 		for _, item := range resPort {
 			dMap := item.(map[string]interface{})
@@ -1520,32 +1554,37 @@ func resourceTencentCloudWafSaasDomainUpdate(d *schema.ResourceData, meta interf
 	}
 
 	// set ipv6
-	if d.HasChange("ipv6_status") {
-		if v, ok := d.GetOkExists("ipv6_status"); ok {
-			ipv6Status = int64(v.(int))
-			modifyDomainIpv6StatusRequest := waf.NewModifyDomainIpv6StatusRequest()
-			modifyDomainIpv6StatusRequest.Domain = &domain
-			modifyDomainIpv6StatusRequest.DomainId = &domainId
-			modifyDomainIpv6StatusRequest.InstanceId = &instanceID
-			modifyDomainIpv6StatusRequest.Status = &ipv6Status
-
-			err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
-				result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyDomainIpv6Status(modifyDomainIpv6StatusRequest)
-				if e != nil {
-					return retryError(e)
-				} else {
-					log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainIpv6StatusRequest.GetAction(), modifyDomainIpv6StatusRequest.ToJsonString(), result.ToJsonString())
-				}
-
-				return nil
-			})
-
-			if err != nil {
-				log.Printf("[CRITAL]%s modify waf saasDomain ipv6_status failed, reason:%+v", logId, err)
-				return err
-			}
-		}
-	}
+	//if d.HasChange("ipv6_status") {
+	//	if v, ok := d.GetOkExists("ipv6_status"); ok {
+	//		tmpIpv6Status := v.(int)
+	//		if tmpIpv6Status == IPV6_STATUS_0 {
+	//			ipv6Status = int64(IPV6_OFF)
+	//		} else {
+	//			ipv6Status = int64(IPV6_ON)
+	//		}
+	//		modifyDomainIpv6StatusRequest := waf.NewModifyDomainIpv6StatusRequest()
+	//		modifyDomainIpv6StatusRequest.Domain = &domain
+	//		modifyDomainIpv6StatusRequest.DomainId = &domainId
+	//		modifyDomainIpv6StatusRequest.InstanceId = &instanceID
+	//		modifyDomainIpv6StatusRequest.Status = &ipv6Status
+	//
+	//		err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+	//			result, e := meta.(*TencentCloudClient).apiV3Conn.UseWafClient().ModifyDomainIpv6Status(modifyDomainIpv6StatusRequest)
+	//			if e != nil {
+	//				return retryError(e)
+	//			} else {
+	//				log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, modifyDomainIpv6StatusRequest.GetAction(), modifyDomainIpv6StatusRequest.ToJsonString(), result.ToJsonString())
+	//			}
+	//
+	//			return nil
+	//		})
+	//
+	//		if err != nil {
+	//			log.Printf("[CRITAL]%s modify waf saasDomain ipv6_status failed, reason:%+v", logId, err)
+	//			return err
+	//		}
+	//	}
+	//}
 
 	//// set waf status
 	//if d.HasChange("status") {

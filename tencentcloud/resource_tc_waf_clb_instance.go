@@ -24,8 +24,6 @@ resource "tencentcloud_waf_clb_instance" "example" {
   time_unit        = "m"
   auto_renew_flag  = 1
   elastic_mode     = 1
-  domain_pkg_count = 3
-  qps_pkg_count    = 3
 }
 ```
 */
@@ -90,18 +88,18 @@ func resourceTencentCloudWafClbInstance() *schema.Resource {
 				ValidateFunc: validateAllowedIntValue(ELASTIC_MODE),
 				Description:  "Is elastic billing enabled, 1: enable, 0: disable.",
 			},
-			"domain_pkg_count": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				ValidateFunc: validateIntegerMin(1),
-				Description:  "Domain extension package count.",
-			},
-			"qps_pkg_count": {
-				Optional:     true,
-				Type:         schema.TypeInt,
-				ValidateFunc: validateIntegerMin(1),
-				Description:  "QPS extension package count.",
-			},
+			//"domain_pkg_count": {
+			//	Optional:     true,
+			//	Type:         schema.TypeInt,
+			//	ValidateFunc: validateIntegerMin(1),
+			//	Description:  "Domain extension package count.",
+			//},
+			//"qps_pkg_count": {
+			//	Optional:     true,
+			//	Type:         schema.TypeInt,
+			//	ValidateFunc: validateIntegerMin(1),
+			//	Description:  "QPS extension package count.",
+			//},
 			// computed
 			"instance_id": {
 				Computed:    true,
@@ -202,61 +200,61 @@ func resourceTencentCloudWafClbInstanceCreate(d *schema.ResourceData, meta inter
 	instanceGood.GoodsDetail = instanceGoodDetail
 	goods = append(goods, instanceGood)
 
-	// make domain pkg
-	if v, ok := d.GetOkExists("domain_pkg_count"); ok {
-		domainPkgGood := new(waf.GoodNews)
-		domainPkgGoodDetail := new(waf.GoodsDetailNew)
-		domainPkgGood.GoodsCategoryId = helper.IntInt64(DOMIAN_CATEGORY_ID_CLB)
-		domainPkgGood.GoodsNum = helper.IntInt64(1)
-		domainPkgGoodDetail.SubProductCode = helper.String(DOMAIN_SUB_PRODUCT_CODE_CLB)
-		domainPkgGoodDetail.Pid = helper.IntInt64(DOMAIN_PID_CLB)
-		domainPkgGoodDetail.LabelTypes = helper.Strings([]string{DOMAIN_LABEL_TYPE_CLB})
-		domainPkgGoodDetail.LabelCounts = []*int64{helper.IntInt64(v.(int))}
-
-		if v, ok := d.GetOkExists("time_span"); ok {
-			domainPkgGoodDetail.TimeSpan = helper.IntInt64(v.(int))
-		}
-
-		if v, ok := d.GetOk("time_unit"); ok {
-			domainPkgGoodDetail.TimeUnit = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOkExists("auto_renew_flag"); ok {
-			domainPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
-		}
-
-		domainPkgGood.RegionId = helper.IntInt64(mainlandMode)
-		domainPkgGood.GoodsDetail = domainPkgGoodDetail
-		goods = append(goods, domainPkgGood)
-	}
-
-	// make qps pkg
-	if v, ok := d.GetOkExists("qps_pkg_count"); ok {
-		qpsPkgGood := new(waf.GoodNews)
-		qpsPkgGoodDetail := new(waf.GoodsDetailNew)
-		qpsPkgGood.GoodsCategoryId = helper.IntInt64(QPS_CATEGORY_ID_CLB)
-		qpsPkgGood.GoodsNum = helper.IntInt64(1)
-		qpsPkgGoodDetail.SubProductCode = helper.String(QPS_SUB_PRODUCT_CODE_CLB)
-		qpsPkgGoodDetail.Pid = helper.IntInt64(QPS_PID_CLB)
-		qpsPkgGoodDetail.LabelTypes = helper.Strings([]string{QPS_LABEL_TYPE_CLB})
-		qpsPkgGoodDetail.LabelCounts = []*int64{helper.IntInt64(v.(int) * 1000)}
-
-		if v, ok := d.GetOkExists("time_span"); ok {
-			qpsPkgGoodDetail.TimeSpan = helper.IntInt64(v.(int))
-		}
-
-		if v, ok := d.GetOk("time_unit"); ok {
-			qpsPkgGoodDetail.TimeUnit = helper.String(v.(string))
-		}
-
-		if v, ok := d.GetOkExists("auto_renew_flag"); ok {
-			qpsPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
-		}
-
-		qpsPkgGood.RegionId = helper.IntInt64(mainlandMode)
-		qpsPkgGood.GoodsDetail = qpsPkgGoodDetail
-		goods = append(goods, qpsPkgGood)
-	}
+	//// make domain pkg
+	//if v, ok := d.GetOkExists("domain_pkg_count"); ok {
+	//	domainPkgGood := new(waf.GoodNews)
+	//	domainPkgGoodDetail := new(waf.GoodsDetailNew)
+	//	domainPkgGood.GoodsCategoryId = helper.IntInt64(DOMIAN_CATEGORY_ID_CLB)
+	//	domainPkgGood.GoodsNum = helper.IntInt64(1)
+	//	domainPkgGoodDetail.SubProductCode = helper.String(DOMAIN_SUB_PRODUCT_CODE_CLB)
+	//	domainPkgGoodDetail.Pid = helper.IntInt64(DOMAIN_PID_CLB)
+	//	domainPkgGoodDetail.LabelTypes = helper.Strings([]string{DOMAIN_LABEL_TYPE_CLB})
+	//	domainPkgGoodDetail.LabelCounts = []*int64{helper.IntInt64(v.(int))}
+	//
+	//	if v, ok := d.GetOkExists("time_span"); ok {
+	//		domainPkgGoodDetail.TimeSpan = helper.IntInt64(v.(int))
+	//	}
+	//
+	//	if v, ok := d.GetOk("time_unit"); ok {
+	//		domainPkgGoodDetail.TimeUnit = helper.String(v.(string))
+	//	}
+	//
+	//	if v, ok := d.GetOkExists("auto_renew_flag"); ok {
+	//		domainPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
+	//	}
+	//
+	//	domainPkgGood.RegionId = helper.IntInt64(mainlandMode)
+	//	domainPkgGood.GoodsDetail = domainPkgGoodDetail
+	//	goods = append(goods, domainPkgGood)
+	//}
+	//
+	//// make qps pkg
+	//if v, ok := d.GetOkExists("qps_pkg_count"); ok {
+	//	qpsPkgGood := new(waf.GoodNews)
+	//	qpsPkgGoodDetail := new(waf.GoodsDetailNew)
+	//	qpsPkgGood.GoodsCategoryId = helper.IntInt64(QPS_CATEGORY_ID_CLB)
+	//	qpsPkgGood.GoodsNum = helper.IntInt64(1)
+	//	qpsPkgGoodDetail.SubProductCode = helper.String(QPS_SUB_PRODUCT_CODE_CLB)
+	//	qpsPkgGoodDetail.Pid = helper.IntInt64(QPS_PID_CLB)
+	//	qpsPkgGoodDetail.LabelTypes = helper.Strings([]string{QPS_LABEL_TYPE_CLB})
+	//	qpsPkgGoodDetail.LabelCounts = []*int64{helper.IntInt64(v.(int) * 1000)}
+	//
+	//	if v, ok := d.GetOkExists("time_span"); ok {
+	//		qpsPkgGoodDetail.TimeSpan = helper.IntInt64(v.(int))
+	//	}
+	//
+	//	if v, ok := d.GetOk("time_unit"); ok {
+	//		qpsPkgGoodDetail.TimeUnit = helper.String(v.(string))
+	//	}
+	//
+	//	if v, ok := d.GetOkExists("auto_renew_flag"); ok {
+	//		qpsPkgGoodDetail.AutoRenewFlag = helper.IntInt64(v.(int))
+	//	}
+	//
+	//	qpsPkgGood.RegionId = helper.IntInt64(mainlandMode)
+	//	qpsPkgGood.GoodsDetail = qpsPkgGoodDetail
+	//	goods = append(goods, qpsPkgGood)
+	//}
 
 	request.Goods = goods
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
@@ -350,14 +348,14 @@ func resourceTencentCloudWafClbInstanceRead(d *schema.ResourceData, meta interfa
 		_ = d.Set("elastic_mode", instanceInfo.Mode)
 	}
 
-	if instanceInfo.DomainPkg != nil {
-		_ = d.Set("domain_pkg_count", instanceInfo.DomainPkg.Count)
-	}
-
-	if instanceInfo.QPS != nil {
-		qpsCount := *instanceInfo.QPS.Count / 1000
-		_ = d.Set("qps_pkg_count", qpsCount)
-	}
+	//if instanceInfo.DomainPkg != nil {
+	//	_ = d.Set("domain_pkg_count", instanceInfo.DomainPkg.Count)
+	//}
+	//
+	//if instanceInfo.QPS != nil {
+	//	qpsCount := *instanceInfo.QPS.Count / 1000
+	//	_ = d.Set("qps_pkg_count", qpsCount)
+	//}
 
 	if instanceInfo.Edition != nil {
 		_ = d.Set("edition", instanceInfo.Edition)

@@ -6,8 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixWafSaasDomainResource_basic -v
-func TestAccTencentCloudNeedFixWafSaasDomainResource_basic(t *testing.T) {
+// go test -i; go test -test.run TestAccTencentCloudWafSaasDomainResource_basic -v
+func TestAccTencentCloudWafSaasDomainResource_basic(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
@@ -39,7 +39,7 @@ func TestAccTencentCloudNeedFixWafSaasDomainResource_basic(t *testing.T) {
 const testAccWafSaasDomain = `
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.example.com"
+  domain          = "tf.qcloudwaf.com"
   is_cdn          = 3
   cert_type       = 2
   ssl_id          = "3a6B5y8v"
@@ -87,14 +87,13 @@ resource "tencentcloud_waf_saas_domain" "example" {
   xff_reset          = 1
   bot_status         = 1
   api_safe_status    = 1
-  ipv6_status        = 1
 }
 `
 
 const testAccWafSaasDomainUpdate = `
 resource "tencentcloud_waf_saas_domain" "example" {
   instance_id     = "waf_2kxtlbky01b3wceb"
-  domain          = "tf.example.com"
+  domain          = "tf.qcloudwaf.com"
   is_cdn          = 3
   cert_type       = 2
   ssl_id          = "3a6B5y8v"
@@ -152,6 +151,5 @@ resource "tencentcloud_waf_saas_domain" "example" {
   xff_reset          = 0
   bot_status         = 0
   api_safe_status    = 0
-  ipv6_status        = 0
 }
 `

@@ -6,9 +6,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-// go test -i; go test -test.run TestAccTencentCloudNeedFixWafCustomWhiteRuleResource_basic -v
-func TestAccTencentCloudNeedFixWafCustomWhiteRuleResource_basic(t *testing.T) {
-	t.Parallel()
+// go test -i; go test -test.run TestAccTencentCloudWafCustomWhiteRuleResource_basic -v
+func TestAccTencentCloudWafCustomWhiteRuleResource_basic(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)

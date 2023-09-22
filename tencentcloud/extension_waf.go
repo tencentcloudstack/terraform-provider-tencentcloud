@@ -121,6 +121,11 @@ var API_SAFE_STATUS = []int{
 }
 
 const (
+	IPV6_ON  = 1
+	IPV6_OFF = 2
+)
+
+const (
 	ALB_TYPE_CLB = "clb"
 )
 
@@ -583,3 +588,7 @@ var MetricNameList = []string{
 	METRIC_NAME_UPSTREAMCLIENTERROR,
 	METRIC_NAME_UPSTREAMREDIRECT,
 }
+
+var (
+	STATE_0 = 0
+)

@@ -28,15 +28,13 @@ resource "tencentcloud_waf_saas_instance" "example" {
 
 ```hcl
 resource "tencentcloud_waf_saas_instance" "example" {
-  goods_category   = "ultimate_saas"
-  instance_name    = "tf-example-saas-waf"
-  time_span        = 1
-  time_unit        = "m"
-  auto_renew_flag  = 1
-  elastic_mode     = 1
-  real_region      = "gz"
-  domain_pkg_count = 3
-  qps_pkg_count    = 3
+  goods_category  = "ultimate_saas"
+  instance_name   = "tf-example-saas-waf"
+  time_span       = 1
+  time_unit       = "m"
+  auto_renew_flag = 1
+  elastic_mode    = 1
+  real_region     = "gz"
 }
 ```
 
@@ -46,10 +44,8 @@ The following arguments are supported:
 
 * `goods_category` - (Required, String) Billing order parameters. support premium_saas, enterprise_saas, ultimate_saas.
 * `auto_renew_flag` - (Optional, Int) Auto renew flag, 1: enable, 0: disable.
-* `domain_pkg_count` - (Optional, Int) Domain extension package count.
 * `elastic_mode` - (Optional, Int) Is elastic billing enabled, 1: enable, 0: disable.
 * `instance_name` - (Optional, String) Waf instance name.
-* `qps_pkg_count` - (Optional, Int) QPS extension package count.
 * `real_region` - (Optional, String) region. If Region is `ap-guangzhou`, support: gz, sh, bj, cd (Means: GuangZhou, ShangHai, BeiJing, ChengDu); If Region is `ap-seoul`, support: hk, sg, th, kr, in, de, ca, use, sao, usw, jkt (Means: HongKong, Singapore, Bandkok, Seoul, Mumbai, Frankfurt, Toronto, Virginia, SaoPaulo, SiliconValley, Jakarta).
 * `time_span` - (Optional, Int) Time interval.
 * `time_unit` - (Optional, String) Time unit, support d, m, y. d: day, m: month, y: year.

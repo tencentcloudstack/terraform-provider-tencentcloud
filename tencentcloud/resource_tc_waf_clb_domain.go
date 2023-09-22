@@ -423,6 +423,24 @@ func resourceTencentCloudWafClbDomainCreate(d *schema.ResourceData, meta interfa
 
 	d.SetId(strings.Join([]string{instanceID, domain, domainId}, FILED_SP))
 
+	// wait domain state
+	err = resource.Retry(writeRetryTimeout, func() *resource.RetryError {
+		result, e := service.DescribeDomainsById(ctx, instanceID, domain)
+		if e != nil {
+			return retryError(e)
+		}
+
+		if *result.State == 0 || *result.State == 1 {
+			return nil
+		}
+
+		return resource.RetryableError(fmt.Errorf("domain is still in state %d", *result.State))
+	})
+
+	if err != nil {
+		return err
+	}
+
 	// set engine
 	if v, ok := d.GetOkExists("engine"); ok {
 		tmpEngine := v.(int)
