@@ -17,7 +17,7 @@ func TestAccTencentCloudCatMetricDataDataSource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCatMetricDataDataSource,
-				Check:  resource.ComposeTestCheckFunc(
+				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTencentCloudDataSourceID("data.tencentcloud_cat_metric_data.metric_data"),
 					resource.TestCheckResourceAttrSet("data.tencentcloud_cat_metric_data.metric_data", "metric_set"),
 				),

@@ -91,6 +91,59 @@ func (me *CatService) DeleteCatTaskSetById(ctx context.Context, taskId string) (
 	return
 }
 
+func (me *CatService) DescribeCatProbeNodeByFilter(ctx context.Context, param map[string]interface{}) (node []*cat.NodeDefine, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = cat.NewDescribeProbeNodesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+				logId, "query object", request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "node_type" {
+			request.NodeType = v.(*int64)
+		}
+
+		if k == "location" {
+			request.Location = v.(*int64)
+		}
+
+		if k == "is_ipv6" {
+			request.IsIPv6 = v.(*bool)
+		}
+
+		if k == "node_name" {
+			request.NodeName = v.(*string)
+		}
+
+		if k == "pay_mode" {
+			request.PayMode = v.(*int64)
+		}
+
+	}
+
+	ratelimit.Check(request.GetAction())
+	response, err := me.client.UseCatClient().DescribeProbeNodes(request)
+	if err != nil {
+		log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n",
+			logId, request.GetAction(), request.ToJsonString(), err.Error())
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
+		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	node = append(node, response.Response.NodeSet...)
+
+	return
+}
+
+// DescribeNodes interface is an alternative interface to DescribeProbeNodes, but it lacks the NodeDefineStatus field, so both interfaces are used at the same time.
 func (me *CatService) DescribeCatNodeByFilter(ctx context.Context, param map[string]interface{}) (node []*cat.NodeDefineExt, errRet error) {
 	var (
 		logId   = getLogId(ctx)
