@@ -1211,6 +1211,7 @@ Simple Email Service(SES)
 	tencentcloud_ses_send_email
 	tencentcloud_ses_batch_send_email
 	tencentcloud_ses_verify_domain
+	tencentcloud_ses_black_list_delete
 
 Security Token Service(STS)
   Data Source
@@ -2816,6 +2817,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_ses_send_email":                                      resourceTencentCloudSesSendEmail(),
 			"tencentcloud_ses_batch_send_email":                                resourceTencentCloudSesBatchSendEmail(),
 			"tencentcloud_ses_verify_domain":                                   resourceTencentCloudSesVerifyDomain(),
+			"tencentcloud_ses_black_list_delete":                               resourceTencentCloudSesBlackListDelete(),
 			"tencentcloud_sms_sign":                                            resourceTencentCloudSmsSign(),
 			"tencentcloud_sms_template":                                        resourceTencentCloudSmsTemplate(),
 			"tencentcloud_dcdb_account":                                        resourceTencentCloudDcdbAccount(),
