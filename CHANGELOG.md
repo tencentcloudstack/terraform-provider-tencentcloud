@@ -1,3 +1,26 @@
+## 1.81.29 (September 22, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_waf_attack_log_histogram` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Data Source:** `tencentcloud_waf_attack_log_list` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Data Source:** `tencentcloud_waf_attack_overview` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Data Source:** `tencentcloud_waf_attack_total_count` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Data Source:** `tencentcloud_waf_ciphers` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Data Source:** `tencentcloud_waf_domains` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Data Source:** `tencentcloud_waf_find_domains` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Data Source:** `tencentcloud_waf_peak_points` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Data Source:** `tencentcloud_waf_ports` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Data Source:** `tencentcloud_waf_tls_versions` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Data Source:** `tencentcloud_waf_user_domains` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Resource:** `tencentcloud_ses_black_list_delete` ([#2131](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2131))
+* **New Resource:** `tencentcloud_waf_clb_domain` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Resource:** `tencentcloud_waf_clb_instance` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Resource:** `tencentcloud_waf_custom_rule` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Resource:** `tencentcloud_waf_custom_white_rule` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Resource:** `tencentcloud_waf_saas_domain` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+* **New Resource:** `tencentcloud_waf_saas_instance` ([#2111](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2111))
+
 ## 1.81.28 (September 20, 2023)
 
 FEATURES:
