@@ -6,7 +6,7 @@ Provides a resource to create a ses black_list
 Example Usage
 
 ```hcl
-resource "tencentcloud_ses_black_list" "black_list" {
+resource "tencentcloud_ses_black_list_delete" "black_list" {
   email_address = "terraform-tf@gmail.com"
 }
 ```
@@ -22,11 +22,11 @@ import (
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
-func resourceTencentCloudSesBlackList() *schema.Resource {
+func resourceTencentCloudSesBlackListDelete() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceTencentCloudSesBlackListCreate,
-		Read:   resourceTencentCloudSesBlackListRead,
-		Delete: resourceTencentCloudSesBlackListDelete,
+		Create: resourceTencentCloudSesBlackListDeleteCreate,
+		Read:   resourceTencentCloudSesBlackListDeleteRead,
+		Delete: resourceTencentCloudSesBlackListDeleteDelete,
 		Importer: &schema.ResourceImporter{
 			State: schema.ImportStatePassthrough,
 		},
@@ -41,8 +41,8 @@ func resourceTencentCloudSesBlackList() *schema.Resource {
 	}
 }
 
-func resourceTencentCloudSesBlackListCreate(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_black_list.create")()
+func resourceTencentCloudSesBlackListDeleteCreate(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ses_black_list_delete.create")()
 	defer inconsistentCheck(d, meta)()
 
 	logId := getLogId(contextNil)
@@ -72,18 +72,18 @@ func resourceTencentCloudSesBlackListCreate(d *schema.ResourceData, meta interfa
 
 	d.SetId(emailAddress)
 
-	return resourceTencentCloudSesBlackListRead(d, meta)
+	return resourceTencentCloudSesBlackListDeleteRead(d, meta)
 }
 
-func resourceTencentCloudSesBlackListRead(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_black_list.read")()
+func resourceTencentCloudSesBlackListDeleteRead(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ses_black_list_delete.read")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil
 }
 
-func resourceTencentCloudSesBlackListDelete(d *schema.ResourceData, meta interface{}) error {
-	defer logElapsed("resource.tencentcloud_ses_black_list.delete")()
+func resourceTencentCloudSesBlackListDeleteDelete(d *schema.ResourceData, meta interface{}) error {
+	defer logElapsed("resource.tencentcloud_ses_black_list_delete.delete")()
 	defer inconsistentCheck(d, meta)()
 
 	return nil

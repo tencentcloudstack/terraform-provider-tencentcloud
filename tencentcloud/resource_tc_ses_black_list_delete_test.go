@@ -18,7 +18,7 @@ func TestAccTencentNeedFixCloudSesBlackListResource_basic(t *testing.T) {
 			{
 				Config: testAccSesBlackList,
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttrSet("tencentcloud_ses_black_list.black_list", "id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_ses_black_list_delete.black_list", "id"),
 				),
 			},
 		},
@@ -42,7 +42,7 @@ resource "tencentcloud_ses_send_email" "send_email" {
   trigger_type = 1
 }
 
-resource "tencentcloud_ses_black_list" "black_list" {
+resource "tencentcloud_ses_black_list_delete" "black_list" {
   email_address = "terraform-tf@gmail.com"
   depends_on = [ tencentcloud_ses_send_email.send_email ]
 }
