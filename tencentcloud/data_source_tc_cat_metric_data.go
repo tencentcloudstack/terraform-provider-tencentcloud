@@ -3,12 +3,13 @@ Use this data source to query detailed information of cat metric_data
 Example Usage
 ```hcl
 data "tencentcloud_cat_metric_data" "metric_data" {
-  analyze_task_type = ""
-  metric_type = ""
-  field = ""
-  filter = ""
-  group_by = ""
-  filters =
+  analyze_task_type = "AnalyzeTaskType_Network"
+  metric_type = "gauge"
+  field = "avg(\"ping_time\")"
+  filters = [
+    "\"host\" = 'www.qq.com'",
+    "time >= now()-1h",
+  ]
 }
 ```
 */
@@ -20,6 +21,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	cat "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cat/v20180409"
+	sdkErrors "github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors"
 	"github.com/tencentcloudstack/terraform-provider-tencentcloud/tencentcloud/internal/helper"
 )
 
@@ -58,7 +60,7 @@ func dataSourceTencentCloudCatMetricData() *schema.Resource {
 			},
 
 			"filters": {
-				Optional: true,
+				Required: true,
 				Type:     schema.TypeSet,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
@@ -121,6 +123,11 @@ func dataSourceTencentCloudCatMetricDataRead(d *schema.ResourceData, meta interf
 	err := resource.Retry(readRetryTimeout, func() *resource.RetryError {
 		result, e := service.DescribeCatMetricDataByFilter(ctx, paramMap)
 		if e != nil {
+			if sdkError, ok := e.(*sdkErrors.TencentCloudSDKError); ok {
+				if sdkError.Code == "FailedOperation.DbQueryFailed" {
+					return resource.NonRetryableError(e)
+				}
+			}
 			return retryError(e)
 		}
 		metric = result
