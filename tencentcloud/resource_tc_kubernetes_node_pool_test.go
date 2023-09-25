@@ -83,12 +83,12 @@ func TestAccTencentCloudKubernetesNodePoolResource_basic(t *testing.T) {
 		CheckDestroy: testAccCheckTkeNodePoolDestroy,
 		Steps: []resource.TestStep{
 			{
-				SkipFunc: func() (bool, error) {
-					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
-						return true, nil
-					}
-					return false, errors.New("need test")
-				},
+				//SkipFunc: func() (bool, error) {
+				//	if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+				//		return true, nil
+				//	}
+				//	return false, errors.New("need test")
+				//},
 				Config: testAccTkeNodePoolCluster,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeNodePoolExists,

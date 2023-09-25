@@ -61,12 +61,12 @@ func TestAccTencentCloudKubernetesClusterResourceBasic(t *testing.T) {
 		CheckDestroy: testAccCheckTkeDestroy,
 		Steps: []resource.TestStep{
 			{
-				SkipFunc: func() (bool, error) {
-					if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
-						return true, nil
-					}
-					return false, errors.New("need test")
-				},
+				//SkipFunc: func() (bool, error) {
+				//	if strings.Contains(os.Getenv(PROVIDER_DOMAIN), "test") {
+				//		return true, nil
+				//	}
+				//	return false, errors.New("need test")
+				//},
 				Config: testAccTkeCluster,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckTkeExists(testTkeClusterResourceKey),
