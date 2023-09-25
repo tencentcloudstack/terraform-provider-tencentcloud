@@ -1,0 +1,11 @@
+```release-note:new-resource
+tencentcloud_cfw_address_template
+```
+
+```release-note:new-resource
+tencentcloud_cfw_block_ignore
+```
+
+```release-note:new-resource
+tencentcloud_cfw_edge_policy
+```
