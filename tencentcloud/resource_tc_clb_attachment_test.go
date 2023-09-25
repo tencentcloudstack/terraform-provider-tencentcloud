@@ -64,6 +64,16 @@ func TestAccTencentCloudClbAttachmentResource_http(t *testing.T) {
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.foo", "clb_id"),
 					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.foo", "listener_id"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.foo", "protocol_type", "HTTPS"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.foo", "targets.#", "2"),
+				),
+			},
+			{
+				Config: fmt.Sprintf(testAccClbServerAttachment_httpUpdate, defaultSshCertificate),
+				Check: resource.ComposeTestCheckFunc(
+					testAccCheckClbServerAttachmentExists("tencentcloud_clb_attachment.foo"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.foo", "clb_id"),
+					resource.TestCheckResourceAttrSet("tencentcloud_clb_attachment.foo", "listener_id"),
+					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.foo", "protocol_type", "HTTPS"),
 					resource.TestCheckResourceAttr("tencentcloud_clb_attachment.foo", "targets.#", "1"),
 				),
 			},
@@ -267,6 +277,49 @@ resource "tencentcloud_clb_attachment" "foo" {
 `
 
 const testAccClbServerAttachment_http = instanceCommonTestCase + presetCVM + `
+resource "tencentcloud_clb_instance" "foo" {
+  network_type = "OPEN"
+  clb_name     = "tf-clb-attach-http-test"
+  vpc_id       = var.cvm_vpc_id
+}
+
+resource "tencentcloud_clb_listener" "foo" {
+  clb_id               = tencentcloud_clb_instance.foo.id
+  listener_name        = "tf-clb-attach-http-test"
+  port                 = 77
+  protocol             = "HTTPS"
+  certificate_ssl_mode = "UNIDIRECTIONAL"
+  certificate_id       = "%s"
+}
+
+resource "tencentcloud_clb_listener_rule" "foo" {
+  clb_id              = tencentcloud_clb_instance.foo.id
+  listener_id         = tencentcloud_clb_listener.foo.listener_id
+  domain              = "abc.com"
+  url                 = "/"
+  session_expire_time = 30
+  scheduler           = "WRR"
+}
+
+resource "tencentcloud_clb_attachment" "foo" {
+  clb_id      = tencentcloud_clb_instance.foo.id
+  listener_id = tencentcloud_clb_listener.foo.listener_id
+  rule_id     = tencentcloud_clb_listener_rule.foo.rule_id
+
+  targets {
+    instance_id = tencentcloud_instance.default.id
+    port        = 23
+    weight      = 10
+  }
+  targets {
+    instance_id = tencentcloud_instance.default.id
+    port        = 22
+    weight      = 10
+  }
+}
+`
+
+const testAccClbServerAttachment_httpUpdate = instanceCommonTestCase + presetCVM + `
 resource "tencentcloud_clb_instance" "foo" {
   network_type = "OPEN"
   clb_name     = "tf-clb-attach-http-test"
