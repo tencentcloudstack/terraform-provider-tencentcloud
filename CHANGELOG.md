@@ -1,3 +1,14 @@
+## 1.81.30 (September 25, 2023)
+
+FEATURES:
+
+* **New Data Source:** `tencentcloud_tse_gateway_certificates` ([#2147](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2147))
+* **New Resource:** `tencentcloud_tse_cngw_certificate` ([#2147](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2147))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_vpc_bandwidth_package: support set `egress` ([#2146](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2146))
+
 ## 1.81.29 (September 22, 2023)
 
 FEATURES:
