@@ -1252,3 +1252,116 @@ func (me *TseService) CheckTseNativeAPIGatewayGroupStatusById(ctx context.Contex
 
 	return
 }
+
+func (me *TseService) DescribeTseGatewayCertificatesByFilter(ctx context.Context, param map[string]interface{}) (gatewayCertificates *tse.KongCertificatesList, errRet error) {
+	var (
+		logId   = getLogId(ctx)
+		request = tse.NewDescribeCloudNativeAPIGatewayCertificatesRequest()
+	)
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	for k, v := range param {
+		if k == "GatewayId" {
+			request.GatewayId = v.(*string)
+		}
+		if k == "Filters" {
+			request.Filters = v.([]*tse.ListFilter)
+		}
+	}
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 20
+		total  int64
+	)
+	certificates := make([]*tse.KongCertificatesPreview, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayCertificates(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+		if response == nil || response.Response == nil || response.Response.Result == nil || len(response.Response.Result.CertificatesList) < 1 {
+			break
+		}
+
+		total = *response.Response.Result.Total
+		certificates = append(certificates, response.Response.Result.CertificatesList...)
+		if len(response.Response.Result.CertificatesList) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	gatewayCertificates = &tse.KongCertificatesList{
+		Total:            &total,
+		CertificatesList: certificates,
+	}
+
+	return
+}
+
+func (me *TseService) DescribeTseCngwCertificateById(ctx context.Context, gatewayId string, id string) (cngwCertificate *tse.KongCertificatesPreview, errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDescribeCloudNativeAPIGatewayCertificateDetailsRequest()
+	request.GatewayId = &gatewayId
+	request.Id = &id
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DescribeCloudNativeAPIGatewayCertificateDetails(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+	if response == nil || response.Response.Result == nil || response.Response.Result.Cert == nil {
+		return
+	}
+
+	cngwCertificate = response.Response.Result.Cert
+	return
+}
+
+func (me *TseService) DeleteTseCngwCertificateById(ctx context.Context, gatewayId string, id string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := tse.NewDeleteCloudNativeAPIGatewayCertificateRequest()
+	request.GatewayId = &gatewayId
+	request.Id = &id
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTseClient().DeleteCloudNativeAPIGatewayCertificate(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
