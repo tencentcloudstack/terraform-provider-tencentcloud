@@ -101,67 +101,6 @@ func (me *CssService) DeleteCssWatermarkById(ctx context.Context, watermarkId *i
 	return
 }
 
-func (me *CssService) DescribeCssWatermarkRuleAttachment(ctx context.Context, domainName, appName, streamName, watermarkId string) (watermarkRuleAttachment *css.RuleInfo, errRet error) {
-	var (
-		logId   = getLogId(ctx)
-		request = css.NewDescribeLiveWatermarkRulesRequest()
-	)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "query object", request.ToJsonString(), errRet.Error())
-		}
-	}()
-	// request.DomainName = &domainName
-	// request.AppName = &appName
-	// request.StreamName = &streamName
-	// request.WatermarkId = &watermarkId
-
-	response, err := me.client.UseCssClient().DescribeLiveWatermarkRules(request)
-	if err != nil {
-		log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-			logId, request.GetAction(), request.ToJsonString(), err.Error())
-		errRet = err
-		return
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-	if len(response.Response.Rules) < 1 {
-		return
-	}
-	watermarkRuleAttachment = response.Response.Rules[0]
-	return
-}
-
-func (me *CssService) DetachCssWatermarkRuleAttachment(ctx context.Context, domainName, appName, streamName string) (errRet error) {
-	logId := getLogId(ctx)
-
-	request := css.NewDeleteLiveWatermarkRuleRequest()
-
-	request.DomainName = helper.String(domainName)
-	request.AppName = helper.String(appName)
-	request.StreamName = helper.String(streamName)
-
-	defer func() {
-		if errRet != nil {
-			log.Printf("[CRITICAL]%s api[%s] fail, request body [%s], reason[%s]\n",
-				logId, "delete object", request.ToJsonString(), errRet.Error())
-		}
-	}()
-
-	ratelimit.Check(request.GetAction())
-	response, err := me.client.UseCssClient().DeleteLiveWatermarkRule(request)
-	if err != nil {
-		errRet = err
-		return err
-	}
-	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n",
-		logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
-
-	return
-}
-
 func (me *CssService) DescribeCssPullStreamTask(ctx context.Context, taskId string) (tasks []*css.PullStreamTaskInfo, errRet error) {
 	var (
 		logId   = getLogId(ctx)
