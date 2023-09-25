@@ -1677,6 +1677,14 @@ Waf
     tencentcloud_waf_saas_domain
     tencentcloud_waf_clb_instance
     tencentcloud_waf_saas_instance
+
+Cfw
+  Data Source
+
+  Resource
+    tencentcloud_cfw_address_template
+    tencentcloud_cfw_block_ignore
+    tencentcloud_cfw_edge_policy
 */
 package tencentcloud
 
@@ -3093,6 +3101,9 @@ func Provider() *schema.Provider {
 			"tencentcloud_waf_saas_domain":                                     resourceTencentCloudWafSaasDomain(),
 			"tencentcloud_waf_clb_instance":                                    resourceTencentCloudWafClbInstance(),
 			"tencentcloud_waf_saas_instance":                                   resourceTencentCloudWafSaasInstance(),
+			"tencentcloud_cfw_address_template":                                resourceTencentCloudCfwAddressTemplate(),
+			"tencentcloud_cfw_block_ignore":                                    resourceTencentCloudCfwBlockIgnore(),
+			"tencentcloud_cfw_edge_policy":                                     resourceTencentCloudCfwEdgePolicy(),
 		},
 
 		ConfigureFunc: providerConfigure,

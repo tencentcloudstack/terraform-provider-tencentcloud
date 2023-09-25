@@ -1,0 +1,33 @@
+package tencentcloud
+
+const (
+	ADDRESS_TEMPLATE_TYPE_1 = 1
+	ADDRESS_TEMPLATE_TYPE_5 = 5
+)
+
+var ADDRESS_TEMPLATE_TYPE = []int{
+	ADDRESS_TEMPLATE_TYPE_1,
+	ADDRESS_TEMPLATE_TYPE_5,
+}
+
+const (
+	RULE_TYPE_1 = 1
+	RULE_TYPE_2 = 2
+)
+
+var RULE_TYPE = []int{
+	RULE_TYPE_1,
+	RULE_TYPE_2,
+}
+
+const (
+	DIRECTION_0 = "0"
+	DIRECTION_1 = "1"
+	DIRECTION_3 = "3"
+)
+
+var DIRECTION = []string{
+	DIRECTION_0,
+	DIRECTION_1,
+	DIRECTION_3,
+}
