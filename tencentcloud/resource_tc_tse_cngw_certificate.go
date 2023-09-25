@@ -6,10 +6,10 @@ Example Usage
 ```hcl
 
 resource "tencentcloud_tse_cngw_certificate" "cngw_certificate" {
-  gateway_id = ""
-  bind_domains = []
-  cert_id = ""
-  name = ""
+  gateway_id   = "gateway-ddbb709b"
+  bind_domains = ["example1.com"]
+  cert_id      = "vYSQkJ3K"
+  name         = "xxx1"
 }
 
 ```
@@ -19,7 +19,7 @@ Import
 tse cngw_certificate can be imported using the id, e.g.
 
 ```
-terraform import tencentcloud_tse_cngw_certificate.cngw_certificate gatewayId#certId
+terraform import tencentcloud_tse_cngw_certificate.cngw_certificate gatewayId#Id
 ```
 */
 package tencentcloud
@@ -97,9 +97,10 @@ func resourceTencentCloudTseCngwCertificateCreate(d *schema.ResourceData, meta i
 	logId := getLogId(contextNil)
 
 	var (
-		request   = tse.NewCreateCloudNativeAPIGatewayCertificateRequest()
-		gatewayId string
-		certId    string
+		request       = tse.NewCreateCloudNativeAPIGatewayCertificateRequest()
+		response      = tse.NewCreateCloudNativeAPIGatewayCertificateResponse()
+		gatewayId     string
+		certificateId string
 	)
 	if v, ok := d.GetOk("gateway_id"); ok {
 		gatewayId = v.(string)
@@ -115,7 +116,6 @@ func resourceTencentCloudTseCngwCertificateCreate(d *schema.ResourceData, meta i
 	}
 
 	if v, ok := d.GetOk("cert_id"); ok {
-		certId = v.(string)
 		request.CertId = helper.String(v.(string))
 	}
 
@@ -130,6 +130,7 @@ func resourceTencentCloudTseCngwCertificateCreate(d *schema.ResourceData, meta i
 		} else {
 			log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), result.ToJsonString())
 		}
+		response = result
 		return nil
 	})
 	if err != nil {
@@ -137,7 +138,8 @@ func resourceTencentCloudTseCngwCertificateCreate(d *schema.ResourceData, meta i
 		return err
 	}
 
-	d.SetId(gatewayId + FILED_SP + certId)
+	certificateId = *response.Response.Result.Id
+	d.SetId(gatewayId + FILED_SP + certificateId)
 
 	return resourceTencentCloudTseCngwCertificateRead(d, meta)
 }
@@ -157,9 +159,9 @@ func resourceTencentCloudTseCngwCertificateRead(d *schema.ResourceData, meta int
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	gatewayId := idSplit[0]
-	certId := idSplit[1]
+	certificateId := idSplit[1]
 
-	cngwCertificate, err := service.DescribeTseCngwCertificateById(ctx, gatewayId, certId)
+	cngwCertificate, err := service.DescribeTseCngwCertificateById(ctx, gatewayId, certificateId)
 	if err != nil {
 		return err
 	}
@@ -208,18 +210,16 @@ func resourceTencentCloudTseCngwCertificateUpdate(d *schema.ResourceData, meta i
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	gatewayId := idSplit[0]
-	certId := idSplit[1]
+	certificateId := idSplit[1]
 
 	request.GatewayId = &gatewayId
-	request.Id = &certId
+	request.Id = &certificateId
 
-	if d.HasChange("bind_domains") {
-		if v, ok := d.GetOk("bind_domains"); ok {
-			bindDomainsSet := v.(*schema.Set).List()
-			for i := range bindDomainsSet {
-				bindDomains := bindDomainsSet[i].(string)
-				request.BindDomains = append(request.BindDomains, &bindDomains)
-			}
+	if v, ok := d.GetOk("bind_domains"); ok {
+		bindDomainsSet := v.(*schema.Set).List()
+		for i := range bindDomainsSet {
+			bindDomains := bindDomainsSet[i].(string)
+			request.BindDomains = append(request.BindDomains, &bindDomains)
 		}
 	}
 
@@ -259,9 +259,9 @@ func resourceTencentCloudTseCngwCertificateDelete(d *schema.ResourceData, meta i
 		return fmt.Errorf("id is broken,%s", d.Id())
 	}
 	gatewayId := idSplit[0]
-	certId := idSplit[1]
+	certificateId := idSplit[1]
 
-	if err := service.DeleteTseCngwCertificateById(ctx, gatewayId, certId); err != nil {
+	if err := service.DeleteTseCngwCertificateById(ctx, gatewayId, certificateId); err != nil {
 		return err
 	}
 

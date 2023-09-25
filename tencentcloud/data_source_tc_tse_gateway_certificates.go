@@ -6,13 +6,12 @@ Example Usage
 ```hcl
 
 data "tencentcloud_tse_gateway_certificates" "gateway_certificates" {
-  gateway_id = ""
+  gateway_id = "gateway-ddbb709b"
   filters {
-	key = ""
-	value = ""
+    key = "BindDomain"
+    value = "example.com"
   }
 }
-
 ```
 */
 package tencentcloud
@@ -39,7 +38,7 @@ func dataSourceTencentCloudTseGatewayCertificates() *schema.Resource {
 			"filters": {
 				Optional:    true,
 				Type:        schema.TypeList,
-				Description: "Filter conditions, valid value:BindDomain,Name.",
+				Description: "Filter conditions, valid value: `BindDomain`, `Name`.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"key": {
@@ -65,23 +64,23 @@ func dataSourceTencentCloudTseGatewayCertificates() *schema.Resource {
 						"total": {
 							Type:        schema.TypeInt,
 							Computed:    true,
-							Description: "Total countNote: This field may return null, indicating that a valid value is not available.",
+							Description: "Total count. Note: This field may return null, indicating that a valid value is not available.",
 						},
 						"certificates_list": {
 							Type:        schema.TypeList,
 							Computed:    true,
-							Description: "Certificate list of gatewayNote: This field may return null, indicating that a valid value is not available.",
+							Description: "Certificate list of gateway. Note: This field may return null, indicating that a valid value is not available.",
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"name": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Certificate nameNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Certificate name. Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Certificate IDNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Certificate ID. Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"bind_domains": {
 										Type: schema.TypeSet,
@@ -89,32 +88,32 @@ func dataSourceTencentCloudTseGatewayCertificates() *schema.Resource {
 											Type: schema.TypeString,
 										},
 										Computed:    true,
-										Description: "Domains of the bindingNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Domains of the binding. Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"status": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Status of certificate. Reference value:- expired- activeNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Status of certificate. Reference value:- expired- active. Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"crt": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Pem format of certificateNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Pem format of certificate. Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"key": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Private key of certificateNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Private key of certificate. Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"expire_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Expiration time of certificateNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Expiration time of certificate. Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"create_time": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Upload time of certificateNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Upload time of certificate. Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"issue_time": {
 										Type:        schema.TypeString,
@@ -124,12 +123,12 @@ func dataSourceTencentCloudTseGatewayCertificates() *schema.Resource {
 									"cert_source": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Source of certificate. Reference value:- native. Source: konga- ssl. Source: ssl platformNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Source of certificate. Reference value:- native. Source: konga- ssl. Source: ssl platform. Note: This field may return null, indicating that a valid value is not available.",
 									},
 									"cert_id": {
 										Type:        schema.TypeString,
 										Computed:    true,
-										Description: "Certificate ID of ssl platformNote: This field may return null, indicating that a valid value is not available.",
+										Description: "Certificate ID of ssl platform. Note: This field may return null, indicating that a valid value is not available.",
 									},
 								},
 							},
@@ -255,10 +254,10 @@ func dataSourceTencentCloudTseGatewayCertificatesRead(d *schema.ResourceData, me
 				ids = append(ids, *certificatesList.Id)
 			}
 
-			kongCertificatesListMap["certificates_list"] = []interface{}{certificatesListList}
+			kongCertificatesListMap["certificates_list"] = certificatesListList
 		}
 
-		_ = d.Set("result", kongCertificatesListMap)
+		_ = d.Set("result", []interface{}{kongCertificatesListMap})
 	}
 
 	d.SetId(helper.DataResourceIdsHash(ids))
