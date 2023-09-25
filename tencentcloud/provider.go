@@ -1600,6 +1600,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_gateway_routes
 	tencentcloud_tse_gateway_canary_rules
 	tencentcloud_tse_gateway_services
+	tencentcloud_tse_gateway_certificates
 
   Resource
 	tencentcloud_tse_instance
@@ -1610,6 +1611,7 @@ Tencent Cloud Service Engine(TSE)
 	tencentcloud_tse_cngw_service_rate_limit
 	tencentcloud_tse_cngw_route
 	tencentcloud_tse_cngw_route_rate_limit
+	tencentcloud_tse_cngw_certificate
 
 ClickHouse(CDWCH)
   Data Source
@@ -2301,6 +2303,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_gateway_routes":                        dataSourceTencentCloudTseGatewayRoutes(),
 			"tencentcloud_tse_gateway_canary_rules":                  dataSourceTencentCloudTseGatewayCanaryRules(),
 			"tencentcloud_tse_gateway_services":                      dataSourceTencentCloudTseGatewayServices(),
+			"tencentcloud_tse_gateway_certificates":                  dataSourceTencentCloudTseGatewayCertificates(),
 			"tencentcloud_lighthouse_modify_instance_bundle":         dataSourceTencentCloudLighthouseModifyInstanceBundle(),
 			"tencentcloud_lighthouse_zone":                           dataSourceTencentCloudLighthouseZone(),
 			"tencentcloud_lighthouse_scene":                          dataSourceTencentCloudLighthouseScene(),
@@ -3075,6 +3078,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tse_cngw_route":                                      resourceTencentCloudTseCngwRoute(),
 			"tencentcloud_tse_cngw_route_rate_limit":                           resourceTencentCloudTseCngwRouteRateLimit(),
 			"tencentcloud_tse_cngw_canary_rule":                                resourceTencentCloudTseCngwCanaryRule(),
+			"tencentcloud_tse_cngw_certificate":                                resourceTencentCloudTseCngwCertificate(),
 			"tencentcloud_clickhouse_instance":                                 resourceTencentCloudClickhouseInstance(),
 			"tencentcloud_cls_kafka_recharge":                                  resourceTencentCloudClsKafkaRecharge(),
 			"tencentcloud_cls_scheduled_sql":                                   resourceTencentCloudClsScheduledSql(),

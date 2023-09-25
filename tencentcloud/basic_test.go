@@ -1088,11 +1088,15 @@ const (
 	defaultTseVpcId           = "vpc-4owdpnwr"
 	defaultTseSubnetId        = "subnet-dwj7ipnc"
 	defaultTseGatewayId       = "gateway-ddbb709b"
+	defaultTseCertId          = "vYSQkJ3K"
 )
 
 const DefaultTseVar = `
 variable "gateway_id" {
   default = "` + defaultTseGatewayId + `"
+}
+variable "cert_id" {
+  default = "` + defaultTseCertId + `"
 }
 `
 
