@@ -1,0 +1,2 @@
+```release-note:enhancement
+resource/tencentcloud_nat_gateway: support create standard NatGateway
