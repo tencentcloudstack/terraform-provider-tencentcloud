@@ -211,3 +211,80 @@ func (me *TrocketService) DeleteTrocketRocketmqConsumerGroupById(ctx context.Con
 
 	return
 }
+
+func (me *TrocketService) DescribeTrocketRocketmqRoleById(ctx context.Context, instanceId string, role string) (rocketmqRole *trocket.RoleItem, errRet error) {
+	logId := getLogId(ctx)
+
+	request := trocket.NewDescribeRoleListRequest()
+	request.InstanceId = &instanceId
+	filter := &trocket.Filter{
+		Name:   helper.String("RoleName"),
+		Values: []*string{&role},
+	}
+	request.Filters = []*trocket.Filter{filter}
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	var (
+		offset int64 = 0
+		limit  int64 = 100
+	)
+	instances := make([]*trocket.RoleItem, 0)
+	for {
+		request.Offset = &offset
+		request.Limit = &limit
+		response, err := me.client.UseTrocketClient().DescribeRoleList(request)
+		if err != nil {
+			errRet = err
+			return
+		}
+		log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+		if response == nil || len(response.Response.Data) < 1 {
+			break
+		}
+		instances = append(instances, response.Response.Data...)
+		if len(response.Response.Data) < int(limit) {
+			break
+		}
+
+		offset += limit
+	}
+
+	if len(instances) < 1 {
+		return
+	}
+	rocketmqRole = instances[0]
+	return
+}
+
+func (me *TrocketService) DeleteTrocketRocketmqRoleById(ctx context.Context, instanceId string, role string) (errRet error) {
+	logId := getLogId(ctx)
+
+	request := trocket.NewDeleteRoleRequest()
+	request.InstanceId = &instanceId
+	request.Role = &role
+
+	defer func() {
+		if errRet != nil {
+			log.Printf("[CRITAL]%s api[%s] fail, request body [%s], reason[%s]\n", logId, request.GetAction(), request.ToJsonString(), errRet.Error())
+		}
+	}()
+
+	ratelimit.Check(request.GetAction())
+
+	response, err := me.client.UseTrocketClient().DeleteRole(request)
+	if err != nil {
+		errRet = err
+		return
+	}
+	log.Printf("[DEBUG]%s api[%s] success, request body [%s], response body [%s]\n", logId, request.GetAction(), request.ToJsonString(), response.ToJsonString())
+
+	return
+}
