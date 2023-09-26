@@ -529,7 +529,7 @@ func targetGroupContainsEni(targets []*clb.Backend, eniIp interface{}) (contains
 		return
 	}
 	for _, target := range targets {
-		if len(target.PrivateIpAddresses) > 0 && target.PrivateIpAddresses[0] != nil {
+		if len(target.PrivateIpAddresses) == 0 || target.PrivateIpAddresses[0] == nil {
 			continue
 		}
 		if ip == *target.PrivateIpAddresses[0] {
