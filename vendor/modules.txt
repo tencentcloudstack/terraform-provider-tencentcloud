@@ -1052,7 +1052,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apigateway/v20180808
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm v1.0.624
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/apm/v20210622
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.655
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.756
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as/v20180419
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cam v1.0.409
@@ -1094,7 +1094,7 @@ github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cloudaudit/v20190319
 # github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls v1.0.711
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cls/v20201016
-# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.755
+# github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.756
 ## explicit; go 1.14
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common
 github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common/errors
