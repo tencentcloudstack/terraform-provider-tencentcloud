@@ -81,6 +81,30 @@ func TestAccTencentCloudAsScalingConfig_basic(t *testing.T) {
 	})
 }
 
+func TestAccTencentCloudAsScalingConfig_loginSettings(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testAccProviders,
+		CheckDestroy: testAccCheckAsScalingConfigDestroy,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccAsScalingConfigLoginSetting("skey-58gbxolb"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.login_setting"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.login_setting", "key_ids.0", "skey-58gbxolb"),
+				),
+			},
+			{
+				Config: testAccAsScalingConfigLoginSetting("skey-i55cwgvl"),
+				Check: resource.ComposeAggregateTestCheckFunc(
+					testAccCheckAsScalingConfigExists("tencentcloud_as_scaling_config.login_setting"),
+					resource.TestCheckResourceAttr("tencentcloud_as_scaling_config.login_setting", "key_ids.0", "skey-i55cwgvl"),
+				),
+			},
+		},
+	})
+}
+
 func TestAccTencentCloudAsScalingConfig_full(t *testing.T) {
 	t.Parallel()
 	resource.Test(t, resource.TestCase{
@@ -344,4 +368,16 @@ resource "tencentcloud_as_scaling_config" "launch_configuration" {
 	instance_charge_type_prepaid_renew_flag = "NOTIFY_AND_MANUAL_RENEW"
 }
 	`
+}
+
+func testAccAsScalingConfigLoginSetting(keyId string) string {
+	return fmt.Sprintf(`
+resource "tencentcloud_as_scaling_config" "login_setting" {
+  configuration_name   = "test-as-login-setting"
+  image_id = "img-2lr9q49h"
+  instance_types = ["S5.SMALL2"]
+  instance_charge_type = "POSTPAID_BY_HOUR"
+  key_ids              = ["%s"]
+}
+`, keyId)
 }
