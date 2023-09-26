@@ -5,19 +5,18 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_application_proxy" "application_proxy" {
-  accelerate_type      = 1
-  plat_type            = "domain"
-  proxy_name           = "applicationProxies-test-1"
-  proxy_type           = "instance"
-  security_type        = 1
-  session_persist_time = 2400
-  status               = "online"
-  tags                 = {}
-  zone_id              = "zone-2983wizgxqvm"
+    accelerate_type      = 0
+    plat_type            = "domain"
+    proxy_name           = "test"
+    proxy_type           = "instance"
+    security_type        = 1
+    session_persist_time = 0
+    status               = "online"
+    zone_id              = "zone-2o0l8g7zisgt"
 
-  ipv6 {
-    switch = "off"
-  }
+    ipv6 {
+        switch = "off"
+    }
 }
 
 ```

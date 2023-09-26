@@ -15,12 +15,10 @@ Provides a resource to create a teo origin_group
 
 ```hcl
 resource "tencentcloud_teo_origin_group" "origin_group" {
+  zone_id            = "zone-297z8rf93cfw"
   configuration_type = "weight"
   origin_group_name  = "test-group"
   origin_type        = "self"
-  tags               = {}
-  zone_id            = "zone-297z8rf93cfw"
-
   origin_records {
     area    = []
     port    = 8080

@@ -122,8 +122,6 @@ resource "tencentcloud_teo_rule_engine" "rule1" {
   }
 }
 
-
-
 ```
 Import
 
@@ -160,7 +158,7 @@ func resourceTencentCloudTeoRuleEngine() *schema.Resource {
 			"zone_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Site ID.",
+				Description: "ID of the site.",
 			},
 
 			"rule_id": {
@@ -172,13 +170,13 @@ func resourceTencentCloudTeoRuleEngine() *schema.Resource {
 			"rule_name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Rule name.",
+				Description: "The rule name (1 to 255 characters).",
 			},
 
 			"status": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Status of the rule, valid value can be `enable` or `disable`.",
+				Description: "Rule status. Values: `enable`: Enabled; `disable`: Disabled.",
 			},
 
 			"tags": {
