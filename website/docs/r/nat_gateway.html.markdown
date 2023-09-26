@@ -53,6 +53,8 @@ The following arguments are supported:
 * `vpc_id` - (Required, String, ForceNew) ID of the vpc.
 * `bandwidth` - (Optional, Int) The maximum public network output bandwidth of NAT gateway (unit: Mbps). Valid values: `20`, `50`, `100`, `200`, `500`, `1000`, `2000`, `5000`. Default is 100.
 * `max_concurrent` - (Optional, Int) The upper limit of concurrent connection of NAT gateway. Valid values: `1000000`, `3000000`, `10000000`. Default is `1000000`.
+* `nat_product_version` - (Optional, Int, ForceNew) 1: traditional NAT, 2: standard NAT, default value is 1.
+* `subnet_id` - (Optional, String, ForceNew) Subnet of NAT.
 * `tags` - (Optional, Map) The available tags within this NAT gateway.
 * `zone` - (Optional, String) The availability zone, such as `ap-guangzhou-3`.
 

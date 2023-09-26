@@ -109,6 +109,20 @@ func resourceTencentCloudNatGateway() *schema.Resource {
 				Computed:    true,
 				Description: "The availability zone, such as `ap-guangzhou-3`.",
 			},
+			"subnet_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Subnet of NAT.",
+			},
+			"nat_product_version": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "1: traditional NAT, 2: standard NAT, default value is 1.",
+			},
 			"tags": {
 				Type:        schema.TypeMap,
 				Optional:    true,
@@ -149,6 +163,14 @@ func resourceTencentCloudNatGatewayCreate(d *schema.ResourceData, meta interface
 
 	if v, ok := d.GetOk("zone"); ok {
 		request.Zone = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("subnet_id"); ok {
+		request.SubnetId = helper.String(v.(string))
+	}
+
+	if v, ok := d.GetOk("nat_product_version"); ok {
+		request.NatProductVersion = helper.IntUint64(v.(int))
 	}
 
 	if v := helper.GetTags(d, "tags"); len(v) > 0 {
@@ -263,6 +285,8 @@ func resourceTencentCloudNatGatewayRead(d *schema.ResourceData, meta interface{}
 	_ = d.Set("created_time", *nat.CreatedTime)
 	_ = d.Set("assigned_eip_set", flattenAddressList((*nat).PublicIpAddressSet))
 	_ = d.Set("zone", *nat.Zone)
+	_ = d.Set("subnet_id", *nat.SubnetId)
+	_ = d.Set("nat_product_version", *nat.NatProductVersion)
 
 	tcClient := meta.(*TencentCloudClient).apiV3Conn
 	tagService := &TagService{client: tcClient}
