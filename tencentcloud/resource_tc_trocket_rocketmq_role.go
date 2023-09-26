@@ -123,7 +123,6 @@ func resourceTencentCloudTrocketRocketmqRoleCreate(d *schema.ResourceData, meta 
 	}
 
 	if v, ok := d.GetOk("role"); ok {
-		role = v.(string)
 		request.Role = helper.String(v.(string))
 	}
 
