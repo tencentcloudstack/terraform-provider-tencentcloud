@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_trocket_rocketmq_role
+```
