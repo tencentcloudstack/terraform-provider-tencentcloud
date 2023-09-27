@@ -49,7 +49,6 @@ func testSweepRuleEngine(region string) error {
 
 // go test -i; go test -test.run TestAccTencentCloudTeoRuleEngine_basic -v
 func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
-	t.Parallel()
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
@@ -60,7 +59,7 @@ func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
 				Config: testAccTeoRuleEngine,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRuleEngineExists("tencentcloud_teo_rule_engine.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "zone_id", defaultZoneId),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rule_name", "rule-1"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "status", "enable"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.#", "1"),
@@ -91,7 +90,7 @@ func TestAccTencentCloudTeoRuleEngine_basic(t *testing.T) {
 				Config: testAccTeoRuleEngineUp,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckRuleEngineExists("tencentcloud_teo_rule_engine.basic"),
-					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "zone_id", defaultZoneId),
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_rule_engine.basic", "zone_id"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rule_name", "rule-up"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "status", "enable"),
 					resource.TestCheckResourceAttr("tencentcloud_teo_rule_engine.basic", "rules.#", "1"),
@@ -177,7 +176,7 @@ const testAccTeoRuleEngine = testAccTeoZone + `
 resource "tencentcloud_teo_rule_engine" "basic" {
 	rule_name = "rule-1"
 	status    = "enable"
-	zone_id   = var.zone_id
+	zone_id   = tencentcloud_teo_zone.basic.id
   
 	rules {
 	  actions {

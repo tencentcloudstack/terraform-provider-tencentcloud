@@ -13,7 +13,7 @@ import (
 
 // go test -i; go test -test.run TestAccTencentCloudTeoApplicationProxyRule_basic -v
 func TestAccTencentCloudTeoApplicationProxyRule_basic(t *testing.T) {
-	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheckCommon(t, ACCOUNT_TYPE_PRIVATE) },
 		Providers:    testAccProviders,
@@ -100,16 +100,7 @@ func testAccCheckApplicationProxyRuleExists(r string) resource.TestCheckFunc {
 	}
 }
 
-const testAccTeoApplicationProxyRuleVar = `
-variable "default_zone_id" {
-  default = "` + defaultZoneId + `"
-}
-variable "proxy_id" {
-  default = "` + applicationProxyId + `"
-}
-`
-
-const testAccTeoApplicationProxyRule = testAccTeoApplicationProxyRuleVar + `
+const testAccTeoApplicationProxyRule = testAccTeoApplicationProxy + `
 
 resource "tencentcloud_teo_application_proxy_rule" "basic" {
   forward_client_ip = "TOA"
@@ -122,10 +113,10 @@ resource "tencentcloud_teo_application_proxy_rule" "basic" {
     "8083",
   ]
   proto             = "TCP"
-  proxy_id          = var.proxy_id
+  proxy_id          = tencentcloud_teo_application_proxy.basic.proxy_id
   session_persist   = false
   status            = "online"
-  zone_id           = var.default_zone_id
+  zone_id           = tencentcloud_teo_zone.basic.id
 }
 
 `

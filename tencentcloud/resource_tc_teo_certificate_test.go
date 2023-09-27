@@ -7,7 +7,7 @@ import (
 )
 
 func TestAccTencentCloudTeoCertificateResource_basic(t *testing.T) {
-	t.Parallel()
+
 	resource.Test(t, resource.TestCase{
 		PreCheck: func() {
 			testAccPreCheck(t)
@@ -16,7 +16,9 @@ func TestAccTencentCloudTeoCertificateResource_basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccTeoCertificate,
-				Check:  resource.ComposeTestCheckFunc(resource.TestCheckResourceAttrSet("tencentcloud_teo_certificate.certificate", "id")),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrSet("tencentcloud_teo_certificate.certificate", "id"),
+				),
 			},
 			{
 				ResourceName:      "tencentcloud_teo_certificate.certificate",
@@ -27,35 +29,22 @@ func TestAccTencentCloudTeoCertificateResource_basic(t *testing.T) {
 	})
 }
 
-const testAccTeoCertificate = `
+const testAccTeoCertificate = testAccTeoZone + `
 
 resource "tencentcloud_teo_certificate" "certificate" {
-  zone_id = ""
-  hosts = 
-  server_cert_info {
-		cert_id = ""
-		alias = ""
-		type = ""
-		expire_time = ""
-		deploy_time = ""
-		sign_algo = ""
-		common_name = ""
+    host    = ` + "test." + `var.zone_name
+    mode    = "disable"
+    zone_id = tencentcloud_teo_zone.basic.id
 
-  }
-  mode = ""
-  zone_id = ""
-  hosts = 
-  server_cert_info {
-		cert_id = ""
-		alias = ""
-		type = ""
-		expire_time = ""
-		deploy_time = ""
-		sign_algo = ""
-		common_name = ""
-
-  }
-  apply_type = ""
+    server_cert_info {
+        alias       = "EdgeOne default"
+        cert_id     = "teo-2o1tfutpnb6l"
+        common_name = var.zone_name
+        deploy_time = "2023-09-27T11:54:47Z"
+        expire_time = "2023-12-26T06:38:47Z"
+        sign_algo   = "RSA 2048"
+        type        = "default"
+    }
 }
 
 `

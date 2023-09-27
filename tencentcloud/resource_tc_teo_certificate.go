@@ -5,16 +5,19 @@ Example Usage
 
 ```hcl
 resource "tencentcloud_teo_certificate" "certificate" {
-    alias       = "EdgeOne default"
-    cert_id     = "teo-2o1tfutpnb6l"
-    common_name = "tencentcloud-terraform-provider.cn"
-    deploy_time = "2023-09-27T07:38:49Z"
-    expire_time = "2023-12-26T06:38:47Z"
-    host        = "test.tencentcloud-terraform-provider.cn"
-    mode        = "eofreecert"
-    sign_algo   = "RSA 2048"
-    type        = "default"
-    zone_id     = "zone-2o1t24kgy362"
+    host    = "test.tencentcloud-terraform-provider.cn"
+    mode    = "disable"
+    zone_id = "zone-2o1t24kgy362"
+
+    server_cert_info {
+        alias       = "EdgeOne default"
+        cert_id     = "teo-2o1tfutpnb6l"
+        common_name = "tencentcloud-terraform-provider.cn"
+        deploy_time = "2023-09-27T11:54:47Z"
+        expire_time = "2023-12-26T06:38:47Z"
+        sign_algo   = "RSA 2048"
+        type        = "default"
+    }
 }
 ```
 
@@ -52,18 +55,21 @@ func resourceTencentCloudTeoCertificate() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"zone_id": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Site ID.",
 			},
 
 			"host": {
 				Required:    true,
+				ForceNew:    true,
 				Type:        schema.TypeString,
 				Description: "Acceleration domain name that needs to modify the certificate configuration.",
 			},
 
 			"server_cert_info": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeList,
 				Description: "SSL certificate configuration, this parameter takes effect only when mode = sslcert, just enter the corresponding CertId. You can go to the SSL certificate list to view the CertId.",
 				Elem: &schema.Resource{
@@ -109,6 +115,7 @@ func resourceTencentCloudTeoCertificate() *schema.Resource {
 
 			"mode": {
 				Optional:    true,
+				Computed:    true,
 				Type:        schema.TypeString,
 				Description: "Mode of configuring the certificate, the values are: `disable`: Do not configure the certificate; `eofreecert`: Configure EdgeOne free certificate; `sslcert`: Configure SSL certificate. If not filled in, the default value is disable.",
 			},
@@ -244,35 +251,37 @@ func resourceTencentCloudTeoCertificateUpdate(d *schema.ResourceData, meta inter
 	request.ZoneId = &zoneId
 	request.Hosts = []*string{&host}
 
-	if d.HasChange("server_cert_info") {
-		if v, ok := d.GetOk("server_cert_info"); ok {
-			for _, item := range v.([]interface{}) {
-				dMap := item.(map[string]interface{})
-				serverCertInfo := teo.ServerCertInfo{}
-				if v, ok := dMap["cert_id"]; ok {
-					serverCertInfo.CertId = helper.String(v.(string))
-				}
-				if v, ok := dMap["alias"]; ok {
-					serverCertInfo.Alias = helper.String(v.(string))
-				}
-				if v, ok := dMap["type"]; ok {
-					serverCertInfo.Type = helper.String(v.(string))
-				}
-				if v, ok := dMap["expire_time"]; ok {
-					serverCertInfo.ExpireTime = helper.String(v.(string))
-				}
-				if v, ok := dMap["deploy_time"]; ok {
-					serverCertInfo.DeployTime = helper.String(v.(string))
-				}
-				if v, ok := dMap["sign_algo"]; ok {
-					serverCertInfo.SignAlgo = helper.String(v.(string))
-				}
-				if v, ok := dMap["common_name"]; ok {
-					serverCertInfo.CommonName = helper.String(v.(string))
-				}
-				request.ServerCertInfo = append(request.ServerCertInfo, &serverCertInfo)
+	if v, ok := d.GetOk("server_cert_info"); ok {
+		for _, item := range v.([]interface{}) {
+			dMap := item.(map[string]interface{})
+			serverCertInfo := teo.ServerCertInfo{}
+			if v, ok := dMap["cert_id"]; ok {
+				serverCertInfo.CertId = helper.String(v.(string))
 			}
+			if v, ok := dMap["alias"]; ok {
+				serverCertInfo.Alias = helper.String(v.(string))
+			}
+			if v, ok := dMap["type"]; ok {
+				serverCertInfo.Type = helper.String(v.(string))
+			}
+			if v, ok := dMap["expire_time"]; ok {
+				serverCertInfo.ExpireTime = helper.String(v.(string))
+			}
+			if v, ok := dMap["deploy_time"]; ok {
+				serverCertInfo.DeployTime = helper.String(v.(string))
+			}
+			if v, ok := dMap["sign_algo"]; ok {
+				serverCertInfo.SignAlgo = helper.String(v.(string))
+			}
+			if v, ok := dMap["common_name"]; ok {
+				serverCertInfo.CommonName = helper.String(v.(string))
+			}
+			request.ServerCertInfo = append(request.ServerCertInfo, &serverCertInfo)
 		}
+	}
+
+	if v, ok := d.GetOk("mode"); ok {
+		request.Mode = helper.String(v.(string))
 	}
 
 	err := resource.Retry(writeRetryTimeout, func() *resource.RetryError {
