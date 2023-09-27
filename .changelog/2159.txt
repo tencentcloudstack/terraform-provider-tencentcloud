@@ -1,0 +1,3 @@
+```release-note:new-resource
+tencentcloud_mps_enable_workflow_config
+```
