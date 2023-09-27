@@ -1,3 +1,19 @@
+## 1.81.31 (September 27, 2023)
+
+FEATURES:
+
+* **New Resource:** `tencentcloud_css_watermark_rule_attachment` ([#2156](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2156))
+* **New Resource:** `tencentcloud_mps_enable_workflow_config` ([#2159](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2159))
+* **New Resource:** `tencentcloud_trocket_rocketmq_role` ([#2153](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2153))
+
+ENHANCEMENTS:
+
+* resource/tencentcloud_trocket_rocketmq_role: Add computed `access_key` and `secret_key` ([#2158](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2158))
+
+BUG FIXES:
+
+* resource/tencentcloud_as_scaling_config: fix `key_ids` can not modify ([#2155](https://github.com/tencentcloudstack/terraform-provider-tencentcloud/pull/2155))
+
 ## 1.81.30 (September 25, 2023)
 
 FEATURES:
