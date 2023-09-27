@@ -1556,6 +1556,7 @@ Tencent Service Framework(TSF)
 Media Processing Service(MPS)
   Resource
 	tencentcloud_mps_workflow
+	tencentcloud_mps_enable_workflow_config
 	tencentcloud_mps_transcode_template
 	tencentcloud_mps_watermark_template
 	tencentcloud_mps_image_sprite_template
@@ -3017,6 +3018,7 @@ func Provider() *schema.Provider {
 			"tencentcloud_tsf_operate_group":                                   resourceTencentCloudTsfOperateGroup(),
 			"tencentcloud_tsf_unit_namespace":                                  resourceTencentCloudTsfUnitNamespace(),
 			"tencentcloud_mps_workflow":                                        resourceTencentCloudMpsWorkflow(),
+			"tencentcloud_mps_enable_workflow_config":                          resourceTencentCloudMpsEnableWorkflowConfig(),
 			"tencentcloud_mps_transcode_template":                              resourceTencentCloudMpsTranscodeTemplate(),
 			"tencentcloud_mps_watermark_template":                              resourceTencentCloudMpsWatermarkTemplate(),
 			"tencentcloud_mps_image_sprite_template":                           resourceTencentCloudMpsImageSpriteTemplate(),
